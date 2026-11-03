@@ -1,5 +1,6 @@
 import { agendaDoom, totalDoom } from '../engine/rules-state.js'
 import { registeredEntry } from '../engine/ability.js'
+import { effectiveTraits } from '../engine/engine.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignView, replacementBlockers, upgradeRecord } from '../campaign/campaign.js'
 import { cardPoolContext } from '../deck/card-pool.js'
@@ -16,13 +17,14 @@ import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 import { campaignProjection } from '../cards/campaign-view.js'
 import { scenarioInteractionsView } from './scenario-interactions.js'
 import { scenarioGuide, scenarioSetupText } from '../../content/scenario-guides.js'
+import { mechanicView } from './mechanic-view.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
   'status', 'winnerSeat', 'currentSeat', 'turnSeat', 'moveCount', 'round', 'phase',
   'hubFlow', 'uiState', 'hubSelectedScenarioId', 'hubReady', 'hubSeatSelected', 'hubSeatDone',
   'outcome', 'resolution', 'difficulty', 'numInvestigators', 'actIndex', 'agendaIndex',
-  'doom', 'clues', 'victory', 'actClues', 'fogMod', 'locations', 'enemies',
+  'doom', 'clues', 'victory', 'actClues', 'fogMod', 'locations', 'enemies', 'agendaAside',
   'encounterDiscard', 'cultistsInVictory', 'chaosBag', 'sealedTokens', 'exiled',
   'cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames',
   'acts', 'agendas', 'tokenLabels', 'storyAssets', 'victoryDisplay', 'log',
@@ -140,7 +142,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     ? observerSeat : null
   const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS, copyField)
   const attachments = publicAttachments(state)
-  view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations))
+  view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations), state)
   // 投影有效帷幕：印刷值 + shroudMod（含「直到某张卡重整」的临时修正，如皮博迪先生的 -1）
   // + 迷雾 + 剧本常驻修正（04294 的「X=深度」等），否则前端会一直显示印刷的 0/负数。
   // 特性：`traits` 保留英文（规则判定读它），`traitsZh` 是逐位对应的中文写法（只用于显示，
@@ -155,11 +157,14 @@ export function viewState(state, observerSeat = null, options = {}) {
     const grantedTraits = grantedTraitsOf(source || location)
     const projected = {
       ...location,
+      ...(state.scenarioFlags?.towerCompass?.[location.id] ? {compass:state.scenarioFlags.towerCompass[location.id]} : {}),
+      damage: Math.max(location.damage || 0, state.infestedLocations?.includes(location.id) ? 1 : 0),
+      horror: Math.max(location.horror || 0, state.scenarioFlags?.sealedRifts?.[location.id] ? 1 : 0),
       traitsZh: traitLabels(traits),
       grantedTraits: [...grantedTraits],
       grantedTraitsZh: traitLabels(grantedTraits),
     }
-    if (!source) return projected
+    if (!source || (source.hiddenIdentity && !source.revealed)) return projected
     const scenarioShroud = shroudBehavior?.locationShroudModifier?.(state, source, observerInv) || 0
     return {
       ...projected,
@@ -168,8 +173,10 @@ export function viewState(state, observerSeat = null, options = {}) {
     }
   })
   view.scriptAttachments = { act: attachments.act, agenda: attachments.agenda }
-  view.enemies = view.enemies.map((enemy, index) => ({
-    ...enemy,
+  view.enemies = view.enemies.map((enemy, index) => {
+    const { underlyingCard, ...publicEnemy } = enemy
+    return {
+    ...publicEnemy,
     // 蜂拥卡面朝下：观察投影只留 id 与来源，不给卡号。
     ...(Array.isArray(enemy.swarmCards) ? {
       swarmCards: enemy.swarmCards.filter(card => !card.defeated).map(card => ({ id: card.id, source: card.source || null })),
@@ -177,7 +184,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     health: enemyHealth(state, state.enemies[index]),
     effectiveFight: enemyFightValue(state, state.enemies[index]),
     effectiveEvade: enemyEvadeValue(state, state.enemies[index]),
-  }))
+  }})
   view.locationEntryErrors = locationEntryErrors(state)
   view.campaign = campaignView(state.campaign, observer)
   // 双线战役在模式确定前没有 seatParts/parts 记录，非房主席位也必须有办法知道
@@ -219,6 +226,8 @@ export function viewState(state, observerSeat = null, options = {}) {
   Object.assign(view, campaignProjection(state))
   const scenarioInteractions = scenarioInteractionsView(state, observer)
   if (scenarioInteractions) view.scenarioInteractions = scenarioInteractions
+  const mechanics = mechanicView(state, observer)
+  if (mechanics) view.mechanics = mechanics
   view.scenarioFlagsPublic = Object.fromEntries(PUBLIC_SCENARIO_FLAGS
     .filter(key => state.scenarioFlags?.[key] != null)
     .map(key => [key, state.scenarioFlags[key]]))
@@ -227,6 +236,13 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.timeline = timelineSummary(state)
   view.chaos = state.chaos ? { revealed: [...state.chaos.revealed], sealed: structuredClone(state.chaos.sealed), removed: [...state.chaos.removed] } : null
   const privateTest = state.skillTest && !state.skillTest.helpRequested && state.skillTest.seat !== observer
+  if (state.skillTest && view.chaos) {
+    const start = state.chaos?.frames?.at(-1) || 0
+    const masked = privateTest ? state.chaos.revealed : state.chaos.revealed.slice(0, start)
+    if (masked.length) view.chaosBag = [...view.chaosBag, ...masked].sort()
+    view.chaos.revealed = privateTest ? [] : view.chaos.revealed.slice(start)
+    if (privateTest || start > 0) view.chaos.removed = []
+  }
   if (privateTest) { view.log = [...(state.skillTest.publicLog || [])]; view.timingWindow = null }
   view.skillTest = state.skillTest && !privateTest ? { ...structuredClone(state.skillTest) } : null
   view.scenario = state.scenario ? {
@@ -240,6 +256,7 @@ export function viewState(state, observerSeat = null, options = {}) {
   // 第 125 轮（第 8 批）：「翻面/变体」表现由条目声明（03009 → 03009b，伤害 ≥5 时）。
   const projectAsset = (asset, inv) => {
     const visible = publicCardInstance(asset)
+    if (asset.attachments?.some(attachment => registeredEntry(attachment.code)?.assetRule?.hostTrait)) visible.traits = effectiveTraits(state, inv, asset)
     // 展示槽位跟引擎同一口径：没有 slotsOverride 时用印刷槽位，
     // 这样卡面表缺 slots 时也不会把占着手槽的支援画进「其他资产」。
     if (!visible.slotsOverride) {
@@ -273,6 +290,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     for (const card of [...(inv.assets || []), ...(inv.threat || [])]) visibleCodes.add(card.code)
     if (inv.seat === observer) for (const code of inv.hand || []) visibleCodes.add(code)
   }
+  for (const item of mechanicView(state, observer)?.beneath || []) for (const code of item.codes || []) visibleCodes.add(code)
   for (const card of [...(state.storyAssets || []), ...(state.victoryDisplay || [])]) visibleCodes.add(card.code)
   // P1.4：精简视图拿不到 view.cards，用大厅传入的公共表（publicCards，只读）判断缺哪些卡面。
   const publicCards = slim && options.publicCards && typeof options.publicCards === 'object' ? options.publicCards : null
@@ -293,6 +311,7 @@ export function viewState(state, observerSeat = null, options = {}) {
       const privateZones = new Set()
       const own = (state.investigators || []).find(inv => inv.seat === observer)
       if (own) for (const code of [...(own.hand || []), ...(own.deck || []), ...(own.beneath || [])]) if (code) privateZones.add(code)
+      if (own) for (const cards of Object.values(state.scenarioFlags?.mechanics?.beneath?.[own.seat] || {})) for (const code of cards) privateZones.add(code)
       const patch = {}
       const privateCards = {}
       for (const [code, def] of Object.entries(defs)) {
@@ -340,6 +359,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment', 'autoOptionId', 'autoTriggerOptionId', 'cardCode'], copyField),
     source: typeof choice.source === 'string' ? choice.source : pick(choice.source || {}, [
       'id', 'code', 'label', 'name', 'type',
+      ...(choice.kind === 'mechanic' ? ['operation', 'stage', 'min', 'max', 'selectedCount'] : []),
       // 补给选购要区分序幕与补给点：两处的清单和点数不同，前端据此列出完整卡面。
       ...(choice.kind === 'pickSupplies' ? ['context'] : []),
     ], copyField),
@@ -349,6 +369,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     // 界面据此把选项挂回直觉区/下方/宿主支援，点牌即打出（与 legalMoves 的 move.uiKey 同协议）。
     options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, [
       'id', 'label', 'cardCode', 'uiKey',
+      ...(choice.kind === 'mechanic' ? ['token', 'keyColor', 'selected'] : []),
       // 序章故事调查员：额外放行公开印刷卡面身份（职业、职业名、副标题、四维、生命/理智），
       // 选人界面据此画出卡面。这些字段只放宽给 storyInvestigator 的应答座位，其他 kind
       // 仍只保留 id/label/cardCode/uiKey，避免把无关选择里的内部数据顺带带出。

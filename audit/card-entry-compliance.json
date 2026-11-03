@@ -35,18 +35,18 @@
   }
  ],
  "scope": {
-  "entries": 1347,
-  "player": 568,
-  "encounter": 779,
-  "cycles01to05": 1335
+  "entries": 1727,
+  "player": 671,
+  "encounter": 1056,
+  "cycles01to05": 1339
  },
  "counts": {
-  "directStateWrite": 151,
+  "directStateWrite": 149,
   "singleCardField": 0,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
   "testWrapper": 15,
-  "revelationTestCards": 45
+  "revelationTestCards": 55
  },
  "baseline": {
   "directStateWrite": [
@@ -117,8 +117,6 @@
    "03262",
    "03338",
    "04005",
-   "04040",
-   "04041",
    "04044",
    "04046",
    "04047",
@@ -271,7 +269,17 @@
    "05271",
    "05306",
    "05342",
-   "05344"
+   "05344",
+   "06085",
+   "06093",
+   "06094",
+   "06109",
+   "06194",
+   "06230",
+   "06231",
+   "06268",
+   "06274",
+   "06322"
   ]
  },
  "fields": {
@@ -341,8 +349,6 @@
   ],
   "inv.deck": [
    "03211",
-   "04040",
-   "04041",
    "04175",
    "05130"
   ],
@@ -396,13 +402,8 @@
    "03054",
    "03255",
    "04073",
-   "05037",
    "05058",
    "05059"
-  ],
-  "inv.weaknessCounters": [
-   "04040",
-   "04041"
   ],
   "location.attachments": [
    "03091",

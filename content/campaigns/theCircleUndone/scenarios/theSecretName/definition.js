@@ -71,8 +71,8 @@ export const LOCATION_ENTRIES = Object.freeze([
   },
   { id: 'keziahsRoom', code: KEZIAHS_ROOM, symbol: 'square', links: ['moon', 'hourglass', 't', 'equals', 'squiggle'], spectral: true },
   { id: 'siteOfTheSacrifice', code: SITE_OF_THE_SACRIFICE, symbol: 't', links: ['hourglass'] },
-  { id: 'strangeGeometry1', code: STRANGE_GEOMETRY, connections: ['moldyHalls'] },
-  { id: 'strangeGeometry2', code: STRANGE_GEOMETRY, connections: ['moldyHalls'] },
+  { id: 'strangeGeometry1', code: STRANGE_GEOMETRY, encounterLocation: true, connections: [] },
+  { id: 'strangeGeometry2', code: STRANGE_GEOMETRY, encounterLocation: true, connections: [] },
 ])
 
 // 闹鬼（P2.1 闭集子句）：文本取自卡面，需要章节脚本的两条用 `script` 交给 behavior.hauntedScript。
@@ -137,6 +137,7 @@ function locationDefinition(entry) {
     ...(entry.frontName ? { name: entry.frontName } : {}),
     ...(entry.symbol ? { symbol: entry.symbol, links: entry.links || [] } : {}),
     ...(entry.connections ? { connections: entry.connections } : {}),
+    ...(entry.encounterLocation ? { encounterLocation: true } : {}),
     ...(entry.spectral ? { spectral: true } : {}),
     ...(entry.victory ? { victory: entry.victory } : {}),
     ...(HAUNTED_BY_ID[entry.id] ? { haunted: HAUNTED_BY_ID[entry.id] } : {}),

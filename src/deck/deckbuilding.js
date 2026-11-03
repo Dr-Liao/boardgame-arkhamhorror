@@ -24,6 +24,7 @@ import {
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
   TCU_PLAYER_BUILDABLE_CODES,
   TDE_PLAYER_BUILDABLE_CODES,
+  TIC_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -44,7 +45,7 @@ const TDE_DECK_CARD_CODES = Object.freeze(TDE_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES])
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES])
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
 const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
@@ -57,9 +58,9 @@ export { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES }
 
 // 该卡是否满足调查员的 deck_options（阵营 + 等级区间）。
 // 「额外限制：无等级 1-5 的[[武器]]卡牌」这类排除项先否决，再看是否命中某个允许项。
-export function matchesDeckOptions(invDef, card) {
+export function matchesDeckOptions(invDef, card, codes = []) {
   if (optionExcluded(invDef, card)) return false
-  return deckRules(invDef).options.some(rule => rule.not !== true && matchesCardRule(card, rule, invDef))
+  return deckRules(invDef, codes, ALL_CARDS).options.some(rule => rule.not !== true && matchesCardRule(card, rule, invDef))
 }
 
 // 仅简化模式许可且有明确效果条目的卡牌；不使用技能图标隐式放行。
@@ -397,7 +398,7 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     }
     if (!licensed.has(code) || !isPlayable(card)) { errors.push(name + ' 未获运行时许可'); continue }
     if (!pool.has(code)) { errors.push(name + ' 不在 playerPool 白名单内'); continue }
-    if (!matchesDeckOptions(invDef, card)) { errors.push(name + ' 不符合构筑限制'); continue }
+    if (!matchesDeckOptions(invDef, card, codes)) { errors.push(name + ' 不符合构筑限制'); continue }
     if (n > cardLimit(card)) errors.push(name + ' 超过张数上限（' + cardLimit(card) + '）')
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
@@ -485,6 +486,7 @@ export function deckBuilderData() {
     deckLimit: cardLimit(c), unique: !!c.unique, exceptional: !!c.exceptional,
     // P7（食梦者 M2）：多重卡在构筑界面显示「同名 n/3」（见 web/hub.js 的 cardMeta）。
     myriad: c.myriad === true,
+    ...(registeredEntry(c.code)?.deckConstruction ? { deckConstruction: registeredEntry(c.code).deckConstruction } : {}),
     doubleSided: !!c.doubleSided, subtype: c.subtype || null,
   }))
 

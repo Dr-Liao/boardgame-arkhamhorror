@@ -7,12 +7,27 @@
 // 依据 Haskell Treachery/Cards/.../DeceptiveMemories.hs：
 //   · 进威胁区 → encounterResolve 调 api.threat；
 //   · [action] 检定意志（3）弃掉 → threatAction（共享层 performEncounterAction 统一检定+removeThreat）；
-//   · 强制「另一张卡进入威胁区域后」：引擎没有「卡进入威胁区」读点，记 simplified（见 note）。
+//   · 强制「另一张卡进入威胁区域后」：threatEntered 窗口派发本卡的 forced 能力。
 export default {
   code: '06193',
   scope: 'treachery',
   implemented: true,
   treacheryRule: { threatArea: true },
+  abilities: [{
+    kind: 'forced', trigger: 'threatEntered', silent: true,
+    label: '另一张卡牌进入你的威胁区域后：选择并弃掉 1 张手牌',
+    criteria: [({ inv, source, context }) => context?.seat === inv?.seat
+      && context?.card?.id !== source?.id && (inv?.hand?.length || 0) > 0],
+    resolve: ({ inv, api }) => {
+      const options = [...new Set(inv.hand || [])].map(code => ({ id: code, label: code }))
+      if (!options.length) return
+      const chosen = options.length === 1 ? options[0].id : api.choice?.({
+        kind: 'card', source: '06193', seat: inv.seat,
+        prompt: '欺骗性记忆：选择并弃掉你的一张手牌。', options,
+      })
+      if (chosen && (inv.hand || []).includes(chosen)) api.discardFromHand?.(inv.seat, chosen)
+    },
+  }],
   threatAction: {
     rule: 'tshDiscardDeceptiveMemories',
     label: '[action]：检定意志（3），成功弃掉「欺骗性记忆」',
@@ -25,6 +40,4 @@ export default {
     api.info?.(`🧠 「欺骗性记忆」进入 ${inv.name} 的威胁区域。`)
     return true
   },
-  note: 'simplified：「强制 - 另一张卡进入你的威胁区域后，选择并弃掉 1 张手牌」没有「卡进入威胁区」的引擎读点；'
-    + '其余子句（显现进威胁区、[action] 意志（3）弃掉本卡）已实现。',
 }

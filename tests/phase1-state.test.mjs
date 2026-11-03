@@ -181,7 +181,8 @@ test('playCondition：描述子与旧字段都由单一读点判定，文案不�
   assert.deepEqual(describePlayCondition('__legacyPlayConditionSample'), [])
   // 区域许可与条件分开：03315 不是「弃牌堆/威胁区可打出」的卡。
   assert.deepEqual(playAccess('03315'), {
-    fromDiscard: false, playableWeakness: false, fromThreat: false, reactionOnly: false, limitPerInvestigator: false,
+    fromDiscard: false, onlyFromDiscard: false, playableWeakness: false, fromThreat: false,
+    reactionOnly: false, limitPerInvestigator: false,
   })
 })
 

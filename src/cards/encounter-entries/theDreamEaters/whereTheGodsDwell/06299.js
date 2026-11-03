@@ -6,8 +6,7 @@
 // 行为位置：
 //   · 未揭示不可进入 → `locationRule.blockedWhileUnrevealed`，章节 behavior.moveError / movementError 读；
 //   · [action] → locationRule.actions / performAction（章节 behavior 转发）；
-//     「隐私卡牌」= hand 中的 inv.hiddenCards；移交给另一人需要 hidden 手牌移交原语
-//     （已提交 primitive request；无原语时该行动只提示，记 worker 报告 simplified）。
+//     「隐私卡牌」= hand 中的 inv.hiddenCards；移交走 hiddenCards.transfer 原语。
 const GIVE_RULE = 'giveHiddenCard'
 
 const activeInvestigators = state => (state?.investigators || []).filter(inv => !inv.defeated && !inv.resigned)
@@ -47,12 +46,7 @@ export default {
       }))
       const code = hidden[Number.isInteger(chosenIndex) && hidden[chosenIndex] ? chosenIndex : 0]
       if (!code) return false
-      if (typeof api.transferHiddenCard !== 'function') {
-        api.info?.('「大礼堂」：当前缺少移交隐私手牌的原语，本次行动未生效（记为简化）。')
-        return true
-      }
-      api.transferHiddenCard(inv.seat, targetSeat, code)
-      return true
+      return api.hiddenCards?.transfer?.(inv.seat, targetSeat, code) === true
     },
   },
 }

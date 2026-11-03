@@ -134,7 +134,7 @@ export function assertCampaignManifest(campaign) {
   }
   const records = object(campaign.recordSchema, 'campaign.recordSchema')
   for (const [key, type] of Object.entries(records)) {
-    id(key, `campaign.recordSchema.${key}`)
+    if (!/^[A-Za-z][A-Za-z0-9-]*$/.test(key) || ['constructor', 'prototype'].includes(key)) fail(`campaign.recordSchema.${key}`, '必须是稳定的 ASCII 记录键')
     if (!['boolean', 'number', 'string', 'string[]'].includes(type)) {
       fail(`campaign.recordSchema.${key}`, '未知战役记录字段类型')
     }

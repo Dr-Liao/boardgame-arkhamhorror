@@ -209,6 +209,7 @@ export default {
   'hub.metric.victory': 'Victory points',
   'hub.metric.xp': 'Unspent experience',
   'hub.overview.eyebrow': 'Campaign dossier',
+  'hub.overview.earlyAccess': 'Early access: some rules or flows remain under review. See the campaign audit ledger for the current scope.',
   'hub.overview.tagline': 'Gather clues, assemble the team, step into the unknown.',
   'hub.overview.difficultyAria': 'Investigation difficulty',
   'hub.overview.resultTitle': 'Scenario results',

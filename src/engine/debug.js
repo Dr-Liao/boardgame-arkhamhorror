@@ -1,3 +1,4 @@
+import { discardPlayerCards } from './player-zones.js'
 // 调试控制台 · 引擎侧原语（2026-10-28 起，契约：artifacts/debug-console/CONTRACT.md §3 / §10）。
 //
 // 职责边界：
@@ -275,7 +276,7 @@ export function createDebugExecutor(deps) {
       // 牌库数组末尾是牌库顶（drawCards 用 pop 抽牌），开头是牌库底。
       if (zone === 'deckTop') inv.deck.push(code)
       else if (zone === 'deckBottom') inv.deck.unshift(code)
-      else inv.discard.push(code)
+      else discardPlayerCards(state, inv, code)
     }
     info(state, events, `🛠️ 调试：将「${cardName(code)}」放入 ${inv.name} 的${ZONE_LABELS[zone]}。`)
   }

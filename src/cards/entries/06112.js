@@ -8,8 +8,8 @@
 // 读点：
 //   · 绑定集合来自卡面数据（bondedCards: 06113），检索走 api.bonded.retrieve（src/engine/bonded.js）；
 //   · 记录走 api.recordResearch（campaign.records + 每名调查员的 research 记录，读点 harm-threat.js）；
-//   · 「检定成功且超过难度 ≥3」用旧式反应 criteria.successByAtLeast，窗口 skillTestSuccess
-//     （triggerReaction 只枚举 legacyReaction 描述子；state.skillTest.committed 在窗口里仍可读）。
+//   · 研究反应在 skillTestSuccess 窗口检查成功差额、本人的梦的本质投入及未记录状态；
+//     triggerReaction 只枚举 legacyReaction 描述子，此窗口仍可读 state.skillTest.committed。
 
 export default {
   code: '06112',
@@ -18,6 +18,7 @@ export default {
       kind: 'action',
       label: '查找绑定卡牌：把「梦的本质」加入手牌',
       cost: { action: true },
+      criteria: [({ inv, helpers }) => helpers.bondedAvailable(inv.seat, '06112', '06113') > 0],
       resolve: ({ inv, api }) => {
         const taken = api.bonded.retrieve(inv.seat, '06112', { handCount: 1 })
         if (!taken.length) api.info('「梦境日记」的绑定卡牌已不在场外集合中。')
@@ -27,9 +28,11 @@ export default {
     {
       kind: 'reaction',
       trigger: 'skillTestSuccess',
-      // triggerReaction 只枚举带 legacyReaction 标记的描述子；criteria 是旧式反应条件字段。
+      // triggerReaction 只枚举带 legacyReaction 标记的描述子；函数条件同时约束投入与战役记录。
       legacyReaction: true,
-      criteria: { successByAtLeast: 3 },
+      criteria: ({ state, inv, context }) => (context.successBy || 0) >= 3
+        && !state.campaign?.records?.youHaveInterpretedTheDreams
+        && (state.skillTest?.committed || []).some(item => item.code === '06113' && item.seat === inv.seat),
       label: '投入「梦的本质」的检定成功且超过难度 3 点后：记录「你洞悉了梦境」',
       resolve: ({ state, inv, api }) => {
         const committed = (state.skillTest?.committed || []).map(item => item.code)

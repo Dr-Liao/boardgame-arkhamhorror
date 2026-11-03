@@ -236,15 +236,20 @@ export const behavior = {
       // 坑葬墓室：探索成功并入场后，抽 2 张遭遇牌或放置 2 个毁灭（可任意组合）。
       const pit = state.locations.find(entry => original(entry) === '04065')
       if (!pit) return
-      for (let point = 0; point < 2; point++) {
-        const answer = api?.choose ? api.choose({
-          kind: 'location', source: '04065', seat: inv.seat,
-          prompt: `坑葬墓室（${point + 1}/2）：抽取 1 张遭遇牌，还是放置 1 个毁灭标记？`,
-          options: [{ id: 'draw', label: '从遭遇牌库顶抽 1 张' }, { id: 'doom', label: '在坑葬墓室上放置 1 个毁灭' }],
-        }) : 'doom'
-        if (answer === 'draw') api?.drawEncounter?.(inv.seat)
-        else placeDoom(pit)
-      }
+      // 卡面要求先决定两点的组合，再结算。若逐点询问，第一张遭遇牌的效果会
+      // 改变第二次选择时的局面，不能视作同一次「任意组合」选择。
+      const answer = api?.choose ? api.choose({
+        kind: 'location', source: '04065', seat: inv.seat,
+        prompt: '坑葬墓室：选择抽遭遇牌与放置毁灭的组合（合计 2 点）',
+        options: [
+          { id: 'draw2', label: '抽 2 张遭遇牌' },
+          { id: 'draw1Doom1', label: '抽 1 张遭遇牌，放置 1 个毁灭' },
+          { id: 'doom2', label: '放置 2 个毁灭' },
+        ],
+      }) : 'doom2'
+      const draws = answer === 'draw2' ? 2 : answer === 'draw1Doom1' ? 1 : 0
+      placeDoom(pit, 2 - draws)
+      for (let index = 0; index < draws; index++) api?.drawEncounter?.(inv.seat)
     }
   },
 
@@ -450,10 +455,12 @@ export const behavior = {
     if (key === 'noResolution') {
       records.theFabricOfTimeIsUnwoven = true
       for (const inv of state.investigators) {
-        if (inv.defeated || inv.resigned) continue
-        inv.defeated = true
-        inv.defeatCause = 'mental'
-        api?.addTrauma?.(state, inv.seat, 'mental', 1, events)
+        // 来源为 eachInvestigator drivenInsane：即使此前已被击败或撤退，
+        // 战役调查员也永久陷入疯狂；1 点精神创伤无法表达这个结果。
+        const record = state.campaign.investigators?.[inv.seat]
+        if (record) record.status = 'insane'
+        if (!inv.defeated && !inv.resigned) api?.defeat?.(inv, 'insane')
+        inv.defeatCause = 'insane'
         api?.info?.(`💔 ${inv.name} 的时间线互相冲突，陷入疯狂。`)
       }
       return { award: false, bonus: 0 }

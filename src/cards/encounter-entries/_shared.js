@@ -664,3 +664,97 @@ export function doomInPlayInEntry(state) {
         .reduce((inner, card) => inner + (card.doom || 0), 0), 0)
 }
 
+// Single-sided encounter locations use their authored physical identity.
+export function putRevealedPrintedLocation(state, inv, card, api) {
+  api.placePrintedLocation(card.originalCode || card.code, { seat: inv.seat, reveal: true })
+  return true
+}
+
+// Read-only mechanic queries available to individual encounter entries.
+export { keysAt, keysHeldAtLocation, keysHeldByGroup } from '../../engine/scenario-keys.js'
+export { barrierEdges, barrierCount, canPlaceBarrier } from '../../engine/edge-barriers.js'
+export { effectiveFloodLevel, floodLevel } from '../../engine/flood.js'
+export { locationLookCandidates } from '../../engine/location-look.js'
+export { payablePoolTokens } from '../../engine/chaos-token-pool.js'
+export { gridPosition, gridLocations } from '../../engine/grid-map.js'
+
+
+import { keysAt as heldKeysQuery, keysHeldAtLocation as localHeldKeysQuery, keysHeldByGroup as groupKeysQuery } from '../../engine/scenario-keys.js'
+export function keyedFlashbackAbility({ key, keyCount, flashback, requiresNoClues = true, label }) {
+  return { kind: 'free', actionKind: 'activate', label,
+    limit: { scope: 'perGame', owner: 'group' },
+    criteria: ({ state, inv, source }) => (!requiresNoClues || source.clues === 0)
+      && (key ? heldKeysQuery(state, 'investigator:'+inv.seat).includes(key) : groupKeysQuery(state).length >= keyCount),
+    resolve: ({ inv, api }) => api.scenario.resolveFlashback(inv.seat, flashback) }
+}
+
+export function evadeTraitAndDrainLocation({ state, source, api }, { trait = 'Ancient One' } = {}) {
+  for (const enemy of [...state.enemies]) if (enemy.traits?.includes(trait)) api.autoEvadeEnemy(enemy)
+  api.water.set(source.id, 0)
+  api.water.lock(source.id)
+}
+
+export function suspectEntry({ code, homes, label, skill = null, difficulty = 0, cost = {}, failureDamage = 0, failureHorror = 0 }) {
+  return {
+    code, scope: 'enemy', implemented: true,
+    enemyRule: { revelationSpawn: { locationOriginalCodes: homes, cluesPerInvestigator: 1 } },
+    abilities: [{
+      kind: 'action', actionKind: 'parley', label, cost: { action: 1, ...cost },
+      resolve: ({ state, inv, source, api }) => {
+        const take = () => api.scenario.takeEnemyClues(source, inv.seat, 1, { victoryWhenEmpty: true })
+        if (!skill) return take()
+        api.test(inv.seat, skill, difficulty + enemyParleyDifficultyBonus(source, state.round), {
+          source: { type: 'scenario', action: 'parley', code, name: source.name, ability: true },
+          target: { kind: 'enemy', id: source.id }, actionKind: 'parley',
+          resolve: result => {
+            if (result.success) take()
+            else {
+              if (failureDamage) api.damage(inv.seat, failureDamage)
+              if (failureHorror) api.horror(inv.seat, failureHorror)
+            }
+          },
+        })
+      },
+    }],
+  }
+}
+
+// Proposed shared factory for main integration. Not executed by worker.
+export function symbolFailingRevelation({ code, skills, difficulty, token, onFailure }) {
+  return (state, inv, card, api) => {
+    const labels = { willpower: '意志', intellect: '智力', combat: '战力', agility: '敏捷' }
+    const skill = skills.length === 1 ? skills[0] : api.choose({ kind: 'skill', seat: inv.seat, source: code,
+      prompt: '选择本次显现检定的技能。', options: skills.map(id => ({ id, label: labels[id] })) })
+    if (!skills.includes(skill)) return false
+    api.test(inv.seat, skill, difficulty, result => {
+      if (!result.success) onFailure({ state, inv, card, api, result })
+    }, 0, { code, ability: true }, { autoFailOnTokens: [token] })
+    return false
+  }
+}
+
+export function localKeyFlashbackAbility({ keys, cluesPerInvestigator, flashback, label }) {
+ return {kind:'free',actionKind:'activate',label,cost:{groupClues:({state})=>cluesPerInvestigator*state.numInvestigators},limit:{scope:'perGame',owner:'instance'},
+  criteria:({state,source})=>keys.every(color=>localHeldKeysQuery(state,source.id).includes(color)),
+  resolve:({inv,api})=>api.scenario.resolveFlashback(inv.seat,flashback)}
+}
+
+import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
+export function scenarioReferenceEntry({ code, scenarioRule }) {
+ return {code,scope:'scenario',scenarioRule,abilities:[
+  {kind:'free',actionKind:'activate',range:'anywhere',label:'拿取本地点的一把钥匙',criteria:({state,inv})=>canClaimKey(state,inv.seat),resolve:({inv,api})=>api.interactions.keys(inv.seat,'claimKey')},
+  {kind:'free',actionKind:'activate',range:'anywhere',label:'将钥匙交给同地点调查员',criteria:({state,inv})=>canGiveKeys(state,inv.seat),resolve:({inv,api})=>api.interactions.keys(inv.seat,'giveKeys',{max:7})},
+ ]}
+}
+
+export function defeatedSuspectAgendaAbility({ isKidnapper, recordValue, recordKey = 'outForBlood' }) {
+  return { kind: 'forced', trigger: 'enemyDefeated',
+    limit: { scope: 'perWindow', owner: 'instance' }, label: '击败嫌疑人：取得其线索并记录寻仇',
+    criteria: ({ state, inv, context }) => context.accepted === true && context.sourceSeat === inv.seat
+      && context.enemy?.traits?.some(trait => trait.toLowerCase() === 'suspect') && !isKidnapper(state, context.enemy),
+    resolve: ({ state, inv, context, api }) => {
+      api.enemyOutcomes.takeClues(context, inv.seat, 'all')
+      api.recordSets.add(recordKey, recordValue(state, context.enemy))
+    },
+  }
+}

@@ -15,7 +15,7 @@ import {
   ISLE_CODES, JOSEF_MEIGER, KEEPER_OF_SECRETS, LODGE_NEOPHYTE, MISKATONIC_RIVER,
   SCENARIO_CARD, SPECTRAL_RAVEN, THE_SPECTRAL_WATCHER, TREACHERY_CODES, UNVISITED_ISLES, WHIPPOORWILL,
 } from './definition.js'
-import { scenarioGaps, scenarioApproximations } from './notes.js'
+import { scenarioGaps, migrationHistory } from './notes.js'
 
 // ---------------------------------------------------------------------------
 // 小工具
@@ -142,7 +142,7 @@ export function litIsles(state) {
 function setupFateCards(state) {
   const records = recordsFor(state)
   const missing = Array.isArray(records.missingPersons) ? records.missingPersons : []
-  const includeAll = missing.length === 0
+  const includeAll = !Array.isArray(records.missingPersons)
   const cards = FATE_LIST
     .filter(fate => includeAll || missing.includes(fate.person))
     .map(fate => ({
@@ -305,7 +305,7 @@ export const behavior = {
 
   implementedEncounterCodes,
   scenarioGaps,
-  scenarioApproximations,
+  migrationHistory,
   // 读点（测试 / UI / 其它 worker）
   factionOf,
   brazierLit,

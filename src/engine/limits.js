@@ -33,7 +33,7 @@ export const LIMIT_SCOPES = Object.freeze([
   'perWindow', 'perAttack', 'perSearch', 'perAction',
 ])
 
-export const LIMIT_OWNERS = Object.freeze(['instance', 'investigator', 'player', 'group'])
+export const LIMIT_OWNERS = Object.freeze(['instance', 'investigator', 'investigatorInstance', 'player', 'group'])
 
 // 旧字符串写法 → 新对象写法。旧表只有 5 个，且语义就是 instance/player 两种归属。
 const LEGACY_SCOPES = Object.freeze({
@@ -95,6 +95,7 @@ function scopeKey(scope, state, ctx = {}) {
 function ownerKey(owner, descriptor, source, inv) {
   switch (owner) {
     case 'instance': return source?.id ? `card:${source.id}` : `seat:${inv?.seat}:${descriptor.code}`
+    case 'investigatorInstance': return `inv:${inv?.seat}:card:${source?.id ?? descriptor.code}`
     case 'investigator': return `inv:${inv?.seat}:${descriptor.code}`
     case 'player': return `seat:${inv?.seat}:${descriptor.code}`
     case 'group': return `group:${descriptor.code}`
@@ -115,6 +116,7 @@ export function limitKey(state, inv, descriptor, context = null, windowId = null
     ...(context || {}),
     ...(windowId ? { windowId } : {}),
   }
+  if (normalized.scope === 'perWindow' && context?.tokenIndex != null) ctx.windowInstance = `${state.skillTest?.id}:${context.tokenIndex}`
   return `${descriptor.id}|${ownerKey(normalized.owner, descriptor, source, inv)}|`
     + `${scopeKey(normalized.scope, state, ctx)}`
 }
@@ -132,6 +134,7 @@ function usedCount(state, key) {
 // 取「窗口名 + 轮/阶段/回合 + 行动序号 + 窗口主体」的组合，既跨续算稳定（纯数据、可重放），
 // 也能区分同一轮里对同一个敌人的两次躲避（两次躲避是两次行动，moveCount 不同）。
 function windowInstanceKey(state, context = null, windowId = null) {
+  if (context?.windowInstance != null) return `${windowId}:${context.windowInstance}`
   const subject = context?.enemy?.id ?? context?.cardCode ?? context?.location ?? ''
   return [windowId ?? '', state?.round ?? 0, state?.phase ?? '', state?.turnSerial ?? 0,
     state?.moveCount ?? 0, subject].join('|')
@@ -149,6 +152,7 @@ export function limitUsed(state, inv, descriptor, context = null, windowId = nul
       && record.windowInstance === windowInstanceKey(state, context, windowId))
   }
   const limit = typeof descriptor.limit === 'string' ? normalizeLimit(descriptor.limit) : descriptor.limit
+  if (limit?.scope === 'perWindow' && state.abilityLimits?.[key]?.windowInstance !== windowInstanceKey(state, context, windowId)) return false
   return usedCount(state, key) >= (limit?.count ?? 1)
 }
 
@@ -156,7 +160,9 @@ export function markLimitUsed(state, inv, descriptor, context = null, windowId =
   const key = limitKey(state, inv, descriptor, context, windowId, source)
   if (!key) return
   state.abilityLimits ||= {}
-  const used = usedCount(state, key) + 1
+  const limit = typeof descriptor.limit === 'string' ? normalizeLimit(descriptor.limit) : descriptor.limit
+  const isNewWindow = limit?.scope === 'perWindow' && state.abilityLimits?.[key]?.windowInstance !== windowInstanceKey(state, context, windowId)
+  const used = (isNewWindow ? 0 : usedCount(state, key)) + 1
   state.abilityLimits[key] = {
     used,
     round: state.round,

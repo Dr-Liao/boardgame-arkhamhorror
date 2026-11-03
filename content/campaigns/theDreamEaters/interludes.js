@@ -917,7 +917,7 @@ const INTERLUDE_THREE_DUAL = [
     effects: [
       record('B', 'theInvestigatorsPossessTheSilverKey', false),
       record('A', 'theInvestigatorsPossessTheSilverKey'),
-      { type: 'addCampaignCardToDeck', code: '06189', seat: 0, part: 'A', reason: 'theGreatOnes2' },
+      { type: 'addCampaignCardToDeck', code: '06189', part: 'A', chooseRecipient: true, reason: 'theGreatOnes2' },
     ],
     pendingEngine: true,
     pendingEffects: [{

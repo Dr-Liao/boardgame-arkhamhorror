@@ -11,6 +11,7 @@
 - 卡牌字段：`参考资源/ArkhamHorror-main/frontend/public/cards*.json`，通过现有卡牌导入管线进入 `catalog/` 和 `src/cards/cards-data.js`。
 - 规则行为：`参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/`。
 - 中文剧情：`参考资源/ArkhamHorror-main/frontend/src/locales/zh/<campaign>/`。
+- 冒险指南：逐章锁定上述中文目录及对应 `locales/en/<campaign>/scenarios/` 的完整指南来源，覆盖开场、设置、特别规则与结局结算；中文缺项须对照英文补译并保留来源与自译标记，不能只导入叙事段落。
 - 卡图：统一使用 `games/arkhamhorror/web/img/cards/`（英文）与 `games/arkhamhorror/web/img/zh/cards/`（中文），并保留现有远程回退（卡面 `imagesrc`／`backimagesrc`）；不得创建循环专属卡图目录或手工改名副本。
 
 审计报告必须记录来源根目录、相对路径、哈希和资源策略。来源发生变化时，`--check` 必须失败，人工审阅后才能重写报告。
@@ -30,6 +31,7 @@
 - **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
 - **新增交互先于批量卡牌**：新的选择、目标、提示、面板与动画必须在卡牌批量迁移前完成，并复用 `web/` 的现有组件、CSS 变量与交互模式；不允许在卡牌批次里边写卡边临时拼界面。验收必须覆盖桌面 1440 与移动端 390，见 §4.5。
 - **剧本卡行动必须标明归属**：幕／议程卡面上印着的 `[action]` / `[free]` 行动（包括引擎自带的「探索」）必须通过关卡数据的 `scenario.scriptCards` 或显式 `scriptCard` 标成 `act` / `agenda`，牌桌才会把它放在剧本书对应卡片旁；只出现在通用动作栏视为迁移缺口。声明方式与验收见 §4.5.1。
+- **冒险指南是逐章必交产物**：新增或迁移的每一关都要接入完整中英文冒险指南。布置摘要、剧情正文和引擎规则不能代替玩家可查阅的完整指南；漏掉特别规则即视为该章迁移缺口。指南来源、生成、入口位置与验收见 §4.5.2。
 - **多进程写入边界**：批量迁移由主进程 + 多个子进程完成；子进程只写分给自己的单卡文件（玩家卡 `entries/<code>.js`，非玩家卡 `encounter-entries/<归属目录>/<code>.js`），不得改 `entries/index.js`、`encounter-entries/index.js`、任一本 `_shared.js` / `_lookup.js`、两个聚合入口、`src/engine/`、`content/`、`docs/`、`audit/`。索引由主进程在合并时统一重建，见 §4.6。
 - **非玩家卡一卡一文件**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`。落点按使用范围分三档：跨战役 → `encounter-entries/shared/<encounterGroup>/`；同一战役跨关卡 → `encounter-entries/<campaign>/_shared/<encounterGroup>/`；只在单关卡 → `encounter-entries/<campaign>/<scenario>/`。**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断，更不要把条目写回 `encounter-abilities.js` 单文件。
 - **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
@@ -152,6 +154,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 - `type` 至少覆盖 `primitive`（引擎动作/读点）、`keyword`（关键词/时机词）、`rulebook`（规则条目）、`interaction`（选择/目标/提示/面板）、`scenario`（章节流程）、`content`（纯数据/文案）。
 - 每个机制条目必须列出代表卡号、来源、是否已有通用实现、缺口和候选原语。
+- 逐章扫描冒险指南的特别规则与布置、分支、结局指示，建立正文覆盖清单；不印在卡面上的规则（例如卡城幽影不会因恐惧被击败）也必须同时进入实现计划和玩家指南，不能因卡牌扫描未命中而遗漏。
 - 同一机制合并去重；同一张卡可以关联多个机制。
 - 未知机制默认**阻断**，不得用近似卡文实现静默过关。
 - 产物：`artifacts/migration/<cycle>/mechanism-scan.json`。
@@ -195,6 +198,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - 对 `type=keyword` 的机制：实现引擎行为、窗口/时机、成功失败分支、存档恢复，并写 Node 测试；已有关键词要确认在本循环卡牌上仍然成立。
 - 对 `type=rulebook` 的机制：写规则书条目、关键词索引、卡文直达和桌面/移动端阅读路径；规则描述只写规则本身，不写引擎入口、实现状态、界面操作或审计路径。未实现的机制不建条目，也不在规则书里描述为当前可用。
 - 每个关键词/规则条目关联代表卡号；卡牌批量迁移时只能引用已经 `verified` 的关键词 id。
+- 同步补齐各章冒险指南正文，特别规则必须与引擎及规则书口径一致；完整内容和阅读入口按 §4.5.2 验收。
 - 产物：`confirmations.keywords`、`confirmations.rulebook` 的检查项与测试/审计证据路径。
 - 门禁：新增关键词与规则条目全部 `verified`；规则书桌面/移动端浏览器用例通过；未确认的关键词不得在卡牌文件里使用。
 
@@ -240,6 +244,25 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
   Playwright 走真实大厅流程，桌面 1440 与移动 390 各验证：按钮位于剧本书对应卡片旁、
   卡片发光、点击提交服务端公开动作。参考 `tests/script-card-ownership.test.mjs` 与
   `tests/script-actions-tfa.browser.mjs`。
+
+#### 4.5.2 完整冒险指南与关卡设置入口
+
+这是所有后续关卡迁移的必做项，不限于新增交互或特殊机制较多的关卡。操作说明和数据通路见 [`scenario-guides.md`](scenario-guides.md)。
+
+1. **完整正文**：逐章覆盖开场及条件分支、完整设置、特别规则、后续剧情、全部结局与经验／创伤／奖励／日志等结算指示。按来源逐段核对，保留列表、图标及条件限制；上下篇分别映射对应指南。中文来源遗漏或夹有英文时补译，补译标记为自译，不能用摘要代替正文。
+2. **生成与分发**：在 `tools/import-scenario-guides.mjs` 接入新来源；补译使用 `content/scenario-guide-translations.json` 或已有战役自译来源。重新生成并随 Mod 发布 `web/scenario-guides/<scenarioId>.json` 的中英正文；不得仅保存在不分发的参考工程中，也不得只补 `content/scenario-guides.js` 的摘要。运行时沿用按需加载及缓存，正文不进入权威状态或每次对局同步。
+3. **固定入口**：复用现有“关卡设置”面板，按钮位于剧本书右侧、混乱标记提示卡（骰点提示卡）下方。特别规则优先展示；后续剧情与结局默认折叠，由玩家主动展开。指南跟随卡牌语言；实际对局的剧情演出仍只展示已到达的分支，不得把全指南自动播入演出或日志。
+4. **验证**：执行下方命令；Node 检查必须遍历全部注册关卡，新增章节缺少指南、设置或结局时必须失败，不能把关卡数量写死为当前数量。逐章对照来源确认覆盖；桌面 1440 与移动 390 均需验证入口位置、阅读与滚动、特别规则可见、剧透默认折叠、中英文、加载失败后重试及键盘关闭与焦点返回。
+5. **证据与完成条件**：在该章迁移报告的 `evidence` 中记录指南来源锁、生成文件、覆盖核对、Node／浏览器结果及截图。指南内容不全时不能将该章的 `storyText` 确认为真；入口、加载或阅读未验收时不能将 `browserAcceptance` 确认为真。引擎规则已实现不等于指南已迁移完成。
+
+在本 Mod 目录执行：
+
+```powershell
+node tools/import-scenario-guides.mjs --write
+node tools/import-scenario-guides.mjs --check
+node --test tests/scenario-guides.test.mjs
+npx playwright test --config tests/playwright/playwright.config.mjs scenario-guides.browser.mjs
+```
 
 ### 4.6 第 5 步：批量迁移卡牌（多子进程 + 原语队列）
 
@@ -508,6 +531,7 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 | 原语 | 新原语单测 + `npm run test:fast` | 新原语覆盖正常/无目标/费用不足/存档往返；无新增失败 |
 | 关键字/规则书 | `npm run audit:<cycle>` + 规则书浏览器 | 关键词/规则条目 `verified`；桌面/移动端可读、可跳转 |
 | 交互 | Playwright 桌面 1440 / 移动 390 | 新交互可用、不可用原因、空状态、取消/重试；视觉与既有界面一致 |
+| 冒险指南 | 指南生成 `--check`、`scenario-guides.test.mjs`、`scenario-guides.browser.mjs`、本轮逐章来源核对 | 所有注册关卡有完整中英正文；特别规则不漏项；入口位置正确；桌面／移动阅读、折叠剧透与重试通过，见 §4.5.2 |
 | 批量卡牌 | `cards:check` + `cards:encounter-check` + replay + `test:fast` | 索引一致；**条目合规审计无基线外新增**（§4.6.10）；行为零变化；无新增失败 |
 | 发布 | `npm run test:<cycle>`、`npm run replay:fixtures`、`npm test`、`npm run presentation:check`、浏览器回归 | 三组确认 `verified`；无新增失败；既有失败单独记账 |
 
@@ -537,6 +561,7 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 #### M3：剧本
 
 - 按章节迁移布置、遭遇区域、放在一边区域、地点连接、幕／议程、敌人、诡计、剧本行动、混乱符号、结局和跨关记录。
+- 每章同步交付完整中英文冒险指南并接入固定的“关卡设置”入口；完成 §4.5.2 的来源覆盖、生成校验与桌面／移动验收，不能留到发布阶段再补。
 - 章节可以单独处于 `development`，但战役在所有章节确认前保持不可启动。
 
 #### M4：关键词与规则书
@@ -547,11 +572,10 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 
 #### M5：发布
 
-- 完成完整合法路线、失败路线、存档恢复、多人／AI、桌面和移动端浏览器验收。
-- 正式完成的内容在剧本、关键词和规则书三个确认组全部为 `verified` 后提升为 `playable`。
-- 需要提前开放时，审计报告必须同时写 `playable: true` 与 `earlyAccess: true`；未完成项继续保持
-  `pending`，逐项列入 remaining 并在大厅标明提前体验。`earlyAccess` 不是 `verified` 的别名，
-  也不能用于隐藏 `blocked`、缺失证据或未登记的近似实现。
+- 正式完成须覆盖完整合法路线、失败路线、存档恢复、多人／AI、桌面和移动端浏览器验收；剧本、关键词和规则书三个确认组全部为 `verified` 后才可提升为 `playable`。
+- 提前开放须先通过其公开可用范围的基础门禁：建局、合法动作、存档恢复，以及已开放界面的桌面与移动端浏览器冒烟。未完成的逐章规则、AI 专项、真实联机或特定并行流程只能作为明确的发布边界延后，不得计入已验收范围。
+- 提前开放的审计报告必须同时写 `playable: true` 与 `earlyAccess: true`，在 `releaseAcceptance.deferred` 逐项记录延后的功能、状态、原因和现有证据，并在 `remaining` 与大厅展示中标明。延后项不能写作 `verified`；没有基础门禁证据、未登记的近似实现或 `blocked` 卡不能借 `earlyAccess` 放行。
+- 延后功能完成后，应补真实验收证据、更新状态并移出 `deferred`；只有所有发布验收完成才可撤销 `earlyAccess`。
 - `playable` 表示本 Mod 的已声明实现范围可玩；若未逐条等价，不得标记或描述为规则等价认证。
 
 ## 5. 剧本迁移确认
@@ -567,9 +591,9 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 - `literalCardBehavior`：已逐张、逐能力严格核对卡面字面需求；每个时机、费用、目标、区位、限制、成功／失败分支、持续效果和离场条件都有可执行路径及测试证据。
 - `chaosEffects`：四档提示卡与符号时机已实现。
 - `resolutionsAndRecords`：结局、经验、创伤、奖励、混乱袋及战役记录已实现。
-- `storyText`：完整导入并只展示实际到达的序章、导入、结局、幕间和尾声，不泄露未触发或私密分支。
+- `storyText`：完整导入序章、导入、结局、幕间和尾声，实际剧情演出只展示已到达的内容，不泄露未触发或私密分支；该章完整中英文冒险指南另行覆盖全部设置、特别规则及分支结算，供玩家主动查阅，见 §4.5.2。
 - `saveReplay`：合法动作在 JSON 保存／恢复后确定性一致。
-- `browserAcceptance`：真实大厅流程及桌面、移动端界面通过。
+- `browserAcceptance`：真实大厅流程及桌面、移动端界面通过；包括完整冒险指南入口位置、特别规则阅读、剧透折叠、语言切换、失败重试与键盘操作，见 §4.5.2。
 
 全部检查为真且附有测试或审计证据路径时，该章才能标为 `verified`。定向夹具不能替代真实大厅路线。
 
@@ -638,6 +662,8 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 `earlyAccess: true`，此时内容可以启动，但未完成项仍是 `pending`，必须保留证据缺口与 remaining，
 且界面和文档不得把它描述为已完整验收。实现门禁见 `content/migration-confirmation.js`。
 
+`confirmations` 只证明剧本、关键词和规则书，不代表联机与并行协作验收。新增或重新发布的提前开放战役须在发布账本中提供 `releaseAcceptance.required` 的基础门禁结果及 `releaseAcceptance.deferred` 的延后功能清单；发布门禁应拒绝缺少基础证据、把延后项标成已完成或遗漏 `remaining` 披露的报告。TCU 账本仍沿用原有结构，后续重新发布时补齐该字段；TFA 已补发布验收字段。《食梦者》的可复算实现见 `tools/audit-tde.mjs` 与 `audit/tde-migration.json`。
+
 「有条目 / 有测试」不等于「合规」：迁移报告必须同时附 `npm run audit:entries` 的结果，声明本批新增卡的 R1/R2/R3 违规为 0；存量违规逐卡记在 `audit/card-entry-compliance.json`，只能减少不能增加。把 `implemented: true` 或 `verified` 写在直写状态、重印双实现或回合限制缺失的卡上，视为账本失真，审计工具应拒绝。
 
 新增交互（目标/卡牌/地点选择、多选、排列、确认、空状态、不可用原因）还必须有桌面 1440 与移动 390 的浏览器用例和截图；只有 Node 测试不能算交互完成。原语队列、分片报告和交互截图路径应在迁移报告里可查。
@@ -650,6 +676,10 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 npm run cards:check                         # 单卡文件 / 索引 / 禁止批次大文件 / 条目合规审计
 npm run cards:encounter-check               # 非玩家卡同上（归属 + 合规）
 npm run audit:entries                       # 条目合规账本（R1 直写状态 / R2 重印 / R3 回合限制）
+node tools/import-scenario-guides.mjs --write # 新增／迁移关卡时同步生成完整冒险指南
+node tools/import-scenario-guides.mjs --check # 校验指南与来源、补译一致
+node --test tests/scenario-guides.test.mjs   # 所有注册关卡覆盖与特别规则
+npx playwright test --config tests/playwright/playwright.config.mjs scenario-guides.browser.mjs # 指南桌面／移动端验收
 npm run test:fast                           # 原语、关键字、卡牌逻辑；新增失败必须为 0
 node tools/replay-fixtures.mjs --baseline artifacts/migration/<cycle>/replay-before.json
 node tools/replay-fixtures.mjs --compare  artifacts/migration/<cycle>/replay-before.json

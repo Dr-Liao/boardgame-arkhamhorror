@@ -672,6 +672,112 @@ import e06329 from './06329.js'
 import e06330 from './06330.js'
 import e06331 from './06331.js'
 import e06332 from './06332.js'
+import e07001 from './07001.js'
+import e07002 from './07002.js'
+import e07003 from './07003.js'
+import e07004 from './07004.js'
+import e07005 from './07005.js'
+import e07006 from './07006.js'
+import e07007 from './07007.js'
+import e07008 from './07008.js'
+import e07009 from './07009.js'
+import e07010 from './07010.js'
+import e07011 from './07011.js'
+import e07012 from './07012.js'
+import e07013 from './07013.js'
+import e07014 from './07014.js'
+import e07015 from './07015.js'
+import e07016 from './07016.js'
+import e07018 from './07018.js'
+import e07019 from './07019.js'
+import e07020 from './07020.js'
+import e07021 from './07021.js'
+import e07022 from './07022.js'
+import e07023 from './07023.js'
+import e07024 from './07024.js'
+import e07026 from './07026.js'
+import e07028 from './07028.js'
+import e07029 from './07029.js'
+import e07030 from './07030.js'
+import e07031 from './07031.js'
+import e07032 from './07032.js'
+import e07033 from './07033.js'
+import e07034 from './07034.js'
+import e07035 from './07035.js'
+import e07037 from './07037.js'
+import e07038 from './07038.js'
+import e07039 from './07039.js'
+import e07111 from './07111.js'
+import e07112 from './07112.js'
+import e07113 from './07113.js'
+import e07114 from './07114.js'
+import e07116 from './07116.js'
+import e07117 from './07117.js'
+import e07118 from './07118.js'
+import e07119 from './07119.js'
+import e07120 from './07120.js'
+import e07121 from './07121.js'
+import e07122 from './07122.js'
+import e07152 from './07152.js'
+import e07153 from './07153.js'
+import e07155 from './07155.js'
+import e07156 from './07156.js'
+import e07158 from './07158.js'
+import e07159 from './07159.js'
+import e07161 from './07161.js'
+import e07191 from './07191.js'
+import e07192 from './07192.js'
+import e07193 from './07193.js'
+import e07195 from './07195.js'
+import e07197 from './07197.js'
+import e07220 from './07220.js'
+import e07221 from './07221.js'
+import e07222 from './07222.js'
+import e07224 from './07224.js'
+import e07226 from './07226.js'
+import e07227 from './07227.js'
+import e07228 from './07228.js'
+import e07229 from './07229.js'
+import e07230 from './07230.js'
+import e07263 from './07263.js'
+import e07264 from './07264.js'
+import e07265 from './07265.js'
+import e07266 from './07266.js'
+import e07267 from './07267.js'
+import e07270 from './07270.js'
+import e07271 from './07271.js'
+import e07272 from './07272.js'
+import e07301 from './07301.js'
+import e07302 from './07302.js'
+import e07303 from './07303.js'
+import e07305 from './07305.js'
+import e07306 from './07306.js'
+import e07308 from './07308.js'
+import e07309 from './07309.js'
+import e07196 from './07196.js'
+import e07036 from './07036.js'
+import e07040 from './07040.js'
+import e07108 from './07108.js'
+import e07109 from './07109.js'
+import e07110 from './07110.js'
+import e07115 from './07115.js'
+import e07154 from './07154.js'
+import e07157 from './07157.js'
+import e07160 from './07160.js'
+import e07162 from './07162.js'
+import e07189 from './07189.js'
+import e07190 from './07190.js'
+import e07194 from './07194.js'
+import e07223 from './07223.js'
+import e07225 from './07225.js'
+import e07261 from './07261.js'
+import e07262 from './07262.js'
+import e07268 from './07268.js'
+import e07269 from './07269.js'
+import e07273 from './07273.js'
+import e07304 from './07304.js'
+import e07307 from './07307.js'
+import e07310 from './07310.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -1345,6 +1451,112 @@ export const CARD_ENTRY_LIST = [
   e06330,
   e06331,
   e06332,
+  e07001,
+  e07002,
+  e07003,
+  e07004,
+  e07005,
+  e07006,
+  e07007,
+  e07008,
+  e07009,
+  e07010,
+  e07011,
+  e07012,
+  e07013,
+  e07014,
+  e07015,
+  e07016,
+  e07018,
+  e07019,
+  e07020,
+  e07021,
+  e07022,
+  e07023,
+  e07024,
+  e07026,
+  e07028,
+  e07029,
+  e07030,
+  e07031,
+  e07032,
+  e07033,
+  e07034,
+  e07035,
+  e07037,
+  e07038,
+  e07039,
+  e07111,
+  e07112,
+  e07113,
+  e07114,
+  e07116,
+  e07117,
+  e07118,
+  e07119,
+  e07120,
+  e07121,
+  e07122,
+  e07152,
+  e07153,
+  e07155,
+  e07156,
+  e07158,
+  e07159,
+  e07161,
+  e07191,
+  e07192,
+  e07193,
+  e07195,
+  e07197,
+  e07220,
+  e07221,
+  e07222,
+  e07224,
+  e07226,
+  e07227,
+  e07228,
+  e07229,
+  e07230,
+  e07263,
+  e07264,
+  e07265,
+  e07266,
+  e07267,
+  e07270,
+  e07271,
+  e07272,
+  e07301,
+  e07302,
+  e07303,
+  e07305,
+  e07306,
+  e07308,
+  e07309,
+  e07196,
+  e07036,
+  e07040,
+  e07108,
+  e07109,
+  e07110,
+  e07115,
+  e07154,
+  e07157,
+  e07160,
+  e07162,
+  e07189,
+  e07190,
+  e07194,
+  e07223,
+  e07225,
+  e07261,
+  e07262,
+  e07268,
+  e07269,
+  e07273,
+  e07304,
+  e07307,
+  e07310,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 // 渲染基准：用真实的大厅 + 真实诡镇牌桌，量「整树重绘」的主线程耗时。
 // 只做记录与宽松上限（防止灾难性回归），不做逐毫秒断言（CI 机器差异大）。
-// 运行：node node_modules/@playwright/test/cli.js test --config games/arkhamhorror/playwright.config.mjs render-perf
+// 运行：node node_modules/@playwright/test/cli.js test --config games/arkhamhorror/tests/playwright/playwright.config.mjs render-perf
 
 const stats = values => {
   const sorted = [...values].sort((a, b) => a - b)

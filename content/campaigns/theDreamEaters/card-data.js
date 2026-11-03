@@ -316,7 +316,8 @@ export function encounterDefinitions(cards, extraRules = {}) {
         ...(swarming ? { swarming } : {}),
         ...(printedPrey(text) ? { prey: printedPrey(text) } : {}),
         ...(extraRules.enemies?.[card.code] || {}),
-        ...(enemyRuleFor(card.code) || {}),
+        // Rule callbacks remain in the registry; saved definitions contain data only.
+        ...JSON.parse(JSON.stringify(enemyRuleFor(card.code) || {})),
         ...(hiddenRuleFor(card.code) ? { hiddenRule: hiddenRuleFor(card.code) } : {}),
       } : {
         type: 'treachery',
@@ -325,7 +326,7 @@ export function encounterDefinitions(cards, extraRules = {}) {
         hidden: hasKeyword(text, 'Hidden'),
         effect: { kind: 'campaignRule' },
         ...(extraRules.treacheries?.[card.code] || {}),
-        ...(treacheryRuleFor(card.code) || {}),
+        ...JSON.parse(JSON.stringify(treacheryRuleFor(card.code) || {})),
         // P8：隐藏遭遇牌（Hidden）的限制数据从条目并入 definition（引擎读 state.scenario.treacheries[code].hiddenRule）。
         ...(hiddenRuleFor(card.code) ? { hiddenRule: hiddenRuleFor(card.code) } : {}),
       }),

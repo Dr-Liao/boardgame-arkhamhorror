@@ -1,3 +1,8 @@
+import { putInHand } from './hand-entry.js'
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { notifyPlacedAsset } from './investigator-mechanics.js'
+import { setLocationFlag } from './location-state.js'
+import { availableResources } from './resource-bank.js'
 // 能力 API · 通用动作与展示（Phase 6 · 6d-11，abilityApi 收尾）。
 //
 // abilityApi 的最后一批：通用动作（伤害/恐惧/资源/抽牌/线索/移动/混沌标记/检定入口）、
@@ -10,14 +15,19 @@ import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { syncSpellCredit } from './spell-actions.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
+import { afterHandDiscard } from './hand-discard-window.js'
 // P6（食梦者）：伤害/恐惧移动（托米·马尔登的旧印）与卡牌具名计数器（托尼·摩根根的赏金）。
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
 import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
 import { flipOrPlaceDreamGate, placeDreamGate } from './dream-gate.js'
 import { ignoreLimitForRound } from './limits.js'
+import { capabilityBlocked } from './modifiers.js'
+import { resolveEmptyUses, afterUsesSpent } from './uses.js'
+import { ignoreLocationTrigger } from './location-effect-scope.js'
 
 export function createMiscApi(state, events, deps) {
   const {
+    abilityApi,
     SKILL_NAMES,
     abilityTargets,
     activeEffects,
@@ -31,16 +41,22 @@ export function createMiscApi(state, events, deps) {
     attachCardTo,
     autoEvadeEnemy,
     canDiscoverClueAt,
+    canMoveTo,
+    canAutoEvade,
     cardDef,
     cardHasTrait,
     cardName,
     checkDefeated,
     createEffect,
     damageEnemy,
+    canDamageEnemy,
+    enemyCanBeDefeated,
     discoverClueAt,
     disengageEnemy,
     discardRandomFromHand,
+    discardHandTo,
     drawCards,
+    drawEncounter,
     effectiveTraits,
     engageEnemy,
     failedTestResolves,
@@ -81,6 +97,7 @@ export function createMiscApi(state, events, deps) {
     investigatorMoveDestinations,
     doResign,
     doFightRaw,
+    performImmediateAction,
     playCardFromDiscardForced,
     playCardFromOtherHandForced,
     // 第 5 步 P6：治疗恐惧的统一入口 / 资源寄存 / 取消记账（都要能开窗口）。
@@ -95,6 +112,7 @@ export function createMiscApi(state, events, deps) {
     registeredEntry,
     // 2026-10-25 第五轮：通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
     scenarioRuntime,
+    scenarioBehavior,
     extendHealHorror,
   } = deps
 
@@ -114,10 +132,67 @@ export function createMiscApi(state, events, deps) {
   }
 
   return {
+    resolveEmptyUses: () => resolveEmptyUses(state, abilityApi(state, events), registeredEntry),
+    distributeMythosEncounterDraw: seat => {
+      if (state.phase !== 'mythos' || state.mythosEncounterReplacementRound === state.round) return false
+      const investigators = aliveInvestigators(state)
+      const cards = []
+      while (cards.length < investigators.length) {
+        if (!state.encounterDeck.length && state.encounterDiscard.length) {
+          state.encounterDeck = shuffle(state.encounterDiscard.splice(0), () => randomValue(state))
+        }
+        if (!state.encounterDeck.length) break
+        cards.push(state.encounterDeck.pop())
+      }
+      const assignments = []
+      for (const [index, code] of cards.entries()) {
+        const recipients = investigators.filter(inv => inv.seat === seat || !assignments.some(item => item.seat === inv.seat))
+        const target = Number(requestChoice(state, { kind: 'investigator', source: 'distributeEncounters', seat,
+          prompt: `查看第 ${index + 1} 张「${cardName(code)}」，选择由谁抽取。`,
+          options: recipients.map(inv => ({ id: String(inv.seat), label: inv.name, cardCode: code })) }))
+        assignments.push({ seat: target, code })
+      }
+      state.mythosEncounterReplacementRound = state.round
+      const ordered = [...investigators].sort((a,b) =>
+        (a.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators
+        - (b.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators)
+      for (const inv of ordered) for (const assigned of assignments.filter(item => item.seat === inv.seat)) {
+        state.encounterDeck.push(assigned.code)
+        drawEncounter(state, inv, events)
+      }
+      return true
+    },
+    attachPlayerCardToAsset: (code, asset, options = {}) => {
+      const owner = state.investigators[options.ownerSeat ?? state.currentSeat]
+      if (!owner || !asset) return null
+      return attachCardTo(state, owner.seat, code, asset, options)
+    },
+    spendUses: (card, amount = 1) => {
+      const inv = state.investigators.find(owner => owner.assets.includes(card))
+      if (!inv || (card.uses || 0) < amount) return false
+      card.uses -= amount
+      afterUsesSpent(state, inv, card, amount, events, deps)
+      resolveEmptyUses(state, abilityApi(state, events), registeredEntry)
+      return true
+    },
+    isResolvingAction: () => state._resolvingAction === true,
+    ignoreLocationTrigger: (locationId, label) => ignoreLocationTrigger(state, locationId, requestChoice, label),
+    cancelCardPlay: (context, options = {}) => {
+      if (context?.when !== 'beforePlayAttempt') return false
+      context.cancelled = true
+      if (options.forbidSameNameUntilRoundEnd) {
+        const inv = state.investigators[context.seat]
+        inv.forbiddenPlayNames = inv.forbiddenPlayNames?.round === state.round ? inv.forbiddenPlayNames : { round: state.round, names: [] }
+        const name = cardDef(context.cardCode)?.name || context.cardCode
+        if (!inv.forbiddenPlayNames.names.includes(name)) inv.forbiddenPlayNames.names.push(name)
+      }
+      return true
+    },
     info: text => info(state, events, text),
     // 「撤退」类事件/能力的统一入口（02151 “我要走了！”）。
     resign: seat => doResign(state, seat, events),
     random: () => randomValue(state),
+    scenario: scenarioRuntime(state, events),
     // 剧本标记（state.scenarioFlags）的读写：卡文件不直接写 state（审计 R1），统一走这里。
     scenarioFlag: key => state.scenarioFlags?.[key] ?? null,
     setScenarioFlag: (key, value = true) => {
@@ -127,6 +202,11 @@ export function createMiscApi(state, events, deps) {
       return state.scenarioFlags[key] ?? null
     },
     choice: options => requestChoice(state, options),
+    replaceChaosToken: (context, token) => {
+      if (context?.when !== 'tokenReveal' || typeof token !== 'string') return false
+      context.replacementToken = token
+      return true
+    },
     // 兼容别名（2026-10-28 收口）：遭遇侧内容历史上用 `choose`，玩家侧用 `choice`。
     // 两者最终都落到同一个 requestChoice；canonical 名字是 `choice`，新卡只用 `choice`。
     choose: options => requestChoice(state, options),
@@ -170,7 +250,7 @@ export function createMiscApi(state, events, deps) {
     availableResources: target => {
       const inv = Number.isInteger(target) ? state.investigators[target]
         : (target?.seat != null ? state.investigators[target.seat] : target)
-      return inv ? (inv.resources || 0) : 0
+      return availableResources(inv)
     },
     spendResources: (seat, amount) => {
       const inv = state.investigators[seat]
@@ -216,7 +296,22 @@ export function createMiscApi(state, events, deps) {
       inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - lost)
       return lost
     },
+    canGainResources: seat => {
+      const inv = state.investigators[seat]
+      return !!inv && !inv.defeated && !inv.resigned && !capabilityBlocked(state, inv, 'gainResources')
+        && scenarioBehavior(state).canGainResources?.(state, inv) !== false
+    },
+    canDrawCards: seat => {
+      const inv = state.investigators[seat]
+      return !!inv && !inv.storyInvestigator && !inv.defeated && !inv.resigned
+        && !capabilityBlocked(state, inv, 'drawCards') && (inv.deck.length > 0 || (!discardLocked(state, inv) && inv.discard.length > 0))
+    },
     drawCards: (seat, amount) => drawCards(state, state.investigators[seat], amount, events),
+    checkHandSizeNow: seat => {
+      const inv = state.investigators[seat]
+      if (inv && !inv.defeated && !inv.resigned) discardHandTo(state, inv,
+        () => Math.max(0, getHandSize(state, inv) - (scenarioBehavior(state).handSizePenalty?.(state, inv) || 0)), events)
+    },
     // Phase 5（5c-18）：抽牌并把引擎的抽牌日志写进事件流。
     // 「扒手」这类旧 handler 自己遍历 drawCards 的返回值打日志，走 api.drawCards 会丢掉
     // 「抽取了 1 张牌」这行——它进 state.log 也进重放指纹，因此需要一个同源的带日志版本。
@@ -230,7 +325,8 @@ export function createMiscApi(state, events, deps) {
       const index = inv?.hand.indexOf(code)
       if (index == null || index < 0) return false
       inv.hand.splice(index, 1)
-      inv.discard.push(code)
+      discardPlayerCards(state, inv, code)
+      afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
       return true
     },
     // 2026-10-25：05152「所附属支援被弃掉后：把该支援与其升级附属返回各自所有者手牌」。
@@ -254,7 +350,7 @@ export function createMiscApi(state, events, deps) {
         targets.push({ code: attachment.code, owner })
       }
       for (const { code, owner } of targets) {
-        if (owner && !(owner.hand || []).includes(code)) owner.hand.push(code)
+        if (owner && !(owner.hand || []).includes(code)) putInHand(state, owner, code)
       }
       asset.returnedToHand = true
       const countText = targets.length > 1 ? `及其 ${targets.length - 1} 张附属` : ''
@@ -280,7 +376,7 @@ export function createMiscApi(state, events, deps) {
         if (index < 0) continue
         const [attachment] = attachments.splice(index, 1)
         const discardOwner = state.investigators[Number.isInteger(attachment.ownerSeat) ? attachment.ownerSeat : owner.seat] || owner
-        discardOwner.discard.push(targetCode)
+        discardPlayerCards(state, discardOwner, targetCode)
         info(state, events, `「${cardName(targetCode)}」被弃掉。`)
         return true
       }
@@ -288,7 +384,7 @@ export function createMiscApi(state, events, deps) {
         const index = (owner.threat || []).findIndex(item => item.code === targetCode)
         if (index < 0) continue
         owner.threat.splice(index, 1)
-        owner.discard.push(targetCode)
+        discardPlayerCards(state, owner, targetCode)
         info(state, events, `「${cardName(targetCode)}」被弃掉。`)
         return true
       }
@@ -376,9 +472,36 @@ export function createMiscApi(state, events, deps) {
     },
     moveEnemy: (enemy, locationId) => relocateEnemy(state, enemy, locationId, events),
     engage: (enemy, seat) => engageEnemy(state, enemy, seat, events),
+    canMoveTo: (seat, id) => canMoveTo(state, seat, id),
+    canDamageEnemy: (enemy, seat, source = null) => canDamageEnemy(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, seat, source),
+    canDefeatEnemy: (enemy, seat, source = null) => enemyCanBeDefeated(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, source, seat),
+    canAutoEvade: (enemy, seat) => canAutoEvade(state, typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy, seat),
     autoEvade: enemy => autoEvadeEnemy(state, enemy, events),
-    exhaust: card => { if (card) card.exhausted = true },
-    ready: card => { if (card) card.exhausted = false },
+    autoEvadeEnemy: enemy => autoEvadeEnemy(state, typeof enemy === 'string'
+      ? state.enemies.find(item => item.id === enemy) : enemy, events),
+    transferAssetControl: (asset, targetSeat) => {
+      const owner = state.investigators.find(inv => inv.assets.includes(asset))
+      const target = state.investigators[targetSeat]
+      if (!owner || !target || owner === target || target.defeated || target.resigned) return false
+      owner.assets.splice(owner.assets.indexOf(asset), 1)
+      target.assets.push(asset)
+      return true
+    },
+    setLocationFlag: (id, flag, value) => {
+      const location = state.locations.find(location => location.id === id)
+      if (!location) return false
+      setLocationFlag(state, id, flag, value)
+      if (flag === 'brazier') location.litBrazier = Boolean(value)
+      return true
+    },
+    exhaust: card => {
+      if (state.enemies.includes(card)) return scenarioRuntime(state, events).exhaustEnemy(card)
+      if (card) card.exhausted = true
+    },
+    ready: card => {
+      if (state.enemies.includes(card)) return scenarioRuntime(state, events).readyEnemy(card)
+      if (card) card.exhausted = false
+    },
     // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
     setAssetDoom: (card, amount = 0) => setCardDoom(card, amount),
     // 「移除任意卡牌上的 N 个毁灭标记」（04303 古代遗物）：地点 / 敌人 / 支援都走同一条写点。
@@ -391,15 +514,17 @@ export function createMiscApi(state, events, deps) {
     },
     addUses: (card, amount) => {
       if (!card) return
-      card.uses = (card.uses || 0) + amount
+      const old = card.uses || 0
+      card.uses = Math.max(0, old + amount)
       // 2026-10-25 第五轮修复 05186：条目声明「花费充能/弹药时获得等量资源」。
       if (amount < 0 && registeredEntry(card.code)?.spentUsesGainResources === true) {
         const owner = state.investigators.find(inv => (inv.assets || []).includes(card) || (inv.threat || []).includes(card))
         if (owner) {
-          owner.resources = (owner.resources || 0) + (-amount)
+          resourceBank.gainResource(state, owner, -amount, events)
           info(state, events, `「${cardName(card.code)}」花费 ${-amount} 个标记：${owner.name} 获得 ${-amount} 资源。`)
         }
       }
+      resolveEmptyUses(state, abilityApi(state, events), registeredEntry)
     },
     // 2026-10-25 第五轮修复（05281）：把某项技能的基础值临时设为 value（until: 'endOfRound'|'endOfTurn'|'endOfPhase'）。
     setBaseSkillValue: (seat, skill, value, options = {}) => {
@@ -424,12 +549,13 @@ export function createMiscApi(state, events, deps) {
       const original = state.locations.find(loc => loc.id === frame.locationId)
       const target = state.locations.find(loc => loc.id === locationId)
       if (!target || !original || !target.revealed) return null
-      if (!(original.connections || []).includes(locationId)) return null
+      if (!options.anyRevealed && !(original.connections || []).includes(locationId)) return null
       const shroudValue = options.shroud === 'original'
         ? (Number(test.difficulty) || 0)
         : (scenarioRuntime(state, events).locationShroud(locationId) ?? (target.shroud + (target.shroudMod || 0)))
       frame.retarget = { locationId, shroudValue }
       test.difficulty = shroudValue
+      if (options.anyRevealed) test.retargetDifficulty = true
       info(state, events, `🔎 ${inv?.name || '调查员'} 改为在「${target.name}」调查（隐藏值 ${shroudValue}）。`)
       return { locationId, shroudValue }
     },
@@ -495,7 +621,7 @@ export function createMiscApi(state, events, deps) {
     extendHealHorror: (seat, amount) => extendHealHorror(state, seat, amount, events),
     // 2026-10-25 第五轮：条目 API 的通用读点。
     addEnemyStatModifier: (enemy, mods, options) => scenarioRuntime(state, events).addEnemyStatModifier(enemy, mods, options),
-    locationShroud: locationId => scenarioRuntime(state, events).locationShroud(locationId),
+    locationShroud: (locationId, seat = state.currentSeat) => scenarioRuntime(state, events).locationShroud(locationId, seat),
     revelationResolving: () => currentRevelation() != null || Boolean(state._treacheryResolving),
     cancelDoomPlacement: (card, amount = 1) => scenarioRuntime(state, events).cancelDoomPlacement(card, amount),
     // 2026-10-28 P2-6（05005 丽塔·杨的旧印）：「直到本轮结束，忽略某条能力的限制」。
@@ -544,6 +670,35 @@ export function createMiscApi(state, events, deps) {
       if (!asset || !owner || !target || owner === target) return false
       leaveAsset(state, owner, asset)
       target.assets.push(asset)
+      scenarioBehavior(state).assetControlChanged?.(state, asset, owner.seat, targetSeat, scenarioRuntime(state, events))
+      return true
+    },
+    progressWeakness: (seat, { code, nextCode, recordKey, counterKey, addedKey }) => {
+      const inv = state.investigators[seat]
+      const record = state.campaign.investigators?.[seat]
+      if (!inv || !record) return false
+      record.storyRecords ||= {}
+      const already = record.storyRecords[recordKey] === true || (inv.weaknessCounters?.[counterKey] || 0) > 0
+      record.storyRecords[recordKey] = true
+      state.campaign.records[recordKey] = true
+      inv.weaknessCounters ||= {}
+      inv.weaknessCounters[counterKey] = (inv.weaknessCounters[counterKey] || 0) + 1
+      if (!already) return false
+      for (const zone of ['deck', 'hand', 'discard']) inv[zone] = (inv[zone] || []).filter(item => item !== code)
+      record.deck = (record.deck || []).filter(item => item !== code)
+      if (!record.deck.includes(nextCode)) record.deck.push(nextCode)
+      if (!inv.deck.includes(nextCode) && !inv.hand.includes(nextCode) && !inv.discard.includes(nextCode)) inv.deck.unshift(nextCode)
+      record.storyRecords[addedKey] = true
+      state.campaign.records[addedKey] = true
+      inv.removedWeaknesses ||= []
+      if (!inv.removedWeaknesses.includes(code)) inv.removedWeaknesses.push(code)
+      return true
+    },
+    beginImmediateAction: (seat, options = {}) => performImmediateAction(state, seat, events, options.source || 'immediate-action', options),
+    addScenarioXpBonus: (seat, amount) => {
+      const inv = state.investigators[seat]
+      if (!inv || !Number.isSafeInteger(amount)) return false
+      inv.scenarioXpBonus = (inv.scenarioXpBonus || 0) + amount
       return true
     },
     gainAction: (seat, amount = 1) => {
@@ -574,6 +729,27 @@ export function createMiscApi(state, events, deps) {
         else card.horror = Math.max(0, (card.horror || 0) - spec.horror)
       }
       return card
+    },
+    placeAssetHarm: (card, spec = {}) => {
+      const owner = state.investigators.find(inv => inv.assets.includes(card))
+      if (!owner) return false
+      const room = harmRoom(card, cardDef(card.code))
+      card.damage = (card.damage || 0) + Math.min(room.damage, Math.max(0, spec.damage || 0))
+      card.horror = (card.horror || 0) + Math.min(room.horror, Math.max(0, spec.horror || 0))
+      checkAssetDefeated(state, owner, card, events)
+      return true
+    },
+    placeUse: (card, type, amount = 1) => {
+      if (!card) return 0
+      const normalize = value => String(value || '').toLowerCase().replace(/s$/, '')
+      if (normalize(registeredEntry(card.code)?.usesType || card.usesType) === normalize(type)) {
+        card.uses = Math.max(0, (card.uses || 0) + amount)
+        return card.uses
+      }
+      card.useTokens ||= {}
+      const key = normalize(type)
+      card.useTokens[key] = Math.max(0, (card.useTokens[key] || 0) + amount)
+      return card.useTokens[key]
     },
     // P6（食梦者 · 托米·马尔登旧印）：在「调查员 ↔ 你控制的支援」之间移动伤害/恐惧。
     //   from / to: { seat, assetId? }（assetId 省略即该座位的调查员本人）
@@ -624,8 +800,9 @@ export function createMiscApi(state, events, deps) {
       const owner = state.investigators[Number.isInteger(seat) ? seat : state.currentSeat]
       if (!owner || !(owner.hand || []).includes(code)) return false
       const discount = options.discount ?? playCost(state, owner, cardDef(code))
-      doPlay(state, owner.seat, code, events, false, false, null, null, null, null, discount)
-      return !(owner.hand || []).includes(code)
+      const before = owner.hand.filter(item => item === code).length
+      doPlay(state, owner.seat, code, events, false, options.noAction === true, null, null, null, null, discount)
+      return owner.hand.filter(item => item === code).length < before
     },
     cardFactions: code => {
       const def = cardDef(code)
@@ -663,9 +840,9 @@ export function createMiscApi(state, events, deps) {
     // 离场钩子照常结算（leaveAsset），与旧 handler 的写法一致。
     returnAssetToHand: (seat, card) => {
       const owner = state.investigators[seat]
-      if (!owner || !card) return false
-      leaveAsset(state, owner, card, events)
-      owner.hand.push(card.code)
+      if (!owner || !card || !owner.assets.includes(card)) return false
+      if (leaveAsset(state, owner, card, events) === false || card.removedFromGame) return false
+      if (!card.returnedToHand) putInHand(state, owner, card.code)
       return true
     },
     // Phase 5（5c-19）：读牌库顶 N 张的卡号（**只读**，不移动也不洗牌）。
@@ -688,7 +865,7 @@ export function createMiscApi(state, events, deps) {
     shuffleDeck: seat => {
       const owner = state.investigators[seat]
       if (!owner) return 0
-      owner.deck = shuffle(owner.deck, () => randomValue(state))
+      owner.deck = replacePlayerZoneCards(state, owner, shuffle(owner.deck, () => randomValue(state)), 'shuffle')
       return owner.deck.length
     },
     // Phase 5（5c-9）：检定的「揭示计划」与额外标记数（黑暗预言 / 勇斗异劫）。
@@ -783,7 +960,9 @@ export function createMiscApi(state, events, deps) {
       const owner = state.investigators[seat]
       if (!owner || !cardDef(code)) return false
       if (!removeCardByCode(owner.hand, code)) return false
-      owner.assets.push(newPlayerAssetInstance(state, owner, code))
+      const asset = newPlayerAssetInstance(state, owner, code)
+      owner.assets.push(asset)
+      notifyPlacedAsset(state, seat, asset, events, reactionWindow)
       return true
     },
     // Phase 5（5c-15）：把伤害设为上限并做击败检查（「我会在地狱里见你」这类自我击败）。
@@ -820,16 +999,18 @@ export function createMiscApi(state, events, deps) {
         .map(code => ({ code, owner: person })))
       if (!candidates.length || !owner) return false
       // 03238 的 X 费用：按所选盟友的印刷费用支付。
-      const affordable = candidates.filter(item => owner.resources >= (cardDef(item.code)?.cost || 0))
+      const affordable = candidates.filter(item => availableResources(owner) >= (cardDef(item.code)?.cost || 0))
       if (!affordable.length) return false
       const answer = requestChoice(state, { kind: 'card', source, seat, prompt: '选择弃牌堆中的盟友。',
         options: affordable.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) })
       const picked = affordable[Number(answer)]
       if (!picked) return false
       const cost = cardDef(picked.code)?.cost || 0
-      resourceBank.spendFromPool(owner, cost)
+      resourceBank.spendFromPool(owner, cost, state)
       removeOne(picked.owner.discard, picked.code)
-      owner.assets.push(newPlayerAssetInstance(state, owner, picked.code))
+      const asset = newPlayerAssetInstance(state, owner, picked.code)
+      owner.assets.push(asset)
+      notifyPlacedAsset(state, seat, asset, events, reactionWindow)
       return true
     },
     // 「不期而遇」：从任意玩家弃牌堆临时招募一个盟友，本轮结束弃掉。
@@ -851,7 +1032,9 @@ export function createMiscApi(state, events, deps) {
       if (!chosen) return false
       const index = chosen.owner.discard.indexOf(chosen.code)
       if (index >= 0) chosen.owner.discard.splice(index, 1)
-      owner.assets.push(newCardInstance(state, chosen.code, { exhausted: false, temporaryAllyRound: state.round }))
+      const asset = newCardInstance(state, chosen.code, { exhausted: false, temporaryAllyRound: state.round })
+      owner.assets.push(asset)
+      notifyPlacedAsset(state, seat, asset, events, reactionWindow)
       info(state, events, `${owner.name} 让「${cardName(chosen.code)}」暂时入场。`)
       return true
     },
@@ -935,9 +1118,9 @@ export function createMiscApi(state, events, deps) {
     reactionContext: () => state._reaction || null,
     // 在反应窗口里记录一个标记（例如「哎呀！」把这次攻击伤害转给另一个敌人）。
     // 旧式实现写的是 `_reaction.context`（存在时），这里保持同一目标。
-    setReactionFlag: (key, value = true) => {
-      if (!state._reaction) return false
-      const target = state._reaction.context || state._reaction
+    setReactionFlag: (key, value = true, context = null) => {
+      if (!state._reaction && !context) return false
+      const target = context || state._reaction.context || state._reaction
       target[key] = value
       return true
     },
@@ -950,9 +1133,10 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     // 「窄路逃生」：取消正在结算的攻击，并让下一次躲避 +2。
-    cancelCurrentAttack: () => {
-      if (!state._reaction) return false
-      state._reaction.cancelled = true
+    cancelCurrentAttack: (context = null) => {
+      const current = context || state._reaction?.context || state._reaction
+      if (!current) return false
+      current.cancelled = true
       return true
     },
     prepareEvadeBonus: (amount = 2, seat = state.currentSeat) => {
@@ -992,6 +1176,7 @@ export function createMiscApi(state, events, deps) {
       if (!owner) return null
       const committed = (state.skillTest?.committed || [])
         .filter(item => item.seat === seat && cardDef(item.code)?.type === 'skill')
+        .filter(item => !options.code || item.code === options.code)
       if (!committed.length) {
         info(state, events, options.emptyText || '本次检定没有可收回的技能牌。')
         return null
@@ -1003,7 +1188,7 @@ export function createMiscApi(state, events, deps) {
         options: committed.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) }))
       const entry = committed[chosenIndex] || committed[0]
       removeOne(state.skillTest.committed, entry)
-      owner.hand.push(entry.code)
+      putInHand(state, owner, entry.code)
       info(state, events, `「${cardName(options.source || entry.code)}」把「${cardName(entry.code)}」返回 ${owner.name} 的手牌。`)
       return entry.code
     },
@@ -1043,7 +1228,7 @@ export function createMiscApi(state, events, deps) {
       if (!Number.isFinite(damage) || !Number.isFinite(horror)) return null
       context.damage = Math.max(0, (context.damage || 0) - damage)
       context.horror = Math.max(0, (context.horror || 0) - horror)
-      if (options.gainResources) owner.resources += damage + horror
+      if (options.gainResources) resourceBank.gainResource(state, owner, damage + horror, events)
       info(state, events, `${owner.name} 取消 ${damage} 点伤害与 ${horror} 点恐惧`
         + (options.gainResources ? `，并获得 ${damage + horror} 资源。` : '。'))
       // 第 5 步 P6：取消效果是一张卡做的事，「你拥有的一张卡取消了……」的反应靠这份记账。
@@ -1099,9 +1284,9 @@ export function createMiscApi(state, events, deps) {
         controller.assets.push(asset)
         played = asset
         triggerReaction(state, seat, 'assetEnteredPlay', events,
-          { assetCode: code, assetId: asset.id, location: controller.location })
+          { seat, assetCode: code, assetId: asset.id, location: controller.location })
       }
-      owner.deck = shuffle(owner.deck, () => randomValue(state))
+      owner.deck = replacePlayerZoneCards(state, owner, shuffle(owner.deck, () => randomValue(state)), 'shuffle')
       return played
     },
     // 杜克（02014）调查前可先移动：返回本次可移动到的地点 id 列表。

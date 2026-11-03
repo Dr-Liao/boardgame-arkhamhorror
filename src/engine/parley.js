@@ -22,6 +22,15 @@ import { registeredEntry } from './ability.js'
 import { all as matchAll } from './matcher.js'
 import { enumerateTargets } from './targets.js'
 
+export function scenarioReferenceEntity(state) {
+  return registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope === 'scenario' ? state.scenario : null
+}
+export function activeStageEntities(state) {
+  return [state.acts?.[state.actIndex], state.agendas?.[state.agendaIndex]].filter(Boolean)
+}
+export function actionEntityById(state, id) {
+  return [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || []), ...activeStageEntities(state), scenarioReferenceEntity(state)].filter(Boolean).find(entity => entity.id === id)
+}
 export const PARLEY_ACTION_KIND = 'parley'
 
 // 描述子是否是一条谈判能力：新写法 actionKind，兼容旧的 countsAs。
@@ -36,9 +45,21 @@ export function isParleyAbility(ability) {
 
 // 非玩家实体的谈判能力（按声明顺序；`abilityIndex` 就是这个数组的下标）。
 export function entityParleyDescriptors(entity) {
+  return entityActionDescriptors(entity).filter(isParleyDescriptor)
+}
+
+export function entityActionDescriptors(entity) {
   const entry = registeredEntry(entity?.originalCode || entity?.code)
   return (entry?.abilities || []).filter(ability =>
-    ability.kind === 'action' && isParleyDescriptor(ability))
+    ['action', 'free'].includes(ability.kind) && typeof ability.actionKind === 'string')
+}
+
+export function entityAbilityInRange(state, inv, entity, descriptor) {
+  if (descriptor.range === 'anywhere') return true
+  const location = state.locations.includes(entity) ? entity.id : entity.location
+    ?? state.investigators.find(owner => [...(owner.assets || []), ...(owner.threat || [])].includes(entity))?.location
+  if (location === inv.location) return !state.locations.includes(entity) || entity.revealed
+  return descriptor.range === 'connecting' && state.locations.find(loc => loc.id === inv.location)?.connections?.includes(location)
 }
 
 // 构筑读点：卡面文本含「谈判 / Parley」，或条目里声明了谈判能力。
@@ -56,22 +77,25 @@ export function isParleyCard(card, code = card?.code) {
 // 某个实体此刻可以执行的谈判行动（每个目标展开成一条）。
 // `matchAll(descriptor.criteria)` 与玩家卡能力共用同一份条件组合子；成本与上限在执行时再校验
 // （与 legalMoves 对玩家卡的处理一致：缺条件的能力不出现在列表里）。
-export function parleyMoves(state, inv, entity, entityType) {
+export function parleyMoves(state, inv, entity, entityType, usable = null) {
   const out = []
-  const descriptors = entityParleyDescriptors(entity)
+  const descriptors = entityActionDescriptors(entity)
   descriptors.forEach((descriptor, abilityIndex) => {
-    if (descriptor.criteria) {
+    if (!entityAbilityInRange(state, inv, entity, descriptor)) return
+    if (usable && !usable(entity, descriptor)) return
+    if (!usable && descriptor.criteria) {
       const matched = matchAll(descriptor.criteria)({ state, inv, source: entity, windowId: state.timingWindow, context: {} })
       if (!matched) return
     }
-    const base = { action: 'entityAbility', entityType, entityId: entity.id, abilityIndex }
+    const base = { action: 'entityAbility', entityType, entityId: entity.id, abilityIndex,
+      ...(['act','agenda','scenario'].includes(entityType)?{scriptCard:entityType}:{uiKey:`${entityType==='storyAsset'?'asset':entityType}:${entity.id}`}) }
     if (!descriptor.target) {
-      out.push({ ...base, actionKind: PARLEY_ACTION_KIND, label: `🤝 ${descriptor.label}` })
+      out.push({ ...base, actionKind: descriptor.actionKind, label: `${isParleyDescriptor(descriptor) ? '🤝' : '📍'} ${descriptor.label}` })
       return
     }
     const targets = enumerateTargets(state, inv, descriptor.target, { source: entity })
     for (const target of targets) {
-      out.push({ ...base, targetId: target.id, actionKind: PARLEY_ACTION_KIND,
+      out.push({ ...base, targetId: target.id, actionKind: descriptor.actionKind,
         label: `🤝 ${descriptor.label} → ${target.label || target.name || target.id}` })
     }
   })
@@ -79,17 +103,19 @@ export function parleyMoves(state, inv, entity, entityType) {
 }
 
 // 当前调查员能用的全部谈判行动：本地点、同地点敌人、同地点剧情资产。
-export function parleyMovesFor(state, inv) {
+export function parleyMovesFor(state, inv, usable = null) {
   if (!inv) return []
   const out = []
-  const here = (state.locations || []).find(location => location.id === inv.location)
-  if (here) out.push(...parleyMoves(state, inv, here, 'location'))
-  for (const enemy of (state.enemies || []).filter(item => item.location === inv.location)) {
-    out.push(...parleyMoves(state, inv, enemy, 'enemy'))
+  for (const location of state.locations || []) out.push(...parleyMoves(state, inv, location, 'location', usable))
+  for (const enemy of state.enemies || []) {
+    out.push(...parleyMoves(state, inv, enemy, 'enemy', usable))
   }
-  for (const asset of (state.storyAssets || []).filter(item => item.location === inv.location)) {
-    out.push(...parleyMoves(state, inv, asset, 'storyAsset'))
+  for (const asset of state.storyAssets || []) {
+    out.push(...parleyMoves(state, inv, asset, 'storyAsset', usable))
   }
+  const reference=scenarioReferenceEntity(state)
+  if(reference)out.push(...parleyMoves(state,inv,reference,'scenario',usable))
+  for (const stage of activeStageEntities(state)) out.push(...parleyMoves(state, inv, stage, registeredEntry(stage.originalCode || stage.code)?.scope || 'act', usable))
   return out
 }
 

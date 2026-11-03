@@ -8,8 +8,7 @@ export default {
   code: '06350',
   scope: 'enemy',
   implemented: true,
-  simplified: true,
-  note: '躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。',
+  note: '躲避后不横置；仅所选调查员在本轮免受本敌人攻击。',
   modifiers: [
     { target: 'cannot:opportunityAttack' },
     { target: 'enemyFight', amount: ({ state, entity }) => {
@@ -27,8 +26,7 @@ export default {
         options: candidates.map(one => ({ id: String(one.seat), label: one.name })),
       })
       api.readyEnemy?.(enemy)
-      api.skipEnemyAttackThisRound?.(enemy)
-      api.setScenarioFlag?.('atlachNachaEvadeProtected', { round: state.round, seat: Number(answer ?? candidates[0]?.seat) })
+      api.protectFromEnemyAttack(enemy, Number(answer ?? candidates[0]?.seat), { until: 'roundEnd' })
       api.info?.('🕷️ 阿特拉克·纳克亚之腿没有横置；本轮它不能攻击所选调查员。')
     },
   },

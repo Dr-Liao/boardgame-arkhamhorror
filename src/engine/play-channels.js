@@ -1,3 +1,4 @@
+import { afterUsesSpent } from './uses.js'
 // 「如同手牌」通道（play / commit as if in hand）统一原语。
 //
 // 症状：同一类卡面效果（「如同它是你的手牌」「如同其在你的手牌中」）在项目里有 8 种存储形状：
@@ -424,6 +425,7 @@ export function createPlayChannels(deps) {
         if (hostCost.exhaustHost) host.exhausted = true
         if (hostCost.uses) {
           host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
+          afterUsesSpent(state, inv, host, hostCost.uses, events, deps)
           if (!host.uses && hostEntry?.discardWhenEmpty) {
             leaveAsset(state, inv, host)
             inv.discard.push(host.code)
@@ -573,6 +575,7 @@ export function createPlayChannels(deps) {
         if (hostCost.exhaustHost) host.exhausted = true
         if (hostCost.uses) {
           host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
+          afterUsesSpent(state, inv, host, hostCost.uses, events, deps)
           if (!host.uses && hostEntry?.discardWhenEmpty) {
             leaveAsset(state, inv, host)
             inv.discard.push(host.code)
@@ -615,10 +618,9 @@ export function createPlayChannels(deps) {
     const out = []
     const channel = (inv.assets || []).find(asset =>
       registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-    if (!channel) return out
     const copies = new Map()
     for (const code of inv.beneath || []) copies.set(code, (copies.get(code) || 0) + 1)
-    for (const [index, code] of (inv.beneath || []).entries()) {
+    for (const [index, code] of (channel ? inv.beneath || [] : []).entries()) {
       const def = cardDef(code)
       if (!def || !['event', 'skill'].includes(def.type)) continue
       if (!runtimeCardAvailable(state, inv, code) || isWeaknessCode(code)) continue
@@ -631,10 +633,35 @@ export function createPlayChannels(deps) {
         label: `投入（底下）：${cardName(code)}`,
       })
     }
+    for (const host of inv.assets || []) {
+      if (registeredEntry(host.code)?.commitFromPlay) out.push({ channel: 'playCommit', code: host.code,
+        sourceId: host.id, optionId: `playCommit:${host.id}`, uiKey: `asset:${host.id}`, forced: true,
+        label: `投入（游戏区域）：${cardName(host.code)}` })
+      if (!registeredEntry(host.code)?.attachedCommitAsIfInHand) continue
+      for (const [index, attachment] of (host.attachments || []).entries()) {
+        const code = typeof attachment === 'string' ? attachment : attachment.code
+        if (!cardDef(code) || isWeaknessCode(code)) continue
+        out.push({ channel: 'attachedCommit', code, sourceId: host.id, index,
+          optionId: `attachedCommit:${host.id}:${index}`, uiKey: `asset:${host.id}`,
+          label: `投入（附属）：${cardName(code)}` })
+      }
+    }
     return out
   }
 
   function takeCommit(state, inv, candidate) {
+    if (candidate.channel === 'playCommit') {
+      const index = inv.assets.findIndex(asset => asset.id === candidate.sourceId)
+      if (index < 0) return null
+      return inv.assets.splice(index, 1)[0].code
+    }
+    if (candidate.channel === 'attachedCommit') {
+      const host = inv.assets.find(asset => asset.id === candidate.sourceId)
+      const attachment = host?.attachments?.[candidate.index]
+      if (!attachment || (typeof attachment === 'string' ? attachment : attachment.code) !== candidate.code) return null
+      host.attachments.splice(candidate.index, 1)
+      return candidate.code
+    }
     const channel = (inv.assets || []).find(asset =>
       registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
     const pile = inv.beneath || []

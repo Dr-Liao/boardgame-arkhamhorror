@@ -17,8 +17,8 @@
     }
   ],
   "summary": {
-    "newTotal": 14,
-    "done": 14,
+    "newTotal": 21,
+    "done": 21,
     "pending": 0,
     "reuse": 10,
     "escape": 3,
@@ -38,7 +38,7 @@
           "kind": "scenario-runtime",
           "name": "doomOn",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         }
       ],
       "ok": true
@@ -285,25 +285,25 @@
           "kind": "scenario-runtime",
           "name": "haunted",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "hauntedAt",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "grantHaunted",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "window",
           "name": "haunted",
           "ok": true,
-          "detail": "74 windows"
+          "detail": "78 windows"
         },
         {
           "kind": "source-pattern",
@@ -335,37 +335,37 @@
         },
         {
           "path": "src/engine/windows.js",
-          "sha256": "672dffbf25828b43a4ce43ab581a0e89a0767f07b86fe2b58d3f3a3db5efac04",
+          "sha256": "0327aaeef3ec1ce83ad9e16e9723a3c99dcacf396f06ab1936f3d6db25cdcec9",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/engine/actions.js",
-          "sha256": "0c5537bfe614b959f08b0cce6ecdc9949f12f414661e95d3dc377881ee1f2f97",
+          "sha256": "1f0a252b260c23435c9086514abc9e4bb9ebf24f1f21297dfd7a4cbbb0c5652d",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "content/registry.js",
-          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
+          "sha256": "9b649cb659d93762b2f6cd649123af5211f141134af0553ac88b86cc0fa61f18",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -468,43 +468,43 @@
           "kind": "scenario-runtime",
           "name": "extraDeck",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "extraDeckInfo",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "extraDecks",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "addExtra",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "shuffleExtra",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "drawExtra",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "discardExtra",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "source-pattern",
@@ -529,32 +529,32 @@
         },
         {
           "path": "src/engine/encounter.js",
-          "sha256": "75474c815dab1a90bb6b288bbe1bbd6625964184f28b2afddc8689e721fc1115",
+          "sha256": "1cd90a38a69527631e1dfa961a4d8384603fa90c3831db69a106f79d4f1c355b",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -629,19 +629,19 @@
           "kind": "scenario-runtime",
           "name": "flipSpectral",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "isSpectral",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "spectralFace",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "source-pattern",
@@ -654,32 +654,32 @@
       "files": [
         {
           "path": "src/engine/locations.js",
-          "sha256": "0033fadcd34a7a92609796e61524176672d4b3e402adba25958fd2bd0b6eeb35",
+          "sha256": "9369b5312e4709f7298fef244fb7935e4bef574ed6b4764103d81c94a3f87ea9",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "content/registry.js",
-          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
+          "sha256": "9b649cb659d93762b2f6cd649123af5211f141134af0553ac88b86cc0fa61f18",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -761,19 +761,19 @@
           "kind": "scenario-runtime",
           "name": "tarot",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "tarotRemaining",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "tarotInfo",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "source-pattern",
@@ -798,27 +798,27 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -886,27 +886,27 @@
       "files": [
         {
           "path": "src/engine/tests.js",
-          "sha256": "247b4df9a66677fda44c48dbd1f351473ac67455d65c31e6a7aa368d7a4fe3ae",
+          "sha256": "f83191922bda6d3c9951943e4995bca448a60caef46bde07e82a863e930e0011",
           "exists": true
         },
         {
           "path": "src/engine/stats.js",
-          "sha256": "58bbe5d2c69ca11451b72c68e1f9806d6df2767406602062a1ab9fc22a27e636",
+          "sha256": "0a2da429256357edc020e95cfbc04e102a7e0db7c2ab1a6d17c9c392f8e6d3ab",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1029,22 +1029,22 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "63adcbbe3df83757248da1b3b5f87fc3b21d68cc65f0954212365d1e66cdd6c7",
+          "sha256": "b98760a969cc3669c252ae6f35cb9a51270b4cbde85b90854acc1c447379c76c",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
+          "sha256": "d53d323f9ded62b2116928f781852a1c8c518461251b84c4b7a653f5fc19f51f",
           "exists": true
         },
         {
           "path": "content/registry.js",
-          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
+          "sha256": "9b649cb659d93762b2f6cd649123af5211f141134af0553ac88b86cc0fa61f18",
           "exists": true
         },
         {
@@ -1054,12 +1054,12 @@
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1180,37 +1180,37 @@
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "5923c673e8749ec5002927bed98a753248286cd00123868f174a2f74a71c6058",
+          "sha256": "cf84cfd23f8b558af18105a2f66b0c05a1dfc0dd9f0553a4fd3c8deb453aa825",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "a55d61585bc21b725edd18ea6f948e4368607fb13685f8dec95dd9d8d787aa21",
+          "sha256": "5d30324a67318882af0f964981e6ab6a7f873a1988848766c103ad20f8b182ce",
           "exists": true
         },
         {
           "path": "src/engine/ability-exec.js",
-          "sha256": "cd41ac6942122d6a1616dfbca7678530545974f43ed7880af195b56357a580aa",
+          "sha256": "597155afd8c446fe0d81a15b0cabde1caacea325b6f4df6304b22face4f2aad4",
           "exists": true
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "9d7f39d1852563e3c1c507f9dde06ea204e7c86f1f17727ba2e05eced08c8c27",
+          "sha256": "da5bf75b612e01bc14be1cb59c27bd83c5a731ec87c8f3bacc8ffeccd29feefe",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
+          "sha256": "d53d323f9ded62b2116928f781852a1c8c518461251b84c4b7a653f5fc19f51f",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1319,7 +1319,7 @@
           "kind": "ctx-api",
           "name": "bonded",
           "ok": true,
-          "detail": "234 keys"
+          "detail": "272 keys"
         },
         {
           "kind": "source-pattern",
@@ -1339,32 +1339,32 @@
       "files": [
         {
           "path": "src/engine/bonded.js",
-          "sha256": "0c26e6ca5972a83adcc80476415dc8260168228e0de9d262f8e9830215330f3d",
+          "sha256": "c9fad4bc0ad251c95dd61301551eb634614d5658f6b205a2627d7b3eed9260f8",
           "exists": true
         },
         {
           "path": "src/engine/api-card.js",
-          "sha256": "30466422a04cffbf1048357ad582f5e7c29bc079115a25b9be2feb214e142358",
+          "sha256": "7dcd08cc18383598b8b6cc78ba31bcae1646c3c07aa1bd486d2c08dd6f0abe9e",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1493,32 +1493,32 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "247b4df9a66677fda44c48dbd1f351473ac67455d65c31e6a7aa368d7a4fe3ae",
+          "sha256": "f83191922bda6d3c9951943e4995bca448a60caef46bde07e82a863e930e0011",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
+          "sha256": "d53d323f9ded62b2116928f781852a1c8c518461251b84c4b7a653f5fc19f51f",
           "exists": true
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "9d7f39d1852563e3c1c507f9dde06ea204e7c86f1f17727ba2e05eced08c8c27",
+          "sha256": "da5bf75b612e01bc14be1cb59c27bd83c5a731ec87c8f3bacc8ffeccd29feefe",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1625,7 +1625,7 @@
           "kind": "scenario-runtime",
           "name": "campaignCard",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "source-pattern",
@@ -1643,27 +1643,27 @@
         },
         {
           "path": "src/campaign/campaign-effects.js",
-          "sha256": "759eb1eb119ac1c1c202f2415da67af94c2e5f34f0277ff5ff454445954beada",
+          "sha256": "82ca65a5ec9b7ab1bf05328e23f8be4575d92204228da6d34743b9af6c41a228",
           "exists": true
         },
         {
           "path": "src/campaign/campaign.js",
-          "sha256": "1dcc7117f4d9c0ac050d97f92642c5c921be54682535146b8f36b2eff3b09344",
+          "sha256": "1dfb4b9275359d4cdd74ac70921a786d5b1805b32267bb462aa48cd97ebd4517",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1746,31 +1746,31 @@
           "kind": "scenario-runtime",
           "name": "breach",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "removeBreach",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "skullValue",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "locationFlag",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "setLocationFlag",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "source-pattern",
@@ -1783,22 +1783,22 @@
       "files": [
         {
           "path": "src/engine/location-state.js",
-          "sha256": "f68f32282b4ec5f1452c54f7c18a4d48270d429685839b8af0468772790ee513",
+          "sha256": "08dde3271c3f339d968422a078383f8f6a7a0b46bb5209ee3df8bd761b57a0d0",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1880,19 +1880,19 @@
           "kind": "scenario-runtime",
           "name": "flipEnemy",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "banish",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "enemyFace",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         }
       ],
       "files": [
@@ -1903,17 +1903,17 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "2adf16a635ead62d072c5e214bde7ba6f808c486ef6ae23f8ffee771adc350e3",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -1996,13 +1996,13 @@
           "kind": "scenario-runtime",
           "name": "cosmos",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         },
         {
           "kind": "scenario-runtime",
           "name": "locationDeck",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "252 keys"
         }
       ],
       "files": [
@@ -2013,12 +2013,12 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
           "exists": true
         },
         {
           "path": "docs/tcu-primitives.md",
-          "sha256": "c7612071dd39603899eaee42a57178944ae972e6dd352e4d6da3c57d18579be8",
+          "sha256": "795d437df8b67739aad63501e13073cdebbf39c01ae38b146077019a2407b226",
           "exists": true
         }
       ],
@@ -2183,87 +2183,87 @@
         },
         {
           "path": "src/engine/play-channels.js",
-          "sha256": "037e9151a404a2e8afc13041c3db82be7b189be974fe3dc25a31a1b31056a200",
+          "sha256": "f4a499b05bab3247797206e0787fca9822122810a966c2c23c87aae372179b51",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "3a08f69f93322b2ad8e22cf115793f2fb20415690270fc5dfc2e0001c6e86f54",
+          "sha256": "9165f78ab4dacd6dad7a18d871d8abbea9350f69a24a839b55196bfe7a67f2a6",
           "exists": true
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "6c7e138d34989d7034048f5460563ea6ea6efb1d4b43ca74099557bbd2a47ccf",
+          "sha256": "f4aea7a41331f60d8be3e62e00e4e492339b430f3ac1a921c02430a9cded398b",
           "exists": true
         },
         {
           "path": "src/engine/turn-flow.js",
-          "sha256": "a555c1d277b36e6bd786f5729ad7641cc54fcc2d0e5e35be62b84a5cbda3943c",
+          "sha256": "9a9035c2ee46dcbd8dcfa5f8efff762e4c2522ed9d121ad394e4bcdf5ee2d47f",
           "exists": true
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "5923c673e8749ec5002927bed98a753248286cd00123868f174a2f74a71c6058",
+          "sha256": "cf84cfd23f8b558af18105a2f66b0c05a1dfc0dd9f0553a4fd3c8deb453aa825",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "a55d61585bc21b725edd18ea6f948e4368607fb13685f8dec95dd9d8d787aa21",
+          "sha256": "5d30324a67318882af0f964981e6ab6a7f873a1988848766c103ad20f8b182ce",
           "exists": true
         },
         {
           "path": "src/engine/actions.js",
-          "sha256": "0c5537bfe614b959f08b0cce6ecdc9949f12f414661e95d3dc377881ee1f2f97",
+          "sha256": "1f0a252b260c23435c9086514abc9e4bb9ebf24f1f21297dfd7a4cbbb0c5652d",
           "exists": true
         },
         {
           "path": "src/engine/encounter.js",
-          "sha256": "75474c815dab1a90bb6b288bbe1bbd6625964184f28b2afddc8689e721fc1115",
+          "sha256": "1cd90a38a69527631e1dfa961a4d8384603fa90c3831db69a106f79d4f1c355b",
           "exists": true
         },
         {
           "path": "src/engine/assets.js",
-          "sha256": "5c1aa7a28db7527f97785eb9d699ad1a198d9b387517fc1525112b6cfc8edf0c",
+          "sha256": "9c76332f28ecc08a363b7a6c920e5ff201dcb2f59ba4005fab4ce55378fb8091",
           "exists": true
         },
         {
           "path": "src/engine/ability-exec.js",
-          "sha256": "cd41ac6942122d6a1616dfbca7678530545974f43ed7880af195b56357a580aa",
+          "sha256": "597155afd8c446fe0d81a15b0cabde1caacea325b6f4df6304b22face4f2aad4",
           "exists": true
         },
         {
           "path": "src/engine/ability-rules.js",
-          "sha256": "3c2a16e88149341515a3e588a7264b496ac9cdf27df0511ce4d3e5a3a528d45d",
+          "sha256": "92e6af6ff2604ee1233d71848e0beb811dcd05c127664aa26d597d00a4cda2c2",
           "exists": true
         },
         {
           "path": "src/engine/reveal.js",
-          "sha256": "44ca9f6afd2c4b43aaa58fcab21e452612b234da69a0d8f1a738b4fbc5fb40e8",
+          "sha256": "aa3685b67cf7cef46a966d547db9921daed33873462e089945ca3b435ee50347",
           "exists": true
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "84b1c9d373220b0f653d449d4704b35f253202a21f8846e6a17c7fb548e6b16f",
+          "sha256": "debb649e650565010f00acf6cd7b1e027490ac2905f22f9ec47fc099d0e2b01d",
           "exists": true
         },
         {
           "path": "src/deck/deckbuilding.js",
-          "sha256": "c794d55ee50f57e79b03d6d88f8df28e7ca8208f33e0e86cd6433e55e78ac374",
+          "sha256": "9c0075ea1849ea9bdd9152d3218ffa61818c64ba377993654925311dc0a0538c",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
+          "sha256": "fa00c871080e6d172a0183a654b93c240b8df20c555b1936444ff9eed689b3d8",
           "exists": true
         },
         {
           "path": "web/card-interactions.js",
-          "sha256": "4d30984d13254e83de79540cc4e53d514a89f56e6c64670b63b8dfb1917fff5e",
+          "sha256": "a84a72b31225e1fd598be307b4cbe45845a868d509c1d9e7abcaaaed782117ff",
           "exists": true
         },
         {
           "path": "docs/tcu-investigators.md",
-          "sha256": "1633b3017b0059617f4df9920dc98567897f346783c4a2e74e8010de4bfa853d",
+          "sha256": "7ed0c9ec5d5277918215027b67e3a77c28dc0b7d9e8c8d05d5f9f7d2ac9581cf",
           "exists": true
         }
       ],
@@ -2272,7 +2272,7 @@
           "path": "tests/tcu-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 86,
+          "tests": 90,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2299,7 +2299,7 @@
           "path": "tests/card-interactions.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 6,
+          "tests": 11,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2307,6 +2307,397 @@
       ],
       "blockers": [],
       "symbolCount": 18
+    },
+    {
+      "id": "separateResourceBank",
+      "step": "P10.1",
+      "title": "分离资源池与费用来源",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.availableResources / spendResources / bankResources / withdrawBanked",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/resource-bank.js",
+          "name": "availableResources",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "spendResources",
+          "ok": true,
+          "detail": "272 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/resource-bank.js",
+          "sha256": "ea73412d717d3e19479d0e039f8a2b0cd12fdd43ea48063415ccf9cfbf8dee75",
+          "exists": true
+        },
+        {
+          "path": "src/engine/save-migration.js",
+          "sha256": "e9ca5fa6e2ec3f3c4496fd4a6ac2c0b996e7ca918b211d686f00fd7958f8b207",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "immediateAction",
+      "step": "P10.2",
+      "title": "立即行动与原回合恢复",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.beginImmediateAction",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "ctx-api",
+          "name": "beginImmediateAction",
+          "ok": true,
+          "detail": "272 keys"
+        },
+        {
+          "kind": "window",
+          "name": "investigation.afterAction",
+          "ok": true,
+          "detail": "78 windows"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "3e5142913876a3aa4f0b37cd10dbdf1b6cdf8354552f74eacf887a731ccb9511",
+          "exists": true
+        },
+        {
+          "path": "src/engine/dispatch.js",
+          "sha256": "5d30324a67318882af0f964981e6ab6a7f873a1988848766c103ad20f8b182ce",
+          "exists": true
+        },
+        {
+          "path": "src/engine/encounter.js",
+          "sha256": "1cd90a38a69527631e1dfa961a4d8384603fa90c3831db69a106f79d4f1c355b",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "resolveCardAbility",
+      "step": "P10.3",
+      "title": "忽略费用结算指定能力及其条件子句",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.cardAbilityOptions / resolveCardAbility",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "ctx-api",
+          "name": "cardAbilityOptions",
+          "ok": true,
+          "detail": "272 keys"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "resolveCardAbility",
+          "ok": true,
+          "detail": "272 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/api-card.js",
+          "sha256": "7dcd08cc18383598b8b6cc78ba31bcae1646c3c07aa1bd486d2c08dd6f0abe9e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability.js",
+          "sha256": "da5bf75b612e01bc14be1cb59c27bd83c5a731ec87c8f3bacc8ffeccd29feefe",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability-rules.js",
+          "sha256": "92e6af6ff2604ee1233d71848e0beb811dcd05c127664aa26d597d00a4cda2c2",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability-exec.js",
+          "sha256": "597155afd8c446fe0d81a15b0cabde1caacea325b6f4df6304b22face4f2aad4",
+          "exists": true
+        },
+        {
+          "path": "src/engine/reveal.js",
+          "sha256": "aa3685b67cf7cef46a966d547db9921daed33873462e089945ca3b435ee50347",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 6
+    },
+    {
+      "id": "replaceChaosToken",
+      "step": "P10.4",
+      "title": "揭示时取消并替换混乱标记",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.replaceChaosToken",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "ctx-api",
+          "name": "replaceChaosToken",
+          "ok": true,
+          "detail": "272 keys"
+        },
+        {
+          "kind": "window",
+          "name": "tokenReveal",
+          "ok": true,
+          "detail": "78 windows"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/tests.js",
+          "sha256": "f83191922bda6d3c9951943e4995bca448a60caef46bde07e82a863e930e0011",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "debb649e650565010f00acf6cd7b1e027490ac2905f22f9ec47fc099d0e2b01d",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "controllerDefeatTransfer",
+      "step": "P10.5",
+      "title": "控制者被击败时转交支援",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "transferOnControllerDefeat",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/harm-threat.js",
+          "pattern": "transferOnControllerDefeat",
+          "ok": true,
+          "detail": "受控资产的淘汰生命周期分派，不是独立能力API"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/harm-threat.js",
+          "sha256": "0db94a0612f53b17899de88f7b991632ca94530c62699fb5b51d9501cef6ca3d",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability.js",
+          "sha256": "da5bf75b612e01bc14be1cb59c27bd83c5a731ec87c8f3bacc8ffeccd29feefe",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "progressWeakness",
+      "step": "P10.6",
+      "title": "个人日志与跨关卡弱点升级",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.progressWeakness",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "ctx-api",
+          "name": "progressWeakness",
+          "ok": true,
+          "detail": "272 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "debb649e650565010f00acf6cd7b1e027490ac2905f22f9ec47fc099d0e2b01d",
+          "exists": true
+        },
+        {
+          "path": "src/engine/deck-ops.js",
+          "sha256": "b98760a969cc3669c252ae6f35cb9a51270b4cbde85b90854acc1c447379c76c",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "driveInsane",
+      "step": "P10.7",
+      "title": "记录调查员陷入疯狂",
+      "mechanism": [],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.driveInsane",
+      "params": {},
+      "docs": "docs/tcu-completion.md",
+      "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。",
+      "checks": [
+        {
+          "kind": "scenario-runtime",
+          "name": "driveInsane",
+          "ok": true,
+          "detail": "252 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "6e572e04eb994ae5a074e8c1b1ace2bd91a9cb18380f108738b68e18d76098d3",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-completion.md",
+          "sha256": "8f1d9ffc2e4480c7a547b37682d6e95edf2b23e8a152d3efa0b173c684e0d18e",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-completion.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 21,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 2
     }
   ],
   "escape": [
@@ -2616,8 +3007,8 @@
   ],
   "gate": {
     "newPrimitives": {
-      "expected": 14,
-      "done": 14,
+      "expected": 21,
+      "done": 21,
       "pending": 0,
       "pass": true
     },

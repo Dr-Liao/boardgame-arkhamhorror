@@ -17,6 +17,18 @@
 // 随机只在「洗回牌库」一处：由引擎的 randomValue 通过注入的 shuffle 提供，本模块不造随机数。
 // 引擎不认卡号：主卡/副本关系全部来自卡面数据字段。
 
+import { ALL_CARDS as CARD_DATA } from '../cards/cards-data.js'
+
+const poolCache = new Map()
+export function bondedPoolMain(main) {
+  if (poolCache.has(main)) return poolCache.get(main)
+  const identity = JSON.stringify(bondedCardList(CARD_DATA[main]))
+  if (identity === '[]') return main
+  const canonical = Object.keys(CARD_DATA).filter(code => JSON.stringify(bondedCardList(CARD_DATA[code])) === identity).sort()[0] || main
+  poolCache.set(main, canonical)
+  return canonical
+}
+
 export function bondedCardList(card) {
   if (!Array.isArray(card?.bondedCards)) return []
   return card.bondedCards
@@ -26,6 +38,11 @@ export function bondedCardList(card) {
 
 export function isBondedCopy(card) {
   return Boolean(card?.bondedTo) || Number(card?.bondedCount) > 0
+}
+
+export function bondedSetKey(state, main, seat) {
+  main = bondedPoolMain(main)
+  return state.bondedSets?.[main] && state.bondedSets[main].seat !== seat ? `${main}@${seat}` : main
 }
 
 // 找一份副本属于哪张主卡：同名卡可能有 ReturnTo 版本（54002 也叫 Hallowed Mirror），
@@ -63,12 +80,13 @@ export function createBonded(deps) {
     const copies = bondedCardList(card)
     if (!copies.length) return null
     state.bondedSets ||= {}
-    const existing = state.bondedSets[mainCode]
+    const key = bondedSetKey(state, mainCode, inv?.seat ?? null)
+    const existing = state.bondedSets[key]
     if (existing) return existing
     const cards = []
     for (const entry of copies) for (let i = 0; i < entry.count; i++) cards.push(entry.code)
     const created = { seat: inv?.seat ?? null, cards, retrieved: false }
-    state.bondedSets[mainCode] = created
+    state.bondedSets[key] = created
     return created
   }
 
@@ -113,27 +131,32 @@ export function createBonded(deps) {
       if (!Array.isArray(list)) return
       for (let i = list.length - 1; i >= 0; i--) {
         const code = codeOf(list[i])
+        if (typeof list[i] === 'object' && list[i].ownerSeat != null && list[i].ownerSeat !== inv.seat) continue
         if (!copyCodes.has(code)) continue
         collected.push(code)
         list.splice(i, 1)
       }
     }
     for (const owner of state.investigators || [inv]) {
+      if (owner !== inv && state.bondedSets[bondedSetKey(state, mainCode, owner.seat)]?.seat === owner.seat) continue
       take(owner.hand)
       take(owner.deck)
       take(owner.discard)
       if (Array.isArray(owner.beneath)) take(owner.beneath)
       for (const asset of owner.assets.slice()) {
+        take(asset.attachments)
         if (!copyCodes.has(asset.code)) continue
         collected.push(asset.code)
         owner.assets.splice(owner.assets.indexOf(asset), 1)
       }
       for (const threat of owner.threat.slice()) {
+        take(threat.attachments)
         if (!copyCodes.has(threat.code)) continue
         collected.push(threat.code)
         owner.threat.splice(owner.threat.indexOf(threat), 1)
       }
     }
+    take(options.host?.attachments)
     // 2026-10-25 第四轮修复 05313/05316（交叉复核）：卡面要求「找到所有副本（即使在场外）」，
     // 地点下方/移出游戏/放逐区同样要扫；05175b 阁楼会把非弱点牌放到 location.beneath。
     for (const location of state.locations || []) {
@@ -163,8 +186,9 @@ export function createBonded(deps) {
   function returnAll(state, options = {}) {
     if (!state.bondedSets) return 0
     let total = 0
-    for (const main of Object.keys(state.bondedSets)) {
-      for (const inv of state.investigators) total += returnToSet(state, inv, main, { events: options.events }).length
+    for (const [key, set] of Object.entries(state.bondedSets)) {
+      const inv = state.investigators[set.seat]
+      if (inv) total += returnToSet(state, inv, key.split('@')[0], { events: options.events }).length
     }
     return total
   }

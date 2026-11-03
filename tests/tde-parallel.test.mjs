@@ -434,8 +434,8 @@ test('旧并行存档：待决选择缺少 legalMoves 缓存时读档重算，�
   const state = parallelLaunched()
   const broken = structuredClone(state)
   for (const lane of ['A', 'B']) delete broken.parallel.lanes[lane].legalMoves
-  assert.deepEqual(mod.viewState(broken, 0).legalMoves, [], '缺缓存时真人视图复现为空')
-  assert.deepEqual(mod.viewState(broken, 2).legalMoves, [], '缺缓存时 B 线真人视图复现为空')
+  assert.ok(mod.viewState(broken,0).legalMoves.length,'待决选择直接从权威状态枚举')
+  assert.ok(mod.viewState(broken,2).legalMoves.length,'B 线也不依赖旧缓存')
   const { state: migrated, changes } = migrateState(broken)
   assert.ok(changes.some(item => item.includes('重算合法行动')), changes.join(' | '))
   for (const [lane, roomSeat] of [['A', 0], ['B', 2]]) {

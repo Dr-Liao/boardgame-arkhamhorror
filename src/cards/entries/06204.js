@@ -8,20 +8,19 @@
 //
 // 已实现：每次检定最多 1 张（commit 档案 maxPerTest: 1）；成功超过难度 2 点额外发现 1 个线索
 //   （commit 档案 successBy → clueBonus，由调查流程的线索发现读点统一结算，非调查检定自然无效）。
-// 未实现（显式简化）：「基础调查行动期间获得 [intellect][intellect]」——条件技能图标
-//   （conditionalIcons）没有「本次检定来自基础调查」的条件键，跨到检定来源的读点不存在。
+// 基础调查的额外图标由 skill.iconBonus 按检定来源授予。
 
 export default {
   code: '06204',
-  simplified: true,
-  note: '未实现：「在基础调查行动期间投入时获得 [intellect][intellect]」——commit 档案的 conditionalIcons 没有「检定来自基础调查行动」的条件键（只有生命/手牌/资源/毁灭/控制特性等条件）；已实现：每次检定最多投入 1 张 + 成功超过难度 2 点时额外发现 1 个线索。',
   abilities: [
     {
       kind: 'commit',
       label: '目力敏锐：调查成功超过 2 点额外发现 1 个线索',
       skill: {
         maxPerTest: 1,
-        successBy: { threshold: 2, clueBonus: 1 },
+        iconBonus: ({ skill, test }) => test?.basicAction === 'investigate'
+          && (Array.isArray(skill) ? skill.includes('intellect') : skill === 'intellect') ? 2 : 0,
+        successBy: { threshold: 2, clueBonus: 1, when: ({ test }) => test?.basicAction === 'investigate' },
       },
     },
   ],

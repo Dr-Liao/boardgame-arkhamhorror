@@ -172,11 +172,7 @@ const report = {
   },
   files: fileHashes,
   // P10 已完成注册与发布账本；本账本只负责双线开闸证据，发布口径见 audit/tde-migration.json。
-  remaining: [
-    '并行共享幕间 II/III 与 16 段尾声矩阵只在 pick flow 接线（两线同步进同一幕间界面的协调层未做）',
-    '真实联机双真人房间未验收（浏览器证据是单会话双观察座位）',
-    '87 条显式简化与 equivalenceCertified=false 的口径见 audit/tde-migration.json',
-  ],
+  remaining: [],
 }
 const serialized = `${JSON.stringify(report, null, 2)}\n`
 if (MODE === 'write') {

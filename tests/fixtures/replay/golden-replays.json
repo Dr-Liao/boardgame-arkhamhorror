@@ -22,7 +22,7 @@
           "hashVersion": 2,
           "schemaVersion": 7,
           "rulesVersion": "n6.0",
-          "moveCount": 54
+          "moveCount": 57
         },
         "settings": {
           "campaignId": "nightOfTheZealot",
@@ -243,7 +243,7 @@
             "move": {
               "action": "choose",
               "choiceId": "q22-0",
-              "optionId": "done"
+              "optionId": "skip"
             }
           },
           {
@@ -251,7 +251,31 @@
             "move": {
               "action": "choose",
               "choiceId": "q22-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-2",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-3",
               "optionId": "trigger"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-4",
+              "optionId": "skip"
             }
           },
           {
@@ -279,7 +303,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-0",
+              "choiceId": "q30-0",
               "optionId": "c3"
             }
           },
@@ -287,7 +311,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-1",
+              "choiceId": "q30-1",
               "optionId": "discard"
             }
           },
@@ -295,7 +319,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-2",
+              "choiceId": "q30-2",
               "optionId": "done"
             }
           },
@@ -323,7 +347,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-0",
+              "choiceId": "q36-0",
               "optionId": "advance"
             }
           },
@@ -331,7 +355,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-1",
+              "choiceId": "q36-1",
               "optionId": "1"
             }
           },
@@ -339,7 +363,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-2",
+              "choiceId": "q36-2",
               "optionId": "1"
             }
           },
@@ -347,7 +371,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-3",
+              "choiceId": "q36-3",
               "optionId": "1"
             }
           },
@@ -355,33 +379,8 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-4",
+              "choiceId": "q36-4",
               "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q39-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q39-1",
-              "optionId": "0"
             }
           },
           {
@@ -404,59 +403,59 @@
           {
             "seat": 0,
             "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
               "action": "choose",
-              "choiceId": "q44-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q44-1",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q44-2",
-              "optionId": "c1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q48-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q48-1",
+              "choiceId": "q42-1",
               "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q45-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-2",
+              "optionId": "c1"
             }
           },
           {
@@ -481,6 +480,31 @@
             "move": {
               "action": "choose",
               "choiceId": "q51-1",
+              "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q54-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q54-1",
               "optionId": "r1"
             }
           },
@@ -488,7 +512,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q51-2",
+              "choiceId": "q54-2",
               "optionId": "0"
             }
           }
@@ -509,7 +533,7 @@
         "fdf1ce4fd92def71c2f525a6e0175910ff7f9eaf2c7845c61160d86436ac5d7c",
         "9a49474c52f8a71ec408e10e3d1029575c5333151da1d19d24f3bef76c067c72",
         "f9cf3e38ecccec883c09793c0a554c0d0022def200f7fb50e7932dc41febb327",
-        "8a8a4f7f3be672f87093a762de2435bedd22f1cf8cbeb3d2b1df6ab3d1cfedb6",
+        "2e515bd1a589cb5a9b030635c513a129f2d530ddda5735988bd660131214fd41",
         "f4cad149de12519c9514477297f659155aa1f49234d03ad603f73b8c0d6c56dc",
         "15dbf6f3d9551d72b44ff91a21abb05531b23552a96db00fe14384043cae2541",
         "1ee5d99dd7d64e0bb90ada4de3cea7386fd5d1087f708648b7db6455365c60e6",
@@ -517,43 +541,46 @@
         "5eef409e0a4fb6b2cf0bc86cf60dce205cfa8f35e9e621f99b0c496a554d8cd3",
         "b71af91c9a1f1710a02dda302d27868ddd903431ca3bee22a201baa5ad99bd6e",
         "3cc033e1d2d709c764ccf057e168f1b619bc2b412e58cb63d96b03b02040d3d7",
-        "dbc3a53546b792bdb8cee038981eb11b487f6848a3b9c76c0bc8d765d3adb027",
-        "70f2ae8fb1c25fdb3ca9bf7314aeed7d69d40b136167e343e7f949ca73dea0bf",
-        "180c37608337b209ebe035ea0736d55e394524741b1956fcc82650bf181c3033",
-        "043307f7ba194631c72ff5133033ef8909d2992011ef60b0b95ab0873bfd2fca",
-        "67f2e2be5186f2bcd5c03312c446818934e1fa722d1f9a464e0e3e84aa19565c",
-        "7e38b03bdf5336d183f6487231fa62206b40d56fec50495abb69fac50d69476d",
-        "e43d50b1723dee0705584baf7470d0d2a8f963fe974087525523c01962e6b5a9",
-        "e94eb775f79ffd550463a7211c722c6d2303caac0ebc557e5054f65a5f354ed7",
-        "08b496ed752ce371c7f64c81ce61fb4be87c6fba10379c97f21ba24d8ad2718d",
-        "8c604d61afd3ae57d3d0584589a19fadf60cf73fbdb107b199a220ab563ebf4f",
-        "27914b79f34dcdc6a6e6a307e20391be2cea0c0103f653fce4d04b0aee940314",
-        "802473d1e53b43efd86c72eda7e7744c325025aeaa72a79093303fce90145767",
-        "09039a13e7187192d16c5e3c4081b523178aa71dd519739720de57b68552c522",
-        "cfc9df623d2d2fdb606df5b479a77f6e70cff88bf6eaaaa9bc2a9601683e4063",
-        "0c3fd6b2924f1954023c38c2ab616eaf8ecb2d82abc65f9eef9386170388b442",
-        "6720188d165519b360533f1b465b747a2dbf01f793317322fad76af2dc14fea1",
-        "d4e2bc4c6776d947262368e14d9a3f0b8b3f8298cfbc886c666678067bf8d262",
-        "9533672b218414e0dc11058ce428f6b4830abe19a985c185c02c237b857a90b6",
-        "e0003bf416c3c46e56e6fc15de94a01ca0ca019f49fb17a1a1428d7a27fd1801",
-        "8f39c2cc316f82ff54fac3ae206463c28133d0e5d78d19332bf477eb8a75d3b6",
-        "20387c9e51e6dcfa961e0d422e8f525bbf883aefcaf3c517d646ef15fbcb1e4f",
-        "39b915f4c9d765a952058d30e4505a6edd8590ea8816e833be89aaaae835082a",
-        "1f2a030ba7145f2d541153887270d560e0aec087aba95d1f578fee3d453f8243",
-        "7d18de6089db595bfde97f9c5a7bde4f482e532174ae167229a5060c49d8fd56",
-        "142e1f1138a153280b2a3578531a5d9b0741ef122c4170cbd1575dea3ea2ba78",
-        "525f84ae905d833e9fd275b2039f07136408777879074a78dff99d5399758634",
-        "bd593aa94c1d567e85773fef77647a060a48af7def4fdb9e2c43249db26f2bde",
-        "127806c0e32001d9ae0b6bab8e5aae858bae955ac2f58de75794a46a4aef6c0b",
-        "a1e0a1a74af2e9b71c9479e57d4d66a47862b140e1d02267e18f395840d81d72",
-        "fedbf7a8b68c0a93e534f445ef5db7d930fc45a2833355d7884dca463aec1a52",
-        "1d679f72390bdd4ef7ca33b299d5d230de5ebfdfaeba8c94820ffe6a63ea5a9d",
-        "0d2e893a82eea73b4e1735be1285e804ba56a29da071f4afd34d91a273d00974",
-        "4814faea70ef36b508367b14399eade9a06a465c2f77ada0dd53add8fd209dc1"
+        "26f3b6c346912131f29f7ab080c20946f1bb41d59b8eff8e017a7e08c822ef0f",
+        "9d9e53a334fc1c06f0d6180f792674bb4c5e5c1bca66055b9245fb8bcb0b260c",
+        "8f37ea29aabdc2cf1961120986e12ac926fe29b915794b92362078256a91a394",
+        "68c9beb674ef900d0ac6b7b3712d026f27c04de4c2f1b2821b71e32b22f0cd58",
+        "afe89c1add1d9a2901293de0c4790bee41f2dccaf21571a516586a0366f179ae",
+        "ca9f7459b672a5577eebdb04e174db5440991080e8154a27299eb6ee72a07b40",
+        "b1cf2973489d11cd9186576c16fb7c70b1342ad0dfbccb01d7378fd462c57afe",
+        "cc4d1188b9c0a9cc3543b7032a7fc7947021699a5c7a2b08488f568e6b0a22e6",
+        "b4385095c71870f521b09d060808b00b2cce571345267e51a01f65f0768bc13d",
+        "e8fb4f914c6e0f54462a895a81c6e6d1df5e9aebd9681b2e94cf0a4aa55c93d2",
+        "eb31d54aee76f9c9992c3cdd6c3a0a154aa0b71e554ac4c5de9ea4fdea2e86c5",
+        "eedb937b20c4fd9820a12b6cdd4e6b5933e9be41d43aa634742f90f0a8231ba2",
+        "03218062a18353fdbca27637ace835c8ec3a00409ee423d143b1f6bbdaefb52f",
+        "23c6bb5ea7a89b1d429bc4967a477957ff4fb87c8d905c6f231d78bee2a7f95c",
+        "cc3bf261f2692c53beb3bcfefa5025e6dc739213b9588e4d279b79a5d136bed5",
+        "2083aeae415a7548691740b33a7c6e2fb505e9c61929aa127eac6202eb438b24",
+        "0d4e6e044603270a7f37da94541e6a91551c63e532b5095a849a65227fc22329",
+        "6a9f3ccfe842cf2a076febce6c658cb9181ce605862313941e3af13aede1a6ad",
+        "f53901b1621fd680316b9fb85e50d52700f1ed3216776372ad3280997f09c332",
+        "4796c37db9bf01ff0a51fbd49ae8dc67f23a462821d0f67b8431d4b62c423ca4",
+        "23da2f6c728be57e305ef5c2efe10b0dbc7396d0dbb892a220e35b32c0ea22c1",
+        "c38e626df29d3ab276c8871679b86b0635fda39f7161560eb25b3073ab8715c0",
+        "1144d2065c500f3078b55e24b1587f550aecd31c1eb5b8903ab971010c70ad43",
+        "2eae6fa85161956eb2bd61db07a605ae03a4c99d608fb74fb7003668e3fba031",
+        "293f25935571c5ab056228d81bfb75f0382f227179be6d30ed5345339acbf3db",
+        "71616592b5cf202eaaf41ded9bf8bd25b63001ca1cc0f190193ef05c0d263462",
+        "b92d2f87528be006fca21cb2ce0685fd7e62249e44912db958cbc551c8ac43fd",
+        "d7e72dfd79c68ce9f44c9b8d1f3d8a5b8a593589bdd4fb410e7b73050ff0049e",
+        "55c905a16cd909ffa3d18fb7a7479e9d9e13111fce5a471541690c8ca2295fa8",
+        "846d7a0311550501745ed72f5e3d8ade7de077654a52d3d4c0e82b8f3cac0297",
+        "4e347d94e55219a2aee26237695e163740631224810dd5128984c0bf903fe309",
+        "571a64b343202cd3413cc35179b08befa14915a973b3d24031c2cbd9b849a4cb",
+        "aa30352a3a67478a73ee24684d484746c5e31dab20b38b5f3f8b967806905d74",
+        "226d3dd4bd9941ee8497d71558d2ca31a4fa5eae235b3ab8edf77b62359680d9",
+        "30f85b6450fe72723e1196713668addbdbdda6e35c2afe173025c09e86a9cc9f",
+        "1af84744a66659b898161185f2b8810d7836e3f08ac7b72bfd687263aa598a97"
       ],
       "final": {
-        "hash": "4814faea70ef36b508367b14399eade9a06a465c2f77ada0dd53add8fd209dc1",
-        "revision": 54,
+        "hash": "1af84744a66659b898161185f2b8810d7836e3f08ac7b72bfd687263aa598a97",
+        "revision": 57,
         "uiState": "scenarioResult",
         "status": "playing",
         "scenario": "theGathering",
@@ -578,7 +605,7 @@
           "hashVersion": 2,
           "schemaVersion": 7,
           "rulesVersion": "n6.0",
-          "moveCount": 53
+          "moveCount": 56
         },
         "settings": {
           "campaignId": "nightOfTheZealot",
@@ -799,7 +826,7 @@
             "move": {
               "action": "choose",
               "choiceId": "q22-0",
-              "optionId": "done"
+              "optionId": "skip"
             }
           },
           {
@@ -807,7 +834,31 @@
             "move": {
               "action": "choose",
               "choiceId": "q22-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-2",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-3",
               "optionId": "trigger"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-4",
+              "optionId": "skip"
             }
           },
           {
@@ -835,7 +886,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-0",
+              "choiceId": "q30-0",
               "optionId": "c3"
             }
           },
@@ -843,7 +894,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-1",
+              "choiceId": "q30-1",
               "optionId": "discard"
             }
           },
@@ -851,7 +902,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q27-2",
+              "choiceId": "q30-2",
               "optionId": "done"
             }
           },
@@ -879,7 +930,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-0",
+              "choiceId": "q36-0",
               "optionId": "advance"
             }
           },
@@ -887,7 +938,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-1",
+              "choiceId": "q36-1",
               "optionId": "1"
             }
           },
@@ -895,7 +946,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-2",
+              "choiceId": "q36-2",
               "optionId": "1"
             }
           },
@@ -903,7 +954,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-3",
+              "choiceId": "q36-3",
               "optionId": "1"
             }
           },
@@ -911,33 +962,8 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q33-4",
+              "choiceId": "q36-4",
               "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q39-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q39-1",
-              "optionId": "0"
             }
           },
           {
@@ -960,59 +986,59 @@
           {
             "seat": 0,
             "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
               "action": "choose",
-              "choiceId": "q44-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q44-1",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q44-2",
-              "optionId": "c1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q48-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q48-1",
+              "choiceId": "q42-1",
               "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q45-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q47-2",
+              "optionId": "c1"
             }
           },
           {
@@ -1037,6 +1063,31 @@
             "move": {
               "action": "choose",
               "choiceId": "q51-1",
+              "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q54-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q54-1",
               "optionId": "r2"
             }
           }
@@ -1057,7 +1108,7 @@
         "fdf1ce4fd92def71c2f525a6e0175910ff7f9eaf2c7845c61160d86436ac5d7c",
         "9a49474c52f8a71ec408e10e3d1029575c5333151da1d19d24f3bef76c067c72",
         "f9cf3e38ecccec883c09793c0a554c0d0022def200f7fb50e7932dc41febb327",
-        "8a8a4f7f3be672f87093a762de2435bedd22f1cf8cbeb3d2b1df6ab3d1cfedb6",
+        "2e515bd1a589cb5a9b030635c513a129f2d530ddda5735988bd660131214fd41",
         "f4cad149de12519c9514477297f659155aa1f49234d03ad603f73b8c0d6c56dc",
         "15dbf6f3d9551d72b44ff91a21abb05531b23552a96db00fe14384043cae2541",
         "1ee5d99dd7d64e0bb90ada4de3cea7386fd5d1087f708648b7db6455365c60e6",
@@ -1065,42 +1116,45 @@
         "5eef409e0a4fb6b2cf0bc86cf60dce205cfa8f35e9e621f99b0c496a554d8cd3",
         "b71af91c9a1f1710a02dda302d27868ddd903431ca3bee22a201baa5ad99bd6e",
         "3cc033e1d2d709c764ccf057e168f1b619bc2b412e58cb63d96b03b02040d3d7",
-        "dbc3a53546b792bdb8cee038981eb11b487f6848a3b9c76c0bc8d765d3adb027",
-        "70f2ae8fb1c25fdb3ca9bf7314aeed7d69d40b136167e343e7f949ca73dea0bf",
-        "180c37608337b209ebe035ea0736d55e394524741b1956fcc82650bf181c3033",
-        "043307f7ba194631c72ff5133033ef8909d2992011ef60b0b95ab0873bfd2fca",
-        "67f2e2be5186f2bcd5c03312c446818934e1fa722d1f9a464e0e3e84aa19565c",
-        "7e38b03bdf5336d183f6487231fa62206b40d56fec50495abb69fac50d69476d",
-        "e43d50b1723dee0705584baf7470d0d2a8f963fe974087525523c01962e6b5a9",
-        "e94eb775f79ffd550463a7211c722c6d2303caac0ebc557e5054f65a5f354ed7",
-        "08b496ed752ce371c7f64c81ce61fb4be87c6fba10379c97f21ba24d8ad2718d",
-        "8c604d61afd3ae57d3d0584589a19fadf60cf73fbdb107b199a220ab563ebf4f",
-        "27914b79f34dcdc6a6e6a307e20391be2cea0c0103f653fce4d04b0aee940314",
-        "802473d1e53b43efd86c72eda7e7744c325025aeaa72a79093303fce90145767",
-        "09039a13e7187192d16c5e3c4081b523178aa71dd519739720de57b68552c522",
-        "cfc9df623d2d2fdb606df5b479a77f6e70cff88bf6eaaaa9bc2a9601683e4063",
-        "0c3fd6b2924f1954023c38c2ab616eaf8ecb2d82abc65f9eef9386170388b442",
-        "6720188d165519b360533f1b465b747a2dbf01f793317322fad76af2dc14fea1",
-        "d4e2bc4c6776d947262368e14d9a3f0b8b3f8298cfbc886c666678067bf8d262",
-        "9533672b218414e0dc11058ce428f6b4830abe19a985c185c02c237b857a90b6",
-        "e0003bf416c3c46e56e6fc15de94a01ca0ca019f49fb17a1a1428d7a27fd1801",
-        "8f39c2cc316f82ff54fac3ae206463c28133d0e5d78d19332bf477eb8a75d3b6",
-        "20387c9e51e6dcfa961e0d422e8f525bbf883aefcaf3c517d646ef15fbcb1e4f",
-        "39b915f4c9d765a952058d30e4505a6edd8590ea8816e833be89aaaae835082a",
-        "1f2a030ba7145f2d541153887270d560e0aec087aba95d1f578fee3d453f8243",
-        "7d18de6089db595bfde97f9c5a7bde4f482e532174ae167229a5060c49d8fd56",
-        "142e1f1138a153280b2a3578531a5d9b0741ef122c4170cbd1575dea3ea2ba78",
-        "525f84ae905d833e9fd275b2039f07136408777879074a78dff99d5399758634",
-        "bd593aa94c1d567e85773fef77647a060a48af7def4fdb9e2c43249db26f2bde",
-        "127806c0e32001d9ae0b6bab8e5aae858bae955ac2f58de75794a46a4aef6c0b",
-        "a1e0a1a74af2e9b71c9479e57d4d66a47862b140e1d02267e18f395840d81d72",
-        "fedbf7a8b68c0a93e534f445ef5db7d930fc45a2833355d7884dca463aec1a52",
-        "1d679f72390bdd4ef7ca33b299d5d230de5ebfdfaeba8c94820ffe6a63ea5a9d",
-        "7ec42eec406977b1866b5cef128dfa526466adb897f78ffbc315b7784b714326"
+        "26f3b6c346912131f29f7ab080c20946f1bb41d59b8eff8e017a7e08c822ef0f",
+        "9d9e53a334fc1c06f0d6180f792674bb4c5e5c1bca66055b9245fb8bcb0b260c",
+        "8f37ea29aabdc2cf1961120986e12ac926fe29b915794b92362078256a91a394",
+        "68c9beb674ef900d0ac6b7b3712d026f27c04de4c2f1b2821b71e32b22f0cd58",
+        "afe89c1add1d9a2901293de0c4790bee41f2dccaf21571a516586a0366f179ae",
+        "ca9f7459b672a5577eebdb04e174db5440991080e8154a27299eb6ee72a07b40",
+        "b1cf2973489d11cd9186576c16fb7c70b1342ad0dfbccb01d7378fd462c57afe",
+        "cc4d1188b9c0a9cc3543b7032a7fc7947021699a5c7a2b08488f568e6b0a22e6",
+        "b4385095c71870f521b09d060808b00b2cce571345267e51a01f65f0768bc13d",
+        "e8fb4f914c6e0f54462a895a81c6e6d1df5e9aebd9681b2e94cf0a4aa55c93d2",
+        "eb31d54aee76f9c9992c3cdd6c3a0a154aa0b71e554ac4c5de9ea4fdea2e86c5",
+        "eedb937b20c4fd9820a12b6cdd4e6b5933e9be41d43aa634742f90f0a8231ba2",
+        "03218062a18353fdbca27637ace835c8ec3a00409ee423d143b1f6bbdaefb52f",
+        "23c6bb5ea7a89b1d429bc4967a477957ff4fb87c8d905c6f231d78bee2a7f95c",
+        "cc3bf261f2692c53beb3bcfefa5025e6dc739213b9588e4d279b79a5d136bed5",
+        "2083aeae415a7548691740b33a7c6e2fb505e9c61929aa127eac6202eb438b24",
+        "0d4e6e044603270a7f37da94541e6a91551c63e532b5095a849a65227fc22329",
+        "6a9f3ccfe842cf2a076febce6c658cb9181ce605862313941e3af13aede1a6ad",
+        "f53901b1621fd680316b9fb85e50d52700f1ed3216776372ad3280997f09c332",
+        "4796c37db9bf01ff0a51fbd49ae8dc67f23a462821d0f67b8431d4b62c423ca4",
+        "23da2f6c728be57e305ef5c2efe10b0dbc7396d0dbb892a220e35b32c0ea22c1",
+        "c38e626df29d3ab276c8871679b86b0635fda39f7161560eb25b3073ab8715c0",
+        "1144d2065c500f3078b55e24b1587f550aecd31c1eb5b8903ab971010c70ad43",
+        "2eae6fa85161956eb2bd61db07a605ae03a4c99d608fb74fb7003668e3fba031",
+        "293f25935571c5ab056228d81bfb75f0382f227179be6d30ed5345339acbf3db",
+        "71616592b5cf202eaaf41ded9bf8bd25b63001ca1cc0f190193ef05c0d263462",
+        "b92d2f87528be006fca21cb2ce0685fd7e62249e44912db958cbc551c8ac43fd",
+        "d7e72dfd79c68ce9f44c9b8d1f3d8a5b8a593589bdd4fb410e7b73050ff0049e",
+        "55c905a16cd909ffa3d18fb7a7479e9d9e13111fce5a471541690c8ca2295fa8",
+        "846d7a0311550501745ed72f5e3d8ade7de077654a52d3d4c0e82b8f3cac0297",
+        "4e347d94e55219a2aee26237695e163740631224810dd5128984c0bf903fe309",
+        "571a64b343202cd3413cc35179b08befa14915a973b3d24031c2cbd9b849a4cb",
+        "aa30352a3a67478a73ee24684d484746c5e31dab20b38b5f3f8b967806905d74",
+        "226d3dd4bd9941ee8497d71558d2ca31a4fa5eae235b3ab8edf77b62359680d9",
+        "96ba64b55fc702dfcaa011db4fb5edb36ef11bce0c12e910f1bc6cf74cc67444"
       ],
       "final": {
-        "hash": "7ec42eec406977b1866b5cef128dfa526466adb897f78ffbc315b7784b714326",
-        "revision": 53,
+        "hash": "96ba64b55fc702dfcaa011db4fb5edb36ef11bce0c12e910f1bc6cf74cc67444",
+        "revision": 56,
         "uiState": "scenarioResult",
         "status": "playing",
         "scenario": "theGathering",
@@ -1927,8 +1981,8 @@
         "b1649841291d4e289da6cf4ddc905f09301477e7ace8063228526625ca74a591",
         "b324c402d7ccefee821a0552729a426f93e0d0aa2f6a4b0b37a6f0b31463cd40",
         "52f4ff2017b98ab3f64f7312a241569e1f7484799fc4e1734355f8fb6ca4e4b3",
-        "21c68926e4dd0cadeb618bf5ace907d5dcdcc4df0f3db748f420e1cc0fc3ced8",
-        "2c6e5815318fbf4531f63e9e5e412899d4db57177624641628449e7dc7176f9b",
+        "54681fe26fb186ce9a43caa0e26c37c68b0ee222a97c7232ae08148f2997e614",
+        "ff2ad73c70c0420783b0d6752519e5b293dca0ddf7d0138a317674910e1b1c1c",
         "1ba5a487baf571fa22c98be783c91768d13a2121de06cb0fad8b65f956453c36",
         "71533697862335e6d2760de6c8431e4c7005be0a80be7feac50ebf7f16b52aec",
         "f29bd95e825bb763d832340611e322f151ba58df3dafc3969c5d5a4d80c1c09c",
@@ -1938,20 +1992,20 @@
         "3cd6e7071b51059c42de497421bcc22f901ecbcd472d9e323a153164e6c813a0",
         "98b1475efbf0338185c31ce110a7b31856ff65c84de2c557abae7791b5edde5e",
         "1bb453fb41e3ea7e34ae2bbcbd37c9aa45c60bd6de908b85ce15a2df24be7182",
-        "47959320317a5b90091cdd60f5745b9ea2305040b81696a6b01542efd8ceacf2",
-        "0fb51af873d1cb2b067b0607b0c96b530c043f120af0972a3183cae8cb05552f",
+        "d1f2eb8ed144f01461a0e9b1c49140b54771459f43da17d6ad0ed9d9eda70833",
+        "e5dfe0fa3be4b153f2783ad4cea1f08b75309c5893235f1bf96bfabe79a57253",
         "b3783290fe68e9fc9dad84fc55bb3ebcc755fcbdf1142467464c8e1656a7412c",
-        "c3b9f9c5e6baaa1d5eb34eabe28192af1d9e40da9346f12c655ae54b72f46f70",
+        "eb6d3aa57a10ef80e47455f62d57f62fb4c939d1b5997fe5698398bbb4e703d2",
         "db4a17b72ec16467fbe9697ad102344c1d4d3cc9c7a962060f0b8b228f2207dc",
-        "d0cb0b944c067099b56858c11777adcdb156ca84ddbfe8cede6291dd209dc088",
-        "e57e342e0c350d8d39e37ac27f7befcd8532b9ce15b9a3a44d8ca37faadb8097",
+        "2a4bd12d2fe182c0a189da89e063a828712e72efb88e5abb780b21514b8ef80b",
+        "3142504e3d35ba522fc06c7082f6b2681a04e571db77481d7cc2eb4a177b64ef",
         "40eb40ceca026f38bc7d6d5e2625ed10488065344dcc1ae345baa070ce21cee1",
-        "fe1d374c3a4977b4ad061d89e354090aa525c13fc2f0a47858c0ed3f1b22e73f",
-        "e4d6894886878db2487a8b78a4ee1b295376f69712689414d4db1d38b83c3711",
+        "ba80b0ffeee14793a59120077d7b86e78b61f779002e6688c86d6d0c758664e6",
+        "ff2d624d0a556b1073536103b4339d921b47e38ada57c60c5beb9df0181f642a",
         "75615fd9ae83a95d73108a9cb7ec6c4f9b08585b43e62a1c55c3cac715c4ccae",
-        "a137da51d25215cf802d40521d4f4de67aeb5aa024076723b62650f42b839ff6",
+        "8a409da60a4870da8d83a397042a0107db77f24990261597ff732d6701b212d0",
         "e165ba6c1c49ea1170f55601f70aec1c67097f8f1fd77b9465b2a983ec0229c5",
-        "bfad9d87b6b5b7ce36c211bafacce1a94bf86e237ebf3ba70a42f303c79c9cf2",
+        "d60fbc4766a729ef0a24f374751e5ba208496caf82345011ec0f8eb3f4914ce9",
         "10051d01ba425f931bc56429e05cccd2ff7428cf4999fa9afe28dbefcceca839",
         "62713e44375c324e3b44549de7188e07991e97eb21fb220ba6f426d4e9a59c81",
         "a83549cf3d8d2d60b6c796581d702d903d81800a72c52d8b37a38287c20993b0",
@@ -2006,7 +2060,7 @@
           "hashVersion": 2,
           "schemaVersion": 7,
           "rulesVersion": "n6.0",
-          "moveCount": 148
+          "moveCount": 157
         },
         "settings": {
           "campaignId": "nightOfTheZealot",
@@ -2761,7 +2815,7 @@
             "move": {
               "action": "choose",
               "choiceId": "q91-2",
-              "optionId": "done"
+              "optionId": "skip"
             }
           },
           {
@@ -2769,7 +2823,39 @@
             "move": {
               "action": "choose",
               "choiceId": "q91-3",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q91-4",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q91-5",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q91-6",
               "optionId": "c7"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q91-7",
+              "optionId": "skip"
             }
           },
           {
@@ -2801,7 +2887,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q99-0",
+              "choiceId": "q103-0",
               "optionId": "2"
             }
           },
@@ -2809,7 +2895,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q99-1",
+              "choiceId": "q103-1",
               "optionId": "2"
             }
           },
@@ -2817,7 +2903,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q99-2",
+              "choiceId": "q103-2",
               "optionId": "2"
             }
           },
@@ -2825,7 +2911,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q99-3",
+              "choiceId": "q103-3",
               "optionId": "done"
             }
           },
@@ -2854,7 +2940,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q106-0",
+              "choiceId": "q110-0",
               "optionId": "unhallowedGround"
             }
           },
@@ -2883,7 +2969,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q110-0",
+              "choiceId": "q114-0",
               "optionId": "done"
             }
           },
@@ -2898,7 +2984,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q112-0",
+              "choiceId": "q116-0",
               "optionId": "done"
             }
           },
@@ -2906,7 +2992,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q112-1",
+              "choiceId": "q116-1",
               "optionId": "c9"
             }
           },
@@ -2921,36 +3007,6 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q115-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "fight",
-              "enemyId": "e8"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q117-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "fight",
-              "enemyId": "e8"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
               "choiceId": "q119-0",
               "optionId": "done"
             }
@@ -2958,17 +3014,16 @@
           {
             "seat": 0,
             "move": {
-              "action": "choose",
-              "choiceId": "q119-1",
-              "optionId": "1"
+              "action": "fight",
+              "enemyId": "e8"
             }
           },
           {
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q119-2",
-              "optionId": "cliffside"
+              "choiceId": "q121-0",
+              "optionId": "done"
             }
           },
           {
@@ -2984,6 +3039,77 @@
               "action": "choose",
               "choiceId": "q123-0",
               "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q123-1",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q123-2",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q123-3",
+              "optionId": "cliffside"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q123-4",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "fight",
+              "enemyId": "e8"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q129-0",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q129-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q129-2",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q129-3",
+              "optionId": "skip"
             }
           },
           {
@@ -3011,7 +3137,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q127-0",
+              "choiceId": "q136-0",
               "optionId": "done"
             }
           },
@@ -3019,7 +3145,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q127-1",
+              "choiceId": "q136-1",
               "optionId": "trigger"
             }
           },
@@ -3027,7 +3153,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q127-2",
+              "choiceId": "q136-2",
               "optionId": "done"
             }
           },
@@ -3057,7 +3183,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q133-0",
+              "choiceId": "q142-0",
               "optionId": "2"
             }
           },
@@ -3065,7 +3191,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q133-1",
+              "choiceId": "q142-1",
               "optionId": "done"
             }
           },
@@ -3073,7 +3199,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q133-2",
+              "choiceId": "q142-2",
               "optionId": "done"
             }
           },
@@ -3088,7 +3214,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q137-0",
+              "choiceId": "q146-0",
               "optionId": "1"
             }
           },
@@ -3096,7 +3222,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q137-1",
+              "choiceId": "q146-1",
               "optionId": "1"
             }
           },
@@ -3104,7 +3230,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q137-2",
+              "choiceId": "q146-2",
               "optionId": "1"
             }
           },
@@ -3130,7 +3256,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q143-0",
+              "choiceId": "q152-0",
               "optionId": "c9"
             }
           },
@@ -3138,7 +3264,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q143-1",
+              "choiceId": "q152-1",
               "optionId": "c9"
             }
           },
@@ -3153,7 +3279,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q146-0",
+              "choiceId": "q155-0",
               "optionId": "e15"
             }
           },
@@ -3161,7 +3287,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q146-1",
+              "choiceId": "q155-1",
               "optionId": "c9"
             }
           }
@@ -3178,8 +3304,8 @@
         "b1649841291d4e289da6cf4ddc905f09301477e7ace8063228526625ca74a591",
         "b324c402d7ccefee821a0552729a426f93e0d0aa2f6a4b0b37a6f0b31463cd40",
         "52f4ff2017b98ab3f64f7312a241569e1f7484799fc4e1734355f8fb6ca4e4b3",
-        "21c68926e4dd0cadeb618bf5ace907d5dcdcc4df0f3db748f420e1cc0fc3ced8",
-        "2c6e5815318fbf4531f63e9e5e412899d4db57177624641628449e7dc7176f9b",
+        "54681fe26fb186ce9a43caa0e26c37c68b0ee222a97c7232ae08148f2997e614",
+        "ff2ad73c70c0420783b0d6752519e5b293dca0ddf7d0138a317674910e1b1c1c",
         "1ba5a487baf571fa22c98be783c91768d13a2121de06cb0fad8b65f956453c36",
         "71533697862335e6d2760de6c8431e4c7005be0a80be7feac50ebf7f16b52aec",
         "f29bd95e825bb763d832340611e322f151ba58df3dafc3969c5d5a4d80c1c09c",
@@ -3189,20 +3315,20 @@
         "3cd6e7071b51059c42de497421bcc22f901ecbcd472d9e323a153164e6c813a0",
         "98b1475efbf0338185c31ce110a7b31856ff65c84de2c557abae7791b5edde5e",
         "1bb453fb41e3ea7e34ae2bbcbd37c9aa45c60bd6de908b85ce15a2df24be7182",
-        "47959320317a5b90091cdd60f5745b9ea2305040b81696a6b01542efd8ceacf2",
-        "0fb51af873d1cb2b067b0607b0c96b530c043f120af0972a3183cae8cb05552f",
+        "d1f2eb8ed144f01461a0e9b1c49140b54771459f43da17d6ad0ed9d9eda70833",
+        "e5dfe0fa3be4b153f2783ad4cea1f08b75309c5893235f1bf96bfabe79a57253",
         "b3783290fe68e9fc9dad84fc55bb3ebcc755fcbdf1142467464c8e1656a7412c",
-        "c3b9f9c5e6baaa1d5eb34eabe28192af1d9e40da9346f12c655ae54b72f46f70",
+        "eb6d3aa57a10ef80e47455f62d57f62fb4c939d1b5997fe5698398bbb4e703d2",
         "db4a17b72ec16467fbe9697ad102344c1d4d3cc9c7a962060f0b8b228f2207dc",
-        "d0cb0b944c067099b56858c11777adcdb156ca84ddbfe8cede6291dd209dc088",
-        "e57e342e0c350d8d39e37ac27f7befcd8532b9ce15b9a3a44d8ca37faadb8097",
+        "2a4bd12d2fe182c0a189da89e063a828712e72efb88e5abb780b21514b8ef80b",
+        "3142504e3d35ba522fc06c7082f6b2681a04e571db77481d7cc2eb4a177b64ef",
         "40eb40ceca026f38bc7d6d5e2625ed10488065344dcc1ae345baa070ce21cee1",
-        "fe1d374c3a4977b4ad061d89e354090aa525c13fc2f0a47858c0ed3f1b22e73f",
-        "e4d6894886878db2487a8b78a4ee1b295376f69712689414d4db1d38b83c3711",
+        "ba80b0ffeee14793a59120077d7b86e78b61f779002e6688c86d6d0c758664e6",
+        "ff2d624d0a556b1073536103b4339d921b47e38ada57c60c5beb9df0181f642a",
         "75615fd9ae83a95d73108a9cb7ec6c4f9b08585b43e62a1c55c3cac715c4ccae",
-        "a137da51d25215cf802d40521d4f4de67aeb5aa024076723b62650f42b839ff6",
+        "8a409da60a4870da8d83a397042a0107db77f24990261597ff732d6701b212d0",
         "e165ba6c1c49ea1170f55601f70aec1c67097f8f1fd77b9465b2a983ec0229c5",
-        "bfad9d87b6b5b7ce36c211bafacce1a94bf86e237ebf3ba70a42f303c79c9cf2",
+        "d60fbc4766a729ef0a24f374751e5ba208496caf82345011ec0f8eb3f4914ce9",
         "10051d01ba425f931bc56429e05cccd2ff7428cf4999fa9afe28dbefcceca839",
         "62713e44375c324e3b44549de7188e07991e97eb21fb220ba6f426d4e9a59c81",
         "a83549cf3d8d2d60b6c796581d702d903d81800a72c52d8b37a38287c20993b0",
@@ -3245,82 +3371,91 @@
         "f18a40481a74acc44b696120ba449c9a4b73ba96a12b19f297d3b3fac1d8594e",
         "4e10796ea36f279983f2c119cd1c0c3c6147342ddfe8d624f2a99405bf02b99f",
         "f63212e430544c1c997884805ea88027146677ccfa33ebd29de8c704cdb7bb74",
-        "7868c59a5b88930e342568008afdaa2837414d4b3fbe0900e5bbe4f0095d3d2f",
+        "43066a1eea60390916b61c14e8fdc0a48a5e25d8bbb078dbf3d82b6f8a293b4c",
         "e9f8efaf5a529a82e9eba32c7b779c936414d3171c856e47a66ab66d773f2e87",
         "4379745b020242575e45a3e434452f06577c2b2176cbbaa738663ae51019ba6f",
         "afafeb60d1fa9cd03220d3fd6a512294711454741efd026a6572b03bf7cb9b6a",
         "a69bca5c8561919e6c1c346fdd3e07d3d7ae26e6a64290afa187c390bdf1baa9",
-        "c1efa83c5f051e17f101501ac72fb5f3c598a75f6168ce2f56f4e2b3ffebe9dd",
+        "e6716cec411bbcd15329bedfbd8bf695320b64c9adf8b5e465c4b312b047842c",
         "f6222205a0b09a7bbb73a52e402e23852f080eaf3d45b5576759476563035c8d",
         "404a2b398d038fc525adb7576ce2c7a4089955ff2b0e2ccdc92925ba8513f9a0",
         "bab9cff0b85d1a568c9eac981e10a232984b220fb9b34bb77b7402b465ae9454",
-        "bf1987c51cbcaa8990748e27fe0d9d92f9aa7cd727a0ba06b3475ec791ed5591",
+        "67e6ae2886df6e66773d36b640fa51246edea139343b73ba49a9126ce96bf7c8",
         "e2a9816a330106fe4435ed666d68dedcd6165f7ca84a1a95b59ef1d274cbb178",
         "0222dbf9cad76092744f3d707726f84c6c1506053b7a2fd31fa036613a198487",
         "e90cf3db151faf9a0c3212af0738e04324bdec8c2fe0ea5ea2161485946fca7e",
         "3672900c04ce789bd4b90bfe74afadaf6c4ede5bf882b2f30c47c774cfce7268",
         "f345016be07aa164275a3514828991146008421dff427e75752622af1175b431",
         "a2746e309a9fbd3147650f2acb2ba350d658570e466d316d96967729b5c7c879",
-        "cf4a32d3c55b0c48b3e717e9daded5b31b08f44d5c64e85fb8e9b061a8150bc2",
-        "7d6d01d69281fb5bd5c4f15ab3a8c32fd1cdff9074be7dffcdd76a9c490604fe",
-        "9f94cabefea1d60e6225739f1e586f7f1bef38f19e92bb7237741fd3ed542a71",
-        "18b04fe19be46078696895f6d76dc44635ec5f8fb764814ec7e01cac86aabd5d",
-        "c6b1e5451ec618cc688695da5bc1e530ecc859ecedff4193410ed1a41d31f4be",
-        "71ae4f6912ea7d110cf9ff41a73a7a00e0da875af48151fb54937eec512625de",
-        "1acdb0797753f7fcc7e1af443ef2f6320f4d131b84f703909e3793a8df2f3a88",
-        "2a952fa42dcf9c6d12da5cbdf68f12872327b44851d8e4a3adf0ba2add41cdbb",
-        "0aa7d23cffc13e4aefd0a4a96dfbd190bdd69553ecdc89bed5878eb7cd05eb46",
-        "0923d28afb870ad529f2f28a0aa7e901690ee28b66a81fc973728c16f3f4796c",
-        "37860b3041d9026c464318ff28efe13db81f6f8aa0093666f3cc9efed3b8530e",
-        "a19cfedd870bc885fd03526a52120b8fb0509f67df6f741671138efce1e3fb02",
-        "b756e4ef154a52c3f5b0f045e107313189afd1eba7abb08df40b7e5428d7f152",
-        "e2f1b07075fddb98ed08b38e01234d6a5f4669986438d1cde2fd44a023892f04",
-        "c0366d3387ab8cb47a982d5ffa6e036b54e5ca10037f019f3275d05339e407c5",
-        "c71ebc917cd89f35178445a8870d10e16065610ec183ba836435f9b0b42f7483",
-        "dfceb6f725b91cd95ce12085acf67c4e80897bff9c464227311b03ae28a0ba7f",
-        "8ca6221042c33997c493a920fac6455572a3e4eaae2451983d48f274c76faa9b",
-        "d99c99a209000d1a28c7572449d5a0866f57494cf67df58c90fb03fa67f1f8af",
-        "1bc94ecb24472519595d1d0ecc6a355c4c7030575c4060c3ec6662e8d8755964",
-        "684c424dd9d7923a2065593b8080ce6b4396a6f453ba1ddd0f607a1febba0fbe",
-        "3f1743a22221f47d057208a4c48ed60dea93a4301b393dbec73ffbebd449e494",
-        "defbdb3e1e38cd04200f8e033a963594846a1817a39cb06bf6e3ad7cc742b4a8",
-        "a0fc4ae78d427ea573467c7d32a6d3fb07ef617f16e55f11d3fa143cd30c3b30",
-        "208fade591515156b765ff6cbea564158ef42cec5bbac320df5a0a04575349ec",
-        "85e2604787dbf46cadc3eee4f5c10638e9218f622c7ba02f03a4d0fc9fbac589",
-        "d3280ba482840038334a83308f7e1334298fa002aaedacfd48419dedcbd670af",
-        "84378f926020adb71c73325d11920e701d4959e66bbd3e059a735b1ab2d8a17b",
-        "b812db49c17f1a84f7ce50d976cbf4f589ad2e6c0320b7a544b283499e14ea43",
-        "0ebe5f1136a691ee025c48b5bbf2551221c85689c9ae4dbbd4ded7c0e7f556cf",
-        "6725adf7c074a03aac38fab6e7f040234b55e318205f14b05cdd2413fdf00fd8",
-        "3885668983ebf10781910346b6ce2ad36c1693339bc072659d758c0668ce18b7",
-        "bf559feb0ceff90c07d99fd163159fac7de63d78973f9f8295af0d9a4a58610b",
-        "7097268a7a075cb5e51241774f52211f21da42b3df9d1a6e40b5ff6ed0f218b4",
-        "efc1f46e80c25f838ece79e90ac8b4d24967c6c12a952cc300035c3ff8fe3be1",
-        "e99570f3e5ee4d8e526a687562f63e90a2126805ae78c3f07939669b29aedbd0",
-        "0540afaad8f77db17ae9433df5d31020a75c4c2448a0700d6efa1d6ce41e074b",
-        "5bc96c329a1912a0bc151203287ce45ebdf4634da2926c29d4a1564cdc3d1a9a",
-        "8cb8981ebaa5cbf142f43dc524875fd634263c09d2e6b574a7cb8e5e8b589a54",
-        "40df013ddf77c28b67dff90b801ce225f0ac2d18d4cfadfe3a47abded6d00bf5",
-        "c074334c695a26e4fb37f88888d4c60bcfaf25f8b70f608e1ffac78eba25ffbe",
-        "06d08d526c21f3e291d23e8ca48581c8eefc3eb02d7d6318e846b13b11f8a949",
-        "2b20f32be682fd3ad3f3c24f1dcbd47513dcf75cba0eaf323f67b1894c28f0e1",
-        "f09fa7acfe438ec3efe2e95ae92abd41dd3d99aff9eaf88d7a67af6cf6c685c6",
-        "782f1179b976c0345dce5ae46025e6f9286b9dc6f3b2485d6b911c4e886dfe6c",
-        "76cf00966e92a79fc1906bb4629c5fb776d4bed9888fd5c42c1885df56c2a5f7",
-        "0b713d821619bcf060fa76e89d67fe3615e22c3a6fc687589994c8a6c479525b",
-        "fa3c63b1d05fc731e3bbc8a6b26b868e3212fdca111305a4c93cbdf923844d88",
-        "f75029cad036136e4da511e702cf285a05676fe8d5468b67f504239e1087feeb",
-        "24e77ab6b850096cbd62ed4295d47b680f53ef8d0f311ed6d135222bdbebf884",
-        "621296206f2db2f9e9facc89ecdac68feb59b02913f58a58893e0a8ccad227fb",
-        "0358c0d7833bf0ca8745d75a1f0243493d1396185cf0bf081bf0266435678c01",
-        "7f4579f1a2ee90b6d726ef2c7d492916f3c2263cc4e7f9cd5cf54fe4ab1545a1",
-        "aa32402b529625cb856e45ce312ab9b3e144df5e0450f14ee1913a4d0e6a4fd8",
-        "88b6ecc16a9b0fd0c530ba1ff56dfe13c596cba46c4441475e7609ea40266e02",
-        "b94d75f411361f0fc1be0a1a57572c5b9430fa98b991cb570d3d60166faff26c"
+        "0f389063730039112801d66b2290cfa714b396cfed60396d156a6297f4407282",
+        "3fab6b8efc63d8884a456dcac2f6660e90843c1400ea9bbf786ed98bc78acbf0",
+        "8143ecccdce0a8616c3b497853efa8d61ac4b0bf9313a50305dd9197be772fd1",
+        "f3ea6249b09791fde5b8dfa3293f53da30721608f8cb7073b15d1e1f92374dc6",
+        "5c05fc837a5a097597fba46f825cafab683bb1328b14936174e1c0d60f4d7a39",
+        "dc3868b45b92902b1e73f0838d7efb97cf45cee0b4a2af59feaff3a792192655",
+        "5452bd6295533cf20b61dd9b9012afe6568981f944caae7979b61659368c9bfe",
+        "bef2abce50d7abffc3e93415a7b1964da81a0554fddaf35b22f977b1f3f619fe",
+        "0b42e833e3774b5fe5e3ccb244517920b81618d775b0c3ee0e2af1c7d0d0d699",
+        "c135c870f8631890a4773dd31550da72f61f67d133173fabf49c41e09a47f634",
+        "22a77b9184d14fd7107fca2ed68ceb17f6816b3d9fbc9d5cb4aad245e8e21411",
+        "d5f74695765f6c7a7256fe5f797e9e3856704b6518726d692e586c5845f98650",
+        "9727eaaa4384188f480498315c29bdbb24d762e557fe3b014f121e32beae0eec",
+        "faf0be6bcf405f24d73f36c6d844f49dc662792a5a840c58180f5cefdac45b93",
+        "9331a220c6e8e168f2844103c58b09583776128f21287c8ab2b94492b2feba7c",
+        "9e98b11c0e642fd126743049e9e517cb8289364c5a0b9f7625e5cbc958768dc7",
+        "4c61d99a40814a45bd9ecd138dc2ca67d7b94f582d165ca8bb98668e3a22ddf8",
+        "711089bf50fe9b04673a0ebc612c290ec45116a697e9d97736058058191ffd7e",
+        "595538649a7313974b8cd04bbaaccdebf5fd1a711441fe332d113f1ad7b7d026",
+        "c50a1f23031a1d1f151e5e0039ff29cf7de82e84895517880b7addca71cec3a1",
+        "3da2dace86cf4867199c0a3bfe637d38d78c606e11500c9616d48f865934f5b1",
+        "83d21ea97d033ad4557a9e9b59ee5acc22f1ca480013d09d0533763bfc39f0b3",
+        "588a39c0dae96d933c311b290fe8a290a2c6387ed31c05734efc708d9e54168a",
+        "eef0c0f18342ccb18fdbe02918784b5cfa7d8fa3fcbfedb8d29b975319e7b6d1",
+        "1cfbb8f718de5771312032fae0b69d8a236ec840b4a8203b117b118a2dcecd37",
+        "79a637ef4c46b7dcf8b3a4a0fb2defd48367351b7659c7f58930b86b3c104caa",
+        "3e3f90605a44be3c111d0ac2c62d1bced19bf8581709bb7a31831a43b2070382",
+        "21792a4be9ee4fbfdbf91d4ad979d83c89d89bcb37f2b71d8da76265d4055f59",
+        "91ae42ab09fc2956445e7611769d8b31bea5194ecb41c3315572db7e872a8b9d",
+        "e8f607eb97cc6c9a5911df4100205fe6118a2c835b98cd54717d08453edaff8a",
+        "8f9aec7a1ab9d7556088fe2ffff18dd80a9e4909b83db1e65873ea42b9443c27",
+        "285d7a062f673d9d8d8ebb16e3cf5eb13a54c961261f0a22f2bbb72e70a11388",
+        "4d6eef275e0da6faf8075b08918d1be2b8ca9332b8d7c1e9106d87c2b8e302cb",
+        "4f4eb71b2df4f23b10e206da1b699d3bc7eb03eef9811055198168932f733966",
+        "ce012be4b64da084c52d4e98a087ea0c780e320988b162fd5bf7ec2b0ffeb17f",
+        "bc75ac0298c4190df36ae6b803a2b1f245898f1cbc48adc934158d894e05b955",
+        "4e34f8b4d02b467852d95c256f497aaebfa2302970730831b5e6022c015809d5",
+        "2ce36347ed7fababbd29b18914c252ab886e93b3c1af87a399b34aa0f4c4348a",
+        "dfddf9e6aca3a0ed40ee26a6b4e5bf999862b18f68e59b5cf1dfb6fb247b02be",
+        "11f97bdce3ace66f38e28c36fa489e37344433648468ae50464559a07cb22195",
+        "e3b39ad0a965fc1a3f838958825dab6b52c1c5c707ef0fd94d7a5dcd3d48460f",
+        "3ffaf282f672cb2cebcd6a55e43acfeb018b3744cd6a71d8b6c435fb1ba8cda1",
+        "564aa0cc6bde150d6182d3334882c72fb91ded94494c2b675abbe717deee81a8",
+        "c786c1f11576e1f0217c813c301ac45b002fd4267ec7d6220f64e7dd513b904e",
+        "927d58c805b1de36c961724d47ff934fd808e22a839073a34318230715dc1688",
+        "fbb7e9f5d25873f0c3356b503cc3dc2928a9bfa2af3534bbab2e40e3839bd20d",
+        "5d85d6e6b20d1c988bbc1b64a414ed82b910cd3b88a7ed172989b784ebd19522",
+        "a7d757d45998499c29a5426046659bc677b4f238e862344e8ea9823d0b076a41",
+        "f7ed00282738d92166324c71fcb34c1ae022b4ce45173186cb2396df45ed1aac",
+        "0d542b4616db5c6375ac3f2cae96ef16fc31a1ffaac6e14b37777e3521ca14c7",
+        "3f7d8b530a841b769d85a2595401168d5240df97b8170943e77ab42b09cf57c0",
+        "625d768fbb4ad846d6e3243a51d69e72e6a9b06e5494a06280dddaedafe7f17a",
+        "9b7d96c995ef4e9e74a87b7a6e47d7922b44de1248a2cc506464055af451ed40",
+        "5f7835bdba9f9dd51a8120041489d14fcf8595a0a6199307d9d64c3d173ba739",
+        "e14cd87de75cb80bbd24697ba929f35b88a642f11431e76276a682f324b2bd41",
+        "356d9cc0120bfe3f755472912937493c1ab3dbe4d1d1b65aafc5a1ff675bc268",
+        "6125c313d9b2828996103bb56c18dedd48157b47c61f5c5447eff62e116fc402",
+        "ab61210c6615599a73b7bf268d9a7dce1e3a863a018c6557982784a8a0b998f2",
+        "b26aa63666fa0f08d75494e2faf1bc85ce53188cb5b7d5c2916bfdee813fbcd8",
+        "eb6c4f765c2d8e7dd692b26c4ae8033e44a5ab1b349977278638c452246e03c7",
+        "0f505f6338266668a3e456652da6546be090277fd2034fbad4584c7ab7a1ebd5",
+        "7114fe47a365359320f3173439ae931457d279e59868c9bf8688703f9ee7511d",
+        "988469f2f90a32da2b8da14927a84f7c058dd74e35c724e93930db4e58156155",
+        "efe83960d1da053bdd027f43907f82031e4ca634200e84305f5a9bfafe1bd1d4",
+        "c6f61d1ca178faab1e0e314a7bc7ec962738cab253b32592abe21da58fc93d0c"
       ],
       "final": {
-        "hash": "b94d75f411361f0fc1be0a1a57572c5b9430fa98b991cb570d3d60166faff26c",
-        "revision": 148,
+        "hash": "c6f61d1ca178faab1e0e314a7bc7ec962738cab253b32592abe21da58fc93d0c",
+        "revision": 157,
         "uiState": "campaignResult",
         "status": "over",
         "scenario": "theDevourerBelow",
@@ -4011,8 +4146,8 @@
         "b1649841291d4e289da6cf4ddc905f09301477e7ace8063228526625ca74a591",
         "b324c402d7ccefee821a0552729a426f93e0d0aa2f6a4b0b37a6f0b31463cd40",
         "52f4ff2017b98ab3f64f7312a241569e1f7484799fc4e1734355f8fb6ca4e4b3",
-        "21c68926e4dd0cadeb618bf5ace907d5dcdcc4df0f3db748f420e1cc0fc3ced8",
-        "2c6e5815318fbf4531f63e9e5e412899d4db57177624641628449e7dc7176f9b",
+        "54681fe26fb186ce9a43caa0e26c37c68b0ee222a97c7232ae08148f2997e614",
+        "ff2ad73c70c0420783b0d6752519e5b293dca0ddf7d0138a317674910e1b1c1c",
         "1ba5a487baf571fa22c98be783c91768d13a2121de06cb0fad8b65f956453c36",
         "71533697862335e6d2760de6c8431e4c7005be0a80be7feac50ebf7f16b52aec",
         "f29bd95e825bb763d832340611e322f151ba58df3dafc3969c5d5a4d80c1c09c",
@@ -4022,20 +4157,20 @@
         "3cd6e7071b51059c42de497421bcc22f901ecbcd472d9e323a153164e6c813a0",
         "98b1475efbf0338185c31ce110a7b31856ff65c84de2c557abae7791b5edde5e",
         "1bb453fb41e3ea7e34ae2bbcbd37c9aa45c60bd6de908b85ce15a2df24be7182",
-        "47959320317a5b90091cdd60f5745b9ea2305040b81696a6b01542efd8ceacf2",
-        "0fb51af873d1cb2b067b0607b0c96b530c043f120af0972a3183cae8cb05552f",
+        "d1f2eb8ed144f01461a0e9b1c49140b54771459f43da17d6ad0ed9d9eda70833",
+        "e5dfe0fa3be4b153f2783ad4cea1f08b75309c5893235f1bf96bfabe79a57253",
         "b3783290fe68e9fc9dad84fc55bb3ebcc755fcbdf1142467464c8e1656a7412c",
-        "c3b9f9c5e6baaa1d5eb34eabe28192af1d9e40da9346f12c655ae54b72f46f70",
+        "eb6d3aa57a10ef80e47455f62d57f62fb4c939d1b5997fe5698398bbb4e703d2",
         "db4a17b72ec16467fbe9697ad102344c1d4d3cc9c7a962060f0b8b228f2207dc",
-        "d0cb0b944c067099b56858c11777adcdb156ca84ddbfe8cede6291dd209dc088",
-        "e57e342e0c350d8d39e37ac27f7befcd8532b9ce15b9a3a44d8ca37faadb8097",
+        "2a4bd12d2fe182c0a189da89e063a828712e72efb88e5abb780b21514b8ef80b",
+        "3142504e3d35ba522fc06c7082f6b2681a04e571db77481d7cc2eb4a177b64ef",
         "40eb40ceca026f38bc7d6d5e2625ed10488065344dcc1ae345baa070ce21cee1",
-        "fe1d374c3a4977b4ad061d89e354090aa525c13fc2f0a47858c0ed3f1b22e73f",
-        "e4d6894886878db2487a8b78a4ee1b295376f69712689414d4db1d38b83c3711",
+        "ba80b0ffeee14793a59120077d7b86e78b61f779002e6688c86d6d0c758664e6",
+        "ff2d624d0a556b1073536103b4339d921b47e38ada57c60c5beb9df0181f642a",
         "75615fd9ae83a95d73108a9cb7ec6c4f9b08585b43e62a1c55c3cac715c4ccae",
-        "a137da51d25215cf802d40521d4f4de67aeb5aa024076723b62650f42b839ff6",
+        "8a409da60a4870da8d83a397042a0107db77f24990261597ff732d6701b212d0",
         "e165ba6c1c49ea1170f55601f70aec1c67097f8f1fd77b9465b2a983ec0229c5",
-        "bfad9d87b6b5b7ce36c211bafacce1a94bf86e237ebf3ba70a42f303c79c9cf2",
+        "d60fbc4766a729ef0a24f374751e5ba208496caf82345011ec0f8eb3f4914ce9",
         "10051d01ba425f931bc56429e05cccd2ff7428cf4999fa9afe28dbefcceca839",
         "62713e44375c324e3b44549de7188e07991e97eb21fb220ba6f426d4e9a59c81",
         "a83549cf3d8d2d60b6c796581d702d903d81800a72c52d8b37a38287c20993b0",
@@ -4078,7 +4213,7 @@
         "f18a40481a74acc44b696120ba449c9a4b73ba96a12b19f297d3b3fac1d8594e",
         "4e10796ea36f279983f2c119cd1c0c3c6147342ddfe8d624f2a99405bf02b99f",
         "f63212e430544c1c997884805ea88027146677ccfa33ebd29de8c704cdb7bb74",
-        "7868c59a5b88930e342568008afdaa2837414d4b3fbe0900e5bbe4f0095d3d2f",
+        "43066a1eea60390916b61c14e8fdc0a48a5e25d8bbb078dbf3d82b6f8a293b4c",
         "e9f8efaf5a529a82e9eba32c7b779c936414d3171c856e47a66ab66d773f2e87",
         "4379745b020242575e45a3e434452f06577c2b2176cbbaa738663ae51019ba6f",
         "afafeb60d1fa9cd03220d3fd6a512294711454741efd026a6572b03bf7cb9b6a"
@@ -4244,8 +4379,9 @@
           {
             "seat": 0,
             "move": {
-              "action": "fight",
-              "enemyId": "e1"
+              "action": "choose",
+              "choiceId": "q9-2",
+              "optionId": "skip"
             }
           }
         ]
@@ -4260,19 +4396,19 @@
         "effbc67c417c7f7be45ddd538b27a7c6edb223d4723047a03e823f8cffdd7a79",
         "52e96b267419bcc050607010a4c32938b4d45eff55915258d1bcd876b28fc25d",
         "feb4b5fb1d7982be070b0163459eefb904f4ba267d35c35b40f6a2d3d922ce4f",
-        "4025c8c406cd51d77419844b2b53284ae420b6a1a6d4e7d745c3490b0dd5c9e1",
-        "aa4c2952d60abd15e531eda48731952de5fa6de8f51bca33e9d7e5088613978c",
-        "3bc45608ecf353e049822cefbe76963b284390059eae29684f0a3cf5ad440045",
-        "23798c69dbd0fda3209a9233f74c5956f877a5083d7489d1a479c956c1c9e227"
+        "de480e1ea64a7610bc0106914604ade6fd76e373898df7cad9e7d101c016b3cf",
+        "d7ae118bbc83b5c195a33526c5743bb1734f53faff5e490057d6cc6594117c65",
+        "17fb2db21d464239d55cd96d6a58e2bc1c71fdc681dc3ad09afbb917505308cc",
+        "5be0cc681fbbcb66e7cc20c79d7db7392f894ff3b7bea44431117628ee859b7d"
       ],
       "final": {
-        "hash": "23798c69dbd0fda3209a9233f74c5956f877a5083d7489d1a479c956c1c9e227",
+        "hash": "5be0cc681fbbcb66e7cc20c79d7db7392f894ff3b7bea44431117628ee859b7d",
         "revision": 12,
         "uiState": "inScenario",
         "status": "playing",
         "scenario": "theGathering",
         "outcome": null,
-        "pendingChoice": "commit"
+        "pendingChoice": "playerWindow"
       }
     },
     {
@@ -4860,31 +4996,31 @@
         "dcc77a5eec3a9adc1cedaaa3cb66259520c0791097cd9ab948a38a9252704cc2",
         "87fec19fdb7711a7900e4611581c1ce52be989eca8ef44b205fb287900eed0e5",
         "7be57637f43ece8ce492dab0677cc9f2c5adb0bbd129886cb81c050d17983eb2",
-        "e84219205d43b72c892e64f959a698d862e3493a1f75d6a72d179138320aa92e",
+        "cc44e4ab909634537f5cccb2264cbc19e3c161b8c9290874df3160d19f93cab8",
         "14931aee1ef7021cd608fadd340ec7a461ab1d4c1b6f12803b8d4cd42011a884",
-        "20715c07b027081f80a19d6bde5caef61500856da54d78db6f70fae31bc43514",
+        "172f81eb1013995a49ffc07c94086a16175b2563080c017893b92e460d17f17a",
         "d730f08f615a1352bd27a3f70a3ee5f71d356cb502dc8b4c1a588b8f4e276bfb",
-        "c0710d4e2cb35f033f82b774527c937ee6fb7a44dc80b41901514e457bc8fd2b",
+        "d7458762e6964ee141d4fdbcc6b52f069ee49d6f80cc95fdd72fdab214d0ccde",
         "28775899aec2b9dc6d141e3ceb1d7e40f88a22404a27d9eec7f96a2b86f849a3",
-        "955791ba2b57bf51e077903fc6d0d9f811c28de2c019932a6435625c10e8daad",
+        "84a3f95ad919669c26a4ace929e7638ee0220b797db73025628367fd9dda787e",
         "9becb72336347bccb714c05db472a5b72ade667ef47b8180ea209107163fd83c",
         "0f76192805165ea99d2b7196709f8d4859b5cd5ca5d355d8346e759286dd4d36",
         "fe22412dd53bbd3678be4671962e891a11c6871469c70ccee6a6b70b621b6f3a",
         "53226c4248202313d3c3f4cea79e1c3affa1883abb8c6fbc47925a48b86d4fc8",
-        "10e22391c0879b18b4fa6f71678a33d313df4d13ec1d02acf481c350f2c2103f",
+        "8e459612ba190137a0d1834733702068ffe77c7426600dd23fe5169227a4580b",
         "c24dedb9d1837ea97f822b16794dac739bb135e550a24a7eb334b8e2ca77d9ec",
-        "e9b7dfb517fd7c863442bbb55b75f37d5c64d65a5dfd0251adf0a04cbbcde09d",
+        "5c49109e6ea0ebcb88146780668e3da11ae5efae33be4227a79b9628e933e5a1",
         "515a592f55f52826a7204a69cd81bef197bc0b39183d10ad0cf222cc28b45c53",
-        "74e41ffffc43901ace698f0713f4baa2566a282509644cf0bcaeca85a76d6eb3",
+        "5a27dc6a10f400037e7185857cbfc8c65847a0098b81c9d129fe6bc5e9e67272",
         "b3ff2c4aecc85326fedb72f40f5aa993bf7942006ec211da97b4d7db630c095c",
         "be430837adb83c019635e4f719617c526c849baf4bbb4d938dfcbd65f18464f0",
         "eb5413419e651a481aa2d9c6d4db28f0abc3891fb25d073963326e4fa3554a84",
         "6c53ba99ff1c6f997127baf4e38cb28d94c8044c0cc67a1645dd78607b9e8363",
-        "7a745fd8c2e1d85dc6c400d21fac63ab7289d59c1477927fa752e9da035ca0cb",
+        "fbb37d52b53229ec4257d5104f5a75758b5644fe853772953af1a3b1578a8d31",
         "74c82265c2b5d07f2aaad848241fd1db94471991d96f5ec45a633b2605bc20b3",
-        "ee2e11d5a7d83b2d1254d4dd54f16f86115f34833d9f10c898bb7aac8bd42549",
+        "4d80dd4a13e585c118d7ba7b415c8e990f81be6ab51934f59db2b14d470cae08",
         "41762edf2870a5af85093259aeb96a7a6a4f78a2d657f7bff2c2ddef2e421eaf",
-        "2570c75f5943216d0da5d8eea70fec74e6f5a179770b445286ab0654cdb72b2b",
+        "a74a66f4cc6ebfc0ed16a5338fc7b9ffebbee28432bc99f593e45f277d5113a1",
         "ab143cc4af8c893cee21c1cfda048436f41085efff768cb0ea30ea343577fbbb",
         "86a95f6a94ff7dfee1b93d9edb52834a8e4ef7fa2b54b70e44b699b32aa7db77",
         "75521ad6a520932483f724c7a6d59050365befd9e4864ae7a347adf5d342fbe6",
@@ -5206,16 +5342,16 @@
         "dcc77a5eec3a9adc1cedaaa3cb66259520c0791097cd9ab948a38a9252704cc2",
         "87fec19fdb7711a7900e4611581c1ce52be989eca8ef44b205fb287900eed0e5",
         "7be57637f43ece8ce492dab0677cc9f2c5adb0bbd129886cb81c050d17983eb2",
-        "e84219205d43b72c892e64f959a698d862e3493a1f75d6a72d179138320aa92e",
+        "cc44e4ab909634537f5cccb2264cbc19e3c161b8c9290874df3160d19f93cab8",
         "14931aee1ef7021cd608fadd340ec7a461ab1d4c1b6f12803b8d4cd42011a884",
-        "20715c07b027081f80a19d6bde5caef61500856da54d78db6f70fae31bc43514",
+        "172f81eb1013995a49ffc07c94086a16175b2563080c017893b92e460d17f17a",
         "d730f08f615a1352bd27a3f70a3ee5f71d356cb502dc8b4c1a588b8f4e276bfb",
-        "c0710d4e2cb35f033f82b774527c937ee6fb7a44dc80b41901514e457bc8fd2b",
+        "d7458762e6964ee141d4fdbcc6b52f069ee49d6f80cc95fdd72fdab214d0ccde",
         "28775899aec2b9dc6d141e3ceb1d7e40f88a22404a27d9eec7f96a2b86f849a3",
-        "955791ba2b57bf51e077903fc6d0d9f811c28de2c019932a6435625c10e8daad"
+        "84a3f95ad919669c26a4ace929e7638ee0220b797db73025628367fd9dda787e"
       ],
       "final": {
-        "hash": "955791ba2b57bf51e077903fc6d0d9f811c28de2c019932a6435625c10e8daad",
+        "hash": "84a3f95ad919669c26a4ace929e7638ee0220b797db73025628367fd9dda787e",
         "revision": 30,
         "uiState": "inScenario",
         "status": "playing",
@@ -5795,7 +5931,7 @@
         "4fa614ead1f18761cabf0629f9cd93af92fd905d855dc0f65a6d49562400ca26",
         "6b73762d1b8ffcfced8e7ba2497fc8e6a44e3664d249389c4f9fad3b411e4d6a",
         "69da8e5c8316f075afa94ddaa1ed65514398690d4e65b16409b56f7d622bed46",
-        "6c2df9251478fc3f4fde62ee75cf5a8f176b20ebc7e111be2c922be573462651",
+        "941f2ba40a9f7ee69e1d19a95c62a14dbe6ddae0303acdf0554733ec8353fccc",
         "0e45658598aaffa198d89197c37156f0888a2192f5e093e39598902a20668fca",
         "6702c7d7b1fbb8294b229072a4fc20b9741d1e8fb584bdddf3bfa6927c2bedb9",
         "3c88b1906231b106b3d9bc5f6c1b7c75063264ab501473b35dc0f0ca0dd0b29e",
@@ -5804,48 +5940,48 @@
         "7b5360e7ac9935ff49b35387cd7637a39127f203e67281d5f1c486cb34fc7a33",
         "f3dfc2da6e0886d4582c846383d80881b61c67aed7b9bd966887c28bc576e5c8",
         "bb9e62c39d8eee6600843dfeff790826d8feb2dd438d53fd6b9eff06f19407d2",
-        "c49803ce57af6614c638f9b3ffe3301bfbcdccd9d916e8718c923e374beb213d",
+        "11fdf717223553c71fddc99ccfa1150cc383550711b3f1f44cdad2b864596b05",
         "919d8fee46518110a867b7d3c4b3ed93d0fa8377d062ce061333d28fa9892baf",
-        "3312e20925d43f5033b28762b6f8f99e6037ab7c9f6f5680287c0560fa2dbdb6",
+        "ec76e0864991f62faa60cc90ff47dcf56adb41c43361c2b8414afab6ad6e51fc",
         "83ed0277b5f8363a7bda016193d1ab0aad17c3f1e25227879e9d37b94e88e091",
         "29acaa605376755280bacc0540b8fdc8420b9f6a0bdb4f0b6dda559da2d50631",
         "cb477d1bdb0510560ddf18e357d06184e8e2a1b6d185d6e6ca6af1e6c9c38a27",
         "58af71ac6e2ce173883742363d586191fe9a6faf5046bd7428ad2f1bfc684c2f",
-        "1ce57b91bfb3d087ea33e9bd6419bece5c1f7f9387ccd50a1c375db50789e794",
+        "e99cf5d18b6d3a365efe6a796a1eef3ced7ea8992a2adac54984bf5b302bcc49",
         "aeb0cfc2bff049cf67727d6a2b1791e2611ec16364250b0a4f301302d8ef57c2",
-        "3e1b590ac0f7d67b874afa275ffd9cde0ca56214153dcdcdc7d810dbc182beec",
+        "6f24f792261f5c23774b72c35bbc846c9ff9e9d152913be11792c6eab888b7b6",
         "66049e3148a6d49f1bf2550a04831249a5701d5f3b1476e10080bf6fe25b4673",
-        "7040701fbc8e56475b3522a940e0514f4603a8f6cd99f21ec66bf74f5cb93b1a",
+        "7b01cb8c211af2f4856272d734cbfeaec3deae7a131525fa314ba0a19ebfcc58",
         "53bbb4fd72ef9bdb7553d11f3f6187285b228cfaee0a40699b8bfc79981ee914",
         "d026cfc65fe3733db12fb8d89fc7ef799598413c0cfa1e23af3eec0ea622e5c8",
-        "de52e65f6974630c38d124b82696eb56183a742476ba6db9d14175fce9330964",
+        "fefd39b2da0d3fdaf9651a96ff583bc70efe72f72002b0dd36d21f820a73617a",
         "1256718cc5ddbdbef91d9709c821246f90b6b665c8fa2294e01493b19851d6f9",
-        "19631922de3df253d592033b7696dfd18f64c3301534bf1d599b00b0479b1863",
+        "62f354f4ec9584019ba09479d55328dae7a1466832b7d7b80a2eb1978899a373",
         "f2e1dceeac175d36fb7dba461ac7f916699a5c70df01a81b9e2612a0bb474e64",
-        "f31c3f9b93213d30c7e20844c224ce5c14099c31a2e3f1ab182469726636aaf0",
+        "f4cb00545c9e3eedec50a2746ee5c5b1b89d598b84573b974c959be2d4def692",
         "a23d60c138e7021be4aad3a911aa89431427df0901a7aba6297972ee747a221c",
         "6caacbfbd5d7d55f2d22eeed6dac6bf1fedbf9c797f8ea797628ec015e413fda",
         "c19099d250ddf265dc1fade758e0f34056242f4b967a05ea39008787808804db",
-        "2685537bece40b7dcb55b16d8ce7cfbd8cd5ac166055162357e1e2924abcc6e9",
+        "bb1c6b82467bb87d6ed13ab67fbfec4f741678e5832374a67f66414c810a5596",
         "7e713c167c107062aea207d0b18410eeeaddcf9ed14c27a63352add0c461226a",
-        "fb1287ce158ef9858d153cfac6c92f42e36b13d279efe6127ce55f26f4c117c5",
+        "5f6e94acdd723035ed8d7a948a6591ef3cfc86f852de066a39578ea9d4f59c76",
         "b4a3a978efdcc396d478e2cfa80f482c9fe802873ecfad548244fcb55ee8cf1a",
-        "e221a43f4635ba9984cd099ff916548342db75dcb61359ba0a460f051f702329",
+        "4e6e80ed8140f43eb00558882914e58f0b3d0c046f1f03719d7fe31a6f869249",
         "68d8cbd92fc997b0e49ee7ca77c248e761ddb847f4c543ee1fccfcb4ae9fd06e",
         "8cf30a95ee3ea381f04bd4583b4d4fe0055dc34699eab748c5f6d4c013725345",
-        "4649e5ea01119cfe121cfd3d305929de4f233609c74a7d5eedf17b65d96ea6a4",
+        "e8cb3cc91b90c1cd46405d9d28d0347e90ddc4b3fb455ea3436123921fb519fb",
         "e7e0d5bcf1b284827d797a04c232ccc736da7fddb1ef997ab01b74b83e546bab",
-        "61db6aaa658613800b82789f29db6927b78111e5a9e277889281382902d4a423",
+        "3c2b89b8b34612edd037cb02c9535b927ff43fb863cf526d59af786566610675",
         "bd2bc0fd8bf598158c2f83df90326352c38c0a4efab1f139d5e4da635bbe20c0",
-        "efe8ee1e4032f90a94dd5ce851d07c8ac82b73da76c803e5e0499c2535d32f81",
+        "23ae2475e076ce3a3c67422bc8253d960e2299474872ba31f8f46c6fa6a39b73",
         "a9ab9223611058d7949ded1621fe91fc3d41e226c535dc7740a6b8947a4f284f",
         "20eb0014da47ac544f881f2cac9353f49bba1d3755a06d85718e2f928e2d81e5",
         "d99eea5d59bf3a39f955bb4420fde10c3cc74983d71ccb83614c03045a3434b9",
-        "a365d5598c2bc8aa8325ad461d5cfb97eb8a7e0f1b6c1247438fcca3ffefffec",
+        "a35d1c17614a3f9e602aded91682c5afe811c83312bdea0c586a63d694bc98ec",
         "92c15dce0b9abb5ab6e9fff904aa40500e38e479647acea4a5cacb4102ea2396",
-        "63b5249746ccb023a38cc8c0e3d9fc35380a93a55ed1669a0a3b2b05a71cac85",
+        "77b05c65dabda1fea574cd1bca9a1d2436cc29d3dc641133d2ca0b254730e914",
         "2ac925a255b631c2e95087994f65eaac9b1d7c5fcf853282e6057f62e5e2a14b",
-        "96ad331fd2e61273dd08d343c8781d80aec626db218eaf2c429de0bda82705d5",
+        "f5cc147669f6dfd0a29947f67ed6e00c29cb3cfd3edcd9fbe4ad0272b86d2670",
         "cb578b57c23da766f2c2a14e409afeb2da8455fdb9ab60e91465433b7936ea13",
         "f0b1c03b9d62bb890826cfc815a62f9265508b9082bf438d77474d2d68fc499e",
         "25ef1a4b96e733527d92fdeff09cb45b67ee5cfa26d0e44edae7ac23fd849b28",
@@ -6273,15 +6409,37 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore",
-              "scriptCard": "act"
+              "action": "choose",
+              "choiceId": "q49-0",
+              "optionId": "done"
             }
           },
           {
             "seat": 0,
             "move": {
+              "action": "explore",
+              "scriptCard": "act"
+            }
+          },
+          {
+            "seat": 2,
+            "move": {
+              "action": "explore",
+              "scriptCard": "act"
+            }
+          },
+          {
+            "seat": 2,
+            "move": {
+              "action": "explore",
+              "scriptCard": "act"
+            }
+          },
+          {
+            "seat": 2,
+            "move": {
               "action": "choose",
-              "choiceId": "q50-0",
+              "choiceId": "q53-0",
               "optionId": "done"
             }
           },
@@ -6293,20 +6451,6 @@
             }
           },
           {
-            "seat": 2,
-            "move": {
-              "action": "explore",
-              "scriptCard": "act"
-            }
-          },
-          {
-            "seat": 2,
-            "move": {
-              "action": "explore",
-              "scriptCard": "act"
-            }
-          },
-          {
             "seat": 1,
             "move": {
               "action": "explore",
@@ -6317,8 +6461,8 @@
             "seat": 1,
             "move": {
               "action": "choose",
-              "choiceId": "q55-0",
-              "optionId": "harm"
+              "choiceId": "q56-0",
+              "optionId": "ancientHall"
             }
           },
           {
@@ -6326,14 +6470,6 @@
             "move": {
               "action": "explore",
               "scriptCard": "act"
-            }
-          },
-          {
-            "seat": 1,
-            "move": {
-              "action": "choose",
-              "choiceId": "q57-0",
-              "optionId": "undergroundRuins"
             }
           },
           {
@@ -6348,7 +6484,7 @@
             "move": {
               "action": "choose",
               "choiceId": "q59-0",
-              "optionId": "0"
+              "optionId": "skip"
             }
           },
           {
@@ -6356,7 +6492,7 @@
             "move": {
               "action": "choose",
               "choiceId": "q59-1",
-              "optionId": "0"
+              "optionId": "3"
             }
           },
           {
@@ -6364,19 +6500,19 @@
             "move": {
               "action": "choose",
               "choiceId": "q59-2",
-              "optionId": "1"
+              "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q59-3",
+              "optionId": "0"
             }
           },
           {
             "seat": 1,
-            "move": {
-              "action": "choose",
-              "choiceId": "q59-3",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 2,
             "move": {
               "action": "choose",
               "choiceId": "q59-4",
@@ -6384,48 +6520,48 @@
             }
           },
           {
-            "seat": 0,
+            "seat": 2,
             "move": {
               "action": "choose",
               "choiceId": "q59-5",
-              "optionId": "2"
+              "optionId": "done"
             }
           },
           {
-            "seat": 2,
+            "seat": 0,
             "move": {
               "action": "choose",
               "choiceId": "q59-6",
-              "optionId": "skip"
+              "optionId": "0"
             }
           },
           {
-            "seat": 2,
+            "seat": 0,
             "move": {
               "action": "explore",
               "scriptCard": "act"
             }
           },
           {
-            "seat": 2,
+            "seat": 0,
             "move": {
-              "action": "choose",
-              "choiceId": "q67-0",
-              "optionId": "done"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
-            "seat": 2,
+            "seat": 0,
             "move": {
-              "action": "investigate"
+              "action": "choose",
+              "choiceId": "q68-0",
+              "optionId": "doom"
             }
           },
           {
-            "seat": 2,
+            "seat": 0,
             "move": {
-              "action": "choose",
-              "choiceId": "q69-0",
-              "optionId": "done"
+              "action": "play",
+              "cardId": "01017"
             }
           }
         ]
@@ -6462,49 +6598,49 @@
         "879849dbce77e1fb7fd3283f41c7d78de99498b02dea4530678e55fa742b2046",
         "e3f290e0447e045653aefac5a73e06d1ab17a37742540f2f56e023355699c42e",
         "4536ec2c032c382f49e12816084b7d3aa6c4dfa1dacaa1b8b9c2dc934f86918c",
-        "d10d0f787dd79dca6dcb4f39633afc21edb7e94b56ccd8db6b377be5f4f48e22",
-        "8640f1477c30f99be8c136177f3ef442fbfe19c464cc5a4a566f2751bb8c22ed",
-        "70b481a226fc11c8d923ee6a76fdbbef12111824d53f600d3f187fecfa24c5cd",
-        "59e3f97c8b03f70e11d6ecd301178dbc5584d6cec28245cd71f4e13f5f882018",
-        "3de761183808238827ea76a6c5f7cf43aa6599e2fe4c311513c0b72b86d014e8",
-        "e680bd8e0d6560e834d9c4a90668797d140f4913dcbd3cfbcf7d2153ed4cf530",
-        "5f27908ff6a81d2e0998da12ec804f29664d16313f0d650d0acea9cc45a77d78",
-        "bbbb44c43c9d740e583c9ebdbe6274030fcfce5e5a5881403f63c6921511f7eb",
-        "bc54aca67281a986cb351d5e484f389b631565dd867fe021d2aef9428d756a39",
-        "d3280883b79bb72271caedf2c58eb5ec09df2807345617e3bb4f4056607e4ff0",
-        "774ef6f319dd2dd03da96f45428851dff84e8d6da4e7dcdb1af32dcc20151aa6",
-        "f08519b3828051bcb5f802daab2f80ee8b0aec3140643c3a049d254150e49cc7",
-        "4aef85fa622d742f90437e331c5175ee587e613b2aa0055d9e72e82f749fa288",
-        "188cced3ba2e0e57e7e178e4a6ff6c0e2e7735c9fb0478d86494b81371259914",
-        "26b9d2ab40f3ea7b9cea51440e16c18436f02d80bd73ef10dcbd79d8aab12e5f",
-        "7a4aa01296fd5cac6e43b4edaf189d9b9cc29a761b83dad2796811bbab1328b9",
-        "3d21ded29cea94dc41e4a10d08dbe134cb35ff635ceebaad921ba2c233b41f04",
-        "944f197e5647430c166072226c51abfd1bfb9897c97faf55c446adc60393cf0a",
-        "6b262a6355c58b08e5d7a525eccb02650c9580b6d3268f038f523aa81f1a3411",
-        "c7081335b36da047f194d22a12ae8a5d5282cc4a811be4486f1d07198946b7bb",
-        "d13cf1578da53d1f1fe8fb5e994a820951f8bc159ffbddfbca1f5008eb232824",
-        "5bf1f0bf5713202871ffc3331cc8ff676de543e1607b6351d7ca5f09e3682fd6",
-        "82e89bd8c708e00a2a69dbe64c91d4f570c8ee6a4ad789ce71fb0716f4d2c4cf",
-        "95dceb9522ceb9c9492bc9809077feedf123f3e689558a13a4180753094ec463",
-        "9dee83b383d2199c6517e8a4c71964db47300c0bfa58792ae8dcd1e177331c06",
-        "330200fca1846209b357277dd9733cd8810b334507d14d88ff795f7f0c7ba610",
-        "f78567cf4c4ffb8a9ec4ba93474d682c1268a2abdad831be0e8129001ff69885",
-        "930e3ff22e48ca822bdf7a6a97772b4b862a21c31440612fdcd512846028df7e",
-        "fa4dd87ab283e8dca02dd47bf6f2748beaff98db73bedeb072fcca06dfc13c21",
-        "84e3b11b517f8661855fba6b507b245642b7995e9c37e6a53d8bdc03a6d70b30",
-        "0767340d9c4cafb38a3cce07c3ab4e7a132faa5f890c2831f137b3321d736913",
-        "da7755e5735a8a4709d63cfc6c92c27a59cae3c30b21b45db8c3f4f3206f6850",
-        "4c000e0213d5ff3c8de90cd0f729a539abe4be404cd6670869ddbc05c74dbe38",
-        "c30fe340d87702b9c2c999ff8d0e85cea4f94b4270abf21588d6f8dd6df1c5a1",
-        "0516c8f20c0fb4af40bee977caee2faa0679f0f0d94e34416822f1a446d3c398",
-        "f8d87b1976c664c4ced629687e298461376f3f77ffb42551239b4d84e9311301",
-        "9f5e2d534f3802c0339c70554cdf13177c78868d272bc13aa587e635adb231d4",
-        "e03d0dabec0152c1096781586dc8fc6a0c21cf2d629256d7c80137f8820430d7",
-        "de0fca1823d1533a64c183eb4718368dba58cd247b41bab126f2888848df4180",
-        "b3aab507c36ed3098e482ac7584ecccc8275cbb5e101da63993cf3cfd7fb205a"
+        "046a9abfa4aca9dfa236fd2f620f4818f69338b4b6e4566776fcc738893f60f0",
+        "250c22026e5b54aad5172b2862ea4d36dd0dd02169b942846e1b6d4f1d2578f1",
+        "08dd3e9d7f467ce396320c991715d788c229b43f2267bf21a24cd6bc809e8c21",
+        "7390e94d29b847c90e6da2056c5916252d6f54da085b486e063754144a50c5a9",
+        "cc6721c063d1738a2cfc08b98bfd2836d91f45c597f11e81db0253fb4f75f325",
+        "edb56598d49bc19918378d7c71587fc0b1dcfe9afce8ebf3199fe4025e545cb5",
+        "b9e599d92f3d0aff97d79c72e149c931485aebe0b494485073e50f4657b7e4c7",
+        "113d3d13d52386725590f90f03e466d32c8862d7f61e07e1e4d308165abd09fc",
+        "aef222945554003c20af908a9a66668d2887773cf9fbce17fceb1151ec2fce05",
+        "59c2ec92bbf01dab59422772d1b44cafe0b109b5bcde60267ee2377e7c1a481a",
+        "ac07da24ac3d4f3a33a006771d273d81350a02288d5ed127b2ddfa9d2dcc539c",
+        "ba2adba56dbb6283fc52e35cc0efaaba2b201eba740d1096cb355bd3d5df475f",
+        "14f20a074370dfa53d597bcd28cfea6d5a95cacf70f91281f3abaca3895ca950",
+        "883c07853832a7f8d87f368a29a04f423a5d15dcdf263a735afe0d1bce3e0de2",
+        "20dcba22d0b450f4978c1fc38c77307c8dc85ac3f1d7238d6c44f4657fbcf22f",
+        "7062410527e7d98de7474baeda3805b934c9226c1abed0936dad875f484e9778",
+        "01262706f10a9ac2c1b8e602b5af1eb5dd709956202c93a760dec25bed7f3747",
+        "3c72c4ecebdcfed1c7860519a8434687f9fc6a70ca4bcf9fc35cc54a31a91414",
+        "964b40770be410be09dd472e27f63ee602da0f3905973788d98461434cfaa66c",
+        "39fb55a9ac77436dc2344cf24c96ba69e707cc03580a5e44fdf828cfb6f6af33",
+        "633b377b694bb36f12ab5035d14c431982d7c5ee4c03f57d9a7dccaf83d7325f",
+        "93992e34399703dbb7d89992a24fbd30153ddcff6fbe9eb5c03be482eed6415a",
+        "2e7ef39d07363cc03b858bf303fafe031c78d91eccf15e30ff9549f3b7ea66be",
+        "c2ce78f8d4c77ce80ab02eea65f9a7c1477d101aab6b835fe1b5f88ba77e8b2f",
+        "398a07190bc9e32d098e93080e08f532761b59574f026c3b71a7b561d9aeaf45",
+        "2c7f7d439d5ccf2d3444906a6bffa790e6ec64d0a66647c85b51b65ebca24dfe",
+        "83b1d5541be03d412c45716c06323961c3db32eb03dd9e2a741808842365d63a",
+        "c6315053b2bfae35503f1fa75a1ce688ade22c8665a77f7e4dd00c2c51aa68c6",
+        "b9f4aff4fde444d46549efa0f6b1abbd9370d496da0fe1e7a08b4cd29cfd1d6b",
+        "e0c274e75ff3e7729b92c02e4631b50d7a4d0fd937b3b4de5652c938b397163a",
+        "f78736bd7c8923920abd296adfc5f789eea93cb9e6c5284d728c3308a6364b05",
+        "bcd8ad0ea672040375bef2ae2b2a98302e1d3d6cf758b4f5e3416f6a09bd18f1",
+        "a7368e3b1ce4035921af213d0250ea6f374dc976f1f46946690ec560b1fe88ab",
+        "d5f7c9d362e13efe95af3a8c080697e381d636a3fa6f526dfc479fb13178103c",
+        "5b0e1ea35860d0d8325aea6183d021511bc0b3e7c7fa44a52741a1226720c64a",
+        "ea5f0ca9c2cc36447a1318a9b95adef236d12cb0f6e64609b7fa23e72c8fe583",
+        "5f796fa78f40a348ac0929a09f49c77523832c807c2ac9d6e0e84e03ae30a169",
+        "61f0bd3607cced31e96a746fe5b1efd676b0d37ae556a038c8fd12b41a676215",
+        "bb7260a4cc4586c0993132e96375ecd09d67bf68fbe9e2edd0c433c86ba7bc2e",
+        "e30923f5546527906b54101fd6fd722874da1812af5200cd3f9f141fd0fbb6ae"
       ],
       "final": {
-        "hash": "b3aab507c36ed3098e482ac7584ecccc8275cbb5e101da63993cf3cfd7fb205a",
+        "hash": "e30923f5546527906b54101fd6fd722874da1812af5200cd3f9f141fd0fbb6ae",
         "revision": 70,
         "uiState": "inScenario",
         "status": "playing",
@@ -7492,8 +7628,8 @@
         "d23d7a34ddaace10315b63e32f1875b24fb1a2178b1c0365981ec0e168308295",
         "438da4daf8f0b9df368af4d51bd1e97c2b04ad47fdcba8e710d0f76c0512391e",
         "bd5f83657a737eefb4cb54b61a706a580429d8798c53e08b7e61cc7edcba7281",
-        "b71b814cada7e91c3eed7c6a3fd3e8fbdfd0153b587f01d5bbb6751c074e9116",
-        "8f18278fec556400a2793eeae050436f6da6e6e039b31aa7e31716888c547941",
+        "14e351f65ab525a9e9fbc2095f5d292c4bc28d1dd15248a03a74d0750b1dd3d5",
+        "3460c2ee61c47914d521da5721f64d3050cc40346388dd7e16c8c11bc464bd48",
         "4660ff9050fd84a774a03c25fb4cce67e5cfe1c76dd246a5c2769c7bd11b9c31",
         "011f3566f3f1d96a96cd89cac4f4b2ecf0d4bc65bb054bb22f08e6f6d8c860d3",
         "3cdaa426f21822f9667233ceb7c4283d39d2bab853b3fe3ceb4f388b2f83b28b",
@@ -7519,20 +7655,20 @@
         "15bebd9b8ed49bfc49850db664a69480725023718a4b3796eaa8d1e8e99a625f",
         "edcd115a4f029376ddeba96fdca512fc8f1c6e7c026daae62a59ae67d0865ff0",
         "d898eee17d777c3910c5d6124f28c96b4e881e97a6833b5657ab44a1ac4c5e29",
-        "3f133df860fba83116cb2cbdf298fc1ebef48ac105d450f48deb1eb3cefed2fe",
-        "ff35baaa90a96152b8d3bd58f78a455bac902303402c7f8fd1c9ebb8801888ac",
+        "891dc0254ebccbfa067c1b97225905416d528c68b054e8ed8d4b35d618d9b4a6",
+        "b0ab7f641d91af711662336828566bdc116e2dc29df59bb637070898694ae347",
         "f0e6b4cce51b75f8624bdc8622498f1ecd55935a9a8d42f82063433797debee3",
         "2065c75e1936b67e50494be04da3d6a0f621ccc8e9cef79bf64804d9e4aca62f",
         "cec90b95450617aa6eb2e9420f425cee8b4ad87947c0b3ea84cd641d96645a5a",
-        "a46a529161a4d921d9e088e00b782aed3e1c70d779868fa9309829cf258c8630",
+        "6fee892ac1c1f6f4ed3c54e681f45544b293f6fda5259ae0b63c91eeb6a136ca",
         "b209a667eacd9d52db286897c5368a6fca2d51969553547fea8fb9d2562afcf6",
-        "8cd69617f09f19ddcec4ed726f92826994b57398093fbc9676c69aa207be5d46",
+        "ce7fca2afde5f97f685bb3cd14d9b86f33a7606f3c6bc2d6d44ef9bd3d83d64d",
         "2b74d47e88d17ec5950cebf3176d4e249ea5a2af68871b2c3c8d611eb5b8c43f",
         "72c8110f1d40865007343373a9c79105b15cd60457554533e372d2964700c92b",
         "1863a1ee87caa69bc0150ba7621e3ddb46812e4c03597d2de2b398968a37e8b5",
         "ea4d63d4f076d1a11b680a19003f711354b31a9762fdd8b9ff90cca762b0635f",
         "c489e6c7e5addd7655edf6595fef76928d8faf0045059214dafc4d59d776079f",
-        "40c090da76ad32247432a75606d22e13e6511b5bcd6ec9886a5116114070e88d",
+        "1acaf746b8c93ec4ef089d886a22b66b6e24e334cc0c566fbc0ae6033493e229",
         "837b93582c00f626af5cb678acef42cda01ec81d54312ba7a2a5cfd4b83193b9",
         "9a230101fac36ba77253267a985eb6ca0f12b3a981b85773a7acc17fd1c901f2",
         "1845ccd9b6f1ade5acf34b9ae04f91bfdafa1320190efdc74bdfaa4ca0c308f9",

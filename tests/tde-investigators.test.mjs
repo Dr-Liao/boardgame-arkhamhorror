@@ -263,7 +263,7 @@ test('P6 托米：贝基在场时资源可改为子弹', () => {
       const option = pending.options.find(item => String(item.id).startsWith('desc:tommyAssetDefeated'))
       if (option) return option.id
     }
-    if (pending.kind === 'effect' && pending.options.some(option => option.id === 'ammo')) return 'ammo'
+    if (pending.kind === 'amount' && pending.source === 'tommyReaction') return '2'
     return null
   })
   const becky = me(state).assets.find(asset => asset.id === 'becky')
@@ -354,7 +354,7 @@ test('P6 曼蒂的专属弱点（惊人的发现）：强制取消查找并把�
 test('P6 曼蒂旧印：+0，看牌库顶 3 张并把选中的牌投入检定', () => {
   const state = investigatorFixture('06002')
   const inv = me(state)
-  inv.deck = ['01088', '01089', '01090', '01091']
+  inv.deck = ['01088', '01089', '01090', '01039']
   inv.hand = []
   state.chaosBag = ['eldersign']
   run(state, current => performTest(current, 0, 'intellect', 3, { resolve: value => { current.testResult = value } }), pending => {
@@ -364,7 +364,7 @@ test('P6 曼蒂旧印：+0，看牌库顶 3 张并把选中的牌投入检定', 
   })
   const after = me(state)
   assert.equal(after.hand.length, 0, '没有留在手牌')
-  assert.ok((state.skillTest?.committed || []).length >= 1 || (after.discard || []).length >= 0)
+  assert.ok(after.discard.includes('01039'), '有匹配图标的牌投入并在检定后弃掉')
 })
 
 // ---------------------------------------------------------------------------

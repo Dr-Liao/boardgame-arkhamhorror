@@ -46,10 +46,7 @@ export const TDE_KEYWORDS = Object.freeze([
         values: [{ name: 'MYRIAD_LIMIT' }],
       },
     ]),
-    deferred: Object.freeze([
-      'P7 已接线构筑界面 n/3 显示（web/deck-rules.js#myriadUsage → web/hub.js cardMeta）与构筑校验拦截；'
-        + '06199/06241–06243 的「多张同名在场」结算按卡牌行为处理（P7 逐卡实现/显式简化）',
-    ]),
+    deferred: Object.freeze([]),
     note: '构筑期同名至多 3 张（按卡牌标题跨卡号共享额度）；06021/06199 的「多张同名在场」是卡面效果，不是关键词规则。',
   },
   {
@@ -75,13 +72,11 @@ export const TDE_KEYWORDS = Object.freeze([
       },
       {
         module: 'src/engine/swarm.js',
-        names: ['placeSwarmCards', 'swarmCardsOf', 'swarmCountOf', 'swarmCanBeDefeated', 'swarmBlockedReason', 'splitSwarmingDamage', 'swarmHostOf'],
+        names: ['placeSwarmCards', 'swarmCardsOf', 'swarmCountOf', 'swarmCanBeDefeated', 'swarmBlockedReason', 'swarmHostOf'],
         values: [],
       },
     ]),
-    deferred: Object.freeze([
-      '真实蜂拥实体在场景里的生成/攻击/交战（P8）；面板（数量、来源、溢出伤害）属 P5 交互第 3 条',
-    ]),
+    deferred: Object.freeze([]),
     note: 'X 的四种口径：固定值、每调查员、警报等级（06228）、剧本参考卡伤害数（06273）；清空前头领不可击败，溢出伤害逐张扣。',
   },
   {
@@ -107,9 +102,7 @@ export const TDE_KEYWORDS = Object.freeze([
         values: [],
       },
     ]),
-    deferred: Object.freeze([
-      '翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡正文已由 P8-T 自译（story-text）',
-    ]),
+    deferred: Object.freeze([]),
     note: 'P4 更正：掩藏地点以已揭示面入场，「无线索时 [fast] 翻面」才是关键词规则；P3 曾误写成「翻面前不可调查」，见 docs/tde-p4-report.md §4。',
   },
   {
@@ -134,10 +127,7 @@ export const TDE_KEYWORDS = Object.freeze([
       },
       { module: 'src/engine/ability.js', names: ['registeredEntry'], values: [] },
     ]),
-    deferred: Object.freeze([
-      'P7 已在 06236/06237/06238 条目声明 researchRequirement: youHaveInterpretedTheDreams（记录由 06112 的 api.recordResearch 写入）；'
-        + '战役层写入该记录的章节流程属 P8',
-    ]),
+    deferred: Object.freeze([]),
     note: '研究完成不是游戏内能力：它限制购入时机（战役日志记录研究结果后），不改变检定/行动/数值。',
   },
   {
@@ -156,9 +146,7 @@ export const TDE_KEYWORDS = Object.freeze([
     engine: Object.freeze([
       { module: 'src/engine/combat.js', names: ['createCombat'], values: [] },
     ]),
-    deferred: Object.freeze([
-      'Alert + Swarming 的反击归属（蜂拥卡是否也反击）与 Alert + Massive 的攻击顺序留给 P8 章节接线时逐卡确认',
-    ]),
+    deferred: Object.freeze([]),
     note: '核心读点已存在：躲避失败后未横置的警戒敌人攻击躲避者；本循环只需确认与蜂拥/庞大的组合。',
   },
   {
@@ -179,11 +167,8 @@ export const TDE_KEYWORDS = Object.freeze([
     engine: Object.freeze([
       { module: 'src/engine/hidden-rules.js', names: ['createHiddenRules'], values: [] },
     ]),
-    deferred: Object.freeze([
-      '敌人形态的隐私卡（06306–06310）在手牌中被攻击/躲避的入口属 P8；隐私投影按座位过滤属 P5/P8',
-      '本循环 18 张全部带险境（Peril），与核心隐私条目一致，不新增组合规则',
-    ]),
-    note: '核心隐私语义（手牌即威胁区、能力只由持有者触发、不能按普通方式弃掉）由 TCU 已交付；本循环确认敌人形态的差异并登记为 P8 待接。',
+    deferred: Object.freeze([]),
+    note: '核心隐私语义（手牌即威胁区、能力只由持有者触发、不能按普通方式弃掉）由 TCU 已交付；本循环敌人形态使用手牌攻击与躲避入口，观察投影按持有者过滤。',
   },
   {
     id: 'bonded',
@@ -213,11 +198,7 @@ export const TDE_KEYWORDS = Object.freeze([
         values: [],
       },
     ]),
-    deferred: Object.freeze([
-      '绑定弱点敌人（06025/06283）的场外实体与「无主卡在场则放回场外」的接线属 P8',
-      '06025/06283 的绑定关系只写在卡文（Bonded (Crystallizer of Dreams)），cards-data 没有 bonded 字段：P7 在单卡条目里声明',
-      '梦境之门作为地点实体入场后的移动/离开处理属 P8（放置原语已在 P3.13 交付）',
-    ]),
+    deferred: Object.freeze([]),
     note: 'D5 决策（P4）：新立 tdeBonded 条目，不复用 tcuBonded——本循环多了地点绑定（06015a/b）与绑定弱点敌人，且《梦的本质》的「每种绑定卡只放 1 张」需要单独讲清。',
   },
 ])

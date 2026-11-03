@@ -1120,7 +1120,7 @@ export const behavior = {
   },
 
   scenarioGaps: [],
-  scenarioApproximations: [
+  migrationHistory: [
     '石板标记/轮末的「触发未了之事的强制能力」→ 由 behavior.unfinishedBusinessForced 按数据表 `forced.kind` 统一实现（威胁区卡实例 code 由 flipEnemyFace 写入）。',
     '异端者「在非幽灵地点获得冷漠且不能被交战」→ 冷漠由 enemy.aloof + canFightEnemy=false + enemyDamageAllowed=false 承载；「不能被交战」由 behavior.canEngageEnemy 实现（引擎读点：src/engine/moves.js 的 legalMoves 交战候选与 validateMove）。',
     '异端者「[fast] 花费 1 线索：谈判，查看另一面」→ behavior.hereticParleyMoves 同时供 actions() 与引擎玩家窗口的 fastActions()（任意玩家窗口可发动）；B/D/F/H 只记录查看（剧情面直接揭示），I/K（J/L）按卡面 Forced 立刻翻回并攻击。',

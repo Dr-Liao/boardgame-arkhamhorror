@@ -340,7 +340,8 @@ export default {
     if (locale !== 'en') return null
     let options = LOCALIZED_CAMPAIGN_OPTIONS.en
     if (!options) {
-      options = Object.fromEntries(campaignListForUi(contentRegistry).map(campaign => [campaign.id, campaign.nameEn || campaign.name]))
+      options = Object.fromEntries(campaignListForUi(contentRegistry).map(campaign => [campaign.id,
+        (campaign.nameEn || campaign.name) + (campaign.earlyAccess ? ' (Early access)' : '')]))
       LOCALIZED_CAMPAIGN_OPTIONS.en = options
     }
     return { settings: { campaignId: { options: { ...options } } } }
@@ -376,7 +377,8 @@ export default {
     },
     {
       key: 'campaignId', type: 'select', label: '战役', default: 'nightOfTheZealot',
-      options: campaignListForUi(contentRegistry).map(campaign => ({ value: campaign.id, label: campaign.name })),
+      options: campaignListForUi(contentRegistry).map(campaign => ({ value: campaign.id,
+        label: campaign.name + (campaign.earlyAccess ? '（提前体验）' : '') })),
     },
     {
       // 卡牌范围与回档开关在「游戏高级设置」弹窗里编辑（hub.js），不占用开局表单的通用下拉框。

@@ -16,16 +16,9 @@
 //     因此 `source.horror >= 卡面神智(3)` 即「因恐惧被击败」；此时写 removeFromGame + 战役放逐账本
 //     state.exiled / state.exiledBySeat（与引擎 exilePlayerCard 同一记账口径）。
 //   · 不再使用条目级 removeFromGameOnLeave（那会把「被效果弃掉/槽位移除」等任何离场都移出游戏）。
-//   · 残余近似（登记）：引擎 harm-threat.js:146-149 的 composure 会把可分配候选收窄到本支援
-//     （其他己方支援也不能先分），卡面只要求先于调查员卡。
 
 export default {
   code: '05236',
-  simplified: true,
-  note: '「因恐惧被击败时放逐」已改为 leavesPlay 钩子：仅在离场时 horror ≥ 卡面神智(3) 时判为「因恐惧被击败」，'
-    + '写 removeFromGame 与 state.exiled/exiledBySeat（不再用 removeFromGameOnLeave 的「任何离场都移出游戏」近似）。'
-    + '残余近似：「沉静」的分配由引擎 harm-threat.js:146-149 把候选收窄到本支援（其他己方支援也不能先分），'
-    + '卡面只要求先于调查员卡。',
   composure: true,
   modifiers: [
     { target: 'skill:intellect', amount: 1 },

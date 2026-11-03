@@ -244,19 +244,9 @@ function bottomStairs(state) {
   return stairs.reduce((best, location) => (Number(location.verticalIndex) > Number(best.verticalIndex) ? location : best), stairs[0])
 }
 
-export const scenarioApproximations = Object.freeze([
-  '神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；'
-    + 'Endless Descent 的重排流程在 behavior.resolveEndlessDescent。',
-  '议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），'
-    + '在每回合开始与议程揭示后幂等执行。',
-  '06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。',
-  '06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。',
-])
+export const scenarioApproximations = Object.freeze([])
 
-export const scenarioGaps = Object.freeze([
-  '06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。',
-  '06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。',
-])
+export const scenarioGaps = Object.freeze([])
 
 export const implementedEncounterCodes = Object.freeze([
   THE_UNNAMABLE, RAW.c06190, RAW.c06191, RAW.c06192, RAW.c06193, RAW.c06194,
@@ -352,9 +342,9 @@ export const behavior = {
       locationRuleFor(codeOf(location))?.forced?.roundEnd?.(state, location, api)
     }
     // 06194 阁楼的秘密：轮末从场上弃掉 1 张（每轮最多一次）。
-    const aside = state.scenarioFlags?.agendaAside
-    if (Array.isArray(aside) && aside.includes(SECRETS_IN_THE_ATTIC)) {
-      const index = aside.indexOf(SECRETS_IN_THE_ATTIC)
+    const aside = state.agendaAside
+    const index = (aside || []).findIndex(card => (card.originalCode || card.code || card) === SECRETS_IN_THE_ATTIC)
+    if (index >= 0) {
       aside.splice(index, 1)
       state.encounterDiscard.push(SECRETS_IN_THE_ATTIC)
       api.info?.('🕯️ 轮末：从场上弃掉 1 张「阁楼的秘密」（每轮最多一次）。')
@@ -381,8 +371,8 @@ export const behavior = {
 
   fastActions(state, inv) {
     // 06194 阁楼的秘密在场时，地点上的 [fast] 能力不能触发。
-    const aside = state.scenarioFlags?.agendaAside
-    if (Array.isArray(aside) && aside.includes(SECRETS_IN_THE_ATTIC)) return []
+    const aside = state.agendaAside
+    if ((aside || []).some(card => (card.originalCode || card.code || card) === SECRETS_IN_THE_ATTIC)) return []
     const moves = []
     const location = here(state, inv)
     if (location) locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
@@ -517,6 +507,7 @@ export const behavior = {
 
   // ---- 混乱标记 ----
   resolveChaosToken(state, inv, token) {
+    if (token === 'cultist') return { delta: 0, drawAnother: true }
     return tshChaosToken(state, inv, token)
   },
 

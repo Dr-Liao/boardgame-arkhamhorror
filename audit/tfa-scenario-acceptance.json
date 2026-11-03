@@ -3,14 +3,14 @@
   "campaignId": "theForgottenAge",
   "milestone": "M3",
   "generatedFrom": "original-campaign-only",
-  "status": "pending",
+  "status": "verified",
   "productionGate": "playable",
   "items": [
     {
       "id": "theUntamedWilds",
       "code": "04043",
       "name": "荒莽密林",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -18,7 +18,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -40,14 +40,15 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件"
+      "gaps": [],
+      "resolved": [
+        "探索按当前地点印刷连接符号持续翻牌，跳过不相连地点并洗回；tests/tfa-engine-integration.test.mjs"
       ],
       "testFile": "tests/tfa-untamed-wilds.test.mjs",
       "fileHashes": {
         "definition.js": "28f4ec1a49b6ce358ae38e95548890ce86d2129182935831730de3a3fcd228a6",
         "layout.js": "105a8ad0b2e21650ba10fd1e8e4ca12ef791e542a832686f57805707f0f35974",
-        "behavior.js": "548d7fa64fe3b176743709e365682c0fce9a4e76e0f1ee8381389b92c3a0a93f",
+        "behavior.js": "cf911788caa92cf771c81c6945db5d427982c31819a86067c96b8e2e8d164504",
         "index.js": "0731d736c8926fb865f1158b21717a03cd1c522166df077203d00bd6a99c7d0a"
       }
     },
@@ -89,6 +90,7 @@
         "pendingEncounterCodes": []
       },
       "gaps": [],
+      "resolved": [],
       "testFile": "tests/tfa-doom-of-eztli.test.mjs",
       "fileHashes": {
         "definition.js": "7487d0aceb6b10aa2b0fb67593dc389b639e753b6017df0d0978aab85255c6a6",
@@ -101,7 +103,7 @@
       "id": "threadsOfFate",
       "code": "04113",
       "name": "命运之线",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -109,7 +111,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -130,9 +132,10 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "04124/04132 的目标以「附属敌人是否仍在场」近似，未区分进胜利区与被弃掉",
-        "04122b/04130b/04137b 的「与旁人资产互换」用移除剧情资产 + 生成敌人近似"
+      "gaps": [],
+      "resolved": [
+        "04124/04132 原文条件为附属敌人 leaves play，弃牌与胜利区均满足；tests/tfa-threads-of-fate.test.mjs",
+        "04122b/04130b/04137b 的旁人面进入 removed，敌人面在原地点生成并接过附属卡；tests/tfa-threads-of-fate.test.mjs"
       ],
       "testFile": "tests/tfa-threads-of-fate.test.mjs",
       "fileHashes": {
@@ -146,7 +149,7 @@
       "id": "theBoundaryBeyond",
       "code": "04161",
       "name": "界限彼端",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -154,7 +157,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -176,8 +179,9 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "古代地点与现代格位共用桌面坐标，静态地图上会重叠"
+      "gaps": [],
+      "resolved": [
+        "古代面覆盖同一现场格位，地图只渲染每格一张卡；tests/tfa-boundary-beyond.test.mjs"
       ],
       "testFile": "tests/tfa-boundary-beyond.test.mjs",
       "fileHashes": {
@@ -191,7 +195,7 @@
       "id": "heartOfTheEldersPart1",
       "code": "04205",
       "name": "久远腹地（上）",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -199,7 +203,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -221,14 +225,15 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "r2 是忠实移植但原版基础流程不可达（仅 ReturnTo 触发）"
+      "gaps": [],
+      "resolved": [
+        "r2 属 Return To 专用分支，不在基础战役发布范围；tests/tfa-heart-of-the-elders-part1.test.mjs"
       ],
       "testFile": "tests/tfa-heart-of-the-elders-part1.test.mjs",
       "fileHashes": {
         "definition.js": "92924c0b79e037416cbe2a299d322e134725c98992b0b2a6a563cbfdc0e2635e",
         "layout.js": "07bc6bcbbb4c03013b1fcc3bf62f0e6d68af801d0fdc2f4ab9c6fd02773b86a4",
-        "behavior.js": "6542ef16d91d092bd84ce122c4578ac5ae16a02abee5b2ca8843614de1f52b8f",
+        "behavior.js": "5d3224b4775c2c67f4596d7b4c39b88dd97d48c2fc67b1757642536feb245770",
         "index.js": "9d79ecaaee4dd103bc2d824dcba78e7b5082d3db31d143e7ad57bb8fc6763e26"
       }
     },
@@ -236,7 +241,7 @@
       "id": "heartOfTheEldersPart2",
       "code": "04205",
       "name": "久远腹地（下）",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -244,7 +249,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -266,14 +271,15 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "地点强制效果只覆盖「探索放置/进入」路径，卡牌直接放入场不触发"
+      "gaps": [],
+      "resolved": [
+        "04224/04227 的入场强制效果接入通用 placeLocation；tests/tfa-heart-of-the-elders-part2.test.mjs"
       ],
       "testFile": "tests/tfa-heart-of-the-elders-part2.test.mjs",
       "fileHashes": {
         "definition.js": "2e3a061ef897ba8813e1b99753a076c5d906d27219ae27da86b901076ba63663",
         "layout.js": "303a6681b6de49077068aebb1f8fad4e8fb3c7b170ca9943b5658d3b7dbac3b7",
-        "behavior.js": "6e8288d69b9005d48384ef8d1465f72c07dabb147d9d72eee8fa7b7a7624cfbb",
+        "behavior.js": "78928efb69c93c1ac41e724025e5fd91aeaf06bcd598534d2b85e2e00d05b0c3",
         "index.js": "5a17d4336c601279c39123927a2301ae672a4d20d97032d425458abb2b412491"
       }
     },
@@ -281,7 +287,7 @@
       "id": "theCityOfArchives",
       "code": "04237",
       "name": "天机之城",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -289,7 +295,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -310,8 +316,9 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "会谈间槽位的 frontCode 固定，运行期用 locationVariants 换位，身份与卡面可能错位"
+      "gaps": [],
+      "resolved": [
+        "真实 placeLocation 合并 locationVariants，三间会谈间卡号与随机计划一致；tests/tfa-city-of-archives.test.mjs"
       ],
       "testFile": "tests/tfa-city-of-archives.test.mjs",
       "fileHashes": {
@@ -325,7 +332,7 @@
       "id": "theDepthsOfYoth",
       "code": "04277",
       "name": "幽嘶深渊",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -333,7 +340,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -355,8 +362,9 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "「收集了一种奇怪的液体」存 scenarioFlags 而非战役记录，粘稠物→钥匙只在本章内生效"
+      "gaps": [],
+      "resolved": [
+        "来源在本章结局读取 remembered CollectedAStrangeLiquid 随即授予钥匙补给；tests/tfa-depths-of-yoth.test.mjs"
       ],
       "testFile": "tests/tfa-depths-of-yoth.test.mjs",
       "fileHashes": {
@@ -370,7 +378,7 @@
       "id": "shatteredAeons",
       "code": "04314",
       "name": "破碎永世",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -378,7 +386,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -403,8 +411,9 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」"
+      "gaps": [],
+      "resolved": [
+        "蛇族/异教徒不交战已由 trait-passives 接线，未使用 aloof 近似；tests/tfa-shattered-aeons.test.mjs"
       ],
       "testFile": "tests/tfa-shattered-aeons.test.mjs",
       "fileHashes": {
@@ -418,7 +427,7 @@
       "id": "turnBackTime",
       "code": "04344",
       "name": "时间倒流（尾声）",
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -426,7 +435,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -447,15 +456,16 @@
         ],
         "pendingEncounterCodes": []
       },
-      "gaps": [
-        "无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤",
-        "04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一"
+      "gaps": [],
+      "resolved": [
+        "无结局为全体调查员永久 insane 战役状态；tests/tfa-turn-back-time.test.mjs",
+        "04065 在抽牌前一次选定 2 点的三种组合；tests/tfa-turn-back-time.test.mjs"
       ],
       "testFile": "tests/tfa-turn-back-time.test.mjs",
       "fileHashes": {
         "definition.js": "b4b627111c6c7a7671a76e83071e2ba9d690f060b322a72d6cbcc4a35172669a",
         "layout.js": "9356d9faed24051c0d17ec21c620e1fa84b2eedcc4e70fcb4cd6b27120f47a7a",
-        "behavior.js": "caf45c74bbed4bdd4f689d15816642d91ae6e152df678e9ef4bb44abcec5fe3e",
+        "behavior.js": "3b8d2dcfa0b9d19dfd1ef9eba3ba24ccfabc840867b5299784db28326cc80ed4",
         "index.js": "0e1b101fe1dc49341afa0984566b2ba68a0b999a2abe2910c75f3e6e8e2da30e"
       }
     }

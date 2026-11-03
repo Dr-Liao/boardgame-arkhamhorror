@@ -16,7 +16,7 @@ import { isParleyDescriptor } from './parley.js'
 // P6（食梦者）：受限行动的算术与 kind 判定分别在 restricted-actions.js / table-decisions.js。
 import { spellOnlyActionsOf } from './spell-actions.js'
 import {
-  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction,
+  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction, availableEngageCredit,
 } from './restricted-actions.js'
 
 import { MODE_LABELS, assignSeatPart, campaignPartsManifest, defaultPartLeads, describeModePlan, laneBalance, modePlan } from '../campaign/campaign-modes.js'
@@ -29,10 +29,13 @@ import { flipVeiledLocation } from './veiled.js'
 import { cardDef } from './card-lookup.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
 import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from './hidden-enemy.js'
+import { recordPerformedAction } from './action-history.js'
+import { preparePlayAttempt } from './play-attempt.js'
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
     ALL_INVESTIGATORS,
+    abilityApi,
     EFFECTS,
     ScenarioEnded,
     ScenarioRestarted,
@@ -120,11 +123,13 @@ export function createDispatch(deps) {
     normalActionsLeft,
     payAndAdvanceAct,
     playFlag,
+    playCost,
     // 2026-10-27：如同手牌通道统一取牌（宿主附属 / 直觉牌库 / 银暮匕首下方 / 其余通道片段）。
     playChannels,
     playerWindow,
     progressCampaign,
     randomValue,
+    shuffle,
     reactionWindow,
     recommendUpgrade,
     registerCampaignInvestigator,
@@ -223,6 +228,20 @@ function executeCommand(state, seat, move, events) {
 }
 
 function executeAction(state, seat, move, events) {
+  if (move.action !== 'play') return executePaidAction(state, seat, move, events)
+  const previous = state._prePlayAttempt
+  const attempt = preparePlayAttempt(state, state.investigators[seat], move.copyCode || move.cardId, events,
+    { playCost, cardDef, reactionWindow, shuffle, randomValue })
+  if (attempt.cancelled) return
+  state._prePlayAttempt = attempt
+  try { return executePaidAction(state, seat, move, events) }
+  finally {
+    if (previous) state._prePlayAttempt = previous
+    else delete state._prePlayAttempt
+  }
+}
+
+function executePaidAction(state, seat, move, events) {
   if (move.action === 'setup') {
     progressCampaign(state, events, true)
     return
@@ -244,7 +263,9 @@ function executeAction(state, seat, move, events) {
   const restricted = restrictedKindOfMove(state, inv, move)
   setCurrentSpellAction(spell)
   setCurrentRestrictedKind(restricted)
-  if (kind === 'explore') {
+  if (state.immediateAction?.seat === seat && cost > 0) {
+    if (cost !== 1) throw new Error('立即行动只能进行一次行动')
+  } else if (kind === 'explore') {
     if (inv.actionsLeft < cost) throw new Error('行动点不足')
     const normal = normalActionsLeft(inv)
     inv.actionsLeft -= cost
@@ -262,13 +283,18 @@ function executeAction(state, seat, move, events) {
     consumeRestrictedAction(inv, cost, restricted)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
-  if (cost > 0) { inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1; state.phaseActionCount = (state.phaseActionCount || 0) + 1 }
+  if (cost > 0) {
+    if (state.immediateAction?.seat !== seat) inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1
+    state.phaseActionCount = (state.phaseActionCount || 0) + 1
+  }
   if (totalCost > cost || move.action === 'endTurn') inv.tomeActionUsed = true
   state.moveCount++
   const ability = move.action === 'ability' ? assetEffect(inv, controlledAbilityCard(inv, move.assetId))?.abilities?.[move.abilityIndex] : null
   if (totalCost) for (const threat of unpaidExtraActionThreats(state, inv, kind)) {
     threat.extraActionPaidRound = state.round
   }
+  const previousResolvingAction = state._resolvingAction
+  state._resolvingAction = totalCost > 0 || ability?.descriptor?.kind === 'action'
   state._actionPaid = true
   try {
     if (move.action === 'scenarioAction') scenarioBehavior(state).payScenarioActionCost?.(state, inv, move, scenarioRuntime(state, events))
@@ -280,20 +306,20 @@ function executeAction(state, seat, move, events) {
       && (playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
         || cardKeyword(state, inv, move.copyCode || move.cardId, 'noOpportunityAttack'))
     // 行动/能力级豁免（01055 飞贼的 [action]）：只豁免这一次行动，不豁免打出资产本身。
-    const usedAbility = move.action === 'ability' ? abilityOfMove(state, inv, move) : null
+    const usedAbility = ['ability', 'entityAbility'].includes(move.action) ? abilityOfMove(state, inv, move) : null
     const abilityNoAoO = usedAbility?.descriptor?.noOpportunityAttack === true
       || usedAbility?.noOpportunityAttack === true
       // 第 2 步 P2.7：谈判行动按规则不引发借机攻击；非玩家实体的通用行动同理。
       || isParleyDescriptor(usedAbility?.descriptor)
-      || move.action === 'entityAbility'
     // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
     const engageNoAoO = kind === 'engage'
       && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)
     // 2026-10-25 本循环修复 05228：剧本行动（behavior.actions）可以声明不引发借机攻击，
     // 支持全豁免（noOpportunityAttack: true）与按敌人卡号豁免（noOpportunityAttackFrom: [卡号…]）。
     const scenarioNoAoOAll = move.action === 'scenarioAction' && move.noOpportunityAttack === true
-    const scenarioNoAoOFrom = move.action === 'scenarioAction' && Array.isArray(move.noOpportunityAttackFrom)
-      ? move.noOpportunityAttackFrom.map(String)
+    const exemptions = move.action === 'ability' ? usedAbility?.descriptor?.noOpportunityAttackFrom : move.noOpportunityAttackFrom
+    const scenarioNoAoOFrom = Array.isArray(exemptions)
+      ? exemptions.map(String)
       : []
     if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !scenarioNoAoOAll
       && !ruleIgnored(state, inv, 'opportunityAttack')
@@ -331,6 +357,13 @@ function executeAction(state, seat, move, events) {
         return
       }
       if (move.action !== 'endTurn') {
+        if (totalCost > 0) {
+          const repeatedActionKinds = recordPerformedAction(state, inv, move, kind, registeredEntry)
+          if (repeatedActionKinds.length) reactionWindow(state, 'consecutiveActions', {
+            when: 'consecutiveActions', seat, actionKinds: repeatedActionKinds,
+            location: inv.location, prompt: `${inv.name} 连续完成了两次同类行动`,
+          }, events)
+        }
         reactionWindow(state, 'actionResolvedAtLocation', {
           when: 'actionResolvedAtLocation', seat, location: inv.location, prompt: `${inv.name} 完成了一次行动`,
         }, events)
@@ -339,6 +372,8 @@ function executeAction(state, seat, move, events) {
     } else if (state.status === 'playing') advanceInvestigator(state, seat, events)
   } finally {
     delete state._actionPaid
+    if (previousResolvingAction === undefined) delete state._resolvingAction
+    else state._resolvingAction = previousResolvingAction
   }
 }
 
@@ -616,7 +651,7 @@ function applyMoveUnchecked(state, seat, move, events) {
       if (m.asIfLocation) beginAsIf(state, inv, m.asIfLocation)
       try {
         doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
-          m.fromPlanAssetId, m.fromBackpackId, m.threatId)
+          m.fromPlanAssetId, m.fromBackpackId, m.threatId, 0, m.fastSourceId || null)
       } finally {
         if (m.asIfLocation) endAsIf(state, inv)
       }
@@ -627,12 +662,12 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'freeAction': doFreeAction(state, seat, events); break
     case 'hiddenAction': doHiddenAction(state, seat, m, events); break
     case 'move': doMove(state, seat, m.locationId, events); break
-    case 'investigate': doInvestigate(state, seat, m.allowNoClues ? { allowNoClues: true } : {}, events); break
+    case 'investigate': doInvestigate(state, seat, { basicAction: 'investigate', ...(m.allowNoClues ? { allowNoClues: true } : {}) }, events); break
     case 'explore': doExplore(state, seat, events); break
     case 'searchIzzie': doSearchIzzie(state, seat, events); break
     case 'locationAbility': doLocationAbility(state, seat, m.locationId, events); break
-    case 'fight': doFight(state, seat, { enemyId: m.enemyId }, events); break
-    case 'evade': doEvade(state, seat, { enemyId: m.enemyId }, events); break
+    case 'fight': doFight(state, seat, { enemyId: m.enemyId, basicAction: 'fight' }, events); break
+    case 'evade': doEvade(state, seat, { enemyId: m.enemyId, basicAction: 'evade' }, events); break
     case 'extraEvade': doEvade(state, seat, { enemyId: m.enemyId }, events, true); inv.extraEvadeUsed = state.turnSerial; break
     case 'parley': doParley(state, seat, m.enemyId, events); break
     case 'parleyCultist': doParleyCultist(state, seat, m.enemyId, events); break
@@ -682,6 +717,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     default: break
   }
 
+  abilityApi(state, events).resolveEmptyUses()
   checkAct(state, events)
   checkDefeated(state, seat, events)
   checkOutcome(state, events)
@@ -694,9 +730,11 @@ function applyMoveUnchecked(state, seat, move, events) {
     // 否则「快速。只能在你回合期间打出」的手牌会随回合推进失去唯一的时机。
     const acting = state.investigators[seat]
     const closingTurn = !acting || acting.actionsLeft <= 0 || acting.turnEnded || acting.defeated || acting.resigned
-    playerWindow(state, 'investigation.afterAction', events, null, { fastCards: closingTurn })
+    if (state.immediateAction?.seat === seat) return events
+    playerWindow(state, 'investigation.afterAction', events, null, { fastCards: closingTurn, betweenActions: true })
     const cur = state.investigators[seat]
-    if (cur.actionsLeft <= 0 || cur.turnEnded || cur.defeated || cur.resigned) {
+    const canEngage = availableEngageCredit(cur) > 0 && legalMoves(state).some(move => move.action === 'engage' && !move.reason)
+    if (cur.actionsLeft <= 0 && !canEngage || cur.turnEnded || cur.defeated || cur.resigned) {
       advanceInvestigator(state, seat, events)
     }
   }

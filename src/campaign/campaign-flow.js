@@ -56,6 +56,13 @@ export function flowCondition(condition, campaign) {
       ? roster.length > 0 && someNotCaptured
       : roster.length > 0 && !someNotCaptured
   }
+  if (condition.activeCapturedInvestigator) {
+    return PART_IDS.some(part => {
+      const scope = partScope(campaign, part)
+      const ids = new Set(scope.records.wasCaptured || [])
+      return Object.values(scope.investigators).some(record => record.status === 'active' && ids.has(record.id))
+    })
+  }
   // 双线条件（P5 批次 1）：part/parts/mode/modeIn/activeParts 与普通条件可以同时出现在
   // 同一个叶子上（例如 `{ mode: 'pick', record: 'x', atLeast: 1 }`），拆开分别判断。
   if (PART_CONDITION_KEYS.some(key => Object.hasOwn(condition, key))) {
@@ -116,12 +123,13 @@ export function enterCampaignNode(campaign, manifest, nodeId) {
   return graph.nodes[nodeId]
 }
 
-export function walkCampaign(campaign, manifest, choose, applyEffect = () => {}, { continuousInterlude = false } = {}) {
+export function walkCampaign(campaign, manifest, choose, applyEffect = () => {}, { continuousInterlude = false, stopAtPartGate = false } = {}) {
   const graph = validateCampaignGraph(manifest)
   if (!campaign.flow) enterCampaignNode(campaign, manifest, graph.start)
   for (let steps = 0; steps < 128; steps++) {
     const id = campaign.flow.nodeId
     const node = graph.nodes[id]
+    if (stopAtPartGate && node.type === 'partGate') return { ...node, id }
     const visit = campaign.flow.history.at(-1)
     const partOf = effect => (PART_IDS.includes(effect?.part) ? effect.part : null)
     const apply = effect => {
@@ -170,12 +178,13 @@ export function walkCampaign(campaign, manifest, choose, applyEffect = () => {},
       for (const effect of node.pendingEffects || []) applyPending(effect)
     }
     if (!visit.effectsApplied) {
-      if (node.text) {
+      if (node.text && (!node.textWhen || flowCondition(node.textWhen, campaign))) {
         visit.storyText = node.text
         visit.storyTitle = node.title || node.prompt || '调查纪事'
         applyEffect({ type: 'log', text: node.text })
       }
       for (const effect of node.effects || []) apply(effect)
+      if (node.epilogueNumber != null) campaign.epilogueNumber = node.epilogueNumber
       applyInterludeExtras(node)
       visit.effectsApplied = true
     }

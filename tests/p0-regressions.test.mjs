@@ -95,6 +95,9 @@ test('P0 能力 API 覆盖条目里所有 api.* 调用（locName 回归）', asy
     import('../src/engine/api-clue.js').then(module => module.createClueApi),
     import('../src/engine/api-enemy.js').then(module => module.createEnemyApi),
     import('../src/engine/api-card.js').then(module => module.createCardApi),
+    import('../src/engine/api-mechanics.js').then(module => module.createMechanicsApi),
+    import('../src/engine/investigator-mechanics.js').then(module => module.createInvestigatorApi),
+    import('../src/engine/player-mechanics.js').then(module => module.createPlayerApi),
   ])
   const proxy = new Proxy(function () {}, {
     get: (target, key) => key === 'then' ? undefined : proxy,

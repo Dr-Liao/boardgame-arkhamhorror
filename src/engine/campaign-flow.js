@@ -7,6 +7,7 @@
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
 export function createCampaignFlow(deps) {
+  const { scenarioRuntime } = deps
   const {
     ALL_CARDS,
     CHAOS_BAGS,
@@ -138,7 +139,7 @@ function finishScenario(state, resolutionKey, events) {
     }
   }
   const storyKey = scenarioBehavior(state).storyResolutionKey?.(state, resolutionKey) || resolutionKey
-  const story = resolutionStory(sc, storyKey, null, {
+  let story = resolutionStory(sc, storyKey, null, {
     records: recordsBefore,
     investigators: state.investigators,
     actIndex: state.actIndex,
@@ -146,7 +147,8 @@ function finishScenario(state, resolutionKey, events) {
   info(state, events, story.paragraphs.join('\n\n'), { kind: 'story', title: story.title,
     name: sc.name, text: story.paragraphs.join('\n\n') })
   applyDefeatTrauma(state, events)
-  applyResolutionEffects(state, resolutionKey, events)
+  const resolutionResult = applyResolutionEffects(state, resolutionKey, events)
+  if (resolutionResult?.story) story = resolutionResult.story
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {
     // Phase 5（5a-8）：威胁卡带来的创伤由条目级标记声明（计数 / 充能阈值）。
@@ -220,7 +222,7 @@ function applyResolutionEffects(state, resolutionKey, events) {
   const campaign = state.campaign
   const result = scenarioBehavior(state).resolution?.(
     state, resolutionKey, events,
-    { addLitaToCampaign, addTrauma, originalCardCode, basicWeaknessPool,
+    { ...scenarioRuntime(state,events), addLitaToCampaign, addTrauma, originalCardCode, basicWeaknessPool,
       ALL_CARDS, campaignCardChange, randomValue,
       // P2：结局钩子也能要求玩家做选择（04059 结局 3「回到遗迹深处 / 摧毁此处」），
       // 以及「重演本场冒险」的剧本重开原语（04059 结局 4）。
@@ -229,6 +231,7 @@ function applyResolutionEffects(state, resolutionKey, events) {
         if (!restartScenario(state)) return false
         throw new ScenarioRestarted()
       } }) || {}
+  if (result.flowData !== undefined) campaign.flowPayload = structuredClone(result.flowData)
   const { bonus = 0, award = true, seatBonus = () => 0 } = result
   // Phase 3（D4）：结局的「写哪些记录 / 给谁创伤 / 加什么标记」可以是声明式条目，
   // 由 campaign-effects 的解释器统一校验 recordSchema 后结算。必须在记录快照之前完成。
@@ -240,7 +243,7 @@ function applyResolutionEffects(state, resolutionKey, events) {
     }
   }
   if (award) for (const inv of state.investigators) {
-    let amount = state.victory + bonus + seatBonus(inv.seat)
+    let amount = state.victory + bonus + seatBonus(inv.seat) + (inv.scenarioXpBonus || 0)
     // Phase 5（5b-9）：「卡戎的银币」这类结局加成由条目级 obolContract 声明。
     const obol = inv.assets.find(asset => registeredEntry(asset.code)?.obolContract)
     if (obol) {
@@ -272,6 +275,8 @@ function applyResolutionEffects(state, resolutionKey, events) {
     awardExperience(campaign, inv.seat, amount)
     info(state, events, `${inv.name} 获得 ${amount} XP，未花费 ${campaign.investigators[inv.seat].xp} XP。`)
   }
+  result.afterExperience?.(state, scenarioRuntime(state, events))
+  return result
 }
 
 function addTrauma(state, seat, kind, amount, events) {

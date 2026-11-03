@@ -33,7 +33,7 @@ const ARTIFACT_DIR = join(ROOT, 'artifacts', 'migration', 'tde')
 const PLAN_PATH = join(ARTIFACT_DIR, 'primitive-plan.json')
 const CATALOG_PATH = join(ARTIFACT_DIR, 'primitive-catalog.json')
 const MECHANISM_SCAN = join(ARTIFACT_DIR, 'mechanism-scan.json')
-const REPLAY_BEFORE = 'artifacts/migration/tde/replay-before.json'
+const REPLAY_BEFORE = 'tests/fixtures/replay/golden-replays.json'
 const MODE = process.argv.includes('--write') ? 'write' : process.argv.includes('--check') ? 'check' : 'report'
 
 const rel = path => relative(ROOT, path).replaceAll('\\', '/')
@@ -182,14 +182,18 @@ async function verifyChecks(checks = []) {
 // 测试实跑与重放零漂移
 // ---------------------------------------------------------------------------
 
+const testResults = new Map()
 function runTestFile(path) {
+  if (testResults.has(path)) return testResults.get(path)
   const absolute = abs(path)
   if (!existsSync(absolute)) return { path, exists: false, ok: false, tests: 0, fail: 0, skipped: true, note: '测试文件不存在' }
   const run = spawnSync(process.execPath, ['--test', absolute], { cwd: ROOT, encoding: 'utf8', timeout: 180000 })
   const output = `${run.stdout || ''}\n${run.stderr || ''}`
   const tests = Number((output.match(/^ℹ tests (\d+)$/m) || output.match(/^# tests (\d+)$/m) || [])[1] || 0)
   const fail = Number((output.match(/^ℹ fail (\d+)$/m) || output.match(/^# fail (\d+)$/m) || [])[1] || 0)
-  return { path, exists: true, ok: run.status === 0 && fail === 0 && tests > 0, tests, fail, exitCode: run.status, skipped: false }
+  const result = { path, exists: true, ok: run.status === 0 && fail === 0 && tests > 0, tests, fail, exitCode: run.status, skipped: false }
+  testResults.set(path,result)
+  return result
 }
 
 function replayZeroDrift() {

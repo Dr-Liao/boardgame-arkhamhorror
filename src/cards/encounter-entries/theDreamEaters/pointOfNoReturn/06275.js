@@ -3,14 +3,15 @@
 //   [action]: Test any skill (2). This test gets +1 [per_investigator] difficulty. If you succeed,
 //   remove False Awakening from the game. Any investigator may trigger this ability.
 //
-// 它不进入威胁区、也不从遭遇牌库抽出：setup 时从牌库/放一边取出放在密谋牌库旁（行为在
-// behavior.preScenarioSetup 里读 flags 建立状态），[action] 由 behavior.actions/performAction 分派。
-// 数据：任意技能、难度 2 + 1×人数、成功移出游戏。
+// 开局从持有者牌库取出，作为带 1 毁灭的实体放在密谋牌库旁；任意调查员可发动
+// 章节提供的行动，进行难度 2 + 调查员人数的任意技能检定，成功后移出游戏。
+// 推进密谋时本卡上的毁灭保留，直到本卡自身离场。
 
 export default {
   code: '06275',
   scope: 'treachery',
   implemented: true,
+  doomKeptOnAgendaAdvance: 'self',
   flags: {
     agendaAsideWeakness: true,
     setupDoom: 1,
@@ -20,5 +21,4 @@ export default {
     removeFromGameOnSuccess: true,
     weakness: true,
   },
-  note: '「放在密谋牌库旁并有 1  doom」用 scenarioFlags（doom 计入 api.addDoom/removeDoom）近似；离场/推进时的 doom 清理口径记 simplified。',
 }

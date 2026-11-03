@@ -22,8 +22,10 @@
 import { all } from './matcher.js'
 
 export const TARGET_KINDS = Object.freeze(['enemy', 'investigator', 'location', 'asset', 'cardInHand'])
+let targetHooks = { enemyHealth: (_state,enemy) => enemy.health, enemyEvade: (_state,enemy) => enemy.evade }
+export function setTargetHooks(next) { targetHooks = { ...targetHooks, ...next } }
 
-const TARGET_KEYS = new Set(['kind', 'query', 'optional', 'label'])
+const TARGET_KEYS = new Set(['kind', 'query', 'optional', 'label', 'range'])
 
 function normalizedQuery(raw, origin) {
   if (raw == null) return null
@@ -46,11 +48,13 @@ export function normalizeTarget(raw, origin = 'target') {
   if (!TARGET_KINDS.includes(raw.kind)) {
     throw new Error(`${origin}: target.kind 必须是 ${TARGET_KINDS.join(' / ')} 之一（收到 ${JSON.stringify(raw.kind)}）`)
   }
+  if (raw.range != null && (raw.kind !== 'location' || raw.range !== 'anywhere')) throw new Error(`${origin}: target.range only supports location/anywhere`)
   return Object.freeze({
     kind: raw.kind,
     query: normalizedQuery(raw.query, origin),
     optional: raw.optional === true,
     label: raw.label ? String(raw.label) : null,
+    ...(raw.range ? { range: raw.range } : {}),
   })
 }
 
@@ -62,6 +66,8 @@ function cardNameOf(state, code) {
 function cardTraits(state, code) {
   return (state?.cards?.[code]?.traits || []).map(trait => String(trait).toLowerCase())
 }
+
+import { playerEffectCanAffect } from './effect-recipient.js'
 
 function candidateList(state, inv, kind) {
   const location = inv?.location
@@ -94,11 +100,19 @@ function candidateList(state, inv, kind) {
 export function enumerateTargets(state, inv, target, ctx = {}) {
   if (!target) return []
   const base = { state, inv, source: ctx.source ?? null, windowId: ctx.windowId ?? null, context: ctx.context ?? {} }
-  const candidates = candidateList(state, inv, target.kind)
+  const candidates = (target.kind === 'location' && target.range === 'anywhere'
+    ? (state.locations || []).map(entity => ({ id: entity.id, label: entity.revealed ? entity.name : entity.unrevealedName || entity.name, kind: 'location', entity }))
+    : candidateList(state, inv, target.kind)).filter(candidate => target.kind !== 'investigator'
+    || playerEffectCanAffect(state, candidate.entity.seat, { sourceSeat: inv.seat, sourceCode: ctx.source?.code }))
   if (!target.query) return candidates
   return candidates.filter(candidate => {
     try {
-      return target.query({ ...base, candidate, entity: candidate.entity, cardTraits: code => cardTraits(state, code) }) === true
+      return target.query({ ...base, candidate, entity: candidate.entity, cardTraits: code => cardTraits(state, code),
+        enemyHealth: enemy => targetHooks.enemyHealth(state,enemy),
+        canMoveTo: id => targetHooks.canMoveTo?.(state, inv.seat, id) === true,
+        helpers: { canMoveTo: (seat, id) => targetHooks.canMoveTo?.(state, seat, id) === true },
+        canDamageEnemy: (enemy, source = null) => targetHooks.canDamageEnemy?.(state, enemy, inv.seat, source) === true,
+        enemyEvade: enemy => targetHooks.enemyEvade(state,enemy,inv.seat) }) === true
     } catch {
       return false
     }

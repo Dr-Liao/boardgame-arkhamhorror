@@ -22,7 +22,7 @@ export default {
           api.info(`「低级错误」：${inv.name} 弃掉了 ${targets.length} 个带伤害/恐惧的支援。`)
           return
         }
-        api.scheduleWeaknessShuffle('06007')
+        api.scheduleWeaknessShuffle(inv.seat, '06007')
         api.info(`「低级错误」：没有支援被弃掉，${inv.name} 将它洗回牌库。`)
       },
     },

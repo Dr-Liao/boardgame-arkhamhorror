@@ -10,7 +10,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
-  loadTdeCampaignWorld, hubSetup, hubBegin, settleParallelLaneChoices, serializeContainer, restoreContainer,
+  loadTdeCampaignWorld, hubSetup, hubBegin, finishParallelSharedStory, settleParallelLaneChoices, serializeContainer, restoreContainer,
 } from './tde-p95-fixture.mjs'
 
 const LANES = ['A', 'B']
@@ -49,17 +49,21 @@ test('P9.5 G10 并行 4 人 2+2 四个章对全流程：双封盘、幕间单次
       if (pair < 4) assert.equal(laneState.uiState, 'scenarioResult')
     }
     if (pair === 4) {
-      // 最后一章两线都直接进 campaignResult：endCampaign 由结束事务处理，无下一章要开。
+      parallelRuntime.advanceParallelPair(state,pair)
+      finishParallelSharedStory(engine,mod,state,{beginNext:false})
+      assert.equal(state.parallel.ending.campaign.finished,true)
+      // 两线已完成，协调器结算共享尾声。
       for (const lane of LANES) {
         assert.equal(state.parallel.lanes[lane].uiState, 'campaignResult')
         assert.equal(state.parallel.lanes[lane].status, 'over')
-        assert.equal(state.parallel.lanes[lane].campaign.flow.nodeId, 'end')
+        assert.ok(state.parallel.lanes[lane].campaign.epilogueNumber)
       }
       break
     }
     assert.deepEqual(Object.keys(state.parallel.sealed).sort(), ['1', '2', '3'].slice(0, pair))
     const advanced = parallelRuntime.advanceParallelPair(state, pair)
     assert.equal(advanced.ok, true, JSON.stringify(advanced))
+    finishParallelSharedStory(engine,mod,state)
     const second = parallelRuntime.advanceParallelPair(state, pair)
     assert.deepEqual(second, { ok: true, alreadyApplied: true, pairId: pair, advanced: {} })
     LANES.forEach((lane, index) => {
@@ -77,5 +81,5 @@ test('P9.5 G10 并行 4 人 2+2 四个章对全流程：双封盘、幕间单次
   const text = serializeContainer(world, state)
   const restored = restoreContainer(world, text)
   assert.equal(serializeContainer(world, restored), text)
-  assert.deepEqual(Object.keys(restored.parallel.interludeApplied).map(Number).sort(), [1, 2, 3])
+  assert.deepEqual(Object.keys(restored.parallel.interludeApplied).map(Number).sort(), [1, 2, 3, 4])
 })

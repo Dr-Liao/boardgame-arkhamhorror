@@ -8,13 +8,8 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 06277 食愿项链（绑定副本，主卡 06276 空虚项链）：充能由 06276 交换时写入（uses/usesType 同 charges）。
-//   · 取消符号标记：符号揭示窗口由引擎在「取消判定之前」开能力层窗口，因此取消必须写成
-//     强制描述子 + 旧式 effect 数据体（{type:'cancelSymbolToken'} 写 skillTest.cancelledSymbol，
-//     引擎随后跳过该标记的修正与效果）；heal 1 damage / 1 horror 由同一 sequence 结算。
-//   · 显式简化（noted）：卡面是 [reaction]（可选），引擎里能在取消判定之前拿到 effect 数据体的
-//     唯一通道是 forced 描述子 + legacyReaction 数据体，因此充能足够时会自动取消（不问询）。
-//   · 没有充能时强制交换回空虚项链：另一个 forced 描述子（uses<=0）走 bonded.return +
-//     moveCard(setAside→play) 把空虚项链放回场上。
+//   · 取消符号标记：可选反应在符号结算前调用 api.cancelCurrentSymbol，再治疗伤害与恐惧。
+//   · 没有充能时由 onUsesEmptied 立即交换回空虚项链。
 
 const SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing']
 
@@ -27,38 +22,21 @@ function swapBack({ inv, api }) {
 
 export default {
   code: '06277',
-  simplified: true,
-  note: '简化：卡面为 [reaction]（可选），但引擎里能在「取消判定之前」拿到 effect 数据体（cancelSymbolToken）'
-    + '的唯一通道是 forced 描述子 + legacyReaction，因此有充能时揭示符号标记会自动取消（不问询）。'
-    + '取消标记、治愈 1 伤害/1 恐惧、无充能时强制交换回空虚项链均已实现。',
+  onUsesEmptied: ({ inv, api }) => swapBack({ inv, api }),
   abilities: [
     {
-      kind: 'forced',
+      kind: 'reaction',
       trigger: 'symbolRevealed',
       id: 'wishEaterCancel',
-      // 旧式数据体：cancelSymbolToken 的读点（skillTest.cancelledSymbol）只在「取消判定之前」的
-      // 能力层窗口里有效，因此用 legacyReaction 数据体 + forced 描述子（resolve 型描述子拿不到
-      // 取消标记的写入入口）。
-      legacyReaction: true,
       label: '揭示符号标记时，花费 1 充能：取消该混乱标记，治愈 1 点伤害和 1 点恐惧',
-      criteria: [({ context }) => SYMBOLS.includes(context?.token)],
+      criteria: [({ state, inv, context }) => context?.seat === inv.seat && SYMBOLS.includes(context?.token)
+        && state.skillTest?.cancelledSymbol !== context.token],
       cost: { uses: 1 },
-      effect: {
-        type: 'sequence',
-        effects: [
-          { type: 'cancelSymbolToken', code: '06277' },
-          { type: 'heal', what: 'damage', amount: 1 },
-          { type: 'heal', what: 'horror', amount: 1 },
-        ],
+      resolve: ({ inv, context, api }) => {
+        if (!api.cancelCurrentSymbol(context, { sourceCode: '06277' })) return
+        api.healDamage(inv.seat, 1)
+        api.healHorror(inv.seat, 1)
       },
-    },
-    {
-      kind: 'forced',
-      trigger: 'symbolRevealed',
-      id: 'wishEaterSwapBack',
-      label: '如果食愿项链没有充能：交换回空虚项链',
-      criteria: [({ source }) => (source?.uses ?? 0) <= 0],
-      resolve: ctx => swapBack(ctx),
     },
   ],
   modifiers: [],

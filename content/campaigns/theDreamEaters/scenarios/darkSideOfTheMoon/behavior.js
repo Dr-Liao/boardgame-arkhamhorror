@@ -221,18 +221,9 @@ function resolveActObjectives(state, api) {
   }
 }
 
-export const scenarioApproximations = Object.freeze([
-  '被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），'
-    + '按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。',
-  '月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，'
-    + '效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。',
-  '月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。',
-  '06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。',
-])
+export const scenarioApproximations = Object.freeze([])
 
-export const scenarioGaps = Object.freeze([
-  '06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。',
-])
+export const scenarioGaps = Object.freeze([])
 
 export const implementedEncounterCodes = Object.freeze([
   MOON_LIZARD, RAW.c06227, RAW.c06228, RAW.c06229, RAW.c06230, RAW.c06231, RAW.c06232, RAW.c06233,
@@ -603,6 +594,7 @@ export const behavior = {
         award: true,
         effects: [
           { record: { [COLD_WASTES_RECORD]: true, [RANDOLPH_LOST_RECORD]: true } },
+          { removeStoryCard: '06059' },
           { campaignWeakness: { code: FALSE_AWAKENING, reason: '月之暗面：无结局（被带往寒冷荒原）' } },
         ],
       }

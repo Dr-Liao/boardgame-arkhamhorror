@@ -36,14 +36,7 @@ export const implementedEncounterCodes = Object.freeze([
   RAW.c06106, RAW.c06107, RAW.c06108, RAW.c06109, RAW.c06271, RAW.c06272, RAW.c06273, RAW.c06274,
 ])
 
-export const scenarioApproximations = Object.freeze([
-  '阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。',
-  '「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。',
-  '15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。',
-  '「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。',
-  '遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。',
-  '[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。',
-])
+export const scenarioApproximations = Object.freeze([])
 
 export const scenarioGaps = Object.freeze([])
 
@@ -85,6 +78,8 @@ function spinAtlachNacha(state, api, times) {
       moved += 1
     }
     flagsOf(state).atlachRotation = ((Number(flag(state, 'atlachRotation')) || 0) + 45) % 360
+    const center = (state.enemies || []).find(enemy => codeOf(enemy) === ATLACH_NACHA && enemy.global)
+    if (center) api.rotateGlobalEnemy(center,45)
   }
   if (moved) {
     api.info?.(flipped
@@ -106,6 +101,9 @@ function expandWeb(state, api) {
   }
   for (const id of EXPANSION) {
     if (locById(state, id)) continue
+    const code = state.locationVariants?.[id]?.originalCode
+    const at = zones.setAside.indexOf(code)
+    if (at >= 0) zones.setAside.splice(at, 1)
     api.place?.(id)
   }
   // 四条腿：06347→theGreatWeb11、06348→5、06349→9、06350→7。
@@ -115,6 +113,8 @@ function expandWeb(state, api) {
     api.spawn?.(code, locationId)
   }
   flagsOf(state).atlachCenter = { assembled: true, enemySide: false }
+  api.takeFromSetAside?.(ATLACH_NACHA)
+  api.putGlobalEnemy(ATLACH_NACHA)
   flagsOf(state).atlachRotation = Number(flag(state, 'atlachRotation')) || 0
   // 2 张黑暗中的织网者从「放一边」洗入遭遇牌库；顺手把遭遇弃牌堆洗回牌库。
   const aside = zones.setAside || []
@@ -135,10 +135,14 @@ function flipAtlachNacha(state, api) {
   const ranked = (state.locations || [])
     .map(location => ({ location, doom: Number(location.doom) || 0 }))
     .sort((left, right) => right.doom - left.doom)
-  const target = ranked[0]?.location || null
+  const tied = ranked.filter(entry=>entry.doom === ranked[0]?.doom).map(entry=>entry.location)
+  const targetId = tied.length > 1 ? api.choose({kind:'location',source:ATLACH_NACHA,seat:state.campaign.leadSeat,
+    prompt:'选择毁灭最多的地点，放置阿特拉克·纳克亚的敌人面。',options:tied.map(location=>({id:location.id,label:location.name}))}) : tied[0]?.id
+  const target = tied.find(location=>location.id===targetId) || null
   if (!target) return
   if (existing) {
-    api.moveEnemy?.(existing, target.id)
+    if (existing.global) api.placeGlobalEnemyAt(existing,target.id)
+    else api.moveEnemy?.(existing, target.id)
     return
   }
   const spawned = api.spawn?.(ATLACH_NACHA, target.id)
@@ -274,31 +278,19 @@ function spawnByRule(state, code, fallbackLoc, engagedSeat, api) {
 
 // 06103 恶心蛛网：附属地点上的[[蜘蛛]]敌人获得反击与警戒（引擎直接读 enemy.retaliate/alert，
 // 章节在阶段切换/敌人入场后同步一次；移除附属后恢复印刷关键词）。
-function syncSickeningWebs(state) {
-  for (const enemy of state.enemies || []) {
-    if (!enemy.weaverSickeningWebs) continue
-    const printed = state.scenario?.enemies?.[codeOf(enemy)] || {}
-    enemy.retaliate = printed.retaliate === true
-    enemy.alert = printed.alert || false
-    delete enemy.weaverSickeningWebs
-  }
-  for (const location of state.locations || []) {
-    const attached = (location.attachments || []).some(attachment =>
-      entryFlags(codeOf(attachment))?.spiderKeywords)
-    if (!attached) continue
-    for (const enemy of (state.enemies || []).filter(entry =>
-      entry.location === location.id && hasTrait(entry, 'Spider'))) {
-      enemy.retaliate = true
-      enemy.alert = true
-      enemy.weaverSickeningWebs = true
-    }
-  }
-}
 
 // ---------------------------------------------------------------------------
 // behavior
 // ---------------------------------------------------------------------------
 export const behavior = {
+  needsSaveRepair: state => !!state.scenarioFlags?.atlachCenter?.assembled
+    && !state.scenarioFlags.atlachCenter.enemySide && !state.enemies.some(enemy=>enemy.code===ATLACH_NACHA),
+  repairSavedState: (state,api) => {
+    if(!state.scenarioFlags?.atlachCenter?.assembled || state.scenarioFlags.atlachCenter.enemySide
+      || state.enemies.some(enemy=>enemy.code===ATLACH_NACHA)) return
+    const center=api.putGlobalEnemy(ATLACH_NACHA)
+    api.rotateGlobalEnemy(center,state.scenarioFlags.atlachRotation || 0)
+  },
   ...encounterRules,
   id: 'weaverOfTheCosmos',
   implementedEncounterCodes,
@@ -328,6 +320,17 @@ export const behavior = {
     const zones = zonesOf(state)
     const flags = flagsOf(state)
     zones.setAside = [ATLACH_NACHA, ...LEGS, SPINNER, SPINNER]
+    const copies = ['06340','06340','06340','06341','06341','06342','06342','06342',
+      '06343','06343','06344','06344','06345','06345','06345']
+    const shuffled = helper.shuffle ? helper.shuffle(copies, () => helper.randomValue(state)) : copies
+    state.locationVariants ||= {}
+    for (const [index, id] of [...WEB, ...EXPANSION].entries()) {
+      const template = Object.values(state.scenario.locations).find(loc => loc.originalCode === shuffled[index])
+      const { id: ignoredId, connections, explicitConnections, ruleId, ...face } = template
+      state.locationVariants[id] = { ...face, id }
+    }
+    zones.setAside.push(...shuffled.slice(4))
+    zones.webCardOrder = shuffled
     zones.removed = []
     zones.locationSeq = 0
     flags.startWeb = WEB[0]
@@ -365,12 +368,10 @@ export const behavior = {
 
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
-    syncSickeningWebs(state)
   },
 
   // ---- 阶段 ----
   phaseBegan(state, phase, api) {
-    syncSickeningWebs(state)
     const flags = flagsOf(state)
     if (phase === 'mythos') {
       // 06342：调查阶段结束（神话阶段开始）时，有调查员的巨网各放 1 毁灭。
@@ -489,14 +490,10 @@ export const behavior = {
     const location = here(state, inv)
     if (location) {
       locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
-      // 06103 恶心蛛网：附属地点上的 [action] 摆脱（战斗(3) 或 敏捷(3)）。
       for (const attachment of location.attachments || []) {
-        const spec = entryFlags(codeOf(attachment))?.discardAction
-        if (!spec) continue
-        moves.push({
-          action: 'scenarioAction', rule: `discardSickeningWebs:${attachment.id}`, actions: 1,
-          label: `🕸️ 检定${(spec.skills || ['combat']).join('/')}(${spec.difficulty ?? 3})：弃掉「${ALL_CARDS[codeOf(attachment)]?.nameZh || '恶心蛛网'}」`,
-        })
+        const spec=entryFlags(codeOf(attachment))?.discardAction
+        if (spec) moves.push({action:'scenarioAction',rule:`discardSickeningWebs:${attachment.id}`,actions:1,
+          locationId:location.id,label:`检定 ${(spec.skills || []).join('/')}(${spec.difficulty || 3})：弃掉「${ALL_CARDS[codeOf(attachment)]?.nameZh || codeOf(attachment)}」`})
       }
     }
     for (const enemy of (state.enemies || []).filter(entry => entry.location === inv.location)) {
@@ -634,6 +631,7 @@ export const behavior = {
 
   // ---- 混乱标记 ----
   resolveChaosToken(state, inv, token, api) {
+    if (token === 'cultist') return { delta: 0, drawAnother: true }
     return weaverChaosToken(state, inv, token, api)
   },
 
@@ -653,11 +651,13 @@ export const behavior = {
     }
     if (key === 'resolution1') {
       records.theBridgeWasDestroyed = true
-      return { award: true, bonus: 5 }
+      const next = records.theInvestigatorsFoundAWayOutOfTheUnderworld ? 'resolution3'
+        : records.theInvestigatorsAreTrappedInAtlachNachasRealm ? 'resolution4' : 'resolution5'
+      return behavior.resolution(state, next, events, api)
     }
     if (key === 'resolution2') {
       records.theBridgeWasCompleted = true
-      for (const inv of active) api.defeat?.(inv, 'insane')
+      for (const inv of active) api.driveInsane(inv.seat)
       return { award: true, bonus: 0 }
     }
     if (key === 'resolution3') {
@@ -667,7 +667,7 @@ export const behavior = {
     }
     if (key === 'resolution4') {
       records.theInvestigatorsNeverEscaped = true
-      for (const inv of active) api.defeat?.(inv, 'insane')
+      for (const inv of active) api.driveInsane(inv.seat)
       return { award: true, bonus: 5 }
     }
     records.theInvestigatorsAreStillInTheDreamlands = true

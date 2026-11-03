@@ -6,7 +6,7 @@
 // 约定：
 //   · 随机只走 helper.randomValue / api.random / api.shuffle，不用 Math.random；
 //   · 本章状态写 state.scenarioFlags / state.scenarioZones / state.scenarioKeys（纯 JSON）；
-//   · 四把钥匙没有独立原语 → scenarioKeys 纯 JSON（见 scenarioApproximations）；
+//   · 四把钥匙没有独立原语 → scenarioKeys 纯 JSON（见 migrationHistory）；
 //   · 覆盖共享钩子时显式调用 encounterRules.X?.(...)。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterResolveFor, entryFlags } from '../../../../../src/cards/card-rules.js'
@@ -21,7 +21,7 @@ import {
   NATHAN_WICK_INDOCTRINATION, NATHAN_WICK_INITIATION, PUZZLE_BOX, SANCTUM_DOORWAY_CEREMONY,
   SANCTUM_DOORWAY_HOLDING, SUMMONED_BEAST, VAULT, INNER_SANCTUM, membersAct1,
 } from './definition.js'
-import { scenarioGaps, scenarioApproximations } from './notes.js'
+import { scenarioGaps, migrationHistory } from './notes.js'
 
 // ---------------------------------------------------------------------------
 // 小工具
@@ -282,33 +282,6 @@ function givePuzzleBoxTo(state, api, seat) {
 
 // ---- 05228 机关盒 [action]：火盆 / 幽灵看守人 ---------------------------------
 // 火盆沿用《联合与幻灭》的 location.flags.brazier / location.litBrazier 读点（同一份场景数据）。
-function brazierLit(location) {
-  if (!location) return false
-  if (typeof location.flags?.brazier === 'boolean') return location.flags.brazier
-  return location.litBrazier === true
-}
-
-function unlightBrazier(location) {
-  if (!location) return
-  location.flags ||= {}
-  location.flags.brazier = false
-  location.litBrazier = false
-}
-
-function spectralWatcher(state) {
-  return (state.enemies || []).find(enemy => String(original(enemy)) === '05086') || null
-}
-
-function puzzleBoxActionOptions(state, inv) {
-  const options = []
-  const location = locById(state, inv?.location)
-  if (brazierLit(location)) options.push({ id: 'unlight', label: `熄灭火盆（${location?.name || inv?.location}）` })
-  const watcher = spectralWatcher(state)
-  if (watcher && !watcher.exhausted) options.push({ id: 'exhaust', label: '横置幽灵看守人' })
-  if (watcher && watcher.exhausted) options.push({ id: 'damage', label: '对已横置的幽灵看守人造成 5 点伤害' })
-  return options
-}
-
 function chooseInvestigator(state, api, prompt, options) {  const pool = options || activeInvestigators(state)
   if (!pool.length) return null
   if (pool.length === 1) return pool[0].seat
@@ -375,7 +348,7 @@ export const behavior = {
   setupPlan,
   implementedEncounterCodes,
   scenarioGaps,
-  scenarioApproximations,
+  migrationHistory,
   // 钥匙/机关盒读点也挂到 behavior 上，供测试与其它 worker 使用（index.js 只导出 behavior）。
   createKeys,
   keysHeldBy,
@@ -425,8 +398,8 @@ export const behavior = {
   modifyDeck(state, deck) {
     const members = isMembersOfTheLodge(state)
     const remove = members
-      ? [KNIGHT_INNER_CIRCLE, KNIGHT_INNER_CIRCLE, CELL_KEEPER]
-      : [KNIGHT_OUTER_VOID, KNIGHT_OUTER_VOID, LODGE_JAILOR]
+      ? [KNIGHT_INNER_CIRCLE, KNIGHT_INNER_CIRCLE, CELL_KEEPER, '01169', '01169', '01169', '01170']
+      : [KNIGHT_OUTER_VOID, KNIGHT_OUTER_VOID, LODGE_JAILOR, '05095', '05095', '05095', '05096']
     const remaining = new Map()
     for (const code of remove) remaining.set(code, (remaining.get(code) || 0) + 1)
     return deck.filter(code => {
@@ -604,18 +577,6 @@ export const behavior = {
         reason: cluesAt(state, location.id) >= needed ? null : `需要 ${needed} 个线索（当前 ${cluesAt(state, location.id)}）`,
       })
     }
-    // 05228 机关盒 [action]：只有控制者能用；团队每场游戏限一次。
-    if (puzzleBoxHolder(state) === inv.seat && !state.scenarioFlags?.puzzleBox?.actionUsed) {
-      const options = puzzleBoxActionOptions(state, inv)
-      if (options.length) {
-        moves.push({
-          action: 'scenarioAction', rule: 'puzzleBoxAction',
-          // 卡面「本行动不会引发幽灵看守人的借机攻击」（引擎 dispatch 读该字段，src/engine/dispatch.js:239-252）。
-          noOpportunityAttackFrom: ['05086'],
-          label: `机关盒：${options.map(option => option.label).join(' / ')}`,
-        })
-      }
-    }
     return moves
   },
 
@@ -623,46 +584,6 @@ export const behavior = {
     if (!move || !move.rule) return false
     const location = here(state, inv)
     switch (move.rule) {
-      case 'puzzleBoxAction': {
-        if (puzzleBoxHolder(state) !== inv.seat) return true
-        const box = state.scenarioFlags?.puzzleBox || {}
-        if (box.actionUsed) {
-          api?.info?.('「机关盒」的本场游戏行动已经用过了。')
-          return true
-        }
-        const options = puzzleBoxActionOptions(state, inv)
-        if (!options.length) return true
-        let answer = options[0].id
-        if (options.length > 1 && typeof api?.choose === 'function') {
-          answer = api.choose({
-            kind: 'effect', source: PUZZLE_BOX, seat: inv.seat,
-            prompt: '「机关盒」：选择一项结算。',
-            options: options.map(option => ({ id: option.id, label: option.label })),
-          })
-        }
-        const picked = options.find(option => option.id === answer) || options[0]
-        setFlags(state, { puzzleBox: { ...box, actionUsed: true } })
-        if (picked.id === 'unlight') {
-          unlightBrazier(location)
-          api?.info?.(`「机关盒」熄灭了「${location?.name || inv.location}」的火盆。`)
-          return true
-        }
-        const watcher = spectralWatcher(state)
-        if (!watcher) return true
-        if (picked.id === 'exhaust') {
-          watcher.exhausted = true
-          api?.info?.('「机关盒」横置了幽灵看守人。')
-          return true
-        }
-        if (picked.id === 'damage') {
-          // 非攻击伤害（卡面：对已横置的幽灵看守人造成 5 点伤害）。
-          if (typeof api?.damageEnemy === 'function') api.damageEnemy(watcher.id, 5, inv.seat)
-          else watcher.damageTaken = (watcher.damageTaken || 0) + 5
-          api?.info?.('「机关盒」对已横置的幽灵看守人造成 5 点伤害。')
-          return true
-        }
-        return true
-      }
       case 'resignGates':
         api?.resign?.(inv.seat)
         return true
@@ -914,24 +835,11 @@ export const behavior = {
     if (code === ACT_FOUR_KEYS && fourKeysReady(state)) api?.advanceAct?.()
   },
 
-  // 05228 机关盒的强制：控制者被击败时把控制权交给另一位调查员。
-  // 引擎的击杀钩子只派发给当前章节（src/engine/harm-threat.js:236），所以本实现只覆盖《崇高利益》；
-  // 机关盒随牌组进入其它章节时需要各章自己的 investigatorEliminated 钩子（见 primitive request）。
-  investigatorEliminated(state, inv, clues, api) {
-    const box = describePuzzleBox(state)
-    if (!box || box.holder !== 'seat' || box.seat !== inv?.seat) return false
-    const owned = (inv.assets || []).find(item => original(item) === PUZZLE_BOX)
-    if (owned) inv.assets.splice(inv.assets.indexOf(owned), 1)
-    const others = activeInvestigators(state).filter(other => other.seat !== inv.seat)
-    if (!others.length) {
-      setFlags(state, { puzzleBox: { holder: 'removed', removed: true, seat: null, enemyId: null } })
-      api?.info?.('机关盒没有可接手的调查员，被移出游戏。')
-      return false
-    }
-    const seat = others.length === 1 ? others[0].seat
-      : chooseInvestigator(state, api, '选择一位调查员：接手「机关盒」。', others)
-    if (seat != null) givePuzzleBoxTo(state, api, seat)
-    return false
+  // 控制权转移由通用引擎处理；本章只同步幕牌所读取的剧情归属。
+  assetControlChanged(state, asset, previousSeat, nextSeat, api) {
+    encounterRules.assetControlChanged?.(state, asset, previousSeat, nextSeat, api)
+    if (String(original(asset)) !== PUZZLE_BOX) return
+    setFlags(state, { puzzleBox: { holder: 'seat', seat: nextSeat, enemyId: null, removed: false } })
   },
 
   // -------------------------------------------------------------------------

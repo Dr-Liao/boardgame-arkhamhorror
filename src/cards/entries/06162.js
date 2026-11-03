@@ -10,16 +10,12 @@
 //   · 「发动技能检定」= testBegins 窗口（performTest 在投入前开 reactionWindow）；
 //   · 花费葛利身上的资源 = 资产的 uses（usesType 'resource'）；
 //   · 「成功后获得等量资源」= api.addExtraOnSuccess（test 成功结算段读 state.skillTest.extraOnSuccess）。
-// 显式简化（simplified）：「成功且至少超过该资源数量」的差额门槛无法在成功结算段读取，
-// 目前只要检定成功就返还押注数量的资源（略强于卡面）。
+// 成功结算段按 minimumSuccessBy 检查成功差值是否达到押注数。
 
 export default {
   code: '06162',
   uses: 9,
   usesType: 'resource',
-  simplified: true,
-  note: '未实现「本次检定成功且至少超过该资源数量」的差额门槛（额外成功结算段只支持固定效果，读不到成功超出点数），'
-    + '当前实现为：检定成功即返还押注数量的资源；押注本身（0–3、受资产剩余资源与 3 上限限制）与成功返还均已接线。',
   abilities: [
     {
       kind: 'reaction',
@@ -41,8 +37,8 @@ export default {
         const spend = Math.max(0, Math.min(maximum, Number(answer) || 0))
         if (!spend) return
         api.addUses(asset, -spend)
-        api.addExtraOnSuccess({ type: 'gainResource', amount: spend })
-        api.info(`🎲 ${inv.name} 从格雷戈里·葛利身上押注 ${spend} 资源：本次检定成功后返还 ${spend} 资源。`)
+        api.addExtraOnSuccess({ type: 'gainResource', amount: spend, minimumSuccessBy: spend })
+        api.info(`🎲 ${inv.name} 从格雷戈里·葛利身上押注 ${spend} 资源：本次检定成功且超出至少 ${spend} 点后获得 ${spend} 资源。`)
       },
     },
   ],

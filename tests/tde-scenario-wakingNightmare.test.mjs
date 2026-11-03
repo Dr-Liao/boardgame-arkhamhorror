@@ -566,11 +566,11 @@ test('06082 堕落的护工：在寄生地点受到伤害时取消其中 1 点',
   const enemy = { id: 'corrupted', code: '06082', originalCode: '06082', location: 'waitingRoom',
     damageTaken: 2, traits: ['Humanoid', 'Staff', 'Spider'] }
   state.enemies.push(enemy)
-  chapter.behavior.enemyDamaged(state, enemy, apiStub(state), 0)
-  assert.equal(enemy.damageTaken, 1, '取消 1 点伤害')
+  assert.equal(chapter.behavior.enemyDamageAmount(state,enemy,2,apiStub(state),0),1,'落下伤害前取消 1 点')
+  assert.equal(enemy.damageTaken,2,'只计算本次伤害，不修改旧伤害')
   const elsewhere = { ...enemy, location: 'recordsOffice', damageTaken: 2 }
   state.enemies.push(elsewhere)
-  chapter.behavior.enemyDamaged(state, elsewhere, apiStub(state), 0)
+  assert.equal(chapter.behavior.enemyDamageAmount(state,elsewhere,2,apiStub(state),0),2)
   assert.equal(elsewhere.damageTaken, 2, '非寄生地点不取消')
 })
 

@@ -50,7 +50,7 @@ try {
   server = createServer({ mods: await loadMods() })
   await server.ready
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
-  const args = ['node_modules/@playwright/test/cli.js', 'test', '--config', 'games/arkhamhorror/playwright.config.mjs']
+  const args = ['node_modules/@playwright/test/cli.js', 'test', '--config', 'games/arkhamhorror/tests/playwright/playwright.config.mjs']
   if (process.argv.includes('--p7-only')) args.push('p7-release.browser.mjs')
   if (process.argv.includes('--update-snapshots')) args.push('--update-snapshots')
   await run('arkham-browser', args, { BOARDGAME_EXTERNAL_SERVER: '1', BOARDGAME_PORT: String(server.address().port) })

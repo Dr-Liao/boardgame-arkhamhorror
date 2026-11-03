@@ -1,0 +1,762 @@
+{
+  "summaryBefore": {
+    "cards": 300,
+    "scopedFixes": 6,
+    "fullCardEquivalenceClaimed": 0,
+    "needsBehaviorReview": 177,
+    "catalogOnly": 117
+  },
+  "summaryAfter": {
+    "cards": 300,
+    "scopedFixes": 6,
+    "fullCardEquivalenceClaimed": 0,
+    "needsBehaviorReview": 177,
+    "catalogOnly": 117
+  },
+  "changedFields": [
+    {
+      "code": "01000",
+      "key": "testMentions"
+    },
+    {
+      "code": "01001",
+      "key": "testMentions"
+    },
+    {
+      "code": "01002",
+      "key": "testMentions"
+    },
+    {
+      "code": "01003",
+      "key": "testMentions"
+    },
+    {
+      "code": "01004",
+      "key": "testMentions"
+    },
+    {
+      "code": "01005",
+      "key": "testMentions"
+    },
+    {
+      "code": "01006",
+      "key": "testMentions"
+    },
+    {
+      "code": "01007",
+      "key": "testMentions"
+    },
+    {
+      "code": "01008",
+      "key": "testMentions"
+    },
+    {
+      "code": "01009",
+      "key": "testMentions"
+    },
+    {
+      "code": "01010",
+      "key": "testMentions"
+    },
+    {
+      "code": "01011",
+      "key": "testMentions"
+    },
+    {
+      "code": "01012",
+      "key": "testMentions"
+    },
+    {
+      "code": "01013",
+      "key": "testMentions"
+    },
+    {
+      "code": "01014",
+      "key": "testMentions"
+    },
+    {
+      "code": "01015",
+      "key": "testMentions"
+    },
+    {
+      "code": "01016",
+      "key": "testMentions"
+    },
+    {
+      "code": "01017",
+      "key": "testMentions"
+    },
+    {
+      "code": "01018",
+      "key": "testMentions"
+    },
+    {
+      "code": "01019",
+      "key": "testMentions"
+    },
+    {
+      "code": "01020",
+      "key": "testMentions"
+    },
+    {
+      "code": "01021",
+      "key": "testMentions"
+    },
+    {
+      "code": "01022",
+      "key": "testMentions"
+    },
+    {
+      "code": "01023",
+      "key": "testMentions"
+    },
+    {
+      "code": "01024",
+      "key": "testMentions"
+    },
+    {
+      "code": "01025",
+      "key": "testMentions"
+    },
+    {
+      "code": "01026",
+      "key": "testMentions"
+    },
+    {
+      "code": "01027",
+      "key": "testMentions"
+    },
+    {
+      "code": "01028",
+      "key": "testMentions"
+    },
+    {
+      "code": "01029",
+      "key": "testMentions"
+    },
+    {
+      "code": "01030",
+      "key": "testMentions"
+    },
+    {
+      "code": "01031",
+      "key": "testMentions"
+    },
+    {
+      "code": "01032",
+      "key": "testMentions"
+    },
+    {
+      "code": "01033",
+      "key": "testMentions"
+    },
+    {
+      "code": "01034",
+      "key": "testMentions"
+    },
+    {
+      "code": "01035",
+      "key": "testMentions"
+    },
+    {
+      "code": "01036",
+      "key": "testMentions"
+    },
+    {
+      "code": "01037",
+      "key": "testMentions"
+    },
+    {
+      "code": "01038",
+      "key": "testMentions"
+    },
+    {
+      "code": "01039",
+      "key": "testMentions"
+    },
+    {
+      "code": "01040",
+      "key": "testMentions"
+    },
+    {
+      "code": "01041",
+      "key": "testMentions"
+    },
+    {
+      "code": "01042",
+      "key": "testMentions"
+    },
+    {
+      "code": "01043",
+      "key": "testMentions"
+    },
+    {
+      "code": "01044",
+      "key": "testMentions"
+    },
+    {
+      "code": "01045",
+      "key": "testMentions"
+    },
+    {
+      "code": "01046",
+      "key": "testMentions"
+    },
+    {
+      "code": "01047",
+      "key": "testMentions"
+    },
+    {
+      "code": "01048",
+      "key": "testMentions"
+    },
+    {
+      "code": "01049",
+      "key": "testMentions"
+    },
+    {
+      "code": "01050",
+      "key": "testMentions"
+    },
+    {
+      "code": "01052",
+      "key": "testMentions"
+    },
+    {
+      "code": "01054",
+      "key": "testMentions"
+    },
+    {
+      "code": "01055",
+      "key": "testMentions"
+    },
+    {
+      "code": "01056",
+      "key": "testMentions"
+    },
+    {
+      "code": "01057",
+      "key": "testMentions"
+    },
+    {
+      "code": "01058",
+      "key": "testMentions"
+    },
+    {
+      "code": "01059",
+      "key": "testMentions"
+    },
+    {
+      "code": "01060",
+      "key": "testMentions"
+    },
+    {
+      "code": "01061",
+      "key": "testMentions"
+    },
+    {
+      "code": "01062",
+      "key": "testMentions"
+    },
+    {
+      "code": "01063",
+      "key": "testMentions"
+    },
+    {
+      "code": "01064",
+      "key": "testMentions"
+    },
+    {
+      "code": "01065",
+      "key": "testMentions"
+    },
+    {
+      "code": "01067",
+      "key": "testMentions"
+    },
+    {
+      "code": "01068",
+      "key": "testMentions"
+    },
+    {
+      "code": "01069",
+      "key": "testMentions"
+    },
+    {
+      "code": "01070",
+      "key": "testMentions"
+    },
+    {
+      "code": "01071",
+      "key": "testMentions"
+    },
+    {
+      "code": "01072",
+      "key": "testMentions"
+    },
+    {
+      "code": "01073",
+      "key": "testMentions"
+    },
+    {
+      "code": "01074",
+      "key": "testMentions"
+    },
+    {
+      "code": "01075",
+      "key": "testMentions"
+    },
+    {
+      "code": "01077",
+      "key": "testMentions"
+    },
+    {
+      "code": "01079",
+      "key": "testMentions"
+    },
+    {
+      "code": "01080",
+      "key": "testMentions"
+    },
+    {
+      "code": "01082",
+      "key": "testMentions"
+    },
+    {
+      "code": "01083",
+      "key": "testMentions"
+    },
+    {
+      "code": "01084",
+      "key": "testMentions"
+    },
+    {
+      "code": "01085",
+      "key": "testMentions"
+    },
+    {
+      "code": "01086",
+      "key": "testMentions"
+    },
+    {
+      "code": "01087",
+      "key": "testMentions"
+    },
+    {
+      "code": "01088",
+      "key": "testMentions"
+    },
+    {
+      "code": "01089",
+      "key": "testMentions"
+    },
+    {
+      "code": "01090",
+      "key": "testMentions"
+    },
+    {
+      "code": "01091",
+      "key": "testMentions"
+    },
+    {
+      "code": "01092",
+      "key": "testMentions"
+    },
+    {
+      "code": "01093",
+      "key": "testMentions"
+    },
+    {
+      "code": "01094",
+      "key": "testMentions"
+    },
+    {
+      "code": "01095",
+      "key": "testMentions"
+    },
+    {
+      "code": "01096",
+      "key": "testMentions"
+    },
+    {
+      "code": "01097",
+      "key": "testMentions"
+    },
+    {
+      "code": "01098",
+      "key": "testMentions"
+    },
+    {
+      "code": "01099",
+      "key": "testMentions"
+    },
+    {
+      "code": "01100",
+      "key": "testMentions"
+    },
+    {
+      "code": "01101",
+      "key": "testMentions"
+    },
+    {
+      "code": "01102",
+      "key": "testMentions"
+    },
+    {
+      "code": "01103",
+      "key": "testMentions"
+    },
+    {
+      "code": "01104",
+      "key": "testMentions"
+    },
+    {
+      "code": "01105",
+      "key": "testMentions"
+    },
+    {
+      "code": "01106",
+      "key": "testMentions"
+    },
+    {
+      "code": "01107",
+      "key": "testMentions"
+    },
+    {
+      "code": "01108",
+      "key": "testMentions"
+    },
+    {
+      "code": "01109",
+      "key": "testMentions"
+    },
+    {
+      "code": "01110",
+      "key": "testMentions"
+    },
+    {
+      "code": "01111",
+      "key": "testMentions"
+    },
+    {
+      "code": "01112",
+      "key": "testMentions"
+    },
+    {
+      "code": "01113",
+      "key": "testMentions"
+    },
+    {
+      "code": "01114",
+      "key": "testMentions"
+    },
+    {
+      "code": "01115",
+      "key": "testMentions"
+    },
+    {
+      "code": "01116",
+      "key": "testMentions"
+    },
+    {
+      "code": "01117",
+      "key": "testMentions"
+    },
+    {
+      "code": "01118",
+      "key": "testMentions"
+    },
+    {
+      "code": "01119",
+      "key": "testMentions"
+    },
+    {
+      "code": "01120",
+      "key": "testMentions"
+    },
+    {
+      "code": "01121a",
+      "key": "testMentions"
+    },
+    {
+      "code": "01121b",
+      "key": "testMentions"
+    },
+    {
+      "code": "01122",
+      "key": "testMentions"
+    },
+    {
+      "code": "01123",
+      "key": "testMentions"
+    },
+    {
+      "code": "01125",
+      "key": "testMentions"
+    },
+    {
+      "code": "01126",
+      "key": "testMentions"
+    },
+    {
+      "code": "01127",
+      "key": "testMentions"
+    },
+    {
+      "code": "01129",
+      "key": "testMentions"
+    },
+    {
+      "code": "01130",
+      "key": "testMentions"
+    },
+    {
+      "code": "01131",
+      "key": "testMentions"
+    },
+    {
+      "code": "01132",
+      "key": "testMentions"
+    },
+    {
+      "code": "01133",
+      "key": "testMentions"
+    },
+    {
+      "code": "01134",
+      "key": "testMentions"
+    },
+    {
+      "code": "01135",
+      "key": "testMentions"
+    },
+    {
+      "code": "01136",
+      "key": "testMentions"
+    },
+    {
+      "code": "01137",
+      "key": "testMentions"
+    },
+    {
+      "code": "01138",
+      "key": "testMentions"
+    },
+    {
+      "code": "01139",
+      "key": "testMentions"
+    },
+    {
+      "code": "01140",
+      "key": "testMentions"
+    },
+    {
+      "code": "01141",
+      "key": "testMentions"
+    },
+    {
+      "code": "01142",
+      "key": "testMentions"
+    },
+    {
+      "code": "01143",
+      "key": "testMentions"
+    },
+    {
+      "code": "01144",
+      "key": "testMentions"
+    },
+    {
+      "code": "01145",
+      "key": "testMentions"
+    },
+    {
+      "code": "01146",
+      "key": "testMentions"
+    },
+    {
+      "code": "01147",
+      "key": "testMentions"
+    },
+    {
+      "code": "01148",
+      "key": "testMentions"
+    },
+    {
+      "code": "01149",
+      "key": "testMentions"
+    },
+    {
+      "code": "01150",
+      "key": "testMentions"
+    },
+    {
+      "code": "01151",
+      "key": "testMentions"
+    },
+    {
+      "code": "01152",
+      "key": "testMentions"
+    },
+    {
+      "code": "01153",
+      "key": "testMentions"
+    },
+    {
+      "code": "01154",
+      "key": "testMentions"
+    },
+    {
+      "code": "01155",
+      "key": "testMentions"
+    },
+    {
+      "code": "01156",
+      "key": "testMentions"
+    },
+    {
+      "code": "01157",
+      "key": "testMentions"
+    },
+    {
+      "code": "01158",
+      "key": "testMentions"
+    },
+    {
+      "code": "01159",
+      "key": "testMentions"
+    },
+    {
+      "code": "01160",
+      "key": "testMentions"
+    },
+    {
+      "code": "01161",
+      "key": "testMentions"
+    },
+    {
+      "code": "01162",
+      "key": "testMentions"
+    },
+    {
+      "code": "01163",
+      "key": "testMentions"
+    },
+    {
+      "code": "01164",
+      "key": "testMentions"
+    },
+    {
+      "code": "01165",
+      "key": "testMentions"
+    },
+    {
+      "code": "01166",
+      "key": "testMentions"
+    },
+    {
+      "code": "01167",
+      "key": "testMentions"
+    },
+    {
+      "code": "01168",
+      "key": "testMentions"
+    },
+    {
+      "code": "01169",
+      "key": "testMentions"
+    },
+    {
+      "code": "01170",
+      "key": "testMentions"
+    },
+    {
+      "code": "01171",
+      "key": "testMentions"
+    },
+    {
+      "code": "01172",
+      "key": "testMentions"
+    },
+    {
+      "code": "01173",
+      "key": "testMentions"
+    },
+    {
+      "code": "01174",
+      "key": "testMentions"
+    },
+    {
+      "code": "01175",
+      "key": "testMentions"
+    },
+    {
+      "code": "01176",
+      "key": "testMentions"
+    },
+    {
+      "code": "01177",
+      "key": "testMentions"
+    },
+    {
+      "code": "01178",
+      "key": "testMentions"
+    },
+    {
+      "code": "01181",
+      "key": "testMentions"
+    },
+    {
+      "code": "01518",
+      "key": "testMentions"
+    },
+    {
+      "code": "01522",
+      "key": "testMentions"
+    },
+    {
+      "code": "01523",
+      "key": "testMentions"
+    },
+    {
+      "code": "01527",
+      "key": "testMentions"
+    },
+    {
+      "code": "01533",
+      "key": "testMentions"
+    },
+    {
+      "code": "01570",
+      "key": "testMentions"
+    },
+    {
+      "code": "01571",
+      "key": "testMentions"
+    },
+    {
+      "code": "01572",
+      "key": "testMentions"
+    },
+    {
+      "code": "01586",
+      "key": "testMentions"
+    },
+    {
+      "code": "01587",
+      "key": "testMentions"
+    },
+    {
+      "code": "01603",
+      "key": "testMentions"
+    },
+    {
+      "code": "01683",
+      "key": "testMentions"
+    },
+    {
+      "code": "01687",
+      "key": "testMentions"
+    }
+  ]
+}

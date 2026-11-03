@@ -279,7 +279,8 @@ test('反应入口由卡面数据自动推导：新增 legacy 反应会自带快
       &&ability.fromHand!==true&&def.type!=='event')){
       assert.ok(def.hasAutoReaction,`${code} 新式非手牌反应没有生成自动入口`)
     }
-    if(abilities.some(ability=>ability.kind==='reaction'&&!ability.legacyReaction&&ability.fromHand===true)){
+    if(abilities.some(ability=>ability.kind==='reaction'&&!ability.legacyReaction&&ability.fromHand===true)
+      &&!abilities.some(ability=>ability.kind==='reaction'&&ability.fromHand!==true)){
       assert.equal(def.hasAutoReaction,false,`${code} 手牌快速事件不应自动打出`)
     }
     if(def.hasAutoReaction) assert.equal(typeof def.autoByDefault,'boolean',`${code} 缺少 autoByDefault`)

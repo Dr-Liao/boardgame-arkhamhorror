@@ -9,9 +9,15 @@ export default {
   'setup.closeAria': 'Close scenario setup',
   'setup.intro': 'Introduction',
   'setup.steps': 'Setup',
+  'setup.specialRules': 'Special rules',
+  'setup.storySpoilers': 'Later story (spoilers; expand to read)',
+  'setup.resolutionSpoilers': 'Resolutions and rewards (spoilers; expand to read)',
+  'setup.loading': 'Loading the complete adventure guide…',
+  'setup.loadError': 'The complete adventure guide could not be loaded. Your current introduction and setup summary are shown below.',
+  'setup.retry': 'Reload guide',
   'setup.note': 'Notes',
   'setup.empty': 'This scenario has no written setup steps yet.',
-  'setup.footer': 'These steps were already carried out at the start. Use this page to check how the table was laid out, which cards were set aside, and which rules to remember.',
+  'setup.footer': 'The adventure guide includes the introduction, setup, special rules, and resolutions. Follow the branch indicated by your campaign log. Later story and resolutions are collapsed by default. Setup is handled automatically; this page is for reference.',
 
   // Situation dialog (situation-view.js)
   'situation.title': 'Investigation situation',

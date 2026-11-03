@@ -42,6 +42,7 @@ const MODIFIER_CACHE = new Map()
 
 export const MODIFIER_TARGETS = Object.freeze([
   'skill:willpower', 'skill:intellect', 'skill:combat', 'skill:agility', 'skill:wild', 'skill:*',
+  'testValue',
   'maxHealth', 'maxSanity', 'handSize', 'actions',
   'slot:hand', 'slot:arcane', 'slot:accessory', 'slot:ally', 'slot:body',
   'playCost', 'enemyHealth',
@@ -75,12 +76,16 @@ export const BLOCKABLE_CAPABILITIES = Object.freeze([
   'evade',            // 不能躲避
   'move',             // 不能移动
   'draw',             // 不能抽牌（抽牌行动）
+  'drawCards',        // 不能以任何方式抽牌
   'play',             // 不能打出卡牌
   'triggerAbilities', // 不能触发能力（免费/主动/地点能力）
   'locationAbility',  // 不能使用地点行动
   'commit',           // 不能投入技能检定
   'resign',           // 不能撤退
   'discoverClue',     // 不能发现线索
+  'gainResources',
+  'engage',
+  'dealEnemyDamage',
 ])
 
 // C1：可被"无视"的规则元素。
@@ -123,7 +128,8 @@ export function normalizeModifier(raw, origin = 'modifier') {
   }
   if (kind === 'grant' && raw.value == null) throw new Error(`${origin}: ${target} 必须声明 value`)
   if (raw.value != null && kind !== 'grant') throw new Error(`${origin}: 只有 add:* 目标可以声明 value`)
-  if (raw.audience != null && !['controller', 'here'].includes(raw.audience)) {
+  if(raw.audience==='enemies' && !['entity','entityRule'].includes(kind))throw new Error(`${origin}: enemies audience requires entity modifier`)
+  if (raw.audience != null && !['controller', 'here', 'enemies'].includes(raw.audience)) {
     throw new Error(`${origin}: 未知 audience ${raw.audience}`)
   }
   return Object.freeze({
@@ -131,7 +137,7 @@ export function normalizeModifier(raw, origin = 'modifier') {
     kind,
     amount,
     value: raw.value != null ? String(raw.value) : null,
-    condition: raw.condition ?? null,
+    condition: validateCondition(raw.condition, origin+' condition'),
     audience: raw.audience || 'controller',
     origin,
   })
@@ -261,6 +267,9 @@ function amountOf(modifier, ctx) {
 
 // 单个实体的修正是否作用于 benficiary（inv）。
 function appliesTo(modifier, ctx) {
+  if (ctx.inv?.seat !== ctx.controller?.seat
+    && ctx.controller?.threat?.some(card => lookupEntry(card.code)?.cannotAffectOtherInvestigators)) return false
+  if (modifier.audience === 'enemies') return false
   if (modifier.audience === 'here') return ctx.inv?.location === ctx.controller?.location
   return ctx.inv?.seat === ctx.controller?.seat
 }
@@ -299,6 +308,10 @@ function* modifierSourceRows(state) {
       yield { controller: investigator, source, list }
     }
     const investigatorModifiers = modifiersOf(investigator.code)
+    for (const code of new Set(investigator.hand || [])) {
+      const list = modifiersOf(code).filter(modifier => modifier.condition?.sourceInHand)
+      if (list.length) yield { controller: investigator, source: { code, handCode: code }, list }
+    }
     if (investigatorModifiers.length && !hooks.investigatorBlanked(state, investigator)) {
       yield { controller: investigator, source: investigator, list: investigatorModifiers }
     }
@@ -431,19 +444,24 @@ function entityModifierRows(state, entity) {
   // 两条都查，别名条目与印刷条目可以各自声明规则。
   const selfCodes = [...new Set([entity.originalCode, entity.code].filter(Boolean))]
   for (const code of selfCodes) {
-    const own = modifiersOf(code)
+    const own = modifiersOf(code).filter(modifier=>modifier.audience!=='enemies')
     if (own.length) rows.push({ source: entity, host: 'self', list: own })
   }
   if (entity.location) {
     const location = (state?.locations || []).find(entry => entry.id === entity.location)
     const locationCode = location?.originalCode || location?.code
-    const inherited = locationCode ? modifiersOf(locationCode) : []
+    const inherited = locationCode ? modifiersOf(locationCode).filter(m=>m.audience!=='enemies') : []
     if (inherited.length) rows.push({ source: location, host: 'location', list: inherited })
   }
   for (const list of [state?.acts?.[state?.actIndex], state?.agendas?.[state?.agendaIndex]]) {
     const code = list?.originalCode || list?.code
-    const scene = code ? modifiersOf(code) : []
+    const scene = code ? modifiersOf(code).filter(m=>m.audience!=='enemies') : []
     if (scene.length) rows.push({ source: list, host: 'scene', list: scene })
+  }
+  if(state.enemies?.includes(entity))for(const source of state.enemies){
+    if(source.defeated||source.removedFromGame||hooks.entityBlanked(state,source))continue
+    const list=modifiersOf(source.originalCode||source.code).filter(modifier=>modifier.audience==='enemies')
+    if(list.length)rows.push({source,host:'enemyAura',list})
   }
   return rows
 }
@@ -474,7 +492,7 @@ export function entityModifierTotal(state, entity, target) {
     if (row.host === 'scene' && !['enemyFight', 'enemyEvade', 'enemyHealth'].includes(target)) continue
     for (const modifier of row.list) {
       if (modifier.target !== target) continue
-      if (blanked && modifier.condition?.blankedThisRound !== true) continue
+      if ((row.host==='enemyAura'?hooks.entityBlanked(state,row.source):blanked) && modifier.condition?.blankedThisRound !== true) continue
       const ctx = entityModifierCtx(state, entity, row)
       if (!evaluateCondition(modifier.condition, ctx)) continue
       total += amountOf(modifier, ctx)

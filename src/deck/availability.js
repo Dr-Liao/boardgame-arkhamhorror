@@ -1,4 +1,6 @@
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
+import { TIC_PLAYER_VERIFIED_CODES as TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES } from '../../content/packs/ticPlayer/manifest.js'
+export { TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES }
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
 import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
@@ -24,6 +26,7 @@ export const TFA_INVESTIGATOR_CODES = Object.freeze(['04001', '04002', '04003', 
 export const TCU_INVESTIGATOR_CODES = Object.freeze(['05001', '05002', '05003', '05004', '05005', '05006'])
 // 第五循环（食梦者）：M1（P6）5 位正式调查员 + 13 条专属记录（11 张主卡 + 2 张关联面 06015a/b）。
 export const TDE_INVESTIGATOR_CODES = Object.freeze(['06001', '06002', '06003', '06004', '06005'])
+export const TIC_INVESTIGATOR_CODES = Object.freeze(['07001', '07002', '07003', '07004', '07005'])
 export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
   ...CORE_INVESTIGATOR_CODES,
   ...DUNWICH_INVESTIGATOR_CODES,
@@ -40,6 +43,7 @@ export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
 export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   ...PLAYABLE_INVESTIGATOR_CODES,
   ...TDE_INVESTIGATOR_CODES,
+  ...TIC_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -61,6 +65,7 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...TCU_PLAYER_BASIC_WEAKNESS_CODES,
   // P7：食梦者 4 张基础弱点（06035–06038）只作随机基础弱点依赖。
   ...TDE_PLAYER_BASIC_WEAKNESS_CODES,
+  ...TIC_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -106,6 +111,11 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '06003': Object.freeze(['06010', '06011', '06012']),
   '06004': Object.freeze(['06013', '06014']),
   '06005': Object.freeze(['06016', '06017']),
+  '07001': Object.freeze(['07006', '07007']),
+  '07002': Object.freeze(['07008', '07009']),
+  '07003': Object.freeze(['07010', '07011']),
+  '07004': Object.freeze(['07012', '07013']),
+  '07005': Object.freeze(['07014', '07015', '07016']),
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -125,6 +135,7 @@ const tcuSignatures = TCU_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_
 // 第五循环（食梦者）M1：11 张专属主卡 + 2 张专属弱点；06015a/b 是绑定地点（不计入构筑依赖）。
 const tdeSignatures = TDE_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
   .concat(['06015a', '06015b'])
+const ticSignatures = TIC_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
 export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
 export const PLAYER_CARD_CODES = Object.freeze([
@@ -136,6 +147,7 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   ...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES, ...TCU_PLAYER_BUILDABLE_CODES,
   // P7：食梦者 72 张可入牌组玩家卡（11 张场外绑定卡/绑定弱点 + 4 张基础弱点不进构筑池）。
   ...TDE_PLAYER_BUILDABLE_CODES,
+  ...TIC_PLAYER_BUILDABLE_CODES,
 ])
 // P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
 // catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
@@ -149,7 +161,8 @@ const TDE_CAMPAIGN_ACCEPTED = ['playable', 'verified'].includes(tdeCampaignPack.
   ? [...TDE_CAMPAIGN_CARD_CODES, ...TDE_CAMPAIGN_FACE_CODES] : []
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
   ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
-  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures, ...TDE_PLAYER_CARD_CODES, ...TDE_CAMPAIGN_ACCEPTED,
+  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures, ...ticSignatures, ...TDE_PLAYER_CARD_CODES, ...TDE_CAMPAIGN_ACCEPTED,
+  ...TIC_PLAYER_CARD_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -178,11 +191,14 @@ export function getAvailability(code) {
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
       || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
       || tdeSignatures.includes(code)
+      || ticSignatures.includes(code)
+      || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
       || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
+      : TIC_PLAYER_CARD_CODES.includes(code) ? 'P6 印斯茅斯暗潮一般玩家卡已完成逐卡行为验收；基础弱点只作依赖，战役仍待 P7–P8。'
       : tfaPlayerCardVerified(code)
         ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
       : TCU_PLAYER_CARD_CODES.includes(code)
@@ -191,6 +207,8 @@ export function getAvailability(code) {
         ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。P10 起食梦者战役已在大厅开放（playable + earlyAccess），玩家卡进入构筑界面与食梦者战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
+      : TIC_INVESTIGATOR_CODES.includes(code) || ticSignatures.includes(code)
+        ? 'P5 印斯茅斯暗潮调查员及专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役仍待 P7–P8。'
       : TDE_INVESTIGATOR_CODES.includes(code) || tdeSignatures.includes(code)
         ? 'M1 食梦者五位调查员及其 11 张专属主卡 + 2 张弱点已通过逐人行为与存档回放验收（06015a/b 为绑定地点）。P10 起玩家卡、八章剧本与大厅入口均已开放（战役 playable）。'
       : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)

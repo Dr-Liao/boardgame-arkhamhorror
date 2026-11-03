@@ -12,9 +12,8 @@ const interlude = (id, next) => ({
 })
 
 // The flow mirrors Arkham/Campaigns/TheForgottenAge.hs nextStep. All ten
-// chapters are playable, so the campaign is launchable from the hall; the
-// remaining literal-card work is tracked in audit/tfa-migration.json
-// (playable with earlyAccess, not verified).
+// chapters are playable, so the campaign is launchable from the hall. Release
+// evidence and the current completion state live in audit/tfa-migration.json.
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'theForgottenAge',

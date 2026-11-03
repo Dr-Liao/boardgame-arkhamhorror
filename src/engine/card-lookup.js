@@ -90,6 +90,7 @@ export function enemyDef(code) {
       retaliate: !!extra.retaliate,
       alert: !!extra.alert,
       elite: !!extra.elite,
+      aloof: !!extra.aloof,
       prey: extra.prey ? 'bearer' : null,
       forcedDoom: !!extra.forcedDoom,
       parleyCost: extra.parleyCost ?? 0,

@@ -245,7 +245,7 @@ test('P0-A 07027 眼花缭乱花充能取消趁乱攻击', () => {
   state.investigators[0].engaged = [target.id]
   move(state, { action: 'move', locationId: 'attic' })
   assert.ok(passUntilAbility(state), '趁乱攻击时应出现 07027 的反应窗口')
-  chooseAbility(state, '取消该次攻击')
+  chooseAbility(state, '取消.*攻击')
   passAll(state)
   assert.equal(state.investigators[0].damage, 0)
   const charm = state.investigators[0].assets.find(item => item.code === '07027')

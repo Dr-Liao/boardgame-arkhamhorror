@@ -1,6 +1,10 @@
 // 失去资源：玩家卡 api 与剧本遭遇 api 共用的唯一实现（05280 的 wouldLoseResources 窗口）。
 // 从 api-misc.js 抽出（P2-6，2026-10-28），避免 04082 等遭遇卡再写一遍「扣资源」。
+import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
+
 export function loseResources(state, inv, amount, { reactionWindow, events, info }) {
+  inv = effectRecipient(state, inv)
+  if (inv && !playerEffectCanAffect(state, inv.seat)) return 0
   if (!inv || !(amount > 0)) return 0
   const context = reactionWindow(state, 'wouldLoseResources', {
     when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,

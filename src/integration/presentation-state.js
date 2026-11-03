@@ -4,6 +4,8 @@ import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES, hiddenPathBack } from '../.
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
+import { investigatorConnections } from '../engine/location-connections.js'
+import { mechanicSnapshot, maskMechanicSnapshot } from './mechanic-view.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
 // adjacency or pending choices. Only project the resulting public restriction.
@@ -19,7 +21,7 @@ export function locationEntryErrors(state) {
   // 相邻但现在走不过去（例如未揭示地下墓穴的线索费用）也要写出来。
   // 只挂在当前地点的连接上，远处的地点不显示这条费用。
   const here = state.locations.find(location => location.id === investigator.location)
-  for (const id of here?.connections || []) {
+  for (const id of investigatorConnections(state, here?.id)) {
     if (errors[id]) continue
     const destination = state.locations.find(location => location.id === id)
     const error = behavior.moveError?.(state, investigator, destination, id)
@@ -51,6 +53,7 @@ const INV_FIELDS = ['seat','code','name','nameEn','klass','willpower','intellect
 const pick = (value, keys) => Object.fromEntries(keys.filter(k => Object.hasOwn(value, k)).map(k => [k, structuredClone(value[k])]))
 export function publicCardInstance(card) {
   const visible = structuredClone(card)
+  if (visible.capturedCards) { visible.capturedCardCount = visible.capturedCards.length; delete visible.capturedCards }
   if (visible.code === 'xcourage') {
     delete visible.underlyingCode
     delete visible.originalCode
@@ -121,10 +124,14 @@ function hiddenLocationView(loc) {
     ...publicGrantedTraits(loc),
   }
 }
-export function maskHiddenLocations(locations) {
-  return locations.map(loc => doorwayMask(loc.hiddenIdentity && !loc.revealed
-    ? hiddenLocationView(loc)
-    : structuredClone(loc)))
+export function maskHiddenLocations(locations, state = null) {
+  return locations.map(loc => {
+    const visible = doorwayMask(loc.hiddenIdentity && !loc.revealed
+      ? hiddenLocationView(loc)
+      : structuredClone(loc))
+    if (state) visible.connections = investigatorConnections(state, loc.id)
+    return visible
+  })
 }
 // enemyReadouts（可选）：{ enemyHealth, enemyFightValue, enemyEvadeValue } 三个引擎读点。
 // 演出快照会被客户端当成「当场状态」重绘牌桌（table-presentation.js 的 applyStep），
@@ -133,6 +140,7 @@ export function maskHiddenLocations(locations) {
 // 不传时退回印刷值（旧调用方/单测不需要引擎读点的场景保持原行为）。
 export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = {}) {
   const attachments = publicAttachments(state)
+  const mechanics = mechanicSnapshot(state)
   // 敌人生命值要走剧本钩子（失落时代 P2：04124/04132/04140 等常驻 +生命）。
   const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
   const healthOf = typeof enemyReadouts.enemyHealth === 'function' ? enemyReadouts.enemyHealth : null
@@ -148,11 +156,12 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
     const grantedTraits = grantedTraitsOf(source || loc)
     const projected = {
       ...loc,
+      connections: investigatorConnections(state, loc.id),
       traitsZh: traitLabels(Array.isArray(loc.traits) ? loc.traits : []),
       grantedTraits: [...grantedTraits],
       grantedTraitsZh: traitLabels(grantedTraits),
     }
-    if (!source) return projected
+    if (!source || (source.hiddenIdentity && !source.revealed)) return projected
     return {
       ...projected,
       shroud: (source.shroud || 0) + (source.shroudMod || 0)
@@ -160,7 +169,8 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
     }
   }
   return {
-    ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations).map(doorwayMask).map(projectLocation),
+    ...pick(state, FIELDS), locations: maskHiddenLocations(attachLocationCards(structuredClone(state.locations || []), attachments.locations), state).map(projectLocation),
+    ...(mechanics ? { mechanics } : {}),
     scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({
       ...structuredClone(enemy),
       health: healthOf ? healthOf(state, enemy) : enemyHealthValue(state, enemy, behavior),
@@ -186,6 +196,7 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
 }
 export function projectTableState(snapshot, observer) {
   const copy = structuredClone(snapshot)
+  if (copy.mechanics) copy.mechanics = maskMechanicSnapshot(copy.mechanics, observer)
   copy.locations = maskHiddenLocations(copy.locations || [])
   for (const inv of copy.investigators || []) if (inv.seat !== observer) { inv.hand = []; inv.beneath = [] }
   if (copy.privateTest && copy.privateTest.seat !== observer) copy.log = copy.privateTest.publicLog

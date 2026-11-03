@@ -3,8 +3,7 @@
 // 卡面：冷漠。反击。[action] 谈判：检定战斗或敏捷(2)（本次检定每有 1 名调查员难度 +1）以证明你有资格
 //   进入幻梦境。成功则翻面并结算其另一面；失败则纳什特攻击他所在地点的每位调查员。
 //   强制 - 击败纳什特后：翻面并结算其另一面。
-// 「另一面」= 背面故事卡 06058b（Lead 口径：不建条目，规则在本条目的谈判/击败分支里；故事面用
-//   api.cardFlip('06058') 展示，scenarioFlags.trialOfNashtResolved 记录）。
+// 「另一面」= 背面故事卡 06058b；翻面展示正文后把该故事面放入胜利牌区。
 // 读点：enemyScript.encounterAction / performEncounterAction / onDefeated（共享层分派）。
 import { activeInvestigators } from '../../_shared.js'
 
@@ -17,6 +16,7 @@ function perInvestigatorDifficulty(state) {
 function resolveTrial(state, enemy, api, via) {
   api.cardFlip?.(CODE, '纳什特的考验')
   api.setScenarioFlag?.('trialOfNashtResolved', true)
+  api.addStoryToVictory?.('06058b', { sourceId: enemy.id })
   api.banish?.(enemy)
   api.info?.(via === 'parley'
     ? '🕯️ 纳什特认可了你的求生意志：他让开道路，并预言你的旅途将通向死亡。'
@@ -61,7 +61,7 @@ export default {
     },
     onDefeated(state, enemy, api) {
       resolveTrial(state, enemy, api, 'defeated')
-      return false
+      return true
     },
   },
 }

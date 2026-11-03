@@ -25,7 +25,7 @@
 // 每例断言 0 pageerror / 0 console error / 0 HTTP>=400 / 无横向溢出。
 //
 // 命令（BOARDGAME_PORT=8813；先检查 artifacts/migration/tde/p9-recon/.playwright.lock）：
-//   node ../../node_modules/@playwright/test/cli.js test --config playwright.tde.config.mjs tde-dual-real.browser.mjs
+//   node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs tde-dual-real.browser.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'

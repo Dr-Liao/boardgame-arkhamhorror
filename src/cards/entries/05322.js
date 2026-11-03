@@ -62,7 +62,7 @@ export default {
       },
     },
     {
-      kind: 'reaction', trigger: 'symbolRevealed',
+      kind: 'reaction', trigger: 'symbolRevealed', partOfAbility: 0,
       // 同一场检定只结算一次：窗口在符号揭示后重复枚举候选，不设上限会在同一窗口里重复触发。
       limit: { scope: 'perTest', owner: 'instance' },
       label: '第六感：同时在 2 次连接内的另一已揭示地点调查（新/原隐藏值二选一）',

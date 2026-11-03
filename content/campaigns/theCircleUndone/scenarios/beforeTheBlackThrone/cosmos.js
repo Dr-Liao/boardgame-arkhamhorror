@@ -92,6 +92,8 @@ export function setLocationPosition(state, locationId, x, y) {
     const oldCell = parsed ? grid.cells[keyOf(parsed.x, parsed.y)] : null
     if (oldCell && oldCell.kind === 'location' && String(oldCell.id) === id) delete grid.cells[old]
   }
+  const location = state.locations?.find(location => location.id === id)
+  if (location) location.grid = { x, y }
   const existing = grid.cells[keyOf(x, y)]
   delete grid.posOf[id]
   grid.posOf[id] = keyOf(x, y)
@@ -144,6 +146,7 @@ export function refreshConnections(state) {
     if (location) byLocation.set(String(entry.id), location)
   }
   for (const [id, location] of byLocation) {
+    location.grid = positionOf(state, id)
     location.connections = adjacentLocationIds(state, id)
       .filter(target => byLocation.has(String(target)))
   }

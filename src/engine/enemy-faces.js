@@ -1,3 +1,8 @@
+import { applyPhysicalFace,normalizedFace } from './physical-faces.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { keysOnExit } from './scenario-keys.js'
+import { releaseChaosTokens } from './chaos-bag.js'
+import { afterThreatEntered } from './threat-entry.js'
 // 异端者多面与放逐 —— 第 2 步 P2.12。
 //
 // 《罪恶报应》的 6 个异端者每张卡有两个面：**敌人面**与**未了之事面**（威胁区剧情卡）。
@@ -46,7 +51,7 @@ export function flipEnemyFace(state, enemy, nextCode, deps = {}) {
   const { defOf = () => null, newCardInstance = code => ({ code, id: 'threat-' + code }), info, events } = deps
   if (!enemy) return null
   const face = enemyFacesOf(enemy).find(entry => entry.code === nextCode)
-  if (!face) return null
+  if (!face) return applyPhysicalFace(state,enemy,nextCode,{definitionFor:code=>normalizedFace(state,code,{printed:code=>ALL_CARDS[code],enemyDefinition:defOf}),afterApplied:deps.afterApplied})
   const side = face.side === 'unfinishedBusiness' ? 'unfinishedBusiness' : 'enemy'
   const from = faceOf(enemy)
   if (side === from) return { side, code: nextCode, changed: false }
@@ -59,6 +64,7 @@ export function flipEnemyFace(state, enemy, nextCode, deps = {}) {
     }
     if (holder) {
       holder.threat.push(newCardInstance(nextCode))
+      if (deps.reactionWindow) afterThreatEntered(state, holder, holder.threat.at(-1), events, deps.reactionWindow)
     }
     const index = state.enemies.indexOf(enemy)
     if (index >= 0) state.enemies.splice(index, 1)
@@ -92,15 +98,25 @@ export function flipEnemyFace(state, enemy, nextCode, deps = {}) {
 // 放逐：不能以任何方式被击败的卡面也会用「放逐」离场——移出敌人列表、解除交战、
 // 进胜利展示区（有胜利点就计分），不进遭遇弃牌堆。
 export function banishEnemyToVictory(state, enemy, deps = {}) {
-  const { info, events, victory = Number(enemy?.victory || 0), addVictory = null } = deps
+  const { info, events, victory = Number(enemy?.victory || 0), addVictory = null, forceVictory = false } = deps
   if (!enemy) return false
+  if (state.enemies.includes(enemy)) {
+    releaseChaosTokens(state, enemy.id)
+    keysOnExit(state, `enemy:${enemy.id}`, enemy.location)
+  }
   for (const inv of state.investigators) {
     if (Array.isArray(inv.engaged)) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
   }
   const index = state.enemies.indexOf(enemy)
   if (index >= 0) state.enemies.splice(index, 1)
   const code = enemy.originalCode || enemy.code
-  if (addVictory) {
+  if (forceVictory) {
+    state.victoryDisplay ||= []
+    if (!state.victoryDisplay.some(card => card.id === enemy.id)) {
+      state.victoryDisplay.push({ id: enemy.id, code: enemy.code, originalCode: code, victory })
+      state.victory = (state.victory || 0) + victory
+    }
+  } else if (addVictory) {
     addVictory(state, enemy, events)
   } else if (victory > 0) {
     state.victory = (state.victory || 0) + victory

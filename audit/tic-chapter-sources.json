@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Reviewed chapter definition/setup facts; behavior acceptance is separate",
+  "files": [
+    {
+      "file": "early-chapter-facts.json",
+      "sha256": "d070bb1468617863c8d35906d9baf6c8be4d53e4fc5e4d8ee7588ca633f8cceb"
+    },
+    {
+      "file": "early-definition-brief.json",
+      "sha256": "2e1b9465d1fa84f42ba86f967d891deb3d621b736aacb196037c5399db152f2e"
+    },
+    {
+      "file": "middle-chapter-facts.json",
+      "sha256": "bca554763ab6fc2a2a6bd7041d0d9173c5eda5f48fe608d6451c9949a2f50e26"
+    },
+    {
+      "file": "late-plan.json",
+      "sha256": "35ebd68ad6a9a848f544d56f21a4bd6e7b235d5cf013abf10479648d20f260db"
+    }
+  ],
+  "outputSha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+}

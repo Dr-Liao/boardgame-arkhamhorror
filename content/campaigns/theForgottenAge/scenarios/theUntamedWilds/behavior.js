@@ -108,8 +108,10 @@ export const behavior = {
       inv.tfaExploredThisTurn = true
       return
     }
-    // 探索失败：抽到的是诡计/敌人（04069 荆棘之路）。
-    rule?.afterExploreFailure?.({ state, inv, api, context, location })
+    // 只有翻到敌人/诡计才是探索失败；牌库里没有连接地点不是失败。
+    if (context?.kind === 'encounter') {
+      rule?.afterExploreFailure?.({ state, inv, api, context, location })
+    }
   },
 
   locationEntered(state, inv, location, api) {

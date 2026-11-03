@@ -9,13 +9,13 @@
 //   读 test:pass/test:fail 事件；不读源码字符串、不读冻结 JSON 猜结论。
 // - 战役 283（249 主卡 + 34 关联面）：证据名必须匹配 `TDE <code> 已验收|待实现 · ...`（逐卡 test，
 //   tests/tde-campaign-card-acceptance.test.mjs）。
-// - 玩家 87：证据名必须匹配 `TDE <code> ...`（4 个 M2 分片，101 例）。
+// - 玩家 87：证据名必须匹配 `TDE <code> ...`（4 个 M2 分片）。
 // - 调查员 18（16 主卡 + 2 关联面 06015a/b）：文件级证据（whole-file 实跑通过 + 包 manifest 的
 //   TDE_INVESTIGATOR_ACCEPTANCE_PROFILE），与 TCU 的调查员口径一致。
 // - 账本状态（verified/pending）由测试名标签 / manifest verified 函数决定；人工行为审计的近似说明只从
 //   content/campaigns/theDreamEaters/card-acceptance.js 的 TDE_CARD_ACCEPTANCE_NOTES 读取，
 //   未登记默认 verified，不在工具里硬编码任何卡的 pending。
-// - simplified 是「已登记显式简化」：P7 玩家 57 + P8 单卡 22 + P8 章节 gap 12→8 锚点 = 87；
+// - simplified 是「已登记显式简化」：P7 玩家 53 + P8 单卡 22 + P8 章节 gap 12→8 锚点 = 83；
 //   gap 的逐条评审在 audit/tde-scenario-gap-triage.json，note 与 gapRefs 只从该文件与注册表读取。
 // - 生成物两份：JSON 账本（人读/审计用）与 JS 模块（运行时读 verified/pending 集合与 summary）。
 //   两份都由本工具生成，`--write` 后必须再跑一次默认 check 验证逐字节一致。
@@ -232,7 +232,7 @@ const noteFor = code => {
 
 // ---------------------------------------------------------------------------
 // 简化登记对账（不静默近似）：
-//   1. P7 玩家包的 57 张显式简化必须与注册表的 simplified 集合逐一对应（含 note 一致）；
+//   1. P7 玩家包当前显式简化必须与注册表逐一对应（含 note 一致）；
 //   2. P8 单卡条目 simplified===true 的 22 条必须全部登记 simplified，note 与条目一致；
 //   3. P8 的 12 条 behavior.scenarioGaps 由 audit/tde-scenario-gap-triage.json 逐条落卡，
 //      每条 gap 原文必须与章节 behavior.scenarioGaps[index] 一致，锚点卡必须登记 simplified；
@@ -242,7 +242,7 @@ const playerLedger = JSON.parse(fs.readFileSync(
   path.join(root, game, 'audit/tde-player-acceptance.json'), 'utf8'))
 const playerSimplifiedNotes = new Map(playerLedger.entries
   .filter(entry => entry.simplified).map(entry => [entry.code, entry.note]))
-if (playerSimplifiedNotes.size !== 57) {
+if (playerSimplifiedNotes.size !== playerLedger.summary.simplified) {
   throw new Error(`Unexpected P7 player simplified count: ${playerSimplifiedNotes.size}`)
 }
 for (const code of playerCodes) {
@@ -264,7 +264,7 @@ const p8CardSimplifiedCodes = [...entryByCode.values()]
   .filter(entry => entry.simplified === true)
   .map(entry => entry.code)
   .sort()
-if (p8CardSimplifiedCodes.length !== 22) {
+if (p8CardSimplifiedCodes.length !== 0) {
   throw new Error(`Unexpected P8 single-card simplified count: ${p8CardSimplifiedCodes.length}`)
 }
 for (const code of p8CardSimplifiedCodes) {
@@ -282,7 +282,7 @@ for (const code of p8CardSimplifiedCodes) {
 }
 const triagePath = path.join(root, game, TDE_SCENARIO_GAP_TRIAGE_FILE)
 const triage = JSON.parse(fs.readFileSync(triagePath, 'utf8'))
-if (!Array.isArray(triage.gaps) || triage.gaps.length !== 12) {
+if (!Array.isArray(triage.gaps) || triage.gaps.length !== 0) {
   throw new Error(`Unexpected P8 scenarioGaps triage count: ${triage.gaps?.length}`)
 }
 const triageGapIds = new Set()
@@ -317,8 +317,8 @@ for (const chapter of chapters) {
     }
   }
 }
-if (totalGaps !== 12) throw new Error(`Unexpected P8 scenarioGaps count: ${totalGaps}`)
-if (triageGapIds.size !== 12) throw new Error(`triage 未覆盖全部 12 条 gap：${triageGapIds.size}`)
+if (totalGaps !== 0) throw new Error(`Unexpected P8 scenarioGaps count: ${totalGaps}`)
+if (triageGapIds.size !== 0) throw new Error(`triage 未覆盖全部 12 条 gap：${triageGapIds.size}`)
 const derivedGapCards = Object.fromEntries(chapters.map(chapter => [chapter.id,
   [...new Set(triageCodesByChapter.get(chapter.id))].sort()]))
 for (const chapter of chapters) {
@@ -369,7 +369,7 @@ if (noEntryStoryFaces.length !== 2 || !noEntryStoryFaces.includes('06057b') || !
 const unknownNotes = Object.keys(TDE_CARD_ACCEPTANCE_NOTES)
   .filter(code => !tde.some(card => card.code === code))
 if (unknownNotes.length) throw new Error(`逐卡备注登记了不存在/越界的卡：${unknownNotes.join(', ')}`)
-if (Object.keys(TDE_CARD_ACCEPTANCE_NOTES).length !== 87) {
+if (Object.keys(TDE_CARD_ACCEPTANCE_NOTES).length !== playerSimplifiedNotes.size + expectedCampaignSimplified.length) {
   throw new Error(`Unexpected TDE note registry size: ${Object.keys(TDE_CARD_ACCEPTANCE_NOTES).length}`)
 }
 
@@ -502,13 +502,11 @@ const simplifiedInvestigator = Object.keys(TDE_CARD_ACCEPTANCE_NOTES)
 const profile = {
   id: 'dream-eaters-all-cards-2026-11',
   scope: '食梦者原始循环 388 条印刷记录：352 张主卡（战役 249 / 调查员 16 / 玩家 87）与 36 个关联面（34 战役面 + 2 调查员面 06015a/b）。',
-  basis: `逐卡运行测试：283 条战役记录（249 主卡 + 34 关联面）的卡面印刷数据与 8 章 definition/index 逐字段对照（tests/tde-campaign-card-acceptance.test.mjs ${campaignByCode.size} 例逐卡证据）、87 张玩家卡 4 个分片（tests/tde-player-m2-{1..4}.test.mjs 101 例）、18 条调查员记录 M1 逐人验收（tests/tde-investigators.test.mjs ${investigatorResults.length} 例，文件级）；证据只从实跑 node --test 的 test:pass 事件归集。`,
+  basis: `逐卡运行测试：283 条战役记录（249 主卡 + 34 关联面）的卡面印刷数据与 8 章 definition/index 逐字段对照（tests/tde-campaign-card-acceptance.test.mjs ${campaignByCode.size} 例逐卡证据）、87 张玩家卡 4 个分片（tests/tde-player-m2-{1..4}.test.mjs ${playerLedger.summary.testsPassed} 例）、18 条调查员记录 M1 逐人验收（tests/tde-investigators.test.mjs ${investigatorResults.length} 例，文件级）；证据只从实跑 node --test 的 test:pass 事件归集。`,
   partitionPolicy: '包分区 campaign 283（249 主 + 34 面）/ investigator 18（16 主 + 2 面）/ player 87，合计 388；形态分区 main 352 + face 36，合计 388；两套各自守恒。34 战役面按 linkedCardCode/linkedToCode 反查归正面（06169a/b 成对互链）；06015a/b 归调查员包（UNOWNED_FACE_OVERRIDES）。',
   pendingPolicy: '目录存在、卡号被源码引用、rulesPending:false 或文本非空都不构成通过；未被逐卡 test 标记「已验收」/未被 manifest verified 的卡保持 pending 并计入 summary.pending（当前 0）。',
-  notePolicy: '人工审计的近似说明登记在 content/campaigns/theDreamEaters/card-acceptance.js 的 TDE_CARD_ACCEPTANCE_NOTES（源：P7 账本 57、P8 单卡 simplified 22、P8 章节 gap 12→8 锚点）；未登记默认 verified；simplified 只做说明，不降级 pending（TCU 同口径），发布口径 equivalenceCertified=false。',
-  noEntryPolicy: '10 条 noEntry 逐条登记：8 张剧本参考卡由章节 manifest.referenceCode + definition/behavior 承载；06057b/06058b 由正面 06057/06058 的单卡条目承载。',
-  channelPolicy: 'G5 通道（TDE 自定义枚举，不用 implementationChannel 的 descriptor|legacy|hybrid|missing）：player/investigator=descriptor（条目描述子）；campaign 主体=encounter-entry（implementedFor 单卡条目）；剧本参考卡=scenario-definition；06057b/06058b=linked-face；06015a/b=engine（src/engine/dream-gate.js）。',
-  gapPolicy: 'P8 behavior.scenarioGaps 共 12 条，逐条评审落在 audit/tde-scenario-gap-triage.json（含 gap 原文与锚点卡）；去重后 8 个卡号进 simplified 注册表，TDE_SCENARIO_GAP_CARDS 与 triage 逐章一致。',
+  notePolicy: '本轮完成旧简化的规则补全；当前显式简化必须为零。旧备注与逐项实现证据保存在 audit/tde-completion-review.json。',
+  gapPolicy: '当前未解决章节缺口必须为零；历史十二条缺口及修复证据保存在 audit/tde-scenario-gap-triage.json 的 resolvedGaps。',
   playerCardPolicy: `玩家 87 全部 verified；buildable=${buildable}（可入牌组）、dependencyOnly=${dependencyOnly}（11 张 deckLimit=0 的场外绑定卡/绑定弱点 + ${basicWeaknessCodes.length} 张基础弱点），deckable=${deckable}（可入牌组里 deckLimit>0）。`,
   inheritedProfiles: [TDE_INVESTIGATOR_ACCEPTANCE_PROFILE.id, TDE_PLAYER_ACCEPTANCE_PROFILE.id],
   sources: [
@@ -567,8 +565,8 @@ const expectedCounts = {
   main: 352, face: 36, campaignMain: 249, campaignFaces: 34,
   investigatorMain: 16, investigatorFaces: 2, playerMain: 87,
   buildable: 72, dependencyOnly: 15, basicWeaknesses: 4,
-  simplified: 87, simplifiedPlayer: 57, simplifiedCampaign: 30, simplifiedInvestigator: 0,
-  noEntry: 10, scenarioReferenceCards: 8, recordsWithEntry: 273, scenarioGaps: 12,
+  simplified: 0, simplifiedPlayer: 0, simplifiedCampaign: 0, simplifiedInvestigator: 0,
+  noEntry: 10, scenarioReferenceCards: 8, recordsWithEntry: 273, scenarioGaps: 0,
 }
 for (const [key, expected] of Object.entries(expectedCounts)) {
   if (summary[key] !== expected) throw new Error(`Unexpected ledger ${key}: ${summary[key]}`)

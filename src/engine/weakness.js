@@ -1,3 +1,4 @@
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // 弱点揭示与结算（resolveWeakness）从 engine.js 拆出的模块（Phase 6 · 6d-14）。
 //
 // 弱点是这套引擎里规则最碎的一块：敌人型、威胁型、附着型、可打出的、会升级的、
@@ -7,6 +8,7 @@
 // 依赖注入同前几批；abilityApi 是工厂产物，用惰性调用。
 
 import { popRevelation, pushRevelation } from './resolution-scope.js'
+import { afterThreatEntered } from './threat-entry.js'
 
 export function createWeakness(deps) {
   const {
@@ -38,6 +40,7 @@ export function createWeakness(deps) {
     removeOne,
     replaceAssets,
     requestChoice,
+    reactionWindow,
     resolveEffect,
     sealChaosToken,
     shuffle,
@@ -121,7 +124,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     // 离体体验（04264）：所有手牌洗回牌库并抽取等量，然后把本卡洗回牌库。
     const hand = [...(inv.hand || [])]
     inv.hand = []
-    if (hand.length) inv.deck = shuffle([...inv.deck, ...hand], () => randomValue(state))
+    if (hand.length) inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...hand], () => randomValue(state)), 'shuffle')
     inv.shuffleWeaknessAfterResolution = def.code
     info(state, events, `「${cardName(def.code)}」：${inv.name} 把 ${hand.length} 张手牌洗回牌库并重抽。`)
     if (hand.length) texts.push(...drawCards(state, inv, hand.length, events))
@@ -191,7 +194,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     } else if (choice === 'hand' && handAllies.length) {
       for (const code of handAllies.slice()) {
         removeOne(inv.hand, code)
-        inv.discard.push(code)
+        discardPlayerCards(state, inv, code)
         discarded++
       }
       info(state, events, `「${cardName(def.code)}」：${inv.name} 弃掉手牌中 ${discarded} 张盟友支援。`)
@@ -208,7 +211,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     const spots = new Set([inv.location, ...(loc?.connections || [])])
     let moved = 0
     for (const enemy of state.enemies.filter(item => spots.has(item.location) && !item.defeated)) {
-      enemy.exhausted = false
+      abilityApi(state, events).ready(enemy)
       if (enemy.location !== inv.location && enemy.hunter) {
         enemy.location = inv.location
         moved++
@@ -293,6 +296,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
       inv.threat.push(newCardInstance(state, def.code, eff.weakness.initialUses == null ? {}
         : { uses: eff.weakness.initialUses, usesType: eff.weakness.usesType || 'charges', exhausted: false }))
     }
+    afterThreatEntered(state,inv,inv.threat.at(-1),events,reactionWindow)
     info(state, events, `⚠️ 「${cardName(def.code)}」进入 ${inv.name} 的威胁区域。`)
     return
   }

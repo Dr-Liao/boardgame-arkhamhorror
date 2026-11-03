@@ -1,0 +1,350 @@
+{
+  "id": "intoTheMaelstrom",
+  "campaignId": "theInnsmouthConspiracy",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险VIII：暗潮之下",
+          "children": [
+            {
+              "text": "你的计划非常简单。愚蠢，但是简单。你总结收集的情报，得出的结论是：无论是浪潮渐起，还是可怕的“深潜者”现世，都是因为达贡密教作祟。不仅如此，在过去的几十年间，密教还将村民变得不再像人，更像是那种可怕的生物，利用他们从内部渗透整个印斯茅斯。但最糟的是，密教崇拜的神灵——达贡，竟然还有同类。他的伴侣，海德拉，依然在印斯茅斯底下的深渊沉睡，等候苏醒之日，将无尽的海洋尽数攫于掌心。\n\n你由此得出了自己的计划：再去一趟魔鬼礁石，深入海底潜藏的深潜者之城，一劳永逸地终结深潜者的计划。哈珀特工帮你准备，从印斯茅斯港口的残余中偷来一艘船，将所有的东西都放在了船上。“我们只有一次机会。”哈珀说道，“我想用不著说，要是我们失败了，会有什么下场。”她直截了当地望向印斯茅斯已经淹没的废墟。“你准备好了吗？”"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "集齐以下遭遇组中的所有卡牌：暗潮之下、海德拉的爪牙、深海生物、淹没的洞穴、破碎记忆、天体合相和远古邪恶。这些遭遇组由以下图标表示："
+            },
+            {
+              "text": "检查冒险日志。按以下方式放置蓝色、红色、绿色和黄色钥匙："
+            },
+            {
+              "text": "如果调查员持有伊哈·恩斯雷的钥匙，选择一位调查员控制蓝色钥匙。否则，将它背面朝上放在一边。"
+            },
+            {
+              "text": "如果调查员持有伊哈·恩斯雷的地图，选择一位调查员控制红色钥匙。否则，将它背面朝上放在一边。"
+            },
+            {
+              "text": "如果伊哈·恩斯雷的守卫被除掉了，选择一位调查员控制绿色钥匙。否则，将它背面朝上放在一边。"
+            },
+            {
+              "text": "如果伊哈·恩斯雷的门户承认你是其合法的守护者，选择一位调查员控制黄色钥匙。否则，将它背面朝上放在一边。"
+            },
+            {
+              "text": "如果放在一边的钥匙少于4把，将紫色、白色和黑色钥匙背面朝上混洗。然后逐一将这些钥匙放在一边，直到放在一边的钥匙共有4把，或已没有更多钥匙。将其余多出的钥匙移出游戏。移出的钥匙不会在本场冒险中使用。"
+            },
+            {
+              "text": "将放在一边的所有钥匙混洗，使你们无法分辨各把钥匙。"
+            },
+            {
+              "text": "将伊哈·恩斯雷门扉放置入场。（它以部分淹没状态入场。）将8张潮汐隧道地点放置入场，环绕在它周围。"
+            },
+            {
+              "text": "每位调查员在伊哈·恩斯雷门扉开始游戏。"
+            },
+            {
+              "text": "将其他所有地点放在一边，置于场外。"
+            },
+            {
+              "text": "检查冒险日志。"
+            },
+            {
+              "text": "每位持有潜水服的调查员开始游戏时，将一个潜水服剧情支援放在自己的玩家区域中。"
+            },
+            {
+              "text": "将所有未使用的潜水服移出游戏。"
+            },
+            {
+              "text": "构建场景牌堆时，场景2a仅使用“深海之城（版本I）”。将“深海之城（版本II）”和“深海之城（版本III）”放在一边，置于场外。"
+            },
+            {
+              "text": "将敌人洛依高尔、敌人水生异怪、双面敌人海德拉和双面敌人达贡放在一边，置于场外。"
+            },
+            {
+              "text": "将淹没标记加入标记池。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "钥匙",
+              "children": [
+                {
+                  "text": "在本场冒险中，各把钥匙代表以下物品：\n\n• 红色：关于通往伊哈·恩斯雷的异界路线及其中秘密的情报。\n\n• 蓝色：一把能打开伊哈·恩斯雷门扉及其中其他门扉的钥匙。\n\n• 绿色：一件战利品，证明持有者有资格进入伊哈·恩斯雷，与其中的神灵交流。\n\n• 黄色：一枚表明持有者效忠伊哈·恩斯雷及其神灵的徽章。\n\n• 紫色：一把闪烁金光的钥匙，用于打开深海宝库。\n\n• 黑色：一把黑曜石钥匙，用于启动深海之城中的种种陷阱。\n\n• 白色：一把珊瑚钥匙；在伊哈·恩斯雷深处通行所需的众多钥匙之一。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "记忆闪回XIV",
+          "children": [
+            {
+              "text": "你又一次来到了达贡密教总部的地下深处，你就是在那里的厅堂里摧毁了密教的仪式。你跟著道森特工穿越一连串蜿蜒漫长淹没的长廊，两侧都是水生异怪和变形野兽的雕像。你问道森到底要去哪里，但他没有回答。你们最后来到了另一个与前处相仿的厅室。这里墙上遍布异界样式的塑像，更有大幅的壁画，画的是星象合列之下卷起的海浪。另一个池子填满了整座洞穴，里面有什么黑黢黢的庞大巨物正在沉睡。令你惊讶的是，哈珀特工正站在池子前，凝视著其中黑色的倒影。她听到你们接近，转而一惊，但发现是你们，松了口气。“都完成了？”道森问道。.\n\n她点点头：“这家伙最近是不会醒了。”\n\n“说得好。密教正在追我们。可没剩多少时间了。快去宝库，拿走我们该拿的东西。”\n\n你惊住了。到底是怎么一回事？两位特工同时注意到了你的迷惑。你突然意识到了事情残酷的真相。特工来这里根本不是调查什么印斯茅斯的犯罪活动的。他们别有所图。迄今为止，你在这深处所见的宝库里都装满了古代的财富。这么多年来就是这些财富在维持印斯茅斯村的周转——也许也正是这些财富，让许多村民追随密教，遗忘了人性。\n\n你藏起自己的沮丧，询问道森所说到底有多少是谎言。“不全是。”他冷静地说道，“我联系你的时候，哈珀特工确实失踪了，这部分是真的。但她来这儿是为了别的任务。我们现在必须完成这任务，不然就会失去一直努力的一切。你得来帮我们。”\n\n你交叉双臂，以示反对。为了两个把你蒙在鼓里的特工冒尽生命危险是一回事。帮他们为政府走私财宝，又是另一回事——更别提现在有多么危险了。.\n\n“我觉得你还是不明白。”道森语气意外的从容，“你归组织所有，你得听我的。我让你干什么，你就得照做。”你们之间的沉默越来越紧张，你发现道森的手伸向了皮套里的武器。他真的要把事情弄成这样吗……？\n\n就在这时，你听到从厅室上头传来的叫喊。“去他妈的。他们来了。”道森转向哈珀，悄声简短地下令：“从魔鬼礁石那边出去。沿著来时的路。在宝库碰头。”\n\n接著就是一片混沌。道森和哈珀分头行动。尽管你怒火中烧，但因为你清楚那条逃脱路线，所以觉得最好还是跟著道森特工。一阵脚步声和喊叫的狂潮紧随其后。你没走多远，就陷入了包围。一个身披长袍的老人瞪著他那不会眨的眼睛挡住了你的去路。“逮住他们。”他说道。你还能回想起来的事情就是一阵恐惧。盘问。那黑暗、淹没的深坑。道森的命运。哈珀在海滩上发现了你——\n\n———你的视线刚适应回到现在，转向哈珀。看来她已经明白你瞧见了什么。危险的是，她的手伸向了枪。“要命。”她说道，“我真希望你还是别想起来上次在这洞里都发生了什么……”她颤巍巍地吸了口气。你们之间又是一阵沉默，审视著彼此。“那么，现在怎么说？”她问道，“我还有活要干。你要阻止我吗？”\n\n在冒险日志中的“恢复的记忆”部分，记录刺痛的背叛。\n\n调查员必须决定（选择一项）：\n\n• 帮助哈珀特工完成任务。将放在一边的深海之城（版本II）放置入场，置于当前场景旁。它提供一个新的替代目标。\n\n• 反抗哈珀特工。搜寻每位玩家的手牌、牌堆、弃牌堆及所有玩家区域，找出艾莲娜·哈珀，将她移出游戏。将放在一边的深海之城（版本III）放置入场，置于当前场景旁。它提供一个新的替代目标。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成结局",
+              "children": [
+                {
+                  "text": "如果你未达成任何结局（所有调查员都被击败）： 深潜者的吟唱渐起渐强。你眼前伊哈·恩斯雷怪异的墙壁扭曲歪解，彷佛是不顾一切想要呼吸的肺。空气稀薄。墙中渗水。已经再没什么可以阻止浪潮的牵引了。再没什么可以阻止大洪水了。城中传来兴奋的叫喊，深海的住民一阵狂欢。你精疲力尽，选择放弃，轰然倒下。你完了。人类也快了。."
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "结局 1: 你疯狂地逃向海底城市的出口，绝望逃生。你冲回诡异门扉的时候，感受到身边熟悉的水流拉扯著你。你的心狂跳不止，直到最后破水而出，瘫倒在礁石上。."
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "结局 2: 你从魔鬼礁石的洞穴中跃出，仰视天空，看到日月不再陈列一线，松了口气。潮水貌似也在退去。海面终于平静了下来。."
+                }
+              ]
+            },
+            {
+              "title": "结局 3",
+              "children": [
+                {
+                  "text": "结局 3: 你从魔鬼礁石的洞穴中跃出，仰视天空，喉咙猛地抽紧。日月依然紧锁，锢于不洁的合相，海浪依然吞噬了大部分海岸。."
+                }
+              ]
+            },
+            {
+              "title": "结局 4",
+              "children": [
+                {
+                  "text": "结局 4: 哈珀特工先开口了：“我们办到了。不敢相信居然成了。”你点点头。你不仅成功阻止了深潜者，更帮助哈珀完成了她的任务。她在自己的家伙里翻出一根亮橙色的大管火器，打出一发照明弹，照亮夜空，露出了胜利的笑容。“他们随时都会来接我们。你帮了这么大一个忙，肯定能拿到不少奖赏。当然了，只要你不和别人说就是。”她说道。你点点头。反正，也不会有人信你。"
+                }
+              ]
+            },
+            {
+              "title": "结局 5",
+              "children": [
+                {
+                  "text": "结局 5: 哪里都没有哈珀特工的踪迹。也许她没能活著逃出来。但你依然怀抱著希望，觉得她已在别处。但至少伊哈·恩斯雷的财富不能再用于操纵人类，对此你还是松了口气。政府不行，深潜者也不行——统统不行。"
+                }
+              ]
+            },
+            {
+              "title": "结局 6",
+              "children": [
+                {
+                  "text": "结局 6: 哈珀特工先开口了：“好吧。任务完成了。我猜。”你紧咬嘴唇。她兴许是完成了自己的任务，但整个世界都会因深潜者的仪式付出惨痛长久的代价。她在自己的家伙里翻出一根亮橙色的大管火器，打出一发照明弹，照亮夜空，露出了胜利的笑容。“他们随时都会来接我们。我们会把这座城市炸个稀巴烂，兴许这样就都结了。”她说道。你可不敢确定。已经造成了这么多伤害。这一切真的还会结束吗？又或者你只是延后了必然的劫数？"
+                }
+              ]
+            },
+            {
+              "title": "结局 7",
+              "children": [
+                {
+                  "text": "结局 7: 哪里都没有哈珀特工的踪迹。也许她没能活著逃出来。但你依然怀抱著希望，觉得她已在别处。但至少伊哈·恩斯雷的财富不能再用于操纵人类，对此你还是松了口气。政府不行，深潜者也不行——统统不行。你再次眺望侵袭地平线的海浪。洪水似乎停了。或许你对深潜者与其伟主造成了足够的伤害，阻止了它们的仪式。又或者它们只是在等候时机，等待下一次涌现之时。这一切真的结束了吗？又或者你只是延后了必然的劫数？"
+                }
+              ]
+            },
+            {
+              "title": "结局 8",
+              "children": [
+                {
+                  "text": "结局 8: 仪式告终，海水涨涌，东海岸首当其冲。整片大陆很快都淹入海中。冰川消融，吞尽地球。万城倾倒。人类不再。唯余无垠的大洋和头顶高悬、依旧不变的天体合相。当然，还有新地球的住民：海德拉、达贡，和他们的子嗣。."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario VIII: Into the Maelstrom",
+          "children": [
+            {
+              "text": "Your plan is simple. Foolish, but simple. The knowledge you’ve gathered leads you to conclude that the Esoteric Order of Dagon is the cause of both the rising tides and the appearance of the horrific “Deep Ones.” Not only that, but over the course of the last few decades, the Order has transformed the townsfolk into more of the horrific creatures, using them to infiltrate Innsmouth from within. But worst of all, the entity the cult worships—Dagon— is just one of two. His mate, Hydra, still slumbers in the depths below Innsmouth, waiting to awaken and stake her claim over an endless ocean.\n\nThese are the conclusions that have led you to your plan: Travel once more to Devil Reef, descend into the city of the Deep Ones that lies hidden at the bottom of the ocean, and put a stop to the Deep Ones’ plans once and for all. Agent Harper helps you prepare, loading your possessions onto the boat you managed to steal from what remained of Innsmouth’s docks. “We only have one shot at this,” Harper says. “I don’t think I need to remind you what might happen if we fail.” She looks pointedly at the flooded ruins of Innsmouth. “Are you ready?”"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Into the Maelstrom, Agents of Hydra, Creatures of the Deep, Flooded Caverns, Shattered Memories, Syzygy, and Ancient Evils. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Check Campaign Log. Place each of the following keys (blue, red, green, and yellow) as follows:"
+            },
+            {
+              "text": "If the investigators possess the key to Y’ha-nthlei, choose an investigator to take control of the blue key. Otherwise, set it aside, facedown."
+            },
+            {
+              "text": "If the investigators possess a map of Y’ha-nthlei, choose an investigator to take control of the red key. Otherwise, set it aside, facedown."
+            },
+            {
+              "text": "If the guardian of Y’ha-nthlei is dispatched, choose an investigator to take control of the green key. Otherwise, set it aside, facedown."
+            },
+            {
+              "text": "If the gateway to Y’ha-nthlei recognizes you as its rightful keeper, choose an investigator to take control of the yellow key. Otherwise, set it aside, facedown."
+            },
+            {
+              "text": "If there are fewer than 4 set-aside keys, shuffle the purple, white, and black keys facedown. Then, one at a time, set each of these keys aside until there are no more than 4 set-aside keys. Remove each remaining key in excess of the set-aside keys from the game. The removed keys will not be used in this scenario."
+            },
+            {
+              "text": "Shuffle each set-aside key so you do not know which is which."
+            },
+            {
+              "text": "Put Gateway to Y’ha-nthlei into play. (It enters play partially flooded.) Put each of the 8 Tidal Tunnel locations into play surrounding it."
+            },
+            {
+              "text": "Each investigator begins play at the Gateway to Y’ha-nthlei."
+            },
+            {
+              "text": "Set each other location aside, out of play."
+            },
+            {
+              "text": "Check Campaign Log."
+            },
+            {
+              "text": "Each investigator who possesses a diving suit begins play with a Diving Suit story asset in their play area."
+            },
+            {
+              "text": "Remove each unused Diving Suit from the game."
+            },
+            {
+              "text": "When constructing the act deck, use only the City of the Deep (v. I) version of act 2a. Set City of the Deep (v. II) and City of the Deep (v. III) aside, out of play."
+            },
+            {
+              "text": "Set the Lloigor enemy, the Aquatic Abomination enemy, the double-sided Hydra enemy, and the double-sided Dagon enemy aside, out of play."
+            },
+            {
+              "text": "Add the flood tokens to the token pool."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Keys",
+              "children": [
+                {
+                  "text": "During this scenario, keys represent the following:\n\n• Red: Information regarding the otherworldly route to Y’ha-nthlei, and the secrets that lie within.\n\n• Blue: A key allowing entrance through the gateway to Y’ha-nthlei and its other thresholds.\n\n• Green: A trophy proving one’s worthiness to enter Y’ha-nthlei and commune with its deities.\n\n• Yellow: A badge signifying one’s allegiance to Y’ha-nthlei and its deities.\n\n• Purple: A key of shimmering gold for opening the vaults of the deep.\n\n• Black: A key of obsidian used to activate the many traps within the city of the deep.\n\n• White: A key of coral, one of many used to navigate the depths of Y’ha-nthlei."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "Flashback XIV",
+          "children": [
+            {
+              "text": "Flashback XIV\n\nYou are deep below the Esoteric Order of Dagon’s headquarters once more, emerging from the hall where you had disrupted the Order’s ritual. You follow Agent Dawson through a series of winding, flooded corridors flanked by statues of aquatic monstrosities and malformed beasts. You ask Dawson where exactly you’re headed, but he doesn’t reply. Finally, you enter another chamber, similar to the last. Its walls are covered in otherworldly effigies and a depiction of ocean waves swirling below an alignment of celestial bodies. Another familiar pool dominates the cavern, inside which the dark shape of something massive slumbers. To your surprise, Agent Harper stands in front of the pool, gazing into its dark reflection. She turns with a start when she hears you approach, relaxing only once she sees who you are. “Is it done?” Dawson asks.\n\nShe nods. “This one isn’t waking up anytime soon.”\n\n“Good. The Order is on to us. We have no time to spare. Let’s get to the vault and take what we came for.”\n\nYou reel. What exactly is going on here? Both of the agents notice your confusion at the same time. A moment of grim understanding dawns as you realize the truth of the situation. The agency didn’t come here to investigate criminal activity in Innsmouth at all. They came here for something else. And the only vaults you’ve seen so far in these depths are the ones filled with archaic riches. The material wealth that has kept the town of Innsmouth afloat all these years—perhaps the very riches that persuaded so many of the townsfolk to follow the Order and forsake their own humanity.\n\nStifling your frustration, you ask how much of Dawson’s briefing was a lie. “Not all of it,” he says calmly. “Agent Harper was missing when I contacted you, that much was true. But she was sent here on a different mission. One we must complete this very moment or risk losing everything we’ve worked for. And you’re going to help us.”\n\nYou cross your arms in defiance. It’s one thing to be kept in the dark by the two agents you’ve risked your life for. It’s another to help them smuggle treasure on behalf of the government, especially when so much more is at stake.\n\n“I don’t think you understand,” Dawson replies, his voice surprisingly level. “You are an asset of the agency and under my authority. You will do as I command.” As the silence between you grows more and more tense, you spot Dawson’s hand twitching toward his holstered weapon. Is he truly willing to go that far…?\n\nJust then, you hear shouting down the hall. “Shit. They’re here.” Dawson turns to Harper, his orders terse and quiet: “Take the exit through Devil Reef. We’ll head back the way we came. Meet up at the vault.”\n\nThe next minute is a blur. Dawson and Harper split up. Despite your anger, you decide it is best to follow Agent Dawson, since you are familiar with that escape route. A torrent of footsteps and hollers follows close behind. You don’t get far before you are cornered. An elderly man with wide, unblinking eyes and long robes blocks your exit. “Take them,” he says. The rest you recall only in flashes of horror. The interrogation. The dark, flooded pit. Dawson’s fate. Harper discovering you on the beach—\n\n—You turn on Harper, your vision adjusting back to the present. She seems to understand what you have seen. Her hand hovers dangerously near her handgun. “Dammit,” she says. “I was hoping you wouldn’t remember what happened the last time we were in this room…” She draws in a shaky breath as the two of you silently judge one another. “So, what now?” she asks. “I still have a job to do. Are you going to get in my way?”\n\nIn your Campaign Log, under “Memories Recovered,” record a stinging betrayal.\n\nThe investigators must decide (choose one):\n\n• Help Agent Harper complete her mission. Put the set-aside City of the Deep (v. II) into play next to the current act. It provides a new alternate objective.\n\n• Defy Agent Harper. Search each player’s hand, deck, discard pile, and all play areas for Elina Harper and remove her from the game. Put the set-aside City of the Deep (v. III) into play next to the current act. It provides a new alternate objective."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached because each investigator was defeated: The chanting of the Deep Ones rises to a crescendo. The alien walls of Y’ha-nthlei twist and contort before your eyes, like lungs desperately clawing for breath. The air becomes thin. Water seeps through the walls. Nothing can stop the pull of the tide now. Nothing can stop the great flood. A triumphant roar sounds throughout the city, and the citizens of the deep rise to meet the cry in their jubilance. You collapse in exhaustion and resignation. Your part is over, now. The part of humanity will be soon to follow."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You frantically make your way back to the entrance to the undersea city, hoping desperately to escape alive. You feel the familiar tugging of the currents all around you as you emerge on the other side of the otherworldly threshold. Your heart does not stop racing until you finally break the surface of the water and collapse on an outcropping of rock."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: As you emerge from the caverns of Devil Reef and look up into the sky, you are relieved to see the sun and moon no longer in alignment. The tide appears to be retreating, as well. The seas seem to have finally calmed."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: As you emerge from the caverns of Devil Reef and look up into the sky, your throat clenches tight. The sun and moon are still locked in unholy alignment, and the sea still swallows most of the coast."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 4",
+              "children": [
+                {
+                  "text": "Resolution 4: Agent Harper is the first to speak. “We did it. I can’t believe we did it.” You nod. Not only were you able to stop the Deep Ones, but you helped Harper accomplish her mission as well. She digs through her belongings for a bright orange firearm with a large barrel, loads a flare into it, and launches the bright light into the sky with a victorious smirk. “They’ll be coming for us any minute now. I’m sure you’ll be rewarded handsomely for your help. So long as you agree to speak to nobody about any of this, of course,” she says. You nod. It’s not like anyone would believe you, anyway."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 5",
+              "children": [
+                {
+                  "text": "Resolution 5: There is no sign of Agent Harper anywhere. Perhaps she never made it out of the city alive. You hold out hope that she is out there, somewhere. Still, you are relieved that at the very least, nobody will ever be able to use the riches of Y’ha-nthlei to manipulate humanity ever again. Not the government, not the Deep Ones—nobody."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 6",
+              "children": [
+                {
+                  "text": "Resolution 6: Agent Harper is the first to speak. “Well. Mission accomplished, I suppose.” You bite your lip. She may have accomplished her mission, but the toll of the Deep Ones’ ritual on the world will never fade. She digs through her belongings for a bright orange firearm with a large barrel, loads a flare into it, and launches the bright light into the sky with a victorious smirk. “They’ll be coming for us any minute now. Then we’ll blow that city apart, and hopefully, this will all be over,” she says. You aren’t so sure. Much of the damage has already been done. Will it ever truly end? Or are you just delaying the inevitable?"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 7",
+              "children": [
+                {
+                  "text": "Resolution 7: There is no sign of Agent Harper anywhere. Perhaps she never made it out of the city alive. You hold out hope that she is out there, somewhere. Still, you are relieved that at the very least, nobody will ever be able to use the riches of Y’ha-nthlei to manipulate humanity ever again. Not the government, not the Deep Ones—nobody. You peer out once more to the waves thrashing across the horizon. The flood seems to have halted. Perhaps you have harmed the Deep Ones and their masters enough that their ritual has been foiled. Or perhaps they are merely biding their time, waiting until they can emerge once more. Is this truly over? Or did you merely delay the inevitable?"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 8",
+              "children": [
+                {
+                  "text": "Resolution 8: As the ritual concludes, the eastern seaboard becomes the first coastline drowned by the rising sea. The rest of the continent is swift to follow. The icecaps melt, consuming the remainder of the Earth. Cities fall. Humanity is no longer. All that is left is the ocean and the ever-static alignment of celestial bodies that looms overhead. And of course, the inheritors of this new Earth: Hydra, Dagon, and their children."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

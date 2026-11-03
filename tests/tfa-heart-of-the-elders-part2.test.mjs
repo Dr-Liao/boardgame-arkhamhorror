@@ -5,6 +5,8 @@ import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
 } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/definition.js'
 import { CHAOS_CHAPTER_ID, implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js'
+import { placeLocation } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 
 const clone = value => structuredClone(value)
 const behavior = part2.behavior
@@ -737,6 +739,32 @@ test('04224 漆黑洞窟：全队没地图才加线索，每次入场重新结�
   second.clues = 0
   behavior.afterExplore(withMap, withMap.investigators[0], { code: 'darkHollow', kind: 'location', runtime: recordingApi(withMap) })
   assert.equal(second.clues, 0, '有地图就不加')
+})
+
+test('04224 漆黑洞窟由卡牌直接放置时也触发入场强制效果', () => {
+  const state = placed(stateFor(1), ['mouthOfKnYan'])
+  state.log = []
+  placeLocation(state, 'darkHollow', [])
+  const hollow = state.locations.find(location => location.id === 'darkHollow')
+  assert.ok(hollow)
+  assert.equal(hollow.darkHollowResolved, true)
+  assert.equal(hollow.maxClues, definition.locations.darkHollow.cluesPerInvestigator + 1)
+})
+
+test('04227 深入幽嘶由卡牌直接放置时要求调查员选择毁灭或抽牌', () => {
+  const state = placed(stateFor(1), ['mouthOfKnYan'])
+  state.log = []
+  state.revision = 0
+  const execute = draft => placeLocation(draft, 'descentToYoth', [])
+  resolveTransaction(state, 0, { action: 'placeDescent' }, execute)
+  assert.equal(state.pendingChoice?.kind, 'location')
+  assert.deepEqual(state.pendingChoice?.options.map(option => option.id), ['doom', 'draw'])
+  resolveTransaction(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'doom' }, execute)
+  const descent = state.locations.find(location => location.id === 'descentToYoth')
+  assert.ok(descent)
+  assert.equal(descent.descentResolved, true)
+  assert.equal(descent.doom, 1)
+  assert.equal(state.pendingChoice, null)
 })
 
 test('04212 黑暗中的眼睛：所在地点没有线索时可以探索', () => {

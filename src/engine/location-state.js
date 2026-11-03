@@ -82,6 +82,11 @@ export function setLocationFlag(state, locationId, flag, value = true) {
   const location = findLocation(state, locationId)
   if (!location) return null
   location.flags ||= {}
+  if (key === 'brazier') {
+    location.markers = (location.markers || []).filter(marker => marker !== 'brazier')
+    if (value) location.markers.push('brazier')
+    location.litBrazier = Boolean(value)
+  }
   if (value) location.flags[key] = true
   else delete location.flags[key]
   return locationFlagOf(location, key)

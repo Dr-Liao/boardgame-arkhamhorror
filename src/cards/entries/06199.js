@@ -8,18 +8,26 @@
 //
 // 已实现：多重卡的「可把同名多张投入同一次检定」由 commit 档案的 maxPerTest 声明，
 //   每张投入时按印刷的 1 个万能图标计入本次检定（图标来自 cards-data）。
-// 未实现（主效果）：上述「3 张同名同时投入 → 自动成功 + 抽 3 + 得 3 资源（每次检定一次）」。
-//   commit 流程没有「按同名投入张数结算」的读点（P10 前补原语）；在此之前不写近似的假行为。
+// 第三张投入时设置本次检定自动成功且不抽标记；收尾只由最后一张结算一次奖励。
 
 export default {
   code: '06199',
-  simplified: true,
-  note: '未实现：「将 3 张三条A投入同一次技能检定 → 该检定自动成功（不抽混乱标记），然后抽 3 张牌并获得 3 资源（每次检定最多一次）」——commit 档案没有「按同名投入张数触发自动成功/奖励」的读点（P10 前补原语）。已实现：同名多张可同时投入（maxPerTest: 3）与每张 1 个万能图标的投入结算。',
   abilities: [
     {
       kind: 'commit',
       label: '三条A（多重，可同名多张同时投入）',
-      skill: { maxPerTest: 3 },
+      skill: {
+        maxPerTest: 3,
+        onCommit: ({ test, api }) => {
+          if ((test.committed || []).filter(item => item.code === '06199').length === 3) api.setTestAutoSuccess()
+        },
+        afterTest: ({ inv, source, test, result, api }) => {
+          const copies = (test.committed || []).filter(item => item.code === '06199')
+          if (copies.length !== 3 || copies.at(-1) !== source || !result?.success) return
+          api.drawCards(inv.seat, 3)
+          api.gainResources(inv.seat, 3)
+        },
+      },
     },
   ],
   modifiers: [],

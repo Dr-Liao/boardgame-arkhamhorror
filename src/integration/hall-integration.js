@@ -194,6 +194,7 @@ export function forkSessionCheckpoint(session, checkpointId, { sessionId, revisi
 
 export function sessionPolicy(state) {
   return {
+    yieldAiToHuman: !!state.parallel?.lanes,
     manualLoad: !!state.hubFlow,
     retainOnLeave: !!state.hubFlow,
     preserveInvalid: !!state.hubFlow,

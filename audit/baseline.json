@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "milestone": "P10",
-  "purpose": "P10 发布基线：全部 audit 命令与磁盘账本对账、文档链接无 404、golden replay 计数与冻结基线一致、test:fast 计数快照（含既有失败逐条记账）。",
+  "purpose": "正式发布基线：全部审计与 test:fast 通过，文档链接有效，重放基线与已审阅规则变更一致。",
   "audits": [
     {
       "id": "tfa",
@@ -13,7 +13,7 @@
       "id": "tfaScenarios",
       "command": "node tools/audit-tfa-scenarios.mjs --check",
       "status": 0,
-      "lastLine": "M3 scenario ledger: 1/10 verified; 0 encounter cards pending"
+      "lastLine": "M3 scenario ledger: 10/10 verified; 0 encounter cards pending"
     },
     {
       "id": "carcosa",
@@ -24,20 +24,20 @@
     {
       "id": "carcosaScenarios",
       "command": "node tools/audit-carcosa-scenarios.mjs --check",
-      "status": 1,
-      "lastLine": "Node.js v22.23.1"
+      "status": 0,
+      "lastLine": "M3 scenario ledger: 8/8 verified; production=playable"
     },
     {
       "id": "carcosaPlayer",
       "command": "node tools/audit-carcosa-player.mjs",
-      "status": 1,
-      "lastLine": "Node.js v22.23.1"
+      "status": 0,
+      "lastLine": "{\"total\":95,\"constructible\":92,\"basicWeaknesses\":3,\"verified\":95,\"unverified\":0,\"testsPassed\":109}"
     },
     {
       "id": "carcosaAllCards",
       "command": "node tools/audit-carcosa-all-cards.mjs",
-      "status": 1,
-      "lastLine": "]"
+      "status": 0,
+      "lastLine": "{\"total\":383,\"verified\":383,\"pending\":0,\"investigator\":20,\"player\":95,\"campaign\":268,\"testsPassed\":426}"
     },
     {
       "id": "dunwich",
@@ -48,20 +48,20 @@
     {
       "id": "dunwichAcceptance",
       "command": "node tools/audit-dunwich-acceptance.mjs",
-      "status": 1,
-      "lastLine": "Node.js v22.23.1"
+      "status": 0,
+      "lastLine": "{\"total\":333,\"verified\":333,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":387}"
     },
     {
       "id": "coreAcceptance",
       "command": "node tools/audit-core-acceptance.mjs --check",
-      "status": 1,
-      "lastLine": "Node.js v22.23.1"
+      "status": 0,
+      "lastLine": "{\"total\":183,\"verified\":183,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":378}"
     },
     {
       "id": "p6",
       "command": "node tools/audit-p6.mjs --check",
-      "status": 1,
-      "lastLine": "账本漂移：p6-behavior-ledger.json"
+      "status": 0,
+      "lastLine": "{\"cards\":300,\"scopedFixes\":6,\"fullCardEquivalenceClaimed\":0,\"needsBehaviorReview\":177,\"catalogOnly\":117}"
     },
     {
       "id": "abilities",
@@ -73,7 +73,7 @@
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 76 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 93 个"
     },
     {
       "id": "deadPrimitives",
@@ -90,14 +90,14 @@
     {
       "id": "tcuScope",
       "command": "node tools/scan-tcu-scope.mjs --check",
-      "status": 1,
-      "lastLine": "scope.json 与来源不一致（重新 --write 并审阅 diff）"
+      "status": 0,
+      "lastLine": "scope 复算一致：377 条记录，三包 237/19/87，21 个遭遇组"
     },
     {
       "id": "tcuMigration",
       "command": "node tools/audit-tcu.mjs --check",
-      "status": 1,
-      "lastLine": "audit/tcu-migration.json 与内容不一致（重新 --write 并审阅 diff）：verifiedScope, confirmations, evidence, remaining, gate"
+      "status": 0,
+      "lastLine": "audit 复算一致：P10，关键词 16/16，规则书 verified，gate pass"
     },
     {
       "id": "tdeScope",
@@ -113,28 +113,28 @@
     }
   ],
   "docLinks": {
-    "files": 45,
-    "links": 508,
+    "files": 30,
+    "links": 74,
     "broken": 0
   },
   "goldenReplay": {
     "fixtures": 13,
-    "steps": 782,
-    "hashes": 795,
+    "steps": 797,
+    "hashes": 810,
     "rulesVersion": "n6.0",
     "hashVersion": 2
   },
   "tests": {
     "command": "node tools/run-tests.mjs fast",
-    "status": 1,
-    "tests": 4749,
-    "pass": 4740,
-    "fail": 6
+    "status": 0,
+    "tests": 4854,
+    "pass": 4851,
+    "fail": 0
   },
   "notes": [
     "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",
     "TFA 账本由 tools/audit-tfa-scenarios.mjs 生成、aggregator 由 tools/audit-tfa.mjs 生成；改章节文件后按顺序 --write 再 --check。",
     "基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。",
-    "P10 重采时 carcosa/dunwich/core/p6/tcu 若干账本仍为 P8 报告 §8 的既有漂移（非 TDE 产生，未在本轮改写）；tdeScope/tdeMigration 两项为 P10 新增。测试计数里的 6 条失败与这些既有账本一一对应，新增失败为 0。"
+    "跨循环规则回归已修复；当前审计与测试必须全部通过，不允许冻结失败作为通过的发布基线。"
   ]
 }

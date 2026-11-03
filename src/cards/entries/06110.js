@@ -7,35 +7,21 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 06110 头班守夜（显式简化）：
-//   · 快速事件：played + fast；时机近似为「阶段开始」（phaseBegins）且当前阶段为神话阶段
-//     （引擎没有「神话阶段抽取遭遇牌步骤将要开始」的窗口）。
-//   · 结算近似：查看遭遇牌库顶 X 张并重新排列（api.lookAt arrange），X = 调查员人数；
-//     显式简化：不取消本次神话阶段的抽牌步骤、也不按座位分发——引擎没有「按座位分发遭遇牌」的
-//     API（drawEncounter 只能抽顶），替换步骤需要新窗口 + 新 API（见 primitive-requests/w-m2-1-06110-*）。
+// 06110 头班守夜：在 mythosEncounterStep 窗口打出，分配并抽取遭遇牌，替换普通抽牌步骤。
 
 export default {
   code: '06110',
-  simplified: true,
-  note: '未实现：替换神话阶段的抽取遭遇步骤与按座位分发遭遇牌（无该时机窗口、无按座位分发遭遇牌的 API）；'
-    + '已实现：快速事件（近似在神话阶段开始时）查看遭遇牌库顶 X 张并重新排列，X = 调查员人数。',
   abilities: [
     {
       kind: 'played',
       fast: true,
-      trigger: 'phaseBegins',
-      criteria: [({ state }) => state.phase === 'mythos'],
-      label: '查看遭遇牌库顶 X 张并重新排列（X = 调查员人数）',
-      resolve: ({ state, inv, api }) => {
-        const count = (state.investigators || []).filter(target => !target.defeated && !target.resigned).length
-        if (!count || !(state.encounterDeck || []).length) {
-          api.info('「头班守夜」：没有可查看的遭遇卡牌。')
-          return
-        }
-        api.lookAt(inv.seat, {
-          zone: 'encounterDeck', count, choose: 0, arrange: true, returnStrategy: 'top', source: '06110',
-        })
-        api.info(`「头班守夜」：${inv.name} 查看了遭遇牌库顶 ${count} 张卡牌并重新排列（替换步骤未实现）。`)
+      trigger: 'mythosEncounterStep',
+      criteria: [({ state }) => state.phase === 'mythos'
+        && state.mythosEncounterReplacementRound !== state.round],
+      label: '查看并分发遭遇牌，替换本次神话阶段的抽取步骤',
+      resolve: ({ inv, api }) => {
+        if (api.distributeMythosEncounterDraw(inv.seat))
+          api.info(`「头班守夜」：${inv.name} 分发并依次抽取了本次神话阶段的遭遇牌。`)
       },
     },
   ],

@@ -96,7 +96,9 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     expect(await hub.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true)
     await done.scrollIntoViewIfNeeded()
     await expect(done).toBeInViewport()
-    await page.screenshot({ path: `${output}supply-picker-${label}.png`, animations: 'disabled' })
+    const shot = `${output}supply-picker-${label}.png`
+    await page.screenshot({ path: shot, animations: 'disabled' })
+    test.info().annotations.push({ type: 'screenshot', description: shot })
 
     // 完成购买是单独一步：点数不退还，但不再混在补给选项里。
     const finish = page.waitForRequest(req => req.url().endsWith('/api/move')

@@ -27,9 +27,16 @@ async function fixture(t, count = 2) {
   for (let i = 0; i < count; i++) {
     const server = createServer({ mods, persist: false }); await server.ready
     const origin = await listen(server)
+    // Use the browser's static-table protocol. Card definitions are sent once,
+    // separately from the changing session whose animation budget we measure.
+    let staticVersion = ''
     const call = async (route, body) => {
-      const res = await fetch(origin + '/api/online/' + route, { method: body === undefined ? 'GET' : 'POST', headers: { 'x-boardgame-online': '1', 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(20000) })
-      return res.json()
+      const query = body === undefined ? `?clientStatic=${encodeURIComponent(staticVersion)}` : ''
+      const payload = body === undefined ? undefined : { ...body, client: { ...body.client, staticVersion } }
+      const res = await fetch(origin + '/api/online/' + route + query, { method: body === undefined ? 'GET' : 'POST', headers: { 'x-boardgame-online': '1', 'content-type': 'application/json' }, body: payload === undefined ? undefined : JSON.stringify(payload), signal: AbortSignal.timeout(20000) })
+      const result = await res.json()
+      if (result.staticVersion) staticVersion = result.staticVersion
+      return result
     }
     const command = (action, body = {}) => call('command', { action, body: { operationId: randomUUID(), ...body } })
     halls.push({ server, origin, call, command })

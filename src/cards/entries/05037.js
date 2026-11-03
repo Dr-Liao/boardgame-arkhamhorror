@@ -81,7 +81,7 @@ export default {
           noSpend: true,
         })
         if (result?.success && fromPlayArea) {
-          inv.resources += printedCost
+          api.gainResources(inv.seat, printedCost)
           api.info(`💰 ${inv.name} 因弃掉场上的道具支援获得 ${printedCost} 资源。`)
         }
       },

@@ -1,4 +1,5 @@
 @import url('./noir.css');
+@import url('./game-symbols.css');
 @import url('./story-book.css');
 @import url('./command-deck.css');
 @import url('./situation.css');
@@ -14,6 +15,7 @@
 @import url('./tcu-panels.css');
 @import url('./debug-console.css');
 @import url('./scenario-setup.css');
+@import url('./mechanic-ui.css');
 .ah-player-avatar { display: inline-block; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
 /* 诡镇奇谈 · 卡牌版 Mod 专属样式
  *
@@ -146,6 +148,7 @@
 .ah-minicard-ds { position: absolute; top: 22px; right: 4px; font-size: 10px; color: #9db4ff; }
 .ah-minicard-icons { display: flex; gap: 2px; margin-top: 3px; flex-wrap: wrap; }
 .ah-minicard-icon { font-size: 9px; line-height: 1; }
+.ah-minicard-meta > .ah-icon { width: 1em; height: 1em; }
 /* 「每回合/每场游戏一次」的能力已经用掉：卡面角标常驻，不随按钮消失。 */
 .ah-minicard-usage {
   position: absolute; left: 3px; top: 3px; z-index: 4;

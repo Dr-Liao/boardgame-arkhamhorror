@@ -1,0 +1,292 @@
+{
+  "id": "aLightInTheFog",
+  "campaignId": "theInnsmouthConspiracy",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险VI：雾中之光",
+          "children": [
+            {
+              "text": "你到达猎鹰岬门房的时候，天上弥漫著深红色的浓雾。唯有头顶悬崖上的灯塔发出的亮光刺透迷雾。你想到印斯茅斯如今的情况，不禁好奇这样的讯号是为谁发出。这般恶劣的天气，你怀疑压根儿就不会有船出海。.\n\n这里面某个地方有你数周前追寻的证据。你怀疑奥赛罗思——那个抓住你，把你留在深坑中等死的男人——也住在这里。“你准备好了吗？”哈珀特工问道，“要是事情失控，这里可没有逃生之路。要做好应对一切可能的准备。”\n\n你点点头。现在回头已经太晚。你坚定地朝悬崖走去。无论如何，一切都将在今天见分晓。."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "集齐以下遭遇组中的所有卡牌：雾中之光、深海生物、淹没的洞穴、涨潮、天体合相和惊惧。这些遭遇组由以下图标表示："
+            },
+            {
+              "text": "将猎鹰岬门房、猎鹰岬崖边、灯塔梯井和灯塔看门人小屋放置入场，置于同一行。将灯光室放置入场，置于灯塔梯井正上方。"
+            },
+            {
+              "text": "每位调查员在猎鹰岬门房开始游戏。"
+            },
+            {
+              "text": "从潮汐隧道地点中，将2张地下河地点移出游戏。"
+            },
+            {
+              "text": "将其他所有地点放在一边，置于场外。"
+            },
+            {
+              "text": "按以下方式将各把钥匙放在一边："
+            },
+            {
+              "text": "将白色、黑色、蓝色、黄色和红色钥匙正面朝上放在一边。"
+            },
+            {
+              "text": "将紫色和绿色钥匙背面朝上放在一边。将其混洗，使你们无法分辨各把钥匙。"
+            },
+            {
+              "text": "将双面剧情卡“惨遭俘获！”放置入场，置于冒险参考卡旁，剧情面朝上。（此卡的另一面为拘禁室地点。）其卡牌文字生效。"
+            },
+            {
+              "text": "将以下卡牌放在一边，置于场外：敌人奥赛罗思·马什、2张诡计“尽腥尽力”，以及2张诡计“惨遭俘虏”。"
+            },
+            {
+              "text": "检查冒险日志。"
+            },
+            {
+              "text": "如果神像被带到了灯塔，从收藏中找出浪蚀偶像，将其放在一边，置于场外。"
+            },
+            {
+              "text": "如果披风被带到了灯塔，从收藏中找出觉醒斗篷，将其放在一边，置于场外。"
+            },
+            {
+              "text": "如果头饰被带到了灯塔，从收藏中找出伊哈·恩斯雷的头冠，将其放在一边，置于场外。"
+            },
+            {
+              "text": "检查冒险日志。"
+            },
+            {
+              "text": "如果调查员在日出后抵达猎鹰岬，在密谋1上放置1个毁灭标记。"
+            },
+            {
+              "text": "如果潮水变得更强了，在密谋1上放置1个毁灭标记。"
+            },
+            {
+              "text": "将淹没标记加入标记池。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "钥匙",
+              "children": [
+                {
+                  "text": "在本场冒险中，各把钥匙代表以下物品：\n\n• 红色：一把珊瑚制成的镀金钥匙，上面覆满奇异的发光符文。钥匙柄上刻着“伊哈·恩斯雷”。\n\n• 蓝色：一把雕刻着鼓胀鱼眼图案的钥匙。\n\n• 绿色：一簇拳头大小的橄榄石原矿，脉动着，发出不自然的光芒。\n\n• 黄色：一个沉重的铁环，上面挂满牢房钥匙。\n\n• 紫色：一条畸形鱼类的死去幼体。\n\n• 黑色：一张魔鬼礁石下方深处的地图。\n\n• 白色：一架袖珍望远镜。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "记忆闪回XII",
+          "children": [
+            {
+              "text": "你向上凝视著猎鹰岬的灯塔，但视线所处位置远低于悬崖。此刻恰是几周前，你在摩尔船长的船上，正在前往魔鬼礁石的路上。怒涛猛击船身，船只前后摇摆。“怕不只是有点儿晃了。”船长的叫声盖过了喧闹的海浪撞击的声音，“近来这天气真是见了鬼。怪风怪浪的。”\n\n但你依然抬头望著如谶的灯塔，它发出的是指引，是警告，抑或都是？你好奇摩尔船长会不会知道什么，于是问他灯塔的事。“那东西？比印斯茅斯都老。咱记得以来，那儿就是马什家在管。现在的看门人是奥赛罗思。怪家伙，那个奥赛罗思。大伙说他在村子里就只去新格林教会的达贡密教大厅。”他摇了摇头。\n\n你想知道灯塔里是否有比目见所及更多的秘密。摩尔船长似乎注意到了你的好奇。“咱听说灯塔下面马什一家挖出洞来了，一直通到海平面以下去。”他说道，“不知道真假，但咱有时候出海，能看见他们一群人在悬崖边上，挥著手，跪著，像在祈祷还是干啥。我倒是没咋注意过，但……”他的声音矮了下去，“就是觉得你该知道。”\n\n你点头道谢。要是他所言非虚，或许你应该造访灯塔一回。你心中暗暗记下，等回到镇子之后，要再多探查猎鹰岬一番。\n\n你的思路猛地回到现在，回忆起自己在魔鬼礁石的探险之后的跑腿活儿，还有你所知的灯塔之下庞大隧道网络的信息……\n\n在冒险日志中的“恢复的记忆”部分，记录与摩尔先生的交谈。\n\n选择以下一种混乱标记，从混乱袋中移除1个该标记，直到本次战役结束（[cultist]、[tablet]或[elder_thing]）。\n\n调查队长从标记池获得1[per_investigator]个线索。"
+            }
+          ]
+        },
+        {
+          "title": "记忆闪回XIII",
+          "children": [
+            {
+              "text": "许多水手都常去印斯茅斯码头附近一家破破烂烂的小酒馆，就在破旧海港东南边的贫民窟里。你找到其中一个，与其对话。他在酒馆里有自己一方角落可供伏身痛饮。这样更好——你本就不想大张旗鼓地调查。.\n\n这醉汉正在闲扯自己看到的古怪生物游过海岸，在礁石旁徘徊，而你草草记录下来。“深潜者。”他如此称呼它们，“俺的网有一次逮到一个。”他含糊不清的话语喋喋不休，“那母的和她的蛋——没错——她的卵，比你的拳头都大！还在扭，还在动！”\n\n水手们向来会跟同行说故事，而此时他正沉浸其中，详细描述道：“那母的怀里还抱了一个。那小魔鬼，眼睛肿著，实在可恶。俺都没法盯著它看。俺一反应过来自己抓了个什么东西，就把网扔了，马上回这儿来了。要是有法子，俺可再也不要出海了。”\n\n你脑子里仔细琢磨著这些信息。要是这男人没说假话，这些生物的生命周期和鱼相似。那么，你在城镇中所见鬼鬼祟祟的怪异混血生物究竟有何目的？它们会不会只是你受惊之后想象的产物？还是说，关于这种生命周期，你错过了什么更为邪恶的部分？\n\n在冒险日志中的“恢复的记忆”部分，记录“深潜者”的生命周期。\n\n选择以下一种混乱标记，从混乱袋中移除1个该标记，直到本次战役结束（[cultist]、[tablet]或[elder_thing]）。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "你精疲力竭地瘫倒在岩石海岸上。你望著天空的时候，海浪冲打著你的脚踝。云层后的深红色预示著所有人类的不祥未来。你试著回想是为何，但脑子一阵剧痛炸响。日月已排成一线。远处传来雷鸣的巨响。可憎的洋面上盘旋翻滚著阵阵漩涡般的黑云。这到底意味著什么？达贡密教背后究竟有著怎样的真相？魔鬼礁石背后的真相？黑暗又一次夺走了你的意识。."
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "你逃进猎鹰岬旁漆黑的树林之时，身体已被疲惫和绝望吞没。你知道现在停下十分危险，但你已快站立不住。你抵在附近的一棵树上，抬头望著天空。云层后的深红色预示著所有人类的不祥未来。你试著回想是为何，但脑子一阵剧痛炸响。日月已排成一线。远处传来雷鸣的巨响。可憎的洋面上盘旋翻滚著阵阵漩涡般的黑云。这到底意味著什么？达贡密教背后究竟有著怎样的真相？魔鬼礁石背后的真相？黑暗又一次夺走了你的意识。"
+                }
+              ]
+            },
+            {
+              "title": "结局 3",
+              "children": [
+                {
+                  "text": "水面一路升到洞窟的天顶，你惊恐万分。这里再没有空气可以呼吸了。你感到水流将你越拖越深，而在深处，眼睛肿胀发亮的深潜者正在等候。你绝望地游到了灯塔地下室的顶门。你唯一的希望就是把它撞开，爬到上面的楼里。那里还有甜美的氧气。你用尽全部力气挤、推，希望著、想象著、祈祷著终有一刻自己的力量能弹开这道门。你的肺好像就要爆炸。不！这不可能就这么结束！你挣扎求存，但锁纹丝不动。你的肺渴求空气，屈服了。冰冷的咸水瞬间灌满了你的喉咙。你能记得的最后一件事，就是带蹼的手掌抓住了你的脚踝。."
+                }
+              ]
+            },
+            {
+              "title": "结局 4",
+              "children": [
+                {
+                  "text": "来这儿真是个错误。猎鹰岬不只是一座灯塔，还是达贡密教的总部，比你抛在身后的印斯茅斯渔村更有敌意、更加要命。每个拐角都危机重重，可恶的灯塔看门人紧随其后，你把灯塔的秘密也抛在了身后，逃入漆黑的树林之中。\n\n等到你深入丛木，林业遮蔽了灯塔之时，你发觉自己已然精疲力竭。你知道现在停下十分危险，但你已快站立不住。你抵在附近的一棵树上，抬头望著天空。云层后的深红色预示著所有人类的不祥未来。你试著回想是为何，但脑子一阵剧痛炸响。日月已排成一线。远处传来雷鸣的巨响。可憎的洋面上盘旋翻滚著阵阵漩涡般的黑云。这到底意味著什么？达贡密教背后究竟有著怎样的真相？魔鬼礁石背后的真相？黑暗又一次夺走了你的意识。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario VI: A Light in the Fog",
+          "children": [
+            {
+              "text": "Crimson-tinted fog bathes the sky as you reach the gatehouse of Falcon Point. Atop the cliffs above you, the lighthouse beacon pierces through the mist. Considering the state of Innsmouth, you wonder what purpose the signal serves now. You doubt there are any ships out at sea given the inclement weather.\n\nSomewhere inside is the evidence you found weeks ago. You suspect that Oceiros—the man who captured you and left you in that pit to die—also resides within. “Are you ready?” Agent Harper asks. “We have no real escape route here, should things go south. Be prepared for anything.”\n\nYou nod. It’s too late to turn back now. Steadily, you make your way toward the cliffs. One way or another, this ends today."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: A Light in the Fog, Creatures of the Deep, Flooded Caverns, Rising Tide, Syzygy, and Striking Fear. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Put Falcon Point Gatehouse, Falcon Point Cliffside, Lighthouse Stairwell, and Lighthouse Keeper’s Cottage into play on the same row. Put Lantern Room into play directly above Lighthouse Stairwell."
+            },
+            {
+              "text": "Each investigator begins play at Falcon Point Gatehouse."
+            },
+            {
+              "text": "From among the Tidal Tunnel locations, remove the 2 Underground River locations from the game."
+            },
+            {
+              "text": "Set each other location aside, out of play."
+            },
+            {
+              "text": "Set each key aside, as follows:"
+            },
+            {
+              "text": "Set the white, black, blue, yellow, and red keys aside, faceup."
+            },
+            {
+              "text": "Set the purple and green keys aside, facedown. Shuffle them so you do not know which is which."
+            },
+            {
+              "text": "Put the double-sided “Captured!” story card into play next to the scenario reference card, with its story side faceup. (This card is on the reverse side of the Holding Cells location.) Its text is active."
+            },
+            {
+              "text": "Set the following cards aside, out of play: the Oceiros Marsh enemy, both copies of the Worth His Salt treachery, and both copies of the Taken Captive treachery."
+            },
+            {
+              "text": "Check Campaign Log."
+            },
+            {
+              "text": "If the idol was brought to the lighthouse, search the collection for the Waveworn Idol and set it aside, out of play."
+            },
+            {
+              "text": "If the mantle was brought to the lighthouse, search the collection for the Awakened Mantle and set it aside, out of play."
+            },
+            {
+              "text": "If the headdress was brought to the lighthouse, search the collection for the Headdress of Y’ha-nthlei and set it aside, out of play."
+            },
+            {
+              "text": "Check Campaign Log."
+            },
+            {
+              "text": "If the investigators reached Falcon Point after sunrise, place 1 doom on agenda 1."
+            },
+            {
+              "text": "If the tide has grown stronger, place 1 doom on agenda 1."
+            },
+            {
+              "text": "Add the flood tokens to the token pool."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Keys",
+              "children": [
+                {
+                  "text": "During this scenario, keys represent the following:\n\n• Red: A gilded key made of coral and covered in strange, glowing runes. The word “Y’ha-nthlei” is inscribed upon the handle.\n\n• Blue: A key carved with a symbol of an engorged fish eye.\n\n• Green: A fist-sized cluster of raw peridot that pulses and glows with unnatural light.\n\n• Yellow: A heavy iron ring crowded with prison cell keys.\n\n• Purple: The deceased larva of a malformed fish.\n\n• Black: A map of the depths beneath Devil Reef.\n\n• White: A pocket telescope."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "Flashback XII",
+          "children": [
+            {
+              "text": "Flashback XII\n\nYou peer up at Falcon Point lighthouse, but from much farther below. You are aboard Mr. Moore’s fishing vessel, during your voyage to Devil Reef several weeks earlier. The ship sways back and forth as angry waves thrash against its hull. “’Fraid it’s gon’ be a bit rocky,” the ship captain shouts over the crashing of the tumultuous sea. “Weather’s been awful wild of late. Strange tides an’ stranger winds.”\n\nBut still you stare up at the ominous lighthouse, its beacon a guiding light, a warning sign, or both. Curious what knowledge he might have, you ask Mr. Moore about the lighthouse. “That ol’ thing? Been there longer’n Innsmouth itself. Marsh family’s kept it runnin’ as long as I remember. Oceiros is keeper now. Strange fella, that Oceiros. They say the only place in town he visits is the Order o’ Dagon hall by New Church Green.” He shakes his head.\n\nYou wonder if there are more secrets inside that lighthouse than meets the eye. Mr. Moore seems to note your curiosity. “I’ve heard them Marshes’ve carved out caverns beneath the lighthouse goin’ all the way down to sea level an’ beyond,” he claims. “Dunno if that’s true, but sometimes when I’m out ta sea I’ve seen groups of ‘em up by the cliffside, all wavin’ an’ kneelin’ like they’re prayin’ or something. Never really paid it much mind, but...” his voice grows quieter. “Jus’ thought you oughta know.”\n\nYou nod and thank him. If what he’s saying is true, perhaps you should give this lighthouse a visit. You make a mental note to research more about Falcon Point once you return to town.\n\nWhen your mind snaps back to the present, you recall the legwork you’d done after your expedition to Devil Reef, and the information you found on the vast network of tunnels beneath the lighthouse...\n\nIn your Campaign Log, under “Memories Recovered,” record a conversation with Mr. Moore.\n\nChoose and remove one of the following chaos tokens from the chaos bag for the remainder of the campaign ([cultist], [tablet], or [elder_thing]).\n\nThe lead investigator gains 1 [per_investigator] clues from the token pool."
+            }
+          ]
+        },
+        {
+          "title": "Flashback XIII",
+          "children": [
+            {
+              "text": "Flashback XIII\n\nYou speak with one of the many sailors who frequent a ramshackle tavern by the docks of Innsmouth, somewhere in the southeastern slums of the decrepit seaport. He’s found his own little corner of the pub in which to hide and drown himself in alcohol. So much the better—you’d prefer to keep your investigation quiet.\n\nYou jot down notes as the drunken man rambles on about the creatures he’s seen swimming off the coast and prowling around the reefs. “Deep Ones,” he names them. “Caught one in my net once,” he blabbers through slurred speech. “She an’ her eggs—tha’s right!—’er eggs, bigger’n your fist, an’ squirmin’ an’ wrigglin’, too!”\n\nAbsorbed in the ritual of telling a tale for his fellow sailors, he elaborates: “She had one of ’em in her arms. Tiny little devil, with bulgin’, hateful eyes. Couldn’t stand the sight of it. I threw the net o’er as soon as I realized what I’d caught, an’ came right back ’ere. If I had my way I’d never sail ’gain.”\n\nYou mull this new information over in your head. If this man speaks the truth, these creatures seem to have a lifecycle similar to that of a fish. But then, what is the purpose of the uncanny hybrid creatures you have seen skulking about the town? Are they but figments of your frightened imagination? Or is there a much more sinister part of this lifecycle that you are missing?\n\nIn your Campaign Log, under “Memories Recovered,” record the lifecycle of a “Deep One.”\n\nChoose and remove one of the following chaos tokens from the chaos bag for the remainder of the campaign ([cultist], [tablet], or [elder_thing])."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Exhausted, you throw yourself onto the rocky shore. Waves lap at your ankles as you stare up into the sky. Behind the clouds, deep crimson hues spell an ominous end for all of humankind. Your skull pounds with agony as you struggle to remember why. The moon and sun slide into alignment. A thunderous crash resounds in the distance. Dark, churning clouds swirl and seethe over the hateful ocean. What does it all mean? What is the truth behind the Esoteric Order of Dagon? The truth hidden in Devil Reef? Darkness overtakes your senses once more."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Exhaustion and despair eat at your muscles as you escape into the dark woods surrounding Falcon Point. You know it is too dangerous to stop moving, but you can hardly stand. You brace yourself against a nearby tree and stare up into the sky. Behind the clouds, deep crimson hues spell an ominous end for all of humankind. Your skull pounds as you struggle to remember why. The moon and sun slide into alignment. A thunderous crash resounds in the distance. Dark, churning clouds swirl and seethe above the hateful ocean. What does it all mean? What is the truth behind the Esoteric Order of Dagon? The truth hidden in Devil Reef? Darkness overtakes your senses once more."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "You panic as the water level rises all the way to the ceiling of the cavern. There is no air left to breathe. You feel the currents pulling you deeper and deeper below the surface, where the bulging, glowing eyes of Deep Ones lie in wait. Desperately, you swim up to the cellar door of the lighthouse. Your only hope is to force it open and crawl up into the buildings above, where sweet oxygen awaits. You shove and push with all of your might, hoping, imagining, praying that any moment now your strength will spring the hatch open. Your lungs are about to burst. No! This cannot be the end! You struggle and fight for survival, but the lock does not budge. Hungry for air, your lungs give. Your throat fills with cold saltwater. The sensation of your ankles being gripped by webbed hands is the last thing you feel."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 4",
+              "children": [
+                {
+                  "text": "Coming here was a terrible mistake. Falcon Point is no simple lighthouse, but a headquarters for the Order of Dagon, even more hostile and deadly than the town of Innsmouth you left behind. With danger at every turn and the hateful lighthouse keeper hot on your tail, you leave the secrets of the lighthouse behind and flee into the dark woods.\n\nBy the time you are too deep into the treeline to see the lighthouse beacon, you are utterly exhausted. You know it is too dangerous to stop moving, but you can hardly stand. You brace yourself against a nearby tree and stare up into the sky. Behind the clouds, deep crimson hues spell an ominous end for all of humankind. Your skull pounds as you struggle to remember why. The moon and sun slide into alignment. A thunderous crash resounds in the distance. Dark, churning clouds swirl and seethe above the hateful ocean. What does it all mean? What is the truth behind the Esoteric Order of Dagon? The truth hidden in Devil Reef? Darkness overtakes you once more."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

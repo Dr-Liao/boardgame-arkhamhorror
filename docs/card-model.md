@@ -355,6 +355,14 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 都按公开信息带卡面；`inv.hiddenCards`（隐私牌）是**手牌上的标记**，牌本身仍在 `inv.hand` 里，
 因此前端照常按手牌显示，不需要第二个区域。
 
+食梦者的共用读点：`playableOnlyFromDiscard` 阻止手牌出牌候选与校验，`returnToHandAfterPlay`
+决定事件结算后的去向；`connectsAttachedLocations` 让同卡号地点附件为调查员提供双向连接，
+`legalMoves`、`validateMove` 与牌桌地点投影读取同一连接图。`handCardDiscarded` 在实际弃掉
+一张手牌后开反应窗口，`treacheryWouldDiscard` 在诡计结算后且进入遭遇弃牌堆前开快速事件
+窗口。绑定卡可存于 `asset.attachments`，区域搬运支持从该附件按实例 id 移到牌库；
+绑定集合回收也会扫描附件。技能档案的 `mustCommitNextTest`、`subtractIcons` 与
+`onFail.damage` / `onFail.horror` 分别提供强制投入、图标减值与失败后的伤害结算。
+
 三条读点约定：
 
 1. **「如同手牌」通道统一原语**：`src/engine/play-channels.js` 是这类效果的唯一声明与读取点。
@@ -505,3 +513,35 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    改完 `--compare <文件>`（命令与判定口径见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md#53-重放撤销与迁移对比)）。
 
 **判据**：旧通道表达不了才迁；纯数据卡不迁成闭包（见路线文档 §7）。
+
+## 万象无终补完原语
+
+`api.cardAbilityOptions(seat, source, {ignoreCosts})` 与 `api.resolveCardAbility(seat, source, {abilityIndex, ignoreCosts})` 共用能力目标、条件、限次和效果管线。忽略费用不跳过限次。`partOfAbility: index` 把条件子句关联到同卡的行动能力；从手牌揭示后，只有这些子句在本次能力结算期间作为临时来源可用，结束即清理。
+
+`api.replaceChaosToken(context, token)` 只在 `tokenReveal` 中生效；取消的原标记不结算后续效果，替代标记走正常调查员效果。
+
+`api.beginImmediateAction(seat, {source})` 在可重放事务中选择并执行一次行动，结束后恢复原座位和正常行动额度。条目 `betweenActionsAnyTurn` 开放任意调查员行动之间的快速打出时机。
+
+资源费用读取 `availableResources(inv)`；资源条件与损失仍读取真实 `inv.resources`。`asset.resources` 独立保存卡上资源，支付通过统一来源选择。
+
+`api.progressWeakness(seat, {code, nextCode, recordKey, counterKey, addedKey})` 将个人剧情记录、当前牌库底与战役牌组升级一起持久保存。条目 `transferOnControllerDefeat` 在控制者被击败时转交同一支援实例；能力 `noOpportunityAttackFrom` 仅豁免列出的敌人。
+
+## P7 章节接口（开发中）
+
+P7 的逐章验收与生产注册仍以路线图为准；下列接口通过专项测试不代表整章完成。
+
+- 非玩家 `action` / `free` 能力必须声明 `actionKind`。`range` 为 `here`（默认）、`connecting` 或 `anywhere`；幕与密谋只有当前在场实体可以执行能力。`abilityIndex` 指经过 `entityActionDescriptors` 过滤后的行动数组索引。
+- `cost.groupClues` 使用统一费用表达式；`groupClueScope:'anywhere'` 允许远程活调查员贡献，默认仅本地点。`additionalKeyCost:{colors,scope,destination}` 与其它成本一起预检，使用现有彩色钥匙选择器支付。`scope` 为 `self/here/anywhere`；`destination` 为 `reference/source`。
+- `cost.drawEncounter` 走真正抽牌管线，费用引发战败、撤退或换关后中止能力效果。空牌库且空弃牌堆时不可支付。`runtime.spawn(code,location,{exhausted:true})` 在入场及交战窗口前已经横置。
+- `enemyRule.revelationSpawn:{locationOriginalCodes,cluesPerInvestigator}` 只作用于真正抽到敌人的显现；直接生成不额外放线索。互斥的 `farthestOfCodes` 按实际抽牌者计算距离并由其处理平局。`revelationSpawnOptions` 在真正生成前决定横置等初态。
+- `runtime.takeEnemyClues(enemy,seat,count,{victoryWhenEmpty:true})` 转移实际线索，清空后放逐到胜利区；它不等于击败，不触发击败后效果。印刷胜利0也进入胜利区。
+- `scenarioDecks.discardTop(id,count)` 将实际顶牌直接移入遭遇弃牌堆；`takeEncounterDeckCard(code)` 只取走一张实际遭遇牌，不抽取、不结算显现、不制造弃置过程。`takeSetAsideToHand(seat,code)` 从实际放置一旁区移入手牌，不制造进出场过程。
+- `locationRule.connectsToTrait:'Cave'` 在来源正面生效时双向连接对应特性的在场地点；后续地点入场自动同步，保留其它印刷连接。`floodBounds.onlyRevealed:true` 使水位限制仅在正面生效；省略时维持原有双面规则。
+- `runtime.remember(fact)` 对本场景记忆去重。重复句通过 `keyedFlashbackAbility`、`localKeyFlashbackAbility`、`evadeTraitAndDrainLocation`、`suspectEntry`、`symbolFailingRevelation` 共享工厂表达，不逐卡复制。
+- `keys.linkAsset(color,assetId)` 关联已有物理遗物。钥匙转交调查员时转移同一实体，放到其它场上卡旁时遗物无控制者；钥匙转交幕或离场时移除遗物，后续转移不会重新创建。`interactions.chooseKey` 仅选择已揭示颜色，返回颜色或取消，不自动移动钥匙。
+- `teamActivatable:true` 同时适用于支援区与威胁区的实际卡牌；同地点活调查员可激活，费用由行动者支付。`exemptAssetSlot(asset,'ally')` 仅豁免指定实例的槽位。`preventEnemyReadyNextUpkeep(enemy)` 仅消耗下次真正发生的重整阶段，重复或跳过阶段按实际发生次数处理。
+- `health:null` 表示没有生命值：伤害仍累积，但不因伤害达到生命值而自动被击败，观察视图也保留空值。
+- 新章节数据 `eventWindowInstances:true` 为真正交战和水位变化产生独立的事件发生序号；同一次事件的多入口复用其上下文，同一行动中的两次事件分别触发。旧章节省略该字段时保留原存档及重放形状。
+- 数值及布尔修正的 `condition` 必须是条件对象，自定义函数写为 `{when:fn}`。直接写函数将被校验拒绝，避免静默丢失条件。
+
+专项覆盖见 `tests/tic-scenario-*.test.mjs`、`tests/tic-flashbacks.test.mjs` 与各片区测试。P7 队列、完整章节流程、指南和浏览器证据继续在本循环文档中收拢。

@@ -7,18 +7,12 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 读点：使用次数是条目级 uses/usesType；攻击走 api.fight（combatBonus 加战斗值、assetId 认武器）。
-// 显式简化（simplified）：「本次攻击期间揭示了 +1、0 或 [elder_sign] 标记 → +2 伤害」——
-// doFight 的伤害加值只支持固定 damageBonus，没有按揭示标记条件加伤害的选项，未实现。
+// 攻击期间揭示指定标记时的伤害，由 doFight 的 damageBonusOnTokens 在成功时结算。
 
 export default {
   code: '06195',
   uses: 5,
   usesType: 'ammo',
-  discardWhenEmpty: true,
-  simplified: true,
-  note: '未实现：「本次攻击期间揭示了 +1、0 或 [elder_sign] 混乱标记时 +2 伤害」——'
-    + 'doFight 只支持固定伤害加值，没有按揭示标记条件加伤害的选项；'
-    + '使用(5子弹)、花 1 子弹攻击、本次攻击 +2[combat] 已实现。',
   abilities: [
     {
       kind: 'action',
@@ -34,7 +28,8 @@ export default {
           options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
         const foe = candidates.find(enemy => enemy.id === chosenId) || candidates[0]
-        api.fight(inv.seat, foe.id, { assetId: source?.id, combatBonus: 2 })
+        api.fight(inv.seat, foe.id, { assetId: source?.id, combatBonus: 2,
+          damageBonusOnTokens: { tokens: ['+1', '0', 'eldersign'], amount: 2 } })
       },
     },
   ],

@@ -202,19 +202,37 @@ export function createCampaignPlugin(deps) {
       info(state, events, '🧭 探索牌库已经空了。')
       return
     }
-    const code = state.explorationDeck.pop()
-    const scenarioLocation = state.scenario?.locations?.[code]
-    // 剧本可以要求「只有连接地点才能放置入场」（04285 前往联结点）。
-    // 不相连时把牌放回探索牌库底部，本次探索不放置、不移动。
-    if (scenarioLocation
-      && scenarioBehavior(state).exploreConnects?.(state, inv.location, code) === false) {
-      state.explorationDeck.unshift(code)
-      info(state, events, `🧭 ${inv.name} 探索到「${scenarioLocation.nameZh || scenarioLocation.name || code}」，`
-        + '但它不与当前地点相连，放回探索牌库底部。')
+    // 第三循环探索会持续翻牌，直到遇到与当前地点印刷符号相连的地点，
+    // 或遇到一张敌人/诡计。途中不相连的地点暂置一旁，结算前洗回牌库。
+    const skipped = []
+    const from = state.scenario?.locations?.[inv.location]
+    const connects = code => {
+      const explicit = scenarioBehavior(state).exploreConnects?.(state, inv.location, code)
+      if (explicit != null) return explicit
+      const target = state.scenario?.locations?.[code]
+      if (!from?.symbols?.front || !target?.symbols?.front) return true
+      return (from.symbols.front.links || []).includes(target.symbols.front.symbol)
+    }
+    let code = null
+    while (state.explorationDeck.length) {
+      const drawn = state.explorationDeck.pop()
+      if (state.scenario?.locations?.[drawn] && !connects(drawn)) {
+        skipped.push(drawn)
+        continue
+      }
+      code = drawn
+      break
+    }
+    if (skipped.length) {
+      state.explorationDeck = shuffle([...state.explorationDeck, ...skipped], () => randomValue(state))
+    }
+    if (code == null) {
+      info(state, events, `🧭 ${inv.name} 没有找到与当前地点相连的地点。`)
       scenarioBehavior(state).afterExplore?.(state, inv,
-        { code, kind: 'blocked', runtime: scenarioRuntime(state, events) })
+        { code: null, kind: 'blocked', runtime: scenarioRuntime(state, events) })
       return
     }
+    const scenarioLocation = state.scenario?.locations?.[code]
     const def = scenarioLocation || cardDef(code)
     info(state, events, `🧭 ${inv.name} 探索并翻开「${def?.nameZh || def?.name || code}」。`, {
       kind: 'automatic', phase: state.phase, round: state.round,
@@ -289,13 +307,13 @@ export function createCampaignPlugin(deps) {
     }
   }
 
-  function campaignFailedTestWindow(state, seat, context, events) {
+  function campaignFailedTestWindow(state, seat, context, events, result = null) {
     const { resolve, ...serializable } = context
     state.lastFailedTest = { seat, ...serializable, round: state.round }
     if (typeof resolve === 'function') failedTestResolves.set(state, resolve)
     reactionWindow(state, 'skillTestFailed', { when: 'skillTestFailed', seat,
       location: state.investigators[seat]?.location, skill: context.skill, difficulty: context.difficulty,
-      peril: context.peril, prompt: '技能检定失败并结算完毕' }, events)
+      ...(result ? { result } : {}), peril: context.peril, prompt: '技能检定失败并结算完毕' }, events)
   }
 
   function carcosaPlayerEffect(state, seat, effect, events) {

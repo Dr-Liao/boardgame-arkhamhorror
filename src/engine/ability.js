@@ -1,3 +1,4 @@
+import { validateKeyCost } from './key-cost.js'
 // 诡镇奇谈：卡牌版 · 声明式能力注册表（Ability Registry）
 //
 // P0-A 的核心。此前「一张卡能做什么」只有两个去处：
@@ -46,6 +47,8 @@ import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
 // P2-4：重印别名数据（015xx → 01xx，事实源 cards-data）。注册期按这份映射生成「只改 code」的别名条目。
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { reprintAliasesFor } from '../cards/card-identity.js'
+import { registerDeckCardRule } from '../../web/deck-rules.js'
+import { validateTokenCost } from './token-cost.js'
 // Phase 2（C4）：上限的作用域与归属从 ability.js 搬进 limits.js，这里只保留再导出，
 // 引擎与测试的 import 位置因此不需要改（引擎仍从 ability.js 取 limitUsed）。
 export { describeLimit, limitKey, limitUsed, markLimitUsed } from './limits.js'
@@ -59,9 +62,9 @@ export const ABILITY_KINDS = Object.freeze(['action', 'free', 'reaction', 'force
 // 其余是非玩家卡通道：敌人、地点、幕/议程、剧情支援、威胁区遭遇卡。
 // scope 决定引擎在哪个枚举点把这张卡的行为挂进窗口，以及审计把它算进哪本账。
 export const ABILITY_SCOPES = Object.freeze(['card', 'investigator', 'enemy', 'location', 'act', 'agenda',
-  'storyAsset', 'treachery'])
+  'storyAsset', 'treachery', 'scenario'])
 // 非玩家作用域：这些卡不在调查员的控制列表里，由引擎按「场上实体」枚举。
-export const NON_PLAYER_SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'storyAsset', 'treachery'])
+export const NON_PLAYER_SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'storyAsset', 'treachery', 'scenario'])
 
 const KINDS_NEEDING_TRIGGER = new Set(['reaction', 'forced'])
 // 生命周期描述子不带时机窗口，但必须带自己的数据体：
@@ -83,19 +86,19 @@ const LIFECYCLE_KINDS = new Set(Object.keys(KINDS_NEEDING_PAYLOAD))
 // 第 5 步 P7：leavesPlay 同理（05313/05316 的绑定副本收回要走 api.bonded.return）。
 const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay', 'setup', 'leavesPlay'])
 const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'discardSelf',
-  'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon',
+  'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon', 'discardHandIcons', 'discardControlledAsset',
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
   // 读点在 triggerReaction 的付费段：clues 照扣，returnClue 为真时把线索放回所在地点。
-  'returnClue'])
+  'returnClue', 'damage', 'doomOnSource', 'drawEncounter', 'groupClues'])
 const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost',
   'limit', 'fromHand', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
   'maximumInvestigatorDamage',
   // Phase 5（5c-37）：支援能力上的计数器上限（「时间借取」最多 3 声滴答）；读点在 canAffordAbility。
   'maxClicks',
-  'resolve', 'effect', 'skill', 'weakness', 'entersPlay', 'leavesPlay',
-  'source', 'simplified', 'note',
+  'resolve', 'effect', 'skill', 'weakness', 'entersPlay', 'leavesPlay', 'additionalTokenCost',
+  'source', 'simplified', 'note', 'partOfAbility', 'additionalKeyCost',
   // Phase 2：事件卡的打出关键字从 EFFECTS 顶层字段搬进描述子（迁移逃生卡的前提）。
-  'fast', 'noOpportunityAttack',
+  'fast', 'noOpportunityAttack', 'noOpportunityAttackFrom',
   // Phase 5（5c-24）：`played` 描述子也能声明「打出后去向」——移出游戏 / 加入胜利区 / 变成场上卡。
   'becomesAsset', 'exileAfterPlay', 'addToVictory',
   // Phase 5（5c）：能力"按哪种行动结算"。旧式能力把这件事写在 `effect.kind`（`fight`/`evade`），
@@ -103,6 +106,8 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   'countsAs',
   // 第 2 步 P2.7：能力按哪种行动结算（'parley' 谈判不引发借机攻击）。
   'actionKind',
+  'range',
+  'groupClueScope',
   // Phase 5（5b-6）：反应能力的"旧式询问"兼容标记。
   // 从 `EFFECTS[code].reactions` 搬过来的反应描述子带这个标记：引擎仍用旧式反应询问
   // （`是否触发「X」的反应？` + skip/trigger）结算它，保证迁移前后玩家看到的提示与状态指纹一致。
@@ -122,7 +127,7 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
   // 第 2 步 P2.9：塔罗的开局入场 / 手牌封锁 / 不能换掉（只有布尔值，无行为代码）。
   'entersPlayFromOpeningHand', 'blocksCommitWhileInHand', 'cannotMulliganAway',
-  'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags',
+  'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags', 'additionalTokenCost', 'playCostModifier', 'playTimingProvider',
   // P2-4：重印别名条目（注册期由 canonical 克隆生成）记录 canonical 卡号，供指标/审计去重。
   'reprintOf',
   // Phase 5（D2）：「用完弃置」是使用次数元数据，与 uses/usesType 同层。
@@ -135,7 +140,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'freeTriggers', 'minimumHandForBoost', 'composure',
   // Phase 5（5c-10）：从弃牌堆打出与「打出后去向」（洗回牌库 / 移出游戏）。
   // 旧 DSL 把它们写在 EFFECTS 顶层，读点分别是 play-condition 与 doPlay 的收尾段。
-  'playableFromDiscard', 'shuffleBackAfterPlay', 'removeAfterPlay',
+  'playableFromDiscard', 'playableOnlyFromDiscard', 'returnToHandAfterPlay', 'shuffleBackAfterPlay', 'removeAfterPlay',
+  'connectsAttachedLocations',
   // Phase 5（5b-9）：资产上的规则性字段（回合结束自愈恐惧 / 维护阶段付费 / 被击败反伤 / 恐惧转移 / 不可离场）。
   'healSelfHorrorAfterTurn', 'forcedUpkeepPayOrDiscard', 'defeatedDamage',
   'redirectOneHorrorToSelf', 'cannotLeavePlay',
@@ -151,7 +157,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'locationBarrier',
   // 地点自身的行为规则（墓地 01133 / 扭曲的道路 01151）：进入失败的选项、离开检定都声明在卡条目上。
   // 与 locationBarrier 一样是静态注册表数据，不进 state，因此不改重放指纹。
-  'locationRule',
+  'locationRule', 'scenarioRule',
   // 调查员卡面规则（旧 INVESTIGATOR_ABILITIES 表的数据体，第 6 批搬进单卡条目）。
   'investigator',
   // 诡计的自己规则别名：卡面数据里的 kind 可能是卡名（onWingsOfDarkness），
@@ -166,6 +172,13 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 形状 `{ mode: 'reaction'|'forced', label, take?, discard?, cancelSearch?, drawEncounter?, discoverClue? }`；
   // 读点是 src/engine/deck-ops.js 的 searchedCardsWindow（牌还在牌库里，描述子枚举看不到它）。
   'searchedCardRule',
+  'onUsesEmptied',
+  'cannotAffectOtherInvestigators',
+  'trackActionHistory', 'trackDefeatedEnemyHealth', 'sharedSlotGroup', 'ignoreSkillSubstitution',
+  'zoneReplacement',
+  'deckConstruction',
+  'attachedAssetsIgnoreSlots',
+  'bondedShufflePlayCost',
   // 敌人脚本钩子（函数，不进入关卡定义，避免 structuredClone 失败）。
   'enemyScript',
   // 隐藏卡/威胁区卡的数据型规则（第 7 批从 content/.../card-data.js 的表搬来）。
@@ -339,6 +352,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'playCostReductionProvider',
   // 2026-10-25 第六轮新增条目字段（05112/05019/05013/05196/05279/05323/05021）。
   'restrictedSlots', 'cannotLeavePlayWhile', 'beneathPlayAsIfInHand', 'teamActivatable',
+  'attachedCommitAsIfInHand', 'commitFromPlay',
+  'commitIconBonus',
   'playAsHand', 'lureAttachment', 'payOrDiscardSelf', 'ignoreCosts',
   // 2026-10-25 第七轮（05008/05021/05323 内容准备需要）：
   'redirectHeal', 'overflow', 'blockHealOtherCards', 'locationLure', 'discardAtRoundEnd',
@@ -370,7 +385,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 2026-10-25 第四轮修复 05012：游戏结束时仍在手牌中则承受 1 点精神创伤。
   'traumaAtGameEndWhenInHand',
   // 2026-10-25 第四轮修复 05041：威胁区光环——同地点调查员的检定平局按失败结算。
-  'failTies',
+  'failTies', 'transferOnControllerDefeat', 'movesThroughVoid', 'betweenActionsAnyTurn',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -431,6 +446,9 @@ export function normalizeDescriptor(raw, { code, index }) {
   const origin = `能力 ${code}#${index}`
   if (!raw || typeof raw !== 'object') throw new Error(`${origin}: 描述子必须是对象`)
   assertKnownKeys(raw, DESCRIPTOR_KEYS, origin)
+  validateTokenCost(raw.additionalTokenCost)
+  validateKeyCost(raw.additionalKeyCost)
+  if (raw.skill?.tokenModifiers && Object.entries(raw.skill.tokenModifiers).some(([face, amount]) => !['bless', 'curse'].includes(face) || !Number.isFinite(amount))) throw new TypeError(`${origin}: 非法技能标记修正`)
   const kind = raw.kind
   if (!ABILITY_KINDS.includes(kind)) throw new Error(`${origin}: 未知 kind ${JSON.stringify(kind)}`)
   // P2-4：quickEvent 是 reaction+fromHand 的快速事件统一通道标记；其它 kind 不合法。
@@ -486,11 +504,13 @@ export function normalizeDescriptor(raw, { code, index }) {
   if (raw.countsAs != null && (typeof raw.countsAs !== 'string' || !raw.countsAs)) {
     throw new Error(`${origin}: countsAs 必须是非空字符串（如 'fight' / 'evade'）`)
   }
+  if (raw.partOfAbility != null && (!Number.isInteger(raw.partOfAbility) || raw.partOfAbility < 0)) throw new Error(`${origin}: partOfAbility 必须是非负能力索引`)
   const label = raw.label || raw.text || code
   return Object.freeze({
     id: raw.id || `${code}#${index}`,
     code,
     index,
+    partOfAbility: Number.isInteger(raw.partOfAbility) ? raw.partOfAbility : null,
     kind,
     label,
     text: raw.text || null,
@@ -498,6 +518,8 @@ export function normalizeDescriptor(raw, { code, index }) {
     criteria: raw.criteria ?? null,
     target,
     cost: Object.freeze({ ...(raw.cost || {}) }),
+    ...(raw.additionalKeyCost ? { additionalKeyCost: Object.freeze({ ...raw.additionalKeyCost, colors: Object.freeze([...raw.additionalKeyCost.colors]) }) } : {}),
+    additionalTokenCost: raw.additionalTokenCost ? Object.freeze({ ...raw.additionalTokenCost }) : null,
     limit,
     fromHand: raw.fromHand === true || raw.quickEvent === true,
     // P2-4：快速事件统一通道标记（reaction+fromHand 写法；读点 reactionWindow / playReactionCard）。
@@ -506,6 +528,7 @@ export function normalizeDescriptor(raw, { code, index }) {
     // Phase 2：事件卡的"快速"/"不引发借机攻击"是卡面关键字，跟着描述子走。
     fast: raw.fast === true,
     noOpportunityAttack: raw.noOpportunityAttack === true,
+    noOpportunityAttackFrom: Object.freeze([...(raw.noOpportunityAttackFrom || [])]),
     // Phase 5（5c-24）：`played` 描述子的「打出后去向」（读点在 doPlay 的收尾段）。
     becomesAsset: raw.becomesAsset === true,
     exileAfterPlay: raw.exileAfterPlay === true,
@@ -515,6 +538,8 @@ export function normalizeDescriptor(raw, { code, index }) {
     // 第 2 步 P2.7：显式的行动种类（'parley' 谈判 / 'circle' 阵法…），优先于 countsAs；
     // 非玩家实体只有带 actionKind 的 action 才允许注册。
     actionKind: raw.actionKind || null,
+    ...(raw.groupClueScope != null ? { groupClueScope: (() => { if (!['here', 'anywhere'].includes(raw.groupClueScope)) throw new TypeError('Invalid group clue scope'); return raw.groupClueScope })() } : {}),
+    ...(raw.range != null ? { range: (() => { if (!['here', 'connecting', 'anywhere'].includes(raw.range)) throw new TypeError('Invalid entity ability range'); return raw.range })() } : {}),
     // Phase 5（5b-6）：从旧式 reactions 搬来的反应，沿用旧式询问（见 DESCRIPTOR_KEYS 注释）。
     legacyReaction: raw.legacyReaction === true,
     // 不写「✨ 使用「X」…」日志（敌人卡上的强制效果等）。
@@ -556,6 +581,21 @@ export function registerCardAbilities(entries) {
     if (!entry || typeof entry !== 'object') throw new Error('能力条目必须是对象')
     const origin = `能力条目 ${entry.code || '<无 code>'}`
     assertKnownKeys(entry, ENTRY_KEYS, origin)
+    validateTokenCost(entry.additionalTokenCost)
+    for (const key of ['playCostModifier', 'playTimingProvider']) if (entry[key] != null && typeof entry[key] !== 'function') throw new TypeError(`${origin}: ${key} 必须是函数`)
+    for (const key of ['skipUpkeepReady', 'discardWithoutSealedTokens', 'sharedLocationAbility', 'costReductionAtLocation', 'playUnderAnyAtLocation', 'trackTestTarget']) {
+      if (entry.assetRule?.[key] != null && typeof entry.assetRule[key] !== 'boolean') throw new TypeError(`${origin}: assetRule.${key} 必须为布尔值`)
+    }
+    for (const [key, allowed] of Object.entries({ harmCapacity: ['unlimited'], restrictedAction: ['engage'], hostExtraSlot: ['arcane'], sharedUses: ['secrets'] })) {
+      if (entry.assetRule?.[key] != null && !allowed.includes(entry.assetRule[key])) throw new TypeError(`${origin}: 非法 assetRule.${key}`)
+    }
+    if (entry.assetRule?.hostTrait != null && (typeof entry.assetRule.hostTrait !== 'string' || !entry.assetRule.hostTrait)) throw new TypeError(`${origin}: 非法附属特性`)
+    if (entry.assetRule?.enemyEntryAmbush != null) {
+      const rule = entry.assetRule.enemyEntryAmbush
+      if (!rule || typeof rule !== 'object' || Object.keys(rule).some(key => !['autoEvade', 'clues', 'preventReady'].includes(key))
+        || rule.autoEvade != null && typeof rule.autoEvade !== 'boolean'
+        || ['clues', 'preventReady'].some(key => rule[key] != null && (!Number.isSafeInteger(rule[key]) || rule[key] < 0))) throw new TypeError(`${origin}: 非法敌人进入地点规则`)
+    }
     if (typeof entry.code !== 'string' || !entry.code) throw new Error(`${origin}: 缺少 code`)
     if (entry.openingHandBonus != null
       && (!Number.isInteger(entry.openingHandBonus) || entry.openingHandBonus < 1)) {
@@ -568,8 +608,8 @@ export function registerCardAbilities(entries) {
         throw new Error(`${origin}: harmInterceptor 必须是对象`)
       }
       assertKnownKeys(harm, new Set(['trigger', 'extra', 'discard']), `${origin} harmInterceptor`)
-      if (!['damage', 'horror'].includes(harm.trigger)) {
-        throw new Error(`${origin}: harmInterceptor.trigger 必须是 damage 或 horror`)
+      if (!['damage', 'horror', 'damageOrHorror'].includes(harm.trigger)) {
+        throw new Error(`${origin}: harmInterceptor.trigger 必须是 damage / horror / damageOrHorror`)
       }
       if (!Number.isInteger(harm.extra) || harm.extra < 1) {
         throw new Error(`${origin}: harmInterceptor.extra 必须是正整数`)
@@ -620,6 +660,31 @@ export function registerCardAbilities(entries) {
     if (!ABILITY_SCOPES.includes(scope)) {
       throw new Error(`${origin}: 未知 scope ${JSON.stringify(scope)}（可选：${ABILITY_SCOPES.join(' / ')}）`)
     }
+    if (entry.scenarioRule != null) {
+      assertKnownKeys(entry.scenarioRule, new Set(['resolveChaosToken','applyTokenEffect','afterTest','testAutoFail','trackTestTarget']), 'scenarioRule')
+      if(Object.entries(entry.scenarioRule).some(([key,handler])=>key==='trackTestTarget'?typeof handler!=='boolean':typeof handler!=='function'))throw new TypeError('Invalid scenario rule handler')
+    }
+    if(entry.actRule?.keyClaimBlockedTraits!=null&&(!Array.isArray(entry.actRule.keyClaimBlockedTraits)||entry.actRule.keyClaimBlockedTraits.some(trait=>typeof trait!=='string'||!trait)))throw new TypeError('Invalid key claim trait restriction')
+    if (entry.actRule?.objective != null && !['function', 'object'].includes(typeof entry.actRule.objective)) throw new TypeError('Invalid printed act objective')
+    if (entry.locationRule?.objective != null && typeof entry.locationRule.objective !== 'function') throw new TypeError('Invalid printed location objective')
+    if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
+    if (entry.enemyRule?.revelationSpawn != null) {
+      const rule = entry.enemyRule.revelationSpawn
+      assertKnownKeys(rule, new Set(['locationOriginalCodes', 'farthestOfCodes', 'cluesPerInvestigator']), 'enemyRule.revelationSpawn')
+      for (const field of ['locationOriginalCodes', 'farthestOfCodes']) if (rule[field] != null && (!Array.isArray(rule[field]) || !rule[field].length || rule[field].some(code => typeof code !== 'string' || !code))) throw new TypeError('Invalid revelation spawn rule')
+      if (rule.locationOriginalCodes && rule.farthestOfCodes) throw new TypeError('Ambiguous revelation spawn rule')
+      if (rule.cluesPerInvestigator != null && (!Number.isSafeInteger(rule.cluesPerInvestigator) || rule.cluesPerInvestigator < 0)) throw new TypeError('Invalid revelation clue quantity')
+    }
+    if (entry.enemyRule?.revelationSpawnOptions != null && typeof entry.enemyRule.revelationSpawnOptions !== 'function') throw new TypeError('Invalid revelation spawn options reader')
+    if (entry.locationRule?.cannotPlaceBarriers != null && typeof entry.locationRule.cannotPlaceBarriers !== 'boolean') throw new TypeError('Invalid barrier placement rule')
+    if (entry.locationRule?.connectsToTrait != null && (typeof entry.locationRule.connectsToTrait !== 'string' || !entry.locationRule.connectsToTrait.trim())) throw new TypeError('Invalid location trait connection')
+    if (entry.locationRule?.floodBounds != null) {
+      const bounds = entry.locationRule.floodBounds
+      assertKnownKeys(bounds, new Set(['min', 'max', 'onlyRevealed']), 'locationRule.floodBounds')
+      if (['min','max'].some(key => bounds[key] != null && (!Number.isInteger(bounds[key]) || bounds[key] < 0 || bounds[key] > 2))
+        || (bounds.onlyRevealed != null && typeof bounds.onlyRevealed !== 'boolean')
+        || (bounds.min ?? 0) > (bounds.max ?? 2)) throw new TypeError('Invalid flood bounds')
+    }
     const abilities = (entry.abilities || []).map((raw, index) => normalizeDescriptor(raw, { code: entry.code, index }))
     const seen = new Set()
     for (const descriptor of abilities) {
@@ -632,9 +697,9 @@ export function registerCardAbilities(entries) {
       for (const descriptor of abilities) {
         // 第 2 步 P2.7：非玩家实体可以声明「由调查员发起的行动」（谈判），但必须显式写
         // actionKind 说明它按哪种行动结算；其余 action/free 仍然拒绝，避免声明出永远不结算的条目。
-        const playerInitiated = descriptor.kind === 'action' && typeof descriptor.actionKind === 'string'
-        if (LIFECYCLE_KINDS.has(descriptor.kind) || descriptor.kind === 'free'
-          || (descriptor.kind === 'action' && !playerInitiated)) {
+        const playerInitiated = ['action', 'free'].includes(descriptor.kind) && typeof descriptor.actionKind === 'string'
+        if (LIFECYCLE_KINDS.has(descriptor.kind)
+          || (['action', 'free'].includes(descriptor.kind) && !playerInitiated)) {
           throw new Error(`${origin}: 非玩家卡（scope ${scope}）不能声明 ${descriptor.kind}`
             + '（只能写 constant / reaction / forced / elderSign；谈判类行动必须带 actionKind）')
         }
@@ -659,6 +724,9 @@ export function registerCardAbilities(entries) {
       // Phase 5（D2）：使用次数元数据三件套一起进注册表，迁移 uses 时不用改引擎读点。
       discardWhenEmpty: entry.discardWhenEmpty === true,
       // Phase 5：条目级卡面关键字（资产/调查员的 fast 与不引发借机攻击）。
+      transferOnControllerDefeat: entry.transferOnControllerDefeat === true,
+      movesThroughVoid: entry.movesThroughVoid === true,
+      betweenActionsAnyTurn: entry.betweenActionsAnyTurn === true,
       fast: entry.fast === true,
       noOpportunityAttack: entry.noOpportunityAttack === true,
       // Phase 5（5b-7）：天赋牌的自动投入档位与「沉静」关键字（读点见 assetEffect 的合并）。
@@ -667,6 +735,9 @@ export function registerCardAbilities(entries) {
       minimumHandForBoost: entry.minimumHandForBoost != null ? entry.minimumHandForBoost : null,
       composure: entry.composure === true,
       playableFromDiscard: entry.playableFromDiscard === true,
+      playableOnlyFromDiscard: entry.playableOnlyFromDiscard === true,
+      returnToHandAfterPlay: entry.returnToHandAfterPlay === true,
+      connectsAttachedLocations: entry.connectsAttachedLocations === true,
       shuffleBackAfterPlay: entry.shuffleBackAfterPlay === true,
       removeAfterPlay: entry.removeAfterPlay === true,
       passive: entry.passive ? Object.freeze({ ...entry.passive }) : null,
@@ -758,6 +829,9 @@ export function registerCardAbilities(entries) {
       restrictedSlots: entry.restrictedSlots ?? null,
       cannotLeavePlayWhile: entry.cannotLeavePlayWhile ?? null,
       beneathPlayAsIfInHand: entry.beneathPlayAsIfInHand === true,
+      attachedCommitAsIfInHand: entry.attachedCommitAsIfInHand === true,
+      commitFromPlay: entry.commitFromPlay === true,
+      commitIconBonus: entry.commitIconBonus || null,
       teamActivatable: entry.teamActivatable === true,
       playAsHand: entry.playAsHand === true,
       lureAttachment: entry.lureAttachment ?? null,
@@ -808,8 +882,21 @@ export function registerCardAbilities(entries) {
       surgeIfNoClues: entry.surgeIfNoClues === true,
       enemyRule: entry.enemyRule ? Object.freeze({ ...entry.enemyRule }) : null,
       enemyScript: entry.enemyScript ? Object.freeze({ ...entry.enemyScript }) : null,
+      onUsesEmptied: entry.onUsesEmptied || null,
+      cannotAffectOtherInvestigators: entry.cannotAffectOtherInvestigators === true,
+      trackActionHistory: entry.trackActionHistory === true,
+      trackDefeatedEnemyHealth: entry.trackDefeatedEnemyHealth === true,
+      sharedSlotGroup: entry.sharedSlotGroup || null,
+      ignoreSkillSubstitution: entry.ignoreSkillSubstitution || null,
+      zoneReplacement: entry.zoneReplacement || null,
+      deckConstruction: entry.deckConstruction || null,
+      attachedAssetsIgnoreSlots: entry.attachedAssetsIgnoreSlots || [],
+      bondedShufflePlayCost: entry.bondedShufflePlayCost || null,
       onFound: typeof entry.onFound === 'function' ? entry.onFound : null,
       assetRule: entry.assetRule ? Object.freeze({ ...entry.assetRule }) : null,
+      additionalTokenCost: entry.additionalTokenCost ? Object.freeze({ ...entry.additionalTokenCost }) : null,
+      playCostModifier: entry.playCostModifier || null,
+      playTimingProvider: entry.playTimingProvider || null,
       flags: entry.flags ? Object.freeze({ ...entry.flags }) : null,
       hiddenRule: entry.hiddenRule ? Object.freeze({
         ...entry.hiddenRule,
@@ -843,6 +930,7 @@ export function registerCardAbilities(entries) {
       // 威胁区「当你将受到伤害/恐惧时」的强制修正（读点：enemies.js applyHarm）。
       harmInterceptor: entry.harmInterceptor ? Object.freeze({ ...entry.harmInterceptor }) : null,
       actRule: entry.actRule ? Object.freeze({ ...entry.actRule }) : null,
+      scenarioRule: entry.scenarioRule ? Object.freeze({ ...entry.scenarioRule }) : null,
       agendaRule: entry.agendaRule ? Object.freeze({ ...entry.agendaRule }) : null,
       // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）。
       cannotBeCanceledRevelation: entry.cannotBeCanceledRevelation === true,
@@ -932,6 +1020,7 @@ export function registerCardAbilities(entries) {
       registered: true,
     }
     REGISTRY.set(entry.code, normalized)
+    registerDeckCardRule(entry.code, normalized.deckConstruction)
   }
   // P2-4：重印别名注册（015xx → 01xx，数据在 src/cards/reprint-aliases.js）。
   // canonical 条目已经在本次批量里注册、且别名号没有自己的条目文件时，生成「只改 code」的别名条目；

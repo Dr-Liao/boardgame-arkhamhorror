@@ -320,5 +320,5 @@ test('P5 地点标记 / 异端者面 / 阵法多技能：读投影，不猜规�
   assert.equal(circle.multi, true)
   assert.equal(circle.label, '意志+智识+战斗+敏捷')
   assert.equal(circle.actionKind, 'circle')
-  assert.deepEqual(circle.skills.map(item => item.icon), ['star', 'book', 'sword', 'leaf'])
+  assert.deepEqual(circle.skills.map(item => item.icon), ['willpower', 'intellect', 'combat', 'agility'])
 })

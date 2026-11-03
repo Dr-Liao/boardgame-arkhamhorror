@@ -1,0 +1,226 @@
+{
+  "id": "theWagesOfSin",
+  "campaignId": "theCircleUndone",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险IV：恶罪报应",
+          "children": [
+            {
+              "text": "自从在巫宅遇鬼，你不得不重新思考你对生与死的一切认知。凯夏·梅森死了超过两百年，但她的灵魂留在了鬼灵迷雾之中——也就是你在约瑟夫·梅吉尔庄园遇到的那团雾。当你细想发生的一系列事件，一个问题萦绕在你的脑海里：凯夏的灵魂是因为那团迷雾才徘徊不散，抑或是她的存在导致了迷雾产生？究竟哪一个是因，哪一个是果？\n\n你越是深入研究阿卡姆的巫术和迫害历史，越是焦躁不安。你每夜每夜被恐怖的梦所袭击——梦里尽是死亡和衰败，愧疚和罪恶。这座城市里潜伏著一股邪恶，一直隐藏在阿卡姆的黑暗往昔之中。更糟糕的是，你的调查陷入了僵局。你认为，要是你能找到那晚你在树林里看见的女巫集会，你或许就能够更加地了解凯夏·梅森，或者这难以言喻的邪恶。\n\n在进行早上的日常工作时，你的眼睛扫到今天报纸上的一个小标题：“在绞刑者山丘目睹幽灵？上城区居民声称在绞刑者河边散发的浓雾中看见了若干个人影……”这不可能只是个巧合，对吧？\n\n这时你才恍然大悟——如果那就是你要找的女巫，那你唯一确认能够找到她们的地方就在地下六英呎，传闻中多年以前处决女巫的地方。在墓地里找幽灵或许不是最安全的法子，但你不确定继续呆在城里是否安全。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌：恶罪报应、安妮特的女巫集会、罪恶之城、在劫难逃、冥界、被困的灵魂和巫法。这些遭遇组的图标为："
+            },
+            {
+              "text": "将看守人遭遇组放在一边，位于场外。这个遭遇组的图标为："
+            },
+            {
+              "text": "随机从以下每种地点的两个版本中各选择一个：绞刑架、异端者的墓地、教堂阁楼、教堂地下室，并将选出的4个地点放置入场。将所选地点的其他版本从游戏中移除。然后，将闹鬼农田、废弃教堂、绞刑者河放置入场。"
+            },
+            {
+              "text": "这些地点两面均为已揭示面。一面带有幽灵属性，另一面则不带有。在将这些地点放置入场时，使用不带有幽灵属性的已揭示面。"
+            },
+            {
+              "text": "每位调查员从绞刑者河开始游戏。"
+            },
+            {
+              "text": "将4张幽灵迷网支援放在一边，位于场外。"
+            },
+            {
+              "text": "混洗6张异端者敌人，将其中随机4张放在一边。将另外2张从游戏中移除。这些卡牌是双面的，其背面为剧情卡。为了获得最佳的游戏体验，请勿查看其另一面的剧情卡牌。"
+            },
+            {
+              "text": "本场冒险会用到2个独立的遭遇牌库。"
+            },
+            {
+              "text": "将剩余所有带有幽灵属性的卡牌混洗在一起，建立幽灵遭遇牌库(参考下方的“幽灵遭遇牌堆”)。"
+            },
+            {
+              "text": "将剩余所有不带蛋幽灵属性的卡牌混洗在一起，建立基础遭遇牌库。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "幽灵遭遇牌库",
+              "children": [
+                {
+                  "text": "在本场冒险的设置期间，会构筑2个遭遇牌库：一个“基础”遭遇牌库和一个“幽灵”遭遇牌库。一般来说，每当有调查员将要与遭遇牌库互动，该调查员应该使用基础遭遇牌库。\n\n然而，在本场冒险期间的特定时间点，地点卡可能翻面至其幽灵面。调查员位于带有幽灵属性的地点时，该调查员在任何情况下都不使用基础遭遇牌库，改为使用幽灵遭遇牌库，除非有其他说明。包括从遭遇牌库抽取卡牌、查找、查看、揭示，和其他任何形式与遭遇牌库（或遭遇弃牌堆）的互动，都使用对应的遭遇牌库。在遭遇牌库耗尽卡牌时触发的能力也正常触发。如果有效果特别指明是基础遭遇牌库或幽灵遭遇牌库，则该效果与指名的牌库互动，不论调查员位于什么地点。\n\n上述两个遭遇牌库分别拥有各自的弃牌堆。每当带有幽灵属性的卡牌将被弃掉，将其放在幽灵遭遇牌库的弃牌堆。其他所有遭遇卡被弃掉时放入基础遭遇牌库的弃牌堆。\n\n注意：在本场冒险期间，将一个地点翻面至另一面并不是“揭示”新地点。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "幽灵遭遇牌库",
+          "children": [
+            {
+              "text": "在本场冒险的设置期间，会构筑2个遭遇牌库：一个“基础”遭遇牌库和一个“幽灵”遭遇牌库。一般来说，每当有调查员将要与遭遇牌库互动，该调查员应该使用基础遭遇牌库。\n\n然而，在本场冒险期间的特定时间点，地点卡可能翻面至其幽灵面。调查员位于带有幽灵属性的地点时，该调查员在任何情况下都不使用基础遭遇牌库，改为使用幽灵遭遇牌库，除非有其他说明。包括从遭遇牌库抽取卡牌、查找、查看、揭示，和其他任何形式与遭遇牌库（或遭遇弃牌堆）的互动，都使用对应的遭遇牌库。在遭遇牌库耗尽卡牌时触发的能力也正常触发。如果有效果特别指明是基础遭遇牌库或幽灵遭遇牌库，则该效果与指名的牌库互动，不论调查员位于什么地点。\n\n上述两个遭遇牌库分别拥有各自的弃牌堆。每当带有幽灵属性的卡牌将被弃掉，将其放在幽灵遭遇牌库的弃牌堆。其他所有遭遇卡被弃掉时放入基础遭遇牌库的弃牌堆。\n\n注意：在本场冒险期间，将一个地点翻面至另一面并不是“揭示”新地点。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局且至少一位调查员撤退：转至结局 1.\n\n如果未达成任何结局（每位调查员被击败）：转至结局 2."
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "结局 1: 逐渐减弱的阳光透过了薄雾，那团怪雾最终消散不见。同时，绞刑者山丘恢复了原样。再没有恶鬼来纠缠你，召唤鬼魂的女巫也再次退回了黑暗。你希望自己己所做的能够保护阿卡姆其余的人，不再向恐惧屈服。\n\n• 在剧本日志中，记录下有X名异端者被释放到阿卡姆。其中X为场上的异端者敌人数量。(如果当前场景为场景1，不记录上述语句，改为记录下有4名异端者被释放到阿卡姆。)\n• 如果X不超过3，在“遗留记忆”下方记录一缕鬼灵迷雾。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。"
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "结局 2: 你听天由命，双膝跪倒。迷雾开始分离。看守人现身，连时间都变得缓慢。他的灵体在地面滑行，按时钟滴答敲响的速度，缓缓地接近你。你闭上了双眼，不想看到将要取走自己性命的凶手。双拳紧握，全身绷紧。\n\n片刻过后。\n\n你再次睁开眼睛时，怪物和鬼灵迷雾一同消失了。\n\n……你得救了吗？\n\n• 在剧本日志中，记录下调查员从看守人之拥下存活。\n\n• 在剧本日志中，记录下有X名异端者被释放到阿卡姆。其中X为场上的异端者敌人数量。(如果当前场景为场景1，不记录上述语句，改为记录下有4名异端者被释放到阿卡姆。)\n• 如果X不超过3，在“遗留记忆”下方记录一缕鬼灵迷雾。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。"
+                }
+              ]
+            },
+            {
+              "title": "结局 3",
+              "children": [
+                {
+                  "text": "结局 3：离开绞刑者山时，那片不自然的迷雾仍徘徊在你身后，提醒着你：你为了知识和力量，放弃了这座城市的安全。过河时，你最后看见的是桥两旁树皮上流淌的鲜血。这景象令人作呕，然而……也许这里也藏着可以收集的信息。你希望自己的决定是对的，在继续赶往下一处目的地前，又研究了一会儿那些奇怪的刻痕。\n\n• 在冒险日志中记录：1 名异端者被释放到阿卡姆。\n• 在冒险日志的“发现的纪念物”下记录：血染树刻。\n• 在冒险日志中记录：艾琳加入调查员。任意一名调查员可以选择将艾琳·麦克奥德剧情支援加入其牌组；此卡不计入牌组张数限制。\n• 每名调查员获得等同于胜利牌区所有卡牌胜利 X 数值总和的经验。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario IV: The Wages of Sin",
+          "children": [
+            {
+              "text": "Ever since your encounter with the ghost in the Witch House, you have been forced to reconsider everything you know about life and death. Keziah Mason died over two hundred years ago, but her spirit remains in the spectral mist­ —the same mist you encountered in Josef Meiger’s manor. One question lingers in your mind as you consider the events that have transpired: Does Keziah’s spirit linger because of the mist, or is the mist caused by her presence? Which is the disease, and which the symptom?\n\nThe more you delve into Arkham’s history of witchcraft and persecution, the more restless you become. Night after night, you are assaulted by terrible dreams—dreams of death and decay, of guilt and sin. There is an evil that dwells in this city, an evil that has long remained hidden in the darkness of Arkham’s past. What’s worse, your inquiry has reached an impasse. You believe that if you can find the coven of witches you saw in the woods that fateful night, you might be able to learn more about Keziah Mason or of this unspoken evil.\n\nAs you go through your morning routine, your eyes drift across one of the smaller headlines of today’s newspaper: “Ghost Sightings on Hangman’s Hill? Residents of Uptown claim to have seen human shapes in the thick fog emanating from Hangman’s Brook…” It couldn’t be a coincidence, could it?\n\nThen the realization dawns on you—if it is witches you seek, the only place you can be certain to find them is six feet underground, in the place where professed witches were executed all those years ago. Searching for specters in a graveyard may not be your safest bet, but you’re not sure one can stay safe in this city anymore."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: The Wages of Sin, Anette’s Coven, City of Sins, Inexorable Fate, Realm of Death, Trapped Spirits, and Witchcraft. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Set The Watcher encounter set aside, out of play. This encounter set is indicated by the following icon:"
+            },
+            {
+              "text": "Randomly choose one of the two The Gallows locations, one of the two Heretics’ Graves locations, one of the two Chapel Attic locations, and one of the two Chapel Crypt locations, and put them into play. Remove the other versions of The Gallows, Heretics’ Graves, Chapel Attic, and Chapel Crypt from the game. Then, put Haunted Fields, Abandoned Chapel, and Hangman’s Brook into play (see suggested location placement, below)."
+            },
+            {
+              "text": "These locations have revealed versions on both sides. One side has the Spectral trait, and one side does not. When putting these locations into play, use the revealed sides without the Spectral trait."
+            },
+            {
+              "text": "Each investigator begins play in Hangman’s Brook."
+            },
+            {
+              "text": "Set the four Spectral Web assets aside, out of play."
+            },
+            {
+              "text": "Shuffle the six Heretic enemies and set aside four of them, at random. Remove the other two copies from the game. These cards are double-sided and have story cards on their reverse side. For the best experience, do not look at the story cards on their other side."
+            },
+            {
+              "text": "This scenario utilizes two separate encounter decks."
+            },
+            {
+              "text": "Separate each of the remaining cards with the Spectral trait and shuffle them together to build the spectral encounter deck (see “The Spectral Encounter Deck,” below)."
+            },
+            {
+              "text": "Shuffle each of the remaining non-Spectral cards together to build the standard encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "The Spectral Encounter Deck",
+              "children": [
+                {
+                  "text": "During the setup of this scenario, two encounter decks are constructed: a “standard” encounter deck and a “spectral” encounter deck. Generally speaking, whenever an investigator would interact with the encounter deck, that investigator should use the standard encounter deck.\n\nHowever, at a certain point during this scenario, locations may flip over to their Spectral side. While an investigator is at a location with the Spectral trait, that investigator should use the spectral encounter deck instead of the standard encounter deck for all purposes, unless otherwise noted. This includes drawing cards from the encounter deck, as well as searching, looking at, revealing, or otherwise interacting with the encounter deck (or encounter discard pile) in any way. This also includes abilities that trigger when the encounter deck runs out of cards. If an effect specifically refers to the standard encounter deck or spectral encounter deck, it interacts with the specified deck regardless of the investigator’s location.\n\nEach of the two encounter decks have their own discard pile. Whenever a card with the Spectral trait would be discarded, it is placed in the discard pile for the spectral encounter deck. All other encounter cards are discarded to the discard pile for the standard encounter deck.\n\nNote: Flipping a location over from one side to another during this scenario does not “reveal” the new location."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "The Spectral Encounter Deck",
+          "children": [
+            {
+              "text": "During the setup of this scenario, two encounter decks are constructed: a “standard” encounter deck and a “spectral” encounter deck. Generally speaking, whenever an investigator would interact with the encounter deck, that investigator should use the standard encounter deck.\n\nHowever, at a certain point during this scenario, locations may flip over to their Spectral side. While an investigator is at a location with the Spectral trait, that investigator should use the spectral encounter deck instead of the standard encounter deck for all purposes, unless otherwise noted. This includes drawing cards from the encounter deck, as well as searching, looking at, revealing, or otherwise interacting with the encounter deck (or encounter discard pile) in any way. This also includes abilities that trigger when the encounter deck runs out of cards. If an effect specifically refers to the standard encounter deck or spectral encounter deck, it interacts with the specified deck regardless of the investigator’s location.\n\nEach of the two encounter decks have their own discard pile. Whenever a card with the Spectral trait would be discarded, it is placed in the discard pile for the spectral encounter deck. All other encounter cards are discarded to the discard pile for the standard encounter deck.\n\nNote: Flipping a location over from one side to another during this scenario does not “reveal” the new location."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached because each investigator resigned: Proceed to Resolution 1.\n\nIf no resolution was reached because each investigator was defeated: Proceed to Resolution 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: Rays of faded sunlight stream through the haze, and the unnatural mist finally recedes. As it does, Hangman’s Hill returns to its original state. No other spiteful ghosts emerge to haunt you, and the witches who summoned them have retreated into the shadows once more. You hope that you have done enough to prevent the rest of Arkham to succumbing to this horror.\n\n• In your Campaign Log, record X heretics were unleashed unto Arkham. X is the number of Heretic enemies in play. (If it is act 1, instead record 4 heretics were unleashed unto Arkham.)\n• If X is 3 or less, under “Mementos Discovered,” record Wisp of Spectral Mist.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Resigned to your fate, you fall to your knees. The mist parts. Time slows to a crawl as the watcher emerges. Its spectral form glides along the ground, approaching with the slow surety of a ticking clock. You close your eyes, unwilling to look upon your killer. Your fingers dig into your palm, and you brace yourself.\n\nThe moment passes.\n\nWhen you open your eyes again, the creature is gone, along with the spectral mist.\n\n…Have you been spared?\n\n• In your Campaign Log, record the investigators survived the watcher’s embrace.\n\n• In your Campaign Log, record X heretics were unleashed unto Arkham. X is the number of Heretic enemies in play. (If it is act 1, instead record 4 heretics were unleashed unto Arkham.)\n• If X is 3 or less, under “Mementos Discovered,” record Wisp of Spectral Mist.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: As you depart Hangman’s Hill, the unnatural mist lingers behind—a reminder that you chose information and power over the safety of the city. The last thing you see as you cross the brook is the blood streaking down the bark of the trees flanking the bridge. The sight is repulsive, and yet…perhaps there is information to be gathered here, as well. Hoping you’ve done the right thing, you study the strange carvings for a moment before continuing to your next destination.\n\n• In your Campaign Log, record 1 heretic was unleashed unto Arkham.\n\n• In your Campaign Log, under “Mementos Discovered,” record Bloody Tree Carvings.\n\n• In your Campaign Log, record Erynn joined the investigators. Any one investigator may choose to add the Erynn MacAoidh story asset to their deck. This card does not count toward that investigator’s deck size.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

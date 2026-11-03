@@ -35,19 +35,19 @@
     },
     {
       "file": "games/arkhamhorror/content/packs/carcosaPlayer/manifest.js",
-      "sha256": "208ffb453772c450978bb7d4769341a5475494c75641d56ab9032e92455c8de9"
+      "sha256": "b0d84a11b221a05825db8bce5502931fee6f3001a1ad5501dfbe97f307424b0c"
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "69bfa51dfe1d44480d640e99c6708109642d6109b671556258fbfffe5687469b"
+      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
     },
     {
       "file": "games/arkhamhorror/src/engine/effects.js",
-      "sha256": "dc0631bd4660cf9673d5419b5fb03f253e7b7be6f46adf72fdd6f46030acbf02"
+      "sha256": "179584febcb772e098fc5b8eed09794e76d8ae83a883185fe7b104a0b0b7079f"
     },
     {
       "file": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "b1e666507200ad93a0918744be099e1e4e294372da503185c98bbfe776b1320e"
+      "sha256": "03452aa24188c15def4a0dc6db84046ee714fdfcc615438134f8b345c92a6e91"
     }
   ],
   "entries": [

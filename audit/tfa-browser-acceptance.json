@@ -1,15 +1,560 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "generatedBy": "playwright + tools/playwright-tfa-reporter.mjs",
+  "command": "npm run test:tfa:browser",
   "campaignId": "theForgottenAge",
-  "command": "npm run test:tfa:rules:browser",
-  "runner": "playwright",
-  "tests": 4,
-  "passed": 4,
-  "failed": 0,
-  "platforms": [
-    "desktop",
-    "mobile"
+  "status": "passed",
+  "specs": [
+    "tests/tfa-rules.browser.mjs",
+    "tests/tfa-scenarios.browser.mjs",
+    "tests/tfa-release.browser.mjs",
+    "tests/tfa-online.browser.mjs",
+    "tests/tfa-supplies.browser.mjs"
   ],
-  "runAt": "2026-10-20T02:45:50.888Z",
-  "notes": "tfa-rules.browser.mjs: 规则目录搜索/返回与卡牌规则链接在 desktop/mobile 各 2 条"
+  "checks": {
+    "desktopBrowser": true,
+    "mobileBrowser": true,
+    "release": {
+      "desktop": true,
+      "mobile": true,
+      "screenshots": [
+        "artifacts/tfa-migration/release-first-chapter-desktop.png",
+        "artifacts/tfa-migration/release-first-chapter-mobile.png",
+        "artifacts/tfa-migration/release-second-chapter-desktop.png",
+        "artifacts/tfa-migration/release-second-chapter-mobile.png"
+      ]
+    },
+    "online": {
+      "desktop": true,
+      "mobile": true
+    },
+    "supplies": {
+      "desktop": true,
+      "mobile": true
+    }
+  },
+  "release": {
+    "desktop": true,
+    "mobile": true,
+    "screenshots": [
+      "artifacts/tfa-migration/release-first-chapter-desktop.png",
+      "artifacts/tfa-migration/release-first-chapter-mobile.png",
+      "artifacts/tfa-migration/release-second-chapter-desktop.png",
+      "artifacts/tfa-migration/release-second-chapter-mobile.png"
+    ]
+  },
+  "online": {
+    "desktop": true,
+    "mobile": true
+  },
+  "supplies": {
+    "desktop": true,
+    "mobile": true
+  },
+  "scenarios": [
+    {
+      "scenario": "theUntamedWilds",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theDoomOfEztli",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "threadsOfFate",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theBoundaryBeyond",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "heartOfTheEldersPart1",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "heartOfTheEldersPart2",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theCityOfArchives",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theDepthsOfYoth",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "shatteredAeons",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "turnBackTime",
+      "desktop": true,
+      "mobile": true
+    }
+  ],
+  "tests": [
+    {
+      "spec": "tests/tfa-online.browser.mjs",
+      "title": "两名真人经中转服务进入失落的时代 (desktop)",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-online.browser.mjs",
+      "title": "两名真人经中转服务进入失落的时代 (mobile)",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-release.browser.mjs",
+      "title": "真实大厅经首章结算进入第二章 (desktop)",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-release.browser.mjs",
+      "title": "真实大厅经首章结算进入第二章 (mobile)",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 失落的时代规则目录、搜索与返回在desktop端可用",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 失落的时代规则目录、搜索与返回在mobile端可用",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 失落的时代卡牌规则链接在desktop端可达并恢复详情焦点",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 失落的时代卡牌规则链接在mobile端可达并恢复详情焦点",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "埃兹特里的覆灭 (theDoomOfEztli) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "theDoomOfEztli",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "埃兹特里的覆灭 (theDoomOfEztli) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "theDoomOfEztli",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "荒莽密林 (theUntamedWilds) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "theUntamedWilds",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "荒莽密林 (theUntamedWilds) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "theUntamedWilds",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "界限彼端 (theBoundaryBeyond) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "theBoundaryBeyond",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "界限彼端 (theBoundaryBeyond) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "theBoundaryBeyond",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "久远腹地（上） (heartOfTheEldersPart1) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "heartOfTheEldersPart1",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "久远腹地（上） (heartOfTheEldersPart1) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "heartOfTheEldersPart1",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "久远腹地（下） (heartOfTheEldersPart2) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "heartOfTheEldersPart2",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "久远腹地（下） (heartOfTheEldersPart2) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "heartOfTheEldersPart2",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "命运之线 (threadsOfFate) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "threadsOfFate",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "命运之线 (threadsOfFate) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "threadsOfFate",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "破碎永世 (shatteredAeons) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "shatteredAeons",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "破碎永世 (shatteredAeons) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "shatteredAeons",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "时间倒流（尾声） (turnBackTime) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "turnBackTime",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "时间倒流（尾声） (turnBackTime) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "turnBackTime",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "天机之城 (theCityOfArchives) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "theCityOfArchives",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "天机之城 (theCityOfArchives) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "theCityOfArchives",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "幽嘶深渊 (theDepthsOfYoth) 在 desktop 端进入真实章节",
+      "viewport": "desktop",
+      "scenario": "theDepthsOfYoth",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "title": "幽嘶深渊 (theDepthsOfYoth) 在 mobile 端进入真实章节",
+      "viewport": "mobile",
+      "scenario": "theDepthsOfYoth",
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-supplies.browser.mjs",
+      "title": "序幕补给品按卡牌选取，完成购买与补给选项分开（desktop）",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-supplies.browser.mjs",
+      "title": "序幕补给品按卡牌选取，完成购买与补给选项分开（mobile）",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "m4-rulebook-desktop",
+      "path": "artifacts/tfa-migration/m4-rulebook-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "m4-rulebook-mobile",
+      "path": "artifacts/tfa-migration/m4-rulebook-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "online-two-humans-desktop",
+      "path": "artifacts/tfa-migration/online-two-humans-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-online.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "online-two-humans-mobile",
+      "path": "artifacts/tfa-migration/online-two-humans-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-online.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "release-first-chapter-desktop",
+      "path": "artifacts/tfa-migration/release-first-chapter-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-release.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "release-first-chapter-mobile",
+      "path": "artifacts/tfa-migration/release-first-chapter-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-release.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "release-second-chapter-desktop",
+      "path": "artifacts/tfa-migration/release-second-chapter-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-release.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "release-second-chapter-mobile",
+      "path": "artifacts/tfa-migration/release-second-chapter-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-release.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "scenario-heartOfTheEldersPart1-desktop",
+      "path": "artifacts/tfa-migration/scenario-heartOfTheEldersPart1-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "heartOfTheEldersPart1"
+    },
+    {
+      "name": "scenario-heartOfTheEldersPart1-mobile",
+      "path": "artifacts/tfa-migration/scenario-heartOfTheEldersPart1-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "heartOfTheEldersPart1"
+    },
+    {
+      "name": "scenario-heartOfTheEldersPart2-desktop",
+      "path": "artifacts/tfa-migration/scenario-heartOfTheEldersPart2-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "heartOfTheEldersPart2"
+    },
+    {
+      "name": "scenario-heartOfTheEldersPart2-mobile",
+      "path": "artifacts/tfa-migration/scenario-heartOfTheEldersPart2-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "heartOfTheEldersPart2"
+    },
+    {
+      "name": "scenario-shatteredAeons-desktop",
+      "path": "artifacts/tfa-migration/scenario-shatteredAeons-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "shatteredAeons"
+    },
+    {
+      "name": "scenario-shatteredAeons-mobile",
+      "path": "artifacts/tfa-migration/scenario-shatteredAeons-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "shatteredAeons"
+    },
+    {
+      "name": "scenario-theBoundaryBeyond-desktop",
+      "path": "artifacts/tfa-migration/scenario-theBoundaryBeyond-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theBoundaryBeyond"
+    },
+    {
+      "name": "scenario-theBoundaryBeyond-mobile",
+      "path": "artifacts/tfa-migration/scenario-theBoundaryBeyond-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theBoundaryBeyond"
+    },
+    {
+      "name": "scenario-theCityOfArchives-desktop",
+      "path": "artifacts/tfa-migration/scenario-theCityOfArchives-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theCityOfArchives"
+    },
+    {
+      "name": "scenario-theCityOfArchives-mobile",
+      "path": "artifacts/tfa-migration/scenario-theCityOfArchives-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theCityOfArchives"
+    },
+    {
+      "name": "scenario-theDepthsOfYoth-desktop",
+      "path": "artifacts/tfa-migration/scenario-theDepthsOfYoth-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theDepthsOfYoth"
+    },
+    {
+      "name": "scenario-theDepthsOfYoth-mobile",
+      "path": "artifacts/tfa-migration/scenario-theDepthsOfYoth-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theDepthsOfYoth"
+    },
+    {
+      "name": "scenario-theDoomOfEztli-desktop",
+      "path": "artifacts/tfa-migration/scenario-theDoomOfEztli-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theDoomOfEztli"
+    },
+    {
+      "name": "scenario-theDoomOfEztli-mobile",
+      "path": "artifacts/tfa-migration/scenario-theDoomOfEztli-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theDoomOfEztli"
+    },
+    {
+      "name": "scenario-theUntamedWilds-desktop",
+      "path": "artifacts/tfa-migration/scenario-theUntamedWilds-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theUntamedWilds"
+    },
+    {
+      "name": "scenario-theUntamedWilds-mobile",
+      "path": "artifacts/tfa-migration/scenario-theUntamedWilds-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theUntamedWilds"
+    },
+    {
+      "name": "scenario-threadsOfFate-desktop",
+      "path": "artifacts/tfa-migration/scenario-threadsOfFate-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "threadsOfFate"
+    },
+    {
+      "name": "scenario-threadsOfFate-mobile",
+      "path": "artifacts/tfa-migration/scenario-threadsOfFate-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "threadsOfFate"
+    },
+    {
+      "name": "scenario-turnBackTime-desktop",
+      "path": "artifacts/tfa-migration/scenario-turnBackTime-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "turnBackTime"
+    },
+    {
+      "name": "scenario-turnBackTime-mobile",
+      "path": "artifacts/tfa-migration/scenario-turnBackTime-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "turnBackTime"
+    },
+    {
+      "name": "supply-picker-desktop",
+      "path": "artifacts/tfa-supplies/supply-picker-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-supplies.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "supply-picker-mobile",
+      "path": "artifacts/tfa-supplies/supply-picker-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-supplies.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    }
+  ]
 }

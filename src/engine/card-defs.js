@@ -6,6 +6,7 @@
 // 会重新赋值），所以**必须 import live binding**，不能从 deps 注入快照——否则大厅注册新内容后
 // 这里还拿着旧对象（交接文档「依赖的四种类型」第 1 条）。
 import { investigatorRule } from '../cards/card-rules.js'
+import { isPublicBeneath } from './commit-origins.js'
 import { contentRegistry } from '../../content/registered.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 
@@ -222,7 +223,11 @@ export function createCardDefs(deps) {
       }
       if (own) {
         addAttached(inv.beneath)
+        for (const cards of Object.values(state.scenarioFlags?.mechanics?.beneath?.[inv.seat] || {})) addAttached(cards)
         addAttached(inv.hunchDeck)
+      }
+      if (!own) for (const [host, cards] of Object.entries(state.scenarioFlags?.mechanics?.beneath?.[inv.seat] || {})) {
+        if (isPublicBeneath(state, inv.seat, host)) addAttached(cards)
       }
       // 直觉牌库「已揭示」的那张是桌面公开信息（projectHunch 对所有座位下发），卡面不能只给本人。
       addAttached([inv.hunchRevealed])

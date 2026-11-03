@@ -1,3 +1,4 @@
+import { contentRegistry } from '../../content/registered.js'
 import { STORY_TEXT } from '../../content/campaigns/nightOfTheZealot/story-text.js'
 import { DUNWICH_STORY_TEXT } from '../../content/campaigns/theDunwichLegacy/story-text.js'
 import { CARCOSA_STORY_TEXT } from '../../content/campaigns/thePathToCarcosa/story-text.js'
@@ -412,7 +413,7 @@ function tdeIntroduction(sc, records = {}, context = null) {
 // 幕间二的正文开头按「是否有调查员带银暮秘社特性」二选一（参考实现 thePriceOfProgress1/2）。
 function tcuHasSilverTwilight(campaign) {
   const records = Object.values(campaign?.investigators || {})
-  return records.some(record => (ALL_CARDS[record?.code]?.traits || []).includes('Silver Twilight'))
+  return records.some(record => !['killed', 'insane', 'retired'].includes(record.status) && (ALL_CARDS[record?.code]?.traits || []).includes('Silver Twilight'))
 }
 
 // 战役尾声：按实际结局标签 + 命中的条件片段组装；未触发片段/私密正文不出现。
@@ -420,7 +421,7 @@ function tcuHasSilverTwilight(campaign) {
 function tcuEpilogueStory(campaign, manifest) {
   const source = TCU_STORY_TEXT.epilogue
   if (!source) return null
-  const records = campaign.records || {}
+  const records = campaign.epilogueRecords || campaign.records || {}
   const paragraphs = []
   const ending = manifest ? campaignEnding(manifest, records) : null
   if (ending) paragraphs.push(`【战役结局】${ending.label}。`)
@@ -502,6 +503,8 @@ function dunwichFlowStory(nodeId, campaign) {
 
 // Build a reader's journal from reached branches only. Never send a resolution map.
 export function introduction(sc, records = {}, context = null) {
+  const introductionProvider = contentRegistry.listScenarios().some(scenario => scenario.id === sc.id) && contentRegistry.getBehavior(sc.id).introduction
+  if (typeof introductionProvider === 'function') return introductionProvider(sc, records, context)
   const sections = []
   if (sc.id === 'theGathering') sections.push({ title: '战役序章 · ' + STORY_TEXT.prologue.title, paragraphs: [...STORY_TEXT.prologue.paragraphs] })
   const dunwich = dunwichIntroduction(sc, records)

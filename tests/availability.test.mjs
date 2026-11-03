@@ -128,9 +128,10 @@ test('界面构筑元数据与服务端清单一致', () => {
   // P7（食梦者 M2）：再加 72 张 06 可入牌组的卡（11 张场外绑定卡/绑定弱点 + 4 张基础弱点不进池）。
   // 绑定卡副本 05314/05317（deckLimit=0）不在牌组里，只作为已验收目录卡存在。
   assert.deepEqual(data.cardPool.map(card => card.code), EXPANDED_PLAYER_CARD_CODES)
-  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 83 + 72)
+  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 83 + 72 + 90)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('05')).length, 83)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('06')).length, 72)
+  assert.equal(data.cardPool.filter(card => card.code.startsWith('07')).length, 90)
   assert.ok(data.cardPool.every(card => card.deckLimit > 0), '构筑卡池不得包含 deckLimit=0 的场外绑定副本')
   assert.equal(data.size, 30)
   const roland = data.investigators.find(inv => inv.code === '01001')

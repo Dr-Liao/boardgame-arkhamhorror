@@ -15,6 +15,4 @@ export default {
     spawnFailed: { shuffleBack: true, surge: true },
     tunnelLocationsConnectedWhileMoving: true,
   },
-  simplified: true,
-  note: '生成地点/失败涌动已由共享 spawnLocation/spawnFailed 数据分派；「移动时所有隧道地点视作互相连接」需要 enemyConnections 读点（引擎无内容通道）。',
 }

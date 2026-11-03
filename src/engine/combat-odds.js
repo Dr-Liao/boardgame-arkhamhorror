@@ -168,7 +168,7 @@ export function createCombatOdds(deps) {
   // 命中伤害：与 combat.js 的 doFight 结算同序（1 + damageBonus，或 damageOverride）。
   function damageOf(state, enemy, effect, kind, notes) {
     if (kind !== 'fight') return null
-    const remaining = Math.max(0, enemyHealth(state, enemy) - (enemy.damageTaken || 0))
+    const remaining = enemyHealth(state, enemy) == null ? null : Math.max(0, enemyHealth(state, enemy) - (enemy.damageTaken || 0))
     if (effect?.successDamage === 'overDifficulty') {
       notes.push('伤害 = 超出难度的点数')
       return { damage: null, remaining, hits: null }

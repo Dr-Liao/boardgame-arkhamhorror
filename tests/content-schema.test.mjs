@@ -101,3 +101,9 @@ test('P0 规则模式：新游戏不展示 strict，旧快照仍可读取 strict
   assert.equal(createGameState({ rulesMode: 'strict' }, players).rulesMode, 'strict')
   assert.equal(isCardAvailable('02001'), false, '图鉴卡不能因此进入运行时')
 })
+
+test('campaign records accept canonical PascalCase keys and reject unsafe or malformed keys',()=>{
+ const campaign=bundle().campaigns[0];campaign.recordSchema.TheInvestigatorsMadeItSafelyToTheirVehicles='boolean'
+ assert.doesNotThrow(()=>assertCampaignManifest(campaign))
+ for(const key of ['constructor','prototype','contains space','1startsWithDigit'])assert.throws(()=>assertCampaignManifest({...campaign,recordSchema:{[key]:'boolean'}}))
+})

@@ -1,3 +1,4 @@
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // table-decisions.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 台面决策层：谁在操作、能不能行动、行动代价与开局调度（mulligan / 起始调整）。
 // 读点：legalMoves（actingSeats / actionPreview）、validateHubMove、runMulligans。
@@ -9,6 +10,7 @@ import { cardCounterOf } from './card-counters.js'
 // P5 批次 3：开局先手可能从章对门（partGate）起步，需要按双线条件过滤选项。
 import { flowCondition } from '../campaign/campaign-flow.js'
 import { mulliganCandidates } from './tarot-slot.js'
+import { actionEntityById, entityActionDescriptors } from './parley.js'
 
 export function createTableDecisions(deps) {
   const {
@@ -53,6 +55,7 @@ export function createTableDecisions(deps) {
     leaveAsset,
     legalMoves,
     phaseBeginningWindow,
+    reactionWindow,
     playCost,
     playedEffect,
     randomValue,
@@ -232,13 +235,18 @@ export function createTableDecisions(deps) {
   }
 
   function abilityOfMove(state, inv, move) {
+    if (move.action === 'entityAbility') {
+      const entity = actionEntityById(state, move.entityId)
+      const descriptor = entityActionDescriptors(entity)[move.abilityIndex]
+      return descriptor ? { descriptor, cost: { ...descriptor.cost, ...(descriptor.kind === 'free' ? { action: false } : {}) } } : null
+    }
     if (move.action !== 'ability') return null
     let card = controlledAbilityCard(inv, move.assetId)
     // 2026-10-25 第七轮修复 05196：团队激活时资产属于同地点队友（与 moves/validate/doAbility 同一口径）。
     if (!card && Number.isInteger(move.ownerSeat)) {
       const owner = state.investigators[move.ownerSeat]
-      const candidate = owner?.assets?.find(item => item.id === move.assetId)
-      if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && owner.location === inv.location) {
+      const candidate = owner && controlledAbilityCard(owner, move.assetId)
+      if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && !owner.defeated && !owner.resigned && owner.location === inv.location) {
         card = candidate
       }
     }
@@ -305,6 +313,7 @@ export function createTableDecisions(deps) {
   // 判定口径见 restricted-actions.js，条目层只声明 `investigator.restrictedAction`。
   function restrictedKindOfMove(state, inv, move) {
     if (!inv || !move) return null
+    if (actionKind(state, inv, move) === 'engage' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
     if (isSpellAction(state, inv, move)) return 'spell'
     const rule = investigatorRule(inv.code)?.restrictedAction
     if (!rule || rule.kind !== 'bounty') return null
@@ -396,7 +405,7 @@ export function createTableDecisions(deps) {
           returned.push(inv.hand.splice(Number(answer), 1)[0])
         }
         // 卡面：弃掉其余卡牌（不是洗回牌库）。
-        inv.discard.push(...returned)
+        discardPlayerCards(state, inv, ...returned)
         info(state, events, `${inv.name} 将 ${inv.beneath.length} 张事件放在下方并保留8张起始手牌；不能调度。`)
         continue
       }
@@ -410,7 +419,7 @@ export function createTableDecisions(deps) {
         held.push(inv.hand.splice(Number(answer), 1)[0])
       }
       drawOpeningHand(state, inv)
-      inv.deck = shuffle([...inv.deck, ...held], () => randomValue(state))
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...held], () => randomValue(state)), 'shuffle')
       info(state, events, `${inv.name} 完成起始换牌（更换 ${held.length} 张）。`)
       if (investigatorRule(inv.code)?.deckbuildingRoles && !inv.role) {
         chooseLolaRole(state, inv, 'lolaOpeningRole', '选择罗拉·海斯的初始角色。', true)
@@ -421,6 +430,9 @@ export function createTableDecisions(deps) {
     state.currentSeat = chooseTurn(state)
     state.turnSeat = state.currentSeat
     phaseBeginningWindow(state, events)
+    if (aliveInvestigators(state).some(inv => investigatorRule(inv.code)?.investigationStart)) {
+      reactionWindow(state, 'investigationPhaseStarts', { when: 'investigationPhaseStarts', phase: 'investigation', initial: true }, events)
+    }
     turnBeginningWindow(state, events)
   }
 
@@ -450,7 +462,7 @@ export function createTableDecisions(deps) {
         && (inv.investigatedThisTurn || []).includes(threat.callTarget)
       if (finished) continue
       removeOne(inv.threat, threat)
-      inv.deck = shuffle([...inv.deck, threat.code], () => randomValue(state))
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, threat.code], () => randomValue(state)), 'shuffle')
       info(state, events, `「${cardName(threat.code)}」：${inv.name} 未能调查所选地点，受到 2 点恐惧并洗回牌库。`)
       applyHorror(state, inv, 2, events)
       if (inv.defeated || state.status !== 'playing') return

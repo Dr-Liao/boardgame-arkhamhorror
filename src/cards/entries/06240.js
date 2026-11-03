@@ -5,20 +5,20 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 已实现：作为技能卡的投入图标（印刷 1 个万能图标）。
-// 未实现（显式简化）：「投入后从牌库顶逐张揭示直到找到可投入的[rogue]技能并投入」——
-//   本卡投入后立即离手进入投入区，而 committedCard 窗口的能力源枚举（手牌/场上/调查员）
-//   看不到刚投入的这张牌，没有「投入后自我触发」的读点。
+// 投入后由技能 onCommit 从牌库顶揭示并投入一张符合条件的流浪者技能牌。
 
 export default {
   code: '06240',
-  simplified: true,
-  note: '未实现：「投入后从牌库顶揭示直到揭示一张可投入的[rogue]技能并投入，其余洗回」——本卡投入后已离手，committedCard 窗口的能力源枚举看不到刚投入的牌，没有「投入后自我触发」的读点。已实现：作为技能卡的投入图标。',
   abilities: [
     {
       kind: 'commit',
       label: '虎口拔牙',
-      skill: {},
+      skill: {
+        onCommit: ({ inv, api }) => {
+          const found = api.revealAndCommitSkill(inv.seat, { class: 'rogue' })
+          if (found) api.info(`${inv.name} 用「虎口拔牙」揭示并投入「${api.cardName(found)}」。`)
+        },
+      },
     },
   ],
   modifiers: [],

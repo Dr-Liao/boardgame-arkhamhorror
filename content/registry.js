@@ -5,6 +5,11 @@ import { normalizeScenarioHaunted } from '../src/engine/haunted.js'
 import { normalizeScenarioSpectralLocations } from '../src/engine/locations.js'
 import { normalizeStoryInvestigatorConfig } from '../src/engine/story-investigators.js'
 import { missingMechanics } from './mechanics.js'
+import { normalizeScenarioMechanics } from '../src/engine/mechanic-state.js'
+
+// 发布展示元数据不进入权威战役清单，避免改变旧对局的重放指纹。
+// 状态与 audit/<cycle>-migration.json 的 earlyAccess 保持一致。
+const EARLY_ACCESS_CAMPAIGNS = new Set()
 
 // Registration is explicit. A new campaign or scenario adds an entry to the
 // composition root; the engine and UI consume this API without name branches.
@@ -52,6 +57,7 @@ export function createContentRegistry({ packs, campaigns, scenarios }, rulesVers
     normalizeScenarioHaunted(entry.scenario.locations, `${entry.manifest.id}.locations`)
     normalizeScenarioSpectralLocations(entry.scenario.locations, `${entry.manifest.id}.locations`)
     normalizeStoryInvestigatorConfig(entry.scenario.storyInvestigators, `${entry.manifest.id}.storyInvestigators`)
+    normalizeScenarioMechanics(entry.scenario.mechanics)
   }
   const requireScenario = id => {
     const entry = byId.get(id)
@@ -78,7 +84,7 @@ export function campaignListForUi(registry) {
   }).map(campaign => ({
     id: campaign.id, name: campaign.name, nameEn: campaign.nameEn, recordLabels: campaign.recordLabels || {},
     flow: campaignGraph(campaign),
-    status: campaign.status,
+    status: campaign.status, earlyAccess: EARLY_ACCESS_CAMPAIGNS.has(campaign.id),
     contentPacks: registry.listPacks().map(pack => ({
       id: pack.id, name: pack.name || pack.id, status: pack.status, description: pack.description,
       required: campaign.requiredPackIds.includes(pack.id),

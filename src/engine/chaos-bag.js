@@ -74,14 +74,19 @@ export function endChaosTest(state, resolved = []) {
   const start = z.frames.pop()
   if (start === undefined) throw new Error('没有进行中的混乱标记检定')
   const remaining = [...resolved]
-  for (const token of z.revealed.splice(start)) {
-    const consumed = ['bless', 'curse'].includes(token) && remaining.includes(token)
+  for (const [offset, token] of z.revealed.splice(start).entries()) {
+    const retain = state.skillTest?.tokenTreatments?.[start + offset]?.retain === true
+    const treated = state.skillTest?.tokenTreatments?.[start + offset]?.resolved === true
+    const consumed = !retain && ['bless', 'curse'].includes(token) && (remaining.includes(token) || treated)
     if (consumed) {
-      remaining.splice(remaining.indexOf(token), 1)
+      if (remaining.includes(token)) remaining.splice(remaining.indexOf(token), 1)
       z.removed.push(token)
       const i = state.campaign.chaosBag?.indexOf(token) ?? -1
       if (i >= 0) state.campaign.chaosBag.splice(i, 1)
-    } else state.chaosBag.push(token)
+    } else {
+      if (retain && remaining.includes(token)) remaining.splice(remaining.indexOf(token), 1)
+      state.chaosBag.push(token)
+    }
   }
   restoreOrder(state, z.orders?.pop())
 }

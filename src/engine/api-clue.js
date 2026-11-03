@@ -1,3 +1,4 @@
+import { discardPlayerCards } from './player-zones.js'
 // 能力 API · 线索 / 毁灭 / 收尾（Phase 6 · 6d-9，abilityApi 第三批）。
 //
 // 这一组方法负责「调查结果的落账」：线索归还与搬运、毁灭放置与移除、威胁区操作、
@@ -9,6 +10,7 @@ import { clearCluesOnEnemy, moveClueToEnemy } from './enemy-clues.js'
 
 export function createClueApi(state, events, deps) {
   const {
+    abilityApi,
     campaignState,
     doInvestigate,
     doEvade,
@@ -70,6 +72,7 @@ export function createClueApi(state, events, deps) {
     setAssetUses: (card, amount) => {
       if (!card) return 0
       card.uses = Math.max(0, amount)
+      abilityApi(state, events).resolveEmptyUses()
       return card.uses
     },
     discardTopOfDeck: (seat, amount = 1) => {
@@ -78,7 +81,7 @@ export function createClueApi(state, events, deps) {
       const discarded = []
       for (let i = 0; i < amount && owner.deck.length; i++) {
         const code = owner.deck.pop()
-        owner.discard.push(code)
+        discardPlayerCards(state, owner, code)
         discarded.push(code)
         info(state, events, `🃏 ${owner.name} 弃掉牌库顶的「${cardName(code)}」。`)
       }
@@ -97,7 +100,9 @@ export function createClueApi(state, events, deps) {
     // 剧本卡的 `scope: 'location'` 存储与写入口见 location-attachments.js / scenario-runtime。
     attachToLocation: (locationId, fields = {}) => {
       if (!locationId) return null
-      const attachment = attachLocationCard(state, locationId, { scope: 'player', ...fields })
+      const shared = deps.registeredEntry(fields.code)?.assetRule?.sharedLocationAbility
+      const attachment = attachLocationCard(state, locationId, { scope: 'player', ...fields,
+        ...(shared ? { extra: { id: deps.nextInstanceId(state, 'c'), ...fields.extra } } : {}) })
       if (!attachment) return null
       info(state, events, `📌 「${cardName(fields.code)}」附属到「${locName(state, locationId)}」。`)
       return attachment

@@ -5,11 +5,11 @@
 // 5 个「奈亚拉托提普」复制品之一：Hidden 敌人在手牌（hiddenEnemyInHand，引擎读点）。
 // 复制品不在场上生成；揭示/攻击/洗回/进胜利区/合成真形都由章节 behavior 按卡面效果处理
 // （塔行动、议程与行动背面、act 4）。`flags.nyarlathotepCopy` 供 behavior 识别复制品。
-// 「提到它则发疯」无机械化读点 → simplified。
+// 持有者提到未揭示的本卡时，手动申报；章节的零行动快速入口执行实际发疯结算。
 export default {
   code: '06308',
   scope: 'enemy',
   implemented: true,
   hiddenEnemyInHand: true,
-  flags: { nyarlathotepCopy: true },
+  flags: { nyarlathotepCopy: true, mentionDrivesInsane: true },
 }

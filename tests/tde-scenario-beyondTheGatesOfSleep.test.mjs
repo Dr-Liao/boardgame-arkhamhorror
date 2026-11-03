@@ -7,7 +7,7 @@
 // 索引由 Lead 合并后重建，因此本测试用 registerCardAbilities 显式登记本章条目（已登记则跳过）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import * as engine from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/index.js'
 import {
@@ -87,7 +87,11 @@ function placeLocations(state, ids) {
 const locationOf = (state, id) => state.locations.find(location => location.id === id)
 
 function apiStub(state, overrides = {}) {
+  state.log ||= []; state.instanceSeq ||= {}; state.currentSeat ??= 0
+  const runtime = engine.scenarioRuntime(state, [])
   const api = {
+    ...runtime,
+    choice: request => (overrides.choose || (()=>undefined))(request),
     info: () => {},
     choose: () => undefined,
     random: () => 0.5,
@@ -279,7 +283,7 @@ test('14 种梦境：按玩家顺序各选一种且不重复，中立之梦给�
   assert.equal(state.scenarioFlags.dreams.length, 2)
   assert.deepEqual(state.scenarioFlags.dreams.map(entry => entry.key), ['neutral1', 'neutral2'])
   assert.equal(state.investigators[0].resources, 7, '中立之梦 1：+2 资源')
-  assert.equal(state.investigators[1].hand.length, 1, '中立之梦 2：+1 起始手牌')
+  assert.equal(state.investigators[1].openingHandBonus, 1, '中立之梦 2：+1 起始手牌')
   // 已结算的梦境不会被重复分配。
   chapter.behavior.preScenarioSetup(state, [], apiStub(state, { choose: () => 'neutral1' }))
   assert.equal(state.scenarioFlags.dreams.length, 2)

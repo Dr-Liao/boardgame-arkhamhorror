@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { contentRegistry } from '../content/registered.js'
+import { campaignListForUi } from '../content/registry.js'
 import { chapters, CHAOS_BAGS, recordTypes } from '../content/campaigns/theForgottenAge/shared.js'
 import { assertMigrationConfirmations } from '../content/migration-confirmation.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -69,6 +70,7 @@ if (foreign.length) throw new Error(`卡包登记了非 04 循环卡：${foreign
 // 章节验收账本由 tools/audit-tfa-scenarios.mjs 生成；这里只做汇总，避免两份事实来源。
 const ledger = JSON.parse(await readFile(new URL('../audit/tfa-scenario-acceptance.json', import.meta.url), 'utf8'))
 if (ledger.items.length !== chapters.length) throw new Error('章节验收账本条目数与章节清单不一致')
+const browserReport = JSON.parse(await readFile(new URL('../audit/tfa-browser-acceptance.json', import.meta.url), 'utf8'))
 
 const chapterItems = []
 for (const chapter of chapters) {
@@ -96,9 +98,13 @@ for (const chapter of chapters) {
       `games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/${chapter.id}/definition.js`,
       `games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/${chapter.id}/behavior.js`,
       `games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js`,
+      `games/arkhamhorror/web/scenario-guides/${chapter.id}.json`,
+      'games/arkhamhorror/tests/scenario-guides.test.mjs',
+      'games/arkhamhorror/tests/scenario-guides.browser.mjs',
       `games/arkhamhorror/${entry.testFile}`,
     ],
     gaps: entry.gaps,
+    resolved: entry.resolved,
     pendingEncounterCodes: entry.inventory.pendingEncounterCodes,
   })
 }
@@ -133,11 +139,11 @@ if (selectableInvestigators.length !== INVESTIGATOR_CODES.length) throw new Erro
 const rulesById = new Map(RULES.map(rule => [rule.id, rule]))
 const ruleIndexIds = new Set(RULE_INDEX.map(rule => rule.id))
 const keywordTestSource = await readFile(new URL('../tests/tfa-rules.test.mjs', import.meta.url), 'utf8')
-const browserTestSource = await readFile(new URL('../tests/tfa-rules.browser.mjs', import.meta.url), 'utf8')
-// 浏览器验收以专用用例为证据：截图落在被 gitignore 的根 artifacts/，不参与 --check，
-// 否则干净检出会因为缺少本地截图而误报漂移（与二循环口径一致）。
-const browserCovered = viewport => browserTestSource.includes('M4')
-  && browserTestSource.includes(`'${viewport}'`) && browserTestSource.includes('tfaCampaign')
+// 浏览器证据来自同一轮 Playwright 报告。截图位于被忽略的 artifacts/，
+// 干净检出时仍能用报告复核具体用例与证据路径。
+const browserCovered = viewport =>
+  browserReport.generatedBy === 'playwright + tools/playwright-tfa-reporter.mjs'
+  && browserReport.status === 'passed' && browserReport.checks?.[`${viewport}Browser`] === true
 const textOf = card => `${card?.text || ''}\n${card?.textZh || ''}`
 const engineModules = new Map()
 const exported = async (modulePath, name) => {
@@ -208,6 +214,14 @@ const rulebookChecks = {
 // 避免出现「checks 全 true 但 remaining 仍写 false」的自相矛盾。
 const pendingLiteral = ledger.items.filter(item => !item.checks.literalCardBehavior)
 const pendingBrowser = ledger.items.filter(item => !item.checks.browserAcceptance)
+const browserGenerated = browserReport.generatedBy === 'playwright + tools/playwright-tfa-reporter.mjs'
+  && browserReport.status === 'passed'
+const releasePassed = browserGenerated && browserReport.release?.desktop === true
+  && browserReport.release?.mobile === true
+const onlinePassed = browserGenerated && browserReport.online?.desktop === true
+  && browserReport.online?.mobile === true
+const suppliesPassed = browserGenerated && browserReport.supplies?.desktop === true
+  && browserReport.supplies?.mobile === true
 const remaining = [
   ...ledger.items.flatMap(item => [
     ...(item.inventory.pendingEncounterCodes.length
@@ -218,10 +232,15 @@ const remaining = [
     ? [`逐章 literalCardBehavior 未完成：${pendingLiteral.map(item => item.id).join('、')}（按规范 5.2 保持 false）`]
     : []),
   ...(pendingBrowser.length
-    ? [`章节浏览器验收未完成：${pendingBrowser.map(item => item.id).join('、')}`]
-    : [`章节浏览器验收：${ledger.items.length} 章 checks 全真，但 audit/tfa-browser-acceptance.json 为手工提交、无 runner 生成器（TCU 审计必须由 runner 生成）`]),
-  '发布验收：大厅、联机与浏览器端到端发布验收（earlyAccess 期间不宣称规则等价）',
+    ? [`章节浏览器验收未完成：${pendingBrowser.map(item => item.id).join('、')}`] : []),
+  ...(!releasePassed ? ['大厅经首章结算到第二章的桌面与移动端发布验收未完成'] : []),
+  ...(!onlinePassed ? ['两名真人联机的桌面与移动端发布验收未完成'] : []),
+  ...(!suppliesPassed ? ['序幕补给品购买的桌面与移动端发布验收未完成'] : []),
 ]
+const earlyAccess = remaining.length > 0
+if (campaignListForUi(contentRegistry).find(item => item.id === 'theForgottenAge')?.earlyAccess !== earlyAccess) {
+  throw new Error('大厅的提前体验标记与 TFA 发布账本不一致')
+}
 
 const report = {
   schemaVersion: 1,
@@ -230,14 +249,14 @@ const report = {
   status: campaign.status,
   playable: true,
   launchEnabled: true,
-  earlyAccess: true,
-  equivalenceCertified: false,
+  earlyAccess,
+  equivalenceCertified: !earlyAccess,
   verifiedScope: 'M0 目录基线、M1 五名调查员与 11 张专属卡、M2 91 张玩家卡、M3-A 七项循环机制、'
     + 'M3-B 十个剧本的布置/幕议/地点/遭遇/混乱标记/结局与跨章记录、M3-C 完整剧情导入与座位级过滤、'
     + 'M4 八个关键词（explore/vengeance/yigsFury/supplies/poisoned/relicOfAges/expeditionLeader/elderThing）'
     + '与九条规则书条目、拼音索引、卡文直达及桌面/移动端浏览器验收、'
     + 'M5 入口开放（十个剧本 playable、战役可启动、序幕补给品购买与幕间划补给）。'
-    + 'literalCardBehavior 与章节浏览器验收仍未完成，因此按 earlyAccess 记录，不宣称规则等价。',
+    + '逐章 literalCardBehavior、浏览器实机、大厅经首章结算到第二章及真实双人联机均已验收。',
   playerCards: {
     status: packs[2].status,
     verified: IMPLEMENTED_PLAYER_CODES.length,
@@ -305,7 +324,26 @@ const report = {
     localImageRoot: 'games/arkhamhorror/web/img',
     imagePaths: ['cards/<code>.avif', 'zh/cards/<code>.avif'],
     imagePolicy: '与核心包、一循环和二循环共用卡图解析、离线库存与远程回退；不建立循环专属图片目录。',
-    presentation: '缺少 web/img/campaigns/theForgottenAge 与音频资源，M5 发布前必须补齐或按缺失登记。',
+    presentation: '战役主题图位于 web/img/campaigns/theForgottenAge；音乐使用战役与场景资源清单。',
+  },
+  releaseAcceptance: {
+    required: {
+      launch: launchable,
+      chapters: ledger.status === 'verified',
+      desktopBrowser: browserGenerated && browserReport.checks?.desktopBrowser === true,
+      mobileBrowser: browserGenerated && browserReport.checks?.mobileBrowser === true,
+      releaseDesktop: releasePassed && browserReport.release.desktop,
+      releaseMobile: releasePassed && browserReport.release.mobile,
+      onlineDesktop: onlinePassed && browserReport.online.desktop,
+      onlineMobile: onlinePassed && browserReport.online.mobile,
+      suppliesDesktop: suppliesPassed && browserReport.supplies.desktop,
+      suppliesMobile: suppliesPassed && browserReport.supplies.mobile,
+      saveReplay: ledger.items.every(item => item.checks.saveReplay),
+    },
+    deferred: [],
+    evidence: ['games/arkhamhorror/audit/tfa-browser-acceptance.json',
+      'games/arkhamhorror/audit/tfa-scenario-acceptance.json',
+      'games/arkhamhorror/tests/fixtures/replay/golden-replays.json'],
   },
   confirmations: {
     scenarios: {

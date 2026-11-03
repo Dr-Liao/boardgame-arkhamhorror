@@ -1,3 +1,10 @@
+import { contentRegistry } from '../../content/registered.js'
+import { investigatorRule } from '../cards/card-rules.js'
+import { registeredEntry } from './ability.js'
+import { bondedPoolMain, bondedCardList } from './bonded.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { validateMechanicState } from './mechanic-state.js'
+import { validateInvestigatorMechanics } from './investigator-mechanics.js'
 // 存档向下兼容与修复。
 //
 // 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
@@ -15,7 +22,7 @@ import {
   entryNeedsReactionPrompt,
 } from '../cards/card-rules.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
-import { createGameState, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
+import { createGameState, scenarioRuntime, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
 
 function fixEchoesAgendaThresholds(state) {
   for (const agendas of [state.agendas, state.scenario?.agendas]) {
@@ -282,7 +289,80 @@ function parallelLaneEntries(state) {
   return [['A', lanes.A], ['B', lanes.B]]
 }
 
+const scenarioBehavior = state => state.scenario?.id ? contentRegistry.getBehavior(state.scenario.id) || {} : {}
+function needsCardModelRepair(state) {
+  return scenarioBehavior(state).needsSaveRepair?.(state) || (state.scenarioFlags?.agendaAside || []).length>0 || (state.enemies || []).some(host => !host.hostId && (host.swarmCards || []).some(card =>
+    !card.defeated && (card.ownerSeat == null || !state.enemies.some(enemy => enemy.id === card.id && enemy.hostId === host.id))))
+    || Object.keys(state.bondedSets || {}).some(key => bondedPoolMain(key.split('@')[0]) !== key.split('@')[0])
+}
+
+// Repair both the live runtime and its transaction base so a resumed choice cannot restore obsolete physical cards.
+export function repairRuntimeCardModels(state, changes = []) {
+  if (scenarioBehavior(state).needsSaveRepair?.(state)) {
+    scenarioBehavior(state).repairSavedState(state,scenarioRuntime(state,[]))
+    changes.push('恢复场外全局牌的实际实例与旋转角度')
+  }
+  if (Array.isArray(state.scenarioFlags?.agendaAside) && state.scenarioFlags.agendaAside.length) {
+    state.agendaAside ||= []
+    for(const card of state.scenarioFlags.agendaAside) {
+      const code=typeof card==='string'?card:card.code
+      state.instanceSeq ||= {c:0,e:0}
+      state.agendaAside.push(typeof card==='string' ? {code,originalCode:code,id:'agendaAside:c'+(++state.instanceSeq.c)} : card)
+    }
+    delete state.scenarioFlags.agendaAside
+    changes.push('把密谋旁的旧标记恢复为公共区域实体')
+  }
+  for (const host of [...(state.enemies || [])].filter(enemy => !enemy.hostId)) {
+    for (const card of host.swarmCards || []) {
+      if (card.defeated) continue
+      if (card.ownerSeat == null) {
+        const seat = host.swarmOwnerSeat ?? host.engagedSeat ?? state.campaign?.leadSeat ?? 0
+        const owner = state.investigators?.[seat]
+        // Legacy placeholders came from the encounter deck. Return those physical cards before replacing them.
+        state.encounterDeck ||= []
+        state.encounterDeck.unshift(card.code)
+        const code = owner?.deck.pop()
+        if (!code) { card.defeated = true; continue }
+        card.code = code; card.ownerSeat = seat
+        changes.push('蜂拥：归还旧遭遇占位卡，改用所属调查员牌库中的实体卡')
+      }
+      if (state.enemies.some(enemy => enemy.id === card.id && enemy.hostId === host.id)) continue
+      state.enemies.push({ ...host, id:card.id, hostId:host.id, kind:'swarm', underlyingCard:card.code,
+        swarmOwnerSeat:card.ownerSeat, damageTaken:0, doom:0, clues:0, victory:0, vengeance:0,
+        attachments:[], swarmCards:[], swarming:null, pendingSwarmCount:0 })
+      const engaged = state.investigators?.[host.engagedSeat]
+      if (engaged && !(engaged.engaged ||= []).includes(card.id)) engaged.engaged.push(card.id)
+      changes.push('蜂拥：恢复可独立指定与攻击的敌人实例')
+    }
+  }
+  if (!state.bondedSets) return
+  const merged = {}
+  for (const [key, set] of Object.entries(state.bondedSets)) {
+    const main = bondedPoolMain(key.split('@')[0])
+    const canonicalKey = merged[main] && merged[main].seat !== set.seat ? main+'@'+set.seat : main
+    if (!merged[canonicalKey]) merged[canonicalKey] = { ...set, cards:[] }
+    merged[canonicalKey].cards.push(...set.cards)
+    merged[canonicalKey].retrieved ||= set.retrieved
+    if (key !== canonicalKey) changes.push('绑定：合并同一调查员的同组升级卡场外集合')
+  }
+  for (const [key, set] of Object.entries(merged)) {
+    const owner = state.investigators?.[set.seat]
+    const codeOf = card => typeof card === 'string' ? card : card?.code
+    const inPlay = owner ? ['hand','deck','discard','assets','threat'].flatMap(zone => owner[zone] || []).map(codeOf) : []
+    const allowance = new Map(bondedCardList(ALL_CARDS[key.split('@')[0]]).map(entry =>
+      [entry.code, Math.max(0,entry.count-inPlay.filter(code => code === entry.code).length)]))
+    set.cards = set.cards.filter(card => {
+      const code = codeOf(card), left = allowance.get(code) || 0
+      if (!left) return false
+      allowance.set(code,left-1); return true
+    })
+  }
+  state.bondedSets = merged
+}
+
 function runtimeNeedsWork(runtime, force) {
+  if ([runtime, runtime.continuation?.base].filter(Boolean).some(needsCardModelRepair)) return true
+  if ([runtime, runtime.continuation?.base].filter(Boolean).some(saved => saved.investigators?.some(inv => investigatorRule(inv.code)?.resourceBank && inv.resourceBankModel !== 2) || saved.scenarioFlags?.dancerVoidCell)) return true
   return !!force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime)
     || needsCachedLegalMoves(runtime)
     || !!stateCompatibilityError(runtime, META.resourceVersion)
@@ -294,6 +374,28 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   if (runtime.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`${label}来自更新版本（结构 v${runtime.schemaVersion}），请升级游戏后再读取`)
   if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
   const local = []
+  for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) repairRuntimeCardModels(saved, local)
+  for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) for (const inv of saved.investigators || []) {
+    if (!investigatorRule(inv.code)?.resourceBank || inv.resourceBankModel === 2) continue
+    if (investigatorRule(inv.code)?.resourceBank) {
+      const bank = inv.assets?.find(asset => asset.code === investigatorRule(inv.code).resourceBank.assetCode)
+      inv.resources = Math.max(0, (inv.resources || 0) - (bank?.resources || 0))
+      local.push('家族遗产：分离卡上资源与资源池')
+    }
+    inv.resourceBankModel = 2
+  }
+  if (runtime.scenarioFlags?.dancerVoidCell) {
+    const dancers = runtime.enemies?.filter(enemy => registeredEntry(enemy.originalCode || enemy.code)?.movesThroughVoid) || []
+    for (const enemy of dancers) {
+      const cell = runtime.scenarioFlags.dancerVoidCell
+      enemy.cosmosCell = { ...cell }; enemy.location = 'cosmosVoid:' + cell.x + ':' + cell.y
+      enemy.dancerVoidRound = runtime.scenarioFlags.dancerVoidRound
+    }
+    delete runtime.scenarioFlags.dancerVoidCell
+    delete runtime.scenarioFlags.dancerVoidRound
+    delete runtime.scenarioFlags.pendingDancerVoidCell
+    local.push('迁移盲目舞者的独立虚空位置')
+  }
   migrateVersions(runtime, migrations, local)
   upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime))
   fillMissingFields(runtime, local)
@@ -310,6 +412,12 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
 
 export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
+  // Optional extension v1 is inside the existing scenarioFlags schema; absent old saves stay untouched.
+  validateMechanicState(state)
+  validateInvestigatorMechanics(state)
+  for (const saved of [state.continuation?.base, ...parallelLaneEntries(state).map(([, lane]) => lane)].filter(Boolean)) {
+    validateMechanicState(saved); validateInvestigatorMechanics(saved)
+  }
   const lanes = parallelLaneEntries(state)
   const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))
   if (!runtimeNeedsWork(state, force) && !laneNeedsWork) return { state, changes: [] }

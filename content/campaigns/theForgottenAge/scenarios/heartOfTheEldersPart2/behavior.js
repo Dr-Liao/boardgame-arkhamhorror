@@ -62,8 +62,7 @@ function locationHasSupply(state, locationId, name) {
 // ---------------------------------------------------------------------------
 // 参考实现（Campaigns/TheForgottenAge/Helpers.hs:239-335）：从探索牌库顶一直抽到
 // 「与当前地点连接符号相同的地点」或遭遇卡；不连接的地点先放一边，探索结束后洗回。
-// 引擎 doExplore 只抽 1 张，所以本章在 beforeExplore 里先把不连接的地点挪到一边，
-// 让引擎抽到合法目标；afterExplore 再把一边的牌洗回。04211/04212 的探索由此获得筛选。
+// 通用 doExplore 持续翻牌并洗回不连接地点；本章只提供连接判定。
 const scenarioLocations = state => state.scenario?.locations || {}
 
 const exploreLinks = (state, fromId) => scenarioLocations(state)[fromId]?.connections || []
@@ -78,34 +77,6 @@ function connectsForExplore(state, fromId, code) {
   const links = exploreLinks(state, fromId)
   if (!links.length) return true
   return links.includes(code)
-}
-
-function shuffleExplorationAsideBack(state, api) {
-  const aside = state.scenarioFlags?.exploreAside || []
-  if (!aside.length) return false
-  state.scenarioFlags.exploreAside = []
-  const merged = [...aside, ...(state.explorationDeck || [])]
-  state.explorationDeck = typeof api?.shuffle === 'function' ? api.shuffle(merged) : merged
-  return true
-}
-
-function prepareExplorationDraw(state, inv, api) {
-  const deck = state.explorationDeck || []
-  const aside = []
-  while (deck.length) {
-    const code = deck[deck.length - 1]
-    if (!scenarioLocations(state)[code]) break // 遭遇卡：本次探索停在它上面
-    if (connectsForExplore(state, inv.location, code)) break
-    deck.pop()
-    aside.push(code)
-  }
-  state.explorationDeck = deck
-  if (aside.length) {
-    state.scenarioFlags.exploreAside = [...(state.scenarioFlags.exploreAside || []), ...aside]
-  }
-  if (!state.explorationDeck.length && (state.scenarioFlags.exploreAside || []).length) {
-    shuffleExplorationAsideBack(state, api)
-  }
 }
 
 function removeOne(list, value) {  const index = (list || []).indexOf(value)
@@ -227,7 +198,7 @@ function resolveHallOfIdolatry(state, inv, api) {
 }
 
 // 漆黑洞窟：入场后检查补给，没人带地图就额外放每位调查员 1 个线索。
-function resolveDarkHollow(state, inv, api) {
+function resolveDarkHollow(state, api) {
   const location = state.locations.find(entry => entry.id === 'darkHollow')
   if (!location) return false
   // 每次入场只结算一次（跟着地点实例走；若地点被洗回探索牌库后再入场，会重新结算）。
@@ -249,9 +220,8 @@ function resolveDarkHollow(state, inv, api) {
 function resolveDescentToYoth(state, api) {
   const location = state.locations.find(entry => entry.id === 'descentToYoth')
   if (!location) return
-  flagsFor(state)
-  if (state.scenarioFlags.descentResolved) return
-  state.scenarioFlags.descentResolved = true
+  if (location.descentResolved) return
+  location.descentResolved = true
   for (const inv of active(state)) {
     if (inv.defeated || inv.resigned) continue
     const answer = api.choose({
@@ -524,8 +494,6 @@ export const behavior = {
     // 第 117 轮：宽阔步道（04222）的双筒望远镜行动费在地点条目的 locationRule.beforeExplore。
     const rule = locationRuleFor(original(here(state, inv)))
     if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api) === false) return false
-    // TFA 探索：先把不连接的地点挪到一边，让引擎翻出的是「连接地点」。
-    prepareExplorationDraw(state, inv, api)
     // 记录本次探索，用于「落入陷阱」的「从探索牌库抽出」判断。
     flagsFor(state).exploringSeat = inv.seat
     return true
@@ -537,15 +505,17 @@ export const behavior = {
     const code = context?.code
     const kind = context?.kind
     delete flagsFor(state).exploringSeat
-    // TFA 探索：把本次探索时放一边的不连接地点洗回探索牌库。
-    if (shuffleExplorationAsideBack(state, api)) {
-      api?.info?.('🧭 与当前地点不连接的地点已洗回探索牌库。')
-    }
     if (kind !== 'location') return
     inv.tfaExploredThisTurn = true
     if (code === 'hallOfIdolatry') resolveHallOfIdolatry(state, inv, api)
-    if (code === 'darkHollow') resolveDarkHollow(state, inv, api)
+    // 探索结算也经过这里；地点入场钩子已先触发，实例标记防止重复结算。
+    if (code === 'darkHollow') resolveDarkHollow(state, api)
     if (code === 'descentToYoth') resolveDescentToYoth(state, api)
+  },
+
+  locationPlaced(state, location, api) {
+    if (location.id === 'darkHollow') resolveDarkHollow(state, api)
+    if (location.id === 'descentToYoth') resolveDescentToYoth(state, api)
   },
 
   // 晶体柱群：进入后检定意志(1+复仇)。

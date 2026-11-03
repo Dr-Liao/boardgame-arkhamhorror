@@ -41,7 +41,7 @@ export default {
       },
     },
     {
-      kind: 'reaction', trigger: 'symbolRevealed',
+      kind: 'reaction', trigger: 'symbolRevealed', partOfAbility: 0,
       label: '第六感：改为在连接的已揭示地点调查',
       criteria: [({ state, inv, context }) => {
         if (!context || context.seat !== inv.seat) return false

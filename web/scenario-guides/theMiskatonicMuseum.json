@@ -1,0 +1,238 @@
+{
+  "id": "theMiskatonicMuseum",
+  "campaignId": "theDunwichLegacy",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险II: 博物馆之夜",
+          "children": [
+            {
+              "text": "几个月前，阿米蒂奇和他的同事前往了阿卡姆西北方向的敦威治，在那儿阻止了一场惊天大阴谋。一开始，你觉得那个怪物只是熊，或者那一类的东西，但是教授述说的内容却大相径庭。\n\n一切都要从一个叫威尔伯·沃特雷的男子说起，他进入奥恩图书馆，查找奥洛斯·沃尔密乌斯翻译的拉丁文版《死灵之书》。威尔伯已经有一本破旧的，约翰·迪伊翻译的英文版《死灵之书》，但他好像并不满足于此。阿米蒂奇拒绝了那个男子，他担心书被恶人利用。不过沃特雷还是悄悄回来了，想要偷走书，却被看门狗咬伤。后来，阿米蒂奇、莱斯和摩尔根找到了沃特雷的尸体，样子十分惨烈。他变得像是野兽和人的混合体，粗糙的皮肤上长满毛发，还长出了灰绿色的触手。你开始怀疑，沃特雷真的是人类吗？"
+            },
+            {
+              "text": "检查冒险笔记，如果 亨利·阿米蒂奇博士被绑架:\n\n前往 第一部分"
+            },
+            {
+              "text": "如果 调查员救出了亨利·阿米蒂奇博士:\n\n前往 第二部分"
+            },
+            {
+              "title": "冒险II: 博物馆之夜",
+              "children": [
+                {
+                  "text": "第一部分: 阿米蒂奇博士在日志中所留下的笔记，一再强调威尔伯·沃特雷那迫切的渴望——他企图夺取《死灵之书》，以施行某种骇人的目的。随着你的阅读渐渐深入，字里行间流露出的阴影让人不寒而栗：阿米蒂奇似乎早已将大学所藏的那一册古籍，移交给米斯卡塔尼克大学博物馆的馆长————哈罗德·维尔斯特，并妥善置于博物馆的“限制馆区”之中，以图保险。然而，纵然心中忧虑导师的安危，你同时更为另一件事所牵动：若是那些绑架阿米蒂奇的歹徒真的设法夺得此书，后果将不堪设想。想到此处，你不禁下定决心，必须立刻赶赴博物馆，在他们的黑手伸向禁书之前，设法阻止这场灾厄的降临。\n\n前往 设置"
+                }
+              ]
+            },
+            {
+              "title": "冒险II: 博物馆之夜",
+              "children": [
+                {
+                  "text": "第二部分: “我们三个很快就忘了此事，”阿米蒂奇叹了一口气，“但看起来事情还未结束。我之后会告诉你们剩下的故事，但现在，《死灵之书》才是最重要的。我有一种预感，那些人不会放弃这本书的。所以我提前将书移出了图书馆，交给了我的好朋友————米斯卡塔尼克大学博物馆馆长，哈罗德·维尔斯特先生保管。我曾以为这本书待在博物馆的限制区足够安全，但现在我不敢如此断言。你必须不惜一切代价取回它！我担心他们会运用书里的仪式来做可怕的事情……”\n\n前往 设置"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "将下列遭遇组中，所有遭遇卡找出: 博物馆之夜, 坏运, 巫术, 异世界, 寒风刺骨, 以及 上锁的门。这些遭遇组的图标为:"
+            },
+            {
+              "text": "将2张管理办公室和2张保安室中，各随机选择一张放置入场，将另一张同名卡牌移出游戏。然后，将博物馆大门、博物馆大厅放置入场。每位调查员从博物馆大门开始游戏。"
+            },
+            {
+              "children": [
+                {
+                  "text": "将6张“展厅”放在一边，组成展厅牌堆。请按以下步骤执行："
+                },
+                {
+                  "text": "将展厅（禁止入内）和其他随机2张展厅混洗，未揭示面朝上，放在展厅牌堆底部。"
+                },
+                {
+                  "text": "然后，将剩余3张展厅混洗，放在展厅牌堆顶部。6张展厅卡都必须以未揭示面朝上。"
+                }
+              ]
+            },
+            {
+              "text": "将下列卡牌放在一边：哈罗德·维尔斯特、亚当·林奇、死灵之书（奥洛斯·沃尔密乌斯译本）、暗影之子。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "title": "“混沌”",
+          "children": [
+            {
+              "text": "该冒险中，部分卡牌会提及“混沌”区域。混沌是场外区域的一部分，在场景与密谋牌堆旁边，用于放置追猎恐魔。当追猎恐魔在混沌中时，被视为离场，不能被玩家卡牌和调查员行动影响。"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "“混沌”",
+              "children": [
+                {
+                  "text": "该冒险中，部分卡牌会提及“混沌”区域。混沌是场外区域的一部分，在场景与密谋牌堆旁边，用于放置追猎恐魔。当追猎恐魔在混沌中时，被视为离场，不能被玩家卡牌和调查员行动影响。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "未达成任何结局 (所有调查员都撤离或被击败): 不管博物馆里的那个东西是什么，你都决定放弃，离开这儿。你知道自己不够勇敢，也没有好的武器，看来《死灵之书》也彻底与你无缘了。不管怎样，还是有人期待着你。何不振作起来，自信地迎接下个任务呢？\n\n• 在冒险日志中，记录下 调查员未取得死灵之书。\n\n• 每位调查员获得等同于胜利牌堆中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 只要这本《死灵之书》还在，就会有更多像威尔伯那样的狂热分子，无休止地寻找这本书。能够保护人类的方法就是净化这罪恶，唯一能净化罪恶的就是灼热的火焰。你把垃圾桶里填满纸，又把《死灵之书》放在最上面。你划燃几根火柴，点燃了垃圾桶。火焰传来的温暖充斥了整个房间，火光越烧越烈，逼退了墙上的黑影。你看着这本书被烧成灰烬，只希望你所做的决定是正确的。\n\n• 在冒险日志中，记录下 调查员销毁死灵之书。\n\n• 每位调查员获得等同于胜利牌堆中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 《死灵之书》不仅仅是一本书，它还可以受用于你。在这本书中记载着许多与你所遭遇的势力和生物有关的信息。考虑到它对你来说作用斐然，你怎可把它毁了呢？而且，只要你随身带着它，就能防止别人利用它作恶。\n\n• 在冒险日志中，记录下 调查员带走死灵之书。\n\n• 调查员获得了死灵之书（奥洛斯·沃尔密乌斯译本）。一位调查员可以选择将死灵之书（奥洛斯·沃尔密乌斯译本）加入其牌组中，该卡不计入卡牌张数限制。\n\n• 你被黑暗的力量诱惑了。在混沌袋中加入一个 [elder_thing] 标记，持续到剧本结束。\n\n• 每位调查员获得等同于胜利牌堆中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario II: The Miskatonic Museum",
+          "children": [
+            {
+              "text": "Several months ago, Armitage and his colleagues stopped a rampaging horror from tearing through Dunwich, a backwater town several hours north and west of Arkham. At first you imagine this beast as a rabid bear, or worse, but the professor’s description of the creature paints a different picture.\n\nIt all began when a man named Wilbur Whateley entered the Orne Library looking for Olaus Wormius’s Latin translation of a book called the Necronomicon. Wilbur already possessed a beaten-up English translation by Dr. John Dee, but it was insufficient for his purposes. Armitage turned the man away, fearing what use the strange man had for the book. Whateley returned in secret, hoping to steal the book , but was attacked by a hound guarding the university. Armitage, Rice, and Morgan later discovered Whateley’s body. A description of the foul corpse—semi-anthropomorphic and covered in fur, with a leathery hide and greenish-grey tentacles—causes you to question whether or not Whateley was truly human."
+            },
+            {
+              "text": "Check Campaign Log. If Dr. Henry Armitage was kidnapped:\n\nProceed to Part 1"
+            },
+            {
+              "text": "If the investigators rescued Dr. Henry Armitage:\n\nSkip to Part 2."
+            },
+            {
+              "title": "Scenario II: The Miskatonic Museum",
+              "children": [
+                {
+                  "text": "Part 1: The notes written by Dr. Armitage in the journal stress Whateley’s desire to get his hands on the Necronomicon for some terrible purpose. As you read on, it seems that Dr. Armitage brought the university’s copy of the tome to Harold Walsted­ —the curator of the Miskatonic Museum—for safekeeping in the museum’s Restricted Hall. Although you are worried about your mentor, you are equally worried that Armitage’s kidnappers might get their hands on this Necronomicon. You decide to head to the museum to prevent them from acquiring it.\n\nProceed to Setup."
+                }
+              ]
+            },
+            {
+              "title": "Scenario II: The Miskatonic Museum",
+              "children": [
+                {
+                  "text": "Part 2: “My colleagues and I were quick to put the ordeal behind us,” Armitage says with a sigh. “But it seems that things haven’t fully resolved themselves. I’ll tell you the rest later, but for now, it is imperative that we get our hands on that copy of the Necronomicon. If my instincts are correct, the assailants you’ve encountered will be searching for it. After all that transpired, I didn’t feel safe keeping it at the library, so I brought it to my good friend, Harold Walsted. He is the current curator of the Miskatonic Museum. I thought it would be safe in the museum’s Restricted Hall, but now I’m not so sure. You must retrieve it at all costs! I fear terribly what they could do with the rites contained in its pages…”\n\nProceed to Setup."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: The Miskatonic Museum, Bad Luck, Sorcery, The Beyond, Chilling Cold, and Locked Doors. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Put one of the two Administration Office locations and one of the two Security Office locations into play at random. Remove the other versions of Administration Office and Security Office from the game. Then, put the Museum Entrance and Museum Halls locations into play. Each investigator begins play at the Museum Entrance."
+            },
+            {
+              "children": [
+                {
+                  "text": "Set the 6 “Exhibit Hall” locations aside as a separate “Exhibit Deck.” To do this, perform the following:"
+                },
+                {
+                  "text": "Shuffle the Exhibit Hall (Restricted Hall) and 2 other random Exhibit Hall locations together to form the bottom 3 cards of the Exhibit Deck, unrevealed side faceup."
+                },
+                {
+                  "text": "Then, place the other 3 Exhibit Hall locations on top, in a random order. All 6 cards of the Exhibit Hall deck should be showing only the unrevealed side, so that the players do not know which Exhibit Hall is the Exhibit Hall (Restricted Hall)."
+                }
+              ]
+            },
+            {
+              "text": "Set the following cards aside, out of play: Harold Walsted, Adam Lynch, The Necronomicon (Olaus Wormius Translation), and Shadow-spawned."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "title": "“The Void”",
+          "children": [
+            {
+              "text": "Some cards in this scenario reference an area called “the void.” The void is an out-of-play area next to the act and agenda deck which the Hunting Horror enemy can enter and leave via card effects. While the Hunting Horror is in the void, it is considered out of play and cannot be affected by player cards or investigator actions."
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "“The Void”",
+              "children": [
+                {
+                  "text": "Some cards in this scenario reference an area called “the void.” The void is an out-of-play area next to the act and agenda deck which the Hunting Horror enemy can enter and leave via card effects. While the Hunting Horror is in the void, it is considered out of play and cannot be affected by player cards or investigator actions."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): Whatever the creature in the museum was, you had neither the will nor the tools to destroy it. It seems you must give up any hope of recovering the Necronomicon. Even so, there are others depending on you. Gathering your courage, you prepare for your next task.\n\n• In your Campaign Log, record that the investigators failed to recover the Necronomicon.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: As long as this translation of the Necronomicon exists, there will be sorcerers and other foul agents like Whateley seeking it. In the end, you know what must be done to protect humanity from the threats you’ve seen. You find a trash bin and fill it with books and documents, throwing the Necronomicon on top. It takes several matches to set the contents of the bin alight. The flames fill the room with heat and the creeping shadows retreat from its light. You watch the book burn for some time, its pages turning to ash. You can only hope you’ve made the right decision.\n\n• In your Campaign Log, record that the investigators destroyed the Necronomicon.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: The Necronomicon is more than just a book; it is a tool. Within its pages is a wealth of information about the forces and creatures you have encountered. Knowing how useful it could be in your endeavors, how could you possibly bring yourself to destroy it? Besides, as long as you keep the book safely in your possession, you will still be foiling those who wish to use it for nefarious purposes.\n\n• In your Campaign Log, record that the investigators took custody of the Necronomicon.\n\n• The investigators have earned The Necronomicon (Olaus Wormius Translation) card. Any one investigator may choose to add The Necronomicon (Olaus Wormius Translation) to their deck. This card does not count towards that investigator’s deck size.\n\n• You have given in to the temptation of power. Add 1 [elder_thing] chaos token to the chaos bag for the remainder of the campaign.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

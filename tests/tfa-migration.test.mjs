@@ -144,15 +144,15 @@ test('M5 records the catalogue baseline, the scenario ledger, keywords and ruleb
   assert.equal(report.milestone, 'M5')
   assert.equal(assertMigrationConfirmations(report, chapters.map(chapter => chapter.id)), report)
   assert.equal(report.status, 'playable')
-  // 入口开放但账本仍是 earlyAccess：逐条确认（literalCardBehavior / browserAcceptance）没有全部通过。
+  // 逐章与发布验收齐全后，大厅不再显示提前体验。
   assert.equal(report.playable, true)
   assert.equal(report.launchEnabled, true)
-  assert.equal(report.earlyAccess, true)
-  assert.equal(report.equivalenceCertified, false)
+  assert.equal(report.earlyAccess, false)
+  assert.equal(report.equivalenceCertified, true)
   assert.deepEqual(report.catalog,
     { printedRecords: 361, mainCodes: 338, linkedFaces: 23, campaign: 231, investigatorsAndSignatures: 16,
       playerCards: 91, selectableInvestigators: 5, verifiedInvestigatorCards: 16 })
-  assert.equal(report.confirmations.scenarios.status, 'pending')
+  assert.equal(report.confirmations.scenarios.status, 'verified')
   assert.equal(report.confirmations.scenarios.items.length, 10)
   assert.ok(report.confirmations.scenarios.items.every(item =>
     item.checks.sourceLocked && item.checks.identityRegistered
@@ -162,7 +162,7 @@ test('M5 records the catalogue baseline, the scenario ledger, keywords and ruleb
       && item.checks.browserAcceptance === true
       && (item.status === 'verified' || item.status === 'pending')))
   assert.ok(report.confirmations.scenarios.items.every(item => Array.isArray(item.gaps)))
-  assert.equal(report.scenarios.status, 'pending')
+  assert.equal(report.scenarios.status, 'verified')
   assert.equal(report.scenarios.items.length, 10)
   assert.equal(report.story.status, 'verified')
   assert.equal(report.confirmations.keywords.status, 'verified')
@@ -175,11 +175,11 @@ test('M5 records the catalogue baseline, the scenario ledger, keywords and ruleb
   assert.deepEqual(report.confirmations.rulebook.requiredRuleIds,
     ['tfaCampaign', 'tfaExploration', 'tfaSupplies', 'tfaVengeance', 'tfaPoison',
       'tfaRelic', 'tfaTimeline', 'tfaDescent', 'tfaChaos'])
-  assert.equal(report.remaining.length > 0, true)
+  assert.equal(report.remaining.length, 0)
   assert.equal(report.remaining.some(item => item.startsWith('M1')), false)
   assert.equal(report.remaining.some(item => item.startsWith('M2')), false)
   assert.equal(report.remaining.some(item => item.startsWith('M3 机制：')), false)
-  assert.equal(report.remaining.some(item => item.includes('literalCardBehavior')), true)
+  assert.equal(report.remaining.some(item => item.includes('literalCardBehavior')), false)
   assert.equal(report.remaining.some(item => item.includes('M4 关键词')), false, 'M4 已完成，不再留在待办')
   assert.equal(report.remaining.some(item => item.includes('web/img/campaigns/theForgottenAge')), false,
     '展示图与音频目录已随仓库提供，不再列为待办')
@@ -192,14 +192,17 @@ test('M5 records the catalogue baseline, the scenario ledger, keywords and ruleb
   assert.deepEqual(report.mechanics.items.map(item => item.id),
     ['tfaExploration', 'tfaSupplies', 'tfaVengeance', 'tfaYigsFury', 'tfaPoisoned', 'tfaRelicOfAges', 'tfaExpeditionLeader'])
   assert.ok(report.chapters.every(chapter => chapter.status === 'playable'))
-  // earlyAccess 不等于规则等价：playable 为真时仍必须写明未完成的逐条确认。
-  assert.equal(report.verifiedScope.includes('earlyAccess'), true)
+  assert.ok(Object.values(report.releaseAcceptance.required).every(Boolean))
+  assert.deepEqual(report.releaseAcceptance.deferred, [])
+  assert.equal(report.verifiedScope.includes('earlyAccess'), false)
   const forged = structuredClone(report)
-  forged.playable = true
+  forged.confirmations.scenarios.items[0].checks.literalCardBehavior = false
+  forged.confirmations.scenarios.items[0].status = 'pending'
+  forged.confirmations.scenarios.status = 'pending'
   delete forged.earlyAccess
   assert.throws(() => assertMigrationConfirmations(forged, chapters.map(chapter => chapter.id)))
   const dishonest = structuredClone(report)
-  dishonest.confirmations.scenarios.items[0].status = 'verified'
+  dishonest.confirmations.scenarios.items[0].status = 'pending'
   assert.throws(() => assertMigrationConfirmations(dishonest, chapters.map(chapter => chapter.id)),
-    /status 应为 pending/)
+    /status 应为 verified/)
 })

@@ -832,14 +832,14 @@ test('TCU 05155 亨利·万 揭示符号标记时无事发生', () => {
 // 05156 反应灵敏
 // ---------------------------------------------------------------------------
 
-test('TCU 05156 反应灵敏 立即获得 1 个不计入行动数的行动', () => {
+test('TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数', () => {
   const state = fixture('01001')
   me(state).hand = ['05156']
   me(state).resources = 5
   const before = me(state).actionsLeft
   move(state, { action: 'play', cardId: '05156' })
   settle(state)
-  assert.equal(me(state).actionsLeft, before + 1, '打出后行动数 +1')
+  assert.equal(me(state).actionsLeft, before, '立即执行一次行动后，正常行动数不变')
   assert.equal(me(state).discard.includes('05156'), true)
 })
 

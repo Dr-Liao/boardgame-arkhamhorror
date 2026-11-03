@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tic",
+  "phase": "P5",
+  "generatedBy": "tools/audit-tic-investigators.mjs",
+  "status": "verified",
+  "items": [
+    {
+      "code": "07001",
+      "name": "玛丽修女",
+      "file": "src/cards/entries/07001.js",
+      "signatures": [
+        {
+          "code": "07006",
+          "name": "守护天使",
+          "file": "src/cards/entries/07006.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "f9ee03915ce1a2f91b33913f8e02a2dae6e805d9b303b62368f14d364ce7c318"
+        },
+        {
+          "code": "07007",
+          "name": "信仰危机",
+          "file": "src/cards/entries/07007.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "1abb14df9c1a3c3c7629967fad8363f1c5738abbeeee357aa3beb80b47a158c3"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tic-investigators.test.mjs",
+        "audit/tic-node-acceptance.json",
+        "audit/tic-interactions-browser.json"
+      ]
+    },
+    {
+      "code": "07002",
+      "name": "阿曼达·夏普",
+      "file": "src/cards/entries/07002.js",
+      "signatures": [
+        {
+          "code": "07008",
+          "name": "晦涩研究",
+          "file": "src/cards/entries/07008.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "74d5645967807b3c5cc26ddce4d135132672840cc0c38e3afc5189a78aeafbf2"
+        },
+        {
+          "code": "07009",
+          "name": "深海低语",
+          "file": "src/cards/entries/07009.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "405f3d8af30f4b93cd99bbae121bc776ffbaa72056caa90bdc8318043bec2c1d"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tic-investigators.test.mjs",
+        "audit/tic-node-acceptance.json",
+        "audit/tic-interactions-browser.json"
+      ]
+    },
+    {
+      "code": "07003",
+      "name": "特里希·斯卡波罗",
+      "file": "src/cards/entries/07003.js",
+      "signatures": [
+        {
+          "code": "07010",
+          "name": "潜于阴影",
+          "file": "src/cards/entries/07010.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "721c2cacfc47c1d3adc6f587e83963dff898a9767c272cb56154ad29143c0a26"
+        },
+        {
+          "code": "07011",
+          "name": "影子特工",
+          "file": "src/cards/entries/07011.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "e3cdc6279ed760b1eec4f407b9f71a54b1058b69aac346a948c78ea2820ffed2"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tic-investigators.test.mjs",
+        "audit/tic-node-acceptance.json",
+        "audit/tic-interactions-browser.json"
+      ]
+    },
+    {
+      "code": "07004",
+      "name": "戴克斯特·德雷克",
+      "file": "src/cards/entries/07004.js",
+      "signatures": [
+        {
+          "code": "07012",
+          "name": "精湛手法",
+          "file": "src/cards/entries/07012.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "a07a1a7c919068de3665a4a7e9f79ca863800a9ff4c85da5cc93bd464b8ef3eb"
+        },
+        {
+          "code": "07013",
+          "name": "密教残页",
+          "file": "src/cards/entries/07013.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "2bfe913cbacc218d358ada97d4427a9eebada06c556f87110fdea02e1a152f1f"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tic-investigators.test.mjs",
+        "audit/tic-node-acceptance.json",
+        "audit/tic-interactions-browser.json"
+      ]
+    },
+    {
+      "code": "07005",
+      "name": "塞拉斯·马什",
+      "file": "src/cards/entries/07005.js",
+      "signatures": [
+        {
+          "code": "07014",
+          "name": "骇变鱼叉",
+          "file": "src/cards/entries/07014.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "17ec9d75326b3c7de3e80072820e387b48acaaee20ff4c4bc33f0988eb152372"
+        },
+        {
+          "code": "07015",
+          "name": "塞拉斯的渔网",
+          "file": "src/cards/entries/07015.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "594a2cfada289c61e2ad8ebe2ddca3cc0b4a5ff739f6751b2a9b46177242e976"
+        },
+        {
+          "code": "07016",
+          "name": "海妖之唤",
+          "file": "src/cards/entries/07016.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "c8304c6a460265ff2007fd19978589957bdd2bedf0168212a844158350c46969"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tic-investigators.test.mjs",
+        "audit/tic-node-acceptance.json",
+        "audit/tic-interactions-browser.json"
+      ]
+    }
+  ],
+  "reprints": {
+    "98013": {
+      "note": "同能力的书附版本未独立开放；替换专属卡不在本批范围，未复制行为文件。"
+    },
+    "98016": {
+      "canonical": "07004",
+      "registered": true,
+      "selectable": false
+    }
+  },
+  "boundary": "P5 certifies five TIC investigators and eleven signature dependencies. Ordinary player cards are separately certified by P6; the campaign remains catalog-only. Existing AI random and automatic card pools are unchanged.",
+  "evidence": [
+    "audit/tic-node-acceptance.json",
+    "audit/tic-interactions-browser.json",
+    "audit/tic-investigator-replay.json",
+    "audit/tic-interaction-regression.json",
+    "audit/tic-p5-baseline.json"
+  ],
+  "gates": {
+    "investigators": true,
+    "packBoundary": true,
+    "dexterCardEntry": true,
+    "jsonAndMultiplayer": true,
+    "originalBaselinePreserved": true,
+    "replayExact": true,
+    "fastZeroFailures": true
+  }
+}

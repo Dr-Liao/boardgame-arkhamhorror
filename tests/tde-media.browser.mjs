@@ -21,7 +21,7 @@
 //
 // 报告器按**用例标题是否含 mobile** 派生视口（tools/playwright-tde-reporter.mjs），移动用例标题
 // 必须带 mobile。证据命令：node ../../node_modules/@playwright/test/cli.js test
-//   --config playwright.tde.config.mjs tde-media.browser.mjs
+//   --config tests/playwright/playwright.tde.config.mjs tde-media.browser.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

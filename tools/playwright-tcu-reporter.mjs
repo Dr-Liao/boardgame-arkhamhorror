@@ -4,8 +4,8 @@
 // JSON，无法复现；TCU 要求浏览器证据**由 runner 生成**。审计工具（tools/audit-tcu.mjs、
 // tools/audit-tcu-scenarios.mjs）只读本文件，缺失即 browserAcceptance 为 false，不允许手写补上。
 //
-// 用法（只挂在 playwright.tcu.config.mjs 上，不影响其他循环的浏览器回归）：
-//   npx playwright test --config playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs \
+// 用法（只挂在 tests/playwright/playwright.tcu.config.mjs 上，不影响其他循环的浏览器回归）：
+//   npx playwright test --config tests/playwright/playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs \
 //     tcu-scenarios.browser.mjs tcu-release.browser.mjs tcu-media.browser.mjs
 // 一次命令跑齐五个 spec：本报告器在 onEnd 一次性写文件，分 spec 跑会互相覆盖（证据命令固定为全量）。
 //
@@ -33,8 +33,7 @@ const TARGET = fileURLToPath(new URL('../audit/tcu-browser-acceptance.json', imp
 const TCU_SPEC = /tcu-.*\.browser\.mjs$/
 const RELEASE_SPEC = /tcu-release\.browser\.mjs$/
 const MEDIA_SPEC = /tcu-media\.browser\.mjs$/
-const EVIDENCE_COMMAND = 'npx playwright test --config playwright.tcu.config.mjs tcu-rules.browser.mjs '
-  + 'tcu-interactions.browser.mjs tcu-scenarios.browser.mjs tcu-release.browser.mjs tcu-media.browser.mjs'
+const EVIDENCE_COMMAND = 'node tools/run-tcu-browser.mjs'
 
 const toPackagePath = absolute => relative(PACKAGE_ROOT, absolute).replace(/\\/g, '/')
 const toRepoPath = absolute => relative(REPO_ROOT, absolute).replace(/\\/g, '/')

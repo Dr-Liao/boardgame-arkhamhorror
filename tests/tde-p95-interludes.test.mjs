@@ -215,7 +215,8 @@ function createEffectRecorder(state) {
   const logs = []
   const applyEffect = effect => {
     effects.push(effect)
-    applyCampaignEffect(state, effect, text => logs.push(text))
+    // The model deterministically chooses the first recipient; live flow tests cover human choice.
+    applyCampaignEffect(state, effect.chooseRecipient ? {...effect,chooseRecipient:false} : effect, text => logs.push(text))
   }
   return { effects, logs, applyEffect }
 }

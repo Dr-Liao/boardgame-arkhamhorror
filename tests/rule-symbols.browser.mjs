@@ -25,6 +25,99 @@ async function fixture(page) {
   return {session,submitted,async update(fn){fn(session);session.state.revision++;await page.getByRole('button',{name:'刷新局势'}).click();await expect(page.locator('.ah-table')).toHaveAttribute('data-revision',String(session.state.revision))}}
 }
 
+for (const width of [1440, 390]) {
+  test(`检定投入、抽标记和结果弹窗不泄漏英文技能键（${width}）`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    const f = await fixture(page)
+    const skills = ['willpower', 'intellect', 'combat', 'agility']
+    const source = { label: '遭遇检定', name: '联合检定', code: '01163' }
+    await f.update(s => {
+      s.state.skillTest = { seat: 0, skill: skills, value: 4, baseValue: 4, difficulty: 3, committed: [], source }
+      s.state.pendingChoice = { id: 'mixed-skills', kind: 'commit', seat: 0,
+        prompt: '检定willpower + [intellect] + COMBAT + agility，可投入wild或[knowledge]。',
+        options: [{ id: 'done', label: '开始检定' }] }
+      s.state.legalMoves = [{ action: 'choose', choiceId: 'mixed-skills', optionId: 'done', label: '开始检定' }]
+    })
+    await expect(page.locator('.ah-test-preview')).toHaveAttribute('aria-label', '意志+智识+战斗+敏捷：基础 4，修正 +0，当前 4，难度 3')
+    expect(await page.locator('.ah-test-skill-icons [data-game-symbol]').evaluateAll(els => els.map(el => el.dataset.gameSymbol))).toEqual(skills)
+    await expect(page.locator('.ah-choice-prompt')).not.toContainText(/willpower|intellect|combat|agility|wild|knowledge/i)
+    await expect(page.locator('.ah-choice-prompt [data-card-symbol="intellect"]')).toHaveCount(2)
+    await f.update(s => {
+      s.state.skillTest = null; s.state.pendingChoice = null; s.state.legalMoves = []
+      s.events.push({ seq: s.events.length, type: 'presentation', kind: 'chaos', token: '-1', seat: 0,
+        name: '罗兰·班克斯', skill: skills, difficulty: 3, source })
+      s.events.push({ seq: s.events.length, type: 'presentation', kind: 'test', drawn: ['-1'], success: true,
+        name: '罗兰·班克斯', skill: skills, difficulty: 3, value: 4, source })
+    })
+    const popup = page.locator('.ah-chaos-reveal')
+    await expect(popup).toBeVisible()
+    expect(await popup.locator('.ah-chaos-test-line [data-card-symbol]').evaluateAll(els => els.map(el => el.dataset.cardSymbol))).toEqual(skills)
+    await expect(popup).not.toContainText(/willpower|intellect|combat|agility/i)
+    await page.screenshot({ path: output + `skill-test-popup-${width}.png`, animations: 'disabled' })
+    await popup.getByRole('button', { name: '继续', exact: true }).click()
+    const result = page.locator('.ah-fx-banner')
+    await expect(result).toBeVisible()
+    expect(await result.locator('.ah-fx-eyebrow [data-card-symbol]').evaluateAll(els => els.map(el => el.dataset.cardSymbol))).toEqual(skills)
+    await expect(result).not.toContainText(/willpower|intellect|combat|agility/i)
+  })
+
+  test(`选人与牌桌统一使用游戏技能、心脏和脑部符号（${width}）`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.goto('/index.html')
+    await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+    await page.getByRole('button', { name: '开始新游戏' }).click()
+    const hub = page.locator('.ah-hub')
+    await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
+    await hub.getByRole('button', { name: /选择调查员：罗兰/ }).click()
+    const metrics = hub.locator('.ah-office-investigator-copy').first()
+    for (const name of ['combat', 'intellect', 'willpower', 'agility', 'health', 'sanity']) {
+      await expect(metrics.locator(`[data-game-symbol="${name}"]`).first()).toBeVisible()
+    }
+    await page.evaluate(() => document.fonts.load('22px AHCardSymbols', 'ADFS'))
+    await metrics.locator('.ah-office-metrics').evaluate(el => el.scrollIntoView({ block: 'center' }))
+    await page.screenshot({ path: output + `investigator-game-symbols-${width}.png`, animations: 'disabled' })
+
+    await page.evaluate(() => localStorage.clear())
+    await fixture(page)
+    for (const name of ['combat', 'intellect', 'willpower', 'agility']) {
+      await expect(page.locator(`[data-skill="${name}"] [data-game-symbol="${name}"]`)).toBeVisible()
+    }
+    for (const name of ['health', 'sanity']) {
+      const icon = page.locator(`.ah-vital-${name} [data-game-symbol="${name}"]`)
+      await expect(icon).toBeVisible()
+      const mask = await icon.evaluate(el => getComputedStyle(el).maskImage)
+      expect(mask).toContain(`/img/symbols/${name}.png`)
+      const response = await page.request.get(`/mods/arkhamhorror/img/symbols/${name}.png`)
+      expect(response.ok()).toBe(true)
+    }
+    const shared = await page.evaluate(async () => {
+      const { tableIcon, classIcon } = await import('/mods/arkhamhorror/table-components.js')
+      const { cardSymbol } = await import('/mods/arkhamhorror/card-text.js')
+      const h = (tag, attrs, ...children) => {
+        const el = document.createElement(tag)
+        for (const [key, value] of Object.entries(attrs)) el.setAttribute(key === 'className' ? 'class' : key, value)
+        el.append(...children.flat(Infinity))
+        return el
+      }
+      return ['willpower', 'intellect', 'combat', 'agility', 'wild', 'guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutral', 'action', 'reaction', 'free'].map(name => {
+        const ui = tableIcon(name), card = cardSymbol(h, name)
+        return { name, ui: ui.textContent, card: card.textContent,
+          font: ui.querySelector('text').getAttribute('font-family'),
+          classIcon: ['guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutral'].includes(name) ? classIcon(name) : null }
+      })
+    })
+    for (const symbol of shared) {
+      expect(symbol.ui).toBe(symbol.card)
+      expect(symbol.font).toBe(symbol.name === 'neutral' ? 'AHCardSymbolSlim' : 'AHCardSymbols')
+      if (symbol.classIcon) expect(symbol.classIcon).toBe(symbol.name)
+    }
+    await page.evaluate(() => document.fonts.load('22px AHCardSymbols', 'ADFS'))
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.screenshot({ path: output + `dashboard-game-symbols-${width}.png`, animations: 'disabled' })
+  })
+}
+
 test('地点演出、待决选择和时间线使用真正的卡面符号，保留详情与原有操作',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   const f=await fixture(page)
@@ -95,5 +188,43 @@ test('双括号特性、混乱标记别名与未知内容不会被误转换或�
   expect(result.text).toContain('[unknown]')
   expect(result.buttons).toBe(0);expect(result.scripts).toBe(0);expect(result.linked).toBeGreaterThan(0)
   expect(result.logSymbol).toBe('elder_sign');expect(result.logText).toContain('-2')
+})
+
+test('技能显示兼容单项、组合、别名和语言切换，原始卡文与特性保持原样', async ({ page }) => {
+  await fixture(page)
+  const result = await page.evaluate(async () => {
+    const { skillLabel, skillSymbols, skillText } = await import('/mods/arkhamhorror/skill-presentation.js')
+    const { setRulesText } = await import('/mods/arkhamhorror/card-text.js')
+    const { renderHauntedChoice } = await import('/mods/arkhamhorror/tcu-ui.js')
+    const { setLocale } = await import('/mods/arkhamhorror/i18n.js')
+    const zh = ['willpower', 'intellect', 'combat', 'agility', 'wild', 'knowledge', 'unknown'].map(skillLabel)
+    const symbols = skillSymbols(['[WILLPOWER]', 'knowledge', 'combat,agility'])
+    const plain = skillText('检定combat、[willpower]，wild可以投入', { symbols: false })
+    const trait = skillText('[[Combat]] [combat]')
+    const node = document.createElement('div')
+    setRulesText(node, 'Combat Training [[Combat]]')
+    const h = (tag, attrs, ...children) => {
+      const el = document.createElement(tag)
+      for (const [key, value] of Object.entries(attrs)) {
+        if (value != null && !key.startsWith('on')) el.setAttribute(key === 'className' ? 'class' : key, value)
+      }
+      el.append(...children.flat(Infinity).filter(child => child != null))
+      return el
+    }
+    const haunted = renderHauntedChoice(h, { choice: { id: 'haunted-symbols' }, location: {},
+      prompt: '选择闹鬼能力', options: [], abilityText: '检定[willpower](3)。' })
+    setLocale('en')
+    const en = skillLabel(['willpower', 'intellect', 'combat', 'agility'])
+    setLocale('zh-CN')
+    return { zh, symbols, plain, trait, card: node.textContent, en,
+      haunted: haunted.querySelector('.ah-haunted-source [data-card-symbol]')?.dataset.cardSymbol }
+  })
+  expect(result.zh).toEqual(['意志', '智识', '战斗', '敏捷', '任意技能', '智识', '技能'])
+  expect(result.symbols).toBe('[willpower]+[intellect]+[combat]+[agility]')
+  expect(result.plain).toBe('检定战斗、意志，任意技能可以投入')
+  expect(result.trait).toBe('[[Combat]] [combat]')
+  expect(result.card).toBe('Combat Training Combat')
+  expect(result.en).toBe('Willpower+Intellect+Combat+Agility')
+  expect(result.haunted).toBe('willpower')
 })
 

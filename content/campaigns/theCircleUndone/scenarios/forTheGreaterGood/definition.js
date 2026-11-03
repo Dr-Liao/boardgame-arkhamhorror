@@ -79,7 +79,7 @@ export const LOCATIONS = Object.freeze({
 // ---- 遭遇牌库 -----------------------------------------------------------------
 // 参考实现收齐：FGG + 罪恶之城 + 银暮秘社 + 远古恶魔 + 黑暗异教徒 + 上锁的门。
 // 后三个核组不在 TCU 21 个遭遇组里（见 gaps），本章只用 TCU 的 3 组。
-const deckGroups = ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge']
+const deckGroups = ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge', 'ancientEvils', 'pentagram', 'lockedDoors']
 // 放在一边（场外）的遭遇卡：双面南森·威克（两版都登记，实际按分支只用一版）、响应召唤的怪兽。
 const setAsideCodes = [NATHAN_WICK_INITIATION, NATHAN_WICK_INDOCTRINATION, SUMMONED_BEAST]
 const setAside = new Set(setAsideCodes)

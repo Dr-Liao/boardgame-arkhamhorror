@@ -11,20 +11,20 @@
 //   · 印刷 1 个[combat]图标来自卡面数据；
 //   · successBy: { threshold: 2, damageBonus: 2 }（成功超出难度 ≥2 时本次攻击 +2 伤害，
 //     读点 skill-effects.js 的 applySkillOnSuccess → skillFx.damageBonus → doFight 伤害合计）。
-// 显式简化（simplified）：「基础攻击行动期间才获得[combat][combat]」——conditionalIcons 没有
-// 「检定行动类型」条件（只支持手牌/资源/毁灭/某类支援数量），因此额外图标与 +2 伤害对任何战斗检定生效。
+// 额外图标和成功差值伤害均限定基础攻击行动。
 
 export default {
   code: '06166',
-  simplified: true,
-  note: '未实现：仅在「基础攻击行动期间投入」才获得 [combat][combat] 与 +2 伤害的限定'
-    + '（conditionalIcons 没有检定行动类型条件）；额外图标未写，+2 伤害按「成功超出难度 ≥2」对所有战斗检定生效。'
-    + '每次技能检定最多投入 1 张已由 maxPerTest 生效。',
   abilities: [
     {
       kind: 'commit',
       label: '蛮力',
-      skill: { maxPerTest: 1, successBy: { threshold: 2, damageBonus: 2 } },
+      skill: {
+        maxPerTest: 1,
+        iconBonus: ({ skill, test }) => test?.basicAction === 'fight'
+          && (Array.isArray(skill) ? skill.includes('combat') : skill === 'combat') ? 2 : 0,
+        successBy: { threshold: 2, damageBonus: 2, when: ({ test }) => test?.basicAction === 'fight' },
+      },
     },
   ],
   modifiers: [],

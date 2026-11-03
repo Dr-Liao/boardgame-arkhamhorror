@@ -7,6 +7,7 @@ export const RULES_VERSION = 'n6.0'
 // 卡牌的声明式修正（例如 02255「文本空白时按人数减少」）由 engine 的修正管线
 // （modifiers.enemyHealthDelta）叠加，本函数只负责印刷值。
 export function enemyHealthValue(state, enemy, behavior = null) {
+  if (enemy.health === null) return null
   const modifier = behavior?.enemyStatModifier?.(state, enemy, 'health') || 0
   return Math.max(0, (enemy.health || 0) + modifier)
 }
@@ -27,7 +28,7 @@ export function nextInstanceId(state, kind) {
 }
 
 export function doomCards(state) {
-  return [...state.enemies, ...state.locations, ...state.investigators.flatMap(inv => [...inv.assets, ...inv.threat])]
+  return [...state.enemies, ...state.locations, ...(state.agendaAside || []), ...state.investigators.flatMap(inv => [...inv.assets, ...inv.threat])]
 }
 
 // Rules Reference, "Agenda": the agenda advances when the total amount of doom

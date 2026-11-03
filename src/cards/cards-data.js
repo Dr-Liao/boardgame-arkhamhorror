@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "1a2d416ce664631c7dc893fa016182431f6dbe6a8d6db6db4e35885156dc5338",
+  "resourceVersion": "bbdc0876d177a4e9c48190c1015664e639f46ba21be78ec75df3483aa979d899",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [

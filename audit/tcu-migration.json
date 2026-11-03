@@ -5,10 +5,10 @@
   "milestone": "P10",
   "stage": "第 6 步：测试与验收 · M5 发布",
   "generatedBy": "tools/audit-tcu.mjs",
-  "docs": "docs/tcu-migration-roadmap.md",
+  "docs": "docs/tcu-completion.md",
   "scope": {
     "path": "artifacts/migration/tcu/scope.json",
-    "sha256": "80aa5e607c0ad2ce70f92d52b412d1afded5bdfd5f33b0ed86fe3c7710095699"
+    "sha256": "8f2b152efb2d0f1b1fa9c6967416b0d07370e2509d662dddbc2f3e3c433c0774"
   },
   "campaign": {
     "id": "theCircleUndone",
@@ -29,9 +29,14 @@
   "status": "playable",
   "playable": true,
   "launchEnabled": true,
-  "earlyAccess": true,
-  "earlyAccessReason": "逐卡行为审计发现 0 张卡存在未实现子句（gap）、14 张为显式近似；三组确认按 P8/P9 口径 verified，但不等价于印刷规则，故按 earlyAccess 发布并逐条列入 remaining。",
-  "equivalenceCertified": false,
+  "earlyAccess": false,
+  "earlyAccessReason": null,
+  "equivalenceCertified": true,
+  "scopeNotes": [
+    "原战役9章及完整双语指南；重返版不在本次范围。",
+    "主题美术采用本地生成资源；自动构筑按既有战役卡池策略开放。",
+    "幕间四专家标记采用英文指南及参考规则的−6；中文译源−7的冲突保留于completion-review。"
+  ],
   "verifiedScope": {
     "milestone": "P4–P10",
     "keywords": true,
@@ -214,7 +219,10 @@
       "requiredEncounterGroupIds": [
         "forTheGreaterGood",
         "cityOfSins",
-        "silverTwilightLodge"
+        "silverTwilightLodge",
+        "ancientEvils",
+        "pentagram",
+        "lockedDoors"
       ],
       "launchable": true
     },
@@ -659,14 +667,14 @@
     ]
   },
   "primitives": {
-    "new": 14,
-    "done": 14,
+    "new": 21,
+    "done": 21,
     "unfinished": []
   },
   "sources": [
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "87849b46d71a7e444453e371c38f455fad3d539a7d3eed2d6f176b924e9a6918"
+      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
     },
     {
       "path": "artifacts/migration/tcu/mechanism-scan.json",
@@ -932,10 +940,10 @@
             "locations": 13,
             "acts": 3,
             "agendas": 2,
-            "enemies": 9,
-            "treacheries": 7,
+            "enemies": 11,
+            "treacheries": 10,
             "storyAssets": 2,
-            "encounterCards": 25,
+            "encounterCards": 36,
             "setAsideCards": 10,
             "resolutions": [
               "noResolution",
@@ -943,7 +951,7 @@
               "r2",
               "r3"
             ],
-            "encounterCodes": 16
+            "encounterCodes": 21
           },
           "gaps": [],
           "pendingEncounterCodes": [],
@@ -973,9 +981,9 @@
             "acts": 4,
             "agendas": 2,
             "enemies": 14,
-            "treacheries": 10,
+            "treacheries": 13,
             "storyAssets": 8,
-            "encounterCards": 28,
+            "encounterCards": 35,
             "setAsideCards": 25,
             "resolutions": [
               "noResolution",
@@ -990,7 +998,7 @@
               "r9",
               "r10"
             ],
-            "encounterCodes": 24
+            "encounterCodes": 27
           },
           "gaps": [],
           "pendingEncounterCodes": [],
@@ -1083,7 +1091,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "b184ac376539ab27fe80a9640246287ea5161df7e37b53ed30d66cd1bde737fa"
+        "sha256": "7b41fef2cdd80fd5d4d68ba5e166acd81585ab21ff7f13afa2cd478bc5296e7e"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",
@@ -1581,13 +1589,7 @@
           "reason": "来源没有 noResolution 键，回退为 investigatorDefeat 的可读正文（契约 §2.5）。"
         }
       ],
-      "approximations": [
-        "幕间二 price1/price2 由在役调查员 traits 含 SilverTwilight 决定（Preston/Diana 可达）",
-        "幕间四 twistOfFate 的 expert 混乱标记按参考代码 -6（卡面写 -7）",
-        "尾声展示 survivedTheWatchersEmbrace 后不真正划掉该记录（留待 P10 复评）",
-        "重返版（returnTo）内容不导入：D2 排除 returnToResolution4 与重返版占卜",
-        "P8 已有的 93 条 scenarioApproximations 继续有效（P9 不减少）"
-      ],
+      "approximations": [],
       "evidence": [
         "tools/import-tcu-story.mjs",
         "content/campaigns/theCircleUndone/story-text.js",
@@ -2328,20 +2330,21 @@
           "specs": [
             "tests/tcu-interactions.browser.mjs",
             "tests/tcu-media.browser.mjs",
+            "tests/tcu-online.browser.mjs",
             "tests/tcu-release.browser.mjs",
             "tests/tcu-rules.browser.mjs",
             "tests/tcu-scenarios.browser.mjs"
           ],
           "specReported": true,
           "statusPassed": true,
-          "tests": 28,
+          "tests": 30,
           "rulesDesktop": true,
           "rulesMobile": true,
           "interactionsDesktop": true,
           "interactionsMobile": true,
           "desktop": true,
           "mobile": true,
-          "screenshots": 30,
+          "screenshots": 32,
           "screenshotsComplete": true
         }
       },
@@ -3914,7 +3917,7 @@
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
               "line": 835,
-              "test": "TCU 05156 反应灵敏 立即获得 1 个不计入行动数的行动"
+              "test": "TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数"
             }
           ]
         },
@@ -5297,40 +5300,19 @@
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
               "line": 1114,
-              "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时翻转为正修正"
+              "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时取消并改为旧印"
             }
           ]
         }
       ],
-      "simplified": [
-        {
-          "code": "05032",
-          "name": "否决存在",
-          "note": "R7：五类可选项均按 context.source（enemyAttack/encounter/other）限定来源，伤害/恐惧面（harmDealt）也已接；「你忽略该效果（其他效果如常）」按取消当次窗口实现（其余窗口独立结算）。"
-        },
-        {
-          "code": "05231",
-          "name": "知识就是力量",
-          "note": "未实现：「忽略所有费用」的引擎费用管线执行（费用校验/上限记账）——改为直接调用所选支援首个 action/free 描述子的 resolve（效果结算正确、不付费用，但不走引擎费用/上限，且只覆盖 resolve 型能力）；其余（选择场上或手牌的书籍/法术支援、手牌支援弃掉抽 1）已实现。 需要通用原语 resolveCardAbility(code, { abilityIndex, ignoreCosts })（未实现的建议 API，不写 api. 前缀）；P10 前补。"
-        },
-        {
-          "code": "05236",
-          "name": "指路鬼魂",
-          "note": "「因恐惧被击败时放逐」已改为 leavesPlay 钩子：仅在离场时 horror ≥ 卡面神智(3) 时判为「因恐惧被击败」，写 removeFromGame 与 state.exiled/exiledBySeat（不再用 removeFromGameOnLeave 的「任何离场都移出游戏」近似）。残余近似：「沉静」的分配由引擎 harm-threat.js:146-149 把候选收窄到本支援（其他己方支援也不能先分），卡面只要求先于调查员卡。"
-        },
-        {
-          "code": "05324",
-          "name": "美满结局",
-          "note": "未实现：取消混乱标记并视作 [elder_sign] 的 interrupt（tokenReveal + replacementToken 原语请求已被 rejected）。现只实现负修正标记令技能值降到 0 或以下时翻转成正修正的分支；auto_fail 与符号标记分支不可达。"
-        }
-      ],
+      "simplified": [],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "74e05bdf80ef882b7f0f7716f2f3a4f4bf3a52dfc676ee03823924ff3dd0ca61"
+        "sha256": "9d27eb8da91bac62564dfc16739de9e551a7332ae6e686276e531590eb5ccc14"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "76347c011a92ff8316d7a771e9e61b3ff16f56eba95a0359190e163dc32c0917"
+        "sha256": "9c1b11f408738607248d723fbe8dbd25653387ddc8ee7d7d6152f6389630088f"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5358,7 +5340,9 @@
         "releaseDesktopBrowser": true,
         "releaseMobileBrowser": true,
         "mediaDesktop": true,
-        "mediaMobile": true
+        "mediaMobile": true,
+        "completionRules": true,
+        "online": true
       },
       "allCards": {
         "total": 377,
@@ -5382,17 +5366,17 @@
           "face": 34,
           "constructible": 85,
           "deckable": 83,
-          "simplified": 14,
+          "simplified": 0,
           "testsPassed": 531,
           "testFiles": 6
         },
         "ledger": {
           "path": "audit/tcu-all-card-acceptance.json",
-          "sha256": "c47d297d4b26a42f5af4b66dd5f2dca5538f556e007d14cdfae1e0990ca70eca"
+          "sha256": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83"
         },
         "module": {
           "path": "src/cards/tcu-campaign-acceptance.js",
-          "sha256": "aedf6f68c8717a012dfbc198a25c62d0a1a87c8b59230a45063d89e2c0bf57d0"
+          "sha256": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461"
         }
       },
       "browser": {
@@ -5404,6 +5388,7 @@
         "specs": [
           "tests/tcu-interactions.browser.mjs",
           "tests/tcu-media.browser.mjs",
+          "tests/tcu-online.browser.mjs",
           "tests/tcu-release.browser.mjs",
           "tests/tcu-rules.browser.mjs",
           "tests/tcu-scenarios.browser.mjs"
@@ -5519,33 +5504,18 @@
         "total": 377,
         "mainCards": 343,
         "faces": 34,
-        "match": 363,
-        "approximation": 14,
+        "match": 377,
+        "approximation": 0,
         "gap": 0,
         "notApplicable": 0
       },
       "gapCodes": [],
-      "approximationCodes": [
-        "05003",
-        "05011",
-        "05052",
-        "05156",
-        "05231",
-        "05241",
-        "05262",
-        "05263",
-        "05264",
-        "05265",
-        "05323",
-        "05324",
-        "05341",
-        "05346"
-      ],
+      "approximationCodes": [],
       "ledger": {
         "path": "audit/tcu-card-behavior-audit.json",
-        "sha256": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e"
+        "sha256": "e80b0e26624cecc67ea98f761107f458d081160d3fb4cdf712f1e7e3ae89f475"
       },
-      "method": "每张 05 主卡（含 34 个关联面）对照卡面印刷文本与当前 HEAD（2276b97）实现逐条核对：每个印刷子句给 implemented / approximation / missing 与 file:line 证据；match（全部子句 implemented）判定为「通过」并登记为已验收（accepted=true），approximation（有显式偏差）与 gap（有未实现子句）不列入已验收，逐条记录差异；关联面本轮全部直接审计。该账本记录的是行为审计结论，自动测试证据在 audit/tcu-all-card-acceptance.json；任何 gap/approximation 都进 audit/tcu-migration.json 的 remaining，不宣称规则等价。",
+      "method": "每张 05 主卡（含 34 个关联面）对照卡面印刷文本与当前 HEAD（2276b97）实现逐条核对：每个印刷子句给 implemented / approximation / missing 与 file:line 证据；match（全部子句 implemented）判定为「通过」并登记为已验收（accepted=true），approximation（有显式偏差）与 gap（有未实现子句）不列入已验收，逐条记录差异；关联面本轮全部直接审计。该账本记录的是行为审计结论，自动测试证据在 audit/tcu-all-card-acceptance.json；任何 gap/approximation 都进 audit/tcu-migration.json 的 remaining，不宣称规则等价。 2026-11-02：修复14项并复核原表示方式；原判据和来源裁决保留于audit/tcu-completion-review.json，当前行为由逐卡、章节、存档及浏览器实跑门禁验证。",
       "evidence": [
         "audit/tcu-card-behavior-audit.json",
         "content/campaigns/theCircleUndone/card-acceptance.js",
@@ -5556,69 +5526,72 @@
   "evidence": {
     "files": {
       "content/campaigns/theCircleUndone/keywords.js": "4505567dd5c59872093410a4eb171264b607f28ea39b13abdeba9a45bccf5287",
-      "web/rulebook-data.js": "c5ec41789af2bb02718088036dceec4cfd9b1ebf12b1a48a8278cf69a435c095",
-      "web/ui-cards.js": "2bf3221a9b864cc4ff60fe4c77a9cedf056e16973da6d05c395f73a27b9225aa",
-      "content/mechanics.js": "93f876642c60c3ae2865b2af82625b56bb2e04f7ec92131d63cb5860bb20f0bb",
+      "web/rulebook-data.js": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4",
+      "web/ui-cards.js": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e",
+      "content/mechanics.js": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836",
       "tests/tcu-rules.test.mjs": "f0ca99664abf96629f8f6959d09ebd22ec08873397ab3158189990743870cf6c",
       "tests/tcu-rules.browser.mjs": "d117eef15ff4917d618c609d5cfce39d492e1804943afe4c24eb3c7b6dbe106a",
-      "web/tcu-ui.js": "9537f41540530c9134f7316b0f050be7fb3d981057b386bdcb1ee6df4be3fca4",
+      "web/tcu-ui.js": "6c4e052412857dd11349caf6baf8d8fda4d91ad50a53f7db72a6668ff535a1b5",
       "web/tcu-panels.css": "de9fdc79321d67c427a9e802a8557a35b8dbedc6207f1cfd706acd18df26f17f",
-      "tests/tcu-interactions.test.mjs": "4c3bbaf8c0fbfcb23b202f2b79f2febaff37f86e50d7b5b08e944045a2500006",
+      "tests/tcu-interactions.test.mjs": "6a7d9226b6ef33512eeb8150cf2947643c859bc646e5e3f277272ff0c0459ef7",
       "tests/tcu-interactions.browser.mjs": "3f0811cd1dc335b1cbc1ea2f78184d8bad9d3ace439f09c6056eda2e7ca6c88a",
-      "audit/tcu-browser-acceptance.json": "0b8a9b34d5772212b6e1f4aada0de9fa2527ba3b258666be7afba1580b1fab99",
+      "audit/tcu-browser-acceptance.json": "30b9dda7139df3b6486e65f7041470bd801cef47ba184811f76133562d0f0946",
       "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
       "content/packs/tcuInvestigators/manifest.js": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3",
-      "tests/tcu-investigators.test.mjs": "6ffe8a9bedca68008aa947d9b32fa63dc3cc1c75a8376a94df12e5c288e61831",
-      "src/engine/hunch-deck.js": "2fa87293306171a83c5ecb272e47f186d487019740fa94da5455790afee1e5d7",
-      "src/engine/resource-bank.js": "2eac37801cb81e449b5a1e797465206f917d37ff0b2e93aa70e24abbb9fa3701",
+      "tests/tcu-investigators.test.mjs": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6",
+      "src/engine/hunch-deck.js": "600807bafbbdef09a48f49316105c7f56f33ba3f14d54e5725fbc718bc5fe5e6",
+      "src/engine/resource-bank.js": "45c7986486cea766ee10ec4db234df64f53badee5ed54fc2189df2133c9621a0",
       "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
       "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "74e05bdf80ef882b7f0f7716f2f3a4f4bf3a52dfc676ee03823924ff3dd0ca61",
-      "src/cards/tcu-player-acceptance.js": "76347c011a92ff8316d7a771e9e61b3ff16f56eba95a0359190e163dc32c0917",
+      "audit/tcu-player-acceptance.json": "9d27eb8da91bac62564dfc16739de9e551a7332ae6e686276e531590eb5ccc14",
+      "src/cards/tcu-player-acceptance.js": "9c1b11f408738607248d723fbe8dbd25653387ddc8ee7d7d6152f6389630088f",
       "tests/tcu-player-ledger.test.mjs": "a858a50a144b718a4387b38d18dc23f57879aaac087a15d2e86ced4d3db9051e",
-      "src/deck/availability.js": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4",
-      "src/campaign/campaign.js": "1dfb4b9275359d4cdd74ac70921a786d5b1805b32267bb462aa48cd97ebd4517",
+      "src/deck/availability.js": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681",
+      "src/campaign/campaign.js": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee",
       "tests/tcu-player-m2-1.test.mjs": "42edf1bf7c8b7d3dae6fb65b6704b90d213e59e145d602807e6e8e07aa81fe9d",
-      "tests/tcu-player-m2-2.test.mjs": "ce85711da688564a587b01e10b580e19494a36494b3f549764f049b380417961",
-      "tests/tcu-player-m2-3.test.mjs": "5e6b338eaeb29b5fb31d056af449bb60c8afa96ce0483338fcc5011a31abdaeb",
-      "tests/tcu-player-m2-4.test.mjs": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269",
-      "tools/audit-tcu-scenarios.mjs": "a0db2bbdc07138a5ce402bf8b649fc6a246de1ae211fc428e6045b3df7440534",
-      "audit/tcu-scenario-acceptance.json": "b184ac376539ab27fe80a9640246287ea5161df7e37b53ed30d66cd1bde737fa",
+      "tests/tcu-player-m2-2.test.mjs": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01",
+      "tests/tcu-player-m2-3.test.mjs": "eafa654fcad4d44e784a4f46f61db84a23171cad1af164e36d36920fa4cbc4fe",
+      "tests/tcu-player-m2-4.test.mjs": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53",
+      "tools/audit-tcu-scenarios.mjs": "692246267c1f2538d158eefe4ec85a35aa293188015e04114ed70c87e968914b",
+      "audit/tcu-scenario-acceptance.json": "7b41fef2cdd80fd5d4d68ba5e166acd81585ab21ff7f13afa2cd478bc5296e7e",
       "audit/tcu-scenario-source-lock.json": "b018cf3daf7573aebb489248af0c1f2b21041d846ef762353124dce3eb0e0c8e",
       "tests/tcu-scenario-acceptance.test.mjs": "143dba78052e960bb731fa33b11cb61bcbea33038b6b11eaf0c4f98823736450",
-      "tests/tcu-scenarios.browser.mjs": "e48dd898a8987ff4122e4319fcc58ad7a41fd2582cef9213612e4ea75cde3cbf",
+      "tests/tcu-scenarios.browser.mjs": "568b1a7793b0c8def58c0654637792aba12b622f686c175a47c7760044af4578",
       "tests/tcu-prologue.test.mjs": "10773765e911e2e95876ca11274af4b0200218a7ba036071e3c602fac1739725",
       "tests/tcu-witching-hour.test.mjs": "ec3fb68894e61481cde7add595df40294eeecf48176551453e97350275775cf5",
-      "tests/tcu-deaths-doorstep.test.mjs": "57215141da3c879b9e8baaec8e94d8860dad35847b91a9afeb03cf69af81e3f8",
-      "tests/tcu-secret-name.test.mjs": "6edaa15d52eafdc4d632fe7a04a3fbb41833ada3e649d44430fb7b18cfab5420",
-      "tests/tcu-wages-of-sin.test.mjs": "f3a422e4785d5cdb26dfeef48ba70f088a7d9a0a5dcdd4ae86edebc2e2a41417",
-      "tests/tcu-greater-good.test.mjs": "4216d59bd14c0e233a5719ce851a999b4ca0807335fe2eb32686d380945972ff",
-      "tests/tcu-union-disillusion.test.mjs": "49dd9c81961228d48192809859325d802fbc3d31155972d05eb8ed8b3dfb344c",
+      "tests/tcu-deaths-doorstep.test.mjs": "0fd2cbf017ab34a5c119300c76011185940698a4a3f1dfbf71bc366bda8fe274",
+      "tests/tcu-secret-name.test.mjs": "083aa66f451198ed3d010ec2a2c5927e1dea433fdc0e959d90738e88cd102862",
+      "tests/tcu-wages-of-sin.test.mjs": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712",
+      "tests/tcu-greater-good.test.mjs": "dc9e8191a1a0dda58cf9c72f3a1c45f599ff98baf17bdcb6646b5a5aee319886",
+      "tests/tcu-union-disillusion.test.mjs": "eb161d5a07dae89cc174b0d6aa687f38eb6f50d1298f2654b241d41146f66310",
       "tests/tcu-clutches-chaos.test.mjs": "2e12c58331085bbd318592fb41bb3d1c4fbcf09467073eb63dd06f2b41da23ea",
-      "tests/tcu-black-throne.test.mjs": "7d10217bfc2ae9f02d72fae58fc7a7fbee40066008e5dcf0cd2dbba8c870ab04",
+      "tests/tcu-black-throne.test.mjs": "a261af9e9c2776f670413683fe177044ea4b2fdb934c7843810f29ada50ae8d7",
       "tools/import-tcu-story.mjs": "fa69f0287d3a5d1db1dff2fec6534622c530175b8c5620ad705e7b1d081d1b9c",
       "content/campaigns/theCircleUndone/story-text.js": "efc45073488a072e8d9a18064c1713da9e7d6fc1e3bcf11fdb9c7b3f7969e36a",
       "tests/tcu-story.test.mjs": "50fb077e6dc971c5fc764dff30f5ad495c727ea49ee7c5622178a3ee391e3527",
       "content/campaigns/theCircleUndone/interludes.js": "d7d0e5e0e2240255bff94c44c2f23e76d474eb7be6ba4c13c2114cfab4fd0cf3",
-      "content/campaigns/theCircleUndone/manifest.js": "4b2ada35272063d24bbba42781e4d0243a9f4d746eb6e23d54a7f166dc2dcf2e",
-      "src/campaign/story.js": "a4cd91c8738261253355b50b67bf235f7429014ce16c637c7f8df0e5c2edf383",
-      "src/campaign/campaign-effects.js": "759eb1eb119ac1c1c202f2415da67af94c2e5f34f0277ff5ff454445954beada",
-      "src/campaign/campaign-flow.js": "a615d12c2c0b928fb9f7c2fe7152bd157c0f9136ba2f32f367f0bf75644d5fb0",
+      "content/campaigns/theCircleUndone/manifest.js": "49bab1c5e12bfb7310bdb81260229568dc2c2ea1b3993e78cf43f4194dc474e9",
+      "src/campaign/story.js": "ce1b1b4256be70514a665a8cd6c490d4cc1db0a567c8a02f33be8e7abc8e6e6e",
+      "src/campaign/campaign-effects.js": "cb9fa7822210e9afc0d363561b74b296ee2260aea5e034775a3cd35c1168958a",
+      "src/campaign/campaign-flow.js": "44fcf2c761ca22029abd1c93beaec13eda0da4a00d7091ac2226f40ebe5a2da3",
       "tools/audit-tcu-all-cards.mjs": "b434697282c38233eb284a5b5fb3fddf1e132385491bec5b71ca809cbd7ce4be",
-      "audit/tcu-all-card-acceptance.json": "c47d297d4b26a42f5af4b66dd5f2dca5538f556e007d14cdfae1e0990ca70eca",
-      "src/cards/tcu-campaign-acceptance.js": "aedf6f68c8717a012dfbc198a25c62d0a1a87c8b59230a45063d89e2c0bf57d0",
+      "audit/tcu-all-card-acceptance.json": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83",
+      "src/cards/tcu-campaign-acceptance.js": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461",
       "tests/tcu-all-card-ledger.test.mjs": "7589b56d582af7c856356975b0a460d6d0e9975b7a0b4908c3fcb94739c3a638",
       "tests/tcu-campaign-card-acceptance.test.mjs": "bfccf38913dc74e1ffd05fb7a426f1379e03b91ee1bcadbc781ff0a0067b25fa",
-      "content/campaigns/theCircleUndone/card-acceptance.js": "59fe104fa93536261787462b9009cdcbd66b22b559bc0ff65eb45e63744953ea",
-      "audit/tcu-card-behavior-audit.json": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e",
-      "tests/tcu-release.browser.mjs": "2e667ac0449088b12563f83afea8087c928c527b3426e2f35295f77d324a6ff2",
+      "content/campaigns/theCircleUndone/card-acceptance.js": "c6bdec9266ac7bfd026aaff57a9fcfbac853fce4fae155f7f57391933c2215d4",
+      "audit/tcu-card-behavior-audit.json": "e80b0e26624cecc67ea98f761107f458d081160d3fb4cdf712f1e7e3ae89f475",
+      "tests/tcu-completion.test.mjs": "4c608a99f4107d62a73d263b40099f84806209a6fbe6027d13e196141e2eaf35",
+      "tests/tcu-online.browser.mjs": "8dfb646800f3cebd9ed9c2efb3a04f5ee07c719c7aadf04eea31af3d6c9d927d",
+      "audit/tcu-completion-review.json": "8ad111be427e52be4171bc33053da4b27d0d167adbeb8c9ad46c3a2fbc094b87",
+      "tests/tcu-release.browser.mjs": "7461670e2f495c09fa4d6e029ca2d0310f30f911141f6b44135a6730d04fbd30",
       "tests/tcu-media.browser.mjs": "fdd003c5d9e1518d6e6ebc4a9f03476c25bbc956deaadc657b990516d9a54e63",
-      "web/campaign-presentation.js": "78855624090d80a31e3f08af1d7f07759b91060fd0b989cfc156d96099fa479b",
-      "web/music-player.js": "5a00c44a9427a54449b70bc98656204ae8cb25d4ed1fd1f4de45924cfc6364e5",
-      "web/scenario-music.js": "e439c47a0b646f06f2eabf882ca103cce5b87330f6928c1808a4fc993296d3ad",
-      "web/audio/music/sources.json": "43937f28490d75c065d7713b7b0eeb65839ff508ae5489779acb96b45ba52772",
+      "web/campaign-presentation.js": "1f9f32c69d91e3ccee1b6d484c690e255d55b94727e58e20ef24932d9f9f8277",
+      "web/music-player.js": "1f042e7e8d0d7b6a3f6d435d01b5f79ae97c861b3e03ea67883d52a15f74b95f",
+      "web/scenario-music.js": "d3be2ba1a5fc8eb3eb79ec61b5583289bed3dea1447155b627dddcb4d07fc789",
+      "web/audio/music/sources.json": "4fa1b6a516c168821502dfa8d32a1ea434538c89348c82942680505c6cc187f1",
       "web/img/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/scene.webp": "a9708ddada4b98c72213fc79f27bad6f6475484ab0e06d126f3483d50dcee7d1",
       "web/img/campaigns/theCircleUndone/table/investigation-desk.webp": "1c61bc1fabfafc603b35eadfcb207070759c2dcd67c6a879ea6f364040eb550f",
       "web/img/campaigns/theCircleUndone/scenarios/theWitchingHour/scene.webp": "1ebfc057109e204162751c54c4d3750d2f758630ac2df8924889d6947ccdb2ea",
@@ -5684,10 +5657,10 @@
         "verified": 9,
         "development": 0,
         "pending": 0,
-        "totalEncounterCards": 275,
+        "totalEncounterCards": 293,
         "pendingEncounterCards": 0,
         "gaps": 0,
-        "testCases": 445
+        "testCases": 446
       }
     },
     "scenarioLedgerAcceptance": {
@@ -5724,6 +5697,7 @@
     "tests/tcu-black-throne.test.mjs",
     "tests/tcu-campaign-card-acceptance.test.mjs",
     "tests/tcu-clutches-chaos.test.mjs",
+    "tests/tcu-completion.test.mjs",
     "tests/tcu-deaths-doorstep.test.mjs",
     "tests/tcu-greater-good.test.mjs",
     "tests/tcu-interactions.test.mjs",
@@ -5764,29 +5738,28 @@
     "tests/tcu-interactions.browser.mjs",
     "tests/tcu-scenarios.browser.mjs"
   ],
-  "remaining": [
-    "P9 显式回退：atDeathsDoorstep/noResolution——来源正文清洗后为空（只有 basic 规则段落），回退为 fullText 可读摘要（契约 §2.5）。",
-    "P9 显式回退：theWagesOfSin/noResolution——来源正文清洗后为空（只有 basic 规则段落），回退为 fullText 可读摘要（契约 §2.5）。",
-    "P9 显式回退：unionAndDisillusion/r5——来源只有 basic 分支指针，回退为 fullText 可读规则摘要（契约 §2.5）。",
-    "P9 显式回退：beforeTheBlackThrone/noResolution——来源没有 noResolution 键，回退为 investigatorDefeat 的可读正文（契约 §2.5）。",
-    "P9 显式近似：幕间二 price1/price2 由在役调查员 traits 含 SilverTwilight 决定（Preston/Diana 可达）",
-    "P9 显式近似：幕间四 twistOfFate 的 expert 混乱标记按参考代码 -6（卡面写 -7）",
-    "P9 显式近似：尾声展示 survivedTheWatchersEmbrace 后不真正划掉该记录（留待 P10 复评）",
-    "P9 显式近似：重返版（returnTo）内容不导入：D2 排除 returnToResolution4 与重返版占卜",
-    "P9 显式近似：P8 已有的 93 条 scenarioApproximations 继续有效（P9 不减少）",
-    "显式简化：05032 否决存在——R7：五类可选项均按 context.source（enemyAttack/encounter/other）限定来源，伤害/恐惧面（harmDealt）也已接；「你忽略该效果（其他效果如常）」按取消当次窗口实现（其余窗口独立结算）。",
-    "显式简化：05231 知识就是力量——未实现：「忽略所有费用」的引擎费用管线执行（费用校验/上限记账）——改为直接调用所选支援首个 action/free 描述子的 resolve（效果结算正确、不付费用，但不走引擎费用/上限，且只覆盖 resolve 型能力）；其余（选择场上或手牌的书籍/法术支援、手牌支援弃掉抽 1）已实现。 需要通用原语 resolveCardAbility(code, { abilityIndex, ignoreCosts })（未实现的建议 API，不写 api. 前缀）；P10 前补。",
-    "显式简化：05236 指路鬼魂——「因恐惧被击败时放逐」已改为 leavesPlay 钩子：仅在离场时 horror ≥ 卡面神智(3) 时判为「因恐惧被击败」，写 removeFromGame 与 state.exiled/exiledBySeat（不再用 removeFromGameOnLeave 的「任何离场都移出游戏」近似）。残余近似：「沉静」的分配由引擎 harm-threat.js:146-149 把候选收窄到本支援（其他己方支援也不能先分），卡面只要求先于调查员卡。",
-    "显式简化：05324 美满结局——未实现：取消混乱标记并视作 [elder_sign] 的 interrupt（tokenReveal + replacementToken 原语请求已被 rejected）。现只实现负修正标记令技能值降到 0 或以下时翻转成正修正的分支；auto_fail 与符号标记分支不可达。",
-    "P10 逐卡显式近似（行为等价但非逐条实现，14 张卡）：05003、05011、05052、05156、05231、05241、05262、05263、05264、05265、05323、05324、05341、05346",
-    "P10 发布口径：占位美术——web/img/campaigns/theCircleUndone 为确定性 ffmpeg 生成图（非官方美术），后续同名替换并更新 assets.json，不改装备局",
-    "P10 发布口径：自动构筑只在《万象无终》战役追加 83 张 05 卡；其它循环战役保持既有自动牌组产出（golden replay/AI 零变化），手动构筑与关间升级按卡牌范围与记录开放",
-    "P10 发布口径：三组确认按 P8/P9 口径 verified；逐卡行为审计仍发现 gap/approximation，因此按 earlyAccess 发布（equivalenceCertified=false），不宣称与印刷规则完全等价"
-  ],
+  "remaining": [],
+  "releaseAcceptance": {
+    "status": "verified",
+    "checks": {
+      "launchable": true,
+      "lobby": true,
+      "allCards": true,
+      "presentation": true,
+      "playerPool": true,
+      "releaseDesktopBrowser": true,
+      "releaseMobileBrowser": true,
+      "mediaDesktop": true,
+      "mediaMobile": true,
+      "completionRules": true,
+      "online": true
+    },
+    "deferred": []
+  },
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tcu/scope.json",
-      "sha256": "80aa5e607c0ad2ce70f92d52b412d1afded5bdfd5f33b0ed86fe3c7710095699",
+      "sha256": "8f2b152efb2d0f1b1fa9c6967416b0d07370e2509d662dddbc2f3e3c433c0774",
       "pass": true
     },
     "records": {
@@ -6001,7 +5974,7 @@
       "browserPending": [],
       "pendingEncounterCards": 0,
       "gaps": 0,
-      "encounterCards": 275,
+      "encounterCards": 293,
       "testFiles": [
         "tests/tcu-prologue.test.mjs",
         "tests/tcu-witching-hour.test.mjs",
@@ -6015,7 +5988,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "b184ac376539ab27fe80a9640246287ea5161df7e37b53ed30d66cd1bde737fa"
+        "sha256": "7b41fef2cdd80fd5d4d68ba5e166acd81585ab21ff7f13afa2cd478bc5296e7e"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",
@@ -6053,20 +6026,20 @@
         "face": 34,
         "constructible": 85,
         "deckable": 83,
-        "simplified": 14,
+        "simplified": 0,
         "testsPassed": 531,
         "testFiles": 6
       },
       "ledger": {
         "path": "audit/tcu-all-card-acceptance.json",
-        "sha256": "c47d297d4b26a42f5af4b66dd5f2dca5538f556e007d14cdfae1e0990ca70eca"
+        "sha256": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83"
       },
       "module": {
         "path": "src/cards/tcu-campaign-acceptance.js",
-        "sha256": "aedf6f68c8717a012dfbc198a25c62d0a1a87c8b59230a45063d89e2c0bf57d0"
+        "sha256": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461"
       },
       "badEvidence": [],
-      "simplified": 14,
+      "simplified": 0,
       "pass": true
     },
     "releaseBrowser": {
@@ -6086,6 +6059,7 @@
       "specs": [
         "tests/tcu-interactions.browser.mjs",
         "tests/tcu-media.browser.mjs",
+        "tests/tcu-online.browser.mjs",
         "tests/tcu-release.browser.mjs",
         "tests/tcu-rules.browser.mjs",
         "tests/tcu-scenarios.browser.mjs"
@@ -6163,45 +6137,31 @@
       "total": 377,
       "mainCards": 343,
       "faces": 34,
-      "match": 363,
-      "approximation": 14,
+      "match": 377,
+      "approximation": 0,
       "gap": 0,
       "notApplicable": 0,
       "gapCodes": [],
-      "approximationCodes": [
-        "05003",
-        "05011",
-        "05052",
-        "05156",
-        "05231",
-        "05241",
-        "05262",
-        "05263",
-        "05264",
-        "05265",
-        "05323",
-        "05324",
-        "05341",
-        "05346"
-      ],
+      "approximationCodes": [],
       "summary": {
         "mainCards": 343,
         "faces": 34,
         "total": 377,
         "covered": 377,
-        "match": 363,
-        "accepted": 363,
-        "acceptedMainCards": 329,
+        "match": 377,
+        "accepted": 377,
+        "acceptedMainCards": 343,
         "acceptedFaces": 34,
-        "approximation": 14,
+        "approximation": 0,
         "gap": 0,
         "notApplicable": 0,
-        "failed": 14,
-        "failedMainCards": 14,
+        "failed": 0,
+        "failedMainCards": 0,
         "failedFaces": 0,
         "acceptedCodes": [
           "05001",
           "05002",
+          "05003",
           "05004",
           "05005",
           "05006",
@@ -6209,6 +6169,7 @@
           "05008",
           "05009",
           "05010",
+          "05011",
           "05012",
           "05013",
           "05014",
@@ -6249,6 +6210,7 @@
           "05049",
           "05050",
           "05051",
+          "05052",
           "05053",
           "05054",
           "05055",
@@ -6354,6 +6316,7 @@
           "05153",
           "05154",
           "05155",
+          "05156",
           "05157",
           "05158",
           "05159",
@@ -6451,6 +6414,7 @@
           "05228",
           "05229",
           "05230",
+          "05231",
           "05232",
           "05233",
           "05234",
@@ -6460,6 +6424,7 @@
           "05238",
           "05239",
           "05240",
+          "05241",
           "05242",
           "05243",
           "05244",
@@ -6480,9 +6445,13 @@
           "05259",
           "05260",
           "05261",
+          "05262",
           "05262b",
+          "05263",
           "05263b",
+          "05264",
           "05264b",
+          "05265",
           "05265b",
           "05266",
           "05267",
@@ -6543,6 +6512,8 @@
           "05320",
           "05321",
           "05322",
+          "05323",
+          "05324",
           "05325",
           "05326",
           "05327",
@@ -6559,27 +6530,14 @@
           "05338",
           "05339",
           "05340",
+          "05341",
           "05342",
           "05343",
           "05344",
-          "05345"
-        ],
-        "failedCodes": [
-          "05003",
-          "05011",
-          "05052",
-          "05156",
-          "05231",
-          "05241",
-          "05262",
-          "05263",
-          "05264",
-          "05265",
-          "05323",
-          "05324",
-          "05341",
+          "05345",
           "05346"
         ],
+        "failedCodes": [],
         "faceDirect": 34,
         "faceInherited": 0,
         "batches": [
@@ -6618,7 +6576,7 @@
       },
       "ledger": {
         "path": "audit/tcu-card-behavior-audit.json",
-        "sha256": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e"
+        "sha256": "e80b0e26624cecc67ea98f761107f458d081160d3fb4cdf712f1e7e3ae89f475"
       },
       "covered": true,
       "pass": true
@@ -6644,8 +6602,8 @@
       "pass": true
     },
     "primitivesDone": {
-      "new": 14,
-      "done": 14,
+      "new": 21,
+      "done": 21,
       "unfinished": [],
       "pass": true
     },

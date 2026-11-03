@@ -789,7 +789,7 @@ test('TCU 05235 蠕虫的秘密 横置并放 1 毁灭：从弃牌堆免费-1 费
   // 合法行动枚举的 criteria 上下文不提供 cardType helpers，需引擎补齐后前移）。
   me(empty).discard = ['01088'] // 应急物品：事件但不是[[法术]]/[[洞察]]
   const doomBefore = cardOf(empty, '05235').doom || 0
-  useAbility(empty, '05235', 0)
+  assert.equal(abilityMoves(empty,'05235',0).length,0,'引擎已提供类型查询，没有匹配事件时不可启动')
   assert.equal(cardOf(empty, '05235').doom || 0, doomBefore, '没有合法事件时不放置毁灭')
 })
 

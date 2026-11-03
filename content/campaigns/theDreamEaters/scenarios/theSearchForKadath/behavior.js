@@ -45,20 +45,9 @@ export const implementedEncounterCodes = Object.freeze([
   RAW.c06150, RAW.c06151, RAW.c06152, RAW.c06153, RAW.c06154,
 ])
 
-export const scenarioGaps = Object.freeze([
-  '掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。',
-  '剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。',
-])
+export const scenarioGaps = Object.freeze([])
 
-export const scenarioApproximations = Object.freeze([
-  '斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。',
-  '塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。',
-  '黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。',
-  '维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。',
-  '哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。',
-  '「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。',
-  '艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。',
-])
+export const scenarioApproximations = Object.freeze([])
 
 // ---------------------------------------------------------------------------
 // 故事卡：翻面后读背面正文并结算条目规则
@@ -140,12 +129,7 @@ function setNightgauntsAside(state, api) {
   if (!nightgaunts.length) return
   const snapshots = []
   for (const enemy of nightgaunts) {
-    snapshots.push({
-      damageTaken: Number(enemy.damageTaken) || 0,
-      doom: Number(enemy.doom) || 0,
-      exhausted: enemy.exhausted === true,
-    })
-    api.removeEnemyFromGame?.(enemy)
+    snapshots.push({ id: api.setEnemyAside(enemy) })
   }
   const previous = Array.isArray(readFlag(state, 'nightgauntsAside')) ? readFlag(state, 'nightgauntsAside') : []
   api.setScenarioFlag?.('nightgauntsAside', [...previous, ...snapshots])
@@ -168,11 +152,8 @@ function restoreNightgaunts(state, api) {
       options,
     }) ?? options[0].id
     const city = cities.find(location => location.id === String(answer)) || cities[0]
-    const enemy = api.spawn?.(TENEBROUS_NIGHTGAUNT, city.id)
+    const enemy = api.restoreEnemyFromAside(snapshot.id, city.id)
     if (!enemy) continue
-    if (snapshot.damageTaken > 0) api.damageEnemy?.(enemy, snapshot.damageTaken)
-    if (snapshot.doom > 0) api.doomOn?.(enemy, snapshot.doom)
-    if (snapshot.exhausted) api.exhaustEnemy?.(enemy)
     api.info?.(`🌑 黑暗夜魇回到「${city.name}」。`)
   }
 }
@@ -502,9 +483,9 @@ export const behavior = {
       api.setScenarioFlag?.('skaiLeaveSkill', String(answer) === 'agility' ? 'agility' : 'willpower')
     }
     const payLocations = []
-    if (destination && locationRuleFor(codeOf(destination))?.extraHandDiscardOnMove) payLocations.push(destination)
-    if (prev && locationRuleFor(codeOf(prev))?.extraHandDiscardOnMove) payLocations.push(prev)
-    for (const location of payLocations) payExtraHandCost(state, inv, location, api)
+    if (destination?.revealed && locationRuleFor(codeOf(destination))?.extraHandDiscardOnMove) payLocations.push(destination)
+    if (prev?.revealed && locationRuleFor(codeOf(prev))?.extraHandDiscardOnMove) payLocations.push(prev)
+    for (const location of payLocations) if (payExtraHandCost(state, inv, location, api) === false) return false
   },
 
   locationLeaveTest(state, inv, prevLoc) {
@@ -556,7 +537,8 @@ export const behavior = {
       : null
     if (!location) return
     // 地点的「调查后强制」（萨尔纳斯 / 鲁因遗迹 / 地图未见之城）。
-    locationRuleFor(codeOf(location))?.afterTest?.(state, location, inv, result, api)
+    const hook = locationRuleFor(codeOf(location))?.afterTest
+    if (hook && !api.ignoreLocationTrigger?.(location.id, '地点的调查后强制能力')) hook(state, location, inv, result, api)
     // 奇妙平原：附着地点被成功调查后的强制。
     if (result.success) {
       for (const attachment of (location.attachments || []).slice()) {

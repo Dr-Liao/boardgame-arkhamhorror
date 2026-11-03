@@ -2,7 +2,7 @@
 // 放在 behavior.js 之外的独立文件里，保持 behavior.js 行数只减不增（architecture-guard）。
 export const scenarioGaps = []
 
-export const scenarioApproximations = [
+export const migrationHistory = [
   '结局 9/10 的 ReturnTo 分支不适用（本仓库无 ReturnTo 包）；结局 2（秘社胜）与结局 9（女巫集会胜）只写战役记录，战役结束与尾声由 P9 的战役 flow 接线。',
   '结局 XP 未在 resolution 里发放（引擎没有结局 XP 管线，P9 战役流程统一结算）。',
   '参考实现收齐的「远古恶魔」「寒冷刺骨」两个核组不在本战役包（TCU 只有 21 个遭遇组），相关遭遇卡不参与牌堆。',

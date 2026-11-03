@@ -1059,6 +1059,172 @@ import e06321 from './theDreamEaters/whereTheGodsDwell/06321.js'
 import e06322 from './theDreamEaters/whereTheGodsDwell/06322.js'
 import e01160 from './shared/ghouls/01160.js'
 import e01161 from './shared/ghouls/01161.js'
+import e07241 from './theInnsmouthConspiracy/aLightInTheFog/07241.js'
+import e07242 from './theInnsmouthConspiracy/aLightInTheFog/07242.js'
+import e07243 from './theInnsmouthConspiracy/aLightInTheFog/07243.js'
+import e07244 from './theInnsmouthConspiracy/aLightInTheFog/07244.js'
+import e07245 from './theInnsmouthConspiracy/aLightInTheFog/07245.js'
+import e07246 from './theInnsmouthConspiracy/aLightInTheFog/07246.js'
+import e07248 from './theInnsmouthConspiracy/aLightInTheFog/07248.js'
+import e07251 from './theInnsmouthConspiracy/aLightInTheFog/07251.js'
+import e07256 from './theInnsmouthConspiracy/aLightInTheFog/07256.js'
+import e07258 from './theInnsmouthConspiracy/aLightInTheFog/07258.js'
+import e07169 from './theInnsmouthConspiracy/devilReef/07169.js'
+import e07170 from './theInnsmouthConspiracy/devilReef/07170.js'
+import e07171 from './theInnsmouthConspiracy/devilReef/07171.js'
+import e07172 from './theInnsmouthConspiracy/devilReef/07172.js'
+import e07173 from './theInnsmouthConspiracy/devilReef/07173.js'
+import e07174a from './theInnsmouthConspiracy/devilReef/07174a.js'
+import e07174b from './theInnsmouthConspiracy/devilReef/07174b.js'
+import e07179 from './theInnsmouthConspiracy/devilReef/07179.js'
+import e07180 from './theInnsmouthConspiracy/devilReef/07180.js'
+import e07181 from './theInnsmouthConspiracy/devilReef/07181.js'
+import e07184 from './theInnsmouthConspiracy/devilReef/07184.js'
+import e07186 from './theInnsmouthConspiracy/devilReef/07186.js'
+import e07216 from './theInnsmouthConspiracy/horrorInHighGear/07216.js'
+import e07217 from './theInnsmouthConspiracy/horrorInHighGear/07217.js'
+import e07218 from './theInnsmouthConspiracy/horrorInHighGear/07218.js'
+import e07142 from './theInnsmouthConspiracy/inTooDeep/07142.js'
+import e07143 from './theInnsmouthConspiracy/inTooDeep/07143.js'
+import e07149 from './theInnsmouthConspiracy/inTooDeep/07149.js'
+import e07150 from './theInnsmouthConspiracy/inTooDeep/07150.js'
+import e07323 from './theInnsmouthConspiracy/intoTheMaelstrom/07323.js'
+import e07328 from './theInnsmouthConspiracy/intoTheMaelstrom/07328.js'
+import e07335 from './theInnsmouthConspiracy/intoTheMaelstrom/07335.js'
+import e07336 from './theInnsmouthConspiracy/intoTheMaelstrom/07336.js'
+import e07277 from './theInnsmouthConspiracy/theLairOfDagon/07277.js'
+import e07284 from './theInnsmouthConspiracy/theLairOfDagon/07284.js'
+import e07295 from './theInnsmouthConspiracy/theLairOfDagon/07295.js'
+import e07296 from './theInnsmouthConspiracy/theLairOfDagon/07296.js'
+import e07298 from './theInnsmouthConspiracy/theLairOfDagon/07298.js'
+import e07044 from './theInnsmouthConspiracy/thePitOfDespair/07044.js'
+import e07047 from './theInnsmouthConspiracy/thePitOfDespair/07047.js'
+import e07050 from './theInnsmouthConspiracy/thePitOfDespair/07050.js'
+import e07052 from './theInnsmouthConspiracy/thePitOfDespair/07052.js'
+import e07062b from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07062b.js'
+import e07063 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07063.js'
+import e07064 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07064.js'
+import e07065 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07065.js'
+import e07066 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07066.js'
+import e07067 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js'
+import e07068 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07068.js'
+import e07069 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07069.js'
+import e07070 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js'
+import e07071 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07071.js'
+import e07083 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07083.js'
+import e07085 from './theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js'
+import e07087 from './theInnsmouthConspiracy/_shared/agents_of_hydra/07087.js'
+import e07088 from './theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js'
+import e07089 from './theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js'
+import e07257 from './theInnsmouthConspiracy/aLightInTheFog/07257.js'
+import e07175a from './theInnsmouthConspiracy/devilReef/07175a.js'
+import e07175b from './theInnsmouthConspiracy/devilReef/07175b.js'
+import e07176a from './theInnsmouthConspiracy/devilReef/07176a.js'
+import e07176b from './theInnsmouthConspiracy/devilReef/07176b.js'
+import e07177a from './theInnsmouthConspiracy/devilReef/07177a.js'
+import e07177b from './theInnsmouthConspiracy/devilReef/07177b.js'
+import e07203 from './theInnsmouthConspiracy/horrorInHighGear/07203.js'
+import e07206a from './theInnsmouthConspiracy/horrorInHighGear/07206a.js'
+import e07206b from './theInnsmouthConspiracy/horrorInHighGear/07206b.js'
+import e07207a from './theInnsmouthConspiracy/horrorInHighGear/07207a.js'
+import e07207b from './theInnsmouthConspiracy/horrorInHighGear/07207b.js'
+import e07312 from './theInnsmouthConspiracy/intoTheMaelstrom/07312.js'
+import e07276 from './theInnsmouthConspiracy/theLairOfDagon/07276.js'
+import e07288 from './theInnsmouthConspiracy/theLairOfDagon/07288.js'
+import e07289 from './theInnsmouthConspiracy/theLairOfDagon/07289.js'
+import e07291 from './theInnsmouthConspiracy/theLairOfDagon/07291.js'
+import e07292b from './theInnsmouthConspiracy/theLairOfDagon/07292b.js'
+import e07294 from './theInnsmouthConspiracy/theLairOfDagon/07294.js'
+import e07300 from './theInnsmouthConspiracy/theLairOfDagon/07300.js'
+import e07300b from './theInnsmouthConspiracy/theLairOfDagon/07300b.js'
+import e07042 from './theInnsmouthConspiracy/thePitOfDespair/07042.js'
+import e07043 from './theInnsmouthConspiracy/thePitOfDespair/07043.js'
+import e07072 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07072.js'
+import e07073 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07073.js'
+import e07082 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07082.js'
+import e07129 from './theInnsmouthConspiracy/inTooDeep/07129.js'
+import e07131 from './theInnsmouthConspiracy/inTooDeep/07131.js'
+import e07132 from './theInnsmouthConspiracy/inTooDeep/07132.js'
+import e07133 from './theInnsmouthConspiracy/inTooDeep/07133.js'
+import e07134 from './theInnsmouthConspiracy/inTooDeep/07134.js'
+import e07136 from './theInnsmouthConspiracy/inTooDeep/07136.js'
+import e07137 from './theInnsmouthConspiracy/inTooDeep/07137.js'
+import e07138 from './theInnsmouthConspiracy/inTooDeep/07138.js'
+import e07140 from './theInnsmouthConspiracy/inTooDeep/07140.js'
+import e07279 from './theInnsmouthConspiracy/theLairOfDagon/07279.js'
+import e07130 from './theInnsmouthConspiracy/inTooDeep/07130.js'
+import e07135 from './theInnsmouthConspiracy/inTooDeep/07135.js'
+import e07139 from './theInnsmouthConspiracy/inTooDeep/07139.js'
+import e07145 from './theInnsmouthConspiracy/inTooDeep/07145.js'
+import e07146 from './theInnsmouthConspiracy/inTooDeep/07146.js'
+import e07147 from './theInnsmouthConspiracy/inTooDeep/07147.js'
+import e07151 from './theInnsmouthConspiracy/inTooDeep/07151.js'
+import e07319 from './theInnsmouthConspiracy/intoTheMaelstrom/07319.js'
+import e07322 from './theInnsmouthConspiracy/intoTheMaelstrom/07322.js'
+import e07329 from './theInnsmouthConspiracy/intoTheMaelstrom/07329.js'
+import e07285 from './theInnsmouthConspiracy/theLairOfDagon/07285.js'
+import e07286 from './theInnsmouthConspiracy/theLairOfDagon/07286.js'
+import e07287 from './theInnsmouthConspiracy/theLairOfDagon/07287.js'
+import e07290 from './theInnsmouthConspiracy/theLairOfDagon/07290.js'
+import e07046 from './theInnsmouthConspiracy/thePitOfDespair/07046.js'
+import e07048 from './theInnsmouthConspiracy/thePitOfDespair/07048.js'
+import e07049 from './theInnsmouthConspiracy/thePitOfDespair/07049.js'
+import e07051 from './theInnsmouthConspiracy/thePitOfDespair/07051.js'
+import e07128 from './theInnsmouthConspiracy/inTooDeep/07128.js'
+import e07324 from './theInnsmouthConspiracy/intoTheMaelstrom/07324.js'
+import e07325 from './theInnsmouthConspiracy/intoTheMaelstrom/07325.js'
+import e07326 from './theInnsmouthConspiracy/intoTheMaelstrom/07326.js'
+import e07327 from './theInnsmouthConspiracy/intoTheMaelstrom/07327.js'
+import e07333 from './theInnsmouthConspiracy/intoTheMaelstrom/07333.js'
+import e07334 from './theInnsmouthConspiracy/intoTheMaelstrom/07334.js'
+import e07283 from './theInnsmouthConspiracy/theLairOfDagon/07283.js'
+import e07075 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07075.js'
+import e07076 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07076.js'
+import e07077 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07077.js'
+import e07079 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07079.js'
+import e07080 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07080.js'
+import e07081 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07081.js'
+import e07182 from './theInnsmouthConspiracy/devilReef/07182.js'
+import e07084 from './theInnsmouthConspiracy/_shared/agents_of_dagon/07084.js'
+import e07102 from './theInnsmouthConspiracy/_shared/flooded_caverns/07102.js'
+import e07103 from './theInnsmouthConspiracy/_shared/flooded_caverns/07103.js'
+import e07104 from './theInnsmouthConspiracy/_shared/flooded_caverns/07104.js'
+import e07091 from './theInnsmouthConspiracy/_shared/rising_tide/07091.js'
+import e07092 from './theInnsmouthConspiracy/_shared/rising_tide/07092.js'
+import e07093 from './theInnsmouthConspiracy/_shared/rising_tide/07093.js'
+import e07096 from './theInnsmouthConspiracy/_shared/shattered_memories/07096.js'
+import e07097 from './theInnsmouthConspiracy/_shared/shattered_memories/07097.js'
+import e07098 from './theInnsmouthConspiracy/_shared/shattered_memories/07098.js'
+import e07100 from './theInnsmouthConspiracy/_shared/syzygy/07100.js'
+import e07101 from './theInnsmouthConspiracy/_shared/syzygy/07101.js'
+import e07231 from './theInnsmouthConspiracy/aLightInTheFog/07231.js'
+import e07240 from './theInnsmouthConspiracy/aLightInTheFog/07240.js'
+import e07254 from './theInnsmouthConspiracy/aLightInTheFog/07254.js'
+import e07255 from './theInnsmouthConspiracy/aLightInTheFog/07255.js'
+import e07163 from './theInnsmouthConspiracy/devilReef/07163.js'
+import e07167 from './theInnsmouthConspiracy/devilReef/07167.js'
+import e07198 from './theInnsmouthConspiracy/horrorInHighGear/07198.js'
+import e07215 from './theInnsmouthConspiracy/horrorInHighGear/07215.js'
+import e07219 from './theInnsmouthConspiracy/horrorInHighGear/07219.js'
+import e07123 from './theInnsmouthConspiracy/inTooDeep/07123.js'
+import e07141 from './theInnsmouthConspiracy/inTooDeep/07141.js'
+import e07144 from './theInnsmouthConspiracy/inTooDeep/07144.js'
+import e07148 from './theInnsmouthConspiracy/inTooDeep/07148.js'
+import e07311 from './theInnsmouthConspiracy/intoTheMaelstrom/07311.js'
+import e07274 from './theInnsmouthConspiracy/theLairOfDagon/07274.js'
+import e07275 from './theInnsmouthConspiracy/theLairOfDagon/07275.js'
+import e07278 from './theInnsmouthConspiracy/theLairOfDagon/07278.js'
+import e07041 from './theInnsmouthConspiracy/thePitOfDespair/07041.js'
+import e07045 from './theInnsmouthConspiracy/thePitOfDespair/07045.js'
+import e07053 from './theInnsmouthConspiracy/thePitOfDespair/07053.js'
+import e07054 from './theInnsmouthConspiracy/thePitOfDespair/07054.js'
+import e07055 from './theInnsmouthConspiracy/thePitOfDespair/07055.js'
+import e07056 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js'
+import e07057 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07057.js'
+import e07058 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js'
+import e07059 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07059.js'
+import e07074 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js'
+import e07078 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07078.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2117,6 +2283,172 @@ export const NON_PLAYER_ENTRY_LIST = [
   e06322,
   e01160,
   e01161,
+  e07241,
+  e07242,
+  e07243,
+  e07244,
+  e07245,
+  e07246,
+  e07248,
+  e07251,
+  e07256,
+  e07258,
+  e07169,
+  e07170,
+  e07171,
+  e07172,
+  e07173,
+  e07174a,
+  e07174b,
+  e07179,
+  e07180,
+  e07181,
+  e07184,
+  e07186,
+  e07216,
+  e07217,
+  e07218,
+  e07142,
+  e07143,
+  e07149,
+  e07150,
+  e07323,
+  e07328,
+  e07335,
+  e07336,
+  e07277,
+  e07284,
+  e07295,
+  e07296,
+  e07298,
+  e07044,
+  e07047,
+  e07050,
+  e07052,
+  e07062b,
+  e07063,
+  e07064,
+  e07065,
+  e07066,
+  e07067,
+  e07068,
+  e07069,
+  e07070,
+  e07071,
+  e07083,
+  e07085,
+  e07087,
+  e07088,
+  e07089,
+  e07257,
+  e07175a,
+  e07175b,
+  e07176a,
+  e07176b,
+  e07177a,
+  e07177b,
+  e07203,
+  e07206a,
+  e07206b,
+  e07207a,
+  e07207b,
+  e07312,
+  e07276,
+  e07288,
+  e07289,
+  e07291,
+  e07292b,
+  e07294,
+  e07300,
+  e07300b,
+  e07042,
+  e07043,
+  e07072,
+  e07073,
+  e07082,
+  e07129,
+  e07131,
+  e07132,
+  e07133,
+  e07134,
+  e07136,
+  e07137,
+  e07138,
+  e07140,
+  e07279,
+  e07130,
+  e07135,
+  e07139,
+  e07145,
+  e07146,
+  e07147,
+  e07151,
+  e07319,
+  e07322,
+  e07329,
+  e07285,
+  e07286,
+  e07287,
+  e07290,
+  e07046,
+  e07048,
+  e07049,
+  e07051,
+  e07128,
+  e07324,
+  e07325,
+  e07326,
+  e07327,
+  e07333,
+  e07334,
+  e07283,
+  e07075,
+  e07076,
+  e07077,
+  e07079,
+  e07080,
+  e07081,
+  e07182,
+  e07084,
+  e07102,
+  e07103,
+  e07104,
+  e07091,
+  e07092,
+  e07093,
+  e07096,
+  e07097,
+  e07098,
+  e07100,
+  e07101,
+  e07231,
+  e07240,
+  e07254,
+  e07255,
+  e07163,
+  e07167,
+  e07198,
+  e07215,
+  e07219,
+  e07123,
+  e07141,
+  e07144,
+  e07148,
+  e07311,
+  e07274,
+  e07275,
+  e07278,
+  e07041,
+  e07045,
+  e07053,
+  e07054,
+  e07055,
+  e07056,
+  e07057,
+  e07058,
+  e07059,
+  e07074,
+  e07078,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

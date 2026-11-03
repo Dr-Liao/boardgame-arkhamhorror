@@ -688,11 +688,11 @@
     },
     {
       "path": "tests/tde-investigators.test.mjs",
-      "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf"
+      "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
     },
     {
       "path": "docs/tde-investigators.md",
-      "sha256": "95eb4f5abcf8e15d0a839436379aa1c8e5b7e7ac8b2e0a0b728b3d5043517acb"
+      "sha256": null
     }
   ]
 }

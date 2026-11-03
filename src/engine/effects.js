@@ -16,6 +16,7 @@
 // 未实现/简化的效果一律显式打点，不静默吞掉。
 
 import { requestChoice } from './resolution.js'
+import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 
 // 效果原语清单（用于校验与文档化）。
 // 第 126 轮（DoD 第 6 条）：退役 12 个**没有任何数据引用**的旧原语
@@ -62,7 +63,8 @@ export function effectDefinitionError(effect) {
 // 结算单条效果。rt 由 engine.js 注入（见 engine.js buildRuntime）。
 export function resolveEffect(state, seat, effect, rt) {
   if (!effect) return
-  const inv = state.investigators[seat]
+  const inv = effectRecipient(state, state.investigators[seat])
+  seat = inv?.seat ?? seat
   if (!inv) return
 
   switch (effect.type) {
@@ -474,6 +476,7 @@ export function resolveEffect(state, seat, effect, rt) {
 }
 
 function doHeal(state, inv, amount, what, rt) {
+  if (!playerEffectCanAffect(state, inv.seat)) return
   if (what === 'damage' || what === 'both') {
     const h = Math.min(inv.damage, amount)
     inv.damage -= h

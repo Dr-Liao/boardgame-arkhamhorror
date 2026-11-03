@@ -83,6 +83,31 @@
   color: #efe2c8;
 }
 .ah-setup-section p + p { margin-top: 8px; }
+.ah-guide-block + .ah-guide-block { margin-top: 10px; }
+.ah-guide-block h4 { margin: 8px 0 6px; font-size: 14px; color: #f0dcaa; }
+.ah-guide-block p { white-space: pre-line; overflow-wrap: anywhere; }
+.ah-guide-spoilers { border-top: 1px solid #b0965840; padding-top: 12px; }
+.ah-guide-spoilers summary { cursor: pointer; font-size: 14px; color: #f0dcaa; }
+.ah-guide-spoilers[open] summary { margin-bottom: 12px; }
+.ah-guide-status { margin: 0; font-size: 13px; color: #bcb59f; }
+.ah-guide-retry { align-self: flex-start; padding: 6px 12px; border: 1px solid #a58c56; border-radius: 4px; background: #20372e; color: #efe2c8; }
+/* Keep the guide directly below the chaos-token reference, to the book's right. */
+.ah-table.ah-calm.ah-noir .ah-scenario-reference { flex: 0 0 88px; display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
+.ah-table.ah-calm.ah-noir .ah-scenario-reference .ah-reference-card { flex: none; width: 100%; height: 116px; gap: 2px; }
+.ah-table.ah-calm.ah-noir .ah-scenario-reference .ah-reference-card .ah-table-art { width: 62px; height: 88px; flex: 0 0 88px; }
+.ah-scenario-reference .ah-reference-caption { line-height: 12px; }
+.ah-scenario-reference .ah-reference-card small { line-height: 10px; }
+.ah-scenario-setup-button { box-sizing: border-box; width: 100%; min-height: 28px; padding: 4px 3px; border: 1px solid #b0965877; border-radius: 4px; background: #152b23; color: #e7d6af; font: inherit; font-size: 12px; cursor: pointer; }
+.ah-scenario-setup-button:hover { background: #20372e; border-color: #ddc68d; }
+.ah-scenario-setup-button:focus-visible { outline: 2px solid #f2d68c; outline-offset: 2px; }
+@media (max-width: 980px) {
+  .ah-table.ah-calm.ah-noir .ah-scenario-reference { flex-basis: 72px; }
+  .ah-table.ah-calm.ah-noir .ah-scenario-reference .ah-reference-card { height: 90px; }
+  .ah-table.ah-calm.ah-noir .ah-scenario-reference .ah-reference-card .ah-table-art { width: 44px; height: 62px; flex-basis: 62px; }
+  .ah-scenario-reference .ah-reference-caption { font-size: 10px; }
+  .ah-scenario-reference .ah-reference-card small { font-size: 9px; }
+  .ah-scenario-setup-button { font-size: 11px; }
+}
 .ah-setup-steps { padding-left: 1.3em; }
 .ah-setup-steps li + li { margin-top: 6px; }
 .ah-setup-empty,

@@ -1,0 +1,1093 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tic",
+  "stage": "P6",
+  "summary": {
+    "requests": 33,
+    "done": 33,
+    "pending": 0,
+    "rejected": 0
+  },
+  "items": [
+    {
+      "id": "guardian-seeker-action-icons",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07024"
+      ],
+      "primitive": "turnActionIcons",
+      "status": "done",
+      "resolution": {
+        "api": "skill.conditionalIcons.when.turnActionsTaken:{min:2|max:0}",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 53,
+            "test": "P6 07024 Plan of Action has first/second/third completed-action boundaries"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-ancestral",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07303"
+      ],
+      "primitive": "randomBeneathSetup",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.randomSkillsBeneath(seat,sourceId,5); entry.deckConstruction.minimumTypes:{skill:10}",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 102,
+            "test": "P6 07303 Ancestral Knowledge stores five random non-weakness skills and draws chosen one"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-armor",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07189"
+      ],
+      "primitive": "armorHarm",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.resolveArmorDamage(assetId,context)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 128,
+            "test": "P6 07189 Enchanted Armor transfers control, tests owner, and reassigns only new harm on failure"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-blade-timing",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07018"
+      ],
+      "primitive": "beforeAttackReveal",
+      "status": "done",
+      "resolution": {
+        "api": "api.fight(...,{beforeRevealSeal?}) or generic beforeTokenReveal window",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 35,
+            "test": "P6 07018 Blessed Blade ready attack and optional before-reveal exhaust"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-encounter-replacement",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07192"
+      ],
+      "primitive": "replaceEncounterDraw",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.replaceEncounterDraw(context,{drawPlayerCard:true})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 78,
+            "test": "P6 07192 Cryptic Grimoire replaces actual encounter top draw with player deck draw"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-play-cost",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07019"
+      ],
+      "primitive": "modifyPlayCost",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.modifyPlayCost(context,{reduction:2,noAction:true?})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 38,
+            "test": "P6 07019 Rite of Sanctification seals chosen amount and pays last token for discount"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-resource-uses",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07264"
+      ],
+      "primitive": "resourceUses",
+      "status": "done",
+      "resolution": {
+        "api": "entry.playerRule.replenishResources:2; api.playerTools.spendResourceUse(seat,sourceId,1)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 93,
+            "test": "P6 07264 Hyperawareness pays from its asset resources and replenishes at round start"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-restricted-engage",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07108"
+      ],
+      "primitive": "assetRestrictedAction",
+      "status": "done",
+      "resolution": {
+        "api": "entry.assetRule.restrictedAction:{kind:engage}",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 121,
+            "test": "P6 07108 Riot Whistle grants exactly one real engage action after ordinary actions run out"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-revealed-seal",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07262"
+      ],
+      "primitive": "sealRevealed",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.sealRevealed(sourceId,indices)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 140,
+            "test": "P6 07262 Nephthys seals only actually consumed bless and can pay three seals for damage"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-round-seal",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07110"
+      ],
+      "primitive": "returnRevealed",
+      "status": "done",
+      "resolution": {
+        "api": "api.chaosTokens.treat({index,modifier:0,retain:true}) timingproof",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 125,
+            "test": "P6 07110 Sacred Covenant immediately returns chosen bless and ignores that modifier"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-search-commit",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07223"
+      ],
+      "primitive": "searchCommit",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.searchCommit(seat,{sourceId,count:3,uses:1,optional:true})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 132,
+            "test": "P6 07223 Guided by the Unseen searches performer top three and commits only after secret payment"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-token-isis",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07190"
+      ],
+      "primitive": "elderSignReplacement",
+      "status": "done",
+      "resolution": {
+        "api": "api.chaosTokens.treat({index,as:eldersign,retain:true}) + retain firstbless",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 117,
+            "test": "P6 07190 Blessing of Isis treats the second physical bless as the performing investigator elder sign"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-twine",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07304"
+      ],
+      "primitive": "secretResourceConversion",
+      "status": "done",
+      "resolution": {
+        "api": "entry.playerRule.sharedSecrets:true; api.playerTools.secretResource(seat,assetId,direction)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 143,
+            "test": "P6 07304 Ariadne Twine pays colocated asset secrets and converts own secrets/resources"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "guardian-seeker-weapon-enchantment",
+      "worker": "guardian-seeker",
+      "cards": [
+        "07261"
+      ],
+      "primitive": "weaponEnchantment",
+      "status": "done",
+      "resolution": {
+        "api": "entry.playerRule.enchantWeapon + asset attached declaration",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-guardian-seeker.test.mjs",
+            "line": 136,
+            "test": "P6 07261 Enchant Weapon adds Relic and arcane slot and uses attachment owner willpower"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "rogue-mystic-asset-lifecycles",
+      "worker": "rogue-mystic",
+      "cards": [
+        "07157",
+        "07194",
+        "07266",
+        "07267",
+        "07268"
+      ],
+      "primitive": "assetLifecycleRules",
+      "status": "done",
+      "resolution": {
+        "api": "playerTools lifecycle helpers with declarative entry keys and actual validators/readpoints",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 165,
+            "test": "P6 07266 separate resource payers and replenish preserves resources above two"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 220,
+            "test": "P6 07267 captures a basic weakness from its actual owner and draws it on leave"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 239,
+            "test": "P6 07194 Tristan picks two distinct skills until that investigator next turn"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 245,
+            "test": "P6 07194 Tristan plays from hand free after three actual special tokens"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 261,
+            "test": "P6 07268 Flute X minus two resource cost seals up to X and release is required"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 280,
+            "test": "P6 07157 Under Surveillance triggers once on nonElite spawn and retains event until entry"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 280,
+            "test": "P6 07157 Under Surveillance triggers once on nonElite move and retains event until entry"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "rogue-mystic-spell-token-benefits",
+      "worker": "rogue-mystic",
+      "cards": [
+        "07117",
+        "07118",
+        "07119",
+        "07226",
+        "07227",
+        "07228"
+      ],
+      "primitive": "testWithTokenBenefits",
+      "status": "done",
+      "resolution": {
+        "api": "playerTools.testWithTokenBenefits(seat,{action,assetId,skill:\"willpower\",bonus:0|2,upgraded,enemyId?})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07117 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07117 curse reward occurs even on failure; base once and upgrade each curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07118 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07118 curse reward occurs even on failure; base once and upgrade each curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07119 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07119 curse reward occurs even on failure; base once and upgrade each curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07226 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07226 curse reward occurs even on failure; base once and upgrade each curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07227 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07227 curse reward occurs even on failure; base once and upgrade each curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 189,
+            "test": "P6 07228 uses willpower, printed bonus and exact charge cost"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 200,
+            "test": "P6 07228 curse reward occurs even on failure; base once and upgrade each curse"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "rogue-mystic-token-test-rules",
+      "worker": "rogue-mystic",
+      "cards": [
+        "07115",
+        "07195",
+        "07224",
+        "07225",
+        "07307"
+      ],
+      "primitive": "testTokenRules",
+      "status": "done",
+      "resolution": {
+        "api": "playerTools.setTestTokenRules / rerollToken / baseSkillForTest; no card-state writes",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 145,
+            "test": "P6 07195 second curse can become skull and optionally retain its physical token"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 151,
+            "test": "P6 07224 coin uses deterministic random and draws only on bless-to-curse"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 232,
+            "test": "P6 07115 Skeptic changes each physical bless and curse modifier to plus one"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 253,
+            "test": "P6 07225 Djinn sets current base to five without lasting into later tests or others turns"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 271,
+            "test": "P6 07307 Dice exact curse cost ignores one token and guarded next curse returns asset"
+          },
+          {
+            "file": "tests/tic-player-rogue-mystic.test.mjs",
+            "line": 309,
+            "test": "P6 07225 Djinn sets each base skill in a combined-skill test to five"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07035-skillFailureCallback",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07035"
+      ],
+      "primitive": "skillFailureCallback",
+      "status": "done",
+      "resolution": {
+        "api": "skill.onFail({state,inv,source,result,api})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 28,
+            "test": "P6 07035 Predestined any test max one; failure add bless or remove only bag curses"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07036-committedTokenReaction",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07036"
+      ],
+      "primitive": "committedTokenReaction",
+      "status": "done",
+      "resolution": {
+        "api": "skill.onTokenRevealed({state,inv,source,context,api}), api.playerTools.removeCommitment(source,{to:\"removedFromGame\"})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 158,
+            "test": "P6 07036 Beloved real hand commitment replaces bless, removes physical skill, stops reveal and retains token"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07038-enemyPhaseEnd",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07038"
+      ],
+      "primitive": "enemyPhaseEnd",
+      "status": "done",
+      "resolution": {
+        "api": "entry.enemyWeakness={aloof:true,spawn:\"farthest\"}; trigger:\"enemyPhaseEnds\"",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 179,
+            "test": "P6 07038 Accursed Follower actual weakness spawns farthest aloof, curses at actual enemy-phase end, stops after defeat"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07040-agendaWeaknessAttachment",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07040"
+      ],
+      "primitive": "agendaWeaknessAttachment",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.attachWeaknessToAgenda(seat,code,{seal:\"eldersign\"})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 199,
+            "test": "P6 07040 Day of Reckoning actual draw attaches one weakness and agenda advancement releases sealed eldersign"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07121-investigationAssetSource",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07121"
+      ],
+      "primitive": "investigationAssetSource",
+      "status": "done",
+      "resolution": {
+        "api": "api.investigate(seat,{assetId:source.id,clueIfNoResources:1})",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 70,
+            "test": "P6 07121 Mariners Compass bonus clue depends on resources at success, boosts are limited to three"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07160-lateCommit",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07160"
+      ],
+      "primitive": "lateCommit",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.lateCommitOrReturn(actorSeat, performerSeat)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 218,
+            "test": "P6 07160 Butterfly Effect late commit and withdrawal change actual icons and success rewards; numeric reveal cannot play"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07161-limitedTokenRedraws",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07161"
+      ],
+      "primitive": "limitedTokenRedraws",
+      "status": "done",
+      "resolution": {
+        "api": "playerTools.allowTokenRedraws(2)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 244,
+            "test": "P6 07161 Third Times a Charm actual test allows exactly two physical cancel-return-redraws and excludes remote play"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07162-inspectUntil",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07162"
+      ],
+      "primitive": "inspectUntil",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.inspectUntil([\"curse\",\"autofail\",\"bless\",\"eldersign\"])",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 116,
+            "test": "P6 07162 Manipulate Destiny returns inspected tokens, avoids opportunity attack, damages or heals real target"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07196-testScopedSealingCleanup",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07196"
+      ],
+      "primitive": "testScopedSealingCleanup",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.sealUpTo(seat,id,faces,max), releaseSealedAfterTest(id)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 259,
+            "test": "P6 07196 Unrelenting actual seal selection draws only for three good faces, releases even after late withdrawal"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07197-baseSkillValue",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07197"
+      ],
+      "primitive": "baseSkillValue",
+      "status": "done",
+      "resolution": {
+        "api": "commitCondition({test,baseSkillValue}); playerTools.testBaseSkillValue()",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 71,
+            "test": "P6 07197 Signum Crucis uses base skill excluding passive bonuses and cannot help others"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07269-skipEncounterStep",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07269"
+      ],
+      "primitive": "skipEncounterStep",
+      "status": "done",
+      "resolution": {
+        "api": "entry.additionalTokenCost={token:\"bless\",operation:\"pay\",count:5,sealed:true}; playerTools.skipEncounterStep(context)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 311,
+            "test": "P6 07269 A Watchful Peace pays five bag/sealed bless and skips real multiplayer mythos encounter draws only; four cannot pay"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07270-replenishingResources",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07270"
+      ],
+      "primitive": "replenishingResources",
+      "status": "done",
+      "resolution": {
+        "api": "entry.assetRule.replenishUses=2 and api.playerTools.payResourceFromPoolOrAsset(seat,sourceId,1)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 87,
+            "test": "P6 07270 Dig Deep spends its own resources during matching tests and replenishes without losing excess"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07271-sealedRevealReplacement",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07271"
+      ],
+      "primitive": "sealedRevealReplacement",
+      "status": "done",
+      "resolution": {
+        "api": "playerTools.sealUpTo(seat,id,token,3); revealSealedInstead(context,id); assetRule.discardWithoutSealedTokens",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 337,
+            "test": "P6 07271 Favor real fast play seals a physical token, substitutes before bag reveal, consumes it and discards empty source"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07273-purifyingCorruption",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07273"
+      ],
+      "primitive": "purifyingCorruption",
+      "status": "done",
+      "resolution": {
+        "api": "cost:{damageSelf:1,horror:1}, api.playerTools.removeAssetFromGame; cost.drawEncounter:1",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 361,
+            "test": "P6 07273 Purifying Corruption cancels real revelations, pays combined harm, removes at three, draws encounter before choice and excludes weaknesses"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07309-readyRestriction",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07309"
+      ],
+      "primitive": "readyRestriction",
+      "status": "done",
+      "resolution": {
+        "api": "entry.assetRule.noUpkeepReady=true",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 86,
+            "test": "P6 07309 Jacob Morrison failure bonus works and own bless can ready exhausted Jacob"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    },
+    {
+      "id": "survivor-neutral-07310-shrineSharedAttachment",
+      "worker": "survivor-neutral",
+      "cards": [
+        "07310"
+      ],
+      "primitive": "shrineSharedAttachment",
+      "status": "done",
+      "resolution": {
+        "api": "api.playerTools.attachSharedLocationEvent(seat,code,{uses:3,usesType:\"offerings\"}); entry.sharedLocationAbility; cost.drawEncounter:1; api.playerTools.recoverDiscardCombinedLevel(seat,2,5)",
+        "implementedIn": [
+          "src/engine/player-mechanics.js",
+          "src/engine/ability-rules.js",
+          "src/engine/tests.js",
+          "src/engine/token-cost.js",
+          "src/engine/play-timing.js",
+          "src/engine/use-transfer.js",
+          "src/engine/assets.js"
+        ],
+        "tests": [
+          {
+            "file": "tests/tic-player-survivor-neutral.test.mjs",
+            "line": 392,
+            "test": "P6 07310 Shrine of Moirai actual attached event is usable by local teammate, pays encounter before recovering two cards with total level at most five"
+          }
+        ],
+        "notes": "经主进程接入共用规则读点与现有API组合；以逐卡实际行为证据为准，不以请求中的建议签名推定实现。"
+      }
+    }
+  ]
+}

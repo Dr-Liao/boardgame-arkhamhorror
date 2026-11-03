@@ -4,18 +4,26 @@
 //       强制 - 在当前幕推进时：每位调查员受到 2 点伤害。
 //       附属的幕获得：「[action]：检定[intellect](4) 智胜海盗，或 [agility](4) 偷偷溜走。
 //       如果你检定成功，弃掉海盗追猎。」
-// 实现：附属到「当前幕」用 flags.attachToAct；幕推进伤害在共享层 agendaLeftPlay/actLeftPlay 里
-//   读条目数据统一结算；幕上行动由 chapters 的 actions 分派。共享层目前没有这三处数据读点，
-//   已登记 coordinator request；数据全部写在条目上，接线即生效。
+// 实现：显现时 api.attachToAct；幕上的摆脱行动由 TDE 共享 actions/performAction
+//   读取 actGrantedAction。幕推进前 onActAdvancing 对每位在场调查员造成 2 点伤害。
 export default {
   code: '06104',
   scope: 'treachery',
   implemented: true,
+  encounterResolve(state, inv, card, api) {
+    api.attachToAct?.('06104', { originalCode: '06104' })
+    api.info?.('🏴 「海盗追猎」附属到当前幕。')
+    return true
+  },
+  treacheryRule: {
+    onActAdvancing(state, source, api) {
+      for (const inv of state.investigators || []) {
+        if (inv.defeated || inv.resigned) continue
+        api.damage?.(inv.seat, 2)
+      }
+    },
+  },
   flags: {
-    attachToAct: true,
-    advancesDamage: { amount: 2, each: 'investigator' },
     actGrantedAction: { skills: ['intellect', 'agility'], difficulty: 4, rule: 'outwitCorsairs' },
   },
-  simplified: true,
-  note: '「附属到当前幕 / 幕推进全体 2 伤 / 幕获得摆脱行动」由使用 corsairs 组的章节 behavior 读 flags 接线；数据已备好。',
 }

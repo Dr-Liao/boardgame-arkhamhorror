@@ -1,3 +1,6 @@
+import { availableResources } from './resource-bank.js'
+import { tokenCostAvailable } from './token-cost.js'
+import { afterUsesSpent } from './uses.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { extraDeckPiles } from './alt-decks.js'
 import { markForcedRevelation } from './resolution-scope.js'
@@ -12,6 +15,8 @@ import { markForcedRevelation } from './resolution-scope.js'
 //
 // 第 2 步 P2.2：`drawEncounter(state, inv, events, { deck: 'spectral' })` 从第二遭遇牌堆
 // 抽牌；不传 `deck` 时完全走原来的普通遭遇牌堆（行为零变化）。牌堆读写统一走 alt-decks.js。
+
+import { enumerateTargets } from './targets.js'
 
 export function createEncounter(deps) {
   const {
@@ -88,6 +93,12 @@ export function createEncounter(deps) {
   } = deps
 
 function drawEncounter(state, inv, events, options = {}) {
+  if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
+    row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('encounterCardWouldDraw'))))) {
+    const context = { when: 'encounterCardWouldDraw', seat: inv.seat, location: inv.location }
+    reactionWindow(state, 'encounterCardWouldDraw', context, events, { allowNested: true })
+    if (context.replaced) return
+  }
   // P2.2：deck 缺省是普通遭遇牌库；传 'spectral' 时读写第二遭遇牌堆的两堆。
   // P8：章节可以用 behavior.encounterDeckFor(state, inv) 在**抽牌时**决定从哪一堆抽
   // （《恶罪报应》等：调查员在幽灵地点时从幽灵遭遇牌堆抽）；显式 options.deck 优先。
@@ -150,6 +161,16 @@ function drawEncounter(state, inv, events, options = {}) {
     return
   }
   const resolvingInv = redrawContext.redirectSeat == null ? inv : state.investigators[redrawContext.redirectSeat]
+  let resolution
+  const finishDraw=()=>{
+    delete resolvingInv.handlingEncounter
+    const surge=encounter?.surge||resolution?.gainSurge||scenarioBehavior(state).encounterGainsSurge?.(state,code,resolvingInv)
+    if(surge&&!options.suppressSurge&&!resolution?.surgeHandled&&!resolvingInv.defeated&&!resolvingInv.resigned){
+      info(state,events,`🌀 「${encounter?.name||code}」涌动：再抽取一张遭遇牌。`)
+      const child={...options};delete child.suppressSurge
+      drawEncounter(state,resolvingInv,events,child)
+    }
+  }
   // 「交给你了！」只是改由他人结算；带 +2 的同类卡（如「让我来！」）在反应效果里给出 redirectBonus。
   if (redrawContext.redirectSeat != null) resolvingInv.handlingEncounter = { code, bonus: redrawContext.redirectBonus || 0 }
   scenarioBehavior(state).encounterDrawn?.(state, resolvingInv, code, scenarioRuntime(state, events))
@@ -166,13 +187,30 @@ function drawEncounter(state, inv, events, options = {}) {
   }
   // 「恢复元气」等需要知道本回合是否抽到过诡计。
   if (ALL_TREACHERIES[code]) resolvingInv.drewTreacheryRound = state.round
+  if (ALL_CARDS[code]?.type === 'location' && !ALL_ENEMIES[code] && !ALL_TREACHERIES[code]
+    && registeredEntry(code)?.encounterResolve?.(state, resolvingInv, { code, originalCode: code }, scenarioRuntime(state, events)) === true) return
+  if (!ALL_ENEMIES[code] && !ALL_TREACHERIES[code]
+    && scenarioBehavior(state).resolveEncounterCard?.(state, resolvingInv, code, scenarioRuntime(state, events)) === true) return
   if (ALL_ENEMIES[code]) {
     const def = enemyDef(code)
     // 带固定生成地点的敌人在该地点生成，否则与抽牌者交战；「任意无人地点」敌人去无人地点。
     let engage = null
     let loc = resolvingInv.location
     // 剧本敌人定义上的 spawnAnyEmpty，或卡条目 enemyRule.spawnAnyEmpty（01169 按卡号入牌库时走后者）。
-    if (def.spawnAnyEmpty || enemyRuleFlags(code).spawnAnyEmpty) {
+    const revelationSpawn = registeredEntry(code)?.enemyRule?.revelationSpawn
+    if (revelationSpawn?.locationOriginalCodes || revelationSpawn?.farthestOfCodes) {
+      const codes = revelationSpawn.locationOriginalCodes || revelationSpawn.farthestOfCodes
+      let candidates = state.locations.filter(location => codes.includes(location.originalCode || location.code))
+      if (revelationSpawn.farthestOfCodes && candidates.length) {
+        const runtime = scenarioRuntime(state, events)
+        const distance = location => { const value = runtime.locationDistance(resolvingInv.location, [location.id]); return value < 0 ? Infinity : value }
+        const farthest = Math.max(...candidates.map(distance))
+        candidates = candidates.filter(location => distance(location) === farthest)
+      }
+      if (!candidates.length) { discard().push(code); return finishDraw() }
+      loc = candidates.length === 1 ? candidates[0].id : chooseAmong(state, { kind: 'spawn', source: { type: 'enemy', code }, seat: resolvingInv.seat,
+        prompt: '选择敌人的生成地点。', options: candidates.map(location => ({ id: location.id, label: location.name })) })
+    } else if (def.spawnAnyEmpty || enemyRuleFlags(code).spawnAnyEmpty) {
       const empty = state.locations.filter((l) => !state.enemies.some((e) => e.location === l.id)
         && !aliveInvestigators(state).some(i => i.location === l.id))
       let picked = empty.length ? chooseAmong(state, {
@@ -188,33 +226,46 @@ function drawEncounter(state, inv, events, options = {}) {
         picked = placeLocationForEmptySpawn(state)
         if (picked) info(state, events, `🌐 彼端的世界：从探索牌库翻出地点「${locName(state, picked)}」并让「${def.name}」在那里生成。`)
       }
-      if (!picked) { discard().push(code); return }
+      if (!picked && !empty.length) picked = scenarioBehavior(state).spawnLocation?.(state, code, null, resolvingInv.seat,
+        scenarioRuntime(state, events), { targetMatcher:'emptyLocation' })
+      if (!picked) { discard().push(code); return finishDraw() }
       loc = picked
     } else if (def.spawn) {
-      if (!locationExists(state, def.spawn)) { discard().push(code); return }
+      if (!locationExists(state, def.spawn)) { discard().push(code); return finishDraw() }
       loc = def.spawn
     } else {
       engage = resolvingInv.seat
     }
-    const enemy = spawnEnemy(state, code, loc, engage)
+    const spawnOptions = registeredEntry(code)?.enemyRule?.revelationSpawnOptions?.(state, resolvingInv, loc, scenarioRuntime(state, events)) || {}
+    const enemy = spawnEnemy(state, code, loc, engage, false, false, resolvingInv.seat, spawnOptions)
     if (enemy) info(state, events, `👹 ${resolvingInv.name} 遭遇了「${enemy.name}」！它出现在「${locName(state, enemy.location)}」${enemy.engagedSeat != null ? '并与之交战' : ''}。`)
+    if (enemy && revelationSpawn?.cluesPerInvestigator) enemy.clues = (enemy.clues || 0) + revelationSpawn.cluesPerInvestigator * state.numInvestigators
     if (enemy) autoEngageAt(state, enemy.location, events)
   } else if (ALL_TREACHERIES[code]) {
-    const resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events)
+    const capturedBefore = (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length
+    resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events)
     // Older campaign handlers may already perform their printed surge; the marker prevents a second draw.
-    const placed = typeof resolution === 'object' ? resolution.placed : resolution
-    if (!placed) discard().push(code)
-    const surge = encounter.surge || scenarioBehavior(state).encounterGainsSurge?.(state, code, resolvingInv)
-    if (surge && !resolution?.surgeHandled && !resolvingInv.defeated && !resolvingInv.resigned) {
-      info(state, events, `🌀 「${encounter.name || code}」涌动：再抽取一张遭遇牌。`)
-      drawEncounter(state, resolvingInv, events, options)
+    const placed = (typeof resolution === 'object' ? resolution.placed : resolution)
+      || (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length > capturedBefore
+    if (!placed) {
+      const discardContext = { when: 'treacheryWouldDiscard', seat: resolvingInv.seat,
+        cardCode: code, location: resolvingInv.location,
+        prompt: `「${encounter.name || code}」结算后将要弃掉` }
+      reactionWindow(state, 'treacheryWouldDiscard', discardContext, events)
+      if (!discardContext.attached) discard().push(code)
     }
   } else if (ALL_CARDS[code]?.type === 'asset' && scenarioBehavior(state).drawStoryAsset) {
     scenarioBehavior(state).drawStoryAsset(state, resolvingInv, code, scenarioRuntime(state, events))
   } else if (ALL_CARDS[code]?.type === 'location' && scenarioBehavior(state).drawLocation) {
     scenarioBehavior(state).drawLocation(state, resolvingInv.seat, code, scenarioRuntime(state, events))
+  } else if (ALL_CARDS[code]?.type === 'event' && registeredEntry(code)?.encounterResolve) {
+    // Bonded player events can be inserted into the encounter deck. Resolve their
+    // revelation through the card entry, then remove the physical card from play.
+    registeredEntry(code).encounterResolve(state, resolvingInv, ALL_CARDS[code], abilityApi(state, events))
+    state.removedFromGame ||= []
+    state.removedFromGame.push(code)
   } else throw new Error(`未知遭遇卡：${code}`)
-  delete resolvingInv.handlingEncounter
+  finishDraw()
 }
 
 // 快速反应窗口：同地点持有对应反应事件的调查员可显式打出（如闪躲、守护结界）。
@@ -263,6 +314,7 @@ function reactionWindow(state, when, context, events, opts = {}) {
               : { when })
             : null)
           if (!reaction || reaction.when !== when || !runtimeCardAvailable(state, inv, code)) return false
+          if (!tokenCostAvailable(state, inv, registeredEntry(copyCode || code)?.additionalTokenCost)) return false
           if (!lolaCanUseCard(inv, code)) return false
           if (!reaction.anyLocation && context.location != null && inv.location !== context.location) return false
           if (reaction.selfOnly && inv.seat !== context.seat) return false
@@ -292,7 +344,7 @@ function reactionWindow(state, when, context, events, opts = {}) {
           if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
           // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
           const baseCost = playCost(state, inv, cardDef(copyCode || code))
-          if (inv.resources < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
+          if (availableResources(inv) < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
           if (quick.criteria
             && (Array.isArray(quick.criteria) || typeof quick.criteria === 'function')
@@ -340,7 +392,7 @@ function reactionWindow(state, when, context, events, opts = {}) {
 
 // Phase 5（5a-25）：「离某调查员最远的地点」——弱点生成与 api 共用一份实现。
 
-function triggerReaction(state, seat, when, events, context = {}) {
+function triggerReaction(state, seat, when, events, context = {}, options={}) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return
   const entries = []
@@ -381,7 +433,7 @@ function triggerReaction(state, seat, when, events, context = {}) {
     const cost = r.cost || {}
     if (cost.exhaust && asset?.exhausted) continue
     if (cost.uses && (asset?.uses || 0) < cost.uses) continue
-    if (cost.resources && inv.resources < cost.resources) continue
+    if (cost.resources && availableResources(inv) < cost.resources) continue
     if (cost.clues && inv.clues < cost.clues) continue
     if (!r.resolve && effectError(state, inv, r.effect)) continue
     const scope = r.limit === 'phase' ? `${state.round}:${state.phase}` : r.limit === 'turn' ? `${state.round}:turn` : state.round
@@ -399,8 +451,11 @@ function triggerReaction(state, seat, when, events, context = {}) {
     if (answer === 'skip') continue
     if (r.limit) inv.usedReactions[key] = true
     if (cost.exhaust && asset) asset.exhausted = true
-    if (cost.uses && asset) asset.uses = Math.max(0, (asset.uses || 0) - cost.uses)
-    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources)
+    if (cost.uses && asset) {
+      asset.uses = Math.max(0, (asset.uses || 0) - cost.uses)
+      afterUsesSpent(state,inv,asset,cost.uses,events,deps)
+    }
+    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources, state)
     if (cost.clues) {
       inv.clues -= cost.clues
       if (cost.returnClue) {
@@ -452,17 +507,20 @@ function triggerReaction(state, seat, when, events, context = {}) {
     }
   }
   // 能力层：旧式 reactions 之后，同一个 when 也作为窗口开放给声明式描述子。
-  openAbilityWindow(state, when, context, events)
+  if(!options.skipAbilityWindow)openAbilityWindow(state, when, context, events)
 }
 
 // 行动点用尽后的收尾窗口里仍然可以打出的快速卡。
 // 候选直接复用 legalMoves（手牌与「如同手牌」通道都在同一份列表里），保证打出条件、资源、
 // 槽位与「快速」判定和普通出牌同源；通道条目附带来源信息，执行时统一走 takeToHand。
-function fastHandPlays(state, inv) {
-  if (inv.seat !== state.currentSeat) return []
+function fastHandPlays(state, inv, opts = {}) {
   const helpers = playConditionHelpers(state)
-  return legalMoves(state)
+  return legalMoves({ ...state, currentSeat: inv.seat })
     .filter(move => move.action === 'play' && move.cardId && !move.copyCode
+      && ((opts.fastCards && inv.seat === state.currentSeat) || registeredEntry(move.cardId)?.betweenActionsAnyTurn
+        || move.fastSourceId
+        || (!quickEventView(move.cardId) && (registeredEntry(move.cardId)?.fast
+          || registeredEntry(move.cardId)?.abilities.some(descriptor => descriptor.kind === 'played' && descriptor.fast))))
       && (inv.hand.includes(move.cardId) || playChannels.isChannelMove(move))
       && actionCost(state, inv, move) === 0
       // legalMoves 只做「区域/类型/费用」级筛选，打出条件由 validateMove 读；
@@ -495,13 +553,15 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
           if (ability.cost?.action !== false || !canAffordAbility(state, inv, asset, ability)
             || (!ability.descriptor?.resolve && effectError(state, inv, ability.effect))) continue
           if (!lolaCanUseCard(inv, asset.code)) continue
+          if (ability.descriptor && !descriptorUsable(state, inv, asset, ability.descriptor, { windowId: timing, mode: 'action', ignoreCosts: true })) continue
           // 能力层：免费能力只在它声明的窗口里出现（旧 DSL 能力没有 trigger，行为不变）。
           if (ability.windowTrigger?.length && !ability.windowTrigger.includes(timing)) continue
           if (ability.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) continue
           if (ability.oncePerTest && state.skillTest?.usedAbilities?.[`${asset.id}:${index}`]) continue
           if (ability.oncePerPhase && inv.usedAbilities?.[`${asset.id}:${index}:${state.round}:${state.phase}`]) continue
           if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, timing, asset)) continue
-          const targets = abilityTargets(state, inv, ability.effect)
+          const targets = ability.descriptor?.target ? enumerateTargets(state, inv, ability.descriptor.target, { source: asset })
+            : abilityTargets(state, inv, ability.effect)
           for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
             id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
             assetId: asset.id, index, targetId,
@@ -529,10 +589,13 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
           if (!row.source) continue
           if (!descriptorUsable(state, inv, row.source, descriptor, { windowId: timing, mode: 'free' })) continue
           if (descriptor.effect && effectError(state, inv, descriptor.effect)) continue
-          options.push({
-            id: `free-descriptor:${row.code}:${index}`,
+          const targets = descriptor.target ? enumerateTargets(state, inv, descriptor.target, { source: row.source }) : []
+          if (descriptor.target && !descriptor.target.optional && !targets.length) continue
+          for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
+            id: `free-descriptor:${row.code}:${index}${targetId == null ? '' : `:${targetId}`}${row.entry.scope && row.entry.scope !== 'card' && row.entry.scope !== 'investigator' ? `:${row.source.id}` : ''}`,
             label: `${cardName(row.code)}：${descriptor.label}`,
-            freeCode: row.code, freeIndex: index, targetId: null,
+            freeCode: row.code, freeIndex: index, targetId,
+            ...(row.entry.scope && row.entry.scope !== 'card' && row.entry.scope !== 'investigator' ? { freeSourceId: row.source.id } : {}),
           })
         }
       }
@@ -545,20 +608,20 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
     for (const move of scenarioFast || []) {
       options.push({ id: `scenario-fast:${move.rule}:${move.enemyId || ''}`, label: move.label, scenarioMove: move })
     }
-    if (inv.seat === fastCardSeat) {
-      for (const { move, entry } of fastHandPlays(state, inv)) {
+    {
+      for (const { move, entry } of fastHandPlays(state, inv, opts)) {
         // 2026-10-27「如同手牌」通道统一：option id 保留手牌/直觉牌库的旧格式，其余通道用
         // `fast-card:<通道id>`；同时下发 uiKey，牌桌据此把选项挂回直觉区/下方/宿主支援。
         const optionId = entry
           ? (entry.channel === 'hunch' ? `fast-card:hunch:${move.cardId}` : `fast-card:${playChannels.candidateId(entry)}`)
-          : `fast-card:${move.cardId}`
+          : `fast-card:${move.cardId}${move.fastSourceId ? ':' + move.fastSourceId : ''}`
         if (blockedFast.has(optionId)) continue
         const resourceCost = entry
           ? playChannels.discountedCost(playCost(state, inv, cardDef(move.cardId)), entry)
           : playCost(state, inv, cardDef(move.cardId))
         options.push({ id: optionId,
           label: `⚡ 快速打出「${cardName(move.cardId)}」${entry?.labelSuffix || ''}${resourceCost ? `（${resourceCost} 资源）` : ''}`,
-          cardCode: move.cardId, ...(entry?.uiKey ? { uiKey: entry.uiKey } : {}), fromChannel: entry })
+          cardCode: move.cardId, ...(move.fastSourceId ? { fastSourceId: move.fastSourceId } : {}), ...(entry?.uiKey ? { uiKey: entry.uiKey } : {}), fromChannel: entry })
       }
     }
     if (!options.length) { passed++; continue }
@@ -598,13 +661,13 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
         continue
       }
       const before = inv.hand.filter(code => code === chosen.cardCode).length
-      doPlay(state, inv.seat, chosen.cardCode, events, false, true)
+      doPlay(state, inv.seat, chosen.cardCode, events, false, true, null, null, null, null, 0, chosen.fastSourceId || null)
       const after = state.investigators[inv.seat].hand.filter(code => code === chosen.cardCode).length
       if (after >= before) blockedFast.add(chosen.id)
       continue
     }
     if (chosen.freeCode) {
-      doFreeDescriptor(state, inv.seat, chosen.freeCode, chosen.freeIndex, chosen.targetId, events)
+      doFreeDescriptor(state, inv.seat, chosen.freeCode, chosen.freeIndex, chosen.targetId, events, chosen.freeSourceId || null)
       continue
     }
     if (chosen.scenarioMove) {
@@ -632,9 +695,16 @@ function replayEncounterRevelation(state, inv, events, code) {
   if (index < 0) return false
   state.encounterDiscard.splice(index, 1)
   info(state, events, `${inv.name} 结算遭遇弃牌堆中的「${treachery.name || code}」。`)
+  const capturedBefore = (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length
   const resolution = resolveTreachery(state, inv, treachery, events)
+  const captured = (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length > capturedBefore
   const placed = typeof resolution === 'object' ? resolution.placed : resolution
-  if (!placed) state.encounterDiscard.push(code)
+  if (!placed && !captured) {
+    const context={when:'treacheryWouldDiscard',seat:inv.seat,cardCode:code,location:inv.location,
+      prompt:'已结算的诡计将要弃掉。'}
+    reactionWindow(state,'treacheryWouldDiscard',context,events)
+    if (!context.attached) state.encounterDiscard.push(code)
+  }
   return true
 }
 

@@ -67,7 +67,7 @@ const PRIMITIVE_PLAN_PATH = 'artifacts/migration/tde/primitive-plan.json'
 const PRIMITIVE_CATALOG_PATH = 'artifacts/migration/tde/primitive-catalog.json'
 const PRIMITIVE_REQUEST_DIR = 'artifacts/migration/tde/primitive-requests'
 const BROWSER_PATH = 'audit/tde-browser-acceptance.json'
-const BROWSER_CONFIG_PATH = 'playwright.tde.config.mjs'
+const BROWSER_CONFIG_PATH = 'tests/playwright/playwright.tde.config.mjs'
 const RULES_LEDGER_PATH = 'audit/tde-rules.json'
 const INVESTIGATOR_LEDGER_PATH = 'audit/tde-investigators.json'
 const PLAYER_LEDGER_PATH = 'audit/tde-player-acceptance.json'
@@ -89,6 +89,8 @@ const SCENARIO_CHECK_KEYS = Object.freeze([
 // P10 Node 验收实跑的文件集合：M4 规则书、M1 调查员、M2 玩家卡（4 分片 + 账本）、P9 全卡账本 +
 // 283 例战役逐卡、P9 八章逐章证据。约 645 例、<10s（不跑 test:fast 全量）。
 const TEST_FILES = Object.freeze([
+  'tests/tde-completion-primitives.test.mjs',
+  'tests/tde-completion.test.mjs',
   'tests/tde-rules.test.mjs',
   'tests/tde-investigators.test.mjs',
   'tests/tde-all-card-ledger.test.mjs',
@@ -381,7 +383,7 @@ scanAlignment.pass = scanAlignment.missing.length === 0 && scanAlignment.extra.l
 
 const browserReport = readJson(BROWSER_PATH)
 const browserConfigText = readText(BROWSER_CONFIG_PATH) || ''
-// 期望 spec 集合从 playwright.tde.config.mjs 的 testMatch 声明派生（不硬编码 7 这个数字）。
+// 期望 spec 集合从 tests/playwright/playwright.tde.config.mjs 的 testMatch 声明派生（不硬编码 7 这个数字）。
 const expectedBrowserSpecs = [...new Set([...browserConfigText.matchAll(/['"](tde-[a-z0-9-]+\.browser\.mjs)['"]/g)]
   .map(match => `tests/${match[1]}`))].sort()
 const browserSpecs = Array.isArray(browserReport?.specs) ? [...browserReport.specs] : []
@@ -977,6 +979,21 @@ gate.playerCardsVerified.pass = gate.playerCardsVerified.total === PLAYER_CARD_C
   && gate.playerCardsVerified.basicWeaknesses === TDE_PLAYER_BASIC_WEAKNESS_CODES.length
   && gate.playerCardsVerified.nodeAcceptance && gate.playerCardsVerified.ledgerTest
   && gate.playerCardsVerified.ledgerVerified === PLAYER_CARD_CODES.length
+// 发布要求以实跑证据计算；正式版必须没有简化、缺口或挂起原语。
+const onlineFor=viewport=>browserTests.some(test=>test.spec==='tests/tde-online.browser.mjs'
+  && test.viewport===viewport && test.status==='passed')
+const releaseAcceptance={required:{
+  launch:gate.campaignLaunchable.pass && gate.chaptersLaunchable.pass,
+  node:gate.nodeAcceptance.pass,browser:gate.browserAcceptance.pass,
+  parallelSmoke:gate.parallelVerified.pass,
+  onlineMultiplayer:onlineFor('desktop') && onlineFor('mobile'),
+  sharedInterludes:gate.parallelVerified.pass && fileHash('tests/tde-completion.test.mjs')!==null,
+},deferred:[]}
+const earlyAccessRequired=(allCardSummary?.simplified ?? 0)>0
+  || scenarioItems.some(item=>(item.gaps || []).length>0 || (item.approximations || []).length>0)
+  || primitiveDebts.total>0 || !Object.values(releaseAcceptance.required).every(Boolean)
+gate.releaseDisclosure={deferred:[],pass:!earlyAccessRequired && lobbyEntry?.earlyAccess===false}
+
 gate.releaseGate = {
   launch: campaignLaunchable,
   lobby: lobbyVisible,
@@ -991,6 +1008,7 @@ gate.releaseGate = {
   browser: gate.browserAcceptance.pass,
   story: gate.storyVerified.pass,
   primitives: gate.primitivesDone.pass,
+  disclosure: gate.releaseDisclosure.pass,
 }
 gate.releaseGate.pass = Object.entries(gate.releaseGate)
   .filter(([key]) => key !== 'pass')
@@ -1059,25 +1077,9 @@ const remaining = []
 const legend = allCardSummary?.verified === liveCardShapes.total
   ? `逐卡账本 ${allCardSummary.verified}/${allCardSummary.total} 条 verified，其中 ${allCardSummary.simplified} 条为显式简化`
   : `逐卡账本缺失或不完整（${allCardSummary?.verified ?? 0}/${liveCardShapes.total}）`
-remaining.push(`P7 ${allCardSummary?.simplifiedPlayer ?? 0} + P8 ${allCardSummary?.simplifiedCampaign ?? 0} = `
-  + `${allCardSummary?.simplified ?? 0} 条显式简化保持 simplified（${legend}；逐条 note 见 `
-  + 'content/campaigns/theDreamEaters/card-acceptance.js 与 audit/tde-all-card-acceptance.json；'
-  + '发布口径 equivalenceCertified=false，不宣称与印刷规则等价）')
-remaining.push(`原语请求待还账：P7 ${primitiveDebts.p7Rejected} 条 + P8 ${primitiveDebts.p8Outstanding} 条 rejected 原语请求待还账`
-  + `（P8 = rejected ${primitiveDebts.p8Rejected} / withdrawn ${primitiveDebts.p8Withdrawn} / `
-  + `deferred ${primitiveDebts.p8Deferred} / escape ${primitiveDebts.p8Escape}；rejected 请求合计 `
-  + `${primitiveDebts.p7Rejected + primitiveDebts.p8Rejected} 条），合计 ${primitiveDebts.total} 条；`
-  + `逐条见 ${PRIMITIVE_REQUEST_DIR}/、${PRIMITIVE_PLAN_PATH}`)
-remaining.push('并行共享幕间 II/III 与 16 段尾声矩阵未接线（仅 pick 双线 flow 验证；parallel 每条线当前各跑'
-  + '单线 flow，两线同步进同一幕间界面的协调层未做）——见 docs/tde-p9.5-report.md §6.1')
-remaining.push('真实联机双真人房间未验收（现有浏览器证据是单会话 + 双观察座位注入，不是生产大厅联机）'
-  + '——见 docs/tde-p9.5-report.md §6.3 / docs/tde-release.md §4')
-remaining.push('B4《编织宇宙》调试 endScenario 须选 resolution2（桥梁已建成）才有合法 B 轴最终态记录；'
-  + 'resolution1 属调试入口口径而非规则 bug；endCampaign 未把尾声格子序号写进 campaign（P10 可评估改显示）'
-  + '——见 docs/tde-p9.5-report.md §6.2')
-remaining.push('银钥匙 06189 是 setAside 剧情资产、不在战役牌库：真实路径 removeCampaignCard 为 no-op，'
-  + '「B 线牌库移除」语义仅由 tests/tde-p95-interludes 的预置牌库用例覆盖；'
-  + '内容层是否把它放进战役牌库待评估——见 docs/tde-p9.5-report.md §6.2')
+if ((allCardSummary?.simplified ?? 0)>0) remaining.push(legend)
+if (primitiveDebts.total>0) remaining.push('尚有 '+primitiveDebts.total+' 项原语未完成')
+for(const [key,ok] of Object.entries(releaseAcceptance.required)) if(!ok) remaining.push('发布验收未通过：'+key)
 if ((scenarioLedger?.remaining || []).length) {
   remaining.push(`逐章账本 remaining ${scenarioLedger.remaining.length} 条显式近似/边界保持登记`
     + `（audit/tde-scenario-acceptance.json；summary: ${scenarioLedger.summary?.approximations ?? 0} approximations / `
@@ -1094,10 +1096,7 @@ const tdeBaselineAudits = baselineAudits.filter(entry => /tools\/scan-tde-scope\
 const baselineRecollected = baselineLedger?.milestone === 'P10'
   || (tdeBaselineAudits.length >= 2 && tdeBaselineAudits.every(entry => entry.status === 0)
     && baselineLedger?.tests?.status === 0)
-if (baselineRecollected) {
-  remaining.push('P10 已重采 baseline（含 test:fast 与 tdeScope/tdeMigration，audit/baseline.json）；'
-    + '后续改内容/测试需重跑 node tools/audit-baseline.mjs --write。')
-} else {
+if (!baselineRecollected) {
   remaining.push(`audit/baseline.json 仍是 ${baselineLedger?.milestone ?? '缺失'} 口径（未 P10 重采，R4）：`
     + '发布前需 node tools/audit-baseline.mjs --write；后续改内容需重采。')
 }
@@ -1117,13 +1116,6 @@ if (keywordFailures.length) remaining.push(`关键词未 verified：${keywordFai
 if (rulebookStatus !== 'verified') {
   remaining.push(`规则书未 verified：${Object.entries(rulebookChecks).filter(([, value]) => !value).map(([key]) => key).join('、')}`)
 }
-if (!remaining.some(line => line.startsWith('P10 发布口径'))) {
-  remaining.push('P10 发布口径：三组确认按 P8/P9 口径 verified；逐卡审计仍有 87 条显式简化、并行共享幕间/尾声'
-    + '与真实联机房间边界未完成，按 earlyAccess 发布（playable + earlyAccess + equivalenceCertified=false），'
-    + '不宣称与印刷规则完全等价。')
-}
-if (!remaining.length) remaining.push('P10 发布范围内无遗留')
-
 // ---------------------------------------------------------------- 账本
 
 const audit = {
@@ -1135,7 +1127,7 @@ const audit = {
   milestone: 'M5',
   stage: 'P10',
   generatedBy: 'tools/audit-tde.mjs',
-  docs: 'docs/tde-migration-roadmap.md',
+  docs: 'docs/arkham-content-migration.md',
   scope: { path: SCOPE_PATH, sha256: scopeHash },
   // baseline 只记录「是否已 P10 重采」与 milestone，不记录文件内容哈希、也不记录逐 audit 的
   // status（发布收尾连写两次 baseline：#1 采快照、#2 收口；记哈希或逐项 status 会形成循环依赖/
@@ -1169,21 +1161,17 @@ const audit = {
   status: campaign?.status ?? null,
   playable: LAUNCHABLE.has(campaign?.status) && !launchBlocked,
   launchEnabled: !launchBlocked,
-  earlyAccess: (allCardSummary?.simplified ?? 0) > 0 || scenarioItems.some(item => (item.gaps || []).length > 0),
-  earlyAccessReason: `逐卡行为审计：${liveCardShapes.total} 条记录全部有实跑证据，但其中 `
-    + `${allCardSummary?.simplified ?? 0} 条显式简化（P7 ${allCardSummary?.simplifiedPlayer ?? 0} + P8 战役 `
-    + `${allCardSummary?.simplifiedCampaign ?? 0}），不等价于印刷规则；并行共享幕间 II/III 与 16 段尾声矩阵只在`
-    + ' pick 双线 flow 验证（两线同步幕间界面未做）；真实联机双真人房间未验收。因此 equivalenceCertified=false，'
-    + '按 earlyAccess 发布并逐条列入 remaining。',
-  equivalenceCertified: false,
+  earlyAccess: earlyAccessRequired,
+  earlyAccessReason: earlyAccessRequired ? remaining.join('；') : null,
+  equivalenceCertified: !earlyAccessRequired && gatePass,
+  releaseAcceptance,
   verifiedScope: `M0 范围（${scope?.counts?.records ?? 0} 条记录 = ${liveCardShapes.main} 主卡 + ${liveCardShapes.face} 关联面，`
     + `三包 ${liveCardPartitions.campaign}/${liveCardPartitions.investigator}/${liveCardPartitions.player}，`
     + `${gate.encounterGroups.expected} 遭遇组、4 章对/2 线/4 模式）、M1 五位调查员、M2 `
     + `${PLAYER_CARD_CODES.length} 张玩家卡、M3 八章逐章 12/12 检查、M3-C 剧情自译与双线 flow、`
     + `M4 ${keywordItems.length} 条关键词与 ${tdeRulebookEntries.length} 条规则书条目、M5 生产注册与大厅启动、`
     + `逐卡 ${liveCardShapes.total}/${liveCardShapes.total}、并行双线 10 门禁、真实浏览器证据。`
-    + 'literalCardBehavior 与浏览器证据均已落账，但逐卡仍有显式简化、并行共享幕间/尾声与真实联机未完成，'
-    + '因此按 earlyAccess 记录（equivalenceCertified=false），不宣称与印刷规则完全等价。',
+    + (earlyAccessRequired ? '验收缺口见 remaining。' : '原始循环已完成，显式简化、章节缺口与挂起原语均为零。'),
   packs,
   scenarios: chapterChecks.map(item => ({
     id: item.id,
@@ -1250,9 +1238,9 @@ const audit = {
     'src/campaign/part-flow.js',
     'tools/audit-tde.mjs',
     BROWSER_CONFIG_PATH,
-    'docs/tde-release.md',
-    'docs/tde-p9.5-report.md',
-    'docs/tde-migration-roadmap.md',
+    'docs/arkham-content-migration.md',
+    'audit/tde-parallel-acceptance.json',
+    'tests/tde-p95-interludes.test.mjs',
   ].map(path => ({ path, sha256: fileHash(path) })),
   confirmations,
   evidence: {

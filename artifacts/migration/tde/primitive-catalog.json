@@ -7,6 +7,42 @@
   "primitives": {
     "new": [
       {
+        "id": "window.afterAlarmRaised",
+        "step": "completion",
+        "status": "done",
+        "api": "window.afterAlarmRaised",
+        "readPoints": [
+          "window:afterAlarmRaised"
+        ]
+      },
+      {
+        "id": "play.alternateCost",
+        "step": "completion",
+        "status": "done",
+        "api": "play.alternateCost",
+        "readPoints": [
+          "module-export:preparePlayAttempt"
+        ]
+      },
+      {
+        "id": "skill.forcedCommit",
+        "step": "completion",
+        "status": "done",
+        "api": "skill.forcedCommit",
+        "readPoints": [
+          "source-pattern:forcedCommit"
+        ]
+      },
+      {
+        "id": "effect.capabilityRestrictions",
+        "step": "completion",
+        "status": "done",
+        "api": "effect.capabilityRestrictions",
+        "readPoints": [
+          "ctx-api:addEffect"
+        ]
+      },
+      {
         "id": "campaignPart",
         "step": "P3.1",
         "status": "done",
@@ -106,11 +142,11 @@
         "id": "swarm.placeCards",
         "step": "P3-9",
         "status": "done",
-        "api": "placeSwarmCards / swarmCardsOf / removeSwarmCard / clearSwarmCards / swarmCanBeDefeated / splitSwarmingDamage / swarmHostOf",
+        "api": "placeSwarmCards / swarmCardsOf / removeSwarmCard / clearSwarmCards / swarmCanBeDefeated / swarmHostOf",
         "readPoints": [
           "module-export:placeSwarmCards",
           "module-export:swarmCanBeDefeated",
-          "module-export:splitSwarmingDamage",
+          "module-export:swarmGroup",
           "module-export:swarmHostOf",
           "scenario-runtime:swarm"
         ]
@@ -368,28 +404,29 @@
         "ok": true
       }
     ],
-    "deferred": [
-      {
-        "id": "window.afterAlarmRaised",
-        "mechanism": [
-          "alarmLevel"
-        ]
-      }
-    ]
+    "deferred": []
   },
   "files": {
+    "src/engine/windows.js": "a480ab3957d786fc9829e4cb00ffccd5b7357c49f5641e2642e3364032b9dc5d",
+    "src/engine/scenario-runtime.js": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+    "tests/tde-completion-primitives.test.mjs": "ec22a2346dad73c278a45eda80327b19c6c69b7508d51be4cfb849bf670f9367",
+    "docs/tde-primitives.md": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+    "src/engine/play-attempt.js": "75f45ba599527a140a991723b16d8e0a459f8b5da2fac22644bfe4a8a9029273",
+    "src/engine/actions.js": "8102adef5079256407dab8bcbd9aa2d7774d30bbc41a54658454b910d78e1c23",
+    "src/engine/commit-rules.js": "bb0e99bff115ebab3a6a566614be26d00da7d6663cd7c79703de2773fee62858",
+    "src/engine/tests.js": "70f8e5ccde5b4fbe7e9ac388119206f62a12265871e3bff800031129517c9d22",
+    "src/engine/modifiers.js": "6633e3629ad4040775c6e1c59bfe868eab24bba5fb28d33ea5ad48223fdd928e",
+    "src/cards/entries/06164.js": "470ef8852d3f719016e7164e148e0c097b9014923a214cae29e51a1eabc82013",
     "src/campaign/campaign-parts.js": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
     "tests/tde-campaign-parts.test.mjs": "bf1ccab8618258c13467f7690a0862630506edbc217bc4e63fb56c16f2e1da33",
-    "docs/tde-primitives.md": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
-    "docs/tde-migration-roadmap.md": "1052735141b74c1153948794ad028dbd0dce50cd454a218e8195650f0794ee6e",
+    "docs/tde-release.md": "3654c0a9bca6d515f1e472b12b8047e56c23e2cb74ac35647deff2a149119c1c",
     "src/engine/counters.js": "246f3f93c3f65e034bc185bb3664de62f1c5653bc6ea95c3d972dac0497cae6d",
-    "src/engine/scenario-runtime-extras.js": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
-    "src/engine/scenario-runtime.js": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
+    "src/engine/scenario-runtime-extras.js": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
     "tests/tde-primitives-counters.test.mjs": "fbd004e8b47ddb805322a87bba80dd302452363f6767401d051175096febeaa6",
     "src/engine/swarming.js": "76b1a7156961a613e9f7910827b82a746e5bb898e3eb182bcfaa407ab7f10b9f",
     "tests/tde-primitives-swarming.test.mjs": "1afac20069eda6217c24165c00ce160f59f375e0bcacf9476458b356d2fa2cef",
-    "src/engine/swarm.js": "82b1025909b585a4734ce2aaf67cd8273e8c2f1e159e6a120ae77d644b49ac86",
-    "tests/tde-primitives-swarm.test.mjs": "a5d350aff642ef995ff8eca1a1e6305afd173bd82921f4c66eab9afcc0e1c7ce",
+    "src/engine/swarm.js": "89ec207ed56006480c9149d62b9f47baf785b63b719189459967a8bc0e090c72",
+    "tests/tde-primitives-swarm.test.mjs": "233d4551b7bfd5765a9af60c9a8ce0c6687712a642e5fa8b9844adaee35f842e",
     "src/engine/veiled.js": "c124157ac199a023b34f36d23c617de0f1bcd6c2529682be763ce6c728cfdf67",
     "tests/tde-primitives-veiled.test.mjs": "5ff286b26c58a18fc103642cc0bd5998eca9091682096ced1e81926a6ca1415f",
     "src/engine/token-bag.js": "f189e38ec60b3f5422238ab8c571add679fe564bacc1e7281fad577a08936497",
@@ -407,32 +444,30 @@
     "src/engine/marker-count.js": "fa87d630d4d3de8fe516212f12985a1eb59d5b7403497c259d8945d92c11ec3d",
     "tests/tde-primitives-marker-count.test.mjs": "bbb6b523425b8f947ffe70a2478f8f627b30626b83da26246d96f9feb0b81eee",
     "src/engine/asset-defeat.js": "32a74fdb39f9aefd043bb05385cb53ec173df75ef7fdce00714a6f999a75666b",
-    "src/engine/enemies.js": "54395a26fa4da1d970256bdfa48fc9c74aa5cfb103801c1f18f5aed649ce58ac",
-    "src/engine/windows.js": "ef8fbd64a8cee3026ee465fdfbb2401365d222ef09481af6da55fd5ae560bb6f",
-    "tests/tde-investigators.test.mjs": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
+    "src/engine/enemies.js": "a1f4f0772d22e7bb0511157c350006ccfe317fca6055357d159e7c70a09436dd",
+    "tests/tde-investigators.test.mjs": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
     "src/engine/harm-transfer.js": "6b58b4156f03ae12beb94a2cb16800d68afcae7223d9b0116a80207b5d37d1f8",
-    "src/engine/api-misc.js": "9f728958b0034cdf45693ab6c93badd4ea6c802101c59b07f7c97c7132ea9463",
+    "src/engine/api-misc.js": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765",
     "src/engine/card-counters.js": "62ff1ce3d00bc267be2f9a5bb318e8787022afb6323d70cfc5a26e49f8e2e384",
     "src/engine/restricted-actions.js": "7be7d6e89382fbe2e552329e7a1c9a12f0a2556b1398ef3d9d5a28d36f6ebd2f",
     "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
-    "src/engine/turn.js": "13a7ae480a382aa824ab36922a4188a938d981d21986a4bb5297a445ae7ff79a",
-    "src/engine/moves.js": "4af1cb20a863cbe2834452efa27209d4f9e78e864f78a30d4036989a9cbcc01e",
-    "src/engine/dispatch.js": "3b991edc0d3ec79a692db8691cbbbb049f1b674d28588df22d772f4c770dcd64",
-    "src/engine/table-decisions.js": "d53d323f9ded62b2116928f781852a1c8c518461251b84c4b7a653f5fc19f51f",
-    "src/engine/deck-ops.js": "561faf0d46c2e6b637c30871af039df711fd16505792b22a2f8e1341110833ad",
-    "src/engine/ability.js": "3c5c7cc95252fb855b81ee26846d6b6677bbad90cd81bead673944a7ed886fee",
-    "src/engine/phases.js": "054713120de0f972b5befdb78572d94ac11df261c2eaa798023ea2c15f1949ec",
-    "src/engine/stats.js": "cbbf30a02f7acb0ad966117da81019734c2b2de99dc204e8fdaf7dce83ee2f11",
-    "src/engine/setup.js": "cc239b5e015fff01eca07ac1851c46f7ddad7d42c04a1f980c8233a35646b8ce",
-    "src/engine/tests.js": "1ec7f7c464bc0f502ecc5a0c3cce108739b38c7e4aa415945019dec4e03b3872",
-    "src/engine/as-if-location.js": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc",
-    "src/engine/dream-gate.js": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc",
-    "src/engine/hidden-enemy.js": "6f95b36104ea75b41406bb4a46c66c582d155e21132a6b7b7270e7288aa8543b"
+    "src/engine/turn.js": "48a3525644501dcc83d8d7ea45920b1fd6c8974f731c5b50135e1e7eac63958d",
+    "src/engine/moves.js": "26bce0f0592c82bdad760537747cc5a2bdc6a3096b2514794aa688eb6d49af41",
+    "src/engine/dispatch.js": "25da13f6d7646719a9187a660f55742c6058098951a1d9598ba87d9a817bb89e",
+    "src/engine/table-decisions.js": "2805fbffb7103af4705a1cde49f8dca89064c2f15585058fd2a9eec97016e32b",
+    "src/engine/deck-ops.js": "4745fbee363e9d34e71b5ab8dbc7cbb647ad5b0762f16b4397aa0e6d59c3590d",
+    "src/engine/ability.js": "88e8cc8b521c7182a4ec39a06f437daa8018fdfdac8a2f23558a79039e5c5903",
+    "src/engine/phases.js": "32a3bbb7b988b748da716050d6df6e4f83cb06d61fa97c684b288999321ed8e9",
+    "src/engine/stats.js": "ffae0dc02d5d2f59631c8b000278a79c55d46f7a87315df3759442399f61402b",
+    "src/engine/setup.js": "9dc7b2e5ba572567ce3146d686874ae9b1577b78a075f57291c824b4480ecd20",
+    "src/engine/as-if-location.js": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5",
+    "src/engine/dream-gate.js": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58",
+    "src/engine/hidden-enemy.js": "e063c6e5cfb3fd104d963f0372a9ac754a1ff1d3675784034a5de4eb540a94c2"
   },
   "gate": {
     "newPrimitives": {
-      "expected": 29,
-      "done": 29,
+      "expected": 33,
+      "done": 33,
       "pending": 0,
       "pass": true
     },
@@ -448,7 +483,7 @@
       "pass": true
     },
     "escapeRegistered": {
-      "expected": 3,
+      "expected": 0,
       "pass": true
     },
     "mechanismCoverage": {

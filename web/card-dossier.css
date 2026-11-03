@@ -41,9 +41,6 @@
 .ah-carddetail-modal .ah-detail-meta{margin-top:18px;border-top:1px solid var(--line);padding-top:13px;font-size:12px;color:#9eac96}.ah-carddetail-modal summary{cursor:pointer;color:#b5bc9f;font-size:12px}
 .ah-carddetail-modal .ah-resource-note,.ah-carddetail-modal .ah-art-caption{color:#a8b29b;font-size:11px;line-height:1.7}
 .ah-carddetail-modal .ah-presentation-settings{border-color:var(--line);border-radius:4px}.ah-carddetail-modal input,.ah-carddetail-modal select,.ah-catalog-modal input,.ah-catalog-modal select{color:#e5d8b9;background:#10231c;border-color:#af965955}
-@font-face{font-family:'AHCardSymbols';src:url('./fonts/arkham.ttf') format('truetype');font-display:block}
-@font-face{font-family:'AHCardSymbolIcons';src:url('./fonts/arkhamicons.ttf') format('truetype');font-display:block}
-@font-face{font-family:'AHCardSymbolSlim';src:url('./fonts/arkhamslim.ttf') format('truetype');font-display:block}
 .ah-rule-symbol{display:inline-flex;align-items:center;justify-content:center;vertical-align:-.16em;color:inherit;margin:0 .12em}.ah-rule-symbol .ah-icon{width:1.1em;height:1.1em}
 .ah-card-glyph{font-family:'AHCardSymbols'!important;font-size:1.15em;font-weight:normal;font-style:normal;line-height:1;text-transform:none;letter-spacing:0;font-variant:normal}
 .ah-card-glyph-icons{font-family:'AHCardSymbolIcons'!important}

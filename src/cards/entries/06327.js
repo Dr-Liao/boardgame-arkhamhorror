@@ -12,15 +12,12 @@
 //   · 「不造成标准伤害，改为成功差值每点 1 伤害（1–6）」直接复用攻击流程的通用字段
 //     successDamage:'overDifficulty' / minDamage / maxDamage（01029 同一读点）；
 //   · 失败误伤另一位调查员「每低于难度 1 点 1 伤害」= failByAmountToEngaged。
-// 显式简化：失败误伤的上限由引擎既有读点写死为 5（01029 的口径），卡面写 6；成功伤害按 6 已实现。
+// 成功与失败误伤均按印刷上限 6 结算。
 
 export default {
   code: '06327',
   uses: 2,
   usesType: 'ammo',
-  simplified: true,
-  note: '失败误伤分支的最大值沿用引擎读点写死的 5（01029 的 successDamage/failByAmountToEngaged 共用实现），'
-    + '卡面写 6；成功伤害（1–6）与「不造成标准伤害」已实现。',
   abilities: [
     {
       kind: 'action',
@@ -32,6 +29,7 @@ export default {
         minDamage: 1,
         maxDamage: 6,
         failByAmountToEngaged: true,
+        failMaxDamage: 6,
       },
     },
   ],

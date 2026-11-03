@@ -31,6 +31,7 @@ const SCOPE_PATH = 'artifacts/migration/tde/scope.json'
 const AUDIT_PATH = 'audit/tde-migration.json'
 const scope = JSON.parse(readFileSync(new URL(`../${SCOPE_PATH}`, import.meta.url), 'utf8'))
 const audit = JSON.parse(readFileSync(new URL(`../${AUDIT_PATH}`, import.meta.url), 'utf8'))
+const parallelAudit = JSON.parse(readFileSync(new URL('../audit/tde-parallel-acceptance.json', import.meta.url), 'utf8'))
 const sha256File = path => createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex')
 const exists = path => existsSync(new URL(`../${path}`, import.meta.url))
 // 逐章 12 项检查（P8/P9 口径）：每章账本必须 12 项全真，缺一不可。
@@ -121,6 +122,7 @@ test('P10 生产注册：三包与 8 章 playable、assertLaunchable 通过、�
   const tde = hall.find(item => item.id === 'theDreamEaters')
   assert.ok(tde, '大厅必须出现《食梦者》')
   assert.equal(tde.status, 'playable')
+  assert.equal(tde.earlyAccess, false)
   assert.equal(tde.scenarios.length, 8)
   const launched = contentRegistry.assertLaunchable('theDreamEaters')
   assert.equal(launched.id, 'theDreamEaters')
@@ -151,7 +153,7 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   assert.equal(audit.milestone, 'M5')
   assert.equal(audit.stage, 'P10')
   assert.equal(audit.generatedBy, 'tools/audit-tde.mjs')
-  assert.equal(audit.docs, 'docs/tde-migration-roadmap.md')
+  assert.equal(audit.docs, 'docs/arkham-content-migration.md')
   // 范围账本与三包账（账本 = 范围，不是另一套数字）。
   assert.equal(audit.scope.path, SCOPE_PATH)
   assert.equal(audit.scope.sha256, sha256File(SCOPE_PATH))
@@ -210,7 +212,7 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   assert.equal(audit.gate.scenariosVerified.chapterRecords, 253)
   assert.equal(audit.gate.scenariosVerified.coveredChapterRecords, 253)
   assert.equal(audit.gate.scenariosVerified.pass, true)
-  // 全卡账本：388/388 verified，两套分区守恒，87 条显式简化（P7 57 + P8 30），415 例实跑证据 6 文件。
+  // 全卡账本：388/388 verified，两套分区守恒，83 条显式简化（P7 53 + P8 30），417 例实跑证据 6 文件。
   assert.equal(audit.gate.allCardsVerified.total, 388)
   assert.equal(audit.gate.allCardsVerified.records, 352)
   assert.equal(audit.gate.allCardsVerified.faces, 36)
@@ -218,23 +220,24 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   assert.equal(audit.gate.allCardsVerified.pending, 0)
   assert.deepEqual(audit.gate.allCardsVerified.partitions,
     { campaign: 283, investigator: 18, player: 87, face: 36 })
-  assert.equal(audit.gate.allCardsVerified.simplified, 87)
-  assert.equal(audit.gate.allCardsVerified.simplifiedPlayer, 57)
-  assert.equal(audit.gate.allCardsVerified.simplifiedCampaign, 30)
+  assert.equal(audit.gate.allCardsVerified.simplified, 0)
+  assert.equal(audit.gate.allCardsVerified.simplifiedPlayer, 0)
+  assert.equal(audit.gate.allCardsVerified.simplifiedCampaign, 0)
   assert.equal(audit.gate.allCardsVerified.testFiles, 6)
-  assert.equal(audit.gate.allCardsVerified.testsPassed, 415)
+  assert.equal(audit.gate.allCardsVerified.testsPassed, 417)
   assert.equal(audit.gate.allCardsVerified.testFilesFresh, true)
   assert.equal(audit.gate.allCardsVerified.pass, true)
-  // 并行双线：10/10 门禁、46 例 Node 证据、dualLineGate open、开闸证据账本 fresh。
+  // 并行双线：门禁、实跑用例、dualLineGate 与开闸证据账本一致。
   assert.equal(audit.gate.parallelVerified.status, 'passed')
   assert.equal(audit.gate.parallelVerified.gates, 10)
   assert.equal(audit.gate.parallelVerified.gatesCovered, 10)
   assert.equal(audit.gate.parallelVerified.gatePassCount, 10)
-  assert.equal(audit.gate.parallelVerified.tests, 46)
+  assert.ok(audit.gate.parallelVerified.tests > 0)
+  assert.equal(audit.gate.parallelVerified.tests, parallelAudit.summary.tests)
   assert.equal(audit.gate.parallelVerified.dualLineGate, 'open')
   assert.equal(audit.gate.parallelVerified.filesFresh, true)
   assert.equal(audit.gate.parallelVerified.pass, true)
-  // 浏览器：7 spec 集合与 playwright.tde.config.mjs 一致；计数从账本现读（不硬编码 54/71）。
+  // 浏览器：7 spec 集合与 tests/playwright/playwright.tde.config.mjs 一致；计数从账本现读（不硬编码 54/71）。
   const browser = audit.gate.browserAcceptance
   assert.equal(browser.status, 'passed')
   assert.equal(browser.specs.length, browser.expectedSpecs.length)
@@ -274,13 +277,12 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
     assert.equal(counts.failed, 0, `${file} 不应有失败用例`)
     assert.ok(counts.passed > 0, `${file} 应至少运行 1 例`)
   }
-  // 原语账本：29/29 done，P7 5 + P8 11 = 16 条原语请求债务（remaining 里逐条口径）。
-  assert.equal(audit.gate.primitivesDone.new, 29)
-  assert.equal(audit.gate.primitivesDone.done, 29)
+  // 原语账本：已登记原语完成，未结债务从复算账本读取。
+  assert.equal(audit.gate.primitivesDone.new, 33)
+  assert.equal(audit.gate.primitivesDone.done, 33)
   assert.equal(audit.gate.primitivesDone.unfinished.length, 0)
-  assert.equal(audit.primitives.outstanding.p7Rejected, 5)
-  assert.equal(audit.primitives.outstanding.p8Outstanding, 11)
-  assert.equal(audit.primitives.outstanding.total, 16)
+  assert.equal(audit.primitives.outstanding.total,
+    audit.primitives.outstanding.p7Rejected + audit.primitives.outstanding.p8Outstanding)
   // sources / evidence 哈希与磁盘一致（证据过期即失败）。
   for (const source of audit.sources) {
     assert.match(String(source.sha256), /^[0-9a-f]{64}$/, `${source.path} 缺少 sha256`)
@@ -293,38 +295,19 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   }
 })
 
-test('P10 发布口径：playable + earlyAccess + equivalenceCertified=false，三组 verified，remaining 完整', () => {
-  assert.equal(audit.status, 'playable')
-  assert.equal(audit.playable, true)
-  assert.equal(audit.launchEnabled, true)
-  assert.equal(audit.earlyAccess, true)
-  assert.equal(audit.equivalenceCertified, false)
-  assert.match(audit.earlyAccessReason, /87 条显式简化/)
-  assert.match(audit.earlyAccessReason, /equivalenceCertified=false/)
-  assert.match(audit.earlyAccessReason, /并行共享幕间/)
-  assert.match(audit.earlyAccessReason, /真实联机双真人房间未验收/)
-  assert.equal(typeof audit.verifiedScope, 'string')
-  assert.match(audit.verifiedScope, /earlyAccess/)
-  assert.match(audit.verifiedScope, /不宣称/)
-  for (const group of ['scenarios', 'keywords', 'rulebook']) {
-    assert.equal(audit.confirmations[group].status, 'verified', `${group} 确认组应 verified`)
-  }
-  assert.equal(audit.gate.pass, true)
-  assert.equal(audit.gate.releaseGate.pass, true)
-  // remaining 必须如实列出未完成/边界（不得写成完成）。
-  const remainingText = audit.remaining.join('\n')
-  assert.match(remainingText, /P7 57 \+ P8 30 = 87 条显式简化/)
-  assert.match(remainingText, /原语请求待还账/)
-  assert.match(remainingText, /P7 5 条 \+ P8 11 条 rejected 原语请求待还账/)
-  assert.match(remainingText, /合计 16 条/)
-  assert.match(remainingText, /并行共享幕间 II\/III 与 16 段尾声矩阵未接线/)
-  assert.match(remainingText, /真实联机双真人房间未验收/)
-  assert.match(remainingText, /B4/)
-  assert.match(remainingText, /resolution2/)
-  assert.match(remainingText, /银钥匙 06189 是 setAside 剧情资产/)
-  assert.match(remainingText, /P10 已重采 baseline/)
-  assert.match(remainingText, /后续改内容\/测试需重跑/)
-  assert.ok(audit.remaining.length >= 8, 'remaining 应至少覆盖 87 简化/原语债务/并行幕间/联机/B4/银钥匙/baseline/发布口径')
+test('食梦者正式发布：无提前体验、无简化或缺口，双线与真实联机均验收',()=>{
+  assert.equal(audit.status,'playable')
+  assert.equal(audit.earlyAccess,false)
+  assert.equal(audit.earlyAccessReason,null)
+  assert.equal(audit.equivalenceCertified,true)
+  assert.equal(audit.gate.releaseGate.pass,true)
+  assert.equal(audit.gate.releaseDisclosure.pass,true)
+  assert.ok(Object.values(audit.releaseAcceptance.required).every(Boolean))
+  assert.equal(audit.releaseAcceptance.required.onlineMultiplayer,true)
+  assert.deepEqual(audit.releaseAcceptance.deferred,[])
+  assert.equal(audit.primitives.outstanding.total,0)
+  assert.deepEqual(audit.remaining,[])
+  for(const group of ['scenarios','keywords','rulebook']) assert.equal(audit.confirmations[group].status,'verified')
   // baseline 维护口径：只记 retaken/milestone，不记录文件内容哈希或逐 audit status（发布收尾会连写
   // 两次 baseline，记哈希/status 会形成循环依赖或二次漂移；remaining 负责可读的维护口径）。
   assert.equal(audit.baseline.path, 'audit/baseline.json')

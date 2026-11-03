@@ -15,7 +15,7 @@
 // 与 tests/tde-browser-shell.mjs 的区别：本 spec **不注册任何内容、不注入状态**，全部走真实
 // server 进程（生产组合根）与真实 web/；8 章逐章实机证据在 tests/tde-scenarios.browser.mjs。
 //
-// 证据命令：node ../../node_modules/@playwright/test/cli.js test --config playwright.tde.config.mjs
+// 证据命令：node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

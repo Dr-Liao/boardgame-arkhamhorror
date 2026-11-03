@@ -1,3 +1,4 @@
+import { afterThreatEntered } from './threat-entry.js'
 // 直觉牌库（调查员专属第二牌库）—— 第 5 步 M1 调查员批次（P6）。
 //
 // 印刷场景：乔·戴蒙德的「你的牌库必须包括至少 11 张[[洞察]]事件（包括悬案）；每场冒险的
@@ -170,6 +171,7 @@ export function createHunchDeck(deps) {
     if (registeredEntry(code)?.avoidHunchShuffle) {
       inv.threat ||= []
       inv.threat.push(newCardInstance(state, code, {}))
+      afterThreatEntered(state, inv, inv.threat.at(-1), events, deps.reactionWindow)
       info(state, events, `「${cardName(code)}」改为进入 ${inv.name} 的威胁区域（不洗回直觉牌库）。`)
       return code
     }

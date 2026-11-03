@@ -1,3 +1,5 @@
+import { availableResources } from './resource-bank.js'
+import { payTokenCost } from './token-cost.js'
 // 揭示与描述子执行（runActReveal / runAgendaForced / resolveTreacheryEffect /
 // executeDescriptor）从 engine.js 拆出的模块（Phase 6 · 6d-26）。
 //
@@ -6,6 +8,8 @@
 //   resolveTreacheryEffect        —— 遭遇诡计的印刷效果（含目标与检定）
 //   executeDescriptor             —— 声明式能力的统一执行入口（描述子 → 效果/回调）
 // 最后一个是能力层的核心读点之一：§4 里大量「读点在 executeDescriptor」的条目指的就是它。
+
+import { ignoreLocationTrigger } from './location-effect-scope.js'
 
 export function createReveal(deps) {
   const {
@@ -193,8 +197,14 @@ function flushDeferredBeneath(state, events = []) {
     // 同名牌可能已经在弃牌堆里（上一张没被取走的残留）。取最近打出的那张。
     const discardIndex = (owner.discard || []).lastIndexOf(item.code)
     if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
-    owner.beneath ||= []
-    owner.beneath.push(item.code)
+    if (item.host) {
+      // The event is now in discard; use the same physical origin store as ordinary cards.
+      owner.discard.push(item.code)
+      abilityApi(state, events).commitOrigins.store(item.seat, item.host, item.code, { from: 'discard' })
+    } else {
+      owner.beneath ||= []
+      owner.beneath.push(item.code)
+    }
     if (item.log !== false) info(state, events, `「${cardName(item.code)}」被放在 ${owner.name} 底下。`)
   }
 }
@@ -202,14 +212,18 @@ function flushDeferredBeneath(state, events = []) {
 function executeDescriptor(state, params) {
   descriptorDepth += 1
   try {
-    return runExecuteDescriptor(state, params)
+    const result = runExecuteDescriptor(state, params)
+    if (descriptorDepth === 1) abilityApi(state, params?.events).resolveEmptyUses()
+    return result
   } finally {
     descriptorDepth -= 1
     if (descriptorDepth === 0) flushDeferredBeneath(state, params?.events)
   }
 }
 
-function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false, channelDiscount = 0, fromChannel = null }) {
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false }) {
+  if (state.locations.includes(source) && ['forced', 'reaction'].includes(descriptor.kind)
+    && ignoreLocationTrigger(state, source.id, requestChoice, descriptor.label)) return false
   const cost = descriptorCost(descriptor)
   // 手牌事件：先按打出规则付费并离开手牌，再结算效果。
   // noPlayCost 的描述子（如 05023 宝剑王牌「放置入场」）自己负责移动这张牌。
@@ -227,19 +241,22 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     const def = cardDef(handCode)
     if (!def) return false
     const price = Math.max(0, playCost(state, inv, def) - (channelDiscount || 0))
-    if (inv.resources < price) return false
+    if (availableResources(inv) < price) return false
+    if (!payTokenCost(state, inv, registeredEntry(handCode)?.additionalTokenCost)) return false
     inv.hand.splice(index, 1)
-    resourceBank.spendFromPool(inv, price)
+    resourceBank.spendFromPool(inv, price, state)
     consumePlayThreatResources(state, inv, events)
     info(state, events, fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(handCode)}」。`
       : `⚡ ${inv.name} 快速打出「${cardName(handCode)}」。`)
   }
-  if (!alreadyPaid && !payAbilityCost(state, inv, source, cost, events, descriptor)) return false
+  const scenarioBeforeCost = state.scenario
+  if (!alreadyPaid && !ignoreCosts && !payAbilityCost(state, inv, source, cost, events, descriptor)) return false
+  if (cost?.drawEncounter && (inv.defeated || inv.resigned || state.status !== 'playing' || state.scenario !== scenarioBeforeCost)) return false
   // 只有 kind 'action' 的描述子消耗行动点：free / reaction / forced 都是 0 费，
   // 不能因为 cost 里没写 action:false 就在窗口结算里扣行动（Phase 1 修正）。
-  if (!alreadyPaid && descriptor.kind === 'action' && cost.action !== false) spendAction(state, inv)
-  markLimitUsed(state, inv, descriptor, context, windowId, source)
+  if (!alreadyPaid && !ignoreCosts && descriptor.kind === 'action' && cost.action !== false) spendAction(state, inv)
+  if (!repeatedEffect) markLimitUsed(state, inv, descriptor, context, windowId, source)
   // 日志文案：从牌桌「能力」入口（doAbility）进来的描述子必须复刻旧式能力文案
   // （`使用「X」的能力：…`），否则迁移一张卡就改一行玩家可见日志，重放指纹会对不上。
   // 事件卡（fromHand）与窗口触发的描述子沿用 Phase 2 起的短文案；
@@ -311,6 +328,8 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   let cancelledByDescriptor = false
   const previousResolving = state._resolvingCardCode
   const previousResolvingSeat = state._resolvingSeat
+  const previousAssetId = state._resolvingAssetId
+  if (sourceAsset) state._resolvingAssetId = sourceAsset.id
   state._resolvingCardCode = descriptor.code
   state._resolvingSeat = inv.seat
   try {
@@ -333,6 +352,8 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     else state._resolvingCardCode = previousResolving
     if (previousResolvingSeat === undefined) delete state._resolvingSeat
     else state._resolvingSeat = previousResolvingSeat
+    if (previousAssetId === undefined) delete state._resolvingAssetId
+    else state._resolvingAssetId = previousAssetId
   }
   if (handCode) disposePlayedEvent(inv, handCode)
   // deferredBeneath 的冲刷统一在最外层 executeDescriptor 的 finally 中执行（见上方 flushDeferredBeneath）。

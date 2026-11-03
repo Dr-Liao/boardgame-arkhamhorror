@@ -129,7 +129,7 @@ export default {
   'table.rulebook': '规则书',
   'table.rulebook.title': '规则书 · F1',
   'table.setup': '关卡设置',
-  'table.setup.title': '查看本关的开场、布置步骤和说明',
+  'table.setup.title': '查看本关完整冒险指南与特别规则',
   'table.refresh': '刷新局势',
   'tde.interactions': '场景交互',
   'tde.list': '、',

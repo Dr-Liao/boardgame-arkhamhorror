@@ -408,6 +408,7 @@ export default {
   'game.enemy.engagedWith': 'Engaged with {name}',
   'game.enemy.engagedAll': 'Engaged with everyone here',
   'game.enemy.roaming': 'Roaming',
+  'game.enemy.voidLocation': 'Empty space ({x}, {y})',
   'game.enemy.locationState': '{location} · {state}{exhausted}',
 
   // Equipment slots (renderEquipmentSlots)

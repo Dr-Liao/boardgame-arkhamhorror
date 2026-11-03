@@ -5,6 +5,7 @@
   "specs": [
     "tests/tcu-interactions.browser.mjs",
     "tests/tcu-media.browser.mjs",
+    "tests/tcu-online.browser.mjs",
     "tests/tcu-release.browser.mjs",
     "tests/tcu-rules.browser.mjs",
     "tests/tcu-scenarios.browser.mjs"
@@ -349,6 +350,26 @@
       "retry": 0
     },
     {
+      "title": "两名真人经中转服务进入万象无终 (desktop)",
+      "spec": "tests/tcu-online.browser.mjs",
+      "file": "tests/tcu-online.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "两名真人经中转服务进入万象无终 (mobile)",
+      "spec": "tests/tcu-online.browser.mjs",
+      "file": "tests/tcu-online.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
       "title": "四循环十张图片可解码，27 首本地音乐均可播放",
       "spec": "tests/tcu-media.browser.mjs",
       "file": "tests/tcu-media.browser.mjs",
@@ -385,6 +406,22 @@
       "viewport": "mobile",
       "scenario": null,
       "spec": "tests/tcu-media.browser.mjs"
+    },
+    {
+      "name": "online-two-humans-desktop",
+      "path": "artifacts/tcu-migration/online-two-humans-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "spec": "tests/tcu-online.browser.mjs"
+    },
+    {
+      "name": "online-two-humans-mobile",
+      "path": "artifacts/tcu-migration/online-two-humans-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "spec": "tests/tcu-online.browser.mjs"
     },
     {
       "name": "p10-release-chapter-desktop",

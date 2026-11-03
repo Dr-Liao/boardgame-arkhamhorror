@@ -31,15 +31,15 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "ce85711da688564a587b01e10b580e19494a36494b3f549764f049b380417961"
+      "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "5e6b338eaeb29b5fb31d056af449bb60c8afa96ce0483338fcc5011a31abdaeb"
+      "sha256": "eafa654fcad4d44e784a4f46f61db84a23171cad1af164e36d36920fa4cbc4fe"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269"
+      "sha256": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53"
     }
   ],
   "implementationFiles": [
@@ -49,11 +49,11 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4"
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "1dfb4b9275359d4cdd74ac70921a786d5b1805b32267bb462aa48cd97ebd4517"
+      "sha256": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "62c676d2e9db0fbe456131b44d2b64cb53242ca5cd8a95aeed7db62d75d8a12b"
+      "sha256": "3d9c62886598a4a3fd9c0f3bc96c4db496e1a50e4bd34aff448df3f4c95a5638"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -69,15 +69,15 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "ce85711da688564a587b01e10b580e19494a36494b3f549764f049b380417961"
+      "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "5e6b338eaeb29b5fb31d056af449bb60c8afa96ce0483338fcc5011a31abdaeb"
+      "sha256": "eafa654fcad4d44e784a4f46f61db84a23171cad1af164e36d36920fa4cbc4fe"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269"
+      "sha256": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53"
     }
   ],
   "entries": [
@@ -847,7 +847,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
           "line": 835,
-          "test": "TCU 05156 反应灵敏 立即获得 1 个不计入行动数的行动"
+          "test": "TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数"
         }
       ]
     },
@@ -1854,7 +1854,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
           "line": 1114,
-          "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时翻转为正修正"
+          "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时取消并改为旧印"
         }
       ]
     }

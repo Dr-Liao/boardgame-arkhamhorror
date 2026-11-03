@@ -2,6 +2,8 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
+import { commitProfile } from './lifecycle.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -29,10 +31,12 @@ export function createStats(deps) {
     registeredEntry,
     requestChoice,
     scenarioBehavior,
+    scenarioRuntime,
     statPipeline,
   } = deps
 
   function assetEffect(inv, asset) {
+    if (assetTextBlankedExceptForced(asset)) return {}
     // Phase 5（5a-20）：「毒蛇灾厄」清空某类特长卡的文字——规则数据在 BLANKS_TRAITS 里。
     const blankedTraits = (inv.threat || []).flatMap(item => blanksTraits(item.code))
     if (blankedTraits.length
@@ -99,7 +103,12 @@ export function createStats(deps) {
 
   function controlledAbilityCards(inv) { return [...inv.assets, ...(inv.threat || [])] }
 
-  function controlledAbilityCard(inv, id) { return controlledAbilityCards(inv).find(card => card.id === id) }
+  function controlledAbilityCard(inv, id) {
+    if (id === `investigator:${inv.seat}` && registeredEntry(inv.code)?.abilities?.some(ability => ['action', 'free'].includes(ability.kind))) {
+      return { id, code: inv.code, investigator: inv.seat }
+    }
+    return controlledAbilityCards(inv).find(card => card.id === id)
+  }
 
   function lolaCanUseCard(inv, code) {
     // Phase 5（5a-33）：只有「用角色限制卡牌」的调查员走这套校验。
@@ -122,6 +131,7 @@ export function createStats(deps) {
     // P2-4：重印别名号与 canonical 是同一张印刷卡（cards-data 的 duplicateOfCode）。
     // canonical 已实现并可用时，别名号在运行时也视为可用；构筑/牌池可用性仍在 deck 层判定。
     const canonical = ALL_CARDS[code]?.duplicateOfCode
+    if (cardDef(code)?.type === 'investigator') return code === inv.code || canonical === inv.code
     return isCardAvailable(code) || (canonical != null && isCardAvailable(canonical))
       || signatures.includes(inv.code)
       || scenarioBehavior(state).canPlayScenarioCard?.(state, inv, code) === true
@@ -149,6 +159,8 @@ export function createStats(deps) {
     // 迁移完成的卡牌分支已从引擎删除，新的修正请写在 src/cards/entries/<code>.js 的 modifiers 里。
     const { delta, floor } = statPipeline(state, inv, skill)
     v += delta
+    const resolvingAsset = inv.assets.find(asset => asset.id === state._resolvingAssetId)
+    if (resolvingAsset?.triggeredSkillBonus?.round === state.round) v += resolvingAsset.triggeredSkillBonus.amount
     if (floor != null) v = Math.max(v, floor)
     v += scenarioBehavior(state).statModifier?.(state, inv, skill) || 0
     const substitute = inv.skillSubstitute
@@ -209,6 +221,10 @@ export function createStats(deps) {
       if (eff && eff.passive && eff.passive.handSizeBonus) v += eff.passive.handSizeBonus
     }
     for (const card of inv.threat) v += getThreatEffect(card)?.handSizeModifier || 0
+    if (inv.assets.some(asset => assetEffect(inv, asset)?.passive?.sameNameHandLimit)) {
+      const names = inv.hand.map(code => cardDef(code)?.name || code)
+      v += names.length - new Set(names).size
+    }
     return Math.max(0, v)
   }
 
@@ -257,7 +273,8 @@ export function createStats(deps) {
     const entry = registeredEntry(code)
     const profile = (entry?.abilities || []).find(ability => ability.kind === 'commit')?.skill
     const list = profile?.conditionalIcons
-    if (!Array.isArray(list) || !list.length) return 0
+    const custom = profile?.iconBonus?.({ state, inv, code, skill, test: state.skillTest }) || 0
+    if (!Array.isArray(list) || !list.length) return custom
     let matched = null
     for (const item of list) {
       const when = item?.when
@@ -268,13 +285,16 @@ export function createStats(deps) {
       })
       if (ok) matched = item
     }
-    return matched ? iconsValue(matched.icons, skill) : 0
+    return custom + (matched ? iconsValue(matched.icons, skill) : 0)
   }
 
-  function effectiveTraits(state, inv, code) {
+  function effectiveTraits(state, inv, codeOrAsset) {
+    const copies = inv?.assets.filter(asset => asset.code === codeOrAsset || asset.id === codeOrAsset) || []
+    const instance = typeof codeOrAsset === 'object' ? codeOrAsset : copies.length === 1 ? copies[0] : null
+    const code = instance?.code || codeOrAsset
     const base = (cardDef(code)?.traits || []).map(trait => String(trait))
     if (!state || !inv) return base
-    const granted = [...collectGrants(state, inv, 'trait', { code })]
+    const granted = [...collectGrants(state, inv, 'trait', { code }), ...(instance?.attachments || []).map(attachment => registeredEntry(attachment.code)?.assetRule?.hostTrait).filter(Boolean)]
     if (!granted.length) return base
     const seen = new Set(base.map(trait => trait.toLowerCase()))
     for (const trait of granted) if (!seen.has(trait.toLowerCase())) { base.push(trait); seen.add(trait.toLowerCase()) }
@@ -292,11 +312,18 @@ export function createStats(deps) {
   }
 
   function commitIcons(state, inv, code, skill) {
-    const base = iconValue(code, skill)
+    const weights = state?.skillTest?.iconWeights
+    const base = weights ? Object.entries(cardDef(code)?.icons || {}).reduce((sum, [name, amount]) => sum + amount * (weights[name] || 0), 0)
+      : iconValue(code, skill)
     if (!state || !inv) return base
     const granted = collectGrants(state, inv, 'skillIcon', { code })
     const wanted = Array.isArray(skill) ? skill : [skill]
-    return base + (wanted.some(name => granted.has(name)) ? 1 : 0) + conditionalCommitIcons(state, inv, code, skill)
+    const assetBonus = (inv.assets || []).reduce((sum, asset) => sum + (registeredEntry(asset.code)?.commitIconBonus?.({
+      state, inv, asset, committedCode: code, test: state.skillTest,
+        api: { locationShroud: (id, seat = inv.seat) => scenarioRuntime(state, []).locationShroud(id, seat) },
+    }) || 0), 0)
+    const total = base + assetBonus + (wanted.some(name => granted.has(name)) ? 1 : 0) + conditionalCommitIcons(state, inv, code, skill)
+    return commitProfile(code)?.subtractIcons === true ? -total : total
   }
 
   function enemyStatMods(state) {

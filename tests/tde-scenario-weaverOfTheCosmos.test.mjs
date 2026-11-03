@@ -7,7 +7,8 @@
 //      注册本章条目，再直接 import 单卡文件验证（不依赖 implementedFor）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import * as engine from '../src/engine/engine.js'
+import {enemyHasLocationKeyword} from '../src/engine/enemy-entry.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { registerNonPlayerEntries } from '../src/cards/encounter-entries/_lookup.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/weaverOfTheCosmos/index.js'
@@ -135,6 +136,8 @@ function setupState(count = 2, seed = 1) {
 }
 
 function apiStub(state, overrides = {}) {
+  state.log ||= []; state.instanceSeq ||= {}; state.currentSeat ??= 0
+  const runtime = engine.scenarioRuntime(state, [])
   const doomApi = {
     get: location => Number(location?.doom) || 0,
     add: (location, amount = 1) => { location.doom = (Number(location?.doom) || 0) + amount; return location.doom },
@@ -147,9 +150,10 @@ function apiStub(state, overrides = {}) {
     highest: () => state.locations.reduce((max, location) => Math.max(max, Number(location.doom) || 0), 0),
   }
   return {
+    ...runtime,
     info: () => {},
     present: () => {},
-    choose: () => 'skip',
+    choose: request => request.options?.[0]?.id || 'skip',
     random: () => 0.5,
     shuffle: items => [...items],
     tokenLabel: token => String(token),
@@ -365,8 +369,9 @@ test('setup：4 张巨网入场、7 张放一边、阿特拉克与四条腿/织�
   const state = stateFor(2)
   const ids = chapter.behavior.setupLocations(state, [], setupApi(3))
   assert.deepEqual(ids, [...WEB])
-  assert.deepEqual(state.scenarioZones.setAside,
+  assert.deepEqual(state.scenarioZones.setAside.filter(code=>!/^0634[0-5]$/.test(code)),
     [ATLACH_NACHA, ...LEGS, SPINNER, SPINNER])
+  assert.equal(state.scenarioZones.setAside.filter(code=>/^0634[0-5]$/.test(code)).length,11)
   assert.equal(chapter.manifest.zones.setAside.reduce((sum, entry) => sum + entry.count, 0), 14,
     '7 张展开巨网 + 8 张敌人/织网者')
 })
@@ -680,8 +685,7 @@ test('敌人条目：06346 躲避替代 = 不横置 + 本轮不攻击；06351 �
   atlach.exhausted = true
   atlachNacha.enemyScript.onEvade(state, state.investigators[0], atlach, { success: true }, api)
   assert.equal(atlach.exhausted, false, '不横置')
-  assert.equal(atlach.skipAttackRound, state.round, '本轮不攻击')
-  assert.equal(state.scenarioFlags.atlachNachaEvadeProtected.round, state.round)
+  assert.equal(atlach.attackProtection[0],state.round, '只保护被选调查员')
 
   const spinnerEnemy = api.spawn(WEB_SPINNER, 'theGreatWeb1')
   spinnerEnemy.exhausted = false
@@ -698,7 +702,9 @@ test('诡计条目：06353 进威胁区 + 敏捷修正；06354 场上无蜘蛛�
   assert.equal(caughtInAWeb.threatAction.difficulty, 3)
 
   state.encounterDeck = ['06102', '06103']
-  endlessWeaving.encounterResolve(state, state.investigators[0], { code: '06354' }, api)
+  let requested
+  endlessWeaving.encounterResolve(state, state.investigators[0], { code: '06354' }, {...api, findAndDrawEncounterCard:(seat,options)=>{requested=options; return api.spawn('06102',state.investigators[seat].location)}})
+  assert.equal(requested.trait,'Spider')
   assert.ok(state.enemies.some(enemy => enemy.originalCode === '06102'), '从遭遇牌库抽出了蛛群')
 })
 
@@ -736,8 +742,8 @@ test('共享组条目：06103 恶心蛛网的蜘蛛关键词/移动封锁/摆脱
   sickeningWebs.encounterResolve(state, inv, { code: '06103' }, api)
   const spider = api.spawn('06102', 'theGreatWeb1')
   chapter.behavior.phaseBegan(state, 'mythos', api)
-  assert.equal(spider.retaliate, true)
-  assert.equal(spider.alert, true)
+  assert.equal(enemyHasLocationKeyword(state,spider,'retaliate'),true)
+  assert.equal(enemyHasLocationKeyword(state,spider,'alert'),true)
   assert.match(chapter.behavior.moveError(state, inv, 'theGreatWeb2'), /不能移动离开/)
   const moves = chapter.behavior.actions(state, inv)
   const discardMove = moves.find(entry => String(entry.rule).startsWith('discardSickeningWebs:'))

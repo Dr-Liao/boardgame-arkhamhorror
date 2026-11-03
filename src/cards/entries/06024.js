@@ -7,24 +7,16 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 06024 梦境结晶器：
-//   · 额外费用：入场时 api.bonded.retrieve(..., { handCount: 0 }) → 1 张 06025 洗入牌库。
+//   · 额外打出费用：bondedShufflePlayCost 在付行动/资源和入场前洗入 1 张 06025。
 //   · 事件附属：eventPlayed 窗口（该窗口在事件处置之后开；被打出的事件此时在弃牌堆）→
 //     api.moveCard({ from:'discard', to:'attached', attachTo: source.id, facedown:true }) 改放到宿主附属区。
-//   · 显式简化：「附属事件可以投入技能检定」——引擎的投入通道原语（playChannels.commitEntries）
-//     目前只支持 05013 银暮匕首的 beneath 通道，attachments 没有投入候选；故该子句未接线。
+//   · 附属事件通过 attachedCommitAsIfInHand 进入技能投入候选。
 
 export default {
   code: '06024',
-  simplified: true,
-  note: '未实现：附属事件「如同手牌」投入技能检定（playChannels.commitEntries 只有 beneath 通道，attachments 无投入候选）；已实现额外费用检索与事件附属（上限 5）。',
+  attachedCommitAsIfInHand: true,
+  bondedShufflePlayCost: { count: 1 },
   abilities: [
-    {
-      kind: 'entersPlay',
-      label: '额外费用：查找绑定卡牌，将 1 张结晶器守卫混洗入牌库',
-      resolve: ({ inv, api }) => {
-        api.bonded.retrieve(inv.seat, '06024', { handCount: 0 })
-      },
-    },
     {
       kind: 'reaction',
       trigger: 'eventPlayed',

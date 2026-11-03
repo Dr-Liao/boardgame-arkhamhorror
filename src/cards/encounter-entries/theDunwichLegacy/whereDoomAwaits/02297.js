@@ -5,8 +5,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf, activeInvestigators } from '../../_shared.js'
-import { hiddenPathBack } from '../../../../../content/campaigns/thePathToCarcosa/presentation.js'
+import { originalOf, activeInvestigators, ALL_CARDS } from '../../_shared.js'
 
 export default {
   code: '02297', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
@@ -57,9 +56,9 @@ export default {
         if (artCode) loc.artCode = artCode
         // 已经揭示过的地点，名字就是正面；还没揭示的地点，正面记在 unrevealedActualName 里。
         if (!loc.unrevealedActualName) loc.unrevealedActualName = loc.name
-        const back = hiddenPathBack(originalOf(loc)) || hiddenPathBack(artCode)
-        loc.name = back?.name || '未揭示地点'
-        if (back?.nameEn) loc.nameEn = back.nameEn
+        const back = ALL_CARDS[originalOf(loc)] || ALL_CARDS[artCode]
+        loc.name = back?.backNameZh || back?.backName || '未揭示地点'
+        if (back?.backName) loc.nameEn = back.backName
         state.locationVariants[loc.id] = { ...structuredClone(loc) }
       })
     }

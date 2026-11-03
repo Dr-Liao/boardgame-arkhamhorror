@@ -1,7 +1,7 @@
 // 食梦者（TDE）P9 双线模式浏览器证据（桌面 1440×950 / 移动 390×844）。
 //
 // 与 P5 的 tests/tde-modes.browser.mjs 的分工：P5 证据属于 audit/tde-ui-browser.json
-// （playwright.tde-ui.config.mjs + 专用 reporter，保持不动）；本文件是 **P9 账本**
+// （tests/playwright/playwright.tde-ui.config.mjs + 专用 reporter，保持不动）；本文件是 **P9 账本**
 // （audit/tde-browser-acceptance.json）里的双线证据，独立路径、独立截图（artifacts/tde-migration/p9-dual-*），
 // 并由 tools/playwright-tde-reporter.mjs 汇总。
 //
@@ -14,7 +14,7 @@
 //   · 真人座位按线选人 + 自动构筑，牌组摘要只来自本线；
 //   · 并行开局后局内只渲染本线牌桌（不分屏），另一条线只暴露公开摘要（无手牌/牌堆/事件/日志）。
 //
-// 入口用 webServer 注册的「双线演示」战役（ARKHAM_BROWSER_DEMO=dualHub，playwright.tde.config.mjs
+// 入口用 webServer 注册的「双线演示」战役（ARKHAM_BROWSER_DEMO=dualHub，tests/playwright/playwright.tde.config.mjs
 // 的 webServer 负责设置）：只有声明 parts 的战役才出现模式面板；演示战役的 A/B 两幕复用核心
 // 《聚会》的真实关卡模块，面板、分线与局内渲染都是生产 UI 代码。
 // 开闸口径：演示战役在 content/browser-demo/dualHub.js 里显式 `dualLineGate:'open'`，只是让
@@ -26,7 +26,7 @@
 // 导致逐线袋为空、大厅替 AI 行动时报「混乱袋为空」。现在 initializeChaosBag 把 [] 视为未初始化
 // 并按本线 part 袋重建；本 spec 因此正常断言「begin 响应 ok:true、无错误 toast、本线牌桌可行动」。
 //
-// 证据命令：node ../../node_modules/@playwright/test/cli.js test --config playwright.tde.config.mjs
+// 证据命令：node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

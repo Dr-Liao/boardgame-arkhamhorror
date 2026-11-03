@@ -11,10 +11,6 @@ export default {
   implemented: true,
   flags: {
     storyRule: 'scoutingTheVale',
-    storyOf: '06258',
     lookCountPerInvestigator: 2,
-    discardUpToHalf: true,
-    ignoreLocationText: 'cragOfTheGhouls',
   },
-  note: '「查看并任意顺序放回」没有独立的 peek/排序原语：按「弃掉至多一半遭遇牌库顶」近似，记 simplified。',
 }

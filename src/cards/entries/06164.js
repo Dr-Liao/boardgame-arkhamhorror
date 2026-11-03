@@ -9,21 +9,13 @@
 // 读点：
 //   · 「躲避。」= countsAs:'evade'；意志闪避 = api.evade({ addSkill:'willpower' })；
 //   · 成功后解除其他交战 = doEvade 的 opts.onSuccess → api.disengageAll；
-//   · 「无形」= 持续效果（api.addEffect，duration endOfRound）带 capability:fight 修正，
-//     读点 modifiers.js 的 capabilityBlocked（不能攻击；伤害限制见简化说明）。
-// 显式简化（simplified）：卡面 listed in docs/tde-player-cards.md §2.1 的 escape 卡。
-//   未实现：「敌人不能与你交战、被交战」与「你不能对敌人造成伤害」——引擎没有对应的
-//   交战/伤害禁止读取点（只有 capability:fight 能挡住主动攻击）。已实现：意志闪避、
-//   与所有交战敌人解除交战、直到本轮结束的「不能攻击」部分。
+//   · 「无形」= 持续效果（api.addEffect，duration endOfRound）带攻击、交战、伤害能力限制。
+// 无形对普通交战及同地点庞大敌人的虚拟交战一并生效。
 
 import { ownTurn } from '../../engine/matcher.js'
 
 export default {
   code: '06164',
-  simplified: true,
-  note: '未实现：「无形」中「敌人不能与你交战或被与你交战」「你不能对敌人造成伤害」——'
-    + '引擎没有交战/伤害两处的禁止读取点（只有 capability:fight 能挡住主动攻击）；'
-    + '意志闪避、成功解除所有交战、直到本轮结束不能攻击（持续效果）已实现。',
   playCondition: [{
     when: ({ state, inv }) => (state.enemies || []).some(enemy => enemy.engagedSeat === inv.seat),
     message: '没有与你交战的敌人，不能打出「飘渺灵体」',
@@ -49,11 +41,12 @@ export default {
             api.disengageAll(inv.seat)
             api.addEffect({
               duration: 'endOfRound',
-              label: '飘渺灵体：无形（不能攻击敌人，直到本轮结束）',
+              label: '飘渺灵体：无形（不能攻击、交战或伤害敌人，直到本轮结束）',
               sourceCode: '06164',
-              modifiers: [{ target: 'capability:fight' }],
+              modifiers: [{ target: 'capability:fight' }, { target: 'capability:engage' },
+                { target: 'capability:dealEnemyDamage' }],
             })
-            api.info('💨 你化为无形：解除所有交战，直到本轮结束不能攻击敌人。')
+            api.info('💨 你化为无形：解除所有交战，直到本轮结束不能攻击、交战或伤害敌人。')
           },
         })
       },

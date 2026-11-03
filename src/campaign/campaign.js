@@ -2,9 +2,10 @@ import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, TCU_PLAYER_BUILDABLE_CODES, TDE_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
 import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
-import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
+import { validateDeckRules, upgradeQuote, deckRules } from '../deck/deck-rules.js'
 import { registeredEntry } from '../engine/ability.js'
 import { partScopedView } from './campaign-parts.js'
+import { TIC_PLAYER_BUILDABLE_CODES } from '../deck/availability.js'
 
 const playerPool = [...PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES]
 const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
@@ -15,12 +16,13 @@ const tcuPoolSet = new Set(tcuPool)
 // 与 TCU/失落的时代同一口径：新卡池不改变既有循环的升级候选与 AI 推荐结果。
 const tdePool = [...TDE_PLAYER_BUILDABLE_CODES]
 const tdePoolSet = new Set(tdePool)
+const ticPool = [...TIC_PLAYER_BUILDABLE_CODES], ticPoolSet = new Set(ticPool)
 const poolFor = (record, context = null) => filterCardCodes(
-  record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool]
+  [...(record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool]
     : record && /^05\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tcuPool]
       : record && /^06\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tdePool]
-        : playerPool, context)
-const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code) || tcuPoolSet.has(code) || tdePoolSet.has(code)
+        : playerPool), ...(record && (/^07\d{3}$/.test(String(record.code || '')) || record.deck?.some(code => ticPoolSet.has(code))) ? ticPool : [])], context)
+const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code) || tcuPoolSet.has(code) || tdePoolSet.has(code) || ticPoolSet.has(code)
 // 第 123 轮（第 8 批）：升级前置记录、开局经验、永久资产身份、同名去重全部由条目声明：
 // `researchRequirement` / `startingXp` / `shrewdAnalysis` / `arcaneResearch` / `uniqueInDeck`。
 const entryFlagOf = code => registeredEntry(code) || null
@@ -192,7 +194,8 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
   // Story assets earned by resolutions (e.g. Lita) are campaign dependencies,
   // not ordinary deck slots. They must not block every subsequent upgrade.
   const validatable = deck.filter(ordinary)
-  const errors = validateDeckRules(inv, validatable, ALL_CARDS).errors
+  const errors = validateDeckRules(inv, validatable, ALL_CARDS,
+    { partial: mayFillVacancy || Boolean(registeredEntry(addedCode)?.deckConstruction?.sizeBonus) }).errors
   if (errors.length) {
     // 永久卡不占牌组槽位：换走一张普通卡会让牌组少一张，只能「无需替换」直接加入。
     const rulesSize = inv.deckRequirements?.size || 30
@@ -205,7 +208,8 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
   // Phase 5（5b-9）：「适应性」这类「关间免费替换等级 0 卡」由条目级 adaptableSwaps 声明（次数即上限）。
   const adaptableRule = record.deck.map(code => registeredEntry(code)?.adaptableSwaps).find(value => value > 0)
   const adaptable = adaptableRule && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < adaptableRule
-  const quote = adaptable
+  const quote = !removedCode && mayFillVacancy && (added.xp || 0) === 0
+    ? { cost: 0, explanation: '免费补足牌组张数' } : adaptable
     ? { cost: 0, explanation: '随机应变：本次关间免费替换等级 0 卡牌' }
     : upgradeQuote(added, removed, { discounts: upgradeDiscountsFor(record) })
   if (quote.cost > record.xp) return { ok: false, reason: `经验不足：这次替换需要 ${quote.cost} XP，当前只有 ${record.xp} XP。` }
@@ -221,11 +225,11 @@ export function replacementAnalysis(record, addedCode, campaignRecords = null, c
   const added = ALL_CARDS[addedCode]
   const inv = INVESTIGATORS[record.code]
   if (!added || record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
-    || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return result
+    || !isPlayable(added) || !matchesDeckOptions(inv, added, [...record.deck, addedCode]) || added.signatureFor || added.subtype) return result
   const requiredResearch = researchRequirementFor(addedCode)
   if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return result
   result.allowed = true
-  const invRulesSize = inv.deckRequirements?.size || 30
+  const invRulesSize = deckRules(inv, record.deck, ALL_CARDS).size
   const ordinaryCount = record.deck.filter(code => ordinary(code) && !ALL_CARDS[code]?.permanent).length
   const mayFillVacancy = ordinaryCount < invRulesSize
   for (const removedCode of [null, ...new Set(record.deck)]) {
@@ -306,6 +310,10 @@ export function stagePurchase(campaign, seat, added, removed, context = null) {
 export function finishUpgradeDraft(campaign, seat, commit) {
   const original = campaign.investigators[seat]
   if (!original?.upgradeDraft) throw new Error('没有待确认的升级草稿')
+  if (commit && original.upgradeDraft.record.deck.some(code => registeredEntry(code)?.deckConstruction)) {
+    const errors = validateDeckRules(INVESTIGATORS[original.code], original.upgradeDraft.record.deck.filter(ordinary), ALL_CARDS).errors
+    if (errors.length) throw new Error(`请先完成扩充后的牌组：${errors[0]}`)
+  }
   if (commit) campaign.investigators[seat] = original.upgradeDraft.record
   else delete original.upgradeDraft
   campaign.xp = Object.values(campaign.investigators).reduce((sum, record) => sum + record.xp, 0)

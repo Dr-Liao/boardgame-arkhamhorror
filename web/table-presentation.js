@@ -3,6 +3,7 @@ import { preloadChaosTokens, showChaosToken } from './chaos-token.js'
 import { createCombatSound } from './combat-sound.js'
 import { attackChoreography, blastChoreography } from './attack-fx.js'
 import { setRulesText } from './card-text.js'
+import { skillSymbols } from './skill-presentation.js'
 import { t } from './i18n.js'
 const ROOT = '/mods/arkhamhorror/'
 const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-reveal', play: 'drop_003', move: 'drop_001',
@@ -11,9 +12,7 @@ const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-
   lightningZap: 'lightning-zap.wav', dynamiteBlast: 'dynamite-blast' }
 const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55 }
 // 技能/阶段表只存词典 key，演出渲染时再 t()（模块顶层不调用 t()）。
-const SKILLS = { intellect: 'symbol.intellect', willpower: 'symbol.willpower', combat: 'symbol.combat', agility: 'symbol.agility' }
-const skillLabel = (skill, fallback = '') => SKILLS[skill] ? t(SKILLS[skill]) : fallback
-const PHASES = { enemy: ['table.phase.enemy', '⚔', 'table.phase.enemy.cinematic'], upkeep: ['table.phase.upkeep', '◇', 'table.phase.upkeep.cinematic'], mythos: ['table.phase.mythos', '◉', 'table.phase.mythos.cinematic'], investigation: ['table.phase.investigation', '⌕', 'table.phase.investigation.cinematic'] }
+const PHASES = { enemy: ['table.phase.enemy', '[combat]', 'table.phase.enemy.cinematic'], upkeep: ['table.phase.upkeep', '[resource]', 'table.phase.upkeep.cinematic'], mythos: ['table.phase.mythos', '[doom]', 'table.phase.mythos.cinematic'], investigation: ['table.phase.investigation', '[intellect]', 'table.phase.investigation.cinematic'] }
 export function publicSequence(events) {
   const cues = []
   for (const event of events) {
@@ -436,10 +435,11 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       positionWorld()
       ensureLayer().append(ring); worldNodes.push(ring)
       if (!step.effect) return
-      const label = step.effect === 'attack' ? `♥ −${step.damage || 0}  ◈ −${step.horror || 0}`
+      const label = step.effect === 'attack' ? `[health] −${step.damage || 0}  [sanity] −${step.horror || 0}`
         : step.effect === 'hunter' ? step.name || t('table.world.hunter') : step.effect === 'draw' ? t('table.world.draw')
           : step.effect === 'resource' ? t('table.world.resource', { delta: step.delta || 1 }) : step.effect === 'doom' ? t('table.world.doom', { delta: step.delta || 1 }) : t('table.world.encounter')
       token = node('div', 'ah-phase-world-cue is-' + change.phase, label)
+      if (step.effect === 'attack') setRulesText(token, label)
       token.dataset.effect = step.effect
       const from = step.effect === 'hunter' ? location(step.from)?.getBoundingClientRect()
         : step.effect === 'draw' ? document.querySelector('.ah-dock-deck')?.getBoundingClientRect() : null
@@ -451,7 +451,9 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
         { transform: 'translate(-50%,-18px) scale(1)', opacity: 1 }], from ? 750 : 450)
     }
     const content = node('div', 'ah-cinematic-content')
-    content.append(node('div', 'ah-cinematic-sigil', story ? '✦' : phase[1]),
+    const sigil = node('div', 'ah-cinematic-sigil')
+    setRulesText(sigil, story ? '✦' : phase[1])
+    content.append(sigil,
       node('small', 'ah-cinematic-kicker', story ? change.title : t('table.cinematic.autoRound', { round: change.round || 1 })),
       node('h1', '', story ? change.name || change.title : phase[0]))
     if (story && change.code && art) {
@@ -470,8 +472,10 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     if (location) {
       const stats = node('div', 'ah-location-reveal-stats', t('table.cinematic.locationStats', { shroud: change.shroud ?? '—', clues: change.clues ?? 0 }))
       const effect = change.onEnter
-      const lines = [effect?.damage ? t('table.enter.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.enter.horror', { horror: effect.horror }) : '', effect?.test ? t('table.enter.test', { skill: skillLabel(effect.test.skill, t('table.skill.generic')), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
-      stats.append(node('strong', '', lines.join('；') || t('table.enter.none')))
+      const lines = [effect?.damage ? t('table.enter.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.enter.horror', { horror: effect.horror }) : '', effect?.test ? t('table.enter.test', { skill: skillSymbols(effect.test.skill), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
+      const entry = node('strong')
+      setRulesText(entry, lines.join('；') || t('table.enter.none'))
+      stats.append(entry)
       content.append(stats)
     }
     detail.setAttribute('aria-live', 'polite')
@@ -525,13 +529,14 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
           sound(steps[index].effect === 'doom' ? 'agenda' : 'clue')
         }
         if (steps[index].effect === 'attack') {
-          const hit = node('div', 'ah-cinematic-hit', `♥ ${steps[index].damage || 0}  ·  ◈ ${steps[index].horror || 0}`)
+          const hit = node('div', 'ah-cinematic-hit')
+          setRulesText(hit, `[health] ${steps[index].damage || 0}  ·  [sanity] ${steps[index].horror || 0}`)
           stepArt.append(hit)
           if (!reduced()) hit.animate([{ transform: 'scale(1.8)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 400, fill: 'both' })
           sound('damage')
         }
         const stepText = steps[index].text || phase[2]
-        setRulesText(detail, stepText)
+        setRulesText(detail, stepText, { skills: !story })
         progress.textContent = story ? t('table.cinematic.readThenContinue') : t('table.cinematic.progress', { caption: phase[2], index: index + 1, total: steps.length })
         el.dataset.step = String(index + 1)
         if (steps[index].effect === 'encounter') {
@@ -583,7 +588,9 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const test = change.kind === 'test'
     const el = node('div', 'ah-fx-banner' + (test ? (change.success ? ' is-success' : ' is-failure') : ''))
     el.dataset.fxKind = change.kind
-    el.append(node('span', 'ah-fx-eyebrow', test ? t('table.banner.testKicker', { name: change.name, source: `${change.source?.label || ''} ${change.source?.name || ''}`, skill: skillLabel(change.skill, change.skill) }) : t('table.banner.archive')))
+    const eyebrow = node('span', 'ah-fx-eyebrow')
+    setRulesText(eyebrow, test ? t('table.banner.testKicker', { name: change.name, source: `${change.source?.label || ''} ${change.source?.name || ''}`, skill: skillSymbols(change.skill) }) : t('table.banner.archive'))
+    el.append(eyebrow)
     if (test) {
       const tokens = node('div', 'ah-fx-tokens')
       await Promise.all((change.drawn || []).map(async value => {
@@ -611,9 +618,11 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     await showChaosToken(token,'blank')
     if (generation !== epoch) return
     const skip = node('button', '', t('table.cinematic.next'))
+    const testLine = node('span', 'ah-chaos-test-line')
+    setRulesText(testLine, change.skill ? t('table.chaos.testLine', { skill: skillSymbols(change.skill), difficulty: change.difficulty }) : t('table.chaos.revealLabel'))
     el.append(node('small', '', t('table.chaos.revealSource', { name: change.name || t('table.investigator'), source: change.source?.label || t('table.test.generic') })),
       node('strong', '', change.source?.name || t('table.chaos.reveal')), token,
-      node('span', '', change.skill ? t('table.chaos.testLine', { skill: skillLabel(change.skill, change.skill), difficulty: change.difficulty }) : t('table.chaos.revealLabel')), skip)
+      testLine, skip)
     ensureLayer().append(el); block(true)
     let stopped = false, timer, release
     const cancel = () => { stopped = true; clearTimeout(timer); for (const animation of el.getAnimations({subtree:true})) animation.cancel(); release?.() }
@@ -690,8 +699,12 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       note.setAttribute('role', 'status')
       note.append(node('strong', '', t('table.locationNotice.title', { who: who?.name || t('table.teammate'), title: c.title || t('table.change.enterLocation'), name: c.name })))
       const effect = c.onEnter
-      const details = [effect?.damage ? t('table.notice.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.notice.horror', { horror: effect.horror }) : '', effect?.test ? t('table.notice.test', { skill: skillLabel(effect.test.skill, effect.test.skill), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
-      if (details.length) note.append(node('span', '', details.join(' · ')))
+      const details = [effect?.damage ? t('table.notice.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.notice.horror', { horror: effect.horror }) : '', effect?.test ? t('table.notice.test', { skill: skillSymbols(effect.test.skill), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
+      if (details.length) {
+        const detail = node('span')
+        setRulesText(detail, details.join(' · '))
+        note.append(detail)
+      }
       ensureLayer().append(note)
       const bounds = loc?.getBoundingClientRect(), box = note.getBoundingClientRect()
       note.style.left = Math.max(12, Math.min(innerWidth - box.width - 12, (bounds?.x ?? innerWidth / 2) + (bounds?.width || 0) / 2 - box.width / 2)) + 'px'

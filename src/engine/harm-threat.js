@@ -1,6 +1,12 @@
+import { putInHand } from './hand-entry.js'
 // harm-threat.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 伤害 / 恐惧 / 威胁区 / 击败与淘汰：assignHarm 是唯一承伤入口。
 // 读点：combat 与 api 的伤害接口、威胁区的强制效果、弱点与淘汰判定。
+import { playerEffectCanAffect } from './effect-recipient.js'
+import { keysOnExit } from './scenario-keys.js'
+import { vehicleOf, leaveVehicle } from './vehicles.js'
+import { mechanicState } from './mechanic-state.js'
+
 export function createHarmThreat(deps) {
   const {
     campaignState,
@@ -48,6 +54,7 @@ export function createHarmThreat(deps) {
     requestChoice,
     resolveEffect,
     scenarioBehavior,
+    resourceBank,
     scenarioRuntime,
     shuffle,
     spendAction,
@@ -67,6 +74,7 @@ export function createHarmThreat(deps) {
       return cardOrCode.threatEffect
     }
     const code = typeof cardOrCode === 'object' ? cardOrCode?.code : cardOrCode
+    if (registeredEntry(code)?.threatEffect) return registeredEntry(code).threatEffect
     const profile = weaknessProfile(code)
     if (profile?.type === 'threat') return profile
     const t = ALL_TREACHERIES[code]
@@ -117,13 +125,15 @@ export function createHarmThreat(deps) {
     // Allies such as Brother Xavier may soak harm dealt to other investigators at
     // their location (passive.assignHarmAtLocation).
     const soaks = direct ? [] : state.investigators
-      .filter(other => other !== inv && !other.defeated && !other.resigned && other.location === inv.location)
+      .filter(other => other !== inv && !other.defeated && !other.resigned)
       .flatMap(other => other.assets
         // 2026-10-25 第四轮修复 05109：assignHarmAtLocation 可限定只接伤害或只接恐惧
         // （true = 两者都接；'damage' / 'horror' = 只接对应类型）。
         .filter(asset => {
           const passive = assetEffect(other, asset)?.passive?.assignHarmAtLocation
-          return passive === true || passive === kind
+          const connected = assetEffect(other, asset)?.passive?.assignHarmConnections
+            && state.locations.find(loc => loc.id === other.location)?.connections?.includes(inv.location)
+          return (other.location === inv.location || connected) && (passive === true || passive === kind)
         })
         .map(asset => ({ asset, owner: other })))
     let locked = null
@@ -150,15 +160,17 @@ export function createHarmThreat(deps) {
         || ((assetEffect(inv, asset)?.redirectOneHorrorToSelf) && !(assignments.get(asset) > 0)))
       // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
-      const candidates = assets.length || soaks.length
+        const availableSoaks = soaks.filter(({ asset }) => assetCapacityValue(asset, capacity)
+          > (asset[kind] || 0) + (assignments.get(asset) || 0))
+        const candidates = assets.length || availableSoaks.length
         ? requestChoice(state, { kind: 'assign-' + kind, source: 'harm', seat: inv.seat,
           prompt: `分配 1 点${kind === 'damage' ? '伤害' : '恐惧'}（剩余 ${amount - i}）。`,
           options: [...(preferAssets || mandatory?.length ? [] : [{ id: 'self', label: '由调查员承受' }]),
             ...assets.map(asset => ({ id: asset.id, label: cardName(asset.code) })),
-            ...soaks.map(({ asset, owner }) => ({ id: asset.id, label: `${cardName(asset.code)}（${owner.name}）` }))] })
+              ...availableSoaks.map(({ asset, owner }) => ({ id: asset.id, label: `${cardName(asset.code)}（${owner.name}）` }))] })
         : 'self'
       const recipient = candidates === 'self' ? inv
-        : assets.find(item => item.id === candidates) || soaks.find(item => item.asset.id === candidates)?.asset
+          : assets.find(item => item.id === candidates) || availableSoaks.find(item => item.asset.id === candidates)?.asset
       assignments.set(recipient, (assignments.get(recipient) || 0) + 1)
       if (strategy === 'fillOne') locked = recipient
     }
@@ -214,6 +226,17 @@ export function createHarmThreat(deps) {
   }
 
   function eliminateInvestigator(state, inv, events) {
+    keysOnExit(state, `investigator:${inv.seat}`, inv.location)
+    const vehicleId = vehicleOf(state, inv.seat)
+    if (vehicleId) {
+      const vehicle = mechanicState(state).vehicles[vehicleId]
+      const remaining = vehicle.passengers.filter(seat => seat !== inv.seat && !state.investigators[seat].defeated && !state.investigators[seat].resigned)
+      const nextDriver = vehicle.driver === inv.seat && remaining.length > 1
+        ? Number(requestChoice(state, { kind: 'investigator', source: vehicleId, seat: state.campaign.leadSeat ?? remaining[0],
+          prompt: '选择新的驾驶者。', options: remaining.map(seat => ({ id: String(seat), label: state.investigators[seat].name })) }))
+        : remaining[0] ?? null
+      leaveVehicle(state, inv.seat, vehicleId, { forced: true, nextDriver })
+    }
     // 04038 黑暗契约：退场（被击败/发疯/撤退都走这里）时若仍在手牌 → 移出牌库，
     // 查找收藏换成「失败的代价」。主动撤退路径在 doResign 里已先结算过（幂等）。
     for (const code of [...(inv.hand || [])]) {
@@ -241,6 +264,17 @@ export function createHarmThreat(deps) {
     for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.discardOnElimination)) {
       leaveAsset(state, inv, asset, events)
       if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+    }
+    for (const asset of inv.assets.slice()) {
+      if (!inv.defeated || inv.resigned || !registeredEntry(asset.code)?.transferOnControllerDefeat) continue
+      const targets = aliveInvestigators(state).filter(other => other !== inv)
+      if (!targets.length) continue
+      const targetSeat = targets.length === 1 ? targets[0].seat : Number(requestChoice(state, { kind: 'investigator',
+        source: asset.code, seat: state.campaign.leadSeat ?? targets[0].seat, prompt: '将支援交给另一名调查员。',
+        options: targets.map(other => ({ id: String(other.seat), label: other.name })) }))
+      inv.assets.splice(inv.assets.indexOf(asset), 1)
+      state.investigators[targetSeat].assets.push(asset)
+      scenarioBehavior(state).assetControlChanged?.(state, asset, inv.seat, targetSeat, scenarioRuntime(state, events))
     }
     for (const eid of inv.engaged.slice()) {
       const enemy = state.enemies.find((e) => e.id === eid)
@@ -359,7 +393,7 @@ export function createHarmThreat(deps) {
     return performTest(state, seat, skill, difficulty, { source: { label: '调查以获取资源', name: loc.name, code: loc.originalCode || loc.code }, skillBonus: skill === 'intellect' ? investigateBonus(inv) : 0, resolve: r => {
       if (r.success) {
         const amount = effect.amount || 3
-        if (scenarioBehavior(state).canGainResources?.(state, inv) !== false) inv.resources += amount
+        if (scenarioBehavior(state).canGainResources?.(state, inv) !== false) resourceBank.gainResource(state, inv, amount, events)
         info(state, events, `${inv.name} 调查成功，将发现线索改为获得 ${amount} 资源（当前 ${inv.resources}）。`)
         if (loc.fog) {
           loc.shroudMod = Math.max(0, (loc.shroudMod || 0) - 2); loc.fog = 0
@@ -424,7 +458,7 @@ export function createHarmThreat(deps) {
     })
     const enemy = candidates.find(item => item.id === id)
     enemy.textBlanked = { round: state.round, phase: state.phase }
-    if (enemy.damageTaken >= enemyHealth(state, enemy)) { enemy.defeatedBy = seat; defeatEnemy(state, enemy, events) }
+    if (enemyHealth(state, enemy) != null && enemy.damageTaken >= enemyHealth(state, enemy)) { enemy.defeatedBy = seat; defeatEnemy(state, enemy, events) }
     info(state, events, `📖 「${enemy.name}」的印刷文本被视为空白，直到本阶段结束。`)
   }
 
@@ -439,7 +473,7 @@ export function createHarmThreat(deps) {
     const asset = effect.assetId ? inv.assets.find(item => item.id === effect.assetId) : null
     if (!asset) return
     leaveAsset(state, inv, asset)
-    if (!asset.removedFromGame) inv.hand.push(asset.code)
+    if (!asset.removedFromGame) putInHand(state, inv, asset.code)
     info(state, events, `${inv.name} 将「${cardName(asset.code)}」返回手牌。`)
   }
 
@@ -587,6 +621,7 @@ export function createHarmThreat(deps) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
     const isInvestigator = target.seat != null && target.name != null
+    if (isInvestigator && !playerEffectCanAffect(state, target.seat)) return 0
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
     const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)

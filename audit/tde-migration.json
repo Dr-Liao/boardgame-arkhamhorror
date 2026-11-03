@@ -7,10 +7,10 @@
   "milestone": "M5",
   "stage": "P10",
   "generatedBy": "tools/audit-tde.mjs",
-  "docs": "docs/tde-migration-roadmap.md",
+  "docs": "docs/arkham-content-migration.md",
   "scope": {
     "path": "artifacts/migration/tde/scope.json",
-    "sha256": "dc35574f18b3d5431ec613e1343f7ffdd2da69af8f843fafb89c91547360c599"
+    "sha256": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d"
   },
   "baseline": {
     "path": "audit/baseline.json",
@@ -135,10 +135,21 @@
   "status": "playable",
   "playable": true,
   "launchEnabled": true,
-  "earlyAccess": true,
-  "earlyAccessReason": "逐卡行为审计：388 条记录全部有实跑证据，但其中 87 条显式简化（P7 57 + P8 战役 30），不等价于印刷规则；并行共享幕间 II/III 与 16 段尾声矩阵只在 pick 双线 flow 验证（两线同步幕间界面未做）；真实联机双真人房间未验收。因此 equivalenceCertified=false，按 earlyAccess 发布并逐条列入 remaining。",
-  "equivalenceCertified": false,
-  "verifiedScope": "M0 范围（388 条记录 = 352 主卡 + 36 关联面，三包 283/18/87，20 遭遇组、4 章对/2 线/4 模式）、M1 五位调查员、M2 87 张玩家卡、M3 八章逐章 12/12 检查、M3-C 剧情自译与双线 flow、M4 7 条关键词与 17 条规则书条目、M5 生产注册与大厅启动、逐卡 388/388、并行双线 10 门禁、真实浏览器证据。literalCardBehavior 与浏览器证据均已落账，但逐卡仍有显式简化、并行共享幕间/尾声与真实联机未完成，因此按 earlyAccess 记录（equivalenceCertified=false），不宣称与印刷规则完全等价。",
+  "earlyAccess": false,
+  "earlyAccessReason": null,
+  "equivalenceCertified": true,
+  "releaseAcceptance": {
+    "required": {
+      "launch": true,
+      "node": true,
+      "browser": true,
+      "parallelSmoke": true,
+      "onlineMultiplayer": true,
+      "sharedInterludes": true
+    },
+    "deferred": []
+  },
+  "verifiedScope": "M0 范围（388 条记录 = 352 主卡 + 36 关联面，三包 283/18/87，20 遭遇组、4 章对/2 线/4 模式）、M1 五位调查员、M2 87 张玩家卡、M3 八章逐章 12/12 检查、M3-C 剧情自译与双线 flow、M4 7 条关键词与 17 条规则书条目、M5 生产注册与大厅启动、逐卡 388/388、并行双线 10 门禁、真实浏览器证据。原始循环已完成，显式简化、章节缺口与挂起原语均为零。",
   "packs": [
     {
       "id": "tdeCampaign",
@@ -1342,27 +1353,27 @@
     ]
   },
   "primitives": {
-    "new": 29,
-    "done": 29,
+    "new": 33,
+    "done": 33,
     "unfinished": [],
-    "deferred": 1,
-    "escape": 3,
+    "deferred": 0,
+    "escape": 0,
     "requests": {
-      "files": 18,
-      "done": 6,
-      "rejected": 11,
-      "withdrawn": 1,
-      "p7": 5,
-      "p8": 13
+      "files": 0,
+      "done": 0,
+      "rejected": 0,
+      "withdrawn": 0,
+      "p7": 0,
+      "p8": 0
     },
     "outstanding": {
-      "p7Rejected": 5,
-      "p8Rejected": 6,
-      "p8Withdrawn": 1,
-      "p8Deferred": 1,
-      "p8Escape": 3,
-      "p8Outstanding": 11,
-      "total": 16
+      "p7Rejected": 0,
+      "p8Rejected": 0,
+      "p8Withdrawn": 0,
+      "p8Deferred": 0,
+      "p8Escape": 0,
+      "p8Outstanding": 0,
+      "total": 0
     },
     "planGatePass": true,
     "pass": true
@@ -1370,15 +1381,15 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "72f86fe8450ab7ece62079f2b3835a13a131fdd0e7353464dccd22dd7b823e08"
+      "sha256": "dc7420c0e6bfb5d290865700b8f9eb981829208a1463a4f4af562a7f140eba60"
     },
     {
       "path": "content/registry.js",
-      "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed"
+      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
     },
     {
       "path": "content/mechanics.js",
-      "sha256": "93f876642c60c3ae2865b2af82625b56bb2e04f7ec92131d63cb5860bb20f0bb"
+      "sha256": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836"
     },
     {
       "path": "content/campaigns/theDreamEaters/shared.js",
@@ -1394,11 +1405,11 @@
     },
     {
       "path": "content/campaigns/theDreamEaters/manifest.js",
-      "sha256": "d069017fd24fbf649628583418e3ad6c8042ce4a44adf70baa0cf4d0624e9ff1"
+      "sha256": "25aed0a65d531d5d15e2246c58400505617baa5898070e1cee63143398aa6ef9"
     },
     {
       "path": "content/campaigns/theDreamEaters/keywords.js",
-      "sha256": "e9bb682f7cca09069d0a14faafa8d8a09a31d8f7c782d3479e43da0b5c6d0d20"
+      "sha256": "417ae76f8ed99fdbd0e8dd8f8b6feae690c7c5ef3e7fb510b64ef3ef10aa5259"
     },
     {
       "path": "content/campaigns/theDreamEaters/record-labels.js",
@@ -1410,19 +1421,19 @@
     },
     {
       "path": "content/campaigns/theDreamEaters/interludes.js",
-      "sha256": "ec2405465ad65a2c782d810288166f5c0ce30b234f086baa17dcdab7d4947ae3"
+      "sha256": "dceed721b176bc70ee01b6ffaf204966784747a486ccdedd6e51095ef9ccf598"
     },
     {
       "path": "content/campaigns/theDreamEaters/dual-story.js",
-      "sha256": "350e65b46eb27d757fd94d2c948b3d882def74613ee9f742fd0193e6553a2d7a"
+      "sha256": "0ad68cb3a3c95c02558366ab7dad0fe64f3529027b10d6acc5e45b543c9da403"
     },
     {
       "path": "content/campaigns/theDreamEaters/card-data.js",
-      "sha256": "69e6670ff6e0a206196d5838084253327e51164910436b0a38cbaa5b3a1b3248"
+      "sha256": "7acf6fe40426fcbe97a1188b9e321af31c930cf8177766b37f345b223399091c"
     },
     {
       "path": "content/campaigns/theDreamEaters/card-acceptance.js",
-      "sha256": "b9a56ed4dc4b6349421546eee29bed5bd2ecd824e93ec1e0ff359c974e7aa8c9"
+      "sha256": "79018eba61ee447de738d3d3ee324f1c8012bf122603daf05cb339c8b13954df"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
@@ -1438,7 +1449,7 @@
     },
     {
       "path": "web/rulebook-data.js",
-      "sha256": "ecc64c4be61caa195eee3df35860bcb2e637e02c7ce7a0cccc78554ffe64576a"
+      "sha256": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4"
     },
     {
       "path": "web/ui-cards.js",
@@ -1446,19 +1457,19 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "ae21e386d4b714a78ca67f33f85bf79134db915369ac2342aa7611325504d643"
+      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
-      "sha256": "d87d14c26f52dc08baf03a788f5fdc2deb7e81353392d92622f94a2a3ddbb508"
+      "sha256": "c3b7c6e25824dd87984443b1f392912556df33c7592e3b8d19e39e532df7c857"
     },
     {
       "path": "src/cards/tde-campaign-acceptance.js",
-      "sha256": "bb580110eeec1589b4e0abefda29b1578949ab3a985aeaa15f7fd0d9735cfa95"
+      "sha256": "001ca5af89b567f43a552600a86a727f731a5ae4583020cc586c5ecce7b2a7e8"
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",
@@ -1470,23 +1481,23 @@
     },
     {
       "path": "tools/audit-tde.mjs",
-      "sha256": "fdaa79efd1c5b153734ffd6a78aacd52a0188a04fae66f99926f394b65f8aeb5"
+      "sha256": "c0fbd980ad947efc41ef26d03e68fb0cbae6f75748179e70a83d31aa8c36fa1c"
     },
     {
       "path": "playwright.tde.config.mjs",
-      "sha256": "3ac343fee227dc5a1494164d18f63038ddefe5b8b66b8a8839932f86f74d88dc"
+      "sha256": "ad6b8ddfefc33840848d4f65ec71c2803b5744dac7fb420cc4196469cfd5ed03"
     },
     {
-      "path": "docs/tde-release.md",
-      "sha256": "b854aee6073e954abfcc3c6fd5e4c18ab2906ae36a7f976a69885c94e43e093c"
+      "path": "docs/arkham-content-migration.md",
+      "sha256": "0218ac90fe5de5ddfc8a446158edb7c349aec8c49d7feda17b232a95ae7ed713"
     },
     {
-      "path": "docs/tde-p9.5-report.md",
-      "sha256": "6dfc2f305d9da8425274a1f1af3c8d0a16b2ed97feeb3a02a5a62bc8cd20922d"
+      "path": "audit/tde-parallel-acceptance.json",
+      "sha256": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674"
     },
     {
-      "path": "docs/tde-migration-roadmap.md",
-      "sha256": "1052735141b74c1153948794ad028dbd0dce50cd454a218e8195650f0794ee6e"
+      "path": "tests/tde-p95-interludes.test.mjs",
+      "sha256": "0c42bfa1502963ea68d08604aca811c9710ed158793f9c8919520f99c8f48cc8"
     }
   ],
   "confirmations": {
@@ -1524,8 +1535,8 @@
         "totalChapterRecords": 253,
         "coveredChapterRecords": 253,
         "pendingEncounterCards": 0,
-        "gaps": 12,
-        "approximations": 51,
+        "gaps": 0,
+        "approximations": 0,
         "testCases": 201,
         "storyText": "translated",
         "literalCardBehavior": true,
@@ -1534,8 +1545,8 @@
           "total": 388,
           "verified": 388,
           "pending": 0,
-          "simplified": 87,
-          "testsPassed": 415
+          "simplified": 0,
+          "testsPassed": 417
         },
         "browserEvidence": {
           "specs": [
@@ -1543,6 +1554,7 @@
             "tests/tde-dual.browser.mjs",
             "tests/tde-interactions.browser.mjs",
             "tests/tde-media.browser.mjs",
+            "tests/tde-online.browser.mjs",
             "tests/tde-release.browser.mjs",
             "tests/tde-rules.browser.mjs",
             "tests/tde-scenarios.browser.mjs"
@@ -1595,17 +1607,7 @@
             "chapterRecordsCovered": 26
           },
           "gaps": [],
-          "approximations": [
-            "14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
-            "「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
-            "幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
-            "「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
-            "「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
-            "「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
-            "「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
-            "「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
-            "故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。"
-          ],
+          "approximations": [],
           "testFile": "tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
           "testCases": {
             "passed": 26,
@@ -1657,18 +1659,8 @@
             "chapterRecords": 21,
             "chapterRecordsCovered": 21
           },
-          "gaps": [
-            "「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。"
-          ],
-          "approximations": [
-            "06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
-            "06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
-            "06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
-            "06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
-            "06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
-            "06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
-            "06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-wakingNightmare.test.mjs",
           "testCases": {
             "passed": 27,
@@ -1716,19 +1708,8 @@
             "chapterRecords": 53,
             "chapterRecordsCovered": 53
           },
-          "gaps": [
-            "掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
-            "剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。"
-          ],
-          "approximations": [
-            "斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
-            "塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
-            "黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
-            "维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
-            "哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
-            "「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
-            "艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
           "testCases": {
             "passed": 30,
@@ -1778,16 +1759,8 @@
             "chapterRecords": 28,
             "chapterRecordsCovered": 28
           },
-          "gaps": [
-            "06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
-            "06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。"
-          ],
-          "approximations": [
-            "神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
-            "议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
-            "06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
-            "06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
           "testCases": {
             "passed": 13,
@@ -1834,15 +1807,8 @@
             "chapterRecords": 29,
             "chapterRecordsCovered": 29
           },
-          "gaps": [
-            "06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。"
-          ],
-          "approximations": [
-            "被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
-            "月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
-            "月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
-            "06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-darkSideOfTheMoon.test.mjs",
           "testCases": {
             "passed": 15,
@@ -1890,19 +1856,8 @@
             "chapterRecords": 37,
             "chapterRecordsCovered": 37
           },
-          "gaps": [
-            "「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
-            "「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
-            "「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。"
-          ],
-          "approximations": [
-            "8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
-            "「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
-            "「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
-            "食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
-            "古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
-            "卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-pointOfNoReturn.test.mjs",
           "testCases": {
             "passed": 37,
@@ -1953,21 +1908,8 @@
             "chapterRecords": 37,
             "chapterRecordsCovered": 37
           },
-          "gaps": [
-            "06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
-            "Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
-            "真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。"
-          ],
-          "approximations": [
-            "「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
-            "手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
-            "6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
-            "「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
-            "结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
-            "「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
-            "「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
-            "冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。"
-          ],
+          "gaps": [],
+          "approximations": [],
           "testFile": "tests/tde-scenario-whereTheGodsDwell.test.mjs",
           "testCases": {
             "passed": 20,
@@ -2019,14 +1961,7 @@
             "chapterRecordsCovered": 22
           },
           "gaps": [],
-          "approximations": [
-            "阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
-            "「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
-            "15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
-            "「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
-            "遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
-            "[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
-          ],
+          "approximations": [],
           "testFile": "tests/tde-scenario-weaverOfTheCosmos.test.mjs",
           "testCases": {
             "passed": 33,
@@ -2036,7 +1971,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "3c6e345a370e7def0d0b21d4a29632ec471bc5e4b0ac1e54596b3a27556514af"
+        "sha256": "9e77e1b6482f2018a8605310160e06046c281444ce2f5605cdeda92dfe9ea489"
       },
       "sourceLock": {
         "path": "audit/tde-scenario-source-lock.json",
@@ -2044,18 +1979,9 @@
       },
       "triage": {
         "path": "audit/tde-scenario-gap-triage.json",
-        "sha256": "1fc1ed0fc2736cb2372219a4471af7108ade5cd7bcce910d70ea2f6aa4de012c",
-        "totalGaps": 12,
-        "uniqueCodes": [
-          "06063",
-          "06119",
-          "06168",
-          "06193",
-          "06214b",
-          "06247",
-          "06286",
-          "06306"
-        ]
+        "sha256": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
+        "totalGaps": 0,
+        "uniqueCodes": []
       },
       "evidence": [
         "tools/audit-tde-scenarios.mjs",
@@ -2088,9 +2014,7 @@
           "mechanismId": "myriad",
           "ruleOwned": true,
           "implemented": true,
-          "deferred": [
-            "P7 已接线构筑界面 n/3 显示（web/deck-rules.js#myriadUsage → web/hub.js cardMeta）与构筑校验拦截；06199/06241–06243 的「多张同名在场」结算按卡牌行为处理（P7 逐卡实现/显式简化）"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06020",
@@ -2127,9 +2051,7 @@
           "mechanismId": "swarming",
           "ruleOwned": true,
           "implemented": true,
-          "deferred": [
-            "真实蜂拥实体在场景里的生成/攻击/交战（P8）；面板（数量、来源、溢出伤害）属 P5 交互第 3 条"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06102",
@@ -2163,9 +2085,7 @@
           "mechanismId": "veiled",
           "ruleOwned": true,
           "implemented": true,
-          "deferred": [
-            "翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡正文已由 P8-T 自译（story-text）"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06127",
@@ -2211,9 +2131,7 @@
           "mechanismId": "researched",
           "ruleOwned": true,
           "implemented": true,
-          "deferred": [
-            "P7 已在 06236/06237/06238 条目声明 researchRequirement: youHaveInterpretedTheDreams（记录由 06112 的 api.recordResearch 写入）；战役层写入该记录的章节流程属 P8"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06236",
@@ -2239,9 +2157,7 @@
           "mechanismId": "alert",
           "ruleOwned": false,
           "implemented": true,
-          "deferred": [
-            "Alert + Swarming 的反击归属（蜂拥卡是否也反击）与 Alert + Massive 的攻击顺序留给 P8 章节接线时逐卡确认"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06105",
@@ -2269,10 +2185,7 @@
           "mechanismId": "hidden",
           "ruleOwned": false,
           "implemented": true,
-          "deferred": [
-            "敌人形态的隐私卡（06306–06310）在手牌中被攻击/躲避的入口属 P8；隐私投影按座位过滤属 P5/P8",
-            "本循环 18 张全部带险境（Peril），与核心隐私条目一致，不新增组合规则"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06017",
@@ -2313,11 +2226,7 @@
           "mechanismId": "bonded",
           "ruleOwned": true,
           "implemented": true,
-          "deferred": [
-            "绑定弱点敌人（06025/06283）的场外实体与「无主卡在场则放回场外」的接线属 P8",
-            "06025/06283 的绑定关系只写在卡文（Bonded (Crystallizer of Dreams)），cards-data 没有 bonded 字段：P7 在单卡条目里声明",
-            "梦境之门作为地点实体入场后的移动/离开处理属 P8（放置原语已在 P3.13 交付）"
-          ],
+          "deferred": [],
           "sourceKind": "text",
           "cardCodes": [
             "06013",
@@ -2567,49 +2476,31 @@
   "evidence": {
     "files": {
       "artifacts/migration/tde/mechanism-scan.json": "19acbba9595c9d01a0051d48a7348a5fd0993001e3ab929ee7557f57ac701a56",
-      "artifacts/migration/tde/primitive-catalog.json": "ef22f8e20a435e7406c213d052e132f8b27106b7f3061ada7c7d4e8f21a3058d",
-      "artifacts/migration/tde/primitive-plan.json": "b325f5d79434d478880d02fad12449363c6eb124eff96cc814563cdd4cbe5711",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06023-searched-card-resolve.json": "6cac3e06effab2f34f438147d7bf5d97e04229097830bccd00cdabd72d4a35de",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06028-encounter-player-card.json": "04fecdb24da457ff7943efa400c9e3865f4fbf8ab8aa411caa1e0259003b2b20",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06029-location-link-attachment.json": "7d7e19b16a6e5685c4a748b980d8a23d4f8b788eccc50ea499ffef59a905e0d9",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06110-mythos-draw-step-replace.json": "a04613c40bb627ef1d33def15d3dc1f7e971fbdd7c437d31d1781f1d59e1cfbe",
-      "artifacts/migration/tde/primitive-requests/w-m2-2-06156-treachery-discard-window.json": "6ad0fa4806a9548516abeca4f36d2f9ddf63c7369a15e9b4847e82e438f773cd",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-dynamic-retaliate.json": "f340c630aaa08db437ee4c29e75a5126560f1303e47e164c2c65e1b4a4fe1dde",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-evade-extra-token.json": "b27246c089d13aebf0b0a394ea9e509c8d45a27e55445fad2f58f28fbc1db152",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-play-cost-discount.json": "4b362ab1a989fafe93fc43a23655df5d63815f28018fd92666609f595fbc429e",
-      "artifacts/migration/tde/primitive-requests/w-p8-c-alarm-level-window.json": "565be585087d9a91f565d435e534edf9bc1dcee3d8e318e4f5c8a9420186d78f",
-      "artifacts/migration/tde/primitive-requests/w-p8-c-swarm-discard.json": "5edd8774839e019b356faec863dbf8383d63d882f49b968077d36e55a51f4f48",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-add-clues-to-enemy.json": "da176c3a43182f812fffd04255301a5997baf951ac7c37154233c9a656d8564a",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-take-enemy-from-victory.json": "18aea89bbcca00e58dad8fdb13ef26d670616a8fdab218b61163ee0e45d1f15e",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-veiled-reset.json": "c451b98ea68c350513efe3fdb165732bb485ea8c06cdd9522532e6932b19d4c4",
-      "artifacts/migration/tde/primitive-requests/w-p8-e-commit-limit.json": "18049bcf0fe26eb09edd9f4662fd6db09fea7ba4e323689edaab72f6f394ab53",
-      "artifacts/migration/tde/primitive-requests/w-p8-e-hidden-hand-cards.json": "1231a16bdec83ec072df78305825b14bdd9773db121684b9e71feb5ada1f69f9",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-evade-protection.json": "b40b026b47fcb56ef6da7b870e9e18aa32ec231b076f0fc518b10991bb721dd0",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-prevent-enemy-ready.json": "7ba47742b800ab104a9f3f857ec88cbdcb0aacfdbfddfbb708f8bb35a66dfc80",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-shared-hooks.json": "78316dc4d5a7dd906150e729b37f88d71195301d9e9f1ffa170590be71936c9f",
-      "artifacts/migration/tde/scope.json": "dc35574f18b3d5431ec613e1343f7ffdd2da69af8f843fafb89c91547360c599",
-      "audit/tde-all-card-acceptance.json": "5566071faa6a4dd576a1587f46553f1ab10abf919a304c560f9bcf320a10d645",
-      "audit/tde-browser-acceptance.json": "81b0a3b5e1a9465b699aa73f8a67b655e38e2123c47ba2478cdd306039a7fe87",
-      "audit/tde-investigators.json": "9df7ff26d1978fd84ade5abc1c20b9ee22a6a4df5b51d9c263338c2f8e0f87c0",
-      "audit/tde-parallel-acceptance.json": "cd74d0e17f17819e0c15acdf2f56270b51495cf996696a24277ef7aac5c930a3",
-      "audit/tde-player-acceptance.json": "4f0e2fd21e5db1510c69741adc758d05cc49b1c34090e7a0b10c2c9180fc340f",
-      "audit/tde-rules.json": "2435e578ac64518544f339d8d95b82d3e8cd305a1f063b607af7485439099e36",
-      "audit/tde-scenario-acceptance.json": "3c6e345a370e7def0d0b21d4a29632ec471bc5e4b0ac1e54596b3a27556514af",
-      "audit/tde-scenario-gap-triage.json": "1fc1ed0fc2736cb2372219a4471af7108ade5cd7bcce910d70ea2f6aa4de012c",
+      "artifacts/migration/tde/primitive-catalog.json": "939c85e9ebb343078e666378a86e1a6b3c8183f998c0bc9f81ff2d0234ab9292",
+      "artifacts/migration/tde/primitive-plan.json": "c3bb30c437e7113544c476ddf27b358c11b1db17794f658d38894d6f73d55b63",
+      "artifacts/migration/tde/scope.json": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d",
+      "audit/tde-all-card-acceptance.json": "3158ec209f0426a32b82b4d3c99209134a1107e9c8c099f758fd4aa750a6c60f",
+      "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
+      "audit/tde-investigators.json": "eefa6c46c69158d7f67e2cb93cfd34b7137ac0c44b17f8b53f5b52bfae5bc3ab",
+      "audit/tde-parallel-acceptance.json": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674",
+      "audit/tde-player-acceptance.json": "e82b95acec547abfaff061f57b1d146c9bbd8bc80bda20050cd32a25bf0ed636",
+      "audit/tde-rules.json": "d130940eabc63117f328eb181451d8298c1a726d00cc08dd3f35b0aa99b82b7b",
+      "audit/tde-scenario-acceptance.json": "9e77e1b6482f2018a8605310160e06046c281444ce2f5605cdeda92dfe9ea489",
+      "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
       "content/campaigns/theDreamEaters/story-text.js": "0c951e348f4752e2cf8c956d484c41a0360dc698058ef3b9469893113d3568f5",
-      "src/cards/tde-campaign-acceptance.js": "bb580110eeec1589b4e0abefda29b1578949ab3a985aeaa15f7fd0d9735cfa95",
-      "src/cards/tde-player-acceptance.js": "d87d14c26f52dc08baf03a788f5fdc2deb7e81353392d92622f94a2a3ddbb508"
+      "src/cards/tde-campaign-acceptance.js": "001ca5af89b567f43a552600a86a727f731a5ae4583020cc586c5ecce7b2a7e8",
+      "src/cards/tde-player-acceptance.js": "c3b7c6e25824dd87984443b1f392912556df33c7592e3b8d19e39e532df7c857"
     },
     "browser": {
       "path": "audit/tde-browser-acceptance.json",
       "generatedBy": "playwright + tools/playwright-tde-reporter.mjs",
       "status": "passed",
-      "specs": 7,
-      "expectedSpecs": 7,
-      "tests": 54,
-      "screenshots": 75,
+      "specs": 8,
+      "expectedSpecs": 8,
+      "tests": 60,
+      "screenshots": 93,
       "scenarios": 8
     },
     "scenarioLedger": {
@@ -2624,8 +2515,8 @@
         "totalChapterRecords": 253,
         "coveredChapterRecords": 253,
         "pendingEncounterCards": 0,
-        "gaps": 12,
-        "approximations": 51,
+        "gaps": 0,
+        "approximations": 0,
         "testCases": 201,
         "storyText": "translated",
         "literalCardBehavior": true,
@@ -2634,8 +2525,8 @@
           "total": 388,
           "verified": 388,
           "pending": 0,
-          "simplified": 87,
-          "testsPassed": 415
+          "simplified": 0,
+          "testsPassed": 417
         },
         "browserEvidence": {
           "specs": [
@@ -2643,6 +2534,7 @@
             "tests/tde-dual.browser.mjs",
             "tests/tde-interactions.browser.mjs",
             "tests/tde-media.browser.mjs",
+            "tests/tde-online.browser.mjs",
             "tests/tde-release.browser.mjs",
             "tests/tde-rules.browser.mjs",
             "tests/tde-scenarios.browser.mjs"
@@ -2679,14 +2571,14 @@
         "dependencyOnly": 15,
         "dependency": 15,
         "basicWeaknesses": 4,
-        "simplified": 87,
-        "simplifiedPlayer": 57,
-        "simplifiedCampaign": 30,
+        "simplified": 0,
+        "simplifiedPlayer": 0,
+        "simplifiedCampaign": 0,
         "simplifiedInvestigator": 0,
         "noEntry": 10,
         "scenarioReferenceCards": 8,
         "recordsWithEntry": 273,
-        "scenarioGaps": 12,
+        "scenarioGaps": 0,
         "implementationChannels": {
           "descriptor": 103,
           "engine": 2,
@@ -2694,7 +2586,7 @@
           "encounter-entry": 273,
           "linked-face": 2
         },
-        "testsPassed": 415,
+        "testsPassed": 417,
         "testFiles": 6
       }
     },
@@ -2704,7 +2596,7 @@
       "summary": {
         "gates": 10,
         "gatesCovered": 10,
-        "tests": 46,
+        "tests": 47,
         "testFiles": 4,
         "browserTests": 6,
         "browserScreenshots": 13,
@@ -2866,8 +2758,8 @@
         "basicWeaknesses": 4,
         "verified": 87,
         "unverified": 0,
-        "simplified": 57,
-        "testsPassed": 101
+        "simplified": 0,
+        "testsPassed": 103
       }
     },
     "storyLedger": {
@@ -2879,8 +2771,10 @@
     }
   },
   "tests": {
-    "command": "node --test --test-reporter=./tools/core-test-reporter.mjs tests/tde-rules.test.mjs tests/tde-investigators.test.mjs tests/tde-all-card-ledger.test.mjs tests/tde-campaign-card-acceptance.test.mjs tests/tde-player-m2-1.test.mjs tests/tde-player-m2-2.test.mjs tests/tde-player-m2-3.test.mjs tests/tde-player-m2-4.test.mjs tests/tde-player-ledger.test.mjs tests/tde-scenario-beyondTheGatesOfSleep.test.mjs tests/tde-scenario-wakingNightmare.test.mjs tests/tde-scenario-theSearchForKadath.test.mjs tests/tde-scenario-aThousandShapesOfHorror.test.mjs tests/tde-scenario-darkSideOfTheMoon.test.mjs tests/tde-scenario-pointOfNoReturn.test.mjs tests/tde-scenario-whereTheGodsDwell.test.mjs tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+    "command": "node --test --test-reporter=./tools/core-test-reporter.mjs tests/tde-completion-primitives.test.mjs tests/tde-completion.test.mjs tests/tde-rules.test.mjs tests/tde-investigators.test.mjs tests/tde-all-card-ledger.test.mjs tests/tde-campaign-card-acceptance.test.mjs tests/tde-player-m2-1.test.mjs tests/tde-player-m2-2.test.mjs tests/tde-player-m2-3.test.mjs tests/tde-player-m2-4.test.mjs tests/tde-player-ledger.test.mjs tests/tde-scenario-beyondTheGatesOfSleep.test.mjs tests/tde-scenario-wakingNightmare.test.mjs tests/tde-scenario-theSearchForKadath.test.mjs tests/tde-scenario-aThousandShapesOfHorror.test.mjs tests/tde-scenario-darkSideOfTheMoon.test.mjs tests/tde-scenario-pointOfNoReturn.test.mjs tests/tde-scenario-whereTheGodsDwell.test.mjs tests/tde-scenario-weaverOfTheCosmos.test.mjs",
     "files": [
+      "tests/tde-completion-primitives.test.mjs",
+      "tests/tde-completion.test.mjs",
       "tests/tde-rules.test.mjs",
       "tests/tde-investigators.test.mjs",
       "tests/tde-all-card-ledger.test.mjs",
@@ -2900,8 +2794,8 @@
       "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
     ],
     "status": 0,
-    "tests": 645,
-    "passed": 645,
+    "tests": 671,
+    "passed": 671,
     "failed": 0,
     "perFile": {
       "tde-all-card-ledger.test.mjs": {
@@ -2910,6 +2804,14 @@
       },
       "tde-campaign-card-acceptance.test.mjs": {
         "passed": 289,
+        "failed": 0
+      },
+      "tde-completion-primitives.test.mjs": {
+        "passed": 23,
+        "failed": 0
+      },
+      "tde-completion.test.mjs": {
+        "passed": 1,
         "failed": 0
       },
       "tde-investigators.test.mjs": {
@@ -2921,7 +2823,7 @@
         "failed": 0
       },
       "tde-player-m2-1.test.mjs": {
-        "passed": 24,
+        "passed": 26,
         "failed": 0
       },
       "tde-player-m2-2.test.mjs": {
@@ -2977,21 +2879,11 @@
     "note": "spawnSync 实跑；spawn 时删除 NODE_TEST_CONTEXT / NODE_TEST_WORKER_ID；计数只来自 tools/core-test-reporter.mjs 的 test:pass / test:fail 事件（账本不含耗时/宿主信息）。",
     "ok": true
   },
-  "remaining": [
-    "P7 57 + P8 30 = 87 条显式简化保持 simplified（逐卡账本 388/388 条 verified，其中 87 条为显式简化；逐条 note 见 content/campaigns/theDreamEaters/card-acceptance.js 与 audit/tde-all-card-acceptance.json；发布口径 equivalenceCertified=false，不宣称与印刷规则等价）",
-    "原语请求待还账：P7 5 条 + P8 11 条 rejected 原语请求待还账（P8 = rejected 6 / withdrawn 1 / deferred 1 / escape 3；rejected 请求合计 11 条），合计 16 条；逐条见 artifacts/migration/tde/primitive-requests/、artifacts/migration/tde/primitive-plan.json",
-    "并行共享幕间 II/III 与 16 段尾声矩阵未接线（仅 pick 双线 flow 验证；parallel 每条线当前各跑单线 flow，两线同步进同一幕间界面的协调层未做）——见 docs/tde-p9.5-report.md §6.1",
-    "真实联机双真人房间未验收（现有浏览器证据是单会话 + 双观察座位注入，不是生产大厅联机）——见 docs/tde-p9.5-report.md §6.3 / docs/tde-release.md §4",
-    "B4《编织宇宙》调试 endScenario 须选 resolution2（桥梁已建成）才有合法 B 轴最终态记录；resolution1 属调试入口口径而非规则 bug；endCampaign 未把尾声格子序号写进 campaign（P10 可评估改显示）——见 docs/tde-p9.5-report.md §6.2",
-    "银钥匙 06189 是 setAside 剧情资产、不在战役牌库：真实路径 removeCampaignCard 为 no-op，「B 线牌库移除」语义仅由 tests/tde-p95-interludes 的预置牌库用例覆盖；内容层是否把它放进战役牌库待评估——见 docs/tde-p9.5-report.md §6.2",
-    "逐章账本 remaining 63 条显式近似/边界保持登记（audit/tde-scenario-acceptance.json；summary: 51 approximations / 12 gaps；不宣称规则等价）",
-    "P10 已重采 baseline（含 test:fast 与 tdeScope/tdeMigration，audit/baseline.json）；后续改内容/测试需重跑 node tools/audit-baseline.mjs --write。",
-    "P10 发布口径：三组确认按 P8/P9 口径 verified；逐卡审计仍有 87 条显式简化、并行共享幕间/尾声与真实联机房间边界未完成，按 earlyAccess 发布（playable + earlyAccess + equivalenceCertified=false），不宣称与印刷规则完全等价。"
-  ],
+  "remaining": [],
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tde/scope.json",
-      "sha256": "dc35574f18b3d5431ec613e1343f7ffdd2da69af8f843fafb89c91547360c599",
+      "sha256": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d",
       "milestone": "M0",
       "gatePass": true,
       "registration": {
@@ -3187,9 +3079,11 @@
       "pass": true
     },
     "nodeAcceptance": {
-      "command": "node --test --test-reporter=./tools/core-test-reporter.mjs tests/tde-rules.test.mjs tests/tde-investigators.test.mjs tests/tde-all-card-ledger.test.mjs tests/tde-campaign-card-acceptance.test.mjs tests/tde-player-m2-1.test.mjs tests/tde-player-m2-2.test.mjs tests/tde-player-m2-3.test.mjs tests/tde-player-m2-4.test.mjs tests/tde-player-ledger.test.mjs tests/tde-scenario-beyondTheGatesOfSleep.test.mjs tests/tde-scenario-wakingNightmare.test.mjs tests/tde-scenario-theSearchForKadath.test.mjs tests/tde-scenario-aThousandShapesOfHorror.test.mjs tests/tde-scenario-darkSideOfTheMoon.test.mjs tests/tde-scenario-pointOfNoReturn.test.mjs tests/tde-scenario-whereTheGodsDwell.test.mjs tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+      "command": "node --test --test-reporter=./tools/core-test-reporter.mjs tests/tde-completion-primitives.test.mjs tests/tde-completion.test.mjs tests/tde-rules.test.mjs tests/tde-investigators.test.mjs tests/tde-all-card-ledger.test.mjs tests/tde-campaign-card-acceptance.test.mjs tests/tde-player-m2-1.test.mjs tests/tde-player-m2-2.test.mjs tests/tde-player-m2-3.test.mjs tests/tde-player-m2-4.test.mjs tests/tde-player-ledger.test.mjs tests/tde-scenario-beyondTheGatesOfSleep.test.mjs tests/tde-scenario-wakingNightmare.test.mjs tests/tde-scenario-theSearchForKadath.test.mjs tests/tde-scenario-aThousandShapesOfHorror.test.mjs tests/tde-scenario-darkSideOfTheMoon.test.mjs tests/tde-scenario-pointOfNoReturn.test.mjs tests/tde-scenario-whereTheGodsDwell.test.mjs tests/tde-scenario-weaverOfTheCosmos.test.mjs",
       "status": 0,
       "files": [
+        "tests/tde-completion-primitives.test.mjs",
+        "tests/tde-completion.test.mjs",
         "tests/tde-rules.test.mjs",
         "tests/tde-investigators.test.mjs",
         "tests/tde-all-card-ledger.test.mjs",
@@ -3208,9 +3102,9 @@
         "tests/tde-scenario-whereTheGodsDwell.test.mjs",
         "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
       ],
-      "fileCount": 17,
-      "tests": 645,
-      "passed": 645,
+      "fileCount": 19,
+      "tests": 671,
+      "passed": 671,
       "failed": 0,
       "missingFiles": [],
       "ok": true,
@@ -3232,7 +3126,7 @@
       "buildable": 72,
       "dependencyOnly": 15,
       "basicWeaknesses": 4,
-      "testsPassed": 101,
+      "testsPassed": 103,
       "ledgerVerified": 87,
       "nodeAcceptance": true,
       "ledgerTest": true,
@@ -3245,11 +3139,11 @@
       "nodeEvidence": 8,
       "pending": [],
       "pendingEncounterCards": 0,
-      "gaps": 12,
+      "gaps": 0,
       "encounterCards": 191,
       "chapterRecords": 253,
       "coveredChapterRecords": 253,
-      "remaining": 63,
+      "remaining": 0,
       "testFiles": [
         "tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
         "tests/tde-scenario-wakingNightmare.test.mjs",
@@ -3262,7 +3156,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "3c6e345a370e7def0d0b21d4a29632ec471bc5e4b0ac1e54596b3a27556514af",
+        "sha256": "9e77e1b6482f2018a8605310160e06046c281444ce2f5605cdeda92dfe9ea489",
         "status": "verified"
       },
       "sourceLock": {
@@ -3285,15 +3179,15 @@
         "player": 87,
         "face": 36
       },
-      "simplified": 87,
-      "simplifiedPlayer": 57,
-      "simplifiedCampaign": 30,
-      "testsPassed": 415,
+      "simplified": 0,
+      "simplifiedPlayer": 0,
+      "simplifiedCampaign": 0,
+      "testsPassed": 417,
       "testFiles": 6,
       "testFilesFresh": true,
       "ledger": {
         "path": "audit/tde-all-card-acceptance.json",
-        "sha256": "5566071faa6a4dd576a1587f46553f1ab10abf919a304c560f9bcf320a10d645"
+        "sha256": "3158ec209f0426a32b82b4d3c99209134a1107e9c8c099f758fd4aa750a6c60f"
       },
       "pass": true
     },
@@ -3314,7 +3208,7 @@
         "G10"
       ],
       "gatePassCount": 10,
-      "tests": 46,
+      "tests": 47,
       "testFiles": 4,
       "browserTests": 6,
       "browserScreenshots": 13,
@@ -3336,7 +3230,7 @@
       "filesFresh": true,
       "ledger": {
         "path": "audit/tde-parallel-acceptance.json",
-        "sha256": "cd74d0e17f17819e0c15acdf2f56270b51495cf996696a24277ef7aac5c930a3"
+        "sha256": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674"
       },
       "pass": true
     },
@@ -3349,6 +3243,7 @@
         "tests/tde-dual.browser.mjs",
         "tests/tde-interactions.browser.mjs",
         "tests/tde-media.browser.mjs",
+        "tests/tde-online.browser.mjs",
         "tests/tde-release.browser.mjs",
         "tests/tde-rules.browser.mjs",
         "tests/tde-scenarios.browser.mjs"
@@ -3358,13 +3253,14 @@
         "tests/tde-dual.browser.mjs",
         "tests/tde-interactions.browser.mjs",
         "tests/tde-media.browser.mjs",
+        "tests/tde-online.browser.mjs",
         "tests/tde-release.browser.mjs",
         "tests/tde-rules.browser.mjs",
         "tests/tde-scenarios.browser.mjs"
       ],
       "specsComplete": true,
-      "tests": 54,
-      "screenshots": 75,
+      "tests": 60,
+      "screenshots": 93,
       "scenarios": 8,
       "scenariosCovered": 8,
       "desktop": true,
@@ -3668,29 +3564,33 @@
       "pass": true
     },
     "primitivesDone": {
-      "new": 29,
-      "done": 29,
+      "new": 33,
+      "done": 33,
       "unfinished": [],
-      "deferred": 1,
-      "escape": 3,
+      "deferred": 0,
+      "escape": 0,
       "requests": {
-        "files": 18,
-        "done": 6,
-        "rejected": 11,
-        "withdrawn": 1,
-        "p7": 5,
-        "p8": 13
+        "files": 0,
+        "done": 0,
+        "rejected": 0,
+        "withdrawn": 0,
+        "p7": 0,
+        "p8": 0
       },
       "outstanding": {
-        "p7Rejected": 5,
-        "p8Rejected": 6,
-        "p8Withdrawn": 1,
-        "p8Deferred": 1,
-        "p8Escape": 3,
-        "p8Outstanding": 11,
-        "total": 16
+        "p7Rejected": 0,
+        "p8Rejected": 0,
+        "p8Withdrawn": 0,
+        "p8Deferred": 0,
+        "p8Escape": 0,
+        "p8Outstanding": 0,
+        "total": 0
       },
       "planGatePass": true,
+      "pass": true
+    },
+    "releaseDisclosure": {
+      "deferred": [],
       "pass": true
     },
     "releaseGate": {
@@ -3707,6 +3607,7 @@
       "browser": true,
       "story": true,
       "primitives": true,
+      "disclosure": true,
       "pass": true
     },
     "pass": true

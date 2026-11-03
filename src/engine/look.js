@@ -29,9 +29,9 @@ export const LOOK_ZONES = Object.freeze(['deck', 'discard', 'encounterDeck', 'ex
 export const RETURN_STRATEGIES = Object.freeze(['shuffle', 'top', 'bottom', 'discard', 'keep'])
 
 const LOOK_KEYS = new Set(['zone', 'count', 'arrange', 'returnStrategy', 'choose', 'filter', 'prompt',
-  'shuffleAfter', 'source', 'targetSeat', 'label'])
+  'shuffleAfter', 'source', 'targetSeat', 'label', 'optional', 'commitToTest'])
 
-const SEARCH_KEYS = new Set(['trait', 'type', 'usesType', 'count', 'choose', 'shuffle', 'prompt', 'source',
+const SEARCH_KEYS = new Set(['trait', 'traitsAny', 'factionsAny', 'subtype', 'type', 'usesType', 'count', 'choose', 'shuffle', 'prompt', 'source',
   'targetSeat', 'label', 'optional', 'unlimited'])
 
 function assertKeys(raw, allowed, origin) {
@@ -63,6 +63,8 @@ export function normalizeLookOptions(raw = {}, origin = 'lookAt') {
     arrange: raw.arrange === true,
     returnStrategy,
     choose,
+    ...(raw.optional ? { optional: true } : {}),
+    ...(raw.commitToTest ? { commitToTest: { ...raw.commitToTest } } : {}),
     filter: raw.filter ? Object.freeze({ ...raw.filter }) : null,
     prompt: raw.prompt ? String(raw.prompt) : null,
     source: raw.source || null,
@@ -74,13 +76,16 @@ export function normalizeLookOptions(raw = {}, origin = 'lookAt') {
 export function normalizeSearchOptions(raw = {}, origin = 'searchDeck') {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error(`${origin}: 选项必须是对象`)
   assertKeys(raw, SEARCH_KEYS, origin)
-  if (!raw.trait && !raw.type && !raw.usesType) throw new Error(`${origin}: 至少声明 trait / type / usesType 之一`)
+  if (!raw.trait && !raw.traitsAny && !raw.factionsAny && !raw.subtype && !raw.type && !raw.usesType) throw new Error(`${origin}: 至少声明卡牌筛选条件`)
   const count = raw.count ?? 1
   if (!Number.isInteger(count) || count < 1) throw new Error(`${origin}: count 必须是正整数`)
   const choose = raw.choose ?? 1
   if (!Number.isInteger(choose) || choose < 1) throw new Error(`${origin}: choose 必须是正整数`)
   return Object.freeze({
     trait: raw.trait ? String(raw.trait) : null,
+    ...(raw.traitsAny ? { traitsAny:[...raw.traitsAny] } : {}),
+    ...(raw.factionsAny ? { factionsAny:[...raw.factionsAny] } : {}),
+    ...(raw.subtype ? { subtype:raw.subtype } : {}),
     type: raw.type ? String(raw.type) : null,
     usesType: raw.usesType ? String(raw.usesType) : null,
     count,

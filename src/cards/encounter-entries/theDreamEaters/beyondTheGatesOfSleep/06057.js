@@ -3,9 +3,7 @@
 // 卡面：冷漠。反击。[action] 谈判：检定意志或智识(2)（本次检定每有 1 名调查员难度 +1）以证明你有资格
 //   进入幻梦境。成功则翻面并结算其另一面；失败则卡曼塔攻击他所在地点的每位调查员。
 //   强制 - 击败卡曼塔后：翻面并结算其另一面。
-// 「另一面」= 背面故事卡 06057b（Lead 口径：不建条目，规则在本条目的谈判/击败分支里，结算时用
-//   api.cardFlip('06057') 展示背面正文；故事卡「加入胜利区」在引擎里没有独立实体现，用
-//   scenarioFlags.trialOfKamanThahResolved + 敌人离场近似，0 胜利点故 XP 不受影响）。
+// 「另一面」= 背面故事卡 06057b；翻面展示正文后把该故事面放入胜利牌区。
 // 读点：enemyScript.encounterAction / performEncounterAction（共享 encounter-rules.js 的
 //   encounterActions / performEncounterAction 分派）、enemyScript.onDefeated（共享 enemyDefeated 分派）。
 import { activeInvestigators } from '../../_shared.js'
@@ -20,6 +18,7 @@ function perInvestigatorDifficulty(state) {
 function resolveTrial(state, enemy, api, via) {
   api.cardFlip?.(CODE, '卡曼塔的考验')
   api.setScenarioFlag?.('trialOfKamanThahResolved', true)
+  api.addStoryToVictory?.('06057b', { sourceId: enemy.id })
   api.banish?.(enemy)
   api.info?.(via === 'parley'
     ? '🕯️ 卡曼塔认可了你的意志：他让开道路，幻梦境向你敞开。'
@@ -64,10 +63,10 @@ export default {
       })
       return true
     },
-    // 强制 - 击败后：翻面结算故事面（引擎先移出敌人，再派发本钩子；返回 false 让引擎走常规收尾）。
+    // 强制 - 击败后：翻面结算故事面，接管常规敌人弃牌收尾。
     onDefeated(state, enemy, api) {
       resolveTrial(state, enemy, api, 'defeated')
-      return false
+      return true
     },
   },
 }

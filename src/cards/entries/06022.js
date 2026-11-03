@@ -9,25 +9,44 @@
 //
 // 06022 皇后的挂坠：
 //   · 使用(3 充能) → 条目 uses/usesType；free 能力消耗 1 充能并横置。
-//   · 充能耗尽复位：在「花费最后 1 充能」的路径上结算（把挂坠放到一边 + 3 张一瓣缟玛瑙从
-//     setAside 洗回牌库）。显式简化：引擎没有 uses 归零钩子，其他把充能清零的路径不会触发复位。
+//   · 充能归零由 onUsesEmptied 统一复位，挂坠放到一边并把 3 张一瓣缟玛瑙洗回牌库。
+
+function choicesAt(state, inv, location, rules) {
+  const move = rules.canMoveTo(inv.seat, location.id)
+  const clue = rules.canDiscoverClueAt(inv.seat, location.id)
+  const enemies = (state.enemies || []).filter(enemy => enemy.location === location.id
+    && rules.canAutoEvade(enemy, inv.seat))
+  return { move, clue, enemies, available: move || clue || enemies.length > 0 }
+}
 
 export default {
   code: '06022',
   uses: 3,
   usesType: 'charges',
-  simplified: true,
-  note: '未实现：充能归零的自动复位只在「花费最后 1 充能」这条路径上结算（引擎没有 uses 归零钩子）；'
-    + '挂坠被其他效果清空充能时不会自动放在一边。',
+  onUsesEmptied: ({ state, inv, source, api }) => {
+    api.moveCard({ id: source.id, from: 'play', to: 'setAside', ownerSeat: inv.seat })
+    const available = (state.setAside || []).filter(card =>
+      (typeof card === 'string' ? card : card?.code) === '06021'
+      && (typeof card === 'string' || card.ownerSeat == null || card.ownerSeat === inv.seat)).length
+    let returned = 0
+    for (let index = 0; index < Math.min(3, available); index++) {
+      if (api.moveCard({ code: '06021', from: 'setAside', to: 'deckTop', ownerSeat: inv.seat })) returned += 1
+    }
+    if (returned > 0) api.shuffleDeck(inv.seat)
+    api.info(`「皇后的挂坠」充能耗尽：放到一边，${returned} 张一瓣缟玛瑙洗回牌库。`)
+  },
   abilities: [
     {
       kind: 'free',
       label: '横置并花费 1 充能：移动到 / 发现线索于 / 自动躲避 一个已揭示地点',
       cost: { action: false, exhaust: true, uses: 1 },
-      resolve: ({ state, inv, source, api }) => {
-        const revealed = (state.locations || []).filter(location => location.revealed)
+      criteria: [({ state, inv, helpers }) => (state.locations || []).some(location =>
+        location.revealed && choicesAt(state, inv, location, helpers).available)],
+      resolve: ({ state, inv, api }) => {
+        const revealed = (state.locations || []).filter(location => location.revealed
+          && choicesAt(state, inv, location, api).available)
         if (!revealed.length) {
-          api.info('「皇后的挂坠」：没有已揭示的地点。')
+          api.info('「皇后的挂坠」：没有可结算选项的已揭示地点。')
           return
         }
         const locationId = revealed.length === 1 ? revealed[0].id : api.choice({
@@ -37,11 +56,12 @@ export default {
         })
         const location = (state.locations || []).find(entry => entry.id === locationId)
         if (!location) return
-        const enemyHere = (state.enemies || []).find(enemy => enemy.location === locationId && !enemy.defeated)
+        const legal = choicesAt(state, inv, location, api)
+        const enemiesHere = legal.enemies
         const options = []
-        if (locationId !== inv.location) options.push({ id: 'move', label: '移动到该地点' })
-        if ((location.clues || 0) > 0) options.push({ id: 'clue', label: '发现该地点的 1 个线索' })
-        if (enemyHere) options.push({ id: 'evade', label: '自动躲避该地点的一个敌人' })
+        if (legal.move) options.push({ id: 'move', label: '移动到该地点' })
+        if (legal.clue) options.push({ id: 'clue', label: '发现该地点的 1 个线索' })
+        if (enemiesHere.length) options.push({ id: 'evade', label: '自动躲避该地点的一个敌人' })
         if (!options.length) {
           api.info('「皇后的挂坠」：该地点没有可结算的选项。')
         } else {
@@ -52,16 +72,15 @@ export default {
           })
           if (action === 'move') api.moveInvestigator(inv.seat, locationId)
           else if (action === 'clue') api.discoverClue(inv.seat, 1, locationId)
-          else if (action === 'evade') api.autoEvade(enemyHere)
-        }
-        // 使用(3 充能)：花费最后 1 充能后复位。
-        if (source && (source.uses || 0) <= 0) {
-          api.moveCard({ id: source.id, from: 'play', to: 'setAside' })
-          for (let index = 0; index < 3; index++) {
-            api.moveCard({ code: '06021', from: 'setAside', to: 'deckTop' })
+          else if (action === 'evade') {
+            const enemyId = enemiesHere.length === 1 ? enemiesHere[0].id : api.choice({
+              kind: 'enemy', source: '06022', seat: inv.seat,
+              prompt: '选择要自动躲避的敌人。',
+              options: enemiesHere.map(enemy => ({ id: enemy.id, label: enemy.name })),
+            })
+            const target = enemiesHere.find(enemy => enemy.id === enemyId)
+            if (target) api.autoEvade(target)
           }
-          api.shuffleDeck(inv.seat)
-          api.info('「皇后的挂坠」充能耗尽：放到一边，3 张一瓣缟玛瑙洗回牌库。')
         }
       },
     },

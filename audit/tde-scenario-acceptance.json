@@ -15,8 +15,8 @@
     "totalChapterRecords": 253,
     "coveredChapterRecords": 253,
     "pendingEncounterCards": 0,
-    "gaps": 12,
-    "approximations": 51,
+    "gaps": 0,
+    "approximations": 0,
     "testCases": 201,
     "storyText": "translated",
     "literalCardBehavior": true,
@@ -25,8 +25,8 @@
       "total": 388,
       "verified": 388,
       "pending": 0,
-      "simplified": 87,
-      "testsPassed": 415
+      "simplified": 0,
+      "testsPassed": 417
     },
     "browserEvidence": {
       "specs": [
@@ -34,6 +34,7 @@
         "tests/tde-dual.browser.mjs",
         "tests/tde-interactions.browser.mjs",
         "tests/tde-media.browser.mjs",
+        "tests/tde-online.browser.mjs",
         "tests/tde-release.browser.mjs",
         "tests/tde-rules.browser.mjs",
         "tests/tde-scenarios.browser.mjs"
@@ -167,17 +168,7 @@
       },
       "pendingEncounterCodes": [],
       "gaps": [],
-      "approximations": [
-        "14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
-        "「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
-        "幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
-        "「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
-        "「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
-        "「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
-        "「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
-        "「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
-        "故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。"
-      ],
+      "approximations": [],
       "testFile": "tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
       "testCases": {
         "passed": 26,
@@ -202,20 +193,10 @@
         "index.js": "4f29fca04d693360b7eb853e35dddccb39f2deec337ff704392f6ccff1b729d2",
         "definition.js": "b12469b265651e7d7ee8023fa473bc53b2ea5c86c4010e0637998b05cb957da6",
         "layout.js": "a9560b26ba26ef3e726b5f0e223acbe66fd0536d818a6956c67962d454cc83f0",
-        "behavior.js": "b436aafd672885fa32125d0c3fb0acd55c39d58ccbea29ef7ad2db348a3c9753",
+        "behavior.js": "72fdca4f97ddf479e8bf94dfb476b58625ea95e4cf958f77dac6e1506d051836",
         "chaos.js": "12623426f62ad6c85f455299b7f19a0c7d82d14f1530b26605a44b70165ac91e"
       },
-      "remaining": [
-        "beyondTheGatesOfSleep（近似实现）：14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
-        "beyondTheGatesOfSleep（近似实现）：「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
-        "beyondTheGatesOfSleep（近似实现）：幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
-        "beyondTheGatesOfSleep（近似实现）：「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
-        "beyondTheGatesOfSleep（近似实现）：「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
-        "beyondTheGatesOfSleep（近似实现）：「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
-        "beyondTheGatesOfSleep（近似实现）：「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
-        "beyondTheGatesOfSleep（近似实现）：「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
-        "beyondTheGatesOfSleep（近似实现）：故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。"
-      ]
+      "remaining": []
     },
     {
       "id": "wakingNightmare",
@@ -269,9 +250,7 @@
         "literalCardBehavior": {
           "records": 21,
           "missing": [],
-          "simplified": [
-            "06063"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -337,18 +316,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。"
-      ],
-      "approximations": [
-        "06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
-        "06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
-        "06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
-        "06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
-        "06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
-        "06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
-        "06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-wakingNightmare.test.mjs",
       "testCases": {
         "passed": 27,
@@ -373,19 +342,10 @@
         "index.js": "85035998e724e940f35c11fcb2d893cbb57edc5c8183caa2f8a9b137f0f32666",
         "definition.js": "60684da642ff1c2b6155ac542e5ebf0aca4abd923cdabeb1ba6db7d5f080602f",
         "layout.js": "30e798cf5994a14383577c8f68981d62757c85d224de233c99b0df8bf6a2a13f",
-        "behavior.js": "3be502ebe55927bc2d3c6d1fed120bcdf21260eeb37c2b8e64c78b63afc99981",
+        "behavior.js": "f17318c70bc6cb7bed88284c3410e1742187212ed2cbb312d2adc4fcd35ac508",
         "chaos.js": "aa813c0667f6dd469af8a81c5a97e570c61954a6c27131be15e57ebbeb1885bc"
       },
-      "remaining": [
-        "wakingNightmare：「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。",
-        "wakingNightmare（近似实现）：06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
-        "wakingNightmare（近似实现）：06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
-        "wakingNightmare（近似实现）：06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
-        "wakingNightmare（近似实现）：06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
-        "wakingNightmare（近似实现）：06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
-        "wakingNightmare（近似实现）：06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
-        "wakingNightmare（近似实现）：06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。"
-      ]
+      "remaining": []
     },
     {
       "id": "theSearchForKadath",
@@ -445,9 +405,7 @@
         "literalCardBehavior": {
           "records": 53,
           "missing": [],
-          "simplified": [
-            "06119"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -541,19 +499,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
-        "剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。"
-      ],
-      "approximations": [
-        "斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
-        "塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
-        "黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
-        "维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
-        "哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
-        "「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
-        "艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
       "testCases": {
         "passed": 30,
@@ -578,20 +525,10 @@
         "index.js": "e45a278b0475b5cd8a3ef4d1501a6b05f08f83e6eed07d004083d07b7336c79c",
         "definition.js": "9ffc3778de9970ecbd22e14c97f655ba4f6a80145a5badb7689773be94b90ad6",
         "layout.js": "2d5eb515fb4c2d41e57c24aee4bc9ff00bc2cae0bd8f1aa6842db0f36f55e10c",
-        "behavior.js": "a38f2c2015c18f9cc961ed5d7ee9286a6eab47dad9f35f2141558a98191ec3e3",
+        "behavior.js": "32e90d0517732c4f2753e0707e32222ff714c87bf1cbb9aac23207ac40c45647",
         "chaos.js": "b92dc032ed459298f393ebc3092505bb60c17e50e87239810ab914c1426ffefa"
       },
-      "remaining": [
-        "theSearchForKadath：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
-        "theSearchForKadath：剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。",
-        "theSearchForKadath（近似实现）：斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
-        "theSearchForKadath（近似实现）：塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
-        "theSearchForKadath（近似实现）：黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
-        "theSearchForKadath（近似实现）：维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
-        "theSearchForKadath（近似实现）：哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
-        "theSearchForKadath（近似实现）：「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
-        "theSearchForKadath（近似实现）：艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。"
-      ]
+      "remaining": []
     },
     {
       "id": "aThousandShapesOfHorror",
@@ -649,10 +586,7 @@
         "literalCardBehavior": {
           "records": 28,
           "missing": [],
-          "simplified": [
-            "06168",
-            "06193"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -723,16 +657,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
-        "06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。"
-      ],
-      "approximations": [
-        "神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
-        "议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
-        "06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
-        "06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
       "testCases": {
         "passed": 13,
@@ -757,17 +683,10 @@
         "index.js": "c2f83003e22928c581ab2d50ae8880992b8fe4d34a3217cf419b8f8884c9f9fa",
         "definition.js": "c94f9f763602f5301cf2d971b380bccbfeb66c56dcb5e6a57740b7dbfa7b63db",
         "layout.js": "bf23f43c06560f6e8b621d7ac2112125c04602ac670ab58b019669f00683f2a6",
-        "behavior.js": "d9e0607eb5bb32e287b156fdb65887cf2a8d0e35d6932df4115f200a3d75be44",
+        "behavior.js": "e5ca853d914826de83d80fcf42df898fd7f1aaa32f2335f11263001ca4cda9dc",
         "chaos.js": "35f51969e971aa8c79365d99ed868da0d1cc782d8b66a87a29bcb04ac87274f2"
       },
-      "remaining": [
-        "aThousandShapesOfHorror：06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
-        "aThousandShapesOfHorror：06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。",
-        "aThousandShapesOfHorror（近似实现）：神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
-        "aThousandShapesOfHorror（近似实现）：议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
-        "aThousandShapesOfHorror（近似实现）：06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
-        "aThousandShapesOfHorror（近似实现）：06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。"
-      ]
+      "remaining": []
     },
     {
       "id": "darkSideOfTheMoon",
@@ -819,9 +738,7 @@
         "literalCardBehavior": {
           "records": 29,
           "missing": [],
-          "simplified": [
-            "06214b"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -890,15 +807,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。"
-      ],
-      "approximations": [
-        "被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
-        "月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
-        "月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
-        "06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-darkSideOfTheMoon.test.mjs",
       "testCases": {
         "passed": 15,
@@ -923,16 +833,10 @@
         "index.js": "8d6a44b5841f07cccbc6c046dc54ef2c4c70333aa57751cd6e9bc0e78fa51873",
         "definition.js": "58a8b8dee64e8bbbc1e2b9790c8236786d402c7d2af506765d2945209047a37e",
         "layout.js": "e9452534c06387308e1eb2bd47a1b812b4a7fa27585fbc9a31d4f78ad431ed5d",
-        "behavior.js": "92f1f100f0e8b027f1bb5a60f7b212f824018bf834c6cd77b0d823a8133e5386",
+        "behavior.js": "650be0e69afc123b2e42b672e30cc2e6008298849d56e3f75bed01e480683c69",
         "chaos.js": "a44c0c17413873d17ffbd73bb4b57bb695e72f4e2725db6d9ed5ca71876c51ac"
       },
-      "remaining": [
-        "darkSideOfTheMoon：06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。",
-        "darkSideOfTheMoon（近似实现）：被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
-        "darkSideOfTheMoon（近似实现）：月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
-        "darkSideOfTheMoon（近似实现）：月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
-        "darkSideOfTheMoon（近似实现）：06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。"
-      ]
+      "remaining": []
     },
     {
       "id": "pointOfNoReturn",
@@ -991,9 +895,7 @@
         "literalCardBehavior": {
           "records": 37,
           "missing": [],
-          "simplified": [
-            "06247"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -1071,19 +973,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
-        "「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
-        "「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。"
-      ],
-      "approximations": [
-        "8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
-        "「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
-        "「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
-        "食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
-        "古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
-        "卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-pointOfNoReturn.test.mjs",
       "testCases": {
         "passed": 37,
@@ -1108,20 +999,10 @@
         "index.js": "9cf458ea2c5983ac4703a4ac1939d680f63540a5ddca24a9972e1411b4df2f05",
         "definition.js": "8924e1fadd0c1043375530ad843e29776c577472db806f1e08086668a0a4d327",
         "layout.js": "a986d7c61ad256e569c0a2ab8a390b86660c526d5bc2bb49acff633fd9b72154",
-        "behavior.js": "8997c08aaabb08878e5c42fe9a0eebbf4502587a219d459a6b866bba6cf7e221",
+        "behavior.js": "edb7fcd25cf290145ef551b3fbc789ed550e343258632874905e5ce5f1c8370f",
         "chaos.js": "ae14cd3771ceffab9c4513836af3bdf67ab8e9015a698df510d67635b6006497"
       },
-      "remaining": [
-        "pointOfNoReturn：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
-        "pointOfNoReturn：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
-        "pointOfNoReturn：「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。",
-        "pointOfNoReturn（近似实现）：8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
-        "pointOfNoReturn（近似实现）：「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
-        "pointOfNoReturn（近似实现）：「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
-        "pointOfNoReturn（近似实现）：食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
-        "pointOfNoReturn（近似实现）：古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
-        "pointOfNoReturn（近似实现）：卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。"
-      ]
+      "remaining": []
     },
     {
       "id": "whereTheGodsDwell",
@@ -1188,10 +1069,7 @@
         "literalCardBehavior": {
           "records": 37,
           "missing": [],
-          "simplified": [
-            "06286",
-            "06306"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -1272,21 +1150,8 @@
         ]
       },
       "pendingEncounterCodes": [],
-      "gaps": [
-        "06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
-        "Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
-        "真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。"
-      ],
-      "approximations": [
-        "「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
-        "手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
-        "6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
-        "「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
-        "结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
-        "「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
-        "「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
-        "冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。"
-      ],
+      "gaps": [],
+      "approximations": [],
       "testFile": "tests/tde-scenario-whereTheGodsDwell.test.mjs",
       "testCases": {
         "passed": 20,
@@ -1311,22 +1176,10 @@
         "index.js": "125fadb67143b58287277e6c1902d2160bd4bd2ba439f683809b0c2ff9aace16",
         "definition.js": "29a76ddfc659f88545e150bcc48b85881b3a32b1ebbbb264f8c1a52fafcd1b20",
         "layout.js": "0c33a62b55bfa60df80b4974bb79470cff8bad89e2be07b480846aa28718ac54",
-        "behavior.js": "19544be32bd3de62d40377adbcf8c5b44edf01d5f984adb0f88390ae56b7df8a",
+        "behavior.js": "cdbe12e2bce6977c5b5ff4c9fa16931c3945a97352f5d5f8ee340b308fd8132e",
         "chaos.js": "b7ff1754c1d3df25ac1c79c32780767ab7789d22e705b921904288241f40097c"
       },
-      "remaining": [
-        "whereTheGodsDwell：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
-        "whereTheGodsDwell：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
-        "whereTheGodsDwell：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。",
-        "whereTheGodsDwell（近似实现）：「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
-        "whereTheGodsDwell（近似实现）：手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
-        "whereTheGodsDwell（近似实现）：6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
-        "whereTheGodsDwell（近似实现）：「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
-        "whereTheGodsDwell（近似实现）：结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
-        "whereTheGodsDwell（近似实现）：「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
-        "whereTheGodsDwell（近似实现）：「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
-        "whereTheGodsDwell（近似实现）：冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。"
-      ]
+      "remaining": []
     },
     {
       "id": "weaverOfTheCosmos",
@@ -1375,15 +1228,7 @@
         "literalCardBehavior": {
           "records": 22,
           "missing": [],
-          "simplified": [
-            "06337",
-            "06346",
-            "06347",
-            "06348",
-            "06349",
-            "06350",
-            "06354"
-          ],
+          "simplified": [],
           "ledger": "audit/tde-all-card-acceptance.json"
         },
         "veiled": {
@@ -1450,14 +1295,7 @@
       },
       "pendingEncounterCodes": [],
       "gaps": [],
-      "approximations": [
-        "阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
-        "「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
-        "15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
-        "「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
-        "遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
-        "[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
-      ],
+      "approximations": [],
       "testFile": "tests/tde-scenario-weaverOfTheCosmos.test.mjs",
       "testCases": {
         "passed": 33,
@@ -1482,82 +1320,11 @@
         "index.js": "3992be13b1fac92cc1cf37e17a1e2de673bb19b94535571db47eff1a27496b84",
         "definition.js": "dcfc102b2df9cf3753f70cf9942381679d9cffa5231bc32cdf067f5df6e62528",
         "layout.js": "861b6a3f6200f5f48a20470dad36a32980bdeaa2b0b2df714dfa3ae213a6ca9c",
-        "behavior.js": "c81f6f70b7e57fa58ba3271998bbf99e17f27289277fdf4a00e7cede3f5ff403",
+        "behavior.js": "ed409d46d55eac7b61190c40ee3b8800e32c50c73118c40758118c379d5952f4",
         "chaos.js": "fc2da52fc08e9bb8fdb48d27e5efe5669898daa02b9afdef85cecfc6fde301ce"
       },
-      "remaining": [
-        "weaverOfTheCosmos（近似实现）：阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
-        "weaverOfTheCosmos（近似实现）：「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
-        "weaverOfTheCosmos（近似实现）：15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
-        "weaverOfTheCosmos（近似实现）：「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
-        "weaverOfTheCosmos（近似实现）：遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
-        "weaverOfTheCosmos（近似实现）：[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
-      ]
+      "remaining": []
     }
   ],
-  "remaining": [
-    "beyondTheGatesOfSleep（近似实现）：14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
-    "beyondTheGatesOfSleep（近似实现）：「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
-    "beyondTheGatesOfSleep（近似实现）：幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
-    "beyondTheGatesOfSleep（近似实现）：「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
-    "beyondTheGatesOfSleep（近似实现）：「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
-    "beyondTheGatesOfSleep（近似实现）：「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
-    "beyondTheGatesOfSleep（近似实现）：「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
-    "beyondTheGatesOfSleep（近似实现）：「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
-    "beyondTheGatesOfSleep（近似实现）：故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。",
-    "wakingNightmare：「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。",
-    "wakingNightmare（近似实现）：06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
-    "wakingNightmare（近似实现）：06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
-    "wakingNightmare（近似实现）：06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
-    "wakingNightmare（近似实现）：06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
-    "wakingNightmare（近似实现）：06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
-    "wakingNightmare（近似实现）：06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
-    "wakingNightmare（近似实现）：06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。",
-    "theSearchForKadath：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
-    "theSearchForKadath：剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。",
-    "theSearchForKadath（近似实现）：斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
-    "theSearchForKadath（近似实现）：塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
-    "theSearchForKadath（近似实现）：黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
-    "theSearchForKadath（近似实现）：维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
-    "theSearchForKadath（近似实现）：哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
-    "theSearchForKadath（近似实现）：「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
-    "theSearchForKadath（近似实现）：艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。",
-    "aThousandShapesOfHorror：06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
-    "aThousandShapesOfHorror：06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。",
-    "aThousandShapesOfHorror（近似实现）：神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
-    "aThousandShapesOfHorror（近似实现）：议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
-    "aThousandShapesOfHorror（近似实现）：06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
-    "aThousandShapesOfHorror（近似实现）：06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。",
-    "darkSideOfTheMoon：06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。",
-    "darkSideOfTheMoon（近似实现）：被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
-    "darkSideOfTheMoon（近似实现）：月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
-    "darkSideOfTheMoon（近似实现）：月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
-    "darkSideOfTheMoon（近似实现）：06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。",
-    "pointOfNoReturn：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
-    "pointOfNoReturn：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
-    "pointOfNoReturn：「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。",
-    "pointOfNoReturn（近似实现）：8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
-    "pointOfNoReturn（近似实现）：「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
-    "pointOfNoReturn（近似实现）：「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
-    "pointOfNoReturn（近似实现）：食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
-    "pointOfNoReturn（近似实现）：古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
-    "pointOfNoReturn（近似实现）：卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。",
-    "whereTheGodsDwell：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
-    "whereTheGodsDwell：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
-    "whereTheGodsDwell：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。",
-    "whereTheGodsDwell（近似实现）：「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
-    "whereTheGodsDwell（近似实现）：手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
-    "whereTheGodsDwell（近似实现）：6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
-    "whereTheGodsDwell（近似实现）：「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
-    "whereTheGodsDwell（近似实现）：结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
-    "whereTheGodsDwell（近似实现）：「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
-    "whereTheGodsDwell（近似实现）：「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
-    "whereTheGodsDwell（近似实现）：冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。",
-    "weaverOfTheCosmos（近似实现）：阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
-    "weaverOfTheCosmos（近似实现）：「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
-    "weaverOfTheCosmos（近似实现）：15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
-    "weaverOfTheCosmos（近似实现）：「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
-    "weaverOfTheCosmos（近似实现）：遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
-    "weaverOfTheCosmos（近似实现）：[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
-  ]
+  "remaining": []
 }

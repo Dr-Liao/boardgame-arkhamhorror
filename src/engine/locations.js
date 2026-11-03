@@ -5,6 +5,9 @@
 // 以及线索的发现/归还/同步。地点相关的反应窗口（locationRevealed 等）通过
 // triggerReaction 触发，所以本模块依赖它。
 import { registeredEntry } from './ability.js'
+import { applyRevealFloodPolicy } from './flood.js'
+import { syncDynamicLocationSymbols } from './location-symbols.js'
+import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 
 // 地点卡自己的「揭示时」规则由条目声明（静态注册表，不进 state）。
 function locationRuleOf(loc) {
@@ -64,6 +67,7 @@ export function normalizeScenarioSpectralLocations(locations, origin = 'scenario
 // Shared with the encounter-location placement path (scenario-runtime), which
 // used to rebuild every connection list and dropped hand-made links.
 export function linkLocationBySymbols(state, loc) {
+  if (loc.symbols?.dynamic) { syncDynamicLocationSymbols(state); return }
   const mine = loc.symbols?.front
   if (!mine || !Array.isArray(loc.connections)) return
   for (const other of state.locations) {
@@ -97,6 +101,7 @@ export function createLocations(deps) {
     clueBlockerName,
     discardBarricades,
     engagedWithClueBlocker,
+    enemyTextBlanked,
     entityRuleActive,
     getThreatEffect,
     info,
@@ -140,10 +145,12 @@ function placeLocation(state, id, events, seat = null) {
   if (!base) return
   const def = { ...base, ...(state.locationVariants?.[id] || {}) }
   const clues = def.cluesFixed ?? (def.cluesPerInvestigator != null ? def.cluesPerInvestigator * state.numInvestigators : (def.clues || 0))
-  const revealed = Boolean(scenarioBehavior(state).locationsStartRevealed)
-    || state.investigators.some(inv => inv.location === id)
+  const revealed = !scenarioBehavior(state).deferStartingLocationReveal && (Boolean(scenarioBehavior(state).locationsStartRevealed)
+    || state.investigators.some(inv => inv.location === id))
   const loc = { ...def, id, revealed, clues: revealed ? clues : 0, maxClues: clues }
   state.locations.push(loc)
+  // 「地点入场后」的强制效果独立于探索与移动；卡牌效果直接放置地点时也须触发。
+  scenarioBehavior(state).locationPlaced?.(state, loc, scenarioRuntime(state, events), seat)
   // 04306 有利位置等需要「最近一次有地点入场」的时点（即使入场时未揭示）。
   state.lastLocationEntered = { id, round: state.round, phase: state.phase, seat: seat ?? null }
   linkLocationBySymbols(state, loc)
@@ -237,7 +244,10 @@ function revealLocation(state, id, events, seat = null) {
   const loc = state.locations.find((l) => l.id === id)
   if (loc && !loc.revealed) {
     loc.revealed = true
+    locationTraits?.sync(state)
+    if (loc.symbols?.dynamic) syncDynamicLocationSymbols(state)
     if (loc.unrevealedActualName) { loc.name = loc.unrevealedActualName; delete loc.unrevealedActualName }
+    if (loc.unrevealedActualNameEn) { loc.nameEn = loc.unrevealedActualNameEn; delete loc.unrevealedActualNameEn }
     delete loc.hiddenIdentity
     delete loc.artCode
     // D1：地点卡自己的声明式线索修正；剧本钩子仍然优先（历史数据依赖它的覆盖语义）。
@@ -246,6 +256,7 @@ function revealLocation(state, id, events, seat = null) {
     loc.clues = Math.max(0, clueOverride ?? ((loc.maxClues || 0) + clueDelta))
     info(state, events, `「${loc.name}」被揭示。`, locationRevealCue(loc, false, seat))
     awardLocationVictory(state, loc, events)
+    applyRevealFloodPolicy(state, id, { onChange: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }) })
     const ignored = seat != null
       && (entityRuleActive(state, loc, 'ignore:revealText')
         || scenarioBehavior(state).ignoreLocationRevealText?.(state, state.investigators[seat], loc))
@@ -316,12 +327,17 @@ function notifyCluesRemoved(state, loc, amount, events) {
 // 不是调查员所在地点——例如「发现任意地点的 1 个线索」这类远程发现（02224）。
 function canDiscoverClueAt(state, inv, loc) {
   if (!loc || loc.clues <= 0) return false
+  if (state.scenarioFlags?.deepDark && (state.scenarioFlags.deepDarkClaims?.[`${state.round}:${inv.seat}:${loc.id}`] || 0) >= 1) return false
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // 交战中的「不能发现线索」敌人（影子特工）跟着调查员走，与目标地点无关。
+  if (state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)
+    && registeredEntry(enemy.code)?.enemyRule?.cluesOnlyByInvestigating)) return false
   return !engagedWithClueBlocker(state, inv)
 }
 
 function discoverClueAt(state, inv, amount, events, opts = {}) {
+  inv = effectRecipient(state, inv)
+  if (!inv || !playerEffectCanAffect(state, inv.seat)) return 0
   // 默认发现调查员所在地点的线索；卡面允许指定别的地点（02224「发现任意地点的 1 个线索」）。
   const targetId = opts.locationId ?? inv.location
   let loc = state.locations.find((l) => l.id === targetId)
@@ -329,6 +345,8 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
   // Revelation can put the hunter into play after an event was paid for.
   // Recheck at resolution, including discoveries that bypass investigation.
   const clueBlocker = engagedWithClueBlocker(state, inv)
+  if (!opts.investigation && state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)
+    && registeredEntry(enemy.code)?.enemyRule?.cluesOnlyByInvestigating)) return false
   if (clueBlocker) {
     info(state, events, `${inv.name} 与${clueBlockerName(state, clueBlocker)}交战，不能发现线索。`)
     return false

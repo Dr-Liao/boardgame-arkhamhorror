@@ -12,6 +12,8 @@
 // 文件放在 entries/ 下是因为硬编码守卫只允许卡号出现在 entries/**、encounter-entries/** 与
 // cards-data.js；本文件不 import 任何模块，卡文件与索引生成器把它当 _shared.js 一样忽略。
 export const REPRINT_ALIASES = Object.freeze({
+  '07114': Object.freeze(['12050']),
+  '07004': Object.freeze(['98016']),
   // 巡警 Beat Cop
   '01018': Object.freeze(['01518']),
   // 证据！Evidence!

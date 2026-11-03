@@ -271,10 +271,10 @@ test('聚合幻灭：章节已是 playable，地点/幕/议程/结局/身份齐�
   }
 })
 
-test('诚实登记：gaps 与 approximations 都存在且覆盖命运卡/共享规则', () => {
+test('历史实现说明保留，当前没有未完成规则', () => {
   assert.deepEqual(uad.behavior.scenarioGaps, [], 'playable 要求卡面子句无未实现 gap')
-  assert.ok(uad.behavior.scenarioApproximations.length >= 5)
-  const text = uad.behavior.scenarioApproximations.join(' ')
+  assert.ok(uad.behavior.migrationHistory.length >= 5)
+  const text = uad.behavior.migrationHistory.join(' ')
   for (const keyword of ['fateCards', 'spawnStoryEnemy', '失踪人口']) assert.ok(text.includes(keyword), keyword)
 })
 

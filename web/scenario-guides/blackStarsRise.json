@@ -1,0 +1,242 @@
+{
+  "id": "blackStarsRise",
+  "campaignId": "thePathToCarcosa",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "剧本 VII: 黑星升起",
+          "children": [
+            {
+              "text": "圣米歇尔山所在的岛屿就坐落在法国西北部的海岸线上。这里风景优雅而又神秘莫测——宛若神话中的仙境。只不过，这是一个恐怖而疯狂的神话。低潮时，你可以从海中露出的堤道步行走到岛上。可惜你到达海边时，潮水比你预期的要高出许多。空中乌云密布，远处传来的隆隆雷声预示着暴风雨即将来临。你找到一艘船，船长愿意载你上岛，而你也准备好面对即将到来的仪式。"
+            },
+            {
+              "text": "进入阿什莉提供的信息。"
+            },
+            {
+              "text": "否则，跳到冒险设置。"
+            },
+            {
+              "text": "阿什莉提供的信息: 你回忆起一切开始的那个夜晚，你的思绪也飘向阿什莉那晚唱的迷人歌曲。虽然过了那么久，你却还能清晰地记起每一句歌词，而那个难以忘怀的旋律也已深深植入你的脑海。“城上雷云嚣哗，浪碎鎏金囚枷……碧水穿地涌浃，赤日西枕暗霞……”你端详着眼前的岛屿，在闪电和巨浪的侵袭之下，你不禁好奇，阿什莉唱的是不是就是眼前的这一刻。\n\n• 本场剧本期间，作为一项[free]触发能力，调查员可以从场上1张密谋卡牌上移除1个毁灭标记。(团队每场游戏限制一次。)\n\n前往冒险设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌: 黑星升起、邪兆、拜亚基、卡尔克萨居民、陌生人、黑暗邪教徒、远古恶魔。这些遭遇组的图标为:注意，黑星升起遭遇组中的部分卡牌有多个版本，其中部分卡牌背面有地底洪流遭遇组图标，而另一部分卡牌背面有空中漩涡遭遇组图标。图标如下:（貌似没有）"
+            },
+            {
+              "text": "根据当前游戏难度，在混乱袋加入1个下列标记，直到剧本结束:\n• 简单: -3\n\n• 普通: -5\n\n• 困难: -6\n\n• 专家: -7"
+            },
+            {
+              "children": [
+                {
+                  "text": "将以下所有卡牌根据其背面的遭遇组图标，分类摆作两堆：密谋2a—风暴肆虐，密谋2c—悬空之物，圣奥伯特礼拜堂，修道院塔楼。"
+                },
+                {
+                  "text": "摆放完毕后应为2堆各4张卡牌。每堆卡牌应有上述列出的每种卡牌各一张。一堆卡牌的背面应为地底洪流遭遇组图标，而另一堆则是空中漩涡遭遇组图标。"
+                },
+                {
+                  "text": "将每个牌堆翻面，使黑星升起遭遇组图标朝上。随机调换这两个牌堆，使你无法辨认每个牌堆背面为哪个遭遇组图标。"
+                },
+                {
+                  "text": "随机选择一个牌堆并且将其移出游戏，而另一个牌堆则在冒险设置阶段用到。不要查看这两个牌堆内的任何卡牌的背面。"
+                }
+              ]
+            },
+            {
+              "text": "本场冒险没有场景牌堆，而有两个密谋牌堆。一个密谋牌堆由密谋1a、2a和3a构成。另一个密谋牌堆由密谋1c、2c和3c构成(注意密谋2a和2c要使用较早之前随机选择的版本)。"
+            },
+            {
+              "text": "将下列卡牌放在一边，位于游戏场外：两张场景卡牌(场景3a和场景3c)、毕宿五的野兽、所有的潮汐骇物、所有的裂缝探求者、回廊、骑士大厅、修道院塔楼、圣奥伯特礼拜堂(注意修道院塔楼和圣奥伯特礼拜堂要使用较早之前随机选择的版本)。"
+            },
+            {
+              "text": "从2个哥特式唱诗台地点中随机选择一个地点，然后将它放在一边。将哥特式唱诗台地点的其他所有版本移出游戏。"
+            },
+            {
+              "text": "随机选择2个北部塔楼地点之一，2个外城墙地点之一，2个垮塌的台阶地点之一。将所选地点放置入场。将所选地点的其他版本移出游戏。然后，将剩余的晋升之门、环山大道和修道院教堂放置进场。每位调查员从晋升之门开始游戏。"
+            },
+            {
+              "text": "每位调查员从收藏中找出一张随机的疯狂、契约、异教徒或侦探基础弱点，然后将它加入自己的牌组。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "双密谋牌堆",
+              "children": [
+                {
+                  "text": "本关有两套密谋牌堆。一套代表你和同伴打开通往卡尔克萨之路的方法，并通向两张放在一边的场景卡之一；另一套代表哈斯塔逃入现实世界的方法，将为地球带来毁灭。\n\n两套密谋同时在场时，遵守以下额外规则：\n• 每当要在“当前密谋”上放置一个或更多毁灭时，玩家可以决定放在哪一套密谋上。\n• 两张密谋之外的卡牌（例如敌人、地点或支援）上的毁灭，同时计入两套密谋的毁灭阈值。\n• 一套密谋推进时，不移除另一套密谋上的毁灭；移除场上其他所有毁灭。\n• 如果神话阶段“检查毁灭阈值”步骤中两套密谋同时达到阈值，先选择其中一套推进。完成其推进后，再检查另一套密谋；如果仍满足阈值，也推进它。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "如果未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员被击败): 跳到结局3。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 你屏住呼吸，跳下冰冷的海水，游向下方的尖柱。游到附近时，你可以看见海水泛起阵阵涟漪，就好像你眼前的是海平面的倒影。你冲破了这个海平面，大口把空气吸入肺中。\n\n• 在冒险日志中，记录下你开启了下方通路。\n\n• 从混乱袋中移除所有[cultist]、[tablet]、[elder_thing]。然后加入2个[cultist]以及2个[tablet]。\n\n• 如果阿什莉(歌声渐亡)位于胜利区，在你的冒险日志的“贵宾遇害”下方记录其名字。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n• 经验值: （按上述说明计算）"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 你冲上云霄，直奔头顶的尖柱，身边环绕的云浪让你惊叹不已。你头顶上飘浮着荒凉而不可思议的卡尔克萨。你突然意识到你正在下坠——不是在上浮——有一股拉力牵住了你的身躯。\n\n• 在冒险日志中，记录下你开启了上方通路。\n\n• 从混乱袋中移除所有[cultist]、[tablet]、[elder_thing]。然后加入2个[cultist]以及2个[elder_thing]。\n\n• 如果阿什莉(歌声渐亡)位于胜利区，在你的冒险日志的“贵宾遇害”下方记录其名字。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n• 经验值: （按上述说明计算）"
+                }
+              ]
+            },
+            {
+              "title": "结局3",
+              "children": [
+                {
+                  "text": "结局3: 你醒来时，发现自己坐在圣米歇尔山修道院的哥特式唱诗台上。没有雨点打在头顶的玻璃窗上，也听不到雷鸣和空中飞行骇物的尖叫。你莫名其妙就躲过了小岛注定的噩运。你爬向修道院的大门，颤颤巍巍推开了门。刺眼的阳光烧灼着你的双眼，你抬起手，遮蔽双生太阳的眩目强光。你站起身，俯瞰着哈利湖。黑星高悬在头顶的穹窿之上。在远方，在连绵起伏的翻腾云浪之外，卡尔克萨的尖塔从破碎的月球后方冉冉升起。\n\n• 你遭遇了极其可怕的命运，不是吗？\n\n• 在冒险日志中，记录下你所在的世界与卡尔克萨融为一体并且被哈斯塔支配。\n\n• 所有调查员发疯。\n\n• 调查员剧本失败！"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario VII: Black Stars Rise",
+          "children": [
+            {
+              "text": "The island commune of Mont Saint-Michel lies off the northwestern coast of France. It is beautiful, elegant, and enigmatic­ —a place out of a fairy tale. Only this tale is one of horrors and madness. During low tide, you would be able to reach the island on foot by crossing the tidal causeway that emerges from the sea. However, by the time you reach the coast, the tide is much higher than you’d anticipated. Dark clouds cover the sky, and a distant crash of thunder signals the start of the oncoming storm. You find a boat whose captain is willing to take you to the island, and prepare for the ritual to come."
+            },
+            {
+              "text": "Proceed to Ashleigh’s Information."
+            },
+            {
+              "text": "Otherwise, skip to Setup."
+            },
+            {
+              "text": "Ashleigh’s Information: You recall the night where this all began, and your thoughts drift to the mesmerizing song Ashleigh sang that night. Somehow you remember the lyrics perfectly after all this time, and its haunting melody is ingrained in your mind. “Above the city the storm clouds rage, and waves crash through the gilded cage… Below the earth the salt water seeps, the shadows fall as the red sun sleeps…” Studying the island that lies before you, illuminated by flashes of lighting and assaulted by tumultuous waves, you can’t help but wonder if Ashleigh was singing about this very moment.\n\n• During this scenario, as a [free] triggered ability, an investigator may remove 1 doom from an agenda in play. (Group limit once per game.)\n\nProceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Black Stars Rise, Evil Portents, Byakhee, Inhabitants of Carcosa, The Stranger, Dark Cult, and Ancient Evils. These sets are indicated by the following icons:Be aware that some cards from the Black Stars Rise encounter set have multiple versions, some with The Flood Below encounter set icon on their reverse side, and some with The Vortex Above encounter set icon on their reverse side. These encounter sets are indicated by the following icons:"
+            },
+            {
+              "text": "Based on your difficulty level, add the following chaos token(s) to the chaos bag, for the remainder of the campaign:\n• Easy: -3\n\n• Standard: -5\n\n• Hard: -6\n\n• Expert: -7"
+            },
+            {
+              "children": [
+                {
+                  "text": "Sort each copy of the following cards into two separate piles, based on the encounter set icon on their reverse side: Agenda 2a—Let The Storm Rage, Agenda 2c—The Entity Above, Chapel of St. Aubert, and Abbey Tower."
+                },
+                {
+                  "text": "You should have two piles of exactly four cards. Each pile should have one copy of each of the above listed cards. The cards in the first pile should have The Flood Below encounter set icon on their reverse side, and the cards in the second pile should have The Vortex Above encounter set icon on their reverse side."
+                },
+                {
+                  "text": "Flip each pile over so that only the Black Stars Rise encounter set icon is showing. Randomize the two piles so you cannot tell which is which."
+                },
+                {
+                  "text": "Choose one pile at random to remove from the game and one pile at random to use throughout this scenario’s setup. Do not look at the reverse sides of any of the cards in either pile."
+                }
+              ]
+            },
+            {
+              "text": "This scenario does not have an act deck. Instead, it has two Æ agenda decks. One agenda deck is built using agendas 1a, 2a, and 3a. The other agenda deck is built using agendas 1c, 2c, and 3c (remember to use the versions of agendas 2a and 2c that were randomly chosen earlier)."
+            },
+            {
+              "text": "Set the following cards aside, out of play: Both act cards (Act 3a and Act 3c), Beast of Aldebaran, each copy of Tidal Terror, each copy of Rift Seeker, Cloister, Knight’s Hall, Abbey Tower, and Chapel of St. Aubert (remember to use the versions of Abbey Tower and Chapel of St. Aubert that were randomly chosen earlier)."
+            },
+            {
+              "text": "Choose one of the two Choeur Gothique locations, at random, and set it aside. Remove the other version of Choeur Gothique from the game."
+            },
+            {
+              "text": "Choose one of the two North Tower locations, one of the two Outer Wall locations, and one of the two Broken Steps locations, at random. Put the chosen locations into play. Remove the other versions of those locations from the game. Then, put the remaining locations (Porte de l’Avancée, Grand Rue, and Abbey Church) into play. (See next page for suggested placement.) Each investigator begins play at Porte de l’Avancée."
+            },
+            {
+              "text": "Each investigator searches the collection for a random basic Madness, Pact, Cultist, or Detective weakness, and adds it to their deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Dual Agendas",
+              "children": [
+                {
+                  "text": "During this scenario, there are two agenda decks. One represents a means for you and your allies to open the path to Carcosa, and leads to one of the two set-aside act cards. The other represents a means for Hastur to escape into our world, and spells demise for Earth.\n\nWhen playing this scenario, while there are two agenda decks in play, players must observe the following additional rules:\n\n• Whenever 1 or more doom is placed on “the current agenda,” the players may decide which of the two agendas to place this doom on.\n\n• Doom on cards other than the two agendas (such as enemies, locations, or assets) count towards the doom threshold of both agendas.\n\n• When one agenda advances, doom on the other agenda is not removed. All other doom in play is removed.\n\n• If the doom thresholds of both agendas are satisfied during the “Check doom threshold” step of the Mythos phase, choose only one agenda to advance. Then, once you have completed advancing that agenda, check the doom threshold of the other agenda and advance it if its doom threshold is still satisfied."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): Go to Resolution 3."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You hold your breath as you swim through freezing water toward the spires below. As you get closer, you see ripples throughout the water, as though you are peering into a reflection upon the sea’s surface. You break through the surface and gasp as air fills your lungs.\n\n• In your Campaign Log, record that you opened the path below.\n\n• Remove all [cultist], [tablet], and [elder_thing] tokens from the chaos bag. Then, add 2 [cultist] tokens and 2 [tablet] tokens to the chaos bag.\n\n• If Ashleigh Clarke (Songs Die Unheard) is in the victory display, record her name in your Campaign Log, under “VIPs Slain.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: You marvel at the cloud-waves encircling you and fly toward the spires above. The desolate and inscrutable city of Carcosa towers before you. You suddenly realize you are falling—not floating—and a pulling force takes hold of your body.\n\n• In your Campaign Log, record that you opened the path above.\n\n• Remove all [cultist], [tablet], and [elder_thing] tokens from the chaos bag. Then, add 2 [cultist] tokens and 2 [elder_thing] tokens to the chaos bag.\n\n• If Ashleigh Clarke (Songs Die Unheard) is in the victory display, record her name in your Campaign Log, under “VIPs Slain.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: When you awaken, you are sitting in the choeur gothique of Mont Saint-Michel’s abbey. No rain pelts the glass of the windows above, and you hear no thunder, nor the screeching of winged horrors overhead. Somehow, you had escaped the island’s certain doom. You creep to the door of the abbey and open it with trepidation. A dazzling light sears your eyes, and you lift your hand to block the glare of two suns. You stand overlooking the Lake of Hali. Black stars hang in the heavens above. Beyond, over leagues of tossing cloud- waves, the towers of Carcosa rise behind the shattered moon.\n\n• You’ve met with a terrible fate, haven’t you?\n\n• In your Campaign Log, record that the realm of Carcosa merged with our own, and Hastur rules over them both.\n\n• Each investigator is driven insane.\n\n• The investigators lose the campaign."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

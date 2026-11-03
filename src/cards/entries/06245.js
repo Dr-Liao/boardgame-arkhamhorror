@@ -10,14 +10,13 @@
 //   · 「只能从弃牌堆打出」= 条目级 playableFromDiscard（弃牌堆通道的唯一声明），
 //     弃牌堆里的希望微光因此进入正常出牌候选（legalMoves 的 fromDiscard 通道）；
 //   · 结算：把弃牌堆里其余的每一张希望微光用 api.moveCard 移回手牌（统一的区域移动原语）。
-// 已知简化：「包括本卡牌」——正在打出的这一张在结算期间不在任何区域，引擎在结算收尾才把它
-//   放进弃牌堆；没有「打出的事件改为加入手牌」的读点，因此本张仍按普通事件进弃牌堆（见 note）。
+// 打出后归处由 returnToHandAfterPlay 控制，本张也返回手牌。
 
 export default {
   code: '06245',
   playableFromDiscard: true,
-  simplified: true,
-  note: '未实现/简化：「只能从弃牌堆打出」已通过 playableFromDiscard 声明（普通出牌路径仍允许从手牌打出——没有按区域拒绝手牌打出的读点）；「包括本卡牌」——正在打出的这张在结算期间不在任何区域（收尾才进弃牌堆），没有「打出的事件改为加入手牌」的读点，因此本张不进手牌，其余弃牌堆中的希望微光都会回到手牌。',
+  playableOnlyFromDiscard: true,
+  returnToHandAfterPlay: true,
   abilities: [
     {
       kind: 'played',

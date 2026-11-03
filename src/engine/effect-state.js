@@ -29,7 +29,7 @@ import { modifierTargetKind } from './modifiers.js'
 const LIMIT_VALUES = new Set(['oncePerTest', 'oncePerPhase', 'oncePerRound', 'oncePerTurn', 'oncePerGame'])
 
 export const EFFECT_DURATIONS = Object.freeze([
-  'endOfAction', 'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfRound', 'whilstAttached', 'untilLeavesPlay',
+  'endOfAction', 'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfRound', 'whilstAttached', 'untilLeavesPlay', 'startOfNextTurn',
 ])
 
 // 时长链：在 timing 过期时，把「等长或更短」的时长一起清掉。
@@ -49,6 +49,7 @@ export const EFFECT_DURATION_LABELS = Object.freeze({
   endOfRound: '本轮结束',
   whilstAttached: '附属期间',
   untilLeavesPlay: '直到离场',
+  startOfNextTurn: '直到你的下个回合开始',
 })
 
 // 效果记录里的能力与卡片描述子共享窗口/条件/上限语义，但**必须是纯 JSON**：
@@ -231,7 +232,9 @@ export function expireEffects(state, timing) {
   const removed = []
   state.effects = state.effects.filter(effect => {
     const bound = DURATION_ORDER[effect.duration] == null
-    const expired = bound
+    const expired = effect.duration === 'startOfNextTurn'
+      ? timing === 'startOfNextTurn' && effect.controllerSeat === state.currentSeat && effect.createdAt.turnSerial < state.turnSerial
+      : bound
       ? !sourceStillThere(state, effect)
       : (order != null && DURATION_ORDER[effect.duration] <= order)
     if (expired) removed.push(effect)

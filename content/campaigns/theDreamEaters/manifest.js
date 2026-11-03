@@ -85,6 +85,7 @@ export const manifest = {
   // 显式 `dualLineGate: 'open'` 时允许并行启动；P9.5 的 2+2 / 1+1 / 2+1 矩阵、16 排列、
   // 并发提交、存档回放与浏览器验收通过后打开。P10 注册后即可从大厅走真实并行。
   dualLineGate: 'open',
+  parallelInterludes: { 1: 'interlude1', 2: 'interlude2', 3: 'interlude3', 4: 'epilogueMatrix' },
   requiredPackIds: ['core', 'tdeCampaign', 'tdeInvestigators', 'tdePlayer'],
   scenarioIds: [...TDE_SCENARIO_IDS],
   unlock,

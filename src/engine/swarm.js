@@ -1,7 +1,8 @@
 // 蜂拥卡（批次 2 原语 `swarm.placeCards`）。
 //
 // 规则口径：头领（host）放置 Swarming X 张蜂拥卡；蜂拥卡在场上作为独立敌人实体，
-// 只能被攻击/躲避；头领在蜂拥卡全部清空前**不能被击败**，溢出伤害由头领转给蜂拥卡。
+// 可独立被攻击、交战和攻击调查员；头领在蜂拥卡全部清空前不能被击败。
+// 击败一张蜂拥卡后，可把超出伤害分配给同群另一张蜂拥卡，或在没有蜂拥卡时分给头领。
 // X 由 `swarming.js` 求值；本模块只管「放/收/清空/判定」。
 //
 // 状态形状（只写在蜂拥敌人上）：
@@ -24,28 +25,53 @@ export function swarmCountOf(host) {
   return swarmCardsOf(host).length
 }
 
+export function swarmGroup(state, enemy) {
+  if (!enemy) return []
+  const host = enemy.hostId ? state.enemies.find(item => item.id === enemy.hostId) : enemy
+  return host ? [host, ...state.enemies.filter(item => item.hostId === host.id)] : [enemy]
+}
+
+export function returnSwarmCard(state, enemy) {
+  if (!enemy?.hostId) return false
+  const host = state.enemies.find(item => item.id === enemy.hostId)
+  const card = host?.swarmCards?.find(item => item.id === enemy.id)
+  if (card) card.defeated = true
+  const owner = state.investigators?.[enemy.swarmOwnerSeat ?? card?.ownerSeat]
+  if (owner && (enemy.underlyingCard || card?.code)) owner.deck.unshift(enemy.underlyingCard || card.code)
+  const index = state.enemies.indexOf(enemy)
+  if (index >= 0) state.enemies.splice(index, 1)
+  for (const inv of state.investigators || []) inv.engaged = (inv.engaged || []).filter(id => id !== enemy.id)
+  return true
+}
+
 /**
- * 放置 count 张蜂拥卡。`draw()` 必须返回卡号（默认从遭遇牌库顶抽）。
+ * 放置 count 张蜂拥卡。`draw()` 必须返回卡号（默认从所属调查员牌库顶抽）。
  * 每张卡生成 `{ id, code, hostId, kind: 'swarm', source }`，推进 `state.instanceSeq`。
  */
-export function placeSwarmCards(state, host, count, { draw, source = 'swarming' } = {}) {
+export function placeSwarmCards(state, host, count, { draw, source = 'swarming', ownerSeat = null } = {}) {
   assertHost(host)
   const total = Math.max(0, Number(count) || 0)
   if (!total) return []
-  const drawCard = typeof draw === 'function'
-    ? draw
-    : () => (Array.isArray(state?.encounterDeck) ? state.encounterDeck.shift() ?? null : null)
+  const seat = ownerSeat ?? host.swarmOwnerSeat ?? host.engagedSeat ?? state.campaign?.leadSeat ?? state.currentSeat ?? 0
+  const owner = state.investigators?.[seat]
+  const drawCard = typeof draw === 'function' ? draw : () => owner?.deck.pop() ?? null
   state.instanceSeq ||= {}
   const added = []
   for (let index = 0; index < total; index += 1) {
     const code = drawCard()
-    if (!code) throw new Error(`蜂拥卡不足：需要 ${total} 张，只抽到 ${added.length} 张`)
+    if (!code) break
     const next = (state.instanceSeq.swarm || 0) + 1
     state.instanceSeq.swarm = next
-    const card = { id: `swarm${next}`, code, hostId: host.id ?? null, kind: 'swarm', source, defeated: false }
+    const card = { id: `swarm${next}`, code, hostId: host.id ?? null, kind: 'swarm', source, defeated: false, ownerSeat: seat }
     host.swarmCards ||= []
     host.swarmCards.push(card)
     added.push(card)
+    if (state.enemies?.includes(host)) {
+      const copy = { ...host, id: card.id, hostId: host.id, kind: 'swarm', underlyingCard: code, swarmOwnerSeat: seat,
+        damageTaken: 0, doom: 0, clues: 0, victory: 0, vengeance: 0, attachments: [], swarmCards: [], swarming: null, pendingSwarmCount: 0 }
+      state.enemies.push(copy)
+      if (copy.engagedSeat != null && owner) state.investigators[copy.engagedSeat]?.engaged.push(copy.id)
+    }
   }
   return added
 }
@@ -87,25 +113,3 @@ export function swarmHostOf(state, enemy) {
   return (state?.enemies || []).find(candidate => String(candidate.id) === String(enemy.hostId)) || null
 }
 
-/**
- * 溢出伤害：头领生命被打空后，剩余伤害转给蜂拥卡（逐张扣，已击败的跳过）。
- * 返回 `{ toHost, toSwarm, defeatedSwarm }`；不修改敌人健康（由调用方结算）。
- */
-export function splitSwarmingDamage(host, damage, remainingHealth) {
-  const total = Math.max(0, Number(damage) || 0)
-  const health = Math.max(0, Number(remainingHealth) || 0)
-  const toHost = Math.min(total, health)
-  let overflow = total - toHost
-  const cards = swarmCardsOf(host)
-  let toSwarm = 0
-  const defeatedSwarm = []
-  for (const card of cards) {
-    if (overflow <= 0) break
-    const cardHealth = Math.max(1, Number(card.health) || 1)
-    const applied = Math.min(overflow, cardHealth)
-    overflow -= applied
-    toSwarm += applied
-    if (applied >= cardHealth) defeatedSwarm.push(card.id)
-  }
-  return { toHost, toSwarm, defeatedSwarm, leftover: overflow }
-}

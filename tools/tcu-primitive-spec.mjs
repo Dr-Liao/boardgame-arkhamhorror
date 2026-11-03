@@ -449,6 +449,204 @@ export const PRIMITIVES = Object.freeze([
       + '（如「证据！」击败敌人后）与收尾玩家窗口同样按 -2 资源打出；能力层 fromHand 事件同样可打出；'
       + '阶段结束仍未打出则洗回；悬案改为进入威胁区域。',
   },
+  {
+    "id": "separateResourceBank",
+    "step": "P10.1",
+    "title": "分离资源池与费用来源",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "api.availableResources / spendResources / bankResources / withdrawBanked",
+    "checks": [
+      {
+        "kind": "module-export",
+        "file": "src/engine/resource-bank.js",
+        "name": "availableResources",
+        "type": "function"
+      },
+      {
+        "kind": "ctx-api",
+        "name": "spendResources"
+      }
+    ],
+    "files": [
+      "src/engine/resource-bank.js",
+      "src/engine/save-migration.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "immediateAction",
+    "step": "P10.2",
+    "title": "立即行动与原回合恢复",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "api.beginImmediateAction",
+    "checks": [
+      {
+        "kind": "ctx-api",
+        "name": "beginImmediateAction"
+      },
+      {
+        "kind": "window",
+        "name": "investigation.afterAction"
+      }
+    ],
+    "files": [
+      "src/engine/engine.js",
+      "src/engine/dispatch.js",
+      "src/engine/encounter.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "resolveCardAbility",
+    "step": "P10.3",
+    "title": "忽略费用结算指定能力及其条件子句",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "api.cardAbilityOptions / resolveCardAbility",
+    "checks": [
+      {
+        "kind": "ctx-api",
+        "name": "cardAbilityOptions"
+      },
+      {
+        "kind": "ctx-api",
+        "name": "resolveCardAbility"
+      }
+    ],
+    "files": [
+      "src/engine/api-card.js",
+      "src/engine/ability.js",
+      "src/engine/ability-rules.js",
+      "src/engine/ability-exec.js",
+      "src/engine/reveal.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "replaceChaosToken",
+    "step": "P10.4",
+    "title": "揭示时取消并替换混乱标记",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "api.replaceChaosToken",
+    "checks": [
+      {
+        "kind": "ctx-api",
+        "name": "replaceChaosToken"
+      },
+      {
+        "kind": "window",
+        "name": "tokenReveal"
+      }
+    ],
+    "files": [
+      "src/engine/tests.js",
+      "src/engine/api-misc.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "controllerDefeatTransfer",
+    "step": "P10.5",
+    "title": "控制者被击败时转交支援",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "transferOnControllerDefeat",
+    "checks": [
+      {
+        "kind": "source-pattern",
+        "file": "src/engine/harm-threat.js",
+        "pattern": "transferOnControllerDefeat",
+        "why": "受控资产的淘汰生命周期分派，不是独立能力API"
+      }
+    ],
+    "files": [
+      "src/engine/harm-threat.js",
+      "src/engine/ability.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "progressWeakness",
+    "step": "P10.6",
+    "title": "个人日志与跨关卡弱点升级",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "api.progressWeakness",
+    "checks": [
+      {
+        "kind": "ctx-api",
+        "name": "progressWeakness"
+      }
+    ],
+    "files": [
+      "src/engine/api-misc.js",
+      "src/engine/deck-ops.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
+  {
+    "id": "driveInsane",
+    "step": "P10.7",
+    "title": "记录调查员陷入疯狂",
+    "mechanism": [],
+    "layer": "engine",
+    "params": {},
+    "api": "scenarioRuntime.driveInsane",
+    "checks": [
+      {
+        "kind": "scenario-runtime",
+        "name": "driveInsane"
+      }
+    ],
+    "files": [
+      "src/engine/scenario-runtime.js",
+      "docs/tcu-completion.md"
+    ],
+    "tests": [
+      "tests/tcu-completion.test.mjs"
+    ],
+    "docs": "docs/tcu-completion.md",
+    "note": "补完阶段新增的通用读写点；状态由实际API枚举、代码文件哈希与规则事务测试复算。"
+  },
 ])
 
 // 已登记原语（本轮只引用，不重写）。读点必须可查，不能只写在文档里。

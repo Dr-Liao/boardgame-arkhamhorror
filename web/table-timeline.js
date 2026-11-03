@@ -99,6 +99,6 @@ export function renderTableLog(h, session, inspect) {
         className:'ah-log-card-link',type:'button','data-timeline-card':part.card.originalCode||part.card.code||part.card.id,
         'aria-label':t('table.log.inspect', { name: part.text }),title:t('table.log.inspect', { name: part.text }),
         onclick:()=>inspect(part.card),
-      },renderRulesText(h,part.text,{links:false})):renderRulesText(h,part.text,{links:false}))))
+      },renderRulesText(h,part.text,{links:false})):renderRulesText(h,part.text,{links:false,skills:true}))))
       : h('div', { className: 'ah-log-line' }, t('table.log.empty'))))
 }

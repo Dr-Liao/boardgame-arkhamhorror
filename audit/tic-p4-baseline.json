@@ -1,0 +1,12 @@
+{
+  "phase": "P4",
+  "date": "2026-11-03",
+  "purpose": "Before P4 behavior edits; original P0 baseline is preserved separately.",
+  "replayFile": "tests/fixtures/replay/tic-p4-baseline.json",
+  "replaySha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344",
+  "fast": {
+    "log": "artifacts/migration/tic/p4-fast-before.log",
+    "sha256": "f80c1cceade58837f191ec0b78b92448ef547abf8377b65ea7444025fa9d6cd2",
+    "failures": []
+  }
+}

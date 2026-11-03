@@ -1,0 +1,6 @@
+export const RECORD_TYPES=Object.freeze({
+ memoriesRecovered:'string[]',possibleSuspects:'string[]',possibleHideouts:'string[]',outForBlood:'string[]',teachingsChoices:'string[]',harperSuspect:'string',harperHideout:'string',
+ ...Object.fromEntries([
+ 'TheMissionFailed','TheMissionWasSuccessful','InnsmouthWasConsumedByTheRisingTide','TheInvestigatorsMadeItSafelyToTheirVehicles','TheTideHasGrownStronger','TheTerrorOfDevilReefIsStillAlive','TheTerrorOfDevilReefIsDead','TheIdolWasBroughtToTheLighthouse','TheMantleWasBroughtToTheLighthouse','TheHeaddressWasBroughtToTheLighthouse','TheInvestigatorsReachedFalconPointBeforeSunrise','TheInvestigatorsReachedFalconPointAfterSunrise','TheInvestigatorsPossessAMapOfYhaNthlei','TheInvestigatorsPossessTheKeyToYhaNthlei','DagonHasAwakened','DagonStillSlumbers','TheOrdersRitualWasDisrupted','TheGatekeeperHasBeenDefeated','TheGuardianOfYhanthleiIsDispatched','TheGatewayToYhanthleiRecognizesYouAsTheRightfulKeeper','TheInvestigatorsEscapedYhanthlei','TheDeepOnesHaveFloodedTheEarth','ThePlotOfTheDeepOnesWasThwarted','TheFloodHasBegun','AgentHarpersMissionIsComplete','TheRichesOfTheDeepAreLostForever','AgentHarpersMissionIsCompleteButAtWhatCost','TheRichesOfTheDeepAreLostForeverButAtWhatCost','TheHorribleTruth',
+ ].map(key=>[key,'boolean']))
+})

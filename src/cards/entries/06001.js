@@ -91,23 +91,26 @@ export default {
       resolve: ({ inv, context, api }) => {
         const total = Math.max(0, (context?.damage || 0) + (context?.horror || 0))
         const becky = (inv.assets || []).find(asset => asset.code === '06006')
+        let loadedAmmo = 0
         if (becky && total > 0) {
           const answer = api.choice({
-            kind: 'effect', source: 'tommyReaction', seat: inv.seat,
-            prompt: `获得 ${total} 资源，或把其中任意数量放在贝基上作为子弹？`,
-            options: [
-              { id: 'resources', label: `获得 ${total} 资源` },
-              { id: 'ammo', label: `把 ${total} 资源放到贝基上（作为子弹）` },
-            ],
+            kind: 'amount', source: 'tommyReaction', seat: inv.seat,
+            prompt: `将 ${total} 资源中的几份改放在贝基上作为子弹？`,
+            options: Array.from({ length: total + 1 }, (_, amount) => ({
+              id: String(amount),
+              label: `${amount} 子弹、${total - amount} 资源`,
+            })),
           })
-          if (answer === 'ammo') api.addUses(becky, total)
-          else api.gainResources(inv.seat, total)
+          const ammo = Math.max(0, Math.min(total, Number(answer) || 0))
+          if (ammo) api.addUses(becky, ammo)
+          if (total > ammo) api.gainResources(inv.seat, total - ammo)
+          loadedAmmo = ammo
         } else {
           api.gainResources(inv.seat, total)
         }
         // 「将该支援洗回你的牌库」：引擎在 asset-defeat 里读这个标记决定去向。
         context.shuffledIntoDeck = true
-        api.info(`${inv.name} 因「${api.cardName(context.assetCode)}」被击败获得 ${total} 资源，并将其洗回牌库。`)
+        api.info(`${inv.name} 因「${api.cardName(context.assetCode)}」被击败获得 ${total - loadedAmmo} 资源、给贝基补充 ${loadedAmmo} 子弹，并将该支援洗回牌库。`)
       },
     },
   ],

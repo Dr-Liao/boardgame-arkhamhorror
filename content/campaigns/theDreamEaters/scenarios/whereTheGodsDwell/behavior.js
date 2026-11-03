@@ -103,6 +103,7 @@ function coldWastesTokenPenalty(state, inv, result, api) {
   if (!location) return
   const rule = locationRuleFor(originalOf(location))?.tokenPenalty
   if (!rule) return
+  if (api.ignoreLocationTrigger?.(location.id, '冰封荒土')) return
   const cancelled = new Set(result.cancelledTokens || [])
   const tokens = (result.drawn || []).filter(token => !cancelled.has(token))
   if (!tokens.some(token => (rule.tokens || []).includes(token))) return
@@ -196,8 +197,7 @@ function resolveAgendaRevealNyarlathotepHands(state, agenda, api) {
       })
       const times = answer === 'returned' ? 3 : 1
       for (let index = 0; index < times; index += 1) {
-        if (Number(definition.damage) > 0) api.damage?.(seat, Number(definition.damage))
-        if (Number(definition.horror) > 0) api.horror?.(seat, Number(definition.horror))
+        api.attackFromHiddenEnemy(seat, code, { source: originalOf(agenda) })
       }
       if (answer === 'returned') {
         api.info?.(`👁️ 奈亚拉托提普攻击 ${inv?.name || '调查员'} 3 次后回到其手牌。`)
@@ -271,7 +271,7 @@ function resolveGrandDesign(state, act, api) {
   const flags = scenarioFlags(state)
   // 1) 每位调查员失去所有线索（近似为花掉：没有「失去线索」原语，见 scenarioApproximations）。
   for (const inv of activeInvestigators(state)) {
-    if ((inv.clues || 0) > 0) api.spendClues?.(inv.seat, inv.clues)
+    if ((inv.clues || 0) > 0) api.loseClues(inv.seat, inv.clues)
   }
   // 2) Grand Design 1
   api.info?.(scenario.grandDesign?.[0] || '')
@@ -357,7 +357,7 @@ function resolveTrueShape(state, act, api) {
   const records = campaignRecords(state)
   const flags = scenarioFlags(state)
   for (const inv of activeInvestigators(state)) {
-    if ((inv.clues || 0) > 0) api.spendClues?.(inv.seat, inv.clues)
+    if ((inv.clues || 0) > 0) api.loseClues(inv.seat, inv.clues)
   }
   const knowsTruth = records[truth.blackCatKnowsTruthRecord || RECORDS.blackCatKnowsTheTruth] === true
   const hasKey = records[truth.silverKeyRecord || RECORDS.silverKey] === true
@@ -442,14 +442,14 @@ function performActAction(state, inv, move, api) {
     const priest = (state.enemies || [])
       .find(enemy => String(originalOf(enemy)) === String(rule.defeatPriestAction.targetCode))
     if (!priest) return false
-    const health = Math.max(1, Number(priest.health ?? priest.maxHealth ?? 1))
-    api.damageEnemy?.(priest.id, health, inv.seat)
+    api.defeatEnemy(priest, { seat: inv.seat, source: originalOf(state.acts[state.actIndex]) })
     api.info?.(`🕯️ ${inv.name} 击败了不可描述的高阶祭司。`)
     return true
   }
   if (rule.clueAction && move.rule === rule.clueAction.rule) {
     if ((inv.clues || 0) < Number(rule.clueAction.clues || 1)) return false
     api.spendClues?.(inv.seat, Number(rule.clueAction.clues || 1))
+    api.lookEncounterTop(inv.seat,Number(rule.clueAction.lookCount || 3),{source:originalOf(act)})
     const codes = api.discardEncounterTop?.(Number(rule.clueAction.lookCount || 3), { reshuffle: false, log: false }) || []
     let drawn = 0
     for (const code of codes) {
@@ -509,8 +509,7 @@ function performTowerAction(state, inv, move, api, location, data) {
       api.info?.(`✅ 「${location.name}」：奈亚拉托提普的复制品被放入胜利区，混沌低语被弃掉。`)
       return
     }
-    if (Number(definition.damage) > 0) api.damage?.(inv.seat, Number(definition.damage))
-    if (Number(definition.horror) > 0) api.horror?.(inv.seat, Number(definition.horror))
+    api.attackFromHiddenEnemy(inv.seat, chosen, { source: originalOf(location) })
     if (api.hiddenCards?.take?.(inv.seat, chosen)) api.shuffleIntoEncounterDeck?.([chosen])
     if (api.hiddenCards?.take?.(inv.seat, whisper)) api.shuffleIntoEncounterDeck?.([whisper])
     api.info?.(`❌ 「${location.name}」：奈亚拉托提普攻击了 ${inv.name}，随后与混沌低语一起被洗回遭遇牌库。`)
@@ -547,6 +546,9 @@ function performRestlessJourney(state, inv, move, api) {
 
 function collectActions(state, inv) {
   const moves = [...(encounterRules.actions?.(state, inv) || [])]
+  const mentioned=(inv.hiddenCards || []).find(code=>entryFlags(code)?.mentionDrivesInsane && inv.hand.includes(code))
+  if (mentioned) moves.push({action:'scenarioAction',rule:`reportHiddenMention:${mentioned}`,actions:0,fast:true,
+    label:'我提到了手中的隐私卡：执行发疯后果'})
   const location = here(state, inv)
   if (location) locationRuleFor(originalOf(location))?.actions?.({ moves, state, inv, location })
   const tower = towerActionMove(state, inv, location)
@@ -561,6 +563,11 @@ function fastActions(state, inv) {
 }
 
 function performAction(state, inv, move, api) {
+  if (String(move.rule).startsWith('reportHiddenMention:')) {
+    const code=String(move.rule).slice('reportHiddenMention:'.length)
+    if (entryFlags(code)?.mentionDrivesInsane && inv.hiddenCards?.includes(code) && inv.hand.includes(code)) api.driveInsane(inv.seat)
+    return true
+  }
   if (encounterRules.performAction?.(state, inv, move, api)) return true
   const location = here(state, inv)
   if (location) {
@@ -594,7 +601,7 @@ function locationShroudModifier(state, location) {
   return perInvestigator * perPlayer(state)
 }
 
-function spawnLocation(state, code, fallbackLoc, engagedSeat, api) {
+function spawnLocation(state, code, fallbackLoc, engagedSeat, api, options = {}) {
   // 5 种奈亚拉托提普复制品只能秘密进入手牌：返回不存在的哨兵 → 引擎按生成失败处理。
   if (isNyarlathotepCopy(code)) return '__hidden_in_hand__'
   const rule = enemySpawnRuleFor(code)
@@ -614,7 +621,7 @@ function spawnLocation(state, code, fallbackLoc, engagedSeat, api) {
   // 冷原：敌人试图生成在无人地点、且场上没有无人地点时改为生成在冷原。
   const plateau = (state.locations || [])
     .find(location => locationRuleFor(originalOf(location))?.emptySpawnFallback === true)
-  if (plateau && fallbackLoc == null) {
+  if (plateau && options.targetMatcher === 'emptyLocation' && fallbackLoc == null) {
     const emptyLocations = (state.locations || []).filter(location =>
       !activeInvestigators(state).some(inv => inv.location === location.id)
       && !(state.enemies || []).some(enemy => enemy.location === location.id))
@@ -742,30 +749,9 @@ export const implementedEncounterCodes = [
   ...WHISPERING_CHAOS, MYRIAD_FORMS, ...RESTLESS_JOURNEY, ABANDONED_BY_THE_GODS,
 ]
 
-export const scenarioApproximations = Object.freeze([
-  '「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；'
-    + '涉及 06292 背面、06293 背面两处。',
-  '手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；'
-    + '涉及议程背面、万千化身、塔行动失败三处。',
-  '6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；'
-    + '静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。',
-  '「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。',
-  '结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，'
-    + '战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。',
-  '「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。',
-  '「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，'
-    + '「查看」不显示给玩家单独的排序窗口。',
-  '冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；'
-    + '引擎没有「本次生成目标是无人地点」的显式参数。',
-])
+export const scenarioApproximations = Object.freeze([])
 
-export const scenarioGaps = Object.freeze([
-  '06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。',
-  'Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：'
-    + '参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。',
-  '真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；'
-    + '「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。',
-])
+export const scenarioGaps = Object.freeze([])
 
 export const behavior = {
   ...encounterRules,

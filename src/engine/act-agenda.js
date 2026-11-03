@@ -1,8 +1,10 @@
+import { withAgendaAdvanceFrame } from './agenda-advance-frame.js'
 // act-agenda.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 幕与议程的推进：目标判定、花费线索推进、密谋揭示与毁灭累积。
 // 读点：checkAct / checkAgenda 由阶段机与效果共同调用；addDoom 是毁灭的唯一入口。
 // 第 5 步 P6：放置毁灭可能新增「法术专用额外行动」（玛丽·朗博），授权逻辑在 spell-actions.js。
 import { grantSpellCredit } from './spell-actions.js'
+import { releaseChaosTokens } from './chaos-bag.js'
 
 export function createActAgenda(deps) {
   const {
@@ -52,6 +54,8 @@ export function createActAgenda(deps) {
     const scBefore = state.scenario
     const cur = state.acts[state.actIndex]
     if (!cur) return
+    for (const source of cur.attachments || []) registeredEntry(source.originalCode || source.code)
+      ?.treacheryRule?.onActAdvancing?.(state, source, scenarioRuntime(state, events))
     const advanceText = advanceStoryText(cur, '翻开场景卡，结算背面的剧情与效果。')
     info(state, events, `翻开场景「${cur.name}」的背面。`, { kind: 'story', title: '场景推进',
       code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: advanceText, flip: true })
@@ -147,9 +151,19 @@ export function createActAgenda(deps) {
   }
 
   function checkAct(state, events) {
+    if (state.status === 'playing') {
+      const objectiveLocation = state.locations.find(loc => loc.revealed
+        && registeredEntry(loc.originalCode || loc.code)?.locationRule?.objective?.(state, loc, scenarioRuntime(state, events)) === true)
+      if (objectiveLocation) { advanceAct(state, events); return }
+    }
     if (state.status === 'playing') scenarioBehavior(state).checkObjectives?.(state, scenarioRuntime(state, events))
     const act = state.acts[state.actIndex]
     if (!act || state.status !== 'playing') return
+    const printedObjective = registeredEntry(act.originalCode || act.code)?.actRule?.objective
+    if (typeof printedObjective === 'function' && typeof scenarioBehavior(state).checkObjectives !== 'function') {
+      if (printedObjective(state, act, scenarioRuntime(state, events)) === true) advanceAct(state, events)
+      return
+    }
     const obj = act.objective
     if (!obj) return
     if (obj.type === 'defeatEnemy') {
@@ -183,13 +197,15 @@ export function createActAgenda(deps) {
 
   function spawnStoryAsset(state, code, locationId, events) {
     const def = ALL_STORY_ASSETS[code]
-    if (!def || !locationExists(state, locationId)) return
+    if (!def || (!(def.global && locationId == null) && !locationExists(state, locationId))) return
     state.storyAssets ||= []
     if (state.storyAssets.some(asset => asset.code === code)
         || state.investigators.some(inv => inv.assets.some(asset => asset.code === code))) return
-    const asset = newCardInstance(state, code, { exhausted: false, location: locationId, controllerSeat: null })
+    const asset = newCardInstance(state, code, { exhausted: false, location: locationId, controllerSeat: null,
+      ...(def.global ? { global: true } : {}) })
     state.storyAssets.push(asset)
-    info(state, events, `剧情资产「${def.name}」出现在「${locName(state, locationId)}」，尚无人控制。`)
+    info(state, events, def.global ? `剧情卡「${def.name}」进入场景区。` : `剧情资产「${def.name}」出现在「${locName(state, locationId)}」，尚无人控制。`)
+    return asset
   }
 
   // 2026-10-27 修复：议程推进时按规则清空「场上每张卡」的毁灭标记。
@@ -226,6 +242,9 @@ export function createActAgenda(deps) {
       }
     }
     for (const asset of state.storyAssets || []) if (!keepSelf(asset)) asset.doom = 0
+    const clearAttachments=host=>{for(const card of host?.attachments||[]){if(Object.hasOwn(card,'doom')&&!keepSelf(card))card.doom=0;clearAttachments(card)}}
+    for(const host of [agenda,state.acts?.[state.actIndex],...(state.enemies||[]),...(state.storyAssets||[]),...state.investigators.flatMap(inv=>[...(inv.assets||[]),...(inv.threat||[])])])clearAttachments(host)
+    for (const card of state.agendaAside || []) if (!keepSelf(card)) card.doom = 0
     for (const attachment of state.playerLocationAttachments || []) {
       if (!keepSelf(attachment)) attachment.doom = 0
     }
@@ -245,11 +264,18 @@ export function createActAgenda(deps) {
       // 议程推进：移除场上每张卡上的所有毁灭（Rules Reference，见 clearDoomInPlay）。
       clearDoomInPlay(state, cur)
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
-      if (cur.reveal) runAgendaReveal(state, cur, events)
+      const advanceDecision=withAgendaAdvanceFrame(state,cur,()=>{if(cur.reveal)runAgendaReveal(state,cur,events)})
       // 若 reveal 触发了剧本切换，立即返回。
       if (state.scenario !== scBefore || state.status !== 'playing') return
       if (state.agendas[state.agendaIndex] !== cur) return
+      if(advanceDecision.revert){scenarioRuntime(state,events).flipAgendaInPlace('front');locationTraits?.sync(state);return}
       scenarioBehavior(state).agendaLeftPlay?.(state, cur, scenarioRuntime(state, events))
+      for (const attachment of cur.attachments || []) {
+        if (attachment.ownerSeat == null) continue
+        releaseChaosTokens(state, attachment.id)
+        state.investigators[attachment.ownerSeat]?.discard.push(attachment.code)
+      }
+      if (cur.attachments?.some(attachment => attachment.ownerSeat != null)) cur.attachments = cur.attachments.filter(attachment => attachment.ownerSeat == null)
       state.agendaIndex++
       // 密谋进出同样会改变 agendaRule.locationTraitLinks 声明的特性连接规则。
       locationTraits?.sync(state)

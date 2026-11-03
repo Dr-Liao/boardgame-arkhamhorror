@@ -1,13 +1,53 @@
-// 05228 机关盒 · 归属：关卡专用 05197《崇高利益》（fgg）
-// 规则实现：
-//   · 剧情归属/交付/结局进牌组：behavior.js 的 attachPuzzleBox / givePuzzleBoxTo / resolution；
-//   · 强制「你被击败时交给另一位调查员」：behavior.js 的 investigatorEliminated 钩子；
-//   · [action]（熄灭火盆 / 横置幽灵看守人 / 对已横置的它造成 5 点伤害 / 团队每场游戏限一次）：
-//     behavior.js 的 actions/performAction（规则 rule='puzzleBoxAction'，读点见 behavior）。
-// 注：本条目保持声明式（非玩家卡 registry 不允许声明玩家发起的 action）；执行路径在章节 behavior。
+// 05228 机关盒：取得控制权及加入战役牌组仍由《崇高利益》的剧本流程处理。
+const watcherOf = state => (state.enemies || []).find(enemy =>
+  String(enemy.originalCode || enemy.code) === '05086')
+
+const brazierLit = location => Boolean(location && (
+  (location.markers || []).includes('brazier')
+  || location.flags?.brazier === true
+  || (location.flags?.brazier == null && location.litBrazier === true)
+))
+
+function actionOptions(state, inv) {
+  const options = []
+  const location = (state.locations || []).find(item => item.id === inv.location)
+  if (brazierLit(location)) options.push({ id: 'unlight', label: '熄灭你所在地点的火盆' })
+  const watcher = watcherOf(state)
+  if (watcher && !watcher.exhausted) options.push({ id: 'exhaust', label: '横置幽灵看守人' })
+  if (watcher?.exhausted) options.push({ id: 'damage', label: '对已横置的幽灵看守人造成 5 点伤害' })
+  return options
+}
+
 export default {
-  "code": "05228",
-  "scope": "storyAsset",
-  "implemented": true,
-  "note": "behavior.js:attachPuzzleBox/givePuzzleBoxTo/investigatorEliminated/actions(rule=puzzleBoxAction, noOpportunityAttackFrom=[05086])/resolution(campaignCard)"
-};
+  code: '05228',
+  scope: 'storyAsset',
+  implemented: true,
+  transferOnControllerDefeat: true,
+  abilities: [{
+    kind: 'action',
+    actionKind: 'action',
+    label: '机关盒：熄灭火盆或影响幽灵看守人',
+    cost: { action: 1 },
+    limit: { scope: 'perGame', owner: 'group' },
+    noOpportunityAttackFrom: ['05086'],
+    criteria: [({ state, inv }) => actionOptions(state, inv).length > 0],
+    resolve: ({ state, inv, api }) => {
+      const options = actionOptions(state, inv)
+      if (!options.length) return
+      const answer = options.length === 1 ? options[0].id : api.choice({
+        kind: 'effect', source: '05228', seat: inv.seat,
+        prompt: '「机关盒」：选择一项结算。', options,
+      })
+      const chosen = options.find(option => option.id === answer) || options[0]
+      if (chosen.id === 'unlight') {
+        api.setLocationFlag(inv.location, 'brazier', false)
+      } else {
+        const watcher = watcherOf(state)
+        if (!watcher) return
+        if (chosen.id === 'exhaust') api.exhaust(watcher)
+        if (chosen.id === 'damage') api.damageEnemy(watcher, 5, inv.seat)
+      }
+    },
+  }],
+  note: '剧情归属由《崇高利益》负责；控制后的行动和被击败转交可跨章节使用。',
+}

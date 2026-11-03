@@ -1741,7 +1741,7 @@
       "kind": "repo",
       "exists": true,
       "bytes": 13532239,
-      "sha256": "ae21e386d4b714a78ca67f33f85bf79134db915369ac2342aa7611325504d643"
+      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
@@ -1777,19 +1777,21 @@
     "stateSchemaVersion": 7,
     "goldenReplay": {
       "fixtures": 13,
-      "steps": 782,
-      "hashes": 795
+      "steps": 797,
+      "hashes": 810
     },
     "replayBefore": {
       "fixtures": 13,
-      "steps": 782,
-      "hashes": 795
+      "steps": 797,
+      "hashes": 810
     },
-    "replayBeforeSha256": "f15fd7d13471041a2f9bec3edc03c69e98721829ca888a50723e296d19d69d2b",
+    "replayBeforeSha256": "edbbcc327154ab8358ba217842030c20153bf22323c1789bd92fd08c695127de",
+    "replayBeforePath": "tests/fixtures/replay/tde-baseline.json",
+    "history": "Original M0 snapshot: artifacts/migration/tde/replay-before.json. Completion baseline captured and compared after TFA/TCU repairs on 2026-11-02.",
     "replayBeforeIdsMatch": true,
     "replayBeforeHashesMatch": true,
     "git": {
-      "head": "d3a8dede700cb96cdcb1142d52fa5dae52888045",
+      "head": "dece0835e97d7c06aa1f56219d02e1d00be27b3a",
       "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
     }
   },
@@ -1804,13 +1806,13 @@
   "pending": [
     {
       "id": "beyondTheGatesOfSleepEncounterDeck",
-      "status": "pending",
-      "evidence": "参考实现 BeyondTheGatesOfSleep.hs 有 gatherSets 声明但没有任何 gather Set.* 调用；英文规则书 setup 文本待 M3 逐句对齐（路线图 R8）"
+      "status": "resolved",
+      "evidence": "完整冒险指南与章节测试已对齐：遭遇牌暂放在一边，幕推进时组成遭遇牌库；见 tests/tde-scenario-beyondTheGatesOfSleep.test.mjs 与 web/scenario-guides/beyondTheGatesOfSleep.json"
     },
     {
       "id": "achievements",
-      "status": "pending",
-      "evidence": "成就（achievements）默认 out-of-scope（决策 D4 未改口径），M3 前不列入机制条目"
+      "status": "out-of-scope",
+      "evidence": "可选成就不在原始循环玩法迁移范围内（决策 D4）"
     }
   ],
   "gate": {

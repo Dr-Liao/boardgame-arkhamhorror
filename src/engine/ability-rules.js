@@ -1,9 +1,26 @@
+import { createDiscardCostApi } from './discard-costs.js'
+import { discardPlayerCards } from './player-zones.js'
+import { afterHandDiscard } from './hand-discard-window.js'
+import { isEnemyUnengaged,nearestEnemies } from './enemy-query.js'
+import { keyCostAvailable, payKeyCost } from './key-cost.js'
+import { selectMechanic } from './mechanic-choices.js'
+import { availableResources } from './resource-bank.js'
+import { tokenCostAvailable, payTokenCost } from './token-cost.js'
+import { availableUseCost, payUseCost } from './use-transfer.js'
 // ability-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 能力层的规则侧：描述子的可用性 / 费用 / 目标枚举 / 修正来源枚举。
 // 读点：canAffordAbility + payAbilityCost（legalMoves 与 doAbility 共用）、
 // descriptorSources（窗口枚举）、nonPlayerAbilitySources（D1 非玩家卡）。
 
 import { currentRevelation } from './resolution-scope.js'
+import { poolTokenRoom } from './chaos-token-pool.js'
+import { canDiscardControlledAsset } from './investigator-mechanics.js'
+import { afterUsesSpent } from './uses.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
+import { entityAbilityInRange } from './parley.js'
+import { NON_PLAYER_SCOPES } from './ability.js'
+import { groupClueTotal, payGroupClueCost } from './group-cost.js'
+import { effectiveFloodLevel, floodLevel } from './flood.js'
 
 export function createAbilityRules(deps) {
   const {
@@ -15,11 +32,16 @@ export function createAbilityRules(deps) {
     capabilityBlocked,
     cardDef,
     cardName,
+    canMoveTo,
+    canDiscoverClueAt,
+    canAutoEvade,
+    bondedAvailable,
     controlledAbilityCards,
     costIsDynamic,
     defeatEnemy,
     describeCost,
     discardChosenCards,
+    discardLocked,
     discardableHandCards,
     doAbility,
     effectAbilitySources,
@@ -37,6 +59,7 @@ export function createAbilityRules(deps) {
     playChannels,
     info,
     isWeaknessCode,
+    investigatorTextBlanked,
     leaveAsset,
     legalMoves,
     limitUsed,
@@ -51,6 +74,17 @@ export function createAbilityRules(deps) {
     syncClues,
   } = deps
 
+  function discardCost(state) {
+    return createDiscardCostApi(state,{discardableHandCards,printedCard:cardDef,canDiscardControlledAsset,
+      choose:spec=>deps.requestChoice(state,spec),cardName,leaveAsset,discardPlayerCards,afterHandDiscard,reactionWindow:deps.reactionWindow})
+  }
+  function encounterCostAvailable(state, inv, cost) {
+    if (!cost.drawEncounter) return true
+    const deckId = scenarioBehavior(state).encounterDeckFor?.(state, inv) || 'encounter'
+    const piles = deckId === 'encounter' ? { deck: state.encounterDeck, discard: state.encounterDiscard } : state.extraEncounterDecks?.[deckId]
+    return !!piles && (piles.deck.length + piles.discard.length) > 0
+  }
+
   function payAbilityCost(state, inv, source, cost = {}, events, descriptor = null) {
     // Phase 2（C3）：先把费用表达式求值成数字——校验与扣费必须用同一份结果，
     // 否则「每有 1 个线索付 1 资源」会在校验和扣费之间看到不同的线索数。
@@ -59,20 +93,38 @@ export function createAbilityRules(deps) {
     cost = resolved
     // 先整体校验，再逐项扣费：避免「付了一半失败」留下部分修改。
     if (cost.exhaust && (!source || source.exhausted)) return false
-    if (cost.uses && (source?.uses || 0) < cost.uses) return false
-    if (cost.resources && inv.resources < cost.resources) return false
+    if (cost.uses && availableUseCost(state, source, registeredEntry) < cost.uses) return false
+    if (!encounterCostAvailable(state, inv, cost)) return false
+    if (cost.resources && availableResources(inv) < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
     if (cost.clues && engagedWithClueBlocker(state, inv)) return false
-    if (cost.discardHand && discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return false
+    if (cost.groupClues && groupClueTotal(state, inv, other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), descriptor?.groupClueScope) < cost.groupClues) return false
+    if((cost.discardHandIcons||cost.discardControlledAsset)?!discardCost(state).available(inv,cost,source):(cost.discardHand&&discardableHandCards(inv,cost.discardHandIcon).length<cost.discardHand))return false
+    if (!tokenCostAvailable(state, inv, descriptor?.additionalTokenCost)) return false
+    if (!keyCostAvailable(state, inv, source, descriptor?.additionalKeyCost)) return false
+    if (cost.doomOnSource) {
+      const before = source?.doom || 0
+      deps.placeDoomOnCard(state, source, cost.doomOnSource, events)
+      if ((source?.doom || 0) - before !== cost.doomOnSource) return false
+    }
+    if (!payTokenCost(state, inv, descriptor?.additionalTokenCost)) return false
+    if (!payKeyCost(state, inv, source, descriptor?.additionalKeyCost, spec => selectMechanic(state, inv.seat, spec))) return false
     if (cost.exhaust) source.exhausted = true
-    if (cost.uses) source.uses -= cost.uses
-    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources)
+    if (cost.uses) payUseCost(state, inv.seat, source, cost.uses, registeredEntry, spec => deps.requestChoice(state, spec))
+    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources, state)
     if (cost.clues) {
       inv.clues -= cost.clues
       syncClues(state)
     }
-    if (cost.discardHand) discardChosenCards(state, inv, cost.discardHand, events, source?.code, cost.discardHandIcon)
-    if (cost.horror) applyHorror(state, inv, cost.horror, events)
+    if (cost.groupClues) {
+      payGroupClueCost(state, inv, cost.groupClues, spec => deps.requestChoice(state, spec), other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), descriptor?.groupClueScope)
+      syncClues(state)
+    }
+    if(cost.discardHandIcons||cost.discardControlledAsset){if(!discardCost(state).pay(inv,cost,source,events))return false}
+    else if (cost.discardHand) discardChosenCards(state, inv, cost.discardHand, events, source?.code, cost.discardHandIcon)
+    if (cost.damage) deps.applyHarm(state, inv, cost.damage, cost.horror || 0, events)
+    else if (cost.horror) applyHorror(state, inv, cost.horror, events)
+    if (cost.drawEncounter) for (let i = 0; i < cost.drawEncounter; i++) deps.drawEncounter(state, inv, events)
     if (cost.damageSelf) applyDamage(state, inv, cost.damageSelf, events, true)
     if (cost.assetDamage && source) {
       source.damage = (source.damage || 0) + cost.assetDamage
@@ -92,6 +144,7 @@ export function createAbilityRules(deps) {
       leaveAsset(state, inv, source)
       exilePlayerCard(state, inv, source.code, events)
     }
+    if (cost.uses) afterUsesSpent(state, inv, source, cost.uses, events, deps)
     return true
   }
 
@@ -99,7 +152,13 @@ export function createAbilityRules(deps) {
     return descriptor.kind === 'free' ? { ...descriptor.cost, action: false } : descriptor.cost
   }
 
-  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null } = {}) {
+  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null, ignoreCosts = false } = {}) {
+    if (['action', 'free'].includes(descriptor.kind) && descriptor.actionKind && source
+      && NON_PLAYER_SCOPES.includes(registeredEntry(source.originalCode || source.code)?.scope)
+      && !entityAbilityInRange(state, inv, source, descriptor)) return false
+    if (source?.investigator != null && investigatorTextBlanked(state, inv)) return false
+    if (descriptor.kind === 'free' && state.locations?.includes(source)
+      && (state.agendaAside || []).some(card => registeredEntry(card.originalCode || card.code || card)?.treacheryRule?.blocksLocationFastAbilities)) return false
     const timing = state.timingWindow
     if (mode === 'free') {
       if (descriptor.kind !== 'free') return false
@@ -114,6 +173,7 @@ export function createAbilityRules(deps) {
     // Phase 2（C1）：capability:triggerAbilities 只禁止"可选"的能力；
     // forced（强制）在规则上仍然结算，不能被"不能触发能力"挡住。
     if (descriptor.kind !== 'forced' && capabilityBlocked(state, inv, 'triggerAbilities')) return false
+    if (descriptor.kind !== 'forced' && assetTextBlankedExceptForced(source)) return false
     if (descriptor.requiresNoClues) {
       const here = state.locations.find(location => location.id === inv.location)
       if (here && here.clues > 0) return false
@@ -134,16 +194,44 @@ export function createAbilityRules(deps) {
       if (cannotPlayTypes(inv).has(def.type)) return false
       // 隐私弱点（03084d「你不能打出事件」）：fromHand 描述子与普通出牌同一读点。
       if (playTypeBlocked(state, inv, def.type)) return false
-      if (!descriptor.noPlayCost && inv.resources < playCost(state, inv, def) - channelDiscount) return false
-    } else if (!canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor), descriptor })) return false
+      if (!descriptor.noPlayCost && availableResources(inv) < playCost(state, inv, def) - channelDiscount) return false
+    } else if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {
       state, inv, source, windowId, context,
       // 条件里常用的读点：内容层不直接 import 引擎，也不需要 api 的完整面。
       helpers: {
+        availableResources: () => availableResources(inv),
+        baseSkillValue: (seat, skill) => deps.baseStatValue(state, state.investigators[seat], skill),
+        poolTokenRoom: token => poolTokenRoom(state, token),
+        effectiveFloodLevel: (seat, options) => effectiveFloodLevel(state, seat, options),
+        floodLevel: id => floodLevel(state, id),
+        bondedAvailable: (seat, main, copy) => bondedAvailable(state, seat, main, copy),
+        canMoveTo: (seat, id, options) => canMoveTo(state, seat, id, options),
+        canDiscoverClueAt: (seat, id) => canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === id)),
+        isEnemyUnengaged: enemy => isEnemyUnengaged(state,enemy,enemiesEngagedWith),
+        nearestEnemies: (from,options) => nearestEnemies(state,from,options),
+        canAutoEvade: (enemy, seat) => canAutoEvade(state, enemy, seat),
+        canDamageEnemy: (enemy, seat = inv.seat, source = null) => deps.canDamageEnemy(state, enemy, seat, source),
+        canDefeatEnemy: (enemy, seat = inv.seat, source = null) => deps.enemyCanBeDefeated(state, enemy, source, seat),
         isWeakness: code => isWeaknessCode(code),
         cardType: code => cardDef(code)?.type || null,
+        cardSubtype: code => cardDef(code)?.subtype || null,
+        cardName: code => cardDef(code)?.name || code,
+        playCost: code => playCost(state, inv, cardDef(code)),
+        canDiscardAsset: asset => canDiscardControlledAsset(state, inv, asset),
         cardTraits: code => cardDef(code)?.traits || [],
-        canGainResources: () => scenarioBehavior(state).canGainResources?.(state, inv) !== false,
+        isResolvingAction: () => state._resolvingAction === true,
+        canGainResources: (seat = inv.seat) => {
+          const other = state.investigators[seat]
+          return !!other && !other.defeated && !other.resigned && !capabilityBlocked(state, other, 'gainResources')
+            && scenarioBehavior(state).canGainResources?.(state, other) !== false
+        },
+        canDrawCards: (seat = inv.seat) => {
+          const other = state.investigators[seat]
+          return !!other && !other.storyInvestigator && !other.defeated && !other.resigned
+            && !capabilityBlocked(state, other, 'drawCards')
+            && (other.deck.length > 0 || (!discardLocked(state, other) && other.discard.length > 0))
+        },
         // 2026-10-25 第五轮修复 05049：「是否正在结算显现效果」的只读判定（进程内作用域）。
         revelationResolving: () => currentRevelation() != null || Boolean(state._treacheryResolving),
       },
@@ -159,6 +247,12 @@ export function createAbilityRules(deps) {
 
   function descriptorSources(state, inv) {
     const out = []
+    const revealed = state._revealedAbility
+    if (revealed?.seat === inv.seat) {
+      const entry = registeredEntry(revealed.source.code)
+      const abilities = (entry?.abilities || []).filter(descriptor => descriptor.partOfAbility === revealed.abilityIndex)
+      if (abilities.length) out.push({ source: revealed.source, code: revealed.source.code, entry: { ...entry, abilities }, controlled: true })
+    }
     for (const card of controlledAbilityCards(inv)) {
       const entry = registeredEntry(card.code)
       // 2026-10-25 第五轮修复 05150：受控的剧情支援（scope:'storyAsset'）也要按玩家卡来源
@@ -167,6 +261,7 @@ export function createAbilityRules(deps) {
       // 2026-10-25：附属在支援上的卡（05230 瞄准镜等升级附属）也作为能力来源；
       // source 带 hostAssetId/hostCode，供卡面能力读「所附属支援」上下文。
       for (const attachment of card.attachments || []) {
+        if (attachment.assetReference) continue
         const attachedEntry = registeredEntry(attachment.code)
         if (attachedEntry?.abilities.length) {
           // 2026-10-25 第七轮修复 05230：附属能力必须写回真实附件实例；
@@ -178,6 +273,10 @@ export function createAbilityRules(deps) {
         }
       }
     }
+    for (const source of state.playerLocationAttachments || []) {
+      const entry = registeredEntry(source.code)
+      if (source.location === inv.location && entry?.assetRule?.sharedLocationAbility) out.push({ source, code: source.code, entry, controlled: true })
+    }
     // 2026-10-25：05021「附属到调查员」的卡（attachTo.kind='investigator'）同样作为能力来源。
     for (const attachment of inv.attachments || []) {
       const attachedEntry = registeredEntry(attachment.code)
@@ -186,6 +285,11 @@ export function createAbilityRules(deps) {
       }
     }
     const investigatorEntry = registeredEntry(inv.code)
+    for (const item of state.skillTest?.committed || []) {
+      if (item.seat !== inv.seat) continue
+      const entry = registeredEntry(item.code)
+      if (entry?.abilities.some(descriptor => ['reaction', 'forced'].includes(descriptor.kind))) out.push({ source: item, code: item.code, entry, controlled: true })
+    }
     if (investigatorEntry?.abilities.length) {
       out.push({ source: { investigator: inv.seat, code: inv.code }, code: inv.code, entry: investigatorEntry })
     }
@@ -244,9 +348,10 @@ export function createAbilityRules(deps) {
       push(enemy)
     }
     for (const location of state.locations || []) push(location, { requireRevealed: true })
+    if(registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope==='scenario')push(state.scenario)
     push((state.acts || [])[state.actIndex])
     push((state.agendas || [])[state.agendaIndex])
-    for (const asset of state.storyAssets || []) push(asset)
+    for (const asset of state.storyAssets || []) if (!asset.uncontrolled) push(asset)
     // 窗口上下文里带的实体也算来源：`defeatEnemy` 打开时敌人已经从 state 移除，
     // 但它的「被击败时」能力仍然要结算（来源就是这次结算的敌人本身）。
     push(context.enemy)
@@ -265,16 +370,21 @@ export function createAbilityRules(deps) {
   }
 
   function canAffordAbility(state, inv, asset, ability) {
+    if (!tokenCostAvailable(state, inv, ability.descriptor?.additionalTokenCost)) return false
+    if (!keyCostAvailable(state, inv, asset, ability.descriptor?.additionalKeyCost)) return false
+    if (ability.cost?.doomOnSource && !asset) return false
     const cost = normalizeCostValues(ability.cost || {}, { state, inv, source: asset, descriptor: ability.descriptor || null })
     if (!cost) return false
     // 没有来源就不能付横置费。手牌枚举进来的 source 是 null；只看 asset?.exhausted
     // 会把「卡不在场」误判成「没横置」，免费能力就会从手里被当成可用。
     if (cost.exhaust && (!asset || asset.exhausted)) return false
-    if (cost.uses && (asset?.uses || 0) < cost.uses) return false
-    if (cost.resources && inv.resources < cost.resources) return false
+    if (cost.uses && availableUseCost(state, asset, registeredEntry) < cost.uses) return false
+    if (!encounterCostAvailable(state, inv, cost)) return false
+    if (cost.resources && availableResources(inv) < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
     if (cost.clues && engagedWithClueBlocker(state, inv)) return false
-    if (cost.discardHand && discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return false
+    if((cost.discardHandIcons||cost.discardControlledAsset)?!discardCost(state).available(inv,cost,asset):(cost.discardHand&&discardableHandCards(inv,cost.discardHandIcon).length<cost.discardHand))return false
+    if (cost.groupClues && groupClueTotal(state, inv, other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), ability.descriptor?.groupClueScope) < cost.groupClues) return false
     if (cost.damageSelf && inv.damage + cost.damageSelf >= inv.health) return false
     if (ability.maximumInvestigatorDamage != null && inv.damage > ability.maximumInvestigatorDamage) return false
     if (ability.maxClicks != null && (asset.clicks || 0) >= ability.maxClicks) return false

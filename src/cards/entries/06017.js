@@ -14,7 +14,7 @@ export default {
   code: '06017',
   scope: 'enemy',
   hiddenEnemyInHand: true,
-  enemyWeakness: { hunter: true },
+  enemyWeakness: { hunter: true, attackFromHandOnDeckEmpty: true },
   abilities: [],
   modifiers: [],
 }

@@ -1,0 +1,128 @@
+{
+  "historicalBaseline": "artifacts/tde-completion-before.json",
+  "reviewedBaseline": "tests/fixtures/replay/golden-replays.json",
+  "reasons": [
+    "新增检定 basicAction 与已授予敌人关键词元数据，供猛击类投入限制和授予关键字结算读取。",
+    "通用快速卡与免费能力接入玩家窗口，前三条完成战役的脚本增加跳过选择；暂停脚本在新出现的合法窗口暂停。",
+    "逐局核对所有非选择动作与终局状态；除固定步数暂停脚本外，非选择动作完全一致。"
+  ],
+  "fixtures": [
+    {
+      "id": "notz-gathering-hub-victory-r1",
+      "beforeSteps": 54,
+      "afterSteps": 57,
+      "nonChoiceActions": "identical",
+      "choices": "new optional player windows skipped",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "notz-gathering-hub-victory-r2",
+      "beforeSteps": 53,
+      "afterSteps": 56,
+      "nonChoiceActions": "identical",
+      "choices": "new optional player windows skipped",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "notz-gathering-defeat",
+      "beforeSteps": 25,
+      "afterSteps": 25,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": false
+    },
+    {
+      "id": "notz-gathering-resign",
+      "beforeSteps": 60,
+      "afterSteps": 60,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "notz-midnight-masks",
+      "beforeSteps": 148,
+      "afterSteps": 157,
+      "nonChoiceActions": "identical",
+      "choices": "new optional player windows skipped",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "notz-midnight-masks-only",
+      "beforeSteps": 80,
+      "afterSteps": 80,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "notz-gathering-pending-choice",
+      "beforeSteps": 12,
+      "afterSteps": 12,
+      "nonChoiceActions": "same prefix, paused at the earlier optional player window",
+      "choices": "fixed-step snapshot now stops in an optional window",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "carcosa-curtain-call-hub",
+      "beforeSteps": 70,
+      "afterSteps": 70,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "carcosa-curtain-call-only",
+      "beforeSteps": 30,
+      "afterSteps": 30,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "dunwich-extracurricular-hub",
+      "beforeSteps": 70,
+      "afterSteps": 70,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "tfa-untamed-wilds-hub",
+      "beforeSteps": 70,
+      "afterSteps": 70,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    },
+    {
+      "id": "tfa-untamed-wilds-only",
+      "beforeSteps": 30,
+      "afterSteps": 30,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": false
+    },
+    {
+      "id": "notz-strict-random-3p",
+      "beforeSteps": 80,
+      "afterSteps": 80,
+      "nonChoiceActions": "identical",
+      "choices": "identical",
+      "terminalState": "unchanged",
+      "hashesChanged": true
+    }
+  ]
+}

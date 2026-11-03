@@ -9,7 +9,7 @@
 //   4. 生成模块 src/cards/tde-campaign-acceptance.js 的 sha256 与 JSON 账本逐字节对账，
 //      verified/pending/simplified 集合与 entries 一致；
 //   5. 逐卡证据形状（实跑测试名/文件/行号）与人工备注注册表一致；
-//   6. simplified 87 = P7 57 + P8 单卡 22 + P8 章节 gap 12→8 锚点；12 条 gap 全部由
+//   6. simplified 83 = P7 53 + P8 单卡 22 + P8 章节 gap 12→8 锚点；12 条 gap 全部由
 //      audit/tde-scenario-gap-triage.json 登记（gap 原文 = 各章 behavior.scenarioGaps[index]）；
 //   7. 运行时 availability 分层（玩家/调查员 strict、战役 catalog-only）与账本一致；
 //   8. 不存在未登记卡、越界卡、重复卡。
@@ -210,7 +210,7 @@ test('TDE 全卡账本 summary 与 entries / 卡面数据 / 玩家开放口径�
   assert.equal(entries.filter(entry => entry.noEntry).length, 10)
   assert.equal(summary.recordsWithEntry, 273)
   assert.equal(entries.filter(entry => entry.pack === 'tdeCampaign' && !entry.noEntry).length, 273)
-  assert.equal(summary.scenarioGaps, 12)
+  assert.equal(summary.scenarioGaps, 0)
   const channels = entries.reduce((result, entry) => {
     result[entry.channel] = (result[entry.channel] || 0) + 1
     return result
@@ -277,8 +277,8 @@ test('TDE 全卡账本生成模块与 JSON 对账（sha256 / verified / pending 
   assert.equal(TDE_CAMPAIGN_PENDING_CODES.length, 0)
   assert.equal(TDE_INVESTIGATOR_RECORD_VERIFIED_CODES.length, 18)
   assert.equal(TDE_ALL_CARD_VERIFIED_CODES.length, 388)
-  assert.equal(TDE_ALL_CARD_SIMPLIFIED_CODES.length, 87)
-  assert.equal(TDE_CAMPAIGN_SIMPLIFIED_CODES.length, 30)
+  assert.equal(TDE_ALL_CARD_SIMPLIFIED_CODES.length, 0)
+  assert.equal(TDE_CAMPAIGN_SIMPLIFIED_CODES.length, 0)
 
   // 运行期读点与 entries 一致；非战役卡必须为 false。
   for (const entry of entries) {
@@ -343,10 +343,10 @@ test('TDE 全卡账本逐卡证据来自实跑测试（test:pass 形状 + 分区
   }
 })
 
-test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 单卡 22 + gap 12→8 锚点', () => {
+test('TDE 全卡账本完成验收：无简化、无未解决缺口，历史缺口保留修复证据', () => {
   const noteCodes = Object.keys(TDE_CARD_ACCEPTANCE_NOTES)
   assert.ok(noteCodes.every(code => entryByCode.has(code)), '备注注册表存在越界卡号')
-  assert.equal(noteCodes.length, 87)
+  assert.equal(noteCodes.length, 0)
   for (const code of noteCodes) {
     const registered = TDE_CARD_ACCEPTANCE_NOTES[code]
     const entry = entryByCode.get(code)
@@ -358,9 +358,9 @@ test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 �
     assert.deepEqual(entry.noteSources, registered.sources)
   }
   assert.equal(ledger.summary.simplified, noteCodes.length)
-  assert.equal(ledger.summary.simplified, 87)
-  assert.equal(ledger.summary.simplifiedPlayer, 57)
-  assert.equal(ledger.summary.simplifiedCampaign, 30)
+  assert.equal(ledger.summary.simplified, 0)
+  assert.equal(ledger.summary.simplifiedPlayer, 0)
+  assert.equal(ledger.summary.simplifiedCampaign, 0)
   assert.equal(ledger.summary.simplifiedInvestigator, 0)
   assert.equal(ledger.summary.pending, 0)
 
@@ -369,7 +369,7 @@ test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 �
     path.join(gameRoot, 'audit/tde-player-acceptance.json'), 'utf8'))
   const playerSimplified = new Map(playerLedger.entries
     .filter(entry => entry.simplified).map(entry => [entry.code, entry.note]))
-  assert.equal(playerSimplified.size, 57)
+  assert.equal(playerSimplified.size, 0)
   const registeredPlayerSimplified = noteCodes.filter(code => playerCodes.has(code))
   assert.deepEqual(sorted(registeredPlayerSimplified), sorted(playerSimplified.keys()))
   for (const [code, note] of playerSimplified) {
@@ -383,7 +383,7 @@ test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 �
       && entry.simplified === true)
     .map(entry => entry.code)
     .sort()
-  assert.equal(p8CardSimplified.length, 22)
+  assert.equal(p8CardSimplified.length, 0)
   for (const code of p8CardSimplified) {
     assert.equal(TDE_CARD_ACCEPTANCE_NOTES[code]?.status, 'simplified', `${code} P8 单卡简化未登记`)
     assert.equal(TDE_CARD_ACCEPTANCE_NOTES[code].note, entryByCode.get(code) && ALL_CARDS[code]
@@ -392,12 +392,18 @@ test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 �
   }
   // P6 调查员简化 = 0（历史简化已在 P6/P8 还账）。
   assert.deepEqual(TDE_P6_SIMPLIFICATION_CODES, [])
-  assert.deepEqual(playerLedger.summary.simplified, 57)
+  assert.deepEqual(playerLedger.summary.simplified, 0)
 
   // P8 章节 gap 12 条 → triage 逐条登记；锚点 8 个 code 全部 simplified，且与 TDE_SCENARIO_GAP_CARDS 一致。
   const triage = JSON.parse(fs.readFileSync(path.join(gameRoot, TDE_SCENARIO_GAP_TRIAGE_FILE), 'utf8'))
-  assert.equal(triage.gaps.length, 12)
-  assert.equal(triage.totalGaps, 12)
+  assert.equal(triage.gaps.length, 0)
+  assert.equal(triage.totalGaps, 0)
+  assert.equal(triage.resolvedGaps.length,12)
+  for (const gap of triage.resolvedGaps) {
+    assert.equal(gap.status,'resolved')
+    assert.ok(gap.evidence.length>0)
+    for (const file of gap.evidence) assert.ok(fs.existsSync(path.join(gameRoot,file)),file)
+  }
   const derivedGapCards = Object.fromEntries(chapters.map(chapter => [chapter.id, []]))
   const anchorCodes = new Set()
   const triageIds = new Set()
@@ -419,17 +425,17 @@ test('TDE 全卡账本人工备注注册表一致：simplified 87 = P7 57 + P8 �
       anchorCodes.add(code)
     }
   }
-  assert.equal(triageIds.size, 12)
+  assert.equal(triageIds.size, 0)
   for (const chapter of chapters) {
     assert.deepEqual(sorted([...new Set(derivedGapCards[chapter.id])]),
       sorted(TDE_SCENARIO_GAP_CARDS[chapter.id] || []),
       `${chapter.id} 的 gap 落卡映射与 triage 不一致`)
   }
-  assert.equal(anchorCodes.size, 8)
+  assert.equal(anchorCodes.size, 0)
   const expectedCampaignSimplified = sorted([...p8CardSimplified, ...anchorCodes])
   assert.deepEqual(sorted(noteCodes.filter(code => campaignCodes.has(code) || campaignFaceCodes.has(code))),
     expectedCampaignSimplified)
-  assert.equal(expectedCampaignSimplified.length, 30)
+  assert.equal(expectedCampaignSimplified.length, 0)
 })
 
 test('TDE 全卡账本运行时 availability 分层与账本一致（玩家/调查员 strict、战役 catalog-only）', () => {

@@ -11,7 +11,7 @@ export const manifest = scenarioManifest(scenario, identities, {
   status: 'playable',
   layout,
   requiredPackIds: ['core', 'tcuCampaign'],
-  requiredEncounterGroupIds: ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge'],
+  requiredEncounterGroupIds: ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge', 'ancientEvils', 'pentagram', 'lockedDoors'],
   requiredMechanicIds: ['tcuCampaignAssets', 'tcuChaos'],
   setAsideLocations: scenario.setAsideLocations,
   // 双面南森·威克按分支只用一面；两面都登记，引擎区域报告按目录数量校验。

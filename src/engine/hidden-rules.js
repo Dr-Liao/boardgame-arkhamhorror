@@ -1,6 +1,11 @@
+import { registeredEntry } from './ability.js'
+import { vehicleOf } from './vehicles.js'
+import { barrierCount } from './edge-barriers.js'
 // hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
+
+
 export function createHiddenRules(deps) {
   const {
     capabilityBlocked,
@@ -111,7 +116,9 @@ export function createHiddenRules(deps) {
       item.rule.cannotFightTraits?.some(trait => traits.includes(String(trait).toLowerCase())))
   }
 
-  function movementError(state, inv, destinationId = null) {
+  function movementError(state, inv, destinationId = null, { vehicle = false,ignoreBarriers=false } = {}) {
+    if (!ignoreBarriers && destinationId != null && barrierCount(state, inv.location, destinationId) > 0) return '路障阻挡了这条通道'
+    if (!vehicle && vehicleOf(state, inv.seat)) return '在载具中时不能独立移动'
     // Phase 2（C1）：capability:move —— 「不能移动」由卡面声明，引擎只问读点。
     if (capabilityBlocked(state, inv, 'move')) return '当前效果禁止你移动'
     // 「本轮不能离开本地点」（03256 堵塞通道）：地点实例上的轮次标记是全阶段读点。
@@ -124,6 +131,9 @@ export function createHiddenRules(deps) {
     // 且不传目标地点，导致「不能移动到某调查员所在地点」在效果移动/神话阶段被绕过。
     const destination = destinationId == null
       ? null : state.locations?.find(location => location.id === destinationId) || null
+    const discardCosts = [currentLocation, destination].filter(location => location?.revealed
+      && registeredEntry(location.originalCode || location.code)?.locationRule?.extraHandDiscardOnMove).length
+    if (discardCosts && (inv.hand || []).filter(code => canDiscardFromHand(inv, code)).length < discardCosts) return '必须有足够手牌支付进入或离开地点的额外费用'
     const scenarioError = scenarioBehavior(state).movementError?.(state, inv, destination, destinationId) || null
     if (scenarioError) return scenarioError
     if (state.phase !== 'investigation' || !state.turnSerial) return null
@@ -153,7 +163,10 @@ export function createHiddenRules(deps) {
     return scenarioBehavior(state).enemyCannotAttack?.(state, enemy) === true
   }
 
-  function enemyCannotBeAttacked(state, enemy) {
+  function enemyCannotBeAttacked(state, enemy, seat = null) {
+    if (enemy.global) return true
+    if (seat != null && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)
+      && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.bearerCannotFightDamageDefeat) return true
     if (entityRuleActive(state, enemy, 'cannot:beAttacked')) return true
     return scenarioBehavior(state).enemyCannotBeAttacked?.(state, enemy) === true
   }
@@ -175,6 +188,10 @@ export function createHiddenRules(deps) {
   }
 
   function enemyCanBeDefeated(state, enemy, source = null, seat = null) {
+    if (enemy.global) return false
+    if (enemy.swarmCards?.some(card => !card.defeated)) return false
+    if (seat != null && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)
+      && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.bearerCannotFightDamageDefeat) return false
     if (enemy?.cannotBeDefeated) return false
     if (entityRuleActive(state, enemy, 'cannot:beDefeated')) return false
     return scenarioBehavior(state).enemyCanBeDefeated?.(state, enemy, source, seat) !== false
@@ -182,3 +199,4 @@ export function createHiddenRules(deps) {
 
   return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, playTypeBlocked, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated, hiddenCommitLimitReached, noteHiddenCommit }
 }
+

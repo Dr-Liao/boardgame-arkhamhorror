@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 377
+    "testsPassed": 378
   },
   "testFiles": [
     {
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
-      "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
+      "sha256": "412ad64ccded2f5cddcdd05f2278e547f54f5d924f28f5e922a04fbfe4bf6092"
     },
     {
       "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
@@ -2610,6 +2610,10 @@
         {
           "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
           "test": "Core 01169 acolyte 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01169 按卡号抽出时生成在无人地点并放置1点毁灭"
         }
       ]
     },

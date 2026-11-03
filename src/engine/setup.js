@@ -1,3 +1,6 @@
+import { putInHand } from './hand-entry.js'
+import { replacePlayerZoneCards } from './player-zones.js'
+import { addPoolTokens } from './chaos-token-pool.js'
 // 建局（createGameState / 调查员准备 / 关卡布置 / 混乱袋）从 engine.js 拆出的模块
 // （Phase 6 · 6d-18）。
 //
@@ -134,16 +137,18 @@ function drawOpeningHand(state, inv) {
   // 第 5 步 P7：在场永久卡的条目级修正（05276 苦心钻研）在这里叠加；读点只有这一处。
   const target = (investigatorRule(inv.code)?.openingHandSize || 5)
     + (inv.assets || []).reduce((sum, asset) => sum + (registeredEntry(asset.code)?.openingHandBonus || 0), 0)
+    + (inv.openingHandBonus || 0)
+    + (scenarioBehavior(state).setupBeforeOpeningHands ? inv.hand.length : 0)
   while (inv.hand.length < target && inv.deck.length) {
     const code = inv.deck.pop()
     if (isWeaknessCode(code)) {
       // 2026-10-25：05042「高塔·XVI」这类「必须留在起始手牌」的弱点由条目级字段声明，
       // 不再洗回牌库（其余弱点仍按规则洗回）。
-      if (registeredEntry(code)?.staysInOpeningHand) inv.hand.push(code)
+      if (registeredEntry(code)?.staysInOpeningHand) putInHand(state, inv, code)
       else weaknesses.push(code)
-    } else inv.hand.push(code)
+    } else putInHand(state, inv, code)
   }
-  inv.deck = shuffle([...inv.deck, ...weaknesses], () => randomValue(state))
+  inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...weaknesses], () => randomValue(state)), 'shuffle')
 }
 
 // 为调查员构筑牌库：人类座位若设置了自定义卡组（settings.playerDeck）则用自定义清单，
@@ -248,11 +253,15 @@ function clearScenarioSceneLeftovers(state) {
   if (state.limitOverrides) delete state.limitOverrides
 }
 
-function prepareInvestigator(state, inv, events, startLocation) {
+function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   const def = ALL_INVESTIGATORS[inv.code]
   // 先清上一关的临时记账，再按本关重设规范字段：这样像 tomeActionUsed 这种「开局显式
   // 重置为 false」的字段不会在清理阶段被删掉（否则状态形状会随加载路径抖动）。
   clearInvestigatorTransients(campaignState, inv)
+  delete inv.scenarioXpBonus
+  delete inv.actionHistory
+  delete inv.defeatedHealthHistory
+  delete inv.openingHandBonus
   // 第 2 步 P2.6：无牌组故事调查员——不登记战役身份、不建牌库、不受创伤。
   const story = isStoryInvestigator(state, inv)
   let record = story ? null : state.campaign.investigators[inv.seat]
@@ -277,6 +286,7 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.sanity = def.sanity
   inv.damage = trauma.physical
   inv.horror = trauma.mental
+  if (investigatorRule(inv.code)?.resourceBank) inv.resourceBankModel = 2
   inv.resources = 5
   inv.clues = 0
   // 这里只放基础行动点；额外行动要等下面清掉上一关的资产、重新摆好本关开局阵容后再算。
@@ -344,12 +354,18 @@ function prepareInvestigator(state, inv, events, startLocation) {
   // 开局就带在身上的支援（签名卡 / 永久卡）也计入额外行动；上一关的资产已在上面清空，
   // 因此这里只会读到本关真实在场的卡。
   inv.actionsLeft = 3 + extraActionBonus(inv)
+  if (options.deferOpeningHand) return
+  completeStartingHand(state, inv, events)
+}
+
+function completeStartingHand(state, inv, events) {
+  const trauma = state.campaign.trauma[inv.seat] || {physical:0,mental:0}
   drawOpeningHand(state, inv)
   // 第 5 步 P6：「每场游戏开始时，你的起始手牌中额外有一张 X」（黛安娜·史丹利的黑暗洞察）。
   const extraOpening = investigatorRule(inv.code)?.openingHandExtra
   for (const code of extraOpening == null ? [] : Array.isArray(extraOpening) ? extraOpening : [extraOpening]) {
     if (removeCardByCode(inv.deck, code)) {
-      inv.hand.push(code)
+      putInHand(state, inv, code)
       info(state, events, `🖐️ ${inv.name} 的起始手牌额外获得「${cardName(code)}」。`)
     }
   }
@@ -653,6 +669,7 @@ function startScenario(state, index, events) {
   state.exiledBySeat = []
   state.locationVariants = {}
   state.scenarioZones = {}
+  if (state.agendaAside) delete state.agendaAside
   state.scenarioFlags = {}
   // 地点能力的「每场游戏一次（团队）」标记属于上一关；重开或进入新关时必须清空。
   state.locationAbilityTeamUsed = {}
@@ -702,8 +719,9 @@ function startScenario(state, index, events) {
   const startLoc = scenarioStartLocation(state, sc)
 
   // 调查员：恢复/重建（含创伤）。
+  const deferOpeningHands = scenarioBehavior(state).setupBeforeOpeningHands === true
   for (const inv of state.investigators) {
-    prepareInvestigator(state, inv, events, startLoc)
+    prepareInvestigator(state, inv, events, startLoc, { deferOpeningHand:deferOpeningHands })
   }
 
   // state.cards 是给前端的派生展示表（不进重放指纹），只在开局/读档时重建；而幕间奖励的
@@ -712,7 +730,7 @@ function startScenario(state, index, events) {
   // 只补不删：开局那份卡池定义（幕间牌组界面要用）保留，只并入本关实际带入的卡。
   Object.assign(state.cards ||= {}, embeddedCardDefs(state, CAMPAIGN.id))
 
-  scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
+  if (!deferOpeningHands) scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
 
   // 剧本专属布置。
   setupScenarioLocations(state, events)
@@ -721,7 +739,14 @@ function startScenario(state, index, events) {
   setupChaosBag(state, events)
   // 开局即生效的特性连接规则（actRule.locationTraitLinks）：地点已全部入场，重算一次自动连接。
   locationTraits?.sync(state)
-  scenarioBehavior(state).afterChaosBagSetup?.(state, events)
+  scenarioBehavior(state).afterChaosBagSetup?.(state, events, scenarioRuntime(state, events))
+  for (const inv of state.investigators) {
+    for (const [token, amount] of Object.entries(investigatorRule(inv.code)?.setupChaosTokens || {})) addPoolTokens(state, token, amount)
+  }
+  if (deferOpeningHands) {
+    scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
+    for (const inv of state.investigators) completeStartingHand(state,inv,events)
+  }
 
   state.currentSeat = firstAliveSeat(state)
   info(state, events, `🎬 第 ${index + 1} 关：${sc.name}`)
@@ -731,7 +756,7 @@ function startScenario(state, index, events) {
   // 否则故事导入拍脸没有卡面。aside 是拍脸右侧那张，黑星升起用来亮出「c」密谋。
   const illustrated = scenarioBehavior(state).introSplash?.(state) || null
   const actCard = sc.acts?.[0]
-  info(state, events, introText, { kind: 'story', title: '故事导入', scenarioId: sc.id,
+  if (!scenarioBehavior(state).suppressIntroPresentation?.(state)) info(state, events, introText, { kind: 'story', title: '故事导入', scenarioId: sc.id,
     code: illustrated?.code || actCard?.originalCode || actCard?.code,
     name: actCard?.name || sc.name,
     ...(illustrated?.artName ? { artName: illustrated.artName } : {}),
@@ -787,7 +812,7 @@ function setupScenarioDecks(state, events) {
     state.cultistDeck = shuffle(sc.cultistDeck.slice(), rng)
   }
 
-  scenarioBehavior(state).afterDeckSetup?.(state, events, { info, randomValue, shuffle })
+  scenarioBehavior(state).afterDeckSetup?.(state, events, { info, randomValue, shuffle, api: scenarioRuntime(state, events) })
 
   // 内容层可以在布置结束后声明「需要按正常揭示流程翻开的地点」：
   // 例如《苍白面具》的哈露子密道，揭示时必须派发 locationRule.onReveal、

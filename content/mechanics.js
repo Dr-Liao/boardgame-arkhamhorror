@@ -1,5 +1,6 @@
 // Explicit capabilities with behavioral coverage. Catalog data cannot add one.
 export const supportedMechanics = new Set([
+  'ticBless', 'ticCurse', 'ticSeal', 'ticFlood', 'ticKeys', 'ticVehicles', 'ticRoad', 'ticCovenant', 'ticResearched',
   'assetEnteredPlay', 'handSizeBonus', 'draw', 'targetedEffect', 'heal', 'uses',
   'dunwichEncounterEffects', 'dunwichChaosEffects',
   'extracurricularObjectives', 'cloverClubGambling',

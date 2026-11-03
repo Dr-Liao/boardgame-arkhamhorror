@@ -1,12 +1,19 @@
+import { replacePlayerZoneCards } from './player-zones.js'
 // 能力 API · 检定与投入（Phase 6 · 6d-10，abilityApi 第四批）。
 //
 // 这一组方法覆盖「一次技能检定期间」的读取与修正：加值、重试、投入技能牌、
 // 查看/检索牌堆、描述限制与检定结果、成功后结算、阶段/待决加值。
 // 与前三批相同的工厂形状（createXxxApi(state, events, deps)）。
 
+import { canCommitToTest, payCommitResourceCost } from './commit-rules.js'
+
 export function createTestApi(state, events, deps) {
   const {
     applyHarm,
+    cardDef,
+    registeredEntry,
+    randomValue,
+    shuffle,
     cardName,
     commitIcons,
     describeLimit,
@@ -22,7 +29,50 @@ export function createTestApi(state, events, deps) {
   } = deps
 
   return {
+    captureTreacheryWithSkill: (item, options = {}) => {
+      const test = state.skillTest
+      const code = test?.source?.code || state._treacheryResolving
+      if (!test?.committed.includes(item) || cardDef(code)?.type !== 'treachery') return false
+      state.victoryDisplay ||= []
+      let capture = state.victoryDisplay.find(card => card.id === test.capturedTreacheryId)
+      if (!capture) {
+        const sourceId = test.source?.instanceId || test.source?.id
+        const collections = state.investigators.flatMap(inv => [inv.threat, ...inv.assets.map(asset => asset.attachments || [])])
+          .concat(state.locations.map(location => location.attachments || []),
+            (state.acts || []).map(act => act.attachments || []), (state.agendas || []).map(agenda => agenda.attachments || []))
+        const matches = collections.flatMap(list => list.filter(card => (card.originalCode || card.code) === code
+          && (!sourceId || card.id === sourceId)).map(card => ({ list, card })))
+        const physical = matches.length > 1 ? matches[Number(deps.requestChoice(state, { kind: 'card', seat: test.seat,
+          source: code, prompt: '选择本次检定的诡计实体。', options: matches.map(({card},index) => ({id:String(index),label:card.id,cardCode:code})) }))] : matches[0]
+        if (physical) physical.list.splice(physical.list.indexOf(physical.card), 1)
+        capture = { id: `captured:${state.round}:${state.moveCount}:${state.victoryDisplay.length}`, code,
+          name: cardDef(code).name, victory: 0, attachments: [] }
+        state.victoryDisplay.push(capture)
+        test.capturedTreacheryId = capture.id
+      }
+      capture.attachments.push({ code: item.code, ownerSeat: item.seat, contributesIconsToSameNameTests: options.icons === true })
+      item.destination = 'attached'
+      return true
+    },
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
+    replaceTokenEffect: (context, replacement) => {
+      if (!state.skillTest || context?.when !== 'tokenEffectWouldResolve' || !Number.isFinite(replacement?.delta)) return false
+      context.replacementEffect = { ...replacement }
+      return true
+    },
+    replaceTestSkill: skill => {
+      if (!state.skillTest || !['willpower','intellect','combat','agility'].includes(skill)
+        || !['ST.1','ST.2'].includes(state.skillTest.stage)) return false
+      state.skillTest.skill = skill
+      return true
+    },
+    cancelCurrentSymbol: (context, options = {}) => {
+      if (!state.skillTest || context?.when !== 'symbolRevealed'
+        || state.skillTest.currentToken !== context.token) return false
+      state.skillTest.cancelledSymbol = context.token
+      state.skillTest.cancelledSymbolSource = options.sourceCode || null
+      return true
+    },
     // 第 5 步 P6：「本次检定难度 -N」（序章故事调查员瓦伦蒂诺）。与 addTestValue 分开，
     // 因为「降低难度」与「提高技能值」在结算与展示上是两件事。读点：tests.js 在判定前
     // 统一扣减 state.skillTest.difficultyReduction。
@@ -45,6 +95,28 @@ export function createTestApi(state, events, deps) {
     testResult: () => state.lastTestResult || null,
     describeTest: () => describeTestResult(state.lastTestResult),
     testStage: () => testStage(state.skillTest?.stage),
+    canCommitCard: (seat, code, options) => canCommitToTest(state, state.investigators[seat], code, deps, options),
+    revealAndCommitSkill: (seat, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv || !state.skillTest) return null
+      const revealed = []
+      let found = null
+      while (inv.deck.length) {
+        const code = inv.deck.pop()
+        const card = cardDef(code)
+        info(state, events, `揭示「${cardName(code)}」。`, { kind: 'reveal', card: code })
+        if (card?.type === 'skill' && (!options.class || card.klass === options.class)
+          && canCommitToTest(state, inv, code, deps)) { found = code; break }
+        revealed.push(code)
+      }
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...revealed], () => randomValue(state)), 'shuffle')
+      if (found) {
+        const icons = commitIcons(state, inv, found, state.skillTest.skill)
+        state.skillTest.committed.push({ seat, code: found, icons })
+        state.skillTest.value = (state.skillTest.value || 0) + icons
+      }
+      return found
+    },
     // 「失败后重试」：用同一份 skill / difficulty / source 重跑一次检定，可加值。
     retryTest: (seat, options = {}) => {
       const last = state.lastTestResult
@@ -57,21 +129,41 @@ export function createTestApi(state, events, deps) {
         })
     },
     // 「强制投入」：不询问就把手牌放进本次检定（返回增加的点数）。
-    commitCards: (seat, codes = []) => {
+    commitCards: (seat, codes = [], options = {}) => {
       const owner = state.investigators[seat]
       if (!owner || !state.skillTest) return 0
       let added = 0
       for (const code of codes) {
         const index = owner.hand.indexOf(code)
         if (index < 0) continue
+        if (!canCommitToTest(state, owner, code, deps, options)) continue
+        if (!options.ignoreAdditionalCosts && !payCommitResourceCost(state, owner, code, deps)) continue
         owner.hand.splice(index, 1)
         const icons = commitIcons(state, owner, code, state.skillTest.skill)
         state.skillTest.value = (state.skillTest.value || 0) + icons
-        state.skillTest.committed.push({ seat: owner.seat, code, icons })
+        state.skillTest.committed.push({ seat: owner.seat, code, icons,
+          ...(options.source ? { sourceCode: options.source } : {}),
+          ...(options.onSuccessDestination ? { onSuccessDestination: options.onSuccessDestination } : {}),
+          ...(options.onFailDestination ? { onFailDestination: options.onFailDestination } : {}) })
         info(state, events, `${owner.name} 强制投入「${cardName(code)}」（${icons} 个图标）。`, null, { public: true })
         added += icons
       }
       return added
+    },
+    reduceNextTestDifficulty: (seat, amount) => {
+      const inv = state.investigators[seat]
+      if (!inv || !(amount > 0)) return false
+      const phase = state.immediateAction?.returnPhase || state.phase
+      const previous = inv.nextTestDifficultyReduction
+      inv.nextTestDifficultyReduction = { amount: amount + (previous?.round === state.round && previous.phase === phase ? previous.amount : 0),
+        round: state.round, phase }
+      return true
+    },
+    setTestAutoSuccess: () => {
+      if (!state.skillTest) return false
+      state.skillTest.autoSuccess = true
+      state.skillTest.skipTokens = true
+      return true
     },
     // 2026-10-25 第七轮修复 05029：把进行中的检定改为「资源技能检定」。
     convertTestToResourceSkill: (seat) => {

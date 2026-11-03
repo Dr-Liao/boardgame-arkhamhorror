@@ -203,7 +203,7 @@ export function resolveLostInTheWoods(state, act, api) {
   return true
 }
 
-export const scenarioApproximations = Object.freeze([
+export const migrationHistory = Object.freeze([
   '05062 被污染的井：引擎没有「跨地点投入」的修正目标；用 canCommitCard/commitIconMultiplier 近似——其他森林地点的调查员对本地点检定各可投入 1 张并只算 1 个图标。',
   '05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1）；团队每轮一次（05058）/每人每轮一次（05060）用 scenarioFlags 记录，并通过 behavior.fastActions 接入引擎 playerWindow（player-window-fast-actions 原语），任意玩家窗口可发动、经 behavior.performAction 分派到地点条目。',
   '「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError/movementError 在 act1–2 拒绝进入别人面前的地点（引擎 movementError 已在所有阶段传目标地点，效果移动与神话/剧情阶段同样受限；act2 背面解锁）。静态连线使用印刷符号图（森林本就互连）。',
@@ -222,7 +222,7 @@ export const behavior = {
   ...encounterRules,
   id: 'theWitchingHour',
   implementedEncounterCodes,
-  scenarioApproximations,
+  migrationHistory,
   scenarioGaps: [],
   roundEndActIndex: 0,
 
@@ -481,7 +481,7 @@ export const behavior = {
   commitIconMultiplier(state, owner, commitLocation) {
     const base = encounterRules.commitIconMultiplier?.(state, owner, commitLocation) || 1
     // 05062：其他森林地点→本地点的检定，跨地点投入只算 1 个图标（引擎只有倍率读点；
-    // 若玩家投入多图标卡仍按原图标数计入，属已知近似，见 scenarioApproximations）。
+    // 若玩家投入多图标卡仍按原图标数计入，属已知近似，见 migrationHistory）。
     const flags = state.scenarioFlags || {}
     if (!flags.taintedWellInPlay) return base
     return base

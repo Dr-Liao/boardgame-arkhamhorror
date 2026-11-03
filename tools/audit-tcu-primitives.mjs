@@ -180,7 +180,9 @@ async function verifyChecks(checks = []) {
 // 测试实跑
 // ---------------------------------------------------------------------------
 
+const testRunCache = new Map()
 function runTestFile(path) {
+  if (testRunCache.has(path)) return testRunCache.get(path)
   const absolute = abs(path)
   if (!existsSync(absolute)) return { path, exists: false, ok: false, tests: 0, fail: 0, skipped: true, note: '测试文件不存在' }
   const run = spawnSync(process.execPath, ['--test', absolute], { cwd: ROOT, encoding: 'utf8', timeout: 180000 })
@@ -188,7 +190,7 @@ function runTestFile(path) {
   const tests = Number((output.match(/^ℹ tests (\d+)$/m) || output.match(/^# tests (\d+)$/m) || [])[1] || 0)
   const fail = Number((output.match(/^ℹ fail (\d+)$/m) || output.match(/^# fail (\d+)$/m) || [])[1] || 0)
   // 产物必须可复算（--check 逐字节比对），所以不写耗时/原始输出；只写稳定的计数与退出码。
-  return {
+  const result = {
     path,
     exists: true,
     ok: run.status === 0 && fail === 0 && tests > 0,
@@ -197,6 +199,8 @@ function runTestFile(path) {
     exitCode: run.status,
     skipped: false,
   }
+  testRunCache.set(path, result)
+  return result
 }
 
 // ---------------------------------------------------------------------------

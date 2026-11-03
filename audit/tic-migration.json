@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theInnsmouthConspiracy",
+  "status": "catalog-only",
+  "playable": false,
+  "earlyAccess": false,
+  "equivalenceCertified": false,
+  "generatedBy": "node tools/audit-tic.mjs --write",
+  "stages": {
+    "P0": "verified",
+    "P1": "verified",
+    "P2": "verified",
+    "P3": "verified",
+    "P4": "verified",
+    "P5": "verified",
+    "P6": "verified"
+  },
+  "summary": {
+    "records": 361,
+    "partitions": {
+      "ticCampaign": 252,
+      "ticInvestigators": 16,
+      "ticPlayer": 93
+    },
+    "sourceFiles": 359,
+    "mechanisms": 44,
+    "newPrimitives": 13,
+    "reusedPrimitives": 7,
+    "keywords": 18,
+    "rulebookEntries": 10
+  },
+  "sourcePolicy": {
+    "root": "参考资源/ArkhamHorror-main",
+    "scopeSha256": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
+    "scanSha256": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
+    "canonicalSnapshots": "audit/tic-*.json",
+    "runtimeArtifacts": "大厅根目录 artifacts/migration/tic/",
+    "sourceDriftBlocksCheck": true
+  },
+  "confirmations": {
+    "scenarios": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "thePitOfDespair",
+          "code": "07041",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js"
+          ]
+        },
+        {
+          "id": "theVanishingOfElinaHarper",
+          "code": "07056",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js"
+          ]
+        },
+        {
+          "id": "inTooDeep",
+          "code": "07123",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js"
+          ]
+        },
+        {
+          "id": "devilReef",
+          "code": "07163",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js"
+          ]
+        },
+        {
+          "id": "horrorInHighGear",
+          "code": "07198",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js"
+          ]
+        },
+        {
+          "id": "aLightInTheFog",
+          "code": "07231",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js"
+          ]
+        },
+        {
+          "id": "theLairOfDagon",
+          "code": "07274",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js"
+          ]
+        },
+        {
+          "id": "intoTheMaelstrom",
+          "code": "07311",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/tic-scope.json",
+            "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js"
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "status": "verified",
+      "items": [
+        {
+          "id": "bless",
+          "ruleId": "ticBless",
+          "cards": [
+            "07001",
+            "07006",
+            "07007",
+            "07017",
+            "07018",
+            "07019",
+            "07020",
+            "07022",
+            "07030",
+            "07031",
+            "07033",
+            "07034",
+            "07035",
+            "07036",
+            "07037",
+            "07109",
+            "07110",
+            "07115",
+            "07120",
+            "07122",
+            "07153",
+            "07156",
+            "07162",
+            "07190",
+            "07194",
+            "07196",
+            "07197",
+            "07220",
+            "07221",
+            "07224",
+            "07225",
+            "07229",
+            "07230",
+            "07262",
+            "07269",
+            "07272",
+            "07287",
+            "07300b",
+            "07301",
+            "07302",
+            "07308",
+            "07309"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "curse",
+          "ruleId": "ticCurse",
+          "cards": [
+            "07007",
+            "07022",
+            "07023",
+            "07026",
+            "07028",
+            "07030",
+            "07032",
+            "07033",
+            "07035",
+            "07037",
+            "07038",
+            "07039",
+            "07112",
+            "07113",
+            "07115",
+            "07116",
+            "07117",
+            "07118",
+            "07119",
+            "07120",
+            "07136",
+            "07151",
+            "07155",
+            "07156",
+            "07162",
+            "07191",
+            "07192",
+            "07193",
+            "07194",
+            "07195",
+            "07222",
+            "07224",
+            "07225",
+            "07226",
+            "07227",
+            "07228",
+            "07229",
+            "07230",
+            "07263",
+            "07265",
+            "07268",
+            "07271",
+            "07274",
+            "07275",
+            "07276",
+            "07277",
+            "07278",
+            "07281",
+            "07289",
+            "07293",
+            "07294",
+            "07296",
+            "07297",
+            "07298",
+            "07300",
+            "07300b",
+            "07306",
+            "07307",
+            "07308"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "seal",
+          "ruleId": "ticSeal",
+          "cards": [
+            "07019",
+            "07026",
+            "07040",
+            "07045",
+            "07052",
+            "07153",
+            "07196",
+            "07221",
+            "07252",
+            "07262",
+            "07268",
+            "07271",
+            "07272",
+            "07301",
+            "07302"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "vehicle",
+          "ruleId": "ticVehicles",
+          "cards": [
+            "07099",
+            "07163",
+            "07164",
+            "07165",
+            "07166",
+            "07178",
+            "07183",
+            "07187",
+            "07188",
+            "07198",
+            "07199",
+            "07200",
+            "07201",
+            "07202",
+            "07204a",
+            "07204b",
+            "07204c",
+            "07205a",
+            "07205b",
+            "07208a",
+            "07208b",
+            "07208c",
+            "07209a",
+            "07209b",
+            "07210",
+            "07211a",
+            "07211b",
+            "07212a",
+            "07212b",
+            "07213",
+            "07216",
+            "07217",
+            "07218",
+            "07219"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "road",
+          "ruleId": "ticRoad",
+          "cards": [
+            "07204a",
+            "07204b",
+            "07204c",
+            "07205a",
+            "07205b",
+            "07206a",
+            "07206b",
+            "07207a",
+            "07207b",
+            "07208a",
+            "07208b",
+            "07208c",
+            "07209a",
+            "07209b",
+            "07210"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "researched",
+          "ruleId": "ticResearched",
+          "cards": [
+            "07191",
+            "07192"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "covenant",
+          "ruleId": "ticCovenant",
+          "cards": [
+            "07110",
+            "07113",
+            "07116",
+            "07120",
+            "07122"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "exceptional",
+          "ruleId": "upgrade",
+          "cards": [
+            "07224",
+            "07225",
+            "07265",
+            "07268",
+            "07303",
+            "07307"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "permanent",
+          "ruleId": "permanent",
+          "cards": [
+            "07110",
+            "07113",
+            "07116",
+            "07120",
+            "07122",
+            "07151",
+            "07303"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "fast",
+          "ruleId": "fast",
+          "cards": [
+            "07008",
+            "07010",
+            "07020",
+            "07025",
+            "07027",
+            "07030",
+            "07031",
+            "07034",
+            "07037",
+            "07160",
+            "07161",
+            "07191",
+            "07263",
+            "07269",
+            "07271",
+            "07272",
+            "07305"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "hunter",
+          "ruleId": "hunter",
+          "cards": [
+            "07011",
+            "07053",
+            "07062b",
+            "07086",
+            "07094",
+            "07105",
+            "07144",
+            "07145",
+            "07146",
+            "07147",
+            "07164b",
+            "07165b",
+            "07182",
+            "07183",
+            "07198",
+            "07199b",
+            "07202",
+            "07213",
+            "07214",
+            "07215",
+            "07219",
+            "07253",
+            "07259",
+            "07294",
+            "07330b",
+            "07331b",
+            "07332",
+            "07333",
+            "07334"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "aloof",
+          "ruleId": "aloof",
+          "cards": [
+            "07038",
+            "07061",
+            "07076",
+            "07077",
+            "07078",
+            "07079",
+            "07080",
+            "07081",
+            "07086",
+            "07124",
+            "07125",
+            "07126",
+            "07127",
+            "07231",
+            "07254",
+            "07255",
+            "07280",
+            "07281",
+            "07282"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "massive",
+          "ruleId": "massive",
+          "cards": [
+            "07062b",
+            "07144",
+            "07164b",
+            "07165b",
+            "07199b",
+            "07292b",
+            "07330b",
+            "07331b"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "retaliate",
+          "ruleId": "retaliate",
+          "cards": [
+            "07062b",
+            "07164b",
+            "07165b",
+            "07199b",
+            "07214",
+            "07253",
+            "07254",
+            "07330b",
+            "07331b"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "surge",
+          "ruleId": "surge",
+          "cards": [
+            "07055",
+            "07087",
+            "07091",
+            "07092",
+            "07093",
+            "07100",
+            "07149",
+            "07187",
+            "07254",
+            "07255",
+            "07256",
+            "07298",
+            "07299",
+            "07337"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "peril",
+          "ruleId": "peril",
+          "cards": [
+            "07100",
+            "07101",
+            "07335",
+            "07336"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "victory",
+          "ruleId": "victory",
+          "cards": [
+            "07061",
+            "07075",
+            "07076",
+            "07077",
+            "07078",
+            "07079",
+            "07080",
+            "07081",
+            "07199",
+            "07200",
+            "07201",
+            "07234",
+            "07237",
+            "07259",
+            "07280",
+            "07282",
+            "07315",
+            "07316",
+            "07317",
+            "07318"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        },
+        {
+          "id": "revelation",
+          "ruleId": "revelation",
+          "cards": [
+            "07007",
+            "07016",
+            "07031",
+            "07039",
+            "07040",
+            "07054",
+            "07055",
+            "07070",
+            "07071",
+            "07072",
+            "07073",
+            "07074",
+            "07075",
+            "07076",
+            "07077",
+            "07078",
+            "07079",
+            "07080",
+            "07081",
+            "07087",
+            "07090",
+            "07091",
+            "07092",
+            "07093",
+            "07095",
+            "07096",
+            "07097",
+            "07098",
+            "07099",
+            "07100",
+            "07101",
+            "07106",
+            "07107",
+            "07146",
+            "07147",
+            "07148",
+            "07149",
+            "07184",
+            "07185",
+            "07186",
+            "07187",
+            "07188",
+            "07216",
+            "07217",
+            "07218",
+            "07219",
+            "07256",
+            "07257",
+            "07258",
+            "07259",
+            "07260",
+            "07273",
+            "07275",
+            "07276",
+            "07295",
+            "07296",
+            "07297",
+            "07298",
+            "07299",
+            "07335",
+            "07336",
+            "07337"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/tic-mechanism-scan.json",
+            "audit/tic-primitive-plan.json",
+            "audit/tic-node-acceptance.json",
+            "web/tic-rules.js"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "evidence": [
+        "web/tic-rules.js",
+        "audit/tic-browser-acceptance.json"
+      ]
+    }
+  },
+  "regressionEvidence": [
+    "audit/tic-baseline.json",
+    "audit/tic-node-acceptance.json",
+    "audit/tic-regression.json",
+    "audit/tic-control-regression.json",
+    "audit/tic-p4-baseline.json",
+    "audit/tic-interaction-regression.json"
+  ],
+  "interactions": {
+    "status": "verified",
+    "evidence": "audit/tic-interactions.json"
+  },
+  "investigators": {
+    "status": "verified",
+    "evidence": "audit/tic-investigators.json",
+    "items": [
+      {
+        "code": "07001",
+        "status": "verified"
+      },
+      {
+        "code": "07002",
+        "status": "verified"
+      },
+      {
+        "code": "07003",
+        "status": "verified"
+      },
+      {
+        "code": "07004",
+        "status": "verified"
+      },
+      {
+        "code": "07005",
+        "status": "verified"
+      }
+    ]
+  },
+  "players": {
+    "status": "verified",
+    "gates": {
+      "everyCardVerified": true,
+      "implementationCurrent": true,
+      "executedNode": true,
+      "replayUnchanged": true,
+      "fullFastPassed": true,
+      "desktopAndMobile": true,
+      "shardsAndQueue": true
+    },
+    "evidence": [
+      "audit/tic-player-acceptance.json",
+      "audit/tic-player-shards.json",
+      "audit/tic-player-queue.json",
+      "audit/tic-node-acceptance.json",
+      "audit/tic-player-replay.json",
+      "audit/tic-interactions-browser.json",
+      "audit/tic-interaction-regression.json"
+    ],
+    "summary": {
+      "total": 93,
+      "verified": 93,
+      "missing": 0,
+      "simplified": 0,
+      "buildable": 90,
+      "dependencyOnly": 3,
+      "testsPassed": 122
+    }
+  },
+  "remaining": [
+    "P7：共享遭遇、八章规则、幕间、完整中英叙事和冒险指南；占位章尚不注册到生产关卡列表。",
+    "P8：完整战役、失败分支、存档、多人与 AI、真实联机和发布验收；内容不可启动。"
+  ],
+  "gates": {
+    "p0": true,
+    "p1": true,
+    "p2": true,
+    "p3": true,
+    "p4": true,
+    "p5": true,
+    "p6": true
+  }
+}

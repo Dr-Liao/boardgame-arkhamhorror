@@ -17,7 +17,7 @@ const IMG = '/mods/arkhamhorror/img/'
 const PHASES = [
   ['mythos', 'situation.phase.mythos.name', 'situation.phase.mythos.desc', 'eye'],
   ['investigation', 'situation.phase.investigation.name', 'situation.phase.investigation.desc', 'clue'],
-  ['enemy', 'situation.phase.enemy.name', 'situation.phase.enemy.desc', 'sword'],
+  ['enemy', 'situation.phase.enemy.name', 'situation.phase.enemy.desc', 'combat'],
   ['upkeep', 'situation.phase.upkeep.name', 'situation.phase.upkeep.desc', 'resource'],
 ]
 const STAGES = [['ST.1', 'situation.stage.begin'], ['ST.2', 'situation.stage.commit'], ['ST.3', 'situation.stage.reveal'],
@@ -232,7 +232,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
           tableIcon('book'), h('span', {}, h('b', {}, t('situation.beneath', { count: inv.beneathCount })))) : null,
         (hunch?.deck || hunch?.revealed) ? h('span', { className: 'ah-situ-deck ah-situ-hunch', 'data-hunch-deck': hunch.deck },
           tableIcon('eye'), h('span', {}, h('b', {}, t('situation.hunch', { count: hunch.deck })))) : null),
-      engaged.length ? h('div', { className: 'ah-situ-engaged' }, tableIcon('sword'), t('situation.engaged', { names: engaged.join(separator()) })) : null,
+      engaged.length ? h('div', { className: 'ah-situ-engaged' }, tableIcon('combat'), t('situation.engaged', { names: engaged.join(separator()) })) : null,
       trauma.physical || trauma.mental ? h('div', { className: 'ah-situ-trauma' }, t('situation.trauma', { physical: trauma.physical || 0, mental: trauma.mental || 0 })) : null)
   }
 
@@ -341,12 +341,12 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       .map(id => (st.locations || []).find(location => location.id === id)?.name || id)
     const depths = st.depths
     const rows = [
-      [t('situation.tfa.vengeance'), String(st.vengeance ?? 0), 'sword'],
+      [t('situation.tfa.vengeance'), String(st.vengeance ?? 0), 'combat'],
       [t('situation.tfa.yigsFury'), String(st.yigsFury ?? 0), 'doom'],
       ...(flags.depthLevel != null ? [[t('situation.tfa.depthLabel'), t('situation.tfa.depth', { level: flags.depthLevel }), 'action']] : []),
-      ...(depths ? [[t('situation.tfa.pursuit'), t('situation.tfa.cards', { count: depths.pursuit.length }), 'sword']] : []),
+      ...(depths ? [[t('situation.tfa.pursuit'), t('situation.tfa.cards', { count: depths.pursuit.length }), 'combat']] : []),
       ...(depths && depths.childrenOfValusia.length
-        ? [[t('situation.tfa.childrenOfValusia'), t('situation.tfa.cards', { count: depths.childrenOfValusia.length }), 'sword']] : []),
+        ? [[t('situation.tfa.childrenOfValusia'), t('situation.tfa.cards', { count: depths.childrenOfValusia.length }), 'combat']] : []),
       ...(depths && depths.agendaAttachments.length
         ? [[t('situation.tfa.agendaAttachments'), t('situation.tfa.cards', { count: depths.agendaAttachments.length }), 'doom']] : []),
       ...(flags.pillars != null ? [[t('situation.tfa.pillars'), t('situation.tfa.marks', { count: flags.pillars }), 'star']] : []),
@@ -360,7 +360,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
         ? [[t('situation.tfa.alejandro'), alejandro.enemyId ? t('situation.tfa.takenByEnemy')
           : alejandroPlace ? t('situation.tfa.atLocation', { location: alejandroPlace }) : t('situation.tfa.unknown'), 'book']]
         : []),
-      ...(preyNames.length ? [[t('situation.tfa.itaquaPrey'), preyNames.join(separator()), 'sword']] : []),
+      ...(preyNames.length ? [[t('situation.tfa.itaquaPrey'), preyNames.join(separator()), 'combat']] : []),
       ...(destinationNames.length ? [[t('situation.tfa.itaquaDestinations'), destinationNames.join(separator()), 'action']] : []),
     ]
     return h('div', { className: 'ah-campaign-tfa', role: 'group', 'aria-label': t('situation.tfa.aria') },

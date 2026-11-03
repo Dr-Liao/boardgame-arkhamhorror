@@ -16,7 +16,7 @@ import { createScenarioRuntime } from '../src/engine/scenario-runtime.js'
 import * as engine from '../src/engine/engine.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import {
-  activeInvestigators, applySwarmOverflow, discardEncounterTop, encounterRules, flagOf, performVeiledFlip,
+  activeInvestigators, discardEncounterTop, encounterRules, flagOf, performVeiledFlip,
   playerOrder, placeSwarmCardsFor, swarmBlockedReasonOf, veiledFastActions, watchEncounterDeckEmpty,
 } from '../content/campaigns/theDreamEaters/encounter-rules.js'
 
@@ -356,39 +356,6 @@ test('encounter-rules：敌人入场按 Swarming 规格放置蜂拥卡（固定�
   const host = { id: 'e2', code: '06145', name: '乌撒之猫', health: 2, damageTaken: 0 }
   placeSwarmCardsFor(perInvestigator, host, api)
   assert.equal(placed[1].count, 2, '2 位调查员 → per_investigator 1 × 2')
-})
-
-test('encounter-rules：蜂拥头领清空前不可击败；溢出伤害转给蜂拥卡', () => {
-  const enemy = {
-    id: 'e1', code: '06145', name: '乌撒之猫', health: 2, damageTaken: 3,
-    swarmCards: [
-      { id: 's1', code: 'cat1', defeated: false, health: 1 },
-      { id: 's2', code: 'cat2', defeated: false, health: 1 },
-    ],
-  }
-  assert.match(swarmBlockedReasonOf(enemy), /蜂拥卡/)
-  const state = baseState({ encounterDiscard: [] })
-  const removed = []
-  const api = {
-    info: () => {},
-    healEnemy: (target, amount) => { target.damageTaken = Math.max(0, target.damageTaken - amount) },
-    swarm: {
-      splitDamage: () => ({ toHost: 0, toSwarm: 1, defeatedSwarm: ['s1'], leftover: 0 }),
-      remove: (host, id) => {
-        removed.push(id)
-        const card = host.swarmCards.find(item => item.id === id)
-        if (card) card.defeated = true
-      },
-    },
-  }
-  const defeated = applySwarmOverflow(state, enemy, api)
-  assert.equal(defeated, 1)
-  assert.deepEqual(removed, ['s1'])
-  assert.equal(enemy.damageTaken, 2, '超出生命的 1 点伤害被撤回')
-  assert.deepEqual(state.encounterDiscard, ['cat1'], '被击败的蜂拥卡进遭遇弃牌堆')
-  assert.match(swarmBlockedReasonOf(enemy), /1 张蜂拥卡/, '还剩 1 张，仍不可击败')
-  enemy.swarmCards[1].defeated = true
-  assert.equal(swarmBlockedReasonOf(enemy), null, '清空后可击败')
 })
 
 test('encounter-rules：Veiled [fast] 翻面行动与执行（读背面故事卡）', () => {

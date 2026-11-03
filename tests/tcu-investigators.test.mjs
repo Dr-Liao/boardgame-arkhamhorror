@@ -421,7 +421,7 @@ test('P6 普雷斯顿：家族遗产开局入场，卡牌效果获得的资源�
       descriptor: { code: '01016', label: '测试获得资源', resolve: ({ api }) => api.gainResources(0, 3) },
     })
   })
-  assert.equal(me(state).resources, before + 3)
+  assert.equal(me(state).resources, before, '卡效果资源只进入家族遗产')
   assert.equal(me(state).assets.find(asset => asset.code === '05011').resources, 3, '资源寄存到家族遗产')
 })
 
@@ -432,12 +432,12 @@ test('P6 普雷斯顿：回合开始放 4 资源，支付先扣寄存部分，�
   inv.assets = [{ id: 'family', code: '05011', exhausted: false }]
   inv.resources = 6
   bank.beginTurn(state, inv, [])
-  assert.equal(inv.resources, 10)
+  assert.equal(inv.resources, 6)
   assert.equal(bank.bankedOf(inv), 4)
   assert.equal(bank.projection(inv).banked, 4)
   // 花掉 2 点：走统一支付入口，先扣寄存标记；回合结束时只剩 2 点寄存被弃回。
   bank.spendResources(state, inv, 2, [])
-  assert.equal(inv.resources, 8)
+  assert.equal(inv.resources, 6)
   assert.equal(bank.bankedOf(inv), 2, '支付先扣家族遗产上的寄存资源')
   bank.endTurn(state, inv, [])
   assert.equal(inv.resources, 6)
@@ -464,10 +464,10 @@ test('P6 普雷斯顿：普通支付（打牌）先扣家族遗产上的寄存�
   settle(state)
   const after = me(state)
   const family = after.assets.find(asset => asset.code === '05011')
-  assert.equal(after.resources, 4, '资源池 6 → 4')
+  assert.equal(after.resources, 6, '支付选择家族遗产，资源池保留')
   assert.equal(family.resources, 2, '先扣家族遗产上的寄存资源，而不是留到回合末白弃')
   bankEngine.endTurn(state, after, [])
-  assert.equal(me(state).resources, 2, '自己的 2 点保留；剩下 2 点寄存被弃')
+  assert.equal(me(state).resources, 6, '资源池保留，回合结束只弃卡上资源')
   assert.equal(me(state).assets.find(asset => asset.code === '05011')?.resources ?? 0, 0)
 })
 
@@ -476,9 +476,9 @@ test('P6 普雷斯顿：能力层费用（payAbilityCost）同样先扣寄存资
   const inv = me(state)
   inv.assets = [{ id: 'family', code: '05011', exhausted: false, resources: 4 }]
   inv.resources = 6
-  assert.equal(payAbilityCost(state, inv, null, { resources: 2 }, []), true)
-  assert.equal(inv.resources, 4)
-  assert.equal(inv.assets[0].resources, 2, '能力费用也先扣寄存资源')
+  run(state, current => { assert.equal(payAbilityCost(current, me(current), null, { resources: 2 }, []), true) })
+  assert.equal(me(state).resources, 6)
+  assert.equal(me(state).assets[0].resources, 2, '支付选择家族遗产')
 })
 
 test('P6 普雷斯顿旧印：+0，可花 2 资源改为自动成功', () => {
@@ -1789,7 +1789,7 @@ test('R7 05008：blockHealOtherCards 阻止治疗其它卡牌，但不阻止治�
   assert.equal(me(state).horror, 1)
 })
 
-test('R7 05011：withdrawBanked 清掉寄存标记（合并模型：资源池不变）', () => {
+test('R7 05011：withdrawBanked 将卡上资源移动到真实资源池', () => {
   const state = investigatorFixture('05003')
   const inv = me(state)
   inv.resources = 10
@@ -1801,7 +1801,7 @@ test('R7 05011：withdrawBanked 清掉寄存标记（合并模型：资源池不
   settle(state)
   const asset = me(state).assets.find(item => item.code === '05011')
   assert.equal(asset?.resources || 0, 0, '寄存标记被清空')
-  assert.equal(me(state).resources, 10, '合并模型下资源池数值不变（这些资源不会在回合末流失）')
+  assert.equal(me(state).resources, 14, '卡上4资源移动至资源池')
 })
 
 // ---------------------------------------------------------------------------
@@ -2020,11 +2020,11 @@ test('05013 beneath 通道：底下的 fromHand 反应描述子（05324）在能
   let flipped = false
   run(state, current => {
     const ctx = {
-      when: 'negativeTokenRevealed', seat: 0, location: current.investigators[0].location,
-      token: '-2', testValue: 0, flipTokenSign: false, prompt: '测试负修正',
+      when: 'tokenReveal', seat: 0, location: current.investigators[0].location,
+      token: '-2', tokenDelta: -2, testValue: 0, prompt: '测试负修正',
     }
-    reactionWindow(current, 'negativeTokenRevealed', ctx, [])
-    if (ctx.flipTokenSign) flipped = true
+    reactionWindow(current, 'tokenReveal', ctx, [])
+    if (ctx.replacementToken === 'eldersign') flipped = true
   }, pending => {
     if (pending.kind !== 'reaction') return null
     const option = pending.options.find(item => item.cardCode === '05324')

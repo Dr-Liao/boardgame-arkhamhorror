@@ -16,7 +16,7 @@
 // 文档化的「双击地图空白处适配」手势（幂等，修复前后都成立），再用 toBeInViewport 断言地点可见。
 //
 // 证据命令（5 个 spec 必须一次跑齐，报告器一次写文件）：
-//   npx playwright test --config playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs \
+//   npx playwright test --config tests/playwright/playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs \
 //     tcu-scenarios.browser.mjs tcu-release.browser.mjs tcu-media.browser.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
@@ -154,6 +154,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     const setup = page.locator('.ah-hub-setup')
     await expect(setup).toBeVisible()
     await expect(setup).toHaveAttribute('aria-label', '调查准备设置')
+    await expect(setup.getByRole('combobox', { name: '战役' }).locator('option[value="theCircleUndone"]')).not.toContainText('提前体验')
     await setup.getByRole('combobox', { name: '战役' }).selectOption('theCircleUndone')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
     const [startResponse] = await Promise.all([

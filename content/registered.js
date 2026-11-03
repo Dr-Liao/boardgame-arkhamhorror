@@ -70,11 +70,15 @@ import * as tdeDarkSideOfTheMoon from './campaigns/theDreamEaters/scenarios/dark
 import * as tdePointOfNoReturn from './campaigns/theDreamEaters/scenarios/pointOfNoReturn/index.js'
 import * as tdeWhereTheGodsDwell from './campaigns/theDreamEaters/scenarios/whereTheGodsDwell/index.js'
 import * as tdeWeaverOfTheCosmos from './campaigns/theDreamEaters/scenarios/weaverOfTheCosmos/index.js'
+import { manifest as ticCampaignPack } from './packs/ticCampaign/manifest.js'
+import { manifest as ticInvestigators } from './packs/ticInvestigators/manifest.js'
+import { manifest as ticPlayer } from './packs/ticPlayer/manifest.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
     carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer,
-    tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer],
+    tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer,
+    ticCampaignPack, ticInvestigators, ticPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
     theDreamEaters],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,

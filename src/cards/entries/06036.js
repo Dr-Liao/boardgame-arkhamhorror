@@ -11,21 +11,24 @@
 //   · 显现：资产型弱点放在游戏区域（weaknessPlaysAsAsset + weakness type threat 的资产分支）。
 //   · [action]：在同地点另一位调查员的「[[道具]]支援 / 2 资源」中二选一并夺取（api.giveAsset /
 //     api.loseResources + api.gainResources），然后把自身从场上洗回牌库（api.moveCard → api.shuffleDeck）。
-//   · 显式简化：「当你的回合结束时受到 1 点恐惧」未接线——引擎的回合结束强制只读威胁区
-//     (threatEffect.forced.onTurnEnd / forcedTurnEndPayOrDiscard)，游戏区域里的资产没有回合结束读点。
+//   · 回合结束强制通过资产可见的 turnEnded 窗口结算。
 
 export default {
   code: '06036',
-  simplified: true,
   // 资产型弱点放在游戏区域（weakness.js 的 weaknessPlaysAsAsset 分支）。
   weaknessPlaysAsAsset: true,
-  note: '未实现：「当你的回合结束时受到 1 点恐惧」——引擎的回合结束强制读点只覆盖威胁区，游戏区域的资产没有读点；'
-    + '已实现放置入场、[action] 夺取道具/资源并洗回牌库。',
   abilities: [
     {
       kind: 'weakness',
       label: '显现：放置入场，放到你的游戏区域',
       weakness: { type: 'threat' },
+    },
+    {
+      kind: 'forced',
+      trigger: 'turnEnded',
+      label: '你的回合结束时：受到 1 点恐惧',
+      criteria: [({ inv, context }) => context?.seat === inv.seat],
+      resolve: ({ inv, api }) => api.harm(inv.seat, { horror: 1 }),
     },
     {
       kind: 'action',

@@ -1,0 +1,126 @@
+{
+  "id": "heartOfTheEldersPart2",
+  "campaignId": "theForgottenAge",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌：昆扬、久远腹地、伊格的使徒、伊格的毒液、失落遗迹、致死陷阱、毒药。这些遭遇组的图标为："
+            },
+            {
+              "text": "将昆扬之口放置入场，(下有深渊)面朝上。每位调查员从昆扬之口(下有深渊)开始游戏。"
+            },
+            {
+              "text": "查找收藏，找出你的剧本日志中“丛林监视着你”旁边的括号内列出的卡牌。将这些卡牌加入胜利区。"
+            },
+            {
+              "text": "将深入幽嘶地点放在一边，位于场外。"
+            },
+            {
+              "text": "构建探索牌库。收取昆扬遭遇组剩余的5张单面地点卡牌，并与以下遭遇卡牌每种一张混洗：落入陷阱、无路可退、一片漆黑、致命错误。"
+            },
+            {
+              "text": "将不在调查员牌库中的所有中毒弱点放在一边。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员被击败)：你苏醒过来，发现自己处在一个更加寒冷、更深入的地方，躺在一块粗糙的石块上。你站起身来，环视周围环境，注意到一抹红光，它似乎是从你离开的洞穴发出的。你跟着光芒走了好几分钟，最后在其引领下来到一个亮堂的门廊，其中布满了石柱。在这间石室遥远的后方，有着一扇华丽而精致的大门，一块石盘被滚到了一旁，开启彼端如炼狱般的领域。\n\n• 检查剧本日志：\n• 如果调查员解救了亚历山卓，进入结局1。\n\n• 如果亚历山卓已失踪，进入结局2。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1:“踏破铁鞋无觅处！幽嘶，万蛇之穴！从瓦卢西亚的灭顶之灾下逃离的、被诅咒的蛇族！”亚历山卓检查着大门，双眼流露出惊奇的神色，兴奋地举起双臂。你听不懂他在说些什么，但你开始有点担心。就在刚才，你身后传来急奔的脚步声，还有一阵咔㗳咔㗳的声音，彷佛你会突然被一支巨钳抓住。几个怪异的生物从你身后的黑暗中现身，你从未见过类似的生物：它们高逾十英呎，有着锥状的身体，躯干末尾还有着四根长短不一的奇异附肢。“你们来了。”亚历山卓平静地说道。其中一个生物以一种刻意的方式击打着自己的两个钳子，作为应答。“夺走他们的意识。”亚历山卓指挥这些生物，“我们已经不需要他们了。”这是你作为人类最后的记忆。\n\n• 如果瓦卢西亚的预示者在本场冒险期间入场：\n• 如果其在于胜利区，划掉剧本日志中的“预示者还活着”。\n\n• 如果其仍在场上或被放在一边，在剧本日志中记录的“预示着还活着”旁边的括号内记录瓦卢西亚的预示者上的伤害点数，替代括号内原本记录的数字。\n\n• 胜利区每有1点复仇点数，在你剧本日志的“伊格之怒”下方作1次记录。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2:直到你进入洞穴的下一层之前，一阵咔㗳咔㗳的声音跟随着你，彷佛你会突然被一支巨钳抓住。几个怪异的生物从你身后的黑暗中现身，你从未见过类似的生物：它们高逾十英尺，有着锥状的身体，躯干末尾还有着四根长短不一的奇异附肢。当你看见这群生物的人类首领时，你十分震惊：那人正是亚历山卓·维拉。“夺走他们的意识。”亚历山卓指挥这些生物，“我们已经不需要他们了。”这是你作为人类最后的记忆。\n\n• 如果瓦卢西亚的预示者在本场冒险期间入场：\n• 如果其在于胜利区，划掉剧本日志中的“预示者还活着”。\n\n• 如果其仍在场上或被放在一边，在剧本日志中记录的“预示着还活着”旁边的括号内记录瓦卢西亚的预示者上的伤害点数，替代括号内原本记录的数字。\n\n• 胜利区每有1点复仇点数，在你剧本日志的“伊格之怒”下方作1次记录。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: K’n-yan, Heart of the Elders, Agents of Yig, Yig’s Venom, Forgotten Ruins, Deadly Traps, and Poison. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Put the Mouth of K’n-yan into play, (The Depths Beneath) side faceup. Each investigator begins play at the Mouth of K’n-yan (The Depths Beneath)."
+            },
+            {
+              "text": "Search the collection for each card listed in parentheses next to “the jungle watches” in your Campaign Log. Add those cards to the victory display."
+            },
+            {
+              "text": "Set the Descent to Yoth location aside, out of play."
+            },
+            {
+              "text": "Create the exploration deck. This is done by taking the 5 remaining single-sided locations from the K’n-yan encounter set and shuffling them together, along with 1 copy each of the following encounter cards: Pitfall, No Turning Back, Deep Dark, and Final Mistake."
+            },
+            {
+              "text": "Set aside each Poisoned weakness that is not already in an investigator’s deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator was defeated): You awaken, lying on rough stone in a place much colder and deeper than before. You stand and take stock of your surroundings, noting the red glow that seems to emanate from the cavern to your left. You follow it for several minutes, until finally it leads you into a well-lit entryway, filled with stone pillars. At the far end of the room lies an ornate and elaborately decorated doorway, a stone disc that has been rolled aside to unveil the hellish realm beyond.\n\n• Check Campaign Log.\n• If the investigators rescued Alejandro, proceed to Resolution 1.\n\n• If Alejandro is missing, proceed to Resolution 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: “Finally! Yoth, cavern of the serpents! The cursed ones, who fled the destruction of Valusia!” Alejandro examines the entryway with wonder in his eyes, arms raised in exultation. You know not of what he speaks, and you are beginning to grow worried. Just then, something scutters behind you, and a sound like the click-clacking of a claw catches you by surprise. Emerging from the darkness behind you are several alien creatures, the likes of which you have never seen: ten feet tall, with conical bodies that end in four strange appendages of varying lengths. “There you are,” Alejandro says calmly. One of the creatures responds by clicking its claws against one another in a deliberate pattern. “Take their minds,” Alejandro commands the creatures. “We have no further use for them.” It is your last human memory.\n\n• If the Harbinger of Valusia entered play during this scenario:\n• If it is in the victory display, cross out “the Harbinger is still alive” in your Campaign Log.\n\n• If it is still in play or is set aside, next to “the Harbinger is still alive” in your Campaign Log, record in parentheses how much damage is on the Harbinger of Valusia, replacing the number that was previously in parentheses.\n\n• For each vengeance point in the victory display, record one tally mark under “Yig’s Fury” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Before you are able to cross into the next layer of the cavern, a sound like the click-clacking of a claw catches you by surprise. Emerging from the darkness behind you are several alien creatures, the likes of which you have never seen: ten feet tall, with conical bodies that end in four strange appendages of varying lengths. You are stunned to see a human figure standing at the head of the group: none other than Alejandro Vela. “Take their minds,” Alejandro commands the creatures. “We have no further use for them.” It is your last human memory.\n\n• If the Harbinger of Valusia entered play during this scenario:\n• If it is in the victory display, cross out “the Harbinger is still alive” in your Campaign Log.\n\n• If it is still in play or is set aside, next to “the Harbinger is still alive” in your Campaign Log, record in parentheses how much damage is on the Harbinger of Valusia, replacing the number that was previously in parentheses.\n\n• For each vengeance point in the victory display, record one tally mark under “Yig’s Fury” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

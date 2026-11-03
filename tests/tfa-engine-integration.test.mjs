@@ -112,3 +112,24 @@ test('M3 引擎路径：探索与存档恢复给出同一结果', () => {
   }
   assert.deepEqual({ ...left, pendingChoice: null }, { ...right, pendingChoice: null })
 })
+
+test('探索跳过不相连地点，翻到连接地点才成功，跳过的卡洗回牌库', () => {
+  const state = fixture('tfa-explore-matcher')
+  const inv = state.investigators[0]
+  inv.actionsLeft = 3
+  state.explorationDeck = ['riverCanyon', 'circuitousTrail']
+  applyMove(state, 0, legalMoves(state).find(move => move.action === 'explore'))
+  settle(state)
+  assert.equal(state.investigators[0].location, 'riverCanyon')
+  assert.deepEqual(state.explorationDeck, ['circuitousTrail'])
+  assert.equal(state.investigators[0].tfaExploredThisTurn, true)
+
+  const noMatch = fixture('tfa-explore-no-match')
+  noMatch.investigators[0].actionsLeft = 3
+  noMatch.explorationDeck = ['circuitousTrail']
+  applyMove(noMatch, 0, legalMoves(noMatch).find(move => move.action === 'explore'))
+  settle(noMatch)
+  assert.equal(noMatch.investigators[0].location, 'expeditionCamp')
+  assert.deepEqual(noMatch.explorationDeck, ['circuitousTrail'])
+  assert.notEqual(noMatch.investigators[0].tfaExploredThisTurn, true)
+})

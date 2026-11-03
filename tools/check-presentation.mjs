@@ -13,7 +13,7 @@ const server = createServer({ mods: await loadMods() })
 await server.ready
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
 try {
-  const args = ['node_modules/@playwright/test/cli.js', 'test', '--config', 'games/arkhamhorror/playwright.config.mjs', ...process.argv.slice(2)]
+  const args = ['node_modules/@playwright/test/cli.js', 'test', '--config', 'games/arkhamhorror/tests/playwright/playwright.config.mjs', ...process.argv.slice(2)]
   const child = spawn(process.execPath, args, { stdio: 'inherit', windowsHide: true, env: { ...process.env, BOARDGAME_EXTERNAL_SERVER: '1', BOARDGAME_PORT: String(server.address().port) } })
   const [code] = await once(child, 'exit')
   process.exitCode = code ?? 1

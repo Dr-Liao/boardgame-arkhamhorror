@@ -21,6 +21,8 @@ export const HAUNTED_CLAUSES = Object.freeze([
   'placeClue', 'doom', 'spawn', 'attack', 'moveTo', 'choice', 'script',
 ])
 
+import { ignoreLocationTrigger } from './location-effect-scope.js'
+
 const AMOUNT_CLAUSES = new Set([
   'damage', 'horror', 'directDamage', 'directHorror', 'damageAssets',
   'loseAction', 'loseResource', 'discardRandom', 'discardChosen', 'discardAsset', 'placeClue',
@@ -437,6 +439,7 @@ export function createHaunted(deps) {
           picked = available.find(ability => ability.id === String(chosen)) || available[0]
         }
         remaining = remaining.filter(id => id !== picked.id)
+        if (ignoreLocationTrigger(state, loc.id, requestChoice, picked.text || '闹鬼能力')) continue
         if (resolveAbility(state, seat, loc, picked, api, events)) resolved++
         if (inv.defeated || inv.resigned) {
           return { resolved, cancelled: false, reason: 'eliminated', kind, times }

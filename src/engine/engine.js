@@ -1,3 +1,9 @@
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { wrapInvestigatorEffects } from './effect-recipient.js'
+import { createInvestigatorApi } from './investigator-mechanics.js'
+import { createPlayerApi } from './player-mechanics.js'
+import { setTokenCostShroudReader } from './token-cost.js'
+import { notePromiseEvent } from './turn-promises.js'
 // 诡镇奇谈：卡牌版 · 规则引擎（Night of the Zealot 三关简化流程）
 //
 // 职责划分：
@@ -81,7 +87,7 @@ import {
   // Phase 3（D1）：非玩家卡通道的枚举点。
   hasNonPlayerBehavior,
 } from './ability.js'
-import { enumerateTargets, resolveTarget } from './targets.js'
+import { enumerateTargets, resolveTarget, setTargetHooks } from './targets.js'
 import {
   activeEffects, clearEffects, createEffect, effectAbilitySources, effectModifiers, expireEffects,
   removeEffectsFromSource,
@@ -130,11 +136,13 @@ import { attackStyle } from '../integration/attack-style.js'
 import { describeTeamParticipation, investigatorParticipation, investigatorAssigned } from '../ai/ai-participation.js'
 import { narrativeLogTexts } from '../ai/ai-story.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, randomValue, nextInstanceId, stateCompatibilityError, agendaDoom, totalDoom, doomCards, enemyHealthValue } from './rules-state.js'
+import { swarmGroup, returnSwarmCard } from './swarm.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
 import { requestChoice, choiceMoves, choiceSeats, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
 import { introduction, resolutionStory } from '../campaign/story.js'
 import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
 import { roomSeatForEvent } from './lane-runtime.js'
-import { partManifest } from '../campaign/part-flow.js'
+import { partManifest, partFlow } from '../campaign/part-flow.js'
 import { applyCampaignEffect, applyResolutionResults } from '../campaign/campaign-effects.js'
 import { initializeChaosBag, beginChaosTest, drawChaosToken, returnChaosToken, endChaosTest, releaseChaosTokens, sealChaosToken } from './chaos-bag.js'
 import { registerCampaignInvestigator, updateCampaignStatus, replacementCandidates, awardExperience, campaignCardChange, settleExiledCards, availablePurchases, replacementOptions, purchaseCard, upgradeRecord, stagePurchase, finishUpgradeDraft, recommendUpgrade, campaignEnding, refreshArcaneResearch } from '../campaign/campaign.js'
@@ -147,10 +155,14 @@ const SELECTABLE_INVESTIGATORS = SELECTABLE_INVESTIGATOR_CODES
 
 // 修正管线（modifiers.js）通过注入读取能力层注册表，避免两个模块互相 import。
 setModifierRegistry(registeredEntry)
+setTargetHooks({ enemyHealth: (...args) => enemyHealth(...args), enemyEvade: (state, enemy, seat) => enemyEvadeValue(state, enemy, state.investigators[seat]),
+  canDamageEnemy: (state, enemy, seat, source) => canDamageEnemy(state, enemy, seat, source),
+  canMoveTo: (state, seat, id) => canMoveTo(state, seat, id) })
 setModifierHooks({
   maxSanity: getMaxSanity,
   // 与 assetEffect 的空白判定保持一致：文本空白时被动与声明式修正都不生效。
   sourceBlanked: (state, inv, source) => {
+    if (assetTextBlankedExceptForced(source)) return true
     const traits = cardDef(source?.code)?.traits || []
     // Phase 5（5a-3）：「清空某类特质文案」在内容层数据里，按标记判断。
     if (inv?.threat?.some(item => blanksTraits(item.code).includes('ally')) && traits.includes('Ally')) return true
@@ -160,7 +172,7 @@ setModifierHooks({
   investigatorBlanked: (state, inv) => investigatorTextBlanked(state, inv),
   // Phase 3（D1）：非玩家实体的「文本视为空白」——敌人 textBlanked 时，
   // 它自己声明的修正与布尔规则都不再生效（与支援的空白口径一致）。
-  entityBlanked: (state, entity) => Boolean(entity?.textBlanked) && enemyTextBlanked(state, entity),
+  entityBlanked: (state, entity) => (state.enemies?.includes(entity)||Boolean(entity?.textBlanked)) && enemyTextBlanked(state, entity),
   // Phase 1 A1：持续效果是修正的第三条来源（有到期时间的那种）。
   activeEffects: state => effectModifiers(state),
   // 弱点数据走生命周期读点（描述子优先），威胁区的被动修正因此也能读到。
@@ -179,10 +191,18 @@ const SCENARIOS = Object.fromEntries(contentRegistry.listScenarios()
 const campaignManifestFor = state => {
   const manifest = contentRegistry.getCampaign(state.campaign.id)
   const mode = state.campaign?.mode
-  return manifest?.parts && mode ? partManifest(manifest, mode) : manifest
+  const selected = manifest?.parts && mode ? partManifest(manifest, mode) : manifest
+  return state.parallelLane && manifest?.parallelInterludes
+    ? { ...selected, flow: partFlow(manifest.parts, { mode }) } : selected
 }
 const campaignFor = state => ({ ...campaignManifestFor(state), scenarioOrder: campaignManifestFor(state).scenarioIds })
 const scenarioBehavior = state => state.scenario ? contentRegistry.getBehavior(state.scenario.id) || {} : {}
+function canMoveTo(state, seat, id, options={}) {
+  const inv = state.investigators[seat], location = state.locations.find(loc => loc.id === id)
+  return Boolean(inv && !inv.defeated && !inv.resigned && inv.steamImmobileRound !== state.round
+    && location && inv.location !== id && !movementError(state, inv, id, options)
+    && !investigatorEntryError(state, id, seat) && !scenarioBehavior(state).moveError?.(state, inv, location, id))
+}
 
 // Content modules receive a narrow, transaction-local interface. All choices,
 // randomness, damage and tests use the same replay path as the original campaign.
@@ -326,7 +346,7 @@ function aliveInvestigators(state) {
 
 import { createDescribeState } from './describe.js'
 import { createCombat } from './combat.js'
-import { bondedSetProjection, createBonded } from './bonded.js'
+import { bondedSetProjection, createBonded, bondedSetKey, bondedCardList } from './bonded.js'
 import {
   banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFacesOf, faceOf, flipEnemyFace,
 } from './enemy-faces.js'
@@ -350,6 +370,7 @@ import { createEnemyApi } from './api-enemy.js'
 import { createClueApi } from './api-clue.js'
 import { createTestApi } from './api-test.js'
 import { createMiscApi } from './api-misc.js'
+import { createMechanicsApi } from './api-mechanics.js'
 import { createPerformTest } from './tests.js'
 import { createScenarioRuntime } from './scenario-runtime.js'
 import { createWeakness } from './weakness.js'
@@ -618,6 +639,8 @@ function groupClues(state, location) {
 
 
 function discardEnemyCard(state, enemy) {
+  if (enemy.hostId) { returnSwarmCard(state, enemy); return }
+  for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
   disengageEnemy(state, enemy)
   removeOne(state.enemies, enemy)
   const owner = state.investigators[enemy.bearerSeat]
@@ -639,15 +662,15 @@ function interrogateCultist(state, enemy, events) {
   checkAct(state, events)
 }
 
-function engagesAutomatically(state, enemy) {
-  return !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy)) && (!enemy.aloof || enemyTextBlanked(state, enemy))
+function engagesAutomatically(state, enemy, options={}) {
+  return !enemy.hostId && !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy)) && (!enemy.aloof || enemyTextBlanked(state, enemy) || options.ignoreAloofFor===enemy.id)
 }
 
-function autoEngageAt(state, locationId, events = []) {
+function autoEngageAt(state, locationId, events = [], options={}) {
   for (const enemy of state.enemies) {
-    if (enemy.location !== locationId || !engagesAutomatically(state, enemy)) continue
+    if (enemy.location !== locationId || !engagesAutomatically(state, enemy, options)) continue
     const here = aliveInvestigators(state)
-      .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy))
+      .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage'))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) engageEnemy(state, enemy, target, events)
@@ -658,7 +681,7 @@ function autoEngageAll(state, events) {
   for (const enemy of state.enemies) {
     if (!engagesAutomatically(state, enemy)) continue
     const here = aliveInvestigators(state)
-      .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy))
+      .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage'))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) {
@@ -989,6 +1012,17 @@ const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter
 // 它们在模块末尾才初始化，进 commonDeps 会 TDZ。
 // Phase 6（战役插件化第三批）：战役专属状态字段只经这个访问器读写。
 const campaignState = createCampaignState()
+setTokenCostShroudReader((state, inv) => {
+  const loc = state.locations.find(loc => loc.id === inv.location)
+  if (!loc) return 0
+  if (loc.attachments?.some(item => item.shroudAsOne)) return 1
+  const rule = registeredEntry(loc.originalCode || loc.code)?.locationRule
+  return (loc.shroud || 0) + (loc.shroudMod || 0) + (state.fogMod || 0)
+    + campaignState.turnShroudModifier(loc, state)
+    + (loc.turnShroudMod?.round === state.round && loc.turnShroudMod.turnSeat === state.currentSeat ? loc.turnShroudMod.amount : 0)
+    + (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
+    + (rule?.shroudModifier?.(state, loc, inv) || 0) + entityModifierTotal(state, loc, 'locationShroud')
+})
 
 // 第 5 步 M1 调查员批次（P6）：两个调查员专属读点的惰性门面。
 // 工厂（hunchDeckApi / resourceBankApi）在本文件后面才初始化，因此这里只放转发函数，
@@ -1018,8 +1052,8 @@ const resourceBank = {
   withdrawBanked: (state, inv, amount, events) => resourceBankApi().withdrawBanked(state, inv, amount, events),
   spendBanked: (state, inv, amount, events) => resourceBankApi().spendBanked(state, inv, amount, events),
   spendResources: (state, inv, amount, events) => resourceBankApi().spendResources(state, inv, amount, events),
-  // 引擎内所有「支付资源」路径的统一入口：合并池扣款时先扣寄存量（家族遗产）。
-  spendFromPool: (inv, amount) => resourceBankApi().spendFromPool(inv, amount),
+  // 引擎内所有支付资源路径的统一入口；两处都有资源时选择来源。
+  spendFromPool: (inv, amount, state) => resourceBankApi().spendFromPool(inv, amount, state),
   projection: inv => resourceBankApi().projection(inv),
 }
 
@@ -1057,6 +1091,7 @@ const locationTraits = {
 }
 
 const commonDeps = {
+  prepareEnemyOutcome,
   campaignState,
   ALL_CARDS,
   CLASS_NAMES,
@@ -1086,6 +1121,18 @@ const commonDeps = {
   campaignFor,
   canDiscardFromHand,
   canDiscoverClueAt,
+  bondedAvailable: (state, seat, main, copy) => {
+    const set=state.bondedSets?.[bondedSetKey(state,main,seat)]
+    return set ? set.cards.filter(card=>(card.code || card)===copy).length
+      : bondedCardList(ALL_CARDS[main]).find(entry=>entry.code===copy)?.count || 0
+  },
+  canMoveTo,
+  canDamageEnemy,
+  canAutoEvade: (state, enemy, seat) => Boolean(enemy && !enemy.defeated && !enemy.global
+    && enemyDef(enemy.code)?.evade != null
+    && (enemyTextBlanked(state, enemy) || !enemyRuleFlags(enemy.code).cannotEvade)
+    && scenarioBehavior(state).canEvadeEnemy?.(state, state.investigators[seat], enemy) !== false
+    && scenarioBehavior(state).canEvade?.(state, state.investigators[seat], enemy) !== false),
   cannotPlayTypes,
   capabilityBlocked,
   cardDef,
@@ -1170,7 +1217,7 @@ const commonDeps = {
   randomValue,
   reactionWindow,
   registeredEntry,
-  relocateEnemy,
+  relocateEnemy, moveEnemyToward,
   relocateInvestigator,
   removeCardByCode,
   removeOne,
@@ -1197,6 +1244,9 @@ const commonDeps = {
 }
 
 const apiDeps = { ...commonDeps,
+  descriptorUsable,
+  enumerateTargets,
+  nextInstanceId,
   chooseLolaRole,
   canEquip,
   // 塔罗槽读数需要卡面查询函数才能把「实例只有 code」的支援算进 usage。
@@ -1215,6 +1265,7 @@ const apiEnemyDeps = { ...commonDeps,
   recordResearch, }
 
 const apiClueDeps = { ...commonDeps,
+  nextInstanceId,
   doInvestigate: (...args) => doInvestigate(...args),
   doEvade: (...args) => doEvade(...args),
   doPlay: (...args) => doPlay(...args),
@@ -1234,11 +1285,12 @@ const apiTestDeps = { ...commonDeps,
 
 const apiMiscDeps = { ...commonDeps,
   SKILL_NAMES,
+  discardHandTo,
   // P6（食梦者）：支援被击败判定（applyHarm 与「移动伤害」共用同一实现）。
   checkAssetDefeated: (state, owner, asset, events) => checkAssetDefeated(state, owner, asset, events, {
     cardDef, cardName, leaveAsset, info, reactionWindow, triggerReaction,
     registeredEntry, defeatedAssetRetaliation,
-    shuffleIntoDeck: (target, code) => { target.deck = shuffle([...target.deck, code], () => randomValue(state)) },
+    shuffleIntoDeck: (target, code) => { target.deck = replacePlayerZoneCards(state, target, shuffle([...target.deck, code], () => randomValue(state)), 'shuffle') },
   }),
   // 2026-10-25 第五轮：条目 API 里的通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
   scenarioRuntime,
@@ -1263,18 +1315,71 @@ const apiMiscDeps = { ...commonDeps,
   hunchDeck,
   // 2026-10-25 第五轮：api.addUses 需要条目字段（05186「花费充能/弹药时获得资源」）。
   registeredEntry,
+  performImmediateAction: (...args) => performImmediateAction(...args),
   doFightRaw: (...args) => doFight(...args),
   playCardFromDiscardForced: (...args) => playCardFromDiscardForced(...args),
   playCardFromOtherHandForced: (...args) => playCardFromOtherHandForced(...args), }
 
 function abilityApi(state, events) {
-  return {
+  return wrapInvestigatorEffects(state, {
+    ...createPlayerApi(state, events, {
+      canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code)).length > 0,
+      makeRoom: (seat, source) => replaceAssets(state, state.investigators[seat], cardDef(source.code), events),
+      notifyDraw: (seat, code) => {
+        const inv = state.investigators[seat]
+        notePromiseEvent(state, seat, 'draw', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
+        reactionWindow(state, 'cardDrawn', { when: 'cardDrawn', seat, location: inv.location, cardCode: code, weakness: false, from: 'beneath' }, events, { allowNested: true })
+        reactionWindow(state, 'cardsDrawn', { when: 'cardsDrawn', seat, location: inv.location, cards: [code], count: 1 }, events, { allowNested: true })
+      },
+      nextId: () => nextInstanceId(state, 'c'),
+      baseStatValue: (seat, skill) => baseStatValue(state, state.investigators[seat], skill),
+      api: () => abilityApi(state, events), choice: spec => requestChoice(state, spec),
+      drawWeakness: (seat, code) => { state.investigators[seat].deck.push(code); drawCards(state, state.investigators[seat], 1, events) },
+    }),
+    ...createInvestigatorApi(state, events, {
+      discardEnemy: enemy => { if (!state.enemies.includes(enemy)) return false; discardEnemyCard(state, enemy); return true },
+      choice: spec => requestChoice(state, spec), cardName,
+      draw: (seat, n) => { for (const line of drawCards(state, state.investigators[seat], n, events)) info(state, events, line) },
+      canCommit: (seat, code, options) => createTestApi(state, events, apiTestDeps).canCommitCard(seat, code, options),
+      commit: (seat, spec) => abilityApi(state, events).commitOrigins.commit(seat, spec),
+      discardAsset: (seat, asset) => abilityApi(state, events).discardAsset(seat, asset),
+      returnAsset: (seat, asset) => abilityApi(state, events).returnAssetToHand(seat, asset),
+      playAsset: (seat, code, options) => abilityApi(state, events).playCardFromHandFree(seat, code, options),
+      playCost: (seat, code) => playCost(state, state.investigators[seat], cardDef(code)),
+      locationShroud: (id, seat) => scenarioRuntime(state, events).locationShroud(id, seat),
+    }),
     ...createMiscApi(state, events, apiMiscDeps),
     ...createTestApi(state, events, apiTestDeps),
     ...createClueApi(state, events, apiClueDeps),
     ...createEnemyApi(state, events, apiEnemyDeps),
+    enemyOutcomes:enemyOutcomePublicApi(state,events),
+    enemyZones:enemyZoneApi(state,events),
     ...createCardApi(state, events, apiDeps),
-  }
+    ...createMechanicsApi(state, {
+      enemyZones:enemyZoneApi(state,events),
+      choice: spec => requestChoice(state, spec), cardName,
+      drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
+      cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
+      floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
+      sealedChanged: () => abilityApi(state, events).resolveEmptyUses(),
+      directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
+      moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
+      entryError: (seat, destination) => investigatorEntryError(state, destination, seat)
+        || movementError(state, state.investigators[seat], destination, { vehicle: true }),
+      placeLocation: id => { scenarioRuntime(state, events).place(id); return state.locations.some(loc => loc.id === id) ? id : null },
+      canCommitOrigin: (seat, code) => {
+        const draft = structuredClone(state), count = draft.skillTest?.committed.length || 0
+        draft.investigators[seat].hand.push(code)
+        createTestApi(draft, [], apiTestDeps).commitCards(seat, [code])
+        return (draft.skillTest?.committed.length || 0) > count
+      },
+      commit: (seat, code, options) => {
+        const count = state.skillTest?.committed.length || 0
+        createTestApi(state, events, apiTestDeps).commitCards(seat, [code], options)
+        return state.skillTest?.committed.length > count ? state.skillTest.committed.at(-1) : null
+      },
+    }),
+  })
 }
 
 
@@ -1451,7 +1556,7 @@ export function playCardFromDiscardForced(state, seat, code, events, options = {
     // 未实际打出：撤回临时 push 的那一张并退回弃牌堆。
     const at = inv.hand.lastIndexOf(code)
     if (at >= 0) inv.hand.splice(at, 1)
-    inv.discard.push(code)
+    discardPlayerCards(state, inv, code)
     return false
   }
   if (options.exileAfter !== false) {
@@ -1510,6 +1615,7 @@ const { doPlay, doInvestigate } = createActions({
   investigateBonus,
   nextInstanceId,
   playAccess,
+  enforceAssetSlotCapacity: (...args) => createAssetsApi().enforceAssetSlotCapacity(...args),
   replaceAssets,
   sealChaosToken,
   campaignApplyPlayCost,
@@ -1519,6 +1625,7 @@ const { doPlay, doInvestigate } = createActions({
 
 // Phase 6（6d-5）：补给阶段 / 密谋揭示搬进 phases.js；依赖一次性注入。
 const { upkeepPhase, runAgendaReveal } = createPhases({
+  openAbilityWindow,
   ...commonDeps,
   defeatAll,
   discardHandTo,
@@ -1537,6 +1644,7 @@ const { upkeepPhase, runAgendaReveal } = createPhases({
 
 // Phase 6（6d-6）：合法行动枚举 / 校验搬进 moves.js；外部仍然从 engine.js 取这两个名字。
 export const { legalMoves, validateMove } = createMoves({
+  descriptorUsable,
   ...commonDeps,
   LITA_CHANDLER_CODE,
   META,
@@ -1643,14 +1751,14 @@ function hauntedApi() {
 let hunchDeckImpl = null
 function hunchDeckApi() {
   hunchDeckImpl ||= createHunchDeck({
-    cardDef, cardName, info, newCardInstance, randomValue, registeredEntry, requestChoice, shuffle,
+    cardDef, cardName, info, newCardInstance, randomValue, registeredEntry, requestChoice, shuffle, reactionWindow,
   })
   return hunchDeckImpl
 }
 
 let resourceBankImpl = null
 function resourceBankApi() {
-  resourceBankImpl ||= createResourceBank({ cardName, info })
+  resourceBankImpl ||= createResourceBank({ cardName, info, requestChoice })
   return resourceBankImpl
 }
 
@@ -1659,6 +1767,7 @@ function resourceBankApi() {
 let playChannelsImpl = null
 function playChannelsApi() {
   playChannelsImpl ||= createPlayChannels({
+    reactionWindow,
     cardDef,
     cardName,
     registeredEntry,
@@ -1723,7 +1832,9 @@ function debugApi() {
 let performTestImpl = null
 export function performTest(state, seat, skill, difficulty, options = {}) {
   performTestImpl ||= createPerformTest({
+    abilityApi,
   ...commonDeps,
+  descriptorSources,
   activeHiddenRules,
   applyFreeTriggers,
   applySkillOnSuccess,
@@ -1751,10 +1862,13 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
 
 // Phase 6（6d-13）：剧本运行时搬进 scenario-runtime.js；同样用惰性装配（依赖表在顶层立即求值）。
 let scenarioRuntimeImpl = null
-function scenarioRuntime(state, events, testSource = null) {
+export function scenarioRuntime(state, events, testSource = null) {
   scenarioRuntimeImpl ||= createScenarioRuntime({
+  mechanicsEntryError: (state, seat, destination) => investigatorEntryError(state, destination, seat)
+    || movementError(state, state.investigators[seat], destination, { vehicle: true }),
+  resolveEnemyPhaseOf: (...args) => turnApi().resolveEnemyPhaseOf(...args),
   // 第 2 步 P2.12：异端者多面/放逐（deps 注入卡面定义与胜利区结算）。
-  flipEnemyFace: (state2, enemy, nextCode, deps) => flipEnemyFace(state2, enemy, nextCode, { ...deps, defOf: code => enemyDef(code) }),
+  flipEnemyFace: (state2, enemy, nextCode, deps) => flipEnemyFace(state2, enemy, nextCode, { ...deps, defOf: code => enemyDef(code), reactionWindow }),
   banishEnemyToVictory: (state2, enemy, deps) => banishEnemyToVictory(state2, enemy, { addVictory, ...deps }),
   // 2026-10-25 本循环修复 05294/05312：遭遇弃牌堆就地结算显现（不经过抽牌窗口）。
   replayEncounterRevelation,
@@ -1771,6 +1885,8 @@ function scenarioRuntime(state, events, testSource = null) {
   buildExplorationDeck,
   campaignCardChange,
   doInvestigate,
+  doFight: (...args) => doFight(...args),
+  performImmediateAction: (...args) => performImmediateAction(...args),
   spendAction,
   checkSupplies,
   crossOffSupply,
@@ -1783,6 +1899,7 @@ function scenarioRuntime(state, events, testSource = null) {
   doExplore,
   doPlay,
   doomCards,
+  searchDeck,
   drawMadnessWeakness,
   eliminateInvestigator,
   enemyCannotAttack,
@@ -1807,7 +1924,8 @@ function scenarioRuntime(state, events, testSource = null) {
   grantSupplies,
   groupPayment,
   hasSupply,
-  hunterStep,
+  hunterStep, enemyZoneApi, enemyOutcomePublicApi,
+  resolveHunterMove, resolveHunterMoves,
   investigateTest,
   isPoisoned,
   moveRelicOfAges,
@@ -2080,6 +2198,7 @@ function dispatchApi() {
   normalActionsLeft,
   payAndAdvanceAct,
   playFlag,
+  playCost,
   progressCampaign,
   recommendUpgrade,
   registerCampaignInvestigator,
@@ -2157,6 +2276,7 @@ function movementApi() {
 // movementApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function stepToward(...args) { return movementApi().stepToward(...args) } export function distanceToInvestigator(...args) { return movementApi().distanceToInvestigator(...args) } export function investigatorMoveDestinations(...args) { return movementApi().investigatorMoveDestinations(...args) }
 export function moveInvestigatorTo(...args) { return movementApi().moveInvestigatorTo(...args) } export function doShortcutMove(...args) { return movementApi().doShortcutMove(...args) } export function doDetachLocationAttachment(...args) { return movementApi().doDetachLocationAttachment(...args) } export function doMove(...args) { return movementApi().doMove(...args) }
+export function moveEnemyToward(...args) { return movementApi().moveEnemyToward(...args) }
 export function relocateInvestigator(...args) { return movementApi().relocateInvestigator(...args) } export function relocateEnemy(...args) { return movementApi().relocateEnemy(...args) }
 
 // Phase 6（6d-22）：敌人与伤害原语搬进 enemies.js；惰性装配保持导出与调用点。
@@ -2166,7 +2286,7 @@ function enemiesApi() {
   ...commonDeps,
   pallidMaskCode,
   SMITE_THE_WICKED_CODE,
-  addVictory,
+  addVictory, syncClues, placeDoomOnCard,
   assetPassiveData,
   assignHarm,
   cardIdentityFields,
@@ -2184,6 +2304,10 @@ function enemiesApi() {
   return enemiesImpl
 }
 // enemiesApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
+export function enemyZoneApi(...args) { return enemiesApi().enemyZoneApi(...args) }
+export function enemyOutcomePublicApi(...args) { return enemiesApi().enemyOutcomePublicApi(...args) }
+export function prepareEnemyOutcome(...args) { return enemiesApi().prepareEnemyOutcome(...args) }
+export function canDamageEnemy(...args) { return enemiesApi().canDamageEnemy(...args) }
 export function enemyHealth(...args) { return enemiesApi().enemyHealth(...args) } export function enemyFightValue(...args) { return enemiesApi().enemyFightValue(...args) } export function enemyEvadeValue(...args) { return enemiesApi().enemyEvadeValue(...args) }
 export function enemiesEngagedWith(...args) { return enemiesApi().enemiesEngagedWith(...args) } export function enemyAttack(...args) { return enemiesApi().enemyAttack(...args) } export function spawnEnemy(...args) { return enemiesApi().spawnEnemy(...args) }
 export function engageEnemy(...args) { return enemiesApi().engageEnemy(...args) } export function disengageEnemy(...args) { return enemiesApi().disengageEnemy(...args) } export function defeatEnemy(...args) { return enemiesApi().defeatEnemy(...args) }
@@ -2298,6 +2422,8 @@ function turnApi() {
 }
 // turnApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function runMythos(...args) { return turnApi().runMythos(...args) } export function enemyPhase(...args) { return turnApi().enemyPhase(...args) } export function hunterStep(...args) { return turnApi().hunterStep(...args) }
+export function resolveHunterMove(...args) { return turnApi().resolveHunterMove(...args) }
+export function resolveHunterMoves(...args) { return turnApi().resolveHunterMoves(...args) }
 export function runLocationRoundEnd(...args) { return turnApi().runLocationRoundEnd(...args) } export function runEnemyRoundEnd(...args) { return turnApi().runEnemyRoundEnd(...args) } export function runThreatEndTurn(...args) { return turnApi().runThreatEndTurn(...args) }
 export function phaseBeginningWindow(...args) { return turnApi().phaseBeginningWindow(...args) } export function turnBeginningWindow(...args) { return turnApi().turnBeginningWindow(...args) } export function beginInvestigationPhase(...args) { return turnApi().beginInvestigationPhase(...args) }
 export function runBetweenInvestigationPhases(...args) { return turnApi().runBetweenInvestigationPhases(...args) } export function doEndTurn(...args) { return turnApi().doEndTurn(...args) }
@@ -2351,6 +2477,15 @@ export { banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFace
 let deckOpsImpl = null
 function deckOpsApi() {
   deckOpsImpl ||= createDeckOps({
+    canPlaySearchedCard: (state, inv, def) => !playAccess(def.code).onlyFromDiscard
+      && !cannotPlayTypes(inv).has(def.type) && lolaCanUseCard(inv,def.code)
+      && !cardPlayBlockedReason(state,inv,def)
+      && !playConditionError(state,inv,def.code,playConditionHelpers(state))
+      && (!def.unique || !state.investigators.some(owner=>owner.assets.some(asset=>cardDef(asset.code)?.name===def.name)))
+      && (def.type!=='asset' || canEquip(inv,def) || assetReplacementPlans(inv,def).length>0),
+    enemyAttack,
+    playCost,
+    abilityApi,
     EFFECTS,
     aliveInvestigators,
     applyHorror,
@@ -2452,6 +2587,7 @@ export function selectInitialHubScenario(...args) { return hubApi().selectInitia
 let createAbilityRulesImpl = null
 function createAbilityRulesApi() {
   createAbilityRulesImpl ||= createAbilityRules({
+  discardLocked,
     ...commonDeps,
     doAbility,
     legalMoves,
@@ -2463,6 +2599,7 @@ function createAbilityRulesApi() {
     discardableHandCards,
     effectAbilitySources,
     engagedWithClueBlocker,
+    canSpendClues,
     hasNonPlayerBehavior,
     hiddenFightBlocked,
     limitUsed,
@@ -2550,6 +2687,7 @@ function createActionsExtraApi() {
     nextInstanceId,
     normalizedSlots,
     removeThreat,
+    reactionWindow,
   })
   return createActionsExtraImpl
 }
@@ -2727,6 +2865,7 @@ export function consumePlayThreatResources(...args) { return createAssetsApi().c
 let createStatsImpl = null
 function createStatsApi() {
   createStatsImpl ||= createStats({
+    scenarioRuntime,
     ...commonDeps,
     doPlay,
     HAND_SIZE_BASE,
@@ -2919,3 +3058,44 @@ export function playCost(...args) { return createTurnFlowApi().playCost(...args)
 export function charlesPayCandidate(...args) { return createTurnFlowApi().charlesPayCandidate(...args) } export function tomeActionEligible(...args) { return createTurnFlowApi().tomeActionEligible(...args) } export function actionCost(...args) { return createTurnFlowApi().actionCost(...args) }
 export function canParleyCultist(...args) { return createTurnFlowApi().canParleyCultist(...args) } export function litaControlled(...args) { return createTurnFlowApi().litaControlled(...args) } export function litaUncontrolled(...args) { return createTurnFlowApi().litaUncontrolled(...args) }
 export function unique(...args) { return createTurnFlowApi().unique(...args) } export function evaluateCriteria(...args) { return createTurnFlowApi().evaluateCriteria(...args) } export function playConditionHelpers(...args) { return createTurnFlowApi().playConditionHelpers(...args) }
+
+function performImmediateAction(state, seat, events, source, options = {}) {
+  const inv = state.investigators[seat]
+  if (!inv || inv.defeated || inv.resigned) return false
+  const returnSeat = state.currentSeat
+  const returnPhase = state.phase
+  const actionsLeft = inv.actionsLeft
+  const actionPaid = state._actionPaid
+  const previous = state.immediateAction
+  const restricted = { exploreOnlyActions: inv.exploreOnlyActions, spellOnlyActions: inv.spellOnlyActions, bountyOnlyActions: inv.bountyOnlyActions }
+  state.currentSeat = seat
+  state.phase = 'investigation'
+  inv.actionsLeft = 1
+  inv.exploreOnlyActions = 0; inv.spellOnlyActions = 0; inv.bountyOnlyActions = 0
+  state.immediateAction = { seat, returnSeat, returnPhase, source }
+  try {
+    const moves = legalMoves(state).filter(move => move.action !== 'endTurn' && actionCost(state, inv, move) === 1 && !validateMove(state, seat, move)
+      && (!options.basicOnly || ['fight','investigate','evade','move','engage','resource','draw'].includes(move.action))
+      && (!options.actionKinds?.length || options.actionKinds.includes(actionKind(state, inv, move))
+        || (options.actionKinds.includes('activate') && ['ability', 'entityAbility'].includes(move.action))
+        || (options.actionKinds.includes('play') && move.action === 'play')))
+    if (!moves.length) return false
+    const id = requestChoice(state, { kind: 'action', source, seat, prompt: '立即进行一次行动（如同现在是你的回合）。',
+      options: moves.map((move, index) => ({ id: String(index), label: move.label || move.action })) })
+    executeAction(state, seat, moves[Number(id)], events)
+    return true
+  } finally {
+    inv.actionsLeft = actionsLeft + inv.actionsLeft - 1
+    for (const key of Object.keys(restricted)) {
+      const amount = Number(inv[key]) || 0
+      if (restricted[key] === undefined && !amount) delete inv[key]
+      else inv[key] = (restricted[key] || 0) + amount
+    }
+    state.currentSeat = returnSeat
+    state.phase = returnPhase
+    if (actionPaid === undefined) delete state._actionPaid
+    else state._actionPaid = actionPaid
+    if (previous) state.immediateAction = previous
+    else delete state.immediateAction
+  }
+}

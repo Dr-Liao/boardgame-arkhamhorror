@@ -18,9 +18,14 @@
 // 状态形状（纯 JSON）：`inv[<field>]` 为该 kind 的剩余额度；`inv[<field>Turn]` 记录授权回合。
 // `spell` 沿用旧字段名 `spellOnlyActions` / `spellCreditTurn`，保证第四循环的存档与测试不变。
 
+import { registeredEntry } from './ability.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
+export const availableEngageCredit = inv => (inv.assets || []).filter(asset => !assetTextBlankedExceptForced(asset)
+  && registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent).length
 export const RESTRICTED_ACTION_FIELDS = Object.freeze({
   spell: 'spellOnlyActions',
   bounty: 'bountyOnlyActions',
+  engage: 'engageOnlyActions',
 })
 
 export const RESTRICTED_ACTION_KINDS = Object.freeze(Object.keys(RESTRICTED_ACTION_FIELDS))
@@ -50,7 +55,8 @@ export function actionsAvailable(inv, kind = null) {
   const explore = Math.min(inv?.exploreOnlyActions || 0, total)
   // 别的受限额度必须先扣掉：它们是「最后 N 个行动」。
   const others = Math.min(restrictedTotal(inv) - restrictedCount(inv, kind), total)
-  return Math.max(0, total - explore - others)
+  const assetCredits = kind === 'engage' ? availableEngageCredit(inv) : 0
+  return Math.max(0, total - explore - others) + assetCredits
 }
 
 /** 花掉行动：先消耗同 kind 的受限额度，再消耗普通行动。 */
@@ -58,6 +64,10 @@ export function consumeAction(inv, cost, kind = null) {
   assertRestrictedKind(kind)
   if (!inv) return
   let remaining = Math.max(0, Number(cost) || 0)
+  if (kind === 'engage') for (const asset of inv.assets || []) {
+    if (!remaining || asset.restrictedActionSpent || assetTextBlankedExceptForced(asset) || registeredEntry(asset.code)?.assetRule?.restrictedAction !== 'engage') continue
+    asset.restrictedActionSpent = true; remaining--
+  }
   let fromCredit = 0
   const credit = restrictedCount(inv, kind)
   if (kind != null && credit) {

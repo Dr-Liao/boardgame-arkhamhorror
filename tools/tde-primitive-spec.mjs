@@ -41,6 +41,123 @@ export const DOC_PATH = DOC
 // ---------------------------------------------------------------------------
 export const PRIMITIVES = Object.freeze([
   {
+    "id": "window.afterAlarmRaised",
+    "title": "警报提升窗口",
+    "step": "completion",
+    "mechanism": [
+      "standardRules"
+    ],
+    "layer": "engine",
+    "params": {},
+    "api": "window.afterAlarmRaised",
+    "checks": [
+      {
+        "kind": "window",
+        "name": "afterAlarmRaised"
+      }
+    ],
+    "files": [
+      "src/engine/windows.js",
+      "src/engine/scenario-runtime.js",
+      "tests/tde-completion-primitives.test.mjs",
+      "docs/tde-primitives.md"
+    ],
+    "tests": [
+      "tests/tde-completion-primitives.test.mjs"
+    ],
+    "docs": "docs/tde-primitives.md#completion",
+    "note": "通过公共原语实现，旧单卡特例已移出 escape。"
+  },
+  {
+    "id": "play.alternateCost",
+    "title": "支付前替代费用",
+    "step": "completion",
+    "mechanism": [
+      "standardRules"
+    ],
+    "layer": "engine",
+    "params": {},
+    "api": "play.alternateCost",
+    "checks": [
+      {
+        "kind": "module-export",
+        "file": "src/engine/play-attempt.js",
+        "name": "preparePlayAttempt",
+        "type": "function"
+      }
+    ],
+    "files": [
+      "src/engine/play-attempt.js",
+      "src/engine/actions.js",
+      "tests/tde-completion-primitives.test.mjs",
+      "docs/tde-primitives.md"
+    ],
+    "tests": [
+      "tests/tde-completion-primitives.test.mjs"
+    ],
+    "docs": "docs/tde-primitives.md#completion",
+    "note": "通过公共原语实现，旧单卡特例已移出 escape。"
+  },
+  {
+    "id": "skill.forcedCommit",
+    "title": "强制投入与负图标",
+    "step": "completion",
+    "mechanism": [
+      "standardRules"
+    ],
+    "layer": "engine",
+    "params": {},
+    "api": "skill.forcedCommit",
+    "checks": [
+      {
+        "kind": "source-pattern",
+        "file": "src/engine/tests.js",
+        "pattern": "forcedCommit",
+        "why": "ST1/ST5 调用统一强制投入管线"
+      }
+    ],
+    "files": [
+      "src/engine/commit-rules.js",
+      "src/engine/tests.js",
+      "tests/tde-completion-primitives.test.mjs",
+      "docs/tde-primitives.md"
+    ],
+    "tests": [
+      "tests/tde-completion-primitives.test.mjs"
+    ],
+    "docs": "docs/tde-primitives.md#completion",
+    "note": "通过公共原语实现，旧单卡特例已移出 escape。"
+  },
+  {
+    "id": "effect.capabilityRestrictions",
+    "title": "持续效果能力限制",
+    "step": "completion",
+    "mechanism": [
+      "standardRules"
+    ],
+    "layer": "engine",
+    "params": {},
+    "api": "effect.capabilityRestrictions",
+    "checks": [
+      {
+        "kind": "ctx-api",
+        "name": "addEffect"
+      }
+    ],
+    "files": [
+      "src/engine/modifiers.js",
+      "src/cards/entries/06164.js",
+      "tests/tde-completion-primitives.test.mjs",
+      "docs/tde-primitives.md"
+    ],
+    "tests": [
+      "tests/tde-completion-primitives.test.mjs"
+    ],
+    "docs": "docs/tde-primitives.md#completion",
+    "note": "通过公共原语实现，旧单卡特例已移出 escape。"
+  }
+,
+  {
     id: 'campaignPart',
     step: 'P3.1',
     title: '双 part 状态与切换',
@@ -61,7 +178,7 @@ export const PRIMITIVES = Object.freeze([
       { kind: 'module-export', file: PARTS_FILE, name: 'PARTS' },
       { kind: 'module-export', file: PARTS_FILE, name: 'PART_SCOPED_FIELDS' },
     ],
-    files: [PARTS_FILE, PARTS_TEST, DOC, 'docs/tde-migration-roadmap.md'],
+    files: [PARTS_FILE, PARTS_TEST, DOC, 'docs/tde-release.md'],
     tests: [PARTS_TEST],
     docs: `${DOC}#p31-双-part-状态与切换`,
     note: 'schema 仍为 7：parts 是可选字段，非 TDE 状态字节不变（schema 7→8 推迟到 P5，见路线图 R12 与 P3 报告）。',
@@ -214,11 +331,11 @@ export const PRIMITIVES = Object.freeze([
     mechanism: ['swarming'],
     layer: 'engine',
     params: { host: 'enemy', count: 'number', draw: '() => code' },
-    api: 'placeSwarmCards / swarmCardsOf / removeSwarmCard / clearSwarmCards / swarmCanBeDefeated / splitSwarmingDamage / swarmHostOf',
+    api: 'placeSwarmCards / swarmCardsOf / removeSwarmCard / clearSwarmCards / swarmCanBeDefeated / swarmHostOf',
     checks: [
       { kind: 'module-export', file: `${ENGINE}/swarm.js`, name: 'placeSwarmCards', type: 'function' },
       { kind: 'module-export', file: `${ENGINE}/swarm.js`, name: 'swarmCanBeDefeated', type: 'function' },
-      { kind: 'module-export', file: `${ENGINE}/swarm.js`, name: 'splitSwarmingDamage', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/swarm.js`, name: 'swarmGroup', type: 'function' },
       { kind: 'module-export', file: `${ENGINE}/swarm.js`, name: 'swarmHostOf', type: 'function' },
       { kind: 'scenario-runtime', name: 'swarm' },
     ],
@@ -614,15 +731,7 @@ export const PRIMITIVES = Object.freeze([
 // ---------------------------------------------------------------------------
 // 延后原语（批次 1/2/3 已全部落地；P6 之后仍未落地的候选在此登记）
 // ---------------------------------------------------------------------------
-export const DEFERRED_PRIMITIVES = Object.freeze([
-  {
-    id: 'window.afterAlarmRaised',
-    step: 'P8',
-    title: '警报等级提升后的窗口',
-    mechanism: ['alarmLevel'],
-    reason: 'A3 的警报等级已由 `counter.investigator` 承担读数。P8 评估（2026-10-31）：该窗口只服务 06224 一张卡；A3 章节 behavior 在每次警报提升调用点自行结算反应（条目 flags 提供选项数据），不新增通用窗口原语；06224 的反应子句记 simplified。P9 若出现第二张同类卡再评估。',
-  },
-])
+export const DEFERRED_PRIMITIVES = Object.freeze([])
 
 // ---------------------------------------------------------------------------
 // 复用（已存在于通用层）
@@ -649,11 +758,7 @@ export const REUSE = Object.freeze([
 // ---------------------------------------------------------------------------
 // escape（§5.3；单卡逻辑，必须在账本登记理由）
 // ---------------------------------------------------------------------------
-export const ESCAPE = Object.freeze([
-  { card: '06164', title: '飘渺灵体', reason: '「无形」是全新状态位（不能交战/攻击/伤害），只服务 1 张卡；若 M2 出现同类再提升为通用条件。' },
-  { card: '06329', title: '闪耀的偏方三八面体', reason: '费用替代管线的一次性特例（支付法术费用改为 willpower 检定）。' },
-  { card: '06331', title: '梦境寄生物', reason: '负技能图标 + 手牌强制投入；若本轮决定做通用「负图标」原语则移出 escape。' },
-])
+export const ESCAPE = Object.freeze([])
 
 // ---------------------------------------------------------------------------
 // 机制覆盖（P2 账本的 type=primitive 机制 → 三批落地的原语）

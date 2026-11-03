@@ -1,5 +1,5 @@
 import { renderRulesText } from './card-text.js'
-import { registerDeckRules, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
+import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
 import { tableArt } from './table-art.js'
@@ -686,7 +686,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       className, disabled: locked(s) || blocked,
       title: blocked ? (move.explanation || '') : undefined,
       onclick: () => { if (!blocked) submitMove(move, s) },
-    }, renderRulesText(h,label,{links:false}))
+    }, renderRulesText(h,label,{links:false,skills:true}))
   }
 
   const seatSelected = (s, seat) => !!s.state.hubSeatSelected?.[seat]
@@ -812,6 +812,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('div', { className: 'ah-office-hero-copy' },
           h('small', { className: 'ah-office-eyebrow' }, t('hub.overview.eyebrow')),
           h('h1', {}, selected?.name || cp.name),
+          selected?.earlyAccess ? h('p', { role: 'status' }, t('hub.overview.earlyAccess')) : null,
           h('p', {}, t('hub.overview.tagline')),
           h('div', { className: 'ah-office-metrics' }, metric('shield', s.players.length, t('hub.metric.investigators')), metric('star', cp.victory, t('hub.metric.victory')), metric('book', cp.xp, t('hub.metric.xp'))),
           s.state.uiState === 'campaignHub' ? h('div', { className: 'ah-hub-actions ah-office-difficulty', 'aria-label': t('hub.overview.difficultyAria') },
@@ -1030,7 +1031,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('small', { className: 'ah-office-eyebrow' }, t('hub.investigators.eyebrow', { class: classLabel(inv.klass) || inv.klass || '', pack: packLabel(detail.pack, detail.packName), seat: inv.seat + 1 })),
           playerBadge(s, inv.seat),
           h('h2', {}, inv.name), detail.subname ? h('p', { className: 'ah-investigator-subname' }, detail.subname) : null,
-          h('div', { className: 'ah-office-metrics' }, metric('sword', inv.combat, t('hub.skill.combat')), metric('book', inv.intellect, t('hub.skill.intellect')), metric('star', inv.willpower, t('hub.skill.willpower')), metric('leaf', inv.agility, t('hub.skill.agility'))),
+          h('div', { className: 'ah-office-metrics' }, metric('combat', inv.combat, t('hub.skill.combat')), metric('intellect', inv.intellect, t('hub.skill.intellect')), metric('willpower', inv.willpower, t('hub.skill.willpower')), metric('agility', inv.agility, t('hub.skill.agility'))),
           investigatorInfo(detail),
           !selected && !st.campaign.scenarioResults.length
             ? h('p', { className: 'ah-investigator-selection-state', role: 'status' }, t('hub.investigators.notChosen'))
@@ -1120,8 +1121,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         const card = s.state.cards?.[code] || g.clientData?.deckBuilder?.cardPool.find(c=>c.code===code) || {}
         const klass = String(card.klass || 'neutral').toLowerCase()
         const type = ({
-          asset: ['supply', t('hub.cardKind.asset')], event: ['action', t('hub.cardKind.event')], skill: ['star', t('hub.cardKind.skill')],
-          treachery: ['doom', t('hub.cardKind.treachery')], enemy: ['sword', t('hub.cardKind.enemy')],
+          asset: ['supply', t('hub.cardKind.asset')], event: ['free', t('hub.cardKind.event')], skill: ['wild', t('hub.cardKind.skill')],
+          treachery: ['doom', t('hub.cardKind.treachery')], enemy: ['combat', t('hub.cardKind.enemy')],
         })[card.type] || ['book', t('hub.cardKind.card')]
         return h('button', {className:'ah-deck-inspect',onclick:()=>inspectCard(code),'aria-label':t('hub.card.inspectName', { name: nameOf(g, code) }),'data-deck-code':code,'data-zoom-code':code,'data-zoom-name':nameOf(g,code)},
           art(code,nameOf(g,code)),h('span',{className:'ah-deck-copy-count'},`×${deckCodes.filter(c=>c===code).length}`),
@@ -1299,7 +1300,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (haunted) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderHauntedChoice(h, haunted, panelProps))
     return h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': t('hub.pendingChoice.aria') },
       interludeBriefing(s, true),
-      h('h2', {}, renderRulesText(h, s.state.pendingChoice.prompt, { links: false })),
+      h('h2', {}, renderRulesText(h, s.state.pendingChoice.prompt, { links: false, skills: true })),
       legal(s, 'choose').map(move => action(s, move)))
   }
 
@@ -1552,19 +1553,21 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     // 卡牌范围（渐进式）在服务端校验；这里同步收窄候选，避免把必被拒绝的卡摆出来。
     const scope = s.state.cardPoolScope
     const cycle = campaignCycle(s.state.campaign?.id)
-    const pool = (g.clientData?.deckBuilder?.cardPool || [])
-      .filter(card => inv?.allowedCards?.includes(card.code) && cardAllowedByScope(card.code, scope, cycle))
-      .map(card=>({...s.state.cards?.[card.code],...card}))
     const draft = state.arkhamDeckDraft ||= []
+    if (inv?.rules) registerDeckRules(inv.code, inv.rules)
+    const fullPool = (g.clientData?.deckBuilder?.cardPool || []).map(card=>({...s.state.cards?.[card.code],...card}))
+    const cardMap = Object.fromEntries(fullPool.map(card => [card.code, card]))
+    const rules = inv ? deckRules(inv,draft,cardMap) : null
+    const pool = fullPool.filter(card => cardAllowedByScope(card.code, scope, cycle)
+      && (inv?.allowedCards?.includes(card.code) || draft.includes(card.code)
+        || ((card.xp || 0) === 0 && rules?.options.some(rule=>rule.not !== true && matchesCardRule(card,rule,inv)))))
     const shown = filterCards(pool, cardFilters('deck'))
     const counts = Object.fromEntries([...new Set(draft)].map(code => [code, draft.filter(item => item === code).length]))
     // P7（食梦者 M2）：多重（Myriad）按「同名跨卡号共享 3 张」显示 n/3；
     // 单卡张数上限仍由 validateDeckRules 的逐卡检查约束（例：三张「增强自我」各限 1）。
     const myriadTitles = new Map(myriadUsage(draft, cardMap).map(item => [item.name, item]))
-    const size = inv?.deckSize || 30
-    if (inv?.rules) registerDeckRules(inv.code, inv.rules)
-    const cardMap = Object.fromEntries(pool.map(card => [card.code, card]))
     const checked = inv ? validateDeckRules(inv, draft, cardMap) : { errors: [t('hub.builder.noInvestigator')], count: 0 }
+    const size = checked.size || inv?.deckSize || 30
     const distribution = draft.reduce((out, code) => {
       const card = cardMap[code]
       if (card) out[card.type] = (out[card.type] || 0) + 1

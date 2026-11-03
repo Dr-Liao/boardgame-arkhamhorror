@@ -1,3 +1,5 @@
+import { availableResources } from './resource-bank.js'
+import { playTimingCandidates, playTimingSource } from './play-timing.js'
 // 合法行动枚举与校验（legalMoves / validateMove）从 engine.js 拆出的第六个模块
 // （Phase 6 · 6d-6）。
 //
@@ -11,7 +13,7 @@ import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { locationEntryNotice } from './location-facts.js'
 import { all as matchAll } from './matcher.js'
 import { descriptorOfKind } from './ability.js'
-import { entityParleyDescriptors, parleyMovesFor, parleyTargetError } from './parley.js'
+import { actionEntityById, entityActionDescriptors, entityAbilityInRange, parleyMovesFor, parleyTargetError, isParleyDescriptor } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
 // P6（食梦者）：受限行动的 kind 由 table-decisions 的 restrictedKindOfMove 统一判定。
 import { spellOnlyActionsOf } from './spell-actions.js'
@@ -21,6 +23,7 @@ import { debugMoveError, isDebugMove } from './debug.js'
 import { isVeiledLocation, veiledFlipBlockedReason } from './veiled.js'
 import { canAsIfPlay } from './as-if-location.js'
 import { dreamGateEntryError } from './dream-gate.js'
+import { investigatorConnections } from './location-connections.js'
 
 export function createMoves(deps) {
   const {
@@ -43,6 +46,7 @@ export function createMoves(deps) {
     availableThreatAbilities,
     canAdvanceWithClues,
     canAffordAbility,
+    descriptorUsable,
     canDiscardFromHand,
     canParleyCultist,
     canUseExtraEvade,
@@ -143,16 +147,19 @@ export function createMoves(deps) {
   // 打出一张牌的「潜在减费」预估：campaign 预览 + 条目/场上支援的 playCostReductionProvider。
   // 预览 = 校验 = 扣费同源：legalMoves（手牌与如同手牌通道）与 validateMove 都读这一份。
   function potentialPlayReduction(state, inv, code, def) {
-    return campaignPlayCostPreview(state, inv, code)?.discount || 0
+    const local = state.investigators.filter(owner => owner.location === inv.location).flatMap(owner => owner.assets)
+      .filter(source => registeredEntry(source.code)?.assetRule?.costReductionAtLocation)
+      .reduce((sum, source) => sum + (registeredEntry(source.code).playCostReductionProvider?.(state, inv, def, source) || 0), 0)
+    return local + (campaignPlayCostPreview(state, inv, code)?.discount || 0
       || Math.max(0,
         Number(typeof registeredEntry(code)?.playCostReductionProvider === 'function'
           ? registeredEntry(code).playCostReductionProvider(state, inv, def)
           : registeredEntry(code)?.playCostReductionProvider) || 0,
-        ...inv.assets.map(asset => {
+        ...inv.assets.filter(asset => !registeredEntry(asset.code)?.assetRule?.costReductionAtLocation).map(asset => {
           const provider = registeredEntry(asset.code)?.playCostReductionProvider
           const value = typeof provider === 'function' ? provider(state, inv, def, asset) : provider
           return Number(value) || 0
-        }))
+        })))
   }
 
   // 打出一张牌的最终资源费用：基础费用 - 如同手牌通道折扣。预览/校验/实付同源。
@@ -227,7 +234,7 @@ export function createMoves(deps) {
   }
   for (const { code, rule } of activeHiddenRules(state, inv)) {
     const discard = rule.discard
-    if (!discard || inv.resources < (discard.resources || 0)) continue
+    if (!discard || availableResources(inv) < (discard.resources || 0)) continue
     if (discard.damageInvestigator) {
       for (const target of aliveInvestigators(state).filter(other => other.location === inv.location)) {
         moves.push({ action: 'hiddenAction', cardId: code, targetSeat: target.seat,
@@ -242,6 +249,8 @@ export function createMoves(deps) {
   const blocked = cannotPlayTypes(inv)
   for (const code of unique(inv.hand)) {
     const def = cardDef(code)
+    if (playAccess(code).onlyFromDiscard) continue
+    if (registeredEntry(code)?.investigator?.cannotPlayAction) continue
     if (!def || !runtimeCardAvailable(state, inv, code) || def.dataStatus === 'quarantined' || def.type === 'skill' || (isWeaknessCard(def) && !playAccess(code).playableWeakness)) continue
     if (!lolaCanUseCard(inv, code)) continue
     if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) continue
@@ -259,7 +268,7 @@ export function createMoves(deps) {
         if (!copy || copy.type !== 'event' || copy.exceptional
           || (!copyPlayed && !copyDescriptor?.resolve) || playAccess(copyCode).reactionOnly) continue
         const cost = playCost(state, inv, copy)
-        if (inv.resources < cost || (copyPlayed && effectError(state, inv, copyPlayed))) continue
+        if (availableResources(inv) < cost || (copyPlayed && effectError(state, inv, copyPlayed))) continue
         moves.push({ action: 'play', cardId: code, copyCode,
           label: `🃏 彩绘世界复制「${cardName(copyCode)}」(${cost} 资源)` })
       }
@@ -267,12 +276,15 @@ export function createMoves(deps) {
     }
     const cost = playCost(state, inv, def)
     const potentialReduction = potentialPlayReduction(state, inv, code, def)
-    if (inv.resources < cost - potentialReduction
-      && !charlesPayCandidate(state, inv, cost, def)) continue
+    const timings = playTimingCandidates(state, inv, def).filter(item => availableResources(inv) >= cost - potentialReduction - (item.spec.discount || 0))
+    const ordinary = availableResources(inv) >= cost - potentialReduction || charlesPayCandidate(state, inv, cost, def)
+    if (!ordinary && !timings.length) continue
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
     if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
-    moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
+    if (ordinary) moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
+    for (const { source, spec } of timings) moves.push({ action: 'play', cardId: code, fastSourceId: source.id,
+      label: `⚡ ${cardName(source.code)}：快速打出「${cardName(code)}」(${Math.max(0, cost - (spec.discount || 0))} 资源)` })
     if (def.type === 'event' && registeredEntry(inv.code)?.asIfEvent === true && canAsIfPlay(inv, state)) {
       const here = state.locations.find(location => location.id === inv.location)
       for (const locationId of here?.connections || []) {
@@ -295,7 +307,7 @@ export function createMoves(deps) {
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
     const cost = playCostFor(state, inv, def, candidate)
     const potentialReduction = potentialPlayReduction(state, inv, candidate.code, def)
-    if (inv.resources < cost - potentialReduction
+    if (availableResources(inv) < cost - potentialReduction
       && !charlesPayCandidate(state, inv, cost, def)) continue
     if (registeredEntry(candidate.code)?.limitPerInvestigator
       && inv.assets.some(asset => asset.code === candidate.code)) continue
@@ -323,7 +335,7 @@ export function createMoves(deps) {
   // 「预览 = 校验 = 扣费」：付得起但当前无从执行的免费行动不该出现在列表里——否则牌桌会给出
   // 一个点了必被 validateMove 拒绝的死按钮（赛菲娜下方没有事件、皮特没有可重整的支援、
   // 换行动却连一张能弃的手牌都没有）。
-  if (freeAction && !investigatorTextBlanked(state, inv) && inv.resources >= (freeAction.cost.resources || 0)
+  if (freeAction && !investigatorTextBlanked(state, inv) && availableResources(inv) >= (freeAction.cost.resources || 0)
     && (!freeAction.cost.discardHand
       || inv.hand.some(code => !isWeaknessCode(code) && canDiscardFromHand(inv, code)))
     && (freeAction.repeatable || !inv.usedReactions[freeAction.id + ':' + state.turnSerial])
@@ -331,7 +343,7 @@ export function createMoves(deps) {
     moves.push({ action: 'freeAction', label: freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
   }
 
-  for (const nb of new Set(loc ? loc.connections.filter(id => !movementError(state, inv, id)) : [])) {
+  for (const nb of investigatorConnections(state, inv.location).filter(id => !movementError(state, inv, id))) {
     const target = state.locations.find((l) => l.id === nb)
     // P0：内容层可以声明「这次移动现在不能做」的理由（如《苍白面具》线索不足）。
     if (!target || investigatorEntryError(state, nb) || scenarioBehavior(state).moveError?.(state, inv, target, nb)) continue
@@ -361,7 +373,7 @@ export function createMoves(deps) {
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
     if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
-      && !enemyCannotBeAttacked(state, enemy) && !aloofPreventsAttack(state, inv, enemy)
+      && !enemyCannotBeAttacked(state, enemy, inv.seat) && !aloofPreventsAttack(state, inv, enemy)
       && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
     if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
@@ -371,12 +383,12 @@ export function createMoves(deps) {
       && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'extraEvade', enemyId: enemy.id,
         label: `💨 额外躲避「${enemy.name}」（本回合一次，不消耗行动）` })
-    if (enemy.parleyCost && inv.resources >= enemy.parleyCost) {
+    if (enemy.parleyCost && availableResources(inv) >= enemy.parleyCost) {
       moves.push({ action: 'parley', enemyId: enemy.id, label: `🤝 谈判「${enemy.name}」（花 ${enemy.parleyCost} 资源弃掉）` })
     }
     // 2026-10-25 本循环修复 can-engage-enemy-hook：剧本可以声明「该敌人不能被交战」
     // （对应参考实现 CannotBeEngaged，如《恶罪报应》非幽灵地点的异端者）。
-    if (!enemy.massive && enemy.engagedSeat !== seat && !enemyIgnoresInvestigator(state, inv, enemy)
+    if (!enemy.massive && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
       && scenarioBehavior(state).canEngageEnemy?.(state, inv, enemy) !== false) {
       moves.push({ action: 'engage', enemyId: enemy.id, label: `与「${enemy.name}」交战` })
     }
@@ -389,12 +401,11 @@ export function createMoves(deps) {
 
   // 第 2 步 P2.7：地点 / 敌人 / 剧情资产上的「谈判」通用行动（不引发借机攻击）。
   // 2026-10-25 本循环修复 05245：剧本级「谈判限制」钩子（如「本局剩余时间不能与约瑟夫·梅吉尔谈判」）。
-  for (const parley of parleyMovesFor(state, inv)) {
-    const entity = state.enemies.find(item => item.id === parley.entityId)
-      || state.locations.find(item => item.id === parley.entityId)
-      || (state.storyAssets || []).find(item => item.id === parley.entityId)
-      || null
-    if (scenarioBehavior(state).parleyBlocked?.(state, inv, entity, parley.entityType) === true) continue
+  for (const parley of parleyMovesFor(state, inv, (entity, descriptor) => descriptorUsable(state, inv, entity, descriptor, { mode: 'action' }))) {
+    const entity = actionEntityById(state, parley.entityId)
+    const descriptor = entityActionDescriptors(entity)[parley.abilityIndex]
+    if (!descriptorUsable(state, inv, entity, descriptor, { mode: 'action' })) continue
+    if (isParleyDescriptor(descriptor) && scenarioBehavior(state).parleyBlocked?.(state, inv, entity, parley.entityType) === true) continue
     moves.push(parley)
   }
 
@@ -419,9 +430,11 @@ export function createMoves(deps) {
 
   // 2026-10-25 第七轮修复 05196：同地点队友的 teamActivatable 支援也可被激活（actor 支付费用）。
   const abilitySources = controlledAbilityCards(inv).map(asset => ({ asset, ownerSeat: inv.seat }))
+  const investigatorSource = !investigatorTextBlanked(state, inv) && controlledAbilityCard(inv, `investigator:${inv.seat}`)
+  if (investigatorSource) abilitySources.push({ asset: investigatorSource, ownerSeat: inv.seat })
   for (const other of aliveInvestigators(state)) {
     if (other.seat === inv.seat || other.location !== inv.location) continue
-    for (const asset of other.assets || []) {
+    for (const asset of controlledAbilityCards(other)) {
       if (registeredEntry(asset.code)?.teamActivatable !== true) continue
       abilitySources.push({ asset, ownerSeat: other.seat })
     }
@@ -439,8 +452,7 @@ export function createMoves(deps) {
       if (ab.oncePerPhase && inv.usedAbilities?.[`${a.id}:${i}:${state.round}:${state.phase}`]) return
       // 描述子的 criteria 是「这条能力当前是否可用」的唯一声明；legalMoves 不读会让
       // 条件型主动能力（如卡膛、古代地点）出现在列表里却在执行时静默失败。
-      if (ab.descriptor?.criteria
-        && !matchAll(ab.descriptor.criteria)({ state, inv, source: a, windowId: state.timingWindow, context: {} })) return
+      if (ab.descriptor && !descriptorUsable(state, inv, a, ab.descriptor, { mode: 'action' })) return
       if (ab.requiresNoClues && loc && loc.clues > 0) return
       if (moveToBlocked(state, inv, ab.effect)) return
       const free = ab.cost && ab.cost.action === false
@@ -505,7 +517,7 @@ export function createMoves(deps) {
     if (th && th.purgeAbility && (t.counters || 0) > 0) {
       moves.push({ action: 'purgeThreat', threatId: t.id, label: `📖 净化「${cardName(t.code)}」（移走 1 恐惧）` })
     }
-    if (th && th.debt && inv.threat.includes(t) && inv.resources > 0 && (t.debtPaymentsThisRound || 0) < 2) {
+    if (th && th.debt && inv.threat.includes(t) && availableResources(inv) > 0 && (t.debtPaymentsThisRound || 0) < 2) {
       moves.push({ action: 'payDebt', threatId: t.id, label: `💸 向医院债务支付 1 资源（每轮至多 2 次）` })
     }
   }
@@ -601,6 +613,7 @@ export function createMoves(deps) {
     case 'play': {
       const def = cardDef(move.cardId)
       if (!def) return '未知卡牌'
+      if (playAccess(move.cardId).onlyFromDiscard && !move.fromDiscard) return '只能从弃牌堆打出该卡牌'
       if (!lolaCanUseCard(inv, move.cardId)) return '罗拉只能使用中立或当前角色阵营的卡牌'
       if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) return '当前效果禁止你打出卡牌'
       // 2026-10-27「如同手牌」通道统一读点（play-channels.js）：宿主附属 / 直觉牌库 / 银暮匕首下方 /
@@ -634,17 +647,20 @@ export function createMoves(deps) {
         if (!inv.beneath?.includes(move.copyCode) || !copied || copied.type !== 'event' || copied.exceptional
           || (!copiedPlayed && !copiedDescriptor?.resolve) || playAccess(move.copyCode).reactionOnly) return '彩绘世界没有合法的复制事件'
         if (!inv.hand.includes(move.cardId)) return '手牌中没有彩绘世界'
-        if (inv.resources < playCost(state, inv, copied)) return '资源不足'
+        if (availableResources(inv) < playCost(state, inv, copied)) return '资源不足'
         return copiedPlayed ? effectError(state, inv, copiedPlayed) : null
       }
       if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(move.cardId).playableWeakness)) return '该牌不能作为行动打出'
+      const fastSource = move.fastSourceId ? playTimingSource(state, inv, def, move.fastSourceId) : null
+      if (move.fastSourceId && !fastSource) return '快速打出来源不可用'
       // 2026-10-27：如同手牌通道的来源校验已在上方由原语统一完成；这里只剩「必须是手牌」的基础判定。
       if (!channelCandidate && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
+      if (registeredEntry(move.cardId)?.investigator?.cannotPlayAction) return '该牌不能使用打出行动打出'
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
       // 预览 = 校验 = 扣费同源：基础费用 - 如同手牌通道折扣 - 潜在减费（campaign/条目/场上 provider）。
       const channelDiscount = channelCandidate ? playChannels.discountOf(channelCandidate) : 0
-      if (inv.resources < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def)
+      if (availableResources(inv) < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0)
         && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
       if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '槽位已满'
@@ -666,7 +682,7 @@ export function createMoves(deps) {
       const skids = investigatorRule(inv.code)
       if (!skids || !skids.freeAction || investigatorTextBlanked(state, inv)) return '你没有该异能'
       if (cannotTriggerFreeAbility(state, inv)) return '隐私牌禁止你触发免费能力'
-      if (inv.resources < (skids.freeAction.cost.resources || 0)) return '资源不足'
+      if (availableResources(inv) < (skids.freeAction.cost.resources || 0)) return '资源不足'
       if (skids.freeAction.cost.discardHand
         && !inv.hand.some(code => !isWeaknessCode(code) && canDiscardFromHand(inv, code))) return '没有可弃掉的手牌'
       if (effectError(state, inv, skids.freeAction.effect)) return effectError(state, inv, skids.freeAction.effect)
@@ -677,7 +693,7 @@ export function createMoves(deps) {
       const rule = hiddenRule(state, move.cardId)
       const discard = rule?.discard
       if (!discard || !hasHiddenCard(inv, move.cardId)) return '手牌中没有该隐私牌'
-      if (inv.resources < (discard.resources || 0)) return '资源不足'
+      if (availableResources(inv) < (discard.resources || 0)) return '资源不足'
       if (discard.damageInvestigator && !state.investigators.some(other => other.seat === move.targetSeat
         && !other.defeated && !other.resigned && other.location === inv.location)) return '隐私牌没有合法的伤害目标'
       return null
@@ -685,7 +701,7 @@ export function createMoves(deps) {
     case 'parley': {
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy || enemy.engagedSeat !== seat) return '该敌人未与你交战'
-      if (!enemy.parleyCost || inv.resources < enemy.parleyCost) return '无法谈判（资源不足）'
+      if (!enemy.parleyCost || availableResources(inv) < enemy.parleyCost) return '无法谈判（资源不足）'
       return null
     }
     case 'parleyCultist': {
@@ -737,7 +753,7 @@ export function createMoves(deps) {
     case 'payDebt': {
       const t = inv.threat.find((x) => x.id === move.threatId)
       if (!t || !getThreatEffect(t)?.debt) return '没有该债务'
-      if (inv.resources <= 0) return '资源不足'
+      if (availableResources(inv) <= 0) return '资源不足'
       if ((t.debtPaymentsThisRound || 0) >= 2) return '本轮已支付两次'
       return null
     }
@@ -756,7 +772,7 @@ export function createMoves(deps) {
       const attachment = (state.playerLocationAttachments || []).find(item =>
         registeredEntry(item.code)?.grantsShortcutMove && item.location === inv.location && !item.exhausted)
       if (!attachment) return '这里没有可用的「捷径」'
-      if (!loc || !loc.connections.includes(move.locationId)) return '不能移动到该地点'
+      if (!loc || !investigatorConnections(state, inv.location).includes(move.locationId)) return '不能移动到该地点'
       return movementError(state, inv, move.locationId) || investigatorEntryError(state, move.locationId)
     }
     case 'move': {
@@ -764,22 +780,21 @@ export function createMoves(deps) {
       const destination = state.locations.find(item => item.id === move.locationId)
       const gateError = dreamGateEntryError(inv, destination)
       if (gateError) return gateError
-      if (!loc || !loc.connections.includes(move.locationId)) return '不能移动到该地点'
+      if (!loc || !investigatorConnections(state, inv.location).includes(move.locationId)) return '不能移动到该地点'
       const scenarioMoveError = scenarioBehavior(state).moveError?.(
         state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
       return movementError(state, inv, move.locationId) || investigatorEntryError(state, move.locationId) || scenarioMoveError || null
     }
     case 'entityAbility': {
-      const entity = state.enemies.find(item => item.id === move.entityId)
-        || state.locations.find(item => item.id === move.entityId)
-        || (state.storyAssets || []).find(item => item.id === move.entityId)
+      const entity = actionEntityById(state, move.entityId)
       if (!entity) return '目标实体不在场上'
-      if (entity.location != null && entity.location !== inv.location) return '目标不在此地点'
       // 2026-10-25 本循环修复 05245：剧本级谈判限制（与 legalMoves 的同一读点）。
-      if (scenarioBehavior(state).parleyBlocked?.(state, inv, entity, move.entityType ?? 'entity') === true) return '当前不能与该目标谈判'
-      const descriptors = entityParleyDescriptors(entity)
+      const descriptors = entityActionDescriptors(entity)
       const descriptor = descriptors[move.abilityIndex]
       if (!descriptor) return '该实体没有这条能力'
+      if (isParleyDescriptor(descriptor) && scenarioBehavior(state).parleyBlocked?.(state, inv, entity, move.entityType ?? 'entity') === true) return '当前不能与该目标谈判'
+      if (!entityAbilityInRange(state, inv, entity, descriptor)) return '目标不在能力允许的范围'
+      if (!descriptorUsable(state, inv, entity, descriptor, { mode: 'action' })) return '能力条件或成本不满足'
       const error = parleyTargetError(state, inv, entity, descriptor, move)
       if (error) return error
       return null
@@ -845,15 +860,15 @@ export function createMoves(deps) {
       // 2026-10-25 第七轮修复 05196：团队激活的 validate 放行（资产属于同地点队友且 teamActivatable）。
       if (move.ownerSeat != null && move.ownerSeat !== seat) {
         const owner = state.investigators[move.ownerSeat]
-        const teamAsset = owner?.assets?.find(item => item.id === move.assetId)
-        if (!teamAsset || registeredEntry(teamAsset.code)?.teamActivatable !== true || owner.location !== inv.location) {
+        const teamAsset = owner && controlledAbilityCard(owner, move.assetId)
+        if (!teamAsset || registeredEntry(teamAsset.code)?.teamActivatable !== true || (owner.defeated || owner.resigned || owner.location !== inv.location)) {
           return '该支援不能由你团队激活'
         }
       }
       // 2026-10-25 第七轮修复 05196：团队激活时资产属于同地点队友。
       const asset = controlledAbilityCard(inv, move.assetId)
         || (Number.isInteger(move.ownerSeat)
-          ? state.investigators[move.ownerSeat]?.assets?.find(item => item.id === move.assetId)
+          ? (state.investigators[move.ownerSeat] && controlledAbilityCard(state.investigators[move.ownerSeat], move.assetId))
           : null)
       if (!asset) return '未找到该资产'
       if (capabilityBlocked(state, inv, 'triggerAbilities')) return '当前效果禁止你触发能力'
@@ -864,8 +879,7 @@ export function createMoves(deps) {
       if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, state.timingWindow, asset)) {
         return '该能力的次数已用完（本阶段/本回合/本局）'
       }
-      if (ability.descriptor?.criteria
-        && !matchAll(ability.descriptor.criteria)({ state, inv, source: asset, windowId: state.timingWindow, context: {} })) {
+      if (ability.descriptor && !descriptorUsable(state, inv, asset, ability.descriptor, { mode: 'action', ignoreCosts: true })) {
         return '该能力当前不可用'
       }
       if (ability.cost?.action === false && cannotTriggerFreeAbility(state, inv)) return '隐私牌禁止你触发免费能力'
@@ -910,6 +924,7 @@ export function createMoves(deps) {
       return loc?.resign || state.scenario.resignAnywhere ? null : '当前地点不能撤退'
     }
     case 'engage': {
+      if (capabilityBlocked(state, inv, 'engage')) return '当前效果禁止你与敌人交战'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
       if (enemy.location !== inv.location) return '该敌人不在你所在的地点'

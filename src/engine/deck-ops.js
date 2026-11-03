@@ -1,3 +1,8 @@
+import { putInHand } from './hand-entry.js'
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { notePromiseEvent } from './turn-promises.js'
+import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
+import { capabilityBlocked } from './modifiers.js'
 // 牌堆操作（查看 / 占卜 / 检索 / 移动 / 抽牌 / 弃牌）从 engine.js 拆出的模块
 // （Phase 6 · 6d-28）。
 //
@@ -10,10 +15,13 @@
 // 它们被卡牌效果、剧本运行时与 API 同时使用。
 
 import { hiddenEnemiesAttackFromHand } from './hidden-enemy.js'
+import { afterHandDiscard } from './hand-discard-window.js'
+import { afterThreatEntered } from './threat-entry.js'
 
 export function createDeckOps(deps) {
   const {
     EFFECTS,
+    abilityApi,
     aliveInvestigators,
     applyHorror,
     applyDamage,
@@ -21,6 +29,7 @@ export function createDeckOps(deps) {
     canDiscardFromHand,
     cardDef,
     cardName,
+    playCost,
     describeCardMove,
     describeLook,
     describeSearch,
@@ -28,6 +37,7 @@ export function createDeckOps(deps) {
     // P6（食梦者）：被查找到的那张牌自己的规则（searchedCardRule）需要这两个读点。
     discoverClueAt,
     drawEncounter,
+    enemyAttack,
     findZoneCard,
     info,
     isThreatWeakness,
@@ -132,33 +142,47 @@ function searchedCardsWindow(state, inv, zoneAdapter, codes, events) {
   // 读点只有这里；未知字段直接忽略（注册期已由 ability.js 校验）。
   let pile = [...codes]
   let cancelled = false
+  let researchUsed = false
   const owner = zoneAdapter?.owner || null
   const removeFromDeck = code => {
+    if (zoneAdapter?.detached) return
     if (!owner?.deck) return
     const index = owner.deck.lastIndexOf(code)
     if (index >= 0) owner.deck.splice(index, 1)
   }
   const take = code => {
-    pile = pile.filter(item => item !== code)
+    const index = pile.indexOf(code)
+    if (index >= 0) pile.splice(index, 1)
     removeFromDeck(code)
-    if (owner) owner.hand.push(code)
+    if (owner) putInHand(state, owner, code)
     else state.encounterDeck.push(code)
   }
   const discard = code => {
-    pile = pile.filter(item => item !== code)
+    const index = pile.indexOf(code)
+    if (index >= 0) pile.splice(index, 1)
     removeFromDeck(code)
-    if (owner) owner.discard.push(code)
+    if (owner) discardPlayerCards(state, owner, code)
     else state.encounterDiscard.push(code)
   }
   for (const code of [...codes]) {
     const rule = registeredEntry(code)?.searchedCardRule
     if (!rule || !pile.includes(code)) continue
+    if (rule.condition && !rule.condition({ state, inv, owner, code, zone: zoneAdapter })) continue
+    const research = (cardDef(code)?.traits || []).some(trait => trait.toLowerCase() === 'research')
+    if (research && researchUsed) continue
     const apply = () => {
+      if (research) researchUsed = true
       if (rule.take) take(code)
       if (rule.discard) discard(code)
       if (rule.cancelSearch) cancelled = true
       if (rule.discoverClue && inv) discoverClueAt(state, inv, Number(rule.discoverClue) || 0, events)
       if (rule.drawEncounter && inv) drawEncounter(state, inv, events)
+      rule.resolve?.({ state, inv, code, owner, api: abilityApi(state, events),
+        search: { take: () => take(code), discard: () => discard(code), remove: () => {
+          const index = pile.indexOf(code)
+          if (index >= 0) pile.splice(index, 1)
+          removeFromDeck(code)
+        }, cancel: () => { cancelled = true } } })
       info(state, events, `「${cardName(code)}」：${rule.label || '查找效果'}`)
     }
     if (rule.mode === 'forced') { apply(); continue }
@@ -190,13 +214,13 @@ function lookAt(state, seat, rawOptions, events) {
   // 先把看过的牌整体摘出来，之后的「拿走/放回」都不会和原区域里的副本打架。
   zone.detach(count)
   // P6（食梦者）：查找的牌确定后，「被找到的那张牌自己」的规则（揭示抽走 / 弃掉 / 取消这次查找）。
-  const revealed = searchedCardsWindow(state, inv, zone, pile, events)
+  const revealed = searchedCardsWindow(state, inv, { ...zone, detached: true }, pile, events)
   pile = revealed.pile
   if (revealed.cancel) {
     zone.attach(pile, 'top')
     if (options.zone === 'encounterDeck') state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
     else if (options.zone === 'explorationDeck') state.explorationDeck = shuffle(state.explorationDeck, () => randomValue(state))
-    else if (zone.owner) zone.owner.deck = shuffle(zone.owner.deck, () => randomValue(state))
+    else if (zone.owner) zone.owner.deck = replacePlayerZoneCards(state, zone.owner, shuffle(zone.owner.deck, () => randomValue(state)), 'shuffle')
     info(state, events, `${inv?.name || '调查员'} 的这次查找被取消，牌库已洗回。`)
     return []
   }
@@ -207,6 +231,7 @@ function lookAt(state, seat, rawOptions, events) {
       if (!options.filter) return true
       const def = cardDef(code)
       if (!def) return false
+      if (options.filter.canCommit && !abilityApi(state, events).canCommitCard(zone.owner?.seat ?? seat, code)) return false
       if (options.filter.type && def.type !== options.filter.type) return false
       if (options.filter.trait && !(def.traits || []).some(trait => String(trait).toLowerCase() === String(options.filter.trait).toLowerCase())) return false
       if (options.filter.usesType) {
@@ -219,13 +244,27 @@ function lookAt(state, seat, rawOptions, events) {
     const answer = requestChoice(state, {
       kind: 'search', source: options.source || 'lookAt', seat,
       prompt: options.prompt || `${label}：选择 1 张拿走（剩余 ${options.choose - i}）。`,
-      options: selectable.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })),
+      options: [...selectable.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })), ...(options.optional ? [{ id: 'done', label: '不选择卡牌' }] : [])],
     })
     const chosen = selectable[Number(answer)]
     if (!chosen) break
+    if (options.commitToTest) {
+      const { payer, sourceId, cost = 1 } = options.commitToTest
+      const source = state.investigators[payer]?.assets.find(asset => asset.id === sourceId)
+      if (!source || (source.uses || 0) < cost) break
+      const pay = requestChoice(state, { kind: 'effect', seat: payer, source: sourceId, prompt: '是否花费秘密投入找到的卡牌？',
+        options: [{ id: 'skip', label: '不投入' }, { id: 'pay', label: '支付秘密并投入' }] })
+      if (pay !== 'pay') break
+      source.uses -= cost
+      pile.splice(pile.indexOf(chosen), 1)
+      putInHand(state, zone.owner, chosen)
+      abilityApi(state, events).commitCards(zone.owner.seat, [chosen])
+      taken.push(chosen)
+      continue
+    }
     pile.splice(pile.indexOf(chosen), 1)
     taken.push(chosen)
-    if (zone.owner) zone.owner.hand.push(chosen)
+    if (zone.owner) putInHand(state, zone.owner, chosen)
     info(state, events, `${inv?.name || '调查员'} 取走「${cardName(chosen)}」。`)
   }
   // 排列：只对「看过但没拿走」的牌有意义（≤4 张时用全排列询问，避免组合爆炸）。
@@ -247,7 +286,7 @@ function lookAt(state, seat, rawOptions, events) {
   if (returned.length) {
     switch (options.returnStrategy) {
       case 'discard':
-        if (zone.owner) zone.owner.discard.push(...returned)
+        if (zone.owner) discardPlayerCards(state, zone.owner, ...returned)
         else state.encounterDiscard.push(...returned)
         break
       case 'shuffle': {
@@ -255,7 +294,7 @@ function lookAt(state, seat, rawOptions, events) {
         zone.attach(returned)
         if (options.zone === 'encounterDeck') state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
         else if (options.zone === 'explorationDeck') state.explorationDeck = shuffle(state.explorationDeck, () => randomValue(state))
-        else if (zone.owner) zone.owner.deck = shuffle(zone.owner.deck, () => randomValue(state))
+        else if (zone.owner) zone.owner.deck = replacePlayerZoneCards(state, zone.owner, shuffle(zone.owner.deck, () => randomValue(state)), 'shuffle')
         break
       }
       case 'bottom':
@@ -330,8 +369,13 @@ function searchDeck(state, seat, rawOptions, events) {
   const matches = inv.deck.filter(code => {
     const def = cardDef(code)
     if (!def) return false
+    if (options.playFound && (!['asset', 'event'].includes(def.type) || isWeaknessCard(def)
+      || playCost(state, inv, def) > inv.resources || deps.canPlaySearchedCard?.(state,inv,def) === false)) return false
     if (options.type && def.type !== options.type) return false
     if (options.trait && !(def.traits || []).some(trait => String(trait).toLowerCase() === String(options.trait).toLowerCase())) return false
+    if (options.traitsAny && !(def.traits || []).some(trait => options.traitsAny.some(wanted=>trait.toLowerCase()===wanted.toLowerCase()))) return false
+    if (options.factionsAny && !(def.factions || [def.klass,def.klass2,def.klass3]).some(faction=>options.factionsAny.includes(faction))) return false
+    if (options.subtype && def.subtype !== options.subtype) return false
     // usesType 不是卡面数据，按注册条目 / 旧 DSL 的 uses 判定。
     if (options.usesType) {
       const usesType = registeredEntry(code)?.usesType
@@ -341,7 +385,7 @@ function searchDeck(state, seat, rawOptions, events) {
   })
   if (!matches.length) {
     info(state, events, `${inv.name} 检索牌库，没有符合条件的卡牌${options.shuffle ? '，洗回牌库。' : '。'}`)
-    if (options.shuffle) inv.deck = shuffle(inv.deck, () => randomValue(state))
+    if (options.shuffle) inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
     return []
   }
   // P6（食梦者）：整库检索同样开查找窗口（「多结算 1 个目标」用 choose+1；
@@ -349,14 +393,14 @@ function searchDeck(state, seat, rawOptions, events) {
   const windowed = searchWouldResolve(state, inv, 'investigatorDeck', matches.length, options.choose, options.source, events)
   const revealed = searchedCardsWindow(state, inv, { owner: inv }, matches.filter(code => inv.deck.includes(code)), events)
   if (revealed.cancel) {
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
     info(state, events, `${inv.name} 的这次检索被取消，牌库已洗回。`)
     return []
   }
   const searched = revealed.pile.filter(code => inv.deck.includes(code))
   const taken = []
   for (let i = 0; i < windowed.choose && searched.length; i++) {
-    const selectable = searched.filter(code => inv.deck.includes(code) && !taken.includes(code))
+    const selectable = searched.filter(code => inv.deck.includes(code))
     if (!selectable.length) break
     const answer = requestChoice(state, {
       kind: 'search', source: options.source || 'searchDeck', seat, canSkip: options.optional,
@@ -369,11 +413,11 @@ function searchDeck(state, seat, rawOptions, events) {
     if (!chosen) break
     const index = inv.deck.lastIndexOf(chosen)
     if (index >= 0) inv.deck.splice(index, 1)
-    inv.hand.push(chosen)
+    putInHand(state, inv, chosen)
     taken.push(chosen)
     info(state, events, `${inv.name} 从牌库找到「${cardName(chosen)}」。`)
   }
-  if (options.shuffle) inv.deck = shuffle(inv.deck, () => randomValue(state))
+  if (options.shuffle) inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
   return taken
 }
 
@@ -396,32 +440,38 @@ function moveCardTo(state, inv, rawSpec, events) {
   if (found.shared) state[found.shared].splice(found.index, 1)
   else if (found.zone === 'play') leaveAsset(state, found.owner, found.instance, events)
   else if (found.zone === 'threat') removeThreat(state, found.owner, found.instance, events)
+  else if (found.zone === 'attached') found.host.attachments.splice(found.index, 1)
   else found.owner[found.zone].splice(found.index, 1)
 
   const code = spec.code || found.instance?.code
   const owner = state.investigators[spec.ownerSeat ?? seat] || inv
   switch (spec.to) {
-    case 'hand': owner.hand.push(code); break
+    case 'hand': putInHand(state, owner, code); break
     case 'deckTop': owner.deck.push(code); break
     case 'deckBottom': owner.deck.unshift(code); break
-    case 'discard': owner.discard.push(code); break
+    case 'discard': discardPlayerCards(state, owner, code); break
     case 'play': {
       const asset = newPlayerAssetInstance(state, owner, code, spec.facedown ? { facedown: true } : {})
       owner.assets.push(asset)
       scenarioBehavior(state).assetEntered?.(state, owner, asset, scenarioRuntime(state, events))
       break
     }
-    case 'threat': owner.threat.push(newPlayerAssetInstance(state, owner, code, spec.facedown ? { facedown: true } : {})); break
+    case 'threat': {
+      const card=newPlayerAssetInstance(state, owner, code, spec.facedown ? { facedown: true } : {})
+      owner.threat.push(card)
+      afterThreatEntered(state,owner,card,events,reactionWindow)
+      break
+    }
     case 'attached': {
       const host = [...owner.assets, ...owner.threat].find(card => card.id === spec.attachTo)
         || state.enemies.find(enemy => enemy.id === spec.attachTo)
         || state.locations.find(location => location.id === spec.attachTo)
       if (!host) {
-        owner.discard.push(code)
+        discardPlayerCards(state, owner, code)
         info(state, events, `附属宿主不存在，「${cardName(code)}」进入弃牌堆。`)
         break
       }
-      attachCardTo(state, owner.seat, code, host)
+      attachCardTo(state, owner.seat, code, host, spec.facedown ? { facedown: true } : {})
       break
     }
     case 'beneath': {
@@ -431,12 +481,12 @@ function moveCardTo(state, inv, rawSpec, events) {
       if (host) {
         host.beneath ||= []
         host.beneath.push(code)
-      } else owner.discard.push(code)
+      } else discardPlayerCards(state, owner, code)
       break
     }
     case 'setAside':
       state.setAside ||= []
-      state.setAside.push(code)
+      state.setAside.push({ code, ownerSeat: owner.seat })
       break
     case 'removedFromGame':
       state.removedFromGame ||= []
@@ -454,6 +504,9 @@ function moveCardTo(state, inv, rawSpec, events) {
 }
 
 function drawCards(state, inv, n, events) {
+  inv = effectRecipient(state, inv)
+  if (!inv || !playerEffectCanAffect(state, inv.seat)) return []
+    if (capabilityBlocked(state, inv, 'drawCards')) return []
   // 第 2 步 P2.6：无牌组故事调查员不能抽牌（也不进入重洗/弃牌逻辑）。
   if (inv?.storyInvestigator) {
     info(state, events, `📜 ${inv.name} 没有牌组，不能抽牌。`)
@@ -462,17 +515,19 @@ function drawCards(state, inv, n, events) {
   const texts = []
   let reshuffles = 0
   let drawnCount = 0
+  const drawnCodes = []
   for (let i = 0; i < n; i++) {
     if (inv.deck.length === 0) {
-      hiddenEnemiesAttackFromHand(state, inv, { registeredEntry, cardDef, applyDamage, applyHorror, info, events })
+      hiddenEnemiesAttackFromHand(state, inv, { registeredEntry, cardDef, enemyAttack, info, events })
       if (inv.discard.length === 0 || discardLocked(state, inv)) continue
       const rng = () => randomValue(state)
-      inv.deck = shuffle(inv.discard, rng)
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.discard, rng), 'shuffle')
       inv.discard = []
       reshuffles++
     }
     const code = inv.deck.pop()
     drawnCount++
+    drawnCodes.push(code)
     const def = cardDef(code)
     if (isWeaknessCard(def)) {
       // 2026-10-25 第六轮修复 05014：抽到弱点前的取消窗口（取消后洗回牌库、不重抽）。
@@ -480,36 +535,40 @@ function drawCards(state, inv, n, events) {
         cardCode: code, weakness: true, from: 'deck', cancelled: false,
         prompt: `${inv.name} 将要抽到弱点「${cardName(code)}」` }
       reactionWindow(state, 'cardWouldBeDrawn', weaknessDrawContext, events)
+      if (weaknessDrawContext.captured) continue
       if (weaknessDrawContext.cancelled) {
-        inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
+        inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
         info(state, events, `🛡️ ${inv.name} 取消了抽到的弱点「${cardName(code)}」，并将其洗回牌库。`)
         continue
       }
       texts.push(`⚠️ ${inv.name} 抽到了弱点「${cardName(code)}」：${def.textZh || def.text || ''}`)
+      notePromiseEvent(state, inv.seat, 'draw', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
       // Phase 5（5a-22）：「黑暗回忆」这类抽到后留在手里的弱点由条目级 weaknessStaysInHand 声明。
       if (registeredEntry(def.code)?.hiddenEnemyInHand) {
-        inv.hand.push(code)
+        putInHand(state, inv, code)
         inv.hiddenCards ||= []
         if (!inv.hiddenCards.includes(code)) inv.hiddenCards.push(code)
         texts.push(`${inv.name} 秘密将一张牌加入手牌。`)
       } else if (registeredEntry(def.code)?.weaknessStaysInHand) {
-        inv.hand.push(code)
+        putInHand(state, inv, code)
         const note = registeredEntry(def.code)?.weaknessHandNote
         texts.push(note || cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
       } else {
         resolveWeakness(state, inv, def, events, texts)
         if (inv.shuffleWeaknessAfterResolution === code) {
           delete inv.shuffleWeaknessAfterResolution
-          inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
-        } else if (def.type !== 'enemy' && !isThreatWeakness(def.code)
-          && !['attachedEnemy', 'attachedLocation'].includes(weaknessProfile(code)?.type)) {
+          inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
+        } else if (def.type !== 'enemy' && !inv.removedWeaknesses?.includes(code) && !isThreatWeakness(def.code)
+          && !['attachedEnemy', 'attachedLocation'].includes(weaknessProfile(code)?.type)
+          && !(state.agendas || []).some(agenda => (agenda.attachments || []).some(card => card.code === code && card.ownerSeat === inv.seat))) {
           // Attached weaknesses go to the discard pile when they detach.
-          inv.discard.push(code)
+          discardPlayerCards(state, inv, code)
         }
       }
     } else {
-      inv.hand.push(code)
+      putInHand(state, inv, code)
       texts.push(`${inv.name} 抽取了 1 张牌。`)
+      notePromiseEvent(state, inv.seat, 'draw', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
       scenarioBehavior(state).cardDrawn?.(state, inv, code, scenarioRuntime(state, events))
       // 能力层窗口：抽牌后（02040 亨利·阿米蒂奇博士等）。
       const drawContext = { when: 'cardDrawn', seat: inv.seat, location: inv.location, cardCode: code,
@@ -526,6 +585,15 @@ function drawCards(state, inv, n, events) {
   }
   // 「古代巨石（研究完成）」：抽牌后可按抽到的张数花费秘密。
   if (drawnCount > 0 && !inv.defeated) campaignCardDrawReaction(state, inv, events, drawnCount)
+  if (drawnCount > 0 && !inv.defeated && state.investigators.some(owner =>
+    [owner, ...owner.assets, ...owner.threat].some(source => registeredEntry(source.code)?.abilities?.some(
+      descriptor => descriptor.trigger?.includes('cardsDrawn'))))) {
+    state.drawBatchSerial = (state.drawBatchSerial || 0) + 1
+    reactionWindow(state, 'cardsDrawn', {
+      when: 'cardsDrawn', seat: inv.seat, location: inv.location, drawnCodes,
+      windowInstance: `draw:${state.drawBatchSerial}`,
+    }, events, { allowNested: true })
+  }
   return texts
 }
 
@@ -533,6 +601,8 @@ function drawCards(state, inv, n, events) {
 // （Phase 5（5a-30）：原来按 04230 / 04231 两个卡号分支）。
 
 function discardRandomFromHand(state, inv, n, events) {
+  inv = effectRecipient(state, inv)
+  if (!inv || !playerEffectCanAffect(state, inv.seat)) return
   if (!n || !(inv?.hand || []).length) return
   // 2026-10-25：05280「否决存在：忽略弃掉手牌的效果」的按面向取消窗口。
   const context = reactionWindow(state, 'wouldDiscardFromHand', {
@@ -545,15 +615,19 @@ function discardRandomFromHand(state, inv, n, events) {
     info(state, events, `🛡️ ${inv.name} 忽略了弃掉手牌的效果。`)
     return
   }
+  const discarded = []
   for (let i = 0; i < n; i++) {
     const candidates = inv.hand.map((code, index) => ({ code, index }))
       .filter(item => canDiscardFromHand(inv, item.code))
     if (!candidates.length) break
     const chosen = candidates[Math.floor(randomValue(state) * candidates.length)]
     const code = inv.hand.splice(chosen.index, 1)[0]
-    inv.discard.push(code)
+    discarded.push(code)
+    discardPlayerCards(state, inv, code)
     info(state, events, `${inv.name} 弃掉了「${cardName(code)}」。`)
+    afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
   }
+  return discarded
 }
 
 function removeOne(arr, code) {

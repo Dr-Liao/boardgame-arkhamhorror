@@ -10,14 +10,13 @@
 // 已实现：
 //   · [free] 横置：本次检定 +2 战斗（test.beforeCommit 玩家窗口 + api.addPendingTestBonus，
 //     与检定主流程合并在同一次检定里）；
-//   · 「最多 3 张同名卡共占 1 个法术槽位」用受限额外槽（restrictedSlots，arcane/Ritual）近似。
-// 未实现/简化（见 note）：「忽略 willpower 代替 combat 的效果」没有读点；同名限 1 由构筑层处理。
+//   · 三张增强自我共占一槽由 sharedSlotGroup 精确计算。
+//   · 属性替代时可选忽略由 ignoreSkillSubstitution 接入原动作检定。
 
 export default {
   code: '06241',
-  simplified: true,
-  note: '简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——3 张同名可同时在场且基本只占 1 个法术槽，但其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 combat 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 战斗。',
-  restrictedSlots: [{ slot: 'arcane', traitsAny: ['Ritual'], count: 1 }],
+  ignoreSkillSubstitution: { from: 'combat', to: 'willpower' },
+  sharedSlotGroup: { id: 'empowerSelf', slot: 'arcane', upTo: 3 },
   abilities: [
     {
       kind: 'free',
@@ -25,6 +24,7 @@ export default {
       label: '横置：本次检定 +2 战斗',
       cost: { exhaust: true },
       duringOwnSkillTest: true,
+      criteria: [({ state }) => [state.skillTest?.skill].flat().includes('combat')],
       resolve: ({ api }) => api.addPendingTestBonus(2),
     },
   ],

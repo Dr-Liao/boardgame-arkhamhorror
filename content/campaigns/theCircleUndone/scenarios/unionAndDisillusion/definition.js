@@ -74,7 +74,7 @@ export const KEEPER_OF_SECRETS = '05096'
 // 参考实现收齐：UAD + 在劫难逃 + 冥界 + 幽灵捕食者 + 远古恶魔 + 寒冷刺骨；
 // 后两个核组不在 TCU 21 个遭遇组里（见 gaps）。安妮特的女巫集会 / 银暮秘社 / 看守人
 // 三组整组放在一边（act 3 背面会洗回），不是初始牌堆。
-const deckGroups = ['unionAndDisillusion', 'inexorableFate', 'realmOfDeath', 'spectralPredators']
+const deckGroups = ['unionAndDisillusion', 'inexorableFate', 'realmOfDeath', 'spectralPredators', 'ancientEvils', 'chillingCold']
 // 命运卡背面敌人与看守人的注视不在初始遭遇牌库；它们由 setup 放在一边。
 const setAsideCodes = [
   TREACHERY_CODES.watchersGaze,

@@ -53,6 +53,7 @@ const run = (command, args, { timeout = 600_000 } = {}) => {
 const node = process.execPath
 const audits = AUDITS.map(audit => {
   const result = run(node, [audit.script, ...audit.args])
+  if (['--write','--check'].includes(process.argv[2])) console.error(`audit ${audit.id}: ${result.status===0 ? 'pass' : 'FAIL'}`)
   return {
     id: audit.id,
     command: `node ${audit.script}${audit.args.length ? ` ${audit.args.join(' ')}` : ''}`,
@@ -82,6 +83,7 @@ const goldenReplay = {
 // 与 npm run test:fast 同一条命令；直接跑 node 入口，避免 Windows 下 spawn npm.cmd 需要 shell。
 // Node 的 node --test 在管道下用 TAP reporter（`# tests N`），在 TTY 下用 spec reporter（`ℹ tests N`）；
 // 这里两种都接受，保证 spawnSync 捕获输出时仍能记录真实用例数（否则会记成 -1）。
+if (['--write','--check'].includes(process.argv[2])) console.error('audit commands complete; running test:fast')
 const testsResult = run(node, ['tools/run-tests.mjs', 'fast'])
 const testNumber = label => Number((testsResult.stdout.match(new RegExp(`(?:ℹ|#)\\s*${label}\\s+(\\d+)`)) || [])[1] ?? -1)
 const tests = {
@@ -97,7 +99,7 @@ const report = {
   // P10（2026-11-01）：M5 发布前最后一次重采。基线记录「当前检出」的审计/链接/回放/测试事实，
   // 不把历史跨循环账本的既有失败洗白；详见 notes 与 docs/tde-p10-report.md §5。
   milestone: 'P10',
-  purpose: 'P10 发布基线：全部 audit 命令与磁盘账本对账、文档链接无 404、golden replay 计数与冻结基线一致、test:fast 计数快照（含既有失败逐条记账）。',
+  purpose: '正式发布基线：全部审计与 test:fast 通过，文档链接有效，重放基线与已审阅规则变更一致。',
   audits,
   docLinks,
   goldenReplay,
@@ -106,18 +108,20 @@ const report = {
     'audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。',
     'TFA 账本由 tools/audit-tfa-scenarios.mjs 生成、aggregator 由 tools/audit-tfa.mjs 生成；改章节文件后按顺序 --write 再 --check。',
     '基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。',
-    'P10 重采时 carcosa/dunwich/core/p6/tcu 若干账本仍为 P8 报告 §8 的既有漂移（非 TDE 产生，未在本轮改写）；tdeScope/tdeMigration 两项为 P10 新增。测试计数里的 6 条失败与这些既有账本一一对应，新增失败为 0。',
+    '跨循环规则回归已修复；当前审计与测试必须全部通过，不允许冻结失败作为通过的发布基线。',
   ],
 }
 
 const serialized = JSON.stringify(report, null, 2) + '\n'
 const mode = process.argv[2]
+const gatePass = audits.every(item=>item.status===0) && docLinks.broken===0 && tests.status===0 && tests.fail===0
 
 if (mode === '--write') {
   await writeFile(TARGET, serialized)
   console.log(`baseline: ${audits.filter(item => item.status === 0).length}/${audits.length} audits ok; `
     + `docLinks broken=${docLinks.broken}; golden ${goldenReplay.fixtures} 局 / ${goldenReplay.steps} 步 / ${goldenReplay.hashes} 指纹; `
     + `test:fast ${tests.pass}/${tests.tests}`)
+  if (!gatePass) process.exitCode=1
 } else if (mode === '--check') {
   const current = await readFile(TARGET, 'utf8')
   if (current !== serialized) {
@@ -128,6 +132,7 @@ if (mode === '--write') {
     }
     throw new Error(`P0 基线漂移：${diffs.join(', ') || '未知字段'}；请审阅后 --write`)
   }
+  if (!gatePass) throw new Error('基线仍有失败：请修复审计、文档链接或测试后重新生成')
   console.log(`baseline: check ok (${audits.filter(item => item.status === 0).length}/${audits.length} audits; `
     + `docLinks broken=${docLinks.broken}; golden ${goldenReplay.steps} 步)`)
 } else if (mode === '--summary' || !mode) {

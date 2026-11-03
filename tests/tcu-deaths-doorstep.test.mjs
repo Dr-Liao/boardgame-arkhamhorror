@@ -240,7 +240,7 @@ test('布置线索：失踪人口对应地点 +6，按“留下的证据”尽�
   assert.equal(totalBefore, 26, '印刷线索 + 每处 6 个')
   assert.equal(totalRemaining, 26 - 8, '共移除 8 个线索')
   const values = targets.map(entry => entry.remaining)
-  assert.ok(Math.max(...values) - Math.min(...values) <= 1, '线索移除尽量平均')
+  assert.deepEqual(targets.map(entry => entry.remaining - bases[entry.id]), [4, 4, 4, 4], '每批每地点移除一次，保留印刷线索差异')
   // 没有“留下的证据”时线索为 6。
   const plain = stateFor()
   plain.campaign.records.missingPersons = ['05046']

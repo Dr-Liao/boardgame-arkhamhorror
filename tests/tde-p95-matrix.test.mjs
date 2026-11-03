@@ -47,6 +47,7 @@ import {
   serializeContainer,
   restoreContainer,
   P95_INVESTIGATOR_CODES,
+  finishParallelSharedStory,
 } from './tde-p95-fixture.mjs'
 
 const world = await loadTdeCampaignWorld()
@@ -1362,9 +1363,12 @@ test('P9.5 G10 封盘后两线自动进幕间 I（2–3 节点）并开下一章
   const state = beginParallel(hubSetup(engine, { seats: 4, mode: 'parallel', seed: 'p95-advance' }))
   sealPair(state, 1)
   const revisionBeforeAdvance = state.revision
+  const beforeBags=Object.fromEntries(['A','B'].map(lane=>[lane,state.parallel.lanes[lane].chaosBag.filter(token=>token==='elderthing').length]))
   const advance = pr.advanceParallelPair(state, 1)
   assert.equal(advance.ok, true, JSON.stringify(advance.advanced))
-  assert.equal(state.revision, revisionBeforeAdvance + 1, '封盘推进只推进一次全局版本')
+  assert.equal(advance.pending,true,'共享幕间等待真人确认')
+  assert.equal(state.revision,revisionBeforeAdvance,'打开共享幕间不伪造完成提交')
+  finishParallelSharedStory(engine,mod,state)
   const { A, B } = state.parallel.lanes
   // 封盘后两线自动走完真实 TDE 单线幕间 I（A 2 节点 / B 3 节点），并进入下一章 A2/B2。
   assert.equal(A.uiState, 'inScenario')
@@ -1380,15 +1384,9 @@ test('P9.5 G10 封盘后两线自动进幕间 I（2–3 节点）并开下一章
   assert.deepEqual(B.laneRuntime.roomSeats, [2, 3])
   assert.deepEqual(A.investigators.map(inv => inv.seat), [0, 1])
   assert.deepEqual(B.investigators.map(inv => inv.seat), [0, 1])
-  // 幕间 I 的单线变体按线走完：A 只经过 theBlackCat/theBlackCat1；B 经过 theBlackCat3 + youAreOnYourOwn。
-  const AHistory = A.campaign.flow.history.map(item => item.nodeId)
-  const BHistory = B.campaign.flow.history.map(item => item.nodeId)
-  assert.ok(AHistory.includes('interlude1') && AHistory.includes('interlude1.1'), `A 线应读完幕间 I 两个节点：${AHistory.join('>')}`)
-  assert.ok(BHistory.includes('interlude1.3') && BHistory.includes('interlude1.youAreOnYourOwn'),
-    `B 线应读完幕间 I 三个节点：${BHistory.join('>')}`)
-  // 幕间效果：B 单线分支记录 youAreOnYourOwn；A 单线分支不写该记录（跨线不串）。
-  assert.equal(B.campaign.records.youAreOnYourOwn, true)
-  assert.equal(A.campaign.records.youAreOnYourOwn, undefined)
+  assert.ok(state.parallel.sharedHistory.some(visit=>visit.nodeId==='interlude1'))
+  assert.equal(A.chaosBag.filter(token=>token==='elderthing').length,beforeBags.A+1)
+  assert.equal(B.chaosBag.filter(token=>token==='elderthing').length,beforeBags.B+1)
   // 两线真实的下一章已开局，且各有可行动座位。
   assert.equal(A.round, 1)
   assert.equal(B.round, 1)
@@ -1407,5 +1405,6 @@ test('P9.5 G10 封盘后两线自动进幕间 I（2–3 节点）并开下一章
   const replayRestored = pr.advanceParallelPair(restored, 1)
   assert.equal(replayRestored.alreadyApplied, true)
   assert.equal(restored.revision, revisionAfterFirst)
-  assert.equal(restored.parallel.lanes.B.campaign.records.youAreOnYourOwn, true)
+  assert.equal(restored.parallel.lanes.B.campaign.records.blackCatAtYourSide, B.campaign.records.blackCatAtYourSide)
+  assert.deepEqual(restored.parallel.lanes.B.chaosBag,B.chaosBag)
 })

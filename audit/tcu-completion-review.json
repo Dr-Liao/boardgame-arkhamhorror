@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theCircleUndone",
+  "date": "2026-11-02",
+  "cardCorrections": [
+    {
+      "code": "05003",
+      "name": "普雷斯顿·费尔蒙特",
+      "partition": "investigator",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "资源寄存仍是合并模型（src/engine/resource-bank.js:10-30：寄存量同时计入 inv.resources，asset.resources 只是标记）；R7 已接 resource-bank v2 薄封装：旧印门槛用 api.availableResources、支付用 api.spendResources（src/cards/entries/05003.js:28-40）。仍未实现审计要求的「分离池 + 付费选择（先花哪一份）」表示层；回合末按 min(寄存量, 现有资源) 扣回（resource-bank.js 的 endTurn），只有全部资源都是寄存时与卡面等价。另有直接写 inv.resources、不经 api.gainResources 的效果（01045/05037）不寄存。",
+      "clauses": [
+        {
+          "text": "你每次从卡牌效果获得资源，不将其放在资源池，改为放在家族遗产上。",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05003.js:15-21 resourceBank 声明；src/engine/resource-bank.js:74-84 gainResource（合并模型：同时加 inv.resources）；src/engine/api-misc.js:99-103 卡牌效果资源入口；tests/tcu-investigators.test.mjs:378-395。偏差：合并模型见 src/engine/resource-bank.js:10-17；“卡牌效果”但直写资源池的路径不改道：src/engine/harm-threat.js:335-344 investigateForResources（01045）、src/cards/entries/05037.js:82-84"
+        }
+      ],
+      "batch": "investigators#1"
+    },
+    {
+      "code": "05011",
+      "name": "家族遗产",
+      "partition": "investigator",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "资源寄存仍是合并模型（resource-bank.js:10-30）：卡上的资源同时留在 inv.resources 里，[action] 只是清掉寄存标记（R7 已改用 api.bankedResources/api.withdrawBanked 接线）；回合结束按 min(寄存量, 现有资源) 弃掉，混池时的流失量由实现固定、与卡面「弃掉卡上的所有资源」不等价。回合开始放 4 资源与永久卡开局入场有读点。",
+      "clauses": [
+        {
+          "text": "[action]：将本卡牌上的所有资源移动到你的资源池。",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05011.js:28-42（R7：api.bankedResources + api.withdrawBanked(inv.seat, banked)；回退 v1 resourceBank.withdraw）；src/engine/api-misc.js:114-123（v2 薄封装）；src/engine/resource-bank.js:110-118（withdrawBanked 只清寄存标记，合并模型下资源池数值不变）；tests/tcu-investigators.test.mjs:1617-1631。偏差：合并模型下 [action] 不是真正「把资源搬进资源池」，只是让这部分资源不再于回合末流失。"
+        },
+        {
+          "text": "强制 - 在你的回合开始时：在本卡牌上放置4资源。本卡牌上的资源可以被花费，如同在你的资源池中。当你的回合结束时，弃掉本卡牌上的所有资源。",
+          "status": "approximation",
+          "evidence": "src/engine/resource-bank.js:86-108 beginTurn/endTurn；src/engine/turn.js:323-329；src/engine/turn-flow.js:355；tests/tcu-investigators.test.mjs:397-415。偏差：合并模型（resource-bank.js:10-17）下回合结束按 min(寄存量, 现有资源) 扣，池里混有非寄存资源时会多/少流失"
+        }
+      ],
+      "batch": "investigators#1"
+    },
+    {
+      "code": "05052",
+      "name": "深夜号叫",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "第四轮裁决（Lead）：Omen/Curse 基础弱点在 BASIC_WEAKNESSES 中没有任何已实现弱点条目（registeredEntry 为空），collection 池也无法安全抽到（weakness.js 会抛错），因此本轮保持如实 approximation，不实现 collection pool（避免假通过）。正面轮末强制、背面「存活调查员被击败」与「找不到弱点者 1 精神创伤」均实现；唯一偏差仍是候选池取自 basicWeaknessPool（核心包+本战役已开放弱点），窄于卡面的「收藏」。",
+      "clauses": [
+        {
+          "text": "背面：每位存活的调查员被击败，且必须查找收藏，随机找出一张基础[[征兆]]或[[诅咒]]弱点，将它加入自己的牌库。",
+          "status": "approximation",
+          "evidence": "src/cards/encounter-entries/theCircleUndone/theWitchingHour/05052.js:8-26 先 api.defeat 再 api.addBasicWeakness(seat,['omen','curse'])；弱点候选来自 src/engine/card-defs.js:219-227 basicWeaknessPool（核心包+本战役 requiredPack 的 basicWeaknessCodes），不是全「收藏」检索；tests/tcu-witching-hour.test.mjs:426-442 覆盖加入弱点与 1 精神创伤兜底。"
+        }
+      ],
+      "batch": "chapter:theWitchingHour"
+    },
+    {
+      "code": "05156",
+      "name": "反应灵敏",
+      "partition": "player",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "两处偏差：①打出时机窄得多——引擎的快速手牌只在「当前调查员行动点耗尽/结束回合」的 investigation.afterAction 窗口出现（dispatch.js:460-465 传 fastCards、encounter.js:405-448 只给 fastCardSeat=state.currentSeat），因此本卡实际只能在你自己回合将结束时打出，不能像卡面那样在任意调查员的回合期间、行动之间打出；②「立即进行一次行动，如同现在是你的回合」被实现为获得 1 个额外行动（api-misc.js:245-248 只加 actionsLeft），该行动进入你的行动池、只能在自己的回合里使用；若在别人回合打出也无法立即结算一次行动。额外行动不计入每回合行动数这半边是等价的。",
+      "clauses": [
+        {
+          "text": "快速。在任意调查员的回合期间(不含行动期间)打出。",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05156.js:12-16 只声明 fast；src/engine/encounter.js:396-403 fastHandPlays 只列当前行动者的 0 行动快速牌；src/engine/encounter.js:405-448 快速手牌只在 playerWindow（fastCardSeat=state.currentSeat）且 opts.fastCards 时出现；src/engine/dispatch.js:460-465 只在当前调查员行动点耗尽/结束回合时的 investigation.afterAction 窗口传入 fastCards；tests/tcu-player-m2-2.test.mjs:835-845"
+        },
+        {
+          "text": "立即进行一次行动，如同现在是你的回合。此行动不计入你每回合能够进行的行动数量。",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05156.js:17-20 结算为 api.gainAction(inv.seat,1)；src/engine/api-misc.js:245-248 gainAction 只是 actionsLeft += 1（行动仍要在自己的回合内使用，无法在别人的回合里即时结算一次行动）；tests/tcu-player-m2-2.test.mjs:835-845（断言 actionsLeft+1）"
+        }
+      ],
+      "batch": "player:m2-2#2"
+    },
+    {
+      "code": "05231",
+      "name": "知识就是力量",
+      "partition": "player",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "R7 复核（当前实现未变；R7 引擎冻结未提供该卡所需读点/内容接线，维持原判）：条目 simplified:true 已登记。未实现「忽略所有费用」的引擎费用管线（费用校验/每回合上限记账）：实现是直接调用所选支援首个有 resolve 的 action/free 描述子的 resolve()（05231.js:31-34,67-84），效果不付费用，但不走 payAbilityCost/上限登记，且「需要 target 声明才能用的能力」会被跳过（如 05186 的攻击这类 target:{kind:'enemy'} 的能力），纯 effect 数据体的能力也无法结算。测试 407-418 断言了忽略费用（秘密 4→4、支援未横置）与移动效果；「从手牌揭示→可弃掉抽 1 张」分支（05231.js:85-94）没有断言但实现存在。",
+      "clauses": [
+        {
+          "text": "结算该支援上的一个[action]或[fast]能力，忽略所有费用(包括其[action]费用，如有)",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05231.js:31-34,67-84（只取有 resolve 且无 target 的 action/free 描述子并直接调用 descriptor.resolve，绕过引擎费用管线与上限记账；需要 target 的能力被跳过）；tests/tcu-player-m2-3.test.mjs:416-417（秘密未花费、支援未横置）"
+        }
+      ],
+      "batch": "player:m2-3#1"
+    },
+    {
+      "code": "05241",
+      "name": "未访之岛",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "［R5 裁决］交叉复核（reaudit-c）指出：「将其放置入场，放到自己面前」仍以 flags.frontOf 语义载体记录（引擎无「面前场所」实体原语、web 无消费点），本轮无实现变化，与 R2/R3 记录的近似是同一处；其余子句（火盆地点真实 markers、命运卡随机发放/按玩家顺序结算）均已实现。",
+      "clauses": [
+        {
+          "text": "将其放置入场，放到自己面前",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:698-719（flags.frontOf 语义载体，无面前场所实体）"
+        }
+      ],
+      "batch": "chapter:unionAndDisillusion#1"
+    },
+    {
+      "code": "05262",
+      "name": "加弗瑞拉的命运",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "只剩「翻回敌人面」的承载差异：用 spawnStoryEnemy 生成敌人面 05262b，不是同一张卡实体翻面（本关没有能选中该卡的效果，行为等价，属表示层）。本轮已修：「不占盟友槽」现在由 allySlotsOk 实例 slots 生效（assets.js:193-208）；「与你交战」显式与结算这张命运卡的调查员交战（behavior.js:141-145），不再依赖 autoEngageAt 的猎物选择。",
+      "clauses": [
+        {
+          "text": "如果加弗瑞拉已被幽灵夺走性命：将本卡牌翻回敌人面，生成在你所在地点；若在追查则横置且不交战，否则与你交战",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:155-186（spawnFateEnemy：api.spawnStoryEnemy 生成敌人面 05262b；横置分支解除交战 173-179；非横置分支显式 api.engage(enemy, inv.seat) 180-184）；content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:211-215（claimed 分支）"
+        }
+      ],
+      "batch": "chapter:unionAndDisillusion#2"
+    },
+    {
+      "code": "05263",
+      "name": "杰罗姆的命运",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "与 05262 同构：只剩「翻回敌人面」用 spawnStoryEnemy 生成 05263b 的表示层差异；不占盟友槽（allySlotsOk 已修）、交战者（api.engage 已修）、追查时横置不交战、恐惧数值均一致。",
+      "clauses": [
+        {
+          "text": "如果杰罗姆已被幽灵夺走性命：将本卡牌翻回敌人面，生成在你所在地点；若在追查则横置且不交战，否则与你交战",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:155-186（spawnStoryEnemy 生成 05263b；横置解除交战 173-179；显式交战 180-184）；content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js:59-64（05263/05263b 映射）；content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js:100（05263b horror=1）"
+        }
+      ],
+      "batch": "chapter:unionAndDisillusion#2"
+    },
+    {
+      "code": "05264",
+      "name": "佩妮的命运",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "只剩「翻回敌人面」用 spawnStoryEnemy 生成 05264b 的表示层差异。本轮已修：person 记录键改为 05049（佩妮），失踪人口过滤与「还活着/已死」记录不再串位；不占盟友槽、与非检定者交战均与卡面一致。",
+      "clauses": [
+        {
+          "text": "如果佩妮已被幽灵夺走性命：将本卡牌翻回敌人面，生成在你所在地点；若在追查则横置且不交战，否则与你交战",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:155-186（spawnStoryEnemy 生成 05264b；显式交战 180-184）；content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js:101（05264b horror=2）"
+        }
+      ],
+      "batch": "chapter:unionAndDisillusion#2"
+    },
+    {
+      "code": "05265",
+      "name": "瓦伦蒂诺的命运",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "只剩「翻回敌人面」用 spawnStoryEnemy 生成 05265b 的表示层差异。本轮已修：person 记录键改为 05048（瓦伦蒂诺）；不占盟友槽、与结算者交战、追查时横置不交战均正确。",
+      "clauses": [
+        {
+          "text": "如果瓦伦蒂诺已被幽灵夺走性命：将本卡牌翻回敌人面，生成在你所在地点；若在追查则横置且不交战，否则与你交战",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js:155-186（spawnStoryEnemy 生成 05265b；显式交战 180-184）；content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js:102（05265b horror=1）"
+        }
+      ],
+      "batch": "chapter:unionAndDisillusion#2"
+    },
+    {
+      "code": "05323",
+      "name": "Lure",
+      "partition": "player",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "R7 复核：①「附属到你所在地点或一个连接地点」改走真实地点附属（api.attachToLocation → state.playerLocationAttachments，locationLure/discardAtRoundEnd 由引擎读点消费），不再是 loc.lure 标记；②「敌军阶段期间所有要移动的敌人朝附属地点移动」已由 turn.js hunterStep 读真实附属实现（多诱饵按距离取最近，测试覆盖猎手移动/多诱饵最近）；仍判 approximation 的残余：剧本/效果发起的敌人移动（非猎手步）不经过 hunterStep、不读诱饵；③轮末强制弃置已实现（discardAtRoundEnd 恰好弃 1 张，keepOnPlay 防事件默认弃置）。",
+      "clauses": [
+        {
+          "text": "敌军阶段期间，所有要移动的敌人不照常移动，而是改为沿着最短路径，朝附属地点移动",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05323.js:22（locationLure 字段）；src/engine/turn.js:250-268（hunterStep 读 playerLocationAttachments 的 locationLure，多诱饵按距离取最近）；tests/tcu-player-m2-4.test.mjs:638（猎手朝诱饵移动）、662（多诱饵取最近）；**残余**：剧本/效果发起的敌人移动不经过 hunterStep，不读诱饵"
+        }
+      ],
+      "batch": "player:m2-4#2"
+    },
+    {
+      "code": "05324",
+      "name": "美满结局",
+      "partition": "player",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "R7 复核（当前实现未变；R7 引擎冻结未提供该卡所需读点/内容接线，维持原判）：条目 simplified:true 已登记：引擎没有 tokenReveal 替换标记的 interrupt（原语请求被 rejected）。现实现只覆盖「负数值标记使技能值降到 0 或以下」这一支：negativeTokenRevealed 窗口里把修正翻成等值正数（05324.js:31-33；tests.js:682-684），得到的是 -4→+4 这样的等值正修正，而不是旧印的 +1 与旧印能力，也不是卡面说的「取消该标记」。auto_fail 在打开窗口之前就被判为自动失败（tests.js:633-642），符号标记的负修正走 tests.js:704-708 那条分支、context.token 是符号名，会被本卡 criteria 的纯数字正则挡掉，因此「包括 [auto_fail] 标记」与符号标记分支都不可达（05324.js:16-17 note）。快速/2 费打出与「技能值降到 0 或以下」的判据已实现并有断言。",
+      "clauses": [
+        {
+          "text": "在技能检定期间，你揭示一个混乱标记，且该标记将要令你的技能值减少到0时打出（包括[auto_fail]标记）",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05324.js:24-30（criteria 只接受纯数字标记字符串且 testValue≤0）；src/engine/tests.js:678-684（只有负数值标记打开 negativeTokenRevealed 窗口）；src/engine/tests.js:633-642（auto_fail 在窗口之前直接置自动失败）；src/engine/tests.js:704-708（符号标记走另一条 delta 分支，context.token 是符号名会被该 criteria 挡掉）"
+        },
+        {
+          "text": "取消该标记并改为将其视作[elder_sign]标记",
+          "status": "approximation",
+          "evidence": "src/cards/entries/05324.js:31-34（只写 context.flipTokenSign）；src/engine/tests.js:682-684（仅把负修正翻正，不执行旧印的 +1/旧印能力，也不是「取消标记」）；tests/tcu-player-m2-4.test.mjs:651,659-660"
+        }
+      ],
+      "batch": "player:m2-4#2"
+    },
+    {
+      "code": "05341",
+      "name": "盲目舞者（Mindless Dancer）",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "R6 仍为 approximation（表示层）：虚空格子在本仓库只是 cosmos 二维网格格位数据，不是可站立的 location 实体（参考实现用 xempty 特殊地点卡）。R6 收窄：①「Spawn - Farthest empty space」按网格取离所有调查员最远的虚空格，flags.dancerVoidCell 记录该格位、引擎锚点取离它最近的在场地点（behavior.js:817-870,932-958,1336-1348）；②「可以进入虚空格子，如同其进入一个地点」用 flags.dancerVoidCell 承载：舞者可停留在虚空格中、下一次猎手移动从该格位继续；经猎手进入虚空格时同一结算内再走一格（每轮一次），连续两格虚空格会停在第二格（behavior.js:872-930,1350-1358）；③「经猎手移动到虚空格后再结算猎手（每轮一次）」由 flags.dancerVoidRound 记账覆盖。残余：虚空格中时引擎侧位置仍锚定最近地点（攻击/躲避/交战读点已按 dancerVoidCell 拒绝，但「按地点统计/检索敌人」的效果会把它算在锚点地点；引擎猎手循环在锚点地点有调查员时会跳过本卡）；等距多条路线取确定顺序而非队长选择。测试 tests/tcu-black-throne.test.mjs:996-1103；猎手关键词本身由引擎实现（turn.js:148-161）。",
+      "clauses": [
+        {
+          "text": "Spawn - Farthest empty space.（生成 - 最远的虚空格子。）",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js:817-870（farthestEmptySpace：网格取离所有调查员最远的虚空格 + 离它最近的在场地点）；behavior.js:932-958（spawnLocationFor）；behavior.js:1336-1348（enemySpawned 把虚空格写进 flags.dancerVoidCell）；src/engine/enemies.js:323（剧本 spawnLocation 钩子读点）"
+        },
+        {
+          "text": "Mindless Dancer can enter empty space as if it were a location.（可以进入虚空格子，如同其进入一个地点。）",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js:872-930（dancerVoidCell/dancerHuntMove：进入虚空格可停住、下一次猎手从该格位继续；经猎手进入虚空格则同结算再走一格）；behavior.js:1350-1358（hunterMove 接管）；behavior.js:1290-1318（canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked 在 dancerVoidCell 时拒绝）"
+        },
+        {
+          "text": "Forced - After Mindless Dancer moves to an empty space via its hunter keyword: Resolve its hunter keyword again. (Limit once per round.)",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js:892-930（flags.dancerVoidRound 每轮一次再结算猎手）；tests/tcu-black-throne.test.mjs:996-1103（穿越+清标记/停留虚空格+下一轮继续/连续两格虚空格/生成锚点，共 4 条）"
+        }
+      ],
+      "batch": "chapter:beforeTheBlackThrone#2"
+    },
+    {
+      "code": "05346",
+      "name": "阿撒托斯（Azathoth）",
+      "partition": "campaign",
+      "verdict": "approximation",
+      "accepted": false,
+      "note": "R6 仍为 approximation（表示层）：阿撒托斯不建场上敌人实体（参考实现是 Omnipotent 的 Global 敌人：普通「敌人」匹配器会因 Omnipotent 被排除在玩家卡效果之外，本引擎没有该匹配器语义，故用「不生成实体」表达「免疫所有玩家卡牌效果/调查员行动」）。R6 补齐防御性内容钩子 enemyCanBeDefeated/canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked/enemyCannotAttack/canOpportunityAttack/enemyDamageAllowed（behavior.js:1286-1324,1325-1334，异常路径生成时也不会被攻击/击败/躲避/交战/伤害）。唯一行为差异仍是「统计场上敌人」的效果会少算它：R6 评估内容侧替代读点（behavior.enemyCountOverride 等）不可行——现有玩家卡/引擎效果直接读 state.enemies，没有可插入的引擎读点，内容钩子会是死代码；要消除需引擎支持 Global 真实敌人实体（本轮不做）。③「≥10 毁灭 → 吞食宇宙（→R1）」已实现：maybeDevoured 读 azathothDoom（含 05328 背面后的吸收口径），addAzathothDoom/doomPlaced/各阶段钩子末轮询（behavior.js:64-82,1213-1255），测试 667-707。",
+      "clauses": [
+        {
+          "text": "Azathoth is oblivious and omnipotent. It is immune to all player card effects and investigator actions.（懵懂不察而又无所不能；免疫所有玩家的卡牌效果和调查员行动。）",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js:1286-1324（enemyCanBeDefeated/canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked/enemyCannotAttack/canOpportunityAttack/enemyDamageAllowed 对 05346 一律拒绝）；behavior.js:1325-1334（spawnLocation 返回 null：不生成场上实体）；src/engine/hidden-rules.js:134-142（对应 engine 读点）"
+        },
+        {
+          "text": "…and cannot be defeated by any means.（并且不能被任何方式击败。）",
+          "status": "approximation",
+          "evidence": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js:1286-1300,1325-1334（不可击败/不生成实体）；content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/definition.js:178-185（cannotBeDefeated/immuneToPlayerCards/omnipotent/spawnAt 数据）；src/engine/hidden-rules.js:139-142"
+        }
+      ],
+      "batch": "chapter:beforeTheBlackThrone#2"
+    }
+  ],
+  "scenarioHistory": [
+    {
+      "chapter": "atDeathsDoorstep",
+      "status": "resolved",
+      "review": "逐条核对原备注，实际缺口已修复；存储表示与已实现行为属于实现说明，不作为当前缺口。",
+      "historicalSource": "scenarioApproximations: [\n    '议程 1「抽到[[怪物]]敌人时不生成、放一边」→ 引擎没有 draw-cancel 钩子；本章用 encounterDrawn（引擎在 spawnEnemy 之前调用）给「本次抽到的怪物」打 source 标记，spawnLocation 只在该标记命中时返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside 并用 api.addDoom(1) 放毁灭。效果/弱点等非抽牌 Monster 生成没有标记、照常放行（触发面与卡面「抽取」一致）。',\n    '议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 内容层按参考 hunter-extra-targets 语义重写 hunterMove：同地点有「视作调查员」的银暮秘社敌人则不移动；额外目标最近距离严格更近则向它移动；调查员更近时返回 false 交回引擎默认 hunterStep（PREY_RANK/猎物标记/等距裁决完整）；并列时合并「引擎 hunterStep 的（猎物优先级）下一步」与额外目标路线，由 lead 选择。',\n    '议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎 enemyPhaseAfterHunters 钩子（猎手循环后、交战/攻击前）结算，时点与参考一致。',\n    '露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 本章在 behavior.actions/performAction 内实现（玩家逐张选择手牌，Wild 图标计入，费用不足不消耗团队次数；actionKind=parley 不引发趁乱攻击）。',\n    '幽灵面的闹鬼能力 → flipSpectral 只替换印刷字段；locationFlipped 把幽灵面的 haunted 数组写入地点实例、翻回正常面时清除（与 P2.1 的 haunted 数据形状一致）。',\n    '幽灵面的胜利点（05081/05082/05084）→ locationFlipped 把印刷胜利点写到地点实例；幕末由引擎 campaign-flow「已揭示且无线索」口径计分（与参考实现结算时机一致）。',\n    '幕间故事 I 的正文 → P9 起从 story-text.js 读入（幕 1b 写 trail 记录时逐段读出）；幕间故事 II 的分支（Josef 命运）在 P9 起落到战役记录（josefDisappearedIntoTheMist / theInvestigatorsRescuedJosef / josefIsAliveAndWell），供 campaign.flow 的 interludeTwoFate 分支使用；记录在关末写入（参考实现在幕间开始时写入，状态等价、观察时机略早）。',\n    '「留下的证据」线索移除「尽量平均」→ 参考实现由队长逐个选择；本实现用确定性等价规则（每次从线索最多的地点移除，平手按地点 id）。',\n    '办公室「位于办公室的银暮秘社敌人失去冷漠」→ 事件驱动把结果同步到 enemy.aloof（生成/移动/回合开始/幕议程推进后），引擎没有关键词修正词表。',\n    'Josef 谈判成功 → 一次结算内：flipEnemy 到 05085b、移除毁灭、记录本局限制、翻回敌人面并解除交战（等价双面卡正反面的连续结算）。',\n    '银暮秘社敌人「获得胜利 0」→ 引擎的胜利点只在进入胜利区时按 victory 统计，0 点不改变任何数值；本章不改数据（等价）。',\n  ],\n}\n\nexport {\n  awardSpectralVictory, bfsDistance, distributeClues, epilogueInterludeKey, resolutionForAct,\n  setupLocations as buildSetupPlan,\n}\n"
+    },
+    {
+      "chapter": "beforeTheBlackThrone",
+      "status": "resolved",
+      "review": "逐条核对原备注，实际缺口已修复；存储表示与已实现行为属于实现说明，不作为当前缺口。",
+      "historicalSource": "scenarioApproximations: [\n    '宇宙用二维网格承载（见 cosmos.js）：格位/方向/四邻接连接/虚空格子（携带一张玩家卡）均按参考 Cosmos.hs 与各地点 RunCosmos 实现；虚空格子不建「地点卡」实体（参考实现用 xempty 特殊地点卡），因此敌我目标枚举里不会把虚空格子当地点（05341 盲目舞者的「进入虚空格子」用网格格位 flags.dancerVoidCell 承载，见下一行）。',\n    '盲目舞者（05341）的「可以进入虚空格子，如同其进入一个地点」用 cosmos 二维网格承载：最短路线下一格是虚空格时舞者进入并记录 flags.dancerVoidCell（可停留在虚空格中，下一次猎手移动从该格位继续），若经猎手进入虚空格则同一结算内再走一格（每轮一次，enemy.dancerVoidRound）；生成时按网格取离所有调查员最远的虚空格，dancerVoidCell 记录该格位、引擎锚点取离它最近的在场地点（farthestEmptySpace/dancerHuntMove/spawnLocationFor/enemySpawned）。残余表示层：虚空格仍不是可站立的 location 实体——舞者在虚空格中时引擎侧位置仍锚定在最近地点（攻击/交战类读点已由 canFightEnemy/canEvadeEnemy/enemyCannotBeAttacked 按 dancerVoidCell 拒绝，但「按地点统计/检索敌人」的效果会把它算在锚点地点；引擎猎手循环在锚点地点有调查员时会跳过本卡，属同源残余）；等距多条路线仍取确定顺序而非队长选择。tests/tcu-black-throne.test.mjs 覆盖穿越/停留/连续两虚空格/生成。',\n    '阿撒托斯不建场上敌人实体（参考实现是 Omnipotent 的 Global 敌人；普通「敌人」匹配器在参考实现里会因 Omnipotent 被排除在玩家卡效果之外，本引擎没有该匹配器语义，故用「不生成实体」表达「免疫所有玩家卡牌效果/调查员行动」）。毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败由「不在场」成立，并已由 behavior.enemyCanBeDefeated/canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked/enemyCannotAttack/canOpportunityAttack/enemyDamageAllowed 防御性拒绝（即便被异常路径生成也不会被攻击/击败/躲避/交战/伤害）。唯一行为差异是「统计场上敌人」的效果会少算它：R6 评估过内容侧「替代计数读点」（behavior.enemyCountOverride 等）不可行——现有玩家卡/引擎效果直接读 state.enemies，没有可插入的引擎读点，内容钩子只会是死代码；要消除此差异需要引擎支持 Global/不在任何地点的真实敌人实体（本轮不做）。05328 背面推进后置 flags.azathothAbsorbsAllDoom，此时阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（等价 CountAllDoomInPlay），skull X / 黑色王座隐藏值 / 05344·05345 都读同一口径；≥10 毁灭在 addAzathothDoom/doomPlaced/各阶段钩子末轮询判「吞食宇宙（→R1）」。',\n    '冒险参考卡资源用 scenarioFlags.referenceResources 记账；「移除参考卡 1 资源」的能力在资源不足时不出现。',\n    '幕推进时的清场重建（05329/05330 背面）按 definition.COSMOS_LAYOUTS 的固定摆盘表实现：旧枢纽移出游戏、虚空格子的卡洗回所有者牌库、其余地点洗回宇宙（其上调查员阵亡、敌人与遭遇牌库顶 5 张混洗）、「放在一边的枢纽 + 宇宙顶 N 张」洗混后隐藏摆放在手册位置、虚空格子从 lead 牌库顶取卡、按玩家顺序每人抽 1 张遭遇。仍属表示层近似：地点卡以「宇宙」面朝上摆放但引擎不区分卡背图案，二维坐标只存于 scenarioFlags（界面地图仍用静态 layout 坐标，不随移动变化）。',\n    '调查员被击败的「调查员被击败」段落只记日志 + 1 点精神创伤（参考实现的 drivenInsane 会改写战役记录状态）。',\n    'DarkCult 遭遇组：本仓库卡表把 Acolyte/Wizard of the Order/Mysterious Chanting 归在 pentagram 组，遭遇牌库用 pentagram 组近似。',\n    'ReturnTo 专属内容（夜魇坐骑 54061 等 4 张变体卡）不在本次非 ReturnTo 剧本的卡表范围内，未实现。',\n  ],\n  scenarioGaps: [],\n}\n\nfunction afterAvailable(state, inv) {\n  return (inv.clues || 0) >= 1\n}\n"
+    },
+    {
+      "chapter": "disappearanceAtTheTwilightEstate",
+      "status": "resolved",
+      "review": "逐条核对原备注，实际缺口已修复；存储表示与已实现行为属于实现说明，不作为当前缺口。",
+      "historicalSource": "scenarioApproximations: [\n    '「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）',\n    '击败来源判定：用 beforeEnemyHarm + beforeHarm 两层读点精确定位「致命那次伤害」的来源（敌人攻击/议程 1a 强制/其它），同一轮多来源时不会误归；仅当外部直接调用 investigatorEliminated（无 harm 记录）时退回「同轮最近攻击者」兜底',\n    '卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口',\n    '朦胧之雾(01168) 的附属按核心共享条目的 location.fog/shroudMod 语义近似，不建独立附属实例',\n    '「放在密谋牌库旁」的 05102/05107 存共享区 state.scenarioZones.agendaAside（纯 JSON），持续效果与轮末清理由 encounterRules 的通用钩子读取',\n  ],\n\n  // ---- 设置 ---------------------------------------------------------------\n\n  preScenarioSetup(state, events, api) {\n    encounterRules.preScenarioSetup?.(state, events, api)\n    const flags = flagsFor(state)\n    const zones = zonesFor(state)\n    zones.setAside ||= [THE_SPECTRAL_WATCHER]\n    zones.removed ||= []\n    if (flags.prologueInitialized) return\n    flags.prologueInitialized = true\n    Object.assign(flags, {\n      setupComplete: false,\n      tarotDrawn: false,\n      tarotDrawnCount: 0,\n      lastAttacker: {},\n      agendaHarmSeat: null,\n    })\n    ensurePrologueRecords(state)\n    prepareStoryInvestigatorSetup(state, api)\n    drawPrologueTarot(state, api)\n  },\n\n  setupLocations(state, events, helper = {}) {\n    const zones = zonesFor(state)\n    zones.setAside = [THE_SPECTRAL_WATCHER]\n    zones.removed = []\n    flagsFor(state).locationsPlaced = Object.keys(STORY_INVESTIGATOR_SETUP).length\n    helper.info?.(state, events, '🏚️ 幽灵的领域：本场景只使用 7 张带「幽灵」特性的地点。')\n    // 调查员的位置已在 preScenarioSetup 写好；placeLocation 会据此把有人的地点直接揭示并放线索。\n    return Object.keys(state.scenario.locations)\n  },\n\n  setupEnemies(state, events, helper = {}) {\n    const spawn = (code, locationId, seat = null) => {\n      const enemy = helper.spawnEnemy?.(state, code, locationId, seat, true)\n      if (enemy) helper.info?.(state, events, `👹 「${enemy.name}」生成于「${helper.locName?.(state, locationId) || locationId}」${seat == null ? '' : '并与调查员交战'}。`)\n      return enemy\n    }\n    // theSpectralWatcher：开局放在入口大厅。\n    const watcher = spawn(THE_SPECTRAL_WATCHER, START_LOCATION)\n    const chosen = chosenStoryInvestigators(state)\n    for (const entry of chosen) {\n      const inv = state.investigators?.[entry.seat]\n      if (!inv) continue\n      const setup = STORY_INVESTIGATOR_SETUP[entry.code]\n      for (const card of setup.setupCards) {\n        if (card.code === THE_SPECTRAL_WATCHER) continue\n        if (card.placement === 'threat') {\n          placeThreat(state, inv, card.code)\n          helper.info?.(state, events, `🃏 「${ALL_CARDS[card.code]?.nameZh || card.code}」放入 ${inv.name} 的威胁区域。`)\n        } else if (card.placement === 'enemy') {\n          spawn(card.code, setup.startLocation)\n        } else if (card.placement === 'engagedEnemy') {\n          spawn(card.code, setup.startLocation, inv.seat)\n        } else if (card.placement === 'locationAttachment') {\n          const location = state.locations?.find(item => item.id === inv.location)\n          if (location) {\n            location.fog = (location.fog || 0) + 1\n            location.fogCode = card.code\n            location.shroudMod = (location.shroudMod || 0) + 2\n            helper.info?.(state, events, `🌫️ 「${ALL_CARDS[card.code]?.nameZh || card.code}」附属到「${location.name}」（隐藏值 +2）。`)\n          }\n        } else if (card.placement === 'nextToAgenda') {\n          placeAgendaAside(state, card.code)\n          helper.info?.(state, events, `🃏 「${ALL_CARDS[card.code]?.nameZh || card.code}」放到密谋牌库旁。`)\n        }\n      }\n      const watcherDamage = Number(setup.watcherDamageOnSpawn || 0) // 卡背：在幽灵看守人上放置 N 点伤害（数据驱动）\n      if (watcherDamage > 0 && watcher) {\n        watcher.damageTaken = (watcher.damageTaken || 0) + watcherDamage\n        helper.info?.(state, events, `🔫 ${inv.name} 在幽灵看守人身上留下 ${watcherDamage} 点伤害。`)\n      }\n    }\n  },\n\n  modifyDeck(state, deck, events, helper) {\n    const next = [...deck]\n    const chosen = chosenStoryInvestigators(state).map(entry => entry.code)\n    for (const card of setupCardsFor(chosen)) {\n      const index = next.indexOf(card.code)\n      if (index < 0) continue\n      next.splice(index, 1)\n      helper?.info?.(state, events, `🗂️ 从遭遇牌库取出「${ALL_CARDS[card.code]?.nameZh || card.code}」（按调查员卡背设置）。`)\n    }\n    return next\n  },\n\n  afterChaosBagSetup(state) {\n    encounterRules.afterChaosBagSetup?.(state)\n    flagsFor(state).setupComplete = true\n  },\n\n  // ---- 章节规则 -----------------------------------------------------------\n\n  // 05043 骷髅：简单/普通 -3，困难/专家 -5（数值在 chaos.js）。\n  resolveChaosToken(state, inv, token, api) {\n    encounterRules.resolveChaosToken?.(state, inv, token, api)\n    return prologueChaosToken(state, inv, token, api)\n  },\n\n  // 05043 骷髅的后半句：失败且为攻击/躲避尝试 → 结算你所在地点的每条闹鬼能力。\n  // 判定按「检定动作种类」而不是技能值：战斗/敏捷检定也可能是卡牌效果或其他行动（例如 05104 的\n  // [agility] 显现检定），按技能判断会误触发；01036、05029 等改技能的攻击/躲避又会漏掉。\n  // 共享 encounter-rules 的 testActionKind 读检定 source 标签（攻击/躲避/调查），这里复用同一读点；\n  // 调查失败由引擎自动结算闹鬼，章节不再重复触发。\n  afterTest(state, inv, result, api) {\n    if (!result || result.success) return\n    if (result.token !== 'skull') return\n    if (!['fight', 'evade'].includes(testActionKind(result))) return\n    if (!inv?.location || !api?.haunted) return\n    api.haunted(inv.seat, { locationId: inv.location, times: 1, kind: 'scenario' })\n  },\n\n  // 议程 1a 强制：任何卡上放置毁灭后，每位调查员受到 1 伤害或 1 恐惧（场上有 ≥5 毁灭时改为 2）。\n  // `payload` 形状由引擎给出：{ target, amount, agenda }。\n  doomPlaced(state, payload, api) {\n    encounterRules.doomPlaced?.(state, payload, api)\n    const flags = flagsFor(state)\n    if (!flags.setupComplete) return\n    if (state.agendaIndex !== 0) return\n    const damage = totalDoomInPlay(state) >= 5 ? 2 : 1\n    for (const inv of activeInvestigators(state)) {\n      let choice = 'damage'\n      if (api?.choose) {\n        choice = api.choose({\n          kind: 'harm', source: AGENDA_CARD, seat: inv.seat,\n          prompt: `审判·XX：${inv.name} 受到 ${damage} 点伤害，或受到 ${damage} 点恐惧。`,\n          options: [\n            { id: 'damage', label: `受到 ${damage} 点伤害` },\n            { id: 'horror', label: `受到 ${damage} 点恐惧` },\n          ],\n        })\n      }\n      // 记录「这次伤害来自议程强制」：若因此被击败，1b 的「消失在迷雾之中」分支要靠它。\n      flags.agendaHarmSeat = inv.seat\n      try {\n        if (choice === 'horror') api?.horror?.(inv.seat, damage)\n        else api?.damage?.(inv.seat, damage)\n      } finally {\n        flags.agendaHarmSeat = null\n      }\n    }\n  },\n\n  // 敌人攻击：先记「本次攻击」来源；真正的来源固化在 beforeHarm（伤害落点）里。\n  beforeEnemyHarm(state, enemy, inv, harm, api) {\n    encounterRules.beforeEnemyHarm?.(state, enemy, inv, harm, api)\n    rememberAttacker(state, enemy, inv)\n  },\n\n  // 每次伤害/恐惧落点：把「致命那次伤害」的真实来源固化为 lastHarmSource[seat]：\n  // enemyAttack（含来源敌人与 traits）/ agenda（本密谋 1a 强制）/ other。1b 的四分支记录据此判定。\n  beforeHarm(state, inv, harm, api) {\n    encounterRules.beforeHarm?.(state, inv, harm, api)\n    if (!inv || inv.seat == null) return\n    const flags = flagsFor(state)\n    const pending = flags.pendingAttackHarm\n    let source = { type: 'other' }\n    if (pending && Number(pending.seat) === Number(inv.seat) && Number(pending.round) === Number(state.round || 0)) {\n      source = { type: 'enemyAttack', code: pending.code, traits: [...(pending.traits || [])] }\n      flags.pendingAttackHarm = null\n    } else if (flags.agendaHarmSeat === inv.seat) {\n      source = { type: 'agenda' }\n    }\n    flags.lastHarmSource ||= {}\n    flags.lastHarmSource[inv.seat] = source\n  },\n\n  // 幕 1a 强制 + 议程 1a 强制②：调查员被消除时（含撤退）。\n  investigatorEliminated(state, inv, clues, api) {\n    const flags = flagsFor(state)\n    const act = state.acts?.[0]\n    const actIsPrologue = String(original(act)) === ACT_CARD\n    const amount = Number(clues ?? inv.clues ?? 0)\n    if (actIsPrologue && amount > 0) {\n      // 「改为将该调查员的每个线索放在本场景上，而不是放在所在地点」。\n      act.clues = Number(act.clues || 0) + amount\n      inv.clues = 0\n      api?.info?.(`📜 ${inv.name} 被消除：${amount} 个线索放到「${act.name}」上（场景共 ${act.clues} 个）。`)\n    }\n    // 「当任何调查员被击败时，该调查员必须推进此议程」——撤退 ≠ 被击败，不触发。\n    // 用 agenda-in-place-flip 原语真实翻到 1b（播报背面正文），记录该调查员命运后再翻回 1a；\n    // 不推进 agendaIndex、不移除任何毁灭标记（卡面「在本密谋推进时，不要移除其上任何毁灭标记」）。\n    if (!inv.resigned && state.agendaIndex === 0 && String(original(state.agendas?.[0])) === AGENDA_CARD) {\n      const hasFlip = typeof api?.flipAgendaInPlace === 'function'\n      if (hasFlip) api.flipAgendaInPlace('back')\n      else api?.info?.(`📖 密谋 1b「审判·XX」：翻开背面并按指示记录 ${inv.name} 的命运。`)\n      const fate = recordFateForElimination(state, inv)\n      const backText = ALL_CARDS[AGENDA_CARD]?.backTextZh || ALL_CARDS[AGENDA_CARD]?.backText || ''\n      if (!hasFlip && backText) api?.info?.(backText)\n      api?.info?.(`📖 ${inv.name} 的命运已记录（${fate.key}）。`)\n      if (hasFlip) api.flipAgendaInPlace('front')\n      else api?.info?.('🌑 密谋翻回 1a；本次推进不移除其上任何毁灭标记。')\n      if (fate.attacker) api?.info?.(`🩸 击败来源：${ALL_CARDS[fate.attacker.code]?.nameZh || fate.attacker.code}。`)\n    }\n    // 本 hook 接管了「线索放在地点」的默认行为。\n    return true\n  },\n\n  // 回合结束清理「上一轮攻击者」。\n  roundEnded(state, api) {\n    encounterRules.roundEnded?.(state, api)\n    clearRoundMarkers(state)\n  },\n\n  // ---- 幕 / 议程 / 地点 / 遭遇的分派 ---------------------------------------\n\n  actReveal(state, act, api, revealType) {\n    const handled = encounterRules.actReveal?.(state, act, api, revealType)\n    if (handled) return handled\n    return actRuleFor(String(original(act)))?.onReveal?.(state, act, api)\n  },\n\n  // 幕 1b「记录你被追捕。翻回场景 1a。」：用 actIndexAfterAdvance 实现「翻回」。\n  actIndexAfterAdvance(state, cur, api) {\n    const next = encounterRules.actIndexAfterAdvance?.(state, cur, api)\n    if (Number.isInteger(next)) return next\n    if (String(original(cur)) !== ACT_CARD) return undefined\n    return 0\n  },\n\n  agendaReveal(state, agenda, api, revealType) {\n    const handled = encounterRules.agendaReveal?.(state, agenda, api, revealType)\n    if (handled) return handled\n    return agendaRuleFor(String(original(agenda)), state.scenario?.id)?.onReveal?.(state, agenda, api)\n  },\n\n  // 地点行动统一由地点条目提供（入口大厅的「撤退」在 05078 条目里；条目未注册前给兜底按钮）。\n  actions(state, inv) {\n    const moves = []\n    encounterRules.actions?.({ state, inv, moves })\n    const location = here(state, inv)\n    const rule = locationRuleFor(String(original(location)))\n    if (rule?.actions) rule.actions({ state, inv, location, moves })\n    else if (location?.id === START_LOCATION) {\n      moves.push({ action: 'scenarioAction', rule: 'resignEntryHall', label: '🚪 撤退：破门而出，逃出幽灵国度' })\n    }\n    return moves\n  },\n\n  performAction(state, inv, move, api) {\n    const location = here(state, inv)\n    if (locationRuleFor(String(original(location)))?.performAction?.(state, inv, move, api)) return\n    if (encounterRules.performAction?.(state, inv, move, api)) return\n    if (move.rule === 'resignEntryHall') {\n      api.resign(inv.seat)\n      return\n    }\n    throw new Error(`未知暮色庄园失踪事件行动：${move.rule}`)\n  },\n\n  resolveEncounter(state, inv, treachery, api) {\n    const code = String(original(treachery))\n    const resolver = encounterResolveFor(code)\n    if (typeof resolver === 'function') {\n      return resolver(state, inv, treachery, api, { location: here(state, inv) })\n    }\n    // 共享组条目由 W-shared 提供；索引重建（Lead 合并）前可能读不到，不能静默当作已结算。\n    return encounterRules.resolveEncounter?.(state, inv, treachery, api) || false\n  },\n\n  // ---- 结局 ---------------------------------------------------------------\n\n  resolution(state, key, events, api) {\n    if (key !== 'noResolution') throw new Error(`未知暮色庄园失踪事件结局：${key}`)\n    const records = recordsFor(state)\n    const clues = actClues(state)\n    // 参考实现用 recordCount（覆盖）把证据设为幕上线索数；本实现固定走塔罗路径，\n    // 塔罗已经累加过证据，因此改为累加（与中文引言「统计遗留证据总数」一致）。\n    records.piecesOfEvidenceWereLeftBehind = Number(records.piecesOfEvidenceWereLeftBehind || 0) + clues\n    api?.info?.(`📖 结局：未达成任何结局。幕上留下的线索 ${clues} 个已计入「证据被留下了」`\n      + `（累计 ${records.piecesOfEvidenceWereLeftBehind}）。序章不获得经验值。`)\n    return { award: false, bonus: 0 }\n  },\n\n  // 最后一位撤退的调查员：引擎会把 noResolution 走正常结局流程（不额外处理）。\n  allResigned(state, api) {\n    encounterRules.allResigned?.(state, api)\n  },\n\n  // 界面/日志摘要：序章状态块（塔罗、证据、命运记录、看守人来源）。\n  describe(state) {\n    const lines = encounterRules.describe?.(state) || []\n    const records = state.campaign?.records || {}\n    const chosen = chosenStoryInvestigators(state).map(entry => entry.code)\n    if (!chosen.length) return lines\n    lines.push(`序章故事调查员：${chosen.map(code => STORY_INVESTIGATOR_SETUP[code].name).join('、')}`\n      + `（未选：${STORY_INVESTIGATOR_CODES.filter(code => !chosen.includes(code)).join('、') || '无'}）`)\n    lines.push(`幕上线索：${actClues(state)}；遗留证据：${Number(records.piecesOfEvidenceWereLeftBehind || 0)}`)\n    for (const [key, label] of [\n      ['disappearedIntoTheMist', '消失在迷雾之中'],\n      ['wasClaimedBySpecters', '被幽灵夺走性命'],\n      ['wasPulledIntoTheSpectralRealm', '被拉入幽灵国度'],\n      ['wasTakenByTheWatcher', '被看守人抓走'],\n    ]) {\n      const codes = records[key]\n      if (!Array.isArray(codes) || !codes.length) continue\n      lines.push(`${label}：${codes.map(code => STORY_INVESTIGATOR_SETUP[code]?.name || ALL_CARDS[code]?.nameZh || code).join('、')}`)\n    }\n    const nextToAgenda = agendaAsideCards(state)\n    if (nextToAgenda.length) {\n      lines.push(`密谋旁：${nextToAgenda.map(card => ALL_CARDS[card.code]?.nameZh || card.code).join('、')}`)\n    }\n    return lines\n  },\n}\n"
+    },
+    {
+      "chapter": "inTheClutchesOfChaos",
+      "status": "resolved",
+      "review": "逐条核对原备注，实际缺口已修复；存储表示与已实现行为属于实现说明，不作为当前缺口。",
+      "historicalSource": "scenarioApproximations: [\n    '遭遇牌库：manifest 静态声明「基线 + 两变体并集」，开局 modifyDeck 按剧本日志裁成单局分支（区域报表因此是单局张数的超集）。',\n    '「随机地点」：参考实现混洗开局移出的 8 张地点版本抽取 label，等价于在 8 个在场地点槽中洗牌抽取；用 randomLocationIds 从在场地点取样。',\n    '05302/05305 的「查找遭遇牌库和弃牌堆的某特性敌人」已改为列出两堆全部候选由玩家选择抽取哪张；「洗牌」仍走 engine 的 shuffleEncounterDeck。',\n    '05309/05311 的「裂口最多/最少地点并列」改由队长选择（spawnLocation 钩子拿到 runtime api）；无 choose 注入时按稳定顺序取第一个。',\n    '05310 的「未因本效果放置裂口→涌动」按 placeBreachesAt 实测放置数判断（目标地点满 3 裂口改结算入侵时 placed=0 → 涌动）；并列时由抽牌者选择目标异教徒。',\n  ],\n  scenarioGaps: [],\n}\n"
+    },
+    {
+      "chapter": "theWagesOfSin",
+      "status": "resolved",
+      "review": "逐条核对原备注，实际缺口已修复；存储表示与已实现行为属于实现说明，不作为当前缺口。",
+      "historicalSource": "scenarioApproximations: [\n    '石板标记/轮末的「触发未了之事的强制能力」→ 由 behavior.unfinishedBusinessForced 按数据表 `forced.kind` 统一实现（威胁区卡实例 code 由 flipEnemyFace 写入）。',\n    '异端者「在非幽灵地点获得冷漠且不能被交战」→ 冷漠由 enemy.aloof + canFightEnemy=false + enemyDamageAllowed=false 承载；「不能被交战」由 behavior.canEngageEnemy 实现（引擎读点：src/engine/moves.js 的 legalMoves 交战候选与 validateMove）。',\n    '异端者「[fast] 花费 1 线索：谈判，查看另一面」→ behavior.hereticParleyMoves 同时供 actions() 与引擎玩家窗口的 fastActions()（任意玩家窗口可发动）；B/D/F/H 只记录查看（剧情面直接揭示），I/K（J/L）按卡面 Forced 立刻翻回并攻击。',\n    'J/L「翻回敌人面并立即攻击」→ 一次 enemyDefeated 结算内完成（flipEnemy 往返 + api.attack），并写这里标记；参数来自 UNFINISHED_BUSINESS_RULES[].immediate。',\n    '05184 长明灯「从基础/幽灵牌库抽出」的区分 → 引擎不传抽牌来源；由 behavior.encounterDeckFor 在抽牌前写 scenarioFlags.lastEncounterDeck（显式 drawExtra 的卡由章节 resolver 写同一标记），encounterGainsSurge 的 surgeRule 完成「按 state rng 随机位置洗入幽灵牌库 + 涌动 / 放回基础弃牌堆」。',\n    '05170/05170b 的隐藏值 X（灵怪敌人数量）→ 卡面扫描把 shroud 记成 -2 占位，definition 归零；behavior.locationFlipped 对占位面跳过 shroud 回填（否则翻面后变成 -2+X），X 由地点数据 shroudRule: perGeist 给出。',\n    '教堂阁楼的「放在阁楼底下」→ 地点实例 beneath 数组（{code, ownerSeat}，纯 JSON）；cardDrawn 强制与 investigateResult 的取回反应只对 beneathRule: atticBottom 的 175/175b 面生效。',\n    '异端者墓地 171「调查时把意志值加入技能值」与教堂阁楼 176「把手牌张数加入技能值」→ 地点数据 investigateBonus，beforeInvestigate 登记 { amount, code, round }，statModifier 仅对本次调查检定（skillTest.source.code 匹配目标面）的任意技能加值；手牌张数取当前手牌数，意志值取含修正的当前值（engine scenarioRuntime.investigatorStat，第四轮新增读点）。171 幽灵面「基础意志值减至 1」的解除时点为「该调查员下个回合结束」（behavior.turnEnded 按 turnSerial 清理）。',\n    '闹鬼农田/废弃教堂/绞刑架/教堂地下室/教堂阁楼/异端者墓地的常驻与闹鬼文本 → 地点数据字段（horrorAura/statRule/shroudRule/beneathRule/defeatRule）+ HAUNTED_BY_LOCATION 数据表 + hauntedScript 承载（闭集子句无法表达移动敌人/弃遭遇牌/生成敌人/设定基础值）。',\n    '「地点不能被翻到幽灵/非幽灵面」→ 引擎无 CannotBeFlipped 修正词表；behavior.actions 只在该幕允许的方向给出翻面行动，且 behavior.advanceTheHangedMan 在幕 1（05164）期间跳过议程的「所有地点翻到幽灵面」（FAQ v1.6；幕 2 起正常翻面）。',\n    '未了之事的强制在「如同此时是一轮结束」时触发 → 与 roundEnded 共用同一函数（行为一致，触发源不同）。',\n    '逐卡规则键放在单卡条目 flags（entryFlags 读点）；条目索引尚未重建时 behavior 回退 definition.CARD_RULES 的同一份键，因此章节行为零卡号分支且离线单测可跑。',\n    '05165「线索不能在非幽灵地点被发现」→ behavior.canDiscoverClues（幕 2 且目标非幽灵地点时 false）。',\n    '05166b 幽灵面隐藏值 → 引擎换面只替换 code/name/subname/clues，behavior.locationFlipped 按当前面印刷数据回填 shroud（正面 4 ↔ 幽灵面 1）；闹鬼的「不能触发撤退能力」按「地点 + 轮」记账，对该地点所有调查员生效。',\n    '异端者/未了之事翻面 → 引擎只换印刷字段，behavior.flipBackToHeretic 之后由 resetHereticFaceState 按章节定义重置生命（2 + 2×人数）与伤害/毁灭。',\n    '05177 幽灵迷网 → 线索由「你所在地点」的调查员共同支付（引擎 groupPayment 逐人分摊）；无灵怪目标时不列出该行动；攻击伤害为基础 1 + X（X=花费线索），自定义攻击 source 带 label「攻击」供 05161 的 [elderthing] 识别。',\n    '异端者谈判 → [fast]（0 行动；behavior.fastActions 进入任意玩家窗口，线索由发起者支付）；J 面费用 1 + 人数；查看 L 面只翻回+攻击，不注册「下次击败即驱除」（05178l）。',\n    '05185 祸害生者 → 幽灵牌库弃空时把弃牌堆洗回继续弃；抽到灵怪敌人时用 api.spawn（ignoreSpawn）+ api.engage 生成并与你交战；翻回未了之事后按重置的生命取一半放置伤害。',\n    '05181 惩罚 → 威胁区每张「惩罚」各触发 1 点伤害（不再按调查员只结算一次）；05182 涌动按引擎传入的结算者威胁区判定。',\n  ],\n}\n\n// ---------------------------------------------------------------------------\n// 行动实现\n// ---------------------------------------------------------------------------\nconst SKILL_LABELS = { willpower: '意志', intellect: '智识', combat: '战斗', agility: '敏捷' }\nfunction skillLabel(skill) {\n  return SKILL_LABELS[skill] || skill\n}\n\nfunction canFlipHere(state, location) {\n  if (!location) return false\n  // 幕 1 面：地点不能被翻到幽灵面；议程 2 面：地点不能翻到非幽灵面（玩家可见翻面路径）。\n  if (actStep(state) === 1) return false\n  const spectral = isSpectralLocation(location)\n  if (agendaStep(state) >= 2 && spectral) return false\n  return true\n}\n\nfunction performSpectralWebAttack(state, inv, api) {\n  // 05177：「你所在地点的调查员共同花费 1–3 个线索：攻击。本能力只能用于攻击[[灵怪]]敌人。」\n  const hereInvestigators = alive(state).filter(owner => owner.location === inv.location)\n  const groupClues = hereInvestigators.reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)\n  const targets = (state.enemies || []).filter(enemy => enemy.location === inv.location\n    && hasTrait(enemy, 'geist') && canFightEnemyForWeb(state, inv, enemy))\n  // 支付前先确认有目标：无目标时不扣线索。\n  if (groupClues < 1 || !targets.length) {\n    api.info?.('🕸️ 幽灵迷网：这里没有可攻击的灵怪敌人（或没有线索），未结算。')\n    return\n  }\n  const max = Math.min(3, groupClues)\n  const choice = api.choose({\n    kind: 'option', source: SPECTRAL_WEB, seat: inv.seat,\n    prompt: `幽灵迷网：你所在地点的调查员共同花费几个线索（1–${max}）？`,\n    options: Array.from({ length: max }, (_, index) => ({\n      id: String(index + 1), label: `花费 ${index + 1} 个线索（+${index + 1} 技能值/+${index + 1} 伤害）`,\n    })),\n  })\n  const spent = Math.max(1, Math.min(max, Number(choice) || 1))\n  // 卡面是「共同花费」：走引擎的 groupPayment（turn-flow 会按玩家逐个询问分摊），\n  // 不再按座位顺序自动扣减。\n  api.payClues?.(spent, inv.location)\n  const targetId = api.choose({\n    kind: 'target', source: SPECTRAL_WEB, seat: inv.seat,\n    prompt: '幽灵迷网：选择攻击的灵怪敌人。',\n    options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),\n  })\n  const target = targets.find(enemy => enemy.id === targetId) || targets[0]\n  const skillChoice = api.choose({\n    kind: 'option', source: SPECTRAL_WEB, seat: inv.seat,\n    prompt: '幽灵迷网：本次攻击使用战斗还是意志？',\n    options: [{ id: 'combat', label: '使用战斗' }, { id: 'willpower', label: '使用意志' }],\n  })\n  const skill = skillChoice === 'willpower' ? 'willpower' : 'combat'\n  api.test(inv.seat, skill, Number(target.fight) || 0, result => {\n    // 卡面：本次攻击造成 +X 伤害（X=花费线索数），加上攻击的基础 1 点。\n    if (result.success) api.damageEnemy(target.id, spent + 1, inv.seat, 'spectralWeb')\n  }, spent, { type: 'scenario', name: '幽灵迷网', ability: true, label: '攻击' })\n  api.info?.(`🕸️ ${inv.name} 用幽灵迷网攻击「${target.name}」（+${spent} 技能值/+${spent} 伤害）。`)\n}\n\nfunction canFightEnemyForWeb(state, inv, enemy) {\n  // 复用章节/共享的幽灵目标限制（非幽灵地点的幽灵敌人不能被攻击）。\n  if (typeof behavior.canFightEnemy === 'function') return behavior.canFightEnemy(state, inv, enemy) !== false\n  return true\n}\n\nfunction performHereticParley(state, inv, move, api) {\n  const enemy = (state.enemies || []).find(candidate => candidate.id === move.enemyId)\n  if (!enemy) return\n  let cost = 1\n  if (enemy.hereticJResolved) {\n    cost = Number(enemy.hereticParleyCost) || (1 + (Number(state.numInvestigators) || 1))\n  }\n  // [fast] 谈判：线索由发起者支付（不是团队池）。\n  if ((Number(inv.clues) || 0) < cost) {\n    api.info?.('线索不足，谈判失败。')\n    return\n  }\n  inv.clues -= cost\n  const storyCode = enemy.hereticStory\n  const storyRule = threatRule({ code: storyCode })\n  api.info?.(`🤝 谈判：查看「异端者」的另一面（${ALL_CARDS[storyCode]?.nameZh || storyCode}）。`)\n  if (storyRule?.immediate?.kind === 'cannotBeDefeated' && enemy.hereticJResolved) {\n    // J 面：「下次结算本面文本时，改为本幽灵被『驱除』」。\n    banishUnfinishedBusiness(state, storyCode, api, enemy)\n    return\n  }\n  if (storyRule?.immediate) {\n    // J/L 的 Forced：如同你刚刚击败本异端者——翻回敌人面并立即攻击。\n    const entry = flipToUnfinishedBusiness(state, enemy, api, inv.seat)\n    if (entry) resolveImmediateUnfinishedBusiness(state, entry, api, { fromParley: true })\n  } else {\n    api.cardFlip?.(enemy.hereticFace || original(enemy), '异端者的另一面')\n  }\n}\n\nfunction performBanish(state, inv, move, api) {\n  const code = move.threatCode\n  const rule = threatRule({ code })\n  const threat = (inv.threat || []).find(card => original(card) === code)\n  if (!rule || !threat) return\n  const targetLocation = (state.locations || []).find(location => location.name === rule.locationName)\n  if (!targetLocation || targetLocation.id !== inv.location || (targetLocation.clues || 0) > 0) return\n  api.test(inv.seat, move.skill, 4, result => {\n    if (result.success) banishUnfinishedBusiness(state, code, api)\n  }, 0, { type: 'scenario', name: '驱除未了之事', ability: true })\n}\n\n// ---------------------------------------------------------------------------\n// 幽灵面 haunted 的 script 子句（P2.1 escape）\n// ---------------------------------------------------------------------------\nconst HAUNTED_SCRIPTS = Object.freeze({\n  lockResignThisRound(state, inv) {\n    // 05166b 背面：「直到一轮结束，不能触发上述撤退能力」——按「地点 + 轮」记账，\n    // 对该地点的所有调查员生效（而不是只锁结算闹鬼的那一位）。\n    flagsFor(state).resignLock = { round: state.round, locationId: inv.location }\n    return true\n  },\n  moveNearestSpectralToHere(state, inv, api) {\n    const location = here(state, inv)\n    const enemy = nearestEnemyWithTrait(state, location.id, 'Spectral')\n    if (!enemy) return true\n    const next = api.stepToward(enemy.location, location.id)\n    if (next && next !== enemy.location) api.moveEnemy(enemy, next)\n    return true\n  },\n  roundSkillPenalty(state, inv) {\n    inv.wosRoundSkillPenalty = state.round\n    return true\n  },\n  discardStandardForWitch(state, inv, api) {\n    return discardEncounterForTrait(state, inv, api, { deckId: null, trait: 'witch' })\n  },\n  discardSpectralForGeist(state, inv, api) {\n    return discardEncounterForTrait(state, inv, api, { deckId: 'spectral', trait: 'geist' })\n  },\n  baseWillpowerOne(state, inv) {\n    // 05171b 幽灵面闹鬼：基础意志减至 1，直到该调查员的下个回合结束。\n    // 记下「施加时的回合序号」，供 behavior.turnEnded 在下一回合结束时清理（旧格式缺 turnSerial 时按轮兜底）。\n    inv.wosBaseWillpower = { round: state.round, turnSerial: state.turnSerial ?? null }\n    return true\n  },\n  healHereticsAndWitches(state, inv) {\n    for (const enemy of state.enemies || []) {\n      if (!hasTrait(enemy, 'witch') && !isHereticEnemy(state, enemy)) continue\n      enemy.damageTaken = Math.max(0, (Number(enemy.damageTaken) || 0) - 1)\n    }\n    return true\n  },\n  spawnReanimatedDead(state, inv, api) {\n    const code = inv.deck?.pop()\n    if (!code) return true\n    // 卡面：把牌库顶 1 张牌正面朝下生成，视作 1 攻击/1 生命/1 躲避/1 伤害、带[[怪物]]特性的\n    // 苏生亡者敌人；该牌移出游戏（参考 ChapelCryptSpectral_173.hs 的 RemovePlayerCardFromGame，\n    // 敌人离场后该牌不回弃牌堆），因此不写仅有注释、无读取点的 underlyingCard。\n    state.removedFromGame ||= []\n    state.removedFromGame.push(code)\n    const enemy = api.spawnStoryEnemy?.('xreanimated', inv.location, {\n      fight: 1, health: 1, evade: 1, damage: 1, horror: 0, traits: ['Monster'],\n      name: '苏生亡者',\n    })\n    // 卡面「与你交战」：spawnStoryEnemy 的自动交战按猎物规则在同地点调查员中选人，\n    // 这里显式让该敌人与结算闹鬼的调查员交战。\n    if (enemy && api.engage) api.engage(enemy, inv.seat)\n    api.info?.('🧟 你牌库顶的卡牌被生成成苏生亡者并与你交战。')\n    return true\n  },\n  hexFromDiscardToThreat(state, inv, api) {\n    const index = (state.encounterDiscard || []).findLastIndex(code => hasTrait({ code }, 'hex')\n      && ALL_CARDS[code]?.type === 'treachery')\n    if (index < 0) return true\n    const code = state.encounterDiscard.splice(index, 1)[0]\n    api.threat(inv.seat, code)\n    api.info?.(`🕯️ 遭遇弃牌堆最顶部的巫术诡计进入 ${inv.name} 的威胁区。`)\n    return true\n  },\n  discardBeneathAttic(state, inv, api) {\n    const location = here(state, inv)\n    const beneath = location?.beneath || []\n    if (!beneath.length) return true\n    const index = Math.floor((api.random ? api.random() : 0.5) * beneath.length)\n    const entry = beneath.splice(index, 1)[0]\n    const owner = state.investigators?.[entry.ownerSeat]\n    ;(owner?.discard || inv.discard).push(entry.code)\n    api.info?.('📦 教堂阁楼底下的一张卡牌被随机弃掉。')\n    return true\n  },\n  randomDiscardAtAttic(state, inv, api) {\n    const amount = (inv.hand || []).length >= 5 ? 2 : 1\n    api.discardRandom(inv.seat, amount)\n    return true\n  },\n})\n\n// 「弃牌库顶 3 张；如果因此弃掉一个[[女巫]]/[[灵怪]]敌人，将其抽取」。\nfunction discardEncounterForTrait(state, inv, api, { deckId, trait }) {\n  const piles = deckId ? extraDeckPiles(state, deckId) : null\n  const deck = piles ? piles.deck : state.encounterDeck\n  const discard = piles ? piles.discard : state.encounterDiscard\n  const drawnEnemies = []\n  for (let index = 0; index < 3 && deck.length; index++) {\n    const code = deck.pop()\n    const isTraitEnemy = ALL_CARDS[code]?.type === 'enemy' && hasTrait({ code }, trait)\n    if (isTraitEnemy) drawnEnemies.push(code)\n    else discard.push(code)\n  }\n  for (const code of drawnEnemies) {\n    if (inv.defeated || inv.resigned) break\n    api.spawnEngaged(code, inv.location, inv.seat)\n    api.info?.(`👁️ 「${ALL_CARDS[code]?.nameZh || code}」因闹鬼效果被抽出并与 ${inv.name} 交战。`)\n  }\n  return true\n}\n\nfunction runHauntedScript(state, payload, api) {\n  const scriptId = String(payload?.scriptId || payload?.id || '')\n  const seat = Number(payload?.seat)\n  const inv = state.investigators?.[seat]\n  if (!inv || !here(state, inv)) return false\n  const handler = HAUNTED_SCRIPTS[scriptId]\n  return handler ? handler(state, inv, api) === true : false\n}\n\n// ---------------------------------------------------------------------------\n// 结局\n// ---------------------------------------------------------------------------\nconst RESOLUTION_KEYS = ['noResolution', 'r1', 'r2', 'r3']\n\nfunction noResolutionKey(state) {\n  return (state.investigators || []).some(inv => inv.resigned) ? 'r1' : 'r2'\n}\n\nfunction hereticCountInPlay(state) {\n  return (state.enemies || []).filter(enemy => isHereticEnemy(state, enemy)).length\n}\n\nfunction recordHereicsUnleashed(state, api) {\n  // 参考实现：remained = act step 1 时固定 4，否则场上异端者数量。\n  const count = actStep(state) === 1 ? 4 : hereticCountInPlay(state)\n  recordsFor(state).hereticsWereUnleashedUntoArkham = count\n  flagsFor(state).hereticsUnleashedCount = count\n  api.info?.(`📓 有 ${count} 名异端者被释放到阿卡姆。`)\n  if (count <= 3) recordMemento(state, 'wispOfSpectralMist')\n  return count\n}\n\nfunction applyResolution(state, key, events, api) {\n  if (!RESOLUTION_KEYS.includes(key)) throw new Error(`未知恶罪报应结局：${key}`)\n  const finalKey = key === 'noResolution' ? noResolutionKey(state) : key\n  const records = recordsFor(state)\n  if (finalKey === 'r1') {\n    recordHereicsUnleashed(state, api)\n    api.info?.('📓 结局 1：异端者被释放，绞刑者山丘恢复了原样。')\n    return { award: true, bonus: 0 }\n  }\n  if (finalKey === 'r2') {\n    records.theInvestigatorsSurvivedTheWatchersEmbrace = true\n    recordHereicsUnleashed(state, api)\n    api.info?.('📓 结局 2：调查员从看守人之拥下存活。')\n    return { award: true, bonus: 0 }\n  }\n  records.hereticsWereUnleashedUntoArkham = 1\n  records.erynnJoinedTheInvestigators = true\n  recordMemento(state, 'bloodyTreeCarvings')\n  api.info?.('📓 结局 3：艾琳加入了调查员；记录血染树雕。')\n  return { award: true, bonus: 0 }\n}\n\nexport {\n  applyResolution, canFlipHere, flipBackToHeretic, flipToUnfinishedBusiness, locationGroupOf,\n  locationShroudModifier, noResolutionKey, renderLocationRule, rulesOf,\n  setupLocations as buildSetupPlan, threatRule, unfinishedBusinessEntry,\n}\n"
+    },
+    {
+      "chapter": "forTheGreaterGood",
+      "status": "resolved",
+      "review": "原备注经逐条复核，真实缺口已修复，其他项目为等价表示或过时说明。",
+      "historicalSource": "// 本章账本：完全未实现的卡面子句（gaps）与忠实近似（approximations）。\n// 放在 behavior.js 之外的独立文件里，保持 behavior.js 行数只减不增（architecture-guard）。\nexport const scenarioGaps = []\n\nexport const scenarioApproximations = [\n  '结局的额外 XP（数字混乱标记钥匙按 1 点经验结算）未在 resolution 里发放：引擎没有结局 XP 管线，经验值由 P9 战役流程统一结算（胜利区卡牌的胜利点已计入 state.victory）。',\n  '参考实现收齐的「远古恶魔/黑暗异教徒/上锁的门」三个核组不在本战役包（TCU 只有 21 个遭遇组）：议程 1 背面只能从本包弃掉的异教徒敌人中抽取，黑暗异教徒组的祭司/密会巫师等不参与；setup 的「从遭遇组移除 3 祭司/1 密会巫师」相应只做了本包内的等价移除。',\n  '四把钥匙：参考实现用混乱标记钥匙（Arkham.Key，skull/cultist/tablet/elderthing 标记）实现；本轮无钥匙原语，改用 `state.scenarioKeys`（{ holder, location, enemyId, assetId } 纯 JSON）记录同一语义：放在敌人/地点/调查员/剧情支援上（05210 奥古斯特的钥匙挂 assetId）、敌人离场时由击败者取得否则留在原地、同地点四钥匙开启机关盒。',\n  '机关盒「附属到敌人」：第五轮起用引擎原语 `api.attachStoryAssetToEnemy`（真实 `enemy.attachments` 实例，cardsInPlay 可枚举）表示；`state.scenarioFlags.puzzleBox`（holder: enemy/seat/ground/removed + enemyId/seat）只记录归属，转交/击败/清场时同步摘下附属（behavior.js 的 attachPuzzleBox/detachPuzzleBoxAttachment/givePuzzleBoxTo）。',\n  '议程 2 背面「弃掉全部幕牌」：用 `state.acts = []` 近似（引擎没有「弃幕」原语）；此后幕无法推进，只能等撤退/结局。',\n  '南森·威克（引导面）谈判计数用敌人实例的 resources 字段；「加入胜利区」用 api.banish（放逐到胜利区）。',\n  '机关盒「在你被击败时交给另一位调查员」由本章 behavior.investigatorEliminated 钩子实现；引擎的击杀钩子只派发给当前章节，机关盒随牌库进入其它章节时需各章自接（primitive request w-fix-c3c4-puzzlebox-elimination）。',\n  '机关盒 [action]：火盆沿用 location.flags.brazier / location.litBrazier（与《联合与幻灭》同一份数据），幽灵看守人按 05086 实体识别；「本行动不会触发幽灵看守人的趁乱攻击」由引擎 dispatch 的 noOpportunityAttackFrom 通道豁免（behavior.actions 声明 [05086]）。',\n  '议程 2 正面「位于圣堂地点的银暮秘社敌人失去冷漠」：引擎没有关键词移除/临时修正读点，本章在 enemySpawned/enemyMoved/roundEnded/enemyPhaseStart 以及 agendaChain（新密谋正面入场，src/engine/act-agenda.js:206-216）同步 enemy.aloof；圣堂地点集合固定、敌人位置变化只有这些入口，等价于 Continuous modifier（保留实现记录）。',\n  '议程 2 背面「以崇高的利益替换幕与密谋牌库」：参考实现同样只把全部幕牌弃掉（selectEach AnyAct toDiscard）且议程已是最后一格（无下一议程可替换）；本实现用 `state.acts = []` 表示同一状态，无可观察差异（保留实现记录）。',\n  '05208 秘社地窖（我们一直在等你）背面为空：已移除额外进入限制，改为正常「进入→揭示→放随机钥匙」流程。',\n  '05213 地下墓穴：控制任意 1 把钥匙即放行（进入后正常揭示）；钥匙判定按当前调查员（state.currentSeat）。',\n  '05204/05205 秘社大门「敌人不能生成在秘社大门」：引擎 spawnEnemy 统一咨询 behavior.spawnForbiddenAt（含 api.spawn 的 ignoreSpawn 路径），显式生成点在大门时按 noSpawn 生成失败处理；「生成 - 任意一个……」类改点从候选中排除大门。',\n  '05220 响应召唤的怪兽「敌军阶段开始击败其所在地点的每个类人敌人」：通过 api.checkEnemyDefeat 走引擎击败结算（胜利区/离场触发/钥匙归属），不是直接把敌人移出战场。',\n  '05221 核心圈骑士「在你进入其地点 / 其进入你地点后检定 agility(4)」：两个入口共用 forceKnightTest；「其进入你地点」由引擎 enemyMoved 钩子（locations.js/movement.js）驱动。',\n  '05210 休息室钥匙挂在奥古斯特支援（assetId）、05227 谈判只问实际付费者并只交还奥古斯特身上的钥匙：行为按卡面/参考 AugustLindquist 实现；四把钥匙仍为 JSON 近似（见上）。',\n]\n\n"
+    },
+    {
+      "chapter": "unionAndDisillusion",
+      "status": "resolved",
+      "review": "原备注经逐条复核，真实缺口已修复，其他项目为等价表示或过时说明。",
+      "historicalSource": "// 本章账本：完全未实现的卡面子句（gaps）与忠实近似（approximations）。\n// 放在 behavior.js 之外的独立文件里，保持 behavior.js 行数只减不增（architecture-guard）。\nexport const scenarioGaps = []\n\nexport const scenarioApproximations = [\n  '结局 9/10 的 ReturnTo 分支不适用（本仓库无 ReturnTo 包）；结局 2（秘社胜）与结局 9（女巫集会胜）只写战役记录，战役结束与尾声由 P9 的战役 flow 接线。',\n  '结局 XP 未在 resolution 里发放（引擎没有结局 XP 管线，P9 战役流程统一结算）。',\n  '参考实现收齐的「远古恶魔」「寒冷刺骨」两个核组不在本战役包（TCU 只有 21 个遭遇组），相关遭遇卡不参与牌堆。',\n  '4 张命运剧情卡没有「冒险参考牌底」原语：用 state.scenarioFlags.fateCards（{ code, ally, enemy, person, trail, resolved, seat } 纯 JSON）记录；幕 1 背面按玩家顺序发放并逐张结算，翻回敌人面用 spawnStoryEnemy 近似（表示层，本关没有能选中该卡的效果）。',\n  '失踪人口：reference 用剧本日志的划掉标记区分「失踪/已死」；本实现按 missingPersons（空记录时视为 4 人全部失踪，等同 standalone）与 disappearedIntoTheMist/wasClaimedBySpecters 记录判断。',\n  '共享 encounter-rules 的「幽灵敌人只能在幽灵地点被攻击/躲避」不适用于本章：UAD 的幽灵敌人（命运敌人/幽灵乌鸦/夜鸦）卡面没有该限制，behavior 覆盖 canFightEnemy/canEvadeEnemy 为恒可。',\n  '灵怪陷阱在剧情中「不能进入」与未访之岛的「鬼灵迷雾」限制都用 behavior.investigatorEntryError 在未揭示时挡路；没有独立的通行原语。',\n  '幕 3 背面按版本生成的敌人：v1「女巫的法术成功 → 安妮特·梅森」用目录卡 05057 的数值 spawnStoryEnemy；失败时生成 05090 女巫集会学徒；v3/v4 生成 05095 秘社新信徒（1–2 张）并在 josefIsAliveAndWell 时生成 05085 约瑟夫·梅吉尔（不可谈判以 flags.noParleyJosef 为唯一读点，谈判成功后翻面结算 05085b 的毁灭移除）。',\n  '阵法检定难度 +2（立石闹鬼）用 state.scenarioFlags.circleDifficultyRound + testDifficultyModifier 近似「直到本轮结束」。',\n]\n\n"
+    },
+    {
+      "chapter": "theWitchingHour",
+      "status": "resolved",
+      "historicalSource": "export const scenarioApproximations = Object.freeze([\n  '05062 被污染的井：引擎没有「跨地点投入」的修正目标；用 canCommitCard/commitIconMultiplier 近似——其他森林地点的调查员对本地点检定各可投入 1 张并只算 1 个图标。',\n  '05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1）；团队每轮一次（05058）/每人每轮一次（05060）用 scenarioFlags 记录，并通过 behavior.fastActions 接入引擎 playerWindow（player-window-fast-actions 原语），任意玩家窗口可发动、经 behavior.performAction 分派到地点条目。',\n  '「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError/movementError 在 act1–2 拒绝进入别人面前的地点（引擎 movementError 已在所有阶段传目标地点，效果移动与神话/剧情阶段同样受限；act2 背面解锁）。静态连线使用印刷符号图（森林本就互连）。',\n  '核心包地点 01150–01155（阿卡姆密林）没有共享单卡条目：本章在 definition 里声明并以 investigateSkill 表达 01152/01153/01154，behavior 实现 01150 入地点检定与 01155 治疗行动；01151 走既有条目。',\n  '05052 背面「从收藏随机找基础征兆/诅咒弱点」：引擎没有收藏检索接口；近似为 api.addBasicWeakness(seat, [omen, curse])，找不到对应弱点时按卡面 1 点精神创伤兜底。',\n  '05051 背面「女性敌人从遭遇弃牌堆顶抽取」：直接读 encounterDiscard 的诡计/敌人数组并按 api.spawn 生成（与卡面一致，少了「由谁抽」的额外交互）。',\n  '塔罗占卜：只读 import tarot.js 的固定 8 张正位表（参考实现不洗牌）；结果放 scenarioFlags.campaignReading，P9 再并入战役记录。',\n  '01179/01180 黑山羊：卡面规则（被击败时同地点恐惧 / 轮末治愈 2 伤）由本章 behavior 按 code 实现（它们来自核心包，单卡条目只声明 implemented）。',\n  '01151 阿卡姆密林（扭曲的道路）的离开检定走核心包既有条目；如果该条目未随索引注册，本章不做二次实现。',\n])\n\n",
+      "review": "逐条复查原9项：跨地点投入、收藏、共享核心条目等已有真实读点，其余存储表示等价。"
+    },
+    {
+      "chapter": "theSecretName",
+      "status": "resolved",
+      "historicalSource": "export const scenarioApproximations = Object.freeze([\n  '「未知地点」的未揭示面：引擎只认识 unrevealedActualName/hiddenIdentity；本章 locationRevealed 里应用 definition 的 unrevealed 数据（名称/副标题/traits/符号）并按符号重算连线，等价于翻面。',\n  '未知地点牌库：buildScenarioLocationDeck 只负责洗牌；本章按参考实现 splitAt 3 自行拼 state.extraLocationDecks.unknownPlaces 的上下 3/4 张（仍是原语的纯 JSON 堆结构，可存档）。',\n  '黑书加入战役牌组：用 api.campaignCard（P2.10 原语）；「混乱袋 +1 骷髅」按卡面永久化，P8 只验证本局袋（P9 再接战役袋持久化）。',\n  '05123 背面「密谋 4a 入场时放 4 毁灭」：用 state.scenarioFlags.pendingAgendaDoom + behavior.agendaChain 在 05124 成为当前议程的同一结算里放（对照参考实现 advanceAgendaDeck 后 placeDoomOnAgenda 4），没有「4a 入场」独立窗口。',\n  '05121/05122/05126 的「找出」按参考实现的 findEncounterCard（遭遇牌库+弃牌堆）或 findUniqueCard（场外任意区域）实现；找不到时整段无效果（不凭空生成）。',\n  'Rats（01159，核心包 rats 组）由本章写单卡条目（只声明 implemented，猎手关键词由 definition 印刷数据解析）。',\n  '05129/05133 的闹鬼 script 子句由 behavior.hauntedScript 实现；05133 的「成功调查」反应已可由 0 线索地点触发（behavior.investigateWithoutClues + 引擎 investigate-empty-location 读点）；05140 的「下一行动必须是调查」已由引擎 action-legality-hook 强制（behavior.actionBlocked，非调查行动被拒、调查后清标记）。',\n  'Nahab 在 act3 的「被击败时不弃掉，改为治愈/横置/解除交战/本轮不重整」走正常击败流程后在 behavior.enemyDefeated 里回填（damageTaken=0、exhausted、preventReady={rounds:1}），「不能离开献祭场所」用引擎既有 enemy.immobile。',\n  '布朗·詹金/那赫卜的「击败奖励线索」反应：在 behavior.enemyDefeated 里用 canSkip 选择窗询问击败者（defeatedBy），取代旧实现的「队长询问 + act3 自动发放」。',\n  '05120 [elder_thing] 的「结算场上每个敌人的猎手关键词」用 api.hunterStep（引擎单步解算：Prey/等距选择/barricade）逐个敌人移动一步；与引擎敌人阶段的完整猎手流程同一解算入口。',\n  '古怪图形（05142）从遭遇牌库翻出时用 drawLocation 放置两条预定义地点 id（strangeGeometry1/2，一卡两副本）；静态邻接给 moldyHalls，场景推进后该连接失效属展示层近似。',\n])\n\n// 本章单卡条目已实现的原卡号（审计 literalCardBehavior 兜底；逐卡条目是主证据）。\nexport const implementedEncounterCodes = [NAHAB, BROWN_JENKIN]\n\n",
+      "review": "原11项逐条核对；骷髅已永久加入战役袋、古怪图形删除多余连接；其他说明是等价表示或既有完整读点。"
+    }
+  ],
+  "sourceDecisions": [
+    {
+      "id": "twistOfFate.expert",
+      "value": -6,
+      "reason": "英文指南与参考执行规则均为−6；中文译源−7与两者冲突。采用英文规则值，记录译文差异。"
+    },
+    {
+      "id": "azathoth",
+      "reason": "参考普通敌人匹配器排除Omnipotent。保留独立全局阿撒托斯状态；所有显式IncludeOmnipotent效果由azathothDoom/attack/attachment接口结算，防止被玩家效果选中。"
+    }
+  ]
+}

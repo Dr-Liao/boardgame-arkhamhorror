@@ -17,10 +17,10 @@
 // - annotation 还接受 type: 'interaction'（交互 id）与 type: 'viewport'，不参与通过判定，只随
 //   tests[] / screenshots[] 记账，便于后续逐交互审计。
 //
-// 用法（只挂在 playwright.tde.config.mjs 上，不影响其他循环的浏览器回归）：
-//   node ../../node_modules/@playwright/test/cli.js test --config playwright.tde.config.mjs
+// 用法（只挂在 tests/playwright/playwright.tde.config.mjs 上，不影响其他循环的浏览器回归）：
+//   node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs
 // 单跑某个 spec 调试可以，但写账本的证据命令固定为 6 个 spec 一次跑齐：
-//   node ../../node_modules/@playwright/test/cli.js test --config playwright.tde.config.mjs \
+//   node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs \
 //     tde-rules.browser.mjs tde-interactions.browser.mjs tde-scenarios.browser.mjs \
 //     tde-dual.browser.mjs tde-release.browser.mjs tde-media.browser.mjs
 //
@@ -40,8 +40,8 @@ const TDE_SPEC = /tde-.*\.browser\.mjs$/
 const RELEASE_SPEC = /tde-release\.browser\.mjs$/
 const MEDIA_SPEC = /tde-media\.browser\.mjs$/
 const EVIDENCE_COMMAND = 'node ../../node_modules/@playwright/test/cli.js test '
-  + '--config playwright.tde.config.mjs tde-rules.browser.mjs tde-interactions.browser.mjs '
-  + 'tde-scenarios.browser.mjs tde-dual.browser.mjs tde-release.browser.mjs tde-media.browser.mjs'
+  + '--config tests/playwright/playwright.tde.config.mjs tde-rules.browser.mjs tde-interactions.browser.mjs '
+  + 'tde-scenarios.browser.mjs tde-dual.browser.mjs tde-dual-real.browser.mjs tde-release.browser.mjs tde-media.browser.mjs tde-online.browser.mjs'
 
 const toPackagePath = absolute => relative(PACKAGE_ROOT, absolute).replace(/\\/g, '/')
 const toRepoPath = absolute => relative(REPO_ROOT, absolute).replace(/\\/g, '/')
@@ -179,14 +179,19 @@ export default class TdeBrowserReporter {
       screenshots,
     }
     mkdirSync(new URL('../audit/', import.meta.url), { recursive: true })
-    writeFileSync(TARGET, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
-    console.log(`tde browser acceptance: audit/tde-browser-acceptance.json · ${report.status} · `
+    const expectedSpecs=[...readFileSync(new URL('../tests/playwright/playwright.tde.config.mjs',import.meta.url),'utf8')
+      .matchAll(/['"](tde-[a-z0-9-]+\.browser\.mjs)['"]/g)].map(match=>'tests/'+match[1])
+    const complete=expectedSpecs.every(spec=>specs.includes(spec)) && specs.length===expectedSpecs.length
+    const destination=complete ? TARGET : fileURLToPath(new URL('../audit/tde-browser-debug.json',import.meta.url))
+    writeFileSync(destination, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
+    if(!complete) console.log('Partial browser run saved to audit/tde-browser-debug.json; full acceptance report preserved.')
+    console.log(`tde browser acceptance: ${complete ? 'audit/tde-browser-acceptance.json' : 'audit/tde-browser-debug.json'} · ${report.status} · `
       + `${tests.length} 条用例 / ${specs.length} 个 spec / 剧本实机 ${scenarios.length} 章 · `
       + `截图 ${screenshots.length} 张（存在 ${liveShots.length}） · `
       + `release ${release.desktop && release.mobile ? 'desktop+mobile' : '未齐'} · `
       + `media ${media.desktop && media.mobile ? `${media.resources} 项` : '未齐'}`)
     if (clobbered.length) {
-      console.log(`⚠ 本次命令没有覆盖这些历史 spec，其证据已从报告移除：${clobbered.join(', ')}`)
+      console.log(`⚠ 本次命令没有覆盖这些历史 spec，完整验收记录保持不变：${clobbered.join(', ')}`)
       console.log(`  证据命令固定为：${EVIDENCE_COMMAND}`)
     }
   }

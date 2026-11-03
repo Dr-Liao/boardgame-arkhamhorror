@@ -7,7 +7,7 @@ import { TFA_STORY_TEXT } from '../content/campaigns/theForgottenAge/story-text.
 import { implementedFor } from '../src/cards/card-rules.js'
 
 const hash = content => createHash('sha256').update(content).digest('hex')
-// 浏览器验收结果由 `npm run test:tfa:rules:browser` 写入；没有产物时按未验收处理。
+// 浏览器验收必须由同一次 Playwright 运行按章生成；规则目录的四条用例不能替代逐章证据。
 const browserReport = await readFile(
   new URL('../audit/tfa-browser-acceptance.json', import.meta.url), 'utf8',
 ).then(JSON.parse).catch(() => null)
@@ -17,38 +17,24 @@ const paragraphsIn = value => Array.isArray(value)
     ? Object.values(value).flatMap(paragraphsIn)
     : []
 
-// 逐章尚未逐条核对的卡面分支。写入迁移审计的 remaining，并让 literalCardBehavior
-// 保持 false（规范 5.2：简化分支不得同时标为逐条实现）。
-export const SCENARIO_GAPS = {
-  theUntamedWilds: [
-    '「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件',
-  ],
-  theDoomOfEztli: [],
+// 旧 M5 剩余项逐条裁决后归档在 resolved 中。只有仍缺少印刷行为时才放进 gaps；
+// resolved 的证据同时写入生成账本，避免单纯删掉文字就宣称逐章通过。
+export const SCENARIO_GAPS = Object.fromEntries(chapters.map(chapter => [chapter.id, []]))
+const RESOLVED = {
+  theUntamedWilds: ['探索按当前地点印刷连接符号持续翻牌，跳过不相连地点并洗回；tests/tfa-engine-integration.test.mjs'],
   threadsOfFate: [
-    '04124/04132 的目标以「附属敌人是否仍在场」近似，未区分进胜利区与被弃掉',
-    '04122b/04130b/04137b 的「与旁人资产互换」用移除剧情资产 + 生成敌人近似',
+    '04124/04132 原文条件为附属敌人 leaves play，弃牌与胜利区均满足；tests/tfa-threads-of-fate.test.mjs',
+    '04122b/04130b/04137b 的旁人面进入 removed，敌人面在原地点生成并接过附属卡；tests/tfa-threads-of-fate.test.mjs',
   ],
-  theBoundaryBeyond: [
-    '古代地点与现代格位共用桌面坐标，静态地图上会重叠',
-  ],
-  heartOfTheEldersPart1: [
-    'r2 是忠实移植但原版基础流程不可达（仅 ReturnTo 触发）',
-  ],
-  heartOfTheEldersPart2: [
-    '地点强制效果只覆盖「探索放置/进入」路径，卡牌直接放入场不触发',
-  ],
-  theCityOfArchives: [
-    '会谈间槽位的 frontCode 固定，运行期用 locationVariants 换位，身份与卡面可能错位',
-  ],
-  theDepthsOfYoth: [
-    '「收集了一种奇怪的液体」存 scenarioFlags 而非战役记录，粘稠物→钥匙只在本章内生效',
-  ],
-  shatteredAeons: [
-    '「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」',
-  ],
+  theBoundaryBeyond: ['古代面覆盖同一现场格位，地图只渲染每格一张卡；tests/tfa-boundary-beyond.test.mjs'],
+  heartOfTheEldersPart1: ['r2 属 Return To 专用分支，不在基础战役发布范围；tests/tfa-heart-of-the-elders-part1.test.mjs'],
+  heartOfTheEldersPart2: ['04224/04227 的入场强制效果接入通用 placeLocation；tests/tfa-heart-of-the-elders-part2.test.mjs'],
+  theCityOfArchives: ['真实 placeLocation 合并 locationVariants，三间会谈间卡号与随机计划一致；tests/tfa-city-of-archives.test.mjs'],
+  theDepthsOfYoth: ['来源在本章结局读取 remembered CollectedAStrangeLiquid 随即授予钥匙补给；tests/tfa-depths-of-yoth.test.mjs'],
+  shatteredAeons: ['蛇族/异教徒不交战已由 trait-passives 接线，未使用 aloof 近似；tests/tfa-shattered-aeons.test.mjs'],
   turnBackTime: [
-    '无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤',
-    '04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一',
+    '无结局为全体调查员永久 insane 战役状态；tests/tfa-turn-back-time.test.mjs',
+    '04065 在抽牌前一次选定 2 点的三种组合；tests/tfa-turn-back-time.test.mjs',
   ],
 }
 
@@ -84,6 +70,12 @@ for (const chapter of chapters) {
   const resolutionIds = Object.keys(module.scenario.resolutions)
   const importedResolutions = TFA_STORY_TEXT.resolutions[chapter.id] || {}
   const importedIntro = paragraphsIn(TFA_STORY_TEXT.introductions[chapter.id])
+  const guide = await readFile(new URL(`../web/scenario-guides/${chapter.id}.json`, import.meta.url), 'utf8')
+    .then(JSON.parse).catch(() => null)
+  const guideOk = guide?.id === chapter.id && guide?.campaignId === 'theForgottenAge'
+    && ['zh', 'en'].every(language =>
+      JSON.stringify(guide.locales?.[language]?.setup || '').length > 100
+      && JSON.stringify(guide.locales?.[language]?.resolutions || '').length > 100)
   const encounterCodes = [
     ...Object.keys(module.scenario.treacheries || {}),
     ...Object.keys(module.scenario.enemies || {}),
@@ -135,18 +127,19 @@ for (const chapter of chapters) {
     resolutionsAndRecords: resolutionIds.length > 0
       && module.manifest.resolutionIds.length === resolutionIds.length
       && typeof module.behavior.resolution === 'function',
-    storyText: introOk && resolutionsOk,
+    storyText: introOk && resolutionsOk && guideOk,
     saveReplay: testSource.includes('JSON.stringify')
       && testSource.includes('deepEqual'),
-    browserAcceptance: Boolean(browserReport) && browserReport.failed === 0
-      && browserReport.passed === browserReport.tests,
+    browserAcceptance: browserReport?.generatedBy === 'playwright + tools/playwright-tfa-reporter.mjs'
+      && browserReport.status === 'passed'
+      && browserReport.scenarios?.some(entry => entry.scenario === chapter.id
+        && entry.desktop === true && entry.mobile === true) === true,
   }
   items.push({
     id: chapter.id,
     code: chapter.code,
     name: chapter.name,
-    status: Object.entries(checks).filter(([key]) => key !== 'browserAcceptance')
-      .every(([, value]) => value) ? 'verified' : 'pending',
+    status: Object.values(checks).every(Boolean) ? 'verified' : 'pending',
     checks,
     inventory: {
       locations: Object.keys(module.scenario.locations).length,
@@ -160,6 +153,7 @@ for (const chapter of chapters) {
       pendingEncounterCodes,
     },
     gaps,
+    resolved: RESOLVED[chapter.id] || [],
     testFile,
     fileHashes,
   })

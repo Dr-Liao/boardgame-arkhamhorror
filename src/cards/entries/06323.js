@@ -15,7 +15,7 @@ export default {
   code: '06323',
   abilities: [
     {
-      kind: 'action',
+      kind: 'free',
       label: '[free] 弃掉手牌中一张「摒绝杂念」：治愈本拷贝的全部伤害与恐惧',
       cost: { action: false },
       criteria: [({ inv }) => (inv?.hand || []).includes('06323')],

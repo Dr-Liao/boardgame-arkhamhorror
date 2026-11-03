@@ -190,7 +190,8 @@ export function entityMoves(st, key) {
       return move.locationId === locationId && Number(move.attachmentIndex) === index
     }
     if (kind === 'location') return move.locationId === id || (inv?.location === id && ['investigate', 'breakDoor', 'parleyLita'].includes(move.action))
-    if (kind === 'investigator') return String(inv?.seat) === id && move.action === 'freeAction'
+    if (kind === 'investigator') return String(inv?.seat) === id && (move.action === 'freeAction'
+      || (move.action === 'ability' && move.assetId === `investigator:${id}`))
     if (kind === 'discard') return move.action === 'play' && move.fromDiscard
     if (kind === 'act' || kind === 'agenda') return move.scriptCard === kind
     return false

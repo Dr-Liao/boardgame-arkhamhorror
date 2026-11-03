@@ -12,22 +12,18 @@
 //     `def.type === 'enemy'` 分支直接生成，不需要 weakness 描述子（与 06012/06017 同形；
 //     scope enemy 的条目不允许声明 weakness kind）。
 //   · 关键词来自条目 enemyWeakness（hunter + prey: bearer，bearerSeat = 抽到它的座位）。
-//   · enemySpawn 的 forced：横置入场；场上没有 06024 时移出对局。
-//
-// 显式简化：「放在一边」只用 api.removeEnemy 移出对局（引擎没有把敌人放进 setAside 的写入口）。
+//   · enemySpawn 的 forced：横置入场；场上没有 06024 时回到对应绑定场外集合。
 
 export default {
   code: '06025',
   scope: 'enemy',
-  simplified: true,
-  note: '未实现：「放在一边」用 removeEnemy 移出对局代替（引擎无敌人 setAside 写入口）；其余生成/横置/猎手/bearer 猎物已实现。',
   enemyWeakness: { hunter: true, prey: true },
   abilities: [
     {
       kind: 'forced',
       trigger: 'enemySpawn',
       silent: true,
-      label: '入场：横置；场上没有梦境结晶器时移出对局',
+      label: '入场：横置；场上没有梦境结晶器时放在绑定场外集合',
       criteria: [({ context }) => context?.enemy?.code === '06025'],
       resolve: ({ state, inv, context, api }) => {
         const enemy = context?.enemy
@@ -36,8 +32,8 @@ export default {
         const hasCrystallizer = (state.investigators || []).some(owner =>
           (owner.assets || []).some(asset => asset.code === '06024'))
         if (!hasCrystallizer) {
-          api.removeEnemy(enemy)
-          api.info('「结晶器守卫」：场上没有「梦境结晶器」，将其放在一边（移出对局）。')
+          api.returnEnemyToBonded(enemy, { ownerSeat: enemy.bearerSeat ?? inv.seat })
+          api.info('「结晶器守卫」：场上没有「梦境结晶器」，将其放在绑定场外集合。')
         } else {
           api.info(`「结晶器守卫」以横置状态入场，猎物为 ${inv.name}。`)
         }

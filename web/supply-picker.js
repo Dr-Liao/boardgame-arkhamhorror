@@ -104,7 +104,7 @@ export function renderSupplyPicker(h, model, { onSubmit = () => {}, disabled = f
   const name = model.investigator?.name || t('supply.investigatorFallback')
   const interactive = !disabled
   const instruction = model.remaining == null
-    ? renderRulesText(h, model.choice.prompt, { links: false })
+    ? renderRulesText(h, model.choice.prompt, { links: false, skills: true })
     : t('supply.instruction', { name })
   const footNote = busy ? t('supply.submitting')
     : !interactive ? t('supply.waiting', { name })

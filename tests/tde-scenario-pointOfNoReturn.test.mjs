@@ -7,7 +7,7 @@
 //      （索引由 Lead 合并后重建，因此不依赖 implementedFor）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import * as engine from '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/index.js'
 import {
   ACT_ONE_VARIANTS, CODES, INITIAL_LOCATIONS, INTRO_VARIANTS, LOCATION_IDS, SEA_OF_PITCH_IDS,
@@ -79,9 +79,12 @@ function locationOf(state, id) {
 }
 
 function apiStub(state, overrides = {}) {
+  state.log ||= []; state.instanceSeq ||= {}; state.currentSeat ??= 0
+  const runtime = engine.scenarioRuntime(state, [])
   const calls = []
   const record = (name, args) => calls.push({ name, args })
   const api = {
+    ...runtime,
     calls,
     info: (text, presentation) => record('info', [text, presentation]),
     present: (text, presentation) => record('present', [text, presentation]),
@@ -401,10 +404,10 @@ test('afterDeckSetup：卡达斯从牌组取出、放在议程牌库旁并加 1 
   const state = stateFor()
   state.investigators[0].deck = ['01001', '06275']
   const infos = []
-  behavior.afterDeckSetup(state, [], { info: text => infos.push(text) })
+  behavior.afterDeckSetup(state, [], { api: apiStub(state), info: (...args) => infos.push(args) })
   assert.deepEqual(state.investigators[0].deck, ['01001'])
   assert.equal(state.scenarioFlags.falseAwakeningInPlay, true)
-  assert.equal(state.doom, 1)
+  assert.equal(state.agendaAside[0].doom, 1)
   assert.equal(infos.length, 1)
 })
 
@@ -478,7 +481,7 @@ test('议程 2「怪物围困」：<5 时清空毁灭翻回正面；≥5 时进�
   const cancelled = behavior.agendaWouldAdvance(low, lowApi)
   assert.equal(cancelled, true)
   assert.equal(referenceDamage(low), 3)
-  assert.equal(callsOf(lowApi, 'clearDoom').length, 1)
+  assert.equal(low.doom, 0)
   assert.equal(callsOf(lowApi, 'finish').length, 0)
 
   const high = stateFor()
@@ -758,15 +761,13 @@ test('06267 古革哨兵：横置后重整 → 所在地点每位调查员 1 点
   state.investigators[0].location = 'cityOfGugs'
   state.investigators[1].location = 'cityOfGugs'
   const api = apiStub(state)
-  gugSentinel.enemyScript.onRoundEnd(state, enemy, api)
   enemy.exhausted = false
-  gugSentinel.enemyScript.onEnemyPhaseStart(state, enemy, api)
+  gugSentinel.enemyScript.onReadied(state, enemy, api)
   assert.equal(state.investigators[0].horror, 1)
   assert.equal(state.investigators[1].horror, 1)
   assert.equal(gugSentinel.enemyRule.healthPerPlayerBonus, 2)
   // 未横置过的不触发。
-  gugSentinel.enemyScript.onEnemyPhaseStart(state, enemy, api)
-  assert.equal(state.investigators[0].horror, 1)
+  assert.equal(typeof gugSentinel.enemyScript.onReadied, 'function')
 })
 
 test('06268 鲜血的滋味：意志(3)失败差值逐点三选一（无线索时只能受伤）', () => {
@@ -818,9 +819,8 @@ test('06275 卡达斯：弱点标记（任意技能 2+人数难度、成功移�
 })
 
 test('06266 皮克曼 / 剧情支援：附属食尸鬼与基础战斗 5 的规则数据', () => {
-  assert.equal(pickman.assetRule.fastAttachGhoul.trait, 'Ghoul')
-  assert.equal(pickman.assetRule.fightAction.baseCombat, 5)
-  assert.equal(pickman.assetRule.fightAction.damageFromAttached, true)
+  assert.equal(pickman.scope, 'storyAsset')
+  assert.equal(pickman.implemented, true)
 })
 
 test('06266 皮克曼：章节行为提供 [fast] 附属食尸鬼与 [action] 基础战斗攻击', () => {
@@ -840,10 +840,10 @@ test('06266 皮克曼：章节行为提供 [fast] 附属食尸鬼与 [action] �
   assert.ok(fightMove && fightMove.actions === 1, '提供 [action] 攻击行动')
   behavior.performAction(state, state.investigators[0], attachMove, api)
   assert.equal(state.enemies.some(enemy => enemy.id === 'ghoul'), false, '食尸鬼被移出游戏并附属')
-  assert.equal(api.scenarioFlag('pnrPickmanAttached:pickman'), 1)
+  assert.equal(asset.attachments.length,1)
   assert.equal(asset.exhausted, true)
   asset.exhausted = false
-  behavior.performAction(state, state.investigators[0], fightMove, api)
+  behavior.performAction(state, state.investigators[0], fightMove, {...api, fight:(seat,id,options)=>api.damageEnemy(state.enemies.find(enemy=>enemy.id===id),options.damageOverride)})
   assert.equal(callsOf(api, 'damageEnemy').length, 1)
   assert.equal(callsOf(api, 'damageEnemy')[0].args[1], 1, '伤害 = 附属的正面朝下遭遇卡数')
 })

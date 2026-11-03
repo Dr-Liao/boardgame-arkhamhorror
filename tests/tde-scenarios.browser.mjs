@@ -107,9 +107,45 @@ for (const chapter of shell.chapters) {
       expect(errors).toEqual([])
       expect(await assertNoHorizontalOverflow(page)).toBe(true)
 
+      await page.locator('[data-scenario-setup]').click()
+      const guide=page.getByRole('dialog',{name:'关卡设置',exact:true})
+      await expect(guide).toBeVisible()
+      await expect(guide.locator('details')).not.toHaveCount(0)
+      expect((await guide.textContent()).length).toBeGreaterThan(1000)
+      expect(await guide.locator('details[open]').count()).toBe(0)
+      await guide.locator('details').last().locator('summary').click()
+      await expect(guide.locator('details').last()).toHaveAttribute('open','')
+      await captureEvidence(testInfo,page,output+'completion-guide-'+chapter.id+'-'+viewport+'.png')
+      await page.keyboard.press('Escape')
+      await expect(guide).toHaveCount(0)
       const shot = `${output}p9-scenario-${chapter.id}-${viewport}.png`
       await captureEvidence(testInfo, page, shot)
       testInfo.annotations.push({ type: 'scenario', description: chapter.id })
     })
   }
+}
+
+for (const [viewport,width,height] of VIEWPORTS) {
+  test('P9 全局中心与地点标记在'+viewport+'端显示并保持私密牌面',async({page},testInfo)=>{
+    await page.setViewportSize({width,height})
+    const chapter=shell.chapters.find(chapter=>chapter.id==='weaverOfTheCosmos')
+    const state=buildChapterState(runtime,chapter)
+    const engine=await import('../src/engine/engine.js')
+    const center=engine.scenarioRuntime(state,[]).putGlobalEnemy('06346')
+    engine.scenarioRuntime(state,[]).rotateGlobalEnemy(center,90)
+    state.infestedLocations=[state.locations[0].id]
+    state.scenarioFlags.sealedRifts={[state.locations[1].id]:true}
+    state.scenarioFlags.towerCompass={[state.locations[0].id]:'north'}
+    state.legalMoves=runtime.legalMoves(state)
+    const {errors}=await openInjectedTdeTable(page,runtime,state)
+    await expect(page.locator('.ah-map-global-card')).toBeAttached()
+    await expect(page.locator('.ah-map-global-card')).toHaveAttribute('style',/rotate\(90deg\)/)
+    await expect(page.locator('[data-map-info="damage"]').first()).toBeAttached()
+    await expect(page.locator('[data-map-info="horror"]').first()).toBeAttached()
+    await expect(page.locator('[data-map-info="compass"]').first()).toContainText('N')
+    expect(errors).toEqual([])
+    expect(await assertNoHorizontalOverflow(page)).toBe(true)
+    await captureEvidence(testInfo,page,output+'completion-center-markers-'+viewport+'.png')
+    testInfo.annotations.push({type:'scenario',description:'weaverOfTheCosmos'})
+  })
 }

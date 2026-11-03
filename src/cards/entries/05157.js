@@ -32,7 +32,7 @@ export default {
       },
     },
     {
-      kind: 'reaction', trigger: 'symbolRevealed',
+      kind: 'reaction', trigger: 'symbolRevealed', partOfAbility: 0,
       label: '凋零术：符号后被攻击敌人本回合 -1 攻击值/-1 躲避值（最低 1）',
       criteria: [({ state, inv, context }) => {
         if (!context || context.seat !== inv.seat) return false

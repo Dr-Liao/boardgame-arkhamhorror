@@ -177,6 +177,7 @@ function apiFor(state, options = {}) {
     moveEnemy: (enemy, destination) => { enemy.location = destination },
     damage: (seat, amount) => { state.investigators[seat].damage += amount },
     horror: (seat, amount) => { state.investigators[seat].horror += amount },
+    driveInsane: seat => { const inv = state.investigators[seat]; inv.drivenInsane = true; inv.defeated = true; state.campaign.investigators[seat].status = 'insane' },
     trauma: (seat, kind, amount) => {
       const record = state.campaign.investigators?.[seat]
       if (record) record.trauma[kind] += amount
@@ -901,14 +902,16 @@ test('结局 1：吞食宇宙，全员死亡且战役失败', () => {
   assert.deepEqual(state.campaign.investigators.map(record => record.status), ['killed', 'killed'])
 })
 
-test('结局 2：记录队长加入吹笛人、全员 2 点精神创伤、+5 XP', () => {
+test('结局 2：队长加入吹笛人并陷入疯狂，其他调查员不追加精神创伤、+5 XP', () => {
   const state = stateFor(2)
   setup(state)
   const result = bbt.behavior.resolution(state, 'r2', [], apiFor(state))
   assert.deepEqual(result, { award: true, bonus: 5 })
   assert.equal(state.campaign.records.theLeadInvestigatorHasJoinedThePipersOfAzathoth, true)
   assert.equal(state.campaign.records.azathothSlumbersForNow, true)
-  assert.deepEqual(state.campaign.investigators.map(record => record.trauma.mental), [2, 2])
+  assert.equal(state.campaign.investigators[0].status, 'insane')
+  assert.notEqual(state.campaign.investigators[1].status, 'insane')
+  assert.deepEqual(state.campaign.investigators.map(record => record.trauma.mental), [0, 0])
 })
 
 test('结局 4 选择签名 → 结局 5；拒绝 → 结局 1', () => {
@@ -1014,8 +1017,8 @@ test('05341 盲目舞者：进入虚空格用 cosmos 格位表达（穿越虚空
   assert.equal(bbt.behavior.hunterMove(state, dancer, api), true)
   assert.equal(dancer.location, COURT, '穿过虚空格后到达远端地点（进入虚空格 + 再次猎手的净结果）')
   assert.ok(api.log.some(line => line.includes('虚空格')), '日志标注虚空格表达')
-  assert.equal(state.scenarioFlags.dancerVoidRound, state.round, '每轮一次记账')
-  assert.equal(state.scenarioFlags.dancerVoidCell, undefined, '落到地点后清空虚空格标记')
+  assert.equal(dancer.dancerVoidRound, state.round, '每轮一次记账')
+  assert.equal(dancer.cosmosCell, undefined, '落到地点后清空虚空格标记')
 })
 
 test('05341 盲目舞者：本轮再次猎手已用 → 进入虚空格并停住，下一轮从虚空格继续移动', () => {
@@ -1033,10 +1036,10 @@ test('05341 盲目舞者：本轮再次猎手已用 → 进入虚空格并停住
     location: COSMIC_INGRESS, traits: ['Monster'], hunter: true, exhausted: false, damage: 2, doom: 0,
   }
   state.enemies.push(dancer)
-  state.scenarioFlags.dancerVoidRound = state.round // 本轮强制已用
+  dancer.dancerVoidRound = state.round // 本轮强制已用
   assert.equal(bbt.behavior.hunterMove(state, dancer, apiFor(state)), true)
-  assert.equal(dancer.location, COSMIC_INGRESS, '虚空格不是 location：锚点位置暂不变')
-  assert.deepEqual(state.scenarioFlags.dancerVoidCell, { x: 1, y: 0 }, '停在虚空格中（格位表达）')
+  assert.equal(dancer.location, 'cosmosVoid:1:0', '虚空位置不会被误计为真实地点')
+  assert.deepEqual(dancer.cosmosCell, { x: 1, y: 0 }, '停在虚空格中（格位表达）')
   // 在虚空格中时：调查员无法在锚点位置攻击/躲避/交战它（虚空格不是可进入的 location）。
   assert.equal(bbt.behavior.canFightEnemy(state, state.investigators[0], dancer), false)
   assert.equal(bbt.behavior.canEvadeEnemy(state, state.investigators[0], dancer), false)
@@ -1046,7 +1049,7 @@ test('05341 盲目舞者：本轮再次猎手已用 → 进入虚空格并停住
   state.round += 1
   assert.equal(bbt.behavior.hunterMove(state, dancer, apiFor(state)), true)
   assert.equal(dancer.location, COURT, '下一轮从虚空格继续移动到地点')
-  assert.equal(state.scenarioFlags.dancerVoidCell, undefined)
+  assert.equal(dancer.cosmosCell, undefined)
   assert.notEqual(bbt.behavior.canFightEnemy(state, state.investigators[0], dancer), false)
 })
 
@@ -1067,8 +1070,8 @@ test('05341 盲目舞者：连续两格虚空格时停在第二格，下一轮�
   }
   state.enemies.push(dancer)
   assert.equal(bbt.behavior.hunterMove(state, dancer, apiFor(state)), true)
-  assert.equal(dancer.location, COSMIC_INGRESS)
-  assert.deepEqual(state.scenarioFlags.dancerVoidCell, { x: 2, y: 0 }, '进入+再次猎手共走两格，停在第二格虚空格')
+  assert.equal(dancer.location, 'cosmosVoid:2:0')
+  assert.deepEqual(dancer.cosmosCell, { x: 2, y: 0 }, '进入+再次猎手共走两格，停在第二格虚空格')
   state.round += 1
   assert.equal(bbt.behavior.hunterMove(state, dancer, apiFor(state)), true)
   assert.equal(dancer.location, COURT, '下一轮从第二格虚空格继续移动到地点')
@@ -1088,15 +1091,41 @@ test('05341 盲目舞者：Spawn - Farthest empty space（锚点地点 + 虚空�
   // 最远虚空格是 (2,0)（离调查员 2 格）；离它最近的在场地点是皇廷（1 格）。
   assert.equal(bbt.behavior.spawnLocation(state, '05341', 'fallback'), COURT,
     '引擎锚点 = 离最远虚空格最近的在场地点')
-  assert.deepEqual(state.scenarioFlags.pendingDancerVoidCell, { x: 2, y: 0 })
+  assert.equal(state.scenarioFlags.pendingDancerVoidCell, undefined)
   const dancer = {
     id: 'dancer', code: '05341', originalCode: '05341', name: '盲目舞者',
     location: COURT, traits: ['Monster'], hunter: true, exhausted: false, damage: 2, doom: 0,
   }
   state.enemies.push(dancer)
   bbt.behavior.enemySpawned(state, dancer, apiFor(state))
-  assert.deepEqual(state.scenarioFlags.dancerVoidCell, { x: 2, y: 0 }, '舞者实际位于最远虚空格')
+  assert.deepEqual(dancer.cosmosCell, { x: 2, y: 0 }, '舞者实际位于最远虚空格')
   assert.equal(state.scenarioFlags.pendingDancerVoidCell, undefined)
 })
 
 
+
+
+test('05341 三张盲目舞者分别保存虚空位置和强制次数，JSON存档往返不互相覆盖', () => {
+  const state = stateFor(1)
+  state.scenarioFlags.cosmos = { cells: {}, posOf: {}, scene: 'scene1' }
+  placeInState(state, COSMIC_INGRESS, { revealed: true })
+  placeInState(state, COURT, { revealed: true })
+  setLocationPosition(state, COSMIC_INGRESS, 0, 0)
+  setLocationPosition(state, COURT, 3, 0)
+  setEmptySpace(state, 1, 0); setEmptySpace(state, 2, 0)
+  refreshConnections(state)
+  state.investigators[0].location = COURT
+  const dancers = ['a', 'b', 'c'].map(id => ({ id, code: '05341', originalCode: '05341', name: '盲目舞者', location: COSMIC_INGRESS, hunter: true, exhausted: false }))
+  state.enemies.push(...dancers)
+  dancers[0].dancerVoidRound = state.round
+  bbt.behavior.hunterMove(state, dancers[0], apiFor(state))
+  bbt.behavior.hunterMove(state, dancers[1], apiFor(state))
+  bbt.behavior.hunterMove(state, dancers[2], apiFor(state))
+  assert.deepEqual(dancers.map(enemy => enemy.cosmosCell), [{ x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 0 }])
+  assert.ok(dancers.every(enemy => ![COSMIC_INGRESS, COURT].includes(enemy.location)), '虚空敌人不会误计在锚点地点')
+  const restored = JSON.parse(JSON.stringify(state))
+  restored.round++
+  bbt.behavior.hunterMove(restored, restored.enemies.find(enemy => enemy.id === 'b'), apiFor(restored))
+  assert.equal(restored.enemies.find(enemy => enemy.id === 'b').location, COURT)
+  assert.deepEqual(restored.enemies.find(enemy => enemy.id === 'a').cosmosCell, { x: 1, y: 0 })
+})

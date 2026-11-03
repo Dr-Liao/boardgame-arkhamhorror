@@ -1,3 +1,4 @@
+import puzzleBoxEntry from '../src/cards/encounter-entries/theCircleUndone/forTheGreaterGood/05228.js'
 // 05197《崇高利益》章节测试（钩子级，不依赖引擎注册表）。
 //
 // 覆盖：manifest/身份、按记录分支的布置与区域、符号连线、地点揭示与锁门、
@@ -271,7 +272,7 @@ test('崇高利益：章节已是 playable，身份/地点/幕/议程/结局齐�
   assert.deepEqual(fgg.manifest.agendas.map(agenda => agenda.id), ['agenda1', 'agenda2'])
   assert.deepEqual(fgg.manifest.resolutionIds, ['noResolution', 'r1', 'r2', 'r3'])
   assert.deepEqual(fgg.manifest.requiredEncounterGroupIds,
-    ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge'])
+    ['forTheGreaterGood', 'cityOfSins', 'silverTwilightLodge', 'ancientEvils', 'pentagram', 'lockedDoors'])
   assert.equal(fgg.manifest.zones.encounterDeck.length > 0, true)
   assert.equal(fgg.manifest.zones.setAside.length, 10)
 })
@@ -286,8 +287,8 @@ test('每张本章卡都有实现声明与身份（实现入口集中在 behavio
     }
   }
   assert.deepEqual(fgg.behavior.scenarioGaps, [], 'playable 要求卡面子句无未实现 gap')
-  assert.equal(fgg.behavior.scenarioApproximations.length >= 3, true)
-  assert.ok(fgg.behavior.scenarioApproximations.some(text => text.includes('scenarioKeys')))
+  assert.equal(fgg.behavior.migrationHistory.length >= 3, true)
+  assert.ok(fgg.behavior.migrationHistory.some(text => text.includes('scenarioKeys')))
 })
 
 test('非成员分支：放置 5 处初始地点，放在一边/移出游戏的卡符合参考实现', () => {
@@ -981,12 +982,14 @@ test('05222 边缘虚空骑士谈判成功：移除 1 个毁灭并获得 1 个�
   assert.ok((knight.markers || []).some(label => String(label).startsWith('doomToClue:')), '走引擎 flipMarker 标记翻面载体')
 })
 
-test('05228 机关盒强制：控制者被击败时把控制权交给另一位调查员', () => {
+test('05228 控制权转移后同步本章机关盒归属', () => {
   const state = placedState(2, ['lodgeGatesMembers'])
   state.scenarioFlags.puzzleBox = { holder: 'seat', seat: 0 }
   state.investigators[0].assets.push({ id: 'box0', code: '05228', originalCode: '05228' })
   state.investigators[0].defeated = true
-  fgg.behavior.investigatorEliminated(state, state.investigators[0], 0, apiFor(state))
+  const box = state.investigators[0].assets.pop()
+  state.investigators[1].assets.push(box)
+  fgg.behavior.assetControlChanged(state, box, 0, 1, apiFor(state))
   assert.equal(fgg.behavior.puzzleBoxHolder(state), 1)
   assert.equal(state.investigators[0].assets.some(asset => asset.code === '05228'), false)
   assert.equal(state.investigators[1].assets.some(asset => asset.code === '05228'), true)
@@ -999,24 +1002,26 @@ test('05228 机关盒 [action]：熄灭火盆 / 横置看守人 / 对已横置�
   loc(state, 'lounge').flags = { brazier: true }
   const watcher = enemy(state, '05086', 'lodgeGatesMembers')
   watcher.exhausted = false
+  const executeBox = pick => puzzleBoxEntry.abilities[0].resolve({ state, inv: state.investigators[0], api: {
+    choice: () => pick, exhaust: enemy => { enemy.exhausted = true },
+    damageEnemy: (enemy, amount) => { enemy.damageTaken = (enemy.damageTaken || 0) + amount },
+    setLocationFlag: (id, flag, value) => { loc(state, id).flags[flag] = value },
+  } })
   // 1) 横置看守人
-  const moves = fgg.behavior.actions(state, state.investigators[0])
-  const action = moves.find(move => move.rule === 'puzzleBoxAction')
-  assert.ok(action, '控制者在场时列出机关盒行动')
-  fgg.behavior.performAction(state, state.investigators[0], action, apiFor(state, { choose: () => 'exhaust' }))
+  const action = puzzleBoxEntry.abilities[0]
+  assert.ok(action.criteria[0]({ state, inv: state.investigators[0] }))
+  assert.deepEqual(action.limit, { scope: 'perGame', owner: 'group' })
+  executeBox('exhaust')
   assert.equal(watcher.exhausted, true)
-  assert.equal(state.scenarioFlags.puzzleBox.actionUsed, true)
-  assert.equal(fgg.behavior.actions(state, state.investigators[0]).some(move => move.rule === 'puzzleBoxAction'), false,
-    '团队每场游戏限一次')
+  assert.equal(action.limit.owner, 'group')
+  assert.equal(fgg.behavior.actions(state, state.investigators[0]).some(move => move.rule === 'puzzleBoxAction'), false, '旧章节入口不再重复列出')
   // 2) 已横置 → 5 点伤害
   state.scenarioFlags.puzzleBox.actionUsed = false
-  fgg.behavior.performAction(state, state.investigators[0], { rule: 'puzzleBoxAction' },
-    apiFor(state, { choose: () => 'damage' }))
+  executeBox('damage')
   assert.equal(watcher.damageTaken, 5)
   // 3) 熄灭火焰
   state.scenarioFlags.puzzleBox.actionUsed = false
-  fgg.behavior.performAction(state, state.investigators[0], { rule: 'puzzleBoxAction' },
-    apiFor(state, { choose: () => 'unlight' }))
+  executeBox('unlight')
   assert.equal(loc(state, 'lounge').flags.brazier, false)
 })
 
@@ -1263,9 +1268,7 @@ test('05228 机关盒行动声明只豁免幽灵看守人的借机攻击', () =>
     id: 'watcher', code: '05086', originalCode: '05086', name: '幽灵看守人',
     location: 'lodgeCatacombs', traits: [], engagedSeat: null,
   })
-  const move = fgg.behavior.actions(state, inv).find(entry => entry.rule === 'puzzleBoxAction')
-  assert.ok(move)
-  assert.deepEqual(move.noOpportunityAttackFrom, ['05086'])
+  assert.deepEqual(puzzleBoxEntry.abilities[0].noOpportunityAttackFrom, ['05086'])
 })
 
 test('05204/05205：秘社大门禁止生成敌人（引擎 spawnForbiddenAt 读点）', () => {

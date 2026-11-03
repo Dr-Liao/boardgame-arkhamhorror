@@ -6,9 +6,9 @@
 //   目标 - 如果胜利区有 4 张阿特拉克·纳克亚之腿，推进。
 // 背面：翻转阿特拉克·纳克亚的中心牌面至敌人面，放置在毁灭最多的地点。
 // 接线（章节 behavior）：actions 列出 spendClueDamageAncientOne（扣 1 线索 + 3 伤害）；
-//   phaseBegan('mythos') 读 mythosSpin 揭示标记并按负值旋转（幕 2 旋转四条腿）；
+//   phaseBegan('mythos') 读 mythosSpin 揭示标记并按负值旋转（幕 2 同步旋转四条腿和中心实体）；
 //   checkObjectives 读 legsInVictory（胜利区 4 张 06347–06350）；actLeftPlay 读
-//   advance.flipAtlachNacha 生成敌人面（简化：没有中心牌面，直接在毁灭最多地点生成 06346）。
+//   advance.flipAtlachNacha 将同一中心实体翻至敌人面，放在毁灭最多的地点。
 export default {
   code: '06338',
   scope: 'act',

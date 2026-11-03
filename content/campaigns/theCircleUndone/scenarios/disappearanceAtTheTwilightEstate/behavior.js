@@ -270,7 +270,7 @@ export const behavior = {
 
   // 卡面子句全部接行为；近似实现（等价但改了承载方式）单独列在 scenarioApproximations。
   scenarioGaps: [],
-  scenarioApproximations: [
+  migrationHistory: [
     '「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）',
     '击败来源判定：用 beforeEnemyHarm + beforeHarm 两层读点精确定位「致命那次伤害」的来源（敌人攻击/议程 1a 强制/其它），同一轮多来源时不会误归；仅当外部直接调用 investigatorEliminated（无 harm 记录）时退回「同轮最近攻击者」兜底',
     '卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口',

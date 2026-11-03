@@ -1,4 +1,10 @@
+import { discardPlayerCards } from './player-zones.js'
+import { hasPlayerWindow, playerWindowContext } from './player-mechanics.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
+import { resolvePoolSchedules } from './chaos-token-pool.js'
+import { availableResources } from './resource-bank.js'
 import { investigatorRule } from '../cards/card-rules.js'
+import { swarmGroup } from './swarm.js'
 // 阶段机（补给阶段 / 密谋揭示）从 engine.js 拆出的第五个模块（Phase 6 · 6d-5）。
 //
 // roadmap 的「按域拆分」里，阶段机是第三块：它把「一个阶段的固定流程」从引擎主循环里分出来，
@@ -38,6 +44,7 @@ export function createPhases(deps) {
     locationExists,
     performTest,
     phaseBeginningWindow,
+    openAbilityWindow,
     placeDoomOnCard,
     placeLocation,
     playerWindow,
@@ -85,7 +92,7 @@ function upkeepPhase(state) {
     inv.phaseStatBonuses = []
     inv.fearExtraPaid = false
     if (!assetsCannotReady(inv, state.round)) {
-      for (const a of inv.assets) a.exhausted = false
+      for (const a of inv.assets) if (assetTextBlankedExceptForced(a) || !registeredEntry(a.code)?.assetRule?.skipUpkeepReady) a.exhausted = false
       // 2026-10-25 修复：威胁区的卡（如 05019 安息日男爵这类「[fast] 横置」资产）也应在
       // 重整阶段复位；旧实现只重置 inv.assets，导致威胁区卡的 exhaustion 永久保留、能力只能用一次。
       for (const threat of inv.threat) threat.exhausted = false
@@ -93,7 +100,20 @@ function upkeepPhase(state) {
     if (campaignState.cannotReadyRound(inv) === state.round) campaignState.clearCannotReadyRound(inv)
     for (const threat of inv.threat) if (getThreatEffect(threat)?.debt) threat.debtPaymentsThisRound = 0
   }
+  const skippedNextUpkeep = new Set()
+  for (const enemy of state.enemies) if (enemy.skipNextUpkeepReady) {
+    skippedNextUpkeep.add(enemy.id)
+    delete enemy.skipNextUpkeepReady
+  }
+  const readiedGroups=new Set()
   for (const enemy of state.enemies) if (!enemy.bindMonster) {
+    const group=swarmGroup(state,enemy)
+    const groupId=enemy.hostId || enemy.id
+    if (readiedGroups.has(groupId)) continue
+    readiedGroups.add(groupId)
+    if (group.some(member=>skippedNextUpkeep.has(member.id) || member.bindMonster
+      || (member.preventReady && member.preventReady.from+member.preventReady.rounds>state.round)
+      || (!member.elite && member.attachments?.some(card=>registeredEntry(card.code)?.restrainsReady)))) continue
     if (enemy.snareTrap) {
       state.investigators[enemy.snareTrap.ownerSeat]?.discard.push(enemy.snareTrap.code)
       delete enemy.snareTrap
@@ -103,14 +123,14 @@ function upkeepPhase(state) {
     } else if (enemy.attachments?.some(entry => registeredEntry(entry.code)?.restrainsReady) && !enemy.elite) {
       // 「手铐」：附属的非精英敌人不能重整。
       continue
-    } else enemy.exhausted = false
+    } else scenarioRuntime(state, events).readyEnemy(enemy)
   }
   for (const enemy of state.enemies.slice().filter(enemy => enemy.bindMonster)) {
     const owner = state.investigators[enemy.bindMonster.ownerSeat]
     if (!owner || owner.defeated || owner.resigned) {
       if (owner) owner.discard.push(enemy.bindMonster.code)
       delete enemy.bindMonster
-      enemy.exhausted = false
+      if (!skippedNextUpkeep.has(enemy.id)) scenarioRuntime(state, events).readyEnemy(enemy)
       continue
     }
     // Phase 5（5a-25）：检定的来源卡号用「实际绑定的那张牌」，不写死 02031。
@@ -118,7 +138,7 @@ function upkeepPhase(state) {
       if (result.success || !enemy.bindMonster) return
       owner.discard.push(enemy.bindMonster.code)
       delete enemy.bindMonster
-      enemy.exhausted = false
+      if (!skippedNextUpkeep.has(enemy.id)) scenarioRuntime(state, events).readyEnemy(enemy)
       info(state, events, `维持「绑定怪物」失败；「${enemy.name}」解除绑定并重整。`)
     } })
   }
@@ -128,10 +148,10 @@ function upkeepPhase(state) {
     for (const asset of inv.assets.slice()) {
       const payment = assetEffect(inv, asset)?.forcedUpkeepPayOrDiscard
       if (!payment) continue
-      const keep = inv.resources >= payment && requestChoice(state, { kind: 'upkeep', source: asset.id, seat: inv.seat,
+      const keep = availableResources(inv) >= payment && requestChoice(state, { kind: 'upkeep', source: asset.id, seat: inv.seat,
         prompt: `是否支付 ${payment} 资源保留「${cardName(asset.code)}」？`,
         options: [{ id: 'pay', label: '支付资源' }, { id: 'discard', label: '弃置支援' }] }) === 'pay'
-      if (keep) resourceBank.spendFromPool(inv, payment)
+      if (keep) resourceBank.spendFromPool(inv, payment, state)
       else { leaveAsset(state, inv, asset); inv.discard.push(asset.code) }
     }
     if (!scenarioBehavior(state).skipUpkeepIncome?.(state, inv)) {
@@ -145,7 +165,7 @@ function upkeepPhase(state) {
         const discarded = (inv.hand || []).filter(code => !isWeaknessCode(code))
         inv.hand = keep
         if (discarded.length) {
-          inv.discard.push(...discarded)
+          discardPlayerCards(state, inv, ...discarded)
           info(state, events, `${inv.name} 弃掉手牌中的 ${discarded.length} 张非弱点卡牌（补给阶段替换抽牌）。`)
         }
         const target = Math.max(0, Number(upkeepDraw.handSize) || 0)
@@ -168,7 +188,7 @@ function upkeepPhase(state) {
         info(state, events, supplyText, { kind: 'automatic', phase: 'upkeep', round: state.round, text: supplyText, effect: 'resource', delta: supply, seat: inv.seat, location: inv.location })
       }
     }
-    const limit = Math.max(0, getHandSize(state, inv)
+    const limit = () => Math.max(0, getHandSize(state, inv)
       - (scenarioBehavior(state).handSizePenalty?.(state, inv) || 0))
     discardHandTo(state, inv, limit, events)
     runThreatEndTurn(state, inv, events, 'round')
@@ -189,12 +209,27 @@ function upkeepPhase(state) {
   }
 
   playerWindow(state, 'upkeep.end', events)
+  if (hasPlayerWindow(state, 'upkeepEnd')) openAbilityWindow(state, 'upkeepEnd', playerWindowContext(state, 'upkeepEnd'), events)
   // 地底噬魔：仪式地回合结束补线索；坚韧的黑山羊幼崽治愈 2。
   runLocationRoundEnd(state, events)
   runEnemyRoundEnd(state, events)
   scenarioBehavior(state).roundEnded?.(state, scenarioRuntime(state, events))
+  for (const agenda of state.agendas || []) for (const attachment of (agenda.attachments || []).slice()) {
+    if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.discardAtRoundEnd) continue
+    agenda.attachments.splice(agenda.attachments.indexOf(attachment), 1)
+    state.encounterDiscard.push(attachment.originalCode || attachment.code)
+  }
+  for (const card of (state.agendaAside || []).slice()) {
+    if (!registeredEntry(card.originalCode || card.code)?.treacheryRule?.discardAtRoundEnd) continue
+    state.agendaAside.splice(state.agendaAside.indexOf(card), 1)
+    state.encounterDiscard.push(card.originalCode || card.code)
+  }
 
   runAgendaForced(state, 'roundEnd', events)
+  if (state.investigators.some(inv => investigatorRule(inv.code)?.roundEndReaction)) {
+    openAbilityWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, events)
+  }
+  resolvePoolSchedules(state)
   for (const inv of state.investigators) { inv.onTheLam = false; inv.skillSubstitute = null }
   return events
 }

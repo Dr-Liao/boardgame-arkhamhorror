@@ -14,6 +14,4 @@ export default {
     spawn: { kind: 'titles', titles: ['Sea of Pitch'], emptyIfAble: true },
     attackDealsEitherDamageOrHorror: true,
   },
-  simplified: true,
-  note: '生成地点已由共享 spawnLocation 数据分派；「攻击时伤害/恐惧二选一」需要敌人攻击结算的内容读点（引擎无通道）。',
 }

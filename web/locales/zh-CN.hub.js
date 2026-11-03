@@ -209,6 +209,7 @@ export default {
   'hub.metric.victory': '胜利点',
   'hub.metric.xp': '未花经验',
   'hub.overview.eyebrow': '战役档案',
+  'hub.overview.earlyAccess': '提前体验：部分规则或流程仍在验收，具体边界见该战役的审计账本。',
   'hub.overview.tagline': '整理线索，召集同伴，踏入未知。',
   'hub.overview.difficultyAria': '调查难度',
   'hub.overview.resultTitle': '本关结算',

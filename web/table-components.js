@@ -1,12 +1,10 @@
 // Small monochrome UI marks stay crisp at every zoom level.
 // 标记文案在 cardMarkerData()/placedCardMarkers() 调用期取 t()（模块顶层不调用 t()）。
 import { t } from './i18n.js'
+import { CARD_GLYPHS, SYMBOL_ALIASES, symbolFont } from './game-symbols.js'
 const paths = {
-  health: 'M12 20 3.6 11.6C-1 5 7 1 12 7c5-6 13-2 8.4 4.6Z',
-  sanity: 'M12 3 3 12l9 9 9-9ZM12 7v10M7 12h10',
   clue: 'M15.5 15.5 21 21M18 10.5a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',
   resource: 'M12 2 21 7v10l-9 5-9-5V7ZM3 7l9 5 9-5M12 12v10',
-  action: 'm14 2-9 12h6l-1 8 9-12h-6Z',
   hourglass: 'M6 2h12M6 22h12M7 2v4l5 6 5-6V2M7 22v-4l5-6 5 6v4',
   doom: 'M12 2 3 20h18ZM12 8v6M12 17v1',
   book: 'M12 5C8 2 5 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-3-1-6-2-10 1ZM12 5v15',
@@ -26,13 +24,32 @@ const paths = {
   gear: 'M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm7.1-3.5c0-.44-.05-.87-.13-1.3l2.02-1.57-2-3.46-2.38.96a7 7 0 0 0-2.25-1.3L14 2h-4l-.36 2.33a7 7 0 0 0-2.25 1.3l-2.38-.96-2 3.46 2.02 1.57A7 7 0 0 0 4.9 12c0 .44.05.87.13 1.3L3 14.87l2 3.46 2.38-.96a7 7 0 0 0 2.25 1.3L10 22h4l.36-2.33a7 7 0 0 0 2.25-1.3l2.38.96 2-3.46-2.02-1.57c.08-.43.13-.86.13-1.3Z',
 }
 export function tableIcon(name) {
+  name = SYMBOL_ALIASES[name] || name
+  if (name === 'health' || name === 'sanity') {
+    const mark = document.createElement('span')
+    mark.className = `ah-icon ah-symbol-mask ah-symbol-${name}`
+    mark.dataset.gameSymbol = name
+    mark.setAttribute('aria-hidden', 'true')
+    return mark
+  }
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('class', 'ah-icon')
+  if (Object.hasOwn(CARD_GLYPHS, name)) {
+    svg.classList.add('ah-game-symbol')
+    svg.dataset.gameSymbol = name
+    const glyph = document.createElementNS(svg.namespaceURI, 'text')
+    glyph.setAttribute('x', '12'); glyph.setAttribute('y', '12')
+    glyph.setAttribute('text-anchor', 'middle'); glyph.setAttribute('dominant-baseline', 'central')
+    glyph.setAttribute('font-family', symbolFont(name)); glyph.setAttribute('font-size', '22')
+    glyph.textContent = CARD_GLYPHS[name]
+    svg.append(glyph)
+    return svg
+  }
   const path = document.createElementNS(svg.namespaceURI, 'path')
   path.setAttribute('d', paths[name] || paths.star); path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '1.65'); path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round')
   svg.append(path); return svg
 }
-export const classIcon = klass => ({ guardian: 'shield', seeker: 'book', mystic: 'star', rogue: 'sword', survivor: 'leaf', mythos: 'eye' })[String(klass).toLowerCase()] || 'star'
+export const classIcon = klass => ({ guardian: 'guardian', seeker: 'seeker', mystic: 'mystic', rogue: 'rogue', survivor: 'survivor', neutral: 'neutral', mythos: 'eye' })[String(klass).toLowerCase()] || 'neutral'
 export function tableCounter(h, kind, label, value) {
   return h('span', { className: 'ah-dock-token ah-counter-' + kind, 'aria-label': `${label} ${value}`, title: label },
     h('span', { className: 'ah-counter-face' }, tableIcon(kind), h('strong', {}, String(value))), h('small', {}, label))

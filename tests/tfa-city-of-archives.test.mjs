@@ -9,6 +9,7 @@ import {
   behavior, completedTasks, handLimit, implementedEncounterCodes,
 } from '../content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
+import { placeLocation } from '../src/engine/engine.js'
 
 const clone = value => structuredClone(value)
 
@@ -51,6 +52,21 @@ function stateFor(count = 2, records = {}) {
     status: 'playing',
   }
 }
+
+test('会谈间随机换位后，真实引擎放置的卡面身份与槽位计划一致', () => {
+  const state = stateFor(1)
+  state.log = []
+  behavior.setupLocations(state, [], setupHelper(17))
+  for (const slot of ROOM_SLOTS) {
+    placeLocation(state, slot, [])
+    const placed = state.locations.find(location => location.id === slot)
+    assert.ok(placed, slot)
+    assert.equal(placed.originalCode, state.scenarioFlags.rooms[slot], slot)
+    assert.equal(placed.code, state.scenarioFlags.rooms[slot], slot)
+  }
+  assert.deepEqual(new Set(ROOM_SLOTS.map(slot => state.locations.find(location => location.id === slot).originalCode)),
+    new Set(Object.values(ROOM_CODES)))
+})
 
 function setupHelper(seed = 5) {
   let value = seed >>> 0

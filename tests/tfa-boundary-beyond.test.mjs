@@ -7,6 +7,7 @@ import {
 import { implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js'
 import { symbolConnections } from '../content/campaigns/theForgottenAge/card-data.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { mapGeometry } from '../web/map-layout.js'
 
 const { behavior } = chapter
 const clone = value => structuredClone(value)
@@ -298,6 +299,9 @@ test('探索：符号不符的地点先放一旁，抽到同符号的古代地�
   assert.equal(inv.hand.length, 0, '索卡洛广场弃掉了费用合计 5 的手牌')
   assert.deepEqual(inv.discard.sort(), ['01006', '01016'])
   assert.equal(inv.tfaExploredThisTurn, true)
+  const positions = Object.values(mapGeometry(state.locations, chapter.layout).positions)
+  assert.equal(new Set(positions.map(point => `${point.x},${point.y}`)).size, state.locations.length,
+    '古代卡面覆盖现代格位后，现场六张地点仍各占一格')
 })
 
 test('探索抽到诡计：按遭遇牌结算，不算成功的探索', () => {

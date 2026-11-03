@@ -47,80 +47,31 @@ const DREAM_LABELS = Object.freeze({
   neutral2: '中立之梦 2：开局多 1 张起始手牌',
 })
 
-function dreamMatches(card, dream) {
-  if (!card) return false
-  const klass = String(card.klass || '').toLowerCase()
-  const traits = (card.traits || []).map(trait => String(trait).toLowerCase())
-  const effect = dream.effect || {}
-  if (dream.klass && klass !== dream.klass) return false
-  if (dream.trait && !traits.includes(String(dream.trait).toLowerCase())) return false
-  if (dream.traitAny && !dream.traitAny.some(trait => traits.includes(String(trait).toLowerCase()))) return false
-  if (effect.trait && !(traits.includes(String(effect.trait).toLowerCase()) || klass === String(effect.trait).toLowerCase())) return false
-  if (effect.traitAny && !effect.traitAny.some(trait => traits.includes(String(trait).toLowerCase()))) return false
-  return true
-}
-
-// 从牌库里找 1 张匹配卡（不入场，先放手上；卡面「打出并支付费用」以「进手牌 + 支付印刷费用」近似）。
-function searchDreamCard(state, inv, dream, api) {
-  const effect = dream.effect || {}
-  const index = (inv.deck || []).findIndex(code => dreamMatches(ALL_CARDS[code], {
-    ...dream, effect: { ...effect, trait: effect.trait, traitAny: effect.traitAny },
-  }))
-  if (index < 0) return null
-  const [code] = inv.deck.splice(index, 1)
-  const cost = Number(ALL_CARDS[code]?.cost || 0)
-  if (cost > 0) api.loseResources?.(inv.seat, cost)
-  inv.hand.push(code)
-  api.info?.(`🌙 ${inv.name} 的梦境：从牌库找出「${ALL_CARDS[code]?.nameZh || code}」并支付其费用。`)
-  return code
-}
-
 function applyDream(state, inv, dream, api) {
   const effect = dream.effect || {}
   if (effect.kind === 'searchPlay') {
-    searchDreamCard(state, inv, dream, api)
-    return
-  }
-  if (effect.kind === 'startingCards') {
-    let taken = 0
-    while (taken < (effect.count || 1)) {
-      const index = (inv.deck || []).findIndex(code => dreamMatches(ALL_CARDS[code], {
-        effect: { traitAny: effect.traitAny },
-      }))
-      if (index < 0) break
-      const [code] = inv.deck.splice(index, 1)
-      inv.hand.push(code)
-      taken += 1
-      api.info?.(`🌙 ${inv.name} 的梦境：把「${ALL_CARDS[code]?.nameZh || code}」加入起始手牌。`)
-    }
-    return
-  }
-  if (effect.kind === 'resources') {
-    api.gainResources?.(inv.seat, effect.amount || 2)
-    api.info?.(`🌙 ${inv.name} 的梦境：开局多 ${effect.amount || 2} 点资源。`)
-    return
-  }
-  if (effect.kind === 'openingHand') {
-    api.drawCards?.(inv.seat, effect.amount || 1)
-    api.info?.(`🌙 ${inv.name} 的梦境：开局多抽 ${effect.amount || 1} 张卡。`)
-    return
-  }
-  if (effect.kind === 'giftOther') {
+    const classes = ['guardian','seeker','rogue','mystic','survivor']
+    const filters = classes.includes(effect.trait)
+      ? { factionsAny: [effect.trait] }
+      : { traitsAny: effect.traitAny || [effect.trait] }
+    api.searchAndPlayFromDeck(inv.seat, { ...filters, source: '06039-dream' })
+  } else if (effect.kind === 'startingCards') {
+    api.searchStartingCards(inv.seat, { traitsAny: effect.traitAny, choose: effect.count || 1, source: '06039-dream' })
+  } else if (effect.kind === 'resources') {
+    api.gainResources(inv.seat, effect.amount || 2)
+  } else if (effect.kind === 'openingHand') {
+    api.grantOpeningHandBonus(inv.seat, effect.amount || 1)
+  } else if (effect.kind === 'giftOther') {
     const others = activeInvestigators(state).filter(other => other.seat !== inv.seat)
     if (!others.length) return
-    const answer = api.choose?.({
-      kind: 'investigator', source: '06039-dream', seat: inv.seat,
+    const answer = api.choose({ kind: 'investigator', source: '06039-dream', seat: inv.seat,
       prompt: '选择另一位调查员：该调查员开局多 2 资源与 1 张起始手牌。',
-      options: others.map(other => ({ id: String(other.seat), label: other.name })),
-    })
-    const chosen = others.find(other => String(other.seat) === String(answer)) || others[0]
-    api.gainResources?.(chosen.seat, 2)
-    api.drawCards?.(chosen.seat, 1)
-    api.info?.(`🌙 ${inv.name} 的梦境：${chosen.name} 开局多 2 资源与 1 张牌。`)
-    return
-  }
-  if (effect.kind === 'replaceBasicWeakness') {
-    api.info?.('🌙 漂泊者之梦：基础弱点替换在 P8 走 simple 结算（引擎无收藏检索接口，见 scenarioApproximations）。')
+      options: others.map(other => ({ id: String(other.seat), label: other.name })) })
+    const chosen = others.find(other => String(other.seat) === String(answer))
+    api.gainResources(chosen.seat, 2)
+    api.grantOpeningHandBonus(chosen.seat, 1)
+  } else if (effect.kind === 'replaceBasicWeakness') {
+    api.replaceBasicWeaknessFromDeck(inv.seat)
   }
 }
 
@@ -180,21 +131,7 @@ function resolveChaosAfterTest(state, inv, result, api) {
   if (placed.length) api.info?.(`🪨 [tablet]：给「${enemy.name || codeOf(enemy)}」加 ${placed.length} 张蜂拥卡。`)
 }
 
-export const scenarioApproximations = Object.freeze([
-  '14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 '
-    + 'story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。'
-    + '「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。',
-  '「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。',
-  '幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、'
-    + '全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。',
-  '「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。',
-  '「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。',
-  '「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。',
-  '「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。',
-  '「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。',
-  '故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」'
-    + '以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。',
-])
+export const scenarioApproximations = Object.freeze([])
 
 export const scenarioGaps = Object.freeze([])
 
@@ -212,6 +149,8 @@ export const behavior = {
   implementedEncounterCodes,
   scenarioApproximations,
   scenarioGaps,
+
+  setupBeforeOpeningHands: true,
 
   // ---- 开局：14 种梦境（玩家顺序各选一种；每种只能被选一次） ----
   preScenarioSetup(state, events, api) {
@@ -245,11 +184,7 @@ export const behavior = {
       used.push(dream.key)
       flags.dreams ||= []
       flags.dreams.push({ seat: inv.seat, key: dream.key })
-      try {
-        applyDream(state, inv, dream, api)
-      } catch (error) {
-        api.info?.(`🌙 梦境「${dream.key}」的结算被跳过：${error.message}`)
-      }
+      applyDream(state, inv, dream, api)
     }
     api.info?.(`🌙 梦境已选定：${(flags.dreams || []).map(entry => `${state.investigators[entry.seat]?.name || entry.seat}:${entry.key}`).join('，')}。`)
   },

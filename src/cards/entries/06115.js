@@ -6,19 +6,21 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 实现：1 个万能图标由卡面数据通道生效（commitIcons 读 cards-data 的 icons）。
-// 显式简化（simplified）：引擎没有「下一次技能检定难度降低 X」的持久账本（commit 描述子只有
-// onSuccess 的固定数值键，没有「按成功点数写入下一次检定」的读取点），因此该效果未实现。
+// 成功后按超出点数（至多 3）为投入者登记本阶段下一次检定的难度减免。
 
 export default {
   code: '06115',
-  simplified: true,
-  note: '未实现：「检定成功后本阶段下一次技能检定难度降低 X（X=超出难度点数，至多 3）」——'
-    + '引擎没有下一次检定的难度账本，commit 描述子也没有可写读点；1 个万能图标由卡面数据通道生效。',
   abilities: [
     {
       kind: 'commit',
       label: '势不可挡',
-      skill: {},
+      skill: {
+        afterTest: ({ inv, result, api }) => {
+          if (!result?.success) return
+          const reduction = Math.min(3, Math.max(0, result.value - result.difficulty))
+          if (reduction) api.reduceNextTestDifficulty(inv.seat, reduction)
+        },
+      },
     },
   ],
   modifiers: [],

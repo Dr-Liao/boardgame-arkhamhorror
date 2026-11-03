@@ -171,12 +171,12 @@
     },
     "tests": [
       {
-        "name": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（desktop）",
+        "name": "P9.5 分选 3 人 2+1 座位分线与无活动线等待（desktop）",
         "viewport": "desktop",
         "status": "passed"
       },
       {
-        "name": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（mobile）",
+        "name": "P9.5 分选 3 人 2+1 座位分线与无活动线等待（mobile）",
         "viewport": "mobile",
         "status": "passed"
       },
@@ -283,14 +283,10 @@
     ]
   },
   "files": {
-    "games/arkhamhorror/tests/tde-p95-flow.test.mjs": "30ae03f999126f6a6d17aed4016726dabc4385cf70086cab2dd0706fe53e90c7",
-    "games/arkhamhorror/tests/tde-p95-interludes.test.mjs": "a1d17f9c150433c134da5efb85e4874ce553f49aa95335f431b874e096275cb9",
-    "games/arkhamhorror/tests/tde-p95-matrix.test.mjs": "759806a5f38cb2ac6d42fb6077d245eea2fd44fcc2d27f95d5b259a247b140c2",
-    "games/arkhamhorror/tests/tde-p95-parallel-full.test.mjs": "f32c1fcfd9cd09439c14e2240fff9d27ca4d08ee0009169cadb5000242957564"
+    "games/arkhamhorror/tests/tde-p95-flow.test.mjs": "d143db1b97d4ed218390fc833f280855157f066490940e5fe30d193c434563b8",
+    "games/arkhamhorror/tests/tde-p95-interludes.test.mjs": "0c42bfa1502963ea68d08604aca811c9710ed158793f9c8919520f99c8f48cc8",
+    "games/arkhamhorror/tests/tde-p95-matrix.test.mjs": "64534d09859c9fd8cc29e285f46ace4b1b4533ecab958f931022be8a2cee3ae3",
+    "games/arkhamhorror/tests/tde-p95-parallel-full.test.mjs": "1f97642f1a5630fba66da0031c47741e67c9ccca21ac03ef0738860190272ee5"
   },
-  "remaining": [
-    "并行共享幕间 II/III 与 16 段尾声矩阵只在 pick flow 接线（两线同步进同一幕间界面的协调层未做）",
-    "真实联机双真人房间未验收（浏览器证据是单会话双观察座位）",
-    "87 条显式简化与 equivalenceCertified=false 的口径见 audit/tde-migration.json"
-  ]
+  "remaining": []
 }

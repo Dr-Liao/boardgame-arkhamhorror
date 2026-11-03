@@ -294,6 +294,7 @@ test('A/B 线：哈伦遇险 → 哈伦的诅咒（敌人）→ 夺回遗物', (
   assert.ok(harlan, '哈伦翻面成敌人')
   assert.equal(state.relicOfAges.enemyId, harlan.id)
   assert.equal(state.storyAssets.some(asset => asset.originalCode === '04118b'), false)
+  assert.equal(state.scenarioZones.removed.includes('04118b'), true, '旁人面移出游戏')
   assert.equal(originals(state)[0], '04124')
 
   harlan.damageTaken = 2
@@ -360,11 +361,18 @@ test('C/D 线：亨利·德沃翻面成敌人并带走亚历山卓', () => {
   const henry = state.enemies.find(enemy => enemy.originalCode === '04130b')
   assert.ok(henry)
   assert.equal(state.scenarioFlags.alejandro.enemyId, henry.id)
+  assert.equal(state.scenarioZones.removed.includes('04125b'), true, '旁人面移出游戏')
   assert.equal(originals(state)[1], '04132')
+
+  const victory = clone(state)
+  victory.enemies = victory.enemies.filter(enemy => enemy.id !== henry.id)
+  victory.victoryDisplay.push({ ...henry, victory: 1 })
+  fate.behavior.checkObjectives(victory, makeApi(victory))
+  assert.equal(actsOf(victory).cd.completed, true, '附属敌人进入胜利区也算离场')
 
   state.enemies = state.enemies.filter(enemy => enemy.id !== henry.id)
   fate.behavior.checkObjectives(state, api)
-  assert.equal(actsOf(state).cd.completed, true)
+  assert.equal(actsOf(state).cd.completed, true, '附属敌人弃掉也算离场')
   assert.equal(state.scenarioFlags.alejandro.seat, 0)
 })
 
@@ -380,6 +388,7 @@ test('E/F 线：玛利亚的古怪遗物 → 兄弟会暴露 → 伊塔卡', () 
   fate.behavior.actReveal(state, state.acts[2], api)
   const maria = state.enemies.find(enemy => enemy.originalCode === '04137b')
   assert.ok(maria)
+  assert.equal(state.scenarioZones.removed.includes('04134b'), true, '旁人面移出游戏')
   assert.deepEqual(state.scenarioFlags.ichtacasPrey, [maria.id])
   assert.equal(originals(state)[2], '04140')
   assert.equal(fate.behavior.enemyStatModifier(state, maria, 'fight'), 0, '所在地点有线索时不加值')

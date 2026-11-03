@@ -37,7 +37,9 @@ const MOD_ROOT = fileURLToPath(new URL('../', import.meta.url))
 // 参考资源在仓库根目录（与本 Mod 目录同级的上两级），与 audit-carcosa.mjs 同名约定一致。
 const WORKSPACE_ROOT = fileURLToPath(new URL('../../../', import.meta.url))
 const SCOPE_FILE = 'artifacts/migration/tde/scope.json'
-const REPLAY_BEFORE_FILE = 'artifacts/migration/tde/replay-before.json'
+// The original M0 snapshot predates the reviewed fixes to earlier campaigns.
+// Lock the verified pre-completion replay hashes separately; retain M0 history.
+const REPLAY_BEFORE_FILE = 'tests/fixtures/replay/tde-baseline.json'
 const GOLDEN_FILE = 'tests/fixtures/replay/golden-replays.json'
 const REFERENCE_ROOT = '参考资源/ArkhamHorror-main'
 const MODE = process.argv.includes('--write') ? 'write'
@@ -331,9 +333,10 @@ const readJson = relativePath => (existsSync(`${MOD_ROOT}${relativePath}`)
   ? JSON.parse(readFileSync(`${MOD_ROOT}${relativePath}`, 'utf8')) : null)
 const golden = readJson(GOLDEN_FILE)
 const replayBefore = readJson(REPLAY_BEFORE_FILE)
+const completionReview = readJson('audit/tde-replay-completion-review.json')
 const counters = fixtures => fixtures ? {
   fixtures: fixtures.length,
-  steps: fixtures.reduce((sum, fixture) => sum + (fixture.log?.moves?.length ?? 0), 0),
+  steps: fixtures.reduce((sum, fixture) => sum + (fixture.steps ?? fixture.log?.moves?.length ?? 0), 0),
   hashes: fixtures.reduce((sum, fixture) => sum + (fixture.hashes || []).length, 0),
 } : null
 const goldenCounts = counters(golden?.fixtures)
@@ -371,13 +374,13 @@ const gitHead = (() => {
 const pending = [
   {
     id: 'beyondTheGatesOfSleepEncounterDeck',
-    status: 'pending',
-    evidence: '参考实现 BeyondTheGatesOfSleep.hs 有 gatherSets 声明但没有任何 gather Set.* 调用；英文规则书 setup 文本待 M3 逐句对齐（路线图 R8）',
+    status: 'resolved',
+    evidence: '完整冒险指南与章节测试已对齐：遭遇牌暂放在一边，幕推进时组成遭遇牌库；见 tests/tde-scenario-beyondTheGatesOfSleep.test.mjs 与 web/scenario-guides/beyondTheGatesOfSleep.json',
   },
   {
     id: 'achievements',
-    status: 'pending',
-    evidence: '成就（achievements）默认 out-of-scope（决策 D4 未改口径），M3 前不列入机制条目',
+    status: 'out-of-scope',
+    evidence: '可选成就不在原始循环玩法迁移范围内（决策 D4）',
   },
 ]
 
@@ -466,7 +469,9 @@ const gate = {
     hashesMatch: replayHashesMatch,
     pass: Boolean(replayBefore) && replayIdsMatch && replayHashesMatch
       && JSON.stringify(replayCounts) === JSON.stringify(goldenCounts)
-      && replayCounts?.fixtures === 13 && replayCounts?.steps === 782 && replayCounts?.hashes === 795,
+      && replayCounts?.fixtures === completionReview?.fixtures.length
+      && replayCounts?.steps === completionReview.fixtures.reduce((sum,item)=>sum+item.afterSteps,0)
+      && replayCounts?.hashes === replayCounts?.steps+replayCounts?.fixtures,
   },
   crossCycleGroups: {
     total: crossCycleGroups.length,
@@ -526,6 +531,8 @@ const scope = {
     goldenReplay: goldenCounts,
     replayBefore: replayCounts,
     replayBeforeSha256: sha256(REPLAY_BEFORE_FILE).sha256,
+    replayBeforePath: REPLAY_BEFORE_FILE,
+    history: 'Original M0 snapshot: artifacts/migration/tde/replay-before.json. Completion baseline captured and compared after TFA/TCU repairs on 2026-11-02.',
     replayBeforeIdsMatch: replayIdsMatch,
     replayBeforeHashesMatch: replayHashesMatch,
     git: {

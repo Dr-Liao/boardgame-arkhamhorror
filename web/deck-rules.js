@@ -14,6 +14,12 @@ import { UI_CARDS } from './ui-cards.js'
 import { t } from './i18n.js'
 
 const extensions = new Map()
+const cardExtensions = new Map()
+export function registerDeckCardRule(code, rule) {
+  if (rule?.minimumTypes && Object.entries(rule.minimumTypes).some(([type, count]) => !['asset', 'event', 'skill'].includes(type) || !Number.isSafeInteger(count) || count < 1)) throw new TypeError('Invalid minimum card-type count')
+  if (rule) cardExtensions.set(code, freezeDeep(structuredClone(rule)))
+  else cardExtensions.delete(code)
+}
 let rulesEpoch = 0
 const rulesCache = new WeakMap() // investigator object -> { epoch, rules }
 export function registerDeckRules(investigatorCode, rules) {
@@ -32,7 +38,16 @@ function freezeDeep(value) {
   }
   return value
 }
-export function deckRules(investigator) {
+export function deckRules(investigator, codes = [], cards = {}) {
+  if (codes.length) {
+    const additions = codes.map(code => cards[code]?.deckConstruction || cardExtensions.get(code)).filter(Boolean)
+    if (additions.length) {
+      const base = deckRules(investigator)
+      return { ...base, size: base.size + additions.reduce((sum, rule) => sum + (rule.sizeBonus || 0), 0),
+        minimumTypes: Object.fromEntries([...new Set(additions.flatMap(rule => Object.keys(rule.minimumTypes || {})))].map(type => [type, Math.max(...additions.map(rule => rule.minimumTypes?.[type] || 0))])),
+        options: [...base.options, ...additions.flatMap(rule => rule.options || [])] }
+    }
+  }
   const cached = rulesCache.get(investigator)
   if (cached && cached.epoch === rulesEpoch) return cached.rules
   const { dunwichInvestigators, noFortuneInvestigator } = UI_CARDS.deckRules
@@ -182,6 +197,15 @@ export function deckCardLimit(card) {
 // 06241–06243 三张「增强自我」各自 deckLimit 1，合计最多 3 张）。
 // 与 src/engine/myriad.js 的 MYRIAD_LIMIT 同一口径；浏览器侧不能 import src/，故这里单独声明常量。
 export const MYRIAD_TITLE_LIMIT = 3
+// Trait-wide limits count all titles/levels together, including partial construction and upgrades.
+export const TRAIT_DECK_LIMITS = Object.freeze([{ trait: 'Covenant', limit: 1 }])
+export function validateTraitLimits(codes, cards, limits = TRAIT_DECK_LIMITS) {
+  return limits.flatMap(({ trait, limit }) => {
+    if (typeof trait !== 'string' || !Number.isSafeInteger(limit) || limit < 0) throw new TypeError(t('misc.deckRules.traitLimit'))
+    const count = codes.filter(code => (cards[code]?.traits || []).some(value => lower(value) === lower(trait))).length
+    return count > limit ? [t('misc.deck.traitLimit', { trait, limit, count })] : []
+  })
+}
 // 构筑界面「2/3」读数：按标题汇总牌组里的 Myriad 卡份数（无 Myriad 卡时返回空数组）。
 export function myriadUsage(codes, cards) {
   const byTitle = new Map()
@@ -196,8 +220,12 @@ export function myriadUsage(codes, cards) {
   return [...byTitle.values()]
 }
 export function validateDeckRules(investigator, codes, cards, { partial = false } = {}) {
-  const rules = deckRules(investigator)
-  const errors = []
+  const rules = deckRules(investigator, codes, cards)
+  const errors = validateTraitLimits(codes, cards)
+  if (!partial) for (const [type, minimum] of Object.entries(rules.minimumTypes || {})) {
+    const label = { asset: t('misc.cardType.asset'), event: t('misc.cardType.event'), skill: t('misc.cardType.skill') }[type]
+    if (codes.filter(code => cards[code]?.type === type && !cards[code]?.subtype).length < minimum) errors.push(t('misc.deck.minimumType', { minimum, type: label }))
+  }
   const ordinary = codes.map(code => cards[code]).filter(card => card && !card.signatureFor && !card.subtype && !card.story)
   for (const code of codes) if (!cards[code]) errors.push(t('misc.deck.unknownCard', { code }))
   // 排除式构筑限制（`not: true`）：命中的卡不能进牌组，且不受其它允许项豁免。

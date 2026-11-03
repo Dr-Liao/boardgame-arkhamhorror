@@ -67,7 +67,7 @@ const lockCheck = entry => {
 
 // ---------------------------------------------------------------- 测试实跑（saveReplay / nodeAcceptance）
 const testDir = new URL('../tests/', import.meta.url)
-const testFiles = readdirSync(testDir).filter(name => /^tcu-.*\.test\.mjs$/.test(name) && !/^tcu-(primitives|rules|migration|interactions|investigators|player|player-ledger|scenario-acceptance|shared-encounters|story|browser|campaign-card-acceptance|all-card-ledger)/.test(name))
+const testFiles = readdirSync(testDir).filter(name => /^tcu-.*\.test\.mjs$/.test(name) && !/^tcu-(primitives|rules|migration|interactions|investigators|completion|player|player-ledger|scenario-acceptance|shared-encounters|story|browser|campaign-card-acceptance|all-card-ledger)/.test(name))
 const testSourceFor = async chapterId => {
   const preferred = [`tcu-${kebab(chapterId)}.test.mjs`, `tcu-${kebab(chapterId).replace(/^the-/, '')}.test.mjs`, `tcu-${kebab(chapterId).replace(/^at-/, '')}.test.mjs`]
   for (const candidate of preferred) {
@@ -167,6 +167,10 @@ for (const chapter of chapters) {
   // 近似实现（用战役 JSON 状态承载卡面语义、行为等价但不是引擎通用原语）不算 gap：
   // 它们进账本 approximations 与 remaining，不阻塞 literalCardBehavior。
   const approximations = [...(module.behavior?.scenarioApproximations || [])]
+  const guide = await readFile(new URL('../web/scenario-guides/' + chapter.id + '.json', import.meta.url), 'utf8').then(JSON.parse).catch(() => null)
+  const guideOk = guide?.id === chapter.id && guide?.campaignId === 'theCircleUndone'
+    && ['zh', 'en'].every(language => JSON.stringify(guide.locales?.[language]?.setup || '').length > 100
+      && JSON.stringify(guide.locales?.[language]?.resolutions || '').length > 100)
   const testFileInfo = await testSourceFor(chapter.id)
   const testRun = testFileInfo.name ? runTestFile(testFileInfo.name) : null
   const testTitles = testRun?.titles || []
@@ -206,7 +210,7 @@ for (const chapter of chapters) {
         Array.isArray(location.connections)
         // Cosmos/未知地点牌库里的地点最初不在场，靠牌库放置指令连接（cosmos 标记），允许空邻接。
         // 其余地点必须至少有一条印刷连线，防止「地点表建了但没连」的假实现。
-        && (location.connections.length > 0 || location.cosmos != null || location.fromDeck === true)),
+        && (location.connections.length > 0 || location.cosmos != null || location.fromDeck === true || location.encounterLocation === true)),
     encounterBehaviors: encounterCodes.length > 0
       && Object.values(module.scenario.enemies).every(card => !card.rulesPending)
       && Object.values(module.scenario.treacheries).every(card => !card.rulesPending),
@@ -215,7 +219,7 @@ for (const chapter of chapters) {
     resolutionsAndRecords: resolutionIds.length > 0
       && module.manifest.resolutionIds.length === resolutionIds.length
       && typeof module.behavior.resolution === 'function',
-    storyText: storyOk,
+    storyText: storyOk && guideOk,
     saveReplay: Boolean(testRun?.ok) && testTitles.some(title => SAVE_REPLAY_TITLES.test(title)),
     browserAcceptance: browser.pass,
   }

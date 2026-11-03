@@ -8,19 +8,28 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 06285 黑猫（[[盟友]]·[[化身]]）：纯数据卡——槽位/图标/特性都在 cards-data，条目无需额外行为。
-// 显式简化：符号效果「替换」没有引擎读点（现有 state.skillTest.symbolEffect 是 05033 的
-//   「取消/额外结算 Mystic 卡符号效果」候选语义，不是把标记效果替换成自定义值），因此主效果未实现；
-//   符号修正值与「黑猫承受直接伤害/恐惧、elder_sign 治愈」都无法从卡面声明触发。
-// 纯数据通道已实现：[[盟友]]槽位、2 个万能图标由卡面数据进入构筑/投入/槽位读点。
+// 06285 黑猫：在标记效果结算前可选替换其效果，保持揭示的标记身份不变。
 
 export default {
   code: '06285',
-  simplified: true,
-  note: '未实现：卡面主效果「揭示 [tablet]/[elder_thing]/[elder_sign] 时改为使用以下效果'
-    + '（-1 并让黑猫受到 1 点直接伤害/恐惧；+5 并治愈黑猫全部伤害与恐惧）」——引擎没有把符号效果'
-    + '替换为卡面自定义值的读点（setSymbolEffect 只服务 05033 的取消/再结算候选）。'
-    + '已实现的数据通道：[[盟友]]槽位、2 个万能图标、特性均来自 cards-data。',
-  abilities: [],
+  abilities: [
+    {
+      kind: 'reaction',
+      trigger: 'tokenEffectWouldResolve',
+      label: '揭示碑文、古老者或旧印时：改为结算黑猫的效果',
+      criteria: [({ inv, context }) => context?.seat === inv.seat
+        && ['tablet', 'elderthing', 'eldersign'].includes(context?.token)
+        && !context.replacementEffect],
+      resolve: ({ source, context, api }) => {
+        if (!source) return
+        const replacement = context.token === 'tablet'
+          ? { delta: -1, assetId: source.id, damage: 1 }
+          : context.token === 'elderthing'
+            ? { delta: -1, assetId: source.id, horror: 1 }
+            : { delta: 5, assetId: source.id, healAll: true }
+        api.replaceTokenEffect(context, replacement)
+      },
+    },
+  ],
   modifiers: [],
 }

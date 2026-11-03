@@ -14,6 +14,38 @@
 // 重新分层前请先跑它，别凭文件名的直觉。
 
 export const FAST_TESTS = Object.freeze([
+  'tic-scenario-reference-moving.test.mjs',
+  'tic-enemy-outcomes.test.mjs',
+  'tic-enemy-flow.test.mjs',
+  'tic-enemy-movement-review.test.mjs',
+  'tic-enemy-movement.test.mjs',
+  'tic-companions-setup.test.mjs',
+  'tic-scenario-reference-printed.test.mjs',
+  'tic-scenario-combined-harm.test.mjs',
+  'tic-scenario-reference.test.mjs',
+  'tic-chapter-resolutions.test.mjs',
+  'tic-interludes.test.mjs',
+  'tic-scenario-atomic-spawn.test.mjs',
+  'tic-scenario-key-cost.test.mjs',
+  'tic-scenario-cost-followup.test.mjs',
+  'tic-scenario-template-followup.test.mjs',
+  'tic-scenario-spawn-followup.test.mjs',
+  'tic-scenario-occurrences.test.mjs',
+  'tic-scenario-zones-followup.test.mjs',
+  'tic-scenarios-middle-setup.test.mjs',
+  'tic-flashbacks.test.mjs',
+  'tic-scenario-advanced-followup.test.mjs',
+  'tic-scenario-primitives.test.mjs',
+  'tic-scenario-extra-primitives.test.mjs',
+  'tic-scenarios-early.test.mjs',
+  'tic-scenarios-middle.test.mjs',
+  'tic-scenarios-late.test.mjs',
+  'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
+  'tic-migration.test.mjs',
+  'tic-interactions.test.mjs',
+  'tic-investigators.test.mjs',
+  'tic-primitives.test.mjs',
+  'tic-rules.test.mjs',
   'availability.test.mjs',
   'game-settings.test.mjs', // 开局高级设置：卡牌范围 / 回档 / AI 感知剧情
   'content-schema.test.mjs',
@@ -161,7 +193,7 @@ export const FAST_TESTS = Object.freeze([
   'tcu-primitives-cosmos.test.mjs', // 第 2 步原语 P2.13（Cosmos/未知地点牌库）
   'tcu-primitives-p7.test.mjs', // P7 玩家卡批次新增原语（openingHandBonus / leavesPlay resolve / eventPlayed / conditionalIcons）
   'tcu-location-api.test.mjs', // P2-6 05125 地点原语（swapLocation / removeLocationFromGame / 放一边 / 洗入遭遇牌库）
-  'tcu-migration.test.mjs', // 万象无终 P1：范围/三包/9 章占位/不可启动
+  'tcu-migration.test.mjs', 'tcu-completion.test.mjs', // 万象无终 P1：范围/三包/9 章占位/不可启动
   'tcu-scenario-acceptance.test.mjs', // 万象无终 P8：逐章账本/来源锁/内容结构接线
   'tcu-story.test.mjs', // 万象无终 P9：剧情导入/分支/幕间/隐私
   'tcu-campaign-card-acceptance.test.mjs', // 万象无终 P10：237 战役卡 + 34 关联面逐卡字面验收
@@ -212,6 +244,7 @@ export const FAST_TESTS = Object.freeze([
   'tde-player-m2-3.test.mjs', // 食梦者 P7：M2-3 玩家卡 06196–06245 逐卡行为
   'tde-player-m2-4.test.mjs', // 食梦者 P7：M2-4 玩家卡 06246–06332 逐卡行为
   'tde-player-ledger.test.mjs', // 食梦者 P7：M2 玩家卡账本/availability/campaign/Myriad 接线
+  'tde-completion-primitives.test.mjs', // 食梦者完整规则的实体/窗口/归属回归
   'tde-scenario-interactions.test.mjs', // 食梦者 P5：场景交互投影（蜂拥/滋生/警戒/隐私/掩藏/计数/纵向链/结局）
   'tde-scenario-runtime-api.test.mjs', // 食梦者 P8：内容层通用 api（遭遇牌库/线索/隐私手牌/投入上限）+ 共享规则层
   'tde-campaign-layer.test.mjs', // 食梦者 P8：55 记录键/A-B 双袋/parts+modes/16 排列 flow/三幕间/16 段尾声矩阵
@@ -231,7 +264,8 @@ export const FAST_TESTS = Object.freeze([
   'tde-p95-interludes.test.mjs', // 食梦者 P9.5：3 个幕间跨线读写/绿字/双线袋不串线（真实数据 + 效果解释器）
   'tde-p95-matrix.test.mjs', // 食梦者 P9.5：双线开闸 10 条门禁（真实 TDE 世界 + mod 边界）
   'tde-p95-parallel-full.test.mjs', // 食梦者 P9.5：并行 4 人 2+2 四个章对全流程（双封盘/幕间单次/终局）
-  'tde-migration.test.mjs', // 食梦者 P10：发布账本门禁（audit/tde-migration.json 的 gate/确认/earlyAccess/remaining）
+  'tde-migration.test.mjs',
+  'tde-completion.test.mjs', // 食梦者 P10：发布账本门禁（audit/tde-migration.json 的 gate/确认/earlyAccess/remaining）
   'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
   'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
 ])

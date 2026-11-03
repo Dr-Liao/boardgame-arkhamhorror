@@ -1,3 +1,10 @@
+import { mechanicState } from './mechanic-state.js'
+import { createEnemyZoneApi } from './enemy-zones.js'
+import { createEnemyOutcomeApi } from './enemy-outcomes.js'
+import { wouldAddToVictory } from './victory-destination.js'
+import { replacePlayerZoneCards } from './player-zones.js'
+import { eventWindowContext } from './event-window.js'
+import { keysOnExit } from './scenario-keys.js'
 // 敌人与伤害（applyHarm / 攻击 / 生成 / 击败 / 交战）从 engine.js 拆出的模块
 // （Phase 6 · 6d-22）。
 //
@@ -9,6 +16,11 @@
 import { enemySpawnRuleFor } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
+import { enemyCanEnterLocation } from './enemy-entry.js'
+import { capabilityBlocked } from './modifiers.js'
+import { swarmGroup, returnSwarmCard, swarmCardsOf } from './swarm.js'
+import { tracksHistory } from './action-history.js'
+import { effectRecipient } from './effect-recipient.js'
 // P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
 import { checkAssetDefeated } from './asset-defeat.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
@@ -22,7 +34,7 @@ export function createEnemies(deps) {
     EFFECTS,
     pallidMaskCode,
     SMITE_THE_WICKED_CODE,
-    addDoom,
+    addDoom, syncClues, placeDoomOnCard,
     addVictory,
     aliveInvestigators,
     assetPassiveData,
@@ -91,6 +103,7 @@ function runtimeEnemyStat(state, enemy, kind) {
 }
 
 function enemyHealth(state, enemy) {
+  if (enemy.health === null) return null
   // 印刷值 + 剧本常驻修正 + 能力层声明式修正（例如 02255 的「文本空白时按人数扣血」）。
   const runtime = runtimeEnemyStat(state, enemy, 'health')
   const value = enemyHealthValue(state, enemy, scenarioBehavior(state)) + enemyHealthDelta(state, enemy) + runtime.delta
@@ -98,6 +111,7 @@ function enemyHealth(state, enemy) {
 }
 
 function enemyFightValue(state, enemy, inv) {
+  if(enemy.fight===null)return null
   let value = enemy.fight + (enemyStatMods(state).enemyFight || 0)
   // P8：把正在应对的调查员传给内容层钩子（按人/按手牌数的战斗值修正）。
   value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'fight', inv) || 0
@@ -115,6 +129,7 @@ function enemyFightValue(state, enemy, inv) {
 }
 
 function enemyEvadeValue(state, enemy, inv) {
+  if(enemy.evade===null)return null
   let value = enemy.evade + (enemyStatMods(state).enemyEvade || 0)
   // P8：把正在应对的调查员传给内容层钩子（「每张手牌中的遭遇卡 +1 难度」这类按人修正）。
   value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'evade', inv) || 0
@@ -130,12 +145,16 @@ function enemyEvadeValue(state, enemy, inv) {
 // ---------------------------------------------------------------------------
 
 function enemiesEngagedWith(state, inv) {
+  if (capabilityBlocked(state, inv, 'engage')) return []
   return state.enemies.filter((e) => e.engagedSeat === inv.seat || (e.massive && !enemyTextBlanked(state, e) && e.location === inv.location))
 }
 
 // 猎物（prey）排序：数值越小越优先，便于统一计算并列集合。
 
 function enemyAttack(state, enemy, inv, events, label, options = {}) {
+  inv = effectRecipient(state, inv)
+  if(enemyZoneApi(state,events).isInactive(enemy.id))return false
+  if (enemy.attackProtection?.[inv.seat] === state.round) return false
   const attack = {
     kind: options.kind || 'enemy',
     source: options.source || null,
@@ -200,6 +219,7 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   }
   const adjusted = scenarioBehavior(state).beforeEnemyHarm?.(state, enemy, inv,
     { damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror }, scenarioRuntime(state, events))
+  if (adjusted?.damage != null) extraDamage = adjusted.damage - enemy.damage
   if (adjusted?.horror != null) extraHorror = adjusted.horror - enemy.horror
   attack.plannedDamage = enemy.damage + extraDamage
   attack.plannedHorror = enemy.horror + extraHorror
@@ -268,7 +288,8 @@ function buildDistance(state, from, to) {
   return Infinity
 }
 
-function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, temporary = false) {
+function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, temporary = false, sourceSeat = null, options = {}) {
+  if (options.exhausted != null && typeof options.exhausted !== 'boolean') throw new TypeError('Invalid exhausted spawn option')
   const def = enemyDef(code)
   if (!def) return null
   const override = scenarioBehavior(state).spawnOverrides?.[code]
@@ -329,7 +350,8 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
   if (!ignoreSpawn && scenarioBehavior(state).spawnLocation) loc = scenarioBehavior(state).spawnLocation(state, code, loc, engagedSeat, scenarioRuntime(state, []))
   // 2026-10-25 本循环修复 05204/05205：剧本级「此地不能生成敌人」限制统一咨询（含 api.spawn 的 ignoreSpawn 路径）；
   // 被禁止时按生成失败处理（进遭遇弃牌堆 + spawnFailed），与参考实现 noSpawn 语义一致。
-  if (scenarioBehavior(state).spawnForbiddenAt?.(state, code, loc, engagedSeat)) {
+  if (!enemyCanEnterLocation(state, { ...def, code, originalCode: code }, loc)
+    || scenarioBehavior(state).spawnForbiddenAt?.(state, code, loc, engagedSeat)) {
     info(state, [], `⛔ 「${def?.name || code}」不能在「${state.locations.find(item => item.id === loc)?.name || loc}」生成。`)
     state.encounterDiscard.push(code)
     scenarioBehavior(state).spawnFailed?.(state, code, engagedSeat, scenarioRuntime(state, []))
@@ -340,7 +362,7 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     scenarioBehavior(state).spawnFailed?.(state, code, engagedSeat, scenarioRuntime(state, []))
     return null
   }
-  const health = def.healthPerInvestigator
+  const health = def.health === null ? null : def.healthPerInvestigator
     ? def.healthPerInvestigator * state.numInvestigators
     : def.health + (def.healthPerPlayerBonus || 0) * state.numInvestigators
   // 弱点敌人的牌组归属：从调查员牌库抽出的由抽出者持有（engagedSeat 就是归属座位）；
@@ -368,38 +390,51 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     drawnBySeat: engagedSeat,
     victory: def.victory || 0, vengeance: def.vengeance || 0,
     traits: def.traits || [],
-    damageTaken: 0, exhausted: false, doom: def.onSpawnDoom || 0,
+    damageTaken: 0, exhausted: options.exhausted === true, doom: def.onSpawnDoom || 0,
     location: loc, engagedSeat: null,
   }
   if (temporary) return enemy
+  if (def.swarming) enemy.swarmOwnerSeat = sourceSeat ?? engagedSeat ?? state.campaign?.leadSeat ?? state.currentSeat
+  const chooseEngaged = registeredEntry(code)?.enemyRule?.spawnEngagedSeat
+  if (!ignoreSpawn && typeof chooseEngaged === 'function') engagedSeat = chooseEngaged(state, enemy, engagedSeat, scenarioRuntime(state, []))
+  return enterExistingEnemy(state,enemy,{engageSeat:engagedSeat},[])
+}
+
+function enterExistingEnemy(state,enemy,{engageSeat=null}={},events=[]) {
+  const code=enemy.code,engagedSeat=engageSeat
   state.enemies.push(enemy)
-  processPlayerEnemyEntry(state, enemy, [], true)
+  scenarioBehavior(state).enemySpawned?.(state, enemy, scenarioRuntime(state, events))
+  processPlayerEnemyEntry(state, enemy, events, true)
   if (!state.enemies.includes(enemy)) return enemy
-  scenarioBehavior(state).enemySpawned?.(state, enemy, scenarioRuntime(state, []))
   // 「入场后：在其上放置毁灭」。战役钩子若已放过（失落时代 / 万古之环），这里不再加。
   if (state.enemies.includes(enemy)) {
     const ruleDoom = Number(enemySpawnRuleFor(code)?.doomOnSpawn) || 0
     const missing = ruleDoom - (enemy.doom || 0)
     if (missing > 0) {
       enemy.doom = (enemy.doom || 0) + missing
-      info(state, [], `🧿 「${enemy.name}」入场：在它身上放置 ${missing} 个毁灭标记。`)
+      info(state, events, `🧿 「${enemy.name}」入场：在它身上放置 ${missing} 个毁灭标记。`)
     }
   }
   for (const inv of aliveInvestigators(state)) {
-    if (inv.location === enemy.location) triggerReaction(state, inv.seat, 'enemySpawn', [], { enemy, location: enemy.location })
+    if (inv.location === enemy.location) triggerReaction(state, inv.seat, 'enemySpawn', events, { enemy, location: enemy.location },{skipAbilityWindow:true})
   }
   // Reaction events (e.g. Think on Your Feet) are played from hand on the same
   // window; the enemy still spawns at the original location.
   reactionWindow(state, 'enemySpawn', { when: 'enemySpawn', seat: engagedSeat ?? leadDecisionSeat(state),
-    location: loc, enemy }, [])
-  if (state.enemies.includes(enemy) && !enemy.exhausted && !enemy.aloof && !enemy.massive && engagedSeat != null && state.investigators[engagedSeat]?.location === loc) engageEnemy(state, enemy, engagedSeat)
+    location: enemy.location, enemy }, events)
+  if (state.enemies.includes(enemy) && !enemy.exhausted && !enemy.aloof && !enemy.massive && engagedSeat != null && state.investigators[engagedSeat]?.location === enemy.location) engageEnemy(state, enemy, engagedSeat,events)
   return enemy
 }
 
 // 由剧本现场生成、不在卡牌目录里的敌人（04331 纽约遗址的飞天水螅）。
 // stats 提供印刷数值；extra 放实例标记（例如 underlyingCard = 被当作敌人的那张牌）。
 
-function engageEnemy(state, enemy, seat, events = []) {
+function engageEnemy(state, enemy, seat, events = [], grouped = false) {
+  if (!grouped && (enemy.hostId || enemy.swarmCards?.length)) {
+    for (const member of swarmGroup(state, enemy)) engageEnemy(state, member, seat, events, true)
+    return
+  }
+  if (capabilityBlocked(state, state.investigators[seat], 'engage')) return
   if (enemy.engagedSeat === seat) return
   // 2026-10-25 修复 05178a/c：剧本级「该敌人不能被交战」也要拦卡牌效果的强制交战
   // （此前只在 moves.js 的交战行动层过滤，api.engage 等效果路径可强行交战）。
@@ -421,11 +456,18 @@ function engageEnemy(state, enemy, seat, events = []) {
   if (inv && !enemyTextBlanked(state, enemy)) {
     scenarioBehavior(state).enemyEngaged?.(state, enemy, inv, scenarioRuntime(state, events))
   }
-  if (inv && state.enemies.includes(enemy)) triggerReaction(state, seat, 'enemyEngaged', events, { enemy, seat })
+  if (inv && state.enemies.includes(enemy)) triggerReaction(state, seat, 'enemyEngaged', events, eventWindowContext(state, { enemy, seat }))
   // 年幼的深潜者「交战时受 1 点恐惧」由 youngDeepOne 的 forced 描述子结算。
 }
 
-function disengageEnemy(state, enemy) {
+function disengageEnemy(state, enemy, grouped = false) {
+  if (!grouped && (enemy.hostId || enemy.swarmCards?.length)) {
+    for (const member of swarmGroup(state, enemy)) {
+      if (enemy.exhausted) member.exhausted = true
+      disengageEnemy(state, member, true)
+    }
+    return
+  }
   if (enemy.engagedSeat != null) {
     const inv = state.investigators[enemy.engagedSeat]
     if (inv) removeOne(inv.engaged, enemy.id)
@@ -433,38 +475,72 @@ function disengageEnemy(state, enemy) {
   enemy.engagedSeat = null
 }
 
-function defeatEnemy(state, enemy, events) {
+function leaveEnemyPlay(state,enemy,events,{reason='zone',preserveKeys=false,responsibleSeat=null}={}) {
+  releaseChaosTokens?.(state,enemy.id)
+  if(!preserveKeys)keysOnExit(state,'enemy:'+enemy.id,enemy.location,responsibleSeat)
+  if(enemy.bindMonster){state.investigators[enemy.bindMonster.ownerSeat]?.discard.push(enemy.bindMonster.code);delete enemy.bindMonster}
+  removeOne(state.enemies,enemy)
+  if(enemy.smiteTheWickedSeat!=null)state.investigators[enemy.smiteTheWickedSeat]?.discard.push(SMITE_THE_WICKED_CODE)
+  if(enemy.engagedSeat!=null){const inv=state.investigators[enemy.engagedSeat];if(inv)removeOne(inv.engaged,enemy.id)}
+  if(reason==='zone')enemy.engagedSeat=null
+}
+function enemyZoneApi(state,events=[]) {
+ return createEnemyZoneApi(state,{mechanicState,locationExists:id=>locationExists(state,id),canEnter:(e,id)=>enemyCanEnterLocation(state,e,id),
+   leavePlay:(enemy,options)=>leaveEnemyPlay(state,enemy,events,options),
+   enterExisting:(enemy,options)=>enterExistingEnemy(state,enemy,options,events)})
+}
+function enemyOutcomeApi(state,events=[]) {
+ return createEnemyOutcomeApi(state,{
+  interrupt:(when,context)=>reactionWindow(state,when,eventWindowContext(state,{...context,when}),events,{allowNested:true}),
+  readyEnemy:enemy=>scenarioRuntime(state,events).readyEnemy(enemy),
+  placeDoomOnCard:(enemy,n)=>placeDoomOnCard(state,enemy,n,events),
+  syncClues:()=>syncClues(state),cluesGained:(seat,amount)=>triggerReaction(state,seat,'cluesGained',events,{when:'cluesGained',seat,amount}),
+  zones:enemyZoneApi(state,events),wouldAddToVictory:enemy=>wouldAddToVictory(enemy,enemyDef),
+  scenarioDecks:{put:(...args)=>scenarioRuntime(state,events).mechanics.scenarioDecks.put(...args)},
+  chooseDestination:(context,candidates)=>Number(requestChoice(state,{kind:'effect',source:context.enemy.id,seat:context.sourceSeat??leadDecisionSeat(state),prompt:'选择敌人被击败后的去向。',options:candidates.map((c,index)=>({id:String(index),label:c.kind==='enemyZone'?'放到'+c.id:'洗入'+c.id}))}))
+ })
+}
+function enemyOutcomePublicApi(state,events=[]) {const api=enemyOutcomeApi(state,events);return {replace:api.replace,destination:api.destination,takeClues:api.takeClues}}
+function prepareEnemyOutcome(state,kind,enemy,events,options={}) {return enemyOutcomeApi(state,events).begin(kind,enemy,options)}
+
+function defeatEnemy(state, enemy, events, options={}) {
+  if(!state.enemies.includes(enemy))return false
+  const outcome=enemyOutcomeApi(state,events),context=options.prepared||outcome.begin('defeat',enemy,{seat:options.seat??enemy.defeatedBy??null,source:options.source??enemy.lastDamageSource??null})
+  if(!context||context.replaced||context.cancelled)return false
+  const defeatedLocation=context.location
+
+  const swarmHost = enemy.hostId ? state.enemies.find(item => item.id === enemy.hostId) : null
+  const excess = swarmHost ? Math.max(0, (enemy.damageTaken || 0) - enemyHealth(state, enemy)) : 0
+  const swarmEffect = swarmHost ? registeredEntry(enemy.originalCode || enemy.code)?.enemyScript?.onSwarmDefeated?.(
+    state, enemy, swarmHost, scenarioRuntime(state, events)) : null
   // 敌人离场：把它身上封印的混乱标记归还混乱袋（04014 伊格蛇族的旧印等）。
-  releaseChaosTokens?.(state, enemy.id)
-  const defeatedBy = enemy.defeatedBy ?? enemy.engagedSeat
+  const defeatedBy = context.sourceSeat
+  const defeater = state.investigators[defeatedBy]
+  if (defeater && tracksHistory(state, defeater, 'trackDefeatedEnemyHealth', registeredEntry)) {
+    if (defeater.defeatedHealthHistory?.turn !== state.turnSerial) defeater.defeatedHealthHistory = { turn: state.turnSerial, total: 0 }
+    defeater.defeatedHealthHistory.total += enemyHealth(state, enemy)
+  }
   // 「煤油」等需要知道本地点本轮是否有敌人被击败。
   const defeatedAt = state.locations.find(location => location.id === enemy.location)
   if (defeatedAt) defeatedAt.enemyDefeatedRound = state.round
-  if (enemy.bindMonster) {
-    state.investigators[enemy.bindMonster.ownerSeat]?.discard.push(enemy.bindMonster.code)
-    delete enemy.bindMonster
-  }
-  removeOne(state.enemies, enemy)
-  if (enemy.smiteTheWickedSeat != null) state.investigators[enemy.smiteTheWickedSeat]?.discard.push(SMITE_THE_WICKED_CODE)
-  if (enemy.engagedSeat != null) {
-    const inv = state.investigators[enemy.engagedSeat]
-    if (inv) removeOne(inv.engaged, enemy.id)
-  }
+  leaveEnemyPlay(state,enemy,events,{reason:'defeat',responsibleSeat:defeatedBy})
   if ((registeredEntry(enemy.code)?.enemyWeakness?.shuffleIntoDeckOnDefeat)) {
     const owner = state.investigators[enemy.bearerSeat]
-    if (owner) owner.deck = shuffle([...owner.deck, enemy.code], () => randomValue(state))
+    if (owner) owner.deck = replacePlayerZoneCards(state, owner, shuffle([...owner.deck, enemy.code], () => randomValue(state)), 'shuffle')
     info(state, events, `「${enemy.name}」将被击败时改为洗回其承受者的牌库。`)
-    return
+    return true
   }
   // "When defeated" forced effects resolve before "after defeated" reactions.
   // 黑山羊眷族这类「被击败时」的卡面强制效果走 enemyDefeated 窗口（在胜利区结算之前）。
-  if (!enemyTextBlanked(state, enemy)) triggerReaction(state, defeatedBy, 'enemyDefeated', events, { enemy, seat: defeatedBy, location: enemy.location })
+  outcome.accepted(context)
+  triggerReaction(state,defeatedBy??leadDecisionSeat(state),'enemyDefeated',events,context)
   if ((enemy.originalCode || enemy.code) === pallidMaskCode()) {
     state.campaign.records.chasingTheStranger =
       Number(state.campaign.records.chasingTheStranger || 0) + 1
   }
-  const replaced = scenarioBehavior(state).enemyDefeated?.(state, enemy, scenarioRuntime(state, events))
-  const addedToVictory = !replaced && addVictory(state, enemy, events)
+  const replaced = !swarmHost && (outcome.commitDestination(context)||scenarioBehavior(state).enemyDefeated?.(state, enemy, scenarioRuntime(state, events)))
+  if (swarmHost) returnSwarmCard(state, enemy)
+  const addedToVictory = !swarmHost && !replaced && addVictory(state, enemy, events)
   // 04147 伊塔卡：只有敌人真正加入胜利区后，才可横置伊塔卡治愈自己与它各 1 点恐惧。
   for (const holder of addedToVictory ? aliveInvestigators(state) : []) {
     // Phase 5（5a-29）：条目上的 exhaustOnEnemyDefeatedHealHorror 本身就是标记，不再写死卡号。
@@ -488,9 +564,9 @@ function defeatEnemy(state, enemy, events) {
     enemyId: enemy.id, name: enemy.name, investigatorName: state.investigators[defeatedBy]?.name || null,
   })
   if (defeatedBy != null) {
-    triggerReaction(state, defeatedBy, 'defeatEnemy', events, { enemy, location: enemy.location })
+    triggerReaction(state, defeatedBy, 'defeatEnemy', events, { enemy, location: defeatedLocation },{skipAbilityWindow:true})
     reactionWindow(state, 'defeatEnemy', {
-      when: 'defeatEnemy', seat: defeatedBy, location: enemy.location, enemy,
+      when: 'defeatEnemy', seat: defeatedBy, location: defeatedLocation, enemy,
       prompt: `「${enemy.name}」被击败后`,
     }, events)
   }
@@ -499,41 +575,74 @@ function defeatEnemy(state, enemy, events) {
   //   · `defeatEnemy` 是「你击败敌人后」，带 selfOnly 的快速事件（01022 证据！等）只属于击败者；
   //   · 第二个窗口把 context.seat 换成了同地点的其他调查员，若沿用 `defeatEnemy` 会让他们
   //     通过 reactionWindow 的 selfOnly 判定位（inv.seat === context.seat），从而错误地打出「证据！」。
-  for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === enemy.location)) {
+  for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === defeatedLocation)) {
     if (inv.seat !== defeatedBy) {
       reactionWindow(state, 'defeatAtLocation',
-        { when: 'defeatAtLocation', seat: inv.seat, location: enemy.location, enemy,
+        { when: 'defeatAtLocation', seat: inv.seat, location: defeatedLocation, enemy,
           prompt: `「${enemy.name}」在本地点被击败后` }, events)
     }
   }
   checkAct(state, events)
   checkAgendaForcedEnemyDefeated(state, enemy, events)
+  if (swarmHost && excess > 0 && !swarmEffect?.cancelExcessDamage && state.enemies.includes(swarmHost)) {
+    const remaining = state.enemies.filter(item => item.hostId === swarmHost.id)
+    const targets = remaining.length ? remaining : [swarmHost]
+    const picked = requestChoice(state, { kind: 'enemy', source: enemy.originalCode || enemy.code,
+      seat: defeatedBy ?? state.campaign.leadSeat, canSkip: true,
+      prompt: `是否分配 ${excess} 点超出伤害给同一蜂拥的另一名敌人？`,
+      options: [{ id: 'skip', label: '不分配超出伤害' }, ...targets.map(item => ({ id: item.id, label: item.name }))] })
+    const target = targets.find(item => item.id === picked)
+    if (target) damageEnemy(state, target, excess, defeatedBy, events, enemy.lastDamageSource || null)
+  }
+  if (swarmHost && state.enemies.includes(swarmHost) && !swarmCardsOf(swarmHost).length
+    && enemyHealth(state, swarmHost) != null && swarmHost.damageTaken >= enemyHealth(state, swarmHost)
+    && enemyCanBeDefeated(state, swarmHost, null, defeatedBy)) defeatEnemy(state, swarmHost, events)
+  return true
 }
 
-function damageEnemy(state, enemy, amount, seat, events, source = null) {
+function canDamageEnemy(state, enemy, seat = null, source = null) {
+  if (!enemy || enemy.global || !state.enemies.includes(enemy)) return false
+  if (seat != null && (capabilityBlocked(state, state.investigators[seat], 'dealEnemyDamage')
+    || (registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.bearerCannotFightDamageDefeat
+      && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)))) return false
   // Phase 5（5a-23）：02255 只能被特定来源伤害（规则表 damageOnlyFrom）。
   const damageRule = enemyRuleFlags(enemy?.code)
-  if (!enemy || !(amount > 0)
-    || (damageRule.damageOnlyFrom && source !== damageRule.damageOnlyFrom && !enemyTextBlanked(state, enemy))) return false
+  if (damageRule.damageOnlyFrom && source !== damageRule.damageOnlyFrom && !enemyTextBlanked(state, enemy)) return false
   if (!enemyTextBlanked(state, enemy)
     && (entityRuleActive(state, enemy, 'cannot:beDamaged')
       || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, source, seat) === false)) return false
+  return true
+}
+
+function damageEnemy(state, enemy, amount, seat, events, source = null) {
+  if (!(amount > 0) || !canDamageEnemy(state, enemy, seat, source)) return false
   // 「职业杀手」：本回合该敌人下次受到的伤害 +1（一次性）。
   let total = amount + campaignState.consumeDamageBonus(enemy, state)
+  const adjusted = scenarioBehavior(state).enemyDamageAmount?.(state,enemy,total,scenarioRuntime(state,events),seat,source)
+  if (Number.isFinite(adjusted)) total=Math.max(0,adjusted)
+  if (!total) return false
   enemy.damageTaken = (enemy.damageTaken || 0) + total
+  if (source != null) enemy.lastDamageSource = source
   enemy.defeatedBy = seat
   scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, source)
-  if (enemy.damageTaken >= enemyHealth(state, enemy)
-    && enemyCanBeDefeated(state, enemy, source, seat)) defeatEnemy(state, enemy, events)
+  if (enemyHealth(state, enemy) != null && enemy.damageTaken >= enemyHealth(state, enemy)
+    && enemyCanBeDefeated(state, enemy, source, seat)) defeatEnemy(state, enemy, events,{seat,source})
   return true
 }
 
 // 胜利点 + 独特异教徒盘问记录。
 
-function autoEvadeEnemy(state, enemy, events) {
+function autoEvadeEnemy(state, enemy, events, options={}) {
+  const context=prepareEnemyOutcome(state,'evade',enemy,events,options)
+  if(!context||context.replaced||context.cancelled)return false
   enemy.exhausted = true
   disengageEnemy(state, enemy)
   info(state, events, `💨 「${enemy.name}」被横置并脱离交战。`)
+  if (registeredEntry(enemy.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('evadeSuccess'))) {
+    reactionWindow(state, 'evadeSuccess', { when: 'evadeSuccess', seat: enemy.bearerSeat ?? state.currentSeat,
+      enemy, location: enemy.location }, events, { allowNested: true })
+  }
+  return true
 }
 
 // 冷漠（aloof）敌人不会主动与调查员交战；未交战时也不能被攻击，需要调查员主动交战
@@ -549,9 +658,10 @@ function applyThreatHarmInterceptors(state, inv, damage, horror, events) {
     if (!rule) continue
     if (rule.trigger === 'damage' && !(damage > 0)) continue
     if (rule.trigger === 'horror' && !(horror > 0)) continue
+    if (rule.trigger === 'damageOrHorror' && !(damage > 0 || horror > 0)) continue
     next ||= { damage, horror }
-    if (rule.trigger === 'damage') next.damage += rule.extra
-    else next.horror += rule.extra
+    if (rule.trigger === 'damage' || (rule.trigger === 'damageOrHorror' && damage > 0)) next.damage += rule.extra
+    if (rule.trigger === 'horror' || (rule.trigger === 'damageOrHorror' && horror > 0)) next.horror += rule.extra
     if (rule.discard) {
       const index = inv.threat.indexOf(card)
       if (index >= 0) inv.threat.splice(index, 1)
@@ -565,6 +675,7 @@ function applyThreatHarmInterceptors(state, inv, damage, horror, events) {
 }
 
 function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null) {
+  inv = effectRecipient(state, inv)
   // 「在你受到恐惧时，如果这些恐惧中至少有 1 点没有分配给 X，受到 1 点伤害」（03182a 丹尼尔）。
   // 在分配前记下带这条强制的支援，分配后按分配结果判定。
   const horrorOverflowAssets = (horror || 0) > 0
@@ -598,6 +709,11 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
       assetId: recipient.id, cancelDamage: 0 }
     triggerReaction(state, inv.seat, 'damageAssignedToSelf', events, context)
     if (context.cancelDamage) assignedDamage.set(recipient, Math.max(0, amount - context.cancelDamage))
+    const owner = state.investigators.find(other => other.assets.includes(recipient))
+    if (owner && registeredEntry(recipient.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('assetDamageAssigned'))) {
+      reactionWindow(state, 'assetDamageAssigned', { when: 'assetDamageAssigned', seat: owner.seat,
+        assetId: recipient.id, amount: assignedDamage.get(recipient) }, events, { allowNested: true })
+    }
   }
   // "When dealt damage" reactions occur after assignment, before placement and
   // defeat. A Guard Dog can retaliate even when this attack will defeat it.
@@ -619,6 +735,14 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
     }
   }
   // P6（食梦者）：支援被击败的唯一判定点（asset-defeat.js）。伤害分配、伤害移动、剧本效果
+  const harmedAssets = new Set([...assignedDamage.keys(), ...assignedHorror.keys()])
+  for (const source of harmedAssets) {
+    if (source === inv || !registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger.includes('assetHarmPlaced'))) continue
+    const controller = state.investigators.find(other => other.assets.includes(source))
+    if (!controller) continue
+    reactionWindow(state, 'assetHarmPlaced', { when: 'assetHarmPlaced', seat: controller.seat, assetId: source.id,
+      damage: assignedDamage.get(source) || 0, horror: assignedHorror.get(source) || 0 }, events, { allowNested: true })
+  }
   // 都走这里，`assetDefeated` 窗口才有统一的触发位置。
   const assetDefeatDeps = {
     cardDef,
@@ -630,7 +754,7 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
     registeredEntry,
     defeatedAssetRetaliation,
     shuffleIntoDeck: (owner, code) => {
-      owner.deck = shuffle([...owner.deck, code], () => randomValue(state))
+      owner.deck = replacePlayerZoneCards(state, owner, shuffle([...owner.deck, code], () => randomValue(state)), 'shuffle')
     },
   }
   for (const owner of state.investigators) {
@@ -647,6 +771,12 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
     applyDamage(state, inv, overflowDamage, events)
     break
   }
+  const actualDamage = assignedDamage.get(inv) || 0
+  const actualHorror = assignedHorror.get(inv) || 0
+  if (actualDamage > 0 || actualHorror > 0) reactionWindow(state, 'harmAssigned', {
+    when: 'harmAssigned', seat: inv.seat, location: inv.location,
+    damage: actualDamage, horror: actualHorror, attack,
+  }, events, { allowNested: true })
   checkDefeated(state, inv.seat, events)
   if (inv.defeated || inv.resigned) return
   if ([...assignedDamage.values()].some(amount => amount > 0)) {
@@ -681,5 +811,5 @@ function applyHorror(state, inv, amount, events, direct) {
   applyHarm(state, inv, 0, amount, events, direct)
 }
 
-  return { enemyHealth, enemyFightValue, enemyEvadeValue, enemiesEngagedWith, enemyAttack, spawnEnemy, engageEnemy, disengageEnemy, defeatEnemy, damageEnemy, autoEvadeEnemy, applyHarm, defeatedAssetRetaliation, applyDamage, applyHorror }
+  return { enemyZoneApi, enemyOutcomePublicApi, prepareEnemyOutcome, canDamageEnemy, enemyHealth, enemyFightValue, enemyEvadeValue, enemiesEngagedWith, enemyAttack, spawnEnemy, engageEnemy, disengageEnemy, defeatEnemy, damageEnemy, autoEvadeEnemy, applyHarm, defeatedAssetRetaliation, applyDamage, applyHorror }
 }

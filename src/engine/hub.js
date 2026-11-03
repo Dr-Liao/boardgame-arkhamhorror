@@ -143,6 +143,15 @@ function runInterlude(state, nextIndex, events) {
 
 function endCampaign(state, events) {
   const CAMPAIGN = campaignFor(state)
+  const crossing = (CAMPAIGN.epilogueCrossOutRecords || []).filter(key => state.campaign.records[key])
+  if (crossing.length) {
+    state.campaign.epilogueRecords ||= structuredClone(state.campaign.records)
+    state.campaign.crossedOutRecords ||= []
+    for (const key of crossing) {
+      if (!state.campaign.crossedOutRecords.includes(key)) state.campaign.crossedOutRecords.push(key)
+      delete state.campaign.records[key]
+    }
+  }
   state.status = 'over'
   if (state.hubFlow) { state.uiState = 'campaignResult'; state.phase = 'campaignResult' }
   state.campaign.phase = 'finished'

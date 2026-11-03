@@ -40,9 +40,8 @@ const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
 // ---------------------------------------------------------------------------
 // 参考实现（Campaigns/TheForgottenAge/Helpers.hs:239-335）的 explore：从探索牌库顶
 // 一直抽到「与当前地点的连接符号相同的地点」或遭遇卡；途中不连接的地点先放一边，
-// 本次探索结束后洗回探索牌库。引擎 doExplore 目前只抽 1 张（读点 exploreConnects
-// 已存在），因此本章在 beforeExplore 里先把不连接的地点挪到一边，让引擎抽到的第一张
-// 就是合法目标；afterExplore 再把一边的牌洗回。04207/04208 的探索由此获得连接筛选。
+// 本次探索结束后洗回探索牌库。通用 doExplore 完成持续翻牌和洗回，
+// 本章的 exploreConnects 只提供地点连接判定。
 const scenarioLocations = state => state.scenario?.locations || {}
 
 const exploreLinks = (state, fromId) => scenarioLocations(state)[fromId]?.connections || []
@@ -53,35 +52,6 @@ function connectsForExplore(state, fromId, code) {
   const links = exploreLinks(state, fromId)
   if (!links.length) return true
   return links.includes(code)
-}
-
-function shuffleExplorationAsideBack(state, api) {
-  const aside = state.scenarioFlags?.exploreAside || []
-  if (!aside.length) return false
-  state.scenarioFlags.exploreAside = []
-  const merged = [...aside, ...(state.explorationDeck || [])]
-  state.explorationDeck = typeof api?.shuffle === 'function' ? api.shuffle(merged) : merged
-  return true
-}
-
-function prepareExplorationDraw(state, inv, api) {
-  const deck = state.explorationDeck || []
-  const aside = []
-  while (deck.length) {
-    const code = deck[deck.length - 1]
-    if (!scenarioLocations(state)[code]) break // 遭遇卡：本次探索停在它上面
-    if (connectsForExplore(state, inv.location, code)) break
-    deck.pop()
-    aside.push(code)
-  }
-  state.explorationDeck = deck
-  if (aside.length) {
-    state.scenarioFlags.exploreAside = [...(state.scenarioFlags.exploreAside || []), ...aside]
-  }
-  // 牌库里已没有可翻的地点：把一边的牌洗回，让引擎照常翻出一张（多半是遭遇卡）。
-  if (!state.explorationDeck.length && (state.scenarioFlags.exploreAside || []).length) {
-    shuffleExplorationAsideBack(state, api)
-  }
 }
 
 // 04205 重玩：Haskell 用 scenario metadata 的 reachedAct2 跨 RestartScenario 保留
@@ -308,8 +278,6 @@ export const behavior = {
     // 引擎的 doExplore 在 beforeExplore 之后才从探索牌库抽卡；用这个标记让「落入陷阱」
     // 知道自己是“从探索牌库抽出”的（此时不能选择洗回探索牌库）。
     state.scenarioFlags ||= {}
-    // TFA 探索：先把不连接的地点挪到一边，让引擎翻出的是「连接地点」。
-    prepareExplorationDraw(state, inv, api)
     state.scenarioFlags.exploreDrawPending = true
     return true
   },
@@ -329,17 +297,13 @@ export const behavior = {
     if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
     // 第 116 轮：04072 万蛇据点的中毒伤害在地点条目（探索成功也要结算）。
     rule?.afterExplore?.({ state, inv, api, context, location })
-    // TFA 探索：把本次探索时放一边的不连接地点洗回探索牌库。
-    if (shuffleExplorationAsideBack(state, api)) {
-      api?.info?.('🧭 与当前地点不连接的地点已洗回探索牌库。')
-    }
     if (context?.kind === 'location') {
       state.explorationDiscard ||= []
       inv.tfaExploredThisTurn = true
       return
     }
-    // 抽到的是诡计/敌人＝探索失败，按地点的强制效果结算（04069 荆棘之路）。
-    rule?.afterExploreFailure?.({ state, inv, api, context, location })
+    // 只有敌人/诡计才算探索失败，按地点的强制效果结算（04069 荆棘之路）。
+    if (context?.kind === 'encounter') rule?.afterExploreFailure?.({ state, inv, api, context, location })
   },
 
   afterTest(state, inv, result, api) {

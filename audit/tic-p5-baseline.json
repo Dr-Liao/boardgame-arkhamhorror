@@ -1,0 +1,15 @@
+{
+  "phase": "P5",
+  "date": "2026-11-03",
+  "purpose": "Captured after P4 acceptance and before P5 behavior edits; P0/P4 baselines remain unchanged.",
+  "replayFile": "tests/fixtures/replay/tic-p5-baseline.json",
+  "replaySha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344",
+  "fastBefore": {
+    "evidence": "audit/tic-interaction-regression.json at P4 completion",
+    "log": "artifacts/migration/tic/reports/p4-fast-final.log",
+    "failures": [],
+    "snapshot": "artifacts/migration/tic/p5/p4-acceptance-before.json",
+    "snapshotSha256": "936d93c69b18796b51d26ed236a50dbca6df1474bc8de9c208f55d34a04004c1",
+    "logSha256": "620880fccffe081ed01d9fcc6c4162997fa831f2bac96f4829cbdc652e6e6209"
+  }
+}

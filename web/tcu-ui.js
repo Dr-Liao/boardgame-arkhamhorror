@@ -24,12 +24,11 @@ import { tableArt } from './table-art.js'
 // 卡名/卡文统一走 catalog.js 的 cardDisplay*（docs/localization.md §8.7 第二步）。
 import { cardDisplayName, currentLanguage } from './catalog.js'
 import { t } from './i18n.js'
+import { SKILL_ICONS } from './game-symbols.js'
+import { skillLabel, skillText } from './skill-presentation.js'
 
-const SKILL_LABELS = Object.freeze({ willpower: 'situation.skill.willpower', intellect: 'situation.skill.intellect', combat: 'situation.skill.combat', agility: 'situation.skill.agility' })
-const SKILL_ICONS = Object.freeze({ willpower: 'star', intellect: 'book', combat: 'sword', agility: 'leaf' })
 const ROMAN = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI']
 
-const skillLabel = id => SKILL_LABELS[id] ? t(SKILL_LABELS[id]) : id
 const skillList = skill => Array.isArray(skill) ? skill : skill ? [skill] : []
 export const romanNumeral = arcana => ROMAN[Number(arcana)] || String(arcana)
 
@@ -233,7 +232,7 @@ export function multiSkillTestInfo(state) {
   const base = test.printedValue ?? test.baseValue ?? value
   const delta = Number.isFinite(value) && Number.isFinite(base) ? value - base : 0
   return {
-    skills: skills.map(id => ({ id, label: skillLabel(id), icon: SKILL_ICONS[id] || 'star' })),
+    skills: skills.map(id => ({ id, label: skillLabel(id), icon: SKILL_ICONS[id] || 'wild' })),
     label: skills.map(skillLabel).join('+'),
     multi: skills.length > 1,
     base, value, delta, difficulty: test.difficulty ?? null,
@@ -276,7 +275,7 @@ export function renderTarotPicker(h, model, { onSubmit = () => {}, disabled = fa
       h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, t('tcu.tarot.eyebrow')),
         h('h2', {}, t('tcu.tarot.title')),
-        h('p', { className: 'ah-tcu-lead' }, tableIcon('tarot'), h('span', {}, renderRulesText(h, model.prompt, { links: false })))),
+        h('p', { className: 'ah-tcu-lead' }, tableIcon('tarot'), h('span', {}, renderRulesText(h, model.prompt, { links: false, skills: true })))),
       h('div', { className: 'ah-tcu-purse', role: 'status', 'aria-label': t('tcu.tarot.remainingAria', { count: model.remaining }) },
         h('span', {}, t('tcu.tarot.remaining')), h('b', {}, String(model.remaining)))),
     h('p', { className: 'ah-tcu-note', role: 'status' },
@@ -370,7 +369,7 @@ export function renderStoryInvestigatorPicker(h, model, { onSubmit = () => {}, d
       h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, t('tcu.story.eyebrow')),
         h('h2', {}, t('tcu.story.title')),
-        h('p', { className: 'ah-tcu-lead' }, tableIcon('ally'), h('span', {}, renderRulesText(h, model.prompt, { links: false })))),
+        h('p', { className: 'ah-tcu-lead' }, tableIcon('ally'), h('span', {}, renderRulesText(h, model.prompt, { links: false, skills: true })))),
       h('div', { className: 'ah-tcu-purse', role: 'status', 'aria-label': t('tcu.story.remainingAria', { count: model.remainingCount }) },
         h('span', {}, t('tcu.story.remaining')), h('b', {}, String(model.remainingCount)))),
     h('p', { className: 'ah-tcu-note', role: 'status' },
@@ -404,10 +403,10 @@ export function renderHauntedChoice(h, model, { onSubmit = () => {}, disabled = 
       h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, t('tcu.haunted.eyebrow')),
         h('h2', {}, model.locationName),
-        h('p', { className: 'ah-tcu-lead' }, tableIcon('eye'), h('span', {}, renderRulesText(h, model.prompt, { links: false })))),
+        h('p', { className: 'ah-tcu-lead' }, tableIcon('eye'), h('span', {}, renderRulesText(h, model.prompt, { links: false, skills: true })))),
       h('div', { className: 'ah-tcu-purse', role: 'status', 'aria-label': t('tcu.haunted.waitingAria', { count: model.options.length }) },
         h('span', {}, t('tcu.haunted.waiting')), h('b', {}, String(model.options.length)))),
-    model.abilityText ? h('blockquote', { className: 'ah-haunted-source' }, model.abilityText) : null,
+    model.abilityText ? h('blockquote', { className: 'ah-haunted-source' }, renderRulesText(h, model.abilityText, { links: false })) : null,
     model.times > 1 ? h('p', { className: 'ah-tcu-note' }, t('tcu.haunted.times', { count: model.times })) : null,
     h('ol', { className: 'ah-haunted-list', 'aria-label': t('tcu.haunted.listAria') },
       model.options.map(item => h('li', {}, moveButton(h, {
@@ -416,8 +415,8 @@ export function renderHauntedChoice(h, model, { onSubmit = () => {}, disabled = 
         busy,
         label: h('span', { className: 'ah-haunted-row' },
           h('span', { className: 'ah-haunted-index', 'aria-hidden': 'true' }, String(item.order)),
-          h('span', { className: 'ah-haunted-text' }, renderRulesText(h, item.text, { links: false }))),
-        title: item.move ? t('tcu.haunted.optionTitle', { text: item.text }) : t('tcu.haunted.optionUnavailable'),
+          h('span', { className: 'ah-haunted-text' }, renderRulesText(h, item.text, { links: false, skills: true }))),
+        title: item.move ? t('tcu.haunted.optionTitle', { text: skillText(item.text, { symbols: false }) }) : t('tcu.haunted.optionUnavailable'),
         onclick: () => item.move && onSubmit(item.move),
       })))),
     h('p', { className: 'ah-tcu-note is-muted' }, t('tcu.haunted.note')),

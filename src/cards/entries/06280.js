@@ -9,7 +9,7 @@
 //   · 能力是 [fast]（不花行动，只用横置自身作费用）→ cost:{ action:false, exhaust:true }；
 //   · 卡面「攻击。」= Fight 行动 → countsAs:'fight'（借机攻击豁免读点）；
 //   · 「只能对剩余生命值为正好 1 点的敌人」写在 target.query 上（legalMoves/validateMove/执行同源），
-//     引擎按 candidate.entity 读 health/damageTaken；
+//     target.query 用实时敌人生命值减已受伤害，包含剧本及卡牌修正；
 //   · 攻击本身走 api.fight + combatBonus:2，noSpend:true（行动/横置已由描述子费用结算）。
 
 import { ownTurn } from '../../engine/matcher.js'
@@ -18,7 +18,7 @@ export default {
   code: '06280',
   abilities: [
     {
-      kind: 'action',
+      kind: 'free',
       label: '横置：攻击（战斗 +2，仅限剩余生命为 1 的敌人）',
       cost: { action: false, exhaust: true },
       countsAs: 'fight',
@@ -26,12 +26,10 @@ export default {
       target: {
         kind: 'enemy',
         label: '剩余生命值正好为 1 的敌人',
-        query: ({ candidate }) => {
+        query: ({ candidate, enemyHealth }) => {
           const enemy = candidate?.entity
           if (!enemy) return false
-          const health = Number(enemy.health) || 0
-          const damageTaken = Number(enemy.damageTaken) || 0
-          return health - damageTaken === 1
+          return enemyHealth(enemy) - (enemy.damageTaken || 0) === 1
         },
       },
       resolve: ({ inv, api, targetId }) => {

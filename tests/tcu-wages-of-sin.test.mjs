@@ -1628,8 +1628,8 @@ test('05171b 幽灵面：基础意志减至 1 持续到该调查员下个回合�
 test('05175：引擎在发现线索之后调用 afterInvestigate（顺序契约）', async () => {
   const { readFileSync } = await import('node:fs')
   const source = readFileSync('src/engine/actions.js', 'utf8')
-  const discover = source.indexOf('discoverClueAt(state, inv, gain, events)')
-  const hook = source.indexOf('scenarioBehavior(state).afterInvestigate?.')
+  const discover = source.indexOf('discoverClueAt(state, inv, gain, events')
+  const hook = source.indexOf('const afterHook = scenarioBehavior(state).afterInvestigate')
   assert.ok(discover > 0, '引擎成功调查分支必须发现线索')
   assert.ok(hook > discover, 'afterInvestigate 必须在发现线索之后调用（卡面「成功调查后」）')
 })

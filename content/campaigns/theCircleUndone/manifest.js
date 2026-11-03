@@ -305,6 +305,7 @@ const flow = {
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'theCircleUndone',
+  epilogueCrossOutRecords: ['theInvestigatorsSurvivedTheWatchersEmbrace'],
   name: '万象无终',
   nameEn: 'The Circle Undone',
   contentVersion: CONTENT_VERSION,

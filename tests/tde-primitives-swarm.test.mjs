@@ -3,14 +3,14 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-  clearSwarmCards, placeSwarmCards, removeSwarmCard, splitSwarmingDamage, swarmBlockedReason,
+  clearSwarmCards, placeSwarmCards, removeSwarmCard, swarmBlockedReason,
   swarmCanBeDefeated, swarmCardsOf, swarmCountOf, swarmHostOf,
 } from '../src/engine/swarm.js'
 
 const host = () => ({ id: 'enemy1', code: '06102', name: 'Swarm of Spiders', health: 6, damageTaken: 0 })
-const stateWithDeck = (codes) => ({ instanceSeq: {}, encounterDeck: [...codes], enemies: [] })
+const stateWithDeck = (codes) => ({ instanceSeq: {}, currentSeat:0, investigators:[{seat:0,deck:[...codes],engaged:[]}], encounterDeck:['encounter'], enemies: [] })
 
-test('按遭遇牌库顶放置蜂拥卡：实例 id、hostId、数量', () => {
+test('按调查员牌库顶放置蜂拥卡：实例 id、hostId、数量', () => {
   const state = stateWithDeck(['06103', '06103', '06103'])
   const target = host()
   state.enemies.push(target)
@@ -20,13 +20,13 @@ test('按遭遇牌库顶放置蜂拥卡：实例 id、hostId、数量', () => {
   assert.deepEqual(added.map(card => card.id), ['swarm1', 'swarm2'])
   assert.equal(added[0].hostId, 'enemy1')
   assert.equal(swarmCountOf(target), 2)
-  assert.equal(state.encounterDeck.length, 1)
+  assert.equal(state.investigators[0].deck.length, 1)
 })
 
-test('蜂拥卡抽不够时抛错，不静默少放', () => {
+test('调查员牌库不足时只放置实际剩余的蜂拥卡', () => {
   const state = stateWithDeck(['06103'])
   const target = host()
-  assert.throws(() => placeSwarmCards(state, target, 2), /蜂拥卡不足/)
+  assert.equal(placeSwarmCards(state, target, 2).length, 1)
   assert.equal(swarmCountOf(target), 1, '已抽到的 1 张仍算放置')
 })
 
@@ -58,16 +58,6 @@ test('蜂拥卡不能作为头领', () => {
   assert.throws(() => placeSwarmCards({}, null, 1), /头领敌人对象/)
 })
 
-test('溢出伤害：先打空头领，再逐张扣蜂拥卡', () => {
-  const target = host()
-  target.swarmCards = [
-    { id: 'swarm1', health: 1, defeated: false },
-    { id: 'swarm2', health: 2, defeated: false },
-  ]
-  assert.deepEqual(splitSwarmingDamage(target, 7, 6), { toHost: 6, toSwarm: 1, defeatedSwarm: ['swarm1'], leftover: 0 })
-  assert.deepEqual(splitSwarmingDamage(target, 10, 6), { toHost: 6, toSwarm: 3, defeatedSwarm: ['swarm1', 'swarm2'], leftover: 1 })
-  assert.deepEqual(splitSwarmingDamage(target, 2, 6), { toHost: 2, toSwarm: 0, defeatedSwarm: [], leftover: 0 })
-})
 
 test('swarmHostOf：蜂拥卡反查头领；头领返回自身', () => {
   const state = stateWithDeck(['a'])

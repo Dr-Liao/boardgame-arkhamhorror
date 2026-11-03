@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "phase": "P7",
+  "createdAt": "2026-11-03T07:59:25.076Z",
+  "replayFile": "tests/fixtures/replay/tic-p7-baseline.json",
+  "replaySha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344",
+  "priorStage": "P6; audit/tic-migration.json P0-P6 verified",
+  "purpose": "Recorded before P7 behavior changes; compare without rewriting."
+}

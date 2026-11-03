@@ -122,6 +122,7 @@ test('03185 约束衣占满手部与身体槽，并生成双行动弃置入口',
     id: 'straitjacket',
     code: '03185',
     slots: ['Body', 'Hand x2'],
+    slotsOverride: true,
     cannotLeavePlay: true,
     threatEffect: {
       discardCost: { action: 2 },

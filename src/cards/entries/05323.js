@@ -13,8 +13,7 @@
 //   · turn.js runLocationRoundEnd：声明 discardAtRoundEnd 的附属轮末把 code 推入 ownerSeat 弃牌堆并移除（恰好 1 次）。
 //   keepOnPlay 防止事件结算时默认进弃牌堆，与轮末弃置配合只产生 1 张物理卡。
 //
-// 残余近似（如实登记）：「敌军阶段期间所有要移动的敌人」目前引擎只有 hunterStep 读诱饵；
-// 剧本/效果发起的敌人移动（非猎手步）不读诱饵，仍按原目的地移动。
+// movement.relocateEnemy 同时替换敌军阶段的剧本/效果移动，等距路径由队长选择。
 
 export default {
   code: '05323',

@@ -1,3 +1,5 @@
+import { putInHand } from './hand-entry.js'
+import { replacePlayerZoneCards } from './player-zones.js'
 // card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡与目标的具体操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物。
 // 读点：搜索类效果（api.searchDeck / lookAt）与敌人目标解析。
@@ -48,6 +50,7 @@ export function createCardOps(deps) {
     // P8（食梦者共享组）：「猎物 - 伤害最多」「猎物 - 手牌最多」。
     mostDamage: (state, inv) => -(inv.damage || 0),
     mostCardsInHand: (state, inv) => -((inv.hand || []).length),
+    fewestCardsInHand: (state, inv) => (inv.hand || []).length,
     // 「猎物 - 距离昆扬之口最近」：按地点连接数计算最短距离。
     nearestMouth: (state, inv) => {
       const mouth = (state.locations || []).find(location =>
@@ -151,7 +154,7 @@ export function createCardOps(deps) {
     const chosen = matches[Number(answer)]
     const idx = inv.discard.indexOf(chosen.code)
     if (idx >= 0) inv.discard.splice(idx, 1)
-    inv.hand.push(chosen.code)
+    putInHand(state, inv, chosen.code)
     info(state, events, `${inv.name} 从弃牌堆取回「${cardName(chosen.code)}」。`)
   }
 
@@ -196,6 +199,10 @@ export function createCardOps(deps) {
     const wants = zone => !wanted || wanted === zone || (wanted === 'attached' && false)
     for (const owner of owners) {
       if (!owner) continue
+      if (wants('attached')) for (const host of [...owner.assets, ...owner.threat]) {
+        const index = (host.attachments || []).findIndex(isInstance)
+        if (index >= 0) return { zone: 'attached', owner, host, index, instance: host.attachments[index] }
+      }
       for (const zone of ['play', 'threat']) {
         if (!wants(zone)) continue
         const array = zone === 'play' ? owner.assets : owner.threat
@@ -214,8 +221,11 @@ export function createCardOps(deps) {
       if (!wants(zone)) continue
       const array = state[zone]
       if (!Array.isArray(array) || !spec.code) continue
-      const index = array.lastIndexOf(spec.code)
-      if (index >= 0) return { zone, owner: inv, index, shared: zone }
+      let index = array.findLastIndex(card => typeof card === 'object' && card?.code === spec.code
+        && (spec.ownerSeat == null || card.ownerSeat == null || card.ownerSeat === spec.ownerSeat))
+      if (index < 0) index = array.lastIndexOf(spec.code)
+      if (index >= 0) return { zone, owner: inv, index, shared: zone,
+        ...(typeof array[index] === 'object' ? { instance: array[index] } : {}) }
     }
     return null
   }
@@ -254,7 +264,7 @@ export function createCardOps(deps) {
       return true
     })
     if (!matches.length) {
-      inv.deck = shuffle(inv.deck, () => randomValue(state))
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
       info(state, events, `${inv.name} 查看了牌库顶 ${cards.length} 张，没有符合条件的卡牌，洗回牌库。`)
       return
     }
@@ -273,7 +283,7 @@ export function createCardOps(deps) {
       inv.deck.push(code)
       for (const text of drawCards(state, inv, 1, events)) info(state, events, text)
     }
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
   }
 
   function refillAsset(state, inv, amount, events, { usesType, kind, emptyText, verb, icon, trait = null }) {
@@ -392,10 +402,10 @@ export function createCardOps(deps) {
       options: [{ id: 'skip', label: '不选择卡牌' }, ...cards.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))] })
     if (answer !== 'skip') {
       const index = inv.deck.length - cards.length + Number(answer)
-      inv.hand.push(inv.deck.splice(index, 1)[0])
+      putInHand(state, inv, inv.deck.splice(index, 1)[0])
       info(state, events, `${inv.name} 搜索后将 1 张牌加入手牌。`)
     }
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
   }
 
   return { PREY_RANK, chooseAmong, preyTarget, preySeatForTest, searchDiscard, autoEvadeNonElite, attachBarricade, discardBarricades, findZoneCard, chooseInvestigator, searchTop, refillAsset, reloadAmmo, defeatNonEliteEnemyAt, rechargeAsset, chooseEnemy, enemyForTarget, searchCards }

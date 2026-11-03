@@ -148,7 +148,7 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
   }
   return {
     // 剧本区从左到右：剧本书（密谋/场景）→ 提示卡 → 当前场景/密谋的可执行操作。
-    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}) => {
+    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}, setupButton = null) => {
       const dual = dualStory(state, act, attachments)
       const pages = dual ? dual.pages.map(page => sceneCard(page.item, page.type, page.label, page.attached, page.interaction,
         page.type === 'act' ? clueMark(state, act) : doomMark(state, page)))
@@ -160,7 +160,7 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
       h('div', { className: 'ah-story-group' },
         h('div', { className: 'ah-script-cards ah-story-book', role: 'group', 'data-story-pages': dual ? 'agendas' : 'agenda-act', 'aria-label': dual ? dual.aria : t('table.script.booksAria') },
           ...pages),
-        referenceCard(state), scriptActions),
+        h('div', { className: 'ah-scenario-reference' }, referenceCard(state), setupButton), scriptActions),
       h('div', { className: 'ah-command-deck' },
       h('div', { className: 'ah-command-resources', role: 'group', 'aria-label': t('table.resources.aria') },
       h('div', { className: 'ah-encounter-deck', role: 'group', 'aria-label': t('table.encounter.aria', { count: state.encounterDeckSize ?? state.encounterDeck?.length ?? 0 }) },
@@ -173,7 +173,7 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
     },
     headerPhases: state => h('nav', { className: 'ah-header-phases', 'aria-label': t('table.phase.aria') }, [
       ['mythos', 'table.phase.mythos', 'table.phase.mythos.detail', 'eye'], ['investigation', 'table.phase.investigation', 'table.phase.investigation.detail', 'clue'],
-      ['enemy', 'table.phase.enemy', 'table.phase.enemy.detail', 'sword'], ['upkeep', 'table.phase.upkeep', 'table.phase.upkeep.detail', 'resource'],
+      ['enemy', 'table.phase.enemy', 'table.phase.enemy.detail', 'combat'], ['upkeep', 'table.phase.upkeep', 'table.phase.upkeep.detail', 'resource'],
     ].map(([id, labelKey, detailKey, icon]) => h('div', { className: `ah-header-phase ah-phase-${id}` + (state.status === 'playing' && state.phase === id ? ' is-current' : ''),
       'aria-current': state.status === 'playing' && state.phase === id ? 'step' : 'false', title: t(detailKey) },
       tableIcon(icon), h('span', {}, h('strong', {}, t(labelKey)), h('small', {}, t(detailKey)))))),

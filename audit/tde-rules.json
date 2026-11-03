@@ -33,9 +33,7 @@
         "mechanismId": "myriad",
         "ruleOwned": true,
         "implemented": true,
-        "deferred": [
-          "P7 已接线构筑界面 n/3 显示（web/deck-rules.js#myriadUsage → web/hub.js cardMeta）与构筑校验拦截；06199/06241–06243 的「多张同名在场」结算按卡牌行为处理（P7 逐卡实现/显式简化）"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06020",
@@ -72,9 +70,7 @@
         "mechanismId": "swarming",
         "ruleOwned": true,
         "implemented": true,
-        "deferred": [
-          "真实蜂拥实体在场景里的生成/攻击/交战（P8）；面板（数量、来源、溢出伤害）属 P5 交互第 3 条"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06102",
@@ -108,9 +104,7 @@
         "mechanismId": "veiled",
         "ruleOwned": true,
         "implemented": true,
-        "deferred": [
-          "翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡正文已由 P8-T 自译（story-text）"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06127",
@@ -156,9 +150,7 @@
         "mechanismId": "researched",
         "ruleOwned": true,
         "implemented": true,
-        "deferred": [
-          "P7 已在 06236/06237/06238 条目声明 researchRequirement: youHaveInterpretedTheDreams（记录由 06112 的 api.recordResearch 写入）；战役层写入该记录的章节流程属 P8"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06236",
@@ -184,9 +176,7 @@
         "mechanismId": "alert",
         "ruleOwned": false,
         "implemented": true,
-        "deferred": [
-          "Alert + Swarming 的反击归属（蜂拥卡是否也反击）与 Alert + Massive 的攻击顺序留给 P8 章节接线时逐卡确认"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06105",
@@ -214,10 +204,7 @@
         "mechanismId": "hidden",
         "ruleOwned": false,
         "implemented": true,
-        "deferred": [
-          "敌人形态的隐私卡（06306–06310）在手牌中被攻击/躲避的入口属 P8；隐私投影按座位过滤属 P5/P8",
-          "本循环 18 张全部带险境（Peril），与核心隐私条目一致，不新增组合规则"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06017",
@@ -258,11 +245,7 @@
         "mechanismId": "bonded",
         "ruleOwned": true,
         "implemented": true,
-        "deferred": [
-          "绑定弱点敌人（06025/06283）的场外实体与「无主卡在场则放回场外」的接线属 P8",
-          "06025/06283 的绑定关系只写在卡文（Bonded (Crystallizer of Dreams)），cards-data 没有 bonded 字段：P7 在单卡条目里声明",
-          "梦境之门作为地点实体入场后的移动/离开处理属 P8（放置原语已在 P3.13 交付）"
-        ],
+        "deferred": [],
         "sourceKind": "text",
         "cardCodes": [
           "06013",
@@ -474,7 +457,7 @@
         "statusPassed": true,
         "desktopBrowser": true,
         "mobileBrowser": true,
-        "screenshots": 75
+        "screenshots": 93
       }
     },
     "related": []
@@ -610,14 +593,14 @@
     }
   },
   "files": {
-    "content/campaigns/theDreamEaters/keywords.js": "e9bb682f7cca09069d0a14faafa8d8a09a31d8f7c782d3479e43da0b5c6d0d20",
-    "web/rulebook-data.js": "ecc64c4be61caa195eee3df35860bcb2e637e02c7ce7a0cccc78554ffe64576a",
+    "content/campaigns/theDreamEaters/keywords.js": "417ae76f8ed99fdbd0e8dd8f8b6feae690c7c5ef3e7fb510b64ef3ef10aa5259",
+    "web/rulebook-data.js": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4",
     "web/ui-cards.js": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e",
     "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
-    "content/mechanics.js": "93f876642c60c3ae2865b2af82625b56bb2e04f7ec92131d63cb5860bb20f0bb",
-    "tests/tde-rules.test.mjs": "518e0dce0b629b9f99e3c3498d72b48e8eb5bee82957bec7b96c3b2a6b06f6eb",
+    "content/mechanics.js": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836",
+    "tests/tde-rules.test.mjs": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797",
     "tests/tde-rules.browser.mjs": "829de66de44749447381f3b9e17e4eba783b0b00fcb5bb691f63ab8122a08f6c",
-    "audit/tde-browser-acceptance.json": "81b0a3b5e1a9465b699aa73f8a67b655e38e2123c47ba2478cdd306039a7fe87"
+    "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72"
   },
   "gate": {
     "keywordsVerified": {

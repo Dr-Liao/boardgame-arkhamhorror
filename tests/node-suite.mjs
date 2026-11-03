@@ -1,5 +1,10 @@
-// Arkham 的 Node 回归统一入口。浏览器回归由 playwright.config.mjs 单独发现。
+// Arkham 的 Node 回归统一入口。浏览器回归由 tests/playwright/playwright.config.mjs 单独发现。
 import './audit-resources.test.mjs'
+import './tic-migration.test.mjs'
+import './tic-interactions.test.mjs'
+import './tic-investigators.test.mjs'
+import './tic-primitives.test.mjs'
+import './tic-rules.test.mjs'
 import './import-cards.test.mjs'
 import './availability.test.mjs'
 import './game-settings.test.mjs'
@@ -226,6 +231,7 @@ import './tde-player-m2-2.test.mjs'
 import './tde-player-m2-3.test.mjs'
 import './tde-player-m2-4.test.mjs'
 import './tde-player-ledger.test.mjs'
+import './tde-completion-primitives.test.mjs'
 import './tde-scenario-interactions.test.mjs'
 import './tde-scenario-runtime-api.test.mjs'
 import './tde-campaign-layer.test.mjs'
@@ -249,5 +255,59 @@ import './tde-p95-matrix.test.mjs'
 import './tde-p95-parallel-full.test.mjs'
 // P10：发布账本门禁（三组确认 verified、gate.pass、playable+earlyAccess、remaining 诚实记账）。
 import './tde-migration.test.mjs'
+import './tde-completion.test.mjs'
 import './debug-engine.test.mjs'
 import './debug-console.test.mjs'
+
+import './tcu-completion.test.mjs'
+import './tic-player-primitives.test.mjs'
+import './tic-scenario-primitives.test.mjs'
+import './tic-scenario-extra-primitives.test.mjs'
+import './tic-scenarios-early.test.mjs'
+import './tic-scenarios-middle.test.mjs'
+import './tic-scenarios-late.test.mjs'
+import './tic-player-guardian-seeker.test.mjs'
+import './tic-player-rogue-mystic.test.mjs'
+import './tic-player-survivor-neutral.test.mjs'
+
+import './tic-scenario-atomic-spawn.test.mjs'
+
+import './tic-scenario-key-cost.test.mjs'
+
+import './tic-scenario-cost-followup.test.mjs'
+
+import './tic-scenario-template-followup.test.mjs'
+
+import './tic-scenario-spawn-followup.test.mjs'
+
+import './tic-scenario-occurrences.test.mjs'
+
+import './tic-scenario-zones-followup.test.mjs'
+
+import './tic-scenarios-middle-setup.test.mjs'
+
+import './tic-flashbacks.test.mjs'
+
+import './tic-scenario-advanced-followup.test.mjs'
+
+import './tic-interludes.test.mjs'
+
+import './tic-chapter-resolutions.test.mjs'
+
+import './tic-scenario-reference.test.mjs'
+
+import './tic-scenario-combined-harm.test.mjs'
+
+import './tic-scenario-reference-printed.test.mjs'
+
+import './tic-companions-setup.test.mjs'
+
+import './tic-enemy-movement.test.mjs'
+
+import './tic-enemy-movement-review.test.mjs'
+
+import './tic-enemy-flow.test.mjs'
+
+import './tic-enemy-outcomes.test.mjs'
+
+import './tic-scenario-reference-moving.test.mjs'

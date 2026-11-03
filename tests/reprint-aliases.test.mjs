@@ -64,8 +64,9 @@ test('P2-4 重印别名沿 canonical 的运行时可用性；构筑可用性仍�
   // 015xx 在 deck/牌池层是 catalog-only；运行时按 canonical 的可用性放行，
   // 否则重印号在反应窗口里会被 runtimeCardAvailable 过滤掉。
   for (const [canonical, aliases] of Object.entries(REPRINT_ALIASES)) {
-    assert.equal(runtimeCardAvailable(state, inv, canonical), true, `${canonical} 运行时可用`)
-    for (const alias of aliases) assert.equal(runtimeCardAvailable(state, inv, alias), true, `${alias} 沿 canonical 运行时可用`)
+    const owner = ALL_CARDS[canonical].type === 'investigator' ? { ...inv, code: canonical } : inv
+    assert.equal(runtimeCardAvailable(state, owner, canonical), true, `${canonical} 运行时可用`)
+    for (const alias of aliases) assert.equal(runtimeCardAvailable(state, owner, alias), true, `${alias} 沿 canonical 运行时可用`)
   }
 })
 

@@ -6,27 +6,26 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 实现：ownTurn 打出条件；played 描述子 addToVictory（读点 doPlay 收尾，把事件放进胜利区）；
-// api.endTurn 立即结束回合。
-// 显式简化（simplified）：
-//   ①「本回合击败总计生命值 ≥6 的敌人」——引擎没有「本回合击败敌人总生命」的回合历史读取点；
-//   ②「结局结算经验时额外 +1 经验」——没有经验值写入的 ctx.api（经验在战役层结算）。
+// 本回合击败敌人的动态总生命由 trackDefeatedEnemyHealth 记录；
+// addScenarioXpBonus 在结局分配经验时为本人额外加 1 点。
 
 import { ownTurn } from '../../engine/matcher.js'
 
 export default {
   code: '06160',
-  simplified: true,
-  note: '未实现：①「本回合击败总计生命值 ≥6 点的敌人」的前置条件（引擎没有回合内的击败历史读取点，'
-    + '打出的时机只由 ownTurn 约束）；②「结局结算经验时额外 +1 经验」（经验值在战役层结算，没有 ctx.api 写入口）。'
-    + '「加入胜利区、立即结束你的回合」已实现。',
-  playCondition: [ownTurn()],
+  trackDefeatedEnemyHealth: true,
+  playCondition: [ownTurn(), {
+    when: ({ state, inv }) => inv.defeatedHealthHistory?.turn === state.turnSerial
+      && inv.defeatedHealthHistory.total >= 6,
+    message: '本回合击败的敌人总生命值尚未达到 6',
+  }],
   abilities: [
     {
       kind: 'played',
       label: '加入胜利区并立即结束你的回合',
       addToVictory: true,
       resolve: ({ state, inv, api }) => {
+        api.addScenarioXpBonus(inv.seat, 1)
         api.info(`🏆 「${api.cardName('06160')}」加入胜利区，${inv.name} 的回合立即结束。`)
         api.endTurn(inv.seat)
       },

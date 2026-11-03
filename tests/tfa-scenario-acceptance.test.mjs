@@ -26,24 +26,27 @@ test('M3 账本按章登记失落的时代十个剧本，并附文件哈希与�
   }
 })
 
-test('M5 章节全部进入 playable，但通关项与逐条核对保持诚实', () => {
+test('M5 十章通关项与逐条核对全部通过', () => {
   for (const item of ledger.items) {
     assert.equal(contentRegistry.getScenario(item.id).status, 'playable', item.id)
-    const productive = Object.entries(item.checks).filter(([key]) => !['literalCardBehavior', 'browserAcceptance'].includes(key))
-    assert.ok(productive.every(([, value]) => value), `${item.id} 仍有未完成的迁移项`)
-    // 逐条核对（literalCardBehavior）完成的章节才可标记 verified；浏览器验收已全部通过。
+    assert.ok(Object.values(item.checks).every(Boolean), `${item.id} 仍有未完成的迁移项`)
     assert.equal(item.checks.browserAcceptance, true)
-    assert.equal(item.status, item.checks.literalCardBehavior ? 'verified' : 'pending')
+    assert.equal(item.status, 'verified')
     assert.equal(item.checks.literalCardBehavior, item.inventory.pendingEncounterCodes.length === 0 && item.gaps.length === 0)
   }
-  assert.equal(ledger.status, 'pending')
+  assert.equal(ledger.status, 'verified')
   assert.equal(ledger.productionGate, 'playable')
 })
 
-test('M5 入口开放：战役可启动并出现在大厅列表，账本仍是 earlyAccess', () => {
+test('M5 入口开放：战役可启动且不显示提前体验', () => {
   assert.equal(campaign.status, 'playable')
   assert.equal(contentRegistry.assertLaunchable('theForgottenAge').id, 'theForgottenAge')
-  assert.equal(campaignListForUi(contentRegistry).some(entry => entry.id === 'theForgottenAge'), true)
-  // 开放入口不等于宣称规则等价：逐条核对仍未通过。
-  assert.equal(ledger.status, 'pending')
+  const entry = campaignListForUi(contentRegistry).find(item => item.id === 'theForgottenAge')
+  assert.ok(entry)
+  assert.equal(entry.earlyAccess, false)
+  assert.equal(campaignListForUi(contentRegistry).find(item => item.id === 'theCircleUndone')?.earlyAccess, false)
+  for (const id of ['theDreamEaters']) {
+    assert.equal(campaignListForUi(contentRegistry).find(item => item.id === id)?.earlyAccess, false, id)
+  }
+  assert.equal(ledger.status, 'verified')
 })

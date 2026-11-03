@@ -92,6 +92,10 @@ export function createLocationTraits(deps) {
     if (act) collect('act', act, registeredEntry?.(act.originalCode || act.code)?.actRule)
     const agenda = state.agendas?.[state.agendaIndex]
     if (agenda) collect('agenda', agenda, registeredEntry?.(agenda.originalCode || agenda.code)?.agendaRule)
+    for (const location of state.locations || []) {
+      const trait = registeredEntry?.(location.originalCode || location.code)?.locationRule?.connectsToTrait
+      if (location.revealed && typeof trait === 'string' && trait.trim()) rules.push({ id: 'location:'+location.id+':'+trait, trait, sourceId: location.id })
+    }
     return rules.sort((left, right) => left.id.localeCompare(right.id))
   }
 
@@ -110,7 +114,11 @@ export function createLocationTraits(deps) {
     }))
     const desired = new Set()
     const eachDesiredEdge = visit => {
-      for (const { ids } of active) {
+      for (const { rule, ids } of active) {
+        if (rule.sourceId) {
+          for (const id of ids) if (id !== rule.sourceId) { visit(rule.sourceId, id); visit(id, rule.sourceId) }
+          continue
+        }
         for (let left = 0; left < ids.length; left++) {
           for (let right = left + 1; right < ids.length; right++) {
             visit(ids[left], ids[right])

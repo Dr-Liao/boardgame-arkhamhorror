@@ -11,7 +11,7 @@ import assert from 'node:assert/strict'
 import { readdirSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 // 引擎装配点注册能力层与内容注册表。
-import '../src/engine/engine.js'
+import * as engine from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/index.js'
 import {
@@ -134,7 +134,10 @@ function hiddenCardsStub(state) {
 }
 
 function apiStub(state, overrides = {}) {
+  state.log ||= []; state.instanceSeq ||= {}; state.currentSeat ??= 0
+  const runtime = engine.scenarioRuntime(state, [])
   const api = {
+    ...runtime,
     info: () => {},
     choose: () => 'skip',
     random: () => 0.5,

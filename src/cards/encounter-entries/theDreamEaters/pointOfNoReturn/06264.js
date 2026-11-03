@@ -9,7 +9,7 @@
 //   Each Sea of Pitch may be flipped over again using their veiled keyword.
 //
 // 掩藏翻面由共享层处理；帷幕 X 由 behavior.locationShroudModifier 读 flags 求值；
-// 故事效果由 behavior.storyResolve 分派（位置混洗无引擎表达 → 记 simplified）。
+// 故事效果由 behavior.storyResolve 分派，地点槽位通过通用原语重新洗牌。
 
 export default {
   code: '06264',

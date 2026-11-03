@@ -7,14 +7,13 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 已实现与简化口径同 06241：free 横置 +2 敏捷、restrictedSlots 近似共占 1 个法术槽；
-// 「忽略用 willpower 代替 agility 的效果」没有读点。
+// 已实现：free 横置 +2 敏捷、sharedSlotGroup 精确共占 1 个法术槽；
+// 属性替代时可选忽略由 ignoreSkillSubstitution 接入原动作检定。
 
 export default {
   code: '06242',
-  simplified: true,
-  note: '简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 agility 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 敏捷。',
-  restrictedSlots: [{ slot: 'arcane', traitsAny: ['Ritual'], count: 1 }],
+  ignoreSkillSubstitution: { from: 'agility', to: 'willpower' },
+  sharedSlotGroup: { id: 'empowerSelf', slot: 'arcane', upTo: 3 },
   abilities: [
     {
       kind: 'free',
@@ -22,6 +21,7 @@ export default {
       label: '横置：本次检定 +2 敏捷',
       cost: { exhaust: true },
       duringOwnSkillTest: true,
+      criteria: [({ state }) => [state.skillTest?.skill].flat().includes('agility')],
       resolve: ({ api }) => api.addPendingTestBonus(2),
     },
   ],

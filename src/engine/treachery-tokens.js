@@ -1,10 +1,15 @@
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { isCardAvailable } from '../deck/availability.js'
+import { availableResources } from './resource-bank.js'
 // treachery-tokens.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 混乱标记与诡计结算：特殊标记（auto_fail / 旧神 / 失败惩罚）与揭示后的惩罚链。
 // 读点：performTest 的标记揭示、resolveTreachery（遭遇结算）、applyPenalty（失败追加）。
 
-import { investigatorRule } from '../cards/card-rules.js'
+import { investigatorRule, resolveDeclarativeTreacheryTest } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
 import { clearForcedRevelation, forcedRevelationOf, popRevelation, pushRevelation } from './resolution-scope.js'
+import { afterHandDiscard } from './hand-discard-window.js'
+import { afterThreatEntered } from './threat-entry.js'
 
 export function createTreacheryTokens(deps) {
   const {
@@ -105,10 +110,17 @@ export function createTreacheryTokens(deps) {
       info(state, events, `⛔ 「${t.name}」的效果被忽略。`)
       return
     }
+    if (t.entryRevelation === true) {
+      const entry = registeredEntry(t.originalCode || t.code), api = scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code })
+      if (entry?.encounterResolve) return entry.encounterResolve(state, inv, t, api)
+      if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api)
+    }
     if (t.effect?.kind === 'campaignRule') return scenarioBehavior(state).resolveEncounter(state, inv, t, scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code }))
     if (t.rulesPending) throw new Error(`遭遇效果尚未迁移：${t.originalCode || t.code}`)
     if (t.threat) {
-      inv.threat.push(newCardInstance(state, t.code))
+      const threat = newCardInstance(state, t.code)
+      inv.threat.push(threat)
+      afterThreatEntered(state, inv, threat, events, reactionWindow)
       info(state, events, `「${t.name}」进入 ${inv.name} 的威胁区域。`)
       checkDefeated(state, inv.seat, events)
       return true
@@ -206,8 +218,9 @@ export function createTreacheryTokens(deps) {
           prompt: `乌默尔多斯之怒：选择弃牌或承受伤害／恐惧（剩余 ${failedBy - i} 次）。`, options })
         if (answer === 'harm') applyHarm(state, inv, 1, 1, events)
         else {
-          const code = inv.hand.splice(Number(answer), 1)[0]; inv.discard.push(code)
+          const code = inv.hand.splice(Number(answer), 1)[0]; discardPlayerCards(state, inv, code)
           log(`${inv.name} 弃掉了「${cardName(code)}」。`)
+          afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
         }
         if (inv.defeated || inv.resigned) break
       }
@@ -218,18 +231,24 @@ export function createTreacheryTokens(deps) {
     const wanted = new Set(traits.map(trait => String(trait).toLowerCase()))
     // P0：只从本战役开放的基础弱点池里抽；旧实现遍历全目录 77 张，
     // 会抽到没有任何描述子/profile 的弱点，抽到时 weakness.js 直接抛错。
-    const pool = basicWeaknessPool(state)
+    const owned = new Set([...(state.investigators || []).flatMap(owner => [...(owner.deck || []), ...(owner.hand || []), ...(owner.discard || [])]),
+      ...Object.values(state.campaign?.investigators || {}).flatMap(record => record.deck || [])])
+    const pool = (wanted.has('omen') || wanted.has('curse')
+      ? Object.keys(BASIC_WEAKNESSES).filter(code => isCardAvailable(code) && registeredEntry(code))
+      : basicWeaknessPool(state))
       .map(code => BASIC_WEAKNESSES[code])
       .filter(def => def
         && (def.traits || []).some(trait => wanted.has(String(trait).toLowerCase()))
-        && !inv.deck.includes(def.code) && !inv.discard.includes(def.code))
+        && !owned.has(def.code))
     if (!pool.length) {
       info(state, events, `${inv.name} 的收藏里没有可用的基础弱点。`)
       return null
     }
     const pick = pool[Math.floor(randomValue(state) * pool.length)]
     inv.deck.push(pick.code)
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    const record = state.campaign?.investigators?.[inv.seat]
+    if (record) { record.deck ||= []; if (!record.deck.includes(pick.code)) record.deck.push(pick.code) }
+    inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
     info(state, events, `🃏 ${inv.name} 从收藏中随机获得基础弱点「${pick.nameZh || pick.name}」，并洗入牌库。`)
     return pick.code
   }
@@ -249,7 +268,7 @@ export function createTreacheryTokens(deps) {
     } else {
       info(state, events, `${inv.name} 的牌库中没有疯狂弱点。`)
     }
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
   }
 
   function tokenLabel(token) {
@@ -277,14 +296,14 @@ export function createTreacheryTokens(deps) {
         const triggerKey = `${a.id}:${skill}`
         if (doomCost && state.skillTest.freeTriggerUses[triggerKey]) continue
         let activations = 0
-        while ((resourceCost > 0 && inv.resources >= resourceCost) || (doomCost > 0 && activations === 0)
+        while ((resourceCost > 0 && availableResources(inv) >= resourceCost) || (doomCost > 0 && activations === 0)
           || (exhaustCost && activations === 0)) {
           const answer = requestChoice(state, { kind: 'boost', source: a.id, seat: inv.seat,
             prompt: doomCost ? `是否在「${cardName(a.code)}」上放置 ${doomCost} 毁灭，提高${SKILL_NAMES[skill]}？`
               : `是否花 ${resourceCost} 资源提高${SKILL_NAMES[skill]}？`, canSkip: true,
             options: [{ id: 'skip', label: '不再支付' }, { id: 'pay', label: `${doomCost ? `放置 ${doomCost} 毁灭` : `支付 ${resourceCost} 资源`}，+${ft.bonus}` }] })
           if (answer === 'skip') break
-          resourceBank.spendFromPool(inv, resourceCost)
+          resourceBank.spendFromPool(inv, resourceCost, state)
           if (doomCost) placeDoomOnCard(state, a, doomCost, events, { silent: true })
           if (exhaustCost) a.exhausted = true
           if (doomCost) state.skillTest.freeTriggerUses[triggerKey] = true
@@ -322,7 +341,8 @@ export function createTreacheryTokens(deps) {
 
   function resolveSpecialToken(state, seat, inv, token, events) {
     const custom = scenarioBehavior(state).resolveChaosToken?.(state, inv, token, scenarioRuntime(state, events))
-    if (custom) return { delta: 0, drawAnother: false, onDraw: [], onFail: [], ...custom }
+    if (custom != null) return { delta: 0, drawAnother: false, onDraw: [], onFail: [],
+      ...(typeof custom === 'number' ? { delta: custom } : custom) }
     const meanings = (state.scenario.tokenMeanings && state.scenario.tokenMeanings[state.difficulty]) || {}
     const m = meanings[token]
     const onDraw = []
@@ -334,7 +354,7 @@ export function createTreacheryTokens(deps) {
     if (m.kind === 'count') {
       delta = -(m.base + countTokenValue(m.count, state, inv))
     } else {
-      delta = m.mod || 0
+      delta = m.delta ?? m.mod ?? 0
     }
     if (m.ifGhoul) {
       if (ghoulsAtLocation(state, inv).length) {

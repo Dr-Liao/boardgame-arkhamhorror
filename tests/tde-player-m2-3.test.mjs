@@ -17,7 +17,7 @@ import {
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry, descriptorsInEntry } from '../src/engine/ability.js'
 import {
-  applyMove, commitIcons, enemyAttack, executeDescriptor, getStat, performTest,
+  applyMove, commitIcons, discardRandomFromHand, enemyAttack, executeDescriptor, getStat, performTest,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
@@ -170,7 +170,7 @@ test('TDE 06197 熟能生巧 快速：查牌库顶 9 张找出[[精通]]技能�
   const after = state.investigators[0]
   // 01001 意志 3 + 投入的 1 个万能图标 = 4。
   assert.equal(result.value, getStat(state, after, 'willpower') + 1, '找出的[[精通]]技能被投入本次检定')
-  assert.ok(after.discard.includes('06199'), '投入的[[精通]]技能随检定收尾进入弃牌堆')
+  assert.ok(after.hand.includes('06199'), '检定成功后熟能生巧把所选技能返回手牌')
   assert.equal(after.hand.includes('06197'), false, '快速事件已打出')
   assert.ok(after.discard.includes('06197'), '事件结算后进弃牌堆')
   assert.equal(after.resources, resourcesBefore - 1, '打出费用 1 资源')
@@ -328,19 +328,21 @@ test('TDE 06202 命令真言 指定一张法术卡：从牌库检索并抽取，
 // 06203 月石
 // ---------------------------------------------------------------------------
 
-test('TDE 06203 月石 不能从手牌打出；弃牌前改为打出月石并取消该次弃牌', () => {
+test('TDE 06203 月石 不能从手牌打出；弃掉后支付费用打出，其余牌仍弃掉', () => {
   const state = fixture('01001')
   const inv = state.investigators[0]
-  inv.hand = ['06203']
+  inv.hand = ['06203', '01088']
   inv.resources = 10
   assert.match(String(validateMove(state, 0, { action: 'play', cardId: '06203' })), /月石不能从手牌中打出/,
     '普通出牌路径被拒绝')
-  const context = { when: 'wouldDiscardFromHand', seat: 0, amount: 1, what: 'discard', location: inv.location }
-  runDescriptor(state, '06203', { windowId: 'wouldDiscardFromHand', context })
-  assert.equal(context.cancelled, true, '取消这次弃牌效果')
+  runTest(state, draft => { discardRandomFromHand(draft, draft.investigators[0], 2, []) }, pending => {
+    if (pending.kind === 'reaction') return pending.options.find(item => String(item.label).includes('月石'))?.id ?? 'skip'
+    return null
+  })
   const after = state.investigators[0]
   const stone = after.assets.find(item => item.code === '06203')
   assert.ok(stone, '月石被从手牌打出进入场上')
+  assert.ok(after.discard.includes('01088'), '同次弃牌的另一张仍被弃掉')
   assert.equal(after.resources, 7, '打出费用 3 资源')
   assert.equal(getStat(state, after, 'willpower'), 4, '月石：+1 意志')
   assert.equal(getStat(state, after, 'agility'), 3, '月石：+1 敏捷')
@@ -461,7 +463,7 @@ for (const [code, condition] of [
     assert.equal(registeredEntry(code).researchRequirement, 'youHaveInterpretedTheDreams',
       `${code} 声明研究记录门控`)
     // 条件句（${condition} 时梦的本质获得[wild][wild]）是跨卡图标修正，显式简化。
-    assert.equal(registeredEntry(code).simplified, true, `${code} 的跨卡图标修正按 simplified 登记`)
+    assert.equal(registeredEntry(code).simplified, false, '已完成印刷规则实现')
     runDescriptor(state, code, {
       kind: 'reaction',
       windowId: 'turnBegins',
@@ -469,7 +471,7 @@ for (const [code, condition] of [
     })
     const after = state.investigators[0]
     assert.equal(after.hand.includes('06113'), true, '回合开始把「梦的本质」加入手牌')
-    const bonded = state.bondedSets[code]
+    const bonded = state.bondedSets['06112']
     assert.ok(bonded, '建立绑定卡场外集合')
     assert.equal(bonded.retrieved, true)
     // 只在持有者的回合开始触发。
@@ -560,7 +562,7 @@ test('TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显�
   const after = state.investigators[0]
   assert.ok(after.assets.some(item => item.code === '06244'), '特薇拉入场')
   assert.equal(after.resources, resourcesBefore - 3, '打出费用 3 资源')
-  assert.equal(registeredEntry('06244').simplified, true, '「花费充能后」的反应按 simplified 登记')
+  assert.equal(registeredEntry('06244').simplified, false, '已完成印刷规则实现')
 })
 
 // ---------------------------------------------------------------------------
@@ -579,9 +581,12 @@ test('TDE 06245 希望微光 只能从弃牌堆打出：把弃牌堆中其余希
   applyMove(state, 0, { action: 'play', cardId: '06245', fromDiscard: true })
   resolveChoices(state)
   const after = state.investigators[0]
-  assert.equal(after.hand.filter(code => code === '06245').length, 1, '弃牌堆中的另一张希望微光加入手牌')
-  assert.equal(after.discard.filter(code => code === '06245').length, 1, '正在打出的这一张结算后进弃牌堆')
+  assert.equal(after.hand.filter(code => code === '06245').length, 2, '另一张与刚打出的副本都在手牌')
+  assert.equal(after.discard.filter(code => code === '06245').length, 0, '打出的副本不会回到弃牌堆')
   assert.equal(after.resources, 9, '打出费用 1 资源')
+  assert.equal(legalMoves(state).some(item => item.action === 'play' && item.cardId === '06245' && !item.fromDiscard), false,
+    '返回手牌的副本不会出现非法打出入口')
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '06245' })), /弃牌堆/)
 })
 
 // ---------------------------------------------------------------------------

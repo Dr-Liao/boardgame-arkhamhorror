@@ -1,0 +1,200 @@
+{
+  "id": "theMidnightMasks",
+  "campaignId": "nightOfTheZealot",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "Part II: 午夜假面",
+          "children": [
+            {
+              "text": "检查剧本日志，如果 丽塔不得不去找别的帮手： 阅读 引言 1.\n\n否则，跳转至 引言 2."
+            }
+          ]
+        },
+        {
+          "text": "引言 1: 突然有一个女人慌慌忙忙地向你们跑来，说什么在河岸城旁边的一座房子里，有一堆怪物不停地从地底下涌出。“我想要把它们都困住，”她解释道，“但是数量太多了。而且它们不只有这一个出口。”如果上周遇到她，你可能觉得她是疯子。但是现在看来，这可能与近期的事件有所关联，尽管这一切都难以想像。你决定让她把话说完。原来她名叫丽塔·钱德勒，她说了一些超越你想像的事实。“我提到的这些生物，”她说，“叫做食尸鬼，它们就在阿卡姆市地下的墓穴、洞窟以及隧道之中作乱……”\n\n继续 引言 3."
+        },
+        {
+          "text": "引言 2: 你家中的灾难总算是结束了。丽塔·钱德勒，那个在你客厅中的红发女子，叙述了一些真相。就算你在家中看到了那副光景，你也难以想像她说的都是真实的。“你家里的那些生物，”她说，“叫做食尸鬼，它们就在阿卡姆市地下的墓穴、洞窟以及隧道之中作乱……”\n\n继续 引言 3."
+        },
+        {
+          "text": "引言 3: “这些生物以吃人的尸体维生。在阿卡姆，有一个黑暗邪教组织，一直供奉著这些生物，他们崇信食尸鬼的远古之主。最近，教徒们杀了不少无辜的人，用来填满食尸鬼的无穷饥渴。以前，这些家伙只在暗处行动，避免被人发现。但是这段期间，”丽塔顿了顿，“一个用来囤放尸体的巢穴，被人破坏了。从那时起，食尸鬼就开始频繁地在地面活动。我跟踪过它们，也试著去阻止它们在市里到处乱跑。不过我想这件事不会这么单纯。教会的追求没有这么简单，他们想要的力量超过我的预料。今晚，他们就要完成计划了，时间就在午夜之后。不过具体会发生甚么，我也无法想像。”.\n\n“很多异教徒，”丽塔继续说道，“就隐藏在一般的民众之中，难以分辨。当教会召见时，他们就会戴上用动物头骨制成的面具，来隐藏其真实身分。这些面具象征著死亡和腐朽。我们必须揭开他们的假面，找出他们的计划。剩下的时间不太多了，午夜之前能找到的异教徒越多越好。”\n\n继续 设置."
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "将下列遭遇组中的所有遭遇卡找出: 午夜假面, 寒冷刺骨, 夜魇, 黑暗异教徒, and 上锁的门。 这些遭遇牌如下面图标所示："
+            },
+            {
+              "text": "将遭遇组乌默尔多斯的崇拜者放在一边，作为独立的“异教徒牌堆”，并混洗。 这些遭遇牌如下面图标所示："
+            },
+            {
+              "text": "将2张商业区和2张南区中，各随机选择一张放置入场，将另一张同名卡牌移出游戏。然后。将北区、东城区、河岸城、圣玛丽医院、墓地、米斯卡塔尼克大学和你的房子放置入场。"
+            },
+            {
+              "children": [
+                {
+                  "text": "根据场上的玩家人数"
+                },
+                {
+                  "text": "如果只有一名玩家，无事发生。"
+                },
+                {
+                  "text": "如果有两位玩家在场，查找遭遇组中1张祭司，并生成在南区。"
+                },
+                {
+                  "text": "如果有三位玩家，查找遭遇组中2张祭司，在南区和商业区中，各生成1张。"
+                },
+                {
+                  "text": "如果有四位玩家，查找遭遇组中3张祭司，在南区、商业区和墓地中，各生成1张。"
+                }
+              ]
+            },
+            {
+              "text": "检查冒险日志，如果房屋已烧毁: 将你的房子移出游戏。每位调查员从河岸城开始游戏。."
+            },
+            {
+              "text": "检查冒险日志，如果房屋还在: 每位调查员从你的房子开始游戏。."
+            },
+            {
+              "text": "检查冒险日志，如果 食尸鬼祭司还活着: 将食尸鬼祭司与遭遇牌堆混洗。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "没有结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(所有调查员均已撤退或被击败): 阅读 结局 1."
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "结局 1: 你成功获取了一些关于邪教计划的信息。但愿这一些够用。\n\n• 在冒险日志中，“我们盘问过的异教徒”下，纪录下胜利牌区中，所有独特异教徒的名称。\n\n• 在冒险日志中，“逃跑的异教徒”下，纪录下异教徒牌堆或场上的，所有独特异教徒的名称。 如果当前处于密谋1，则将“假面猎手”也记录下。\n\n• 如果食尸鬼祭司在胜利牌区，在冒险日志中划去 “食尸鬼祭司还活着”。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "结局 2:钟声响起，标示著午夜的来临。你们已经没有时间了，异教徒的仪式马上就要开始。你们试著赶紧整理现在获得的信息，但愿能从中推理出异教徒们的计划。你成功获取了一些关于邪教计划的信息。但愿这一些够用。\n\n• 在冒险日志中，“我们盘问过的异教徒”下，纪录下胜利牌区中，所有独特异教徒的名称。\n\n• 在冒险日志中，“逃跑的异教徒”下，纪录下异教徒牌堆或场上的，所有独特异教徒的名称。.\n\n• 在剧本日志中记录，午夜已至。.\n\n• 如果食尸鬼祭司在胜利牌区，在冒险日志中划去 “食尸鬼祭司还活着”。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Part II: The Midnight Masks",
+          "children": [
+            {
+              "text": "Check Campaign Log. If Lita was forced to find others to help her cause: Read Intro 1.\n\nOtherwise, skip to Intro 2."
+            }
+          ]
+        },
+        {
+          "text": "Intro 1: The woman came to you in a panic, raving about monsters emerging from the ground in a home near Rivertown. “I managed to trap them,” she explains, “but there are others. Other pits. Other domains.” Only last week, you would have thought she was a lunatic. Recent events, however, have challenged your preconceptions of normality. You decide to hear her out. She introduces herself as Lita Chantler and lays out a tale that strains the limits of your belief. “The creatures I speak of ,” she claims, “are called ghouls—cruel beings who plague the crypts, caverns, and tunnels beneath the city of Arkham…”\n\nContinue to Intro 3."
+        },
+        {
+          "text": "Intro 2: In the wake of the disaster at your home, Lita Chantler, the red‑haired woman from your parlor, lays out a tale that—even in light of what you have just witnessed—strains the limits of your belief. “The creatures in your home,” she claims, “are called ghouls—cruel beings who plague the crypts, caverns, and tunnels beneath the city of Arkham…”\n\nContinue to Intro 3."
+        },
+        {
+          "text": "Intro 3: “These creatures feed on the corpses of humans, and they are served by a dark cult within Arkham whose members have inexplicably come to worship the ancient master of the ghouls. This cult has been killing innocent people and feeding them to the ghouls, satiating a monstrous hunger. A dark balance was maintained. Until now. Recently,” Lita continues, “one of their lairs, where the corpses were stored, was destroyed. Since then, the ghouls have been more active than usual. I have tracked their movements and tried my best to stop them from running amok throughout the city. But I think there is something worse going on. The cult has been planning something darker, and more ominous, than anything I have yet observed. Indications are that this plan shall come to fruition tonight, shortly after midnight. Beyond that, I cannot fathom what to expect.\n\n“Many of the cultists,” Lita continues, “will seem like everyday people, despite their foul intentions. Whenever the cult meets, its members don masks shaped like the skulls of various animals to protect their identities from one another. These masks are our mark. Symbols of death and decay. We must unmask the cultists to expose and derail their plans. We have but a few hours. The more cultists we find before midnight, the better.”\n\nContinue to Setup."
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: The Midnight Masks, Chilling Cold, Nightgaunts, Dark Cult, and Locked Doors. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Set the Cult of Umôrdhoth encounter set aside as a separate “Cultist deck,” and shuffle it. This set is indicated by the following icon:"
+            },
+            {
+              "text": "Choose one of the two Downtown locations and one of the two Southside locations at random and put them into play. Remove the other versions of Downtown and Southside from the game. Then, put the Northside, Easttown, Rivertown, St. Mary’s Hospital, Graveyard, Miskatonic University, and Your House locations into play. (See next page for suggested placement.)"
+            },
+            {
+              "children": [
+                {
+                  "text": "Based on the number of players in the game:"
+                },
+                {
+                  "text": "If there is exactly 1 player in the game, no changes are made."
+                },
+                {
+                  "text": "If there are exactly 2 players in the game, search the gathered encounter sets for 1 copy of Acolyte and spawn it at Southside."
+                },
+                {
+                  "text": "If there are exactly 3 players in the game, search the gathered encounter sets for 2 copies of Acolyte. Spawn 1 at Southside and 1 at Downtown."
+                },
+                {
+                  "text": "If there are exactly 4 players in the game, search the gathered encounter sets for 3 copies of Acolyte. Spawn 1 at Southside, 1 at Downtown, and 1 at the Graveyard."
+                }
+              ]
+            },
+            {
+              "text": "Check Campaign Log. If your house has burned to the ground: Remove Your House from the game. Each investigator begins play at Rivertown."
+            },
+            {
+              "text": "Check Campaign Log. If your house is still standing: Each investigator begins play at Your House."
+            },
+            {
+              "text": "Check Campaign Log. If the Ghoul Priest is still alive: Shuffle it into the encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): Read Resolution 1."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You’ve managed to obtain some useful information about the cult and its plans. You can only hope it’s enough.\n\n• In your Campaign Log, under “Cultists We Interrogated,” record the names of each unique Cultist enemy in the victory display.\n\n• In your Campaign Log, under “Cultists Who Got Away,” record the name of each unique enemy still remaining in the Cultist deck or in play. If it is Agenda 1, record “The Masked Hunter” here as well.\n\n• If the Ghoul Priest is in the victory display, cross out “the Ghoul Priest is still alive” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Twelve bells ring out, signaling midnight. You’re out of time; the cult’s ritual will begin shortly. You’ve managed to obtain some useful information about the cult and its plans. You can only hope it’s enough.\n\n• In your Campaign Log, under “Cultists We Interrogated,” record the names of each unique Cultist enemy in the victory display.\n\n• In your Campaign Log, under “Cultists Who Got Away,” record the name of each unique enemy still remaining in the Cultist deck or in play.\n\n• In your Campaign Log, record that it is past midnight.\n\n• If the Ghoul Priest is in the victory display, cross out “the Ghoul Priest is still alive” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

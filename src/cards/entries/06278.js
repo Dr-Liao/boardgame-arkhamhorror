@@ -9,20 +9,29 @@
 //
 // 06278 惊喜的发现（技能卡，多重）：被「查找牌库」翻到时结算的效果由条目级 searchedCardRule 声明
 // （读点 src/engine/deck-ops.js 的 searchedCardsWindow——牌还在牌库里时能力源枚举看不到它）。
-// 显式简化：searchedCardRule 只支持 take / discard / cancelSearch / discoverClue / drawEncounter 固定动作，
-//   没有「放入游戏区域 + 强制投入下一次检定 + 成功后抽 1」的自定义动作，因此用 take（加入手牌）近似
-//   「放到你的游戏区域」，强制投入与成功抽牌未实现（见 note）。
+// 查找命中后转入游戏区；commitFromPlay 使下一次可投入的本人检定强制投入。
+// 投入来源通道标记用于限定成功后的抽牌奖励。
 
 export default {
   code: '06278',
-  simplified: true,
-  note: '未实现：被查找到时「放入游戏区域并强制投入下一次符合条件的技能检定；该检定成功则抽 1 张」'
-    + '（searchedCardRule 只支持 take/discard/cancelSearch/discoverClue/drawEncounter 固定动作，'
-    + '无自定义结算）。现近似为查找时可选择把这张牌加入手牌。',
+  commitFromPlay: true,
   searchedCardRule: {
     mode: 'reaction',
-    label: '查找牌库找到「惊喜的发现」：把它加入手牌',
-    take: true,
+    condition: ({ inv, owner }) => Boolean(inv && owner && inv.seat === owner.seat),
+    label: '查找牌库找到「惊喜的发现」：将其放入游戏区域',
+    resolve: ({ inv, api, search }) => {
+      search.take()
+      api.moveCard({ code: '06278', from: 'hand', to: 'play', ownerSeat: inv.seat })
+    },
   },
+  abilities: [{
+    kind: 'commit',
+    label: '从游戏区域强制投入下一次符合条件的检定',
+    skill: {
+      afterTest: ({ inv, source, result, api }) => {
+        if (source?.sourceChannel === 'playCommit' && result?.success) api.drawCards(inv.seat, 1)
+      },
+    },
+  }],
   modifiers: [],
 }

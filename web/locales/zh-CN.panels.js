@@ -10,9 +10,15 @@ export default {
   'setup.closeAria': '关闭关卡设置',
   'setup.intro': '开场',
   'setup.steps': '设置',
+  'setup.specialRules': '特别规则',
+  'setup.storySpoilers': '后续剧情（含剧透，点击展开）',
+  'setup.resolutionSpoilers': '结局与结算（含剧透，点击展开）',
+  'setup.loading': '正在加载完整冒险指南…',
+  'setup.loadError': '完整冒险指南加载失败。以下暂时显示本局的开场和设置摘要。',
+  'setup.retry': '重新加载指南',
   'setup.note': '说明',
   'setup.empty': '这一关还没有单独写下的设置步骤。',
-  'setup.footer': '这些步骤在开局时已经自动完成。这里用来对照本关怎么摆、哪些牌先放在一边，以及进行中要记住的规则。',
+  'setup.footer': '冒险指南包含本关的开场、设置、特别规则及结局。按冒险日志选择适用分支；后续剧情和结局默认折叠。设置已由游戏自动结算，本页仅供查阅。',
 
   // 局势弹窗（situation-view.js）
   'situation.title': '调查局势',

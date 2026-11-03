@@ -15,13 +15,10 @@
 //         engine 的 cannotPlayTypes 读它）；
 //       - [action] 能力 → 条目 threatEffect.cannotTriggerActionAbilities（moves.js 的读点）；
 //       - 行动/能力 → modifiers 里的 capability 修正（modifierSourceRows 会枚举威胁区卡牌）。
-//   · 强制「受到伤害或恐惧后弃掉」：挂在 harmDealt 窗口的 forced 描述子。
-//     显式简化：在伤害/恐惧分配前结算；若伤害全部由支援承接、本人没有实际承受，也会弃掉。
+//   · 强制「受到伤害或恐惧后弃掉」：挂在实际分配到调查员身上的 harmAssigned 窗口。
 
 export default {
   code: '06037',
-  simplified: true,
-  note: '未实现：强制「受到伤害或恐惧后弃掉」在伤害/恐惧分配前结算（harmDealt 窗口），若伤害全部由支援承接也会弃掉；其余限制与 [action] 弃置已实现。',
   threatEffect: { cannotTriggerActionAbilities: true },
   modifiers: [
     { target: 'capability:investigate' },
@@ -48,10 +45,11 @@ export default {
     },
     {
       kind: 'forced',
-      trigger: 'harmDealt',
+      trigger: 'harmAssigned',
       silent: true,
       label: '受到伤害或恐惧后：弃掉嗜睡症',
-      criteria: [({ source }) => Boolean(source)],
+      criteria: [({ source, inv, context }) => Boolean(source) && context?.seat === inv.seat
+        && ((context.damage || 0) > 0 || (context.horror || 0) > 0)],
       resolve: ({ source, api }) => {
         if (!source) return
         api.removeThreat(source)

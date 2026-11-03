@@ -24,7 +24,7 @@ export default {
       label: '洗回牌库',
       weakness: { type: 'custom' },
       resolve: ({ inv, api }) => {
-        api.scheduleWeaknessShuffle('06009')
+        api.scheduleWeaknessShuffle(inv.seat, '06009')
         api.info(`${inv.name} 将「惊人的发现」混洗回牌库。`)
       },
     },

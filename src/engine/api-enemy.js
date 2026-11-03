@@ -1,3 +1,5 @@
+import { replacePlayerZoneCards } from './player-zones.js'
+import { keysOnExit } from './scenario-keys.js'
 // 能力 API · 敌人 / 威胁 / 毁灭写入（Phase 6 · 6d-8，abilityApi 第二批）。
 //
 // 这一组方法覆盖「敌人与威胁区的写入」：测试修正、阻止攻击、移除/生成敌人、
@@ -37,7 +39,11 @@ export function createEnemyApi(state, events, deps) {
       return owner.infighting
     },
     // Phase 5（5c）：把敌人移出游戏（不经过伤害）与把卡洗回遭遇牌库（「劝服」）。
-    removeEnemy: enemy => {
+    removeEnemy: (enemy, { seat = null } = {}) => {
+      keysOnExit(state, `enemy:${enemy.id}`, enemy.location, seat)
+      if (enemy.hostId) { returnSwarmCard(state, enemy); return enemy }
+      for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
+      for (const inv of state.investigators) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
       const index = state.enemies.indexOf(enemy)
       if (index >= 0) state.enemies.splice(index, 1)
       return enemy
@@ -46,12 +52,18 @@ export function createEnemyApi(state, events, deps) {
       state.encounterDeck = shuffle([...state.encounterDeck, code], () => randomValue(state))
       return state.encounterDeck.length
     },
+    shuffleIntoEncounterDeckTop: (code, count) => {
+      const size = Math.min(state.encounterDeck.length, Math.max(0, Math.trunc(count)))
+      const top = state.encounterDeck.splice(state.encounterDeck.length - size, size)
+      state.encounterDeck.push(...shuffle([...top, code], () => randomValue(state)))
+      return true
+    },
     // Phase 5（5c-10）：这张正在结算的事件是否来自弃牌堆（临时武器 / 应急处理）。
     fromDiscardCode: () => state._fromDiscardCode || null,
     shuffleDiscardIntoDeck: (seat = state.currentSeat) => {
       const owner = state.investigators[seat]
       if (!owner) return 0
-      owner.deck = shuffle([...owner.deck, ...owner.discard], () => randomValue(state))
+      owner.deck = replacePlayerZoneCards(state, owner, shuffle([...owner.deck, ...owner.discard], () => randomValue(state)), 'shuffle')
       owner.discard = []
       return owner.deck.length
     },
@@ -157,3 +169,4 @@ export function createEnemyApi(state, events, deps) {
     // 空袋时的兜底与旧实现逐字一致（把 undefined 塞回袋子，等价于无事发生）。
   }
 }
+import { swarmGroup, returnSwarmCard } from './swarm.js'

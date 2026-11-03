@@ -25,7 +25,8 @@
 
 // 允许写表达式的费用字段（与 ability.js 的 COST_KEYS 取交集，布尔字段除外）。
 export const NUMERIC_COST_KEYS = Object.freeze([
-  'resources', 'clues', 'uses', 'horror', 'damageSelf', 'assetDamage', 'discardHand',
+  'resources', 'clues', 'uses', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcons', 'discardControlledAsset',
+  'damage', 'doomOnSource', 'drawEncounter', 'groupClues',
 ])
 
 // 布尔费用字段：只能是 true/false，不参与表达式求值。
@@ -181,7 +182,7 @@ const PER_LABELS = Object.freeze({
 
 const COST_LABELS = Object.freeze({
   resources: '资源', clues: '线索', uses: '使用次数', horror: '恐惧',
-  damageSelf: '伤害', assetDamage: '自身伤害', discardHand: '手牌',
+  damageSelf: '伤害', assetDamage: '自身伤害', discardHand: '手牌', discardHandIcons:'印刷技能图标', discardControlledAsset:'受控支援',
 })
 
 export function describeCost(cost, ctx = {}) {

@@ -1,3 +1,8 @@
+import { replacePlayerZoneCards } from './player-zones.js'
+import { payTokenCost } from './token-cost.js'
+import { keysOnExit } from './scenario-keys.js'
+import { removeVehicle } from './vehicles.js'
+import { recordPlayedCard } from './action-history.js'
 // assets.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 支援的生命周期与槽位：装备/替换/离场、手牌位与武器位、被动加成、
 // 以及「打出的事件去哪」（牌库顶 / 弃牌堆）与反应卡打出的收尾。
@@ -83,6 +88,13 @@ export function createAssets(deps) {
     return cardDef(asset?.code)
   }
 
+  function occupiedSlots(inv, asset) {
+    const host = inv.assets.find(item => item.id === asset.attachedToAsset)
+    const ignored = registeredEntry(host?.code)?.attachedAssetsIgnoreSlots || []
+    return [...normalizedSlots(slotsForOccupancy(asset)), ...(asset.attachments || []).map(attachment => registeredEntry(attachment.code)?.assetRule?.hostExtraSlot).filter(Boolean)]
+      .filter(slot => !ignored.includes(slot.replace(/x2$/, '')) && !(asset.ignoredSlots || []).includes(slot.replace(/x2$/, '')))
+  }
+
   // 占用豁免原语（05009 柯尔特）：「最多 N 张满足条件的支援不占用某类槽位」。
   // 条目声明 slotExemptions:[{ slot, traitsAny?, count }]；豁免读点只在这里。
   // extraCards 传入「正在尝试打出/装备的卡」——它还没有被控制，但装备判定必须把它
@@ -97,7 +109,6 @@ export function createAssets(deps) {
         if (entry && entry.slot) specs.push(entry)
       }
     }
-    if (!specs.length) return {}
     const items = [...controlled, ...extraCards]
     const defOf = item => (item.code ? cardDef(item.code) : item)
     const matches = (item, entry) => {
@@ -120,13 +131,26 @@ export function createAssets(deps) {
       for (const item of items) if (matches(item, spec)) used += unitsIn(item, slot)
       relief[slot] = (relief[slot] || 0) + Math.min(limit, used)
     }
+    const groups = new Map()
+    for (const item of items) {
+      const spec = registeredEntry(item.code)?.sharedSlotGroup
+      if (!spec) continue
+      const key = `${spec.id}:${spec.slot}`
+      const group = groups.get(key) || { spec, units: 0, count: 0 }
+      group.units += unitsIn(item, spec.slot)
+      group.count++
+      groups.set(key, group)
+    }
+    for (const { spec, units, count } of groups.values()) {
+      relief[spec.slot] = (relief[spec.slot] || 0) + Math.max(0, units - Math.ceil(count / Math.max(1, spec.upTo || 1)))
+    }
     return relief
   }
 
   function slotUsage(inv) {
     const usage = {}
     for (const a of [...inv.assets, ...(inv.threat || [])]) {
-      for (const s of normalizedSlots(slotsForOccupancy(a))) {
+      for (const s of occupiedSlots(inv, a)) {
         if (s === 'handx2') usage.hand = (usage.hand || 0) + 2
         else if (s === 'arcanex2') usage.arcane = (usage.arcane || 0) + 2
         else usage[s] = (usage[s] || 0) + 1
@@ -165,7 +189,7 @@ export function createAssets(deps) {
     const eligible = Boolean(cardCode) && specs.some(entry => matches(defOf(cardCode), entry))
     let occupancy = 0
     for (const asset of controlled) {
-      const slots = normalizedSlots(slotsForOccupancy(asset))
+      const slots = occupiedSlots(inv, asset)
       if (!slots.includes(slot)) continue
       if (specs.some(entry => matches(cardDef(asset.code), entry))) occupancy += 1
     }
@@ -222,7 +246,7 @@ export function createAssets(deps) {
     if (!needed.size) return []
     return inv.assets.filter(asset => {
       if (cardDef(asset.code)?.permanent || assetEffect(inv, asset)?.cannotDiscard) return false
-      return normalizedSlots(slotsForOccupancy(asset)).some(slot => needed.has(baseSlot(slot)))
+      return occupiedSlots(inv, asset).some(slot => needed.has(baseSlot(slot)))
     })
   }
 
@@ -282,6 +306,23 @@ export function createAssets(deps) {
     inv.assets = inv.assets.filter(a => !removed.includes(a.id))
   }
 
+  function enforceAssetSlotCapacity(state, inv, host, events) {
+    while (inv.assets.includes(host)) {
+      const rest = { ...inv, assets: inv.assets.filter(asset => asset !== host) }
+      const prospective = { ...cardDef(host.code), slots: occupiedSlots(inv, host) }
+      if (canEquip(rest, prospective)) return true
+      const ids = [...new Set(assetReplacementPlans(rest, prospective).flat())]
+      if (!cardDef(host.code)?.permanent && !assetCannotLeavePlay(host) && !assetEffect(inv, host)?.cannotDiscard) ids.push(host.id)
+      if (!ids.length) throw new Error('附属后无法满足宿主槽位要求')
+      const id = requestChoice(state, { kind: 'asset', source: host.id, seat: inv.seat, prompt: '为附属后的支援腾出槽位。',
+        options: ids.map(id => { const card = inv.assets.find(asset => asset.id === id); return { id, cardCode: card.code, label: cardName(card.code) } }) })
+      const selected = inv.assets.find(asset => asset.id === id)
+      leaveAsset(state, inv, selected, events)
+      if (!selected.returnedToHand && !selected.removedFromGame) state.investigators[selected.ownerSeat ?? inv.seat].discard.push(selected.code)
+    }
+    return false
+  }
+
   // 2026-10-26 原语收敛：盟友受限槽并入 restrictedSlots（unique: false），
   // 原 nonUniqueAllySlotsFor / allySlotCapacities / allySlotsOk 三条旁路删除；
   // 独特盟友只能占不受限槽的规则由 restrictedSlotInfo 的谓词 + canEquip 通用容量比较覆盖。
@@ -305,6 +346,19 @@ export function createAssets(deps) {
       return false
     }
     removeOne(inv.assets, asset)
+    if (asset.attachedToAsset) {
+      const host = inv.assets.find(item => item.id === asset.attachedToAsset)
+      if (host) host.attachments = (host.attachments || []).filter(item => item.id !== asset.id)
+    }
+      for (const card of asset.attachments || []) {
+        if (card.assetReference) {
+          const attached = inv.assets.find(item => item.id === card.id)
+          if (attached && leaveAsset(state, inv, attached, events) !== false && !attached.removedFromGame && !attached.returnedToHand) inv.discard.push(attached.code)
+        } else if (card.encounterAttached) state.encounterDiscard.push(card.code)
+        else (state.investigators[card.ownerSeat] || inv).discard.push(card.code)
+      }
+    keysOnExit(state, `asset:${asset.id}`, asset.location || inv.location)
+    removeVehicle(state, asset.id)
     releaseChaosTokens(state, asset.id)
     // 2026-10-25 第六轮修复 05152：离场原因（'discard'/'return'/'effect'），
     // 供 assetLeavesPlay 窗口的「被弃掉后」类反应精确限定。
@@ -429,10 +483,12 @@ export function createAssets(deps) {
     // 隐私弱点（03084d「你不能打出事件」）兜底：候选窗口已按同一读点过滤，
     // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
     if (playTypeBlocked(state, inv, cardDef(copyCode || peek)?.type)) return false
+    if (!payTokenCost(state, inv, registeredEntry(copyCode || peek)?.additionalTokenCost)) return false
     const code = inv.hand.splice(index, 1)[0]
     const beneathBefore = (inv.beneath || []).length
     const def = cardDef(copyCode || code)
-    resourceBank.spendFromPool(inv, Math.max(0, playCost(state, inv, def) - (discount || 0)))
+    resourceBank.spendFromPool(inv, Math.max(0, playCost(state, inv, def) - (discount || 0)), state)
+    recordPlayedCard(state, inv, def, registeredEntry)
     consumePlayThreatResources(state, inv, events)
     const fastLabel = fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
@@ -476,7 +532,7 @@ export function createAssets(deps) {
         state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
         info(state, events, `💎 「${cardName(code)}」被加入胜利展示区。`)
       } else if (exileAfterPlay) exilePlayerCard(state, inv, code, events)
-      else if (shuffleBackAfterPlay) inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
+      else if (shuffleBackAfterPlay) inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
       else if (entryFlags.keepOnPlay !== true) {
         // 黛安娜在描述子结束时已经把这张卡从弃牌堆之前的位置挪到底下。
         // 快速事件是先离手、结算完才弃牌；若这里再弃一次，同一张卡会同时待在底下和弃牌堆。
@@ -487,5 +543,5 @@ export function createAssets(deps) {
     }
   }
 
-  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, isWeaponCard, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
+  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, enforceAssetSlotCapacity, isWeaponCard, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
 }

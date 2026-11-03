@@ -988,6 +988,7 @@ test('结局 1：按幕记 Memento，击败詹金/那赫卜各 +1 奖励，可�
   assert.deepEqual(state.campaign.records.mementosDiscovered.sort(), ['gilmensJournal', 'keziahsFormulae'])
   assert.equal(state.campaign.investigators[1].deck.includes(THE_BLACK_BOOK), true)
   assert.equal(state.chaosBag.filter(token => token === 'skull').length, 1)
+  assert.equal(state.campaign.chaosBag.filter(token => token === 'skull').length, 1, '骷髅写入战役袋，下一章保留')
   assert.equal(state.scenarioFlags.blackBookSeat, 1)
 
   const early = setup(stateFor(1), 139)

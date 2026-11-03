@@ -106,13 +106,13 @@ test('TDE 06246 迅速撤退 投入档案：+2 敏捷条件图标与「每次检
   const entry = registeredEntry('06246')
   assert.ok(entry, '06246 已注册')
   // 印刷 1 个敏捷图标 + 条件近似 2 个 = 投入时 3 个敏捷图标。
-  assert.equal(commitIcons(state, inv, '06246', 'agility'), 3)
+  assert.equal(commitIcons(state, inv, '06246', 'agility'), 1)
   assert.equal(entry.abilities[0].skill.maxPerTest, 1, '每次技能检定最多投入 1 张')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /自动躲避|基础躲避/)
+  assert.equal(entry.simplified, false, '已完成印刷规则实现')
+
   // 真实投入：敏捷 2 + 图标 3 = 5。
   const { result } = commitCardOnce('06246', 'agility')
-  assert.equal(result?.value, 5, '投入后检定值 = 敏捷 2 + 3 个敏捷图标')
+  assert.equal(result?.value, 3, '非基础躲避只使用印刷的 1 个敏捷图标')
 })
 
 // ---------------------------------------------------------------------------
@@ -150,7 +150,7 @@ test('TDE 06276 空虚项链 至少3充能时与食愿项链交换并转移全�
   assert.ok(wishEater, '食愿项链进入场上')
   assert.equal(wishEater.uses, 3, '空虚项链的 3 个充能全部转移到食愿项链')
   assert.equal(inv.assets.some(item => item.code === '06276'), false, '空虚项链离开场上')
-  assert.ok((state.setAside || []).includes('06276'), '空虚项链放到一边（场外）')
+  assert.ok((state.setAside || []).some(card => (typeof card === 'string' ? card : card.code) === '06276'), '空虚项链放到一边（场外）')
 })
 
 test('TDE 06277 食愿项链 花费1充能取消符号标记并治愈1伤害1恐惧', () => {
@@ -161,7 +161,7 @@ test('TDE 06277 食愿项链 花费1充能取消符号标记并治愈1伤害1恐
   state.investigators[0].horror = 2
   state.chaosBag = ['tablet']
   let result = null
-  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 3) })
+  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 3) }, pickOption(/06277|食愿/))
   assert.equal(result?.success, true, '符号标记被取消：意志 3 对难度 3 成功（未取消时 tablet -3 会失败）')
   assert.equal(result?.value, 3, '被取消的标记不提供修正值')
   assert.equal(state.investigators[0].assets.find(item => item.id === wish.id).uses, 1, '花费 1 充能')
@@ -177,11 +177,11 @@ test('TDE 06277 食愿项链 充能耗尽后强制交换回空虚项链', () => 
   move(state, { action: 'ability', assetId: vessel.id, abilityIndex: 0 })
   resolveChoices(state)
   assert.ok(state.investigators[0].assets.some(item => item.code === '06277'), '先交换到食愿项链')
-  assert.ok((state.setAside || []).includes('06276'), '空虚项链放到一边')
+  assert.ok((state.setAside || []).some(card => (typeof card === 'string' ? card : card.code) === '06276'), '空虚项链放到一边')
   // 揭示 3 个符号标记：每次花 1 充能取消，第 3 次后充能耗尽 → 强制交换回空虚项链。
   for (const token of ['skull', 'tablet', 'cultist']) {
     state.chaosBag = [token]
-    runTest(state, draft => { performTest(draft, 0, 'willpower', 2) })
+    runTest(state, draft => { performTest(draft, 0, 'willpower', 2) }, pickOption(/06277|食愿/))
   }
   const inv = state.investigators[0]
   assert.equal(inv.assets.some(item => item.code === '06277'), false, '食愿项链收回场外')
@@ -212,10 +212,10 @@ test('TDE 06278 惊喜的发现 查找牌库翻到时可选择加入手牌（简
     return null
   })
   const after = state.investigators[0]
-  assert.ok(after.hand.includes('06278'), '查找翻到后进入手牌（「放入游戏区域」的显式简化）')
+  assert.ok(after.assets.some(card=>card.code==='06278'), '查找命中后置入游戏区域，等待强制投入')
   assert.equal(after.deck.includes('06278'), false, '不再留在牌库')
-  assert.equal(registeredEntry('06278').simplified, true)
-  assert.match(registeredEntry('06278').note, /强制投入/)
+  assert.equal(registeredEntry('06278').simplified, false, '已完成印刷规则实现')
+
 })
 
 // ---------------------------------------------------------------------------
@@ -352,7 +352,7 @@ test('TDE 06283 脱缰野兽 显现：有受召猎犬则猎犬离场且野兽与
   settle(state)
   const inv = state.investigators[0]
   assert.equal(inv.assets.some(item => item.code === '06282'), false, '受召猎犬被放在一边')
-  assert.ok((state.setAside || []).includes('06282'), '受召猎犬进入 setAside（场外）')
+  assert.ok((state.setAside || []).some(card => (typeof card === 'string' ? card : card.code) === '06282'), '受召猎犬进入 setAside（场外）')
   const beast = state.enemies.find(item => item.code === '06283')
   assert.ok(beast, '脱缰野兽生成')
   assert.equal(beast.engagedSeat, 0, '与受召猎犬的持有者交战')
@@ -409,8 +409,8 @@ test('TDE 06285 黑猫 数据通道：盟友槽位/2个万能图标，符号替�
   asset(state, '06285')
   assert.equal(slotUsage(state.investigators[0]).ally, 1, '占用 1 个盟友槽位')
   const entry = registeredEntry('06285')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /符号/)
+  assert.equal(entry.simplified, false, '已完成印刷规则实现')
+
   // 黑猫没有任何常驻属性修正（印刷只有图标的「数据卡」）。
   assert.equal(getStat(state, state.investigators[0], 'willpower'), 3, '不改变调查员属性')
 })
@@ -456,11 +456,11 @@ test('TDE 06324 阿比盖尔·福尔曼 附属一张书籍支援后不占手部�
   move(state, { action: 'ability', assetId: abigail.id, abilityIndex: 0, targetId: state.investigators[0].assets.find(item => item.code === '01035').id })
   settle(state)
   const inv = state.investigators[0]
-  assert.equal(inv.assets.some(item => item.code === '01035'), false, '书籍被附属（离开支援区）')
+  assert.equal(inv.assets.find(item => item.code === '01035').attachedToAsset, abigail.id, '实际书籍实例保留并附属宿主')
   const host = inv.assets.find(item => item.id === abigail.id)
   assert.ok((host.attachments || []).some(item => item.code === '01035'), '书籍附属到阿比盖尔')
   assert.equal(slotUsage(inv).hand || 0, 0, '附属后不占手部槽位')
-  assert.equal(registeredEntry('06324').simplified, true)
+  assert.equal(registeredEntry('06324').simplified, false, '已完成印刷规则实现')
 })
 
 // ---------------------------------------------------------------------------
@@ -474,8 +474,8 @@ test('TDE 06325 真理之眼 投入时提供 4 个万能图标（主效果显式
   const { result } = commitCardOnce('06325', 'willpower')
   assert.equal(result?.value, 3 + 4, '意志 3 + 4 个图标 = 7')
   const entry = registeredEntry('06325')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /胜利区/)
+  assert.equal(entry.simplified, false, '已完成印刷规则实现')
+
 })
 
 // ---------------------------------------------------------------------------
@@ -597,37 +597,39 @@ test('TDE 06330 噩梦球 入场取出3张梦境寄生物，揭示自动失败�
   move(state, { action: 'play', cardId: '06330' })
   settle(state)
   const inv = state.investigators[0]
-  assert.equal(inv.hand.filter(code => code === '06331').length, 3, '入场取出 3 张梦境寄生物')
+  assert.equal(inv.hand.filter(code => code === '06331').length, 0, '寄生物不会错误进入手牌')
+  assert.equal(inv.assets.find(item => item.code === '06330').attachments.filter(item => item.code === '06331').length, 3,
+    '入场附属 3 张梦境寄生物')
   state.chaosBag = ['autofail']
   let result = null
-  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 2) })
+  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 2) }, pickOption(/06330|噩梦球/))
   assert.equal(result?.autoFail, false, '[auto_fail] 标记被取消')
   assert.equal(result?.success, true, '取消后按意志 3 对难度 2 成功')
-  assert.equal(state.investigators[0].hand.filter(code => code === '06331').length, 2, '洗回 1 张梦境寄生物')
+  assert.equal(state.investigators[0].assets.find(item => item.code === '06330').attachments.filter(item => item.code === '06331').length, 2,
+    '洗回 1 张后剩余 2 张附属')
   assert.ok(state.investigators[0].deck.includes('06331'), '混洗入牌库')
 })
 
-test('TDE 06331 梦境寄生物 投入档案（负图标/强制投入显式简化）', () => {
+test('TDE 06331 梦境寄生物 下一次检定强制投入，扣除图标并在失败时造成伤害与恐惧', () => {
   const state = fixture('01001')
   const inv = state.investigators[0]
-  // 卡面 2 个万能图标：近似为普通 2 个图标（负图标无引擎读点）。
-  assert.equal(commitIcons(state, inv, '06331', 'willpower'), 2)
-  assert.equal(commitIcons(state, inv, '06331', 'agility'), 2)
+  assert.equal(commitIcons(state, inv, '06331', 'willpower'), -2)
+  assert.equal(commitIcons(state, inv, '06331', 'agility'), -2)
   const entry = registeredEntry('06331')
   assert.equal(entry.code, '06331')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /负技能图标|减去/)
+  assert.equal(entry.simplified, false)
   assert.equal(ALL_CARDS['06331'].subtype, 'weakness')
   assert.equal(ALL_CARDS['06331'].bondedCount, 3, '绑定 3 张')
-  // 弱点技能牌被引擎排除在正常投入之外（强制投入无读点，正是简化项）。
   assert.equal(state.investigators[0].hand.length, 0)
   state.investigators[0].hand = ['06331']
-  let offered = false
-  runTest(state, draft => { performTest(draft, 0, 'willpower', 1) }, pending => {
-    if (pending.kind === 'commit' && pending.options.some(item => String(item.label).includes('梦境寄生物'))) offered = true
-    return null
-  })
-  assert.equal(offered, false, '弱点技能牌不会作为普通投入候选（强制投入未实现）')
+  state.chaosBag = ['0']
+  let result = null
+  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 2) })
+  assert.equal(result?.success, false)
+  assert.equal(result?.value, 1, '意志 3 减去 2 个图标')
+  assert.equal(state.investigators[0].hand.includes('06331'), false, '自动投入离开手牌')
+  assert.equal(state.investigators[0].damage, 1)
+  assert.equal(state.investigators[0].horror, 1)
 })
 
 // ---------------------------------------------------------------------------

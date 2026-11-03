@@ -262,7 +262,7 @@ export function swarmingCountOf(state, spec, { seat = null } = {}) {
  * 运行时（非布置期）不受影响。
  */
 export function placeSwarmCardsFor(state, enemy, api) {
-  if (!enemy || swarmCountOf(enemy) > 0) return []
+  if (!enemy || enemy.hostId || swarmCountOf(enemy) > 0) return []
   const code = original(enemy)
   const spec = enemy.swarming || swarmingSpecOf(state, code)
   if (!spec) return []
@@ -305,26 +305,7 @@ export function swarmBlockedReasonOf(enemy) {
  * 溢出伤害：头领生命被打空后，多余伤害转给蜂拥卡。
  * 由共享 `enemyDamaged` 调用（引擎在扣伤害后派发；这里把超出生命的伤害从头上撤回并结算给蜂拥卡）。
  */
-export function applySwarmOverflow(state, enemy, api) {
-  if (!enemy || !swarmCountOf(enemy)) return 0
-  const health = Number(enemy.health) || Number(enemy.maxHealth) || 0
-  const overkill = Number(enemy.damageTaken || 0) - health
-  if (overkill <= 0) return 0
-  const cards = swarmCardsOf(enemy)
-  const split = api.swarm?.splitDamage?.(enemy, overkill, 0) || { defeatedSwarm: [], toSwarm: overkill }
-  api.healEnemy?.(enemy, overkill)
-  let defeated = 0
-  for (const id of split.defeatedSwarm || []) {
-    const card = cards.find(item => item.id === id)
-    if (!card) continue
-    api.swarm?.remove?.(enemy, id)
-    defeated += 1
-    // 蜂拥卡被击败后回到遭遇弃牌堆（规则：它们不是敌人实体，不进胜利区）。
-    if (Array.isArray(state.encounterDiscard) && card.code) state.encounterDiscard.push(card.code)
-  }
-  if (defeated) api.info?.(`🐝 溢出伤害击败了「${enemy.name}」的 ${defeated} 张蜂拥卡。`)
-  return defeated
-}
+
 
 // ---------------------------------------------------------------------------
 // 掩藏地点（Veiled）：[fast] 翻面读背面故事卡
@@ -410,6 +391,20 @@ function threatRulesFor(card) {
 // ---------------------------------------------------------------------------
 
 export const encounterRules = Object.freeze({
+  enemyConnections(state, enemy, location) {
+    const flags=flagOf(original(enemy))
+    if (!flags.tunnelLocationsConnectedWhileMoving) return []
+    const code=flags.spawn?.code
+    const hasTunnel=loc=>(loc?.attachments || []).some(card=>original(card)===code)
+    return hasTunnel(location) ? state.locations.filter(hasTunnel).map(loc=>loc.id).filter(id=>id!==location.id) : []
+  },
+  beforeEnemyHarm(state, enemy, inv, harm, api) {
+    if (!flagOf(original(enemy)).attackDealsEitherDamageOrHorror) return harm
+    const choice=api.choose({kind:'effect',source:original(enemy),seat:inv.seat,
+      prompt:'漆黑蜘蛛：选择此次攻击造成伤害，或造成恐惧。',
+      options:[{id:'damage',label:`受到 ${harm.damage} 点伤害`},{id:'horror',label:`受到 ${harm.horror} 点恐惧`}]})
+    return choice==='damage' ? {...harm,horror:0} : {...harm,damage:0}
+  },
   // 「最近一次抽到的遭遇卡」记录 + 牌库耗尽强制。
   encounterDrawn(state, inv, code, api) {
     state.scenarioFlags ||= {}
@@ -538,7 +533,6 @@ export const encounterRules = Object.freeze({
 
   // 敌人受伤：先结算蜂拥溢出伤害，再派发条目 onDamaged。
   enemyDamaged(state, enemy, api, seat, source) {
-    applySwarmOverflow(state, enemy, api)
     enemyScriptFor(original(enemy))?.onDamaged?.(state, enemy, api, seat, source)
   },
 
@@ -598,7 +592,8 @@ export const encounterRules = Object.freeze({
       let count = 0
       if (source === 'doom') count = Number(state.doom || 0)
       else if (source === 'alarmLevel') count = alarmLevelOf(state, null, null)
-      else if (source === 'swarmCards') count = swarmCountOf(enemy)
+      else if (source === 'swarmCards') count = swarmCountOf(enemy.hostId
+        ? state.enemies.find(host => host.id === enemy.hostId) : enemy)
       else if (source === 'doomOnSelf') count = Number(enemy.doom || 0)
       else if (source === 'cluesOnLocation') {
         const location = (state.locations || []).find(item => item.id === enemy.location)
@@ -698,6 +693,8 @@ export const encounterRules = Object.freeze({
   },
 
   moveError(state, inv) {
+    const attached = here(state, inv)?.attachments?.find(card => flagOf(card).blocksMovementOut)
+    if (attached) return `「${ALL_CARDS[original(attached)]?.nameZh || original(attached)}」：不能移动离开`
     if (restrictionActive(state, inv.seat, 'move')) return '本轮不能移动'
     const blocker = (state.enemies || []).find(enemy => enemy.location === inv.location
       && !enemy.exhausted && flagOf(original(enemy)).moveBlockWhileReady)
@@ -737,12 +734,53 @@ export const encounterRules = Object.freeze({
 
   // Veiled 翻面由引擎原生 `flipVeiled` 行动处理（moves.js/dispatch.js），章节用 `veiledFlipped` 读正文；
   // 共享 actions/performAction 保留空实现，方便章节覆盖时转发。
-  actions() {
-    return []
+  actions(state, inv) {
+    const act = state.acts?.[state.actIndex]
+    const moves = (act?.attachments || []).filter(card => flagOf(card).actGrantedAction).map(card => ({
+      action: 'scenarioAction', actions: 1, rule: `actAttachment:${card.id}`,
+      label: `[行动] 摆脱「${ALL_CARDS[original(card)]?.nameZh || original(card)}」`,
+    }))
+    for (const card of here(state, inv)?.attachments || []) if (flagOf(card).discardAction) moves.push({
+      action: 'scenarioAction', actions: 1, rule: `locationAttachment:${card.id}`,
+      label: `[行动] 摆脱「${ALL_CARDS[original(card)]?.nameZh || original(card)}」`,
+    })
+    for (const asset of inv.assets) for (const card of asset.attachments || []) {
+      if (!flagOf(card).discardControlledAssetToRemoveAttachment) continue
+      moves.push({ action: 'scenarioAction', actions: 1, rule: `assetAttachment:${card.id}`,
+        label: `[行动] 弃掉一件支援，摆脱「${ALL_CARDS[original(card)]?.nameZh || original(card)}」` })
+    }
+    return moves
   },
 
-  performAction() {
-    return false
+  performAction(state, inv, move, api) {
+    if (String(move.rule).startsWith('assetAttachment:')) {
+      const card = inv.assets.flatMap(asset => asset.attachments || []).find(card => `assetAttachment:${card.id}` === move.rule)
+      if (!card || !flagOf(card).discardControlledAssetToRemoveAttachment) return false
+      const targets = inv.assets.filter(asset => api.canDiscardAsset(inv.seat, asset.id))
+      if (!targets.length) return false
+      const id = api.choose({ kind: 'asset', seat: inv.seat, source: original(card), prompt: '选择弃掉一件你控制的支援。',
+        options: targets.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.nameZh || asset.code })) })
+      if (!api.discardAsset(inv.seat, id)) return false
+      api.detachEncounterAttachment(card)
+      return true
+    }
+    if (String(move.rule).startsWith('locationAttachment:')) {
+      const card = here(state, inv)?.attachments?.find(card => `locationAttachment:${card.id}` === move.rule)
+      const rule = flagOf(card).discardAction
+      if (!card || !rule) return false
+      const skill = api.choose({ kind: 'skill', source: original(card), seat: inv.seat,
+        prompt: '选择用于摆脱的技能。', options: rule.skills.map(id => ({ id, label: id })) })
+      api.test(inv.seat, skill, rule.difficulty, result => { if (result.success) api.detachEncounterAttachment(card) })
+      return true
+    }
+    if (!String(move.rule).startsWith('actAttachment:')) return false
+    const card = state.acts?.[state.actIndex]?.attachments?.find(card => `actAttachment:${card.id}` === move.rule)
+    const rule = flagOf(card).actGrantedAction
+    if (!card || !rule) return false
+    const skill = api.choose({ kind: 'skill', source: original(card), seat: inv.seat,
+      prompt: '选择用于摆脱的技能。', options: rule.skills.map(id => ({ id, label: id })) })
+    api.test(inv.seat, skill, rule.difficulty, result => { if (result.success) api.detachEncounterAttachment(card) })
+    return true
   },
 
   // 威胁区摆脱行动（条目 threatAction）+ 敌人条目的 enemyScript.encounterAction（TCU 同构）。

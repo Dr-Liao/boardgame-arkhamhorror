@@ -1,0 +1,276 @@
+{
+  "id": "horrorInHighGear",
+  "campaignId": "theInnsmouthConspiracy",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险V：全速恐惧",
+          "children": [
+            {
+              "text": "你在印斯茅斯郊外的旧土路上隆隆前行，树木在一旁飕飕作响。太阳已降到西方的地平线上，唯有满月还将诡异的明光洒在土路上。 “这儿。”哈珀特工在座位上叫了起来，声音盖过了引擎的轰响。她摊开了地图，不断敲击上面的一点。“猎鹰岬的灯塔。奥赛罗思就在那儿。” 你脊背一阵打颤。要是你所记不错，奥赛罗思就是把你扔在潮水通道里等死的男人。你问哈珀猎鹰岬离印斯茅斯有多远，想赶在密教发现你逃跑之前就赶到。 她叹了口气：“路倒是不远，但绕得要命。找准方向可不容易。拐错一个弯，那就——”你和哈珀同时看到了后视镜上闪过的光点。是车灯。每一秒都越来越强，越来越亮。哈珀喘息之间骂了一句。“我想这些人总不能是你朋友？” 你摇摇头，握紧了方向盘。看来密教已经得知风声，明白你逃出了印斯茅斯。你告诉哈珀抓紧，狠狠踩下了油门。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收集以下遭遇组中的所有卡牌：全速恐惧、雾罩印斯茅斯、故障、破碎记忆和远古恶魔。这些遭遇组以下列图标标示："
+            },
+            {
+              "text": "按下列步骤组成道路牌堆："
+            },
+            {
+              "text": "找出猎鹰岬近郊和全部6张绕远路。每张卡牌都是旧印斯茅斯公路地点的已揭示面。将它们全部放在一边，置于场外。"
+            },
+            {
+              "text": "将放在一边的猎鹰岬近郊和2张旧印斯茅斯公路地点混洗，组成道路牌堆最底下的3张卡牌。"
+            },
+            {
+              "text": "将剩余的所有旧印斯茅斯公路地点随机放在这些卡牌上方。"
+            },
+            {
+              "text": "道路牌堆中的所有卡牌都应只露出旧印斯茅斯公路一面，使玩家无法分辨各张卡牌。"
+            },
+            {
+              "text": "将道路牌堆顶的3张卡牌放置入场，从左至右排成一条直线，其中左方为“后方”，右方为“前方”。"
+            },
+            {
+              "text": "选择载具。本场冒险中，调查员可使用两辆载具——托马斯·道森的汽车和艾莲娜·哈珀的汽车。每位调查员必须选择一辆载具乘坐。同一辆载具内不能超过两位调查员。"
+            },
+            {
+              "text": "每辆有至少一位调查员乘坐的载具在最前方的旧印斯茅斯公路地点开始游戏。将其他载具移出游戏。"
+            },
+            {
+              "text": "每辆载具均以行驶面朝上开始游戏。"
+            },
+            {
+              "text": "每位调查员在其选择乘坐的载具内开始游戏。"
+            },
+            {
+              "text": "揭示该地点时，触发其道路X关键词。"
+            },
+            {
+              "text": "选择驾驶员。每辆载具内必须指定一位调查员担任该载具的驾驶员。"
+            },
+            {
+              "text": "每辆载有至少一位调查员的载具必须始终有一名驾驶员。如果驾驶员离开载具或出局，选择该载具内的另一位调查员成为新的驾驶员。"
+            },
+            {
+              "text": "根据本场游戏的玩家人数："
+            },
+            {
+              "text": "如果本场游戏恰好有1名玩家，不作任何改动。"
+            },
+            {
+              "text": "如果本场游戏有2～3名玩家，从已收集的遭遇组中搜寻1个随机载具敌人。将该敌人生成在最后方的地点。"
+            },
+            {
+              "text": "如果本场游戏恰好有4名玩家，从已收集的遭遇组中搜寻2个随机载具敌人。将这些敌人分别生成在最后方的地点。"
+            },
+            {
+              "text": "检查冒险日志。根据下列情况，本场冒险应使用不同版本的密谋1。将另一个版本的密谋1移出游戏。"
+            },
+            {
+              "text": "如果魔鬼礁石的恐怖已死，使用密谋1a——追逐开始！（版本II）。"
+            },
+            {
+              "text": "否则，使用密谋1a——追逐开始！（版本I）。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "载具",
+              "children": [
+                {
+                  "text": "具有载具关键词的支援代表调查员可以进入或离开的载具。具有此关键词的支援称为载具，并遵循下列规则：\n\n• 调查员的小型卡牌与载具重叠放置时，该调查员便在该载具内。调查员的小型卡牌与其所在地点重叠放置时，该调查员便不在载具内（即使该地点有载具也是如此）。\n• 作为一个 [action] 能力，调查员可以进入或离开其所在地点的载具。将该调查员的小型卡牌移到载具上，或从载具上移到其所在地点，以表明其新的位置。每位调查员每轮只能执行此能力一次。\n\n• 载具内的调查员也处于该载具所在的地点。\n\n• 调查员在载具内时，不能独立于该载具移动。\n\n• 载具通常具有一个或多个使其移动到连接地点的能力。载具从一个地点移动到另一个地点时，其中的所有调查员也随之移动。\n\n• 除非另有说明，否则载具不会以任何方式改变敌人的移动或交战。"
+                }
+              ]
+            },
+            {
+              "title": "行驶／停止",
+              "children": [
+                {
+                  "text": "本场冒险中的载具有“行驶”和“停止”两种状态，分别由卡牌的两面表示。行驶和停止的载具之间的区别，由各面上的游戏文字说明。使用该载具上的能力可以启动或关闭引擎，并将其翻到另一面。\n\n• 一般而言，调查员只有乘坐行驶的载具才能迅速前进。不过，在接近悬崖公路或急转弯等危险地点时，暂时停下载具有时会是个好主意。务必小心！"
+                }
+              ]
+            },
+            {
+              "title": "道路X",
+              "children": [
+                {
+                  "text": "本场冒险中，调查员沿着旧印斯茅斯公路从印斯茅斯前往猎鹰岬。这条道路大致从左至右呈一条直线，但偶尔会出现岔路。\n\n每当具有道路X关键词的地点被揭示时，如果刚揭示的地点前方没有任何地点，将X个新地点以旧印斯茅斯公路面朝上的方式放置入场，在其前方组成新的一列。其中第一个地点必须是道路牌堆顶的地点。其余将要放置入场的地点从放在一边的绕远路地点中取出（如果绕远路地点不足，则尽量使用所有剩余的绕远路地点）。将这些地点混洗，使玩家无法分辨各张卡牌。\n\n例如：崔西是艾莲娜·哈珀的汽车的驾驶员，刚将汽车向前移动到一个未揭示地点。该地点是具有“道路2”关键词的岔路口。由于岔路口前方目前没有地点，她必须在岔路口前方放置2个旧印斯茅斯公路地点。她拿取道路牌堆顶的卡牌以及一张放在一边的绕远路地点，将它们都放置入场，在岔路口前方组成新的一列，再将它们混洗，使玩家无法分辨各张卡牌。\n\n• 一般而言，最好避免走绕远路，因为这会减慢你的速度，并缩短你抵达猎鹰岬的可用时间。\n\n• 本场冒险中，每个地点都与其前一列和后一列中的每个地点连接，但不与同一列中的任何其他地点连接。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果你未达成任何结局（所有调查员都被击败）： 你前往猎鹰岬的路上可不轻松。异教徒跟在后面紧追不舍，还有印斯茅斯村外树林里潜居的怪物，你的车子每个转弯都备受阻挠。它一路逃出，已是伤痕累累，你不得不丢下车子，在树林里用两条腿隐秘前行。等你能远远瞧见灯塔的时候，晨曦已将天空映得一片橙红。“终于到了。”哈珀特工呻吟道。但已没有时间可以浪费，你继续向猎鹰岬的灯塔跋涉。精疲力尽，破釜沉舟。"
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "结局 1: 你穿越浓雾，终于瞧见了远远的灯塔，不禁松了口气。“咱们把车停在这儿，剩下的路用走的吧。”哈珀建议道，“要是还有人在灯塔里，最好不要让他听见我们来了。”她的建议十分稳妥。你可不敢确定在猎鹰岬会遇上什么，但所有的迹象都表明这里是密教的另一处据点。你再三确认自己未遭跟踪，然后把车停在路边。你从车箱里收齐自己的东西，开始往猎鹰岬的灯塔跋涉……"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario V: Horror in High Gear",
+          "children": [
+            {
+              "text": "Trees whizz by as you rumble along the old dirt road just outside of Innsmouth. The sun has set over the western horizon, leaving only the full moon to bathe the dusty roads in its brilliant, eerie glow. “Here,” Agent Harper shouts from the passenger seat over the rumbling of the automobile engine. She points to a spot on the map she has spread across her lap, tapping it repeatedly. “Falcon Point Lighthouse. That’s where Oceiros should be.” A shudder courses up your spine. If your memories are to be believed, Oceiros is the man who left you to die in those tidal tunnels. You ask Harper how far Falcon Point is from Innsmouth, hoping to arrive before the Order realizes you’ve escaped. She sighs. “It’s not that far, but these roads are meandering. They could be difficult to navigate. One wrong turn and—” both you and Harper see the lights in your rearview mirror at the same time. Headlights. And they’re growing larger and brighter by the second. Harper curses under her breath. “I don’t suppose those are friends of yours?” You shake your head and tighten your grip on the wheel. It seems the Order has already caught wind of your flight from Innsmouth. You tell Agent Harper to hold on and slam your foot on the accelerator."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Horror in High Gear, Fog over Innsmouth, Malfunction, Shattered Memories, and Ancient Evils. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Create the Road deck. This is done by performing the following steps:"
+            },
+            {
+              "text": "Find Falcon Point Approach and all 6 copies of Long Way Around. Each one is the revealed side of an Old Innsmouth Road location. Set each of them aside, out of play."
+            },
+            {
+              "text": "Shuffle the set-aside Falcon Point Approach and two Old Innsmouth Road locations together to form the bottom three cards of the Road deck."
+            },
+            {
+              "text": "Place all of the remaining Old Innsmouth Road locations on top in a random order."
+            },
+            {
+              "text": "All of the cards in the Road deck should be showing only the Old Innsmouth Road side, so that the players do not know which is which."
+            },
+            {
+              "text": "Put the top 3 cards of the Road deck into play in a straight line from left to right, where left is the “rear” and right is the “front.”"
+            },
+            {
+              "text": "Choose vehicles. There are two vehicles the investigators can use in this scenario—Thomas Dawson’s Car and Elina Harper’s Car. Each investigator must choose a vehicle to board. No more than two investigators can board the same vehicle."
+            },
+            {
+              "text": "Each vehicle that is boarded by at least one investigator begins play at the front Old Innsmouth Road location. Remove each other vehicle from the game."
+            },
+            {
+              "text": "Each vehicle begins play with its Running side faceup."
+            },
+            {
+              "text": "Each investigator begins play in the vehicle they chose to board."
+            },
+            {
+              "text": "Trigger that location’s Road X keyword when it is revealed."
+            },
+            {
+              "text": "Choose drivers. One investigator in each vehicle must be designated as the driver of that vehicle."
+            },
+            {
+              "text": "There must always be a driver for each vehicle with at least one investigator in it. If the driver leaves the vehicle or is eliminated, choose another investigator in that vehicle to become the new driver."
+            },
+            {
+              "text": "Based on the number of players in the game:"
+            },
+            {
+              "text": "If there is exactly 1 player in the game, no changes are made."
+            },
+            {
+              "text": "If there are 2–3 players in the game, search the gathered encounter sets for 1 random Vehicle enemy. Spawn that enemy at the rearmost location."
+            },
+            {
+              "text": "If there are exactly 4 players in the game, search the gathered encounter sets for 2 random Vehicle enemies. Spawn each of those enemies at the rearmost location."
+            },
+            {
+              "text": "Check the Campaign Log. Depending on the following circumstances, a different version of agenda 1 should be used in this scenario. Remove the other version of agenda 1 from the game."
+            },
+            {
+              "text": "If the Terror of Devil Reef is dead, use Agenda 1a—The Chase is On! (v. II)."
+            },
+            {
+              "text": "Otherwise, use Agenda 1a—The Chase is On! (v. I)."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Vehicles",
+              "children": [
+                {
+                  "text": "An asset with the vehicle keyword represents a vehicle that the investigators may enter or leave. An asset with this keyword is called a vehicle, and follows these rules:\n\n• While an investigator’s mini-card is placed overlapping a vehicle, that investigator is in that vehicle. While an investigator’s mini-card is placed overlapping their location, that investigator is instead not in a vehicle (even if they are at the same location as a vehicle).\n• As a [action] ability, an investigator may enter or leave a vehicle at their location. Move that investigator’s mini-card onto the vehicle or off of the vehicle and onto their location to indicate their new position. Each investigator may perform this ability only once each round.\n\n• An investigator who is in a vehicle is also at that vehicle’s location.\n\n• While an investigator is in a vehicle, that investigator cannot move independently of the vehicle.\n\n• Vehicles generally have one or more abilities that allow them to move to a connecting location. As a vehicle moves from one location to another, all investigators in the vehicle also move with the vehicle.\n\n• Vehicles do not alter enemy movement or enemy engagement in any way unless otherwise noted."
+                }
+              ]
+            },
+            {
+              "title": "Running / Stopped",
+              "children": [
+                {
+                  "text": "Vehicles in this scenario can either be “running” or “stopped,” as indicated by their two sides. The differences between a running vehicle and a stopped vehicle is indicated by the game text on each side. A vehicle’s engine can be started or stopped using the ability on that vehicle, flipping it over to its other side.\n\n• Generally speaking, investigators will only be able to make swift progress in a running vehicle. However, it may sometimes be a good idea to briefly stop your vehicle if you are approaching a dangerous location, such as a Cliffside Road or a Tight Turn. Be careful!"
+                }
+              ]
+            },
+            {
+              "title": "Road X",
+              "children": [
+                {
+                  "text": "During this scenario, the investigators are traveling the Old Innsmouth Road from Innsmouth to Falcon Point. This road is generally a straight line from left to right, but occasionally contains branching paths.\n\nEach time a location with the Road X keyword is revealed, if there are no locations ahead of the just revealed location, put X new locations into play in a new column in front of it, Old Innsmouth Road side faceup. The first of these locations must be the top location of the Road deck. Each of the remaining locations to be put into play are taken from among the set-aside Long Way Around locations (if there are not enough Long Way Around locations, use as many as you can). Shuffle each of those locations so that the players do not know which is which.\n\nFor example: Trish is the driver of Elina Harper’s Car, and has just moved that car forward to an unrevealed location. It is a Fork in the Road with the “Road 2” keyword. Since there are currently no locations in front of Fork in the Road, she must therefore place 2 Old Innsmouth Road locations in front of Fork in the Road. She takes the top card of the Road deck and one of the set-aside Long Way Around locations, puts both of them into play in a new column in front of Fork in the Road, and shuffles them so that the players do not know which is which.\n\n• Generally, it is wise to avoid taking a Long Way Around, since it will slow you down and reduce the amount of time you have to reach Falcon Point.\n\n• During this scenario, each location is connected to each location behind or ahead of it, but not to any other location on its column."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator was defeated): Your drive to Falcon Point is no joyride. Between the cultists on your tail and the creatures that dwell in the woods outside Innsmouth, your vehicle is harried at every turn. With no way to escape unharmed, you are forced to abandon your vehicle and sneak through the woods on foot. By the time you see the distant lighthouse beacon, dawn already bathes the sky in orange radiance. “Finally,” Agent Harper groans. With no time to rest, you continue the trek to the Falcon Point lighthouse, exhausted but resolute."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You breathe a sigh of relief as you see the distant lighthouse beacon pierce the fog. “Let’s pull over here and make the rest of the trip on foot,” Harper suggests. “If there’s anybody still in that lighthouse, it would be best if they didn’t hear us approach.” Her advice is sound. You’re not sure what to expect once you reach Falcon Point, but all signs point to it being another outpost for the Order. You double‑check to make sure you aren’t being followed, then pull over by the side of the road. Gathering your belongings from the car’s trunk, you begin the trek to the Falcon Point lighthouse…"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

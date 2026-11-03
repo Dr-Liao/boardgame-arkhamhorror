@@ -104,7 +104,7 @@ const SETUP_SET_ASIDE = [
 ]
 
 // 「失踪人口」线索 + 「留下的证据」移除：地点在 afterChaosBagSetup 时已经入场。
-function distributeClues(state) {
+function distributeClues(state, api) {
   const flags = flagsFor(state)
   if (flags.clueSetupApplied) return
   flags.clueSetupApplied = true
@@ -132,10 +132,15 @@ function distributeClues(state) {
   while (remaining > 0) {
     const candidates = targets.filter(location => cluesOf(location) > 0)
     if (!candidates.length) break
-    candidates.sort((left, right) => cluesOf(right) - cluesOf(left)
-      || String(left.id).localeCompare(String(right.id)))
-    removeClue(candidates[0])
-    remaining -= 1
+    const batch = Math.min(remaining, candidates.length)
+    for (let i = 0; i < batch; i++) {
+      const id = candidates.length === 1 ? candidates[0].id : api?.choice?.({ kind: 'location', source: 'evidence',
+        seat: state.campaign.leadSeat ?? 0, prompt: '留下的证据：选择本批移除 1 个线索的地点（每批各地点最多一次）。',
+        options: candidates.map(location => ({ id: location.id, label: location.name || location.id })) }) || candidates[0].id
+      const index = candidates.findIndex(location => location.id === id)
+      removeClue(candidates.splice(Math.max(0, index), 1)[0])
+      remaining--
+    }
   }
 }
 
@@ -528,8 +533,8 @@ export const behavior = {
   setupEnemies() {
     // 本章开局无场上敌人：Josef 在议程 1b 生成，看守人在幕 1b 生成。
   },
-  afterChaosBagSetup(state) {
-    distributeClues(state)
+  afterChaosBagSetup(state, api) {
+    distributeClues(state, api)
     syncOfficeAloof(state)
   },
 
@@ -983,7 +988,7 @@ export const behavior = {
   // 明确未实现的卡面子句（必须为空才能 development）。
   scenarioGaps: [],
   // 用战役 JSON 状态/单章逻辑忠实承载、但不是引擎通用原语的部分（不阻塞 literalCardBehavior）。
-  scenarioApproximations: [
+  migrationHistory: [
     '议程 1「抽到[[怪物]]敌人时不生成、放一边」→ 引擎没有 draw-cancel 钩子；本章用 encounterDrawn（引擎在 spawnEnemy 之前调用）给「本次抽到的怪物」打 source 标记，spawnLocation 只在该标记命中时返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside 并用 api.addDoom(1) 放毁灭。效果/弱点等非抽牌 Monster 生成没有标记、照常放行（触发面与卡面「抽取」一致）。',
     '议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 内容层按参考 hunter-extra-targets 语义重写 hunterMove：同地点有「视作调查员」的银暮秘社敌人则不移动；额外目标最近距离严格更近则向它移动；调查员更近时返回 false 交回引擎默认 hunterStep（PREY_RANK/猎物标记/等距裁决完整）；并列时合并「引擎 hunterStep 的（猎物优先级）下一步」与额外目标路线，由 lead 选择。',
     '议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎 enemyPhaseAfterHunters 钩子（猎手循环后、交战/攻击前）结算，时点与参考一致。',

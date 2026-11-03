@@ -1,0 +1,753 @@
+{
+  "abilityKinds": [
+    "action",
+    "free",
+    "reaction",
+    "forced",
+    "constant",
+    "elderSign",
+    "setup",
+    "played",
+    "commit",
+    "weakness",
+    "entersPlay",
+    "leavesPlay"
+  ],
+  "effectPrimitives": [
+    "gainResource",
+    "loseResource",
+    "draw",
+    "heal",
+    "takeDamage",
+    "takeHorror",
+    "gainAction",
+    "discoverClue",
+    "addDoom",
+    "dealDamage",
+    "investigate",
+    "fight",
+    "evade",
+    "moveInvestigator",
+    "chooseOne",
+    "discardHandTo",
+    "reloadAmmo",
+    "defeatNonEliteEnemy",
+    "removeDiscard",
+    "onTheLam",
+    "addStatPhase",
+    "rechargeAsset",
+    "cancelEnemyAttack",
+    "cancelTreachery",
+    "substituteSkill",
+    "sequence",
+    "targetedEffect",
+    "searchTop",
+    "investigateForResources",
+    "moveTo",
+    "dealDamageAll",
+    "dealDamageExhausted",
+    "blankEnemy",
+    "ignoreChaos",
+    "returnAssetToHand",
+    "shuffleIntoEncounter",
+    "searchDiscard",
+    "autoEvadeNonElite",
+    "attachBarricade",
+    "drawEncounter",
+    "addTestValue",
+    "disengageAll",
+    "flipTokenSign",
+    "scry",
+    "gainClues",
+    "targetedTest",
+    "readyAsset",
+    "healDamageAtLocation",
+    "researchSolution",
+    "carcosaInvestigator",
+    "carcosaPlayer",
+    "addCurrentTest",
+    "mill",
+    "tfaInvestigator",
+    "tfaPlayer",
+    "cancelSymbolToken"
+  ],
+  "windows": [
+    {
+      "id": "enemyRoundEnd",
+      "label": "回合结束时（敌人）",
+      "kind": "reaction",
+      "order": 38
+    },
+    {
+      "id": "assetDefeated",
+      "label": "你控制的支援被击败时",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
+      "id": "enemyDefeated",
+      "label": "敌人被击败时",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
+      "id": "defeatAtLocation",
+      "label": "本地点有卡牌被击败后",
+      "kind": "reaction",
+      "order": 40
+    },
+    {
+      "id": "haunted",
+      "label": "结算闹鬼能力时",
+      "kind": "interrupt",
+      "order": 41
+    },
+    {
+      "id": "searchWouldResolve",
+      "label": "查找牌库之前",
+      "kind": "reaction",
+      "order": 42
+    },
+    {
+      "id": "cardDrawn",
+      "label": "抽取卡牌后",
+      "kind": "reaction",
+      "order": 60
+    },
+    {
+      "id": "cardsDrawn",
+      "label": "一次抽牌完成后",
+      "kind": "reaction",
+      "order": 60
+    },
+    {
+      "id": "mythosEncounterStep",
+      "label": "神话阶段抽取遭遇卡步骤开始前",
+      "kind": "reaction",
+      "order": 60
+    },
+    {
+      "id": "spellChargesSpent",
+      "label": "花费法术支援的充能后",
+      "kind": "reaction",
+      "order": 60
+    },
+    {
+      "id": "tokenEffectWouldResolve",
+      "label": "揭示的混乱标记效果结算前",
+      "kind": "reaction",
+      "order": 60
+    },
+    {
+      "id": "clueDiscovered",
+      "label": "发现线索后",
+      "kind": "reaction",
+      "order": 61
+    },
+    {
+      "id": "investigateSuccess",
+      "label": "调查成功后",
+      "kind": "reaction",
+      "order": 62
+    },
+    {
+      "id": "skillTestSuccess",
+      "label": "技能检定成功后",
+      "kind": "reaction",
+      "order": 62
+    },
+    {
+      "id": "discoverClue",
+      "label": "发现线索前",
+      "kind": "interrupt",
+      "order": 63
+    },
+    {
+      "id": "scenarioStarts",
+      "label": "冒险开始时",
+      "kind": "reaction",
+      "order": 64
+    },
+    {
+      "id": "enemyEngaged",
+      "label": "与敌人交战后",
+      "kind": "reaction",
+      "order": 65
+    },
+    {
+      "id": "horrorPlaced",
+      "label": "受到恐惧后",
+      "kind": "reaction",
+      "order": 66
+    },
+    {
+      "id": "damageAssignedToSelf",
+      "label": "伤害分配到支援时",
+      "kind": "interrupt",
+      "order": 67
+    },
+    {
+      "id": "horrorHealed",
+      "label": "治疗恐惧后",
+      "kind": "reaction",
+      "order": 68
+    },
+    {
+      "id": "cardCancelled",
+      "label": "卡牌效果被取消后",
+      "kind": "reaction",
+      "order": 69
+    },
+    {
+      "id": "assetEnteredPlay",
+      "label": "支援入场后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "chaosTokenRevealed",
+      "label": "揭示混乱标记后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "damagePlaced",
+      "label": "伤害被放置后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "enemyAttackDamage",
+      "label": "敌人攻击造成伤害时",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "enemyAttacked",
+      "label": "敌人攻击后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "locationRevealed",
+      "label": "地点揭示后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "move",
+      "label": "移动后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "revelationTest",
+      "label": "显现检定后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "revelationTestAlly",
+      "label": "队友显现检定后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "skillTestFail",
+      "label": "技能检定失败后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "skullRevealed",
+      "label": "揭示骷髅标记后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "spellPlayed",
+      "label": "打出法术卡后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "treacheryTestSuccess",
+      "label": "诡计检定成功后",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "wouldDefeatByHorror",
+      "label": "因恐惧将要被击败时",
+      "kind": "reaction",
+      "order": 70
+    },
+    {
+      "id": "agendaWouldAdvance",
+      "label": "密谋将要因毁灭阈值推进时",
+      "kind": "reaction",
+      "order": 71
+    },
+    {
+      "id": "eventPlayed",
+      "label": "打出一张事件后",
+      "kind": "reaction",
+      "order": 72
+    },
+    {
+      "id": "actionResolvedAtLocation",
+      "label": "本地点一次行动结算后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "activateFirearmFight",
+      "label": "使用枪械攻击时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "afterAlarmRaised",
+      "label": "警报等级提高后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "assetActionResolved",
+      "label": "支援的行动能力结算后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "assetDamageAssigned",
+      "label": "伤害分配至支援时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "assetHarmPlaced",
+      "label": "伤害或恐惧放置到支援后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "assetLeavesPlay",
+      "label": "支援离场后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "attackFail",
+      "label": "攻击失败后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "beforeChaosTokenReveal",
+      "label": "将要从混乱袋揭示标记时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "beforePlayAttempt",
+      "label": "打出一张卡牌并支付任何费用前",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "beforePlayCost",
+      "label": "打出一张卡牌支付费用前",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "blessTokensWouldReturnToPool",
+      "label": "检定的祝福将要归还标记池时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "cardWouldBeDrawn",
+      "label": "将要抽到卡牌时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "chaosRevealStepEnded",
+      "label": "混乱标记揭示步骤结束后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "chaosTokenResolved",
+      "label": "祝福或诅咒标记结算后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "committedCard",
+      "label": "卡牌进入投入区后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "consecutiveActions",
+      "label": "连续两次同类行动后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "defeatEnemy",
+      "label": "击败敌人后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "doomPlaced",
+      "label": "毁灭放置后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "doomWouldBePlaced",
+      "label": "将要放置毁灭时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "encounterCardWouldDraw",
+      "label": "将要抽遭遇牌库顶牌时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "encounterDrawn",
+      "label": "抽取遭遇卡后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "enemyAttack",
+      "label": "敌人攻击时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "enemyPhaseBegins",
+      "label": "敌人阶段开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "enemyPhaseEnds",
+      "label": "敌人阶段结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "enemyReadied",
+      "label": "敌人重整后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "enemySpawn",
+      "label": "敌人生成时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "evadeFail",
+      "label": "躲避失败后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "evadeSuccess",
+      "label": "躲避成功后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "handCardDiscarded",
+      "label": "一张手牌被弃掉后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "harmAssigned",
+      "label": "实际受到伤害或恐惧后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "harmDealt",
+      "label": "伤害/恐惧分配时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "investigateFail",
+      "label": "调查检定失败后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "investigationPhaseStarts",
+      "label": "调查阶段开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "moveBeforeEngage",
+      "label": "移动后将要自动交战前",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "mythosEnd",
+      "label": "神话阶段结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "negativeTokenRevealed",
+      "label": "揭示负修正标记后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "opportunityAttack",
+      "label": "趁乱攻击时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "phaseBegins",
+      "label": "阶段开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "promiseBroken",
+      "label": "违背回合承诺后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "roundEnds",
+      "label": "一轮结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "roundStarts",
+      "label": "一轮开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "skillTestFailed",
+      "label": "检定失败后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "symbolRevealed",
+      "label": "揭示符号标记后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "testBegins",
+      "label": "技能检定开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "testEnds",
+      "label": "技能检定结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "testInitiated",
+      "label": "发起技能检定时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "testWouldFail",
+      "label": "检定将要失败时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "threatEntered",
+      "label": "卡牌进入威胁区域后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "tokenReveal",
+      "label": "揭示混乱标记时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "tokenWouldResolve",
+      "label": "混乱标记将要结算时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "treachery",
+      "label": "抽取诡计卡后（显现前）",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "treacheryWouldDiscard",
+      "label": "诡计结算后将要弃掉时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "turnBegins",
+      "label": "回合开始时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "turnEnded",
+      "label": "回合结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "upkeepEnd",
+      "label": "重整阶段结束时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "weaponFightInitiated",
+      "label": "使用武器发起攻击时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "wouldDefeat",
+      "label": "敌人将要被击败时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "wouldDiscardFromHand",
+      "label": "将要弃掉手牌时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "wouldLoseActions",
+      "label": "将要失去行动时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "wouldLoseResources",
+      "label": "将要失去资源时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "wouldSucceedTest",
+      "label": "检定将要成功时",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "enemy.afterAttacks",
+      "label": "敌人攻击结束",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "enemy.afterHunters",
+      "label": "猎手移动后、敌人攻击前",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "investigation.afterAction",
+      "label": "行动结束",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "mythos.afterEncounter",
+      "label": "遭遇牌结算后",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "test.afterCommit",
+      "label": "投入结束、揭示标记前",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "test.beforeCommit",
+      "label": "检定开始、投入前",
+      "kind": "player",
+      "order": 200
+    },
+    {
+      "id": "upkeep.end",
+      "label": "重整结束",
+      "kind": "player",
+      "order": 200
+    }
+  ],
+  "interactionOperations": [
+    "seal",
+    "release",
+    "claimKey",
+    "giveKeys",
+    "spendKey",
+    "enterVehicle",
+    "leaveVehicle",
+    "driveVehicle",
+    "commitOrigin",
+    "returnCommitment"
+  ],
+  "apiModule": "src/engine/api-mechanics.js",
+  "scenarioApi": "scenarioRuntime(...).mechanics",
+  "investigatorApiModule": "src/engine/investigator-mechanics.js",
+  "playerExtensions": {
+    "tokenCost": {
+      "module": "src/engine/token-cost.js",
+      "api": "additionalTokenCost; exact add/pay; dynamic shroud/difficulty"
+    },
+    "playerTools": {
+      "module": "src/engine/player-mechanics.js",
+      "api": "ctx.api.playerTools",
+      "tests": [
+        "tests/tic-player-primitives.test.mjs",
+        "tests/tic-player-guardian-seeker.test.mjs",
+        "tests/tic-player-rogue-mystic.test.mjs",
+        "tests/tic-player-survivor-neutral.test.mjs"
+      ]
+    },
+    "playTiming": {
+      "module": "src/engine/play-timing.js",
+      "api": "playTimingProvider; fastSourceId"
+    },
+    "sharedUses": {
+      "module": "src/engine/use-transfer.js",
+      "api": "availableUseCost/payUseCost; assetRule.sharedUses"
+    },
+    "queue": "audit/tic-player-queue.json"
+  },
+  "state": "scenarioFlags.mechanics.version=1; optional and lazy; validated by save-migration.js"
+}

@@ -409,7 +409,7 @@ test('B5 选项校验与文案', () => {
   assert.ok(LOOK_ZONES.includes('deck') && RETURN_STRATEGIES.includes('shuffle'))
   assert.throws(() => normalizeLookOptions({ zone: 'library' }), /未知区域/)
   assert.throws(() => normalizeLookOptions({ count: 0 }), /count 必须是正整数/)
-  assert.throws(() => normalizeSearchOptions({}), /至少声明 trait/)
+  assert.throws(() => normalizeSearchOptions({}), /至少声明卡牌筛选条件/)
   const look = normalizeLookOptions({ zone: 'deck', count: 2, arrange: true, choose: 1 })
   assert.equal(look.returnStrategy, 'shuffle')
   assert.ok(describeLook(look).includes('查看'))

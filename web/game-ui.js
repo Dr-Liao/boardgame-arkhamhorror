@@ -21,6 +21,8 @@ import { createScenarioSetupView } from './scenario-setup-view.js'
 import { createRulebook } from './rulebook.js'
 import { cardRuleIds, openRule, ruleLink } from './rulebook-data.js'
 import { renderRulesText, cardSymbol } from './card-text.js'
+import { SKILL_ICONS } from './game-symbols.js'
+import { skillIds, skillLabel, skillSymbols, skillText } from './skill-presentation.js'
 import { tableArt, retainTableArt, encounterBackArt } from './table-art.js'
 import { createTableRegions } from './table-regions.js'
 import { renderTableLog } from './table-timeline.js'
@@ -38,6 +40,7 @@ import {
   storyInvestigatorPickerModel, tarotPickerModel,
 } from './tcu-ui.js'
 import { renderScenarioInteractions } from './tde-ui.js'
+import { renderMechanicChoice, renderMechanicSummary, floodLabel } from './mechanic-ui.js'
 
 let h, api, render, state, reset, leave, openFeedback
 let beginInteraction = () => () => {}
@@ -319,10 +322,15 @@ export function createUI(host) {
         && (!musicSession.state?.hubFlow || musicSession.state.uiState === 'inScenario')
       const music = musicPlayer.render(musicActive, campaignPlaylistId(musicSession?.state))
       if (music && musicSession?.state) applyPresentationAttributes(music, presentationAttributes(musicSession.state))
+      const mechanicSession = musicActive && !presentation.isBlocking && tableSession?.state.pendingChoice?.kind === 'mechanic' ? tableSession : null
+      const mechanicPanel = mechanicSession ? h('div', { className: 'ah-mechanic-layer' },
+        renderPendingChoice(mechanicSession, mechanicSession.state.status === 'playing'
+          && !!mechanicSession.players[decisionSeatOf(mechanicSession)] && canAct(mechanicSession, decisionSeatOf(mechanicSession)))) : null
       return [
         themed(chaosBagView.render(state.view==='game'?viewSession():null,false)),
         themed(rulebook.render(state.setup?.game?.id === 'arkhamhorror' || (state.view === 'game' && state.session?.modId === 'arkhamhorror'))),
         music,
+        themed(mechanicPanel),
         themed(situationView.render(state.view === 'game' ? tableSession : null, {
           sync: tableSession && state.arkhamSync?.sessionId === tableSession.sessionId ? state.arkhamSync.message : null })),
         themed(!presentation.isBlocking && state.arkhamZoneOpen && tableSession ? renderCardZoneModal(tableSession) : null),
@@ -365,20 +373,16 @@ const arkhamCatalog = createCatalogUI({
 // 卡牌类桌游渲染（诡镇奇谈：卡牌版）
 // ---------------------------------------------------------------------------
 
-const AH_CLASS_EMOJI = { guardian: '🛡️', seeker: '📖', mystic: '🔮', rogue: '🗡️', survivor: '🪶', neutral: '⚪', mythos: '👁️' }
 const AH_CLASS_COLOR = { guardian: '#3b82f6', seeker: '#f59e0b', mystic: '#8b5cf6', rogue: '#10b981', survivor: '#ef4444', neutral: '#9ca3af', mythos: '#6b21a8' }
-const AH_SKILL_ICON = { willpower: '🧠', intellect: '📖', combat: '⚔️', agility: '👟', wild: '❓' }
-const AH_TYPE_ICON = { asset: '🛠️', event: '⚡', skill: '🎯', investigator: '🕵️', enemy: '👹', treachery: '🃏', location: '📍', act: '📜', agenda: '🌑' }
+const AH_TYPE_ICON = { asset: 'supply', event: 'free', skill: 'wild', investigator: 'ally', enemy: 'combat', treachery: 'doom', location: 'clue', act: 'book', agenda: 'eye' }
 // 展示标签映射只存 key，取词发生在渲染期：模块顶层不能调用 t()（导入时求值会让英文不生效）。
 const AH_CLASS_KEYS = { guardian: 'game.class.guardian', seeker: 'game.class.seeker', mystic: 'game.class.mystic', rogue: 'game.class.rogue', survivor: 'game.class.survivor', neutral: 'game.class.neutral', mythos: 'game.class.mythos' }
-const AH_SKILL_KEYS = { willpower: 'game.skill.willpower', intellect: 'game.skill.intellect', combat: 'game.skill.combat', agility: 'game.skill.agility', wild: 'game.skill.wild' }
 const AH_TYPE_KEYS = { asset: 'card.type.asset', event: 'card.type.event', skill: 'card.type.skill', investigator: 'card.type.investigator', enemy: 'card.type.enemy', treachery: 'card.type.treachery', location: 'card.type.location', act: 'card.type.act', agenda: 'card.type.agenda', story: 'card.type.story', scenario: 'card.type.scenario' }
 const AH_PREY_KEYS = { bearer: 'game.prey.bearer', highestCombat: 'game.prey.highestCombat', lowestHealth: 'game.prey.lowestHealth', mostClues: 'game.prey.mostClues', lowestSanity: 'game.prey.lowestSanity', lowestAgility: 'game.prey.lowestAgility', lowestCombat: 'game.prey.lowestCombat', fewestHand: 'game.prey.fewestHand' }
 const AH_SLOT_KEYS = { hand: 'game.slot.hand', 'hand x2': 'game.slot.handx2', ally: 'game.slot.ally', arcane: 'game.slot.arcane', accessory: 'game.slot.accessory', body: 'game.slot.body', tarot: 'game.slot.tarot' }
 const AH_ACTION_KEYS = { fight: 'game.action.fight', evade: 'game.action.evade', engage: 'game.action.engage', move: 'game.action.move', investigate: 'game.action.investigate', advanceAct: 'game.action.advanceAct', drawCultist: 'game.action.drawCultist', draw: 'game.action.draw', resource: 'game.action.resource', endTurn: 'game.action.endTurn', locationAbility: 'game.action.locationAbility' }
 const ahLabel = (keys, value) => (keys[value] ? t(keys[value]) : value)
 const ahClassLabel = klass => ahLabel(AH_CLASS_KEYS, klass)
-const ahSkillLabel = skill => ahLabel(AH_SKILL_KEYS, skill)
 const ahTypeLabel = type => ahLabel(AH_TYPE_KEYS, type)
 const ahPreyLabel = prey => ahLabel(AH_PREY_KEYS, prey)
 const ahActionLabel = action => (AH_ACTION_KEYS[action] ? t(AH_ACTION_KEYS[action]) : '')
@@ -585,8 +589,7 @@ function renderSkillIcons(icons) {
   for (const [sk, n] of Object.entries(icons)) {
     const k = sk.toLowerCase()
     for (let i = 0; i < (Number(n) || 0); i++) {
-      const label = ahSkillLabel(k)
-      parts.push(h('span', { className: 'ah-rule-symbol', title: label, 'aria-label': label, role: 'img' }, tableIcon(({willpower:'star',intellect:'book',combat:'sword',agility:'leaf',wild:'star'})[k])))
+      parts.push(cardSymbol(h, k))
     }
   }
   return parts.length ? h('div', { className: 'ah-card-full-icons' }, parts) : null
@@ -647,6 +650,8 @@ function renderFullCard(def) {
   const clsName = (state.session && state.session.state.classNames && state.session.state.classNames[d.klass]) || ahClassLabel(d.klass) || d.klass
 
   const badges = []
+  if (def.compass) badges.push(h('span',{className:'ah-loc-badge','data-map-info':'compass',title:def.compass},
+    ({north:'↑ N',east:'→ E',south:'↓ S',west:'← W'})[def.compass] || def.compass))
   if (d.cost != null) badges.push(h('span', { className: 'ah-cfcost' }, d.cost))
   if (d.xp) badges.push(h('span', { className: 'ah-cfxp' }, '✦ ' + d.xp))
 
@@ -710,7 +715,7 @@ function renderFullCard(def) {
   return h('div', { className: 'ah-card-full', style: { borderTop: '3px solid ' + color } },
     h('div', { className: 'ah-card-full-top' },
       h('div', { className: 'ah-card-full-badges' }, badges),
-      h('div', { className: 'ah-card-full-meta' }, tableIcon(({act:'book',agenda:'eye',enemy:'sword',investigator:'ally',asset:'supply',location:'clue',treachery:'doom'})[d.type] || 'star'), ' ' + ahTypeLabel(d.type) + ' · ' + clsName)
+      h('div', { className: 'ah-card-full-meta' }, tableIcon(({act:'book',agenda:'eye',enemy:'combat',investigator:'ally',asset:'supply',location:'clue',treachery:'doom'})[d.type] || 'star'), ' ' + ahTypeLabel(d.type) + ' · ' + clsName)
     ),
     h('div', { className: 'ah-card-full-name' }, d.name),
     d.subname ? h('div', { className: 'ah-card-full-sub' }, d.subname) : null,
@@ -729,7 +734,7 @@ function openCardDetail(s, reference) {
   openCardDetailDef(def, { runtime: true })
 }
 
-function openCardDetailDef(def, { runtime = !!state.session && !state.setup, side = null, interactionKey = null, focusInfo = null } = {}) {
+function openCardDetailDef(def, { runtime = !!state.session && !state.setup, side = null, interactionKey = null, focusInfo = null, returnFocusKey = null } = {}) {
   if (!def) return
   const initialCode = def.originalCode || def.code || def.artCode
   if (!def.name && !def.nameZh && !initialCode) return
@@ -737,7 +742,7 @@ function openCardDetailDef(def, { runtime = !!state.session && !state.setup, sid
   const location = runtime && viewSession()?.state.locations?.find(loc => loc.id === def.id || (def.type === 'location' && (loc.originalCode || loc.code) === (def.originalCode || def.code)))
   if (location) { def = { ...def, ...location, type: 'location' }; interactionKey ||= 'location:' + location.id }
   const code = def.originalCode || def.code || def.artCode
-  const detail = { code, def, runtime, side: side || (location && !location.revealed ? 'back' : 'front'), interactionKey, locationId: location?.id, focusInfo, loading: !!code }
+  const detail = { code, def, runtime, side: side || (location && !location.revealed ? 'back' : 'front'), interactionKey, locationId: location?.id, focusInfo, loading: !!code, returnFocusKey }
   state.cardDetail = detail
   render()
   if (!code) return
@@ -801,16 +806,17 @@ function renderLocationDetail(detail) {
   const backFace = cardFaceText(loc, null, 'back')
   const backSentence = backFace.text && backFace.text !== t('card.back.generic') ? backFace.text : ''
   const entryBlock = st.locationEntryErrors?.[loc.id] || ''
-  const plain = text => String(text || '').replace(/<[^>]+>/g, '').replace(/\[action\]/g, t('game.ruleText.action')).replace(/\[reaction\]/g, t('game.ruleText.reaction'))
-    .replace(/\[(willpower|intellect|combat|agility)\]/g, (_,key) => ahSkillLabel(key))
+  const plain = text => String(text || '').replace(/<[^>]+>/g, '')
   const entryEffect = loc.onEnter
   const entering = [entryEffect?.damage ? t('game.location.enterDamage', { amount: entryEffect.damage }) : '', entryEffect?.horror ? t('game.location.enterHorror', { amount: entryEffect.horror }) : '',
-    entryEffect?.test ? t('game.location.enterTest', { skill: st.skillNames?.[entryEffect.test.skill] || ahSkillLabel(entryEffect.test.skill), difficulty: entryEffect.test.difficulty }) : ''].filter(Boolean)
+    entryEffect?.test ? t('game.location.enterTest', { skill: skillSymbols(entryEffect.test.skill), difficulty: entryEffect.test.difficulty }) : ''].filter(Boolean)
   // loc 是观察投影后的地点：`shroud` 已经含 shroudMod / 迷雾 / 剧本修正 / 皮博迪先生的 -1，
   // 这里不能再叠一次（旧实现重复计算 shroudMod 与 fogMod，皮博迪的 -1 也进不了弹窗）。
   const counters = [
     ['shroud','eye',t('game.stat.shroud'),loc.revealed ? (loc.shroud ?? 0) : t('game.value.unknown')],
     ['clues','clue',t('game.token.clue'),loc.clues || 0],['doom','doom',t('game.token.doom'),loc.doom || 0],['resources','resource',t('game.token.resource'),loc.resources || 0],
+    ...(loc.damage ? [['damage','damage',t('game.stat.damage'),loc.damage]] : []),
+    ...(loc.horror ? [['horror','horror',t('game.stat.horror'),loc.horror]] : []),
   ]
   // 地点特性/关键字：已揭示显示印刷特性，未揭示只显示效果授予的特性（皮博迪先生的 [[通道]]）。
   const traitPairs = locationTraitPairs(loc)
@@ -831,7 +837,7 @@ function renderLocationDetail(detail) {
           ? encounterBackArt(h, cardDisplayName(loc) || loc.name, { table: false })
           : renderImage(h,detail.entry?.images || detail.entry?.card?.images || detail.def.images,front ? 'front' : 'back'),
         h('nav',{'aria-label':t('game.location.facesAria')},[['front',t('game.location.revealed')],['back',t('game.location.hidden')]].map(([side,label]) => h('button',{
-          disabled:side === 'front' && !loc.revealed,'aria-pressed':String(detail.side === side),
+          disabled:(side === 'front' && !loc.revealed) || (side === 'back' && loc.veiled && !loc.veiledRevealed),'aria-pressed':String(detail.side === side),
           onclick:()=>{detail.side=side;render()},title:side === 'front' && !loc.revealed ? t('game.location.revealHint') : t('game.location.viewFace', { face: label }),
         },label)))),
       h('div',{className:'ah-location-detail-info'},
@@ -839,7 +845,7 @@ function renderLocationDetail(detail) {
           className:detail.focusInfo === key ? 'is-focused' : '', 'data-location-stat':key,
         },tableIcon(icon),h('strong',{},value),h('small',{},label)))),
         traitChips,
-        front ? h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.enterTitle')),h('p',{},entering.length ? entering.join(t('game.list.semicolon')) : t('game.location.noEntryPenalty')))
+        front ? h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.enterTitle')),h('p',{},renderRulesText(h,entering.length ? entering.join(t('game.list.semicolon')) : t('game.location.noEntryPenalty'))))
           : h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.exploreTitle')),h('p',{},!loc.revealed && backSentence ? renderRulesText(h, plain(backSentence)) : loc.revealed ? t('game.location.previewBack') : t('game.location.previewBackHint'))),
         h('section',{className:'ah-location-rules'},h('h3',{},front ? t('game.location.rulesEffects') : t('game.location.rulesDescription')),
           h('p',{},renderRulesText(h,plain(rules) || (front ? t('game.location.noEffects') : t('game.location.enterForMore')))),
@@ -861,7 +867,7 @@ function renderLocationDetail(detail) {
             card.exhausted ? h('span',{className:'ah-attachment-state'},t('game.attachment.exhausted')) : null))) : null,
         h('section',{className:'ah-location-connections'},h('h3',{},t('game.location.connections')),h('div',{},(loc.connections || []).map(id=>st.locations.find(item=>item.id===id)).filter(Boolean).map(other=>
           h('button',{onclick:()=>openCardDetailDef({...other,type:'location'})},'→ '+other.name)))),
-        h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},move.label || (ahActionLabel(move.action) || t('game.action.generic'))))
+        h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},renderChoiceText(h,move.label || (ahActionLabel(move.action) || t('game.action.generic')))))
           : entryBlock ? h('button', { className: 'ah-action is-used', disabled: true, title: entryBlock }, entryBlock)
           : usedHints.length ? null : h('span',{},t('game.location.noActions')),
           // 「每场游戏一次」的行动用掉后不再出现在 legalMoves；这里保留一行置灰说明，
@@ -872,9 +878,13 @@ function renderLocationDetail(detail) {
 }
 
 function renderCardDetailModal(detail) {
-  const close = () => { state.cardDetail = null; render() }
-  return h('div', { className: 'bg-backdrop ah-carddetail-backdrop' },
-    h('div', { className: 'bg-modal ah-carddetail-modal' + (detail.locationId ? ' ah-location-detail' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('game.detail.aria'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
+  const close = () => {
+    state.cardDetail = null; render()
+    if (detail.returnFocusKey) queueMicrotask(() => [...document.querySelectorAll('[data-focus-key]')]
+      .find(element => element.dataset.focusKey === detail.returnFocusKey)?.focus({ preventScroll: true }))
+  }
+  const modal = h('div', { className: 'bg-backdrop ah-carddetail-backdrop' },
+    h('div', { className: 'bg-modal ah-carddetail-modal' + (detail.locationId ? ' ah-location-detail' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('game.detail.aria'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close() } } },
       h('button', { className: 'ah-carddetail-close', 'aria-label': t('game.detail.closeAria'), onclick: close }, t('common.close')),
       detail.locationId ? renderLocationDetail(detail) : renderDetailContent(h, detail, renderFullCard, render, viewSession()?.state),
       !detail.locationId ? renderRuntimeCardState(detail) : null,
@@ -886,6 +896,10 @@ function renderCardDetailModal(detail) {
         } }, t('game.detail.targetAction')) : null
     )
   )
+  if (detail.returnFocusKey) queueMicrotask(() => {
+    if (modal.isConnected && !modal.contains(document.activeElement)) modal.querySelector('.ah-carddetail-close')?.focus({ preventScroll: true })
+  })
+  return modal
 }
 
 function zoneCards(s, kind) {
@@ -1010,7 +1024,7 @@ async function cardMove(move, displayedSession, options = {}) {
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
       clearCardDrag()
       const revision = Number.isSafeInteger(r.revision) ? r.revision : r.session?.state?.revision ?? st.revision
-      const feedback = { sessionId: session.sessionId, revision, label: move.label || t('game.move.confirmed') }
+      const feedback = { sessionId: session.sessionId, revision, label: skillText(move.label || t('game.move.confirmed'), { symbols: false }) }
       state.arkhamAcceptedFx = feedback
       setTimeout(() => { if (state.arkhamAcceptedFx === feedback) { state.arkhamAcceptedFx = null; render() } }, 900)
     }
@@ -1092,6 +1106,7 @@ function entityDefinition(s, key) {
   if (kind === 'hand') return ahCardDef(s, s.state.investigators.find(inv => inv.seat === Number(parts[0]))?.hand?.[Number(parts[1])])
   // 压在调查员底下的牌 / 直觉牌库揭示的牌：key 的第二段就是卡号本身。
   if (kind === 'beneath' || kind === 'hunch') return ahCardDef(s, id)
+  if (kind === 'origin') return ahCardDef(s, key.split(':').at(-1))
   if (kind === 'asset') {
     const asset = s.state.investigators.flatMap(inv => [...inv.assets, ...(inv.threat || [])]).find(a => a.id === id)
     return asset ? { ...ahCardDef(s, asset.code), ...asset } : {}
@@ -1141,13 +1156,13 @@ function renderCardActionPopover(s, humanTurn) {
     } },
     [...grouped.values()].map(group => {
       const m = group[0]
-      const actionIcons = { fight: 'sword', evade: 'leaf', move: 'action', investigate: 'clue', ability: 'star' }
-      return h('button', { className: 'ah-action', disabled: state.busy || !humanTurn, title: m.label, 'aria-label': m.label, 'data-location-move': m.action === 'move' ? m.locationId : null,
+      const actionIcons = { fight: 'combat', evade: 'agility', move: 'action', investigate: 'intellect', ability: 'action' }
+      return h('button', { className: 'ah-action', disabled: state.busy || !humanTurn, title: skillText(m.label, { symbols: false }), 'aria-label': skillText(m.label, { symbols: false }), 'data-location-move': m.action === 'move' ? m.locationId : null,
         onclick: () => {
           if (group.length === 1) cardMove(m, s)
           else { state.arkhamTargetAbility = { sessionId: s.sessionId, revision: s.state.revision, assetId: m.assetId, abilityIndex: m.abilityIndex, optionIndex: m.optionIndex }; state.arkhamDirectActions = null; render() }
         } }, tableIcon(actionIcons[m.actionKind] || actionIcons[m.action] || 'book'),
-      group.length > 1 ? t('game.popover.target') : (ahActionLabel(m.action) || renderRulesText(h,m.label,{links:false})))
+      group.length > 1 ? t('game.popover.target') : (ahActionLabel(m.action) || renderRulesText(h,m.label,{links:false,skills:true})))
     }),
     usedRows.map(text => h('button', { className: 'ah-action is-used', disabled: true, title: text, 'aria-label': text, 'data-ability-used': 'true' },
       tableIcon('hourglass'), text)),
@@ -1187,8 +1202,7 @@ async function refreshCardSession(displayedSession) {
 }
 
 function renderChoiceText(h, label) {
-  const symbolized = String(label ?? '').replace(/\b(combat|agility|intellect|willpower)\b/gi, (_, skill) => `[${skill.toLowerCase()}]`)
-  return renderRulesText(h, symbolized, { links: false })
+  return renderRulesText(h, label, { links: false, skills: true })
 }
 
 // 选项卡里那张卡的展示卡号：重印/别名取原卡号，与牌桌其它卡面同一口径。
@@ -1215,6 +1229,18 @@ function renderOfferDetail(h, s, card, fallbackName) {
 function renderPendingChoice(s, humanTurn) {
   const choice = s.state.pendingChoice
   if (!choice) return null
+  if (choice.kind === 'mechanic') return renderMechanicChoice(h, s, {
+    disabled: !humanTurn, busy: state.busy,
+    onSubmit: async move => {
+      await cardMove(move, s)
+      if (!state.session?.state?.pendingChoice) queueMicrotask(() => {
+        const key = choice.source?.id ? `asset:${choice.source.id}` : `investigator:${choice.seat}`
+        const target = [...document.querySelectorAll('[data-interaction]')].find(element => element.dataset.interaction === key)
+        target?.focus({ preventScroll: true })
+      })
+    },
+    inspectCard: code => openCardDetailDef({ ...ahCardDef(s, code), code }, { runtime: false, returnFocusKey: `mechanic-detail:${code}` }),
+  })
   if(choice.kind==='payment' && choice.source==='group-clues')return renderCluePayment(s,humanTurn)
   // 万象无终（P5）：三种选择有自己的面板，语义与排版都与通用按钮列不同。
   // 非当前回答者照样能看到面板（桌面公开信息），只是按钮置灰并说明在等谁。
@@ -1248,7 +1274,7 @@ function renderPendingChoice(s, humanTurn) {
   const staged = humanTurn ? choiceDraft(s)?.selected || [] : []
   // 阵法（P2.5）把 2–4 项技能相加：`skillTest.skill` 可能是数组，标签与图标都按整组显示。
   const multi = test ? multiSkillTestInfo(s.state) : null
-  const skillName = multi?.label || t('game.test.skill')
+  const skillName = test ? skillLabel(test.skill) : t('game.test.skill')
   const testValue = test?.value ?? test?.baseValue ?? '—'
   const testBase = test?.printedValue ?? test?.baseValue ?? testValue
   const testDelta = Number.isFinite(testValue) && Number.isFinite(testBase) ? testValue - testBase : 0
@@ -1260,14 +1286,13 @@ function renderPendingChoice(s, humanTurn) {
     'data-choice-seat': choice.seat, 'data-interaction': choice.kind === 'commit' ? 'zone:commit' : 'zone:discard' },
     h('div', { className: 'ah-direct-instruction', role: 'status' },
       h('strong', { className: test ? 'ah-test-context' : '' }, test ? `${testSource?.label || t('game.test.generic')} · ${testSource?.name || t('game.test.named', { skill: skillName })}` : humanTurn ? names[choice.kind] || t('game.choice.resolving') : t('game.choice.waitingTeammate')),
-      h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false}))),
+      h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false,skills:true}))),
     testSourceCode ? h('button', { className: 'ah-test-source', 'data-card-code': testSourceCode, title: t('game.test.sourceTitle', { name: testSource.name }),
       onclick: () => openCardDetailDef({ ...ahCardDef(s, testSource.code), originalCode: testSourceCode, code: testSourceCode, name: testSource.name }) }, tableArt(h, testSourceCode, testSource.name)) : null,
     test ? h('div', { className: 'ah-test-preview' + (multi?.multi ? ' is-multi-skill' : ''),
       'aria-label': testAria },
       h('span', { className: 'ah-test-skill-icons' },
-        (multi?.skills || [{ icon: ({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[test.skill] || 'star' }])
-          .map(skill => tableIcon(skill.icon))),
+        skillIds(test.skill).map(skill => tableIcon(skill))),
       h('strong', {}, skillName + ' ' + testBase,
         multi?.multi ? h('em', { className: 'ah-test-multiskill' }, t('game.test.combined')) : null,
         testDelta ? h('small', { className: 'ah-test-modifier ' + (testDelta > 0 ? 'is-positive' : 'is-negative') }, `${testDelta>0?'+':''}${testDelta}`) : null,
@@ -1282,7 +1307,7 @@ function renderPendingChoice(s, humanTurn) {
       const assisting = choice.kind === 'commit' && s.state.skillTest?.seat != null && s.state.skillTest.seat !== choice.seat
       const finish = choice.kind === 'commit' && item.move.optionId === 'done'
       const button = (label, title, onclick, extra = '') => h('button', { className: 'ah-action ah-choice-option' + extra,
-        'data-option-id': item.move.optionId, disabled: state.busy || !humanTurn, title, onclick }, label)
+        'data-option-id': item.move.optionId, disabled: state.busy || !humanTurn, title: skillText(title, { symbols: false }), onclick }, label)
       // A helper's staged card is only sent once they explicitly submit it.
       if (finish && assisting && staged.length) return [
         button(t('game.test.submit'), t('game.test.submitTitle', { count: staged.length }), () => cardMove(item.move, s), ' ah-commit-submit'),
@@ -1307,9 +1332,9 @@ function renderPendingChoice(s, humanTurn) {
       // 混乱标记选项：引擎只下发展示名（emoji / ±数字），按 state.tokenLabels 反查回标记类型，
       // 显示真正的标记图案与名称，而不是把 emoji 当图标。
       const token = !cards.length && choice.kind === 'token' ? chaosTokenFaceByLabel(s.state.tokenLabels, item.label) : null
-      const optionIcon = ({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[item.move.optionId]
+      const optionIcon = SKILL_ICONS[item.move.optionId]
         || (choice.kind === 'token' ? 'star' : choice.kind === 'payment' ? 'clue' : 'book')
-      const label = token ? token.label : item.label
+      const label = token ? token.label : skillText(item.label, { symbols: false })
       const button = h('button', { className: 'ah-choice-option ah-visual-option' + (cards.length ? ' has-art' : token ? ' ah-effect-option ah-token-option' : ' ah-effect-option'),
         'aria-label': label,
         'data-option-id': item.move.optionId, 'data-choice-offer': item.key, 'data-keep-offer': choice.kind === 'prey' || assigningHarm ? 'true' : null,
@@ -1358,7 +1383,7 @@ function renderCluePayment(s, humanTurn) {
   return h('section',{className:'ah-choice ah-clue-payment',role:'region','aria-label':t('game.payment.title'),'data-choice-id':choice.id,'data-choice-kind':'payment','aria-busy':String(!!state.busy)},
     h('header',{},tableIcon('clue'),h('div',{},h('small',{},t('game.payment.round', { round: payment.round || 1 })),h('h2',{},t('game.payment.title')))),
     payment.required!=null?h('div',{className:'ah-payment-progress'},
-      h('span',{},t('game.payment.required') + ' ',h('b',{},payment.required)),h('span',{},t('game.payment.paid') + ' ',h('b',{},payment.paid)),h('span',{},t('game.payment.remaining') + ' ',h('b',{},payment.remaining))):h('p',{},renderRulesText(h,choice.prompt,{links:false})),
+      h('span',{},t('game.payment.required') + ' ',h('b',{},payment.required)),h('span',{},t('game.payment.paid') + ' ',h('b',{},payment.paid)),h('span',{},t('game.payment.remaining') + ' ',h('b',{},payment.remaining))):h('p',{},renderRulesText(h,choice.prompt,{links:false,skills:true})),
     h('div',{className:'ah-payment-payer'},inv?.code?tableArt(h,inv.code,inv.name):null,
       h('div',{},h('strong',{},inv?.name||t('card.type.investigator')),h('span',{},t('game.payment.holding', { count: payment.available ?? inv?.clues ?? 0 })))),
     humanTurn?h('div',{},h('div',{className:'ah-payment-dial'},minus,amount,plus),
@@ -1430,8 +1455,9 @@ function renderScriptActions(s, humanTurn) {
   // deckId 区分同一条规则下的两张密谋。漏掉时两个按钮都会提交列表里的第一堆。
   const same = (a, b) => a.action === b.action && (a.rule ?? null) === (b.rule ?? null)
     && (a.skill ?? null) === (b.skill ?? null) && (a.deckId ?? null) === (b.deckId ?? null)
-  const legal = (st.legalMoves || []).filter(m => ['act', 'agenda'].includes(m.scriptCard) && m.action !== 'advanceAct')
-  const hints = (st.scriptActions || []).filter(hint => ['act', 'agenda'].includes(hint.scriptCard))
+    && (a.entityId ?? null) === (b.entityId ?? null) && (a.abilityIndex ?? null) === (b.abilityIndex ?? null)
+  const legal = (st.legalMoves || []).filter(m => ['act', 'agenda', 'scenario'].includes(m.scriptCard) && m.action !== 'advanceAct')
+  const hints = (st.scriptActions || []).filter(hint => ['act', 'agenda', 'scenario'].includes(hint.scriptCard))
   const items = [...hints.map(hint => ({ hint, move: hint.reason ? null : legal.find(m => same(m, hint)) })),
     ...legal.filter(m => !hints.some(hint => same(m, hint))).map(move => ({ hint: move, move }))]
     .sort((a, b) => (a.hint.scriptCard === 'act' ? 0 : 1) - (b.hint.scriptCard === 'act' ? 0 : 1))
@@ -1440,7 +1466,7 @@ function renderScriptActions(s, humanTurn) {
     h('span', { className: 'ah-script-actions-title' }, tableIcon('book'), t('game.script.actionsTitle')),
     items.map(({ hint, move }) => {
       const source = hint.deckId ? t('table.script.agendaDeck', { deck: hint.deckId })
-        : hint.scriptCard === 'act' ? t('card.type.act') : t('card.type.agenda')
+        : hint.scriptCard === 'scenario' ? t('card.type.scenario') : hint.scriptCard === 'act' ? t('card.type.act') : t('card.type.agenda')
       const text = String(hint.label || '').replace(/^[^\p{L}\p{N}（(]+/u, '')
       const reason = hint.reason || (!move ? t('game.script.unavailable') : !humanTurn ? t('game.script.notYourTurn') : null)
       return h('button', { className: 'ah-script-action' + (reason ? ' is-unavailable' : ''), type: 'button',
@@ -1487,11 +1513,15 @@ function renderCardGame(s, autoPassing = false) {
   else if (!over && humanTurn && activity.processing) statusText = activity.presenting ? t('game.status.resolvingYours') : t('game.status.submittingYours')
 
   const script = tableRegions.script(st, actInPlay ? act : null, agenda, s.players, actInPlay ? renderActAdvance(s, humanTurn) : null, activity, renderScriptActions(s, humanTurn), {
-    act: scriptAttachmentCards(s, st.scriptAttachments?.act), agenda: scriptAttachmentCards(s, st.scriptAttachments?.agenda) })
+    act: scriptAttachmentCards(s, st.scriptAttachments?.act), agenda: scriptAttachmentCards(s, st.scriptAttachments?.agenda) },
+    h('button', { type: 'button', className: 'ah-scenario-setup-button', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
+      'aria-expanded': String(scenarioSetupView.opened), title: t('table.setup.title'),
+      onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')))
   const map = tableRegions.map(renderLocationMap(s, humanTurn))
   const player = tableRegions.player(human ? renderPlayerDock(s, human, humanTurn) : null)
   const visibleChoice = st.pendingChoice && !autoPassing
-  const actions = tableRegions.actions(visibleChoice ? renderPendingChoice(s, humanTurn) : st.pendingChoice ? null : renderActionButtons(s, humanTurn), !!visibleChoice)
+  const actions = tableRegions.actions(visibleChoice ? st.pendingChoice.kind === 'mechanic' ? null : renderPendingChoice(s, humanTurn)
+    : st.pendingChoice ? null : renderActionButtons(s, humanTurn), !!visibleChoice)
   const timelineOpen = !!state.arkhamTimelineOpen
   const timeline = tableRegions.timeline(timelineOpen,
     () => { state.arkhamTimelineOpen = !state.arkhamTimelineOpen; render() },
@@ -1527,9 +1557,6 @@ function renderCardGame(s, autoPassing = false) {
           'aria-expanded': String(situationView.opened), title: t('table.situation.title'), onclick: () => situationView.open(s.sessionId) }, t('table.situation')),
         h('button', { className: 'bg-btn secondary', onclick: () => arkhamCatalog.open() }, t('table.catalog')),
         h('button', { className: 'bg-btn secondary ah-header-rulebook', title: t('table.rulebook.title'), onclick: () => openRule() }, tableIcon('book'), t('table.rulebook')),
-        h('button', { className: 'bg-btn secondary', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
-          'aria-expanded': String(scenarioSetupView.opened), title: t('table.setup.title'),
-          onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')),
         h('button', { className: 'bg-btn secondary', 'aria-label': t('table.refresh'), title: t('table.refresh'), disabled: state.busy, onclick: () => refreshCardSession(s) }, '↻'),
         h('details', { className: 'ah-session-menu' }, h('summary', { 'aria-label': t('table.menu') }, '•••'),
         h('div', { className: 'ah-session-menu-items' },
@@ -1549,6 +1576,7 @@ function renderCardGame(s, autoPassing = false) {
       canAct: canAct(s, decisionSeatOf(s)),
       submit: move => cardMove(move, s),
     }),
+    renderMechanicSummary(h, st, { seat: mySeat(s) }),
     h('div', { className: 'bg-game-body ah-table-viewport' }, body),
     renderCardActionPopover(s, humanTurn)
   )
@@ -1590,7 +1618,7 @@ function renderPlayerDock(s, inv, humanTurn) {
   const hunch = (s.state.hunch || []).find(entry => entry.seat === inv.seat) || null
   return h('div', { className: 'ah-player-board' },
     !engaged.length ? h('div', { className: 'ah-engage-drop', 'data-interaction': 'zone:engage', role: 'region', 'aria-label': t('game.dock.engageAria') },
-      tableIcon('sword'), h('strong', {}, t('game.dock.engage')), h('span', {}, t('game.dock.engageHint'))) : null,
+      tableIcon('combat'), h('strong', {}, t('game.dock.engage')), h('span', {}, t('game.dock.engageHint'))) : null,
     h('section', { className: 'ah-equipment-battlefield', 'aria-label': t('game.dock.equipmentAria') },
       h('div', { className: 'ah-play-surface' + (preview?.code ? ' has-card' : ''), 'data-interaction': 'zone:play', role: 'button', tabindex: 0, 'aria-label': t('game.dock.playArea') },
         preview?.code ? tableArt(h, preview.originalCode || preview.code, preview.name) : [slotBackdrop('star'), h('span', { className: 'ah-play-label' }, t('game.dock.playArea'))]),
@@ -1602,6 +1630,12 @@ function renderPlayerDock(s, inv, humanTurn) {
         'aria-label': t('game.beneath.aria', { count: beneath.length }) },
         h('span', { className: 'ah-threat-label' }, tableIcon('book'), t('game.beneath.label')),
         h('div', { className: 'ah-threat-cards' }, beneath.map(code => renderMiniCard(s, code, false, { beneath: true })))) : null,
+      (s.state.mechanics?.beneath || []).filter(item => item.seat === inv.seat && item.codes?.length).map(item =>
+        h('div', { className: 'ah-threat-row ah-beneath-row', 'data-origin-host': item.host,
+          'aria-label': t('mechanic.beneath', { count: item.count }) },
+        h('span', { className: 'ah-threat-label' }, tableIcon('book'), t('mechanic.beneath', { count: item.count })),
+        h('div', { className: 'ah-threat-cards' }, item.codes.map(code => renderMiniCard(s, code, false,
+          { beneath: true, originKey: `origin:${inv.seat}:${item.host}:${code}` }))))),
       hunch ? h('div', { className: 'ah-threat-row ah-hunch-row', 'data-hunch-deck': hunch.deck,
         'aria-label': t('game.hunch.aria', { count: hunch.deck }) },
         h('span', { className: 'ah-threat-label' }, tableIcon('eye'), t('game.hunch.label', { count: hunch.deck })),
@@ -1628,10 +1662,10 @@ function renderPlayerDock(s, inv, humanTurn) {
       })),
       h('div', {className:'ah-dock-skills','aria-label':t('game.dock.skillsAria')}, ['willpower','intellect','combat','agility'].map(skill=>{
         const base=inv[skill] || 0, value=ahEffStat(s,inv,skill), delta=value-base
-        const label=(s.state.skillNames || {})[skill] || ahSkillLabel(skill)
+        const label=skillLabel(skill)
         const desc=t('game.stat.descDelta', { label, base, delta: (delta>=0?'+':'')+delta, value })
         return h('div', {className:'ah-dock-skill','data-skill':skill,title:desc,'aria-label':desc},
-          tableIcon(({willpower:'star',intellect:'book',combat:'sword',agility:'leaf'})[skill]),
+          tableIcon(SKILL_ICONS[skill]),
           h('div',{className:'ah-skill-value'},h('strong',{},base),delta ? h('small',{className:delta>0?'is-positive':'is-negative'},`${delta>0?'+':''}${delta}`) : null),h('span',{},label))
       })),
       h('div', { className: 'ah-dock-actions ah-action-points' + (inv.actionsLeft>0?'':' is-empty'), 'aria-label': t('game.dock.actionsAria', { count: inv.actionsLeft }) },
@@ -1659,9 +1693,9 @@ function renderPlayerDock(s, inv, humanTurn) {
       (inv.discard || []).map((code, index) => h('div', { 'data-interaction': index === inv.discard.length - 1 ? 'discard:top' : null }, renderMiniCard(s, code))),
       !inv.discard?.length ? h('span', {}, t('game.dock.emptyDiscard')) : null) : null),
     engaged.length ? h('section', { className: 'ah-engagement-zone', 'aria-label': t('game.dock.engagementAria'), 'data-engaged-count': engaged.length, 'data-interaction': 'zone:engage' },
-      h('div', { className: 'ah-engagement-heading' }, tableIcon('sword'), h('span', {}, t('game.dock.engaged')), h('b', {}, t('game.dock.enemyCount', { count: engaged.length }))),
+      h('div', { className: 'ah-engagement-heading' }, tableIcon('combat'), h('span', {}, t('game.dock.engaged')), h('b', {}, t('game.dock.enemyCount', { count: engaged.length }))),
       h('div', { className: 'ah-engagement-cards' }, engaged.map(enemy=>h('div',{className:'ah-engaged-enemy'},renderEnemyChip(s,enemy),
-        h('div',{className:'ah-engaged-enemy-stats'},tableIcon('health'),`${Math.max(0,enemy.health-(enemy.damageTaken||0))}`,tableIcon('sword'),enemyFightDisplay(enemy),tableIcon('leaf'),enemy.effectiveEvade ?? enemy.evade)))),
+        h('div',{className:'ah-engaged-enemy-stats'},tableIcon('health'),`${Math.max(0,enemy.health-(enemy.damageTaken||0))}`,tableIcon('combat'),enemyFightDisplay(enemy),tableIcon('agility'),enemy.effectiveEvade ?? enemy.evade)))),
       h('small',{className:'ah-engagement-hint'},t('game.dock.engageHint2'))) : null)
 }
 
@@ -1694,16 +1728,17 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   const d = { ...ahCardDef(s, code), ...(typeof reference === 'object' ? reference : {}) }
   const cd = cardDisplay(d)
   const clsColor = ahClassColor(s, code)
-  const typeIcon = AH_TYPE_ICON[cd.type] || (cd.isWeakness ? '⚠️' : '🃏')
+  const typeIcon = AH_TYPE_ICON[cd.type] || (cd.isWeakness ? 'doom' : 'book')
   const iconEls = []
   for (const [sk, n] of Object.entries(cd.icons || {})) {
-    for (let i = 0; i < (Number(n) || 0); i++) iconEls.push(h('span', { className: 'ah-minicard-icon' }, AH_SKILL_ICON[sk.toLowerCase()] || sk))
+    for (let i = 0; i < (Number(n) || 0); i++) iconEls.push(h('span', { className: 'ah-minicard-icon' }, cardSymbol(h, sk.toLowerCase())))
   }
   const draggable = !!opts.draggable
   const selected = currentSelection(s)
   // 非手牌、非槽位的小卡也要能被选中/查看：压在调查员底下的牌与直觉牌库揭示的牌用卡号当 key。
   const interactionKey = opts.source === 'hand' ? `hand:${opts.seat ?? 0}:${opts.handIndex}`
     : opts.asset ? `asset:${reference?.id}`
+    : opts.originKey ? opts.originKey
     : opts.beneath ? `beneath:${code}`
     : opts.hunch ? `hunch:${code}` : null
   const staged = opts.source === 'hand' && choiceDraft(s)?.selected.some(item => item.index === opts.handIndex)
@@ -1721,6 +1756,8 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   ].filter(Boolean).join(' · ') : ''
   const activate = (focusActions = false) => {
     if (state.busy) return
+    const originMove = opts.originKey ? entityMoves(s.state, opts.originKey)[0] : null
+    if (originMove) return cardMove(originMove, s)
     if (commit) return cardMove(commit, s)
     if (s.state.pendingChoice) return openCardDetail(s, reference)
     if (opts.source === 'hand') return selectCard(s, { code, handIndex: opts.handIndex }, focusActions)
@@ -1762,7 +1799,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     }, t('game.used.badge')) : null,
     opts.asset ? placedCardMarkers(h, d) : null,
     iconEls.length ? h('div', { className: 'ah-minicard-icons' }, iconEls) : null,
-    h('div', { className: 'ah-minicard-meta' }, typeIcon + ' ' + (cd.klass || '')),
+    h('div', { className: 'ah-minicard-meta' }, tableIcon(typeIcon), ' ' + ahTypeLabel(cd.type) + ' · ' + ahClassLabel(cd.klass)),
     h('div', { className: 'ah-minicard-bar', style: { background: clsColor } })
   )
 }
@@ -1789,6 +1826,11 @@ function renderLocationNode(s, loc, opts = {}) {
     : kind === 'resources' ? 'resource' : kind === 'breach' ? 'doom' : kind === 'brazier' ? 'star'
     : kind === 'spectral' ? 'eye' : kind), value == null ? null : String(value))
   const badges = []
+  const flood = st.mechanics?.water?.locations.find(item => item.id === loc.id)
+  if (flood) badges.push(h('span', { className: 'ah-loc-badge ah-mechanic-flood', 'data-flood-level': flood.level, title: floodLabel(flood.level) }, floodLabel(flood.level)))
+  if (loc.compass) badges.push(h('span',{className:'ah-loc-badge','data-map-info':'compass',title:loc.compass},({north:'↑ N',east:'→ E',south:'↓ S',west:'← W'})[loc.compass] || loc.compass))
+  if (loc.damage) badges.push(resourceBadge('damage', t('game.stat.damage'), loc.damage))
+  if (loc.horror) badges.push(resourceBadge('horror', t('game.stat.horror'), loc.horror))
   // [[通道]] 关键字徽记：已揭示地点的印刷特性，或皮博迪先生授予未揭示地点的运行时特性。
   // 放在徽记列表最前，默认主题的徽记区只有两行高度，避免被裁掉；点击打开地点档案并高亮特性。
   for (const pair of locationTraitBadges(loc)) {
@@ -2125,7 +2167,7 @@ function setMapEdge(line, from, to) {
   line.setAttribute('y2', String(to.y + MAP_CARD_HEIGHT / 2 - dy * trim))
 }
 
-function mapEdges(geometry, hunterEdges, entryErrors = {}) {
+function mapEdges(geometry, hunterEdges, entryErrors = {}, barriers = []) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('class', 'ah-map-edges')
   svg.setAttribute('width', String(geometry.width))
@@ -2154,6 +2196,16 @@ function mapEdges(geometry, hunterEdges, entryErrors = {}) {
     const from = geometry.positions[edge.from]
     const to = geometry.positions[edge.to]
     setMapEdge(line, from, to)
+    const barrier = barriers.find(item => [item.a, item.b].includes(edge.from) && [item.a, item.b].includes(edge.to))
+    if (barrier?.count) {
+      line.classList.add('ah-map-barrier'); line.setAttribute('data-barrier-count', String(barrier.count))
+      const label = document.createElementNS(svg.namespaceURI, 'text')
+      label.setAttribute('x', String((from.x + to.x + MAP_CARD_WIDTH) / 2))
+      label.setAttribute('y', String((from.y + to.y + MAP_CARD_HEIGHT) / 2))
+      label.setAttribute('class', 'ah-map-barrier-count')
+      label.textContent = `⛔ ${barrier.count}`
+      svg.append(label)
+    }
     svg.append(line)
   }
   return svg
@@ -2162,7 +2214,11 @@ function mapEdges(geometry, hunterEdges, entryErrors = {}) {
 function renderLocationMap(s, humanTurn) {
   const st = s.state
   const view = currentMapView(s)
-  const geometry = mapGeometry(st.locations, st.scenario?.layout, view.positions)
+  const voidCells = new Map((st.enemies || []).filter(enemy => enemy.cosmosCell).map(enemy => [enemy.location, {
+    id: enemy.location, name: t('game.enemy.voidLocation', enemy.cosmosCell), grid: enemy.cosmosCell, connections: [], virtualEmptySpace: true,
+  }]))
+  const mapLocations = [...st.locations, ...[...voidCells.values()].filter(cell => !st.locations.some(location => location.id === cell.id))]
+  const geometry = mapGeometry(mapLocations, st.scenario?.layout, st.scenario?.id === 'beforeTheBlackThrone' ? {} : view.positions)
   const hunterEdges = hunterRouteEdges(st.locations, st.enemies || [], st.investigators)
   let viewport, scene, drag
   const focusLines = previewId => {
@@ -2230,8 +2286,18 @@ function renderLocationMap(s, humanTurn) {
   scene = h('div', { className: 'ah-map-scene ah-location-map',
     'data-map-width': geometry.width, 'data-map-height': geometry.height,
     style: { width: geometry.width + 'px', height: geometry.height + 'px' } },
-  mapEdges(geometry, hunterEdges, st.locationEntryErrors), st.locations.map(loc => {
+  mapEdges(geometry, hunterEdges, st.locationEntryErrors, st.mechanics?.barriers),
+  st.enemies.filter(enemy=>enemy.global).map(enemy=>h('div', {
+    className:'ah-map-global-card', role:'img', title:cardDisplayName(enemy) || enemy.name,
+    'aria-label':cardDisplayName(enemy) || enemy.name,
+    style:{position:'absolute',left:(geometry.width/2-55)+'px',top:(geometry.height/2-78)+'px',width:'110px',
+      border:0,padding:0,background:'transparent',transform:`rotate(${enemy.rotation || 0}deg)`},
+  },renderImage(h,ahCardDef(s,enemy.code).images,enemy.face || 'back'))), mapLocations.map(loc => {
     const point = geometry.positions[loc.id]
+    if (loc.virtualEmptySpace) return h('div', {
+      className: 'ah-map-node ah-map-void', 'data-location-id': loc.id,
+      style: { left: point.x + 'px', top: point.y + 'px', width: MAP_CARD_WIDTH + 'px', padding: '8px', border: '1px dashed #8b80b8', borderRadius: '12px', background: '#171326' },
+    }, h('h3', {}, loc.name), st.enemies.filter(enemy => enemy.location === loc.id).map(enemy => renderEnemyChip(s, enemy, { map: true })))
     const node = renderLocationNode(s, loc, { humanTurn, onDragStart: startDrag, onPreview: focusLines,
       style: { left: point.x + 'px', top: point.y + 'px' } })
     node.classList.add('ah-map-node')
@@ -2332,7 +2398,7 @@ function renderEnemyChip(s, e, { map = false } = {}) {
       (e.damage ? t('game.enemy.damageSuffix', { damage: e.damage }) : '') + (e.horror ? t('game.enemy.horrorSuffix', { horror: e.horror }) : '')),
     kws.length ? h('div', { className: 'ah-enemy-kws' }, kws.map((k) => h('span', { className: 'ah-enemy-kw' }, k))) : null,
     h('div', { className: 'ah-enemy-state' },
-      t('game.enemy.locationState', { location: atLoc ? atLoc.name : e.location, state: enemyState, exhausted: e.exhausted ? t('game.enemy.exhaustedSuffix') : '' }))
+      t('game.enemy.locationState', { location: atLoc ? atLoc.name : e.cosmosCell ? t('game.enemy.voidLocation', e.cosmosCell) : e.location, state: enemyState, exhausted: e.exhausted ? t('game.enemy.exhaustedSuffix') : '' }))
   )
 }
 

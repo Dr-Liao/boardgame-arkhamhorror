@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 3,
+  "generatedBy": "playwright + tools/playwright-tde-reporter.mjs",
+  "spec": "tests/tde-rules.browser.mjs",
+  "specs": [
+    "tests/tde-rules.browser.mjs"
+  ],
+  "milestone": "P10",
+  "campaignId": "theDreamEaters",
+  "status": "passed",
+  "screenshotBase": "repo-root",
+  "checks": {
+    "desktopBrowser": false,
+    "mobileBrowser": false,
+    "release": {
+      "desktop": false,
+      "mobile": false
+    },
+    "media": {
+      "desktop": false,
+      "mobile": false
+    }
+  },
+  "release": {
+    "desktop": false,
+    "mobile": false,
+    "screenshots": []
+  },
+  "media": {
+    "desktop": false,
+    "mobile": false,
+    "resources": 0
+  },
+  "scenarios": [],
+  "tests": [
+    {
+      "title": "M4 食梦者卡牌规则链接在desktop端可达并恢复详情焦点",
+      "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 食梦者卡牌规则链接在mobile端可达并恢复详情焦点",
+      "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    }
+  ],
+  "screenshots": []
+}

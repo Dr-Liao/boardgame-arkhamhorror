@@ -36,7 +36,7 @@ export default {
       },
     },
     {
-      kind: 'forced', trigger: 'symbolRevealed',
+      kind: 'forced', trigger: 'symbolRevealed', partOfAbility: 0,
       silent: true,
       // 符号窗口会开两次（反应窗口与 triggerReaction）。同一场检定只结算一次。
       limit: { scope: 'perTest', owner: 'instance' },

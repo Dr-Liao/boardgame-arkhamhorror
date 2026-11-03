@@ -16,6 +16,9 @@
 //   · 文案就是玩家/AI 看到的拒绝原因，迁移时必须逐字保留。
 
 import { EFFECTS } from '../cards/card-effects.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { bondedPlayCostAvailable } from './play-attempt.js'
+import { tokenCostAvailable } from './token-cost.js'
 import { descriptorOfKind, playConditionFor, quickEventView, registeredEntry } from './ability.js'
 import {
   clueAtLocation, investigatorClues, noEnemiesHere, ownFirstAction, ownTurn,
@@ -107,6 +110,7 @@ export function playAccess(code) {
   return {
     fromDiscard: effect.playableFromDiscard === true || descriptor?.playableFromDiscard === true
       || (descriptorOfKind(code, 'played') ? false : false) || entryPlayableFromDiscard(code),
+    onlyFromDiscard: registeredEntry(code)?.playableOnlyFromDiscard === true,
     playableWeakness: registeredEntry(code)?.playableWeakness === true || effect.playableWeakness === true,
     // 2026-10-27：威胁区里的这张牌可被「打出」（05010 悬案）。读点：moves.js / actions.js。
     fromThreat: entryPlayableFromThreat(code) || effect.playableFromThreat === true,
@@ -131,6 +135,9 @@ function evaluate(item, ctx) {
  * @param {object} helpers 引擎注入的读数（maxSanity / resignAvailable），避免本模块反向依赖引擎
  */
 export function playConditionError(state, inv, code, helpers = {}) {
+  if (!tokenCostAvailable(state, inv, registeredEntry(code)?.additionalTokenCost)) return '无法支付额外混乱标记费用'
+  if (!bondedPlayCostAvailable(state, inv, code)) return '场外没有足够的绑定卡牌支付额外打出费用'
+  if (inv.forbiddenPlayNames?.round === state.round && inv.forbiddenPlayNames.names.includes(ALL_CARDS[code]?.name || code)) return '本轮不能打出该同名卡牌'
   const ctx = { state, inv, source: { code }, helpers }
   for (const item of declaredPlayConditions(code)) {
     if (!evaluate(item, ctx)) return item.message || '不满足卡面的打出条件'

@@ -17,8 +17,9 @@
 - 《夜之狂热》状态为 `playable`，三关组成可启动战役。
 - 《敦威治遗产》状态为 `playable`，八章组成可从大厅启动的完整战役；规则仍采用本 Mod 的简化实现边界。
 - 《卡尔克萨之路》为 `playable`，沿用敦威治的卡包、章节、资源与验收目录契约；逐卡字面核对仍在迁移账本中跟踪。
-- 《失落的时代》为 `playable`（账本 `earlyAccess`）：十章组成可从大厅启动的战役，序幕按补给品点数购买补给、幕间按卡面划掉补给；逐张卡面字面核对仍在 `audit/tfa-migration.json` 的 `remaining` 清单与 `confirmations.scenarios[].checks.literalCardBehavior` 下跟踪。
+- 《失落的时代》为 `playable`，已移除提前体验标记：十章逐章规则与桌面/移动浏览器验收、序幕补给品、真实大厅经首章结算到第二章和双真人联机均已通过；证据见 `audit/tfa-migration.json`、`audit/tfa-scenario-acceptance.json` 与 `audit/tfa-browser-acceptance.json`。
 - 《万象无终》M0–M5 已交付（发布口径 `playable` + `earlyAccess`）：战役、9 章与 `tcuCampaign` 包可从大厅启动，`assertLaunchable` 通过；六位正式调查员可选人/可构筑，87 张玩家卡逐卡验收（85 张可构筑，83 张可入牌组进构筑界面与 TCU 战役起始牌组池；05314/05317 绑定副本与 2 张基础弱点只作依赖）。逐卡自动账本 `audit/tcu-all-card-acceptance.json` 377/377 verified；逐卡行为审计 `audit/tcu-card-behavior-audit.json` 在 2026-10-25 完成第七轮全量重跑（继续修复后重审 + 交叉复核 + Lead 裁决）：377 条记录 **363 match（登记已验收）/ 14 approximation / 0 gap**，因此 `equivalenceCertified: false`、14 条非 match 逐卡在总账 remaining 中，未宣称规则等价（已验收清单与逐轮基线见 `audit/tcu-card-behavior-audit.json`）。发布级证据（大厅→序章→章节实机路径、媒体资源、展示素材与 27 首 BGM）见 `audit/tcu-browser-acceptance.json`；逐章证据见 `audit/tcu-scenario-acceptance.json`，整轮账本见 `audit/tcu-migration.json`。
+- 《食梦者》八章与四种模式已注册，可从大厅启动；发布口径为 `playable` + `earlyAccess`，不宣称印刷规则等价。并行共享幕间 II/III 与尾声协调、真实联机双真人房间尚未验收，完整边界与证据见 `audit/tde-migration.json`、`audit/tde-parallel-acceptance.json` 和 `audit/tde-browser-acceptance.json`。
 - 目录收录不等于规则已实现；可选人、可构筑和可启动状态必须经过服务端许可与内容注册表校验。
 
 ## 2. 目录结构
@@ -27,7 +28,6 @@
 games/arkhamhorror/
 ├─ index.js                 # Mod 唯一入口，大厅只依赖这里
 ├─ ARCHITECTURE.md          # 当前架构说明
-├─ playwright.config.mjs    # 浏览器回归配置
 ├─ src/                     # 服务端领域与应用代码
 │  ├─ ai/                   # AI 观察、剧情上下文、协作计划
 │  ├─ campaign/             # 战役图、记录、经验、升级、剧情
@@ -40,6 +40,7 @@ games/arkhamhorror/
 ├─ presentation/            # 卡图解析规则和媒体登记
 ├─ web/                     # 浏览器端 JS、CSS、字体、音频和图片
 ├─ tests/                   # Node、HTTP 与浏览器回归；统一 Node 入口
+│  └─ playwright/           # 通用及各战役的浏览器回归配置
 ├─ tools/                   # 导入、审计、图像与发布工具
 └─ audit/                   # 可复现的审计输入、基线和生成报告
 ```
@@ -164,6 +165,8 @@ games/arkhamhorror/
 
 新增关卡时，应在目标战役清单中声明顺序/解锁条件，在独立关卡目录提供定义、布局、行为和入口，最后通过 `registered.js` 注册。不得在引擎或大厅中增加按关卡名称判断的分支。
 
+每个新增或迁移的关卡还必须同步提供完整中英文冒险指南，包含开场与条件分支、设置、特别规则、后续剧情及结局结算。指南由 `tools/import-scenario-guides.mjs` 生成到 `web/scenario-guides/`，通过现有“关卡设置”面板按需加载；入口固定在剧本书右侧、混乱标记提示卡下方，特别规则优先展示，后续剧情和结局默认折叠。正文不进入权威状态或每次观察投影；`content/scenario-guides.js` 的摘要不能替代完整指南。来源核对、测试与逐章完成条件见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4.5.2，维护方式见 [`docs/scenario-guides.md`](docs/scenario-guides.md)。
+
 关卡的**布置、推进常量与结局结果优先声明**：`content/scenario-declaration.js` 的 `declareScenario({ id, setup, data, hooks })` 把起始地点、地点清单/随机变体、开局敌人与遭遇牌库修改写成数据，`hooks` 只保留真正需要脚本的部分（`actions`/`describe`/`resolution` 等）。结局的记录/创伤/经验可以写成 `resolution` 返回的 `effects[]` 条目，由 `applyResolutionResults` 统一结算并按 `campaign.recordSchema` 校验类型。
 
 ### 3.5 集成、观察与展示
@@ -275,6 +278,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | --- | --- | --- |
 | `src/cards/cards-data.js`、`catalog/`、`audit/catalog-report.json` | 多语言卡表与来源合并 | `npm run import` |
 | `presentation/*.json`、`audit/presentation-report.json` | 图片规则与参考媒体 | `npm run presentation:write` |
+| `web/scenario-guides/<scenarioId>.json` | 各章中英冒险指南来源、战役自译正文及 `content/scenario-guide-translations.json` 补译 | `node tools/import-scenario-guides.mjs --write`；`--check` 校验 |
 | `audit/core-acceptance.json`、`src/cards/core-acceptance.js` | Core 行为测试 | `npm run test:core`（检查） |
 | `audit/ability-coverage.json`、`audit/ability-migration.json` | 能力层覆盖度与迁移工作单 | `npm run cards:audit:write` |
 | `audit/ability-workorder.json` | 166 个引擎码的形态与能力缺口分类 | `npm run cards:workorder:write` |
@@ -296,7 +300,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 
 - `tests/node-suite.mjs` 是全部 Node/HTTP 回归的统一入口；不再按 N1、N2、N3、N4 保存重复套件壳。
 - `*.test.mjs` 覆盖规则、内容、AI、审计和 HTTP 边界。
-- `*.browser.mjs` 由 `playwright.config.mjs` 发现，覆盖真实界面、交互、尺寸和演出。
+- `*.browser.mjs` 由 `tests/playwright/playwright.config.mjs` 发现，覆盖真实界面、交互、尺寸和演出。
 - `tests/fixtures/` 保存可复用的最小状态与剧情夹具；`tests/fixtures/replay/` 是 golden replay 基线（动作日志 + 逐步指纹，由 `npm run replay:fixtures:write` 生成，不要手改）。
 - `tests/*-snapshots/` 保存需要人工确认的稳定视觉基线。
 

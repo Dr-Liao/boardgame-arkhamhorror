@@ -13,8 +13,7 @@
 //   · [free] 至少 3 充能交换：绑定集合由 P2.8 原语 api.bonded 维护——retrieve 把食愿项链从
 //     场外集合取到手、moveCard 入场、把充能搬到新实例；空虚项链本体经 moveCard 到 setAside
 //     （「交换」的另一半，场外），食愿项链耗尽后会交换回来（见 06277 的强制描述子）。
-// 显式简化（noted）：引擎没有「绑定主卡 ↔ 副卡互换」的单条原语；这里用
-//   bonded.retrieve + moveCard(hand→play) + moveCard(play→setAside) 组合表达，等价于卡面的交换。
+// 交换由 bonded.retrieve + moveCard(hand→play) + moveCard(play→setAside) 组合结算。
 
 export default {
   code: '06276',
@@ -36,7 +35,7 @@ export default {
       },
     },
     {
-      kind: 'action',
+      kind: 'free',
       label: '[free] 至少 3 充能：与食愿项链交换并转移全部充能',
       cost: { action: false },
       criteria: [({ source }) => (source?.uses || 0) >= 3],

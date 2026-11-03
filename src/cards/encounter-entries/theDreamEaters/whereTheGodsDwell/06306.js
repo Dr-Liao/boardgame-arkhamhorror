@@ -9,11 +9,11 @@
 //       - 被遗忘的高塔行动/议程与行动背面 → 揭示手中复制品（攻击或放入胜利区）；
 //       - act 4 → 把胜利区里的复制品合成「奈亚拉托提普的真形」。
 //   · `flags.nyarlathotepCopy` 是章节 behavior 读的「这是复制品」判据（不写死卡号）。
-// 「提到它则发疯」是桌面口头约定，无法机械化判定 → worker 报告 simplified。
+// 持有者提到未揭示的本卡时，手动申报；章节的零行动快速入口执行实际发疯结算。
 export default {
   code: '06306',
   scope: 'enemy',
   implemented: true,
   hiddenEnemyInHand: true,
-  flags: { nyarlathotepCopy: true },
+  flags: { nyarlathotepCopy: true, mentionDrivesInsane: true },
 }

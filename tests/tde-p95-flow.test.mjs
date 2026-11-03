@@ -247,6 +247,7 @@ function assertVisitedTextsLogged(flow, recorder) {
   for (const id of new Set(seen)) {
     const node = nodes[id]
     if (!node?.text) continue
+    if (node.textWhen?.activeCapturedInvestigator && !['A','B'].some(part=>{const scope=partScope(flow.campaign,part);return Object.values(scope.investigators).some(record=>record.status==='active' && (scope.records.wasCaptured || []).includes(record.id))})) continue
     assert.ok(recorder.logs.includes(node.text), `节点 ${id} 的正文没有进入剧情日志`)
     checked += 1
   }

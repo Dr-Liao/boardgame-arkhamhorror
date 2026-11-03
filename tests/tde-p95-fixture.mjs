@@ -213,3 +213,28 @@ export function serializeContainer(world, state) {
 export function restoreContainer(world, text) {
   return world.parallelRuntime.restoreParallelState(text)
 }
+
+// Human confirmations are explicit: shared story, then each lane's real upgrade and start controls.
+export function finishParallelSharedStory(engine, mod, state, { beginNext = true } = {}) {
+  for (let guard=0;state.parallel.interlude;guard++) {
+    if (guard>=200) throw new Error('共享幕间未收敛')
+    const q=state.parallel.interlude.state.pendingChoice
+    if (!q) throw new Error('共享幕间缺少待决选择')
+    const optionId=q.options.find(option=>['done','skip'].includes(option.id))?.id || q.options[0].id
+    mod.applyMove(state,q.seat,{action:'choose',choiceId:q.id,optionId})
+  }
+  if (!beginNext || state.status==='ended') return state
+  for (const lane of ['A','B']) {
+    for (const seat of state.parallel.lanes[lane].laneRuntime.roomSeats) {
+      const done=mod.legalMoves(state,seat).find(move=>move.action==='hubDoneSeat' && !move.disabled)
+      if (done) mod.applyMove(state,seat,plainMove(done))
+      settleParallelLaneChoices(engine,mod,state)
+    }
+    const seat=state.parallel.lanes[lane].laneRuntime.roomSeats[0]
+    const begin=mod.legalMoves(state,seat).find(move=>move.action==='hubBeginScenario' && !move.disabled)
+    if (!begin) throw new Error('共享幕间后缺少下一章开始动作：'+lane)
+    mod.applyMove(state,seat,plainMove(begin))
+    settleParallelLaneChoices(engine,mod,state)
+  }
+  return state
+}

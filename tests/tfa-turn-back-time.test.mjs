@@ -361,15 +361,25 @@ test('密谋推进：神庙看守者推进后未撤退的调查员全部被击�
   assert.equal(state.finished, 'noResolution')
 })
 
-test('坑葬墓室：探索成功后抽遭遇牌或放置毁灭（可组合）', () => {
-  const state = placed(stateFor(1), ['burialPit'])
-  setup(state)
-  const api = runtimeApi(state)
-  const answers = ['draw', 'doom']
-  api.choose = () => answers.shift()
-  behavior.afterExplore(state, state.investigators[0], { code: 'burialPit', kind: 'location', runtime: api })
-  assert.deepEqual(api.drawn, [0])
-  assert.equal(state.locations.find(location => location.id === 'burialPit').doom, 1)
+test('坑葬墓室：先选定 2 点组合，再按组合结算遭遇牌与毁灭', () => {
+  for (const [answer, drawn, doom] of [
+    ['draw2', 2, 0], ['draw1Doom1', 1, 1], ['doom2', 0, 2],
+  ]) {
+    const state = placed(stateFor(1), ['burialPit'])
+    setup(state)
+    const api = runtimeApi(state)
+    let choices = 0
+    api.choose = choice => {
+      choices++
+      assert.deepEqual(choice.options.map(option => option.id), ['draw2', 'draw1Doom1', 'doom2'])
+      assert.equal(api.drawn.length, 0, '选择时尚未抽遭遇牌')
+      return answer
+    }
+    behavior.afterExplore(state, state.investigators[0], { code: 'burialPit', kind: 'location', runtime: api })
+    assert.equal(choices, 1, answer)
+    assert.deepEqual(api.drawn, Array(drawn).fill(0), answer)
+    assert.equal(state.locations.find(location => location.id === 'burialPit').doom, doom, answer)
+  }
 })
 
 test('古代石厅：轮末把 1 个线索翻至毁灭，调查员可花 3 资源取消', () => {
@@ -523,11 +533,15 @@ test('入口行动：撤退与检查补给品（火把弃掉探索牌库顶的�
 test('结局：无结局写入时间之布被拆解并让调查员疯狂；结局 1 封印遗物', () => {
   const state = setup(stateFor(2))
   const api = runtimeApi(state)
+  state.investigators[1].resigned = true
   const first = behavior.resolution(state, 'noResolution', [], api)
   assert.deepEqual(first, { award: false, bonus: 0 })
   assert.equal(state.campaign.records.theFabricOfTimeIsUnwoven, true)
-  assert.equal(state.investigators.every(inv => inv.defeated), true)
-  assert.deepEqual(api.trauma.map(entry => entry.seat), [0, 1])
+  assert.equal(state.investigators[0].defeated, true)
+  assert.equal(state.investigators[0].defeatCause, 'insane')
+  assert.equal(state.investigators[1].resigned, true)
+  assert.deepEqual(state.campaign.investigators.map(record => record.status), ['insane', 'insane'])
+  assert.deepEqual(api.trauma, [], '陷入疯狂直接改变战役状态，不折算成精神创伤')
   const second = behavior.resolution(state, 'r1', [], api)
   assert.deepEqual(second, { award: true, bonus: 0 })
   assert.equal(state.campaign.records.theInvestigatorsSealedTheRelicOfAgesForever, true)

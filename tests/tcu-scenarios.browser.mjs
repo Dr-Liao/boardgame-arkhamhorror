@@ -10,7 +10,7 @@
 //      audit/tcu-browser-acceptance.json（逐章 browserAcceptance 的证据）。
 //
 // 证据命令（必须三个 spec 一次跑齐，报告器一次写文件）：
-//   npx playwright test --config playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs tcu-scenarios.browser.mjs
+//   npx playwright test --config tests/playwright/playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs tcu-scenarios.browser.mjs
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -143,7 +143,12 @@ function buildChapterState(chapterId) {
     location: here.name || '',
     locationsOnTable: state.locations.length,
   }
+  if (chapterId === 'beforeTheBlackThrone') state.enemies.push({
+    id: 'browser-dancer', code: '05341', originalCode: '05341', name: '盲目舞者', location: 'cosmosVoid:1:0',
+    cosmosCell: { x: 1, y: 0 }, hunter: true, health: 4, fight: 3, evade: 3, damage: 2, horror: 2, damageTaken: 0, doom: 0, exhausted: false, engagedSeat: null,
+  })
   const view = viewState(state, 0, { includeStatic: true })
+  view.scenario.id = chapterId
   view.uiState = 'inScenario'
   view.pendingChoice = null
   view.revision = 1
@@ -207,9 +212,16 @@ for (const chapter of chapters.filter(candidate => READY.includes(candidate.id))
       if (facts.agenda) await expect(situation).toContainText(facts.agenda)
       await page.getByRole('button', { name: '关闭局势详情' }).click()
       if (facts.location) await expect(page.locator('body')).toContainText(facts.location)
+      if (chapter.id === 'beforeTheBlackThrone') await expect(page.locator('body')).toContainText('虚空（1，0）')
       // 地图节点数与本局实际入场地点一致（《黑色王座》Cosmos 开局只有 1–2 处，
       // 《混沌魔掌》等 4 人图更多；不写死阈值）。
       expect(await page.locator('.ah-map-node').count()).toBeGreaterThanOrEqual(Math.min(facts.locationsOnTable, 2))
+      await page.locator('[data-scenario-setup]').click()
+      const guide = page.getByRole('dialog', { name: '关卡设置', exact: true })
+      await expect(guide.locator('.ah-guide-block').first()).toBeVisible()
+      expect((await guide.locator('.ah-guide-block').allTextContents()).join('').length).toBeGreaterThan(100)
+      await page.keyboard.press('Escape')
+      await expect(guide).toHaveCount(0)
       expect(errors).toEqual([])
       // 没有横向溢出（1px 容差）。
       expect(await page.evaluate(() => document.body.scrollWidth <= document.body.clientWidth + 1)).toBe(true)

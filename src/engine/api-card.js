@@ -1,3 +1,6 @@
+import { discardPlayerCards } from './player-zones.js'
+import { bondedSetKey } from './bonded.js'
+import { notifyPlacedAsset } from './investigator-mechanics.js'
 ﻿// 能力 API · 卡牌与状态写入口（Phase 6 · 6d-7 第一批）。
 //
 // `abilityApi(state, events)` 是个 179 个方法的巨型对象，按域拆开的第一块：
@@ -19,6 +22,7 @@ export function createCardApi(state, events, deps) {
     checkDefeated,
     chooseLolaRole,
     canEquip,
+    replaceAssets,
     descriptorOfKind,
     disengageAll,
     drawChaosToken,
@@ -26,6 +30,12 @@ export function createCardApi(state, events, deps) {
     enemyAttack,
     enemyDef,
     executeDescriptor,
+    descriptorUsable,
+    enumerateTargets,
+    effectError,
+    registeredEntry,
+    requestChoice,
+    reactionWindow,
     farthestLocationsFor,
     getMaxHealth,
     info,
@@ -33,6 +43,7 @@ export function createCardApi(state, events, deps) {
     locName,
     makeRuntime,
     newPlayerAssetInstance,
+    nextInstanceId,
     notifyCluesRemoved,
     playCost,
     playedEffect,
@@ -45,7 +56,97 @@ export function createCardApi(state, events, deps) {
     tarotSlotInfo,
   } = deps
 
+  const abilitySource = source => typeof source === 'string'
+    ? { id: `revealed:${source}`, code: source, exhausted: false, uses: registeredEntry(source)?.uses ?? null }
+    : source
+  const abilityOptions = (seat, source, options = {}) => {
+    const inv = state.investigators[seat]
+    source = abilitySource(source)
+    if (!inv || !source) return []
+    return (registeredEntry(source.code)?.abilities || []).map((descriptor, index) => ({ descriptor, index }))
+      .filter(({ descriptor }) => ['action', 'free'].includes(descriptor.kind)
+        && descriptorUsable(state, inv, source, descriptor, { mode: 'action', ignoreCosts: options.ignoreCosts === true })
+        && (!descriptor.effect || !effectError(state, inv, descriptor.effect))
+        && (!descriptor.target || descriptor.target.optional
+          || enumerateTargets(state, inv, descriptor.target, { source }).length))
+  }
+
   return {
+    attachOrSwapControlledAsset: (seat, hostId, assetId) => {
+      const inv = state.investigators[seat]
+      const host = inv?.assets.find(asset => asset.id === hostId)
+      const incoming = inv?.assets.find(asset => asset.id === assetId && !asset.attachedToAsset)
+      if (!host || !incoming || host === incoming) return false
+      const current = inv.assets.find(asset => asset.attachedToAsset === host.id)
+      if (current) delete current.attachedToAsset
+      incoming.attachedToAsset = host.id
+      if (current && !canEquip({...inv,assets:inv.assets.filter(asset=>asset.id!==current.id)},cardDef(current.code))) {
+        inv.assets=inv.assets.filter(asset=>asset.id!==current.id)
+        replaceAssets(state,inv,cardDef(current.code),events)
+        inv.assets.push(current)
+      }
+      host.attachments = (host.attachments || []).filter(card => !card.assetReference)
+      host.attachments.push({ id: incoming.id, code: incoming.code, ownerSeat: seat, assetReference: true })
+      return true
+    },
+    repeatResolvedAbility: context => {
+      const inv = state.investigators[context?.seat]
+      const source = inv?.assets.find(asset => asset.id === context.assetId)
+      const descriptor = registeredEntry(source?.code)?.abilities.find(descriptor => descriptor.id === context.descriptorId)
+      if (!descriptor || descriptor.kind !== 'action') return false
+      const targets = enumerateTargets(state, inv, descriptor.target, { source })
+      const targetId = targets.length ? requestChoice(state, { kind: 'target', source: source.code, seat: inv.seat,
+        prompt: '选择再次结算的目标。', options: targets.map(target => ({ id: String(target.id), label: target.label })) }) : null
+      return executeDescriptor(state, { inv, source, descriptor, context: { targetId }, events,
+        alreadyPaid: true, repeatedEffect: true })
+    },
+    returnEnemyToBonded: (enemy, options = {}) => {
+      if (!state.enemies.includes(enemy)) return false
+      const code = enemy.originalCode || enemy.code
+      const group = bondedGroupOf(code)
+      if (!group) return false
+      const seat = options.ownerSeat ?? enemy.bearerSeat ?? state.currentSeat
+      for (const inv of state.investigators) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
+      state.enemies.splice(state.enemies.indexOf(enemy), 1)
+      state.bondedSets ||= {}
+      const set = state.bondedSets[bondedSetKey(state, group.main, seat)] ||= { seat, cards: [], retrieved: true }
+      set.cards.push(code)
+      return true
+    },
+    cardAbilityOptions: (seat, source, options = {}) => abilityOptions(seat, source, options)
+      .map(({ descriptor, index }) => ({ index, label: descriptor.label })),
+    resolveCardAbility: (seat, source, { abilityIndex, ignoreCosts = false } = {}) => {
+      const inv = state.investigators[seat]
+      const fromHand = typeof source === 'string'
+      source = abilitySource(source)
+      const available = abilityOptions(seat, source, { ignoreCosts })
+      const picked = available.find(item => item.index === abilityIndex)
+      if (!picked) return false
+      const { descriptor } = picked
+      const targets = enumerateTargets(state, inv, descriptor.target, { source })
+      let targetId = null
+      if (targets.length) targetId = targets.length === 1 ? String(targets[0].id) : requestChoice(state, {
+        kind: 'target', source: source.code, seat, prompt: '选择这项能力的目标。',
+        options: targets.map(target => ({ id: String(target.id), label: target.label })),
+      })
+      const previous = state._revealedAbility
+      if (fromHand) state._revealedAbility = { seat, source, abilityIndex: picked.index }
+      try {
+        return executeDescriptor(state, { inv, source, descriptor, context: { targetId }, events, ignoreCosts })
+      } finally {
+        if (previous) state._revealedAbility = previous
+        else delete state._revealedAbility
+      }
+    },
+    attachResolvingEncounter: asset => {
+      const context = state._reaction
+      if (!asset || context?.when !== 'treacheryWouldDiscard' || !context.cardCode || context.attached) return false
+      asset.attachments ||= []
+      asset.attachments.push({ id: nextInstanceId(state, 'a'), code: context.cardCode,
+        ownerSeat: null, encounterAttached: true })
+      context.attached = true
+      return true
+    },
     // 第 2 步 P2.8：绑定（场外集合/检索 3 张/洗回/离场收回）。卡面生命周期钩子调用它；
     // 主卡与副本的关系来自卡面数据（bondedCards / bondedTo），引擎不认卡号。
     bonded: {
@@ -63,7 +164,7 @@ export function createCardApi(state, events, deps) {
     putIntoDiscard: (seat, code) => {
       const owner = state.investigators[seat]
       if (!owner || !code) return false
-      owner.discard.push(code)
+      discardPlayerCards(state, owner, code)
       return true
     },
     // Phase 5（5a-15）：「惩戒邪恶 / 寻找伊兹」共用——遭遇牌库顶的敌人、最远地点、生成敌人与两个标记。
@@ -317,6 +418,7 @@ export function createCardApi(state, events, deps) {
       const asset = newPlayerAssetInstance(state, inv, code)
       inv.assets.push(asset)
       scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
+      notifyPlacedAsset(state, seat, asset, events, reactionWindow)
       info(state, events, `🎴 ${inv.name} 将「${cardName(code)}」放置入场。`)
       return asset
     },

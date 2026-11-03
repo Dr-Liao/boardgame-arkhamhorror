@@ -48,13 +48,18 @@ export function discardSpawnedEnemy(state, inv, enemy) {
   inv.discard.push(enemy.code)
 }
 
-/** 牌库耗尽时，手牌里的隐私敌人各攻击一次（不离开手牌）。 */
-export function hiddenEnemiesAttackFromHand(state, inv, { registeredEntry, cardDef, applyDamage, applyHorror, info, events }) {
+export function attackHiddenEnemyFromHand(state, inv, code, { cardDef, enemyAttack, events, source = code }) {
+  if (!inv?.hiddenCards?.includes(code) || !inv.hand.includes(code)) return false
+  const card=Object.values(state.scenario?.enemies || {}).find(item=>(item.originalCode || item.code)===code) || cardDef(code)
+  if (!card) return false
+  const enemy={...card,id:`hidden:${inv.seat}:${code}`,code,originalCode:code,location:inv.location,engagedSeat:inv.seat}
+  return enemyAttack(state,enemy,inv,events,'隐私敌人从手牌发动攻击',{kind:'effect',source})
+}
+
+/** 只有明确印有牌库耗尽强制的隐私敌人才从手牌攻击。 */
+export function hiddenEnemiesAttackFromHand(state, inv, deps) {
   for (const code of inv.hand || []) {
-    if (!isHiddenHandEnemy(registeredEntry(code))) continue
-    const card = cardDef(code) || {}
-    if (card.damage) applyDamage(state, inv, card.damage, events)
-    if (card.horror) applyHorror(state, inv, card.horror, events)
-    info(state, events, `${inv.name} 的牌库耗尽，手牌中的一个敌人攻击了${inv.name}。`)
+    if (!deps.registeredEntry(code)?.enemyWeakness?.attackFromHandOnDeckEmpty) continue
+    attackHiddenEnemyFromHand(state,inv,code,deps)
   }
 }

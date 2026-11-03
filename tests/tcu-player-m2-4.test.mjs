@@ -1108,10 +1108,10 @@ test(`TCU 05320 ${nameOf('05320')} 再次打出时支付该事件自己的费用
 })
 
 // ---------------------------------------------------------------------------
-// 05324 美满结局（显式简化：负修正标记 → 等值正修正）
+// 05324 美满结局（取消原标记并结算旧印）
 // ---------------------------------------------------------------------------
 
-test(`TCU 05324 ${nameOf('05324')} 负修正标记将要令技能值降到 0 时翻转为正修正`, () => {
+test(`TCU 05324 ${nameOf('05324')} 负修正标记将要令技能值降到 0 时取消并改为旧印`, () => {
   const state = fixture('01001')
   const inv = me(state)
   inv.hand = ['05324']
@@ -1124,8 +1124,9 @@ test(`TCU 05324 ${nameOf('05324')} 负修正标记将要令技能值降到 0 时
     if (pending.kind !== 'reaction') return null
     return pending.options.find(option => option.cardCode === '05324')?.id ?? null
   })
-  assert.equal(state.testResult?.drawn?.includes('-4'), true, '揭示了 -4 标记')
-  assert.equal(state.testResult?.success, true, '翻转成正修正后检定成功')
+  assert.ok(state.testResult?.cancelledTokens?.includes('-4'), '取消了原始 -4 标记')
+  assert.ok(state.testResult?.drawn?.includes('eldersign'), '替换为旧印并结算调查员效果')
+  assert.equal(state.testResult?.success, true, '结算旧印后检定成功')
   assert.equal(me(state).resources, 8, '打出费用 2')
   assert.ok(me(state).discard.includes('05324'), '快速事件结算后进弃牌堆')
 })

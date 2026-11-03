@@ -253,23 +253,9 @@ function replaceSuspiciousOrderlies(state, api) {
 // ---------------------------------------------------------------------------
 // 章节钩子
 // ---------------------------------------------------------------------------
-export const scenarioApproximations = Object.freeze([
-  '06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；'
-    + 'behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），'
-    + '无符号标记的检定可能仍按初始难度结算。',
-  '06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。',
-  '06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。',
-  '06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；'
-    + '「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。',
-  '06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。',
-  '06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / '
-    + 'enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。',
-  '06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。',
-])
+export const scenarioApproximations = Object.freeze([])
 
-export const scenarioGaps = Object.freeze([
-  '「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。',
-])
+export const scenarioGaps = Object.freeze([])
 
 // 本章单卡条目的原卡号（审计/覆盖用；剧本参考卡 06063 与背面故事面 06057b/06058b 不建条目）。
 export const implementedEncounterCodes = Object.freeze([
@@ -412,9 +398,9 @@ export const behavior = {
     }
     const location = here(state, inv)
     if (location) locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
-    if (inv.assets?.some(asset => entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)) {
-      const target = (state.enemies || []).find(enemy => enemy.engagedSeat === inv.seat
-        && hasTrait(enemy, 'humanoid') && traitsOf(enemy).includes('staff') && codeOf(enemy) === SUSPICIOUS_ORDERLY)
+    if (inv.assets?.some(asset => !asset.exhausted && entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)) {
+      const target = (state.enemies || []).find(enemy => enemy.engagedSeat != null
+        && !enemy.exhausted && codeOf(enemy) === SUSPICIOUS_ORDERLY)
       if (target) {
         moves.push({
           action: 'scenarioAction', rule: 'shivaniEvade', actions: 0, fast: true,
@@ -429,8 +415,8 @@ export const behavior = {
     const moves = []
     const location = here(state, inv)
     if (location) locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
-    if (inv.assets?.some(asset => entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)) {
-      const engaged = (state.enemies || []).some(enemy => enemy.engagedSeat === inv.seat)
+    if (inv.assets?.some(asset => !asset.exhausted && entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)) {
+      const engaged = (state.enemies || []).some(enemy => enemy.engagedSeat != null && !enemy.exhausted && codeOf(enemy) === SUSPICIOUS_ORDERLY)
       if (engaged) {
         moves.push({
           action: 'scenarioAction', rule: 'shivaniEvade', actions: 0, fast: true,
@@ -478,10 +464,14 @@ export const behavior = {
       return
     }
     if (move.rule === 'shivaniEvade') {
-      const asset = (inv.assets || []).find(entry => entryFlags(codeOf(entry))?.fastAutoEvadeOrderly)
-      const target = (state.enemies || []).find(enemy => enemy.engagedSeat === inv.seat
+      const asset = (inv.assets || []).find(entry => !entry.exhausted && entryFlags(codeOf(entry))?.fastAutoEvadeOrderly)
+      const targets = (state.enemies || []).filter(enemy => enemy.engagedSeat != null && !enemy.exhausted
         && codeOf(enemy) === SUSPICIOUS_ORDERLY)
-      if (!asset || !target) return
+      if (!asset || !targets.length) return
+      const id = targets.length === 1 ? targets[0].id : api.choose({ kind: 'enemy', source: asset.code, seat: inv.seat,
+        prompt: '选择自动躲避一个与任意调查员交战的可疑的护工。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
+      const target = targets.find(enemy => enemy.id === id)
+      if (!target) return
       asset.exhausted = true
       api.evadeEnemy?.(target)
       api.info?.('🩺 席瓦妮·马斯沃伦医生自动躲避了可疑的护工。')
@@ -541,12 +531,15 @@ export const behavior = {
   enemyDefeated(state, enemy, api) {
     return encounterRules.enemyDefeated?.(state, enemy, api)
   },
+  enemyDamageAmount(state,enemy,amount,api) {
+    if(entryFlags(codeOf(enemy))?.cancelOneDamageAtInfestedLocation && isInfested(state,enemy.location)) {
+      api.info('寄生地点上的堕落护工取消本次伤害中的 1 点。')
+      return Math.max(0,amount-1)
+    }
+    return amount
+  },
   enemyDamaged(state, enemy, api, seat, source) {
     encounterRules.enemyDamaged?.(state, enemy, api, seat, source)
-    if (entryFlags(codeOf(enemy))?.cancelOneDamageAtInfestedLocation && isInfested(state, enemy.location)) {
-      api.healEnemy?.(enemy, 1)
-      api.info?.(`🕷️ 「${enemy.name || codeOf(enemy)}」在寄生地点受到伤害：取消其中 1 点。`)
-    }
   },
   mythosEnded(state, api) {
     encounterRules.mythosEnded?.(state, api)

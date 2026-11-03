@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { contentRegistry } from '../content/registered.js'
 
-const SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'treachery', 'storyAsset', 'threat'])
+const SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'treachery', 'storyAsset', 'threat', 'scenario'])
 export const ENTRY_SCOPES = SCOPES
 
 export const canonical = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -60,6 +60,7 @@ export function collectScenarioTokens(scenario = {}, manifest = {}) {
       addToken(tokens, definition?.originalCode)
     }
   }
+  for (const definition of Object.values(scenario.stageCards || {})) { addToken(tokens, definition.id); addToken(tokens, definition.originalCode || definition.code) }
   for (const zone of Object.values(manifest.zones || {})) {
     for (const entry of zone || []) addToken(tokens, entry?.cardCode)
   }

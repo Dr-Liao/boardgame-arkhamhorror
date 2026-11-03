@@ -11,6 +11,7 @@
 // 卡面规则写在各单卡条目的 actRule / agendaRule / locationRule.onEnter 数据里；
 // 本文件只读 actRuleFor / agendaRuleFor 与引擎直读的 locationRule 分派，不含按卡号的规则分支。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
 import { buildScenarioLocationDeck, drawScenarioLocationDeck } from '../../../../../src/engine/alt-decks.js'
 import { encounterRules } from '../../encounter-rules.js'
@@ -814,7 +815,7 @@ function emptySpaceGridPositions(state) {
 }
 
 // 05341「Spawn - Farthest empty space」：找离所有调查员最远的虚空格，并返回离它最近的在场地点。
-function farthestEmptySpace(state) {
+function farthestEmptySpace(state, api = null) {
   const empties = emptySpaceGridPositions(state)
   if (!empties.length) return null
   const keyOfPos = position => gridPositionKey(position.x, position.y)
@@ -831,6 +832,12 @@ function farthestEmptySpace(state) {
     }
   }
   if (!farthest) return null
+  const ties = empties.filter(empty => fromInvestigators.get(keyOfPos(empty.position)) === farthest.distance)
+  if (ties.length > 1 && api) {
+    const id = chooseOption(api, { kind: 'location', source: MIND_DANCER, seat: leadSeat(state),
+      prompt: '选择离调查员最远的虚空格生成盲目舞者。', options: ties.map((empty, index) => ({ id: String(index), label: '虚空 (' + empty.position.x + ',' + empty.position.y + ')' })) })
+    farthest = { position: (ties[Number(id)] || ties[0]).position, distance: farthest.distance }
+  }
   const fromEmptySpace = gridDistanceFromPositions(state, [farthest.position])
   let pick = null
   for (const location of state.locations || []) {
@@ -849,7 +856,10 @@ function farthestEmptySpace(state) {
 // 盲目舞者的网格猎手步：返回「朝最近调查员的下一格」候选。虚空格与地点都算可走格位。
 function gridHunterCandidates(state, startPosition) {
   const keyOfPos = position => gridPositionKey(position.x, position.y)
-  const targetPositions = active(state)
+  const lurePositions = state.phase === 'enemy' ? (state.playerLocationAttachments || [])
+    .filter(attachment => registeredEntry(attachment.code)?.locationLure)
+    .map(attachment => positionOf(state, attachment.location)).filter(Boolean) : []
+  const targetPositions = lurePositions.length ? lurePositions : active(state)
     .map(inv => (inv.location ? positionOf(state, inv.location) : null))
     .filter(Boolean)
   if (!targetPositions.length) return null
@@ -869,18 +879,17 @@ function gridHunterCandidates(state, startPosition) {
 
 // 05341：舞者「在虚空格中」用 scenarioFlags.dancerVoidCell 记录格位（虚空格不是可站立的
 // location 实体，仍以最近地点作为引擎侧的锚点位置；位置相关读点用本标记修正）。
-function dancerVoidCell(state) {
-  const cell = flagsOf(state).dancerVoidCell
+function dancerVoidCell(enemy) {
+  const cell = enemy?.cosmosCell
   if (!cell || !Number.isFinite(Number(cell.x)) || !Number.isFinite(Number(cell.y))) return null
   return { x: Number(cell.x), y: Number(cell.y) }
 }
-function setDancerVoidCell(state, cell) {
-  const flags = flagsOf(state)
-  if (cell) flags.dancerVoidCell = { x: cell.x, y: cell.y }
-  else delete flags.dancerVoidCell
+function setDancerVoidCell(enemy, cell) {
+  if (cell) { enemy.cosmosCell = { x: cell.x, y: cell.y }; enemy.location = `cosmosVoid:${cell.x}:${cell.y}` }
+  else delete enemy.cosmosCell
 }
 function dancerStartPosition(state, enemy) {
-  return dancerVoidCell(state) || positionOf(state, enemy.location)
+  return dancerVoidCell(enemy) || positionOf(state, enemy.location)
 }
 
 // 05341 猎手移动：参考实现里舞者可进入虚空格（如同地点），若经猎手关键词进入虚空格则
@@ -893,11 +902,11 @@ function dancerHuntMove(state, enemy, api) {
   const flags = flagsOf(state)
   const start = dancerStartPosition(state, enemy)
   if (!start) return false
-  const inVoid = Boolean(dancerVoidCell(state))
+  const inVoid = Boolean(dancerVoidCell(enemy))
   const firstPlan = gridHunterCandidates(state, start)
   if (!firstPlan) return false
   const firstHasLocation = firstPlan.candidates.some(candidate => isLocationCell(candidate.cell))
-  if (!inVoid && firstHasLocation) return false
+  if (!inVoid && firstHasLocation && firstPlan.candidates.every(candidate => isLocationCell(candidate.cell))) return false
   let current = start
   let moved = false
   let forcedUsed = false
@@ -905,24 +914,25 @@ function dancerHuntMove(state, enemy, api) {
     const plan = gridHunterCandidates(state, current)
     if (!plan) break
     // 同距时优先走到地点；否则进入虚空格。
-    const chosen = plan.candidates.find(candidate => isLocationCell(candidate.cell))
-      || plan.candidates[0]
+    const choice = plan.candidates.length === 1 ? '0' : chooseOption(api, { kind: 'hunter', source: MIND_DANCER,
+      seat: leadSeat(state), prompt: '选择盲目舞者的最短猎手路线。', options: plan.candidates.map((cell, i) => ({ id: String(i), label: cell.cell.kind === 'location' ? locationById(state, cell.cell.id)?.name || cell.cell.id : '虚空 (' + cell.x + ',' + cell.y + ')' })) })
+    const chosen = plan.candidates[Number(choice)] || plan.candidates[0]
     if (!chosen) break
     if (isLocationCell(chosen.cell)) {
       api.moveEnemy?.(enemy, chosen.cell.id)
-      setDancerVoidCell(state, null)
+      setDancerVoidCell(enemy, null)
       api.info?.(`💃 盲目舞者移动到「${locationById(state, chosen.cell.id)?.name || chosen.cell.id}」。`)
       return true
     }
     current = { x: chosen.x, y: chosen.y }
-    setDancerVoidCell(state, current)
+    setDancerVoidCell(enemy, current)
     moved = true
-    const alreadyUsed = forcedUsed || flags.dancerVoidRound === state.round
+    const alreadyUsed = forcedUsed || enemy.dancerVoidRound === state.round
     if (alreadyUsed) {
       api.info?.('💃 盲目舞者停在虚空格中（cosmos 格位表达）：本轮「再次结算猎手」已用过。')
       return true
     }
-    flags.dancerVoidRound = state.round
+    enemy.dancerVoidRound = state.round
     forcedUsed = true
     api.info?.('💃 盲目舞者进入虚空格（cosmos 格位表达）：再次结算猎手关键词（每轮一次）。')
   }
@@ -937,7 +947,6 @@ function spawnLocationFor(state, code) {
   // 「舞者其实位于该虚空格」写进 flags.dancerVoidCell，锚点地点只作为引擎侧位置。
   const gridSpawn = farthestEmptySpace(state)
   if (gridSpawn) {
-    flagsOf(state).pendingDancerVoidCell = { x: gridSpawn.position.x, y: gridSpawn.position.y }
     return gridSpawn.location.id
   }
   const investigators = active(state)
@@ -1023,8 +1032,8 @@ function validSlideDirections(state, locationId) {
 function readInvestigatorDefeat(state, api) {
   const defeated = state.investigators.filter(inv => inv.defeated && !inv.resigned)
   for (const inv of defeated) {
-    api.info?.(`💀 ${inv.name} 被击败：坐骑没有接住你，你坠入无尽虚空（近似：追加 1 点精神创伤）。`)
-    api.trauma?.(inv.seat, 'mental', 1)
+    api.info?.(`💀 ${inv.name} 被击败：坐骑没有接住你，你坠入无尽虚空，陷入疯狂。`)
+    api.driveInsane?.(inv.seat)
   }
   return defeated
 }
@@ -1051,7 +1060,7 @@ function applyResolution(state, key, events, api) {
     // 参考实现的 drivenInsane(lead) 会改写战役记录状态；这里用日志 + 2 点精神创伤近似。
     const lead = leadInvestigator(state)
     if (lead) api.info?.(`🎼 队长 ${lead.name} 加入了阿撒托斯的吹笛人，陷入疯狂。`)
-    for (const inv of state.investigators) api.trauma?.(inv.seat, 'mental', 2)
+    if (lead) api.driveInsane?.(lead.seat)
     return { award: true, bonus: 5 }
   }
   if (key === 'r3') {
@@ -1289,24 +1298,24 @@ export const behavior = {
   },
   canFightEnemy(state, inv, enemy) {
     if (String(original(enemy)) === AZATHOTH) return false
-    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(enemy)) return false
     return encounterRules.canFightEnemy?.(state, inv, enemy)
   },
   canEvadeEnemy(state, inv, enemy) {
     if (String(original(enemy)) === AZATHOTH) return false
-    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(enemy)) return false
     return encounterRules.canEvadeEnemy?.(state, inv, enemy)
   },
   // 盲目舞者在虚空格中时「如同地点」的进入权只属于它自己：调查员不能与锚点位置上的它交战
   // （虚空格不是可进入的 location；参考实现里调查员需要 CanEnterEmptySpace 才能进入）。
   canEngageEnemy(state, inv, enemy) {
     if (String(original(enemy)) === AZATHOTH) return false
-    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(enemy)) return false
     return encounterRules.canEngageEnemy?.(state, inv, enemy)
   },
   enemyCannotBeAttacked(state, enemy) {
     if (String(original(enemy)) === AZATHOTH) return true
-    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return true
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(enemy)) return true
     return encounterRules.enemyCannotBeAttacked?.(state, enemy)
   },
   enemyCannotAttack(state, enemy) {
@@ -1335,10 +1344,9 @@ export const behavior = {
   // 真正的虚空格位置在敌人实体生成后补写进 flags.dancerVoidCell。
   enemySpawned(state, enemy, api) {
     const flags = flagsOf(state)
-    if (String(original(enemy)) === MIND_DANCER && flags.pendingDancerVoidCell) {
-      setDancerVoidCell(state, flags.pendingDancerVoidCell)
-      delete flags.pendingDancerVoidCell
-      api?.info?.(`💃 盲目舞者在最远的虚空格中生成（cosmos 格位表达；引擎锚点「${locationById(state, enemy.location)?.name || enemy.location}」）。`)
+    if (String(original(enemy)) === MIND_DANCER) {
+      const spawn = farthestEmptySpace(state, api)
+      if (spawn) setDancerVoidCell(enemy, spawn.position)
     }
     encounterRules.enemySpawned?.(state, enemy, api)
   },
@@ -1350,8 +1358,8 @@ export const behavior = {
   hunterMove(state, enemy, api) {
     if (String(original(enemy)) !== MIND_DANCER) return false
     if (enemy.exhausted || !enemy.hunter) return true
-    if (dancerHuntMove(state, enemy, api)) return true
     if (active(state).some(inv => inv.location === enemy.location)) return true
+    if (dancerHuntMove(state, enemy, api)) return true
     const target = api.hunterStep?.(enemy, {})
     if (target && target !== enemy.location) api.moveEnemy?.(enemy, target)
     return true
@@ -1559,9 +1567,9 @@ export const behavior = {
   },
 
   // ---- 诚实边界 ----
-  scenarioApproximations: [
+  migrationHistory: [
     '宇宙用二维网格承载（见 cosmos.js）：格位/方向/四邻接连接/虚空格子（携带一张玩家卡）均按参考 Cosmos.hs 与各地点 RunCosmos 实现；虚空格子不建「地点卡」实体（参考实现用 xempty 特殊地点卡），因此敌我目标枚举里不会把虚空格子当地点（05341 盲目舞者的「进入虚空格子」用网格格位 flags.dancerVoidCell 承载，见下一行）。',
-    '盲目舞者（05341）的「可以进入虚空格子，如同其进入一个地点」用 cosmos 二维网格承载：最短路线下一格是虚空格时舞者进入并记录 flags.dancerVoidCell（可停留在虚空格中，下一次猎手移动从该格位继续），若经猎手进入虚空格则同一结算内再走一格（每轮一次，flags.dancerVoidRound）；生成时按网格取离所有调查员最远的虚空格，dancerVoidCell 记录该格位、引擎锚点取离它最近的在场地点（farthestEmptySpace/dancerHuntMove/spawnLocationFor/enemySpawned）。残余表示层：虚空格仍不是可站立的 location 实体——舞者在虚空格中时引擎侧位置仍锚定在最近地点（攻击/交战类读点已由 canFightEnemy/canEvadeEnemy/enemyCannotBeAttacked 按 dancerVoidCell 拒绝，但「按地点统计/检索敌人」的效果会把它算在锚点地点；引擎猎手循环在锚点地点有调查员时会跳过本卡，属同源残余）；等距多条路线仍取确定顺序而非队长选择。tests/tcu-black-throne.test.mjs 覆盖穿越/停留/连续两虚空格/生成。',
+    '盲目舞者（05341）的「可以进入虚空格子，如同其进入一个地点」用 cosmos 二维网格承载：最短路线下一格是虚空格时舞者进入并记录 flags.dancerVoidCell（可停留在虚空格中，下一次猎手移动从该格位继续），若经猎手进入虚空格则同一结算内再走一格（每轮一次，enemy.dancerVoidRound）；生成时按网格取离所有调查员最远的虚空格，dancerVoidCell 记录该格位、引擎锚点取离它最近的在场地点（farthestEmptySpace/dancerHuntMove/spawnLocationFor/enemySpawned）。残余表示层：虚空格仍不是可站立的 location 实体——舞者在虚空格中时引擎侧位置仍锚定在最近地点（攻击/交战类读点已由 canFightEnemy/canEvadeEnemy/enemyCannotBeAttacked 按 dancerVoidCell 拒绝，但「按地点统计/检索敌人」的效果会把它算在锚点地点；引擎猎手循环在锚点地点有调查员时会跳过本卡，属同源残余）；等距多条路线仍取确定顺序而非队长选择。tests/tcu-black-throne.test.mjs 覆盖穿越/停留/连续两虚空格/生成。',
     '阿撒托斯不建场上敌人实体（参考实现是 Omnipotent 的 Global 敌人；普通「敌人」匹配器在参考实现里会因 Omnipotent 被排除在玩家卡效果之外，本引擎没有该匹配器语义，故用「不生成实体」表达「免疫所有玩家卡牌效果/调查员行动」）。毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败由「不在场」成立，并已由 behavior.enemyCanBeDefeated/canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked/enemyCannotAttack/canOpportunityAttack/enemyDamageAllowed 防御性拒绝（即便被异常路径生成也不会被攻击/击败/躲避/交战/伤害）。唯一行为差异是「统计场上敌人」的效果会少算它：R6 评估过内容侧「替代计数读点」（behavior.enemyCountOverride 等）不可行——现有玩家卡/引擎效果直接读 state.enemies，没有可插入的引擎读点，内容钩子只会是死代码；要消除此差异需要引擎支持 Global/不在任何地点的真实敌人实体（本轮不做）。05328 背面推进后置 flags.azathothAbsorbsAllDoom，此时阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（等价 CountAllDoomInPlay），skull X / 黑色王座隐藏值 / 05344·05345 都读同一口径；≥10 毁灭在 addAzathothDoom/doomPlaced/各阶段钩子末轮询判「吞食宇宙（→R1）」。',
     '冒险参考卡资源用 scenarioFlags.referenceResources 记账；「移除参考卡 1 资源」的能力在资源不足时不出现。',
     '幕推进时的清场重建（05329/05330 背面）按 definition.COSMOS_LAYOUTS 的固定摆盘表实现：旧枢纽移出游戏、虚空格子的卡洗回所有者牌库、其余地点洗回宇宙（其上调查员阵亡、敌人与遭遇牌库顶 5 张混洗）、「放在一边的枢纽 + 宇宙顶 N 张」洗混后隐藏摆放在手册位置、虚空格子从 lead 牌库顶取卡、按玩家顺序每人抽 1 张遭遇。仍属表示层近似：地点卡以「宇宙」面朝上摆放但引擎不区分卡背图案，二维坐标只存于 scenarioFlags（界面地图仍用静态 layout 坐标，不随移动变化）。',

@@ -11,21 +11,129 @@
 // 本模块是**接线层**：lane 的规则结算仍走既有引擎函数；不复制规则。玩家开闸仍留
 // P9.5（双线 UI 与浏览器门禁），当前只由 `test:tde:parallel` 与大厅钩子使用。
 import { campaignPartsManifest } from '../campaign/campaign-modes.js'
-import { seatsOfLane, setPart } from '../campaign/campaign-parts.js'
+import { seatsOfLane, setPart, partScope, PART_SCOPED_FIELDS } from '../campaign/campaign-parts.js'
 import { partManifest } from '../campaign/part-flow.js'
 import { contentRegistry } from '../../content/registered.js'
-import { campaignGraph, enterCampaignNode } from '../campaign/campaign-flow.js'
+import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
+import { applyCampaignEffect } from '../campaign/campaign-effects.js'
 import { initializeChaosBag } from '../engine/chaos-bag.js'
 import { enterLaneRuntime } from '../engine/lane-runtime.js'
 import {
   applyMove, decisionSeat, describeParts, executeCommand, legalMoves, seatLocalMove, validateMove,
 } from '../engine/engine.js'
-import { resolveTransaction } from '../engine/resolution.js'
+import { resolveTransaction, requestChoice, choiceMoves, choiceError, choiceSeats } from '../engine/resolution.js'
 import { viewState } from './observation.js'
 import { aiDecisionContext } from '../ai/ai-context.js'
 
 const LANES = ['A', 'B']
 const clone = value => structuredClone(value)
+
+const sharedState = state => state.parallel?.interlude?.state
+const coordinationFor = state => contentRegistry.getCampaign(state.campaign?.id)?.parallelInterludes
+const readySharedPair = state => coordinationFor(state)
+  && Object.keys(state.parallel?.sealed || {}).map(Number).find(pair => !state.parallel.interludeApplied?.[pair])
+
+function scopeInRoomSeats(laneState) {
+  const scope = partScope(laneState.campaign, laneState.parallelLane)
+  const seats = laneState.laneRuntime.roomSeats
+  scope.investigators = Object.fromEntries(Object.entries(scope.investigators).map(([seat, record]) => {
+    const roomSeat = seats[Number(seat)]
+    const copy = { ...record, seat: roomSeat }; delete copy.roomSeat
+    return [roomSeat, copy]
+  }))
+  scope.trauma = Object.fromEntries(Object.entries(scope.trauma).map(([seat, value]) => [seats[Number(seat)], value]))
+  scope.retired = scope.retired.map(record => ({ ...record, seat: seats[record.seat] }))
+  return scope
+}
+
+function startSharedInterlude(state, pair) {
+  const manifest = contentRegistry.getCampaign(state.campaign.id)
+  const { parallel, ...base } = state
+  const coordinator = clone(base)
+  coordinator.scenario = null
+  coordinator.locations = []; coordinator.enemies = []; coordinator.storyAssets = []
+  coordinator.pendingChoice = null; coordinator.continuation = null
+  coordinator.phase = 'interlude'; coordinator.uiState = 'interlude'
+  coordinator.investigators = LANES.flatMap(lane => parallel.lanes[lane].investigators.map(inv => ({
+    ...clone(inv), seat: parallel.lanes[lane].laneRuntime.roomSeats[inv.seat],
+  }))).sort((a, b) => a.seat - b.seat)
+  coordinator.campaign.parts = Object.fromEntries(LANES.map(lane => [lane, scopeInRoomSeats(parallel.lanes[lane])]))
+  coordinator.campaign.currentPart = null
+  coordinator.campaign.activeParts = [...LANES]
+  coordinator.campaign.mode = 'parallel'
+  coordinator.campaign.scenarioIndex = pair - 1
+  coordinator.campaign.records = {}; coordinator.campaign.investigators = {}
+  coordinator.campaign.finished = false; coordinator.campaign.phase = 'interlude'
+  coordinator.campaign.upgradesAllowed = false
+  coordinator.campaign.scenarioResults = LANES.flatMap(lane => {
+    const seats = parallel.lanes[lane].laneRuntime.roomSeats
+    return parallel.lanes[lane].campaign.scenarioResults.map(result => ({ ...clone(result),
+      investigators: (result.investigators || []).map(record => ({ ...clone(record), seat: seats[record.seat] })) }))
+  })
+  coordinator.campaign.flow = { nodeId: '', visits: {}, history: clone(parallel.sharedHistory || []) }
+  enterCampaignNode(coordinator.campaign, manifest, manifest.parallelInterludes[pair])
+  coordinator.sharedPair = pair
+  parallel.interlude = { pair, state: coordinator }
+  resolveTransaction(coordinator, coordinator.campaign.leadSeat ?? 0, { action: 'sharedInterlude' }, executeSharedInterlude)
+}
+
+function executeSharedInterlude(state) {
+  const manifest = contentRegistry.getCampaign(state.campaign.id)
+  const node = walkCampaign(state.campaign, manifest, (id, branch, options) => {
+    const parts = [...new Set(options.flatMap(option => option.effects || []).map(effect => effect.part).filter(Boolean))]
+    const part = branch.choicePart || (parts.length === 1 ? parts[0] : null)
+    const seat = part ? state.campaign.partLeads?.[part] ?? seatsOfLane(state.campaign.seatParts, part)[0]
+      : state.campaign.leadSeat ?? 0
+    return requestChoice(state, {
+    kind: 'campaignBranch', source: id, seat,
+    prompt: branch.prompt || branch.title || '选择幕间路线', options: options.map(option => ({ id: option.id, label: option.label })),
+  }) }, effect => applyCampaignEffect(state, effect, text => {
+    state.log ||= []; state.log.push(text)
+  }), { continuousInterlude: true, stopAtPartGate: true })
+  // Each human reads and confirms the same completed shared story. This is
+  // persisted in the normal choice transaction, including across reconnects.
+  for (const seat of state.humanSeats || [0]) requestChoice(state, {
+    kind: 'interlude', source: `shared:${state.sharedPair}:${seat}`, seat,
+    prompt: node.type === 'end' ? '阅读尾声后确认战役结束。' : '阅读共同幕间后，确认两条线继续。',
+    options: [{ id: 'done', label: '完成阅读' }],
+  })
+  state.sharedReady = true
+  if (node.type === 'end') {
+    state.status = 'over'; state.uiState = 'campaignResult'; state.phase = 'campaignResult'
+    state.campaign.finished = true; state.campaign.phase = 'finished'
+  }
+}
+
+function finishSharedInterlude(state) {
+  const interlude = state.parallel.interlude
+  if (!interlude?.state.sharedReady) return false
+  const coordinator = interlude.state
+  for (const lane of LANES) {
+    const target = state.parallel.lanes[lane]
+    const scope = partScope(coordinator.campaign, lane)
+    const seats = target.laneRuntime.roomSeats
+    scope.investigators = Object.fromEntries(Object.entries(scope.investigators).map(([seat, record]) => {
+      const local = seats.indexOf(Number(seat))
+      return [local, { ...record, seat: local, roomSeat: Number(seat) }]
+    }))
+    scope.trauma = Object.fromEntries(Object.entries(scope.trauma).map(([seat, value]) => [seats.indexOf(Number(seat)), value]))
+    scope.retired = scope.retired.map(record => ({ ...record, seat: seats.indexOf(record.seat) }))
+    for (const field of PART_SCOPED_FIELDS) target.campaign[field] = clone(scope[field])
+    if (coordinator.campaign.epilogueNumber != null) target.campaign.epilogueNumber = coordinator.campaign.epilogueNumber
+    target.chaosBag = [...scope.chaosBag]
+  }
+  state.parallel.sharedHistory = clone(coordinator.campaign.flow.history)
+  if (coordinator.campaign.finished) {
+    state.parallel.interludeApplied[interlude.pair] = { revision: state.revision ?? 0 }
+    state.parallel.ending = coordinator
+    state.campaign.epilogueNumber = coordinator.campaign.epilogueNumber
+    state.status = 'ended'; state.uiState = 'campaignResult'
+  }
+  state.parallel.completedInterlude = interlude.pair
+  delete state.parallel.interlude
+  if (!coordinator.campaign.finished) advanceParallelPair(state, interlude.pair)
+  return true
+}
 
 export const isParallelState = state => Boolean(state?.parallel?.lanes?.A && state?.parallel?.lanes?.B)
 
@@ -93,6 +201,25 @@ function remapEventSeats(event, roomSeats) {
 /** 大厅命令：按座位路由到本线运行时。 */
 export function parallelApplyMove(state, seat, move) {
   if (!isParallelState(state)) throw new Error('不是并行双运行时状态')
+  if (sharedState(state)) {
+    const coordinator = sharedState(state)
+    const error = choiceError(coordinator, seat, move)
+    if (error) throw new Error(error)
+    const events = resolveTransaction(coordinator, seat, move, executeSharedInterlude)
+    state.revision = (state.revision ?? 0) + 1
+    finishSharedInterlude(state)
+    return events
+  }
+  if (coordinationFor(state) && move?.action === 'hubContinue') {
+    const lane = laneStateOf(state, seat)
+    const pair = (lane?.campaign.scenarioIndex ?? 0) + 1
+    if (state.parallel.sealed[pair] && !state.parallel.interludeApplied[pair]) {
+      const result = advanceParallelPair(state, pair)
+      if (!result.ok) throw new Error(result.reason || '幕间无法继续')
+      state.revision = (state.revision ?? 0) + 1
+      return []
+    }
+  }
   const laneState = laneStateOf(state, seat)
   if (!laneState) throw new Error('该座位不属于任何线')
   const laneSeat = laneSeatOf(state, seat)
@@ -101,8 +228,8 @@ export function parallelApplyMove(state, seat, move) {
   const lane = laneOfSeat(state, seat)
   // 章对屏障：另一条线还没结算到同一对时，不允许本线开下一章。
   if (move?.action === 'hubBeginScenario') {
-    const pair = (laneState.campaign.scenarioIndex ?? 0) + 1
-    if (!state.parallel.sealed[pair]) {
+    const pair = coordinationFor(state) ? laneState.campaign.scenarioIndex ?? 0 : (laneState.campaign.scenarioIndex ?? 0) + 1
+    if (!state.parallel.sealed[pair] || (coordinationFor(state) && !state.parallel.interludeApplied[pair])) {
       throw new Error('另一条线尚未结算到同一章对，下一章要等两边都完成')
     }
   }
@@ -116,7 +243,7 @@ export function parallelApplyMove(state, seat, move) {
   // 全局提交序列：任一条线成功提交都推进顶层 revision（门禁 8）；各线 revision 由引擎自行递增。
   state.revision = (state.revision ?? 0) + 1
   // 本线关卡结算 → 记等待；两边到同一章对才封盘（先不自动推进，幕间交给各线玩家）。
-  if (laneState.uiState === 'scenarioResult') markLaneFinished(state, lane)
+  if (laneState.uiState === 'scenarioResult' || laneState.uiState === 'campaignResult') markLaneFinished(state, lane)
   syncParallelStatus(state)
   // 事件离开引擎前把线内座位换回房间座位（含演出快照），并标记 lane。
   const roomSeats = laneState.laneRuntime?.roomSeats || []
@@ -132,6 +259,10 @@ export function parallelApplyMove(state, seat, move) {
 /** 容器状态与两条线保持一致：全部结束才结束；否则 playing。 */
 export function syncParallelStatus(state) {
   if (!isParallelState(state)) return
+  if (coordinationFor(state) && !state.parallel.ending) {
+    state.status = 'playing'
+    return
+  }
   const playing = LANES.some(lane => state.parallel.lanes[lane].status === 'playing')
   state.status = playing ? 'playing' : 'ended'
   if (!playing) state.uiState = 'campaignResult'
@@ -139,6 +270,13 @@ export function syncParallelStatus(state) {
 
 /** 本线命令校验；座位不属于运行时返回原因字符串。 */
 export function parallelValidateMove(state, seat, move) {
+  if (sharedState(state)) return choiceError(sharedState(state), seat, move)
+  if (coordinationFor(state) && move?.action === 'hubContinue') {
+    const lane = laneStateOf(state, seat)
+    const pair = (lane?.campaign.scenarioIndex ?? 0) + 1
+    if (!state.parallel.sealed[pair]) return '另一条线尚未完成本章对'
+    return null
+  }
   const laneState = laneStateOf(state, seat)
   const laneSeat = laneSeatOf(state, seat)
   if (!laneState || laneSeat == null) return '该座位不属于当前双线运行时'
@@ -147,15 +285,25 @@ export function parallelValidateMove(state, seat, move) {
 
 /** 本线可执行动作；不是该线当前行动者时返回空数组。 */
 export function parallelLegalMoves(state, seat) {
+  if (sharedState(state)) return choiceMoves(sharedState(state), seat)
+  if (state.parallel?.ending) return []
   const laneState = laneStateOf(state, seat)
   const laneSeat = laneSeatOf(state, seat)
   if (!laneState || laneSeat == null) return []
+  if (coordinationFor(state) && ['scenarioResult', 'campaignResult'].includes(laneState.uiState)) {
+    const pair = (laneState.campaign.scenarioIndex ?? 0) + 1
+    return state.parallel.sealed[pair] && !state.parallel.interludeApplied[pair]
+      ? [{ action: 'hubContinue', label: '两条线共同阅读幕间与尾声' }] : []
+  }
   return legalMoves(laneState, laneSeat)
 }
 
 /** 两条线的当前决策座位（换成房间座位；同一时刻可能有两个）。 */
 export function parallelDecisionSeats(state) {
   if (!isParallelState(state)) return []
+  if (sharedState(state)) return choiceSeats(sharedState(state).pendingChoice)
+  if (state.parallel.ending) return []
+  if (readySharedPair(state)) return [state.campaign.leadSeat ?? 0]
   return LANES.map(lane => {
     const laneState = state.parallel.lanes[lane]
     const seat = decisionSeat(laneState)
@@ -171,6 +319,9 @@ export function parallelDecisionSeat(state) {
 /** 两条线当前可行动座位（换回房间座位）。 */
 export function parallelActingSeats(state) {
   if (!isParallelState(state)) return []
+  if (sharedState(state)) return choiceSeats(sharedState(state).pendingChoice)
+  if (state.parallel.ending) return []
+  if (readySharedPair(state)) return [state.campaign.leadSeat ?? 0]
   const seats = []
   for (const lane of LANES) {
     const laneState = state.parallel.lanes[lane]
@@ -178,7 +329,7 @@ export function parallelActingSeats(state) {
     const acting = []
     for (let laneSeat = 0; laneSeat < roomSeats.length; laneSeat += 1) {
       // 关卡内 actingSeats 由引擎决定；这里用 legalMoves 的可用性替代读取内部状态。
-      if (legalMoves(laneState, laneSeat).length && decisionSeat(laneState) === laneSeat) acting.push(roomSeats[laneSeat])
+      if (parallelLegalMoves(state, roomSeats[laneSeat]).length && decisionSeat(laneState) === laneSeat) acting.push(roomSeats[laneSeat])
     }
     seats.push(...acting)
   }
@@ -186,6 +337,7 @@ export function parallelActingSeats(state) {
 }
 
 export function parallelSeatLocalMove(state, seat, move) {
+  if (sharedState(state)) return false
   const laneState = laneStateOf(state, seat)
   const laneSeat = laneSeatOf(state, seat)
   if (!laneState || laneSeat == null) return false
@@ -228,6 +380,12 @@ function laneViewToRoomSeats(view, roomSeats, roomLeadSeat) {
 /** 本线视图；另一条线的座位拿到只读摘要（不含手牌/牌库/未公开剧情）。 */
 export function parallelView(state, seat) {
   if (!isParallelState(state)) return null
+  const shared = sharedState(state) || state.parallel.ending
+  if (shared) {
+    const view = viewState(shared, seat)
+    return { ...view, revision: state.revision ?? 0, legalMoves: parallelLegalMoves(state, seat),
+      parallel: { lane: laneOfSeat(state, seat), shared: true, pair: shared.sharedPair, sealed: state.parallel.sealed } }
+  }
   const lane = laneOfSeat(state, seat)
   if (!lane) return null
   const laneState = state.parallel.lanes[lane]
@@ -239,6 +397,7 @@ export function parallelView(state, seat) {
   const otherState = state.parallel.lanes[other]
   return {
     ...(view || {}),
+    legalMoves: parallelLegalMoves(state, seat),
     // 门禁 8：投影同时携带全局提交序列与目标线版本；客户端提交时两者都回传。
     revision: state.revision ?? 0,
     parallel: {
@@ -262,6 +421,7 @@ export function parallelView(state, seat) {
 /** 大厅代答用：把某条线当前的待决选择换回房间座位（A 优先、B 次之）。 */
 export function parallelPendingChoice(state) {
   if (!isParallelState(state)) return state?.pendingChoice ?? null
+  if (sharedState(state)) return clone(sharedState(state).pendingChoice)
   for (const lane of LANES) {
     const laneState = state.parallel.lanes[lane]
     const choice = laneState?.pendingChoice
@@ -285,6 +445,8 @@ export function parallelPendingChoice(state) {
 /** 观战/无座位视图：给公开投影（含一条线的公开牌桌摘要，两条线摘要另列）。 */
 export function parallelPublicView(state) {
   if (!isParallelState(state)) return null
+  const shared = sharedState(state) || state.parallel.ending
+  if (shared) return { ...viewState(shared, null), revision: state.revision, legalMoves: [], parallel: { shared: true, public: true } }
   // 观战没有座位：用 A 线的公开投影做底（不含手牌/牌库/私密剧情），再附两条线摘要。
   const base = viewState(state.parallel.lanes.A, null)
   const lanes = LANES.map(lane => {
@@ -311,6 +473,7 @@ export function parallelPublicView(state) {
 
 /** 本线 AI/描述文本（不暴露另一线）。 */
 export function parallelDescribe(state, seat) {
+  if (sharedState(state)) return `${sharedState(state).pendingChoice?.prompt || ''}\n${JSON.stringify(parallelLegalMoves(state, seat))}`
   const laneState = laneStateOf(state, seat)
   const laneSeat = laneSeatOf(state, seat)
   if (!laneState || laneSeat == null) return ''
@@ -460,6 +623,26 @@ export function advanceParallelPair(state, pairId) {
   // 门禁 10：同一 pairId 的封盘 + 幕间只结算一次；重复调用/读档/重连直接 no-op。
   if (state.parallel.interludeApplied[pairId]) {
     return { ok: true, alreadyApplied: true, pairId, advanced: {} }
+  }
+  if (coordinationFor(state) && state.parallel.completedInterlude !== pairId) {
+    if (!sharedState(state)) startSharedInterlude(state, pairId)
+    finishSharedInterlude(state)
+    return { ok: true, pairId, pending: !!sharedState(state), advanced: {} }
+  }
+  if (coordinationFor(state)) {
+    // Prepare both lanes on copies before committing either. Each investigator
+    // keeps the real upgrade/replacement window; the UI confirms the next start.
+    const lanes = clone(state.parallel.lanes)
+    const advanced = {}
+    for (const lane of LANES) {
+      applyMove(lanes[lane], 0, { action: 'hubContinue' })
+      advanced[lane] = { scenarioId: lanes[lane].scenario?.id, uiState: lanes[lane].uiState }
+    }
+    state.parallel.lanes = lanes
+    state.parallel.awaiting = { A: null, B: null }
+    state.parallel.interludeApplied[pairId] = { revision: state.revision ?? 0 }
+    state.revision = (state.revision ?? 0) + 1
+    return { ok: true, pairId, advanced }
   }
   const advanced = {}
   for (const lane of LANES) {

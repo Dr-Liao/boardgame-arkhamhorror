@@ -16,9 +16,10 @@ import { fixture, move, asset, enemy, settle, legalMoves, validateMove } from '.
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import {
-  applyHarm, bondedGroupOf, drawCards, getStat, lookAt, reactionWindow,
+  applyHarm, bondedGroupOf, drawCards, drawEncounter, getStat, lookAt, reactionWindow,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { viewState } from '../src/integration/observation.js'
 
 const codes = [
   '06018', '06019', '06020', '06021', '06022', '06023', '06024', '06025', '06026', '06027', '06028',
@@ -95,7 +96,7 @@ test('TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属
   // 准备 2 张附属嗜血 + 2 点贡品；敌人 2 点生命，本次攻击应正好击败。
   const target = enemy(state, { fight: 1, evade: 1, health: 2 })
   blade.uses = 2
-  blade.attachedCards = ['06019', '06019']
+  blade.attachments = [{id:'blood1',code:'06019',ownerSeat:0},{id:'blood2',code:'06019',ownerSeat:0}]
   state.chaosBag = ['0']
   const combatBase = getStat(state, me(state), 'combat')
   const attack = abilityMove(state, blade.id, target.id)
@@ -111,14 +112,14 @@ test('TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属
 
 test('TDE 06018 渴血之刃 攻击时可将 1 张嗜血混洗回牌库换 +1 伤害', () => {
   const state = fixture('01001')
-  const blade = asset(state, '06018', { uses: 2, attachedCards: ['06019', '06019'] })
+  const blade = asset(state, '06018', { uses: 2, attachments: [{id:'blood1',code:'06019',ownerSeat:0},{id:'blood2',code:'06019',ownerSeat:0}] })
   const target = enemy(state, { fight: 1, evade: 1, health: 6 })
   state.chaosBag = ['0']
   move(state, abilityMove(state, blade.id, target.id))
   resolveChoices(state, pending => (pending.options.some(option => option.id === 'use') ? 'use' : null))
   assert.equal(state.enemies.find(item => item.id === target.id)?.damageTaken, 3, '基础 1 + 卡面 1 + 嗜血 1')
   const after = me(state).assets.find(item => item.id === blade.id)
-  assert.equal((after.attachedCards || []).filter(code => code === '06019').length, 1, '消耗 1 张附属嗜血')
+  assert.equal((after.attachments || []).filter(card => card.code === '06019').length, 1, '消耗 1 张附属嗜血')
   assert.ok(me(state).deck.includes('06019'), '嗜血混洗回牌库')
 })
 
@@ -135,7 +136,7 @@ test('TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 
   const after = me(state)
   const bladeAfter = after.assets.find(item => item.id === blade.id)
   assert.equal(bladeAfter.uses, 2, '移除 2 点贡品')
-  assert.deepEqual(bladeAfter.attachedCards, ['06019'], '嗜血附属到渴血之刃')
+  assert.deepEqual(bladeAfter.attachments.map(card=>card.code), ['06019'], '嗜血附属到渴血之刃')
   assert.equal(after.discard.includes('06019'), false, '附属后不进入弃牌堆')
 
   // 没有渴血之刃：受到 1 点恐惧并洗回牌库。
@@ -197,7 +198,7 @@ test('TDE 06021 一瓣缟玛瑙 3 张在场时放在一边并找出皇后的挂�
   resolveChoices(state)
   const inv = me(state)
   assert.equal(inv.assets.filter(item => item.code === '06021').length, 0, '3 张一瓣缟玛瑙离场')
-  assert.equal((state.setAside || []).filter(code => code === '06021').length, 3, '放在一边，位于场外')
+  assert.equal((state.setAside || []).filter(card => (typeof card === 'string' ? card : card.code) === '06021').length, 3, '放在一边，位于场外')
   assert.ok(inv.assets.some(item => item.code === '06022'), '皇后的挂坠放置入场')
   assert.equal((state.bondedSets?.['06021']?.cards || []).length, 0, '绑定检索已取走副本')
 })
@@ -227,7 +228,7 @@ test('TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索
   move(state, abilityMove(state, last.id))
   resolveChoices(state, pending => (pending.options.some(option => option.id === 'move') ? 'move' : null))
   assert.equal(me(state).assets.some(item => item.code === '06022'), false, '充能耗尽后放在一边')
-  assert.ok((state.setAside || []).includes('06022'), '挂坠进入放在一边区')
+  assert.ok((state.setAside || []).some(card => (typeof card === 'string' ? card : card.code) === '06022'), '挂坠进入放在一边区')
   assert.equal(me(state).deck.filter(code => code === '06021').length, 3, '3 张一瓣缟玛瑙洗回牌库')
 })
 
@@ -357,6 +358,18 @@ test('TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一
   assert.equal(state.removedFromGame?.includes('06028'), true, '显现后移出游戏')
 })
 
+test('TDE 06028 群星正确之时 从遭遇牌库抽取时正常显现', () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.deck = ['01088']
+  inv.resources = 5
+  state.encounterDeck = ['06028']
+  runTest(state, draft => drawEncounter(draft, draft.investigators[0], []))
+  assert.ok(me(state).hand.includes('01088'))
+  assert.equal(me(state).resources, 6)
+  assert.deepEqual(state.removedFromGame.filter(code => code === '06028'), ['06028'])
+})
+
 // ---------------------------------------------------------------------------
 // 06029 开启大门
 // ---------------------------------------------------------------------------
@@ -381,6 +394,23 @@ test('TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能
   assert.equal((state.playerLocationAttachments || []).filter(item => item.code === '06029').length, 3)
   me(state).hand = ['06029']
   assert.match(String(validateMove(state, 0, { action: 'play', cardId: '06029' })), /3 张「开启大门」/)
+})
+
+test('TDE 06029 开启大门 两处附属地点产生可见且可执行的移动', () => {
+  const state = fixture('01001')
+  const origin = me(state).location
+  const destination = 'gate-destination'
+  state.locations.push({ ...state.locations[0], id: destination, name: '远端地点', connections: [], revealed: true })
+  state.playerLocationAttachments = [
+    { code: '06029', location: origin, ownerSeat: 0 },
+    { code: '06029', location: destination, ownerSeat: 0 },
+  ]
+  assert.ok(legalMoves(state).some(item => item.action === 'move' && item.locationId === destination))
+  assert.ok(viewState(state, 0).locations.find(item => item.id === origin).connections.includes(destination),
+    '牌桌地点投影显示动态连线')
+  assert.equal(validateMove(state, 0, { action: 'move', locationId: destination }), null)
+  move(state, { action: 'move', locationId: destination })
+  assert.equal(me(state).location, destination)
 })
 
 // ---------------------------------------------------------------------------
@@ -570,7 +600,7 @@ test('TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇
   state.encounterDeck = ['dissonantVoices', 'dissonantVoices', 'dissonantVoices']
   let offered = false
   runTest(state, draft => {
-    reactionWindow(draft, 'phaseBegins', { when: 'phaseBegins', prompt: '阶段开始' }, [])
+    reactionWindow(draft, 'mythosEncounterStep', { when: 'mythosEncounterStep', seat: 0, prompt: '抽取遭遇步骤' }, [])
   }, pending => {
     const card = pending.options.find(option => option.cardCode === '06110')
     if (card) { offered = true; return card.id }
@@ -578,7 +608,7 @@ test('TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇
   })
   assert.equal(offered, true, '神话阶段开始时的反应窗口提供「头班守夜」')
   assert.ok(me(state).discard.includes('06110'), '快速事件结算后进弃牌堆')
-  assert.equal(state.encounterDeck.length, 3, '遭遇牌库张数不变（查看+排列，不替换抽牌步骤）')
+  assert.equal(state.encounterDeck.length, 2, '本次步骤实际抽取分配的 1 张遭遇卡')
 })
 
 // ---------------------------------------------------------------------------

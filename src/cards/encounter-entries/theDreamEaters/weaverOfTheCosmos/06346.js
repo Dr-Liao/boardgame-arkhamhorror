@@ -6,7 +6,7 @@
 //   强制 - 你躲避阿特拉克·纳克亚后：其不横置，改为选择你所在地点的一位调查员。它本轮不能攻击所选调查员。
 // 接线：enemyScript.onMoved 由 TDE 共享层 enemyMoved 派发（第 3 实参是「移动前地点」）；
 //   onEvade 由章节 behavior.afterEvade 派发（共享层未内置，见 worker 报告的共享层请求）。
-//   simplified：引擎没有「不能攻击指定调查员」的读点，躲替代实现为「不横置 + 本轮不攻击任何人」。
+//   躲避后通过 protectFromEnemyAttack 仅保护所选调查员至本轮结束。
 import { activeInvestigators } from '../../_shared.js'
 
 function doomAt(state, api, locationId) {
@@ -20,8 +20,7 @@ export default {
   code: '06346',
   scope: 'enemy',
   implemented: true,
-  simplified: true,
-  note: '躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）；离开地点与击败标记已实现。',
+  note: '躲避后不横置；仅所选调查员在本轮免受本敌人攻击。',
   enemyScript: {
     onMoved(state, enemy, previousLocation, api) {
       const previous = previousLocation || null
@@ -31,7 +30,6 @@ export default {
       api.info?.(`🕷️ 阿特拉克·纳克亚离开「${api.locName?.(previous) || previous}」：攻击该地点的每位调查员。`)
       for (const inv of present) {
         api.attack?.(enemy, inv)
-        if (inv.defeated || inv.resigned) break
       }
     },
     onEvade(state, inv, enemy, result, api) {
@@ -43,8 +41,7 @@ export default {
         options: candidates.map(one => ({ id: String(one.seat), label: one.name })),
       })
       api.readyEnemy?.(enemy)
-      api.skipEnemyAttackThisRound?.(enemy)
-      api.setScenarioFlag?.('atlachNachaEvadeProtected', { round: state.round, seat: Number(answer ?? candidates[0]?.seat) })
+      api.protectFromEnemyAttack(enemy, Number(answer ?? candidates[0]?.seat), { until: 'roundEnd' })
       api.info?.('🕷️ 阿特拉克·纳克亚没有横置；本轮它不能攻击所选调查员。')
     },
     onDefeated(state, enemy, api) {

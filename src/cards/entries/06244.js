@@ -5,14 +5,21 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 已实现：作为[[盟友]]支援的印刷数据（槽位/图标/费用由 cards-data 与通用规则结算）。
-// 未实现（主效果，显式简化）：「花费[[法术]]支援的至少 1 充能后」——引擎没有「充能被花费后」
-//   的窗口（ability-rules 扣充能处不开窗口，也没有本次花费来源的上下文），无法判定触发时机。
+// 法术支援支付充能后由 spellChargesSpent 窗口提供来源，横置本卡归还 1 充能。
 
 export default {
   code: '06244',
-  simplified: true,
-  note: '未实现（主效果）：「你花费[[法术]]支援的至少 1 充能后，横置特薇拉：在该支援上放置 1 充能」——引擎没有「充能被花费后」的窗口/上下文（扣充能发生在费用支付里，不进入任何窗口）。卡牌本身作为[[盟友]]支援的入场/槽位/费用按印刷数据结算。',
-  abilities: [],
+  abilities: [{
+    kind: 'reaction',
+    trigger: 'spellChargesSpent',
+    label: '花费法术支援充能后：横置特薇拉，在该支援上放置 1 充能',
+    cost: { exhaust: true },
+    criteria: [({ inv, context }) => context?.seat === inv.seat && context.amount >= 1
+      && (inv.assets || []).includes(context.asset)],
+    resolve: ({ context, api }) => {
+      api.addUses(context.asset, 1)
+      api.info(`「特薇拉·凯瑟琳·普莱斯」为「${api.cardName(context.asset.code)}」补充了 1 充能。`)
+    },
+  }],
   modifiers: [],
 }

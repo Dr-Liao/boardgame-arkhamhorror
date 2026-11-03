@@ -1,3 +1,4 @@
+import { availableResources } from './resource-bank.js'
 // 能力执行（doAbility / openAbilityWindow / effectError）从 engine.js 拆出的模块
 // （Phase 6 · 6d-16）。
 //
@@ -10,7 +11,9 @@
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
 import { NON_PLAYER_SCOPES } from './ability.js'
-import { entityParleyDescriptors, parleyTargetError } from './parley.js'
+import { actionEntityById, entityActionDescriptors, parleyTargetError, entityAbilityInRange } from './parley.js'
+import { afterUsesSpent } from './uses.js'
+import { availableUseCost, payUseCost } from './use-transfer.js'
 
 export function createAbilityExecution(deps) {
   const {
@@ -38,7 +41,7 @@ export function createAbilityExecution(deps) {
     discardLocked,
     discardableHandCards,
     effectDefinitionError,
-    executeDescriptor,
+    executeDescriptor, enemyTextBlanked,
     exilePlayerCard,
     healDamageAtLocation,
     info,
@@ -59,6 +62,7 @@ export function createAbilityExecution(deps) {
     registeredEntry,
     reloadAmmo,
     requestChoice,
+    reactionWindow,
     resourceBank,
     resolveEffect,
     returnAssetToHand,
@@ -74,12 +78,10 @@ export function createAbilityExecution(deps) {
 function doEntityAbility(state, seat, move, events) {
   const inv = state.investigators[seat]
   if (!inv) return false
-  const entity = state.enemies.find(item => item.id === move.entityId)
-    || state.locations.find(item => item.id === move.entityId)
-    || (state.storyAssets || []).find(item => item.id === move.entityId)
+  const entity = actionEntityById(state, move.entityId)
   if (!entity) return false
-  const descriptor = entityParleyDescriptors(entity)[move.abilityIndex]
-  if (!descriptor) return false
+  const descriptor = entityActionDescriptors(entity)[move.abilityIndex]
+  if (!descriptor || !entityAbilityInRange(state, inv, entity, descriptor)) return false
   const error = parleyTargetError(state, inv, entity, descriptor, move)
   if (error) {
     info(state, events, `⛔ ${error}`)
@@ -98,8 +100,8 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   // 2026-10-25 第七轮修复 05196：同地点队友的 teamActivatable 支援由本调查员激活（actor 支付费用）。
   if (!asset && Number.isInteger(ownerSeat)) {
     const owner = state.investigators[ownerSeat]
-    const candidate = owner?.assets?.find(item => item.id === assetId)
-    if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && owner.location === inv.location) {
+    const candidate = owner && controlledAbilityCard(owner, assetId)
+    if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && !owner.defeated && !owner.resigned && owner.location === inv.location) {
       asset = candidate
     }
   }
@@ -116,6 +118,10 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     if (!descriptorUsable(state, inv, asset, descriptor, { windowId: state.timingWindow, mode: 'action' })) return
     executeDescriptor(state, { inv, source: asset, descriptor, context: { targetId, optionIndex },
       events, windowId: state.timingWindow, legacyAbilityLog: true })
+    if (descriptor.kind === 'action') reactionWindow(state, 'assetActionResolved', {
+      when: 'assetActionResolved', seat, assetId: asset.id, assetCode: asset.code,
+      descriptorId: descriptor.id, location: inv.location,
+    }, events, { allowNested: true })
     return
   }
   // Phase 2（C3）：旧式能力也走同一份费用求值（动态费用不再只有描述子能用）。
@@ -131,12 +137,12 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     asset.exhausted = true
   }
   if (cost.uses) {
-    if ((asset.uses || 0) < cost.uses) return
-    asset.uses -= cost.uses
+    if (availableUseCost(state, asset, registeredEntry) < cost.uses) return
+    payUseCost(state, seat, asset, cost.uses, registeredEntry, spec => requestChoice(state, spec))
   }
   if (cost.resources) {
-    if (inv.resources < cost.resources) return
-    resourceBank.spendFromPool(inv, cost.resources)
+    if (availableResources(inv) < cost.resources) return
+    resourceBank.spendFromPool(inv, cost.resources, state)
   }
   // 「一目十行」等：以个人线索作为能力费用。
   if (cost.clues) {
@@ -160,6 +166,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     }
   }
   if (cost.action !== false) spendAction(state, inv)
+  if (cost.uses) afterUsesSpent(state, inv, asset, cost.uses, events, deps)
   if (ability.oncePerTest) {
     state.skillTest.usedAbilities ||= {}
     state.skillTest.usedAbilities[`${asset.id}:${abilityIndex}`] = true
@@ -218,6 +225,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
   if ((state._abilityWindow && !opts.allowNested) || (state._reaction && !opts.allowNested)) return context
   // 印刷文本被清空的实体不结算它自己的描述子能力（与 enemyTextBlanked 同一口径）。
   const entityBlanked = source => {
+    if(state.enemies.includes(source)||context.enemy===source)return enemyTextBlanked(state,source)
     const blank = source?.textBlanked
     return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
   }
@@ -232,6 +240,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
         // 受控的剧情支援（controlled）按玩家卡来源处理。
         if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
+          if (!source && !descriptor.fromHand) continue
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           if (descriptor.fromHand && fromHandIndex == null) continue
           executeDescriptor(state, { inv, source, descriptor, context, events, windowId, fromHandIndex, effect, silent: descriptor.silent === true })
@@ -250,7 +259,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
         // 只按「窗口 + 本轮/阶段/回合 + 相关实体」去重：同一事件的两次窗口调用
         // 上下文可能一个带 seat 一个不带，不能用 windowInstanceKey 原样做键。
         const instanceKey = [windowId, state.round, state.phase, state.turnSerial ?? 0, state.moveCount ?? 0,
-          context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? ''].join('|')
+          context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? '', context.windowInstance ?? ''].join('|')
         for (const { source, entry } of nonPlayerAbilitySources(state, context)) {
           if (entityBlanked(source)) continue
           for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
@@ -318,6 +327,17 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
             if (!descriptorUsable(state, inv, playedSource, descriptor, { windowId, context })) continue
             candidates.push({ source: playedSource, code: context.cardCode, descriptor })
           }
+        }
+      }
+      // The discarded card has already left the hand, so the ordinary hand source
+      // enumeration cannot offer its own "after you discard this card" reaction.
+      if (windowId === 'handCardDiscarded' && context?.cardCode && inv.seat === context.seat
+        && inv.discard.includes(context.cardCode)) {
+        const discardedEntry = registeredEntry(context.cardCode)
+        const discardedSource = { code: context.cardCode, discardedCard: true }
+        for (const descriptor of descriptorsInEntry(discardedEntry, windowId, 'reaction')) {
+          if (descriptor.fromHand || !descriptorUsable(state, inv, discardedSource, descriptor, { windowId, context })) continue
+          candidates.push({ source: discardedSource, code: context.cardCode, descriptor })
         }
       }
       if (!candidates.length) continue
@@ -486,7 +506,7 @@ function effectError(state, inv, effect) {
       const cost = code => Math.max(0, playCost(state, inv, cardDef(code)) - (effect.amount || 0))
       const ally = inv.hand.some(code => cardDef(code)?.type === 'asset'
         && (cardDef(code)?.traits || []).some(trait => String(trait).toLowerCase() === 'ally')
-        && inv.resources >= cost(code))
+        && availableResources(inv) >= cost(code))
       if (!ally) return '手牌中没有可打出的盟友支援'
     }
     if (effect.action === 'investigateAction') {
@@ -518,7 +538,7 @@ function effectError(state, inv, effect) {
   if (effect.type === 'carcosaInvestigator' && effect.action === 'yorickPlayAsset'
     && (discardLocked(state, inv) || !inv.discard.some(code => {
       const def = cardDef(code)
-      return def?.type === 'asset' && !isWeaknessCard(def) && inv.resources >= playCost(state, inv, def)
+      return def?.type === 'asset' && !isWeaknessCard(def) && availableResources(inv) >= playCost(state, inv, def)
         && assetReplacementPlans(inv, def).length > 0
     }))) return '弃牌堆中没有可打出的支援'
   if (effect.type === 'carcosaInvestigator' && effect.action === 'sefinaDrawBeneath' && !inv.beneath?.length) return '赛菲娜下方没有事件'
@@ -532,16 +552,17 @@ function effectError(state, inv, effect) {
 
 // 2026-10-25 本循环修复 player-window-fast-actions：在玩家窗口里结算一个 kind:'free' 描述子。
 // 用于调查员/附属的 [free] 能力（legalMoves 只枚举场上支援，playerWindow 需要显式执行入口）。
-function doFreeDescriptor(state, seat, code, index, targetId, events) {
+function doFreeDescriptor(state, seat, code, index, targetId, events, sourceId = null) {
   const inv = state.investigators[seat]
   if (!inv) return false
   for (const row of descriptorSources(state, inv)) {
     if (row.code !== code) continue
     // 手牌行的 source 是 null。免费能力必须作用在场上的那张卡，不能借手里的同名卡结算。
-    if (!row.source) continue
+    if (!row.source || sourceId != null && row.source.id !== sourceId) continue
     const descriptor = (row.entry?.abilities || [])[index]
     if (!descriptor || descriptor.kind !== 'free') continue
     if (descriptor.fromHand) continue
+    if (!descriptorUsable(state, inv, row.source, descriptor, { windowId: state.timingWindow, mode: 'free' })) continue
     executeDescriptor(state, {
       inv, source: row.source, descriptor,
       context: { seat, targetId: targetId ?? null, window: state.timingWindow },

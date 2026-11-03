@@ -24,7 +24,7 @@ import { settle } from './core-fixture.mjs'
 
 import { MYRIAD_LIMIT, isMyriad, myriadUsage, validateMyriadLimit } from '../src/engine/myriad.js'
 import { swarmingCount, swarmingCountForText, swarmingSpec } from '../src/engine/swarming.js'
-import { placeSwarmCards, splitSwarmingDamage, swarmBlockedReason, swarmCanBeDefeated, swarmCardsOf, swarmCountOf } from '../src/engine/swarm.js'
+import { placeSwarmCards, swarmBlockedReason, swarmCanBeDefeated, swarmCardsOf, swarmCountOf } from '../src/engine/swarm.js'
 import { canFlipVeiledLocation, flipVeiledLocation, isVeiledLocation, shuffleVeiledIntoDeck, veiledFlipBlockedReason } from '../src/engine/veiled.js'
 import { bondedCardList, findBondedMain } from '../src/engine/bonded.js'
 import { bondedPartnerOf, placeBondedLocation } from '../src/engine/bonded-location.js'
@@ -277,14 +277,13 @@ test('P4 关键词引擎行为：蜂拥 X 的四种口径与清空前不可击�
   // 头领在还有蜂拥卡时不能被击败；溢出伤害逐张扣。
   const host = { id: 'host1', code: '06102', health: 6, damageTaken: 0 }
   const deck = ['06103', '06103', '06103']
-  const target = placeSwarmCards({ instanceSeq: {}, encounterDeck: deck }, host, 2)
+  const target = placeSwarmCards({ instanceSeq: {}, currentSeat:0, investigators:[{seat:0,deck,engaged:[]}] }, host, 2)
   assert.equal(swarmCountOf(host), 2)
   assert.equal(swarmCardsOf(host).length, 2)
   assert.equal(swarmCanBeDefeated(host), false)
   assert.match(swarmBlockedReason(host), /蜂拥卡/)
   host.swarmCards[0].health = 1
   host.swarmCards[1].health = 1
-  assert.deepEqual(splitSwarmingDamage(host, 2, 1), { toHost: 1, toSwarm: 1, defeatedSwarm: ['swarm1'], leftover: 0 })
   assert.equal(target.length, 2)
 })
 

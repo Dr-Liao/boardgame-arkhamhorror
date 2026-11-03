@@ -1,0 +1,180 @@
+{
+  "id": "heartOfTheEldersPart1",
+  "campaignId": "theForgottenAge",
+  "sourceKind": "bundled-reference-with-self-translated-supplements",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险V–A: 久远腹地，第一章",
+          "children": [
+            {
+              "text": "自从你的队伍再次进入丛林探险以来，已经过了好几天，你们愈发频繁地遭遇危机，危险程度也与日俱增。努力保障此次旅程的食粮和补给品数量充足，这已经不容易，更别提还时常受到丛林住民的滋扰。万幸的是，你至今还没发现上次探险来袭的蛇族的踪迹，但你确定它们就在那里。它们在盯着你们，伺机而动。\n\n在第六天的早晨，你找到了入口。这是一个巨大的洞穴入口，被树木、灌木丛和藤蔓遮挡着。你差点完全错过了这整个巨大的洞穴入口，尽管它是如此地庞大。洞穴入口周围的是六根石柱，每根石柱均覆盖着古怪的凹槽和闪着黯淡红光的雕文。或许你的向导之中有人会知道这是什么含义？\n\n• 调查员必须決定(选择一项)：\n• 问问伊塔卡。只有当伊塔卡在一位调查员的牌库中，才能选择这个选项\n\n• 问问亚历山卓。只有当亚历山卓·维拉在一位调查员的牌库中，才能选择这个选项\n\n• 查阅探险日志。只有当探险日志在一位调查员的牌库中，才能选择这个选项\n\n• 我们要是能对这知道多些信息就好了……进入冒险设置。"
+            },
+            {
+              "text": "“那个入口有结界，防止入侵者进入。”伊塔卡神秘地说道，合上双眼，仿佛用灵感来探索整个洞穴一般，“这些柱子就是钥匙。每根石柱都代表着一次对智慧和意志的考验。”她向其中一根柱子踏近一步并伸出手掌触碰，柱身的光芒开始变亮。你发现这根柱子底下带有的凹槽形成一种图案，你曾在某个地方见过这图案。如果伊塔卡认为此地有结界，那么你也认同她的观点——肯定有方法打破结界……\n\n本场冒险开始时，将伊塔卡放置在场。\n\n你在时间界限彼端的旅程使你领悟到了如何进入昆场。"
+            },
+            {
+              "text": "亚历山卓仔细地查看每根石柱。 “这些柱子的作用应该和门锁差不多。看这儿，看到了吗？凹槽没有刚好连成一线。”他转动其中一根石柱，随后你看见石柱向侧转动时显示的图案。“我敢打赌，要是没有把这些石柱正确排列就进洞的话，我们是走不远的。这只是我的直觉……但我认为我们应该更加仔细地检查这个区域，再进入洞穴。”你现在很了解亚历山卓，知道他的直觉往往是对的。\n\n本场冒险开始时，将亚历山卓·维拉放置在场。\n\n你在时间界限彼端的旅程使你领悟到了如何进入昆场。"
+            },
+            {
+              "text": "在上一次探险的日志内并不能找到所有的答案，但当你翻动书页的时候，一个熟悉的图样吸引了你的注意力——由此前丧生的探险队员洛伦佐所绘制的一个图样。这是从其中一处埃兹特里遗迹的石壁上细致摹画的雕纹。你从摹画下来的图样忠看到了许多图案和象形文字，与这些石柱上的一致。这部是个单纯的巧合。这些石柱无疑就是关键，能够令你找到恩凯之路……\n\n本场冒险开始时，将探险日志放置在场。\n\n你在时间界限彼端的旅程使你领悟到了如何进入昆场。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "检查剧本日志。如果你知道了6条道路，跳过本场冒险，立即进入结局1。"
+            },
+            {
+              "text": "收齐以下遭遇组的所有卡牌：审判之柱、久远腹地、雨林、蛇族、探险、毒药。这些遭遇组的图标为："
+            },
+            {
+              "text": "将昆扬之口放置入场，(洞穴的巨口)面朝上。每位调查员从昆扬之口(洞穴的巨口)开始游戏。"
+            },
+            {
+              "text": "检查剧本日志。得益于你在时空界限另一端的经历，你得知了进入昆扬的方法。你每知道了1条道路，在昆扬之口上放置1资源，视作1个石柱标记。"
+            },
+            {
+              "text": "在这个剧本期间，如果你之前已进行过本场冒险，并且之前已到达场景2，则将场景1a翻面并放置在昆扬之口上。"
+            },
+            {
+              "text": "构建探索牌库。收取6张单面的丛林地点卡牌，并与以下遭遇卡牌每种一张混洗：落入陷阱、蚁群缠身、迷失荒野、补给短缺。"
+            },
+            {
+              "text": "随机从以下3个遗迹地点中选择一个：杂草丛生的遗迹、毒牙神庙、石板祭坛。将所选地点洗入探索牌库。将其他2个地点从游戏中移除。"
+            },
+            {
+              "text": "检查剧本日志。如果调查员找到了前进的道路，不将随机选择的地点洗入探索牌库，而是将其放置入场。"
+            },
+            {
+              "text": "将不在调查员牌库中的所有中毒弱点放在一边。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员撤退或者被击败)：丛林实在过于危险，你无法继续探索。要是你再逗留下去，这些怪异石柱的所在将成为你的坟墓。你决定立即逃跑，回到数英里外一片熟悉的空地并修整队伍。你知道自己终究还是得回到石柱那去，搞懂那些图案才能开启前进的道路……但就现在而言，至少你保住了性命。\n\n• 如果昆扬之口上的石柱标记多于冒险日志中记录的冒险开始时的石柱标记数，则划掉了你知道了……条道路的数量。然后，记录下你知道了X条道路，其中X为昆扬之口上的石柱标记的数量。\n\n• 调查员必须重玩本冒险。重置游戏，至本场冒险的设置阶段。除了在上一局游戏中承受的任何创伤以外，不要在剧本日志记录其他任何信息。你们在上一局游戏不获得经验点数。任何调查员阵亡或发疯的玩家必须如常选择一位新的调查员进行游戏。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1：你压抑着心中的恐惧，走进了洞穴……\n\n• 在冒险日志中，记录下丛林监视着你。在其旁边的括号内，记录下胜利牌区内带有“复仇X”字样的每张卡牌名称。不要在“伊格之怒”下方作任何记录。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 调查员不可以花费经验值，也不可以更改自己的牌库。立即进入冒险V–A: 久远腹地，第二章。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局 2：你尚未解开昆扬入口六根石柱的谜题，却已不愿继续逗留在这片敌意重重的丛林。你决定直接进入洞穴，希望石柱所代表的那些“防护”不过是古老的迷信……\n\n• 你擅闯了敌对的土地。在昆扬之口上放置石柱标记，直到恰好有 6 个。每以此方式放置 1 个石柱标记，就在冒险日志的“伊格之怒”下记录 2 道划记。\n• 穿过石柱时，剧痛突然撕扯你的身体，一个可怕的诅咒降临在你身上。每名已中毒的调查员承受 1 点精神创伤；每名未中毒的调查员将一张放在一边的中毒弱点加入自己的牌组。\n• 进入结局 1。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario V-A: Heart of the Elders, Part 1",
+          "children": [
+            {
+              "text": "Intro 1: It has been several days since your party ventured forth into the rainforest once more, and each day, the hazards you face grow more dangerous and frequent. Securing enough food and supplies for the journey is a constant struggle, and you are harrassed at every turn by the jungle’s inhabitants. Fortunately, you have seen no sign yet of the serpent people who attacked the previous expedition, but you’re positive they are out there. Watching. Waiting.\n\nOn the morning of the sixth day, you find the entrance. It is a huge cave opening, partially obscured by trees, brush, and vines. You nearly missed the great cavern maw altogether, despite its enormity. Surrounding the cavern’s entrance are six stone pillars, each covered in strange grooves and carvings that glow with a dim red hue. Perhaps one of your guides will understand what this means?\n\n• The investigators must decide (choose one):\n• Let’s consult with Ichtaca. Choose this option only if Ichtaca is in an investigator’s deck. Proceed to Intro 2.\n\n• Let’s consult with Alejandro. Choose this option only if Alejandro Vela is in an investigator’s deck. Proceed to Intro 3.\n\n• Let’s consult the expedition journal. Choose this option only if the Expedition Journal is in an investigator’s deck. Skip to Intro 4.\n\n• I wish we knew more about this... Skip to Setup."
+            },
+            {
+              "text": "Intro 2: “The entrance is warded against intruders,” Ichtaca says cryptically, her eyes closed as though probing the cavern with unnatural senses. “These pillars are the key. Each is a test of wit and will.” She steps toward one of them and touches it with her palm, and its glow brightens. You notice now that the grooves along the pillar’s foundation depict a pattern you have seen somewhere before. If Ichtaca believes this place to be warded, you trust her opinion—there must be some way to break these wards…\n\nBegin this scenario with Ichtaca in play. Skip to Setup."
+            },
+            {
+              "text": "Intro 3: Alejandro examines each of the pillars studiously. “It is a lock of some sort. Look here, see? The grooves do not line up perfectly.” He twists one of the pillars, and you can see the pattern along its side shifting. “I wager if we entered the cave, we would not get very far without these pillars in the correct formation. Just a hunch, I suppose…But I think we should examine this area further before we proceed.” You know Alejandro well enough by now to know that his hunches tend to be correct.\n\nBegin this scenario with Alejandro Vela in play. Skip to Setup."
+            },
+            {
+              "text": "Intro 4: The previous expedition’s journal doesn’t have all the answers, but as you browse its pages, you are struck by a familiar diagram—one drawn by Lorenzo, an expedition member who never made it back to Arkham. It is a delicate recreation of a carving that was on the wall of one of the Eztli ruins. Many of the patterns and hieroglyphs you see in this drawing are shared among these pillars. It cannot simply be a coincidence. These pillars are surely the key to finding your way to N’kai…\n\nBegin this scenario with Expedition Journal in play. Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Check Campaign Log. If 6 paths are known to you, skip this scenario and proceed immediately to Resolution 1."
+            },
+            {
+              "text": "Gather all cards from the following encounter sets: Pillars of Judgment, Heart of the Elders, Rainforest, Serpents, Expedition, and Poison. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Put the Mouth of K’n-yan into play, (The Cavern’s Maw) side faceup. Each investigator begins play at the Mouth of K’n-yan (The Cavern’s Maw)."
+            },
+            {
+              "text": "Check Campaign Log. Your journey beyond the boundary of time has granted you insight into how to enter K’n-yan. For each path that is known to you, place 1 resource on the Mouth of K’n-yan, as a pillar token."
+            },
+            {
+              "text": "If you have played this scenario before during this campaign and have reached act 2 before, flip act 1a over and place it in the Mouth of K’n-yan."
+            },
+            {
+              "text": "Create the exploration deck. This is done by taking the 6 single-sided Jungle locations and shuffling them together, along with 1 copy each of the following encounter cards: Pitfall, Ants!, Lost in the Wilds, and Low on Supplies."
+            },
+            {
+              "text": "Randomly choose one of the following 3 Ruins locations: Overgrown Ruins, Temple of the Fang, and Stone Altar. Shuffle the randomly chosen location into the exploration deck. Remove the other 2 from the game."
+            },
+            {
+              "text": "Check Campaign Log. If the investigators mapped out the way forward, instead of shuffling the randomly chosen location into the exploration deck, put it into play."
+            },
+            {
+              "text": "Set aside each Poisoned weakness that is not already in an investigator’s deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): The hazards of the jungle are too dangerous for you to continue exploring. If you remain any longer, these odd pillars will mark your grave. You decide to flee for now, returning to a familiar clearing several miles away where you can recuperate. You know that you must eventually return to the pillars and figure out the pattern that will open the way forward…but for now, at least you are safe.\n\n• If there are more pillar tokens on the Mouth of K’n-yan than there were when the scenario began, in your Campaign Log, cross out how many paths are known to you. Then, record that X paths are known to you. X is the number of pillar tokens on the Mouth of K’n-yan.\n\n• The investigators must replay Scenario V-A: Heart of the Elders, Part 1. Reset the game to this scenario’s Setup. Do not record anything else in your Campaign Log except for any trauma suffered from your previous game. No experience points are earned from your previous game. Any player whose investigator was killed or driven insane must choose a new investigator to play, as normal."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: Swallowing your fear, you enter the cavern…\n\n• In your Campaign Log, record that the jungle watches. Next to this, in parentheses, record the names of each card with Vengeance X in the victory display. Do not record any tally marks under “Yig’s Fury.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Investigators may not spend experience or alter their decks in between Scenarios V-A and V-B. Proceed immediately to Scenario V-B: Heart of the Elders, Part 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: You haven’t yet completed the puzzle of the six pillars that serve as the entrance to K’n-yan, but you don’t wish to tarry any further in this hostile jungle. You decide to enter the cavern anyway, hoping that whatever “wards” the pillars represent are nothing but ancient superstition…\n\n• You have trespassed in a hostile land. Place pillar tokens on the Mouth of K’n-yan until there are exactly 6 pillar tokens. Then, for every pillar token added in this way, record two tally marks under “Yig’s Fury” in your Campaign Log.\n\n• As you pass by the pillars, intense pain wrenches its way through your body, and you are afflicted with a terrible curse. Each investigator who is poisoned takes 1 mental trauma. Each investigator who is not poisoned adds a set‑aside Poisoned weakness to their deck.\n\n• Proceed to Resolution 1."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

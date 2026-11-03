@@ -46,6 +46,7 @@
   [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4.6.3 排队给主进程，子进程**不得**改 `src/engine/**`、任一本 `_shared.js` / `_lookup.js`、两个 `index.js`、`content/**`、`docs/**`、`audit/**`。
 - **批量迁移的主进程是唯一索引写者**：子进程用 `scaffold-card --entry --no-index` / `--encounter --no-index`，主进程合并后统一重建两个索引。
 - **新交互先于批量卡牌**：新的选择/目标/提示/面板必须在批次前完成，复用现有界面 token，并通过桌面 1440 / 移动 390 浏览器验收。
+- **每关必须迁移完整冒险指南**：新增或迁移关卡时，同步补齐中英文开场及条件分支、完整设置、特别规则、后续剧情、结局和结算，不能以布置摘要或引擎已实现代替。复用“关卡设置”面板，入口固定在剧本书右侧、混乱标记提示卡下方；特别规则优先展示，后续剧情和结局默认折叠。完成指南生成与校验、全部注册关卡覆盖检查及桌面 1440 / 移动 390 浏览器验收后，才能确认该章迁移完成。流程、命令和证据要求见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4.5.2 与 [`docs/scenario-guides.md`](docs/scenario-guides.md)。
 - **`web/` 是浏览器唯一能访问的目录**：`web/**` 只能从 `web/` 内相对导入。浏览器把 `/mods/arkhamhorror/`
   当根解析，跨出去（例如 `../presentation/...`）会 404，导致整块 Mod 界面加载失败：启动页退回大厅通用弹窗、
   开局后停在「正在加载界面…」。纯展示数据放 `web/ui-cards.js` 这类模块；Node 侧可以反向 import `web/`。

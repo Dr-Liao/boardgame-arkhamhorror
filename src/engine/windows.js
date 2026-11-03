@@ -24,6 +24,7 @@ const define = (id, label, kind = 'reaction', order = 100) => DEFS.set(id, Objec
 for (const [id, label, kind] of [
   ['encounterDrawn', '抽取遭遇卡后', 'reaction'],
   ['beforePlayCost', '打出一张卡牌支付费用前', 'interrupt'],
+  ['beforePlayAttempt', '打出一张卡牌并支付任何费用前', 'interrupt'],
   ['treachery', '抽取诡计卡后（显现前）', 'interrupt'],
   ['testBegins', '技能检定开始时', 'reaction'],
   ['tokenReveal', '揭示混乱标记时', 'interrupt'],
@@ -39,23 +40,48 @@ for (const [id, label, kind] of [
   ['enemyAttack', '敌人攻击时', 'interrupt'],
   ['opportunityAttack', '趁乱攻击时', 'interrupt'],
   ['harmDealt', '伤害/恐惧分配时', 'interrupt'],
+  ['harmAssigned', '实际受到伤害或恐惧后', 'reaction'],
+  ['threatEntered', '卡牌进入威胁区域后', 'reaction'],
+  ['enemyReadied', '敌人重整后', 'reaction'],
+  ['afterAlarmRaised', '警报等级提高后', 'reaction'],
   ['evadeSuccess', '躲避成功后', 'reaction'],
   ['evadeFail', '躲避失败后', 'reaction'],
   ['attackFail', '攻击失败后', 'reaction'],
   ['activateFirearmFight', '使用枪械攻击时', 'reaction'],
   ['actionResolvedAtLocation', '本地点一次行动结算后', 'reaction'],
+  ['consecutiveActions', '连续两次同类行动后', 'reaction'],
+  ['assetActionResolved', '支援的行动能力结算后', 'reaction'],
   ['enemyPhaseBegins', '敌人阶段开始时', 'reaction'],
   ['phaseBegins', '阶段开始时', 'reaction'],
   ['turnBegins', '回合开始时', 'reaction'],
+  ['turnEnded', '回合结束时', 'reaction'],
 ]) define(id, label, kind)
 // 2026-10-25 修复战役新增的窗口：05152 的「所附属支援离场后」与 05280 的三类取消面向。
 define('assetLeavesPlay', '支援离场后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
+define('handCardDiscarded', '一张手牌被弃掉后', 'reaction')
+define('treacheryWouldDiscard', '诡计结算后将要弃掉时', 'interrupt')
 define('wouldLoseResources', '将要失去资源时', 'interrupt')
 define('wouldLoseActions', '将要失去行动时', 'interrupt')
 // 2026-10-25 第六轮新增窗口（05036/05119/05014/05237/05324）。
 define('moveBeforeEngage', '移动后将要自动交战前', 'interrupt')
 define('committedCard', '卡牌进入投入区后', 'reaction')
+define('promiseBroken', '违背回合承诺后', 'reaction')
+define('chaosTokenResolved', '祝福或诅咒标记结算后', 'reaction')
+define('chaosRevealStepEnded', '混乱标记揭示步骤结束后', 'reaction')
+define('roundEnds', '一轮结束时', 'reaction')
+define('investigationPhaseStarts', '调查阶段开始时', 'reaction')
+define('testInitiated', '发起技能检定时', 'interrupt')
+define('beforeChaosTokenReveal', '将要从混乱袋揭示标记时', 'interrupt')
+define('encounterCardWouldDraw', '将要抽遭遇牌库顶牌时', 'interrupt')
+define('roundStarts', '一轮开始时', 'reaction')
+define('enemyPhaseEnds', '敌人阶段结束时', 'reaction')
+define('upkeepEnd', '重整阶段结束时', 'reaction')
+define('assetHarmPlaced', '伤害或恐惧放置到支援后', 'reaction')
+define('weaponFightInitiated', '使用武器发起攻击时', 'reaction')
+define('blessTokensWouldReturnToPool', '检定的祝福将要归还标记池时', 'interrupt')
+define('testEnds', '技能检定结束时', 'reaction')
+define('assetDamageAssigned', '伤害分配至支援时', 'reaction')
 define('cardWouldBeDrawn', '将要抽到卡牌时', 'interrupt')
 define('doomWouldBePlaced', '将要放置毁灭时', 'interrupt')
 define('doomPlaced', '毁灭放置后', 'reaction')
@@ -86,6 +112,11 @@ for (const [id, label] of [
 // 注意：注册 ≠ 已接线；下面每一个都在 engine.js 有确切的 openAbilityWindow /
 // triggerReaction 调用点，新增窗口时请同时补上调用点与测试。
 define('cardDrawn', '抽取卡牌后', 'reaction', 60)
+define('cardsDrawn', '一次抽牌完成后', 'reaction', 60)
+define('floodChanged', '地点淹没等级改变后', 'reaction', 220)
+define('spellChargesSpent', '花费法术支援的充能后', 'reaction', 60)
+define('mythosEncounterStep', '神话阶段抽取遭遇卡步骤开始前', 'reaction', 60)
+define('tokenEffectWouldResolve', '揭示的混乱标记效果结算前', 'reaction', 60)
 define('clueDiscovered', '发现线索后', 'reaction', 61)
 define('investigateSuccess', '调查成功后', 'reaction', 62)
 define('skillTestSuccess', '技能检定成功后', 'reaction', 62)
@@ -93,6 +124,11 @@ define('discoverClue', '发现线索前', 'interrupt', 63)
 define('scenarioStarts', '冒险开始时', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
 // 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。
+define('enemyWouldBeDefeated','敌人将要被击败','interrupt',38)
+define('enemyWouldBeEvaded','敌人将要被躲避','interrupt',38)
+define('enemyMoved','敌人移动后','reaction',39)
+define('enemyEnteredLocation','敌人进入地点后','reaction',39)
+define('enemyDamaged','敌人受到伤害后','reaction',39)
 define('enemyDefeated', '敌人被击败时', 'reaction', 39)
 // P6（食梦者）：你控制的支援被击败时（伤害/恐惧达到其上限）。
 // 调用点：src/engine/asset-defeat.js 的 checkAssetDefeated（applyHarm 与「移动伤害」共用同一判定）。

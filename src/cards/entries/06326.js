@@ -23,7 +23,7 @@ export default {
   code: '06326',
   abilities: [
     {
-      kind: 'action',
+      kind: 'free',
       label: '[free] 花费 1 资源：打出手中一个[[道具]]支援（支付其费用）',
       cost: { action: false, resources: 1 },
       target: {
@@ -40,7 +40,7 @@ export default {
       },
     },
     {
-      kind: 'action',
+      kind: 'free',
       label: '[free] 弃掉场上的一个[[道具]]支援：获得 2 资源',
       cost: { action: false },
       target: {

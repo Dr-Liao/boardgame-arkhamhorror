@@ -5,7 +5,13 @@
 //
 // 依赖注入同前；performTest / scenarioRuntime / triggerReaction 已迁出，作为函数声明引用即可。
 
+import { eventWindowContext } from './event-window.js'
+import { hunterRouteCandidates } from './enemy-routes.js'
 import { registeredEntries } from './ability.js'
+import { vehicleOf } from './vehicles.js'
+import { checkAirAfterMove } from './flood.js'
+import { investigatorConnections } from './location-connections.js'
+import { swarmGroup } from './swarm.js'
 
 export function createMovement(deps) {
   const {
@@ -59,7 +65,7 @@ function stepToward(state, fromId, toId) {
   return null
 }
 
-function distanceToInvestigator(state, fromId, targetInvestigators = aliveInvestigators(state)) {
+function distanceToInvestigator(state, fromId, targetInvestigators = aliveInvestigators(state), enemy = null) {
   const targets = new Set(targetInvestigators.map((i) => i.location))
   if (targets.has(fromId)) return 0
   const seen = new Set([fromId])
@@ -67,7 +73,8 @@ function distanceToInvestigator(state, fromId, targetInvestigators = aliveInvest
   while (queue.length) {
     const cur = queue.shift()
     const loc = state.locations.find((l) => l.id === cur.id)
-    for (const nb of (loc ? loc.connections : [])) {
+    const extra=enemy ? scenarioBehavior(state).enemyConnections?.(state,enemy,loc) || [] : []
+    for (const nb of [...new Set([...(loc?.connections || []),...extra])]) {
       if (seen.has(nb) || !state.locations.some((l) => l.id === nb)) continue
       if (targets.has(nb)) return cur.distance + 1
       seen.add(nb)
@@ -82,7 +89,7 @@ function distanceToInvestigator(state, fromId, targetInvestigators = aliveInvest
 function investigatorMoveDestinations(state, seat, effect) {
   const inv = state.investigators[seat]
   const loc = state.locations.find(item => item.id === inv.location)
-  let destinations = (loc?.connections || []).filter(id => state.locations.some(item => item.id === id))
+  let destinations = investigatorConnections(state, inv.location).filter(id => state.locations.some(item => item.id === id))
   if (effect.anyRevealed) {
     destinations = state.locations.filter(item => item.id !== inv.location && item.revealed && !state.enemies.some(enemy => enemy.location === item.id)).map(item => item.id)
   }
@@ -177,10 +184,13 @@ function doMove(state, seat, locationId, events) {
 // Action payment and effect-specific disengagement stay with the caller.
 
 function relocateInvestigator(state, seat, locationId, events, message = null, options = {}) {
+  seat = effectRecipient(state, state.investigators[seat])?.seat ?? seat
+  if (!playerEffectCanAffect(state, seat)) return
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned || inv.location === locationId || !locationExists(state, locationId)) return
+  if (vehicleOf(state, seat) && options.reason !== 'vehicle') return
   if (inv.steamImmobileRound === state.round) return
-  const moveError = movementError(state, inv, locationId)
+  const moveError = movementError(state, inv, locationId, { vehicle: options.reason === 'vehicle',ignoreBarriers:options.ignoreBarriers===true })
   if (moveError) { info(state, events, moveError); return }
   const entryError = investigatorEntryError(state, locationId, seat)
   if (entryError) { info(state, events, entryError); return }
@@ -193,6 +203,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
     info(state, events, `🚧 「${prevLoc.name}」上的屏障因调查员离开而被弃掉。`)
   }
   inv.location = locationId
+  checkAirAfterMove(state, seat)
   const enteredLocation = state.locations.find(location => location.id === locationId)
   // 03250：手部槽位 -1 只在该地点调查时生效，不能常驻。
   inv.handSlotsPenalty = registeredEntry(enteredLocation?.originalCode || enteredLocation?.code)?.handSlotsPenaltyWhileInvestigating
@@ -216,6 +227,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   info(state, events, message || `🚶 ${inv.name} 从「${from}」移动到「${locName(state, locationId)}」。`)
   for (const enemy of state.enemies.filter(enemy => enemy.engagedSeat === seat)) {
     if (enemy.bindMonster) { disengageEnemy(state, enemy); continue }
+    if (!enemyCanEnterLocation(state, enemy, locationId)) { disengageEnemy(state, enemy); continue }
     const previous = enemy.location
     enemy.location = locationId
     scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events), seat)
@@ -254,7 +266,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
     }
   }
   if (!inv.defeated && !inv.resigned && inv.location === locationId) {
-    triggerReaction(state, seat, 'move', events, { when: 'move', seat, location: locationId })
+    triggerReaction(state, seat, 'move', events, { when: 'move', seat, location: locationId, from: prevLoc?.id || null })
   }
   // 地底噬魔场景 2 目标：进入仪式地。关卡自带 checkObjectives 的剧本用 scenarioAdvance
   // 标记「推进由剧本结算」，避免在移动结算中途提前触发 actReveal。
@@ -268,8 +280,8 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   // 2026-10-25 本循环修复 05254：beforeMove 第 5 参携带位移来源 { reason: 'move' | 'effect' }，
   // 使「下一次移动行动额外花费」只对移动行动生效、效果位移不加价。
   const destination = state.locations.find(loc => loc.id === locationId)
-  scenarioBehavior(state).beforeMove?.(state, inv, destination, scenarioRuntime(state, events),
-    { reason: options.reason === 'move' ? 'move' : 'effect' })
+  if (scenarioBehavior(state).beforeMove?.(state, inv, destination, scenarioRuntime(state, events),
+    { reason: options.reason === 'move' ? 'move' : 'effect' }) === false) return
   // beforeEnter 与 entryError 同属未揭示面：揭示后不再收费，忽略未揭示面文字的效果同样跳过。
   const unrevealedText = destination && !destination.revealed
     && scenarioBehavior(state).ignoreLocationRevealText?.(state, inv, destination) !== true
@@ -333,8 +345,30 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   payBarrier(0)
 }
 
-function relocateEnemy(state, enemy, destination, events) {
-  if (!enemy || enemy.bindMonster || !destination || enemy.location === destination || !locationExists(state, destination)) return
+function relocateEnemy(state, enemy, destination, events, options = {}) {
+  if (enemy?.hostId) enemy = state.enemies.find(item => item.id === enemy.hostId) || enemy
+  if (!enemy || enemy.bindMonster || !destination) return
+  if (state.phase === 'enemy' && !options.routeSelected && (!options.cause || options.cause==='hunter') && !registeredEntry(enemy.originalCode || enemy.code)?.movesThroughVoid) {
+    const lures = (state.playerLocationAttachments || []).filter(a => registeredEntry(a.code)?.locationLure)
+    if (lures.length) {
+      const distance = id => distanceToInvestigator(state, enemy.location, [{ location: id }])
+      const best = Math.min(...lures.map(a => distance(a.location)))
+      const destinations = [...new Set(lures.filter(a => distance(a.location) === best).map(a => a.location))]
+      const target = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'location', source: 'locationLure',
+        seat: state.campaign.leadSeat ?? 0, prompt: '选择敌人朝向的诱饵。', options: destinations.map(id => ({ id, label: locName(state, id) })) })
+      if (enemy.location === target) return
+      const here = state.locations.find(l => l.id === enemy.location)
+      const neighbours = (here?.connections || []).filter(id => enemy.elite || !state.locations.find(l => l.id === id)?.barricade)
+      const distances = neighbours.map(id => distanceToInvestigator(state, id, [{ location: target }]))
+      const minimum = Math.min(...distances)
+      const routes = neighbours.filter((id, i) => distances[i] === minimum && Number.isFinite(minimum))
+      if (!routes.length) return
+      destination = routes.length === 1 ? routes[0] : requestChoice(state, { kind: 'hunter', source: 'locationLure',
+        seat: state.campaign.leadSeat ?? 0, prompt: '选择敌人朝诱饵移动的最短路线。', options: routes.map(id => ({ id, label: locName(state, id) })) })
+    }
+  }
+  if (enemy.location === destination || !locationExists(state, destination)) return
+  if (!enemyCanEnterLocation(state, enemy, destination)) return
   // 「不能移动，也不能被移动」（04337 无形之子）：任何移动来源都被拦住。
   if (enemy.immobile) {
     info(state, events, `⛔ 「${enemy.name}」不能移动，也不能被移动。`)
@@ -343,11 +377,33 @@ function relocateEnemy(state, enemy, destination, events) {
   if (!enemy.elite && state.locations.find(loc => loc.id === destination)?.barricade) return
   const previous = enemy.location
   enemy.location = destination
+  for (const member of swarmGroup(state, enemy)) member.location = destination
   if (enemy.engagedSeat != null && state.investigators[enemy.engagedSeat]?.location !== destination) disengageEnemy(state, enemy)
+  const result={moved:true,from:previous,to:destination,enemyId:enemy.id,cause:options.cause||'effect'}
+  if(state.scenario?.eventWindowInstances&&options.cause==='hunter')enemy.lastHunterMove={round:state.round,phase:state.phase,phaseInstance:options.phaseInstance??state.phaseInstance??0,from:previous,to:destination}
   processPlayerEnemyEntry(state, enemy, events)
   scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events))
-  autoEngageAt(state, destination, events)
+  if(!options.skipAutoEngage)autoEngageAt(state, destination, events,{ignoreAloofFor:options.ignoreAloof?enemy.id:null})
+  if(state.scenario?.eventWindowInstances){
+    const context=eventWindowContext(state,{when:'enemyMoved',enemy,enemyId:enemy.id,from:previous,to:destination,location:destination,cause:options.cause||'effect',hunter:options.cause==='hunter',phaseInstance:state.phaseInstance??0,seat:options.seat??null})
+    reactionWindow(state,'enemyMoved',context,events,{allowNested:true})
+    if(state.enemies.includes(enemy)&&enemy.location===destination)reactionWindow(state,'enemyEnteredLocation',{...context,when:'enemyEnteredLocation'},events,{allowNested:true})
+  }
+  return result
 }
 
-  return { stepToward, distanceToInvestigator, investigatorMoveDestinations, moveInvestigatorTo, doShortcutMove, doDetachLocationAttachment, doMove, relocateInvestigator, relocateEnemy }
+function moveEnemyToward(state,enemy,destination,events,options={}) {
+ if(!enemy||!state.enemies.includes(enemy)||enemy.location===destination)return {moved:false}
+ // Effect movement ignores edge barriers; recompute with a barrier-free view.
+ const clean={...state,scenarioFlags:{...state.scenarioFlags,mechanics:{...state.scenarioFlags?.mechanics,barriers:[]}}}
+ const routes=hunterRouteCandidates(clean,enemy,[destination],{connections:id=>state.locations.find(l=>l.id===id)?.connections||[],canEnter:(e,id)=>enemyCanEnterLocation(state,e,id)&&(!state.locations.find(l=>l.id===id)?.barricade||e.elite)}).destinations
+ if(!routes.length)return {moved:false}
+ const to=routes.length===1?routes[0]:requestChoice(state,{kind:'location',source:options.source||enemy.id,seat:state.campaign?.leadSeat??0,prompt:'选择敌人向目标移动的最短路线。',options:routes.map(id=>({id,label:locName(state,id)}))})
+ if(!routes.includes(to))return {moved:false}
+ return relocateEnemy(state,enemy,to,events,{...options,cause:'effect'})||{moved:false}
 }
+
+  return { stepToward, distanceToInvestigator, investigatorMoveDestinations, moveInvestigatorTo, doShortcutMove, doDetachLocationAttachment, doMove, relocateInvestigator, relocateEnemy, moveEnemyToward }
+}
+import { enemyCanEnterLocation } from './enemy-entry.js'
+import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'

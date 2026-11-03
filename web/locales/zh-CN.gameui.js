@@ -409,6 +409,7 @@ export default {
   'game.enemy.engagedWith': '与「{name}」交战',
   'game.enemy.engagedAll': '与同地点所有人交战',
   'game.enemy.roaming': '游荡中',
+  'game.enemy.voidLocation': '虚空（{x}，{y}）',
   'game.enemy.locationState': '{location} · {state}{exhausted}',
 
   // 装备栏（renderEquipmentSlots）

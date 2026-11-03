@@ -1,3 +1,4 @@
+import { runCampaignEffectHandler } from './content-effects.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { poisonWeaknessCode } from '../cards/card-rules.js'
 import { awardExperience, campaignCardChange, updateCampaignStatus } from './campaign.js'
@@ -699,7 +700,16 @@ function applyPartScopedEffect(state, effect, part, log) {
   }
   if (effect.type === 'addCampaignCardToDeck') {
     if (typeof effect.code !== 'string' || !effect.code) throw new Error('战役资产入牌组需要卡号')
-    inPart(state, part, () => campaignCardChange(campaign, effect.seat ?? 0, effect.code, 'add', effect.reason || '剧情奖励'))
+    inPart(state, part, () => {
+      const candidates = Object.values(campaign.investigators || {}).filter(record => record.status === 'active')
+      if (!candidates.length) return
+      const seat = effect.chooseRecipient ? Number(requestChoice(state, {
+        kind: 'storyCard', source: effect.code, seat: campaign.partLeads?.[part] ?? candidates[0].seat,
+        prompt: `选择一位调查员接收「${ALL_CARDS[effect.code]?.nameZh || effect.code}」。`,
+        options: candidates.map(record => ({ id: String(record.seat), label: record.name })),
+      })) : effect.seat ?? candidates[0].seat
+      campaignCardChange(campaign, seat, effect.code, 'add', effect.reason || '剧情奖励')
+    })
     return
   }
   if (effect.type === 'removeCampaignCard') {
@@ -712,6 +722,11 @@ function applyPartScopedEffect(state, effect, part, log) {
     })
     return
   }
+  if (effect.type === 'investigatorStatus') {
+    const { part: ignored, ...local } = effect
+    inPart(state, part, () => applyCampaignEffect(state, local, log))
+    return
+  }
   throw new Error(`带 part 的战役效果暂不支持：${effect.type}`)
 }
 
@@ -720,6 +735,7 @@ export function applyCampaignEffect(state, effect, log) {
     applyPartScopedEffect(state, effect, effect.part, log)
     return
   }
+  if (effect.type === 'registered') return runCampaignEffectHandler(state,effect,log)
   if (effect.type === 'chaos') changeChaosBag(state, effect.token, effect.amount, { permanent: true })
   else if (effect.type === 'log') log(effect.text)
   else if (effect.type === 'storyCard') awardStoryCard(state, effect.code, state.campaign.flow.nodeId)
@@ -810,6 +826,19 @@ export function applyCampaignEffect(state, effect, log) {
   else if (effect.type === 'discardSupplies') applyDiscardSupplies(state, effect, log)
   else if (effect.type === 'resupplyServices') applyResupplyServices(state, effect, log)
   else if (effect.type === 'storyBranch') applyStoryBranch(state, effect, log)
+  else if (effect.type === 'investigatorStatus') {
+    if (!['active', 'killed', 'insane'].includes(effect.status)) throw new Error('无效的调查员状态')
+    const selected = effect.matchRecord ? new Set(state.campaign.records[effect.matchRecord] || []) : null
+    for (const record of Object.values(state.campaign.investigators)) {
+      if (selected && !selected.has(record.id)) continue
+      if (effect.onlyActive && record.status !== 'active') continue
+      record.status = effect.status
+      record.trauma ||= { physical: 0, mental: 0 }
+      const card = ALL_CARDS[record.code]
+      if (effect.status === 'insane') record.trauma.mental = Math.max(record.trauma.mental || 0, card?.sanity || 0)
+      if (effect.status === 'killed') record.trauma.physical = Math.max(record.trauma.physical || 0, card?.health || 0)
+    }
+  }
   else if (effect.type === 'experience') {
     if (!Number.isSafeInteger(effect.amount) || effect.amount < 0) throw new Error('经验奖励必须为非负整数')
     for (const record of Object.values(state.campaign.investigators)) {
@@ -863,7 +892,7 @@ export const RESULT_EFFECT_KEYS = Object.freeze([
   'when', 'text', 'record', 'recordUnion', 'recordRemove', 'trauma', 'xp', 'targets',
   'investigatorStatus', 'failed', 'storyCard', 'chaos', 'flag',
   // P9.5：TDE 月之暗面的结局声明（P8 遗留字段，参考实现 recordCount = incrementRecordCount）。
-  'campaignWeakness', 'recordCount',
+    'campaignWeakness', 'recordCount', 'removeStoryCard',
 ])
 
 const RESULT_EFFECT_KEY_SET = new Set(RESULT_EFFECT_KEYS)
@@ -975,6 +1004,7 @@ export function applyResolutionResults(state, effects, { log = () => {}, runtime
     }
     if (effect.failed) campaign.failed = true
     if (effect.storyCard) awardStoryCard(state, effect.storyCard, campaign.flow?.nodeId)
+    if (effect.removeStoryCard) removeCardFromDecks(campaign, effect.removeStoryCard, 'resolution', log)
     if (effect.chaos) changeChaosBag(state, effect.chaos.token, effect.chaos.amount ?? 1, { permanent: true })
     if (effect.flag) {
       campaign.ruleFlags ||= {}

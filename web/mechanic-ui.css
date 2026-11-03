@@ -1,0 +1,35 @@
+/* Reuse the table theme and existing choice panel spacing/type/control tokens. */
+.ah-mechanic-layer { position: fixed; inset: 0; z-index: 35; pointer-events: none; }
+.ah-mechanic-layer .ah-choice.ah-mechanic-choice {
+  display: grid; grid-template-columns: minmax(0,1fr); align-items: stretch; justify-content: stretch;
+  width: min(38rem,calc(100% - 2rem)); max-height: 65dvh; overflow: auto;
+  position: fixed; margin: 0; top: auto; left: 50%; right: auto; transform: translateX(-50%); bottom: 5rem;
+  color: var(--ah-theme-accent); background: var(--ah-theme-panel); min-width: 0;
+  box-sizing: border-box; border-color: var(--ah-theme-edge); pointer-events: auto;
+}
+.ah-mechanic-choice .ah-tcu-head { display: block; }
+.ah-mechanic-choice .ah-tcu-head h2 { margin: 0; color: var(--ah-theme-accent); }
+.ah-mechanic-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: inherit; min-width: 0; }
+.ah-mechanic-choice .ah-mechanic-options { max-height: 30dvh; overflow: auto; }
+.ah-mechanic-option-cell { display: flex; flex-direction: column; gap: inherit; min-width: 0; }
+.ah-mechanic-option-cell button { overflow-wrap: anywhere; }
+.ah-mechanic-layer .ah-mechanic-choice .ah-tcu-option { width: 100%; min-width: 0; max-width: none; min-height: 3em; color: var(--ah-theme-accent); background: var(--ah-theme-panel); border-color: var(--ah-theme-edge); }
+.ah-mechanic-choice .ah-tcu-option[aria-pressed='true'] { border-color: var(--ah-theme-accent-strong); box-shadow: inset 0 0 0 1px var(--ah-theme-accent-strong); }
+.ah-mechanic-choice button:focus-visible { outline-color: var(--ah-theme-accent-strong); }
+.ah-mechanic-choice .ah-tcu-actions { flex-wrap: wrap; }
+.ah-mechanic-choice .ah-tcu-actions .ah-tcu-option { flex: 1; }
+.ah-mechanic-choice .ah-choice-token { width: 3em; height: 3em; object-fit: contain; }
+.ah-mechanic-summary { border-block: 1px solid var(--ah-theme-edge); color: var(--ah-theme-accent); padding: 1em; }
+.ah-mechanic-summary summary { cursor: pointer; }
+.ah-mechanic-summary p,.ah-mechanic-investigator p { margin: 0; overflow-wrap: anywhere; }
+.ah-mechanic-air { display: block; color: var(--ah-theme-muted); }
+.ah-mechanic-air[data-air-required='true'] { color: var(--ah-theme-accent-strong); font-weight: bold; }
+.ah-mechanic-investigator .ah-threat-row { flex-wrap: wrap; }
+.ah-beneath-row[data-origin-host] .ah-threat-label { max-width: calc(100% - 10px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ah-mechanic-tokens { display: flex; flex-wrap: wrap; gap: inherit; list-style: none; margin: 0; padding: 0; }
+.ah-mechanic-tokens li { display: grid; justify-items: center; border: 1px solid var(--ah-theme-edge); border-radius: inherit; padding: .5em; }
+.ah-mechanic-tokens .ah-choice-token { width: 3em; height: 3em; object-fit: contain; }
+.ah-mechanic-flood { color: var(--ah-theme-accent); }
+@media(max-width:600px) { .ah-mechanic-options { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+.ah-map-edges line.ah-map-barrier { stroke: #e69b51; stroke-width: 6; stroke-dasharray: 6 5; }
+.ah-map-barrier-count { fill: #ffd08a; stroke: #171a17; stroke-width: 4; paint-order: stroke; font-size: 18px; font-weight: 700; text-anchor: middle; }

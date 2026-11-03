@@ -7,19 +7,17 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 实现：2 个万能图标与 Bonded 关系来自卡面数据（icons / bondedTo），投入检定走 commit 描述子。
-// 显式简化（simplified）：引擎在检定收尾（tests.js 的 closeTest）统一把投入区牌放进弃牌堆，
-// 没有「绑定副本改为放回场外集合」的读取点，因此「不进入弃牌堆/洗入牌库，改为放一边」未实现。
+// 投入检定后的去向由 skill.destination 指向绑定场外集合；其它弃牌或洗入牌库
+// 由 zoneReplacement 在玩家区域写点替换为绑定场外集合。
 
 export default {
   code: '06113',
-  simplified: true,
-  note: '未实现：「将要进入弃牌堆或洗入牌库时改为放回场外集合（和绑定卡牌一起）」——'
-    + '引擎检定收尾会把投入卡统一放进弃牌堆，没有 bonded 读取点；Bonded(Dream Diary) 关系与图标由卡面数据通道生效。',
+  zoneReplacement: { discard: 'bonded', shuffle: 'bonded' },
   abilities: [
     {
       kind: 'commit',
       label: '梦的本质',
-      skill: {},
+      skill: { destination: () => 'setAside' },
     },
   ],
   modifiers: [],

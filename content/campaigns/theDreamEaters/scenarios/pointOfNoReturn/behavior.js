@@ -251,14 +251,10 @@ function storyGroupClueCheck(state, api, location, inv, storyCode) {
   return true
 }
 
-function storyScoutingTheVale(state, api, location) {
+function storyScoutingTheVale(state, api, location, inv) {
   const rule = storyRuleOf(RAW.c06258b)
   const look = Number(rule.lookCountPerInvestigator || 2) * Number(state.numInvestigators || 1)
-  const discardable = Math.floor(look / 2)
-  if (discardable > 0) {
-    api.discardEncounterTop?.(discardable, { reshuffle: false })
-    api.info?.(`查看了遭遇牌库顶 ${look} 张，弃掉其中 ${discardable} 张（「任意顺序放回」无 peek 原语，记 simplified）。`)
-  }
+  api.scoutEncounterTop(inv?.seat ?? state.campaign.leadSeat, { count:look, source:RAW.c06258b })
   const targetCode = rule.ignoreLocationCode || RAW.c06258
   const crag = (state.locations || []).find(entry => codeOf(entry) === targetCode)
   if (crag) {
@@ -376,20 +372,17 @@ function storyRollingPits(state, api) {
     if (clues[index] > 0) api.removeLocationClues?.(entry.id, clues[index])
   })
   const perSea = Math.floor(total / Math.max(1, seas.length))
-  let remainder = total - perSea * seas.length
-  for (const entry of seas) {
-    let amount = perSea
-    if (remainder > 0) {
-      amount += 1
-      remainder -= 1
-    }
-    if (amount > 0) api.addCluesToLocation?.(entry.id, amount)
-  }
-  if (rule.resetVeiledFlippable !== false) {
-    for (const entry of seas) entry.veiledRevealed = false
+  api.shuffleLocationPositions(seas.map(location => location.id), { clearOtherTokensAndAttachments:true,preserveOccupants:true })
+    for (const location of seas) delete flagsFor(state).storyResolved?.[location.id]
+  for (const entry of seas) if (perSea > 0) api.addCluesToLocation(entry.id,perSea)
+  const candidates = [...seas]
+  for (let remainder = total - perSea * seas.length; remainder > 0; remainder--) {
+    const id = api.choose({ kind:'location',source:RAW.c06264b,seat:state.campaign.leadSeat,
+      prompt:'选择额外放置 1 个线索的漆黑之海，保持尽量平均。',options:candidates.map(location=>({id:location.id,label:location.name})) })
+    api.addCluesToLocation(id,1)
+    candidates.splice(candidates.findIndex(location=>location.id===id),1)
   }
   api.info?.(`「起伏的漩涡」：把 ${total} 个线索在 ${seas.length} 张「漆黑之海」间尽可能平均分配；各张漆黑之海可再次用掩藏关键词翻面。`)
-  api.info?.('（简化）「打乱各张漆黑之海的位置」无引擎表达；调查员与敌人保持原地点。')
 }
 
 function storyDispatch(state, api, storyCode, location, inv) {
@@ -477,8 +470,8 @@ const behavior = {
       inv.deck.splice(index, 1)
       flagsFor(state).falseAwakeningInPlay = true
       flagsFor(state).falseAwakeningSeat = inv.seat
-      state.doom = (Number(state.doom) || 0) + 1
-      helper?.info?.(`「卡达斯」放在密谋牌库旁，其上放置 1 点毁灭（当前 ${state.doom}）。`)
+      helper.api.putNextToAgenda(code, { ownerSeat: inv.seat, doom: 1 })
+      helper?.info?.(state, events, '「卡达斯」放在密谋牌库旁，其上放置 1 点毁灭。')
     }
     void events
   },
@@ -551,7 +544,8 @@ const behavior = {
       api.finish?.('resolution2')
       return true
     }
-    api.clearDoom?.()
+    api.removeDoom(Number.MAX_SAFE_INTEGER)
+    api.clearDoomOnCard(agenda)
     api.info?.('「怪物围困」翻回正面：本局继续，现实的结构继续崩解。')
     return true
   },
@@ -626,7 +620,7 @@ const behavior = {
     const storyCode = flipped.storyCode || locationRule.flipStory
     if (storyCode && !flags.storyResolved[locationId]) {
       resolveStory(state, api, storyCode, location, inv)
-      flags.storyResolved[locationId] = storyCode
+      if (storyRuleOf(storyCode)?.storyRule !== 'rollingPits') flags.storyResolved[locationId] = storyCode
     }
     const shuffleBack = location.shuffleBack === true || locationRule.shuffleBack === true
     if (shuffleBack && location.veiledRevealed !== false) {
@@ -654,9 +648,11 @@ const behavior = {
   // 食尸鬼峭壁：神话阶段本地点调查员抽到的第一张诡计获得涌动。
   encounterGainsSurge(state, code, inv) {
     if (!inv) return undefined
+    if (ALL_CARDS[code]?.type !== 'treachery') return undefined
     if (String(state.phase) !== 'mythos') return undefined
     const location = (state.locations || []).find(entry => entry.id === inv.location)
     if (!location) return undefined
+    if (location.flags?.ignoreText) return undefined
     const rule = locationRuleOf(location)
     if (!rule.firstMythosTreacherySurge) return undefined
     const flags = flagsFor(state)
@@ -718,6 +714,10 @@ const behavior = {
   // ---- 玩家行动：地点上的 [action] 翻面（卡斯之塔 / 撒克山峰）+ 皮克曼的受控行动 ----
   actions(state, inv) {
     const moves = encounterRules.actions?.(state, inv) || []
+    for (const card of state.agendaAside || []) if (entryFlags(card.originalCode || card.code)?.agendaAsideWeakness) {
+      moves.push({ action: 'scenarioAction', actions: 1, rule: `agendaAside:${card.id}`,
+        label: '[行动] 检定任意技能，摆脱「卡达斯」' })
+    }
     addPickmanActions(state, inv, moves)
     const location = (state.locations || []).find(entry => entry.id === inv?.location)
     if (!location) return moves
@@ -736,6 +736,16 @@ const behavior = {
 
   performAction(state, inv, move, api) {
     const rule = String(move?.rule || '')
+    if (rule.startsWith('agendaAside:')) {
+      const card = state.agendaAside?.find(item => `agendaAside:${item.id}` === rule)
+      if (!card) return false
+      const data = entryFlags(card.originalCode || card.code)
+      const skill = api.choose({ kind: 'skill', seat: inv.seat, source: card.code,
+        prompt: '选择技能检定。', options: ['willpower','intellect','combat','agility'].map(id => ({ id, label: id })) })
+      api.test(inv.seat, skill, data.difficulty + data.difficultyPerInvestigator * state.numInvestigators,
+        result => { if (result.success) api.removeAgendaAside(card.id) })
+      return true
+    }
     if (rule === 'pickmanAttach' || rule === 'pickmanFight') {
       return performPickmanAction(state, inv, move, api)
     }
@@ -769,22 +779,9 @@ const behavior = {
     return []
   },
 
-  scenarioGaps: [
-    '「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。',
-    '「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。',
-    '「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。',
-  ],
+  scenarioGaps: [],
 
-  scenarioApproximations: [
-    '8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；'
-      + 'behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，'
-      + '等 Lead 最终裁决（任务书曾要求洗回）。',
-    '「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。',
-    '「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。',
-    '食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。',
-    '古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。',
-    '卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。',
-  ],
+  scenarioApproximations: [],
 }
 
 // ---------------------------------------------------------------------------
@@ -798,7 +795,7 @@ function pickmanAssetOf(inv) {
 }
 
 function pickmanAttachedCount(api, asset) {
-  return Number(api?.scenarioFlag?.(`pnrPickmanAttached:${asset.id}`) || 0)
+  return (asset.attachments || []).filter(card=>card.encounterAttached && card.facedown).length
 }
 
 function pickmanTargets(state, inv) {
@@ -817,7 +814,7 @@ function addPickmanActions(state, inv, moves) {
   }
   if (targets.length) {
     moves.push({
-      action: 'scenarioAction', rule: 'pickmanFight', actions: 1,
+      action: 'scenarioAction', rule: 'pickmanFight', actions: 1, actionKind:'fight',
       label: '🧑‍🎨 横置皮克曼：以基础战斗 5 攻击（伤害 = 附属的正面朝下遭遇卡数）',
     })
   }
@@ -847,10 +844,8 @@ function performPickmanAction(state, inv, move, api) {
       prompt: '选择要正面朝下附属到皮克曼的[[食尸鬼]]敌人。', options,
     }) ?? 0)
     const enemy = ghouls[picked] || ghouls[0]
-    const key = `pnrPickmanAttached:${asset.id}`
-    const count = pickmanAttachedCount(api, asset) + 1
-    api.setScenarioFlag?.(key, count)
-    api.removeEnemyFromGame?.(enemy)
+    api.placeEnemyCardUnderAsset(enemy,asset,{facedown:true})
+    const count = pickmanAttachedCount(api, asset)
     asset.exhausted = true
     api.info?.(`${inv.name} 横置皮克曼：把「${enemy.name || enemy.code}」正面朝下附属到他身上（现有 ${count} 张）。`)
     return true
@@ -863,14 +858,8 @@ function performPickmanAction(state, inv, move, api) {
   }) ?? 0)
   const enemy = targets[picked] || targets[0]
   const damage = pickmanAttachedCount(api, asset)
-  const fightValue = Number(ALL_CARDS[codeOf(enemy)]?.fight ?? enemy.fight ?? 2)
-  const baseCombat = Number(ALL_CARDS[CODES.richardUptonPickman]?.combat ?? 5)
-  api.test?.(inv.seat, 'combat', fightValue, result => {
-    if (!result.success) return
-    api.damageEnemy?.(enemy.id, damage, inv.seat)
-    api.info?.(`${inv.name} 横置皮克曼攻击「${enemy.name || enemy.code}」，造成 ${damage} 点伤害。`)
-  }, baseCombat - Number(inv.combat || 0), { label: '皮克曼攻击' })
   asset.exhausted = true
+  api.fight(inv.seat,enemy.id,{baseValue:5,damageOverride:damage,assetId:asset.id,sourceCode:CODES.richardUptonPickman})
   return true
 }
 

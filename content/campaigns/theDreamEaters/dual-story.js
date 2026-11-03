@@ -265,6 +265,7 @@ export function attachEpilogue(flow) {
     epilogueStep: TDE_EPILOGUE_STEPS.killCampaignA.step,
     part: TDE_EPILOGUE_STEPS.killCampaignA.part,
     investigatorStatus: TDE_EPILOGUE_STEPS.killCampaignA.investigatorStatus,
+    effects: [{ type: 'investigatorStatus', part: 'A', status: 'killed' }],
     pendingTranslation: true,
     next: 'epiloguePart17',
   }
@@ -274,6 +275,7 @@ export function attachEpilogue(flow) {
     epilogueStep: TDE_EPILOGUE_STEPS.driveCampaignAInsane.step,
     part: TDE_EPILOGUE_STEPS.driveCampaignAInsane.part,
     investigatorStatus: TDE_EPILOGUE_STEPS.driveCampaignAInsane.investigatorStatus,
+    effects: [{ type: 'investigatorStatus', part: 'A', status: 'insane' }],
     pendingTranslation: true,
     next: 'epiloguePart17',
   }
@@ -282,8 +284,10 @@ export function attachEpilogue(flow) {
     title: 'Epilogue',
     epilogueStep: TDE_EPILOGUE_STEPS.brokeTheLawOfUlthar.step,
     record: TDE_EPILOGUE_STEPS.brokeTheLawOfUlthar.record,
+    effects: ['A', 'B'].map(part => ({ type: 'investigatorStatus', part, status: 'killed', matchRecord: 'wasCaptured', onlyActive: true })),
     storySection: 'epilogue',
     textKey: TDE_EPILOGUE_STEPS.brokeTheLawOfUlthar.textKey,
+    textWhen: { activeCapturedInvestigator: true },
     pendingTranslation: true,
     next: 'end',
   }

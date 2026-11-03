@@ -28,11 +28,12 @@ export function createRulebook(h,render) {
     if(cachedQuery!==query)directoryScroll={top:0,left:0}
     const scroll={...directoryScroll}
     cachedKey=key;cachedQuery=query
-    const matches=RULE_INDEX.filter(r=>`${r.title} ${r.aliases.join(' ')} ${r.body.join(' ')}`.toLowerCase().includes(query.trim().toLowerCase()))
+    const localize=r=>getLocale().startsWith('en')&&r.bodyEn ? {...r,title:r.titleEn,body:r.bodyEn,group:r.groupEn||r.group} : r
+    const matches=RULE_INDEX.filter(r=>`${r.title} ${r.titleEn||''} ${r.aliases.join(' ')} ${r.body.join(' ')} ${(r.bodyEn||[]).join(' ')}`.toLowerCase().includes(query.trim().toLowerCase())).map(localize)
     const pinned=matches.filter(r=>r.pinned)
     const groups=new Map()
     for(const rule of matches){if(rule.pinned)continue;if(!groups.has(rule.initial))groups.set(rule.initial,[]);groups.get(rule.initial).push(rule)}
-    const current=ruleById(selected)
+    const current=localize(ruleById(selected))
     const ruleButton=r=>h('button',{'data-rule-id':r.id,'aria-current':r.id===selected?'page':null,onclick:()=>select(r.id)},h('small',{},r.group),r.title)
     const directory=matches.length?[
       ...(pinned.length?[h('section',{className:'ah-rule-index-group ah-rule-index-pinned','aria-label':t('rulebook.pinnedGroup')},
@@ -54,7 +55,7 @@ export function createRulebook(h,render) {
         h('article',{className:'ah-rulebook-article',tabindex:-1,'data-rule-topic':selected},
           h('button',{className:'ah-rulebook-back',disabled:!history.length,onclick:()=>{rememberDirectory();selected=history.pop();render()}},t('rulebook.back')),
           h('small',{},current.group),h('h1',{},current.title),current.body.map(p=>h('p',{},p)),
-          h('div',{className:'ah-rulebook-related'},h('h3',{},t('rulebook.related')),current.related.map(id=>h('button',{onclick:()=>select(id)},ruleById(id).title))),
+          h('div',{className:'ah-rulebook-related'},h('h3',{},t('rulebook.related')),current.related.map(id=>h('button',{onclick:()=>select(id)},localize(ruleById(id)).title))),
           h('footer',{},h('p',{},t('rulebook.footer')),RULE_SOURCES.map(([label,url])=>h('a',{href:url,target:'_blank',rel:'noopener noreferrer'},label+' ↗'))))))) : null)
     restoreDirectory(cachedNode,scroll)
     return cachedNode

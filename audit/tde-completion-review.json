@@ -1,0 +1,3374 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "reviewStarted": "2026-11-02",
+  "scope": "Original eight chapters, four campaign modes, shared interludes and epilogue; original collection only",
+  "historicalCardNotes": [
+    {
+      "code": "06019",
+      "name": "嗜血",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：弱点揭示时附属到玩家支援的完整物理形态（引擎无 attachedAsset 弱点类型/attach-resolving-card API），改为在渴血之刃的 attachedCards 槽记录附属张数；[fast] +1 伤害由 06018 的攻击 resolve 结算。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 130,
+          "test": "TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 恐惧并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06022",
+      "name": "皇后的挂坠",
+      "type": "asset",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：充能归零的自动复位只在「花费最后 1 充能」这条路径上结算（引擎没有 uses 归零钩子）；挂坠被其他效果清空充能时不会自动放在一边。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 206,
+          "test": "TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索 / 充能耗尽复位"
+        }
+      ]
+    },
+    {
+      "code": "06023",
+      "name": "骇人真相",
+      "type": "event",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：被查找到时的二选一奖励（获得 2 资源／在支援上放 1 秘密）——searchedCardRule 无 resolve 通道；已实现「查找中被发现 → 弃掉」与「不能打出」。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 239,
+          "test": "TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己"
+        }
+      ]
+    },
+    {
+      "code": "06024",
+      "name": "梦境结晶器",
+      "type": "asset",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：附属事件「如同手牌」投入技能检定（playChannels.commitEntries 只有 beneath 通道，attachments 无投入候选）；已实现额外费用检索与事件附属（上限 5）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 260,
+          "test": "TDE 06024 梦境结晶器 入场检索结晶器守卫；打出事件后改为附属到它上面"
+        }
+      ]
+    },
+    {
+      "code": "06025",
+      "name": "结晶器守卫",
+      "type": "enemy",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「放在一边」用 removeEnemy 移出对局代替（引擎无敌人 setAside 写入口）；其余生成/横置/猎手/bearer 猎物已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 287,
+          "test": "TDE 06025 结晶器守卫 无梦境结晶器时移出对局；有则横置入场并成为 bearer 猎物"
+        }
+      ]
+    },
+    {
+      "code": "06027",
+      "name": "仰望星空",
+      "type": "event",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：遭遇牌库没有「混洗入顶部 N 张」的插入点（api.shuffleIntoEncounterDeck 只能洗入整副遭遇牌库），改为洗入遭遇牌库。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 326,
+          "test": "TDE 06027 仰望星空 遭遇牌库≥10 才能打出；把群星正确之时洗入遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "06028",
+      "name": "群星正确之时",
+      "type": "event",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "遭遇牌库抽出后已按显现结算抽 1 张牌、获得 1 资源并移出游戏；「立即进行一个行动，如同自己回合」仍待通用回合外即时行动原语。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 342,
+          "test": "TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一位调查员抽 1 张、获得 1 资源并移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 361,
+          "test": "TDE 06028 群星正确之时 从遭遇牌库抽取时正常显现"
+        }
+      ]
+    },
+    {
+      "code": "06029",
+      "name": "开启大门",
+      "type": "event",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "快速打出仍使用自己回合的普通出牌入口，尚未覆盖回合内任意玩家窗口。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 377,
+          "test": "TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能再打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 399,
+          "test": "TDE 06029 开启大门 两处附属地点产生可见且可执行的移动"
+        }
+      ]
+    },
+    {
+      "code": "06035",
+      "name": "自私自利",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：不能对其他调查员的技能检定投入卡牌、不能用玩家卡效果影响其他调查员（引擎无对应读点：capability:commit 只挡自己的检定，也没有玩家卡效果指向他人的通用限制）；已实现威胁区与 [action][action] 弃置。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 529,
+          "test": "TDE 06035 自私自利 显现进入威胁区域，花费 2 行动弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06036",
+      "name": "偷窃癖",
+      "type": "asset",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「当你的回合结束时受到 1 点恐惧」——引擎的回合结束强制读点只覆盖威胁区，游戏区域的资产没有读点；已实现放置入场、[action] 夺取道具/资源并洗回牌库。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 543,
+          "test": "TDE 06036 偷窃癖 放置入场后夺取同地点另一位调查员的资源并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06037",
+      "name": "嗜睡症",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：强制「受到伤害或恐惧后弃掉」在伤害/恐惧分配前结算（harmDealt 窗口），若伤害全部由支援承接也会弃掉；其余限制与 [action] 弃置已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 561,
+          "test": "TDE 06037 嗜睡症 威胁区：不能打出事件/进行调查，受到伤害后弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06038",
+      "name": "最可怕的噩梦",
+      "type": "enemy",
+      "printPack": "tde",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：承受者不能攻击/伤害/击败它（引擎的被攻击/被击败读点没有按攻击者座位的卡条目钩子；enemyCannotBeAttacked 无攻击者参数）；已实现猎手与「猎物-仅对承受者」。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 577,
+          "test": "TDE 06038 最可怕的噩梦 显现生成敌人：猎手、猎物仅对承受者"
+        }
+      ]
+    },
+    {
+      "code": "06039",
+      "name": "梦境门外",
+      "type": "scenario",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "beyondTheGatesOfSleep",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "剧本参考卡：实现 = Beyond the Gates of Sleep 章节 definition/behavior（manifest.referenceCode）",
+      "noteStatus": "verified",
+      "noteSources": [],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06039 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06057b",
+      "name": "卡曼塔的考验",
+      "type": "story",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "face",
+      "faceOf": "06057",
+      "noEntry": true,
+      "channel": "linked-face",
+      "status": "verified",
+      "note": "背面故事面：无单卡条目；谈判/击败分支由 06057 敌人条目翻面流程 api.cardFlip 展示正文",
+      "noteStatus": "verified",
+      "noteSources": [],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 390,
+          "test": "TDE 06057b 已验收 · story 关联面 06057"
+        }
+      ]
+    },
+    {
+      "code": "06058b",
+      "name": "纳什特的考验",
+      "type": "story",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "face",
+      "faceOf": "06058",
+      "noEntry": true,
+      "channel": "linked-face",
+      "status": "verified",
+      "note": "背面故事面：无单卡条目；谈判/击败分支由 06058 敌人条目翻面流程 api.cardFlip 展示正文",
+      "noteStatus": "verified",
+      "noteSources": [],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 390,
+          "test": "TDE 06058b 已验收 · story 关联面 06058"
+        }
+      ]
+    },
+    {
+      "code": "06063",
+      "name": "清醒噩梦",
+      "type": "scenario",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "wakingNightmare",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "面板/表示层缺口（非单卡规则缺口）：寄生地点上的伤害标记与「封印后替换为恐惧标记」的可见面板属 P5/P9；本章内容层只维护 tokenBag 的寄生状态（infestedLocations）与 scenarioFlags.sealedRifts。锚到章节参考卡 06063 作章节级理由。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "wakingNightmare#1"
+      ],
+      "chapters": [
+        "wakingNightmare"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06063 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06085",
+      "name": "蛛后的意志",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「所在地点有[[蜘蛛]]敌人时不能投入卡牌」需要检定期间的 commit 闸门（共享 canCommitCard 只读威胁区 flags）；失败限制已通过 scenarioFlags.failRestricts 接线（共享 canFightEnemy/investigationError 读点）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "wakingNightmare",
+        "pointOfNoReturn",
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06085 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06093",
+      "name": "入梦者的诅咒",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「[intellect]/[combat]/[agility] 计 1、[willpower]/[wild] 计 2 个匹配图标」需要检定器的图标权重读点；已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "darkSideOfTheMoon",
+        "whereTheGodsDwell"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06093 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06094",
+      "name": "睡眠恐惧症",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "图标权重同 06093（已登记 coordinator request）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "darkSideOfTheMoon",
+        "whereTheGodsDwell"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06094 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06095",
+      "name": "沉眠",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「每次抽牌后检查手牌上限」缺引擎抽牌后钩子（CheckHandSizeAfterDraw 无对应读点）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "darkSideOfTheMoon",
+        "whereTheGodsDwell"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06095 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06096",
+      "name": "幻梦境月食",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "调查时二选一与轮末弃牌需要共享层 beforeInvestigate/roundEnded 的数据分派；已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06096 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06097",
+      "name": "棱镜光华",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "两类效果都需要共享层数据分派（行动额外费用通道 / 调查成功替代），已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06097 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06099",
+      "name": "窥看地下世界",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「受到额外 1 点伤害或恐惧」按伤害声明（引擎 harmInterceptor 每个拦截器只能指定伤害或恐惧之一）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "wakingNightmare",
+        "aThousandShapesOfHorror"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06099 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06100",
+      "name": "现实之线",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "附属到支援/文本空白/摆脱行动由使用本章的章节 behavior 读 flags 接线（内容层无 attach-to-asset API）；数据已备好。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "wakingNightmare",
+        "aThousandShapesOfHorror"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06100 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06103",
+      "name": "恶心蛛网",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "关键字授予/移动封锁/摆脱行动需要共享层地点附属数据分派；已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "wakingNightmare",
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06103 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06104",
+      "name": "海盗追猎",
+      "type": "treachery",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「附属到当前幕 / 幕推进全体 2 伤 / 幕获得摆脱行动」由使用 corsairs 组的章节 behavior 读 flags 接线；数据已备好。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "theSearchForKadath",
+        "darkSideOfTheMoon"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06104 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06106",
+      "name": "鬼祟的祖格鼠",
+      "type": "enemy",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「与你所在地点最低战斗调查员交战」的生成需要共享层 spawnLocation 数据分派；已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06106 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06107",
+      "name": "潜行的祖格鼠",
+      "type": "enemy",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "「与你所在地点最低敏捷调查员交战」的生成需要共享层 spawnLocation 数据分派；已登记 coordinator request。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06107 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06108",
+      "name": "隐蔽的祖格鼠",
+      "type": "enemy",
+      "printPack": "tde",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "生成地点已由共享 spawnLocation 数据分派；「击败时取消超出伤害并搬动剩余蜂拥卡」需要击败结算的内容读点（引擎无通道）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "beyondTheGatesOfSleep",
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06108 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06110",
+      "name": "头班守夜",
+      "type": "event",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：替换神话阶段的抽取遭遇步骤与按座位分发遭遇牌（无该时机窗口、无按座位分发遭遇牌的 API）；已实现：快速事件（近似在神话阶段开始时）查看遭遇牌库顶 X 张并重新排列，X = 调查员人数。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 594,
+          "test": "TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇牌库顶 X 张并重新排列"
+        }
+      ]
+    },
+    {
+      "code": "06111",
+      "name": "浑身是胆",
+      "type": "skill",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①该敌人在本次技能期间获得反击和警戒；②本次检定结束后抽 1 张卡牌（commit 描述子没有「测试期间」/「测试结束后」读点）。「只能投入到攻击或躲避敌人期间的检定」以 skill.requireEngagedEnemy 近似（要求投入时与敌人交战）。3 个万能图标由卡面数据通道生效。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 94,
+          "test": "TDE 06111 浑身是胆 3 万能图标；与敌人交战时才能投入，投入后检定值 +3"
+        }
+      ]
+    },
+    {
+      "code": "06113",
+      "name": "梦的本质",
+      "type": "skill",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「将要进入弃牌堆或洗入牌库时改为放回场外集合（和绑定卡牌一起）」——引擎检定收尾会把投入卡统一放进弃牌堆，没有 bonded 读取点；Bonded(Dream Diary) 关系与图标由卡面数据通道生效。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 209,
+          "test": "TDE 06113 梦的本质 2 个万能图标 + Bonded(梦境日记)；投入检定真实加 2 点"
+        }
+      ]
+    },
+    {
+      "code": "06115",
+      "name": "势不可挡",
+      "type": "skill",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「检定成功后本阶段下一次技能检定难度降低 X（X=超出难度点数，至多 3）」——引擎没有下一次检定的难度账本，commit 描述子也没有可写读点；1 个万能图标由卡面数据通道生效。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 253,
+          "test": "TDE 06115 势不可挡 1 个万能图标；投入后检定值 +1（下一次检定降难为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06117",
+      "name": "解读秘符",
+      "type": "event",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「你可以忽略本次调查期间你所在地点将要触发的任何效果和关键词」——引擎没有「忽略地点效果/关键词」的通用读取点；调查、把意志值加入技能值、成功额外发现 1 个线索均已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 269,
+          "test": "TDE 06117 解读秘符 调查：加入意志值，成功额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06118",
+      "name": "洁西卡·海德",
+      "type": "asset",
+      "printPack": "sfk",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①入场时其上带有 2 点伤害（缺「给支援加伤害」的 ctx.api；不能直写资产字段）；②[reaction]你的回合结束后治愈她 1 点伤害（引擎没有回合结束窗口，也没有资产伤害的通用治愈读点）。你得到 +1[combat] 已由 modifiers 生效。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 289,
+          "test": "TDE 06118 洁西卡·海德 你得到 +1[combat]（入场伤害/回合结束自愈为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06119",
+      "name": "寻觅卡达斯",
+      "type": "scenario",
+      "printPack": "sfk",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "theSearchForKadath",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "实现说明（非缺口）：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章 behavior 只通过 veiledFlipped 结算背面故事卡，没有逐卡翻面条目。锚到章节参考卡 06119。\n已由 noEntry 口径覆盖：剧本参考卡 06119 没有单卡条目（reference card，无行为读点），实现 = 本章 definition/behavior 的 manifest.referenceCode；「神迹」计数走 api.markers 的通用命名计数。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "theSearchForKadath#1",
+        "theSearchForKadath#2"
+      ],
+      "chapters": [
+        "theSearchForKadath"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06119 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06155",
+      "name": "森哲夫",
+      "type": "asset",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「对你所在地点其他调查员造成的伤害和/或恐惧，可以分配给森哲夫」——引擎的盟友吸收只覆盖控制者本人的伤害/恐惧，没有跨调查员重定向读取点。被击败时的[[道具]]支援搜索（弃牌堆 / 牌库顶 9 张、搜牌库后混洗）已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 304,
+          "test": "TDE 06155 森哲夫 被击败时：目标调查员从弃牌堆找一张[[道具]]支援加入手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 331,
+          "test": "TDE 06155 森哲夫 被击败时也能从牌库顶 9 张找[[道具]]支援并混洗牌库"
+        }
+      ]
+    },
+    {
+      "code": "06157",
+      "name": "自我牺牲",
+      "type": "skill",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①「只能投入到另一位调查员执行的检定」没有 commit 档案字段（协助投入窗口本身限同地点队友）；②检定失败效果改由投入者结算（无失败效果归属重定向原语）；③「你或执行者抽 2 张」只实现执行者抽 2 张分支。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 358,
+          "test": "TDE 06157 自我牺牲 协助队友检定：检定失败时执行者抽 2 张（失败效果重定向为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06159",
+      "name": "强梦血清",
+      "type": "asset",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「如果你手中有多张同名手牌，检查手牌上限时其只计作一张」——引擎 handSize 读点只支持静态修正，没有按手牌内容动态计算的手牌上限读取点；「抽到与手牌同名的牌后横置血清抽 1 张」已实现（cardDrawn 窗口 + 横置费）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 414,
+          "test": "TDE 06159 强梦血清 抽到与手牌同名的牌后横置血清抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06160",
+      "name": "“让上帝分辨去吧……”",
+      "type": "event",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①「本回合击败总计生命值 ≥6 点的敌人」的前置条件（引擎没有回合内的击败历史读取点，打出的时机只由 ownTurn 约束）；②「结局结算经验时额外 +1 经验」（经验值在战役层结算，没有 ctx.api 写入口）。「加入胜利区、立即结束你的回合」已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 441,
+          "test": "TDE 06160 “让上帝分辨去吧……” 只能在你的回合打出；加入胜利区并立即结束回合"
+        }
+      ]
+    },
+    {
+      "code": "06162",
+      "name": "格雷戈里·葛利",
+      "type": "asset",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现「本次检定成功且至少超过该资源数量」的差额门槛（额外成功结算段只支持固定效果，读不到成功超出点数），当前实现为：检定成功即返还押注数量的资源；押注本身（0–3、受资产剩余资源与 3 上限限制）与成功返还均已接线。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 491,
+          "test": "TDE 06162 格雷戈里·葛利 使用(9资源)；检定开始时押注，成功后返还等量资源"
+        }
+      ]
+    },
+    {
+      "code": "06164",
+      "name": "飘渺灵体",
+      "type": "event",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「无形」中「敌人不能与你交战或被与你交战」「你不能对敌人造成伤害」——引擎没有交战/伤害两处的禁止读取点（只有 capability:fight 能挡住主动攻击）；意志闪避、成功解除所有交战、直到本轮结束不能攻击（持续效果）已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 518,
+          "test": "TDE 06164 飘渺灵体 意志躲避：成功后解除所有交战，本轮不能攻击"
+        }
+      ]
+    },
+    {
+      "code": "06166",
+      "name": "蛮力",
+      "type": "skill",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：仅在「基础攻击行动期间投入」才获得 [combat][combat] 与 +2 伤害的限定（conditionalIcons 没有检定行动类型条件）；额外图标未写，+2 伤害按「成功超出难度 ≥2」对所有战斗检定生效。每次技能检定最多投入 1 张已由 maxPerTest 生效。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 562,
+          "test": "TDE 06166 蛮力 每次检定最多投入 1 张；成功超出难度 ≥2 时本次攻击 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06167",
+      "name": "多才多艺",
+      "type": "asset",
+      "printPack": "tsh",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "构筑层效果（牌库张数 +5、牌库构建选项 +1 张任意职阶等级 0 卡）由主进程在构筑/可用性层接线；本卡对局内无行为，卡面 permanent:true 由开局流程处理。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 584,
+          "test": "TDE 06167 多才多艺 永久卡：+5 牌库张数与构筑选项属构筑层（数据通道）"
+        }
+      ]
+    },
+    {
+      "code": "06168",
+      "name": "万千骇形",
+      "type": "scenario",
+      "printPack": "tsh",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "aThousandShapesOfHorror",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "剧本/单卡简化：剧本参考卡 06168 的混乱符号「[cultist]：再揭示一个标记」没有剧本级「额外揭示一个混乱标记」原语；chaos.js 按简单/普通与困难/专家两档固定数值近似。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "aThousandShapesOfHorror#2"
+      ],
+      "chapters": [
+        "aThousandShapesOfHorror"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06168 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06193",
+      "name": "欺骗性记忆",
+      "type": "treachery",
+      "printPack": "tsh",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "单卡简化：「强制 - 另一张卡进入你的威胁区域后，选择并弃掉 1 张手牌」没有「卡进入威胁区」的引擎读点；其余子句（显现进威胁区、[action] 意志（3）弃掉本卡）已实现。落在 06193 单卡条目 note（simplified）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "aThousandShapesOfHorror#1"
+      ],
+      "chapters": [
+        "aThousandShapesOfHorror"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06193 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06195",
+      "name": ".35温彻斯特步枪",
+      "type": "asset",
+      "printPack": "dsm",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「本次攻击期间揭示了 +1、0 或 [elder_sign] 混乱标记时 +2 伤害」——doFight 只支持固定伤害加值，没有按揭示标记条件加伤害的选项；使用(5子弹)、花 1 子弹攻击、本次攻击 +2[combat] 已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 602,
+          "test": "TDE 06195 .35温彻斯特步枪 使用(5子弹)；花 1 子弹攻击、本次攻击 +2[combat]"
+        }
+      ]
+    },
+    {
+      "code": "06196",
+      "name": "安全护卫",
+      "type": "asset",
+      "printPack": "dsm",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「从你所在地点移动到连接地点」的出发地判定——move 窗口上下文只带目标地点，没有移动前所在地点（需要移动窗口补充来源地点的新原语，P10 前处理）；改为判定「目标地点与安全护卫持有者所在地点相连」。跟随移动本身已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 122,
+          "test": "TDE 06196 安全护卫 其他调查员移动到连接地点时横置跟随移动"
+        }
+      ]
+    },
+    {
+      "code": "06197",
+      "name": "熟能生巧",
+      "type": "event",
+      "printPack": "dsm",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「本次检定结束后，如果检定成功，不将该技能弃掉，改为加入手牌」——已投入的牌在检定收尾统一弃掉，commit 流程没有「按检定结果决定投入牌去向」的读点（P10 前补原语）。其余（快速窗口、查牌库顶 9 张、找出[[精通]]技能投入、其余洗回）已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 150,
+          "test": "TDE 06197 熟能生巧 快速：查牌库顶 9 张找出[[精通]]技能并投入本次检定"
+        }
+      ]
+    },
+    {
+      "code": "06199",
+      "name": "三条A",
+      "type": "skill",
+      "printPack": "dsm",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「将 3 张三条A投入同一次技能检定 → 该检定自动成功（不抽混乱标记），然后抽 3 张牌并获得 3 资源（每次检定最多一次）」——commit 档案没有「按同名投入张数触发自动成功/奖励」的读点（P10 前补原语）。已实现：同名多张可同时投入（maxPerTest: 3）与每张 1 个万能图标的投入结算。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 212,
+          "test": "TDE 06199 三条A 同名多张可同时投入同一次技能检定（每张 1 个万能图标）"
+        }
+      ]
+    },
+    {
+      "code": "06204",
+      "name": "目力敏锐",
+      "type": "skill",
+      "printPack": "dsm",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「在基础调查行动期间投入时获得 [intellect][intellect]」——commit 档案的 conditionalIcons 没有「检定来自基础调查行动」的条件键（只有生命/手牌/资源/毁灭/控制特性等条件）；已实现：每次检定最多投入 1 张 + 成功超过难度 2 点时额外发现 1 个线索。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 357,
+          "test": "TDE 06204 目力敏锐 调查检定成功超过 2 点：额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06206",
+      "name": "月之暗面",
+      "type": "scenario",
+      "printPack": "dsm",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "darkSideOfTheMoon",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "剧本参考卡：实现 = Dark Side of the Moon 章节 definition/behavior（manifest.referenceCode）",
+      "noteStatus": "verified",
+      "noteSources": [],
+      "gapRefs": [],
+      "chapters": [
+        "darkSideOfTheMoon"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06206 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06214b",
+      "name": "下船",
+      "type": "story",
+      "printPack": "dsm",
+      "pack": "tdeCampaign",
+      "kind": "face",
+      "faceOf": "06214",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "实现说明：06214b「下船」的翻面结算由本章 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）；本卡由 06214 月兽帆船翻面时读出，无独立翻面行动条目。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "darkSideOfTheMoon#1"
+      ],
+      "chapters": [
+        "darkSideOfTheMoon"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 390,
+          "test": "TDE 06214b 已验收 · story 关联面 06214"
+        }
+      ]
+    },
+    {
+      "code": "06235",
+      "name": "领导力",
+      "type": "skill",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「如果本次检定成功，获得 2 资源；若领导力投入到另一位调查员的检定，该调查员也获得 2 资源」——commit 档案的 onSuccess 读点没有 gainResources 字段（P10 前补原语）；投入时获得 [willpower][wild] 的图标句已由引擎 leadership 读点实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 433,
+          "test": "TDE 06235 领导力 投入到另一位调查员的检定时获得 [willpower][wild]"
+        }
+      ]
+    },
+    {
+      "code": "06236",
+      "name": "梦境日记",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「你在隐藏值至少为 4 的地点时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点（commitIcons 的授予只作用于声明者自身）。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 457,
+          "test": "TDE 06236 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06237",
+      "name": "梦境日记",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「你与敌人交战时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 457,
+          "test": "TDE 06237 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06238",
+      "name": "梦境日记",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「你有至少 8 张手牌时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 457,
+          "test": "TDE 06238 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06239",
+      "name": "快手",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现（主效果）：「你连续执行同一种行动两次后，横置快手：再执行一次该种行动」——引擎没有行动类型历史/本次行动类型的窗口上下文，也没有「按行动类型受限的额外行动」原语。已实现：每位调查员仅限 1 张（limitPerInvestigator）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 487,
+          "test": "TDE 06239 快手 每位调查员仅限 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06240",
+      "name": "虎口拔牙",
+      "type": "skill",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：「投入后从牌库顶揭示直到揭示一张可投入的[rogue]技能并投入，其余洗回」——本卡投入后已离手，committedCard 窗口的能力源枚举看不到刚投入的牌，没有「投入后自我触发」的读点。已实现：作为技能卡的投入图标。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 502,
+          "test": "TDE 06240 虎口拔牙 作为技能卡的投入图标"
+        }
+      ]
+    },
+    {
+      "code": "06241",
+      "name": "增强自我",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——3 张同名可同时在场且基本只占 1 个法术槽，但其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 combat 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 战斗。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 514,
+          "test": "TDE 06241 增强自我 横置：本次检定 +2 战斗"
+        }
+      ]
+    },
+    {
+      "code": "06242",
+      "name": "增强自我",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 agility 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 敏捷。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 514,
+          "test": "TDE 06242 增强自我 横置：本次检定 +2 敏捷"
+        }
+      ]
+    },
+    {
+      "code": "06243",
+      "name": "增强自我",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 intellect 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 智识。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 514,
+          "test": "TDE 06243 增强自我 横置：本次检定 +2 智识"
+        }
+      ]
+    },
+    {
+      "code": "06244",
+      "name": "特薇拉·凯瑟琳·普莱斯",
+      "type": "asset",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现（主效果）：「你花费[[法术]]支援的至少 1 充能后，横置特薇拉：在该支援上放置 1 充能」——引擎没有「充能被花费后」的窗口/上下文（扣充能发生在费用支付里，不进入任何窗口）。卡牌本身作为[[盟友]]支援的入场/槽位/费用按印刷数据结算。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 554,
+          "test": "TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06246",
+      "name": "迅速撤退",
+      "type": "skill",
+      "printPack": "pnr",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①「仅在基础躲避行动期间投入时」+2 敏捷图标（conditionalIcons 无检定来源条件，现按恒真条件近似为每次投入都给）；②检定成功且超过难度≥2时自动躲避另一敌人的成功后结算（commit 档案只有 icons / conditionalIcons / onSuccess 数据键，无自定义成功后结算）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 103,
+          "test": "TDE 06246 迅速撤退 投入档案：+2 敏捷条件图标与「每次检定最多投入1张」"
+        }
+      ]
+    },
+    {
+      "code": "06247",
+      "name": "无归之地",
+      "type": "scenario",
+      "printPack": "pnr",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "pointOfNoReturn",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "近似：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语；探查山谷按「弃掉至多一半遭遇牌库顶」近似，已同载 behavior.scenarioApproximations。章节级理由锚到剧本参考卡 06247。\n近似：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状；用 scenarioFlags 计数 + removeEnemyFromGame 近似（06266 条目 note 已登记）。章节级理由锚到剧本参考卡 06247。\n近似：「打乱各张漆黑之海的位置」没有地点位置/标签概念；只做线索平均分配与重置可翻面，位置打乱用固定实例顺序表达。章节级理由锚到剧本参考卡 06247。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "pointOfNoReturn#1",
+        "pointOfNoReturn#2",
+        "pointOfNoReturn#3"
+      ],
+      "chapters": [
+        "pointOfNoReturn"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06247 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06271",
+      "name": "滑行的巨噬蠕虫",
+      "type": "enemy",
+      "printPack": "pnr",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "生成地点/失败涌动已由共享 spawnLocation/spawnFailed 数据分派；「移动时所有隧道地点视作互相连接」需要 enemyConnections 读点（引擎无内容通道）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "pointOfNoReturn"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06271 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06273",
+      "name": "漆黑蜘蛛",
+      "type": "enemy",
+      "printPack": "pnr",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "生成地点已由共享 spawnLocation 数据分派；「攻击时伤害/恐惧二选一」需要敌人攻击结算的内容读点（引擎无通道）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "pointOfNoReturn"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06273 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06277",
+      "name": "食愿项链",
+      "type": "asset",
+      "printPack": "wgd",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "简化：卡面为 [reaction]（可选），但引擎里能在「取消判定之前」拿到 effect 数据体（cancelSymbolToken）的唯一通道是 forced 描述子 + legacyReaction，因此有充能时揭示符号标记会自动取消（不问询）。取消标记、治愈 1 伤害/1 恐惧、无充能时强制交换回空虚项链均已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 156,
+          "test": "TDE 06277 食愿项链 花费1充能取消符号标记并治愈1伤害1恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 172,
+          "test": "TDE 06277 食愿项链 充能耗尽后强制交换回空虚项链"
+        }
+      ]
+    },
+    {
+      "code": "06278",
+      "name": "惊喜的发现",
+      "type": "skill",
+      "printPack": "wgd",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：被查找到时「放入游戏区域并强制投入下一次符合条件的技能检定；该检定成功则抽 1 张」（searchedCardRule 只支持 take/discard/cancelSearch/discoverClue/drawEncounter 固定动作，无自定义结算）。现近似为查找时可选择把这张牌加入手牌。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 198,
+          "test": "TDE 06278 惊喜的发现 查找牌库翻到时可选择加入手牌（简化口径）"
+        }
+      ]
+    },
+    {
+      "code": "06282",
+      "name": "受召猎犬",
+      "type": "asset",
+      "printPack": "wgd",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：卡面「行动外（except during an action）」的使用限制——引擎没有「是否正在结算一次行动」的通用读点，现允许在任意时点（自己回合内）横置发动。其余效果（额外费用检索脱缰野兽洗回牌库、基础值 5 的攻击/调查）已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 308,
+          "test": "TDE 06282 受召猎犬 打出时把脱缰野兽洗入牌库，横置以基础值5攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 327,
+          "test": "TDE 06282 受召猎犬 横置以基础智识值5调查"
+        }
+      ]
+    },
+    {
+      "code": "06283",
+      "name": "脱缰野兽",
+      "type": "enemy",
+      "printPack": "wgd",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：多张受召猎犬在场时由玩家选择哪一张被放到一边（现取第一张）；「放到一边」进入 setAside（不是 06282 的绑定集合）；无猎犬时的「不生成」用移除刚生成敌人的方式近似。主要分支（有猎犬→猎犬离场、脱缰野兽与猎犬持有者交战）已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 346,
+          "test": "TDE 06283 脱缰野兽 显现：有受召猎犬则猎犬离场且野兽与持有者交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 363,
+          "test": "TDE 06283 脱缰野兽 显现：场上没有受召猎犬时放在一边、不生成"
+        }
+      ]
+    },
+    {
+      "code": "06285",
+      "name": "黑猫",
+      "type": "asset",
+      "printPack": "wgd",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：卡面主效果「揭示 [tablet]/[elder_thing]/[elder_sign] 时改为使用以下效果（-1 并让黑猫受到 1 点直接伤害/恐惧；+5 并治愈黑猫全部伤害与恐惧）」——引擎没有把符号效果替换为卡面自定义值的读点（setSymbolEffect 只服务 05033 的取消/再结算候选）。已实现的数据通道：[[盟友]]槽位、2 个万能图标、特性均来自 cards-data。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 402,
+          "test": "TDE 06285 黑猫 数据通道：盟友槽位/2个万能图标，符号替换主效果显式简化"
+        }
+      ]
+    },
+    {
+      "code": "06286",
+      "name": "神居之所",
+      "type": "scenario",
+      "printPack": "wgd",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "whereTheGodsDwell",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "近似：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力。章节级理由锚到剧本参考卡 06286。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "whereTheGodsDwell#3"
+      ],
+      "chapters": [
+        "whereTheGodsDwell"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06286 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06306",
+      "name": "奈亚拉托提普",
+      "type": "enemy",
+      "printPack": "wgd",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "表示层/桌面约定：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。锚到 5 形态中首个 06306。\n设计差异：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭；参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。锚到 06306。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-gap"
+      ],
+      "gapRefs": [
+        "whereTheGodsDwell#1",
+        "whereTheGodsDwell#2"
+      ],
+      "chapters": [
+        "whereTheGodsDwell"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06306 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06324",
+      "name": "阿比盖尔·福尔曼",
+      "type": "asset",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①「与你游戏区域的书籍支援互换」（引擎没有把附属卡移回支援区的通用 API，现只支持从支援区附属一张书籍）；②「结算附属书籍的 [action] 能力后横置她再结算一次」（引擎不把附属卡的 [action] 能力列入能力源，无法挂 reaction）。已实现：附属一张[[书籍]]支援到阿比盖尔（仅限 1 张），且附属后不再占用槽位。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 450,
+          "test": "TDE 06324 阿比盖尔·福尔曼 附属一张书籍支援后不占手部槽位"
+        }
+      ]
+    },
+    {
+      "code": "06325",
+      "name": "真理之眼",
+      "type": "skill",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现：①仅当「本次检定是对诡计卡牌的检定」的条件；②成功后把该诡计加入胜利区并把真理之眼附属到它上面；③附属期间为「该诡计的同名卡牌」的每次检定提供 4 个万能图标（commit 档案没有检定来源条件与成功后自定义结算读点）。已实现：投入时按卡面提供 4 个万能图标。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 470,
+          "test": "TDE 06325 真理之眼 投入时提供 4 个万能图标（主效果显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06327",
+      "name": "短管霰弹枪",
+      "type": "asset",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "失败误伤分支的最大值沿用引擎读点写死的 5（01029 的 successDamage/failByAmountToEngaged 共用实现），卡面写 6；成功伤害（1–6）与「不造成标准伤害」已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 518,
+          "test": "TDE 06327 短管霰弹枪 按成功差值造成伤害（不造成标准伤害）"
+        }
+      ]
+    },
+    {
+      "code": "06328",
+      "name": "神识之眼",
+      "type": "asset",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "以「本次检定技能值改为意志值」近似「改为检定意志」（引擎没有替换本次检定技能的 API；pendingBonus 读点只改检定值，不改变 test.skill 本身）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 535,
+          "test": "TDE 06328 神识之眼 检定开始花1秘密把本次检定改为按意志值结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 556,
+          "test": "TDE 06328 神识之眼 弃掉手中一张同名卡放置2秘密"
+        }
+      ]
+    },
+    {
+      "code": "06329",
+      "name": "闪耀的偏方三八面体",
+      "type": "asset",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "未实现失败分支：①「检定失败则取消打出该卡牌，不支付任何费用（包括行动费用）」——beforePlayCost 窗口没有取消整次打出的引擎字段；②「直到本轮结束不能打出该卡牌及其同名卡」。成功分支已实现：横置自身 + 意志(X) 检定，成功则本次资源费用视为已支付（costReduction = cost）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 573,
+          "test": "TDE 06329 闪耀的偏方三八面体 意志(X)检定成功则法术费用视为已支付"
+        }
+      ]
+    },
+    {
+      "code": "06330",
+      "name": "噩梦球",
+      "type": "asset",
+      "printPack": "woc",
+      "pack": "tdePlayer",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "descriptor",
+      "status": "verified",
+      "note": "揭示自动失败时取消标记并洗牌按强制效果自动触发，尚未提供可选反应。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P7"
+      ],
+      "gapRefs": [],
+      "chapters": [],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 592,
+          "test": "TDE 06330 噩梦球 入场取出3张梦境寄生物，揭示自动失败时取消标记并洗回1张"
+        }
+      ]
+    },
+    {
+      "code": "06333",
+      "name": "编织宇宙",
+      "type": "scenario",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "chapterId": "weaverOfTheCosmos",
+      "noEntry": true,
+      "channel": "scenario-definition",
+      "status": "verified",
+      "note": "剧本参考卡：实现 = Weaver of the Cosmos 章节 definition/behavior（manifest.referenceCode）",
+      "noteStatus": "verified",
+      "noteSources": [],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06333 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06337",
+      "name": "穿过桥梁",
+      "type": "act",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "引擎没有「中心牌面/Global 敌人」实体：阿特拉克·纳克亚在幕 2 推进前不生成实体（其翻面生成在 06338 的 advance.flipAtlachNacha 里）；参考实现的「旋转中心牌」近似为旋转四条腿（幕 2）与敌人本身（幕 3）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06337 已验收 · act 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06346",
+      "name": "阿特拉克·纳克亚",
+      "type": "enemy",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）；离开地点与击败标记已实现。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06346 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06347",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06347 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06348",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06348 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06349",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06349 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06350",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06350 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06354",
+      "name": "无休织作",
+      "type": "treachery",
+      "printPack": "woc",
+      "pack": "tdeCampaign",
+      "kind": "main",
+      "noEntry": false,
+      "channel": "encounter-entry",
+      "status": "verified",
+      "note": "蜂拥/头领卡在引擎里是头领敌人的附属卡（不是独立敌人实体），只由头领发起一次攻击；「每张蜂拥卡各攻击一次」未逐卡重演。",
+      "noteStatus": "simplified",
+      "noteSources": [
+        "P8-card"
+      ],
+      "gapRefs": [],
+      "chapters": [
+        "weaverOfTheCosmos"
+      ],
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "line": 278,
+          "test": "TDE 06354 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "code": "06019",
+      "status": "implemented",
+      "previousNote": "未实现：弱点揭示时附属到玩家支援的完整物理形态（引擎无 attachedAsset 弱点类型/attach-resolving-card API），改为在渴血之刃的 attachedCards 槽记录附属张数；[fast] +1 伤害由 06018 的攻击 resolve 结算。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06022",
+      "status": "implemented",
+      "previousNote": "未实现：充能归零的自动复位只在「花费最后 1 充能」这条路径上结算（引擎没有 uses 归零钩子）；挂坠被其他效果清空充能时不会自动放在一边。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06023",
+      "status": "implemented",
+      "previousNote": "未实现：被查找到时的二选一奖励（获得 2 资源／在支援上放 1 秘密）——searchedCardRule 无 resolve 通道；已实现「查找中被发现 → 弃掉」与「不能打出」。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06024",
+      "status": "implemented",
+      "previousNote": "未实现：附属事件「如同手牌」投入技能检定（playChannels.commitEntries 只有 beneath 通道，attachments 无投入候选）；已实现额外费用检索与事件附属（上限 5）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06025",
+      "status": "implemented",
+      "previousNote": "未实现：「放在一边」用 removeEnemy 移出对局代替（引擎无敌人 setAside 写入口）；其余生成/横置/猎手/bearer 猎物已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06027",
+      "status": "implemented",
+      "previousNote": "未实现：遭遇牌库没有「混洗入顶部 N 张」的插入点（api.shuffleIntoEncounterDeck 只能洗入整副遭遇牌库），改为洗入遭遇牌库。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06028",
+      "status": "implemented",
+      "previousNote": "遭遇牌库抽出后已按显现结算抽 1 张牌、获得 1 资源并移出游戏；「立即进行一个行动，如同自己回合」仍待通用回合外即时行动原语。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06029",
+      "status": "implemented",
+      "previousNote": "快速打出仍使用自己回合的普通出牌入口，尚未覆盖回合内任意玩家窗口。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06035",
+      "status": "implemented",
+      "previousNote": "未实现：不能对其他调查员的技能检定投入卡牌、不能用玩家卡效果影响其他调查员（引擎无对应读点：capability:commit 只挡自己的检定，也没有玩家卡效果指向他人的通用限制）；已实现威胁区与 [action][action] 弃置。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06036",
+      "status": "implemented",
+      "previousNote": "未实现：「当你的回合结束时受到 1 点恐惧」——引擎的回合结束强制读点只覆盖威胁区，游戏区域的资产没有读点；已实现放置入场、[action] 夺取道具/资源并洗回牌库。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06037",
+      "status": "implemented",
+      "previousNote": "未实现：强制「受到伤害或恐惧后弃掉」在伤害/恐惧分配前结算（harmDealt 窗口），若伤害全部由支援承接也会弃掉；其余限制与 [action] 弃置已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06038",
+      "status": "implemented",
+      "previousNote": "未实现：承受者不能攻击/伤害/击败它（引擎的被攻击/被击败读点没有按攻击者座位的卡条目钩子；enemyCannotBeAttacked 无攻击者参数）；已实现猎手与「猎物-仅对承受者」。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06039",
+      "status": "implemented",
+      "previousNote": "剧本参考卡：实现 = Beyond the Gates of Sleep 章节 definition/behavior（manifest.referenceCode）",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06057b",
+      "status": "implemented",
+      "previousNote": "背面故事面：无单卡条目；谈判/击败分支由 06057 敌人条目翻面流程 api.cardFlip 展示正文",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06058b",
+      "status": "implemented",
+      "previousNote": "背面故事面：无单卡条目；谈判/击败分支由 06058 敌人条目翻面流程 api.cardFlip 展示正文",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06063",
+      "status": "implemented",
+      "previousNote": "面板/表示层缺口（非单卡规则缺口）：寄生地点上的伤害标记与「封印后替换为恐惧标记」的可见面板属 P5/P9；本章内容层只维护 tokenBag 的寄生状态（infestedLocations）与 scenarioFlags.sealedRifts。锚到章节参考卡 06063 作章节级理由。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06085",
+      "status": "implemented",
+      "previousNote": "「所在地点有[[蜘蛛]]敌人时不能投入卡牌」需要检定期间的 commit 闸门（共享 canCommitCard 只读威胁区 flags）；失败限制已通过 scenarioFlags.failRestricts 接线（共享 canFightEnemy/investigationError 读点）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06093",
+      "status": "implemented",
+      "previousNote": "「[intellect]/[combat]/[agility] 计 1、[willpower]/[wild] 计 2 个匹配图标」需要检定器的图标权重读点；已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06094",
+      "status": "implemented",
+      "previousNote": "图标权重同 06093（已登记 coordinator request）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06095",
+      "status": "implemented",
+      "previousNote": "「每次抽牌后检查手牌上限」缺引擎抽牌后钩子（CheckHandSizeAfterDraw 无对应读点）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06096",
+      "status": "implemented",
+      "previousNote": "调查时二选一与轮末弃牌需要共享层 beforeInvestigate/roundEnded 的数据分派；已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06097",
+      "status": "implemented",
+      "previousNote": "两类效果都需要共享层数据分派（行动额外费用通道 / 调查成功替代），已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06099",
+      "status": "implemented",
+      "previousNote": "「受到额外 1 点伤害或恐惧」按伤害声明（引擎 harmInterceptor 每个拦截器只能指定伤害或恐惧之一）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06100",
+      "status": "implemented",
+      "previousNote": "附属到支援/文本空白/摆脱行动由使用本章的章节 behavior 读 flags 接线（内容层无 attach-to-asset API）；数据已备好。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06103",
+      "status": "implemented",
+      "previousNote": "关键字授予/移动封锁/摆脱行动需要共享层地点附属数据分派；已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06104",
+      "status": "implemented",
+      "previousNote": "「附属到当前幕 / 幕推进全体 2 伤 / 幕获得摆脱行动」由使用 corsairs 组的章节 behavior 读 flags 接线；数据已备好。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06106",
+      "status": "implemented",
+      "previousNote": "「与你所在地点最低战斗调查员交战」的生成需要共享层 spawnLocation 数据分派；已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06107",
+      "status": "implemented",
+      "previousNote": "「与你所在地点最低敏捷调查员交战」的生成需要共享层 spawnLocation 数据分派；已登记 coordinator request。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06108",
+      "status": "implemented",
+      "previousNote": "生成地点已由共享 spawnLocation 数据分派；「击败时取消超出伤害并搬动剩余蜂拥卡」需要击败结算的内容读点（引擎无通道）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06110",
+      "status": "implemented",
+      "previousNote": "未实现：替换神话阶段的抽取遭遇步骤与按座位分发遭遇牌（无该时机窗口、无按座位分发遭遇牌的 API）；已实现：快速事件（近似在神话阶段开始时）查看遭遇牌库顶 X 张并重新排列，X = 调查员人数。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06111",
+      "status": "implemented",
+      "previousNote": "未实现：①该敌人在本次技能期间获得反击和警戒；②本次检定结束后抽 1 张卡牌（commit 描述子没有「测试期间」/「测试结束后」读点）。「只能投入到攻击或躲避敌人期间的检定」以 skill.requireEngagedEnemy 近似（要求投入时与敌人交战）。3 个万能图标由卡面数据通道生效。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06113",
+      "status": "implemented",
+      "previousNote": "未实现：「将要进入弃牌堆或洗入牌库时改为放回场外集合（和绑定卡牌一起）」——引擎检定收尾会把投入卡统一放进弃牌堆，没有 bonded 读取点；Bonded(Dream Diary) 关系与图标由卡面数据通道生效。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06115",
+      "status": "implemented",
+      "previousNote": "未实现：「检定成功后本阶段下一次技能检定难度降低 X（X=超出难度点数，至多 3）」——引擎没有下一次检定的难度账本，commit 描述子也没有可写读点；1 个万能图标由卡面数据通道生效。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06117",
+      "status": "implemented",
+      "previousNote": "未实现：「你可以忽略本次调查期间你所在地点将要触发的任何效果和关键词」——引擎没有「忽略地点效果/关键词」的通用读取点；调查、把意志值加入技能值、成功额外发现 1 个线索均已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06118",
+      "status": "implemented",
+      "previousNote": "未实现：①入场时其上带有 2 点伤害（缺「给支援加伤害」的 ctx.api；不能直写资产字段）；②[reaction]你的回合结束后治愈她 1 点伤害（引擎没有回合结束窗口，也没有资产伤害的通用治愈读点）。你得到 +1[combat] 已由 modifiers 生效。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06119",
+      "status": "implemented",
+      "previousNote": "实现说明（非缺口）：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章 behavior 只通过 veiledFlipped 结算背面故事卡，没有逐卡翻面条目。锚到章节参考卡 06119。\n已由 noEntry 口径覆盖：剧本参考卡 06119 没有单卡条目（reference card，无行为读点），实现 = 本章 definition/behavior 的 manifest.referenceCode；「神迹」计数走 api.markers 的通用命名计数。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06155",
+      "status": "implemented",
+      "previousNote": "未实现：「对你所在地点其他调查员造成的伤害和/或恐惧，可以分配给森哲夫」——引擎的盟友吸收只覆盖控制者本人的伤害/恐惧，没有跨调查员重定向读取点。被击败时的[[道具]]支援搜索（弃牌堆 / 牌库顶 9 张、搜牌库后混洗）已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06157",
+      "status": "implemented",
+      "previousNote": "未实现：①「只能投入到另一位调查员执行的检定」没有 commit 档案字段（协助投入窗口本身限同地点队友）；②检定失败效果改由投入者结算（无失败效果归属重定向原语）；③「你或执行者抽 2 张」只实现执行者抽 2 张分支。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06159",
+      "status": "implemented",
+      "previousNote": "未实现：「如果你手中有多张同名手牌，检查手牌上限时其只计作一张」——引擎 handSize 读点只支持静态修正，没有按手牌内容动态计算的手牌上限读取点；「抽到与手牌同名的牌后横置血清抽 1 张」已实现（cardDrawn 窗口 + 横置费）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06160",
+      "status": "implemented",
+      "previousNote": "未实现：①「本回合击败总计生命值 ≥6 点的敌人」的前置条件（引擎没有回合内的击败历史读取点，打出的时机只由 ownTurn 约束）；②「结局结算经验时额外 +1 经验」（经验值在战役层结算，没有 ctx.api 写入口）。「加入胜利区、立即结束你的回合」已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06162",
+      "status": "implemented",
+      "previousNote": "未实现「本次检定成功且至少超过该资源数量」的差额门槛（额外成功结算段只支持固定效果，读不到成功超出点数），当前实现为：检定成功即返还押注数量的资源；押注本身（0–3、受资产剩余资源与 3 上限限制）与成功返还均已接线。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06164",
+      "status": "implemented",
+      "previousNote": "未实现：「无形」中「敌人不能与你交战或被与你交战」「你不能对敌人造成伤害」——引擎没有交战/伤害两处的禁止读取点（只有 capability:fight 能挡住主动攻击）；意志闪避、成功解除所有交战、直到本轮结束不能攻击（持续效果）已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06166",
+      "status": "implemented",
+      "previousNote": "未实现：仅在「基础攻击行动期间投入」才获得 [combat][combat] 与 +2 伤害的限定（conditionalIcons 没有检定行动类型条件）；额外图标未写，+2 伤害按「成功超出难度 ≥2」对所有战斗检定生效。每次技能检定最多投入 1 张已由 maxPerTest 生效。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06167",
+      "status": "implemented",
+      "previousNote": "构筑层效果（牌库张数 +5、牌库构建选项 +1 张任意职阶等级 0 卡）由主进程在构筑/可用性层接线；本卡对局内无行为，卡面 permanent:true 由开局流程处理。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06168",
+      "status": "implemented",
+      "previousNote": "剧本/单卡简化：剧本参考卡 06168 的混乱符号「[cultist]：再揭示一个标记」没有剧本级「额外揭示一个混乱标记」原语；chaos.js 按简单/普通与困难/专家两档固定数值近似。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06193",
+      "status": "implemented",
+      "previousNote": "单卡简化：「强制 - 另一张卡进入你的威胁区域后，选择并弃掉 1 张手牌」没有「卡进入威胁区」的引擎读点；其余子句（显现进威胁区、[action] 意志（3）弃掉本卡）已实现。落在 06193 单卡条目 note（simplified）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06195",
+      "status": "implemented",
+      "previousNote": "未实现：「本次攻击期间揭示了 +1、0 或 [elder_sign] 混乱标记时 +2 伤害」——doFight 只支持固定伤害加值，没有按揭示标记条件加伤害的选项；使用(5子弹)、花 1 子弹攻击、本次攻击 +2[combat] 已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06196",
+      "status": "implemented",
+      "previousNote": "未实现：「从你所在地点移动到连接地点」的出发地判定——move 窗口上下文只带目标地点，没有移动前所在地点（需要移动窗口补充来源地点的新原语，P10 前处理）；改为判定「目标地点与安全护卫持有者所在地点相连」。跟随移动本身已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06197",
+      "status": "implemented",
+      "previousNote": "未实现：「本次检定结束后，如果检定成功，不将该技能弃掉，改为加入手牌」——已投入的牌在检定收尾统一弃掉，commit 流程没有「按检定结果决定投入牌去向」的读点（P10 前补原语）。其余（快速窗口、查牌库顶 9 张、找出[[精通]]技能投入、其余洗回）已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06199",
+      "status": "implemented",
+      "previousNote": "未实现：「将 3 张三条A投入同一次技能检定 → 该检定自动成功（不抽混乱标记），然后抽 3 张牌并获得 3 资源（每次检定最多一次）」——commit 档案没有「按同名投入张数触发自动成功/奖励」的读点（P10 前补原语）。已实现：同名多张可同时投入（maxPerTest: 3）与每张 1 个万能图标的投入结算。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06204",
+      "status": "implemented",
+      "previousNote": "未实现：「在基础调查行动期间投入时获得 [intellect][intellect]」——commit 档案的 conditionalIcons 没有「检定来自基础调查行动」的条件键（只有生命/手牌/资源/毁灭/控制特性等条件）；已实现：每次检定最多投入 1 张 + 成功超过难度 2 点时额外发现 1 个线索。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06206",
+      "status": "implemented",
+      "previousNote": "剧本参考卡：实现 = Dark Side of the Moon 章节 definition/behavior（manifest.referenceCode）",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06214b",
+      "status": "implemented",
+      "previousNote": "实现说明：06214b「下船」的翻面结算由本章 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）；本卡由 06214 月兽帆船翻面时读出，无独立翻面行动条目。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06235",
+      "status": "implemented",
+      "previousNote": "未实现：「如果本次检定成功，获得 2 资源；若领导力投入到另一位调查员的检定，该调查员也获得 2 资源」——commit 档案的 onSuccess 读点没有 gainResources 字段（P10 前补原语）；投入时获得 [willpower][wild] 的图标句已由引擎 leadership 读点实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06236",
+      "status": "implemented",
+      "previousNote": "未实现：「你在隐藏值至少为 4 的地点时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点（commitIcons 的授予只作用于声明者自身）。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06237",
+      "status": "implemented",
+      "previousNote": "未实现：「你与敌人交战时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06238",
+      "status": "implemented",
+      "previousNote": "未实现：「你有至少 8 张手牌时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06239",
+      "status": "implemented",
+      "previousNote": "未实现（主效果）：「你连续执行同一种行动两次后，横置快手：再执行一次该种行动」——引擎没有行动类型历史/本次行动类型的窗口上下文，也没有「按行动类型受限的额外行动」原语。已实现：每位调查员仅限 1 张（limitPerInvestigator）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06240",
+      "status": "implemented",
+      "previousNote": "未实现：「投入后从牌库顶揭示直到揭示一张可投入的[rogue]技能并投入，其余洗回」——本卡投入后已离手，committedCard 窗口的能力源枚举看不到刚投入的牌，没有「投入后自我触发」的读点。已实现：作为技能卡的投入图标。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06241",
+      "status": "implemented",
+      "previousNote": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——3 张同名可同时在场且基本只占 1 个法术槽，但其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 combat 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 战斗。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06242",
+      "status": "implemented",
+      "previousNote": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 agility 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 敏捷。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06243",
+      "status": "implemented",
+      "previousNote": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 intellect 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 智识。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06244",
+      "status": "implemented",
+      "previousNote": "未实现（主效果）：「你花费[[法术]]支援的至少 1 充能后，横置特薇拉：在该支援上放置 1 充能」——引擎没有「充能被花费后」的窗口/上下文（扣充能发生在费用支付里，不进入任何窗口）。卡牌本身作为[[盟友]]支援的入场/槽位/费用按印刷数据结算。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06246",
+      "status": "implemented",
+      "previousNote": "未实现：①「仅在基础躲避行动期间投入时」+2 敏捷图标（conditionalIcons 无检定来源条件，现按恒真条件近似为每次投入都给）；②检定成功且超过难度≥2时自动躲避另一敌人的成功后结算（commit 档案只有 icons / conditionalIcons / onSuccess 数据键，无自定义成功后结算）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06247",
+      "status": "implemented",
+      "previousNote": "近似：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语；探查山谷按「弃掉至多一半遭遇牌库顶」近似，已同载 behavior.scenarioApproximations。章节级理由锚到剧本参考卡 06247。\n近似：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状；用 scenarioFlags 计数 + removeEnemyFromGame 近似（06266 条目 note 已登记）。章节级理由锚到剧本参考卡 06247。\n近似：「打乱各张漆黑之海的位置」没有地点位置/标签概念；只做线索平均分配与重置可翻面，位置打乱用固定实例顺序表达。章节级理由锚到剧本参考卡 06247。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06271",
+      "status": "implemented",
+      "previousNote": "生成地点/失败涌动已由共享 spawnLocation/spawnFailed 数据分派；「移动时所有隧道地点视作互相连接」需要 enemyConnections 读点（引擎无内容通道）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06273",
+      "status": "implemented",
+      "previousNote": "生成地点已由共享 spawnLocation 数据分派；「攻击时伤害/恐惧二选一」需要敌人攻击结算的内容读点（引擎无通道）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06277",
+      "status": "implemented",
+      "previousNote": "简化：卡面为 [reaction]（可选），但引擎里能在「取消判定之前」拿到 effect 数据体（cancelSymbolToken）的唯一通道是 forced 描述子 + legacyReaction，因此有充能时揭示符号标记会自动取消（不问询）。取消标记、治愈 1 伤害/1 恐惧、无充能时强制交换回空虚项链均已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06278",
+      "status": "implemented",
+      "previousNote": "未实现：被查找到时「放入游戏区域并强制投入下一次符合条件的技能检定；该检定成功则抽 1 张」（searchedCardRule 只支持 take/discard/cancelSearch/discoverClue/drawEncounter 固定动作，无自定义结算）。现近似为查找时可选择把这张牌加入手牌。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06282",
+      "status": "implemented",
+      "previousNote": "未实现：卡面「行动外（except during an action）」的使用限制——引擎没有「是否正在结算一次行动」的通用读点，现允许在任意时点（自己回合内）横置发动。其余效果（额外费用检索脱缰野兽洗回牌库、基础值 5 的攻击/调查）已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06283",
+      "status": "implemented",
+      "previousNote": "未实现：多张受召猎犬在场时由玩家选择哪一张被放到一边（现取第一张）；「放到一边」进入 setAside（不是 06282 的绑定集合）；无猎犬时的「不生成」用移除刚生成敌人的方式近似。主要分支（有猎犬→猎犬离场、脱缰野兽与猎犬持有者交战）已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06285",
+      "status": "implemented",
+      "previousNote": "未实现：卡面主效果「揭示 [tablet]/[elder_thing]/[elder_sign] 时改为使用以下效果（-1 并让黑猫受到 1 点直接伤害/恐惧；+5 并治愈黑猫全部伤害与恐惧）」——引擎没有把符号效果替换为卡面自定义值的读点（setSymbolEffect 只服务 05033 的取消/再结算候选）。已实现的数据通道：[[盟友]]槽位、2 个万能图标、特性均来自 cards-data。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06286",
+      "status": "implemented",
+      "previousNote": "近似：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力。章节级理由锚到剧本参考卡 06286。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06306",
+      "status": "implemented",
+      "previousNote": "表示层/桌面约定：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。锚到 5 形态中首个 06306。\n设计差异：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭；参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。锚到 06306。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06324",
+      "status": "implemented",
+      "previousNote": "未实现：①「与你游戏区域的书籍支援互换」（引擎没有把附属卡移回支援区的通用 API，现只支持从支援区附属一张书籍）；②「结算附属书籍的 [action] 能力后横置她再结算一次」（引擎不把附属卡的 [action] 能力列入能力源，无法挂 reaction）。已实现：附属一张[[书籍]]支援到阿比盖尔（仅限 1 张），且附属后不再占用槽位。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06325",
+      "status": "implemented",
+      "previousNote": "未实现：①仅当「本次检定是对诡计卡牌的检定」的条件；②成功后把该诡计加入胜利区并把真理之眼附属到它上面；③附属期间为「该诡计的同名卡牌」的每次检定提供 4 个万能图标（commit 档案没有检定来源条件与成功后自定义结算读点）。已实现：投入时按卡面提供 4 个万能图标。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06327",
+      "status": "implemented",
+      "previousNote": "失败误伤分支的最大值沿用引擎读点写死的 5（01029 的 successDamage/failByAmountToEngaged 共用实现），卡面写 6；成功伤害（1–6）与「不造成标准伤害」已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06328",
+      "status": "implemented",
+      "previousNote": "以「本次检定技能值改为意志值」近似「改为检定意志」（引擎没有替换本次检定技能的 API；pendingBonus 读点只改检定值，不改变 test.skill 本身）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06329",
+      "status": "implemented",
+      "previousNote": "未实现失败分支：①「检定失败则取消打出该卡牌，不支付任何费用（包括行动费用）」——beforePlayCost 窗口没有取消整次打出的引擎字段；②「直到本轮结束不能打出该卡牌及其同名卡」。成功分支已实现：横置自身 + 意志(X) 检定，成功则本次资源费用视为已支付（costReduction = cost）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06330",
+      "status": "implemented",
+      "previousNote": "揭示自动失败时取消标记并洗牌按强制效果自动触发，尚未提供可选反应。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06333",
+      "status": "implemented",
+      "previousNote": "剧本参考卡：实现 = Weaver of the Cosmos 章节 definition/behavior（manifest.referenceCode）",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06337",
+      "status": "implemented",
+      "previousNote": "引擎没有「中心牌面/Global 敌人」实体：阿特拉克·纳克亚在幕 2 推进前不生成实体（其翻面生成在 06338 的 advance.flipAtlachNacha 里）；参考实现的「旋转中心牌」近似为旋转四条腿（幕 2）与敌人本身（幕 3）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06346",
+      "status": "implemented",
+      "previousNote": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）；离开地点与击败标记已实现。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06347",
+      "status": "implemented",
+      "previousNote": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06348",
+      "status": "implemented",
+      "previousNote": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06349",
+      "status": "implemented",
+      "previousNote": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06350",
+      "status": "implemented",
+      "previousNote": "躲避替代的「不能攻击所选调查员」缺引擎读点：实现为不横置 + 本轮不攻击任何人（见 primitive-request w-p8-f-evade-protection）。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    },
+    {
+      "code": "06354",
+      "status": "implemented",
+      "previousNote": "蜂拥/头领卡在引擎里是头领敌人的附属卡（不是独立敌人实体），只由头领发起一次攻击；「每张蜂拥卡各攻击一次」未逐卡重演。",
+      "evidence": [
+        "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/tde-completion-primitives.test.mjs"
+      ],
+      "review": "Printed rule behavior implemented in the single-card entry and its shared engine consumers; final release remains gated by full regression and browser acceptance."
+    }
+  ],
+  "historicalScenarioNotes": [
+    {
+      "chapterId": "aThousandShapesOfHorror",
+      "approximations": [
+        "神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
+        "议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
+        "06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
+        "06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。"
+      ],
+      "gaps": [
+        "06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
+        "06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。"
+      ]
+    },
+    {
+      "chapterId": "beyondTheGatesOfSleep",
+      "approximations": [
+        "14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
+        "「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
+        "幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
+        "「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
+        "「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
+        "「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
+        "「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
+        "「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
+        "故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。"
+      ],
+      "gaps": []
+    },
+    {
+      "chapterId": "darkSideOfTheMoon",
+      "approximations": [
+        "被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
+        "月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
+        "月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
+        "06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。"
+      ],
+      "gaps": [
+        "06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。"
+      ]
+    },
+    {
+      "chapterId": "pointOfNoReturn",
+      "approximations": [
+        "8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
+        "「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
+        "「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
+        "食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
+        "古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
+        "卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。"
+      ],
+      "gaps": [
+        "「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
+        "「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
+        "「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。"
+      ]
+    },
+    {
+      "chapterId": "theSearchForKadath",
+      "approximations": [
+        "斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
+        "塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
+        "黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
+        "维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
+        "哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
+        "「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
+        "艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。"
+      ],
+      "gaps": [
+        "掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
+        "剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。"
+      ]
+    },
+    {
+      "chapterId": "wakingNightmare",
+      "approximations": [
+        "06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
+        "06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
+        "06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
+        "06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
+        "06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
+        "06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
+        "06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。"
+      ],
+      "gaps": [
+        "「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。"
+      ]
+    },
+    {
+      "chapterId": "weaverOfTheCosmos",
+      "approximations": [
+        "阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
+        "「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
+        "15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
+        "「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
+        "遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
+        "[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
+      ],
+      "gaps": []
+    },
+    {
+      "chapterId": "whereTheGodsDwell",
+      "approximations": [
+        "「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
+        "手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
+        "6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
+        "「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
+        "结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
+        "「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
+        "「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
+        "冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。"
+      ],
+      "gaps": [
+        "06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
+        "Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
+        "真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。"
+      ]
+    }
+  ],
+  "status": "verified",
+  "validation": [
+    "tests/tde-completion-primitives.test.mjs",
+    "tests/tde-completion.test.mjs",
+    "tests/tde-p95-parallel-full.test.mjs",
+    "tests/tde-scenarios.browser.mjs",
+    "tests/tde-online.browser.mjs",
+    "audit/tde-migration.json",
+    "audit/tde-replay-completion-review.json"
+  ],
+  "acceptance": {
+    "fullLibrary": "npm test: hall 245 passed; Arkham 5328 passed, 3 pre-existing skips, zero failures",
+    "browser": "60 passed across desktop/mobile, eight chapters and real relay multiplayer",
+    "rules": "388 verified, 0 simplified, 0 pending; 33 primitives done; no unresolved scenario gaps"
+  }
+}

@@ -1,3 +1,6 @@
+import { putInHand } from './hand-entry.js'
+import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { wrapInvestigatorEffects } from './effect-recipient.js'
 ﻿import { investigatorRule } from '../cards/card-rules.js'
 import { noteCardCancelled } from './cancel-note.js'
 // 技能检定效果（applyTokenFx / applySkillOnSuccess / makeRuntime）从 engine.js 拆出的模块
@@ -81,6 +84,7 @@ export function createSkillEffects(deps) {
     researchSolution,
     returnAssetToHand,
     scenarioBehavior,
+    scenarioRuntime,
     scryDeck,
     searchCards,
     searchDiscard,
@@ -100,6 +104,10 @@ export function createSkillEffects(deps) {
 
 function applyTokenFx(state, seat, inv, fx, events) {
   switch (fx.type) {
+    case 'scenarioToken': {
+      const frame=state.skillTest
+      scenarioBehavior(state).applyTokenEffect?.(state,inv,{...fx,test:frame?{actionKind:frame.actionKind,target:frame.target,failedBy:Math.max(0,frame.difficulty-frame.value)}:null},scenarioRuntime(state,events));break
+    }
     case 'damage': case 'takeDamage': info(state, events, `${inv.name} 受到 ${fx.amount} 点伤害。`); applyDamage(state, inv, fx.amount, events); break
     case 'horror': case 'takeHorror': info(state, events, `${inv.name} 受到 ${fx.amount} 点恐惧。`); applyHorror(state, inv, fx.amount, events); break
     case 'drawEnemyTrait': drawEnemyByTrait(state, inv, fx.amount || fx.trait || 'Monster', events, true); break
@@ -137,7 +145,8 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
     const s = commitProfile(code)
     if (!s) continue
     const o = { ...(s.onSuccess || {}) }
-    if (s.successBy && successBy >= s.successBy.threshold) {
+    if (s.successBy && successBy >= s.successBy.threshold
+      && (!s.successBy.when || s.successBy.when({ state, inv, test: state.skillTest, code }))) {
       for (const key of ['damageBonus', 'clueBonus', 'healHorror', 'gainAction']) o[key] = (o[key] || 0) + (s.successBy[key] || 0)
     }
     if (o.draw) {
@@ -156,10 +165,10 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
         if (!inv.deck.length) break
         const drawnCode = inv.deck.pop()
         if (isWeaknessCard(cardDef(drawnCode))) {
-          inv.deck = shuffle([...inv.deck, drawnCode], () => randomValue(state))
+          inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, drawnCode], () => randomValue(state)), 'shuffle')
           continue
         }
-        inv.hand.push(drawnCode)
+        putInHand(state, inv, drawnCode)
         drawn++
       }
       if (drawn) info(state, null, `${inv.name} 的「${cardName(code)}」触发：抽 ${drawn} 张牌。`)
@@ -181,7 +190,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
     const owner = inv
     const wager = campaignState.wager(owner, code)
     if (s.wagerResources && wager) {
-      owner.resources += wager * 2
+      resourceBank.gainResource(state, owner, wager * 2, events)
       campaignState.clearWager(owner, code)
     }
     if (o.returnDiscardClass && !discardLocked(state, owner)) {
@@ -192,7 +201,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
             ...candidates.map((item, index) => ({ id: String(index), cardCode: item, label: cardName(item) }))] })
         if (answer !== 'skip') {
           const picked = candidates[Number(answer)]
-          removeOne(owner.discard, picked); owner.hand.push(picked)
+          removeOne(owner.discard, picked); putInHand(state, owner, picked)
         }
       }
     }
@@ -238,7 +247,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
 }
 
 function makeRuntime(state, events) {
-  return {
+  return wrapInvestigatorEffects(state, {
     cancelPending: (when) => {
       if (!state._reaction || state._reaction.when !== when) throw new Error('当前没有可取消的结算')
       state._reaction.cancelled = true
@@ -325,7 +334,7 @@ function makeRuntime(state, events) {
       const discarded = []
       for (let index = 0; index < amount && inv.deck.length; index++) discarded.push(inv.deck.pop())
       if (!discarded.length) return
-      inv.discard.push(...discarded)
+      discardPlayerCards(state, inv, ...discarded)
       info(state, events, `${inv.name} 弃掉牌库顶 ${discarded.length} 张牌。`)
     },
     addEffect: (seat, record) => createEffect(state, { ...record, controllerSeat: seat }),
@@ -375,7 +384,7 @@ function makeRuntime(state, events) {
     gainClues: (inv, amount) => { inv.clues += amount; syncClues(state); info(state, events, `${inv.name} 从供应堆获得 ${amount} 个线索（个人 ${inv.clues}）。`) },
     targetedTest: (seat, effect) => targetedTest(state, seat, effect, events),
     reactionContext: null,
-  }
+  })
 }
 
   return { applyTokenFx, applySkillOnSuccess, makeRuntime }

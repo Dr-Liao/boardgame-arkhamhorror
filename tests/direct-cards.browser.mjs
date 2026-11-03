@@ -865,6 +865,8 @@ test('剧情技能选项自适应窗口并显示对应技能图标',async({page}
   await expect(choices.locator('[data-card-symbol="agility"]')).toHaveCount(1)
   await expect(choices.locator('[data-card-symbol="intellect"]')).toHaveCount(1)
   await expect(choices).not.toContainText(/combat|agility|intellect/i)
+  await expect(choices.locator('[data-option-id="combat"]')).toHaveAttribute('aria-label','由一位调查员检定战斗（4）')
+  await expect(choices.locator('[data-option-id="combat"]')).toHaveAttribute('title','由一位调查员检定战斗（4）')
   const layout=await choices.evaluate(element=>{
     const box=element.getBoundingClientRect()
     return {left:box.left,right:box.right,viewport:innerWidth,overflow:element.scrollWidth-element.clientWidth}
@@ -872,8 +874,8 @@ test('剧情技能选项自适应窗口并显示对应技能图标',async({page}
   expect(layout.left).toBeGreaterThanOrEqual(0)
   expect(layout.right).toBeLessThanOrEqual(layout.viewport)
   expect(layout.overflow).toBe(0)
-  const iconPaths=await choices.locator('.ah-effect-option > .ah-icon path').evaluateAll(paths=>paths.slice(0,3).map(path=>path.getAttribute('d')))
-  expect(new Set(iconPaths).size).toBe(3)
+  const icons=await choices.locator('.ah-effect-option > .ah-icon[data-game-symbol]').evaluateAll(els=>els.map(el=>el.dataset.gameSymbol))
+  expect(icons).toEqual(['combat','agility','intellect'])
 })
 
 test('混乱标记选项显示真实标记图案与名称，不再把 emoji 当图标',async({page})=>{

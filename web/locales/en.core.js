@@ -129,7 +129,7 @@ export default {
   'table.rulebook': 'Rulebook',
   'table.rulebook.title': 'Rulebook · F1',
   'table.setup': 'Scenario setup',
-  'table.setup.title': 'Read this scenario’s introduction, setup steps and notes',
+  'table.setup.title': 'Read the complete adventure guide and special rules',
   'table.refresh': 'Refresh situation',
   'tde.interactions': 'Scenario interactions',
   'tde.list': ', ',

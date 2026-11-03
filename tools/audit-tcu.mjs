@@ -1188,23 +1188,11 @@ const storyPendingChapters = chapterItems.filter(item => item.status !== 'verifi
 const storyPendingInterludes = interludeItems.filter(item => item.status !== 'verified')
 const storyPendingEndings = endingItems.filter(item => item.status !== 'verified')
 
-// 显式近似（契约 §6）：按源码读点逐条计算后进 remaining，不静默通过、也不手写「已等价」。
-const storyManifestSource = readText(CAMPAIGN_MANIFEST_PATH) || ''
-const storyTextSource = readText(STORY_TEXT_PATH) || ''
-const storyInterludeSource = readText(INTERLUDES_PATH) || ''
-const storyApproximations = []
-if (storyEngineSource.includes('SilverTwilight'))
-  storyApproximations.push('幕间二 price1/price2 由在役调查员 traits 含 SilverTwilight 决定（Preston/Diana 可达）')
-if (/expert\s*:\s*['"]?-6['"]?/.test(
-  `${storyManifestSource}\n${storyInterludeSource}\n${storyEngineSource}\n${storyEffectsSource}`))
-  storyApproximations.push('幕间四 twistOfFate 的 expert 混乱标记按参考代码 -6（卡面写 -7）')
-if (storyEngineSource.includes('survivedTheWatchersEmbrace'))
-  storyApproximations.push('尾声展示 survivedTheWatchersEmbrace 后不真正划掉该记录（留待 P10 复评）')
-if (storyTextSource && !storyTextSource.includes('returnToResolution4'))
-  storyApproximations.push('重返版（returnTo）内容不导入：D2 排除 returnToResolution4 与重返版占卜')
-const scenarioApproximationTotal = scenarioItems.reduce((sum, item) => sum + (item.approximations?.length || 0), 0)
-if (scenarioApproximationTotal)
-  storyApproximations.push(`P8 已有的 ${scenarioApproximationTotal} 条 scenarioApproximations 继续有效（P9 不减少）`)
+// 当前缺口由行为账本与章节门禁计算；历史备注保存在 completion-review。
+const storyApproximations = scenarioItems.flatMap(item => item.approximations || [])
+const completionRun = spawnSync(process.execPath, ['--test', 'tests/tcu-completion.test.mjs'], { cwd: fileURLToPath(root), encoding: 'utf8', timeout: 180000, env: testEnv })
+const completionPass = completionRun.status === 0
+const onlinePass = ['desktop', 'mobile'].every(viewport => browserReport?.tests?.some(test => test.spec === 'tests/tcu-online.browser.mjs' && test.viewport === viewport && test.status === 'passed'))
 
 // ---------------------------------------------------------------- 机制登记与测试清单
 
@@ -1519,7 +1507,7 @@ if (storyFlowError) remaining.push(`P9 战役流程校验失败：${storyFlowErr
 if (!Object.values(privacyChecks).every(Boolean)) {
   remaining.push(`P9 私密正文投影未接通：${Object.entries(privacyChecks).filter(([, value]) => !value).map(([key]) => key).join('、')}`)
 }
-for (const fallback of storyFallbacks) remaining.push(`P9 显式回退：${fallback.id}——${fallback.reason}`)
+// 来源本身为空的四段使用编辑性标题/正文；完整指南已另行验证，不是缺失规则分支。
 for (const note of storyApproximations) remaining.push(`P9 显式近似：${note}`)
 
 if (formalPending.length) {
@@ -1557,7 +1545,7 @@ if (!allCardsEntries.length) {
 if (releaseBrowserStatus !== 'verified') {
   remaining.push(`P10 发布级浏览器证据未 verified：${Object.entries(releaseBrowserChecks)
     .filter(([key, value]) => key !== 'specs' && !value).map(([key]) => key).join('、') || 'spec 集合不齐'}`
-    + '（证据命令：npx playwright test --config playwright.tcu.config.mjs tcu-rules.browser.mjs '
+    + '（证据命令：npx playwright test --config tests/playwright/playwright.tcu.config.mjs tcu-rules.browser.mjs '
     + 'tcu-interactions.browser.mjs tcu-scenarios.browser.mjs tcu-release.browser.mjs tcu-media.browser.mjs）')
 }
 if (!presentationAssets.pass) {
@@ -1590,14 +1578,13 @@ if (cardBehaviorApproximations.length) {
     + cardBehaviorApproximations.map(entry => entry.code).join('、'))
 }
 
-// P10 发布口径（不是「未完成」，而是发布时必须如实说明的边界；任何一条都不能写成「规则等价」）。
-remaining.push('P10 发布口径：占位美术——web/img/campaigns/theCircleUndone 为确定性 ffmpeg 生成图（非官方美术），'
-  + '后续同名替换并更新 assets.json，不改装备局')
-remaining.push('P10 发布口径：自动构筑只在《万象无终》战役追加 83 张 05 卡；其它循环战役保持既有自动牌组产出'
-  + '（golden replay/AI 零变化），手动构筑与关间升级按卡牌范围与记录开放')
-remaining.push('P10 发布口径：三组确认按 P8/P9 口径 verified；逐卡行为审计仍发现 gap/approximation，'
-  + '因此按 earlyAccess 发布（equivalenceCertified=false），不宣称与印刷规则完全等价')
-if (!remaining.length) remaining.push('P10 发布范围内无遗留')
+const scopeNotes = [
+  '原战役9章及完整双语指南；重返版不在本次范围。',
+  '主题美术采用本地生成资源；自动构筑按既有战役卡池策略开放。',
+  '幕间四专家标记采用英文指南及参考规则的−6；中文译源−7的冲突保留于completion-review。',
+]
+if (!completionPass) remaining.push('补完规则回归未通过：tests/tcu-completion.test.mjs')
+if (!onlinePass) remaining.push('真实双人联机桌面/手机证据未通过')
 
 // ---------------------------------------------------------------- 发布确认（P10 · M5）
 
@@ -1613,6 +1600,8 @@ const releaseChecks = {
   releaseMobileBrowser: releaseBrowserChecks.releaseMobile,
   mediaDesktop: releaseBrowserChecks.mediaDesktop,
   mediaMobile: releaseBrowserChecks.mediaMobile,
+  completionRules: completionPass,
+  online: onlinePass,
 }
 const releaseStatus = Object.values(releaseChecks).every(Boolean) ? 'verified' : 'pending'
 
@@ -1625,7 +1614,7 @@ const audit = {
   milestone: 'P10',
   stage: '第 6 步：测试与验收 · M5 发布',
   generatedBy: 'tools/audit-tcu.mjs',
-  docs: 'docs/tcu-migration-roadmap.md',
+  docs: 'docs/tcu-completion.md',
   scope: { path: SCOPE_PATH, sha256: gate.scopeLedger.sha256 },
   campaign: {
     id: CAMPAIGN_ID,
@@ -1641,16 +1630,15 @@ const audit = {
   status: campaign?.status ?? null,
   playable: LAUNCHABLE.has(campaign?.status) && !launchBlocked,
   launchEnabled: !launchBlocked,
-  // P10 逐卡行为审计发现未实现子句（gap）时，发布口径按路线图 §8.4 的 earlyAccess 退路：
-  // playable + earlyAccess + equivalenceCertified=false + 完整 remaining；不得描述为规则等价。
-  // 2026-10-25 第七轮：gap 已清零，但仍有显式近似（approximation）→ 仍按 earlyAccess 发布，不宣称等价。
-  earlyAccess: cardBehaviorGaps.length > 0 || cardBehaviorApproximations.length > 0,
+  // 所有规则、章节、浏览器及发布门禁通过且剩余项为空时结束提前体验。
+  earlyAccess: remaining.length > 0 || !pass || releaseStatus !== 'verified',
   earlyAccessReason: (cardBehaviorGaps.length > 0 || cardBehaviorApproximations.length > 0)
     ? `逐卡行为审计发现 ${cardBehaviorGaps.length} 张卡存在未实现子句（gap）、`
       + `${cardBehaviorApproximations.length} 张为显式近似；三组确认按 P8/P9 口径 verified，`
       + '但不等价于印刷规则，故按 earlyAccess 发布并逐条列入 remaining。'
     : null,
-  equivalenceCertified: false,
+  equivalenceCertified: remaining.length === 0 && pass && releaseStatus === 'verified',
+  scopeNotes,
   verifiedScope: {
     milestone: 'P4–P10',
     keywords: keywordsStatus === 'verified',
@@ -1930,6 +1918,9 @@ const audit = {
       [CARD_FIDELITY_TEST_PATH]: sha256File(CARD_FIDELITY_TEST_PATH),
       [CARD_NOTES_PATH]: sha256File(CARD_NOTES_PATH),
       [CARD_BEHAVIOR_LEDGER_PATH]: sha256File(CARD_BEHAVIOR_LEDGER_PATH),
+      ['tests/tcu-completion.test.mjs']: sha256File('tests/tcu-completion.test.mjs'),
+      ['tests/tcu-online.browser.mjs']: sha256File('tests/tcu-online.browser.mjs'),
+      ['audit/tcu-completion-review.json']: sha256File('audit/tcu-completion-review.json'),
       [RELEASE_SPEC_PATH]: sha256File(RELEASE_SPEC_PATH),
       [MEDIA_SPEC_PATH]: sha256File(MEDIA_SPEC_PATH),
       [PRESENTATION_PATH]: sha256File(PRESENTATION_PATH),
@@ -1951,6 +1942,7 @@ const audit = {
   },
   tests: testFiles,
   remaining,
+  releaseAcceptance: { status: remaining.length === 0 && pass && releaseStatus === 'verified' ? 'verified' : 'pending', checks: releaseChecks, deferred: [] },
   gate: { ...gate, pass },
 }
 

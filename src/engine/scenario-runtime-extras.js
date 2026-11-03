@@ -10,8 +10,8 @@ import {
 } from './counters.js'
 import { swarmingCount, swarmingCountForText, swarmingSpec } from './swarming.js'
 import {
-  clearSwarmCards, placeSwarmCards, removeSwarmCard, splitSwarmingDamage, swarmBlockedReason,
-  swarmCanBeDefeated, swarmCardsOf, swarmCountOf, swarmHostOf,
+  clearSwarmCards, placeSwarmCards, removeSwarmCard, swarmBlockedReason,
+  swarmCanBeDefeated, swarmCardsOf, swarmCountOf, swarmHostOf, returnSwarmCard,
 } from './swarm.js'
 import {
   canFlipVeiledLocation, flipVeiledLocation, isVeiledLocation, normalizeVeiledScenario,
@@ -29,13 +29,23 @@ import {
 } from './location-doom.js'
 import { addMarker, markerCountOf, markerSummary, referenceMarkerCount, resetMarkerCount, setMarkerCount } from './marker-count.js'
 
-export function scenarioRuntimeExtras(state) {
+export function scenarioRuntimeExtras(state, onCounterChanged = null) {
+  const changeCounter = (seat, id, fn) => {
+    const oldValue = counterOf(state, seat, id)
+    const newValue = fn()
+    if (newValue !== oldValue) {
+      state.counterWindowSerial = (state.counterWindowSerial || 0) + 1
+      onCounterChanged?.({ seat, counterId: id, oldValue, newValue, delta: newValue - oldValue,
+        windowInstance: `counter:${state.counterWindowSerial}` })
+    }
+    return newValue
+  }
   return {
     // 按调查员的计数器（警报等级 / 赏金）
     counters: {
       get: (seat, id) => counterOf(state, seat, id),
-      set: (seat, id, value, options) => setCounter(state, seat, id, value, options),
-      add: (seat, id, delta = 1, options) => addCounter(state, seat, id, delta, options),
+      set: (seat, id, value, options) => changeCounter(seat, id, () => setCounter(state, seat, id, value, options)),
+      add: (seat, id, delta = 1, options) => changeCounter(seat, id, () => addCounter(state, seat, id, delta, options)),
       max: id => counterSummary(state, id, state.numInvestigators || 0),
       highestOf: id => highestCounter(state, id),
       atLeast: (seat, id, threshold) => counterAtLeast(state, seat, id, threshold),
@@ -53,12 +63,22 @@ export function scenarioRuntimeExtras(state) {
       place: (host, count, options) => placeSwarmCards(state, host, count, options),
       cardsOf: host => swarmCardsOf(host),
       countOf: host => swarmCountOf(host),
-      remove: (host, swarmId) => removeSwarmCard(host, swarmId),
-      clear: host => clearSwarmCards(host),
+      remove: (host, swarmId) => {
+        const enemy = state.enemies?.find(item => item.id === swarmId && item.hostId === host.id)
+        return enemy ? returnSwarmCard(state, enemy) : removeSwarmCard(host, swarmId)
+      },
+      clear: host => {
+        const ids = swarmCardsOf(host).map(card => card.id)
+        for (const id of ids) {
+          const enemy = state.enemies?.find(item => item.id === id)
+          if (enemy) returnSwarmCard(state, enemy)
+          else removeSwarmCard(host, id)
+        }
+        return ids
+      },
       canDefeat: host => swarmCanBeDefeated(host),
       blockedReason: host => swarmBlockedReason(host),
       hostOf: enemy => swarmHostOf(state, enemy),
-      splitDamage: (host, damage, remainingHealth) => splitSwarmingDamage(host, damage, remainingHealth),
     },
     // 掩藏地点（[fast] 翻面 / 洗回；线索是翻面门槛，不是调查门槛）
     veiled: {

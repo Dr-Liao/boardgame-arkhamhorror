@@ -94,14 +94,14 @@ function chooseBlackBook(state, api) {
   const inv = state.investigators[seat]
   if (!inv) return null
   api.campaignCard?.(THE_BLACK_BOOK, seat, '隐秘之名结局')
-  addChaosToken(state, 'skull', 1)
+  addChaosToken(state, 'skull', 1, { permanent: true })
   state.scenarioFlags ||= {}
   state.scenarioFlags.blackBookSeat = seat
   api.info?.(`📖 ${inv.name} 把「黑书」加入战役牌组，混乱袋加入 1 个骷髅标记。`)
   return seat
 }
 
-export const scenarioApproximations = Object.freeze([
+export const migrationHistory = Object.freeze([
   '「未知地点」的未揭示面：引擎只认识 unrevealedActualName/hiddenIdentity；本章 locationRevealed 里应用 definition 的 unrevealed 数据（名称/副标题/traits/符号）并按符号重算连线，等价于翻面。',
   '未知地点牌库：buildScenarioLocationDeck 只负责洗牌；本章按参考实现 splitAt 3 自行拼 state.extraLocationDecks.unknownPlaces 的上下 3/4 张（仍是原语的纯 JSON 堆结构，可存档）。',
   '黑书加入战役牌组：用 api.campaignCard（P2.10 原语）；「混乱袋 +1 骷髅」按卡面永久化，P8 只验证本局袋（P9 再接战役袋持久化）。',
@@ -123,7 +123,7 @@ export const behavior = {
   id: 'theSecretName',
   implementedEncounterCodes,
   scenarioGaps: [],
-  scenarioApproximations,
+  migrationHistory,
   tokenMeanings: SECRET_NAME_TOKEN_MEANINGS,
 
   // ---- 介绍：按战役日志分支（参考 PreScenarioSetup）----
