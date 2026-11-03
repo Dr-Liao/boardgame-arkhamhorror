@@ -1842,6 +1842,9 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     abilityApi,
   ...commonDeps,
   descriptorSources,
+  // 窗口守卫要能看见「场上非玩家实体」的监听者（沉睡达贡这类敌人卡的 testEnds 强制能力），
+  // 只看玩家来源会把整个窗口关掉。
+  nonPlayerAbilitySources,
   activeHiddenRules,
   applyFreeTriggers,
   applySkillOnSuccess,

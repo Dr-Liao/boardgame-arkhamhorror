@@ -7,11 +7,11 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 771,
-    "descriptorAbilities": 940,
+    "descriptorAbilities": 942,
     "abilityKinds": 12,
     "windows": 112,
     "effectPrimitives": 56,
-    "nonPlayerCards": 166,
+    "nonPlayerCards": 167,
     "behaviorLines": 29028,
     "declaredScenarios": 3
   },
@@ -21,7 +21,7 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 51,
+      "enemy": 52,
       "location": 77,
       "storyAsset": 19,
       "treachery": 6,
@@ -175,6 +175,7 @@
       "07289",
       "07290",
       "07291",
+      "07292a",
       "07292b",
       "07294",
       "07300",
@@ -197,7 +198,7 @@
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 171,
+    "abilities": 173,
     "modifiers": 63
   },
   "declaration": {

@@ -68,6 +68,9 @@ export function createPerformTest(deps) {
     commitProfile,
     discoverClueAt,
     descriptorSources,
+    // 场上非玩家实体（敌人/地点/幕/密谋）的监听者：窗口守卫必须一起看，
+    // 否则「沉睡达贡」这类敌人卡的检定窗口强制能力永远不会被派发。
+    nonPlayerAbilitySources,
     drawCards,
     drawChaosToken,
     elderSignEffect,
@@ -541,7 +544,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   const sealElderSign = commitments.some(item => commitProfile(item.code)?.elderSignInsteadOfChaos)
   const closeTest = (resolved, result = null) => {
     if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
-      row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds'))))) {
+      row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds'))))
+      // 场上非玩家实体（敌人/地点/幕/密谋/剧情资产）也可能是 testEnds 的监听者。
+      || (nonPlayerAbilitySources?.(state, { seat }) || []).some(row =>
+        row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds')))) {
       reactionWindow(state, 'testEnds', { when: 'testEnds', seat, result, source: options.source }, events, { allowNested: true })
     }
     state.skillTest.stage = 'ST.8'

@@ -258,9 +258,19 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       if (inv) {
         // 只按「窗口 + 本轮/阶段/回合 + 相关实体」去重：同一事件的两次窗口调用
         // 上下文可能一个带 seat 一个不带，不能用 windowInstanceKey 原样做键。
+        const sources = nonPlayerAbilitySources(state, context)
+        // 同一个回合内的两次检定是两个不同事件，不能被当成同一个窗口实例。只有
+        // 「本窗口确实有非玩家检定监听者」时才把这次检定追加进键里
+        //（`skillTest.publicLog` 是检定开始时 state.log 的快照，长度随检定次数单调增长，
+        //  不新增 state 字段也不改重放指纹）。没有监听者时**键保持逐字不变**——
+        //  追加空串会改变 state.abilityLimits 的键、进而改变状态指纹。
+        const testListener = windowId === 'testEnds'
+          && sources.some(({ entry }) => (entry.abilities || []).some(descriptor => descriptor.trigger?.includes('testEnds')))
+        const testIdentity = testListener && state.skillTest ? `st:${state.skillTest.publicLog?.length ?? 0}` : ''
         const instanceKey = [windowId, state.round, state.phase, state.turnSerial ?? 0, state.moveCount ?? 0,
-          context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? '', context.windowInstance ?? ''].join('|')
-        for (const { source, entry } of nonPlayerAbilitySources(state, context)) {
+          context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? '', context.windowInstance ?? '',
+          ...(testIdentity ? [testIdentity] : [])].join('|')
+        for (const { source, entry } of sources) {
           if (entityBlanked(source)) continue
           for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
             const markKey = `entityWindow:${instanceKey}:${descriptor.id}:${source?.id ?? descriptor.code}`
