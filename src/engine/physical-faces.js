@@ -24,20 +24,38 @@ export function planPhysicalFace(entity,nextCode,{kind,definitionFor}) {
   return {kind,from:entity.originalCode||entity.code,to:nextCode,set,remove}
 }
 
+// Which in-play channel currently owns this physical object ('enemy' | 'asset'),
+// or null when it is not in play at all. Shared by apply and probe so the two
+// can never disagree about whether the object is a legal physical source.
+function inPlayKind(state,entity) {
+  if(!entity||!state)return null
+  if((state.enemies||[]).includes(entity))return 'enemy'
+  if((state.storyAssets||[]).includes(entity))return 'asset'
+  if((state.investigators||[]).some(inv=>inv.assets?.includes(entity)))return 'asset'
+  return null
+}
+
+// Probe variant of applyPhysicalFace for callers that must keep their own
+// "no matching face" semantics. Returns null instead of throwing whenever the
+// source is out of play or the replacement is not a real same-kind pair, so a
+// card-driven flip never turns "unknown next face" into an engine exception.
+export function physicalFacePlanIfAny(state,entity,nextCode,deps) {
+  const kind=inPlayKind(state,entity)
+  if(!kind)return null
+  try{return planPhysicalFace(entity,nextCode,{...deps,kind})}catch{return null}
+}
+
 // Replace printed characteristics in the same physical object. Counts, id,
 // exhaustion, controller, location, attachments and every external id reference
 // remain untouched. No play/enter/leave/spawn/revelation hook is simulated.
 export function applyPhysicalFace(state,entity,nextCode,deps) {
-  const owners=state.investigators.filter(inv=>inv.assets?.includes(entity))
-  const enemy=state.enemies.includes(entity)
-  const story=(state.storyAssets||[]).includes(entity)
-  if(!enemy&&!story&&!owners.length)throw new TypeError('Physical source is not currently in play')
-  const kind=enemy?'enemy':'asset'
+  const kind=inPlayKind(state,entity)
+  if(!kind)throw new TypeError('Physical source is not currently in play')
   const plan=planPhysicalFace(entity,nextCode,{...deps,kind})
   if(plan.from===plan.to)return {entity,changed:false,from:plan.from,to:plan.to}
   for(const key of plan.remove)delete entity[key]
   Object.assign(entity,plan.set)
-  if(enemy)entity.printedAloof=entity.aloof
+  if(kind==='enemy')entity.printedAloof=entity.aloof
   // Main should inject an actual auto-engagement recheck for a ready waking
   // enemy, then its one generic faceChanged event. Do not replay old windows.
   deps.afterApplied?.(entity,{kind,from:plan.from,to:plan.to})

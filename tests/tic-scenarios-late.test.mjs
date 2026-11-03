@@ -277,7 +277,7 @@ export function registerLateTests(lateFixture) {
     const s=lateFixture('theLairOfDagon',3);s.humanSeats=[0,1,2]
     const grand=placePrinted(s,'07283')
     transaction(s,draft=>revealLocation(draft,grand.id,[],0))
-    const cave=placePrinted(s,'07291')
+    const cave=placePrinted(s,'07102')
     assert.equal(s.locations.find(location=>location.id===grand.id).connections.includes(cave.id),true)
     assert.equal(s.locations.find(location=>location.id===cave.id).connections.includes(grand.id),true)
     s.investigators[0].location=grand.id;s.investigators[1].location=grand.id;s.investigators[2].location=cave.id

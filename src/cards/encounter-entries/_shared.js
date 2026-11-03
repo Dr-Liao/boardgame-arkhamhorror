@@ -8,6 +8,7 @@
 // 条目文件不得 import 聚合入口或 engine.js。
 
 import { hasTrait } from '../../engine/matcher.js'
+import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
 import { ALL_CARDS } from '../cards-data.js'
 import { traitLabel } from '../trait-labels.js'
 
@@ -739,7 +740,6 @@ export function localKeyFlashbackAbility({ keys, cluesPerInvestigator, flashback
   resolve:({inv,api})=>api.scenario.resolveFlashback(inv.seat,flashback)}
 }
 
-import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
 export function scenarioReferenceEntry({ code, scenarioRule }) {
  return {code,scope:'scenario',scenarioRule,abilities:[
   {kind:'free',actionKind:'activate',range:'anywhere',label:'拿取本地点的一把钥匙',criteria:({state,inv})=>canClaimKey(state,inv.seat),resolve:({inv,api})=>api.interactions.keys(inv.seat,'claimKey')},
@@ -758,3 +758,18 @@ export function defeatedSuspectAgendaAbility({ isKidnapper, recordValue, recordK
     },
   }
 }
+
+// 印斯茅斯「猎鹰岬疑案」的印刷身份表：嫌疑人与藏身处卡号 ↔ 战役记录里写的角色名。
+// 这是印刷卡面数据（不是某张卡的规则），放在共享窄工具里，条目只需要 import 这一个出口；
+// 不允许再单开 roles.js 这类旁路模块（条目只允许 _shared.js / _lookup.js / matcher.js）。
+export const SUSPECTS = { '07076': 'RobertFriendly', '07077': 'ZadokAllen', '07078': 'BrianBurnham',
+  '07079': 'BarnabasMarsh', '07080': 'JoyceLittle', '07081': 'OtheraGilman' }
+export const HIDEOUTS = { '07070': 'EsotericOrderOfDagon', '07071': 'SawboneAlley', '07072': 'ShorewardSlums',
+  '07073': 'TheHouseOnWaterStreet', '07074': 'InnsmouthJail', '07075': 'NewChurchGreen' }
+// 记录里既可能是卡号也可能是角色名，双向读回印刷卡号；未知值保持原样（返回 undefined）。
+export const printedRole = (map, value) => Object.hasOwn(map, value) ? value
+  : Object.keys(map).find(code => map[code] === value)
+export const suspectCode = value => printedRole(SUSPECTS, value)
+export const suspectRole = value => SUSPECTS[suspectCode(value)]
+export const hideoutCode = value => printedRole(HIDEOUTS, value)
+export const hideoutRole = value => HIDEOUTS[hideoutCode(value)]

@@ -34,6 +34,11 @@ function addToken(tokens, value) {
 // 一个关卡的全部匹配 token：definition 的卡号 / 运行时 id，以及 manifest 的区域卡号。
 export function collectScenarioTokens(scenario = {}, manifest = {}) {
   const tokens = new Set()
+  // 关卡自己的卡号（referenceCode / originalCode / manifest.referenceCode）：剧本参考卡
+  // 这类「只属于本关」的条目只带这个 token，不补的话八章 reference 会全部 unresolved。
+  addToken(tokens, scenario.referenceCode)
+  addToken(tokens, scenario.originalCode)
+  addToken(tokens, manifest.referenceCode)
   for (const category of ['locations', 'locationVariants']) {
     const value = scenario[category]
     const groups = category === 'locationVariants' ? Object.values(value || {}) : [Object.values(value || {})]

@@ -1,5 +1,4 @@
-import { defeatedSuspectAgendaAbility } from '../../_shared.js'
-import { suspectCode, suspectRole } from '../_shared/_roles.js'
+import { defeatedSuspectAgendaAbility, suspectCode, suspectRole } from '../../_shared.js'
 export default {
   code: '07058', scope: 'agenda', implemented: true,
   abilities: [defeatedSuspectAgendaAbility({

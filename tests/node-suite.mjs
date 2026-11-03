@@ -300,6 +300,8 @@ import './tic-scenario-combined-harm.test.mjs'
 
 import './tic-scenario-reference-printed.test.mjs'
 
+import './tic-scenario-reference-final.test.mjs'
+
 import './tic-companions-setup.test.mjs'
 
 import './tic-enemy-movement.test.mjs'
@@ -309,5 +311,12 @@ import './tic-enemy-movement-review.test.mjs'
 import './tic-enemy-flow.test.mjs'
 
 import './tic-enemy-outcomes.test.mjs'
+
+import './tic-catching-up.test.mjs'
+import './tic-hybrid-assassin.test.mjs'
+import './tic-discard-costs.test.mjs'
+import './tic-effect-barriers.test.mjs'
+import './tic-agenda-revert.test.mjs'
+import './tic-physical-faces.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

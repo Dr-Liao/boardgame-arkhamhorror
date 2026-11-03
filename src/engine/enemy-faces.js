@@ -1,4 +1,4 @@
-import { applyPhysicalFace,normalizedFace } from './physical-faces.js'
+import { applyPhysicalFace,normalizedFace,physicalFacePlanIfAny } from './physical-faces.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { keysOnExit } from './scenario-keys.js'
 import { releaseChaosTokens } from './chaos-bag.js'
@@ -51,7 +51,17 @@ export function flipEnemyFace(state, enemy, nextCode, deps = {}) {
   const { defOf = () => null, newCardInstance = code => ({ code, id: 'threat-' + code }), info, events } = deps
   if (!enemy) return null
   const face = enemyFacesOf(enemy).find(entry => entry.code === nextCode)
-  if (!face) return applyPhysicalFace(state,enemy,nextCode,{definitionFor:code=>normalizedFace(state,code,{printed:code=>ALL_CARDS[code],enemyDefinition:defOf}),afterApplied:deps.afterApplied})
+  if (!face) {
+    // 卡面没有声明面表时，同一张印刷双面卡（07292a/07292b 这类）走物理换面：
+    // 只替换印刷数值，保留 id / 计数 / 钥匙 / 附件。**不是**合法的同类型双面、
+    // 或实体已经不在场时，保持本函数原有语义——返回 null，不抛错。
+    const definitionFor = code => normalizedFace(state, code, { printed: code => ALL_CARDS[code], enemyDefinition: defOf })
+    const plan = physicalFacePlanIfAny(state, enemy, nextCode, { definitionFor })
+    if (!plan) return null
+    const applied = applyPhysicalFace(state, enemy, nextCode, { definitionFor, afterApplied: deps.afterApplied })
+    if (applied.changed) info?.(state, events, `🎭 「${enemy.name || nextCode}」换到了另一面。`)
+    return { side: faceOf(enemy), code: nextCode, changed: applied.changed }
+  }
   const side = face.side === 'unfinishedBusiness' ? 'unfinishedBusiness' : 'enemy'
   const from = faceOf(enemy)
   if (side === from) return { side, code: nextCode, changed: false }

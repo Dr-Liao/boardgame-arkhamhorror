@@ -1481,15 +1481,15 @@
     },
     {
       "path": "tools/audit-tde.mjs",
-      "sha256": "c0fbd980ad947efc41ef26d03e68fb0cbae6f75748179e70a83d31aa8c36fa1c"
+      "sha256": "92f0a0886f858a493bd0c8531030ecacd7e4440baa0bcccb6b44ee9fd548f16a"
     },
     {
-      "path": "playwright.tde.config.mjs",
-      "sha256": "ad6b8ddfefc33840848d4f65ec71c2803b5744dac7fb420cc4196469cfd5ed03"
+      "path": "tests/playwright/playwright.tde.config.mjs",
+      "sha256": "48c3daa6b990881684fd99d3a78d61a28070096c531d78b2dea48865d56b34ce"
     },
     {
       "path": "docs/arkham-content-migration.md",
-      "sha256": "0218ac90fe5de5ddfc8a446158edb7c349aec8c49d7feda17b232a95ae7ed713"
+      "sha256": "6dcb28b9cea2d5f0123b633be579cd56850a6a721303dd247266d31ecbf3ab27"
     },
     {
       "path": "audit/tde-parallel-acceptance.json",

@@ -5,6 +5,7 @@ import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
 import { scenarioRuntime, legalMoves, revealLocation } from '../src/engine/engine.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+const json = value => JSON.parse(JSON.stringify(value))
 function transaction(s,execute,select=()=>null){resolveTransaction(s,0,{action:'testTicFlashback'},execute);for(let guard=0;s.pendingChoice;guard++){assert.ok(guard<70);const c=s.pendingChoice;resolveTransaction(s,c.seat,{action:'choose',choiceId:c.id,optionId:select(c)??c.options.find(o=>['skip','done','self'].includes(o.id))?.id??c.options[0].id},execute)}}
 for(const [id,memory,token] of [[1,'AMeetingWithThomasDawson'],[2,'ABattleWithAHorrifyingDevil','cultist'],[3,'ADecisionToStickTogether','tablet'],[4,'AnEncounterWithASecretCult','elderthing']])test(`P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol`,()=>{
  const s=chapterFixture('thePitOfDespair');s.chaosBag=['0','cultist','cultist','tablet','tablet','elderthing','elderthing'];s.campaign.chaosBag=[...s.chaosBag]
@@ -57,18 +58,40 @@ for(const [id,code,color,memory] of [[12,'07242','white','AConversationWithMrMoo
 const actualDepths={ '07175a':[['red','blue'],2,'purple','07179','flashback9'],'07175b':[['green','yellow'],3,'purple','07179','flashback9'],
  '07176a':[['red','yellow'],2,'white','07180','flashback10'],'07176b':[['blue','green'],3,'white','07180','flashback10'],
  '07177a':[['red','green'],2,'black','07181','flashback11'],'07177b':[['blue','yellow'],3,'black','07181','flashback11'] }
-test('P7 real selected Depth locations pay local group clues and invoke all three actual relic flashbacks',()=>{
+test('P7 real selected Depth locations pay local group clues and invoke their actual relic flashback',()=>{
+ const base=chapterFixture('devilReef',2),api=scenarioRuntime(base,[]),m=createMechanicsApi(base)
+ const locations=m.scenarioDecks.take('unfathomableDepths',3)
+ for(const id of locations){api.place(id);transaction(base,d=>revealLocation(d,id,[],0))}
+ for(const id of locations){
+  // 每个地点在「三处深处都已揭示」的同一初始局面的副本上单独验证：真正的印刷规则是
+  // 「控制紫/白/黑三把钥匙就推进」（见下一个用例），所以三个遗物拿齐会合法地结束本章，
+  // 不能拿前一地点的结果继续验下一个地点。
+  const s=json(base),concrete=createMechanicsApi(s)
+  const location=s.locations.find(l=>l.id===id),[required,n,color,code,flashback]=actualDepths[location.originalCode]
+  for(const inv of s.investigators){inv.location=id;inv.clues=n}
+  for(const requiredColor of required)assert.equal(concrete.keys.transfer(requiredColor,s.scenarioFlags.mechanics.keys[requiredColor].holder,'investigator:0',{reveal:true}),true)
+  const actions=s.investigators[0].actionsLeft,command=legalMoves(s).find(move=>move.entityId===id);assert.ok(command)
+  move(s,command);settle(s)
+  assert.equal(s.investigators[0].actionsLeft,actions);assert.equal(s.investigators.reduce((sum,inv)=>sum+inv.clues,0),0)
+  assert.ok(s.investigators[0].assets.some(a=>a.code===code));assert.ok(s.scenarioFlags.resolvedFlashbacks.includes(flashback));assert.ok(concrete.keys.at('investigator:0').includes(color))
+  assert.equal(legalMoves(s).some(move=>move.entityId===id),false)
+  assert.equal(s.scenario.id,'devilReef','claimed relics alone must not advance the act')
+ }
+})
+test('P7 controlling all three relics completes the printed Devil Reef act and hands the campaign to interlude3',()=>{
  const s=chapterFixture('devilReef',2),api=scenarioRuntime(s,[]),m=createMechanicsApi(s)
  const locations=m.scenarioDecks.take('unfathomableDepths',3)
  for(const id of locations){api.place(id);transaction(s,d=>revealLocation(d,id,[],0))}
  for(const id of locations){
-  const location=s.locations.find(l=>l.id===id),[required,n,color,code,flashback]=actualDepths[location.originalCode]
+  const location=s.locations.find(l=>l.id===id),[required,n]=actualDepths[location.originalCode]
   for(const inv of s.investigators){inv.location=id;inv.clues=n}
-  for(const color of required)assert.equal(m.keys.transfer(color,s.scenarioFlags.mechanics.keys[color].holder,'investigator:0',{reveal:true}),true)
-  const actions=s.investigators[0].actionsLeft,command=legalMoves(s).find(move=>move.entityId===id);assert.ok(command)
-  move(s,command);settle(s)
-  assert.equal(s.investigators[0].actionsLeft,actions);assert.equal(s.investigators.reduce((sum,inv)=>sum+inv.clues,0),0)
-  assert.ok(s.investigators[0].assets.some(a=>a.code===code));assert.ok(s.scenarioFlags.resolvedFlashbacks.includes(flashback));assert.ok(m.keys.at('investigator:0').includes(color))
-  assert.equal(legalMoves(s).some(move=>move.entityId===id),false)
+  for(const requiredColor of required)m.keys.transfer(requiredColor,s.scenarioFlags.mechanics.keys[requiredColor].holder,'investigator:0',{reveal:true})
+  const command=legalMoves(s).find(move=>move.entityId===id);assert.ok(command);move(s,command);settle(s)
  }
+ assert.deepEqual([...s.campaign.records.memoriesRecovered].sort(),
+  ['DiscoveryOfAMysticalRelic','DiscoveryOfAStrangeIdol','DiscoveryOfAnUnholyMantle'])
+ assert.equal(s.campaign.records.TheTerrorOfDevilReefIsStillAlive,true,'agenda 1 never advanced, so the printed terror record stands')
+ assert.deepEqual(s.campaign.flow.history.map(entry=>entry.nodeId),['devilReef','interlude3','horrorInHighGear'])
+ assert.equal(s.scenario.id,'horrorInHighGear')
 })
+
