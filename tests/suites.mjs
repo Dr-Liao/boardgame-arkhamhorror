@@ -67,6 +67,7 @@ export const FAST_TESTS = Object.freeze([
   'tic-maelstrom-act.test.mjs',
   'tic-scenarios-a1.test.mjs',
   'tic-scenarios-light-in-the-fog.test.mjs',
+  'tic-alight-cards.test.mjs', // 2026-11-04 合并后：雾中之光 8 卡专属验收（w1）
   'tic-maelstrom-treacheries.test.mjs',
   'tic-light-in-the-fog-agendas.test.mjs',
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',

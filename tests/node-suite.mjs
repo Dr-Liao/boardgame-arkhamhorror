@@ -338,6 +338,8 @@ import './tic-maelstrom-agendas.test.mjs'
 import './tic-maelstrom-act.test.mjs'
 import './tic-scenarios-a1.test.mjs'
 import './tic-scenarios-light-in-the-fog.test.mjs'
+// 2026-11-04 合并后：雾中之光 8 卡专属验收（w1）
+import './tic-alight-cards.test.mjs'
 import './tic-maelstrom-treacheries.test.mjs'
 import './tic-light-in-the-fog-agendas.test.mjs'
 
