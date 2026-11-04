@@ -870,7 +870,7 @@ export function defeatedSuspectAgendaAbility({ isKidnapper, recordValue, recordK
 //   · 「完全淹没」= 有效淹没等级 ≥ 2（flood.js 的 FLOOD_LEVELS.full）；载具内的保护由
 //     effectiveFloodLevel 自己算（渔船在完全淹没地点也算未淹没）。
 //   · 回合结束窗口 turnEnded 的上下文带 seat：正好是「你的回合结束时」。
-export function floodedTurnEndAgenda({ code, label, horror = 0, discard = 0 }) {
+export function floodedTurnEndAgenda({ code, label, horror = 0, discard = 0, onReveal = null }) {
   const suspect = { when: ({ state, entity }) => (state.enemies || []).includes(entity) && hasTrait(entity, 'Suspect') }
   return {
     code, scope: 'agenda', implemented: true,
@@ -888,6 +888,52 @@ export function floodedTurnEndAgenda({ code, label, horror = 0, discard = 0 }) {
         if (discard) api.discardRandomFromHand(inv.seat, discard)
       },
     }],
+    // 背面推进效果（07124–07127 各自不同：沿海/市中心涨水、生成暴民+随机钥匙、全部涨水+逐人遭遇、
+    // 记录+全员创伤并击败）。四张卡在条目文件里传入自己的 onReveal（同句工厂只写一次正面）。
+    ...(typeof onReveal === 'function' ? { agendaRule: { onReveal } } : {}),
+  }
+}
+
+// 07124 路障重重 背面：「所有[[沿海]]地点提升淹没等级；把 07145 与 01181 从旁置区洗入遭遇牌库；
+// 把遭遇弃牌堆洗回遭遇牌库。」
+export function barricadedStreetsBack(state, agenda, api) {
+  for (const location of state.locations || []) {
+    if (hasTrait(location, 'Coastal') && api.mechanics.water.canChange(location.id, 1)) api.mechanics.water.change(location.id, 1)
+  }
+  const reshuffled = []
+  for (const code of ['07145', '01181']) if (api.takeFromSetAside(code)) reshuffled.push(code)
+  if (reshuffled.length) api.shuffleIntoEncounterDeck(reshuffled, { shuffle: false })
+  api.shuffleDiscard()
+}
+
+// 07125 无情浪潮 背面：「所有[[市中心]]地点提升淹没等级；把愤怒暴民 07062b 生成在印斯茅斯广场并
+// 在其上放置 1 个未揭示的钥匙。」
+export function relentlessTideBack(state, agenda, api) {
+  for (const location of state.locations || []) {
+    if (hasTrait(location, 'Midtown') && api.mechanics.water.canChange(location.id, 1)) api.mechanics.water.change(location.id, 1)
+  }
+  const square = (state.locations || []).find(location => String(location.originalCode || location.code) === '07065')
+  const mob = square ? api.spawn('07062b', square.id) : null
+  if (mob?.id != null) api.mechanics.keys.placeRandom(`enemy:${mob.id}`)
+}
+
+// 07126 水漫街道 背面：「所有地点提升淹没等级；每位调查员抽取 1 张遭遇卡。」
+export function floodedStreetsBack(state, agenda, api) {
+  for (const location of state.locations || []) {
+    if (api.mechanics.water.canChange(location.id, 1)) api.mechanics.water.change(location.id, 1)
+  }
+  for (const inv of state.investigators || []) {
+    if (!inv.defeated && !inv.resigned) api.drawEncounter(inv.seat)
+  }
+}
+
+// 07127 深海之怒 背面：「记录印斯茅斯被上涨的潮水吞没；每位调查员受到 1 点物理创伤并被击败。」
+export function rageOfTheDeepBack(state, agenda, api) {
+  api.setCampaignRecord('InnsmouthWasConsumedByTheRisingTide', true)
+  for (const inv of state.investigators || []) {
+    if (inv.defeated || inv.resigned) continue
+    api.trauma(inv.seat, 'physical', 1)
+    api.defeat(inv)
   }
 }
 

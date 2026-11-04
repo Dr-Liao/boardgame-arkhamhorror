@@ -160,7 +160,8 @@ test('幕 07280 目标：全员在宏伟入口且解锁洞穴入口时才成立�
 test('幕 07280 背面：移除旧地点、潮水通道入场、提升淹没并洗回朔望/星潮合相', () => {
   const s = lairFixture()
   s.enemies = []
-  const suspect = enemy(s, { code: '07078', originalCode: '07078', location: s.investigators[0].location })
+  const suspect = enemy(s, { code: '07078', originalCode: '07078', traits: ['Suspect'],
+    location: s.investigators[0].location })
   transaction(s, draft => scenarioRuntime(draft, []).advanceAct())
   assert.equal(s.actIndex, 1, '进入幕 2')
   const codes = s.locations.map(codeOf)
@@ -175,7 +176,8 @@ test('幕 07280 背面：移除旧地点、潮水通道入场、提升淹没并�
   assert.equal(s.encounterDeck.includes('07102'), false, '潮水通道地点不留在遭遇牌库')
   assert.equal((s.removedFromGame || []).includes('07078'), true, '在场的嫌犯被移出游戏')
   assert.ok(!s.enemies.includes(suspect))
-  assert.ok(s.scenarioFlags.remembered !== undefined)
+  assert.equal(s.scenarioZones.setAside.filter(code => code === '07100' || code === '07101').length, 0,
+    '朔望/星潮合相已从旁置区洗入遭遇牌库')
 })
 
 test('幕 07281 背面：达贡巢穴完全淹没、沉睡达贡入场、诅咒按密谋次序加入', () => {
@@ -266,13 +268,14 @@ test('议程变体 07275/07277：恢复记忆时的正面诅咒与背面加诅�
 // 3) locationsAndConnections：地点行为与连接
 // ===========================================================================
 test('地点 07283 宏伟入口：与[[洞穴]]地点双向连接，可真实移动', () => {
-  const s = lairFixture()
+  const s = lairFixture(2)
   const grand = placePrinted(s, '07283')
   const tunnel = placePrinted(s, '07102')
   transaction(s, draft => revealLocation(draft, tunnel.id, [], 0))
-  assert.ok((grand.connections || []).includes(tunnel.id), '宏伟入口连接到[[洞穴]]地点')
-  assert.ok((tunnel.connections || []).includes(grand.id), '反之亦然')
+  assert.ok((locationOf(s, '07283').connections || []).includes(tunnel.id), '宏伟入口连接到[[洞穴]]地点')
+  assert.ok((locationOf(s, '07102').connections || []).includes(grand.id), '反之亦然')
   s.investigators[0].location = grand.id
+  s.investigators[1].location = grand.id
   assert.equal(validateMove(s, 0, { action: 'move', locationId: tunnel.id }), null, '可移动到连接地点')
   const resign = legalMoves(s).find(command => command.action === 'entityAbility'
     && command.entityId === grand.id && command.abilityIndex === 0)
@@ -280,22 +283,23 @@ test('地点 07283 宏伟入口：与[[洞穴]]地点双向连接，可真实移
   move(s, resign)
   settle(s)
   assert.equal(s.investigators[0].resigned, true, '只让行动者撤退')
+  assert.equal(s.investigators[1].resigned, false, '另一名调查员不受影响')
+  assert.equal(validateMove(s, 1, { action: 'move', locationId: tunnel.id }), null, '其余调查员仍可移动')
 })
 
 test('地点 07286/07289：黑钥匙解锁三楼，寂静厅堂放紫钥匙且本地检定失败加诅咒', () => {
   const s = lairFixture()
   const hall = placePrinted(s, '07289')
   hall.revealed = false
-  s.investigators[0].location = placePrinted(s, '07286').id
-  createMechanicsApi(s).map.connect(s.investigators[0].location, hall.id)
+  const corridorId = placePrinted(s, '07286').id
+  transaction(s, draft => revealLocation(draft, corridorId, [], 0))
+  s.investigators[0].location = corridorId
+  createMechanicsApi(s).map.connect(corridorId, hall.id)
   // 未解锁三楼时不能移动到未揭示的 07289。
   assert.notEqual(validateMove(s, 0, { action: 'move', locationId: hall.id }), null)
-  const unlock = legalMoves(s).find(command => command.action === 'entityAbility'
-    && command.entityId === s.investigators[0].location)
   // 黑钥匙在旁置区，先交给调查员再使用 07286 的行动。
   createMechanicsApi(s).keys.transfer('black', 'setAside', 'investigator:0', { reveal: true })
-  const unlockMove = legalMoves(s).find(command => command.action === 'entityAbility'
-    && command.entityId === s.investigators[0].location)
+  const unlockMove = legalMoves(s).find(command => command.action === 'entityAbility' && command.entityId === corridorId)
   assert.ok(unlockMove, '花费黑钥匙解锁三楼的行动可见')
   move(s, unlockMove)
   settle(s)
@@ -304,13 +308,17 @@ test('地点 07286/07289：黑钥匙解锁三楼，寂静厅堂放紫钥匙且�
   move(s, { action: 'move', locationId: hall.id })
   settle(s)
   assert.ok(keysAt(s, `location:${hall.id}`).includes('purple'), '揭示后放紫色钥匙')
-  // 本地检定失败加 1 诅咒（紫钥匙在本地；同位置检定失败触发 onReveal 后的强制）。
+  // 本地检定失败加 1 诅咒（紫色钥匙在本地；07289 的强制）。
   createMechanicsApi(s).chaosTokens.add('curse', 0)
+  const curseBefore = createMechanicsApi(s).chaosTokens.count('curse')
   s.chaosBag = ['autofail']
+  s.investigators[0].intellect = 0
   transaction(s, draft => {
     const runtime = scenarioRuntime(draft, [])
-    runtime.test(0, 'willpower', 3, { resolve: () => {} })
+    runtime.test(0, 'intellect', 3, () => {})
   })
+  assert.ok(createMechanicsApi(s).chaosTokens.count('curse') + (s.chaos?.removed || []).filter(t => t === 'curse').length > curseBefore,
+    '本地检定失败后加入诅咒标记')
 })
 
 test('地点 07284/07285：红钥匙揭示、调查失败恐惧与用红钥匙取得雕像资产', () => {
@@ -368,10 +376,10 @@ test('地点 07290/07291：绿钥匙放到线索最多地点、解锁最终深�
   mostClues.clues = 2
   transaction(s, draft => revealLocation(draft, gate.id, [], 0))
   assert.ok(keysAt(s, `location:${mostClues.id}`).includes('green'), '绿色钥匙放到线索最多的地点')
-  // 解锁最终深处：每人 3 线索 + 此处绿钥匙。
+  // 解锁最终深处：每人 3 线索 + 此处绿钥匙（钥匙在「这里」= 位于本地点的调查员持有）。
   s.investigators[0].location = gate.id
   s.investigators[0].clues = 3
-  createMechanicsApi(s).keys.transfer('green', `location:${mostClues.id}`, `location:${gate.id}`, { reveal: true })
+  createMechanicsApi(s).keys.transfer('green', `location:${mostClues.id}`, 'investigator:0', { reveal: true })
   const unlock = legalMoves(s).find(command => command.action === 'entityAbility' && command.entityId === gate.id)
   assert.ok(unlock, '解锁最终深处的行动可见')
   move(s, unlock)
@@ -408,12 +416,15 @@ test('敌人 07293 达贡宣教士：+1[每调查员]生命、入场黑钥匙、
   assert.ok(keysAt(s, `enemy:${id}`, { reveal: true }).includes('black'), '入场后拿走放在一边的黑色钥匙')
   s.chaosBag = ['0']
   const curseBefore = createMechanicsApi(s).chaosTokens.count('curse')
+    + (s.chaos?.removed || []).filter(token => token === 'curse').length
   transaction(s, draft => {
     const runtime = scenarioRuntime(draft, [])
-    runtime.damageEnemy(draft.enemies.find(entity => entity.id === id), 2, 0)
+    runtime.damageEnemy(id, 2, 0)
   })
   assert.equal(s.enemies.find(entity => entity.id === id)?.damageTaken ?? 0, 2)
-  assert.ok(createMechanicsApi(s).chaosTokens.count('curse') >= curseBefore, '调查员造成伤害后加入 1 个诅咒标记')
+  assert.ok(createMechanicsApi(s).chaosTokens.count('curse')
+    + (s.chaos?.removed || []).filter(token => token === 'curse').length > curseBefore,
+  '调查员造成伤害后加入 1 个诅咒标记')
 })
 
 test('敌人 07292a/b 沉睡达贡：失败叠资源翻面，苏醒面生命与本地失败后重整攻击', () => {
@@ -426,18 +437,19 @@ test('敌人 07292a/b 沉睡达贡：失败叠资源翻面，苏醒面生命与�
   })
   s.chaosBag = ['autofail']
   for (let index = 0; index < s.numInvestigators + 2; index++) {
-    transaction(s, draft => scenarioRuntime(draft, []).test(0, 'willpower', 20, { resolve: () => {} }))
+    transaction(s, draft => scenarioRuntime(draft, []).test(0, 'willpower', 20, () => {}))
   }
   const boss = s.enemies.find(entity => entity.id === bossId)
   assert.equal(codeOf(boss), '07292b', '达到 1[每调查员]+2 资源后翻至(苏醒狂怒)面')
   assert.equal(enemyHealth(s, boss), 18, '苏醒面 +6[每调查员]生命')
+  const bossDamage = Number(boss.damage || 0)
   transaction(s, draft => scenarioRuntime(draft, []).exhaustEnemy(draft.enemies.find(entity => entity.id === bossId)))
   s.investigators[0].assets = []
   s.chaosBag = ['autofail']
   const damageBefore = s.investigators[0].damage
-  transaction(s, draft => scenarioRuntime(draft, []).test(0, 'intellect', 20, { resolve: () => {} }))
+  transaction(s, draft => scenarioRuntime(draft, []).test(0, 'intellect', 20, () => {}))
   assert.equal(s.enemies.find(entity => entity.id === bossId).exhausted, false, '本地检定失败后重整')
-  assert.equal(s.investigators[0].damage, damageBefore + 2, '随后攻击本地调查员（2 伤害）')
+  assert.equal(s.investigators[0].damage, damageBefore + bossDamage, '随后攻击本地调查员')
 })
 
 test('敌人 07294 与诡计 07296/07298：交战后加诅咒、显现失败的毁灭/诅咒', () => {
@@ -449,16 +461,24 @@ test('敌人 07294 与诡计 07296/07298：交战后加诅咒、显现失败的�
     deepOneId = scenarioRuntime(draft, []).spawn('07294', here).id
     scenarioRuntime(draft, []).engage(draft.enemies.find(entity => entity.id === deepOneId), 0)
   })
+  const curseSupply = () => createMechanicsApi(s).chaosTokens.count('curse')
+    + (s.chaos?.removed || []).filter(token => token === 'curse').length
   assert.ok(createMechanicsApi(s).chaosTokens.count('curse') >= 2, '交战后加入 2 个诅咒标记')
-  // 07296 显现：加 1 诅咒；失败后给每个邪教徒敌人放 1 毁灭。
+  // 07296 显现：加入 1 诅咒后做意志(4) 检定（诅咒标记可能在本次检定中被消耗，所以按「袋 + 已消耗」统计）。
+  const supplyBefore = curseSupply()
+  assert.ok(s.chaosBag.length > 0)
   draw(s, '07296')
-  assert.ok(createMechanicsApi(s).chaosTokens.count('curse') >= 3, '07296 显现加 1 个诅咒标记')
-  // 07298 显现：按淹没等级决定难度，失败按差值加诅咒。
+  assert.ok(curseSupply() > supplyBefore, '07296 显现加 1 个诅咒标记')
+  assert.ok(s.lastTestResult, '07296 显现进行了意志检定')
+  // 07298 显现：完全淹没时难度 5；失败按差值加诅咒（池容量内尽量加）。
   s.chaosBag = ['autofail']
   s.investigators[0].willpower = 0
+  createMechanicsApi(s).water.set(s.investigators[0].location, 2)
+  const beforeSurge = curseSupply()
   draw(s, '07298')
   assert.equal(s.encounterDiscard.includes('07298'), true)
-  assert.deepEqual(json(s).scenarioFlags.mechanics.curse ?? null, null)
+  assert.equal(s.lastTestResult.difficulty, 5, '完全淹没时难度 5')
+  assert.ok(curseSupply() > beforeSurge, '07298 失败后按差值加入诅咒标记')
 })
 
 test('诡计 07297 玄密仪式：失败二选一，揭示诅咒标记时两者都执行', () => {
@@ -478,8 +498,10 @@ test('诡计 07297 玄密仪式：失败二选一，揭示诅咒标记时两者�
   t.investigators[0].assets = [{ id: 'probeAsset', code: '01090', exhausted: false }]
   const api = createMechanicsApi(t)
   api.chaosTokens.add('curse', 1)
-  t.chaosBag = ['curse']
+  // 诅咒标记揭示后要再揭示一个标记（TIC 诅咒规则），因此袋里另给 1 个普通标记。
+  t.chaosBag = ['curse', '0']
   draw(t, '07297')
+  assert.equal(t.lastTestResult.drawn.includes('curse'), true, '本次检定揭示了诅咒标记')
   assert.equal(t.investigators[0].hand.length <= 1, true, '揭示诅咒标记时同时弃 2 张手牌')
   assert.equal(t.investigators[0].assets.some(asset => asset.id === 'probeAsset'), false, '同时弃掉支援')
 })
@@ -575,7 +597,11 @@ test('结局与战役记录：无结局重定向到 resolution1 并记录达贡�
   const s = lairFixture()
   transaction(s, draft => scenarioRuntime(draft, []).finish('noResolution'))
   assert.equal(s.campaign.records.DagonHasAwakened, true, 'noResolution 记录达贡已苏醒')
-  assert.equal(lastResult(s)?.resolution, 'resolution1', '重定向到结局 1')
+  const result = lastResult(s)
+  assert.ok(result, '剧本结果已写入战役账本')
+  assert.equal(result.resolution, 'noResolution', '引擎记录触发键')
+  const sectionTitles = (result.story?.sections || []).map(section => section.title)
+  assert.ok(sectionTitles.includes('resolution1'), '叙事重定向到 resolution1（结局 1 正文已生成）')
 })
 
 test('存档 JSON 往返：开局区域/钥匙/水位/地点附属在序列化后保持一致', () => {
