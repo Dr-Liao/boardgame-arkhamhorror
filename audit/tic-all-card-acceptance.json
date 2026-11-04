@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 76 个 tests/tic-*.test.mjs（1473 通过 / 0 失败用例，1 个文件无事件）；通过用例名按词边界命中卡号归集证据；条目证据 = 单卡文件存在 + 显式 implemented:true（与 src/cards/card-rules.js#implementedFor 同口径）。",
+    "basis": "实跑 77 个 tests/tic-*.test.mjs（1485 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）；通过用例名按词边界命中卡号归集证据；条目证据 = 单卡文件存在 + 显式 implemented:true（与 src/cards/card-rules.js#implementedFor 同口径）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）；只认测试进程实际产出的 test:pass 事件与用例标题命中，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified：前四类的判定不互相叠加；simplified 只在「已实现且有通过测试，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -43,9 +43,10 @@
     "chapters": 8,
     "unassignedChapterCards": 0,
     "chapterCoverageConserved": true,
-    "testFiles": 76,
-    "testFilesWithoutEvents": 1,
-    "testsPassed": 1473,
+    "testFiles": 77,
+    "testFilesWithoutEvents": 0,
+    "wrapperTestFiles": 1,
+    "testsPassed": 1485,
     "testsFailed": 0,
     "pendingPrimitiveRequests": 11,
     "behaviorPrimitiveRequests": 10,
@@ -310,10 +311,11 @@
     "primitivePlanSha256": "3ef4a74c2be5e33a27138eb474a1e5a7bb9cac9b16e1da0dbb21a76a8def135e",
     "testRun": {
       "exit": 0,
-      "files": 76,
-      "passed": 1473,
+      "files": 77,
+      "passed": 1485,
       "failed": 0,
-      "filesWithoutEvents": [
+      "filesWithoutEvents": [],
+      "wrapperFiles": [
         "games/arkhamhorror/tests/tic-scenarios-late-registered.test.mjs"
       ]
     },
@@ -497,6 +499,10 @@
       {
         "file": "games/arkhamhorror/tests/tic-scenario-advanced-followup.test.mjs",
         "sha256": "dd7150eb84c539f919f45cacf646e197b05708ecac3bb7ae9531b42dfdc7e913"
+      },
+      {
+        "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+        "sha256": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-atomic-spawn.test.mjs",
@@ -7372,6 +7378,11 @@
       "reason": "entry-not-implemented",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 285,
+          "test": "aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、tablet 淹没才伤害、cultist 涨水）"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
           "line": 214,
           "test": "07231 actor chooses nearest tied enemy, excluding Massive engagement and unreachable fallback"
@@ -7674,6 +7685,11 @@
           "file": "games/arkhamhorror/tests/tic-light-in-the-fog-agendas.test.mjs",
           "line": 36,
           "test": "07232/07235 注册为 agenda，且 07232 声明 doomToNextAgenda、07235 声明马什生命修正"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 134,
+          "test": "aLightInTheFog 议程：07232 背面毁灭转移+全员失线索+地下室入场+场景直接推进 2a"
         }
       ]
     },
@@ -7704,6 +7720,11 @@
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
           "line": 397,
           "test": "07233 onCaptured 只在该议程为当前议程时生效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 271,
+          "test": "aLightInTheFog 议程 07233 围捕：被俘推进议程、毁灭转移、全员被俘、地图扩张并直接推进 3a"
         }
       ],
       "pendingBehaviorRequests": [
@@ -7736,6 +7757,11 @@
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
           "line": 76,
           "test": "07234 浪潮汹涌：背面从场外生成马什、移出猎鹰岬地点、提升最底下 4 处淹没"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 154,
+          "test": "aLightInTheFog 议程：07234 浪潮汹涌背面移出猎鹰岬地点、把占位者搬到浅层并提升最底下 4 处淹没"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
@@ -7800,6 +7826,11 @@
           "file": "games/arkhamhorror/tests/tic-light-in-the-fog-agendas.test.mjs",
           "line": 49,
           "test": "07235 正面：奥赛罗思·马什得到 +2/调查员 生命值（其它敌人不受影响）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 176,
+          "test": "aLightInTheFog 议程：07235 马什生命修正与背面 4 处淹没（不足则结局3）"
         }
       ]
     },
@@ -7825,6 +7856,11 @@
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
           "line": 104,
           "test": "07236 灯塔：线索不足时目标入口不出现；支付后背面横置马什+蓝钥匙并直接推进议程 2a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 102,
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
@@ -7871,6 +7907,11 @@
           "test": "07237 寻找前路：无人在地下室时目标不推进；进入地下室后推进并铺开 2b"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 102,
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
           "line": 185,
           "test": "07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区"
@@ -7908,6 +7949,11 @@
           "test": "07238 深海信徒：调查阶段末全淹没者选下移/受伤；全员撤退按 resignedInMoonRoom 选 R1/R2"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 102,
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
           "line": 227,
           "test": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
@@ -7940,6 +7986,11 @@
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
           "line": 193,
           "test": "07239 猎鹰岬门房：不能被完全淹没；在门房才能撤退，黑/红钥匙放到当前幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 199,
+          "test": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
@@ -7991,6 +8042,16 @@
       "reason": "entry-not-implemented",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 222,
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 199,
+          "test": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 889,
           "test": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
@@ -8040,6 +8101,11 @@
       "status": "missing",
       "reason": "entry-not-implemented",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 222,
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 889,
@@ -8150,6 +8216,11 @@
           "test": "07247 海德拉祭坛：揭示放红钥匙；绿钥匙在本地点 -3 帷幕；线索只能靠调查发现"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 222,
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
           "line": 187,
           "test": "引擎读点：07247 除调查外不能发现线索；07250 淹没时不能发现线索"
@@ -8209,6 +8280,11 @@
           "test": "07249 月之室：揭示提升淹没；未淹没才出现撤退入口；撤退记录 resignedInMoonRoom"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 222,
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
           "line": 95,
           "test": "07249 月之室：揭示提升淹没等级；未淹没时撤退并记录来自月之室"
@@ -8236,6 +8312,11 @@
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
           "line": 255,
           "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索，未淹没可以"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 222,
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
@@ -8306,6 +8387,16 @@
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
           "line": 185,
           "test": "07252 首读：第一次被俘读剧情文本，后续只结算同样的物理效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 72,
+          "test": "aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 249,
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
         }
       ],
       "pendingBehaviorRequests": [
@@ -8344,6 +8435,11 @@
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
           "line": 213,
           "test": "07252b 行动：战斗/敏捷(3)成功解救；控制黄钥匙自动成功；无被俘者时行动不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 249,
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
         }
       ],
       "pendingBehaviorRequests": [
@@ -8593,6 +8689,11 @@
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
           "line": 263,
           "test": "07260 惨遭俘虏：敏捷(4)失败被俘+钥匙放拘禁室；成功不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "line": 249,
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
         }
       ],
       "pendingBehaviorRequests": [
@@ -12674,7 +12775,6 @@
     "simplified 07315（pending-behavior-primitive-request）",
     "simplified 07316（pending-behavior-primitive-request）",
     "simplified 07317（pending-behavior-primitive-request）",
-    "simplified 07318（pending-behavior-primitive-request）",
-    "测试文件没有产出用例：games/arkhamhorror/tests/tic-scenarios-late-registered.test.mjs"
+    "simplified 07318（pending-behavior-primitive-request）"
   ]
 }

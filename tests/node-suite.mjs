@@ -356,5 +356,7 @@ import './tic-scenario-inTooDeep.test.mjs'
 import './tic-scenario-devilReef.test.mjs'
 import './tic-scenario-horrorInHighGear.test.mjs'
 import './tic-scenario-theLairOfDagon.test.mjs'
+import './tic-scenario-aLightInTheFog.test.mjs'
+import './tic-scenario-intoTheMaelstrom.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

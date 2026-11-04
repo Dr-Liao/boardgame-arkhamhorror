@@ -197,6 +197,14 @@ const passingTests = events.filter(event => event.type === 'test:pass' && !event
 const failingTests = events.filter(event => event.type === 'test:fail')
 const testFilesWithEvents = new Set(events.map(eventFile).filter(Boolean))
 const testFilesWithoutEvents = testFiles.filter(file => !testFilesWithEvents.has(file))
+// 只做 re-export / register*Tests 的测试入口文件（例如 tic-scenarios-late-registered.test.mjs）：
+// 用例由被 import 的文件注册，事件 file 因此指向被 import 的文件；这些不算「无事件缺口」。
+const isWrapperTestFile = file => {
+  const text = fs.readFileSync(path.join(root, file), 'utf8')
+  return !/\btest\s*\(/.test(text) && /import\s+[^'\n]*\.test\.mjs['"]|register(?:Pending)?LateTests\s*\(/.test(text)
+}
+const wrapperTestFiles = testFilesWithoutEvents.filter(isWrapperTestFile)
+const brokenTestFiles = testFilesWithoutEvents.filter(file => !wrapperTestFiles.includes(file))
 
 const codePattern = code => new RegExp(`(?:^|[^0-9A-Za-z])${code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![0-9A-Za-z])`)
 const evidenceByCode = new Map()
@@ -410,7 +418,8 @@ const summary = {
   unassignedChapterCards: unassigned.length,
   chapterCoverageConserved: chapterAssigned.size + unassigned.length === campaignCodes.length,
   testFiles: testFiles.length,
-  testFilesWithoutEvents: testFilesWithoutEvents.length,
+  testFilesWithoutEvents: brokenTestFiles.length,
+  wrapperTestFiles: wrapperTestFiles.length,
   testsPassed: passingTests.length,
   testsFailed: failingTests.length,
   pendingPrimitiveRequests: pendingRequests.length,
@@ -425,7 +434,7 @@ const summary = {
 const profile = {
   id: 'tic-all-cards-2026-11',
   scope: `TIC 全部非玩家印刷记录 ${campaignCodes.length} 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 ${scope.cards.length} 条记录 = campaign ${campaignCodes.length} + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。`,
-  basis: `实跑 ${testFiles.length} 个 tests/tic-*.test.mjs（${passingTests.length} 通过 / ${failingTests.length} 失败用例，${testFilesWithoutEvents.length} 个文件无事件）；通过用例名按词边界命中卡号归集证据；条目证据 = 单卡文件存在 + 显式 implemented:true（与 src/cards/card-rules.js#implementedFor 同口径）。`,
+  basis: `实跑 ${testFiles.length} 个 tests/tic-*.test.mjs（${passingTests.length} 通过 / ${failingTests.length} 失败用例，${brokenTestFiles.length} 个无事件损坏文件 + ${wrapperTestFiles.length} 个 re-export 入口）；通过用例名按词边界命中卡号归集证据；条目证据 = 单卡文件存在 + 显式 implemented:true（与 src/cards/card-rules.js#implementedFor 同口径）。`,
   evidencePolicy: '卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）；只认测试进程实际产出的 test:pass 事件与用例标题命中，失败用例只记 failedEvidence。',
   statusPolicy: '优先级 no-behavior > blocked > 缺失（missing）> simplified > verified：前四类的判定不互相叠加；simplified 只在「已实现且有通过测试，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified。',
   blockedPolicy: 'blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。',
@@ -452,7 +461,7 @@ const ledger = {
     scopeSha256: sha256(fs.readFileSync(path.join(mod, 'audit/tic-scope.json'))),
     primitivePlanSha256: sha256(fs.readFileSync(path.join(mod, 'audit/tic-primitive-plan.json'))),
     testRun: { exit: testRun.status, files: testFiles.length, passed: passingTests.length, failed: failingTests.length,
-      filesWithoutEvents: testFilesWithoutEvents },
+      filesWithoutEvents: brokenTestFiles, wrapperFiles: wrapperTestFiles },
     testFiles: testFiles.map(file => ({ file, sha256: sha256(fs.readFileSync(path.join(root, file))) })),
     primitivePlan: planSummary,
     pendingPrimitiveRequests: pendingRequests.map(request => ({
@@ -474,7 +483,7 @@ const ledger = {
     ...missing.map(entry => `missing ${entry.code}（${entry.reason}）`),
     ...blocked.map(entry => `blocked ${entry.code}（${entry.reason}）`),
     ...simplified.map(entry => `simplified ${entry.code}（${entry.reason}）`),
-    ...testFilesWithoutEvents.map(file => `测试文件没有产出用例：${file}`),
+    ...brokenTestFiles.map(file => `测试文件没有产出用例：${file}`),
     ...failingTests.filter(event => campaignCodes.some(code => codePattern(code).test(event.name || '')))
       .slice(0, 20).map(event => `失败用例：${event.file || ''} ${event.name}`),
   ],

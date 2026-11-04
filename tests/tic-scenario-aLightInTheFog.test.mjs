@@ -27,7 +27,13 @@ import { resolveTransaction } from '../src/engine/resolution.js'
 const json = value => JSON.parse(JSON.stringify(value))
 const codeOf = entity => entity?.originalCode || entity?.code
 const locationOf = (s, code) => s.locations.find(location => codeOf(location) === code) || null
-const positionOf = (s, location) => createMechanicsApi(s).map.position(typeof location === 'string' ? location : location.id)
+// 位置查询：target 可以是地点实例 id、地点对象，或印刷卡号。
+const positionOf = (s, target) => {
+  const id = typeof target === 'string' && s.locations.some(location => location.id === target)
+    ? target
+    : locationOf(s, typeof target === 'string' ? target : codeOf(target))?.id
+  return createMechanicsApi(s).map.position(id)
+}
 
 function transaction(state, execute, select = () => null) {
   const run = draft => {
@@ -43,14 +49,18 @@ function transaction(state, execute, select = () => null) {
     resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, run)
   }
 }
-const placeAt = (s, code, x, y) => transaction(s, draft => {
-  const location = locationOf(draft, code)
-  if (location) return location
-  const definition = Object.entries(draft.scenario.locations)
-    .find(([, item]) => codeOf(item) === code)
-  assert.ok(definition, `章节没有 ${code} 的物理定义`)
-  return scenarioRuntime(draft, []).mechanics.map.place(definition[0], x, y)
-})
+const placeAt = (s, code, x, y) => {
+  if (locationOf(s, code)) return locationOf(s, code)
+  transaction(s, draft => {
+    const definition = Object.entries(draft.scenario.locations)
+      .find(([, item]) => codeOf(item) === code)
+    assert.ok(definition, `章节没有 ${code} 的物理定义`)
+    scenarioRuntime(draft, []).mechanics.map.place(definition[0], x, y)
+  })
+  const placed = locationOf(s, code)
+  assert.ok(placed, `${code} 应已入场`)
+  return placed
+}
 const draw = (s, code) => {
   s.encounterDeck = [code]
   transaction(s, draft => drawEncounter(draft, draft.investigators[0], []))
@@ -94,8 +104,8 @@ test('aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进�
   const act = s.acts[s.actIndex]
   // 07236 正面：线索不足不出现；支付 3n 线索后推进，背面布置马什/蓝钥匙/尽腥尽力/地下室并直接推进 agenda 2a。
   assert.equal(entityAction(s, act.id), undefined, '线索不足时线索目标不出现')
-  s.investigators[0].clues = 3
-  s.clues = 3
+  s.investigators[0].clues = 6
+  s.clues = 6
   const command = entityAction(s, act.id)
   assert.ok(command, '线索目标能力出现在合法行动')
   move(s, command)
@@ -294,9 +304,12 @@ test('aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、t
   water.set(inv.location, 0)
   rule.applyTokenEffect(s, inv, { event: 'damage', amount: 1 }, runtime)
   assert.equal(inv.damage, before + 1, '未淹没地点不追加伤害')
-  water.set(inv.location, 1)
-  rule.afterTest(s, inv, { success: false }, runtime, { resolvedTokens: ['cultist'], ignoredSymbols: false })
-  assert.equal(water.level(inv.location), 2, 'cultist 失败提高所在地点淹没等级')
+  // cultist 失败：把所在地点淹没等级 +1（换到可涨到 2 的沉没岩洞，门房本身上限为 1）。
+  const basement = placeAt(s, '07244', 2, -1)
+  s.investigators[0].location = basement.id
+  water.set(basement.id, 1)
+  rule.afterTest(s, s.investigators[0], { success: false }, runtime, { resolvedTokens: ['cultist'], ignoredSymbols: false })
+  assert.equal(water.level(basement.id), 2, 'cultist 失败提高所在地点淹没等级')
 })
 
 test('aLightInTheFog 结局与记录：resolution1 记录潜水服/黑红钥匙，noResolution 重定向到 R4，R3 击杀全员', () => {
@@ -323,7 +336,7 @@ test('aLightInTheFog 结局与记录：resolution1 记录潜水服/黑红钥匙�
   const wipe = chapterFixture('aLightInTheFog', 2)
   transaction(wipe, draft => scenarioRuntime(draft, []).finish('resolution3'))
   assert.equal(wipe.campaign.scenarioResults.at(-1).resolution, 'resolution3')
-  assert.equal(wipe.investigators.every(inv => inv.defeated), true, '结局3 击杀所有调查员')
+  assert.equal(Object.values(wipe.campaign.investigators).every(record => record.status === 'killed'), true, '结局3 击杀所有调查员')
 })
 
 test('aLightInTheFog 存档与恢复往返：网格行邻接/钥匙/拘禁室/被俘状态在 JSON 往返后一致且校验通过', () => {

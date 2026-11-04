@@ -84,6 +84,8 @@ export const FAST_TESTS = Object.freeze([
   'tic-scenario-devilReef.test.mjs', // 第四章逐章验收（w1）
   'tic-scenario-horrorInHighGear.test.mjs', // 第五章逐章验收（w1）
   'tic-scenario-theLairOfDagon.test.mjs', // 第七章逐章验收（w2）
+  'tic-scenario-aLightInTheFog.test.mjs', // 第六章逐章验收（w1）
+  'tic-scenario-intoTheMaelstrom.test.mjs', // 第八章逐章验收（w1）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',
