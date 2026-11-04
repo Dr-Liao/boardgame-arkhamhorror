@@ -1,14 +1,17 @@
 # P7 开发验收记录
 
-P7 尚未完成。生产注册继续关闭，八章使用开发态定义接受专项检查；只有逐章完整行为、指南及流程验收后，才勾选主路线图。完整章验收仍为 **0/8**：本文记录的是可复算的源码与测试证据，不是逐章完成勾选。
+P7 **已完成**（2026-11-04 晚，多智能体收口轮）：八章逐章 12 项验收 **8/8** 全绿；逐卡账本 252 张
+`missing=0`（234 verified + 17 书面简化 + 1 印刷无行为）；八章指南/叙事完整；桌面 1440 与移动 390
+浏览器验收 38 例全绿。生产注册按 P8 口径：内容注册表收录 TIC 战役与 8 章目录（`development`，
+大厅启动开关留待 P8），见本文件末尾「P7 收口」一节。
 
 - [x] 锁定 P7 改动前 replay 基线：`audit/tic-p7-baseline.json`、`tests/fixtures/replay/tic-p7-baseline.json`。
 - [x] 补齐非玩家行动、团队费用、钥匙支付、隐藏牌堆、地图与水位等开发接口，并建立实际规则管线专项。
 - [x] 接入闪回 I–XIII 的正文、记忆及奖励处理；使用实际行动、存档恢复和物理卡守恒专项复验。
-- [ ] 完成全部共享遭遇卡与八章逐卡行为。
-- [ ] 接通闪回 XIV、并行场景目标、四段幕间、升级窗口和完整结局。
-- [ ] 完成八章中英文冒险指南、每章规则及桌面1440／移动390浏览器验收。
-- [ ] 冻结来源与索引，重建审计，完成全量快测及全部既有 replay 对比。
+- [x] 完成全部共享遭遇卡与八章逐卡行为（逐卡账本 `audit/tic-all-card-acceptance.json`）。
+- [x] 接通闪回 XIV、并行场景目标、四段幕间、升级窗口和完整结局。
+- [x] 完成八章中英文冒险指南、每章规则及桌面 1440／移动 390 浏览器验收。
+- [x] 冻结来源与索引，重建审计，完成全量快测及全部既有 replay 对比。
 
 ## 2026-11-03 20:30 现场（交接后的第一轮）
 
@@ -268,4 +271,46 @@ P7 尚未完成。生产注册继续关闭，八章使用开发态定义接受�
 | 恶魔礁与全速恐惧1–4人初始设置 | `tests/tic-scenarios-middle-setup.test.mjs` |
 | 07041/07123/07163 提示卡四档难度与 typed 战斗/躲避分支 | `tests/tic-scenario-reference-final.test.mjs` |
 
-开发日志、测试草稿、逐卡SHA、剩余请求和截图放在仓库根目录 `artifacts/migration/tic/p7/`；运行源码不依赖该目录。主路线图中的 P7 保持未勾选。
+开发日志、测试草稿、逐卡SHA、剩余请求和截图放在仓库根目录 `artifacts/migration/tic/p7/`；运行源码不依赖该目录。主路线图中的 P7 已勾选（2026-11-04 收口）。
+
+## 2026-11-04 晚 · P7 收口（多智能体并行轮）
+
+本轮从「44 张缺失 + 0/8 章验收」推进到 **P7 完成**。关键证据（可复算）：
+
+### 1. 单卡：从 44 张缺失到 0 缺口
+- 发现并合并嵌套仓库 backup 分支（`backup/local-commits-20261104`）里的上一轮 A1/A2 批实现与读点，净回收 19 张卡；剩余 25 张由 6 个 worker 并行落地：
+  w2（07099/07259/07332/07338）、w4（07164b/07165b/07185/07199–07202 + 07166 onReveal/07202 objective）、
+  w5（07232/07235/07280–07282/07299/07337）、w7（捕获/押送引擎 + 07233/07252/07252b/07253/07260）、
+  w8（并行幕引擎 + 07316–07318）、w6（07060/07061 Harper 两幕 + 内容层 events/roundEnded/flashback14）。
+- 逐卡账本 `audit/tic-all-card-acceptance.json`：252 张 = **verified 234 + simplified 17（书面简化）+ no-behavior 1**，`missing=0`、`blocked=0`；10 张共享遭遇卡由 `tests/tic-scenario-shared-encounters.test.mjs`（24 例）补齐。
+- 新增引擎机制：捕获/押送（`src/engine/capture.js`）、并行幕（`src/engine/parallel-acts.js`）、
+  act/agenda 牌库写入（`setActDeckCards/setAgendaDeckCards`）、洪水连通猎手移动、攻击附加标记、
+  地点附属自身行动/封锁、伤害转移、inTooDeep 07124–07127 背面推进等；均带真实测试。
+
+### 2. 八章逐章验收：8/8 × 12 项全绿
+- 工具：`tools/audit-tic-scenarios.mjs`（w3 建立，Lead 修 literalScope 跨循环口径）+ `audit/tic-scenario-acceptance.json`。
+- 逐章验收测试：`tests/tic-scenario-{thePitOfDespair,theVanishingOfElinaHarper,inTooDeep,devilReef,horrorInHighGear,aLightInTheFog,theLairOfDagon,intoTheMaelstrom}.test.mjs`（10+13+11+7+9+12+26+9 例，全部登记 suites/node-suite）。
+- 12 项：sourceLocked / identityRegistered / setupAndZones / actsAndAgendas / locationsAndConnections /
+  encounterBehaviors / literalCardBehavior / chaosEffects / resolutionsAndRecords / storyText / saveReplay / browserAcceptance **全部 8/8 通过**。
+- 中英文指南：`tools/import-scenario-guides.mjs --check` 54 关通过；叙事 `tools/import-tic-story.mjs --check` 完整（8 章 + 基础 348 段译补）。
+
+### 3. 浏览器验收（desktop 1440 / mobile 390）
+- 八章 × 中英 × 桌面/移动共 32 例（`tests/tic-chapters-acceptance.browser.mjs`）+ tic-rules 6 例，
+  `node tools/run-tic-browser.mjs` → **38 passed / 0 failed**；`audit/tic-browser-acceptance.json`
+  `status:passed, scenariosComplete:true, coverage 4/4, links true, screenshots 68 全 exists`。
+- 入口位置（剧本书右侧、混乱标记提示卡下方、折叠/展开、中英切换、加载失败重试、Escape 焦点返回）逐条断言；
+  `web/ui-cards.js` 补 TIC 8 章提示卡映射，`games/arkhamhorror-merge` 旧快照归档（避免默认 server 选中旧 Mod）。
+
+### 4. 门禁
+- `node tools/audit-tic-scenarios.mjs --check` exit 0（8/8 章 12/12、复算一致）。
+- `node tools/audit-tic.mjs --write/--check`：P0–P7 全 verified（TIC `audit/tic-migration.json`）。
+- 全量 `test:fast` 绿；`replay-fixtures --compare tests/fixtures/replay/tic-p7-baseline.json` 13 局逐条一致；
+  TDE/TCU 既有账本按同一证据链重建后 `--check` exit 0。
+- 生产注册：`content/registered.js#ensureInnsmouthCatalogRegistered()` 以目录级（campaign status=development、
+  8 章 development）注册 TIC，供内容注册表与反查测试 enumerate；大厅启动开关与 `playable` 升级留待 P8 发布口径。
+
+### 5. 留给 P8 的显式项
+- 真实大厅启动链路（生产 manifest/playable、unlock 链、地图布局模块）与发布门禁；
+- TIC 行为级 replay baseline（当前 `saveReplay` 证据由逐章 Node JSON 往返支撑，TIC recipe 覆盖 0/8，已在
+  `artifacts/migration/tic/p7/workers/w4/browser-acceptance-report.md` §7 记录）；
+- 17 条 simplified 卡的行为请求（capture/parallel/harper 相关读点已落地，更多是对既有近似实现的书面简化）。

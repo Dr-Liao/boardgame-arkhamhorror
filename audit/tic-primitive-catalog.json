@@ -79,14 +79,44 @@
       "order": 38
     },
     {
+      "id": "enemyWouldBeDefeated",
+      "label": "敌人将要被击败",
+      "kind": "interrupt",
+      "order": 38
+    },
+    {
+      "id": "enemyWouldBeEvaded",
+      "label": "敌人将要被躲避",
+      "kind": "interrupt",
+      "order": 38
+    },
+    {
       "id": "assetDefeated",
       "label": "你控制的支援被击败时",
       "kind": "reaction",
       "order": 39
     },
     {
+      "id": "enemyDamaged",
+      "label": "敌人受到伤害后",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
       "id": "enemyDefeated",
       "label": "敌人被击败时",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
+      "id": "enemyEnteredLocation",
+      "label": "敌人进入地点后",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
+      "id": "enemyMoved",
+      "label": "敌人移动后",
       "kind": "reaction",
       "order": 39
     },
@@ -293,6 +323,12 @@
       "label": "打出一张事件后",
       "kind": "reaction",
       "order": 72
+    },
+    {
+      "id": "investigationPhaseEnds",
+      "label": "调查阶段结束时",
+      "kind": "reaction",
+      "order": 73
     },
     {
       "id": "actionResolvedAtLocation",
@@ -707,6 +743,12 @@
       "label": "重整结束",
       "kind": "player",
       "order": 200
+    },
+    {
+      "id": "floodChanged",
+      "label": "地点淹没等级改变后",
+      "kind": "reaction",
+      "order": 220
     }
   ],
   "interactionOperations": [

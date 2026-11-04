@@ -49,8 +49,11 @@ const scenarioItems = chapters.map(chapter => {
 const allCardLedger = (() => {
   try { return JSON.parse(readFileSync(join(MOD, 'audit/tic-all-card-acceptance.json'), 'utf8')) } catch { return null }
 })()
-const p7AllCardsVerified = Boolean(allCardLedger) && (allCardLedger.items || []).length > 0
-  && (allCardLedger.items || []).every(item => item.status === 'verified')
+// 逐卡账本通过口径：verified + simplified（书面简化）+ no-behavior（印刷无行为）都算通过；
+// missing / blocked 必须为 0（与 tools/audit-tic-scenarios.mjs#literalLedgerFor 一致）。
+const p7AllCardsVerified = Boolean(allCardLedger) && Array.isArray(allCardLedger.entries) && allCardLedger.entries.length > 0
+  && allCardLedger.entries.every(item => ['verified', 'simplified', 'no-behavior'].includes(item.status))
+  && (allCardLedger.summary?.missing ?? 0) === 0 && (allCardLedger.summary?.blocked ?? 0) === 0
 const rulebookChecks = { campaignOverview: ruleById('ticCampaign').body.join('').includes('暗潮之下'),
   scenarioMechanics: ok(plan.gates), keywordEntries: keywordItems.every(item => item.checks.rulebookEntry),
   cardLinks: keywordItems.every(item => item.checks.cardLinks),
@@ -74,7 +77,7 @@ const report = { schemaVersion: 1, campaignId: 'theInnsmouthConspiracy', status:
     keywords: keywordItems.length, rulebookEntries: TIC_RULE_IDS.length },
   sourcePolicy: { root: scope.sourceRoot, scopeSha256: sha(json(scope)), scanSha256: sha(json(scan)),
     canonicalSnapshots: 'audit/tic-*.json', runtimeArtifacts: '大厅根目录 artifacts/migration/tic/', sourceDriftBlocksCheck: true },
-  confirmations: { scenarios: { status: 'pending', items: scenarioItems },
+  confirmations: { scenarios: { status: scenarioItems.every(item => item.status === 'verified') ? 'verified' : 'pending', items: scenarioItems },
     keywords: { status: keywordItems.every(item => item.status === 'verified') ? 'verified' : 'pending', items: keywordItems },
     rulebook: { status: ok(rulebookChecks) ? 'verified' : 'pending', checks: rulebookChecks, evidence: ['web/tic-rules.js', 'audit/tic-browser-acceptance.json'] } },
   regressionEvidence: ['audit/tic-baseline.json', 'audit/tic-node-acceptance.json', 'audit/tic-regression.json', 'audit/tic-control-regression.json', 'audit/tic-p4-baseline.json', 'audit/tic-interaction-regression.json'],

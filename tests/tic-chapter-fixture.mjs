@@ -13,12 +13,13 @@ import { registerCampaignScenarios, startScenario } from '../src/engine/engine.j
 import { resolveTransaction } from '../src/engine/resolution.js'
 
 // Development chapters are registered only in this test process. Production
-// registration waits for per-chapter behavior, guides and acceptance evidence.
+// registration (content/registered.js, P7) enumerates the same chapters, so the
+// engine scenario registry still needs an explicit per-campaign wire-up here.
 if (!contentRegistry.getCampaign(campaign.id)) {
   const scenarios = chapters.map(chapter => developmentChapter(chapter.id))
   registerContentBundle({ campaigns: [{ ...campaign, status: 'development' }], scenarios })
-  registerCampaignScenarios(campaign.id)
 }
+registerCampaignScenarios(campaign.id)
 
 export function chapterFixture(id, count = 1, { records = {}, memoriesRecovered = [], investigatorRecords = {} } = {}) {
   const state = fixture('01001', count)

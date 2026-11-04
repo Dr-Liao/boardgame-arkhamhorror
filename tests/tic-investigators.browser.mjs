@@ -59,6 +59,9 @@ for (const [viewport, width, height] of [['desktop', 1440, 900], ['mobile', 390,
     await page.locator('[data-interaction="investigator:0"]').first().click()
     const ability = page.locator('.ah-card-action-popover').getByRole('button', { name: /弃掉支援，以折扣/ })
     await expect(ability).toBeVisible(); await ability.click()
+    // 选择面板由待决选择事务异步渲染：先等 pendingChoice 落地再点资产，
+    // 否则点击会落在「无 move 的资产按钮」上被忽略（race：40 过/2 失败 → 全量重试可过）。
+    await expect.poll(() => run.latest()?.state.pendingChoice?.prompt || '').toContain('选择弃掉的支援')
     // Mounted asset choices use the existing card itself; the duplicate prompt button is hidden.
     await page.locator('[data-interaction="asset:c1"]').click()
     await page.locator('.ah-choice [data-option-id="0"]').click()

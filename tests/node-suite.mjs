@@ -359,5 +359,6 @@ import './tic-scenario-theLairOfDagon.test.mjs'
 import './tic-scenario-aLightInTheFog.test.mjs'
 import './tic-scenario-intoTheMaelstrom.test.mjs'
 import './tic-scenario-theVanishingOfElinaHarper.test.mjs'
+import './tic-scenario-shared-encounters.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

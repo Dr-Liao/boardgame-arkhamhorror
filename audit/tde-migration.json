@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "dc7420c0e6bfb5d290865700b8f9eb981829208a1463a4f4af562a7f140eba60"
+      "sha256": "0d8788cd970bc4e1bd929cbcea77b80a48ff59878369e4d89dcd2d0e537820bf"
     },
     {
       "path": "content/registry.js",
@@ -1453,7 +1453,7 @@
     },
     {
       "path": "web/ui-cards.js",
-      "sha256": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e"
+      "sha256": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de"
     },
     {
       "path": "src/cards/cards-data.js",

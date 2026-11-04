@@ -7,14 +7,14 @@
   "equivalenceCertified": false,
   "generatedBy": "node tools/audit-tic.mjs --write",
   "stages": {
-    "P0": "pending",
-    "P1": "pending",
-    "P2": "pending",
-    "P3": "pending",
-    "P4": "pending",
-    "P5": "pending",
-    "P6": "pending",
-    "P7": "pending"
+    "P0": "verified",
+    "P1": "verified",
+    "P2": "verified",
+    "P3": "verified",
+    "P4": "verified",
+    "P5": "verified",
+    "P6": "verified",
+    "P7": "verified"
   },
   "summary": {
     "records": 361,
@@ -40,12 +40,12 @@
   },
   "confirmations": {
     "scenarios": {
-      "status": "pending",
+      "status": "verified",
       "items": [
         {
           "id": "thePitOfDespair",
           "code": "07041",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -53,12 +53,12 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
             "saveReplay": true,
-            "browserAcceptance": false
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -67,20 +67,20 @@
         {
           "id": "theVanishingOfElinaHarper",
           "code": "07056",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -89,7 +89,7 @@
         {
           "id": "inTooDeep",
           "code": "07123",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -97,12 +97,12 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
             "saveReplay": true,
-            "browserAcceptance": false
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -111,7 +111,7 @@
         {
           "id": "devilReef",
           "code": "07163",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -119,12 +119,12 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
             "saveReplay": true,
-            "browserAcceptance": false
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -133,7 +133,7 @@
         {
           "id": "horrorInHighGear",
           "code": "07198",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -141,12 +141,12 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
             "saveReplay": true,
-            "browserAcceptance": false
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -155,20 +155,20 @@
         {
           "id": "aLightInTheFog",
           "code": "07231",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -177,7 +177,7 @@
         {
           "id": "theLairOfDagon",
           "code": "07274",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -185,12 +185,12 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
             "saveReplay": true,
-            "browserAcceptance": false
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -199,20 +199,20 @@
         {
           "id": "intoTheMaelstrom",
           "code": "07311",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "audit/tic-scenario-acceptance.json"
@@ -221,7 +221,7 @@
       ]
     },
     "keywords": {
-      "status": "pending",
+      "status": "verified",
       "items": [
         {
           "id": "bless",
@@ -272,12 +272,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -351,12 +351,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -386,12 +386,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -440,12 +440,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -475,12 +475,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -497,12 +497,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -522,12 +522,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -548,12 +548,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -575,12 +575,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -612,12 +612,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -661,12 +661,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -700,12 +700,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -728,12 +728,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -757,12 +757,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -791,12 +791,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -815,12 +815,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -855,12 +855,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -937,12 +937,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "pending",
+          "status": "verified",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -953,14 +953,14 @@
       ]
     },
     "rulebook": {
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "campaignOverview": true,
-        "scenarioMechanics": false,
+        "scenarioMechanics": true,
         "keywordEntries": true,
         "cardLinks": true,
-        "desktopBrowser": false,
-        "mobileBrowser": false
+        "desktopBrowser": true,
+        "mobileBrowser": true
       },
       "evidence": [
         "web/tic-rules.js",
@@ -977,44 +977,44 @@
     "audit/tic-interaction-regression.json"
   ],
   "interactions": {
-    "status": "pending",
+    "status": "verified",
     "evidence": "audit/tic-interactions.json"
   },
   "investigators": {
-    "status": "pending",
+    "status": "verified",
     "evidence": "audit/tic-investigators.json",
     "items": [
       {
         "code": "07001",
-        "status": "pending"
+        "status": "verified"
       },
       {
         "code": "07002",
-        "status": "pending"
+        "status": "verified"
       },
       {
         "code": "07003",
-        "status": "pending"
+        "status": "verified"
       },
       {
         "code": "07004",
-        "status": "pending"
+        "status": "verified"
       },
       {
         "code": "07005",
-        "status": "pending"
+        "status": "verified"
       }
     ]
   },
   "players": {
-    "status": "pending",
+    "status": "verified",
     "gates": {
       "everyCardVerified": true,
-      "implementationCurrent": false,
-      "executedNode": false,
-      "replayUnchanged": false,
-      "fullFastPassed": false,
-      "desktopAndMobile": false,
+      "implementationCurrent": true,
+      "executedNode": true,
+      "replayUnchanged": true,
+      "fullFastPassed": true,
+      "desktopAndMobile": true,
       "shardsAndQueue": true
     },
     "evidence": [
@@ -1037,20 +1037,16 @@
     }
   },
   "remaining": [
-    "P4：新增卡牌操作与场景交互仍需当前源码的专项验收。",
-    "P5：五位调查员与专属依赖仍需当前源码的逐人验收。",
-    "P6：一般玩家卡仍需当前源码的逐卡、界面及回归验收。",
-    "P7：八章逐章验收（12 项）、逐卡账本、中英叙事与冒险指南、章节测试与浏览器验收尚未全部 verified；占位章尚不注册到生产关卡列表。",
     "P8：完整战役、失败分支、存档、多人与 AI、真实联机和发布验收；内容不可启动。"
   ],
   "gates": {
-    "p0": false,
-    "p1": false,
-    "p2": false,
-    "p3": false,
-    "p4": false,
-    "p5": false,
-    "p6": false,
-    "p7": false
+    "p0": true,
+    "p1": true,
+    "p2": true,
+    "p3": true,
+    "p4": true,
+    "p5": true,
+    "p6": true,
+    "p7": true
   }
 }

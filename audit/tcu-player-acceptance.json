@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "b86ad365862f52d785668b9b3831fdbf1614df057ce6748d410776591484b156"
+      "sha256": "6e27c46b756ef6451877e5e8cc6ce2083b39aa40d7a8022c342e05f68a145e1f"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",

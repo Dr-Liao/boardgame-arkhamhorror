@@ -155,7 +155,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-          "sha256": "baafc1f3864a616c69ee2a0bf7f68de2ac239f2e3315e3211432750d48253448"
+          "sha256": "68c1037ee56ba034c8c3d408895d9bf6e03f3c3cac83677e06cf250e2914075a"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
@@ -171,11 +171,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
-          "sha256": "151b86692059b3f43a0ff09cdfb7c0d021d42443956666ff69d534b866e33246"
+          "sha256": "ccb4adf876c678a9b0aebd4a5442f96bca5a4b06b953869944fc5b03f0b21b6b"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
-          "sha256": "acd6d397f94ce346f1154dbc5ee457611544d25f6472d66b087e71ac0db5a1f5"
+          "sha256": "51b52e62ac7cd5d42618753c1ed465eb1c494d199a30c8d4797e9eff633936ed"
         }
       ]
     },
@@ -203,7 +203,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
-          "sha256": "fd7c09d2c26a77430e62623d0ed388db04fe2d07b010bbe154ff01bc5c0c5218"
+          "sha256": "95987c9b2d7ee3d6f2a86054f3b8023d6e695c3567aa0ca5edbfcbbe2406eac4"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png",
@@ -219,11 +219,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
-          "sha256": "6fdee0804fe7a826dc13e8984173824f747c4535edf169caaaeb3681d070c068"
+          "sha256": "1ee45b1baa4d68137a8336ca4e7d83e64ce0985248cdce702e233498f6c7e9a9"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
-          "sha256": "cbc7232593571f89c73e3853f703db3d96aa83463a44e61746bd19f97742a146"
+          "sha256": "77e3e27a14bbfb88a845a5079e36ae7a437cb71e79c82d45078ed89714e78184"
         }
       ]
     },
@@ -235,11 +235,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
-          "sha256": "a1b8a37223aaa4c82b406629a9fd26d98fddbd901595568d05e1246d744b00d6"
+          "sha256": "45fcb40610ff57f76ca390cb5f4fa4e61e18aec1404945968bf50ba0abbed89c"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
-          "sha256": "a72cd80912cca35e1b542f5856fc7e937553f5439b75b64c5851f7878377f203"
+          "sha256": "42aad1233f45ace45ef91cdb3b4e0cf18b3c22e7cd1584ba13de6d7c04a10e68"
         }
       ]
     },
@@ -267,7 +267,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
-          "sha256": "881d9b387cf8400f939c03047dcb4c739e086ed6e223512b55cab8ee913c8b50"
+          "sha256": "ca7cdaa46a2cafbf3207c13079dc50237c6ff0628003d62788acc31462691c3d"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png",
@@ -283,7 +283,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
-          "sha256": "fdf1b041c9c4b5a8bfd8207796488cdff6b6ff072f95d21afacdbacea7461a99"
+          "sha256": "90bd194204075f4c7182072012d442df77f1ea5e939c6caf043f18b43c0f8eb4"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
@@ -299,11 +299,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
-          "sha256": "ef575117a190701275fc6ec1dce7e06633c4b53578f652e088d68f21023b6a94"
+          "sha256": "14c35c0f9452460c1a7e664c49c2127061f0d478384ff01db921a466d0bb0ad7"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
-          "sha256": "543be27b8187514289346a1756ede72ecd6cf04e666eb259f60405e6c50217d0"
+          "sha256": "ef110652584472108e61b6342f4bc0fc8f384d3fe23ddb4f33b89fb136b8761c"
         }
       ]
     },
@@ -315,7 +315,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
-          "sha256": "577be5cfe7ac0b621ad2a1fc9d2638e57340de234832498c568ac0bc5a645e77"
+          "sha256": "891f5eb145352894ae12f2411e3486b3c3f51cec568612d7bc95c3e632ac6d0c"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
@@ -331,11 +331,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
-          "sha256": "745c086e85f103b1c15e712c597e7ee3c384e4c5a63b0ce3fd07beb139743050"
+          "sha256": "3b06b74392c4927fbed7860129183502fb20443687d4e7e47bb7f91dbaaf65f7"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
-          "sha256": "44a51ec8b5696ee1c1565b1e14d996eec2dc670d91fb21155dc242deab7401fc"
+          "sha256": "07e3d87b060dbea7ef61bfa665d53f9bddeb565ad9db91bf979c006ff09f36d6"
         }
       ]
     },
@@ -347,11 +347,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
-          "sha256": "e009b88a0cf0c19b192f5805e963c0ab92652bf25db24bbfea411d66ff5d8eb8"
+          "sha256": "92a8b46af9e3db16b515b205826e4bcf09230ca46b39053a8332ffbc71dabda2"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
-          "sha256": "6ed1dc4b16af1218ed3803d54d63f73a6f82ca3ef0b8ed9a87b0e74c9a6e57ad"
+          "sha256": "3335b0188326aa5ce615b7fa737d85f96f249d89e05a69462cd3e725529d9e9d"
         }
       ]
     },
@@ -363,11 +363,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
-          "sha256": "c8f8cfb5c31e4543fba6d95b98dc7d0cc0727f3e4f97196ff521428649de1ce7"
+          "sha256": "408452af40c47f2c962fb584462e0c9a78060b3d11a7a33ba16d7cfde097585a"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
-          "sha256": "7a641b8a604be5a4d3cdc43bb790e973b8ba79b40984bdcb4b2cd1056eb10be9"
+          "sha256": "6418ab662b9cbcd9f551396067f05278e064b21fdcb7b81f09c008448dcbcd4d"
         }
       ]
     },
@@ -379,7 +379,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
-          "sha256": "66914075100e844d0d99ef97aa23d2bb272934b622f9383e3f5c09f1045af45b"
+          "sha256": "cde4379861327bc84ceae2cd916bf42deaebebc8fae0c45776b7d53f02718a6a"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
@@ -395,7 +395,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
-          "sha256": "94435cb77b6e5199f71ba09305f6028704b0d75b1b81cfc738bf1e38e8e3a053"
+          "sha256": "9f979c601ce843c0d6b227639298072098360abcc26678901076f0c029831c04"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png",
@@ -411,11 +411,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
-          "sha256": "2da8bd7fc18e87c236a2dbc349a7de32167a266280728adcd33fa2bdfcc5d18f"
+          "sha256": "f947aa0895df948997c0124f4e3c3a57559529ead6417e54cfeff371aab0d745"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
-          "sha256": "df21bc97e6c5e6a6c2081b89e97dca0ead3a8d81bb8668ec2fde030b188d149b"
+          "sha256": "3b78a649e17d5915f077b3f1f3692bb63781f859871f96a85255b32ba3d038ae"
         }
       ]
     },
@@ -427,11 +427,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
-          "sha256": "6c3c3dcc3903f500843bcff1b376ae9691138c05e226ee448740125d3572cce1"
+          "sha256": "a43c1238972b20c6c45bef82db87dc2a903d4040002a59f491fff1b2e6dff403"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
-          "sha256": "574203487313734cbb46184e1fe0dde334680826efeeef255444e203122b2d1e"
+          "sha256": "079ec7b06960715a2df8d4b913a5fe30af81f3499de6bba7872d14012d84c7d0"
         }
       ]
     },
@@ -443,11 +443,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
-          "sha256": "41552c939e3f86c720eb986313e2088bf63a35ea7e9f0c17470b2cb80d83634a"
+          "sha256": "2b5382dabb40a05c4dfbad89b0bc8023520be1b014710dd7cb8339c442b57cbe"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
-          "sha256": "14225f8ce8fb024236bbee11f6ae226314c99eeddf15d972d28448533201ac25"
+          "sha256": "72cc9769923a2003b1bdfa8f4f01ccf2c3d62eee8f43cc443639d464406a88be"
         }
       ]
     },
@@ -459,11 +459,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
-          "sha256": "d26528f05d279a1a931b485eb09ec71bcfbde0433d505fe2339b650bba9fa913"
+          "sha256": "c76c9ae648f131a6764dbc72c1e5976ce3acc4d20a8772664752ec1d5c89bf36"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
-          "sha256": "59b82dcd2bffb97ed4555b26adbda43864d8149666112e94fee4740716b0cfee"
+          "sha256": "ddeb02213b49cc7a13f6522c393811742ffa461cd0e563dee5cc2f04ee0a7688"
         }
       ]
     },
@@ -475,11 +475,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
-          "sha256": "41ee8e27f2695833f1f7a71c88c9bb21287a63568c3cd83756c4b656867f48e0"
+          "sha256": "19586297b9352079b18f2553610ed3587a1bdb1cafb7b8650e04c74c741e8316"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
-          "sha256": "797e4e31222189821869d55828b5e805f96a56764e60aae88eac6c1dfa7041ee"
+          "sha256": "a98507c05739b17a7cd9397acc4ab78474460ca8e60512bf2f43773496586d6b"
         }
       ]
     },
@@ -491,11 +491,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
-          "sha256": "fa4fe2b8f7dcf47091b5785b05fc532e617dae854b8fadd8fdfff0237a0194c1"
+          "sha256": "55793d2a3506b6053ab96d22db782c991fde5b4cf4ac506c5fa0561af82f1f92"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
-          "sha256": "450a9bd98be18ce612100f92f3ab8b3970a3bee88c25187859d380f40d8e5d86"
+          "sha256": "2bd9a7631b66bb875eb856adae7ccbbe25cc3bcd9cc3a646b86a98c9dd02b764"
         }
       ]
     },
@@ -507,11 +507,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
-          "sha256": "3e83693d699beaf9c0f036f4ded019eda7cf9af91094568d1c8abcb7199fd24e"
+          "sha256": "4c8fa9971a7eb8bbdced6768258fcf09090d81166e6875cd7b23f576c05e5f0d"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
-          "sha256": "bfe79cb4ef4f06ea195f95063feda3c1b0e2523d6546c21009617e561c32319a"
+          "sha256": "07659072a90e207ade96f2582ad9bfcda257508228b7ddf30d173ac81668682e"
         }
       ]
     },
@@ -523,7 +523,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
-          "sha256": "607ec89596dca7ad42959dd514d71ca37f98e3ec40a6caef5ba7b46e22e52808"
+          "sha256": "356776c628e8e3dbd5d8628bcc84afe2dd44d0a65ec5ddd10f37327d76a63f80"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png",
@@ -539,7 +539,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
-          "sha256": "8f99db0c17a5fc8c5effaa40b6ea64827b637a172667efd24dfc052dbc98fac4"
+          "sha256": "0f70660a7e838c688de15a0b58bbf0af3068a6b194becedf48c34e2089a71218"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
@@ -555,11 +555,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
-          "sha256": "3afdc5898ea4497a3159cc0608e6580c4baaedd17235af2c95a81468b20cfe5b"
+          "sha256": "0ac787ac25086a22e143d49bcab13b2d7518afd06c6efe3a3c65caf7147d1e9f"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
-          "sha256": "43f70469994434b183b8a6b8273fd0bb7968a3e77fbc6627b2e053756e8bc666"
+          "sha256": "ebfd02146337121ddf81e1b919c8940ac8053219dacdb0f2e28678cf675ffb61"
         }
       ]
     },
@@ -587,11 +587,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
-          "sha256": "9322fc9e02d007cc0ffca87a17e485b6706f1e5177d2b59e3473d600f12aaf1a"
+          "sha256": "4e823a89d93db174badda8c2317be44749dc4a6971552c5e8b816639d13ab238"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
-          "sha256": "6fecd47ea2ab11fd5eef5ba1b739c4e0966733bc2096871feda7e9c2ab17a184"
+          "sha256": "4f0bb24aa987d359f12b592ac5d5a9b3bcf00b85b152d1ef4c09e45c445fab79"
         }
       ]
     },
@@ -603,11 +603,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
-          "sha256": "22f153af81b7bf5e3de66efeb6989850c88d69003359b010f80c063880706442"
+          "sha256": "1b3b4015abe63ece33c4700b3ca2f7b6f867d6f693ff5c2332e26c95af74a1d0"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
-          "sha256": "cbb0300d545e5bbd8c2e5f1686245afec79de889892c7fade6e7495f4ff93f91"
+          "sha256": "a04cfa8c98713bf0c529fa80c2d8d890913a9e764758b3ab07641a4d0280fe4b"
         }
       ]
     },
@@ -619,11 +619,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
-          "sha256": "c732179f5fe94da6642393a5f738baaebf4fe5a5d0fc4639007fb9e2ad4dfaf9"
+          "sha256": "692280dbdc91904523b292e4b3461b3531c846ce78ce2960d610f9e23fe321b2"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
-          "sha256": "bd504f895b0c9bee01b9fc7cd38146cbaec97b1e610af6c7cbe31c509cf100ee"
+          "sha256": "ba489c7a17b928140a3c655f7d3cf17e202131cac774c9236e406203be6cdfa1"
         }
       ]
     },
@@ -635,7 +635,7 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
-          "sha256": "36699248dac5764d905ae40db84de585fca1d7cc74b75f65855f693804b3d9f7"
+          "sha256": "8ec6e90f8c8eb54be0842b436295d031f66d5f51519e25f3ca52d537ed096745"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
@@ -651,11 +651,11 @@
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
-          "sha256": "ed1858bba8d26964a05a5514422304b1390e595223d184d557028cc199c83478"
+          "sha256": "b6d3adec3ea73564fa188dd6cbd8a377a80e7a436d9581c612f0295ccfa508f1"
         },
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
-          "sha256": "c4e257691ebd7369896909cb942bf96bdb73cd98346025d73906df2187dfa6b5"
+          "sha256": "4595dc59cd3c52871290464da810e4b64e1c664604cb018e5b37ceb1d0082d39"
         }
       ]
     },
@@ -725,7 +725,7 @@
   "screenshots": [
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-      "sha256": "baafc1f3864a616c69ee2a0bf7f68de2ac239f2e3315e3211432750d48253448",
+      "sha256": "68c1037ee56ba034c8c3d408895d9bf6e03f3c3cac83677e06cf250e2914075a",
       "exists": true,
       "scenario": "thePitOfDespair",
       "viewport": "desktop",
@@ -741,7 +741,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
-      "sha256": "151b86692059b3f43a0ff09cdfb7c0d021d42443956666ff69d534b866e33246",
+      "sha256": "ccb4adf876c678a9b0aebd4a5442f96bca5a4b06b953869944fc5b03f0b21b6b",
       "exists": true,
       "scenario": "thePitOfDespair",
       "viewport": "desktop",
@@ -749,7 +749,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
-      "sha256": "acd6d397f94ce346f1154dbc5ee457611544d25f6472d66b087e71ac0db5a1f5",
+      "sha256": "51b52e62ac7cd5d42618753c1ed465eb1c494d199a30c8d4797e9eff633936ed",
       "exists": true,
       "scenario": "thePitOfDespair",
       "viewport": "desktop",
@@ -773,7 +773,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
-      "sha256": "fd7c09d2c26a77430e62623d0ed388db04fe2d07b010bbe154ff01bc5c0c5218",
+      "sha256": "95987c9b2d7ee3d6f2a86054f3b8023d6e695c3567aa0ca5edbfcbbe2406eac4",
       "exists": true,
       "scenario": "thePitOfDespair",
       "viewport": "mobile",
@@ -789,7 +789,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
-      "sha256": "6fdee0804fe7a826dc13e8984173824f747c4535edf169caaaeb3681d070c068",
+      "sha256": "1ee45b1baa4d68137a8336ca4e7d83e64ce0985248cdce702e233498f6c7e9a9",
       "exists": true,
       "scenario": "theVanishingOfElinaHarper",
       "viewport": "desktop",
@@ -797,7 +797,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
-      "sha256": "cbc7232593571f89c73e3853f703db3d96aa83463a44e61746bd19f97742a146",
+      "sha256": "77e3e27a14bbfb88a845a5079e36ae7a437cb71e79c82d45078ed89714e78184",
       "exists": true,
       "scenario": "theVanishingOfElinaHarper",
       "viewport": "desktop",
@@ -805,7 +805,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
-      "sha256": "a1b8a37223aaa4c82b406629a9fd26d98fddbd901595568d05e1246d744b00d6",
+      "sha256": "45fcb40610ff57f76ca390cb5f4fa4e61e18aec1404945968bf50ba0abbed89c",
       "exists": true,
       "scenario": "theVanishingOfElinaHarper",
       "viewport": "desktop",
@@ -813,7 +813,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
-      "sha256": "a72cd80912cca35e1b542f5856fc7e937553f5439b75b64c5851f7878377f203",
+      "sha256": "42aad1233f45ace45ef91cdb3b4e0cf18b3c22e7cd1584ba13de6d7c04a10e68",
       "exists": true,
       "scenario": "theVanishingOfElinaHarper",
       "viewport": "desktop",
@@ -837,7 +837,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
-      "sha256": "881d9b387cf8400f939c03047dcb4c739e086ed6e223512b55cab8ee913c8b50",
+      "sha256": "ca7cdaa46a2cafbf3207c13079dc50237c6ff0628003d62788acc31462691c3d",
       "exists": true,
       "scenario": "theVanishingOfElinaHarper",
       "viewport": "mobile",
@@ -853,7 +853,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
-      "sha256": "fdf1b041c9c4b5a8bfd8207796488cdff6b6ff072f95d21afacdbacea7461a99",
+      "sha256": "90bd194204075f4c7182072012d442df77f1ea5e939c6caf043f18b43c0f8eb4",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "desktop",
@@ -869,7 +869,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
-      "sha256": "ef575117a190701275fc6ec1dce7e06633c4b53578f652e088d68f21023b6a94",
+      "sha256": "14c35c0f9452460c1a7e664c49c2127061f0d478384ff01db921a466d0bb0ad7",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "desktop",
@@ -877,7 +877,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
-      "sha256": "543be27b8187514289346a1756ede72ecd6cf04e666eb259f60405e6c50217d0",
+      "sha256": "ef110652584472108e61b6342f4bc0fc8f384d3fe23ddb4f33b89fb136b8761c",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "desktop",
@@ -885,7 +885,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
-      "sha256": "577be5cfe7ac0b621ad2a1fc9d2638e57340de234832498c568ac0bc5a645e77",
+      "sha256": "891f5eb145352894ae12f2411e3486b3c3f51cec568612d7bc95c3e632ac6d0c",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "mobile",
@@ -901,7 +901,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
-      "sha256": "745c086e85f103b1c15e712c597e7ee3c384e4c5a63b0ce3fd07beb139743050",
+      "sha256": "3b06b74392c4927fbed7860129183502fb20443687d4e7e47bb7f91dbaaf65f7",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "mobile",
@@ -909,7 +909,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
-      "sha256": "44a51ec8b5696ee1c1565b1e14d996eec2dc670d91fb21155dc242deab7401fc",
+      "sha256": "07e3d87b060dbea7ef61bfa665d53f9bddeb565ad9db91bf979c006ff09f36d6",
       "exists": true,
       "scenario": "inTooDeep",
       "viewport": "mobile",
@@ -917,7 +917,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
-      "sha256": "e009b88a0cf0c19b192f5805e963c0ab92652bf25db24bbfea411d66ff5d8eb8",
+      "sha256": "92a8b46af9e3db16b515b205826e4bcf09230ca46b39053a8332ffbc71dabda2",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "desktop",
@@ -925,7 +925,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
-      "sha256": "6ed1dc4b16af1218ed3803d54d63f73a6f82ca3ef0b8ed9a87b0e74c9a6e57ad",
+      "sha256": "3335b0188326aa5ce615b7fa737d85f96f249d89e05a69462cd3e725529d9e9d",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "desktop",
@@ -933,7 +933,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
-      "sha256": "c8f8cfb5c31e4543fba6d95b98dc7d0cc0727f3e4f97196ff521428649de1ce7",
+      "sha256": "408452af40c47f2c962fb584462e0c9a78060b3d11a7a33ba16d7cfde097585a",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "desktop",
@@ -941,7 +941,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
-      "sha256": "7a641b8a604be5a4d3cdc43bb790e973b8ba79b40984bdcb4b2cd1056eb10be9",
+      "sha256": "6418ab662b9cbcd9f551396067f05278e064b21fdcb7b81f09c008448dcbcd4d",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "desktop",
@@ -949,7 +949,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
-      "sha256": "66914075100e844d0d99ef97aa23d2bb272934b622f9383e3f5c09f1045af45b",
+      "sha256": "cde4379861327bc84ceae2cd916bf42deaebebc8fae0c45776b7d53f02718a6a",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "mobile",
@@ -965,7 +965,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
-      "sha256": "94435cb77b6e5199f71ba09305f6028704b0d75b1b81cfc738bf1e38e8e3a053",
+      "sha256": "9f979c601ce843c0d6b227639298072098360abcc26678901076f0c029831c04",
       "exists": true,
       "scenario": "devilReef",
       "viewport": "mobile",
@@ -981,7 +981,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
-      "sha256": "2da8bd7fc18e87c236a2dbc349a7de32167a266280728adcd33fa2bdfcc5d18f",
+      "sha256": "f947aa0895df948997c0124f4e3c3a57559529ead6417e54cfeff371aab0d745",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "desktop",
@@ -989,7 +989,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
-      "sha256": "df21bc97e6c5e6a6c2081b89e97dca0ead3a8d81bb8668ec2fde030b188d149b",
+      "sha256": "3b78a649e17d5915f077b3f1f3692bb63781f859871f96a85255b32ba3d038ae",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "desktop",
@@ -997,7 +997,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
-      "sha256": "6c3c3dcc3903f500843bcff1b376ae9691138c05e226ee448740125d3572cce1",
+      "sha256": "a43c1238972b20c6c45bef82db87dc2a903d4040002a59f491fff1b2e6dff403",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "desktop",
@@ -1005,7 +1005,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
-      "sha256": "574203487313734cbb46184e1fe0dde334680826efeeef255444e203122b2d1e",
+      "sha256": "079ec7b06960715a2df8d4b913a5fe30af81f3499de6bba7872d14012d84c7d0",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "desktop",
@@ -1013,7 +1013,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
-      "sha256": "41552c939e3f86c720eb986313e2088bf63a35ea7e9f0c17470b2cb80d83634a",
+      "sha256": "2b5382dabb40a05c4dfbad89b0bc8023520be1b014710dd7cb8339c442b57cbe",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "mobile",
@@ -1021,7 +1021,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
-      "sha256": "14225f8ce8fb024236bbee11f6ae226314c99eeddf15d972d28448533201ac25",
+      "sha256": "72cc9769923a2003b1bdfa8f4f01ccf2c3d62eee8f43cc443639d464406a88be",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "mobile",
@@ -1029,7 +1029,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
-      "sha256": "d26528f05d279a1a931b485eb09ec71bcfbde0433d505fe2339b650bba9fa913",
+      "sha256": "c76c9ae648f131a6764dbc72c1e5976ce3acc4d20a8772664752ec1d5c89bf36",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "mobile",
@@ -1037,7 +1037,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
-      "sha256": "59b82dcd2bffb97ed4555b26adbda43864d8149666112e94fee4740716b0cfee",
+      "sha256": "ddeb02213b49cc7a13f6522c393811742ffa461cd0e563dee5cc2f04ee0a7688",
       "exists": true,
       "scenario": "horrorInHighGear",
       "viewport": "mobile",
@@ -1045,7 +1045,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
-      "sha256": "41ee8e27f2695833f1f7a71c88c9bb21287a63568c3cd83756c4b656867f48e0",
+      "sha256": "19586297b9352079b18f2553610ed3587a1bdb1cafb7b8650e04c74c741e8316",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "desktop",
@@ -1053,7 +1053,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
-      "sha256": "797e4e31222189821869d55828b5e805f96a56764e60aae88eac6c1dfa7041ee",
+      "sha256": "a98507c05739b17a7cd9397acc4ab78474460ca8e60512bf2f43773496586d6b",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "desktop",
@@ -1061,7 +1061,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
-      "sha256": "fa4fe2b8f7dcf47091b5785b05fc532e617dae854b8fadd8fdfff0237a0194c1",
+      "sha256": "55793d2a3506b6053ab96d22db782c991fde5b4cf4ac506c5fa0561af82f1f92",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "desktop",
@@ -1069,7 +1069,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
-      "sha256": "450a9bd98be18ce612100f92f3ab8b3970a3bee88c25187859d380f40d8e5d86",
+      "sha256": "2bd9a7631b66bb875eb856adae7ccbbe25cc3bcd9cc3a646b86a98c9dd02b764",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "desktop",
@@ -1077,7 +1077,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
-      "sha256": "3e83693d699beaf9c0f036f4ded019eda7cf9af91094568d1c8abcb7199fd24e",
+      "sha256": "4c8fa9971a7eb8bbdced6768258fcf09090d81166e6875cd7b23f576c05e5f0d",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "mobile",
@@ -1085,7 +1085,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
-      "sha256": "bfe79cb4ef4f06ea195f95063feda3c1b0e2523d6546c21009617e561c32319a",
+      "sha256": "07659072a90e207ade96f2582ad9bfcda257508228b7ddf30d173ac81668682e",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "mobile",
@@ -1093,7 +1093,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
-      "sha256": "607ec89596dca7ad42959dd514d71ca37f98e3ec40a6caef5ba7b46e22e52808",
+      "sha256": "356776c628e8e3dbd5d8628bcc84afe2dd44d0a65ec5ddd10f37327d76a63f80",
       "exists": true,
       "scenario": "aLightInTheFog",
       "viewport": "mobile",
@@ -1109,7 +1109,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
-      "sha256": "8f99db0c17a5fc8c5effaa40b6ea64827b637a172667efd24dfc052dbc98fac4",
+      "sha256": "0f70660a7e838c688de15a0b58bbf0af3068a6b194becedf48c34e2089a71218",
       "exists": true,
       "scenario": "theLairOfDagon",
       "viewport": "desktop",
@@ -1125,7 +1125,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
-      "sha256": "3afdc5898ea4497a3159cc0608e6580c4baaedd17235af2c95a81468b20cfe5b",
+      "sha256": "0ac787ac25086a22e143d49bcab13b2d7518afd06c6efe3a3c65caf7147d1e9f",
       "exists": true,
       "scenario": "theLairOfDagon",
       "viewport": "desktop",
@@ -1133,7 +1133,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
-      "sha256": "43f70469994434b183b8a6b8273fd0bb7968a3e77fbc6627b2e053756e8bc666",
+      "sha256": "ebfd02146337121ddf81e1b919c8940ac8053219dacdb0f2e28678cf675ffb61",
       "exists": true,
       "scenario": "theLairOfDagon",
       "viewport": "desktop",
@@ -1157,7 +1157,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
-      "sha256": "9322fc9e02d007cc0ffca87a17e485b6706f1e5177d2b59e3473d600f12aaf1a",
+      "sha256": "4e823a89d93db174badda8c2317be44749dc4a6971552c5e8b816639d13ab238",
       "exists": true,
       "scenario": "theLairOfDagon",
       "viewport": "mobile",
@@ -1165,7 +1165,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
-      "sha256": "6fecd47ea2ab11fd5eef5ba1b739c4e0966733bc2096871feda7e9c2ab17a184",
+      "sha256": "4f0bb24aa987d359f12b592ac5d5a9b3bcf00b85b152d1ef4c09e45c445fab79",
       "exists": true,
       "scenario": "theLairOfDagon",
       "viewport": "mobile",
@@ -1173,7 +1173,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
-      "sha256": "22f153af81b7bf5e3de66efeb6989850c88d69003359b010f80c063880706442",
+      "sha256": "1b3b4015abe63ece33c4700b3ca2f7b6f867d6f693ff5c2332e26c95af74a1d0",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "desktop",
@@ -1181,7 +1181,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
-      "sha256": "cbb0300d545e5bbd8c2e5f1686245afec79de889892c7fade6e7495f4ff93f91",
+      "sha256": "a04cfa8c98713bf0c529fa80c2d8d890913a9e764758b3ab07641a4d0280fe4b",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "desktop",
@@ -1189,7 +1189,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
-      "sha256": "c732179f5fe94da6642393a5f738baaebf4fe5a5d0fc4639007fb9e2ad4dfaf9",
+      "sha256": "692280dbdc91904523b292e4b3461b3531c846ce78ce2960d610f9e23fe321b2",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "desktop",
@@ -1197,7 +1197,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
-      "sha256": "bd504f895b0c9bee01b9fc7cd38146cbaec97b1e610af6c7cbe31c509cf100ee",
+      "sha256": "ba489c7a17b928140a3c655f7d3cf17e202131cac774c9236e406203be6cdfa1",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "desktop",
@@ -1205,7 +1205,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
-      "sha256": "36699248dac5764d905ae40db84de585fca1d7cc74b75f65855f693804b3d9f7",
+      "sha256": "8ec6e90f8c8eb54be0842b436295d031f66d5f51519e25f3ca52d537ed096745",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "mobile",
@@ -1221,7 +1221,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
-      "sha256": "ed1858bba8d26964a05a5514422304b1390e595223d184d557028cc199c83478",
+      "sha256": "b6d3adec3ea73564fa188dd6cbd8a377a80e7a436d9581c612f0295ccfa508f1",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "mobile",
@@ -1229,7 +1229,7 @@
     },
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
-      "sha256": "c4e257691ebd7369896909cb942bf96bdb73cd98346025d73906df2187dfa6b5",
+      "sha256": "4595dc59cd3c52871290464da810e4b64e1c664604cb018e5b37ceb1d0082d39",
       "exists": true,
       "scenario": "intoTheMaelstrom",
       "viewport": "mobile",
@@ -2891,8 +2891,8 @@
     },
     {
       "path": "content/registered.js",
-      "bytes": 9855,
-      "sha256": "dc7420c0e6bfb5d290865700b8f9eb981829208a1463a4f4af562a7f140eba60"
+      "bytes": 11098,
+      "sha256": "0d8788cd970bc4e1bd929cbcea77b80a48ff59878369e4d89dcd2d0e537820bf"
     },
     {
       "path": "content/registry.js",
@@ -13567,7 +13567,7 @@
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "4c42bee5d1adadb414dac135977e4fb1d2ba6832e2b96c04aabf2d8f5a826e6a"
+      "sha256": "ac6c27fcd94d65c798fccefec4b6d2eb201fca457dbd1e8c3e16b27e99846999"
     },
     {
       "path": "src/cards/tic-player-acceptance.js",
@@ -14506,8 +14506,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 13888,
-      "sha256": "3438b8910bbd7fa5cf065cd5c6bc05a212647f0f466ea3309410b4289bdaac23"
+      "bytes": 13939,
+      "sha256": "43780afc6879646b94651f726fcdd629c5da53528f436fc6535cc6cd60b2af87"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -14546,8 +14546,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 24315,
-      "sha256": "b86ad365862f52d785668b9b3831fdbf1614df057ce6748d410776591484b156"
+      "bytes": 24405,
+      "sha256": "6e27c46b756ef6451877e5e8cc6ce2083b39aa40d7a8022c342e05f68a145e1f"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
@@ -14571,8 +14571,8 @@
     },
     {
       "path": "tests/tic-investigators.browser.mjs",
-      "bytes": 4300,
-      "sha256": "abc1e7156c9e6de25768659c930809b8fe657d6387ca0fee15c2b0ab740aa274"
+      "bytes": 4635,
+      "sha256": "6031a89aa1f2d6c36c87dc59b0fce519ac77e2074b225222486f645ceaccc028"
     },
     {
       "path": "tests/tic-investigators.test.mjs",
@@ -14651,8 +14651,8 @@
     },
     {
       "path": "tools/audit-tic.mjs",
-      "bytes": 7959,
-      "sha256": "d40909c8f70b9ae379108bc3593c5bf75ad02421004f3203e71b47088022a400"
+      "bytes": 8409,
+      "sha256": "4325d6e4843e369707d9a9beabbf42a7fb8de8ea3050de47d450e644533d11f4"
     },
     {
       "path": "tools/playwright-tic-p4-reporter.mjs",

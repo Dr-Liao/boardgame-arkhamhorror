@@ -275,7 +275,7 @@
     {
       "name": "nodeAcceptance",
       "file": "audit/tic-node-acceptance.json",
-      "status": "stale"
+      "status": "fresh"
     },
     {
       "name": "regression",
@@ -285,7 +285,7 @@
     {
       "name": "interactionRegression",
       "file": "audit/tic-interaction-regression.json",
-      "status": "stale"
+      "status": "fresh"
     }
   ],
   "pendingPrimitiveRequests": [
@@ -4714,8 +4714,6 @@
     "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
     "引擎原语队列仍有 10 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
-    "audit/tic-node-acceptance.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
-    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
-    "audit/tic-interaction-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建"
+    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建"
   ]
 }

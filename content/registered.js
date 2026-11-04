@@ -110,6 +110,25 @@ export function registerContentBundle(additions) {
   contentRegistry = validated
 }
 
+// P7《印斯茅斯暗潮》：目录级注册（campaign catalog-only + 8 章 development）。
+// 生产组合根静态 import 会形成 chapter-entry ↔ engine ↔ registered 的循环依赖，
+// 因此改为显式惰性注册：测试/工具在需要 enumerate 全部战役章节时调用；
+// P8 发布时再把 8 章升级为 playable 并静态接入（见 docs/theInnsmouthConspiracy/p7-development.md）。
+let innsmouthCatalogRegistered = false
+export async function ensureInnsmouthCatalogRegistered() {
+  if (innsmouthCatalogRegistered || contentRegistry.getCampaign('theInnsmouthConspiracy')) {
+    innsmouthCatalogRegistered = true
+    return contentRegistry.getCampaign('theInnsmouthConspiracy')
+  }
+  const { manifest } = await import('./campaigns/theInnsmouthConspiracy/manifest.js')
+  const { developmentChapter } = await import('./campaigns/theInnsmouthConspiracy/chapter-entry.js')
+  const { chapters } = await import('./campaigns/theInnsmouthConspiracy/shared.js')
+  registerContentBundle({ campaigns: [{ ...manifest, status: 'development' }],
+    scenarios: chapters.map(chapter => developmentChapter(chapter.id)) })
+  innsmouthCatalogRegistered = true
+  return contentRegistry.getCampaign('theInnsmouthConspiracy')
+}
+
 // 浏览器验收专用：只有 playwright.tde-ui.config.mjs 的 webServer 会设置该环境变量。
 // 默认不注册、不进入玩家可见的战役列表；见 content/browser-demo/dualHub.js 的说明。
 if (typeof process !== 'undefined' && process.env?.ARKHAM_BROWSER_DEMO === 'dualHub') {

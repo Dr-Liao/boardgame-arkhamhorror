@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { campaignStory, introduction } from '../src/campaign/story.js'
-import { contentRegistry } from '../content/registered.js'
+import { contentRegistry, ensureInnsmouthCatalogRegistered } from '../content/registered.js'
 import { viewState } from '../src/integration/observation.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { DEFAULT_RULE_ID, RULES, RULE_INDEX, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
@@ -13,6 +13,10 @@ import { renderStoryReader } from '../web/story-reader.js'
 import { UI_CARDS } from '../web/ui-cards.js'
 import { STORY_TEXT } from '../content/campaigns/nightOfTheZealot/story-text.js'
 import { midnightConclusion } from './fixtures/midnight-story.mjs'
+// P7：《印斯茅斯暗潮》八章已通过逐章验收，目录注册进内容注册表（campaign status
+// development，不进大厅启动列表；P8 再升级 playable）。这样桌面提示卡映射的反查
+// 测试能覆盖 TIC 章节，而不是依赖「未注册战役」的隐式假设。
+await ensureInnsmouthCatalogRegistered()
 const move=(s,m)=>{const seat=decisionSeat(s);assert.equal(validateMove(s,seat,m),null);return applyMove(s,seat,m)}
 test('完整导入包含序章和每关全部正文，午夜假面只展示实际引言分支',()=>{
   const gathering=introduction(contentRegistry.getScenarioData('theGathering'))

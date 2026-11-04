@@ -87,6 +87,7 @@ export const FAST_TESTS = Object.freeze([
   'tic-scenario-aLightInTheFog.test.mjs', // 第六章逐章验收（w1）
   'tic-scenario-intoTheMaelstrom.test.mjs', // 第八章逐章验收（w1）
   'tic-scenario-theVanishingOfElinaHarper.test.mjs', // 第二章逐章验收（w3）
+  'tic-scenario-shared-encounters.test.mjs', // 10 张共享遭遇卡逐卡验收（w5）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',
