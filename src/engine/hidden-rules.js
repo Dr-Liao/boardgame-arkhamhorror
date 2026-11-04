@@ -1,6 +1,7 @@
 import { registeredEntry } from './ability.js'
 import { vehicleOf } from './vehicles.js'
 import { barrierCount } from './edge-barriers.js'
+import { enemyIsAloof } from './enemy-aloof.js'
 // hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
@@ -174,9 +175,10 @@ export function createHiddenRules(deps) {
   // 冷漠（aloof）：未与调查员交战的冷漠敌人不能被攻击——调查员必须先主动交战，
   // 或使用写明「忽略冷漠」的攻击（04104 枪法如神等，通过 options.ignoreAloof 放行）。
   // 庞大敌人视为与所在地点每位调查员交战（规则书「庞大」），因此不受这条限制。
+  // 「冷漠」读点是 enemyIsAloof：印刷正文里的连续条件（07086 洛依高尔）在这里求值。
   function aloofPreventsAttack(state, inv, enemy, options = {}) {
     if (!enemy || options.ignoreAloof === true) return false
-    if (enemyTextBlanked(state, enemy) || !enemy.aloof) return false
+    if (!enemyIsAloof(state, enemy, { isBlanked: enemyTextBlanked })) return false
     if (enemy.engagedSeat != null) return false
     if (enemy.massive && enemy.location === inv?.location) return false
     return true

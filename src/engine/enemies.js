@@ -1,11 +1,13 @@
 import { mechanicState } from './mechanic-state.js'
+import { vehicleOf } from './vehicle-state.js'
 import { createEnemyZoneApi } from './enemy-zones.js'
 import { createEnemyOutcomeApi } from './enemy-outcomes.js'
 import { wouldAddToVictory } from './victory-destination.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { eventWindowContext } from './event-window.js'
 import { keysOnExit } from './scenario-keys.js'
-import { enemyEffectAllowed } from './effect-provenance.js'
+import { enemyEffectAllowed, enemyIsSlumbering, enemyModifierAllowed } from './effect-provenance.js'
+import { hasWindowListener } from './window-listeners.js'
 // 敌人与伤害（applyHarm / 攻击 / 生成 / 击败 / 交战）从 engine.js 拆出的模块
 // （Phase 6 · 6d-22）。
 //
@@ -81,14 +83,20 @@ export function createEnemies(deps) {
 
 // 2026-10-25 第五轮修复（05321/05157 等）：敌人「本回合/本轮」的运行期数值修正。
 // 条目在 api.addEnemyStatModifier 写入 {fight,evade,health,floor,until}；这里按当前轮/回合过滤。
+//
+// 沉睡（enemyRule.slumbering）的目标还要按**这一行自己的来源**再过滤一次：玩家卡写的运行期
+// 修正不能落在免疫玩家卡效果的沉睡敌人身上；行上没有来源时 fail-closed（与
+// effect-provenance 的 enemyModifierAllowed 同一口径），敌人/剧本来源的行照常生效。
 function activeRuntimeEnemyMods(state, enemy) {
   const mods = enemy?.statMods
   if (!Array.isArray(mods) || !mods.length) return []
+  const slumbering = enemyIsSlumbering(state, enemy, { entryOf: registeredEntry, isBlanked: enemyTextBlanked })
   return mods.filter(mod => {
     const until = mod.until || {}
     if (until.round != null && state.round !== until.round) return false
     if (until.turnSerial != null && state.turnSerial !== until.turnSerial) return false
     if (until.phase != null && state.phase !== until.phase) return false
+    if (slumbering && !enemyModifierAllowed(state, enemy, mod, { entryOf: registeredEntry, cardDef })) return false
     return true
   })
 }
@@ -228,6 +236,15 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     { damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror }, scenarioRuntime(state, events))
   if (adjusted?.damage != null) extraDamage = adjusted.damage - enemy.damage
   if (adjusted?.horror != null) extraHorror = adjusted.horror - enemy.horror
+  // 「如果你不在载具上：其本次攻击造成 +N 伤害」（07213 追击快车）：
+  // 声明在 `enemyRule.attackDamageBonus = { amount, unlessTargetInVehicle }`。
+  // 放在 beforeEnemyHarm **之后**：章节内容钩子会把伤害改写成「印刷值 + 额外」，
+  // 规则级加成必须在它之后叠加，否则会被内容层的绝对值覆盖。
+  const bonusRule = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.attackDamageBonus
+  if (bonusRule && Number.isFinite(Number(bonusRule.amount))) {
+    const inVehicle = vehicleOf(state, inv.seat) != null
+    if (!(bonusRule.unlessTargetInVehicle === true && inVehicle)) extraDamage += Number(bonusRule.amount)
+  }
   attack.plannedDamage = enemy.damage + extraDamage
   attack.plannedHorror = enemy.horror + extraHorror
   const attackText = label || `🗡️ 「${enemy.name}」攻击 ${inv.name}：${enemy.damage + extraDamage} 点伤害、${enemy.horror + extraHorror} 点恐惧。`
@@ -326,6 +343,41 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
           options: farthest.map(id => ({ id, label: state.locations.find(item => item.id === id)?.name || id })),
         })
       }
+    }
+  }
+  // 「生成 - 线索最多的地点」（07105 印斯茅斯闹事者）：同样只在通用生成时生效，
+  // 剧本用 api.spawn(..., ignoreSpawn=true) 指定的剧情生成点优先。已揭示地点之间并列时由
+  // 领队选择（与「距离最远」同一套询问形状）。
+  if (!override && !ignoreSpawn && registeredEntry(code)?.spawnMostClues) {
+    const revealed = state.locations.filter(location => location.revealed !== false)
+    const pool = revealed.length ? revealed : state.locations
+    const best = Math.max(...pool.map(location => Number(location.clues) || 0))
+    const candidates = pool.filter(location => (Number(location.clues) || 0) === best)
+    if (candidates.length) {
+      loc = candidates.length === 1 ? candidates[0].id : requestChoice(state, {
+        kind: 'location', source: code, seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: `选择「${def.name}」生成的、线索最多的地点。`,
+        options: candidates.map(location => ({ id: location.id, label: location.name || location.id })),
+      })
+    }
+  }
+  // 「生成 - 最后方的地点」（07213 追击快车、07214 一车打手）：道路按 mechanicState(state).road
+  // 的列号排序，最小列 = 最后方；未登记的列（如起点 07168 之外的自由地点）不参与。
+  // 并列时由领队选择，生成时不与抽牌者交战（loc 只决定位置，engagement 由调用方决定）。
+  if (!override && !ignoreSpawn && registeredEntry(code)?.spawnRearmost) {
+    const columns = mechanicState(state)?.road?.columns || {}
+    const columnOf = location => Number(columns[location.id] ?? columns[location.originalCode || location.code])
+    const ranked = state.locations
+      .map(location => ({ location, column: columnOf(location) }))
+      .filter(item => Number.isFinite(item.column))
+    const best = ranked.length ? Math.min(...ranked.map(item => item.column)) : null
+    const candidates = ranked.filter(item => item.column === best).map(item => item.location)
+    if (candidates.length) {
+      loc = candidates.length === 1 ? candidates[0].id : requestChoice(state, {
+        kind: 'location', source: code, seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: `选择「${def.name}」生成的、最后方的地点。`,
+        options: candidates.map(location => ({ id: location.id, label: location.name || location.id })),
+      })
     }
   }
   // 「生成 - 任意无人地点（如可能，生成在[[古代]]地点）」（04086）。
@@ -441,6 +493,9 @@ function engageEnemy(state, enemy, seat, events = [], grouped = false) {
     for (const member of swarmGroup(state, enemy)) engageEnemy(state, member, seat, events, true)
     return
   }
+  // 沉睡（enemyRule.slumbering）：「不能与调查员交战」是印刷的无条件规则——基础行动、
+  // 剧本/遭遇来源与自动交战都不放行（`enemyEffectAllowed` 对 engage 一律 false）。
+  if (!enemyEffectAllowed(state, enemy, 'engage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked, cardDef })) return
   if (capabilityBlocked(state, state.investigators[seat], 'engage')) return
   if (enemy.engagedSeat === seat) return
   // 2026-10-25 修复 05178a/c：剧本级「该敌人不能被交战」也要拦卡牌效果的强制交战
@@ -635,6 +690,13 @@ function damageEnemy(state, enemy, amount, seat, events, source = null) {
   if (source != null) enemy.lastDamageSource = source
   enemy.defeatedBy = seat
   scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, source)
+  // 条目级「敌人受到伤害后」窗口（07330b/07331b「对达贡之子也执行相同操作」这类卡面强制）。
+  // 只在真有监听者时开窗：没有卡面挂载时窗口是 no-op，也不能让空窗口改动状态指纹。
+  if (hasWindowListener(state, 'enemyDamaged')) {
+    reactionWindow(state, 'enemyDamaged', eventWindowContext(state, {
+      when: 'enemyDamaged', seat, enemy, amount: total, source, location: enemy.location,
+    }), events)
+  }
   if (enemyHealth(state, enemy) != null && enemy.damageTaken >= enemyHealth(state, enemy)
     && enemyCanBeDefeated(state, enemy, source, seat)) defeatEnemy(state, enemy, events,{seat,source})
   return true

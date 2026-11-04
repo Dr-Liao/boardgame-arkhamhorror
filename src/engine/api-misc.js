@@ -15,6 +15,7 @@ import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { syncSpellCredit } from './spell-actions.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
+import { applyPhysicalFace } from './physical-faces.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 // P6（食梦者）：伤害/恐惧移动（托米·马尔登的旧印）与卡牌具名计数器（托尼·摩根根的赏金）。
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
@@ -59,6 +60,8 @@ export function createMiscApi(state, events, deps) {
     drawCards,
     drawEncounter,
     effectiveTraits,
+    investigatorTraits,
+    investigatorHasTrait,
     engageEnemy,
     failedTestResolves,
     finishScenario,
@@ -720,6 +723,13 @@ export function createMiscApi(state, events, deps) {
     cardTraits: code => cardDef(code)?.traits || [],
     cardIcons: code => ({ ...(cardDef(code)?.icons || {}) }),
     effectiveTraits: code => effectiveTraits(state, state.investigators[state.currentSeat], code),
+    // 载具正反面（07211a/b、07212a/b）等「把这张支援翻面」：走引擎的普通物理面入口，
+    // 只换印刷特征，不动实例 id / 乘客 / 位置。正反面成对关系来自 cards-data 的 linkedToCode。
+    flipAsset: (asset, nextCode) => applyPhysicalFace(state, asset, nextCode, { definitionFor: code => cardDef(code) }),
+    // 调查员本人的有效特性（含威胁区卡授予的，例如 07106 的[[深潜者]]）：
+    // 读点是 stats 的 investigatorTraits，卡文件不直接读 inv.traits。
+    investigatorTraits: (seat = state.currentSeat) => investigatorTraits(state, state.investigators[seat]),
+    investigatorHasTrait: (trait, seat = state.currentSeat) => investigatorHasTrait(state, state.investigators[seat], trait),
     locationName: id => locName(state, id),
     // P0：02007/02011/03310 等条目写的是 api.locName；两个名字指向同一读点。
     locName: id => locName(state, id),
@@ -1047,6 +1057,10 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     discardRandomFromHand: (seat, amount = 1) => discardRandomFromHand(state, state.investigators[seat], amount, events),
+    // 「选择并弃掉 N 张手牌」（07088 深潜者巨怪这类强制弃牌）：场景运行时的 discardChosen 已经是
+    // 唯一实现（逐张询问、走 canDiscardFromHand 与 afterHandDiscard 窗口），实体能力面只做委托，
+    // 不再复制一套弃牌逻辑。此前单卡直接调 api.discardChosen 会拿到 undefined。
+    discardChosen: (seat, n = 1, source = 'encounter') => scenarioRuntime(state, events).discardChosen(seat, n, source),
     // 本阶段下一次攻击该敌人时战斗值 -N（可叠加）。
     addEnemyFightReduction: (enemy, amount) => {
       if (!enemy) return 0

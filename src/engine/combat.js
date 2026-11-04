@@ -3,6 +3,8 @@ import { availableResources } from './resource-bank.js'
 import { actionTestSkill } from './skill-substitution.js'
 import { enemyHasLocationKeyword } from './enemy-entry.js'
 import { afterUsesSpent } from './uses.js'
+import { hasWindowListener } from './window-listeners.js'
+import { eventWindowContext } from './event-window.js'
 // 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
@@ -362,6 +364,22 @@ function doFight(state, seat, opts, events, noSpend) {
         dmg = Math.max(0, dmg - exhaustedReduction)
         info(state, events, `🛡️ 「${enemy.name}」处于横置状态，本次攻击伤害从 ${before} 减为 ${dmg}。`)
       }
+      // 07094 长翼者：除[[远程]]/[[枪械]]/[[法术]]卡牌外，每次从攻击受到的伤害 -1（最低 1 点）。
+      // 判定读攻击**来源卡**的特性：武器支援取 asset 的卡号，事件/技能等取 opts.sourceCode；
+      // 空手攻击没有来源卡，按印刷同样减伤。
+      const sourceTraitRule = enemyTextBlanked(state, enemy) ? null
+        : registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.damageReductionExceptSourceTraits
+      if (sourceTraitRule && dmg > 0) {
+        const attackingCode = weapon?.code || opts.sourceCode || null
+        const attackingTraits = (attackingCode ? cardDef(attackingCode)?.traits : []) || []
+        const exempt = attackingTraits.some(trait =>
+          sourceTraitRule.traits.some(wanted => String(wanted).toLowerCase() === String(trait).toLowerCase()))
+        if (!exempt) {
+          const before = dmg
+          dmg = Math.max(sourceTraitRule.minimum ?? 1, dmg - sourceTraitRule.amount)
+          if (dmg !== before) info(state, events, `🛡️ 「${enemy.name}」只受特定来源的完整伤害，本次攻击伤害从 ${before} 减为 ${dmg}。`)
+        }
+      }
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && opts.assetId !== enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return
       // 「职业杀手」：本回合该敌人下次受到的攻击伤害 +1（一次性）。
       dmg += campaignState.consumeDamageBonus(enemy, state)
@@ -408,6 +426,14 @@ function doFight(state, seat, opts, events, noSpend) {
         // 导致 05180「除法术/遗物以外的伤害」这类按来源分支的规则失效）。
         scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, opts.assetId || opts.sourceCode || null)
         enemy.defeatedBy = seat
+        // 条目级「敌人受到伤害后」窗口（07330b/07331b 的镜像强制）。普通攻击路径直接写
+        // damageTaken（不走 damageEnemy），因此这里要单独开一次；没有监听者时完全不开窗。
+        if (hasWindowListener(state, 'enemyDamaged')) {
+          reactionWindow(state, 'enemyDamaged', eventWindowContext(state, {
+            when: 'enemyDamaged', seat, enemy, amount: dmg, source: opts.assetId || opts.sourceCode || null,
+            location: enemy.location,
+          }), events)
+        }
       }
       // 「晕眩重击」：攻击成功时自动躲避被攻击敌人。
       for (const commitment of r.committed || []) {

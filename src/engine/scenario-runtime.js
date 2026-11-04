@@ -35,6 +35,10 @@ import { ignoreLocationTrigger } from './location-effect-scope.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
+import { enemyCanEnterLocation } from './enemy-entry.js'
+import { dispatchVehicleEvent, roadHazardOnce } from './road-hazards.js'
+import { mechanicState } from './mechanic-state.js'
+import { removeVehicle } from './vehicles.js'
 
 export function createScenarioRuntime(deps) {
   const {
@@ -230,6 +234,9 @@ function scenarioRuntime(state, events, testSource = null) {
       entryError: (seat, destination) => deps.mechanicsEntryError?.(state, seat, destination) || null,
       directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
       moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
+      // 道路危害的两个分发口：载具移动成功后由 vehicles.moveVehicle 回调（07204–07210）。
+      vehicleLeft: event => dispatchVehicleEvent(state, 'left', event, () => scenarioRuntime(state, events)),
+      vehicleEntered: event => dispatchVehicleEvent(state, 'entered', event, () => scenarioRuntime(state, events)),
       placeLocation: id => { placeLocation(state, id, events); return state.locations.some(loc => loc.id === id) ? id : null },
     }),
     grantedBasicInvestigate: seat => performImmediateAction(state, seat, events, 'basicInvestigation', { actionKinds:['investigate'],basicOnly:true }),
@@ -431,6 +438,31 @@ function scenarioRuntime(state, events, testSource = null) {
       if (index < 0) return false
       setAside.splice(index, 1)
       return true
+    },
+    // 搜索遭遇牌库 / 弃牌堆：取出**一张指定的物理卡**（07090「查找一个[[深潜者]]敌人」这类
+    // 搜索效果的唯一写入口）。牌库按「顶到底」找（牌库是 push/pop 栈，顶部在末尾），
+    // 弃牌堆同样从末尾找。找不到返回 null，调用方不需要直接写 state.encounterDeck。
+    takeEncounterCard: (code, options = {}) => {
+      if (!code) return null
+      const wanted = String(code)
+      const piles = options.pile ? [options.pile] : ['encounterDeck', 'encounterDiscard']
+      for (const pile of piles) {
+        const list = pile === 'encounterDeck' ? state.encounterDeck : state.encounterDiscard
+        if (!Array.isArray(list)) continue
+        const index = list.lastIndexOf(wanted)
+        if (index < 0) continue
+        list.splice(index, 1)
+        return { pile }
+      }
+      return null
+    },
+    // 「这个敌人能不能进入某个地点」的权威只读读点（搜索/生成候选过滤，例如 07090）。
+    // 与生成、猎人移动共用 enemyCanEnterLocation 的同一份实现，卡面不重写 enterOnlyTraits。
+    canEnemyEnterLocation: (enemyOrCode, locationId) => {
+      if (!enemyOrCode || !locationId) return false
+      const entity = typeof enemyOrCode === 'string'
+        ? { code: enemyOrCode, originalCode: enemyOrCode } : enemyOrCode
+      return enemyCanEnterLocation(state, entity, locationId)
     },
     putGlobalEnemy: code => {
       const def = enemyDef(code)
@@ -665,6 +697,50 @@ function scenarioRuntime(state, events, testSource = null) {
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
     },
     addDoom: n => addDoom(state, n, events),
+    // 道路危害模板的两块公用原语：
+    //   · roadHazardOnce：括号条款「每个载具每场游戏仅限一次」的记账（读点是 road-hazards.js）；
+    //   · payGroupClues：地点上的调查员共同支付线索，allowShort 时能付多少付多少并返回差额。
+    roadHazardOnce: (locationId, vehicleId) => roadHazardOnce(state, locationId, vehicleId),
+    payGroupClues: (amount, options = {}) => groupPayment(state, amount, options.atLocation, events,
+      { allowShort: options.allowShort === true }),
+    // 「将该载具从游戏中移除」（07205a/b 崖边道路的翻车）：物理卡可以是剧情支援，也可以是
+    // 挂在调查员身上的受控载具；两种都从场上移除（不进弃牌堆）并注销载具登记。
+    removeVehicleFromGame: id => {
+      const vehicles = mechanicState(state)?.vehicles || {}
+      if (!vehicles[id]) return false
+      const story = (state.storyAssets || []).find(item => item.id === id)
+      if (story) {
+        removeOne(state.storyAssets, story)
+        scenarioBehavior(state).storyAssetLeftPlay?.(state, story, scenarioRuntime(state, events))
+      }
+      for (const inv of state.investigators) {
+        const owned = (inv.assets || []).find(item => item.id === id)
+        if (!owned) continue
+        inv.assets = inv.assets.filter(item => item !== owned)
+        if (owned.code) inv.removedFromGame = [...(inv.removedFromGame || []), owned.code]
+      }
+      removeVehicle(state, id)
+      return true
+    },
+    discardEncounterUntilSpawn: ({ trait, location } = {}) => {
+      if (!trait || !(state.locations || []).some(item => item.id === location)) return null
+      const wanted = String(trait).toLowerCase()
+      const discarded = []
+      while (state.encounterDeck.length) {
+        const code = state.encounterDeck.pop()
+        const def = cardDef(code)
+        const isEnemy = def?.type === 'enemy'
+        const matching = (def?.traits || []).some(value => String(value).toLowerCase() === wanted)
+        if (isEnemy && matching) {
+          state.encounterDiscard.push(...discarded)
+          spawnEnemy(state, code, location, null, true, false, null)
+          return code
+        }
+        discarded.push(code)
+      }
+      state.encounterDiscard.push(...discarded)
+      return null
+    },
     // 移除当前密谋上的 N 点毁灭（05126 把议程毁灭转移到那赫卜）。
     removeDoom: (amount = 1) => {
       const removed = Math.min(Math.max(0, Number(amount) || 0), Number(state.doom) || 0)
@@ -1059,6 +1135,15 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     trauma: (seat, kind, n) => addTrauma(state, seat, kind, n, events),
     storyAsset: (code, location) => spawnStoryAsset(state, code, location, events),
+    // 「将这张剧情支援从游戏中移除」（07168 急涡水域：「将渔船从游戏中移除」）。
+    // 只从场上移除并通知离场清理，**不进弃牌堆**：它不回到任何牌库，也不再是场面的一部分。
+    removeStoryAsset: id => {
+      const asset = (state.storyAssets || []).find(item => item.id === id || item.code === id)
+      if (!asset) return false
+      removeOne(state.storyAssets, asset)
+      scenarioBehavior(state).storyAssetLeftPlay?.(state, asset, scenarioRuntime(state, events))
+      return true
+    },
     // 失落的时代机制（M3-A）
     supplies: seat => suppliesFor(state, seat),
     hasSupply: (seat, name) => hasSupply(state, seat, name),

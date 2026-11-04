@@ -11,6 +11,7 @@
 
 import { investigatorRule } from '../cards/card-rules.js'
 import { capabilityBlocked } from './modifiers.js'
+import { enemyEngagedRestricts } from './enemy-entry.js'
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -102,6 +103,8 @@ export function createResourceBank(deps) {
     if (inv && !playerEffectCanAffect(state, inv.seat)) return 0
     if (!inv || !Number.isFinite(amount) || amount <= 0) return 0
     if (capabilityBlocked(state, inv, 'gainResources')) return 0
+    // 「与你交战期间你不能获得资源」（07183 追猎的深潜者）：敌方持续限制的读点。
+    if (enemyEngagedRestricts(state, inv, 'gainResources')) return 0
     const asset = bankAsset(inv)
     if (asset && ruleOf(inv.code).redirectGain) {
       asset.resources = (asset.resources || 0) + amount

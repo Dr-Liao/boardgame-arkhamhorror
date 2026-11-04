@@ -37,7 +37,7 @@ export function normalizeScenarioMechanics(spec) {
 export function validateMechanicState(state) {
   const data = mechanicState(state)
   if (!data) return // Old saves stay byte-for-byte unchanged.
-  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones'])
+  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards'])
   validateEnemyZones(state,data.enemyZones)
   if (data.version !== 1) throw new TypeError('不支持的可选机制存档版本')
   if (data.gridAdjacency != null && !['orthogonal', 'row', 'columns', 'none'].includes(data.gridAdjacency)) throw new TypeError('Invalid grid adjacency save')

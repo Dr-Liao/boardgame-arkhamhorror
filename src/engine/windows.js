@@ -163,6 +163,9 @@ define('agendaWouldAdvance', '密谋将要因毁灭阈值推进时', 'reaction',
 // 第 5 步 P7：事件打出并结算后（05320 超级加倍）。调用点在 src/engine/actions.js#doPlay 的事件收尾段；
 // 卡面用 api.replayPlayedCode 重放刚打出的事件。没有卡面挂载时 reactionWindow 是 no-op。
 define('eventPlayed', '打出一张事件后', 'reaction', 72)
+// P7：调查阶段结束（07330a/07331a 沉睡古神的「调查阶段结束时放置毁灭」）。
+// 调用点在 src/engine/turn.js 的 runBetweenInvestigationPhases 起始处，且只在真有监听者时开窗。
+define('investigationPhaseEnds', '调查阶段结束时', 'reaction', 73)
 
 // 玩家窗口（免费触发）。engine.js 的 playerWindow(timing) 使用这批 id。
 for (const [id, label] of [

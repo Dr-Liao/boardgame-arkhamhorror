@@ -9,10 +9,72 @@
 
 import { hasTrait } from '../../engine/matcher.js'
 import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
+import { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard } from '../../engine/vehicle-state.js'
 import { ALL_CARDS } from '../cards-data.js'
 import { traitLabel } from '../trait-labels.js'
 
+export { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard }
+
+// 「如果你是本载具的司机」的读法：司机记在 mechanicState.vehicles[id].driver 上。
+export function vehicleDriverOf(state, id) {
+  return vehicleRecord(state, id)?.driver ?? null
+}
+
+// 「将本载具翻面」（07211a/b、07212a/b 的运行/熄火两面）：卡面数据的正反面在
+// cards-data 里用 linkedToCode 成对声明，翻面走引擎的普通物理面入口，只换印刷特征、
+// 不动实例 id / 乘客 / 位置。载具运行状态与当前面同步（运行面 = running true）。
+export function flipVehicleFace(state, api, vehicleId, nextCode, running) {
+  const card = vehicleCard(state, vehicleId)
+  if (!card) return false
+  api.flipAsset(card, nextCode)
+  api.mechanics.vehicles.running(vehicleId, running === true)
+  return true
+}
+
+// 「你在这辆载具上」的读法：先按 mechanicState 找乘客所在的载具 id，再取它的**物理卡**
+// （剧情支援或受控支援），卡面条件据此判断是不是某一张载具（例如「如果你在渔船上」）。
+// 卡条目不要直接读 mechanicState，也不要拿 storyAssets 里同卡号的第一张顶替。
+export function vehicleAssetOf(state, seat) {
+  const id = vehicleOf(state, seat)
+  if (!id) return null
+  const carriers = [...(state.storyAssets || []), ...(state.investigators || []).flatMap(inv => inv.assets || [])]
+  return carriers.find(asset => asset?.id === id) || null
+}
+
 export { hasTrait, ALL_CARDS }
+
+// --- 道路危害模板（07204a–07210 共用的前半句） ---------------------------------
+// 印刷：「强制 - 在有载具离开本地点时：该载具上每有一位调查员，该地点的调查员必须共同花费
+//        <N> 个线索…（每个载具每场游戏仅限一次。）」
+// 流程固定为三步，卡牌只写「差额怎么结算」：
+//   1. 取乘客快照（车是空的就不触发，也不消耗每场一次的记账）；
+//   2. `api.roadHazardOnce` 记账（括号条款）；
+//   3. `api.payGroupClues(required, { allowShort: true })` 能付多少付多少，返回差额。
+// 返回 null 表示这次不结算（已触发过）；否则 { aboard, required, paid, shortfall }。
+export function roadHazardCharge(state, location, event, api, perInvestigator = 1) {
+  const aboard = (event?.seats || []).filter(seat => {
+    const inv = state.investigators[seat]
+    return inv && !inv.defeated && !inv.resigned
+  })
+  if (!aboard.length) return { aboard, required: 0, paid: 0, shortfall: 0 }
+  if (!api.roadHazardOnce?.(location.id, event.vehicleId)) return null
+  const required = aboard.length * (Number(perInvestigator) || 1)
+  const result = api.payGroupClues?.(required, { atLocation: location.id, allowShort: true }) || { paid: 0, shortfall: required }
+  return { aboard, required, paid: Number(result.paid) || 0, shortfall: Number(result.shortfall) || 0 }
+}
+
+// 「该载具上的一位调查员」：由领队选一位乘客（只有一位时直接返回）。
+export function roadHazardSufferer(state, api, aboard, prompt) {
+  if (aboard.length === 1) return aboard[0]
+  const answer = api.choice({
+    kind: 'investigator', source: 'road-hazard',
+    seat: state.campaign?.leadSeat ?? aboard[0],
+    prompt,
+    options: aboard.map(seat => ({ id: String(seat), label: state.investigators[seat].name })),
+  })
+  const seat = Number(answer)
+  return Number.isInteger(seat) ? seat : aboard[0]
+}
 
 // 「你检定失败且每低于难度 1 点」的唯一读法：难度优先取本次检定的实际难度（含难度修正），
 // 检定的 result 没带 difficulty 时（老测试桩 / 部分外部调用）回落到卡面声明的难度。
@@ -312,6 +374,34 @@ export function chooseCandidateEntry(api, request, candidates, { key, label, car
     })),
   })
   return candidates.find(candidate => keyOf(candidate) === answer) || candidates[0]
+}
+
+// 「查找遭遇牌库和弃牌堆里的一个符合条件的敌人，生成、交战并洗回牌库」的统一写法
+// （07090 深潜者来袭）。候选过滤由调用方给出（特性、能否进入当前地点）；取出与洗牌都走
+// runtime 原语（`takeEncounterCard` / `spawn` / `shuffleEncounterDeck`），卡面不写 state。
+export function searchEncounterEnemyAndSpawn(state, api, { seat, locationId, matches, prompt, source, engageSeat = seat }) {
+  const candidates = []
+  for (const pile of ['encounterDeck', 'encounterDiscard']) {
+    const list = pile === 'encounterDeck' ? state.encounterDeck : state.encounterDiscard
+    if (!Array.isArray(list)) continue
+    // 牌库是 push/pop 栈：从顶部（末尾）往底部找，重复副本按顶先取。
+    for (let offset = 1; offset <= list.length; offset++) {
+      const index = list.length - offset
+      const code = list[index]
+      if (matches(code)) candidates.push({ code, index, pile })
+    }
+  }
+  if (!candidates.length) return null
+  const chosen = chooseCandidateEntry(api, { kind: 'card', source, seat, prompt }, candidates, {
+    key: match => `${match.pile}:${match.index}`,
+    cardCode: match => match.code,
+    label: match => ALL_CARDS[match.code]?.nameZh || ALL_CARDS[match.code]?.name || match.code,
+  })
+  if (!chosen || !api.takeEncounterCard(chosen.code, { pile: chosen.pile })) return null
+  const enemy = api.spawn(chosen.code, locationId)
+  api.shuffleEncounterDeck()
+  if (enemy && engageSeat != null) api.engageAtInvestigator(enemy, engageSeat)
+  return enemy
 }
 
 export function spawnTraitEnemyAtVillage(state, loc, api, trait) {
@@ -673,8 +763,10 @@ export function putRevealedPrintedLocation(state, inv, card, api) {
 
 // Read-only mechanic queries available to individual encounter entries.
 export { keysAt, keysHeldAtLocation, keysHeldByGroup } from '../../engine/scenario-keys.js'
+import { keysAt } from '../../engine/scenario-keys.js'
 export { barrierEdges, barrierCount, canPlaceBarrier } from '../../engine/edge-barriers.js'
 export { effectiveFloodLevel, floodLevel } from '../../engine/flood.js'
+import { effectiveFloodLevel } from '../../engine/flood.js'
 export { locationLookCandidates } from '../../engine/location-look.js'
 export { payablePoolTokens } from '../../engine/chaos-token-pool.js'
 export { gridPosition, gridLocations } from '../../engine/grid-map.js'
@@ -756,6 +848,137 @@ export function defeatedSuspectAgendaAbility({ isKidnapper, recordValue, recordK
       api.enemyOutcomes.takeClues(context, inv.seat, 'all')
       api.recordSets.add(recordKey, recordValue(state, context.enemy))
     },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 印斯茅斯「深陷其中」的四张压迫议程（07124–07127）
+//
+// 四张卡的印刷正文只差最后一句，共同规则写一次：
+//   「每个[[嫌犯]]敌人失去冷漠，并且不能与之谈判。
+//     强制 - 在你回合结束时，如果你位于完全淹没的地点：受到1点伤害[和1点恐惧][，并随机弃掉N张手牌]。」
+// 读点：
+//   · `loses:aloof` / `cannot:parley` 是实体规则目标，写在议程上由 entityRuleActive 读 scene 行
+//     （条件用 hasTrait 收窄到 [[嫌犯]]）；冷漠的最终判定在 enemy-aloof 的 enemyIsAloof。
+//   · 「完全淹没」= 有效淹没等级 ≥ 2（flood.js 的 FLOOD_LEVELS.full）；载具内的保护由
+//     effectiveFloodLevel 自己算（渔船在完全淹没地点也算未淹没）。
+//   · 回合结束窗口 turnEnded 的上下文带 seat：正好是「你的回合结束时」。
+export function floodedTurnEndAgenda({ code, label, horror = 0, discard = 0 }) {
+  const suspect = { when: ({ state, entity }) => (state.enemies || []).includes(entity) && hasTrait(entity, 'Suspect') }
+  return {
+    code, scope: 'agenda', implemented: true,
+    modifiers: [
+      { target: 'loses:aloof', condition: suspect },
+      { target: 'cannot:parley', condition: suspect },
+    ],
+    abilities: [{
+      kind: 'forced', trigger: 'turnEnded', label,
+      criteria: ({ state, inv, context }) => Boolean(inv) && context?.seat === inv.seat
+        && effectiveFloodLevel(state, inv.seat) >= 2,
+      resolve: ({ inv, api }) => {
+        api.damage(inv.seat, 1)
+        if (horror) api.horror(inv.seat, horror)
+        if (discard) api.discardRandomFromHand(inv.seat, discard)
+      },
+    }],
+  }
+}
+
+
+// ---------------------------------------------------------------------------
+// 印斯茅斯「进入漩涡」的两组沉睡古神（07330a/07331a、07330b/07331b）
+//
+// 每组的印刷正文逐字相同，只有名字、巢穴与子嗣卡号不同（达贡/海德拉）。按「同句规则只写
+// 一次」的口径，两张卡共用这里的工厂，条目文件只声明卡号与归属数据。
+// ---------------------------------------------------------------------------
+
+const locationOriginalOf = (state, enemy) => {
+  const location = (state.locations || []).find(entry => entry.id === enemy?.location)
+  return location ? String(location.originalCode || location.code) : null
+}
+
+// 「每有一个[[圣堂]]地点上有钥匙」：同一地点有多把钥匙也只算一次。
+const keyedSanctumCount = state => (state.locations || []).filter(location =>
+  hasTrait(location, 'Sanctum') && keysAt(state, `location:${location.id}`).length > 0).length
+
+// 沉睡面（07330a/07331a）：
+//   「X is slumbering. She cannot attack or engage, and is immune to investigator actions and
+//     player card effects.
+//     Forced - At the end of the investigation phase, if an investigator is in <巢穴> and X is
+//     ready: Place 1 doom on her.
+//     [action]: Test [willpower](4). If you succeed, either exhaust X or remove 1 doom from her.
+//     If you fail by 3 or more, place 1 doom on her.」
+//
+// 免疫/不能攻击/不能交战全部由 effect-provenance 统一执行；本工厂只声明这张卡自己的能力。
+// 「自己的印刷行动」不受免疫影响：它由敌人自己的条目给出，来源是遭遇卡而不是玩家卡。
+export function slumberingAncientOneEntry({ code, lairCode, actionLabel }) {
+  return {
+    code, scope: 'enemy', implemented: true,
+    enemyRule: { slumbering: true },
+    abilities: [{
+      kind: 'forced', trigger: 'investigationPhaseEnds',
+      label: '调查阶段结束时：若有调查员在巢穴且她处于重整，在她身上放置1个毁灭',
+      criteria: ({ state, source }) => source.exhausted !== true
+        && locationOriginalOf(state, source) === lairCode
+        && activeInvestigators(state).some(inv => inv.location === source.location),
+      resolve: ({ source, api }) => { api.placeDoomOnCard(source, 1) },
+    }, {
+      kind: 'action', actionKind: 'activate', label: actionLabel,
+      resolve: ({ inv, source, api }) => {
+        api.test(inv.seat, 'willpower', 4, {
+          source: { type: 'scenario', action: 'activate', code, name: source.name, ability: true },
+          target: { kind: 'enemy', id: source.id }, actionKind: 'activate',
+          resolve: result => {
+            if (result.success) {
+              const choice = api.choice({ kind: 'effect', source: code, seat: inv.seat,
+                prompt: '检定成功：横置她，或移除她身上的1个毁灭标记？',
+                options: [{ id: 'exhaust', label: '横置她' }, { id: 'doom', label: '移除1个毁灭标记' }] })
+              if (choice === 'doom') api.removeDoomFromCard(source, 1)
+              else api.exhaust(source)
+            } else if (failedBy(result, 4) >= 3) {
+              api.placeDoomOnCard(source, 1)
+            }
+          },
+        })
+      },
+    }],
+  }
+}
+
+// 觉醒面（07330b/07331b）：
+//   「Hunter. Massive. Retaliate.（印刷关键词由关卡遭遇定义提供）
+//     X gets -1 fight for each [[Sanctum]] location with a key on it.
+//     Forced - After X is evaded or dealt damage: Do the same to a copy of X's Brood in play, as well.」
+//
+// 「相同的操作」按实际发生的事件分派：受到伤害 → 对同一张子嗣造成同量伤害（沿用同一来源，
+// 便于「只受某来源伤害」这类规则照常判定）；被躲避 → 同样躲避那张子嗣。
+// 子嗣不在场时整条强制不结算（criteria 先挡掉，避免空选择）。
+export function awakenedAncientOneEntry({ code, broodCode, mirrorLabel }) {
+  const broodOf = state => (state.enemies || []).filter(enemy =>
+    (enemy.originalCode || enemy.code) === broodCode && !enemy.defeated && !enemy.removedFromGame)
+  const pickBrood = (state, list, api, seat) => list.length === 1 ? list[0] : list.find(enemy =>
+    enemy.id === api.choose({ kind: 'effect', source: code, seat,
+      prompt: '选择要执行相同操作的子嗣。', options: list.map(enemy => ({ id: enemy.id, label: enemy.name })) })) || list[0]
+  return {
+    code, scope: 'enemy', implemented: true,
+    modifiers: [{ target: 'enemyFight', amount: ({ state }) => -keyedSanctumCount(state) }],
+    abilities: [{
+      kind: 'forced', trigger: ['evadeSuccess', 'enemyDamaged'], label: mirrorLabel,
+      limit: { scope: 'perWindow', owner: 'instance' },
+      criteria: ({ state, source, context }) => context?.enemy?.id === source.id && broodOf(state).length > 0
+        && (context.when !== 'enemyDamaged' || Number(context.amount) > 0),
+      resolve: ({ state, context, api }) => {
+        const list = broodOf(state)
+        if (!list.length) return
+        if (context.when === 'enemyDamaged') {
+          const target = pickBrood(state, list, api, context.seat ?? state.currentSeat)
+          api.damageEnemy(target, Number(context.amount), context.seat ?? null,
+            context.source == null ? null : String(context.source))
+        } else {
+          api.autoEvadeEnemy(pickBrood(state, list, api, context.seat ?? state.currentSeat))
+        }
+      },
+    }],
   }
 }
 

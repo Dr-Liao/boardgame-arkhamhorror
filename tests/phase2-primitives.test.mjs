@@ -174,7 +174,9 @@ test('C1 引擎接线：ignore:retaliate / ignore:alert / ignore:opportunityAtta
 // ---------------------------------------------------------------------------
 
 test('C2 校验与读点：add:* 需要 value，授予只作用于来源卡自己', () => {
-  assert.deepEqual([...GRANT_TARGETS], ['add:trait', 'add:keyword', 'add:slot', 'add:skillIcon'])
+  // add:investigatorTrait 是「授予控制者本人」的第五种授予（07106 深潜者特性），
+  // 与 add:trait（这张卡自己）分开；读点见 stats#investigatorTraits。
+  assert.deepEqual([...GRANT_TARGETS], ['add:trait', 'add:keyword', 'add:slot', 'add:skillIcon', 'add:investigatorTrait'])
   assert.throws(() => normalizeModifier({ target: 'add:trait' }), /必须声明 value/)
   const s = fixture()
   const inv = s.investigators[0]

@@ -93,10 +93,13 @@ export function createMechanicsApi(state, deps = {}) {
     },
     vehicles: {
       register: (id, spec) => vehicles.registerVehicle(state, id, spec), of: seat => vehicles.vehicleOf(state, seat),
+      passengers: id => vehicles.vehiclePassengers(state, id), record: id => vehicles.vehicleRecord(state, id),
       accessError: (seat, id, entering) => vehicles.vehicleAccessError(state, seat, id, entering),
       enter: (seat, id, options) => vehicles.enterVehicle(state, seat, id, options), leave: (seat, id, options) => vehicles.leaveVehicle(state, seat, id, options),
       setDriver: (id, seat) => vehicles.setVehicleDriver(state, id, seat),
       running: (id, running) => vehicles.setVehicleRunning(state, id, running),
+      // 07210 蜿蜒长路：「该载具不能离开本地点，直到下一轮结束」的写入口（读点在 moveVehicle）。
+      lockUntil: (id, round) => vehicles.lockVehicleUntilRound(state, id, round),
       move: (id, destination) => vehicles.moveVehicle(state, id, destination, deps), remove: id => vehicles.removeVehicle(state, id),
     },
     map: {

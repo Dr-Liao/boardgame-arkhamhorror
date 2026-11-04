@@ -323,6 +323,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'grantsHidingSpot',
   // Phase 5（5a-27）：附属触发型（埋伏 / 陷阱）。
   'ambushAttachment', 'discardWhenNoInvestigator', 'spawnChoices', 'charlesRoss', 'handSlotsPenaltyWhileInvestigating', 'spawnFarthestFromAll',
+  'spawnMostClues', 'spawnRearmost',
   'detachAction', 'spawnAncientFirst', 'darkPactForced', 'replacementCode',
   'bonusVsVictoryCombat', 'bonusVsVengeanceAgility',
   'snareAttachment',
@@ -666,10 +667,72 @@ export function registerCardAbilities(entries) {
     }
     if(entry.actRule?.keyClaimBlockedTraits!=null&&(!Array.isArray(entry.actRule.keyClaimBlockedTraits)||entry.actRule.keyClaimBlockedTraits.some(trait=>typeof trait!=='string'||!trait)))throw new TypeError('Invalid key claim trait restriction')
     if (entry.actRule?.objective != null && !['function', 'object'].includes(typeof entry.actRule.objective)) throw new TypeError('Invalid printed act objective')
+    // 步行额外行动费用（07164/07165/07166 的「在[[海洋]]地点间移动」，07199–07201 的「任何移动」）：
+    // 读点是 turn-flow.js 的 movementActionSurcharge（基础移动行动加费，载具上不付）。
+    for (const rule of [entry.actRule?.movementActionSurcharge, entry.agendaRule?.movementActionSurcharge]) {
+      if (rule == null) continue
+      if (typeof rule === 'number') {
+        if (!Number.isSafeInteger(rule) || rule < 1) throw new TypeError('Invalid walking surcharge')
+        continue
+      }
+      if (typeof rule !== 'object' || Array.isArray(rule)) throw new TypeError('Invalid walking surcharge')
+      assertKnownKeys(rule, new Set(['amount', 'betweenTraits']), 'movementActionSurcharge')
+      if (!Number.isSafeInteger(rule.amount) || rule.amount < 1) throw new TypeError('Invalid walking surcharge amount')
+      if (rule.betweenTraits != null && (!Array.isArray(rule.betweenTraits) || !rule.betweenTraits.length
+        || rule.betweenTraits.some(trait => typeof trait !== 'string' || !trait))) throw new TypeError('Invalid walking surcharge traits')
+    }
     if (entry.locationRule?.objective != null && typeof entry.locationRule.objective !== 'function') throw new TypeError('Invalid printed location objective')
     if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
     // 沉睡：读点是 effect-provenance 的 enemyEffectAllowed（伤害/交战/攻击/躲避一律先问它）。
     if(entry.enemyRule?.slumbering!=null && typeof entry.enemyRule.slumbering!=='boolean')throw new TypeError('Invalid slumbering rule')
+    // 连续条件的冷漠：读点是 enemy-aloof 的 enemyIsAloof（07086「有调查员没有手牌时失去冷漠」）。
+    if (entry.enemyRule?.losesAloofWhen != null && typeof entry.enemyRule.losesAloofWhen !== 'function') throw new TypeError('Invalid aloof condition reader')
+    // 「与你交战期间你不能做 X」的敌方持续限制（07183「不能进入载具或获得资源」）：
+    // 读点是 enemy-entry.js 的 enemyEngagedRestricts（载具进入与资源获得两处）。
+    if (entry.enemyRule?.engagedRestrictions != null) {
+      if (!Array.isArray(entry.enemyRule.engagedRestrictions) || !entry.enemyRule.engagedRestrictions.length
+        || entry.enemyRule.engagedRestrictions.some(value => !['enterVehicle', 'gainResources'].includes(value))) {
+        throw new TypeError('Invalid engaged restriction')
+      }
+    }
+    // 「你不能进入载具」的威胁区声明（07188 拖入水底）：读点是 vehicles.js 的 vehicleAccessError。
+    if (entry.treacheryRule?.forbidsVehicles != null && typeof entry.treacheryRule.forbidsVehicles !== 'boolean') {
+      throw new TypeError('Invalid vehicle restriction')
+    }
+    // 「不能进入[[洞穴]]地点」（07164b/07165b）：读点 enemy-entry.js#enemyCanEnterLocation。
+    if (entry.enemyRule?.cannotEnterTraits != null) {
+      const traits = entry.enemyRule.cannotEnterTraits
+      if (!Array.isArray(traits) || !traits.length || traits.some(trait => typeof trait !== 'string' || !trait)) {
+        throw new TypeError('Invalid cannot-enter traits')
+      }
+    }
+    // 「生成 - 最后方的地点」（07213/07214）：读点在 enemies.js#spawnEnemy（与 spawnMostClues 同段）。
+    if (entry.spawnRearmost != null && typeof entry.spawnRearmost !== 'boolean') throw new TypeError('Invalid rearmost spawn flag')
+    // 「本次攻击造成 +N 伤害」（07213）：读点在 enemies.js#enemyAttack。
+    if (entry.enemyRule?.attackDamageBonus != null) {
+      const bonus = entry.enemyRule.attackDamageBonus
+      if (typeof bonus !== 'object' || Array.isArray(bonus) || !Number.isFinite(Number(bonus.amount)) || Number(bonus.amount) < 1) {
+        throw new TypeError('Invalid attack damage bonus')
+      }
+      if (bonus.unlessTargetInVehicle != null && typeof bonus.unlessTargetInVehicle !== 'boolean') {
+        throw new TypeError('Invalid attack damage bonus condition')
+      }
+    }
+    if (entry.assetRule?.vehicleAccessLocked != null && typeof entry.assetRule.vehicleAccessLocked !== 'boolean') {
+      throw new TypeError('Invalid vehicle access lock')
+    }
+    // 攻击来源特性减伤（07094「除[[远程]]/[[枪械]]/[[法术]]外每次攻击伤害 -1，最低 1」）：
+    // 读点在 combat.js 的攻击伤害段，与既有 damageReductionWhileExhausted 同一位置。
+    if (entry.enemyRule?.damageReductionExceptSourceTraits != null) {
+      const rule = entry.enemyRule.damageReductionExceptSourceTraits
+      if (typeof rule !== 'object' || Array.isArray(rule)) throw new TypeError('Invalid attack source damage reduction')
+      assertKnownKeys(rule, new Set(['amount', 'minimum', 'traits']), 'enemyRule.damageReductionExceptSourceTraits')
+      if (!Number.isSafeInteger(rule.amount) || rule.amount < 1) throw new TypeError('Invalid attack source damage reduction amount')
+      if (rule.minimum != null && (!Number.isSafeInteger(rule.minimum) || rule.minimum < 0)) throw new TypeError('Invalid attack source damage reduction minimum')
+      if (!Array.isArray(rule.traits) || !rule.traits.length || rule.traits.some(trait => typeof trait !== 'string' || !trait)) {
+        throw new TypeError('Invalid attack source damage reduction traits')
+      }
+    }
     if (entry.enemyRule?.revelationSpawn != null) {
       const rule = entry.enemyRule.revelationSpawn
       assertKnownKeys(rule, new Set(['locationOriginalCodes', 'farthestOfCodes', 'cluesPerInvestigator']), 'enemyRule.revelationSpawn')
@@ -807,6 +870,10 @@ export function registerCardAbilities(entries) {
       charlesRoss: entry.charlesRoss === true,
       handSlotsPenaltyWhileInvestigating: entry.handSlotsPenaltyWhileInvestigating === true,
       spawnFarthestFromAll: entry.spawnFarthestFromAll === true,
+      // 07105「生成 - 线索最多的地点」：读点在 enemies.js#spawnEnemy（与 spawnFarthestFromAll 同段）。
+      spawnMostClues: entry.spawnMostClues === true,
+      // 07213/07214「生成 - 最后方的地点」：读点同在 enemies.js#spawnEnemy。
+      spawnRearmost: entry.spawnRearmost === true,
       detachAction: entry.detachAction === true,
       spawnAncientFirst: entry.spawnAncientFirst === true,
       darkPactForced: entry.darkPactForced === true,

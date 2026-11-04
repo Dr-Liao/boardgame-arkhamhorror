@@ -20,6 +20,11 @@ export function createDescribeState(deps) {
     // commonDeps 里，描述层只多做一次投影，不新增装配。
     cardDef,
     enemyTextBlanked,
+    // 「冷漠」的有效读点（印刷正文里的连续条件，例如 07086 失去冷漠）由引擎注入，
+    // 描述层不自己判断卡面规则。
+    enemyIsAloof,
+    // 调查员有效特性（含威胁区卡授予的），见 stats.js#investigatorTraits。
+    investigatorTraits,
     agendaDoom,
     scenarioBehavior,
     locLabel,
@@ -168,6 +173,10 @@ export function createDescribeState(deps) {
       ` 生命 ${getMaxHealth(inv) - inv.damage}/${getMaxHealth(inv)} 理智 ${getMaxSanity(inv) - inv.horror}/${getMaxSanity(inv)}` +
       ` 资源 ${inv.resources} 行动 ${inv.actionsLeft}${alive ? '' : '（' + participation.statusLabel + '）'}${mark}`)
     lines.push(`  属性：意志${getStat(state, inv, 'willpower')} 智识${getStat(state, inv, 'intellect')} 战斗${getStat(state, inv, 'combat')} 敏捷${getStat(state, inv, 'agility')}`)
+    // 调查员有效特性（卡面 + 运行期 + 威胁区卡授予，例如 07106 的[[深潜者]]）：
+    // 特性会影响「每个[[深潜者]]敌人…」这类规则判定，AI 必须看得到。
+    const traits = investigatorTraits ? investigatorTraits(state, inv) : []
+    if (traits.length) lines.push(`  特性：${traits.join('/')}`)
     lines.push(`  线索 ${inv.clues}；手牌(${inv.hand.length})：${inv.seat === observerSeat ? inv.hand.map((c) => cardName(c)).join('、') || '（空）' : '（隐藏）'}`)
     if (inv.assets.length) {
       lines.push(`  资产：${inv.assets.map((a) => {
@@ -218,7 +227,7 @@ export function createDescribeState(deps) {
     for (const e of state.enemies) {
       const eng = e.massive ? '与所在地点所有人交战' : (e.engagedSeat != null ? state.investigators[e.engagedSeat]?.name : '无')
       const kw = [e.hunter && '猎手', e.retaliate && '反击', e.alert && '警戒', e.elite && '精英', e.massive && '庞大',
-        e.aloof && '冷漠'].filter(Boolean).join(' ')
+        enemyIsAloof(state, e) && '冷漠'].filter(Boolean).join(' ')
       const intent = [
         e.hunter && '会主动向最近调查员移动',
         e.prey && ('猎物「' + describePrey(e.prey) + '」'),

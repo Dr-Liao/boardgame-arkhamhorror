@@ -31,6 +31,7 @@ import { notePromiseEvent } from './turn-promises.js'
 
 import { randomUUID } from 'node:crypto'
 import { createTurnFlow } from './turn-flow.js'
+import { dispatchVehicleEvent } from './road-hazards.js'
 import { createHiddenRules } from './hidden-rules.js'
 import { createCardDefs } from './card-defs.js'
 import { createCardOps } from './card-ops.js'
@@ -157,7 +158,9 @@ const SELECTABLE_INVESTIGATORS = SELECTABLE_INVESTIGATOR_CODES
 setModifierRegistry(registeredEntry)
 setTargetHooks({ enemyHealth: (...args) => enemyHealth(...args), enemyEvade: (state, enemy, seat) => enemyEvadeValue(state, enemy, state.investigators[seat]),
   canDamageEnemy: (state, enemy, seat, source) => canDamageEnemy(state, enemy, seat, source),
-  canMoveTo: (state, seat, id) => canMoveTo(state, seat, id) })
+  canMoveTo: (state, seat, id) => canMoveTo(state, seat, id),
+  // 沉睡目标的合法性过滤（targets.js）：候选卡面类型 + 沉睡判定都走引擎同一份读点。
+  cardDef, entryOf: registeredEntry, enemyBlanked: enemyTextBlanked })
 setModifierHooks({
   maxSanity: getMaxSanity,
   // 与 assetEffect 的空白判定保持一致：文本空白时被动与声明式修正都不生效。
@@ -177,6 +180,8 @@ setModifierHooks({
   activeEffects: state => effectModifiers(state),
   // 弱点数据走生命周期读点（描述子优先），威胁区的被动修正因此也能读到。
   weaknessProfile: code => weaknessProfile(code),
+  // 沉睡目标的修正行过滤要按这一行自己的来源分类（modifiers.js 不 import card-lookup）。
+  cardDef,
 })
 // 能力层内容注册（src/cards/card-abilities.js）：描述子、修正、旧印效果。
 // 注册是幂等的"谁先加载谁注册"：审计工具（tools/audit-abilities.mjs）在单进程测试里
@@ -394,6 +399,7 @@ import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
 import { createHub } from './hub.js'
 import { enemyEffectAllowed, scopedScenarioBehavior } from './effect-provenance.js'
+import { enemyIsAloof } from './enemy-aloof.js'
 
 // Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
 // 外部模块的 import 路径保持不变。
@@ -670,7 +676,9 @@ function engagesAutomatically(state, enemy, options={}) {
   // 沉睡（enemyRule.slumbering）的敌人印着「不能与调查员交战」：连自动交战也不发生，
   // 不论当前效果来源；换到清醒面后这条立刻失效（读当前印刷面）。
   if (!enemyEffectAllowed(state, enemy, 'autoEngage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
-  return !enemy.hostId && !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy)) && (!enemy.aloof || enemyTextBlanked(state, enemy) || options.ignoreAloofFor===enemy.id)
+  // 冷漠读点是 enemyIsAloof：印刷正文里的连续条件（07086）在这里求值，不写入实例。
+  return !enemy.hostId && !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy))
+    && (!enemyIsAloof(state, enemy, { isBlanked: enemyTextBlanked }) || options.ignoreAloofFor===enemy.id)
 }
 
 function autoEngageAt(state, locationId, events = [], options={}) {
@@ -1307,6 +1315,9 @@ const apiMiscDeps = { ...commonDeps,
   createEffect,
   doResign,
   effectiveTraits,
+  // 调查员有效特性（卡面 + inv.traits + 声明式授予），给威胁区卡/描述层用。
+  investigatorTraits,
+  investigatorHasTrait,
   failedTestResolves,
   getHandSize,
   handSize,
@@ -1328,6 +1339,35 @@ const apiMiscDeps = { ...commonDeps,
   playCardFromOtherHandForced: (...args) => playCardFromOtherHandForced(...args), }
 
 function abilityApi(state, events) {
+  // 机制面（载具/水位/钥匙/地图/障碍…）在能力面与场景运行时共用同一份实例：
+  // 能力面把它摊平到顶层（历史写法 `api.vehicles` 等），同时挂到 `api.mechanics`，
+  // 让同一段结算里的两种入口看到同一份状态视图。
+  const mechanicsApi = createMechanicsApi(state, {
+    enemyZones: enemyZoneApi(state, events),
+    choice: spec => requestChoice(state, spec), cardName,
+    drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
+    cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
+    floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
+    sealedChanged: () => abilityApi(state, events).resolveEmptyUses(),
+    directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
+    moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
+    vehicleLeft: event => dispatchVehicleEvent(state, 'left', event, () => scenarioRuntime(state, events)),
+    vehicleEntered: event => dispatchVehicleEvent(state, 'entered', event, () => scenarioRuntime(state, events)),
+    entryError: (seat, destination) => investigatorEntryError(state, destination, seat)
+      || movementError(state, state.investigators[seat], destination, { vehicle: true }),
+    placeLocation: id => { scenarioRuntime(state, events).place(id); return state.locations.some(loc => loc.id === id) ? id : null },
+    canCommitOrigin: (seat, code) => {
+      const draft = structuredClone(state), count = draft.skillTest?.committed.length || 0
+      draft.investigators[seat].hand.push(code)
+      createTestApi(draft, [], apiTestDeps).commitCards(seat, [code])
+      return (draft.skillTest?.committed.length || 0) > count
+    },
+    commit: (seat, code, options) => {
+      const count = state.skillTest?.committed.length || 0
+      createTestApi(state, events, apiTestDeps).commitCards(seat, [code], options)
+      return state.skillTest?.committed.length > count ? state.skillTest.committed.at(-1) : null
+    },
+  })
   return wrapInvestigatorEffects(state, {
     ...createPlayerApi(state, events, {
       canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code)).length > 0,
@@ -1362,30 +1402,10 @@ function abilityApi(state, events) {
     enemyOutcomes:enemyOutcomePublicApi(state,events),
     enemyZones:enemyZoneApi(state,events),
     ...createCardApi(state, events, apiDeps),
-    ...createMechanicsApi(state, {
-      enemyZones:enemyZoneApi(state,events),
-      choice: spec => requestChoice(state, spec), cardName,
-      drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
-      cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
-      floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
-      sealedChanged: () => abilityApi(state, events).resolveEmptyUses(),
-      directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
-      moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
-      entryError: (seat, destination) => investigatorEntryError(state, destination, seat)
-        || movementError(state, state.investigators[seat], destination, { vehicle: true }),
-      placeLocation: id => { scenarioRuntime(state, events).place(id); return state.locations.some(loc => loc.id === id) ? id : null },
-      canCommitOrigin: (seat, code) => {
-        const draft = structuredClone(state), count = draft.skillTest?.committed.length || 0
-        draft.investigators[seat].hand.push(code)
-        createTestApi(draft, [], apiTestDeps).commitCards(seat, [code])
-        return (draft.skillTest?.committed.length || 0) > count
-      },
-      commit: (seat, code, options) => {
-        const count = state.skillTest?.committed.length || 0
-        createTestApi(state, events, apiTestDeps).commitCards(seat, [code], options)
-        return state.skillTest?.committed.length > count ? state.skillTest.committed.at(-1) : null
-      },
-    }),
+    ...mechanicsApi,
+    // 与场景运行时的形状对齐：`api.mechanics.vehicles` / `api.mechanics.water` 在能力面也能用。
+    // 两个 api 面共用**同一个**实例，避免同一段结算里出现两份载具/水位状态视图。
+    mechanics: mechanicsApi,
   })
 }
 
@@ -1708,6 +1728,8 @@ const describeApi = createDescribeState({
   actingSeats,
   legalMoves,
   actObjectiveContext,
+  enemyIsAloof,
+  investigatorTraits,
   totalDoom,
   agendaDoom,
   investigatorParticipation,
@@ -2903,7 +2925,8 @@ export function getStat(...args) { return createStatsApi().getStat(...args) } ex
 export function extraActionBonus(...args) { return createStatsApi().extraActionBonus(...args) } export function exploreOnlyActionBonus(...args) { return createStatsApi().exploreOnlyActionBonus(...args) } export function normalActionsLeft(...args) { return createStatsApi().normalActionsLeft(...args) }
 export function investigateBonus(...args) { return createStatsApi().investigateBonus(...args) } export function handSize(...args) { return createStatsApi().handSize(...args) } export function getHandSize(...args) { return createStatsApi().getHandSize(...args) }
 export function cardPlayFlag(...args) { return createStatsApi().cardPlayFlag(...args) } export function iconValue(...args) { return createStatsApi().iconValue(...args) } export function effectiveTraits(...args) { return createStatsApi().effectiveTraits(...args) }
-export function cardHasTrait(...args) { return createStatsApi().cardHasTrait(...args) } export function cardKeyword(...args) { return createStatsApi().cardKeyword(...args) } export function commitIcons(...args) { return createStatsApi().commitIcons(...args) }
+export function cardHasTrait(...args) { return createStatsApi().cardHasTrait(...args) } export function cardKeyword(...args) { return createStatsApi().cardKeyword(...args) }
+export function investigatorTraits(...args) { return createStatsApi().investigatorTraits(...args) } export function investigatorHasTrait(...args) { return createStatsApi().investigatorHasTrait(...args) } export function commitIcons(...args) { return createStatsApi().commitIcons(...args) }
 export function enemyStatMods(...args) { return createStatsApi().enemyStatMods(...args) }
 
 

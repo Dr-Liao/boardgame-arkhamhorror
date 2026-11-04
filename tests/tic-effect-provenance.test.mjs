@@ -13,7 +13,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, enemy, legalMoves, validateMove } from './core-fixture.mjs'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
-import { executeDescriptor, scenarioRuntime } from '../src/engine/engine.js'
+import { executeDescriptor, enemyFightValue, enemyHealth, scenarioRuntime } from '../src/engine/engine.js'
+import { enumerateTargets } from '../src/engine/targets.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import {
   cardEffectSource, currentEffectSource, effectSourceKindOfType, enemyEffectAllowed, enemyIsSlumbering,
@@ -268,4 +269,52 @@ test('provenance 不写 state：存档往返不出现来源字段', () => {
   const restored = JSON.parse(JSON.stringify(state))
   assert.equal(JSON.stringify(restored).includes('effectSource'), false)
   assert.equal(currentEffectSource(restored), null)
+})
+
+// 沉睡目标的「typed target」过滤：玩家卡来源的敌人类目标在合法性阶段就看不到沉睡敌人；
+// 遭遇/剧本来源（地点印刷能力）仍然看得到，具体操作由 canDamageEnemy 等谓词逐项把关。
+test('typed target：玩家卡来源的敌人类目标过滤沉睡敌人，遭遇来源不过滤', () => {
+  const state = chapterFixture('theLairOfDagon')
+  const sleeper = enemy(state, { code: '07292a', health: 99, engagedSeat: null })
+  const ghoul = enemy(state, { code: '01101', health: 9, engagedSeat: null })
+  ghoul.location = sleeper.location
+  const inv = state.investigators[0]
+  inv.assets = []; inv.threat = []
+  const target = { kind: 'enemy' }
+  // 玩家卡（01016 支援）作来源：沉睡的达贡不在候选里，普通敌人仍在。
+  const player = enumerateTargets(state, inv, target, { source: { code: '01016' } })
+  assert.equal(player.some(candidate => candidate.id === sleeper.id), false)
+  assert.equal(player.some(candidate => candidate.id === ghoul.id), true)
+  // 地点（遭遇卡）作来源：沉睡的达贡仍是合法候选（圣堂的印刷自动躲避要能选中它）。
+  const phase = state.locations.find(location => location.id === sleeper.location)
+  const encounter = enumerateTargets(state, inv, target, { source: phase })
+  assert.equal(encounter.some(candidate => candidate.id === sleeper.id), true)
+  // 显式 effectSource 优先于卡面类型（嵌套结算把真实来源带下来时按它判定）。
+  const nested = enumerateTargets(state, inv, target, { source: { code: '07324', effectSource: { kind: 'playerCard' } } })
+  assert.equal(nested.some(candidate => candidate.id === sleeper.id), false)
+})
+
+// 沉睡目标的持久修正行读点：数值行与布尔行都按「这一行自己的来源」过滤，
+// 遭遇/地点/幕行照常；行上没有来源时对沉睡目标 fail-closed。
+test('持久修正行：沉睡目标只接受非玩家来源的行，运行期修正同样过滤', () => {
+  const state = fixture('01001')
+  const sleeper = enemy(state, { code: '07292a', fight: 2, evade: 2, health: 10, engagedSeat: null })
+  const plain = enemy(state, { code: '01101', fight: 2, evade: 2, health: 10, engagedSeat: null })
+  // ① 运行期数值修正：行上没有来源 → 沉睡目标 fail-closed，普通敌人照常。
+  sleeper.statMods = [{ fight: 3 }]
+  plain.statMods = [{ fight: 3 }]
+  assert.equal(enemyFightValue(state, plain, state.investigators[0]), 5)
+  assert.equal(enemyFightValue(state, sleeper, state.investigators[0]), 2)
+  // ② 场景来源的行仍然生效（沉睡古神的「印刷数值被剧本修正」不能被目标免疫一并砍掉）。
+  sleeper.statMods = [{ fight: 3, effectSource: { kind: 'encounterCard', code: '07324' } }]
+  assert.equal(enemyFightValue(state, sleeper, state.investigators[0]), 5)
+  // ③ 玩家卡来源的行对沉睡目标不生效。
+  sleeper.statMods = [{ fight: 3, effectSource: { kind: 'playerCard', code: '01016' } }]
+  assert.equal(enemyFightValue(state, sleeper, state.investigators[0]), 2)
+  // ④ 地点行（03219「位于巴黎圣母院的每个敌人 -1 攻击」）是遭遇来源，沉睡目标照常结算。
+  state.locations.push({ id: 'notreDame', code: '03219', originalCode: '03219', revealed: true,
+    connections: [], clues: 0, traits: [] })
+  sleeper.statMods = []
+  sleeper.location = 'notreDame'
+  assert.equal(enemyFightValue(state, sleeper, state.investigators[0]), 1, '地点来源的修正不受沉睡免疫影响')
 })

@@ -3,6 +3,7 @@ import { enemyCanEnterLocation } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
 import { putInHand } from './hand-entry.js'
 import { hasPlayerWindow, playerWindowContext } from './player-mechanics.js'
+import { hasWindowListener } from './window-listeners.js'
 // 回合与阶段推进（神话 / 敌人 / 轮末 / 回合开始与结束）从 engine.js 拆出的模块
 // （Phase 6 · 6d-25）。
 //
@@ -540,6 +541,11 @@ function beginInvestigationPhase(state, events, repeated = false) {
 }
 
 function runBetweenInvestigationPhases(state, events) {
+  // 「调查阶段结束时」的强制能力先结算（此时还在调查阶段的收尾，敌人阶段尚未开始）。
+  // 只在真有监听者时开窗：空窗口会改变重放指纹（与神话阶段结束同一口径）。
+  if (hasWindowListener(state, 'investigationPhaseEnds')) {
+    reactionWindow(state, 'investigationPhaseEnds', { when: 'investigationPhaseEnds', round: state.round }, events)
+  }
   // 第 5 步 P6：调查阶段结束——直觉牌库顶那张没打出的牌洗回直觉牌库。
   for (const inv of aliveInvestigators(state)) hunchDeck.returnCard(state, inv, events)
   setDreamGatesAside(state, {

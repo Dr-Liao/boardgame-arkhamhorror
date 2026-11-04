@@ -9,6 +9,7 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { locationAttachmentTotal } from './location-attachments.js'
 import { afterHandDiscard } from './hand-discard-window.js'
+import { vehicleOf } from './vehicles.js'
 // turn-flow.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 调查员回合内的推进与代价：advanceInvestigator（行动/结束回合的推进）、
 // 打出费用与折扣、旧印结算、反应规格与条件评估、以及「支付/选择」的共用小函数。
@@ -194,11 +195,17 @@ export function createTurnFlow(deps) {
     }
   }
 
-  function groupPayment(state, amount, location, events) {
+  // 共同支付线索。allowShort 时**能付多少付多少**并返回 { paid, shortfall }——
+  // 道路危害模板「每有一个线索不能花费，就……」要的正是这个差额，与幕目标「付不出就推进不了」
+  // 的严格支付共用一份分摊交互。
+  function groupPayment(state, amount, location, events, { allowShort = false } = {}) {
     const payers = aliveInvestigators(state).filter(inv => canSpendClues(state, inv)).filter(inv => !location || inv.location === location)
-    if (groupClues(state, location) < amount) throw new Error('符合地点条件的共同线索不足')
-    let remaining = amount
-    for (let i = 0; remaining; i++) {
+    const available = groupClues(state, location)
+    const required = Math.max(0, Number(amount) || 0)
+    if (!allowShort && available < required) throw new Error('符合地点条件的共同线索不足')
+    const target = allowShort ? Math.min(required, available) : required
+    let remaining = target
+    for (let i = 0; remaining && payers.length; i++) {
       const inv = payers[i % payers.length]
       if (!inv.clues) continue
       const min = 1
@@ -207,12 +214,13 @@ export function createTurnFlow(deps) {
       const round = Math.floor(i / payers.length) + 1
       const answer = requestChoice(state, { kind: 'payment', source: 'group-clues', seat: inv.seat,
         prompt: `第 ${round} 轮分摊 · 共同支付还需 ${remaining} 个线索，请决定个人贡献。`, options,
-        payment: { required: amount, remaining, paid: amount - remaining, round, min, max, available: inv.clues } })
+        payment: { required: target, remaining, paid: target - remaining, round, min, max, available: inv.clues } })
       const paid = Number(answer)
       spendClues(state, inv, paid)
       remaining -= paid
       info(state, events, `${inv.name} 支付 ${paid} 个线索。`)
     }
+    return { paid: target - remaining, shortfall: required - (target - remaining) }
   }
 
   function addVictory(state, enemy, events) {
@@ -514,6 +522,34 @@ export function createTurnFlow(deps) {
     return (cardDef(source?.code)?.traits || []).some(trait => trait.toLowerCase() === 'tome')
   }
 
+  // 「你不在载具上时，作为移动的额外费用，你必须花费 2 行动」（印斯茅斯 07164/07165/07166
+  // 的「在[[海洋]]地点间移动」，以及 07199–07201 的「任何移动」）。读点在这里统一结算：
+  //   · 只有在**基础移动行动**（move.action='move'）上加费，效果移动不受影响；
+  //   · 在载具上的调查员不付（vehicleOf 按 mechanicState.vehicles 的乘客判定）；
+  //   · 声明写在**当前幕/议程**的条目录上（两张在场条目相加，但同一张卡只算一次）。
+  function movementActionSurcharge(state, inv, move) {
+    if (!inv || vehicleOf(state, inv.seat)) return 0
+    const destination = state.locations.find(location => location.id === (move.locationId || inv.location))
+    const origin = state.locations.find(location => location.id === inv.location)
+    let total = 0
+    for (const stage of [state.acts?.[state.actIndex], state.agendas?.[state.agendaIndex]]) {
+      const entry = registeredEntry(stage?.originalCode || stage?.code)
+      const rule = entry?.agendaRule?.movementActionSurcharge ?? entry?.actRule?.movementActionSurcharge
+      if (!rule) continue
+      const spec = typeof rule === 'number' ? { amount: rule } : rule
+      const amount = Number(spec.amount) || 0
+      if (!amount) continue
+      if (spec.betweenTraits?.length) {
+        const hasTrait = location => Boolean(location
+          && spec.betweenTraits.some(trait => (location.traits || []).some(value =>
+            String(value).toLowerCase() === String(trait).toLowerCase())))
+        if (!hasTrait(origin) || !hasTrait(destination)) continue
+      }
+      total += amount
+    }
+    return total
+  }
+
   function actionCost(state, inv, move, applyTome = true) {
     if (move.action === 'play' && move.fastSourceId && playTimingSource(state, inv, cardDef(move.cardId), move.fastSourceId)) return 0
     if (['endTurn', 'advanceAct', 'shortcutMove', 'extraEvade'].includes(move.action)) return 0
@@ -528,6 +564,8 @@ export function createTurnFlow(deps) {
       cost += (investigateLoc?.investigateExtraActions || 0) + attachmentInvestigateCost
     }
     if (move.action === 'searchIzzie') cost = 2
+    // 步行额外行动费用（见 movementActionSurcharge）：只加在基础移动行动上。
+    if (move.action === 'move') cost += movementActionSurcharge(state, inv, move)
     if (move.action === 'hiddenAction') cost = hiddenRule(state, move.cardId)?.discard?.actions ?? 1
     if (move.action === 'scenarioAction') cost = scenarioBehavior(state).actions?.(state, inv).find(m => m.rule === move.rule && !m.reason)?.actions ?? 1
     if (move.action === 'encounterAction') cost = scenarioBehavior(state).encounterActions?.(state, inv).find(m => m.rule === move.rule && !m.reason)?.actions ?? 1

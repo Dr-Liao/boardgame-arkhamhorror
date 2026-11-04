@@ -1,8 +1,8 @@
-// 通用谈判（Parley）原语 —— 第 2 步 P2.7。
+// 通用谈判（Parley）原语 —— 第 12 步 P2.7。
 //
-// 印刷规则：带「谈判 - …」的**敌人 / 地点 / 剧情资产**可以在其卡面上声明一次行动；
+// 印刷规则：带「谈判 - ……」的**敌人 / 地点 / 剧情资产**可以在其卡面上声明一次行动；
 // 谈判是普通行动（消耗 1 个行动点），但**不会引发借机攻击**。第四循环大量使用它
-// （05020/05076/05085/05095–05097/05217/05218 等），其中有 19 张中文卡面含「谈判」。
+// （05020/05076/05085/05095…/05097/05217/05218 等），其中有 19 张中文卡面含「谈判」。
 //
 // 声明方式（非玩家条目的 abilities 里）：
 //   { kind: 'action', actionKind: 'parley', label: '谈判：…', cost: { action: 1 },
@@ -10,10 +10,10 @@
 //     resolve: ({ inv, api, target }) => … }
 // 读点：
 //   · legalMoves 由 `parleyMoves(state, inv)` 枚举（地点 / 同地点敌人 / 同地点剧情资产）；
-//   · 执行走 ability-exec 的 `doEntityAbility`（与能力层同一条 `executeDescriptor` 管线，
+//   · 执行走 ability-exec 的 `doEntityAbility`（与能力层同一条 `executeDescriptor` 管线；
 //     费用、上限、日志、目标注入共用一套）；
-//   · actionKind：`actionKind()` 先读描述子的 `actionKind`，再回落 `countsAs`；
-//   · 借机攻击豁免：dispatch 把 `actionKind === 'parley'` 与 entityAbility 都视为不引发借机攻击；
+//   · actionKind：`actionKind()` 先读描述子的 `actionKind`，再回退 `countsAs`；
+//   · 借机攻击豁免：dispatch 把 `actionKind === 'parley'` 的 entityAbility 都视为不引发借机攻击；
 //   · 构筑：`isParleyCard(card, code)` 供调查员能力（如普雷斯顿）判断「这张牌带谈判」。
 //
 // 本模块是纯函数（只读注册表与 state）：不 import 引擎装配点，也不改状态。
@@ -21,6 +21,7 @@
 import { registeredEntry } from './ability.js'
 import { all as matchAll } from './matcher.js'
 import { enumerateTargets } from './targets.js'
+import { capabilityBlocked, entityRuleActive } from './modifiers.js'
 
 export function scenarioReferenceEntity(state) {
   return registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope === 'scenario' ? state.scenario : null
@@ -74,6 +75,17 @@ export function isParleyCard(card, code = card?.code) {
     isParleyDescriptor(ability) || ability.parley === true)
 }
 
+// 「不能谈判」的唯一读点（合法性枚举与执行前校验共用，避免只有选择器受保护）：
+//   · 目标实体侧：`cannot:parley` 实体规则——敌人自己的条目、所在地点，以及幕/议程
+//     （07124–07127「每个[[嫌犯]]敌人…不能与之谈判」、07061「绑架犯…不能与之谈判」）；
+//   · 调查员侧：`capability:parley` 能力禁止（07107「调查员不能谈判」）。
+// 剧本 chapter 自己声明的临时限制仍走 scenarioBehavior.parleyBlocked（既有通道）。
+export function parleyForbidden(state, inv, entity) {
+  if (!entity) return false
+  if (capabilityBlocked(state, inv, 'parley')) return true
+  return entityRuleActive(state, entity, 'cannot:parley')
+}
+
 // 某个实体此刻可以执行的谈判行动（每个目标展开成一条）。
 // `matchAll(descriptor.criteria)` 与玩家卡能力共用同一份条件组合子；成本与上限在执行时再校验
 // （与 legalMoves 对玩家卡的处理一致：缺条件的能力不出现在列表里）。
@@ -82,6 +94,7 @@ export function parleyMoves(state, inv, entity, entityType, usable = null) {
   const descriptors = entityActionDescriptors(entity)
   descriptors.forEach((descriptor, abilityIndex) => {
     if (!entityAbilityInRange(state, inv, entity, descriptor)) return
+    if (isParleyDescriptor(descriptor) && parleyForbidden(state, inv, entity)) return
     if (usable && !usable(entity, descriptor)) return
     if (!usable && descriptor.criteria) {
       const matched = matchAll(descriptor.criteria)({ state, inv, source: entity, windowId: state.timingWindow, context: {} })
@@ -122,6 +135,7 @@ export function parleyMovesFor(state, inv, usable = null) {
 // 执行前的目标合法性：返回 null 表示可用，否则返回原因（validateMove 与 dispatch 共用）。
 export function parleyTargetError(state, inv, entity, descriptor, move) {
   if (!descriptor) return '该实体没有这条谈判能力'
+  if (isParleyDescriptor(descriptor) && parleyForbidden(state, inv, entity)) return '不能与之谈判'
   if (!descriptor.target) return null
   const targets = enumerateTargets(state, inv, descriptor.target, { source: entity })
   if (!targets.length) return '没有合法的谈判目标'

@@ -49,6 +49,19 @@ export const FAST_TESTS = Object.freeze([
   'tic-physical-faces.test.mjs',
   'tic-effect-provenance.test.mjs',
   'tic-slumbering-bosses.test.mjs',
+  'tic-dynamic-aloof.test.mjs', // 冷漠的有效读点（连续条件）+ 07086 洛依高尔
+  'tic-encounter-search.test.mjs', // 遭遇堆搜索 / canEnemyEnterLocation / 07090 / 07088
+  'tic-flooded-agendas.test.mjs', // 07124–07127 压迫议程：失去冷漠 / 不能谈判 / 完全淹没回合结束
+  'tic-aside-hazards.test.mjs', // 07095 / 07107 放在密谋牌库旁：全局隐藏值、全局禁止谈判、轮末弃 1 张
+  'tic-fog-and-locals.test.mjs', // 07094 按攻击来源减伤 / 07105 线索最多生成点与谈判
+  'tic-innsmouth-look.test.mjs', // 07106 威胁区卡 + 调查员特性授予（add:investigatorTrait）
+  'tic-walking-surcharge.test.mjs', // 07164/07165/07166 步行额外行动费用 + 求取空气
+  'tic-fishing-vessel.test.mjs', // 07178 渔船载具移动 + 07187 偷偷上船
+  'tic-vehicle-restrictions.test.mjs', // 07183 交战限制 + 07188 威胁区禁止进入载具
+  'tic-vortex-resign.test.mjs', // 07168 急涡水域：渔船撤退三件事（撤退/移除渔船/钥匙归公）
+  'tic-road-hazards.test.mjs', // 07204–07210 道路危害：载具离开/进入地点的强制结算
+  'tic-car-faces.test.mjs', // 07211a/b 与 07212a/b：载具正反面、司机限定、运行面禁止进出
+  'tic-chase-vehicles.test.mjs', // 07213/07214：最后方生成；攻击伤害加成读点与 07214 的猎手阶段禁攻
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',

@@ -5308,11 +5308,11 @@
       "simplified": [],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "a97fe353036be98f9300302d656318b58ba138989b55fd5cc7ab0aa7dd154326"
+        "sha256": "704d6f4b4f84a93bf53984381ff966fe54289a1281787fcf636c0f32c7e8d37a"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "726717aa98685a55f076d22340731243f943bba3ab32b6d3d8b74c75c99eff27"
+        "sha256": "ebff5417371003ac2bbe912fa88478fa51c12d543ba1d67b5aa14b4ca06aef78"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5540,13 +5540,13 @@
       "content/packs/tcuInvestigators/manifest.js": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3",
       "tests/tcu-investigators.test.mjs": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6",
       "src/engine/hunch-deck.js": "600807bafbbdef09a48f49316105c7f56f33ba3f14d54e5725fbc718bc5fe5e6",
-      "src/engine/resource-bank.js": "8c9b4b4e7162639eda416c8f07d6485bdf5584a2d58cb37b158c8646c1818893",
+      "src/engine/resource-bank.js": "f5355de2e60bc8d19dec23f7938e66884d7e8c6fa7c31b1b5a162d18a3fb0df9",
       "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
       "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "a97fe353036be98f9300302d656318b58ba138989b55fd5cc7ab0aa7dd154326",
-      "src/cards/tcu-player-acceptance.js": "726717aa98685a55f076d22340731243f943bba3ab32b6d3d8b74c75c99eff27",
+      "audit/tcu-player-acceptance.json": "704d6f4b4f84a93bf53984381ff966fe54289a1281787fcf636c0f32c7e8d37a",
+      "src/cards/tcu-player-acceptance.js": "ebff5417371003ac2bbe912fa88478fa51c12d543ba1d67b5aa14b4ca06aef78",
       "tests/tcu-player-ledger.test.mjs": "a858a50a144b718a4387b38d18dc23f57879aaac087a15d2e86ced4d3db9051e",
       "src/deck/availability.js": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681",
       "src/campaign/campaign.js": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee",

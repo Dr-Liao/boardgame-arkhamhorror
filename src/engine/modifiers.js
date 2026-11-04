@@ -37,6 +37,7 @@ import { registeredEntry } from './ability.js'
 import { EFFECTS } from '../cards/card-effects.js'
 import { hasTrait } from './matcher.js'
 import { blanksTraits } from '../cards/card-rules.js'
+import { enemyIsSlumbering, enemyModifierAllowed } from './effect-provenance.js'
 
 const MODIFIER_CACHE = new Map()
 
@@ -65,8 +66,15 @@ export const ENTITY_RULE_TARGETS = Object.freeze([
   'cannot:beDefeated',      // 不能被击败（伤害仍可累积）
   'cannot:beDamaged',       // 不能受到伤害
   'cannot:opportunityAttack', // 不发动借机攻击
+  'cannot:parley',          // 不能与之谈判（07124–07127「每个[[嫌犯]]敌人…不能与之谈判」/07061）
+  'loses:aloof',            // 失去冷漠（07124–07127「每个[[嫌犯]]敌人失去冷漠」）
   'ignore:revealText',      // 地点/卡的「揭示时」文本视为空白
 ])
+
+// 幕/议程（scene 行）一般是「全局修正」，但这两类规则按印刷就是**全局**施加在所有目标上的
+// （「每个[[嫌犯]]敌人失去冷漠、不能谈判」写在议程上）。entityRuleActive 默认跳过 scene 行，
+// 只对这里列出的规则放行——其余规则仍然只能由实体自己/地点/光环声明。
+const SCENE_ENTITY_RULES = new Set(['cannot:parley', 'loses:aloof'])
 
 // C1：能力禁止。每一项都必须有引擎侧读点（见 engine.js 的同名调用），
 // 否则"能声明但不能生效"——这比不支持更糟。
@@ -86,6 +94,7 @@ export const BLOCKABLE_CAPABILITIES = Object.freeze([
   'gainResources',
   'engage',
   'dealEnemyDamage',
+  'parley',           // 不能谈判（07107「调查员不能谈判」这类调查员侧禁止）
 ])
 
 // C1：可被"无视"的规则元素。
@@ -97,7 +106,9 @@ export const IGNORABLE_RULES = Object.freeze([
 ])
 
 // C2：授予类修正（amount 省略即 1，value 是授予的名字）。
-export const GRANT_TARGETS = Object.freeze(['add:trait', 'add:keyword', 'add:slot', 'add:skillIcon'])
+//   add:investigatorTrait —— 把特性授予**控制者本人**（威胁区卡「你获得[[深潜者]]特性」，07106）；
+//   其余 add:* 都是「这张卡自己获得」。读点：grantedInvestigatorTraits（本文末）。
+export const GRANT_TARGETS = Object.freeze(['add:trait', 'add:keyword', 'add:slot', 'add:skillIcon', 'add:investigatorTrait'])
 
 const capabilityTarget = id => `capability:${id}`
 const ignoreTarget = id => `ignore:${id}`
@@ -129,7 +140,7 @@ export function normalizeModifier(raw, origin = 'modifier') {
   if (kind === 'grant' && raw.value == null) throw new Error(`${origin}: ${target} 必须声明 value`)
   if (raw.value != null && kind !== 'grant') throw new Error(`${origin}: 只有 add:* 目标可以声明 value`)
   if(raw.audience==='enemies' && !['entity','entityRule'].includes(kind))throw new Error(`${origin}: enemies audience requires entity modifier`)
-  if (raw.audience != null && !['controller', 'here', 'enemies'].includes(raw.audience)) {
+  if (raw.audience != null && !['controller', 'here', 'enemies', 'all'].includes(raw.audience)) {
     throw new Error(`${origin}: 未知 audience ${raw.audience}`)
   }
   return Object.freeze({
@@ -243,6 +254,8 @@ let hooks = {
   entityBlanked: () => false,
   activeEffects: () => [],
   weaknessProfile: code => null,
+  // 沉睡目标的修正行过滤要按「这一行自己的来源」分类，读法与引擎相同（卡面 type）。
+  cardDef: () => null,
 }
 
 export function setModifierHooks(next) {
@@ -270,6 +283,8 @@ function appliesTo(modifier, ctx) {
   if (ctx.inv?.seat !== ctx.controller?.seat
     && ctx.controller?.threat?.some(card => lookupEntry(card.code)?.cannotAffectOtherInvestigators)) return false
   if (modifier.audience === 'enemies') return false
+  // 「全局」修正来自没有控制者的卡（放在密谋牌库旁的遭遇卡）：对每名调查员都生效。
+  if (modifier.audience === 'all') return true
   if (modifier.audience === 'here') return ctx.inv?.location === ctx.controller?.location
   return ctx.inv?.seat === ctx.controller?.seat
 }
@@ -315,6 +330,12 @@ function* modifierSourceRows(state) {
     if (investigatorModifiers.length && !hooks.investigatorBlanked(state, investigator)) {
       yield { controller: investigator, source: investigator, list: investigatorModifiers }
     }
+  }
+  // 「放在密谋牌库旁」的遭遇卡（agendaAside）没有控制者：只有显式声明 audience:'all' 的
+  // 修正对所有人生效（07107「调查员不能谈判」）。它们不属于任何调查员，controller 为 null。
+  for (const card of state?.agendaAside || []) {
+    const list = modifiersOf(card.originalCode || card.code).filter(modifier => modifier.audience === 'all')
+    if (list.length) yield { controller: null, source: card, list }
   }
   // 持续效果（state.effects）：与卡片修正等价的一条声明式来源，只是有到期时间。
   for (const row of hooks.activeEffects(state)) {
@@ -463,6 +484,12 @@ function entityModifierRows(state, entity) {
     const list=modifiersOf(source.originalCode||source.code).filter(modifier=>modifier.audience==='enemies')
     if(list.length)rows.push({source,host:'enemyAura',list})
   }
+  // 「放在密谋牌库旁」的遭遇卡（agendaAside）对**每个实体**都算一条来源：
+  // 07095「每个地点的隐藏值 +1」就是 locationShroud 的全局行。
+  for (const card of state?.agendaAside || []) {
+    const list = modifiersOf(card.originalCode || card.code).filter(modifier => modifier.audience !== 'enemies')
+    if (list.length) rows.push({ source: card, host: 'aside', list })
+  }
   return rows
 }
 
@@ -477,6 +504,16 @@ function entityModifierCtx(state, entity, row) {
   }
 }
 
+// 沉睡目标（`enemyRule.slumbering`）的修正行过滤：印刷的「免疫玩家卡牌效果」包含玩家的
+// 修正，因此**来自玩家卡的那一行**不参与结算；敌人光环（例如 05266 女佣的「此处敌人 -1 战斗」）、
+// 地点/幕/议程行的来源是遭遇卡，照常生效。来源未知的行对沉睡目标 fail-closed
+// （宁可不加成），与 effect-provenance 的同一口径一致。
+// 每次读点只做一次沉睡判定（地点/幕这类非敌人实体直接返回 false），再按行判定。
+function slumberRowFilter(state, entity) {
+  if (!enemyIsSlumbering(state, entity, { entryOf: registeredEntry, isBlanked: hooks.entityBlanked })) return null
+  return row => enemyModifierAllowed(state, entity, row, { entryOf: registeredEntry, cardDef: hooks.cardDef })
+}
+
 // 实体数值修正（enemyFight / enemyEvade / enemyHealth / locationShroud / locationClues）。
 export function entityModifierTotal(state, entity, target) {
   if (!ENTITY_MODIFIER_TARGETS.includes(target)) {
@@ -486,10 +523,12 @@ export function entityModifierTotal(state, entity, target) {
   // 文本被涂白时，印刷文本带来的修正一律失效；但 declare 了 blankedThisRound 的
   // 修正本身就是「文本空白后发生的事」（02255 失去 +1[per_investigator] 生命），仍要结算。
   const blanked = hooks.entityBlanked(state, entity)
+  const allowed = slumberRowFilter(state, entity)
   let total = 0
   for (const row of entityModifierRows(state, entity)) {
     // 场景行（幕/议程）只提供全局修正，避免把某张幕的「此处」写成全局。
     if (row.host === 'scene' && !['enemyFight', 'enemyEvade', 'enemyHealth'].includes(target)) continue
+    if (allowed && !allowed(row)) continue
     for (const modifier of row.list) {
       if (modifier.target !== target) continue
       if ((row.host==='enemyAura'?hooks.entityBlanked(state,row.source):blanked) && modifier.condition?.blankedThisRound !== true) continue
@@ -508,8 +547,10 @@ export function entityRuleActive(state, entity, target) {
   }
   if (!entity) return false
   if (hooks.entityBlanked(state, entity)) return false
+  const allowed = slumberRowFilter(state, entity)
   for (const row of entityModifierRows(state, entity)) {
-    if (row.host === 'scene') continue
+    if (row.host === 'scene' && !SCENE_ENTITY_RULES.has(target)) continue
+    if (allowed && !allowed(row)) continue
     for (const modifier of row.list) {
       if (modifier.target !== target) continue
       const ctx = entityModifierCtx(state, entity, row)
@@ -625,6 +666,7 @@ const GRANT_KINDS = Object.freeze({
   keyword: 'add:keyword',
   slot: 'add:slot',
   skillIcon: 'add:skillIcon',
+  investigatorTrait: 'add:investigatorTrait',
 })
 
 export function collectGrants(state, inv, kind, { code = null } = {}) {
@@ -645,4 +687,13 @@ export function collectGrants(state, inv, kind, { code = null } = {}) {
     }
   }
   return out
+}
+
+/**
+ * 「你获得某特性」的读点（威胁区卡给控制者本人加特性，例如 07106「你获得[[深潜者]]特性」）。
+ * 与 add:trait 的区别：add:trait 是这张卡自己获得，来源卡号必须匹配；这里看的是**控制者**，
+ * 因此不过滤卡号，按 audience/条件判定的那套走。返回 Set<string>（保留卡面大小写）。
+ */
+export function grantedInvestigatorTraits(state, inv) {
+  return collectGrants(state, inv, 'investigatorTrait')
 }

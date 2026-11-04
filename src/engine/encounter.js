@@ -19,6 +19,9 @@ import { markForcedRevelation } from './resolution-scope.js'
 import { enumerateTargets } from './targets.js'
 
 export function createEncounter(deps) {
+  // 「生成 - <某类地点>」的条目级声明（位置由 enemies.js#spawnEnemy 解析，抽牌时不与抽牌者交战）。
+  const printedSpawnLocation = entry => Boolean(entry?.spawnFarthestFromAll || entry?.spawnMostClues
+    || entry?.spawnRearmost || entry?.spawnAncientFirst)
   const {
     ALL_CARDS,
     ALL_ENEMIES,
@@ -233,6 +236,9 @@ function drawEncounter(state, inv, events, options = {}) {
     } else if (def.spawn) {
       if (!locationExists(state, def.spawn)) { discard().push(code); return finishDraw() }
       loc = def.spawn
+    } else if (printedSpawnLocation(registeredEntry(code))) {
+      // 「生成 - 最后方 / 线索最多 / 离所有人最远 / 古代地点」这类印刷生成点：位置由
+      // spawnEnemy 的条目分支解析，且**不与抽牌者交战**（印刷没有「与你交战」）。
     } else {
       engage = resolvingInv.seat
     }

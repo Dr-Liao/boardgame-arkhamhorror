@@ -219,10 +219,19 @@ function upkeepPhase(state) {
     agenda.attachments.splice(agenda.attachments.indexOf(attachment), 1)
     state.encounterDiscard.push(attachment.originalCode || attachment.code)
   }
+  // 旁置卡（放在密谋牌库旁）的轮末弃置：
+  //   · `discardOneAtRoundEnd`——印刷「从场上弃掉 1 张…（每轮最多一次）」，同轮最多弃 1 张；
+  //   · `discardAtRoundEnd`——印刷「弃掉这张卡」，全部同名副本一起弃（06096/05102 旧口径）。
+  const asideDiscardedOnce = new Set()
   for (const card of (state.agendaAside || []).slice()) {
-    if (!registeredEntry(card.originalCode || card.code)?.treacheryRule?.discardAtRoundEnd) continue
+    const code = card.originalCode || card.code
+    const rule = registeredEntry(code)?.treacheryRule
+    if (rule?.discardOneAtRoundEnd) {
+      if (asideDiscardedOnce.has(code)) continue
+      asideDiscardedOnce.add(code)
+    } else if (!rule?.discardAtRoundEnd) continue
     state.agendaAside.splice(state.agendaAside.indexOf(card), 1)
-    state.encounterDiscard.push(card.originalCode || card.code)
+    state.encounterDiscard.push(code)
   }
 
   runAgendaForced(state, 'roundEnd', events)

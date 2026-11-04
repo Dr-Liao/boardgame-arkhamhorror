@@ -20,9 +20,13 @@
 //   · 目标枚举只读 state，不修改任何东西，也没有随机性。
 
 import { all } from './matcher.js'
+import { effectSourceKindOfType, enemyIsSlumbering } from './effect-provenance.js'
 
 export const TARGET_KINDS = Object.freeze(['enemy', 'investigator', 'location', 'asset', 'cardInHand'])
-let targetHooks = { enemyHealth: (_state,enemy) => enemy.health, enemyEvade: (_state,enemy) => enemy.evade }
+// cardDef / entryOf / enemyBlanked 由 engine.js 注入：候选过滤要按「真实来源类别」
+// 判断（见 slumberingFilter 的注释），且不能为了查卡面把引擎装配点 import 进来。
+let targetHooks = { enemyHealth: (_state,enemy) => enemy.health, enemyEvade: (_state,enemy) => enemy.evade,
+  cardDef: () => null, entryOf: () => null, enemyBlanked: () => false }
 export function setTargetHooks(next) { targetHooks = { ...targetHooks, ...next } }
 
 const TARGET_KEYS = new Set(['kind', 'query', 'optional', 'label', 'range'])
@@ -97,13 +101,34 @@ function candidateList(state, inv, kind) {
 }
 
 // ctx: { state, inv, source, windowId, context }（与 matcher.js 的 predicate ctx 一致）
+//
+// 沉睡（`enemyRule.slumbering`）的敌人「免疫调查员行动和玩家卡牌效果」，因此在**合法性阶段**
+// 就要从玩家卡来源的敌人类目标里剔除——否则「治疗/横置/重整/抹除文本」这类不改伤害的
+// 效果仍会先选中它，再被写入口拒绝，牌桌会看到一条永远失败的行动。遭遇/剧本来源
+// （地点、幕、密谋、敌人自己的印刷能力、受控剧情资产之外的剧情卡）照常看到它，
+// 具体操作仍由引擎的 canDamageEnemy / autoEvade 等谓词逐项把关。
+function sourceKindOf(ctx) {
+  const explicit = ctx?.source?.effectSource?.kind
+  if (explicit) return explicit
+  const code = ctx?.source?.originalCode || ctx?.source?.code
+  return effectSourceKindOfType(code ? targetHooks.cardDef?.(code)?.type : null)
+}
+
+function slumberingFilter(state, target, ctx) {
+  if (target?.kind !== 'enemy' || sourceKindOf(ctx) !== 'playerCard') return null
+  return candidate => !enemyIsSlumbering(state, candidate.entity,
+    { entryOf: targetHooks.entryOf, isBlanked: targetHooks.enemyBlanked })
+}
+
 export function enumerateTargets(state, inv, target, ctx = {}) {
   if (!target) return []
   const base = { state, inv, source: ctx.source ?? null, windowId: ctx.windowId ?? null, context: ctx.context ?? {} }
+  const immune = slumberingFilter(state, target, ctx)
   const candidates = (target.kind === 'location' && target.range === 'anywhere'
     ? (state.locations || []).map(entity => ({ id: entity.id, label: entity.revealed ? entity.name : entity.unrevealedName || entity.name, kind: 'location', entity }))
     : candidateList(state, inv, target.kind)).filter(candidate => target.kind !== 'investigator'
     || playerEffectCanAffect(state, candidate.entity.seat, { sourceSeat: inv.seat, sourceCode: ctx.source?.code }))
+    .filter(candidate => !immune || immune(candidate))
   if (!target.query) return candidates
   return candidates.filter(candidate => {
     try {

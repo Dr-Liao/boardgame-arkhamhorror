@@ -306,6 +306,24 @@ export function createStats(deps) {
     return effectiveTraits(state, inv, code).some(item => String(item).toLowerCase() === wanted)
   }
 
+  // 调查员的**有效特性**：卡面印刷特性 + 运行期写入的 inv.traits（04085「获得蛇族特性」）
+  // + 声明式授予（威胁区卡对自己控制者的 add:investigatorTrait，07106「你获得[[深潜者]]特性」）。
+  // 特性随卡的离场自动消失：授予读的是修正行，不写 inv.traits。
+  function investigatorTraits(state, inv) {
+    const base = [...(cardDef(inv?.code)?.traits || []), ...(inv?.traits || [])].map(trait => String(trait))
+    if (!state || !inv) return base
+    const seen = new Set(base.map(trait => trait.toLowerCase()))
+    for (const trait of collectGrants(state, inv, 'investigatorTrait')) {
+      if (seen.has(trait.toLowerCase())) continue
+      base.push(trait); seen.add(trait.toLowerCase())
+    }
+    return base
+  }
+  function investigatorHasTrait(state, inv, trait) {
+    const wanted = String(trait).toLowerCase()
+    return investigatorTraits(state, inv).some(item => item.toLowerCase() === wanted)
+  }
+
   function cardKeyword(state, inv, code, keyword) {
     if (!state || !inv) return false
     return collectGrants(state, inv, 'keyword', { code }).has(keyword)
@@ -370,5 +388,5 @@ export function createStats(deps) {
     return cards
   }
 
-  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, baseStatValue, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, commitIcons, enemyStatMods, abilityUsage }
+  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, baseStatValue, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, investigatorTraits, investigatorHasTrait, commitIcons, enemyStatMods, abilityUsage }
 }
