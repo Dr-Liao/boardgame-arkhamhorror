@@ -663,6 +663,9 @@ function startScenario(state, index, events) {
   if (state.extraEncounterDecks) state.extraEncounterDecks = {}
   // 第四循环 P2.4：塔罗牌组逐关重建；存在才删键，避免给旧战役新增状态字段（replay 指纹不变）。
   if (state.scenarioDecks?.tarot) delete state.scenarioDecks.tarot
+  // P7 并行幕（07316–07318）：逐关惰性字段，上一关若残留会污染存档/单幕读点，
+  // 开局重建为「不存在」（不写空数组，旧战役 replay 指纹零变化）。
+  if (state.parallelActs) delete state.parallelActs
   state.relicOfAges = null
   state.expeditionLeaderSeat = state.expeditionLeaderSeat ?? null
   state.exiled = []

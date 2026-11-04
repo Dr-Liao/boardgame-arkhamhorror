@@ -38,6 +38,7 @@ import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { dispatchVehicleEvent, roadHazardOnce } from './road-hazards.js'
 import { mechanicState } from './mechanic-state.js'
+import { capturedAtLocation, capturedLocation, capturedSeats, isCaptured } from './capture.js'
 import { removeVehicle } from './vehicles.js'
 // P7《暗潮之下》第八章：并行幕（深海之城 v.I/II/III）的运行时入口。
 import {
@@ -61,6 +62,9 @@ export function createScenarioRuntime(deps) {
     advanceActDirectly,
     advanceAgenda,
     advanceAgendaTo,
+    // P7 幕/议程牌库操作（Harper 07060 的「营救」、flashback 的替代幕）。
+    setActDeckCards,
+    setAgendaDeckCards,
     awardLocationVictory,
     aliveInvestigators,
     aloofPreventsAttack,
@@ -81,6 +85,9 @@ export function createScenarioRuntime(deps) {
     chooseTarot,
     discardDrawnTarot,
     drawTarot,
+    // TIC 捕获/押送：唯一写入口由 engine.js 的 createCapture 提供，这里只做窄接口转发。
+    captureSeat,
+    freeCapturedSeat,
     canDiscardFromHand,
     canDiscoverClueAt,
     cardDef,
@@ -663,6 +670,21 @@ function scenarioRuntime(state, events, testSource = null) {
     // 「直到本轮结束，忽略某条能力的限制」（与玩家面同一实现，见 api-misc）。
     ignoreLimitForRound: descriptorId => ignoreLimitForRound(state, descriptorId),
     finish: key => finishScenario(state, key, events),
+    // TIC 捕获/押送（07252/07252b/07253/07260/07233）：被俘状态的唯一写入口在
+    // src/engine/capture.js；卡条目与内容层只经这两个入口改状态，读点三个查询函数。
+    //   capture(seat, { location?, keysTo?, source?, batch?, readText? })
+    //     · location：关押地点实例 id（缺省时引擎按剧情卡 07252 的 flags.captureLocation
+    //       翻面入场拘禁室；内容层也可用 scenarioBehavior.captureLocation 覆盖）；
+    //     · keysTo：'destination'（默认，放拘禁室）/ 'none' / `enemy:<id>` / `location:<id>` /
+    //       `investigator:<seat>`；07253 用 `enemy:<马什 id>`；
+    //     · batch：批量俘获（07233 背面全员被俘），抑制「被俘时」议程强制递归。
+    //   freeCaptured(seat)：解救（07252b 的行动）。
+    capture: (seat, options = {}) => captureSeat(state, seat, options, events),
+    freeCaptured: (seat, options = {}) => freeCapturedSeat(state, seat, options, events),
+    isCaptured: seat => isCaptured(state, seat),
+    capturedLocation: seat => capturedLocation(state, seat),
+    capturedSeats: () => capturedSeats(state),
+    capturedAt: locationId => capturedAtLocation(state, locationId),
     resolveFlashback: (seat, id, options = {}) => {
       const handler = scenarioBehavior(state).resolveFlashback
       if (typeof handler !== 'function') throw new Error('Scenario has no flashback handler')
@@ -727,6 +749,11 @@ function scenarioRuntime(state, events, testSource = null) {
     advanceAgenda: () => advanceAgenda(state, events),
     // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
     advanceAgendaTo: index => advanceAgendaTo(state, events, index),
+    // P7：幕/议程牌库操作。把卡号数组放进牌库的 index 位置（从 index 起替换旧牌；
+    // index === 当前长度时追加扩展）。不改变 actIndex / agendaIndex；卡定义来自
+    // state.scenario.stageCards，与 setup 时的 state.acts/state.agendas 同形状。
+    setActDeckCards: (index, codes) => setActDeckCards(state, events, index, codes),
+    setAgendaDeckCards: (index, codes) => setAgendaDeckCards(state, events, index, codes),
     // P7《暗潮之下》第八章：并行幕（07316/07317/07318「深海之城」v.I/II/III）。
     // state.acts/actIndex 的线性语义不变；这些幕只是「额外的活动幕」，各自独立目标/独立完成。
     addParallelAct: code => {

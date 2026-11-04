@@ -20,8 +20,10 @@
 //     逐个问 `api.mechanics.vehicles.record(id)`（mechanic-state 的只读视图）；「正在运行」
 //     读 record.running，「司机」读 record.driver；移动走 `api.mechanics.vehicles.move`
 //     （vehicles.js#moveVehicle：原子移动全部乘客、校验连接的[[道路]]地点）。
-//   · 目标：「尽快开到猎鹰岬」是纯印刷目标；实际推进由 07203 猎鹰岬近郊的
-//     `locationRule.objective`（全员到达后 checkAct 自动推进）负责，本条目不再声明 objective。
+//   · 目标：「尽快开到猎鹰岬」是**剧情指示型**目标（印刷原文「推进场景时你会收到指示」）：
+//     条目声明恒 false 的 `actRule.objective`，让审计「印刷含目标的幕必须有 objective」成立；
+//     实际推进由 07203 猎鹰岬近郊的 `locationRule.objective`（全员到达后 checkAct 自动推进）
+//     或章节剧情指示承担，本条目**不自动判定**、不误推进。
 //   · 背面「(→结局1)」= `actRule.onReveal` → `api.finish('resolution1')`
 //     （读点：content/.../entry-rules.js#actReveal；缺 onReveal 会 throw）。
 //
@@ -30,7 +32,7 @@
 //
 // implemented：三句印刷正文均有读点与测试（tests/tic-middle-remaining.test.mjs）：
 //   `actRule.enemiesGainHunter`（turn.js#enemyHasHunter）、forced investigationPhaseEnds、
-//   `actRule.onReveal`（背面 (→结局1)）。
+//   `actRule.objective`（剧情指示型，恒 false）、`actRule.onReveal`（背面 (→结局1)）。
 
 import { hasTrait } from '../../_shared.js'
 
@@ -53,6 +55,9 @@ export default {
   implemented: true,
   actRule: {
     enemiesGainHunter: true,
+    // 印刷「目标 - 尽快开到猎鹰岬！(要推进场景时，你会收到指示)」是剧情指示型目标：
+    // 恒 false，推进由章节指示 / 07203 的地点 objective 承担，不自动判定。
+    objective: () => false,
     onReveal(state, act, api) {
       api.finish('resolution1')
     },

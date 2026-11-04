@@ -2,6 +2,7 @@ import { registeredEntry } from './ability.js'
 import { vehicleOf } from './vehicles.js'
 import { barrierCount } from './edge-barriers.js'
 import { enemyIsAloof } from './enemy-aloof.js'
+import { capturedActionError } from './capture.js'
 // hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
@@ -118,6 +119,10 @@ export function createHiddenRules(deps) {
   }
 
   function movementError(state, inv, destinationId = null, { vehicle = false,ignoreBarriers=false } = {}) {
+    // TIC 捕获：被俘的调查员不能移动（印刷 07252）。这里是合法移动枚举 / validateMove /
+    // 效果位移 / canMoveTo / shortcutMove 共用的唯一读点；捕获自身的搬家由 capture.js 瞬态放行。
+    const captureError = capturedActionError(state, inv, 'move')
+    if (captureError) return captureError
     if (!ignoreBarriers && destinationId != null && barrierCount(state, inv.location, destinationId) > 0) return '路障阻挡了这条通道'
     if (!vehicle && vehicleOf(state, inv.seat)) return '在载具中时不能独立移动'
     // Phase 2（C1）：capability:move —— 「不能移动」由卡面声明，引擎只问读点。

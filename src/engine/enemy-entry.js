@@ -3,6 +3,10 @@ import { registeredEntry } from './ability.js'
 export function enemyCanEnterLocation(state, enemy, destination) {
   const rule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
   const location = state.locations.find(item => item.id === destination)
+  // 「敌人不能进入本地点」（TIC 07252b 拘禁室）：地点侧的声明。移动/猎人/追逐/生成校验
+  // 共用本函数，所以一处声明覆盖「进入」与「生成」两条路径；生成落点的改换由
+  // enemies.js#spawnEnemy 读取 locationRule.enemySpawnRedirect 处理。
+  if (registeredEntry(location?.originalCode || location?.code)?.locationRule?.enemiesCannotEnter === true) return false
   // 「不能进入[[洞穴]]地点」（07164b/07165b 魔鬼礁石的骇物）：禁止类特性。
   const banned = rule?.cannotEnterTraits
   if (banned?.length && location && banned.some(trait => location.traits?.some(value =>

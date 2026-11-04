@@ -34,11 +34,34 @@ export function normalizeScenarioMechanics(spec) {
   for (const field of ['keys', 'vehicles']) if (spec[field] != null && typeof spec[field] !== 'boolean') throw new TypeError(`${field} 必须为布尔值`)
   return structuredClone(spec)
 }
+// TIC 捕获/押送：`mechanicState.captured` 的存档校验（唯一权威状态在 capture.js 写入）。
+// 形状 { storyShown: boolean, seats: { "<seat>": { locationId, round, source } } }。
+// 非法座位/非在场拘禁室/坏字段在读档时被拒（fresh 状态下 locationId 必须指向已入场地点）。
+function validateCaptured(state, captured) {
+  if (captured == null) return
+  assertFields(captured, ['storyShown', 'seats'])
+  if (typeof captured.storyShown !== 'boolean') throw new TypeError('存档被俘剧情标记无效')
+  if (captured.seats == null) throw new TypeError('存档被俘记录缺失')
+  if (typeof captured.seats !== 'object' || Array.isArray(captured.seats)) throw new TypeError('存档被俘记录无效')
+  for (const [key, entry] of Object.entries(captured.seats)) {
+    const seat = Number(key)
+    if (!Number.isSafeInteger(seat) || String(seat) !== key || !state.investigators?.[seat]) throw new TypeError('存档被俘座位无效')
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new TypeError('存档被俘状态无效')
+    assertFields(entry, ['locationId', 'round', 'source'])
+    if (typeof entry.locationId !== 'string' || !entry.locationId) throw new TypeError('存档被俘地点无效')
+    // 「存在则校验」：地点必须已入场，读取函数才不会拿到悬空 id（关押地点不会被移出游戏）。
+    if (!(state.locations || []).some(location => location.id === entry.locationId)) throw new TypeError('存档被俘地点不在场')
+    if (!Number.isSafeInteger(entry.round) || entry.round < 0) throw new TypeError('存档被俘回合无效')
+    if (entry.source != null && typeof entry.source !== 'string') throw new TypeError('存档被俘来源无效')
+  }
+}
+
 export function validateMechanicState(state) {
   const data = mechanicState(state)
   if (!data) return // Old saves stay byte-for-byte unchanged.
-  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards'])
+  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards','captured'])
   validateEnemyZones(state,data.enemyZones)
+  validateCaptured(state, data.captured)
   if (data.version !== 1) throw new TypeError('不支持的可选机制存档版本')
   if (data.gridAdjacency != null && !['orthogonal', 'row', 'columns', 'none'].includes(data.gridAdjacency)) throw new TypeError('Invalid grid adjacency save')
   if (data.floodPolicy != null) {

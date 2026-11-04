@@ -25,6 +25,7 @@ import { canAsIfPlay } from './as-if-location.js'
 import { dreamGateEntryError } from './dream-gate.js'
 import { investigatorConnections } from './location-connections.js'
 import { enemyEffectAllowed } from './effect-provenance.js'
+import { capturedActionError } from './capture.js'
 
 export function createMoves(deps) {
   const {
@@ -574,6 +575,11 @@ export function createMoves(deps) {
   if (inHub(state)) return validateHubMove(state, seat, move)
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return '你已经败退'
+  // TIC 捕获：被俘的调查员不能移动、攻击，也不能与敌人交战（印刷 07252）。
+  // validateMove 是合法行动列表（末尾统一过本函数）与提交命令的共同校验点，
+  // 所以这里一处就同时拦掉「列表里出现」和「伪造命令」两条路径。
+  const captureError = capturedActionError(state, inv, move.action)
+  if (captureError) return captureError
   // 2026-10-25 第四轮修复 action-legality-hook（05140 等）：剧本可以按任意理由禁止某个行动
   // （返回字符串作为提示，或返回 false 表示「不许做但不解释」）。legalMoves 末尾统一过本读点。
   {

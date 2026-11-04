@@ -75,6 +75,15 @@ export const FAST_TESTS = Object.freeze([
   'tic-late-b-cards.test.mjs', // 07280–07282/07299（w5）
   'tic-w2-new-cards.test.mjs', // 07099/07259/07332/07338（w2）
   'tic-scenarios-late-registered.test.mjs', // late pending 14 例（w1；ready 76 例已由 tic-scenarios-late.test.mjs 注册）
+  // 2026-11-04 晚间：捕获/并行幕/Harper 三块引擎功能与八章逐章验收测试。
+  'tic-capture.test.mjs', // 捕获/押送机制 + 07233/07252/07252b/07253/07260（w7）
+  'tic-parallel-acts.test.mjs', // 并行幕 + 07316/07317/07318（w8）
+  'tic-harper-acts.test.mjs', // 07060/07061 Harper 两幕（w6）
+  'tic-scenario-thePitOfDespair.test.mjs', // 第一章逐章验收（w3）
+  'tic-scenario-inTooDeep.test.mjs', // 第三章逐章验收（w3）
+  'tic-scenario-devilReef.test.mjs', // 第四章逐章验收（w1）
+  'tic-scenario-horrorInHighGear.test.mjs', // 第五章逐章验收（w1）
+  'tic-scenario-theLairOfDagon.test.mjs', // 第七章逐章验收（w2）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',

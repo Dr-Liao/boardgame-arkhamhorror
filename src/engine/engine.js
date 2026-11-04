@@ -402,6 +402,12 @@ import { createDeckOps } from './deck-ops.js'
 import { createHub } from './hub.js'
 import { enemyEffectAllowed, scopedScenarioBehavior } from './effect-provenance.js'
 import { enemyIsAloof } from './enemy-aloof.js'
+// TIC 捕获/押送（07252/07252b/07253/07260/07233）：唯一写入口在 capture.js；
+// 引擎侧只装配依赖并把只读查询转出给 observation / 测试使用。
+import { createCapture, isCaptured } from './capture.js'
+import { putInHand } from './hand-entry.js'
+import { keysAt as keysAtTarget, transferKey } from './scenario-keys.js'
+export { isCaptured, capturedSeats, capturedLocation, capturedAtLocation, capturedCount, capturedActionError } from './capture.js'
 
 // Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
 // 外部模块的 import 路径保持不变。
@@ -689,7 +695,8 @@ function autoEngageAt(state, locationId, events = [], options={}) {
   for (const enemy of state.enemies) {
     if (enemy.location !== locationId || !engagesAutomatically(state, enemy, options)) continue
     const here = aliveInvestigators(state)
-      .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage'))
+      .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage')
+        && !isCaptured(state, i.seat))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) engageEnemy(state, enemy, target, events)
@@ -700,7 +707,8 @@ function autoEngageAll(state, events) {
   for (const enemy of state.enemies) {
     if (!engagesAutomatically(state, enemy)) continue
     const here = aliveInvestigators(state)
-      .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage'))
+      .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage')
+        && !isCaptured(state, i.seat))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) {
@@ -1919,6 +1927,9 @@ export function scenarioRuntime(state, events, testSource = null) {
   enemyFace: enemy => faceOf(enemy),
   enemyFaces: enemy => enemyFacesOf(enemy),
   ...commonDeps,
+  // TIC 捕获/押送：剧本运行时把 api.scenario.capture/freeCaptured 转发到 capture.js 的唯一写入口。
+  captureSeat,
+  freeCapturedSeat,
   addBasicWeakness,
   // 2026-10-25 第五轮：剧情资产附属到敌人 / 地点当前帷幕读点。
   attachCardTo: (...args) => attachCardTo(...args),
@@ -1927,6 +1938,9 @@ export function scenarioRuntime(state, events, testSource = null) {
   addYigsFury,
   advanceAgenda,
   advanceAgendaTo,
+  // P7 幕/议程牌库操作（Harper 07060 的「营救」装进下一格幕牌库、flashback 的替代幕）。
+  setActDeckCards,
+  setAgendaDeckCards,
   // P7：跳过当前幕背面直接推进（07232b「直接推进到场景2a，不结算1b」）。
   advanceActDirectly,
   // P7（《暗潮之下》幕背面布置）：把「Victory X 且无线索」的地点加入胜利区。
@@ -2385,6 +2399,47 @@ export function revealLocation(...args) { return locationsApi().revealLocation(.
 export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function canDiscoverClueAt(...args) { return locationsApi().canDiscoverClueAt(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
 export function awardLocationVictory(...args) { return locationsApi().awardLocationVictory(...args) }
 export function setLocationShroudMod(...args) { return locationsApi().setLocationShroudMod(...args) }
+
+// ---------------------------------------------------------------------------
+// createCapture 装配（TIC 捕获/押送，P7）：唯一写入口在 src/engine/capture.js。
+// 读点（hidden-rules/moves/enemies/observation）直接 import capture.js 的纯函数；
+// 这里只把写入口 + 其依赖注入装配起来，并导出给 scenarioRuntime 的窄接口。
+// ---------------------------------------------------------------------------
+let captureImpl = null
+function captureApi() {
+  captureImpl ||= createCapture({
+    cardDef,
+    cardName,
+    info,
+    registeredEntry,
+    requestChoice,
+    leadDecisionSeat,
+    normalizedSlots,
+    leaveAsset,
+    putInHand,
+    disengageEnemy,
+    relocateInvestigator,
+    placeLocation,
+    revealLocation,
+    keysAt: keysAtTarget,
+    transferKey,
+    scenarioBehavior,
+    scenarioRuntime,
+  })
+  return captureImpl
+}
+
+function captureSeat(state, seat, options = {}, events = []) {
+  return captureApi().captureSeat(state, seat, options, events)
+}
+
+function freeCapturedSeat(state, seat, options = {}, events = []) {
+  return captureApi().freeCapturedSeat(state, seat, options, events)
+}
+
+// 外部（测试/工具/内容层装配）需要写入口时用的公开包装：语义与 api.scenario.capture 相同。
+export function captureInvestigator(...args) { return captureApi().captureSeat(...args) }
+export function freeCapturedInvestigator(...args) { return captureApi().freeCapturedSeat(...args) }
 
 // 2026-10-28：地点特性原语（location-traits.js）的对外入口。
 // 场景 behavior 的 api 走 scenarioRuntime（addLocationTrait/removeLocationTrait/setShroudMod），
@@ -2974,6 +3029,9 @@ export function actObjectiveContext(...args) { return createActAgendaApi().actOb
 export function locationRevealCue(...args) { return createActAgendaApi().locationRevealCue(...args) } export function spawnStoryAsset(...args) { return createActAgendaApi().spawnStoryAsset(...args) } export function advanceAgenda(...args) { return createActAgendaApi().advanceAgenda(...args) }
 // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b 的印刷用语）。
 export function advanceAgendaTo(...args) { return createActAgendaApi().advanceAgendaTo(...args) }
+// P7：幕/议程牌库操作（把卡号放到当前牌库的指定槽；index === 长度时追加扩展）。
+export function setActDeckCards(...args) { return createActAgendaApi().setActDeckCards(...args) }
+export function setAgendaDeckCards(...args) { return createActAgendaApi().setAgendaDeckCards(...args) }
 export function discardUntilEnemyFromEncounter(...args) { return createActAgendaApi().discardUntilEnemyFromEncounter(...args) } export function investigateTest(...args) { return createActAgendaApi().investigateTest(...args) }
 export function discardUntilEnemyTrait(...args) { return createActAgendaApi().discardUntilEnemyTrait(...args) } export function checkAgenda(...args) { return createActAgendaApi().checkAgenda(...args) } export function checkAgendaForcedEnemyDefeated(...args) { return createActAgendaApi().checkAgendaForcedEnemyDefeated(...args) }
 export function placeDoomOnCard(...args) { return createActAgendaApi().placeDoomOnCard(...args) } export function addDoom(...args) { return createActAgendaApi().addDoom(...args) }

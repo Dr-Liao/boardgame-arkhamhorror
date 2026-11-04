@@ -799,6 +799,42 @@ export function registerCardAbilities(entries) {
         || (bounds.onlyRevealed != null && typeof bounds.onlyRevealed !== 'boolean')
         || (bounds.min ?? 0) > (bounds.max ?? 2)) throw new TypeError('Invalid flood bounds')
     }
+    // P7 TIC 07252b 拘禁室：「敌人不能进入或生成在本地点」的地点侧声明。
+    // 读点：enemy-entry.js#enemyCanEnterLocation（进入/猎人/生成校验）与
+    // enemies.js#spawnEnemy（生成落点按 enemySpawnRedirect 改换）。
+    if (entry.locationRule?.enemiesCannotEnter != null
+      && typeof entry.locationRule.enemiesCannotEnter !== 'boolean') {
+      throw new TypeError('Invalid enemies-cannot-enter rule')
+    }
+    if (entry.locationRule?.enemySpawnRedirect != null) {
+      const redirect = entry.locationRule.enemySpawnRedirect
+      if (typeof redirect !== 'object' || Array.isArray(redirect)) throw new TypeError('Invalid enemy spawn redirect')
+      assertKnownKeys(redirect, new Set(['toOriginalCodes', 'toTrait', 'chooser']), 'locationRule.enemySpawnRedirect')
+      const codes = redirect.toOriginalCodes
+      if (codes != null && (!Array.isArray(codes) || !codes.length
+        || codes.some(code => typeof code !== 'string' || !code))) throw new TypeError('Invalid enemy spawn redirect codes')
+      if (redirect.toTrait != null && (typeof redirect.toTrait !== 'string' || !redirect.toTrait)) {
+        throw new TypeError('Invalid enemy spawn redirect trait')
+      }
+      if (redirect.chooser != null && !['lead', 'random'].includes(redirect.chooser)) {
+        throw new TypeError('Invalid enemy spawn redirect chooser')
+      }
+      if (!codes?.length && redirect.toTrait == null) throw new TypeError('Enemy spawn redirect needs a target')
+      if (entry.locationRule.enemiesCannotEnter !== true) throw new TypeError('Enemy spawn redirect requires enemiesCannotEnter')
+    }
+    // P7 TIC 07252 剧情卡（惨遭俘获！）：「首次被俘时翻面成拘禁室地点并入场」的声明。
+    // 读点：capture.js#ensureStoryCaptureLocation（引擎读场上剧情资产条目的 flags.captureLocation，
+    // 内容层不写卡号分支；坐标取 chapter-data 的 setup.expandedMap.holdingCells）。
+    if (entry.flags?.captureLocation != null) {
+      const spec = entry.flags.captureLocation
+      if (typeof spec !== 'object' || Array.isArray(spec)) throw new TypeError('Invalid capture location declaration')
+      assertKnownKeys(spec, new Set(['code', 'column', 'row', 'isolated']), 'flags.captureLocation')
+      if (typeof spec.code !== 'string' || !spec.code) throw new TypeError('Invalid capture location code')
+      for (const key of ['column', 'row']) {
+        if (!Number.isSafeInteger(spec[key])) throw new TypeError('Invalid capture location position')
+      }
+      if (spec.isolated != null && typeof spec.isolated !== 'boolean') throw new TypeError('Invalid capture location isolation')
+    }
     const abilities = (entry.abilities || []).map((raw, index) => normalizeDescriptor(raw, { code: entry.code, index }))
     const seen = new Set()
     for (const descriptor of abilities) {

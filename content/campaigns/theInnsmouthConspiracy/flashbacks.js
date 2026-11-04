@@ -15,6 +15,9 @@ const FLASHBACKS = {
   flashback11: ['devilReef','DiscoveryOfAMysticalRelic'],
   flashback12: ['aLightInTheFog','AConversationWithMrMoore'],
   flashback13: ['aLightInTheFog','TheLifecycleOfADeepOne'],
+  // 《暗潮之下》第八章：达贡巢穴的「记忆闪回 XIV」——选择帮助/违抗哈珀，把 07317/07318
+  // 作为并行幕（额外活动目标）入场；无永久混乱标记变化。
+  flashback14: ['intoTheMaelstrom','AStingingBetrayal'],
 }
 export function story(state, api, id, { scenario = state.scenario.id, locale = 'zh' } = {}) {
   const raw = id.split('.').reduce((value,key)=>value?.[key], STORY_TEXT[locale]?.scenarios?.[scenario])
@@ -61,6 +64,21 @@ export function resolveFlashback(state, seat, id, api) {
   story(state,api,id)
   recordSetAdd(state.campaign,'memoriesRecovered',spec[1])
   if(spec[2])changePermanentToken(state,spec[2],-1)
+  if(id==='flashback14') {
+    // 《暗潮之下》记忆闪回 XIV（07328 达贡巢穴）：帮助哈珀 → 并行幕 07317（重获宝藏）；
+    // 违抗哈珀 → 移除每张「艾莲娜·哈珀」实体卡 + 并行幕 07318（摧毁财富宝库）。
+    // 只 addParallelAct，**不再** setActDeckCards：07316 是线性幕组（正常 advanceAct+onReveal 完成），
+    // 同一张卡不能同时有「线性幕 + 并行幕」两个身份（w8 明确警告）。
+    const answer=api.choose({kind:'effect',seat,source:id,prompt:'帮助哈珀特工，还是违抗她？',
+      options:[{id:'helpHarper',label:'帮助哈珀特工（新目标：重获深潜者的宝藏）'},
+               {id:'defyHarper',label:'违抗哈珀（移除艾莲娜·哈珀，新目标：摧毁财富宝库）'}]})
+    if(answer==='helpHarper') addParallelActForContent(state,api,'07317')
+    else {
+      const removed=removeEveryPhysicalCopy(state,'07083')
+      addParallelActForContent(state,api,'07318')
+      if(removed)api.info?.(`🃏 从各区域移除 ${removed} 张「艾莲娜·哈珀」实体卡。`)
+    }
+  }
   if(id==='flashback5') {
     const owner=chooseLocalInvestigator(state,seat,api,'07139')
     if(owner!=null&&api.takeFromSetAside('07150'))api.giveAsset(owner,'07150',{uses:3,usesType:'ticket'})
@@ -83,4 +101,55 @@ export function resolveFlashback(state, seat, id, api) {
     api.mechanics.keys.linkAsset(color,asset.id)
   }
   return true
+}
+
+// ---- 记忆闪回 XIV（并行幕入场）辅助 ----------------------------------------
+const printedCode = value => (typeof value === 'string' ? value : value?.originalCode || value?.code || null)
+
+// 把 07317/07318 作为「额外的活动幕」入场。入口是引擎 api.scenario.addParallelAct（w8 提供：
+// 实例来自 state.scenario.stageCards，进 state.parallelActs；不改变 state.acts/actIndex）。
+// 完成判定由内容层 checkParallelActs（entry-rules.js 薄委托 parallel-acts.js）负责。
+// 注意：**不要**再 setActDeckCards，否则同一张卡会同时有「线性幕 + 并行幕」两个身份。
+function addParallelActForContent(state, api, code) {
+  if (typeof api.addParallelAct !== 'function') {
+    api.info?.(`⚠️ 场景运行时缺少 addParallelAct：并行幕 ${code} 未入场。`)
+    return false
+  }
+  if (api.addParallelAct(String(code)) === true) {
+    const name = state.scenario?.stageCards?.[String(code)]?.name || code
+    api.info?.(`📜 新的场景目标：${name}`)
+    return true
+  }
+  if ((state.parallelActs || []).some(act => printedCode(act) === String(code))) return false
+  api.info?.(`⚠️ 并行幕 ${code} 入场失败（缺少场景定义或已入场）。`)
+  return false
+}
+
+// 移除某卡号的每一张物理副本（手牌/牌库/弃牌/场上/存放区），返回移除数量。
+// 只服务 flashback14「违抗哈珀」；07083 是故事资产，实际可能在控制者资产区、手牌/牌堆/弃牌堆、
+// 藏身处地点下方等，逐区扫一遍避免漏卡。
+function removeEveryPhysicalCopy(state, code) {
+  const target = String(code)
+  const matches = item => item != null && (typeof item === 'string'
+    ? item === target : String(item.code || item.originalCode || '') === target)
+  let removed = 0
+  const sweep = list => {
+    if (!Array.isArray(list)) return
+    for (let index = list.length - 1; index >= 0; index--) {
+      if (!matches(list[index])) continue
+      list.splice(index, 1)
+      removed += 1
+    }
+  }
+  for (const inv of state.investigators || []) {
+    for (const zone of ['hand','deck','discard','assets','threat']) sweep(inv[zone])
+  }
+  for (const zone of ['storyAssets','victoryDisplay','agendaAside']) sweep(state[zone])
+  sweep(state.scenarioZones?.setAside)
+  for (const location of state.locations || []) {
+    sweep(location.beneath)
+    sweep(location.attachments)
+  }
+  for (const enemy of state.enemies || []) sweep(enemy.attachments)
+  return removed
 }

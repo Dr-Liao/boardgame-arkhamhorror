@@ -40,14 +40,6 @@ function transaction(s, execute, select = () => null) {
 const byId = (s, id) => s.enemies.find(item => item.id === id)
 const codeOf = entity => entity?.originalCode || entity?.code
 
-// 用真实行动入口抽一张指定遭遇卡（helper 自带 discardSelf，付完费即离场）。
-const drawHelper = {
-  code: 'w2DrawEncounterHelper',
-  abilities: [{ kind: 'action', label: '实际抽取遭遇卡', cost: { discardSelf: true },
-    resolve: ({ inv, api }) => api.scenario.drawEncounter(inv.seat) }],
-}
-if (!registeredEntry(drawHelper.code)) registerCardAbilities([drawHelper])
-
 // ---------------------------------------------------------------------------
 // 注册形状
 // ---------------------------------------------------------------------------

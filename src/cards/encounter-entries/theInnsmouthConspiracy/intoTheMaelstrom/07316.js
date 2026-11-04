@@ -43,7 +43,7 @@
 //
 // implemented: true
 
-import { floodLevel, hasTrait, originalOf } from '../../_shared.js'
+import { floodLevel, hasTrait } from '../../_shared.js'
 
 const LAIR_TRAIT = 'Lair'
 const ANCIENT_ONE_TRAIT = 'Ancient One'
@@ -121,14 +121,4 @@ export default {
       api.info?.(`🌊 「${location.name}」的淹没等级降低 1（当前 ${floodLevel(state, location.id)}）。`)
     },
   }],
-}
-
-// 供测试/审计读取的印刷事实（不进入注册表行为）。
-export const printedFacts = {
-  code: '07316',
-  objective: '每个在场地点的淹没等级都是 0（未淹没）',
-  layout: 'linear-act-deck / actIndex=1',
-  victory: 2,
-  relatedLocations: { vault: '07322', lairOfDagon: '07328', lairOfHydra: '07329' },
-  originalOf,
 }

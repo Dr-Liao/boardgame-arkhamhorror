@@ -18,6 +18,9 @@ import { campaignProjection } from '../cards/campaign-view.js'
 import { scenarioInteractionsView } from './scenario-interactions.js'
 import { scenarioGuide, scenarioSetupText } from '../../content/scenario-guides.js'
 import { mechanicView } from './mechanic-view.js'
+// TIC 捕获/押送：被俘是**公开信息**（桌面上把迷你卡侧放），观察投影按座位派生后下发，
+// 不写入 inv（见 src/engine/capture.js 的存储说明）。
+import { capturedLocation, isCaptured } from '../engine/capture.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -28,6 +31,8 @@ const PUBLIC_STATE_FIELDS = [
   'encounterDiscard', 'cultistsInVictory', 'chaosBag', 'sealedTokens', 'exiled',
   'cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames',
   'acts', 'agendas', 'tokenLabels', 'storyAssets', 'victoryDisplay', 'log',
+  // P7 并行幕（07316–07318）：额外的活动幕是公开信息（卡面/目标/合法行动都要展示）。
+  'parallelActs',
   'turnsTaken', 'timingWindow', 'humanSeats', 'aiTurnOrder', 'aiTurnOrderRound',
   // 开局「游戏高级设置」：卡牌范围与回档开关是公开的对局规则，前端据此收窄卡池、
   // 在关卡纪要里隐藏/说明回档入口。
@@ -269,6 +274,9 @@ export function viewState(state, observerSeat = null, options = {}) {
   }
   view.investigators = state.investigators.map(inv => ({
     ...pick(inv, PUBLIC_INVESTIGATOR_FIELDS, copyField),
+    // 被俘状态与其关押地点（拘禁室）：从 mechanicState.captured 现算，所有观察者可见。
+    captured: isCaptured(state, inv.seat),
+    capturedAt: capturedLocation(state, inv.seat),
     assets: inv.assets.map(asset => projectAsset(asset, inv)),
     threat: (inv.threat || []).map(card => projectAsset(card, inv)),
     maxSanity: getMaxSanity(inv),

@@ -23,18 +23,19 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { enemy, move, settle } from './core-fixture.mjs'
-import { enemyHealth, legalMoves, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
+import { checkAct, enemyHealth, legalMoves, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import e07164b from '../src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07164b.js'
 import e07165b from '../src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165b.js'
+import e07166 from '../src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07166.js'
 import e07185 from '../src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07185.js'
 import e07199 from '../src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199.js'
 import e07200 from '../src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07200.js'
 import e07201 from '../src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07201.js'
 import e07202 from '../src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07202.js'
 
-const entries = [e07164b, e07165b, e07185, e07199, e07200, e07201, e07202]
+const entries = [e07164b, e07165b, e07166, e07185, e07199, e07200, e07201, e07202]
 for (const entry of entries) if (!registeredEntry(entry.code)) registerCardAbilities([entry])
 
 function transaction(s, execute, select = () => null) {
@@ -45,6 +46,22 @@ function transaction(s, execute, select = () => null) {
     const id = select(choice, s) ?? ['done', 'skip', 'self'].find(optionId => choice.options.some(option => option.id === optionId))
       ?? choice.options[0].id
     resolveTransaction(s, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, execute)
+  }
+}
+
+// 结局流程用 api.finish：finishScenario 会以 ScenarioEnded 正常收束剧本结算，
+// 测试按 tests/tic-chapter-resolutions.test.mjs 的写法只吞这个控制流异常。
+function finishTransaction(s, execute, select = () => null) {
+  const guarded = draft => {
+    try { execute(draft) } catch (error) { if (error.constructor.name !== 'ScenarioEnded') throw error }
+  }
+  resolveTransaction(s, 0, { action: 'testTicMiddleFinish' }, guarded)
+  for (let guard = 0; s.pendingChoice; guard++) {
+    assert.ok(guard < 80, `choice loop ${s.pendingChoice.kind}`)
+    const choice = s.pendingChoice
+    const id = select(choice, s) ?? ['done', 'skip', 'self'].find(optionId => choice.options.some(option => option.id === optionId))
+      ?? choice.options[0].id
+    resolveTransaction(s, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, guarded)
   }
 }
 
@@ -175,6 +192,19 @@ test('07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错',
     registeredEntry('07165').agendaRule.onReveal(draft, draft.agendas[draft.agendaIndex], scenarioRuntime(draft, []))
   })
   assert.equal(s.enemies.some(item => codeOf(item) === '07165b'), false, '没有生成点时不落敌人')
+})
+
+test('07166 深海的魔鬼：背面记录「浪潮愈烈」并进入结局 1', () => {
+  const s = chapterFixture('devilReef', 1)
+  assert.deepEqual(s.agendas.map(codeOf), ['07165', '07166'], '第二张议程是深海的魔鬼')
+  const entry = registeredEntry('07166')
+  assert.equal(typeof entry.agendaRule.onReveal, 'function', '背面 onReveal 已接线（审计要求）')
+  assert.deepEqual(entry.agendaRule.movementActionSurcharge, { amount: 2, betweenTraits: ['Ocean'] }, '正面规则保留')
+  finishTransaction(s, draft => {
+    entry.agendaRule.onReveal(draft, draft.agendas.find(agenda => codeOf(agenda) === '07166'), scenarioRuntime(draft, []))
+  })
+  assert.equal(s.campaign.records.TheTideHasGrownStronger, true, '在剧本日志记录「浪潮愈烈」')
+  assert.equal(s.campaign.scenarioResults.at(-1)?.resolution, 'resolution1', '背面 (→结局1)')
 })
 
 // ---------------------------------------------------------------------------
@@ -371,14 +401,35 @@ test('07199 轮末道路清理：后方空地点移出游戏；停机列保留�
 // 07202 油门踩死
 // ---------------------------------------------------------------------------
 
-test('07202：声明「每个敌人获得猎手」「调查阶段末载具移动」与背面结局1', () => {
+test('07202：声明「每个敌人获得猎手」「调查阶段末载具移动」「剧情指示型目标」与背面结局1', () => {
   const entry = registeredEntry('07202')
   assert.equal(entry.implemented, true)
   assert.equal(entry.scope, 'act')
   assert.equal(entry.actRule.enemiesGainHunter, true, '每个敌人获得猎手的读点声明')
+  assert.equal(typeof entry.actRule.objective, 'function', '印刷含目标 → 必须有 actRule.objective（审计要求）')
   assert.equal(typeof entry.actRule.onReveal, 'function', '背面 (→结局1)')
   assert.equal(entry.abilities.length, 1)
   assert.ok(entry.abilities[0].trigger.includes('investigationPhaseEnds'))
+})
+
+test('07202：「尽快开到猎鹰岬」是剧情指示型目标——objective 恒 false，不自动推进幕', () => {
+  const s = chapterFixture('horrorInHighGear', 1)
+  s.enemies = []
+  const entry = registeredEntry('07202')
+  const act = s.acts[s.actIndex]
+  assert.equal(codeOf(act), '07202')
+  const api = scenarioRuntime(s, [])
+  assert.equal(entry.actRule.objective(s, act, api), false, '没有剧情指示时恒 false')
+  // 即使把所有调查员视为「已到最前方」，actRule.objective 也不判定推进（推进由 07203 的地点目标承担）。
+  for (const inv of s.investigators) {
+    const front = s.locations.find(location => columnOf(s, location.id) === Math.max(...Object.values(roadColumns(s)).map(Number)))
+    api.moveInvestigator(inv.seat, front.id)
+  }
+  assert.equal(entry.actRule.objective(s, act, api), false, '全员到最前方也恒 false')
+  const before = s.actIndex
+  transaction(s, draft => { checkAct(draft, []) })
+  assert.equal(s.actIndex, before, '幕不会被 07202 的 objective 误推进')
+  assert.equal(s.status, 'playing')
 })
 
 test('07202：全局猎手读点让未印猎手的敌人在敌人阶段获得猎手行为', () => {

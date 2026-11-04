@@ -20,6 +20,7 @@ import { enemySpawnRuleFor } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
+import { capturedActionError } from './capture.js'
 import { capabilityBlocked } from './modifiers.js'
 import { swarmGroup, returnSwarmCard, swarmCardsOf } from './swarm.js'
 import { tracksHistory } from './action-history.js'
@@ -324,6 +325,47 @@ function buildDistance(state, from, to) {
   return Infinity
 }
 
+// TIC 拘禁室：「敌人不能进入或生成在拘禁室（如果将有敌人生成在此，改为将其生成在任意
+// 沉没岩洞）」。地点侧声明 `locationRule.enemiesCannotEnter` / `locationRule.enemySpawnRedirect`
+// （形状校验在 ability.js 注册期）；生成落点被该地点拒绝时按声明的候选改换：
+//   · toOriginalCodes：按卡号匹配已入场地点（拘禁室用沉没岩洞的三个候选卡号，具体值在内容层声明）；
+//   · toTrait：按特性匹配（任意沉没岩洞类地点可复用同一声明）。
+// 多位候选默认由领队选择（chooser:'lead'），也可声明 'random'。没有任何候选时保留原落点，
+// 让下面既有的「不能在…生成」失败路径（spawnFailed）处理。
+function redirectEnemySpawn(state, code, locationId) {
+  if (!locationId) return locationId
+  const location = state.locations.find(item => item.id === locationId)
+  const rule = registeredEntry(location?.originalCode || location?.code)?.locationRule
+  const redirect = rule?.enemiesCannotEnter === true ? rule.enemySpawnRedirect : null
+  if (!redirect) return locationId
+  let candidates = state.locations.filter(item => item.id !== locationId)
+  if (Array.isArray(redirect.toOriginalCodes) && redirect.toOriginalCodes.length) {
+    candidates = candidates.filter(item =>
+      redirect.toOriginalCodes.includes(String(item.originalCode || item.code)))
+  }
+  if (redirect.toTrait) {
+    const wanted = String(redirect.toTrait).toLowerCase()
+    candidates = candidates.filter(item =>
+      (item.traits || []).some(trait => String(trait).toLowerCase() === wanted))
+  }
+  if (!candidates.length) return locationId
+  let chosen = candidates[0]
+  if (candidates.length > 1) {
+    if (redirect.chooser === 'random') {
+      chosen = candidates[Math.floor(randomValue(state) * candidates.length)]
+    } else {
+      const chosenId = requestChoice(state, {
+        kind: 'location', source: code, seat: leadDecisionSeat(state),
+        prompt: `拘禁室禁止敌人进场：选择改为生成「${enemyDef(code)?.name || code}」的地点。`,
+        options: candidates.map(item => ({ id: item.id, label: item.name || item.id })),
+      })
+      chosen = candidates.find(item => item.id === chosenId) || chosen
+    }
+  }
+  info(state, [], `🔀 「${enemyDef(code)?.name || code}」不能在「${location.name || location.id}」生成，改为在「${chosen.name || chosen.id}」生成。`)
+  return chosen.id
+}
+
 function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, temporary = false, sourceSeat = null, options = {}) {
   if (options.exhausted != null && typeof options.exhausted !== 'boolean') throw new TypeError('Invalid exhausted spawn option')
   const def = enemyDef(code)
@@ -427,6 +469,9 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     }
   }
   if (!ignoreSpawn && scenarioBehavior(state).spawnLocation) loc = scenarioBehavior(state).spawnLocation(state, code, loc, engagedSeat, scenarioRuntime(state, []))
+  // 「敌人不能生成在该地点」的地点侧声明（07252b 拘禁室）：按声明的候选改换落点；
+  // 无候选时保留原落点，交给下面的 enemyCanEnterLocation 失败路径。
+  loc = redirectEnemySpawn(state, code, loc)
   // 2026-10-25 本循环修复 05204/05205：剧本级「此地不能生成敌人」限制统一咨询（含 api.spawn 的 ignoreSpawn 路径）；
   // 被禁止时按生成失败处理（进遭遇弃牌堆 + spawnFailed），与参考实现 noSpawn 语义一致。
   if (!enemyCanEnterLocation(state, { ...def, code, originalCode: code }, loc)
@@ -513,6 +558,10 @@ function engageEnemy(state, enemy, seat, events = [], grouped = false) {
     for (const member of swarmGroup(state, enemy)) engageEnemy(state, member, seat, events, true)
     return
   }
+  // TIC 捕获：被俘的调查员不能被交战（印刷 07252）。基础行动、自动交战与剧本/遭遇来源的
+  // 强制交战都落到这里，是全库唯一的交战写入点。
+  const captureError = capturedActionError(state, state.investigators?.[seat], 'engage')
+  if (captureError) return
   // 沉睡（enemyRule.slumbering）：「不能与调查员交战」是印刷的无条件规则——基础行动、
   // 剧本/遭遇来源与自动交战都不放行（`enemyEffectAllowed` 对 engage 一律 false）。
   if (!enemyEffectAllowed(state, enemy, 'engage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked, cardDef })) return

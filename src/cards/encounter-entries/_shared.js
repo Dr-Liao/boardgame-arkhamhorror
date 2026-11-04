@@ -774,6 +774,9 @@ import { effectiveFloodLevel } from '../../engine/flood.js'
 export { locationLookCandidates } from '../../engine/location-look.js'
 export { payablePoolTokens } from '../../engine/chaos-token-pool.js'
 export { gridPosition, gridLocations } from '../../engine/grid-map.js'
+// P7 TIC 捕获/押送（07252b 等）：被俘状态的只读查询（写入口只在 api.scenario.capture/freeCaptured）。
+export { capturedAtLocation, capturedCount, capturedLocation, capturedSeats, isCaptured } from '../../engine/capture.js'
+import { capturedAtLocation as capturedSeatsAt } from '../../engine/capture.js'
 
 
 import { keysAt as heldKeysQuery, keysHeldAtLocation as localHeldKeysQuery, keysHeldByGroup as groupKeysQuery } from '../../engine/scenario-keys.js'
@@ -1123,6 +1126,104 @@ export function floodBottommostLocations(state, api, count, source) {
   }
   return count - remaining
 }
+
+// ---------------------------------------------------------------------------
+// P7 第六章《雾中之光》07237b 幕背面与 07233b 议程背面共用的「沉没岩洞扩张 + 惨遭俘虏洗入」
+// 印刷块（两卡是同一句印刷文本的两种触发路径）：
+//   · 把沉没岩洞（深层）放在（浅层）正下方、把（底层）放在（深层）正下方；
+//   · 揭示灯塔地下室（07244 的已揭示面 = 沉没岩洞浅层）；
+//   · 把随机放在一边的潮水通道地点放入场，直到每一行（灯光室所在行除外）正好 4 个地点；
+//   · 把每张放在一边的「惨遭俘虏」洗入遭遇牌库。
+// 条目只声明差异（07237b 另把马什加入胜利区并直接推进议程 3a；07233b 另结算全员被俘并
+// 直接推进场景 3a），地图扩张本身只在这里实现一次。
+// ---------------------------------------------------------------------------
+const GROTTO_UPPER = '07244'
+const GROTTO_LOWER = '07245'
+const GROTTO_FINAL = '07246'
+const TAKEN_CAPTIVE = '07260'
+// 放在一边的「潮水通道」实体：07247–07251（未揭示面 Tidal Tunnel）与 07102/07103 各两张。
+const TIDAL_TUNNEL_CODES = ['07247', '07248', '07249', '07250', '07251', '07102', '07103']
+
+export function sunkenGrottoLocation(state, code) {
+  const wanted = String(code)
+  return state.locations.find(location => String(originalOf(location)) === wanted) || null
+}
+
+function sunkenGrottoDefinition(state, code) {
+  const wanted = String(code)
+  return Object.values(state.scenario?.locations || {})
+    .find(definition => String(originalOf(definition)) === wanted) || null
+}
+
+function placeGrottoAt(state, api, code, x, y) {
+  const existing = sunkenGrottoLocation(state, code)
+  if (existing) return existing
+  const definition = sunkenGrottoDefinition(state, code)
+  if (!definition) return null
+  if (api.mechanics.map.locations({ row: y, column: x }).length) return null
+  api.mechanics.map.place(definition.id, x, y)
+  return sunkenGrottoLocation(state, code)
+}
+
+function placeGrottoBelow(state, api, code, anchor, fallbackPosition) {
+  if (!anchor) return placeGrottoAt(state, api, code, fallbackPosition.x, fallbackPosition.y)
+  const at = api.mechanics.map.position(anchor.id)
+  if (!at || !Number.isFinite(at.x) || !Number.isFinite(at.y)) {
+    return placeGrottoAt(state, api, code, fallbackPosition.x, fallbackPosition.y)
+  }
+  return placeGrottoAt(state, api, code, at.x, at.y - 1)
+}
+
+// 逐行补潮水通道到每行 4 个（主线图示：上层行 / 深层行 / 底层行各 3 个空位、固定地点占中列）。
+function spreadGrottoTunnels(state, api, anchor) {
+  const at = anchor && api.mechanics.map.position(anchor.id)
+  if (!at || !Number.isFinite(at.x) || !Number.isFinite(at.y)) return 0
+  const inPlay = new Set(state.locations.map(location => location.id))
+  const available = Object.values(state.scenario.locations || {})
+    .filter(definition => TIDAL_TUNNEL_CODES.includes(String(originalOf(definition)))
+      && !inPlay.has(definition.id))
+    .map(definition => definition.id)
+  if (!available.length) return 0
+  const shuffled = api.shuffle([...available])
+  const slots = []
+  for (const dy of [0, -1, -2]) for (const dx of [-2, -1, 1]) slots.push({ x: at.x + dx, y: at.y + dy })
+  let placed = 0
+  let cursor = 0
+  for (const slot of slots) {
+    if (cursor >= shuffled.length) break
+    const rowCount = api.mechanics.map.locations({ row: slot.y }).length
+    if (rowCount >= 4) continue
+    if (api.mechanics.map.locations({ row: slot.y, column: slot.x }).length) continue
+    api.mechanics.map.place(shuffled[cursor], slot.x, slot.y)
+    cursor += 1
+    placed += 1
+  }
+  return placed
+}
+
+export function expandSunkenGrotto(state, api, { revealUpper = true, shuffleTakenCaptive = true } = {}) {
+  let upper = sunkenGrottoLocation(state, GROTTO_UPPER)
+  if (!upper) {
+    placeGrottoAt(state, api, GROTTO_UPPER, 2, -1)
+    upper = sunkenGrottoLocation(state, GROTTO_UPPER)
+  }
+  if (upper && revealUpper && !upper.revealed) api.reveal(upper.id)
+  const lower = placeGrottoBelow(state, api, GROTTO_LOWER, upper, { x: 2, y: -2 })
+  placeGrottoBelow(state, api, GROTTO_FINAL, lower, { x: 2, y: -3 })
+  const tunnelCount = spreadGrottoTunnels(state, api, upper)
+  const takenCaptive = []
+  if (shuffleTakenCaptive) {
+    while (api.takeFromSetAside(TAKEN_CAPTIVE)) takenCaptive.push(TAKEN_CAPTIVE)
+    if (takenCaptive.length) api.shuffleIntoEncounterDeck(takenCaptive, { shuffle: false })
+  }
+  return { upper, lower, tunnelCount, takenCaptive: takenCaptive.length }
+}
+
+// 07252b 拘禁室的解救候选：只在「被关押在此处」的调查员里选。
+export function capturedInvestigatorsHere(state, locationId) {
+  return capturedSeatsAt(state, locationId)
+}
+
 
 // ---------------------------------------------------------------------------
 // P7 第五章《全速恐惧》三张同文追逐议程（07199 / 07200 / 07201：追逐开始！v.I / v.II、热力追踪）

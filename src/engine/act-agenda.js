@@ -531,5 +531,48 @@ export function createActAgenda(deps) {
     checkAgenda(state, events)
   }
 
-  return { advanceAct, advanceActDirectly, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
+  // P7：幕/议程牌库操作（原语请求 w6-act-agenda-deck-ops）。
+  //   setActDeckCards(index, codes) / setAgendaDeckCards(index, codes)：
+  //   codes 从 state.scenario.stageCards 实例化（与 setup.js 的 state.acts = sc.acts 同形状），
+  //   放进牌库的 index 位置，并从 index 起替换旧牌（index === 当前长度 时为追加扩展）。
+  //   不改变 actIndex / agendaIndex（何时结算新卡由调用方决定；Harper 07060 的
+  //   「营救 07061 装进下一格幕牌库」、flashback 的替代幕都走这里）。
+  function stageDeckInstances(state, codes, type) {
+    const list = Array.isArray(codes) ? codes : (codes == null ? [] : [codes])
+    const instances = []
+    for (const code of list) {
+      const definition = state.scenario?.stageCards?.[String(code)]
+      if (!definition || definition.type !== type) return null
+      instances.push(structuredClone(definition))
+    }
+    return instances
+  }
+
+  function replaceStageDeck(state, events, key, index, codes, type, label) {
+    if (!Number.isInteger(index) || index < 0) return false
+    const current = Array.isArray(state[key]) ? state[key] : (state[key] = [])
+    if (index > current.length) return false
+    const instances = stageDeckInstances(state, codes, type)
+    if (!instances) return false
+    state[key] = current.slice(0, index).concat(instances)
+    if (type === 'agenda') {
+      for (const agenda of state[key]) {
+        if (agenda.doomThresholdPerInvestigator != null) {
+          agenda.doomThreshold = agenda.doomThresholdPerInvestigator * state.numInvestigators
+        }
+      }
+    }
+    info(state, events, `📜 ${label}更新：${instances.map(instance => instance.name).join('、') || '（清空该位置及其后的卡牌）'}。`)
+    return true
+  }
+
+  function setActDeckCards(state, events, index, codes) {
+    return replaceStageDeck(state, events, 'acts', index, codes, 'act', '场景牌库')
+  }
+
+  function setAgendaDeckCards(state, events, index, codes) {
+    return replaceStageDeck(state, events, 'agendas', index, codes, 'agenda', '密谋牌库')
+  }
+
+  return { advanceAct, advanceActDirectly, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, setActDeckCards, setAgendaDeckCards, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
 }

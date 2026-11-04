@@ -20,6 +20,11 @@ const node = currentEvidence('node-acceptance'), browser = currentEvidence('brow
 const interactions = buildInteractionAudit()
 const investigators = buildInvestigatorAudit()
 const players = buildPlayerStageAudit()
+// 2026-11-04：八章 12 项逐章验收由 tools/audit-tic-scenarios.mjs 生成账本；
+// 本工具（P7 gate）只读账本，不重复判定（literalCardBehavior 需要逐卡账本，见 tic-all-card-acceptance）。
+const scenarioLedger = JSON.parse(readFileSync(join(MOD, 'audit/tic-scenario-acceptance.json'), 'utf8'))
+const scenarioLedgerItem = id => (scenarioLedger.items || []).find(item => item.id === id) || null
+const scenarioVerified = item => Boolean(item) && SCENARIO_MIGRATION_CHECKS.every(check => item.checks?.[check] === true)
 const ok = gates => Object.values(gates).every(value => value === true)
 const same = (name, report) => { try { return readFileSync(join(MOD, `audit/tic-${name}.json`), 'utf8') === json(report) } catch { return false } }
 const keywordItems = TIC_KEYWORDS.map(keyword => {
@@ -31,9 +36,21 @@ const keywordItems = TIC_KEYWORDS.map(keyword => {
   return { id: keyword.id, ruleId: keyword.ruleId, cards: keyword.cardCodes, checks, status: ok(checks) ? 'verified' : 'pending',
     evidence: ['audit/tic-mechanism-scan.json', 'audit/tic-primitive-plan.json', 'audit/tic-node-acceptance.json', 'web/tic-rules.js'] }
 })
-const scenarioItems = chapters.map(chapter => ({ id: chapter.id, code: chapter.code, status: 'pending',
-  checks: Object.fromEntries(SCENARIO_MIGRATION_CHECKS.map(id => [id, ['sourceLocked', 'identityRegistered'].includes(id)])),
-  evidence: ['audit/tic-scope.json', `content/campaigns/theInnsmouthConspiracy/scenarios/${chapter.id}/index.js`] }))
+// P7 逐章：接受账本（tools/audit-tic-scenarios.mjs --write）为唯一事实来源；
+// 12 项全 true ⇔ status 'verified'（账本 status 由工具判定，这里只做格式映射与顺序校验）。
+const scenarioItems = chapters.map(chapter => {
+  const item = scenarioLedgerItem(chapter.id)
+  const checks = Object.fromEntries(SCENARIO_MIGRATION_CHECKS.map(id => [id, item?.checks?.[id] === true]))
+  const verified = scenarioVerified(item)
+  return { id: chapter.id, code: chapter.code, status: verified ? 'verified' : 'pending', checks,
+    evidence: Array.isArray(item?.evidence) ? item.evidence : ['audit/tic-scenario-acceptance.json'] }
+})
+// P7 gate 还要求逐卡账本（literalCardBehavior 只认审计账本，不认测试文本）与章节测试文件证据。
+const allCardLedger = (() => {
+  try { return JSON.parse(readFileSync(join(MOD, 'audit/tic-all-card-acceptance.json'), 'utf8')) } catch { return null }
+})()
+const p7AllCardsVerified = Boolean(allCardLedger) && (allCardLedger.items || []).length > 0
+  && (allCardLedger.items || []).every(item => item.status === 'verified')
 const rulebookChecks = { campaignOverview: ruleById('ticCampaign').body.join('').includes('暗潮之下'),
   scenarioMechanics: ok(plan.gates), keywordEntries: keywordItems.every(item => item.checks.rulebookEntry),
   cardLinks: keywordItems.every(item => item.checks.cardLinks),
@@ -45,7 +62,10 @@ const gates = { p0: ok(scope.gates) && same('scope', scope) && !!node,
   p3: keywordItems.every(row => row.status === 'verified') && ok(rulebookChecks) && !!regression,
   p4: interactions.status === 'verified' && same('interactions', interactions),
   p5: investigators.status === 'verified' && same('investigators', investigators),
-  p6: players.status === 'verified' }
+  p6: players.status === 'verified',
+  // P7：八章逐章 12 项全部 verified + 逐卡账本全 verified + 章节账本在本轮源码快照下稳定。
+  p7: scenarioItems.every(item => item.status === 'verified') && p7AllCardsVerified
+    && scenarioLedger.sourceStableDuringRun !== false }
 const report = { schemaVersion: 1, campaignId: 'theInnsmouthConspiracy', status: 'catalog-only', playable: false, earlyAccess: false,
   equivalenceCertified: false, generatedBy: 'node tools/audit-tic.mjs --write',
   stages: Object.fromEntries(Object.entries(gates).map(([id, value]) => [id.toUpperCase(), value ? 'verified' : 'pending'])),
@@ -66,7 +86,7 @@ const report = { schemaVersion: 1, campaignId: 'theInnsmouthConspiracy', status:
     ...(!gates.p4 ? ['P4：新增卡牌操作与场景交互仍需当前源码的专项验收。'] : []),
     ...(!gates.p5 ? ['P5：五位调查员与专属依赖仍需当前源码的逐人验收。'] : []),
     ...(!gates.p6 ? ['P6：一般玩家卡仍需当前源码的逐卡、界面及回归验收。'] : []),
-    'P7：共享遭遇、八章规则、幕间、完整中英叙事和冒险指南；占位章尚不注册到生产关卡列表。',
+    ...(!gates.p7 ? ['P7：八章逐章验收（12 项）、逐卡账本、中英叙事与冒险指南、章节测试与浏览器验收尚未全部 verified；占位章尚不注册到生产关卡列表。'] : []),
     'P8：完整战役、失败分支、存档、多人与 AI、真实联机和发布验收；内容不可启动。',
   ], gates }
 assertMigrationConfirmations(report, chapters.map(ch => ch.id))
