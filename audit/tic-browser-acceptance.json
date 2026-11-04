@@ -2,100 +2,1270 @@
   "schemaVersion": 2,
   "generatedBy": "playwright + tools/playwright-tic-reporter.mjs",
   "evidenceCommand": "node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tic.config.mjs",
-  "status": "failed",
-  "sourceStableDuringRun": false,
+  "status": "passed",
+  "sourceStableDuringRun": true,
   "coverage": {
-    "desktop:zh-CN": false,
-    "desktop:en": false,
-    "mobile:zh-CN": false,
-    "mobile:en": false
+    "desktop:zh-CN": true,
+    "desktop:en": true,
+    "mobile:zh-CN": true,
+    "mobile:en": true
   },
   "links": {
-    "desktop": false,
-    "mobile": false
+    "desktop": true,
+    "mobile": true
   },
   "scenarios": [
     {
       "scenario": "thePitOfDespair",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "theVanishingOfElinaHarper",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "inTooDeep",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "devilReef",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "horrorInHighGear",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "aLightInTheFog",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "theLairOfDagon",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png"
+      ]
     },
     {
       "scenario": "intoTheMaelstrom",
-      "desktop": false,
-      "mobile": false,
-      "ok": false,
-      "screenshots": []
+      "desktop": true,
+      "mobile": true,
+      "ok": true,
+      "screenshots": [
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
+        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png"
+      ]
     }
   ],
-  "scenariosComplete": false,
+  "scenariosComplete": true,
   "chapterCount": 8,
   "tests": [
     {
       "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": null,
+      "scenario": "thePitOfDespair",
       "viewport": "desktop",
-      "status": "failed",
+      "status": "passed",
       "screenshots": [
         {
           "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-          "sha256": "3a4eee09936bf0450d644ce07fb6eccf9a950cd0d7683dbbb2785a20eaf71a6d"
+          "sha256": "68c1037ee56ba034c8c3d408895d9bf6e03f3c3cac83677e06cf250e2914075a"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
+          "sha256": "b6f3c096c6ac414ce1638550061a576f9a7f55d04644f8b8acaf03e6f0659123"
         }
       ]
+    },
+    {
+      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "thePitOfDespair",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
+          "sha256": "cc6a5981d2f5cc3aa98bee7ed092a38be13f8da070864d0bb8e0da6e2e9d8670"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
+          "sha256": "acd6d397f94ce346f1154dbc5ee457611544d25f6472d66b087e71ac0db5a1f5"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
+          "sha256": "253b0158ae06da3dc41fc0f1adaef7bd835dc98311cc59701e393ebdc3fcd588"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
+          "sha256": "0a80f09d881f98fff624103483f9cf6d63e6295ba485aa659ce65ffbca7c9b53"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
+          "sha256": "fd7c09d2c26a77430e62623d0ed388db04fe2d07b010bbe154ff01bc5c0c5218"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png",
+          "sha256": "53ea101a027973352e52ae3ced95f65fe20dc56028b4d57075c34864a26788b5"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
+          "sha256": "09987070a504878eddf4a8d26b8106e142a571a7946125cea2944fba04755998"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
+          "sha256": "cbc7232593571f89c73e3853f703db3d96aa83463a44e61746bd19f97742a146"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
+          "sha256": "e109dd505a219906e21fb28b90b6528bb2edaaed2802b53940d0d633d5b30762"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
+          "sha256": "aa37ae43c1ab39fc31fe51d6f2b46e5f1b7b9d33d5ddfaac4c41913f3b889077"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
+          "sha256": "c5963a9ee1af818ddd707a6ec732e2b3d3baef46185a1098534d0e84ca502177"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
+          "sha256": "795cfdf5385e6a81c4d0d188bc45d085760b50f7ea153546f796a1f010fc2d10"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
+          "sha256": "0f8ebc0c3f830520185dc736a02f8ff9d280ff88dfe922fea3ca41eb48113c1a"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png",
+          "sha256": "a9d96b010ed7d853636e98559cac4355414464e2d5c7dd96f55eca6dc7138f37"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
+          "sha256": "51508ca021477aaf0ada9f2ff98013f3421e69e2f5c12be440d87485064753c2"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
+          "sha256": "d93120f14c8bf85f121bfbaf3c43addf509eff798c7c5940c5ab78c317f09735"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
+          "sha256": "ef575117a190701275fc6ec1dce7e06633c4b53578f652e088d68f21023b6a94"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
+          "sha256": "3ec327d4b841755ccab0ed924718aa26e1ae7dce1946929592d0a324c6468b40"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
+          "sha256": "891f5eb145352894ae12f2411e3486b3c3f51cec568612d7bc95c3e632ac6d0c"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
+          "sha256": "76da100a30b3f86e2d53a7bb80a01ceb2599827176f4501a089e60e1c8368557"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
+          "sha256": "d137ae0885000ed9f46e035e62ed0426cee8c9c583294dc0d5cb948313259eb4"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
+          "sha256": "44a51ec8b5696ee1c1565b1e14d996eec2dc670d91fb21155dc242deab7401fc"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
+          "sha256": "7339a23c072c31dd825584a13d9bfcb2a28a011da776590f3e710d329dc0bf48"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
+          "sha256": "166c4c455ec7f9648a9ea0a1533bfd5f098fe85047f3c62c45bfc41888c59196"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
+          "sha256": "e711bf4ab375f53b3104da1e696e444ed10112db7dedbc0124364b60867afb6a"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
+          "sha256": "676312cb4b81073cfc647fbfc036dfabc6c85410ce1355e2aad4f9006b65fafb"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
+          "sha256": "50309ceeaeaff71a8a99b9e9a1a04d5f9d797c7565ddaa539b8c496d0873e6d6"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
+          "sha256": "da4e474d2230838d72306002441796590b71dd57f1d595379f005823d1a935c8"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
+          "sha256": "92650299be7f97bf42eebd5daf8cbe1410e41691fdb1f90d9d82954bf2c27650"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png",
+          "sha256": "f5db5d54ed1c4ab43866bb621d981d4ea6bec2290d8c889f4ab2e2eb2e37e414"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
+          "sha256": "cc286485d68aead3b32cbb3affac714cf9b0b3ea260d0f2316d23bba6dd6d9eb"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
+          "sha256": "dac1566a776e66ed99ed074a497952f4a868fc7e1b6ebfd067497a0bbe820c67"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
+          "sha256": "6e87711775af89a30d041612bba3ff27aa31867ad0af5439bff3dd1dce48f34b"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
+          "sha256": "4a5c5c2f88f29bac63462dd1f80dbade17b4337653f27e11d26651069eae795f"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
+          "sha256": "41552c939e3f86c720eb986313e2088bf63a35ea7e9f0c17470b2cb80d83634a"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
+          "sha256": "14225f8ce8fb024236bbee11f6ae226314c99eeddf15d972d28448533201ac25"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
+          "sha256": "c09e3a81c998f21a6eec65bae96decca0f6734d29fc4e4ef393832e1b745240c"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
+          "sha256": "59b82dcd2bffb97ed4555b26adbda43864d8149666112e94fee4740716b0cfee"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
+          "sha256": "41ee8e27f2695833f1f7a71c88c9bb21287a63568c3cd83756c4b656867f48e0"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
+          "sha256": "797e4e31222189821869d55828b5e805f96a56764e60aae88eac6c1dfa7041ee"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
+          "sha256": "147aa4bdfc56e52c4adee04d3875a3f64751f83a813f1fcf56ad160479ab0cbe"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
+          "sha256": "450a9bd98be18ce612100f92f3ab8b3970a3bee88c25187859d380f40d8e5d86"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
+          "sha256": "b6538b21a12ae7275d99d6a364f2242c877b94af807baf6a1d58af776666b687"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
+          "sha256": "bfe79cb4ef4f06ea195f95063feda3c1b0e2523d6546c21009617e561c32319a"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
+          "sha256": "607ec89596dca7ad42959dd514d71ca37f98e3ec40a6caef5ba7b46e22e52808"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png",
+          "sha256": "734a1e7ede217e183732331ecd383b83c20c6500196ab0beccbc34bce5f96b75"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
+          "sha256": "efab9a53847016b6e30f0ff2439128d4180d347bd6fd9541673320c0a6f9f6cf"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
+          "sha256": "639f5bf0d3f13edace73a001be9bd5f794e40c35a5243dbfb8e60f63dd257867"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
+          "sha256": "e896cd60bea84c6a7d8e6a1b681a270f7de39adad6f014799cd0d2458e1cd852"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
+          "sha256": "43f70469994434b183b8a6b8273fd0bb7968a3e77fbc6627b2e053756e8bc666"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
+          "sha256": "e216cecf58a57f2ac2c4913c21b573341d9df1e9490582e7f71df36db98efbb4"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
+          "sha256": "6d7a6680c0111c0a7f463830a309e525b6f9719ac40e1eea3e51a350cb53b3d8"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
+          "sha256": "e56f231cac3def183e4e75986005bcfe09b56d3d2bf6ee6d470b0db09cc5de61"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
+          "sha256": "4f0bb24aa987d359f12b592ac5d5a9b3bcf00b85b152d1ef4c09e45c445fab79"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
+          "sha256": "889b4200338a055a97211edc40fdf8ac7bf0af871eb3be0dd8d30e3e7d8eeaca"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
+          "sha256": "43a568ff3643d2680337bd32e75d6d874a0228b0f4f72b1c8d7482c97ca6aa61"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收",
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
+          "sha256": "c732179f5fe94da6642393a5f738baaebf4fe5a5d0fc4639007fb9e2ad4dfaf9"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
+          "sha256": "bd504f895b0c9bee01b9fc7cd38146cbaec97b1e610af6c7cbe31c509cf100ee"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
+          "sha256": "36699248dac5764d905ae40db84de585fca1d7cc74b75f65855f693804b3d9f7"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
+          "sha256": "06032fbfb5036db85844e333bcb1a5f5e0d67e2493b3221b2edce8a54bdd3f8a"
+        }
+      ]
+    },
+    {
+      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收",
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
+          "sha256": "c3de5141e17d96bf0e20b4fe9aee882c4b434323762f1fd1d28290a7154987d3"
+        },
+        {
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
+          "sha256": "a1de9f1b5b51084b26ef3c6cd6cd33c9e0063991bc11dd342a0075e7038f69ab"
+        }
+      ]
+    },
+    {
+      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
+      "scenario": null,
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/reports/screenshots/desktop-zh-CN.png",
+          "sha256": "dbbd63dea53f3e479ccc582530b241ff21e5632ff7ec2858d2bebdf861904c47"
+        }
+      ]
+    },
+    {
+      "title": "P3 desktop en 规则目录、阅读与返回",
+      "scenario": null,
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/reports/screenshots/desktop-en.png",
+          "sha256": "6c3b8f63143e25b0ab028cc4289513d148af69965a0541ef2ef632ad4c8c3a77"
+        }
+      ]
+    },
+    {
+      "title": "P3 desktop 卡文直达并恢复详情焦点",
+      "scenario": null,
+      "viewport": "desktop",
+      "status": "passed",
+      "screenshots": []
+    },
+    {
+      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
+      "scenario": null,
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/reports/screenshots/mobile-zh-CN.png",
+          "sha256": "dcfae556cc1d0655551ef297598d4edbf35b3ac17e3524b1ab276b9b1ea31726"
+        }
+      ]
+    },
+    {
+      "title": "P3 mobile en 规则目录、阅读与返回",
+      "scenario": null,
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": [
+        {
+          "path": "artifacts/migration/tic/reports/screenshots/mobile-en.png",
+          "sha256": "49725cf22d0f41c0a4cd5f408e115a3fa87b4f55383d2a88328e3e23e1fc7836"
+        }
+      ]
+    },
+    {
+      "title": "P3 mobile 卡文直达并恢复详情焦点",
+      "scenario": null,
+      "viewport": "mobile",
+      "status": "passed",
+      "screenshots": []
     }
   ],
   "screenshots": [
     {
       "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-      "sha256": "3a4eee09936bf0450d644ce07fb6eccf9a950cd0d7683dbbb2785a20eaf71a6d",
+      "sha256": "68c1037ee56ba034c8c3d408895d9bf6e03f3c3cac83677e06cf250e2914075a",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "desktop",
+      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
+      "sha256": "b6f3c096c6ac414ce1638550061a576f9a7f55d04644f8b8acaf03e6f0659123",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "desktop",
+      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
+      "sha256": "cc6a5981d2f5cc3aa98bee7ed092a38be13f8da070864d0bb8e0da6e2e9d8670",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "desktop",
+      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
+      "sha256": "acd6d397f94ce346f1154dbc5ee457611544d25f6472d66b087e71ac0db5a1f5",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "desktop",
+      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
+      "sha256": "253b0158ae06da3dc41fc0f1adaef7bd835dc98311cc59701e393ebdc3fcd588",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
+      "sha256": "0a80f09d881f98fff624103483f9cf6d63e6295ba485aa659ce65ffbca7c9b53",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
+      "sha256": "fd7c09d2c26a77430e62623d0ed388db04fe2d07b010bbe154ff01bc5c0c5218",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png",
+      "sha256": "53ea101a027973352e52ae3ced95f65fe20dc56028b4d57075c34864a26788b5",
+      "exists": true,
+      "scenario": "thePitOfDespair",
+      "viewport": "mobile",
+      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
+      "sha256": "09987070a504878eddf4a8d26b8106e142a571a7946125cea2944fba04755998",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
+      "sha256": "cbc7232593571f89c73e3853f703db3d96aa83463a44e61746bd19f97742a146",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
+      "sha256": "e109dd505a219906e21fb28b90b6528bb2edaaed2802b53940d0d633d5b30762",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
+      "sha256": "aa37ae43c1ab39fc31fe51d6f2b46e5f1b7b9d33d5ddfaac4c41913f3b889077",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "desktop",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
+      "sha256": "c5963a9ee1af818ddd707a6ec732e2b3d3baef46185a1098534d0e84ca502177",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
+      "sha256": "795cfdf5385e6a81c4d0d188bc45d085760b50f7ea153546f796a1f010fc2d10",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
+      "sha256": "0f8ebc0c3f830520185dc736a02f8ff9d280ff88dfe922fea3ca41eb48113c1a",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png",
+      "sha256": "a9d96b010ed7d853636e98559cac4355414464e2d5c7dd96f55eca6dc7138f37",
+      "exists": true,
+      "scenario": "theVanishingOfElinaHarper",
+      "viewport": "mobile",
+      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
+      "sha256": "51508ca021477aaf0ada9f2ff98013f3421e69e2f5c12be440d87485064753c2",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
+      "sha256": "d93120f14c8bf85f121bfbaf3c43addf509eff798c7c5940c5ab78c317f09735",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
+      "sha256": "ef575117a190701275fc6ec1dce7e06633c4b53578f652e088d68f21023b6a94",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
+      "sha256": "3ec327d4b841755ccab0ed924718aa26e1ae7dce1946929592d0a324c6468b40",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "desktop",
+      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
+      "sha256": "891f5eb145352894ae12f2411e3486b3c3f51cec568612d7bc95c3e632ac6d0c",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
+      "sha256": "76da100a30b3f86e2d53a7bb80a01ceb2599827176f4501a089e60e1c8368557",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
+      "sha256": "d137ae0885000ed9f46e035e62ed0426cee8c9c583294dc0d5cb948313259eb4",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
+      "sha256": "44a51ec8b5696ee1c1565b1e14d996eec2dc670d91fb21155dc242deab7401fc",
+      "exists": true,
+      "scenario": "inTooDeep",
+      "viewport": "mobile",
+      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
+      "sha256": "7339a23c072c31dd825584a13d9bfcb2a28a011da776590f3e710d329dc0bf48",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
+      "sha256": "166c4c455ec7f9648a9ea0a1533bfd5f098fe85047f3c62c45bfc41888c59196",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
+      "sha256": "e711bf4ab375f53b3104da1e696e444ed10112db7dedbc0124364b60867afb6a",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
+      "sha256": "676312cb4b81073cfc647fbfc036dfabc6c85410ce1355e2aad4f9006b65fafb",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "desktop",
+      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
+      "sha256": "50309ceeaeaff71a8a99b9e9a1a04d5f9d797c7565ddaa539b8c496d0873e6d6",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
+      "sha256": "da4e474d2230838d72306002441796590b71dd57f1d595379f005823d1a935c8",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
+      "sha256": "92650299be7f97bf42eebd5daf8cbe1410e41691fdb1f90d9d82954bf2c27650",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png",
+      "sha256": "f5db5d54ed1c4ab43866bb621d981d4ea6bec2290d8c889f4ab2e2eb2e37e414",
+      "exists": true,
+      "scenario": "devilReef",
+      "viewport": "mobile",
+      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
+      "sha256": "cc286485d68aead3b32cbb3affac714cf9b0b3ea260d0f2316d23bba6dd6d9eb",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
+      "sha256": "dac1566a776e66ed99ed074a497952f4a868fc7e1b6ebfd067497a0bbe820c67",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
+      "sha256": "6e87711775af89a30d041612bba3ff27aa31867ad0af5439bff3dd1dce48f34b",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
+      "sha256": "4a5c5c2f88f29bac63462dd1f80dbade17b4337653f27e11d26651069eae795f",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "desktop",
+      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
+      "sha256": "41552c939e3f86c720eb986313e2088bf63a35ea7e9f0c17470b2cb80d83634a",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
+      "sha256": "14225f8ce8fb024236bbee11f6ae226314c99eeddf15d972d28448533201ac25",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
+      "sha256": "c09e3a81c998f21a6eec65bae96decca0f6734d29fc4e4ef393832e1b745240c",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
+      "sha256": "59b82dcd2bffb97ed4555b26adbda43864d8149666112e94fee4740716b0cfee",
+      "exists": true,
+      "scenario": "horrorInHighGear",
+      "viewport": "mobile",
+      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
+      "sha256": "41ee8e27f2695833f1f7a71c88c9bb21287a63568c3cd83756c4b656867f48e0",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
+      "sha256": "797e4e31222189821869d55828b5e805f96a56764e60aae88eac6c1dfa7041ee",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
+      "sha256": "147aa4bdfc56e52c4adee04d3875a3f64751f83a813f1fcf56ad160479ab0cbe",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
+      "sha256": "450a9bd98be18ce612100f92f3ab8b3970a3bee88c25187859d380f40d8e5d86",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "desktop",
+      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
+      "sha256": "b6538b21a12ae7275d99d6a364f2242c877b94af807baf6a1d58af776666b687",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
+      "sha256": "bfe79cb4ef4f06ea195f95063feda3c1b0e2523d6546c21009617e561c32319a",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
+      "sha256": "607ec89596dca7ad42959dd514d71ca37f98e3ec40a6caef5ba7b46e22e52808",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png",
+      "sha256": "734a1e7ede217e183732331ecd383b83c20c6500196ab0beccbc34bce5f96b75",
+      "exists": true,
+      "scenario": "aLightInTheFog",
+      "viewport": "mobile",
+      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
+      "sha256": "efab9a53847016b6e30f0ff2439128d4180d347bd6fd9541673320c0a6f9f6cf",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
+      "sha256": "639f5bf0d3f13edace73a001be9bd5f794e40c35a5243dbfb8e60f63dd257867",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
+      "sha256": "e896cd60bea84c6a7d8e6a1b681a270f7de39adad6f014799cd0d2458e1cd852",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
+      "sha256": "43f70469994434b183b8a6b8273fd0bb7968a3e77fbc6627b2e053756e8bc666",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "desktop",
+      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
+      "sha256": "e216cecf58a57f2ac2c4913c21b573341d9df1e9490582e7f71df36db98efbb4",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
+      "sha256": "6d7a6680c0111c0a7f463830a309e525b6f9719ac40e1eea3e51a350cb53b3d8",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
+      "sha256": "e56f231cac3def183e4e75986005bcfe09b56d3d2bf6ee6d470b0db09cc5de61",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
+      "sha256": "4f0bb24aa987d359f12b592ac5d5a9b3bcf00b85b152d1ef4c09e45c445fab79",
+      "exists": true,
+      "scenario": "theLairOfDagon",
+      "viewport": "mobile",
+      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
+      "sha256": "889b4200338a055a97211edc40fdf8ac7bf0af871eb3be0dd8d30e3e7d8eeaca",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
+      "sha256": "43a568ff3643d2680337bd32e75d6d874a0228b0f4f72b1c8d7482c97ca6aa61",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
+      "sha256": "c732179f5fe94da6642393a5f738baaebf4fe5a5d0fc4639007fb9e2ad4dfaf9",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
+      "sha256": "bd504f895b0c9bee01b9fc7cd38146cbaec97b1e610af6c7cbe31c509cf100ee",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "desktop",
+      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
+      "sha256": "36699248dac5764d905ae40db84de585fca1d7cc74b75f65855f693804b3d9f7",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
+      "sha256": "06032fbfb5036db85844e333bcb1a5f5e0d67e2493b3221b2edce8a54bdd3f8a",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
+      "sha256": "c3de5141e17d96bf0e20b4fe9aee882c4b434323762f1fd1d28290a7154987d3",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
+      "sha256": "a1de9f1b5b51084b26ef3c6cd6cd33c9e0063991bc11dd342a0075e7038f69ab",
+      "exists": true,
+      "scenario": "intoTheMaelstrom",
+      "viewport": "mobile",
+      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收"
+    },
+    {
+      "path": "artifacts/migration/tic/reports/screenshots/desktop-zh-CN.png",
+      "sha256": "dbbd63dea53f3e479ccc582530b241ff21e5632ff7ec2858d2bebdf861904c47",
       "exists": true,
       "scenario": null,
       "viewport": "desktop",
-      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
+      "title": "P3 desktop zh-CN 规则目录、阅读与返回"
+    },
+    {
+      "path": "artifacts/migration/tic/reports/screenshots/desktop-en.png",
+      "sha256": "6c3b8f63143e25b0ab028cc4289513d148af69965a0541ef2ef632ad4c8c3a77",
+      "exists": true,
+      "scenario": null,
+      "viewport": "desktop",
+      "title": "P3 desktop en 规则目录、阅读与返回"
+    },
+    {
+      "path": "artifacts/migration/tic/reports/screenshots/mobile-zh-CN.png",
+      "sha256": "dcfae556cc1d0655551ef297598d4edbf35b3ac17e3524b1ab276b9b1ea31726",
+      "exists": true,
+      "scenario": null,
+      "viewport": "mobile",
+      "title": "P3 mobile zh-CN 规则目录、阅读与返回"
+    },
+    {
+      "path": "artifacts/migration/tic/reports/screenshots/mobile-en.png",
+      "sha256": "49725cf22d0f41c0a4cd5f408e115a3fa87b4f55383d2a88328e3e23e1fc7836",
+      "exists": true,
+      "scenario": null,
+      "viewport": "mobile",
+      "title": "P3 mobile en 规则目录、阅读与返回"
     }
   ],
   "sourceFiles": [
@@ -13336,8 +14506,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 13829,
-      "sha256": "985776d5d6d717a91a80627610d68e895770848ce3aa7ef2a503f9df07a0f0c2"
+      "bytes": 13888,
+      "sha256": "3438b8910bbd7fa5cf065cd5c6bc05a212647f0f466ea3309410b4289bdaac23"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -13351,8 +14521,8 @@
     },
     {
       "path": "tests/playwright/playwright.tic.config.mjs",
-      "bytes": 1105,
-      "sha256": "d281e5f6bb3665039b3046fe6cd9a8b2cbc4ab6de6eb6067d77e5825095fc324"
+      "bytes": 1623,
+      "sha256": "9cbffddcf5ff96aa03fa1a6619c16b6dc4a520c05a7604efc0bee7dc174b4659"
     },
     {
       "path": "tests/reaction-preferences.test.mjs",
@@ -13376,8 +14546,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 24229,
-      "sha256": "7caba10477a3fa5597f843963b8a86d8809129def82adb8d127343fbb5d60e14"
+      "bytes": 24315,
+      "sha256": "b86ad365862f52d785668b9b3831fdbf1614df057ce6748d410776591484b156"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",

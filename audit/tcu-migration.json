@@ -40,11 +40,11 @@
   "verifiedScope": {
     "milestone": "P4–P10",
     "keywords": true,
-    "rulebook": false,
-    "interactions": false,
+    "rulebook": true,
+    "interactions": true,
     "investigators": true,
     "scenarios": true,
-    "playerCards": true,
+    "playerCards": false,
     "story": true,
     "allCards": true,
     "cardBehaviorAudit": true,
@@ -2270,7 +2270,7 @@
       ]
     },
     "rulebook": {
-      "status": "pending",
+      "status": "verified",
       "requiredRuleIds": [
         "tcuCampaign",
         "tcuHaunted",
@@ -2294,8 +2294,8 @@
         "scenarioMechanics": true,
         "keywordEntries": true,
         "cardLinks": true,
-        "desktopBrowser": false,
-        "mobileBrowser": false
+        "desktopBrowser": true,
+        "mobileBrowser": true
       },
       "details": {
         "campaignOverview": {
@@ -2344,8 +2344,8 @@
           "interactionsMobile": true,
           "desktop": true,
           "mobile": true,
-          "screenshots": 30,
-          "screenshotsComplete": false
+          "screenshots": 32,
+          "screenshotsComplete": true
         }
       },
       "evidence": [
@@ -2358,7 +2358,7 @@
       ]
     },
     "interactions": {
-      "status": "pending",
+      "status": "verified",
       "checks": {
         "desktopBrowser": true,
         "mobileBrowser": true,
@@ -2373,13 +2373,13 @@
             "tarotPickerModel",
             "renderTarotPicker"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2397,13 +2397,13 @@
             "storyInvestigatorPickerModel",
             "renderStoryInvestigatorPicker"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2421,13 +2421,13 @@
             "hauntedChoiceModel",
             "renderHauntedChoice"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2445,13 +2445,13 @@
             "tcuCampaignModel",
             "renderTcuCampaignPanel"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2468,13 +2468,13 @@
           "model": [
             "multiSkillTestInfo"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2489,13 +2489,13 @@
           "zh": "谈判目标与豁免",
           "keyword": "parley",
           "model": [],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2510,13 +2510,13 @@
           "model": [
             "tcuCampaignModel"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2533,13 +2533,13 @@
           "model": [
             "tcuCampaignModel"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2556,13 +2556,13 @@
           "model": [
             "locationTcuBadges"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2579,13 +2579,13 @@
           "model": [
             "enemyFaceBadge"
           ],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2600,13 +2600,13 @@
           "zh": "塔罗槽位",
           "keyword": "tarotSlot",
           "model": [],
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "model": true,
             "engineReadPoint": true,
             "nodeAcceptance": true,
-            "desktopBrowser": false,
-            "mobileBrowser": false
+            "desktopBrowser": true,
+            "mobileBrowser": true
           },
           "problems": [],
           "evidence": [
@@ -2815,7 +2815,7 @@
       ]
     },
     "playerCards": {
-      "status": "verified",
+      "status": "pending",
       "total": 87,
       "constructible": 85,
       "basicWeaknesses": 2,
@@ -2825,8 +2825,8 @@
         "availabilityGate": true,
         "deckbuildingGate": true,
         "dependencyOnlyGate": true,
-        "nodeAcceptance": true,
-        "ledgerFresh": true,
+        "nodeAcceptance": false,
+        "ledgerFresh": false,
         "ledgerTest": true,
         "buildable85": true
       },
@@ -2838,14 +2838,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -2862,14 +2862,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -2896,14 +2896,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -2920,14 +2920,14 @@
           "class": "guardian",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -2949,14 +2949,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -2978,14 +2978,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3002,14 +3002,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3026,14 +3026,14 @@
           "class": "seeker",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3050,14 +3050,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3074,14 +3074,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3098,14 +3098,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3122,14 +3122,14 @@
           "class": "rogue",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3146,14 +3146,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3180,14 +3180,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3214,14 +3214,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3238,14 +3238,14 @@
           "class": "mystic",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3262,14 +3262,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3286,14 +3286,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3315,14 +3315,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3339,14 +3339,14 @@
           "class": "survivor",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3363,14 +3363,14 @@
           "class": "neutral",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3387,14 +3387,14 @@
           "class": "neutral",
           "level": 0,
           "basicWeakness": true,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3416,14 +3416,14 @@
           "class": "neutral",
           "level": 0,
           "basicWeakness": true,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3455,14 +3455,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3489,14 +3489,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3513,14 +3513,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3542,14 +3542,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3566,14 +3566,14 @@
           "class": "mystic",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3600,14 +3600,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3629,14 +3629,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3653,14 +3653,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3682,14 +3682,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3716,14 +3716,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3740,14 +3740,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3764,14 +3764,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3793,14 +3793,14 @@
           "class": "guardian",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3822,14 +3822,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3851,14 +3851,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3875,14 +3875,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3904,14 +3904,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3928,14 +3928,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3952,14 +3952,14 @@
           "class": "mystic",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -3991,14 +3991,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4015,14 +4015,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4044,14 +4044,14 @@
           "class": "guardian",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4068,14 +4068,14 @@
           "class": "rogue",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4097,14 +4097,14 @@
           "class": "seeker",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4121,14 +4121,14 @@
           "class": "mystic",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4145,14 +4145,14 @@
           "class": "rogue",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4179,14 +4179,14 @@
           "class": "survivor",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4213,14 +4213,14 @@
           "class": "guardian",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4237,14 +4237,14 @@
           "class": "mystic",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4261,14 +4261,14 @@
           "class": "seeker",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4290,14 +4290,14 @@
           "class": "survivor",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4319,14 +4319,14 @@
           "class": "neutral",
           "level": 2,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4353,14 +4353,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4377,14 +4377,14 @@
           "class": "guardian",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4411,14 +4411,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4435,14 +4435,14 @@
           "class": "seeker",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4459,14 +4459,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4483,14 +4483,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4512,14 +4512,14 @@
           "class": "mystic",
           "level": 2,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4536,14 +4536,14 @@
           "class": "survivor",
           "level": 1,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4565,14 +4565,14 @@
           "class": "survivor",
           "level": 2,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4594,14 +4594,14 @@
           "class": "guardian",
           "level": 4,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4618,14 +4618,14 @@
           "class": "guardian",
           "level": 5,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4647,14 +4647,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4686,14 +4686,14 @@
           "class": "seeker",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4710,14 +4710,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4749,14 +4749,14 @@
           "class": "rogue",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4773,14 +4773,14 @@
           "class": "mystic",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4812,14 +4812,14 @@
           "class": "mystic",
           "level": 5,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4841,14 +4841,14 @@
           "class": "survivor",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4865,14 +4865,14 @@
           "class": "survivor",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4904,14 +4904,14 @@
           "class": "neutral",
           "level": 4,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4938,14 +4938,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4967,14 +4967,14 @@
           "class": "guardian",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -4996,14 +4996,14 @@
           "class": "guardian",
           "level": 2,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5020,14 +5020,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5049,14 +5049,14 @@
           "class": "seeker",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5078,14 +5078,14 @@
           "class": "seeker",
           "level": 5,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5102,14 +5102,14 @@
           "class": "rogue",
           "level": 0,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5141,14 +5141,14 @@
           "class": "rogue",
           "level": 4,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5170,14 +5170,14 @@
           "class": "mystic",
           "level": 4,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5214,14 +5214,14 @@
           "class": "mystic",
           "level": 4,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5258,14 +5258,14 @@
           "class": "survivor",
           "level": 2,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5287,14 +5287,14 @@
           "class": "survivor",
           "level": 3,
           "basicWeakness": false,
-          "status": "verified",
+          "status": "pending",
           "checks": {
             "printedEffectEvidence": true,
             "packaged": true,
             "availability": true,
             "deckbuilding": true,
             "dependencyOnly": true,
-            "nodeAcceptance": true
+            "nodeAcceptance": false
           },
           "evidence": [
             {
@@ -5527,7 +5527,7 @@
     "files": {
       "content/campaigns/theCircleUndone/keywords.js": "4505567dd5c59872093410a4eb171264b607f28ea39b13abdeba9a45bccf5287",
       "web/rulebook-data.js": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4",
-      "web/ui-cards.js": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e",
+      "web/ui-cards.js": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de",
       "content/mechanics.js": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836",
       "tests/tcu-rules.test.mjs": "f0ca99664abf96629f8f6959d09ebd22ec08873397ab3158189990743870cf6c",
       "tests/tcu-rules.browser.mjs": "d117eef15ff4917d618c609d5cfce39d492e1804943afe4c24eb3c7b6dbe106a",
@@ -5629,8 +5629,8 @@
     },
     "playerAcceptance": {
       "command": "node tools/audit-tcu-player.mjs",
-      "status": 0,
-      "ok": true,
+      "status": 1,
+      "ok": false,
       "summary": {
         "total": 87,
         "constructible": 85,
@@ -5739,8 +5739,8 @@
     "tests/tcu-scenarios.browser.mjs"
   ],
   "remaining": [
-    "规则书未 verified：desktopBrowser、mobileBrowser",
-    "交互面板未 verified：tarotPick（缺少浏览器证据） | storyInvestigatorPick（缺少浏览器证据） | hauntedResolution（缺少浏览器证据） | spectralDeck（缺少浏览器证据） | circleTest（缺少浏览器证据） | parleyTarget（缺少浏览器证据） | campaignRecords（缺少浏览器证据） | watcherPanel（缺少浏览器证据） | breachDoom（缺少浏览器证据） | hereticFaces（缺少浏览器证据） | tarotSlot（缺少浏览器证据）"
+    "M2 玩家卡未 verified：05020、05021、05022、05023、05024、05025、05026、05027、05028、05029、05030、05031、05032、05033、05034、05035、05036、05037、05038、05039、05040、05041、05042、05109、05110、05111、05112、05113、05114、05115、05116、05117、05118、05119、05151、05152、05153、05154、05155、05156、05157、05158、05159、05160、05186、05187、05188、05189、05190、05191、05192、05193、05194、05195、05196、05229、05230、05231、05232、05233、05234、05235、05236、05237、05273、05274、05275、05276、05277、05278、05279、05280、05281、05282、05283、05313、05314、05315、05316、05317、05318、05319、05320、05321、05322、05323、05324",
+    "M2 玩家卡验收工具未通过：node tools/audit-tcu-player.mjs（实跑 4 个分片测试并逐字节比对账本/模块）"
   ],
   "releaseAcceptance": {
     "status": "pending",
@@ -5908,14 +5908,11 @@
         "scenarioMechanics": true,
         "keywordEntries": true,
         "cardLinks": true,
-        "desktopBrowser": false,
-        "mobileBrowser": false
+        "desktopBrowser": true,
+        "mobileBrowser": true
       },
-      "pending": [
-        "desktopBrowser",
-        "mobileBrowser"
-      ],
-      "pass": false
+      "pending": [],
+      "pass": true
     },
     "nodeAcceptance": {
       "command": "node --test tests/tcu-rules.test.mjs",
@@ -5933,26 +5930,14 @@
     },
     "interactionsVerified": {
       "total": 11,
-      "verified": 0,
-      "pending": [
-        "tarotPick",
-        "storyInvestigatorPick",
-        "hauntedResolution",
-        "spectralDeck",
-        "circleTest",
-        "parleyTarget",
-        "campaignRecords",
-        "watcherPanel",
-        "breachDoom",
-        "hereticFaces",
-        "tarotSlot"
-      ],
+      "verified": 11,
+      "pending": [],
       "nodeAcceptance": true,
       "browser": {
         "desktop": true,
         "mobile": true
       },
-      "pass": false
+      "pass": true
     },
     "investigatorsVerified": {
       "formal": 6,
@@ -5969,11 +5954,99 @@
     },
     "playerCardsVerified": {
       "total": 87,
-      "verified": 87,
+      "verified": 0,
       "buildable": 85,
       "basicWeaknesses": 2,
-      "pending": [],
-      "nodeAcceptance": true,
+      "pending": [
+        "05020",
+        "05021",
+        "05022",
+        "05023",
+        "05024",
+        "05025",
+        "05026",
+        "05027",
+        "05028",
+        "05029",
+        "05030",
+        "05031",
+        "05032",
+        "05033",
+        "05034",
+        "05035",
+        "05036",
+        "05037",
+        "05038",
+        "05039",
+        "05040",
+        "05041",
+        "05042",
+        "05109",
+        "05110",
+        "05111",
+        "05112",
+        "05113",
+        "05114",
+        "05115",
+        "05116",
+        "05117",
+        "05118",
+        "05119",
+        "05151",
+        "05152",
+        "05153",
+        "05154",
+        "05155",
+        "05156",
+        "05157",
+        "05158",
+        "05159",
+        "05160",
+        "05186",
+        "05187",
+        "05188",
+        "05189",
+        "05190",
+        "05191",
+        "05192",
+        "05193",
+        "05194",
+        "05195",
+        "05196",
+        "05229",
+        "05230",
+        "05231",
+        "05232",
+        "05233",
+        "05234",
+        "05235",
+        "05236",
+        "05237",
+        "05273",
+        "05274",
+        "05275",
+        "05276",
+        "05277",
+        "05278",
+        "05279",
+        "05280",
+        "05281",
+        "05282",
+        "05283",
+        "05313",
+        "05314",
+        "05315",
+        "05316",
+        "05317",
+        "05318",
+        "05319",
+        "05320",
+        "05321",
+        "05322",
+        "05323",
+        "05324"
+      ],
+      "nodeAcceptance": false,
       "ledgerTest": true,
       "testFiles": [
         "tests/tcu-player-m2-1.test.mjs",
@@ -5981,7 +6054,7 @@
         "tests/tcu-player-m2-3.test.mjs",
         "tests/tcu-player-m2-4.test.mjs"
       ],
-      "pass": true
+      "pass": false
     },
     "scenariosVerified": {
       "total": 9,

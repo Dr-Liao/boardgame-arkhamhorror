@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 79 个 tests/tic-*.test.mjs（1507 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
+    "basis": "实跑 80 个 tests/tic-*.test.mjs（1531 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）：文件级证据只在该测试文件**实跑有通过用例**时成立，且与标题命中分开记账（strongEvidence / fileLevelEvidence）。整体仍要求「实跑通过 + 卡号命中」，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified。simplified 只在「已实现且有测试证据，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified；gate 口径（w3）允许 verified+simplified 通过、no-behavior 单列、missing 必须为 0。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -27,14 +27,14 @@
   },
   "summary": {
     "total": 252,
-    "verified": 211,
-    "simplified": 18,
-    "missing": 22,
+    "verified": 234,
+    "simplified": 17,
+    "missing": 0,
     "blocked": 0,
     "noBehavior": 1,
-    "pending": 22,
-    "verifiedPlusSimplified": 229,
-    "gateComplete": false,
+    "pending": 0,
+    "verifiedPlusSimplified": 251,
+    "gateComplete": true,
     "strictComplete": false,
     "campaignPartition": 252,
     "allRecords": 361,
@@ -46,48 +46,24 @@
     "chapters": 8,
     "unassignedChapterCards": 0,
     "chapterCoverageConserved": true,
-    "testFiles": 79,
+    "testFiles": 80,
     "testFilesWithoutEvents": 0,
     "wrapperTestFiles": 1,
-    "testsPassed": 1507,
+    "testsPassed": 1531,
     "testsFailed": 0,
-    "pendingPrimitiveRequests": 11,
-    "behaviorPrimitiveRequests": 10,
+    "pendingPrimitiveRequests": 10,
+    "behaviorPrimitiveRequests": 9,
     "refactorPrimitiveRequests": 1,
     "recordsWithEntryFile": 252,
-    "recordsImplemented": 239,
-    "recordsWithTestEvidence": 242,
-    "verifiedByTitle": 189,
+    "recordsImplemented": 252,
+    "recordsWithTestEvidence": 252,
+    "verifiedByTitle": 212,
     "verifiedByFileOnly": 22,
-    "implementedWithoutEvidence": 9,
+    "implementedWithoutEvidence": 0,
     "reasonBuckets": {
       "explicitImplementedFalse": [],
-      "noBehaviorKeys": [
-        "07087",
-        "07184",
-        "07186",
-        "07216",
-        "07217",
-        "07218",
-        "07219",
-        "07256",
-        "07295",
-        "07296",
-        "07298",
-        "07335",
-        "07336"
-      ],
-      "noTestEvidence": [
-        "07084",
-        "07085",
-        "07092",
-        "07093",
-        "07096",
-        "07097",
-        "07098",
-        "07182",
-        "07254"
-      ],
+      "noBehaviorKeys": [],
+      "noTestEvidence": [],
       "noEntryFile": [],
       "verifiedByTitle": [
         "07041",
@@ -127,12 +103,20 @@
         "07081",
         "07082",
         "07083",
+        "07084",
+        "07085",
         "07086",
+        "07087",
         "07088",
         "07090",
         "07091",
+        "07092",
+        "07093",
         "07094",
         "07095",
+        "07096",
+        "07097",
+        "07098",
         "07099",
         "07105",
         "07106",
@@ -188,8 +172,11 @@
         "07179",
         "07180",
         "07181",
+        "07182",
         "07183",
+        "07184",
         "07185",
+        "07186",
         "07187",
         "07188",
         "07198",
@@ -214,6 +201,10 @@
         "07213",
         "07214",
         "07215",
+        "07216",
+        "07217",
+        "07218",
+        "07219",
         "07231",
         "07232",
         "07234",
@@ -231,6 +222,8 @@
         "07249",
         "07250",
         "07251",
+        "07254",
+        "07256",
         "07257",
         "07258",
         "07259",
@@ -254,7 +247,11 @@
         "07292b",
         "07293",
         "07294",
+        "07295",
+        "07296",
         "07297",
+        "07298",
+        "07299",
         "07300",
         "07300b",
         "07311",
@@ -277,6 +274,8 @@
         "07332",
         "07333",
         "07334",
+        "07335",
+        "07336",
         "07337",
         "07338"
       ],
@@ -328,17 +327,7 @@
         "07255",
         "07328"
       ],
-      "implementedWithoutEvidence": [
-        "07084",
-        "07085",
-        "07092",
-        "07093",
-        "07096",
-        "07097",
-        "07098",
-        "07182",
-        "07254"
-      ]
+      "implementedWithoutEvidence": []
     }
   },
   "snapshot": {
@@ -346,8 +335,8 @@
     "primitivePlanSha256": "41f3dea25ed705497a2e7625c0980530e060af07d884e347984322f72661e353",
     "testRun": {
       "exit": 0,
-      "files": 79,
-      "passed": 1507,
+      "files": 80,
+      "passed": 1531,
       "failed": 0,
       "filesWithoutEvents": [],
       "wrapperFiles": [
@@ -600,6 +589,10 @@
         "sha256": "cd7722e98daecae87b4f754ec50a78bc305f1f04515613745c8e5fb856e82691"
       },
       {
+        "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+        "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+      },
+      {
         "file": "games/arkhamhorror/tests/tic-scenario-spawn-followup.test.mjs",
         "sha256": "ac804bb691abcd90ff9e5945fa5fb6398ed3e63723a3810c9c380d90b07a1eae"
       },
@@ -728,15 +721,6 @@
         ]
       },
       {
-        "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
-        "id": "p7-b-07299-location-attachment-ability",
-        "kind": "engine-read-point",
-        "refactorOnly": false,
-        "cards": [
-          "07299"
-        ]
-      },
-      {
         "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
         "id": "w5-07280-act1-back-layout",
         "kind": "content-read-point",
@@ -844,9 +828,9 @@
     },
     "enemy": {
       "total": 40,
-      "verified": 34,
+      "verified": 38,
       "simplified": 2,
-      "missing": 4,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0
     },
@@ -876,9 +860,9 @@
     },
     "treachery": {
       "total": 41,
-      "verified": 21,
-      "simplified": 2,
-      "missing": 18,
+      "verified": 40,
+      "simplified": 1,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0
     }
@@ -890,19 +874,13 @@
       "name": "绝望深坑",
       "nameEn": "The Pit of Despair",
       "total": 27,
-      "verified": 22,
+      "verified": 27,
       "simplified": 0,
-      "missing": 5,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 5,
-      "pendingCodes": [
-        "07092",
-        "07093",
-        "07096",
-        "07097",
-        "07098"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": []
     },
     {
@@ -911,16 +889,13 @@
       "name": "艾莲娜·哈珀失踪案",
       "nameEn": "The Vanishing of Elina Harper",
       "total": 36,
-      "verified": 30,
+      "verified": 32,
       "simplified": 4,
-      "missing": 2,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 2,
-      "pendingCodes": [
-        "07084",
-        "07085"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": [
         "07060",
         "07061",
@@ -934,16 +909,13 @@
       "name": "深陷危局",
       "nameEn": "In Too Deep",
       "total": 40,
-      "verified": 38,
+      "verified": 40,
       "simplified": 0,
-      "missing": 2,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 2,
-      "pendingCodes": [
-        "07092",
-        "07093"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": []
     },
     {
@@ -952,20 +924,13 @@
       "name": "魔鬼礁石",
       "nameEn": "Devil Reef",
       "total": 44,
-      "verified": 38,
+      "verified": 44,
       "simplified": 0,
-      "missing": 6,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 6,
-      "pendingCodes": [
-        "07087",
-        "07092",
-        "07093",
-        "07182",
-        "07184",
-        "07186"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": []
     },
     {
@@ -974,21 +939,13 @@
       "name": "全速恐惧",
       "nameEn": "Horror in High Gear",
       "total": 39,
-      "verified": 32,
+      "verified": 39,
       "simplified": 0,
-      "missing": 7,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 7,
-      "pendingCodes": [
-        "07096",
-        "07097",
-        "07098",
-        "07216",
-        "07217",
-        "07218",
-        "07219"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": []
     },
     {
@@ -997,18 +954,13 @@
       "name": "雾中之光",
       "nameEn": "A Light in the Fog",
       "total": 42,
-      "verified": 31,
+      "verified": 35,
       "simplified": 7,
-      "missing": 4,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 4,
-      "pendingCodes": [
-        "07092",
-        "07093",
-        "07254",
-        "07256"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": [
         "07233",
         "07236",
@@ -1025,23 +977,16 @@
       "name": "达贡巢穴",
       "nameEn": "The Lair of Dagon",
       "total": 36,
-      "verified": 28,
-      "simplified": 3,
-      "missing": 5,
+      "verified": 34,
+      "simplified": 2,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
-      "pending": 5,
-      "pendingCodes": [
-        "07084",
-        "07085",
-        "07295",
-        "07296",
-        "07298"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": [
         "07280",
-        "07281",
-        "07299"
+        "07281"
       ]
     },
     {
@@ -1050,20 +995,13 @@
       "name": "暗潮之下",
       "nameEn": "Into the Maelstrom",
       "total": 43,
-      "verified": 32,
+      "verified": 38,
       "simplified": 4,
-      "missing": 6,
+      "missing": 0,
       "blocked": 0,
       "noBehavior": 1,
-      "pending": 6,
-      "pendingCodes": [
-        "07087",
-        "07096",
-        "07097",
-        "07098",
-        "07335",
-        "07336"
-      ],
+      "pending": 0,
+      "pendingCodes": [],
       "simplifiedCodes": [
         "07315",
         "07316",
@@ -2561,7 +2499,9 @@
       "entrySha256": "ba45317c0d84c38b1f92652d55fb82eea65cb8694cac56fca7d3580914469bf7",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair"
@@ -2638,7 +2578,9 @@
       "entrySha256": "a6fd01a832ee49130ee5a654522f50bbe7a997e92696af971565e5490302954e",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair"
@@ -4314,7 +4256,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -4387,7 +4330,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "modifiers"
+        "modifiers",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -4431,7 +4375,8 @@
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities",
-        "modifiers"
+        "modifiers",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -4474,7 +4419,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -4591,7 +4537,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -5306,10 +5253,53 @@
         "theVanishingOfElinaHarper",
         "theLairOfDagon"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 92,
+          "test": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 105,
+          "test": "07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有毁灭不再叠加",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 116,
+          "test": "07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 92,
+          "test": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 105,
+          "test": "07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有毁灭不再叠加",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 116,
+          "test": "07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07085",
@@ -5333,10 +5323,53 @@
         "theVanishingOfElinaHarper",
         "theLairOfDagon"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 142,
+          "test": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 151,
+          "test": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 166,
+          "test": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 142,
+          "test": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 151,
+          "test": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 166,
+          "test": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07086",
@@ -5435,18 +5468,51 @@
       "canonicalCode": "07087",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07087.js",
       "entrySha256": "8d0743393a02081c15dd7414622d3a990b237b5dda883399b49346845561ad1d",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "devilReef",
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 181,
+          "test": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 193,
+          "test": "07087 魂牵梦绕：随机弃 1 张手牌，按印刷费用做意志检定，失败失去 1 行动",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 181,
+          "test": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 193,
+          "test": "07087 魂牵梦绕：随机弃 1 张手牌，按印刷费用做意志检定，失败失去 1 行动",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07088",
@@ -5573,7 +5639,9 @@
       "entrySha256": "6037c296e10c7df6fdf3bb27659405fd7e24327c3ce0433a4316d08d496d5074",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
@@ -5667,7 +5735,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -5712,7 +5781,9 @@
       "entrySha256": "6fa6ea562ab4a26b52ce82a9a3df84c4e661411db89756e3dcf263ed7ce042ca",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
@@ -5720,10 +5791,41 @@
         "devilReef",
         "aLightInTheFog"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 226,
+          "test": "07092 潮起：没有可提升淹没等级的地点时获得涌动",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 211,
+          "test": "07092 潮起：提升最近且可提升淹没等级的地点 1 级",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 226,
+          "test": "07092 潮起：没有可提升淹没等级的地点时获得涌动",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 211,
+          "test": "07092 潮起：提升最近且可提升淹没等级的地点 1 级",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07093",
@@ -5737,7 +5839,9 @@
       "entrySha256": "6f8751506b5de94a985130051a7d4de13e15dd3d818cd18553dc174996e48381",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
@@ -5745,10 +5849,53 @@
         "devilReef",
         "aLightInTheFog"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 253,
+          "test": "07093 激流：部分淹没时敏捷(3)，失败弃掉 1 个支援",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 241,
+          "test": "07093 激流：所在地点未淹没时获得涌动且不进行检定",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 266,
+          "test": "07093 激流：完全淹没时敏捷(4)，不能弃支援则按失败差值失去资源",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 253,
+          "test": "07093 激流：部分淹没时敏捷(3)，失败弃掉 1 个支援",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 241,
+          "test": "07093 激流：所在地点未淹没时获得涌动且不进行检定",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 266,
+          "test": "07093 激流：完全淹没时敏捷(4)，不能弃支援则按失败差值失去资源",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07094",
@@ -5820,7 +5967,8 @@
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "modifiers",
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -5875,17 +6023,50 @@
       "entrySha256": "3a7a87e497f091be240ed4ed25047547cb8c67338e54991f088d12b4293bc02c",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
         "horrorInHighGear",
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 294,
+          "test": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 282,
+          "test": "07096 死亡纪念：意志(3)失败受到 2 点恐惧",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 294,
+          "test": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 282,
+          "test": "07096 死亡纪念：意志(3)失败受到 2 点恐惧",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07097",
@@ -5899,17 +6080,38 @@
       "entrySha256": "46d33679825fb9d561212cc849d63fc8a91b18bfc8e58f9f85fd03b4f1954b73",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
         "horrorInHighGear",
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 309,
+          "test": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 309,
+          "test": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07098",
@@ -5923,17 +6125,50 @@
       "entrySha256": "1677212272769be97536197475d5dc6ebb832cbe14e09456104d6f2ff6edfaa3",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "thePitOfDespair",
         "horrorInHighGear",
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 338,
+          "test": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 325,
+          "test": "07098 湮灭记忆：选择智力(4)，失败按差值弃掉相应数量手牌",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 338,
+          "test": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 325,
+          "test": "07098 湮灭记忆：选择智力(4)，失败按差值弃掉相应数量手牌",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07099",
@@ -5948,7 +6183,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -6033,7 +6269,9 @@
       "entrySha256": "7075e938d67900cbe45d13c7e958fef9a4dd128deee941091c7ef17978630839",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "inTooDeep",
@@ -6084,7 +6322,9 @@
       "entrySha256": "1e1130711fa39e9aff14a5f1b6ebed1c7eb1ed0fcfcd195c2748534cc616c308",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "inTooDeep",
@@ -6544,7 +6784,8 @@
       "behaviorKeys": [
         "abilities",
         "modifiers",
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -6625,7 +6866,8 @@
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "modifiers",
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -8828,7 +9070,9 @@
       "entrySha256": "b28b69210d148b2f73ee76f0ce272453efa4ff49c4d27afaa2148af3387a8281",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "inTooDeep"
@@ -8881,7 +9125,9 @@
       "entrySha256": "344c1d7b922d4d1a1daed1edf397f660bfd17ad6151ad4998a45ee6b36fe8951",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "inTooDeep"
@@ -8917,7 +9163,9 @@
       "entrySha256": "ebee1200afd532e00517cff48c9f8c11b135511d6798b1fe8b73bcd40e95cae2",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "inTooDeep"
@@ -12006,10 +12254,53 @@
       "chapters": [
         "devilReef"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 371,
+          "test": "07182 掠食的深潜者：交战后你的钥匙移到它身上，击败时取回",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 388,
+          "test": "07182 掠食的深潜者：印刷关键词（猎手）与数值来自关卡定义",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 353,
+          "test": "07182 掠食的深潜者：与你交战后你的 1 个线索移到它身上，击败时取回",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 371,
+          "test": "07182 掠食的深潜者：交战后你的钥匙移到它身上，击败时取回",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 388,
+          "test": "07182 掠食的深潜者：印刷关键词（猎手）与数值来自关卡定义",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 353,
+          "test": "07182 掠食的深潜者：与你交战后你的 1 个线索移到它身上，击败时取回",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07183",
@@ -12077,15 +12368,16 @@
       "canonicalCode": "07184",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07184.js",
       "entrySha256": "fe27a28b75257b479338b96d697ae344bd970e3cd0d6a79f5efd8b44dfd16247",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "devilReef"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -12170,7 +12462,8 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -12234,15 +12527,16 @@
       "canonicalCode": "07186",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07186.js",
       "entrySha256": "10d8fa518e84e7802ad1294b5fbad20d906a3e4f2b698bbbeebc2040aca196f4",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "devilReef"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -12326,7 +12620,9 @@
       "entrySha256": "13d68af8ab6b839ea9f3771747486bac37dca31b7a39034c89be3389dc4a0f69",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "devilReef"
@@ -12399,7 +12695,8 @@
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities",
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -14878,15 +15175,16 @@
       "canonicalCode": "07216",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07216.js",
       "entrySha256": "b2481ac98d92e40091191bf6a34e537c3d2dcb93a005812968ac5ddd5da66cc8",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "horrorInHighGear"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -14944,15 +15242,16 @@
       "canonicalCode": "07217",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07217.js",
       "entrySha256": "aa5a59ed684ba83a20d579f5629850445f1c2d86ca82fc61c3ea31535c03affe",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "horrorInHighGear"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -15010,15 +15309,16 @@
       "canonicalCode": "07218",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07218.js",
       "entrySha256": "cca89ead030a0c4adfabc15f8e02967569cd51688c9b748df50ad3f2e3ead253",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "horrorInHighGear"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -15076,15 +15376,16 @@
       "canonicalCode": "07219",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07219.js",
       "entrySha256": "0a2e9388732c619603c46d392af4eec9a21634b46673bc38a7b26943179c5a90",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "horrorInHighGear"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
@@ -17912,10 +18213,53 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "missing",
-      "reason": "no-test-evidence",
-      "evidence": [],
-      "strongEvidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 399,
+          "test": "07254 深潜者保姆：未交战时同地点与连接地点的其他[[深潜者]] +1 攻击/+1 躲避",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 436,
+          "test": "07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定义",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 423,
+          "test": "07254 深潜者保姆：与你交战后抽取遭遇牌库顶牌且该牌失去涌动",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 24,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        }
+      ],
+      "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 399,
+          "test": "07254 深潜者保姆：未交战时同地点与连接地点的其他[[深潜者]] +1 攻击/+1 躲避",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 436,
+          "test": "07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定义",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 423,
+          "test": "07254 深潜者保姆：与你交战后抽取遭遇牌库顶牌且该牌失去涌动",
+          "titleMatched": true
+        }
+      ]
     },
     {
       "code": "07255",
@@ -17965,15 +18309,16 @@
       "canonicalCode": "07256",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07256.js",
       "entrySha256": "e719fd495010b79d9e5b9ac2cc9b856bacb8c4bc12f8168689b0df84673871f6",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -18023,7 +18368,8 @@
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
         "abilities",
-        "modifiers"
+        "modifiers",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -18090,7 +18436,8 @@
       "implemented": true,
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -18146,7 +18493,8 @@
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities",
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -18254,7 +18602,9 @@
       "entrySha256": "2c137896a6fc16381071c29c077cb4245ffc7232295d2904b757b01a86c2b80d",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "aLightInTheFog"
@@ -20652,15 +21002,16 @@
       "canonicalCode": "07295",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07295.js",
       "entrySha256": "da8c9c4938151f62c8c1575b9f65a0ee96662ecf971e4679cceee08a7751c0d6",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -20748,15 +21099,16 @@
       "canonicalCode": "07296",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07296.js",
       "entrySha256": "357834c36e804c3a88fb56ac6c470358193eb75ff7f013eba5451242c51be43d",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -20834,7 +21186,9 @@
       "entrySha256": "3d7392b656f8fe29b8df9aa16c39d068ec93bbf14019eddccb9b24c68977470d",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "theLairOfDagon"
@@ -20903,15 +21257,16 @@
       "canonicalCode": "07298",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07298.js",
       "entrySha256": "2d5506601e18cca6f96b7a5cc53403826d684deafedfa194feb9bca40d066e5b",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -21002,14 +21357,14 @@
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "treacheryRule"
+        "treacheryRule",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
@@ -21114,14 +21469,6 @@
           "line": 124,
           "test": "TIC 07299: real nearest eligible location attachment blocks movement only while ready, real success exhausts and actual upkeep readies",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
-          "id": "p7-b-07299-location-attachment-ability",
-          "kind": "engine-read-point",
-          "title": "地点附属卡自身行动能力（attachmentAbilities）与横置原语"
         }
       ]
     },
@@ -24131,15 +24478,16 @@
       "canonicalCode": "07335",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07335.js",
       "entrySha256": "4e9b217237e35c993823dac1610ff62fe6e2d36e85db9eb3410a6443d4988e0e",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -24185,15 +24533,16 @@
       "canonicalCode": "07336",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07336.js",
       "entrySha256": "ccd627c62a8a6b09f9e2e3727b72c1f0ff00d44ecccfd3b5c14f756628485e5c",
-      "implemented": false,
-      "implementedFlag": "none",
-      "behaviorKeys": [],
+      "implemented": true,
+      "implementedFlag": "behavior-keys",
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "missing",
-      "reason": "entry-no-behavior-keys",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -24241,7 +24590,9 @@
       "entrySha256": "825dcf162f81d2622595a39011e169228429ef24b17f233287cb445998ece1dd",
       "implemented": true,
       "implementedFlag": "explicit-true",
-      "behaviorKeys": [],
+      "behaviorKeys": [
+        "encounterResolve"
+      ],
       "printedBehavior": true,
       "chapters": [
         "intoTheMaelstrom"
@@ -24422,221 +24773,7 @@
       ]
     }
   ],
-  "missing": [
-    {
-      "code": "07084",
-      "type": "enemy",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "theVanishingOfElinaHarper",
-        "theLairOfDagon"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07085",
-      "type": "enemy",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "theVanishingOfElinaHarper",
-        "theLairOfDagon"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07087",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "devilReef",
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07092",
-      "type": "treachery",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "thePitOfDespair",
-        "inTooDeep",
-        "devilReef",
-        "aLightInTheFog"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07093",
-      "type": "treachery",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "thePitOfDespair",
-        "inTooDeep",
-        "devilReef",
-        "aLightInTheFog"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07096",
-      "type": "treachery",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "thePitOfDespair",
-        "horrorInHighGear",
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07097",
-      "type": "treachery",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "thePitOfDespair",
-        "horrorInHighGear",
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07098",
-      "type": "treachery",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "thePitOfDespair",
-        "horrorInHighGear",
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07182",
-      "type": "enemy",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "devilReef"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07184",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "devilReef"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07186",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "devilReef"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07216",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "horrorInHighGear"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07217",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "horrorInHighGear"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07218",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "horrorInHighGear"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07219",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "horrorInHighGear"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07254",
-      "type": "enemy",
-      "reason": "no-test-evidence",
-      "chapters": [
-        "aLightInTheFog"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07256",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "aLightInTheFog"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07295",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "theLairOfDagon"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07296",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "theLairOfDagon"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07298",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "theLairOfDagon"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07335",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    },
-    {
-      "code": "07336",
-      "type": "treachery",
-      "reason": "entry-no-behavior-keys",
-      "chapters": [
-        "intoTheMaelstrom"
-      ],
-      "refactorRequests": []
-    }
-  ],
+  "missing": [],
   "blocked": [],
   "simplified": [
     {
@@ -24748,14 +24885,6 @@
       ]
     },
     {
-      "code": "07299",
-      "type": "treachery",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "p7-b-07299-location-attachment-ability"
-      ]
-    },
-    {
       "code": "07315",
       "type": "act",
       "reason": "pending-behavior-primitive-request",
@@ -24797,28 +24926,6 @@
   ],
   "unassignedChapterCards": [],
   "remaining": [
-    "missing 07084（no-test-evidence）",
-    "missing 07085（no-test-evidence）",
-    "missing 07087（entry-no-behavior-keys）",
-    "missing 07092（no-test-evidence）",
-    "missing 07093（no-test-evidence）",
-    "missing 07096（no-test-evidence）",
-    "missing 07097（no-test-evidence）",
-    "missing 07098（no-test-evidence）",
-    "missing 07182（no-test-evidence）",
-    "missing 07184（entry-no-behavior-keys）",
-    "missing 07186（entry-no-behavior-keys）",
-    "missing 07216（entry-no-behavior-keys）",
-    "missing 07217（entry-no-behavior-keys）",
-    "missing 07218（entry-no-behavior-keys）",
-    "missing 07219（entry-no-behavior-keys）",
-    "missing 07254（no-test-evidence）",
-    "missing 07256（entry-no-behavior-keys）",
-    "missing 07295（entry-no-behavior-keys）",
-    "missing 07296（entry-no-behavior-keys）",
-    "missing 07298（entry-no-behavior-keys）",
-    "missing 07335（entry-no-behavior-keys）",
-    "missing 07336（entry-no-behavior-keys）",
     "simplified 07060（pending-behavior-primitive-request）",
     "simplified 07061（pending-behavior-primitive-request）",
     "simplified 07062a（pending-behavior-primitive-request）",
@@ -24832,7 +24939,6 @@
     "simplified 07260（pending-behavior-primitive-request）",
     "simplified 07280（pending-behavior-primitive-request）",
     "simplified 07281（pending-behavior-primitive-request）",
-    "simplified 07299（pending-behavior-primitive-request）",
     "simplified 07315（pending-behavior-primitive-request）",
     "simplified 07316（pending-behavior-primitive-request）",
     "simplified 07317（pending-behavior-primitive-request）",

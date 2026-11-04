@@ -21,8 +21,8 @@
   ],
   "summary": {
     "chapters": 8,
-    "completeChapters": 0,
-    "developmentChapters": 8,
+    "completeChapters": 1,
+    "developmentChapters": 7,
     "pendingChapters": 0,
     "checkTotals": {
       "sourceLocked": 8,
@@ -31,12 +31,12 @@
       "actsAndAgendas": 8,
       "locationsAndConnections": 8,
       "encounterBehaviors": 8,
-      "literalCardBehavior": 0,
+      "literalCardBehavior": 1,
       "chaosEffects": 8,
       "resolutionsAndRecords": 8,
       "storyText": 8,
       "saveReplay": 8,
-      "browserAcceptance": 0
+      "browserAcceptance": 8
     },
     "structuralTotals": {
       "setupAndZones": 8,
@@ -60,15 +60,15 @@
     "literalCardLedger": {
       "file": "audit/tic-all-card-acceptance.json",
       "entries": 252,
-      "pending": 22
+      "pending": 0
     },
     "browserEvidence": {
-      "status": "failed",
+      "status": "passed",
       "coverage": {
-        "desktop:zh-CN": false,
-        "desktop:en": false,
-        "mobile:zh-CN": false,
-        "mobile:en": false
+        "desktop:zh-CN": true,
+        "desktop:en": true,
+        "mobile:zh-CN": true,
+        "mobile:en": true
       }
     },
     "storyImport": {
@@ -90,12 +90,11 @@
     "replayCoversTicChapters": false,
     "primitiveRequests": {
       "total": 17,
-      "pending": 11,
+      "pending": 10,
       "pendingFiles": [
         "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
         "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
         "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-        "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
         "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
         "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
         "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
@@ -318,15 +317,6 @@
       ]
     },
     {
-      "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
-      "id": "p7-b-07299-location-attachment-ability.json",
-      "status": "pending",
-      "primitive": null,
-      "cards": [
-        "07299"
-      ]
-    },
-    {
       "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
       "id": "w5-07280-act1-back-layout.json",
       "status": "pending",
@@ -440,7 +430,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -539,6 +529,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -753,20 +744,20 @@
               "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
             },
             {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 setup 初始设置与区域守恒：4 地点/25 张遭遇牌库/6 张旁置/8 条潮汐隧道模板"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
             },
             {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 地点与连接：随机隧道隐藏身份、真实地图坐标与双向连接守恒"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有毁灭不再叠加"
             },
             {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 幕 07045 推进与背面：生成阿玛尔加姆/洗入 07054/07055/初始化潮汐隧道牌堆"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点"
             },
             {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 地点揭示与连接扩张：07046 背面只扩空位且 8 条物理隧道总数守恒"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭"
             }
           ],
           "actsAndAgendas": [
@@ -861,8 +852,16 @@
               "title": "07041 ${difficulty} exact flood${level} skull and cultist condition"
             },
             {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 chaos token 四档提示卡符号：skull 按水位、hard 提高难度、tablet 失败持钥匙恐惧"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害"
             }
           ],
           "resolutionsAndRecords": [
@@ -879,16 +878,16 @@
               "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
             },
             {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定"
+            },
+            {
               "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
               "title": "P7 绝望深坑 幕 07046 目标与背面：全部撤退/败北才推进，推进结算 resolution1 记录"
             },
             {
               "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
               "title": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算"
-            },
-            {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 结局与记录：noResolution 结算交接到 interlude1"
             }
           ],
           "saveReplay": [
@@ -921,8 +920,7 @@
         "acceptanceTest": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182, 07092, 07093, 07096, 07097, 07098",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182"
       ]
     },
     {
@@ -943,7 +941,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -1043,6 +1041,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -1409,16 +1408,28 @@
           ],
           "chaosEffects": [
             {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌"
+            },
+            {
               "file": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
               "title": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）"
             },
             {
               "file": "tests/tic-scenarios-a1.test.mjs",
               "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
-            },
-            {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07297：失败且揭示了诅咒标记 → 两个分支都执行"
             }
           ],
           "resolutionsAndRecords": [
@@ -1491,8 +1502,7 @@
         "acceptanceTest": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 01167, 01168, 01173, 01174, 01135, 01136"
       ]
     },
     {
@@ -1513,7 +1523,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -1613,6 +1623,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -1939,8 +1950,12 @@
               "title": "07123 ${difficulty} skull counts real east cells across a gap and isolated origin counts zero"
             },
             {
-              "file": "tests/tic-scenarios-early.test.mjs",
-              "title": "P7 07136 shroud counts physical barrier tokens and exact curse fee rejects insufficient supply"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
             }
           ],
           "resolutionsAndRecords": [
@@ -1963,6 +1978,10 @@
             {
               "file": "tests/tic-scenario-inTooDeep.test.mjs",
               "title": "P7 深陷危局 结局与记录：resolution1 安全抵达载具经验 +2 且交接到 devilReef；noResolution 重定向"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定"
             }
           ],
           "saveReplay": [
@@ -1999,8 +2018,7 @@
         "acceptanceTest": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182, 07092, 07093",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182"
       ]
     },
     {
@@ -2008,7 +2026,7 @@
       "code": "07163",
       "name": "魔鬼礁石",
       "nameEn": "Devil Reef",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -2016,12 +2034,12 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -2118,6 +2136,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -2505,10 +2524,7 @@
         "guide": "da8c37d6980342b4da7fd9fe67a2a4ef3fbeee9d281ecb47b65a268b9e494538",
         "acceptanceTest": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07182, 07184, 07186, 07087, 07092, 07093",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
-      ]
+      "gaps": []
     },
     {
       "id": "horrorInHighGear",
@@ -2528,7 +2544,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -2628,6 +2644,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -2994,8 +3011,7 @@
         "acceptanceTest": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166"
       ]
     },
     {
@@ -3016,7 +3032,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -3120,6 +3136,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -3412,8 +3429,8 @@
               "title": "aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库"
             },
             {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
             }
           ],
           "actsAndAgendas": [
@@ -3587,8 +3604,7 @@
         "acceptanceTest": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07254, 07256, 01163, 01164, 01165, 07092, 07093",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01163, 01164, 01165"
       ]
     },
     {
@@ -3609,7 +3625,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -3712,6 +3728,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -3917,15 +3934,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
-            "id": "p7-b-07299-location-attachment-ability.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": [
-              "07299"
-            ]
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
             "id": "w5-07280-act1-back-layout.json",
             "status": "pending",
@@ -3947,24 +3955,24 @@
               "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
             },
             {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有毁灭不再叠加"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭"
+            },
+            {
               "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
               "title": "theLairOfDagon setup：真实开局的初始地点/随机槽位/区域守恒"
-            },
-            {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "theLairOfDagon setup：钥匙初始状态、旁置区与章节机制（air/adjacency）"
-            },
-            {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "章节开局混乱标记：记忆数决定祝福/诅咒袋（afterChaosBagSetup）"
-            },
-            {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "地点 07287/07288：钥匙恩赐与揭示实际抽取旁置的达贡宣教士"
-            },
-            {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "存档 JSON 往返：开局区域/钥匙/水位/地点附属在序列化后保持一致"
             }
           ],
           "actsAndAgendas": [
@@ -4051,6 +4059,10 @@
               "title": "07274 modifier0 curse remains revealed and must still automatically fail Lair cultist"
             },
             {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+            },
+            {
               "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
               "title": "章节开局混乱标记：记忆数决定祝福/诅咒袋（afterChaosBagSetup）"
             },
@@ -4065,10 +4077,6 @@
             {
               "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
               "title": "诡计 07297 玄密仪式：失败二选一，揭示诅咒标记时两者都执行"
-            },
-            {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "提示卡 07274：skull/cultist/tablet/elderthing 的混乱标记修正与效果"
             }
           ],
           "resolutionsAndRecords": [
@@ -4146,8 +4154,7 @@
         "acceptanceTest": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07295, 07296, 07298, 01169, 01170, 07084, 07085, 01171, 01174",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01169, 01170, 01171, 01174"
       ]
     },
     {
@@ -4168,7 +4175,7 @@
         "resolutionsAndRecords": true,
         "storyText": true,
         "saveReplay": true,
-        "browserAcceptance": false
+        "browserAcceptance": true
       },
       "evidence": {
         "sourceLocked": [
@@ -4267,6 +4274,7 @@
           "audit/tic-p7-baseline.json"
         ],
         "browserAcceptance": [
+          "audit/tic-browser-acceptance.json",
           "tests/scenario-guides.browser.mjs",
           "tests/playwright/playwright.tic.config.mjs"
         ]
@@ -4633,16 +4641,16 @@
               "title": "07311 skull switches only at4 real in-play unflooded Yha-nthlei; nonYha and remote water do not fake threshold"
             },
             {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
             },
             {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07297：失败且揭示了诅咒标记 → 两个分支都执行"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害"
             },
             {
-              "file": "tests/tic-slumbering-bosses.test.mjs",
-              "title": "07330a 沉睡达贡：行动失败低于难度 3 点才放置 1 个毁灭"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌"
             }
           ],
           "resolutionsAndRecords": [
@@ -4712,24 +4720,19 @@
         "acceptanceTest": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07335, 07336, 01166, 07087, 07096, 07097, 07098",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166"
       ]
     }
   ],
   "remaining": [
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182, 07092, 07093, 07096, 07097, 07098",
-    "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182, 07092, 07093",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07182, 07184, 07186, 07087, 07092, 07093",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07254, 07256, 01163, 01164, 01165, 07092, 07093",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07295, 07296, 07298, 01169, 01170, 07084, 07085, 01171, 01174",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07335, 07336, 01166, 07087, 07096, 07097, 07098",
-    "browserAcceptance：audit/tic-browser-acceptance.json status=failed/coverage 全 false，缺 8 章 desktop+mobile 实机证据与指南入口截图",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 01167, 01168, 01173, 01174, 01135, 01136",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01163, 01164, 01165",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01169, 01170, 01171, 01174",
     "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
-    "引擎原语队列仍有 11 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, p7-b-07299-location-attachment-ability.json, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
+    "引擎原语队列仍有 10 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
     "audit/tic-node-acceptance.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
     "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
