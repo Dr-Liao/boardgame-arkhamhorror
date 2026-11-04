@@ -71,6 +71,9 @@ define('chaosTokenResolved', '祝福或诅咒标记结算后', 'reaction')
 define('chaosRevealStepEnded', '混乱标记揭示步骤结束后', 'reaction')
 define('roundEnds', '一轮结束时', 'reaction')
 define('investigationPhaseStarts', '调查阶段开始时', 'reaction')
+// P7（印斯茅斯终章 07330a/07331a）：「调查阶段结束时」的强制能力需要真实窗口。
+// 调用点：turn.js#runBetweenInvestigationPhases（调查阶段结束、敌人阶段之前）。
+define('investigationPhaseEnds', '调查阶段结束时', 'reaction')
 define('testInitiated', '发起技能检定时', 'interrupt')
 define('beforeChaosTokenReveal', '将要从混乱袋揭示标记时', 'interrupt')
 define('encounterCardWouldDraw', '将要抽遭遇牌库顶牌时', 'interrupt')

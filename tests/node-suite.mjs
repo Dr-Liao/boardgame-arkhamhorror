@@ -333,5 +333,12 @@ import './tic-vortex-resign.test.mjs'
 import './tic-road-hazards.test.mjs'
 import './tic-car-faces.test.mjs'
 import './tic-chase-vehicles.test.mjs'
+// 2026-11-04 合并：backup 分支（上一轮 A1/A2 与 B 批）带入的正式测试。
+import './tic-maelstrom-agendas.test.mjs'
+import './tic-maelstrom-act.test.mjs'
+import './tic-scenarios-a1.test.mjs'
+import './tic-scenarios-light-in-the-fog.test.mjs'
+import './tic-maelstrom-treacheries.test.mjs'
+import './tic-light-in-the-fog-agendas.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

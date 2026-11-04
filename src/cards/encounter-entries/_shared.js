@@ -10,6 +10,8 @@
 import { hasTrait } from '../../engine/matcher.js'
 import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
 import { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard } from '../../engine/vehicle-state.js'
+// 2026-11-04 合并：backup 侧的 A2 共享工厂（floodBottommost 等）用 floodLevel 读水位。
+import { floodLevel } from '../../engine/flood.js'
 import { ALL_CARDS } from '../cards-data.js'
 import { traitLabel } from '../trait-labels.js'
 
@@ -996,3 +998,231 @@ export const suspectCode = value => printedRole(SUSPECTS, value)
 export const suspectRole = value => SUSPECTS[suspectCode(value)]
 export const hideoutCode = value => printedRole(HIDEOUTS, value)
 export const hideoutRole = value => HIDEOUTS[hideoutCode(value)]
+
+// ---------------------------------------------------------------------------
+// P7 · 印斯茅斯终章的两个沉睡古神：达贡（07330a/07330b）与海德拉（07331a/07331b）。
+// 两张沉睡面只差名字与巢穴地点，两张苏醒面只差名字与子嗣卡号，因此四条条目由同一份
+// 工厂生成（同句规则只写一次；印刷差异全部从参数来）。沉睡的免疫/不能攻击/不能交战由
+// 引擎的 enemyRule.slumbering 读点统一执行，条目只写这张卡自己的印刷能力。
+// ---------------------------------------------------------------------------
+
+const ancientOnePrintedCode = entity => entity?.originalCode || entity?.code
+
+// 「有钥匙的圣堂地点」数量：苏醒面的攻击值按这个数下降（钥匙不论是否已揭示）。
+const keyedSanctumCount = state => (state.locations || []).filter(location => hasTrait(location, 'Sanctum')
+  && heldKeysQuery(state, `location:${location.id}`).length > 0).length
+
+// 沉睡面：调查阶段结束时，若调查员在该古神的巢穴且它未横置 → 在它上面放 1 毁灭；
+// [action] 意志(4)：成功可横置它或移除 1 毁灭，失败至少 3 点则放 1 毁灭。
+export function slumberingAncientOneEntry({ code, name, lairCode, lairName }) {
+  const investigatorInLair = state => {
+    const lair = (state.locations || []).find(location => ancientOnePrintedCode(location) === lairCode)
+    return Boolean(lair) && state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === lair.id)
+  }
+  return {
+    code, scope: 'enemy', implemented: true,
+    enemyRule: { slumbering: true },
+    abilities: [{
+      kind: 'forced', trigger: 'investigationPhaseEnds',
+      limit: { scope: 'perWindow', owner: 'instance' },
+      label: `调查阶段结束时：若调查员在${lairName}且${name}未横置，在${name}上放置1个毁灭`,
+      criteria: ({ state, source }) => Boolean(source) && !source.exhausted && investigatorInLair(state),
+      resolve: ({ source, api }) => { api.scenario.doomOn(source, 1) },
+    }, {
+      kind: 'action', actionKind: 'activate',
+      label: `检定意志(4)：成功则横置${name}或移除1个毁灭；若失败至少3点则放置1个毁灭`,
+      criteria: ({ inv, source }) => Boolean(inv && source) && inv.location === source.location,
+      resolve: ({ state, inv, source, api }) => {
+        api.test(inv.seat, 'willpower', 4, {
+          source: { type: 'enemy', code, name, ability: true },
+          testTarget: { kind: 'enemy', id: source.id, actionKind: 'activate' },
+          actionKind: 'activate',
+          resolve: result => {
+            // 事务内可能换过 state 内容，回调里按 id 重新取实例。
+            const current = (state.enemies || []).find(enemy => enemy.id === source.id)
+            if (!current || current.defeated || current.removedFromGame) return
+            if (!result.success) {
+              // result 是原始检定结果（只有 result.summary 带 failedBy），统一走 failedBy 读法。
+              if (failedBy(result, 4) >= 3) api.scenario.doomOn(current, 1)
+              return
+            }
+            const options = []
+            if (!current.exhausted) options.push({ id: 'exhaust', label: `横置${name}` })
+            if ((current.doom || 0) > 0) options.push({ id: 'removeDoom', label: `从${name}上移除1个毁灭` })
+            if (!options.length) return
+            const pick = options.length === 1 ? options[0].id
+              : api.choice({ kind: 'effect', source: code, seat: inv.seat,
+                  prompt: `选择：横置${name}，或从${name}上移除1个毁灭。`, options })
+            if (pick === 'exhaust') api.scenario.exhaustEnemy(current)
+            else if (pick === 'removeDoom') api.removeDoomFromCard(current, 1)
+          },
+        })
+      },
+    }],
+  }
+}
+
+// 苏醒面：猎手/庞大/反击由印刷文本解析；攻击值按「有钥匙的圣堂地点」数下降；
+// 被躲避或受到伤害后，对场上一张该古神的子嗣做同样的事（多张时由触发者选择）。
+export function awakenedAncientOneEntry({ code, name, broodCode, broodName }) {
+  const chooseBrood = (state, api, seat, prompt) => {
+    const copies = (state.enemies || []).filter(enemy => !enemy.defeated && !enemy.removedFromGame
+      && ancientOnePrintedCode(enemy) === broodCode)
+    if (!copies.length) return null
+    if (copies.length === 1) return copies[0]
+    const picked = api.choice({ kind: 'enemy', source: code, seat, prompt,
+      options: copies.map(enemy => ({ id: enemy.id, label: enemy.name })) })
+    return copies.find(enemy => enemy.id === picked) || copies[0]
+  }
+  return {
+    code, scope: 'enemy', implemented: true,
+    modifiers: [{ target: 'enemyFight', amount: ({ state }) => -keyedSanctumCount(state) }],
+    abilities: [{
+      kind: 'forced', trigger: 'enemyDamaged',
+      limit: { scope: 'perWindow', owner: 'instance' },
+      label: `${name}受到伤害后：对场上一张${broodName}造成等量伤害`,
+      criteria: ({ source, context }) => Boolean(source && context?.enemy
+        && context.enemy.id === source.id && (context.damage || 0) > 0),
+      resolve: ({ state, inv, source, context, api }) => {
+        const target = chooseBrood(state, api, context.seat ?? inv?.seat ?? state.campaign.leadSeat,
+          `选择一张${broodName}：对它造成同样的伤害。`)
+        if (target) api.damageEnemy(target, context.damage, context.seat ?? null, code)
+      },
+    }, {
+      kind: 'forced', trigger: 'evadeSuccess',
+      limit: { scope: 'perWindow', owner: 'instance' },
+      label: `${name}被躲避后：对场上一张${broodName}也执行躲避`,
+      criteria: ({ source, context }) => Boolean(source && context?.enemy && context.enemy.id === source.id),
+      resolve: ({ state, inv, source, context, api }) => {
+        const target = chooseBrood(state, api, context.seat ?? inv?.seat ?? state.campaign.leadSeat,
+          `选择一张${broodName}：对它也执行躲避。`)
+        if (target) api.autoEvadeEnemy(target)
+      },
+    }],
+  }
+}
+
+// ---------------------------------------------------------------------------
+// P7 第三章《深陷其中》四张议程共用模板（07124 路障重重 / 07125 无情浪潮 /
+// 07126 水漫街道 / 07127 深海之怒）：
+//   「每个[[嫌犯]]敌人失去冷漠，并且不能与之谈判。
+//    强制 - 在你回合结束时，如果你位于完全淹没的地点：<各卡效果>。」
+// 四张的差异只在回合末效果参数与背面 onReveal，因此共用工厂；条目只声明差异。
+//
+// 引擎读点：
+//   · enemyLosesAloof ← hidden-rules.aloofPreventsAttack / engine.engagesAutomatically /
+//     enemies.spawnEnemy 的自动交战判定（数据驱动分派在 content entry-rules.js）；
+//   · parleyBlocked ← moves.js#parleyMoves / validateMove 先问 scenarioBehavior.parleyBlocked；
+//   · 回合末强制走既有 turnEnded 窗口（forced 实体能力），floodLevel 读 flood.js。
+// ---------------------------------------------------------------------------
+export function floodedStreetAgendaRule({ onReveal }) {
+  return {
+    enemyLosesAloof: (state, enemy) => hasTrait(enemy, 'Suspect'),
+    parleyBlocked: (state, inv, entity) => hasTrait(entity, 'Suspect'),
+    ...(typeof onReveal === 'function' ? { onReveal } : {}),
+  }
+}
+
+export function floodedStreetTurnEndAbility({ damage = 0, horror = 0, discard = 0 } = {}) {
+  return {
+    kind: 'forced', trigger: 'turnEnded',
+    limit: { scope: 'perWindow', owner: 'instance' },
+    label: '回合结束时如果你位于完全淹没的地点，结算该议程的强制效果',
+    criteria: ({ state, inv, context }) => context.seat === inv.seat && floodLevel(state, inv.location) === 2,
+    resolve: ({ inv, api }) => {
+      if (damage) api.damage(inv.seat, damage)
+      if (horror) api.horror(inv.seat, horror)
+      if (discard) api.discardRandomFromHand(inv.seat, discard)
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// P7 第六章《雾中之光》两张卡共用的「奥赛罗思·马什 + 蓝钥匙 + 尽腥尽力 + 灯塔地下室」布置
+//（07236b 幕背面与 07232b 议程背面是同一句印刷块的两种触发路径）：
+//   · 从 setAside 生成马什到灯塔看门人小屋（07236b 横置；07232b 与队长交战）；
+//   · 把放在一边的蓝色钥匙放到马什上；把每张放在一边的「尽腥尽力」洗入遭遇牌库；
+//   · 把灯塔地下室（07244）放到灯塔梯井（07240）正下方（主线坐标 (2,-1)）。
+// 条目只声明差异（是否横置、是否直接推进议程/场景）。
+// ---------------------------------------------------------------------------
+export function bringMarshAndLighthouseBasement(state, api, {
+  exhausted = false, engagedSeat = null, marshCode = '07253', cottageCode = '07243',
+  stairwellCode = '07240', basementCode = '07244', saltCode = '07259',
+} = {}) {
+  const locationByCode = code => state.locations.find(location => originalOf(location) === code) || null
+  const cottage = locationByCode(cottageCode)
+  // 07236b 在灯塔看门人小屋横置生成；07232b 印刷是「与调查员队长交战」（生成在队长所在地点）。
+  const engagedLocation = engagedSeat != null && state.investigators?.[engagedSeat]
+    ? state.investigators[engagedSeat].location : null
+  const spawnLocationId = engagedLocation || cottage?.id || null
+  let marsh = state.enemies.find(enemy => !enemy.defeated && !enemy.removedFromGame
+    && originalOf(enemy) === marshCode)
+  if (!marsh && spawnLocationId && api.takeFromSetAside(marshCode)) {
+    marsh = engagedSeat == null
+      ? api.spawn(marshCode, spawnLocationId, { exhausted })
+      : api.spawnEngaged(marshCode, spawnLocationId, engagedSeat)
+  } else if (!spawnLocationId) {
+    api.info?.('⚠️ 灯塔看门人小屋不在场，奥赛罗思·马什仍放在一边。')
+  }
+  if (marsh) api.mechanics.keys.transfer('blue', 'setAside', `enemy:${marsh.id}`, { reveal: true })
+  const worthHisSalt = []
+  while (api.takeFromSetAside(saltCode)) worthHisSalt.push(saltCode)
+  if (worthHisSalt.length) api.shuffleIntoEncounterDeck(worthHisSalt, { shuffle: false })
+  let basement = locationByCode(basementCode)
+  if (!basement) {
+    const definition = Object.values(state.scenario.locations || {})
+      .find(item => originalOf(item) === basementCode)
+    if (definition) {
+      const stairwell = locationByCode(stairwellCode)
+      let position = { x: 2, y: -1 }
+      const at = stairwell ? api.mechanics.map.position(stairwell.id) : null
+      if (at && Number.isFinite(at.x) && Number.isFinite(at.y)) position = { x: at.x, y: at.y - 1 }
+      api.mechanics.map.place(definition.id, position.x, position.y)
+      basement = locationByCode(basementCode)
+    }
+  }
+  return { marsh, basement }
+}
+
+// P7 第六章《雾中之光》07234b / 07235b 共用的 floodBottommost 口径
+//（参考实现 Helpers.hs#floodBottommost）：可提升淹没等级的地点不足 count 张时返回 0；
+// 否则从最底行开始逐行提升：整行放得下就整行提升，放不下时由领队在该行中选满剩余名额。
+// 返回实际提升张数（== 0 表示「不能这么做」，由条目走失败/结局分支）。
+export function floodBottommostLocations(state, api, count, source) {
+  const candidates = state.locations.filter(location => api.mechanics.water.canChange(location.id, 1))
+  if (candidates.length < count) return 0
+  const rowOf = location => {
+    const position = api.mechanics.map.position(location.id)
+    return position && Number.isFinite(position.y) ? position.y : Number.POSITIVE_INFINITY
+  }
+  let remaining = count
+  const rows = [...new Set(candidates.map(rowOf))].sort((left, right) => left - right)
+  for (const rowNumber of rows) {
+    if (remaining <= 0) break
+    const row = candidates.filter(location => rowOf(location) === rowNumber)
+    if (row.length <= remaining) {
+      for (const location of row) api.mechanics.water.change(location.id, 1)
+      remaining -= row.length
+      continue
+    }
+    const chosen = new Set()
+    while (remaining > 0 && chosen.size < row.length) {
+      const unchosen = row.filter(location => !chosen.has(location.id))
+      if (!unchosen.length) break
+      const seat = api.decideSeat()
+      const id = api.choice({
+        kind: 'location', source,
+        seat,
+        prompt: '选择本行中要提升淹没等级的地点（可提升名额少于本行地点数）。',
+        options: unchosen.map(location => ({ id: location.id, label: location.name || location.id })),
+      })
+      const target = unchosen.find(location => location.id === id) || unchosen[0]
+      chosen.add(target.id)
+      api.mechanics.water.change(target.id, 1)
+      remaining -= 1
+    }
+  }
+  return count - remaining
+}
+
+

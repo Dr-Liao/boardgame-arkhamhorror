@@ -62,6 +62,13 @@ export const FAST_TESTS = Object.freeze([
   'tic-road-hazards.test.mjs', // 07204–07210 道路危害：载具离开/进入地点的强制结算
   'tic-car-faces.test.mjs', // 07211a/b 与 07212a/b：载具正反面、司机限定、运行面禁止进出
   'tic-chase-vehicles.test.mjs', // 07213/07214：最后方生成；攻击伤害加成读点与 07214 的猎手阶段禁攻
+  // 2026-11-04 合并：backup 分支（上一轮 A1/A2 与 B 批）带入的正式测试。
+  'tic-maelstrom-agendas.test.mjs',
+  'tic-maelstrom-act.test.mjs',
+  'tic-scenarios-a1.test.mjs',
+  'tic-scenarios-light-in-the-fog.test.mjs',
+  'tic-maelstrom-treacheries.test.mjs',
+  'tic-light-in-the-fog-agendas.test.mjs',
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',
