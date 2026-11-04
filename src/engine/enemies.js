@@ -245,6 +245,18 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     const inVehicle = vehicleOf(state, inv.seat) != null
     if (!(bonusRule.unlessTargetInVehicle === true && inVehicle)) extraDamage += Number(bonusRule.amount)
   }
+  // 「在 X 攻击时：本次攻击 +1 伤害和 +1 恐惧。弃掉本卡」（07259 尽腥尽力）：附属在敌人身上的
+  // 诡计声明 `treacheryRule.attackBonus = { damage, horror, discardOnAttack }`，攻击宣言时叠加并弃置。
+  for (const attachment of (enemy.attachments || []).slice()) {
+    const attackBonus = registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attackBonus
+    if (!attackBonus) continue
+    extraDamage += Number(attackBonus.damage) || 0
+    extraHorror += Number(attackBonus.horror) || 0
+    if (attackBonus.discardOnAttack === true) {
+      enemy.attachments.splice(enemy.attachments.indexOf(attachment), 1)
+      state.encounterDiscard.push(attachment.originalCode || attachment.code)
+    }
+  }
   attack.plannedDamage = enemy.damage + extraDamage
   attack.plannedHorror = enemy.horror + extraHorror
   const attackText = label || `🗡️ 「${enemy.name}」攻击 ${inv.name}：${enemy.damage + extraDamage} 点伤害、${enemy.horror + extraHorror} 点恐惧。`
@@ -379,6 +391,14 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
         options: candidates.map(location => ({ id: location.id, label: location.name || location.id })),
       })
     }
+  }
+  // 「生成 - 某张剧情支援（载具）所在地点」（07164b/07165b「生成 - 渔船所在地点」）：
+  // 取 state.storyAssets 里同一张物理卡的实例 location；实例不在场时保持默认落点。
+  // 只在该实例的卡号/原名匹配时生效，避免同名多张时拿到别人的位置。
+  if (!override && !ignoreSpawn && registeredEntry(code)?.spawnAtStoryAsset) {
+    const wanted = registeredEntry(code).spawnAtStoryAsset
+    const asset = (state.storyAssets || []).find(item => (item.originalCode || item.code) === wanted)
+    if (asset && locationExists(state, asset.location)) loc = asset.location
   }
   // 「生成 - 任意无人地点（如可能，生成在[[古代]]地点）」（04086）。
   if (!override && !ignoreSpawn && registeredEntry(code)?.spawnAncientFirst) {

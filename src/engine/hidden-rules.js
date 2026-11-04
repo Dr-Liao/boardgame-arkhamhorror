@@ -127,6 +127,12 @@ export function createHiddenRules(deps) {
     if (currentLocation?.cannotLeaveRound === state.round) {
       return `本轮不能离开「${currentLocation.name || currentLocation.id}」`
     }
+    // 「石障为重整状态时，调查员不能移动离开附属地点」（07299）：地点附属的声明式读点。
+    // legalMoves / validateMove / 效果位移共用本函数，所以三处同时生效。
+    const readyBlocker = (currentLocation?.attachments || []).find(attachment =>
+      attachment.exhausted !== true
+      && registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.blocksMovementWhileReady === true)
+    if (readyBlocker) return `「${currentLocation.name || currentLocation.id}」的附属效果禁止你离开`
     // 2026-10-25 本循环修复 movement-error-destination-all-phases（05053/05054）：
     // 剧本级移动限制在任何阶段都生效（含效果位移），并携带目标地点；此前只在调查阶段、
     // 且不传目标地点，导致「不能移动到某调查员所在地点」在效果移动/神话阶段被绕过。

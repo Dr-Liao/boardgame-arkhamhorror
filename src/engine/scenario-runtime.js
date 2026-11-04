@@ -1313,6 +1313,25 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!enemy || !code) return null
       return attachCardTo(state, null, code, enemy, extra)
     },
+    // 07099 机械故障：「显现 - 附属到最近的[[载具]]剧情支援」——剧情支援实例也可以当宿主。
+    attachEncounterToStoryAsset: (code, storyAssetId, extra = {}) => {
+      const host = (state.storyAssets || []).find(item => item.id === storyAssetId)
+      if (!host || !code) return null
+      return attachCardTo(state, null, code, host, { encounterAttached: true, ...extra })
+    },
+    // 07259 尽腥尽力：「显现 - 附属到奥赛罗思·马什，即便他在胜利区」——
+    // host 同时搜索在场敌人与胜利区的物理卡。
+    attachEncounterToEnemy: (code, enemyId, extra = {}) => {
+      const host = [...(state.enemies || []), ...(state.victoryDisplay || [])].find(item => item.id === enemyId)
+      if (!host || !code) return null
+      return attachCardTo(state, null, code, host, { encounterAttached: true, ...extra })
+    },
+    // 07299 石障：「[action] 检定成功后横置石障」——横置地点附属的唯一写入口。
+    exhaustLocationAttachment: attachment => {
+      if (!attachment || typeof attachment !== 'object') return false
+      attachment.exhausted = true
+      return true
+    },
     // 2026-10-28 P1：剧本/遭遇卡附属到地点（疯狂生长 04076 / 屋中无人 04145 / 怨灵作祟 03094 …）。
     // 走 location-attachments.js 的唯一写入口（location.attachments），卡文件不再直接 push。
     attachToLocation: (locationId, fields = {}) => attachLocationCard(state, locationId, { scope: 'location', ...fields }),

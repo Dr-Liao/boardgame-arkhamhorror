@@ -21,7 +21,7 @@ import { enumerateTargets } from './targets.js'
 export function createEncounter(deps) {
   // 「生成 - <某类地点>」的条目级声明（位置由 enemies.js#spawnEnemy 解析，抽牌时不与抽牌者交战）。
   const printedSpawnLocation = entry => Boolean(entry?.spawnFarthestFromAll || entry?.spawnMostClues
-    || entry?.spawnRearmost || entry?.spawnAncientFirst)
+    || entry?.spawnRearmost || entry?.spawnAncientFirst || entry?.spawnAtStoryAsset)
   const {
     ALL_CARDS,
     ALL_ENEMIES,

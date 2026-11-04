@@ -30,7 +30,14 @@ export function activeStageEntities(state) {
   return [state.acts?.[state.actIndex], state.agendas?.[state.agendaIndex]].filter(Boolean)
 }
 export function actionEntityById(state, id) {
-  return [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || []), ...activeStageEntities(state), scenarioReferenceEntity(state)].filter(Boolean).find(entity => entity.id === id)
+  return [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || []),
+    ...(state.locations || []).flatMap(location => location.attachments || []),
+    ...activeStageEntities(state), scenarioReferenceEntity(state)].filter(Boolean).find(entity => entity.id === id)
+}
+// 地点附属实体（07299 石障）：附属对象本身没有 location 字段，宿主地点由归属扫描得到。
+export function locationOfAttachment(state, attachment) {
+  if (!attachment) return null
+  return (state.locations || []).find(location => (location.attachments || []).includes(attachment))?.id || null
 }
 export const PARLEY_ACTION_KIND = 'parley'
 
@@ -51,13 +58,24 @@ export function entityParleyDescriptors(entity) {
 
 export function entityActionDescriptors(entity) {
   const entry = registeredEntry(entity?.originalCode || entity?.code)
+  // 07299 这类「地点附属卡自身行动」：描述子放在 treacheryRule.attachmentAbilities，
+  // 枚举/执行与实体 abilities 共用同一条管线（actionEntityById 会把附属对象本身交进来）。
+  if (entry?.treacheryRule?.attachmentAbilities?.length) return entry.treacheryRule.attachmentAbilities
   return (entry?.abilities || []).filter(ability =>
     ['action', 'free'].includes(ability.kind) && typeof ability.actionKind === 'string')
+}
+
+// 「附属支援上的“[action]”能力不能触发」（07099 机械故障）：宿主实体上挂了声明该规则的附属时，
+// 宿主的 action 类描述子不进入合法表；forced/reaction 照常。
+export function hostActionsSuppressed(state, entity) {
+  return (entity?.attachments || []).some(attachment =>
+    registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.suppressesHostActions === true)
 }
 
 export function entityAbilityInRange(state, inv, entity, descriptor) {
   if (descriptor.range === 'anywhere') return true
   const location = state.locations.includes(entity) ? entity.id : entity.location
+    ?? locationOfAttachment(state, entity)
     ?? state.investigators.find(owner => [...(owner.assets || []), ...(owner.threat || [])].includes(entity))?.location
   if (location === inv.location) return !state.locations.includes(entity) || entity.revealed
   return descriptor.range === 'connecting' && state.locations.find(loc => loc.id === inv.location)?.connections?.includes(location)
@@ -94,6 +112,7 @@ export function parleyMoves(state, inv, entity, entityType, usable = null) {
   const descriptors = entityActionDescriptors(entity)
   descriptors.forEach((descriptor, abilityIndex) => {
     if (!entityAbilityInRange(state, inv, entity, descriptor)) return
+    if (descriptor.kind === 'action' && hostActionsSuppressed(state, entity)) return
     if (isParleyDescriptor(descriptor) && parleyForbidden(state, inv, entity)) return
     if (usable && !usable(entity, descriptor)) return
     if (!usable && descriptor.criteria) {
@@ -125,6 +144,13 @@ export function parleyMovesFor(state, inv, usable = null) {
   }
   for (const asset of state.storyAssets || []) {
     out.push(...parleyMoves(state, inv, asset, 'storyAsset', usable))
+  }
+  // 地点附属卡自身行动（07299 石障）：宿主地点上的调查员才能用；entityId 是附属对象 id。
+  for (const location of state.locations || []) {
+    for (const attachment of location.attachments || []) {
+      if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attachmentAbilities?.length) continue
+      out.push(...parleyMoves(state, inv, attachment, 'locationAttachment', usable))
+    }
   }
   const reference=scenarioReferenceEntity(state)
   if(reference)out.push(...parleyMoves(state,inv,reference,'scenario',usable))

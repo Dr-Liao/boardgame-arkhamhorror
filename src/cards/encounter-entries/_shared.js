@@ -12,6 +12,8 @@ import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
 import { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard } from '../../engine/vehicle-state.js'
 // 2026-11-04 合并：backup 侧的 A2 共享工厂（floodBottommost 等）用 floodLevel 读水位。
 import { floodLevel } from '../../engine/flood.js'
+// 2026-11-04 P7 剩余：道路议程（07199–07201）读 mechanicState.road.columns（列号 = 最后方顺序）。
+import { mechanicState } from '../../engine/mechanic-state.js'
 import { ALL_CARDS } from '../cards-data.js'
 import { traitLabel } from '../trait-labels.js'
 
@@ -1120,6 +1122,78 @@ export function floodBottommostLocations(state, api, count, source) {
     }
   }
   return count - remaining
+}
+
+// ---------------------------------------------------------------------------
+// P7 第五章《全速恐惧》三张同文追逐议程（07199 / 07200 / 07201：追逐开始！v.I / v.II、热力追踪）
+//
+// 印刷同文：
+//   「你不在载具上时，作为移动的额外费用，你必须花费 2 行动。」
+//   「强制 - 当一轮结束时：从最后方的地点开始，将每个没有载具、敌人和调查员的地点放在一边，
+//    位于场外（或如果其有胜利 X 且没有线索，将其放入胜利区）。在到达有载具、敌人或调查员的地点时；
+//    或在最后方的调查员后方一个地点停下。」
+//
+// 读点：
+//   · 移动费用 = `movementActionSurcharge`（turn-flow.js#actionCost，无 betweenTraits 即「任何移动」，
+//     载具上的调查员不付，与 07164–07166 的海洋版同一读点）；
+//   · 轮末清理 = `agendaRule.onRoundEnd`（phases.js#upkeepPhase 的 runAgendaForced 同层），
+//     写入口 `api.awardLocationVictory(id)` / `api.removeLocationFromGame(id)`；
+//   · 最后方顺序 = `mechanicState(state).road.columns`（列号最小 = 最后方）。
+// ---------------------------------------------------------------------------
+export function roadColumns(state) {
+  const columns = mechanicState(state)?.road?.columns || {}
+  return Object.entries(columns)
+    .map(([id, column]) => ({ id, column: Number(column) }))
+    .filter(item => Number.isFinite(item.column))
+    .sort((left, right) => left.column - right.column)
+}
+
+// 「最后方的地点」（07213/07214/07199b 的生成点）：列号最小的地点（可能并列）。
+export function roadRearmostLocations(state) {
+  const ranked = roadColumns(state)
+  if (!ranked.length) return []
+  const best = ranked[0].column
+  return ranked.filter(item => item.column === best).map(item => item.id)
+}
+
+// 一轮结束时从最后方清理道路：逐列（列号升序）把「无载具、无敌人、无调查员」的地点移出游戏；
+// 有胜利 X 且没有线索的进胜利区。遇到被占地点或「最后方调查员后一列」即停。
+export function chaseRoundEndCleanup(state, api) {
+  const ranked = roadColumns(state)
+  if (!ranked.length) return []
+  const columns = mechanicState(state)?.road?.columns || {}
+  const columnOf = id => Number(columns[id] ?? columns[(state.locations || []).find(loc => loc.id === id)?.originalCode])
+  const active = (state.investigators || []).filter(inv => !inv.defeated && !inv.resigned)
+  const vehicles = Object.values(mechanicState(state)?.vehicles || {})
+  const occupied = id => active.some(inv => inv.location === id)
+    || (state.enemies || []).some(enemy => enemy.location === id && !enemy.defeated && !enemy.removedFromGame)
+    || vehicles.some(vehicle => vehicle.location === id)
+  const investigatorColumns = active.map(inv => columnOf(inv.location)).filter(Number.isFinite)
+  const stopColumn = investigatorColumns.length ? Math.min(...investigatorColumns) - 1 : null
+  const removed = []
+  for (const item of ranked) {
+    if (stopColumn != null && item.column > stopColumn) break
+    if (occupied(item.id)) break
+    const location = (state.locations || []).find(loc => loc.id === item.id)
+    if (!location) continue
+    const def = ALL_CARDS[location.originalCode || location.code]
+    const victory = Number(def?.victory ?? location.victory ?? 0)
+    if (victory > 0 && (Number(location.clues) || 0) === 0) api.awardLocationVictory(item.id)
+    else api.removeLocationFromGame(item.id)
+    removed.push(item.id)
+  }
+  return removed
+}
+
+export function chaseAgendaEntry({ code, onReveal }) {
+  return {
+    code, scope: 'agenda', implemented: true,
+    agendaRule: {
+      movementActionSurcharge: { amount: 2 },
+      onReveal,
+      onRoundEnd(state, agenda, api) { chaseRoundEndCleanup(state, api) },
+    },
+  }
 }
 
 

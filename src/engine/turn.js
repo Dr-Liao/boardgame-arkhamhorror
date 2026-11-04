@@ -17,7 +17,7 @@ import { hasWindowListener } from './window-listeners.js'
 
 // 第 5 步 P6：法术专用额外行动的授权/清理只走 spell-actions 的算术（纯函数，无依赖）。
 import { clearSpellCredit, grantSpellCredit } from './spell-actions.js'
-import { beginAirTurn } from './flood.js'
+import { beginAirTurn, floodLevel } from './flood.js'
 // P6（食梦者）：受限额外行动（托尼·摩尔根的赏金行动）的授权与清理。
 import {
   clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
@@ -172,10 +172,25 @@ function runMythos(state, repeated = false) {
   return events
 }
 
+// 07202 油门踩死：「每个敌人获得猎手」= 当前幕条目的 `actRule.enemiesGainHunter`。
+// 只影响猎手行为判定（移动/目标），不写实例字段，因此换幕/换面立即失效。
+function enemyHasHunter(state, enemy) {
+  if (enemy?.hunter) return true
+  const act = state.acts?.[state.actIndex]
+  return registeredEntry(act?.originalCode || act?.code)?.actRule?.enemiesGainHunter === true
+}
+
+// 07338 潜水服：「你忽略当前密谋的强制能力」= 该调查员控制的资产声明 `assetRule.ignoreAgendaForced`。
+// 读点：回合开始的「求取空气」（本条印刷把它归为当前密谋的强制能力）。
+function ignoresAgendaForced(state, inv) {
+  return [...(inv?.assets || []), ...(inv?.threat || [])].some(card =>
+    registeredEntry(card.code)?.assetRule?.ignoreAgendaForced === true)
+}
+
 function resolveEnemyPhaseOf(state, enemy, events = []) {
   if (!enemy || !state.enemies.includes(enemy)) return { moved: false, attacked: false }
   const previous = enemy.location
-  if (enemy.hunter && !enemy.exhausted && enemy.engagedSeat == null && !enemy.immobile
+  if (enemyHasHunter(state, enemy) && !enemy.exhausted && enemy.engagedSeat == null && !enemy.immobile
     && !enemyTextBlanked(state, enemy)) {
     const overridden = scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))
     if (!overridden && !aliveInvestigators(state).some(inv => inv.location === enemy.location
@@ -215,7 +230,7 @@ function enemyPhase(state) {
   // 1) 猎手移动
   if(state.scenario?.eventWindowInstances)resolveHunterMoves(state,events)
   else for (const enemy of state.enemies.slice()) {
-    if (enemy.hostId || !enemy.hunter || enemyTextBlanked(state, enemy) || enemy.engagedSeat != null || enemy.exhausted || enemy.immobile) continue
+    if (enemy.hostId || !enemyHasHunter(state, enemy) || enemyTextBlanked(state, enemy) || enemy.engagedSeat != null || enemy.exhausted || enemy.immobile) continue
     if (scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))) continue
     if (aliveInvestigators(state).some((inv) => inv.location === enemy.location && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat))) continue
     const target = hunterStep(state, enemy)
@@ -303,14 +318,14 @@ function hunterRoute(state,enemy,targetIds,prompt) {
 }
 
 function resolveHunterMove(state,enemy,events=[],options={}) {
-  if(!enemy||!state.enemies.includes(enemy)||enemy.hostId||!enemy.hunter||enemy.exhausted||enemy.engagedSeat!=null||enemy.immobile||enemyTextBlanked(state,enemy))return {moved:false}
+  if(!enemy||!state.enemies.includes(enemy)||enemy.hostId||!enemyHasHunter(state,enemy)||enemy.exhausted||enemy.engagedSeat!=null||enemy.immobile||enemyTextBlanked(state,enemy))return {moved:false}
   if(aliveInvestigators(state).some(inv=>inv.location===enemy.location&&(enemy.prey!=='bearer'||inv.seat===enemy.bearerSeat)&&!ruleIgnored(state,inv,'hunter')))return {moved:false}
   const target=hunterStep(state,enemy,{...options,barrierRouting:true})
   if(!target||dreamGateEntryError(null,state.locations.find(loc=>loc.id===target)))return {moved:false}
   return relocateEnemy(state,enemy,target,events,{cause:'hunter',phaseInstance:state.phaseInstance,routeSelected:true})||{moved:false}
 }
 function resolveHunterMoves(state,events=[],options={}) {
- const pending=state.enemies.filter(e=>!e.hostId&&e.hunter&&!e.exhausted&&e.engagedSeat==null&&!e.immobile&&!enemyTextBlanked(state,e)).map(e=>e.id),results=[]
+ const pending=state.enemies.filter(e=>!e.hostId&&enemyHasHunter(state,e)&&!e.exhausted&&e.engagedSeat==null&&!e.immobile&&!enemyTextBlanked(state,e)).map(e=>e.id),results=[]
  while(pending.length){
   const available=pending.map(id=>state.enemies.find(e=>e.id===id)).filter(Boolean)
   if(!available.length)break
@@ -333,6 +348,16 @@ function hunterStep(state, enemy, options = {}) {
     if (target.barricade && !enemy.elite) return false
     return true
   })
+  // 07332 水生异怪：「移动时，完全淹没的地点视作相互连接」——当前地点完全淹没时，
+  // 其它完全淹没地点直接进入猎手候选（仍随后经过 canEnter/路障/Dream-Gate 校验）。
+  if (registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.hunterTreatsFloodedConnected === true
+    && floodLevel(state, enemy.location) >= 2) {
+    for (const other of state.locations) {
+      const id = other?.id
+      if (!id || id === enemy.location || neighbours.includes(id)) continue
+      if (floodLevel(state, id) >= 2) neighbours.push(id)
+    }
+  }
   if (!neighbours.length) return null
   // 2026-10-25 第七轮修复 05323：地点附属的 locationLure 是真实诱饵（多诱饵取最近）。
   const lureAttachments = (state.playerLocationAttachments || [])
@@ -484,7 +509,9 @@ function turnBeginningWindow(state, events) {
       info(state, events, `${inv.name} 获得 1 个${restrictedRule.kind === 'bounty' ? '只能用于交战或攻击带赏金敌人' : '受限'}的额外行动。`)
     }
     scenarioBehavior(state).turnBegins?.(state, inv, scenarioRuntime(state, events))
-    if (state.scenario?.mechanics?.water?.air) beginAirTurn(state, inv.seat, { damage: state.scenario.mechanics.water.damage ?? 5 })
+    // 07338 潜水服：「你忽略当前密谋的强制能力」——章节水位规则把「求取空气」作为当前密谋的
+    // 强制能力结算，因此控制该资产的调查员在回合开始时不记录空气风险。
+    if (state.scenario?.mechanics?.water?.air && !ignoresAgendaForced(state, inv)) beginAirTurn(state, inv.seat, { damage: state.scenario.mechanics.water.damage ?? 5 })
     // 「时间借取」：回合开始时移除所有滴答，换取等量额外行动。
     campaignBorrowedTimeTurnStart(state, inv, events)
     triggerReaction(state, inv.seat, 'turnBegins', events, { seat: inv.seat, location: inv.location })

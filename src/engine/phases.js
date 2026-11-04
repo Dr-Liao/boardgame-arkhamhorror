@@ -83,6 +83,15 @@ function upkeepPhase(state) {
     attachment.exhausted = false
   }
 
+  // 剧本附属到地点的卡（07299 石障等）在补给阶段重整；只有声明了自身行动读点的附属
+  // （treacheryRule.attachmentAbilities）参与，避免改变其它战役地点附属的既有行为。
+  for (const location of state.locations || []) {
+    for (const attachment of location.attachments || []) {
+      if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attachmentAbilities?.length) continue
+      attachment.exhausted = false
+    }
+  }
+
   for (const inv of aliveInvestigators(state)) {
     inv.actionsLeft = 3 + extraActionBonus(inv)
     inv.exploreOnlyActions = exploreOnlyActionBonus(inv)
@@ -235,6 +244,15 @@ function upkeepPhase(state) {
   }
 
   runAgendaForced(state, 'roundEnd', events)
+  // 议程条目的「轮末强制」读点（07199–07201 追逐议程：轮末道路清理）：
+  // 数据驱动分派到 `agendaRule.onRoundEnd(state, agenda, api)`；条目只声明这一个函数。
+  {
+    const roundEndAgenda = state.agendas?.[state.agendaIndex]
+    const roundEndRule = registeredEntry(roundEndAgenda?.originalCode || roundEndAgenda?.code)?.agendaRule
+    if (typeof roundEndRule?.onRoundEnd === 'function') {
+      roundEndRule.onRoundEnd(state, roundEndAgenda, scenarioRuntime(state, events))
+    }
+  }
   if (state.investigators.some(inv => investigatorRule(inv.code)?.roundEndReaction)) {
     openAbilityWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, events)
   }

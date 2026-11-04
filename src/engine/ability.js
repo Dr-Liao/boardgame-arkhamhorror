@@ -323,7 +323,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'grantsHidingSpot',
   // Phase 5（5a-27）：附属触发型（埋伏 / 陷阱）。
   'ambushAttachment', 'discardWhenNoInvestigator', 'spawnChoices', 'charlesRoss', 'handSlotsPenaltyWhileInvestigating', 'spawnFarthestFromAll',
-  'spawnMostClues', 'spawnRearmost',
+  'spawnMostClues', 'spawnRearmost', 'spawnAtStoryAsset',
   'detachAction', 'spawnAncientFirst', 'darkPactForced', 'replacementCode',
   'bonusVsVictoryCombat', 'bonusVsVengeanceAgility',
   'snareAttachment',
@@ -708,6 +708,41 @@ export function registerCardAbilities(entries) {
     }
     // 「生成 - 最后方的地点」（07213/07214）：读点在 enemies.js#spawnEnemy（与 spawnMostClues 同段）。
     if (entry.spawnRearmost != null && typeof entry.spawnRearmost !== 'boolean') throw new TypeError('Invalid rearmost spawn flag')
+    // 「生成 - 某张剧情支援（载具）所在地点」（07164b/07165b「生成 - 渔船所在地点」）：
+    // 条目声明剧情支援卡号；读点在 enemies.js#spawnEnemy（取实例当前 location）。
+    if (entry.spawnAtStoryAsset != null && (typeof entry.spawnAtStoryAsset !== 'string' || !entry.spawnAtStoryAsset)) {
+      throw new TypeError('Invalid story asset spawn code')
+    }
+    // P7 剩余单卡的声明式规则键（每个键都在同一轮有真实读点；这里只做形状校验）：
+    //   · actRule.enemiesGainHunter：07202「每个敌人获得猎手」→ turn.js#enemyHasHunter；
+    //   · enemyRule.hunterTreatsFloodedConnected：07332「移动时完全淹没地点视作相连」→ turn.js#hunterStep；
+    //   · treacheryRule.extraTokenOnAttackAtFlooded：07185 → tests.js 的标记揭示循环；
+    //   · treacheryRule.suppressesHostActions：07099「附属支援上的 [action] 不能触发」→ parley.js；
+    //   · treacheryRule.blocksMovementWhileReady：07299「重整状态时不能离开附属地点」→ hidden-rules.js；
+    //   · treacheryRule.attachToNearestVehicleStoryAsset：07099 显现目标（条目里用 api 实现，仅标记）；
+    //   · treacheryRule.attackBonus：07259「攻击时 +1 伤害/+1 恐惧，然后弃掉本卡」→ enemies.js#enemyAttack；
+    //   · assetRule.ignoreAgendaForced：07338「你忽略当前密谋的强制能力」→ turn.js 的求取空气读点。
+    if (entry.actRule?.enemiesGainHunter != null && typeof entry.actRule.enemiesGainHunter !== 'boolean') throw new TypeError('Invalid enemies-gain-hunter rule')
+    // 07199–07201 轮末道路清理：读点 phases.js#upkeepPhase（runAgendaForced 同层）。
+    if (entry.agendaRule?.onRoundEnd != null && typeof entry.agendaRule.onRoundEnd !== 'function') throw new TypeError('Invalid agenda round-end hook')
+    if (entry.enemyRule?.hunterTreatsFloodedConnected != null && typeof entry.enemyRule.hunterTreatsFloodedConnected !== 'boolean') throw new TypeError('Invalid flooded hunter connection rule')
+    if (entry.treacheryRule?.extraTokenOnAttackAtFlooded != null && typeof entry.treacheryRule.extraTokenOnAttackAtFlooded !== 'boolean') throw new TypeError('Invalid flooded attack token rule')
+    if (entry.treacheryRule?.suppressesHostActions != null && typeof entry.treacheryRule.suppressesHostActions !== 'boolean') throw new TypeError('Invalid host action suppression rule')
+    if (entry.treacheryRule?.blocksMovementWhileReady != null && typeof entry.treacheryRule.blocksMovementWhileReady !== 'boolean') throw new TypeError('Invalid ready movement block rule')
+    if (entry.treacheryRule?.attachToNearestVehicleStoryAsset != null && typeof entry.treacheryRule.attachToNearestVehicleStoryAsset !== 'boolean') throw new TypeError('Invalid vehicle story asset attachment rule')
+    if (entry.assetRule?.ignoreAgendaForced != null && typeof entry.assetRule.ignoreAgendaForced !== 'boolean') throw new TypeError('Invalid agenda forced ignore rule')
+    if (entry.treacheryRule?.attackBonus != null) {
+      const bonus = entry.treacheryRule.attackBonus
+      assertKnownKeys(bonus, new Set(['damage', 'horror', 'discardOnAttack']), 'treacheryRule.attackBonus')
+      for (const key of ['damage', 'horror']) if (bonus[key] != null && (!Number.isSafeInteger(bonus[key]) || bonus[key] < 0)) throw new TypeError('Invalid enemy attack bonus')
+      if (bonus.discardOnAttack != null && typeof bonus.discardOnAttack !== 'boolean') throw new TypeError('Invalid enemy attack bonus discard')
+    }
+    if (entry.treacheryRule?.attachmentAbilities != null) {
+      if (!Array.isArray(entry.treacheryRule.attachmentAbilities) || !entry.treacheryRule.attachmentAbilities.length) throw new TypeError('Invalid location attachment abilities')
+      if (entry.treacheryRule.attachmentAbilities.some(raw => !raw || typeof raw !== 'object' || typeof raw.actionKind !== 'string')) {
+        throw new TypeError('Location attachment abilities require actionKind')
+      }
+    }
     // 「本次攻击造成 +N 伤害」（07213）：读点在 enemies.js#enemyAttack。
     if (entry.enemyRule?.attackDamageBonus != null) {
       const bonus = entry.enemyRule.attackDamageBonus
@@ -886,6 +921,8 @@ export function registerCardAbilities(entries) {
       spawnMostClues: entry.spawnMostClues === true,
       // 07213/07214「生成 - 最后方的地点」：读点同在 enemies.js#spawnEnemy。
       spawnRearmost: entry.spawnRearmost === true,
+      // 07164b/07165b「生成 - 渔船所在地点」：读点同在 enemies.js#spawnEnemy（按剧情支援实例取地点）。
+      spawnAtStoryAsset: typeof entry.spawnAtStoryAsset === 'string' ? entry.spawnAtStoryAsset : null,
       detachAction: entry.detachAction === true,
       spawnAncientFirst: entry.spawnAncientFirst === true,
       darkPactForced: entry.darkPactForced === true,
@@ -1007,6 +1044,10 @@ export function registerCardAbilities(entries) {
           extraActionCost: Object.freeze([...(entry.treacheryRule.threat.extraActionCost || [])]),
           cannotPlay: Object.freeze([...(entry.treacheryRule.threat.cannotPlay || [])]),
         }) : null,
+        // 07299 石障这类「附属于地点、自身带行动」的诡计：描述子与实体 abilities 同一套
+        // normalizeDescriptor 校验/形状；枚举与执行在 parley.js / ability-exec.js 的实体管线。
+        attachmentAbilities: Object.freeze((entry.treacheryRule.attachmentAbilities || [])
+          .map((raw, index) => normalizeDescriptor({ kind: 'action', ...raw }, { code: entry.code, index }))),
       }) : null,
       // 威胁区「当你将受到伤害/恐惧时」的强制修正（读点：enemies.js applyHarm）。
       harmInterceptor: entry.harmInterceptor ? Object.freeze({ ...entry.harmInterceptor }) : null,

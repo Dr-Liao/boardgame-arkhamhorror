@@ -13,6 +13,7 @@ import { canCommitToTest, commitResourceCost, payCommitResourceCost } from './co
 import { returnCommitment } from './commit-origins.js'
 import { addPoolTokens, releasePoolTokens } from './chaos-token-pool.js'
 import { tokenEffect } from './chaos-token-effects.js'
+import { floodLevel } from './flood.js'
 import { notePromiseEvent } from './turn-promises.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
@@ -27,6 +28,19 @@ import { notePromiseEvent } from './turn-promises.js'
 // 规范化在进入检定流程前完成，单技能调用得到 ['<skill>']，后续求和与单值完全一致。
 // 技能名表与引擎其它日志同源（presentation-constants），不复制中文。
 const TEST_SKILL_NAMES = Object.freeze({ ...SKILL_NAMES, wild: '万能' })
+
+// 07185 伏兵出水：「当你攻击淹没地点的敌人并揭示混乱标记时：再揭示一个混乱标记
+//（每次检定最多一次）」。条目在 `treacheryRule.extraTokenOnAttackAtFlooded` 声明；
+// 卡放在密谋牌库旁（state.agendaAside），只要仍在场就生效。
+export function floodedAttackExtraTokenRule(state, options) {
+  const enemyId = options?.source?.enemyId ?? options?.testTarget?.id ?? null
+  if (enemyId == null) return false
+  const enemy = (state.enemies || []).find(item => item.id === enemyId)
+  if (!enemy || enemy.location == null) return false
+  if (floodLevel(state, enemy.location) <= 0) return false
+  return (state.agendaAside || []).some(card =>
+    registeredEntry(card.originalCode || card.code)?.treacheryRule?.extraTokenOnAttackAtFlooded === true)
+}
 
 export function normalizeTestSkills(skill) {
   const list = Array.isArray(skill) ? skill : [skill]
@@ -682,6 +696,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   let strokeOfLuckExiled = false
   let exilableCode = null
   let extraChaosUsed = false
+  // 07185：本次检定是否已经结算过「攻击淹没地点敌人 → 额外揭示」。
+  let extraFloodedAttackTokenUsed = false
   const pendingTokens = []
   const replacedEffectTokens = []
   const processedPhysicalTokens = new Set()
@@ -910,6 +926,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       }
     }
     drawn.push(token)
+    // 07185 伏兵出水：攻击淹没地点的敌人时，揭示标记后立刻再揭示一个（每次检定最多一次）。
+    if (!extraFloodedAttackTokenUsed && floodedAttackExtraTokenRule(state, options)) {
+      extraFloodedAttackTokenUsed = true
+      const extra = drawChaosToken(state)
+      pendingTokens.unshift(extra)
+      info(state, events, `🌊 「伏兵出水」：攻击淹没地点的敌人，额外揭示 1 个混乱标记（${tokenLabel(extra)}）。`)
+    }
     options.onToken?.(token, { index: tokenIndex, state, seat })
     const rewards = state.skillTest.tokenRewards
     if (rewards) {

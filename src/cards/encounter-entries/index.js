@@ -1286,6 +1286,17 @@ import e07212a from './theInnsmouthConspiracy/horrorInHighGear/07212a.js'
 import e07212b from './theInnsmouthConspiracy/horrorInHighGear/07212b.js'
 import e07213 from './theInnsmouthConspiracy/horrorInHighGear/07213.js'
 import e07214 from './theInnsmouthConspiracy/horrorInHighGear/07214.js'
+import e07164b from './theInnsmouthConspiracy/devilReef/07164b.js'
+import e07099 from './theInnsmouthConspiracy/_shared/malfunction/07099.js'
+import e07259 from './theInnsmouthConspiracy/aLightInTheFog/07259.js'
+import e07165b from './theInnsmouthConspiracy/devilReef/07165b.js'
+import e07185 from './theInnsmouthConspiracy/devilReef/07185.js'
+import e07202 from './theInnsmouthConspiracy/horrorInHighGear/07202.js'
+import e07332 from './theInnsmouthConspiracy/intoTheMaelstrom/07332.js'
+import e07338 from './theInnsmouthConspiracy/intoTheMaelstrom/07338.js'
+import e07280 from './theInnsmouthConspiracy/theLairOfDagon/07280.js'
+import e07281 from './theInnsmouthConspiracy/theLairOfDagon/07281.js'
+import e07282 from './theInnsmouthConspiracy/theLairOfDagon/07282.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2571,6 +2582,17 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07212b,
   e07213,
   e07214,
+  e07164b,
+  e07099,
+  e07259,
+  e07165b,
+  e07185,
+  e07202,
+  e07332,
+  e07338,
+  e07280,
+  e07281,
+  e07282,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)
