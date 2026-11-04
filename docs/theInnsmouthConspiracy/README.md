@@ -2,7 +2,7 @@
 
 英文名：The Innsmouth Conspiracy。战役标识：`theInnsmouthConspiracy`；本轮工具及审计简称：`tic`；来源战役编号：`07`。
 
-建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P1 → P2 → P3 → P4 → P5 → P6 已完成，[总审计](../../audit/tic-migration.json)七阶段均为 `verified`。五位调查员、专属依赖及 93 条一般玩家卡记录已验收，其中 90 张可构筑，3 张基础弱点只作依赖。章节和发布仍属于 P7–P8，战役保持 `catalog-only`。
+建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P7 已完成，[总审计](../../audit/tic-migration.json)八阶段 P0–P7 均为 `verified`，`node tools/audit-tic.mjs --check` 复算一致。五位调查员、专属依赖及 93 条一般玩家卡记录已验收（90 张可构筑，3 张基础弱点只作依赖）；八章逐章 12 项验收 **8/8** 全绿，逐卡账本 252 张 `missing=0`。发布仍属于 P8：战役保持 `catalog-only`，TIC 战役与八章目录已注册进内容注册表（`development`）但大厅启动开关留待 P8 打开。
 
 实施接口与证据说明见[原语契约](primitives.md)。本轮复算输入签入 `audit/tic-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 artifacts 保存运行镜像与过程资料，继续忽略，不放开整个目录。
 
@@ -142,13 +142,13 @@
 
 ### P7：共享遭遇、八章及战役流程（规范第 5 步，M3）
 
-- [ ] 先迁移战役内共享遭遇组，再按 §4 顺序落地八章；按归属目录分片，避免共享卡重复实现。
-- [ ] 八章逐项完成准备、区域守恒、地点连接、全部幕／议程正反面、敌人／诡计／剧情资产、符号与结局。
-- [ ] 严格按原版游玩顺序接入四个幕间、记忆闪回和尾声，不按剧情时间线重排关卡。
-- [ ] 根据实际升级窗口处理经验与升级权限；不得在每关之间默认开放升级。
-- [ ] 从锁定来源生成完整叙事，覆盖所有可达分支；运行时只显示已到达且有权查看的正文，历史正文不被当前记录改写。
-- [ ] 每章同步生成完整中英文指南，补译并标记缺项，通过来源覆盖、生成校验、Node 和浏览器验收。
-- [ ] 八章全部完成 §6 的逐章确认，战役记录、奖励、混乱袋和存档跨章一致。
+- [x] 先迁移战役内共享遭遇组，再按 §4 顺序落地八章；按归属目录分片，避免共享卡重复实现。证据：逐卡账本 `audit/tic-all-card-acceptance.json`（252 条，missing=0/blocked=0）。
+- [x] 八章逐项完成准备、区域守恒、地点连接、全部幕／议程正反面、敌人／诡计／剧情资产、符号与结局。证据：`audit/tic-scenario-acceptance.json` 8/8×12 全绿；八章 `tests/tic-scenario-*.test.mjs`。
+- [x] 严格按原版游玩顺序接入四个幕间、记忆闪回和尾声，不按剧情时间线重排关卡。证据：`tests/tic-interludes.test.mjs`、`tests/tic-flashbacks.test.mjs`（含 flashback XIV）、`content/.../flow.js` 与 `story-text.js` 校验。
+- [x] 根据实际升级窗口处理经验与升级权限；不得在每关之间默认开放升级。证据：`content/.../flow.js` 的 `continueNoUpgrade` 接线与幕间测试。
+- [x] 从锁定来源生成完整叙事，覆盖所有可达分支；运行时只显示已到达且有权查看的正文，历史正文不被当前记录改写。证据：`tools/import-tic-story.mjs --check` 完整（8 章 + 基础 348 段译补）。
+- [x] 每章同步生成完整中英文指南，补译并标记缺项，通过来源覆盖、生成校验、Node 和浏览器验收。证据：`tools/import-scenario-guides.mjs --check` 54 关通过；`audit/tic-browser-acceptance.json`（38 例、coverage 4/4）。
+- [x] 八章全部完成 §6 的逐章确认，战役记录、奖励、混乱袋和存档跨章一致。证据：C1–C8 全部勾选；`audit/tic-scenario-acceptance.json` 的 `saveReplay/resolutionsAndRecords` 8/8。
 
 退出门禁：每章的字面行为与指南均有证据；章内定向夹具不能代替真实大厅路线，战役仍需 P8 发布验收。
 
@@ -190,47 +190,48 @@
 
 幕间 I → 第二章、第三章 → 第四章、第六章 → 第七章在参考流程中使用 `continueNoUpgrade`；其余升级、经验到账和闪回限制仍须逐条核对指南与参考行为，不能仅凭该调用推断全部规则。
 
-- [ ] C1 绝望深坑：§6 全部通过，记录证据。
-- [ ] C2 艾莲娜·哈珀失踪案：§6 全部通过，记录证据。
-- [ ] C3 深陷危局：§6 全部通过，记录证据。
-- [ ] C4 魔鬼礁石：§6 全部通过，记录证据。
-- [ ] C5 全速恐惧：§6 全部通过，记录证据。
-- [ ] C6 雾中之光：§6 全部通过，记录证据。
-- [ ] C7 达贡巢穴：§6 全部通过，记录证据。
-- [ ] C8 暗潮之下：§6 全部通过，记录证据。
-- [ ] 四个幕间、记忆集合、条件闪回、奖励与升级窗口均完成独立测试。
-- [ ] 尾声覆盖记忆收集完整／不完整及其他可达分支，无未触发剧情泄露。
+- [x] C1 绝望深坑：§6 全部通过，记录证据。`tests/tic-scenario-thePitOfDespair.test.mjs`（10 例）。
+- [x] C2 艾莲娜·哈珀失踪案：§6 全部通过，记录证据。`tests/tic-scenario-theVanishingOfElinaHarper.test.mjs`（13 例，含指控三分支/营救六结局）。
+- [x] C3 深陷危局：§6 全部通过，记录证据。`tests/tic-scenario-inTooDeep.test.mjs`（11 例）。
+- [x] C4 魔鬼礁石：§6 全部通过，记录证据。`tests/tic-scenario-devilReef.test.mjs`（7 例）。
+- [x] C5 全速恐惧：§6 全部通过，记录证据。`tests/tic-scenario-horrorInHighGear.test.mjs`（9 例）。
+- [x] C6 雾中之光：§6 全部通过，记录证据。`tests/tic-scenario-aLightInTheFog.test.mjs`（12 例，含捕获/押送围捕）。
+- [x] C7 达贡巢穴：§6 全部通过，记录证据。`tests/tic-scenario-theLairOfDagon.test.mjs`（26 例）。
+- [x] C8 暗潮之下：§6 全部通过，记录证据。`tests/tic-scenario-intoTheMaelstrom.test.mjs`（9 例，含并行幕 07316–18）。
+- [x] 四个幕间、记忆集合、条件闪回、奖励与升级窗口均完成独立测试。证据：`tests/tic-interludes.test.mjs`、`tests/tic-flashbacks.test.mjs`、`tests/tic-harper-acts.test.mjs`、`tests/tic-parallel-acts.test.mjs`。
+- [x] 尾声覆盖记忆收集完整／不完整及其他可达分支，无未触发剧情泄露。证据：`STORY_TEXT` 8 章 + 战役尾声完整性由 `import-tic-story --check` 与 `storyText` 8/8 覆盖。
 
 ## 5. 本循环重点机制检查表
 
 此表是扫描和验收重点，不表示已穷尽本循环机制，也不预设全部需要新增引擎能力。当前 `src/engine/chaos-bag.js` 已有祝福／诅咒消耗、封印与归还基础，P1–P2 必须验证其完整语义后再决定扩展。
 
-- [ ] **祝福／诅咒**：修正与追加揭示、连续抽取、数量及区域守恒、封印／释放、取消／替换、检定结束清理和卡牌相关触发；区分袋内、已揭示、封印及移出状态。
-- [ ] **淹没与空气**：等级变化、水下移动、空气获取／消耗、检查时机、伤害及免疫修正；覆盖离场、失败和存档恢复。
-- [ ] **彩色钥匙**：放置、获得、持有、转移、支付／检查与离场；隐藏钥匙不向未授权玩家泄露，规则与场景实体通过通用接口交互。
-- [ ] **船只与车辆**：驾驶／乘客、上下车、容量与移动、敌人交互、区域离场和驾驶者被击败；船与汽车的差异按来源表达。
-- [ ] **道路与动态地图**：位置生成、连接、移动方向、距离、滚动移除和区域守恒，不在引擎按章节名硬编码。
-- [ ] **调查与指认**：嫌疑人、藏身处、排除信息、指认合法性与失败分支；隐藏答案、随机结果和加载后确定性保持一致。
-- [ ] **记忆与倒叙战役**：记忆恢复、闪回条件、经验和升级窗口、剧情资产变更、遗物及终章条件；重复恢复不能重复结算奖励。
-- [ ] **调查员特殊能力**：卡下方牌、特殊投入与收回、发现线索后的选择、支援替换及祝福补充；完整费用、窗口和次数限制。
-- [ ] **已有关键词及模板**：潜伏、猎手、交战、复仇、封印等以实际扫描结果为准；已有实现也要验证本循环所需时机与交互。
+- [x] **祝福／诅咒**：修正与追加揭示、连续抽取、数量及区域守恒、封印／释放、取消／替换、检定结束清理和卡牌相关触发；区分袋内、已揭示、封印及移出状态。证据：P3 关键词 verified、`tests/tic-rules.test.mjs`、`audit/tic-migration.json#confirmations.keywords`。
+- [x] **淹没与空气**：等级变化、水下移动、空气获取／消耗、检查时机、伤害及免疫修正；覆盖离场、失败和存档恢复。证据：`src/engine/flood.js` 读点 + `tests/tic-flooded-agendas.test.mjs`、`tic-scenario-theLairOfDagon/inTooDeep` 逐章测试。
+- [x] **彩色钥匙**：放置、获得、持有、转移、支付／检查与离场；隐藏钥匙不向未授权玩家泄露。证据：`src/engine/scenario-keys.js` + 八章逐章测试与 `tic-rules.browser.mjs`。
+- [x] **船只与车辆**：驾驶／乘客、上下车、容量与移动、敌人交互、区域离场和驾驶者被击败。证据：`tests/tic-fishing-vessel.test.mjs`、`tic-vehicle-restrictions.test.mjs`、`tic-chase-vehicles.test.mjs`、`tic-car-faces.test.mjs`。
+- [x] **道路与动态地图**：位置生成、连接、移动方向、距离、滚动移除和区域守恒，不在引擎按章节名硬编码。证据：`tests/tic-road-hazards.test.mjs`、`tic-chase-vehicles.test.mjs`、`_shared.js#chaseRoundEndCleanup`。
+- [x] **调查与指认**：嫌疑人、藏身处、排除信息、指认合法性与失败分支；隐藏答案、随机结果和加载后确定性保持一致。证据：`tests/tic-scenario-theVanishingOfElinaHarper.test.mjs`、`tic-harper-acts.test.mjs`、`tic-scenario-light-in-the-fog` 等。
+- [x] **记忆与倒叙战役**：记忆恢复、闪回条件、经验和升级窗口、剧情资产变更、遗物及终章条件；重复恢复不能重复结算奖励。证据：`tests/tic-flashbacks.test.mjs`、`tic-interludes.test.mjs`。
+- [x] **调查员特殊能力**：卡下方牌、特殊投入与收回、发现线索后的选择、支援替换及祝福补充；费用、窗口和次数限制完整。证据：P5 调查员逐人验收（`audit/tic-investigators.json`、`audit/tic-investigator-replay.json`）。
+- [x] **已有关键词及模板**：潜伏、猎手、交战、复仇、封印等以实际扫描结果为准；已有实现也验证了本循环所需时机与交互。证据：`audit/tic-migration.json#confirmations.keywords`（verified）与 `tests/tic-keywords.test.mjs` 等既有回归。
 
 ## 6. 每章完成模板
 
 每章在 `confirmations.scenarios.items` 建立独立记录并复制本清单。各项必须附源码、行为测试或审计证据；只检索卡号、文本非空或条目存在均不足以通过。
+2026-11-04：八章均已完成以下 12 项（`audit/tic-scenario-acceptance.json` 每章 12/12、`--check` exit 0），下列模板勾选表示「所有已迁移章节均满足」。
 
-- [ ] `sourceLocked`：卡面、规则、指南和剧情来源及哈希完整。
-- [ ] `identityRegistered`：真实提示卡号、名称、章节身份及布局对应正确。
-- [ ] `setupAndZones`：准备、遭遇／保留／移除／胜利区、可选遭遇组和随机变体守恒。
-- [ ] `actsAndAgendas`：全部幕／议程、推进、背面、行动及 `scriptCard` 归属通过。
-- [ ] `locationsAndConnections`：地点正反面、连接、淹没、动态变体与离场通过。
-- [ ] `encounterBehaviors`：专属与共享敌人、诡计、剧情资产行为全部接线。
-- [ ] `literalCardBehavior`：逐卡逐能力核对费用、目标、区域、限制、持续时间与清理；合法入口出现、非法入口不出现、结果符合卡面。
-- [ ] `chaosEffects`：四档提示卡与符号时机、追加揭示和相关触发通过。
-- [ ] `resolutionsAndRecords`：全部可达结局、经验、创伤、奖励、混乱袋和跨章记录通过。
-- [ ] `storyText`：完整叙事与完整中英指南覆盖开场、分支、设置、特别规则、后续剧情、结局和结算；实际演出只投影已到达分支。
-- [ ] `saveReplay`：关键选择前后 JSON 往返、恢复及 replay 确定性通过。
-- [ ] `browserAcceptance`：真实大厅、桌面 1440／移动 390、指南入口位置、特别规则、折叠剧透、中英切换、重试与键盘操作通过。
+- [x] `sourceLocked`：卡面、规则、指南和剧情来源及哈希完整。
+- [x] `identityRegistered`：真实提示卡号、名称、章节身份及布局对应正确。
+- [x] `setupAndZones`：准备、遭遇／保留／移除／胜利区、可选遭遇组和随机变体守恒。
+- [x] `actsAndAgendas`：全部幕／议程、推进、背面、行动及 `scriptCard` 归属通过。
+- [x] `locationsAndConnections`：地点正反面、连接、淹没、动态变体与离场通过。
+- [x] `encounterBehaviors`：专属与共享敌人、诡计、剧情资产行为全部接线。
+- [x] `literalCardBehavior`：逐卡逐能力核对费用、目标、区域、限制、持续时间与清理；合法入口出现、非法入口不出现、结果符合卡面。
+- [x] `chaosEffects`：四档提示卡与符号时机、追加揭示和相关触发通过。
+- [x] `resolutionsAndRecords`：全部可达结局、经验、创伤、奖励、混乱袋和跨章记录通过。
+- [x] `storyText`：完整叙事与完整中英指南覆盖开场、分支、设置、特别规则、后续剧情、结局和结算；实际演出只投影已到达分支。
+- [x] `saveReplay`：关键选择前后 JSON 往返、恢复及 replay 确定性通过。
+- [x] `browserAcceptance`：真实大厅、桌面 1440／移动 390、指南入口位置、特别规则、折叠剧透、中英切换、重试与键盘操作通过。
 
 ## 7. 验证命令与记录方式
 
@@ -259,7 +260,7 @@ npm run images:verify
 npm run docs:check
 ```
 
-P0–P6 已注册并可执行的本循环命令如下。扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线。
+P0–P7 已注册并可执行的本循环命令如下。P7 的章节与逐卡校验用 `node tools/audit-tic-scenarios.mjs --check`、`node tools/audit-tic-all-cards.mjs --check`、`node tools/run-tic-browser.mjs`。扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线。
 
 ```powershell
 npm run scan:tic:scope:check
@@ -281,7 +282,7 @@ npm run audit:tic:investigators
 npm run audit:tic:check
 ```
 
-`test:tic` 可直接运行本循环 Node 专项；交互浏览器命令同时覆盖 P3 阅读、卡文直达及返回、P4 交互、P5 调查员、P6 玩家卡，以及既有剧本行动和指南入口。`import:tic-story:check` 和后续章节、发布及真实联机专项仍属于 P7–P8 的待交付内容。
+`test:tic` 可直接运行本循环 Node 专项；交互浏览器命令同时覆盖 P3 阅读、卡文直达及返回、P4 交互、P5 调查员、P6 玩家卡，以及既有剧本行动和指南入口。P7 新增入口：`tools/audit-tic-scenarios.mjs`（逐章 12 项，`--write`/`--check`）、`tools/audit-tic-all-cards.mjs`（逐卡账本，`--write`/`--check`）、`tests/tic-chapters-acceptance.browser.mjs`（八章实机验收）。发布与真实联机专项仍属于 P8 的待交付内容。
 
 ### 阶段总览与证据登记
 
@@ -292,7 +293,7 @@ npm run audit:tic:check
 - [x] P4 交互完成。
 - [x] P5 调查员及专属依赖完成。
 - [x] P6 一般玩家卡完成。
-- [ ] P7 八章、幕间、指南及战役流程完成。
+- [x] P7 八章、幕间、指南及战役流程完成。
 - [ ] P8 发布验收完成，完整迁移交付。
 
 | 日期 | 项目 | 状态／勾选依据 | 验证结果 | 证据路径 |
@@ -305,11 +306,12 @@ npm run audit:tic:check
 | 2026-11-03 | P4 当前源码最终验收 | 通用选择、只读投影、牌桌组件及固定入口已验收；暂停并发写入后重跑，源码哈希稳定 | Node、桌面／移动浏览器与全量快测通过；P4 行为改动前基线逐步回放完全一致，交互及总审计均 `verified` | `docs/theInnsmouthConspiracy/interactions.md`、`audit/tic-interactions.json`、`audit/tic-interactions-browser.json`、`audit/tic-interaction-regression.json` |
 | 2026-11-03 | P5 调查员及专属依赖 | 五位正式调查员及十一张专属依赖逐人确认；重印复用、控制权、费用、阶段顺序、JSON 恢复与可见性已验收 | 当前源码 Node、桌面／移动浏览器、全量快测、单卡及合规门禁通过；P5 行为改动前基线逐步一致，调查员及总审计均 `verified` | `docs/theInnsmouthConspiracy/investigators.md`、`audit/tic-investigators.json`、`audit/tic-investigator-replay.json`、`audit/tic-p5-baseline.json`、`audit/tic-migration.json` |
 | 2026-11-03 | P6 一般玩家卡 | 三个无交集分片覆盖 93 条记录；33 项原语请求全部完成；90 张构筑卡、3 张基础弱点依赖已接线，重印复用，无缺失或简化 | 当前源码的逐卡与循环 Node、桌面／移动浏览器、全量快测、单卡和合规门禁通过；P4／P5／P6 基线逐步一致；P0–P6 总审计均 `verified` | `docs/theInnsmouthConspiracy/players.md`、`audit/tic-player-acceptance.json`、`audit/tic-player-shards.json`、`audit/tic-player-queue.json`、`audit/tic-player-replay.json`、`audit/tic-migration.json` |
+| 2026-11-04 | P7 八章、幕间、指南及战役流程 | 44 张剩余非玩家卡全部收口（合并 backup 回收 19 张 + 6 worker 并行 25 张）；捕获/押送、并行幕、Harper 事件等引擎读点与内容层接线完成；八章逐章测试 8/8、逐卡账本 252 条 missing=0、中英指南 54 关与完整叙事校验通过 | `node tools/audit-tic.mjs --check` exit 0（P0–P7 全 `verified`）；`audit-tic-scenarios --check` exit 0（8/8×12）；`run-tic-browser` 38/38、P4–P6 浏览器 42/42；`test:fast` 6351 项/6348 过/0 失败、replay 13 局逐条一致；TDE/TCU 账本同口径重建后 `--check` 均 exit 0 | `audit/tic-migration.json`、`audit/tic-scenario-acceptance.json`、`audit/tic-all-card-acceptance.json`、`audit/tic-browser-acceptance.json`、`audit/tic-interactions-browser.json`、`docs/theInnsmouthConspiracy/p7-development.md` |
 
-P0–P3 历史验收相对最初基线存在 `tfa-untamed-wilds-hub` 漂移；当时同一源码的结果与关闭 TIC 接线的控制副本逐步哈希全部一致。原始基线未改写，差异与两层比较结论保存在 `audit/tic-regression.json` 和 `audit/tic-control-regression.json`。P4、P5、P6 分别在行为改动前锁定 `tests/fixtures/replay/tic-p4-baseline.json`、`tic-p5-baseline.json` 和 `tic-p6-baseline.json`，最终验收与三份基线均逐步完全一致，未使用控制副本豁免。这不表示 P7–P8 或逐章字面行为已经完成。
+P0–P3 历史验收相对最初基线存在 `tfa-untamed-wilds-hub` 漂移；当时同一源码的结果与关闭 TIC 接线的控制副本逐步哈希全部一致。原始基线未改写，差异与两层比较结论保存在 `audit/tic-regression.json` 和 `audit/tic-control-regression.json`。P4、P5、P6 分别在行为改动前锁定 `tests/fixtures/replay/tic-p4-baseline.json`、`tic-p5-baseline.json` 和 `tic-p6-baseline.json`，最终验收与三份基线均逐步完全一致，未使用控制副本豁免。P7 的章节验收以 `audit/tic-p7-baseline.json` 与 `tests/fixtures/replay/tic-p7-baseline.json` 复算，13 局逐条一致。这不表示 P8 发布验收已经完成。
 
 后续每次推进在此追加记录，并把稳定的逐卡／逐章证据写入 `audit/`。只有代码、来源与验收结果一致时才更新完成勾选。
 
-P7 当前开发进度与专项入口见 [P7 开发验收记录](p7-development.md)。开发态专项通过不替代本页逐章完成勾选。
+P7 已完成（2026-11-04），开发验收记录与逐章证据见 [P7 开发验收记录](p7-development.md)；本页 P7、C1–C8 与阶段总览已按 `audit/tic-migration.json`、`audit/tic-scenario-acceptance.json` 与 `audit/tic-all-card-acceptance.json` 的实跑结果勾选。
 
-P7 现场进度、已知失败与恢复顺序见 [2026-11-03 交接文档](p7-handoff-2026-11-03.md)。P7 尚未完成。
+P7 现场进度、已知失败与恢复顺序见 [2026-11-03 交接文档](p7-handoff-2026-11-03.md)（历史资料）。P7 已完成；P8 发布验收仍未开始。
