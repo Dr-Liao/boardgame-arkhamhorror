@@ -37,7 +37,9 @@ export default {
     label: '调查员对其造成至少1点伤害：在混乱袋中加入1个诅咒标记',
     limit: { scope: 'perWindow', owner: 'instance' },
     criteria: ({ source, context }) => context.enemy?.id === source.id
-      && context.seat != null && Number(context.damage || 0) >= 1,
+      // 2026-11-04 合并：main 侧 batch2 的条目级 enemyDamaged 上下文用 `amount`（backup 侧旧写法是
+      // `damage`）；两种都接受，保证同一张卡在两条读点写法下都结算。
+      && context.seat != null && Number(context.amount ?? context.damage ?? 0) >= 1,
     resolve: ({ api }) => { api.chaosTokens.add('curse', 1) },
   }],
 }

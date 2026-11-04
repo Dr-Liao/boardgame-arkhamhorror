@@ -1256,6 +1256,36 @@ import e07337 from './theInnsmouthConspiracy/intoTheMaelstrom/07337.js'
 import e07232 from './theInnsmouthConspiracy/aLightInTheFog/07232.js'
 import e07235 from './theInnsmouthConspiracy/aLightInTheFog/07235.js'
 import e07168 from './theInnsmouthConspiracy/devilReef/07168.js'
+import e07086 from './theInnsmouthConspiracy/_shared/agents_of_hydra/07086.js'
+import e07090 from './theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js'
+import e07094 from './theInnsmouthConspiracy/_shared/fog_over_innsmouth/07094.js'
+import e07095 from './theInnsmouthConspiracy/_shared/fog_over_innsmouth/07095.js'
+import e07106 from './theInnsmouthConspiracy/_shared/the_locals/07106.js'
+import e07107 from './theInnsmouthConspiracy/_shared/the_locals/07107.js'
+import e07164 from './theInnsmouthConspiracy/devilReef/07164.js'
+import e07165 from './theInnsmouthConspiracy/devilReef/07165.js'
+import e07166 from './theInnsmouthConspiracy/devilReef/07166.js'
+import e07183 from './theInnsmouthConspiracy/devilReef/07183.js'
+import e07187 from './theInnsmouthConspiracy/devilReef/07187.js'
+import e07188 from './theInnsmouthConspiracy/devilReef/07188.js'
+import e07199b from './theInnsmouthConspiracy/horrorInHighGear/07199b.js'
+import e07204a from './theInnsmouthConspiracy/horrorInHighGear/07204a.js'
+import e07204b from './theInnsmouthConspiracy/horrorInHighGear/07204b.js'
+import e07204c from './theInnsmouthConspiracy/horrorInHighGear/07204c.js'
+import e07205a from './theInnsmouthConspiracy/horrorInHighGear/07205a.js'
+import e07205b from './theInnsmouthConspiracy/horrorInHighGear/07205b.js'
+import e07208a from './theInnsmouthConspiracy/horrorInHighGear/07208a.js'
+import e07208b from './theInnsmouthConspiracy/horrorInHighGear/07208b.js'
+import e07208c from './theInnsmouthConspiracy/horrorInHighGear/07208c.js'
+import e07209a from './theInnsmouthConspiracy/horrorInHighGear/07209a.js'
+import e07209b from './theInnsmouthConspiracy/horrorInHighGear/07209b.js'
+import e07210 from './theInnsmouthConspiracy/horrorInHighGear/07210.js'
+import e07211a from './theInnsmouthConspiracy/horrorInHighGear/07211a.js'
+import e07211b from './theInnsmouthConspiracy/horrorInHighGear/07211b.js'
+import e07212a from './theInnsmouthConspiracy/horrorInHighGear/07212a.js'
+import e07212b from './theInnsmouthConspiracy/horrorInHighGear/07212b.js'
+import e07213 from './theInnsmouthConspiracy/horrorInHighGear/07213.js'
+import e07214 from './theInnsmouthConspiracy/horrorInHighGear/07214.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2511,6 +2541,36 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07232,
   e07235,
   e07168,
+  e07086,
+  e07090,
+  e07094,
+  e07095,
+  e07106,
+  e07107,
+  e07164,
+  e07165,
+  e07166,
+  e07183,
+  e07187,
+  e07188,
+  e07199b,
+  e07204a,
+  e07204b,
+  e07204c,
+  e07205a,
+  e07205b,
+  e07208a,
+  e07208b,
+  e07208c,
+  e07209a,
+  e07209b,
+  e07210,
+  e07211a,
+  e07211b,
+  e07212a,
+  e07212b,
+  e07213,
+  e07214,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

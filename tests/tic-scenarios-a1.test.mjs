@@ -75,7 +75,9 @@ test('07105：谈判把 1 个线索放到你所在地点，横置且下个补给
   assert.equal(s.investigators[0].clues, 0)
   assert.equal(s.locations.find(location => location.id === here).clues, clueBefore + 1)
   assert.equal(current.exhausted, true)
-  assert.equal(current.skipNextUpkeepReady, true, '下个补给阶段不重整')
+  // 2026-11-04 合并：main 侧 07105 用 api.scenario.preventEnemyReady（写 enemy.preventReady），
+  // backup 侧旧实现写 skipNextUpkeepReady；两条读点都让它在下一个补给阶段不重整。
+  assert.ok(current.preventReady != null || current.skipNextUpkeepReady === true, '下个补给阶段不重整')
 })
 
 test('07105：可以从连接地点发起谈判，线索放到行动者所在地点', () => {
