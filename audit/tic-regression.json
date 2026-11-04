@@ -7,7 +7,7 @@
     "command": "node tools/run-tests.mjs fast",
     "exitCode": 0,
     "log": "artifacts/migration/tic/reports/fast-final.log",
-    "logSha256": "9b5ecfdc08ec22863e8461eb8b08b6dd2a3ce7f2066b47022f730a03c599cf3f",
+    "logSha256": "7b1bf3e2228b9ca0133132f1d87dd200f96bdd4b28b1b522bce0a198b13e179b",
     "failures": [],
     "additionsSinceInitialBaseline": [],
     "introduced": [],
@@ -30,6 +30,31 @@
       "path": "audit/tic-mechanism-scan.json",
       "bytes": 313836,
       "sha256": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2"
+    },
+    {
+      "path": "audit/tic-p4-baseline.json",
+      "bytes": 455,
+      "sha256": "7c8d32ad8bfaecc501e56bad9839d8d83c9d0c994a0da8ac0ebba2ec1eb549a6"
+    },
+    {
+      "path": "audit/tic-p5-baseline.json",
+      "bytes": 728,
+      "sha256": "f1b643095bda1b8cabdc6f04c7dec02e875161d1f1a628e6d0f90a2694d4a34f"
+    },
+    {
+      "path": "audit/tic-p6-baseline.json",
+      "bytes": 641,
+      "sha256": "fd4ca26544dd508b59921658cfa40043bad93e5fafdf1dca52a38f4b7648a880"
+    },
+    {
+      "path": "audit/tic-player-queue.json",
+      "bytes": 39980,
+      "sha256": "66d4e35ddb501e18002c982db7cccc51c8bb2ecc9b9c78143982d9b224ac3808"
+    },
+    {
+      "path": "audit/tic-player-shards.json",
+      "bytes": 2101,
+      "sha256": "d644d3cb370e87ae8da4a14dbbd81d1cbe3ff27c69a8bb4c539b8bf335754d16"
     },
     {
       "path": "audit/tic-scope.json",
@@ -1122,9 +1147,64 @@
       "sha256": "0fc3d71c2886b7c919191a0ef34acd09117a0767cca716308903b7e1ee5b8c89"
     },
     {
+      "path": "content/campaigns/theInnsmouthConspiracy/card-data.js",
+      "bytes": 3533,
+      "sha256": "094740de869194ac43e805ccaf41250842bf0fef31428237f6dd2b6c683e6508"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+      "bytes": 392355,
+      "sha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-definition.js",
+      "bytes": 3254,
+      "sha256": "22994886db8f1ac701051cdc0a4bb6f60570ade256caf2a843e61189126f17cd"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-entry.js",
+      "bytes": 12113,
+      "sha256": "27e712c165d8515fc7024ded7000c537c6682fab41db3e142730e72b3fff5371"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-setup.js",
+      "bytes": 5346,
+      "sha256": "5494d5859ec81d48c5f99113943de84eb6ae1d4948f451c5b9ae1e8b91579597"
+    },
+    {
       "path": "content/campaigns/theInnsmouthConspiracy/chapters.js",
-      "bytes": 1064,
-      "sha256": "190e3451e0a6324bfb012b318802899dfb99b93ec9a69e2f26af678e335a45fd"
+      "bytes": 1564,
+      "sha256": "a27a5ba9c89fea235ae614ec90404c4190a6536b988ff7c6b4494401969c02f5"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/companions-setup.js",
+      "bytes": 2011,
+      "sha256": "d4cec26b44c1655e1791d93b8b7b46c80e92a35cc65d3aeb9adceac68316605b"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+      "bytes": 16099,
+      "sha256": "4b194ea00a288ad2d999e1e0164236338759ce875985b42c17223aa4553cd398"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/flashbacks.js",
+      "bytes": 9044,
+      "sha256": "4d3ec7aeb4b0349c73c6f42ceb2bbaca0aba44b46020e6e14f9e7e68749fb548"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/flow.js",
+      "bytes": 1428,
+      "sha256": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/interludes.js",
+      "bytes": 5406,
+      "sha256": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/introduction.js",
+      "bytes": 1168,
+      "sha256": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/keywords.js",
@@ -1132,54 +1212,129 @@
       "sha256": "0aac1cc76b1d8f031c4af7e2d9ff06f024e51953c5b089b2c9a4016109f9baa2"
     },
     {
+      "path": "content/campaigns/theInnsmouthConspiracy/late-setup.js",
+      "bytes": 11535,
+      "sha256": "447e4477896f7000f2c217738979499fb6cd9a98f288f3f4b5c2e914f2b866a4"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/layout.js",
+      "bytes": 3093,
+      "sha256": "82d98fcc5caa7b17726ee869ff83b0bf3e458cb0a7533eaa21cee3ef354fa0c5"
+    },
+    {
       "path": "content/campaigns/theInnsmouthConspiracy/manifest.js",
-      "bytes": 862,
-      "sha256": "4fd8cf7d49e447fe03eb8f2b6fc7ded8eac978789d682953bb81d4a92cbc58bf"
+      "bytes": 2503,
+      "sha256": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/middle-setup.js",
+      "bytes": 6743,
+      "sha256": "5c4ef5d030169d05d96c0052f26767a2cf2e443d0b77241bda362b2eabbf70e9"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/records.js",
+      "bytes": 1294,
+      "sha256": "35f89ad13a156283d60a081196c80ec2ee7c577a81cccb3fb4010fa8aed06e08"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+      "bytes": 5689,
+      "sha256": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/role-data.js",
+      "bytes": 371,
+      "sha256": "5258bff918c39a4350e6caa75dd918412b36f92cf3ed564cba7175fbef1055d6"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
-      "bytes": 152,
-      "sha256": "81fae6b75ebabde22feac0a6c910a86f753f336da3ec9810747678b76337e442"
+      "bytes": 369,
+      "sha256": "78eecd44f48fb5a55ef62b8f331097241f8ea77900697ea04dd41ecbe8e15602"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/layout.js",
+      "bytes": 1785,
+      "sha256": "0ebab3ff8d5535bf1b4bf24bb4d72ec0956e8bbec3dc9f9586c117f496cb4dbf"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
-      "bytes": 147,
-      "sha256": "408c30598b13113ec3bef298d76df4bb056174388b039fdb55b6a4c7c158ee33"
+      "bytes": 364,
+      "sha256": "2efe92eda86905c57a2c03f8a1133df4ad221194fceb400f7a6d37f0a30eff43"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/layout.js",
+      "bytes": 1094,
+      "sha256": "c981a595a56947f303c7932ec06347a9bb2de585e3c43a2ae68ffbba30f69766"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
-      "bytes": 154,
-      "sha256": "43c29273f41ffe81f82b3b5f687c6f372483f6e6aed5433ac3bf1ed3d9606404"
+      "bytes": 371,
+      "sha256": "61db717095a1bccd622f0a194914571fe2b589e7ed81b0d7cab4e1ed53392a58"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/layout.js",
+      "bytes": 1389,
+      "sha256": "1cf9bbbc8d7d368ef1feee302b03cfd649d3a04d35a284e4bd133b04269bece7"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
-      "bytes": 147,
-      "sha256": "d15496835f5e32466df749e843c2592a8cde4bc9135f883ab9e14fcdfa2cc873"
+      "bytes": 364,
+      "sha256": "1aa771a6c2c7f797b6b5091c84b4f49f809b759526c9e20ad0d468fe448d2b62"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/layout.js",
+      "bytes": 718,
+      "sha256": "386f1cbd804830a8538bb7001a7b3a0e3484d89ee81bd235682019e598fb0424"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
-      "bytes": 154,
-      "sha256": "ea725fd153a3e409599b2836761ab2f7161c07d9eaae7910f10f958a1702f4ec"
+      "bytes": 371,
+      "sha256": "9956d856a661173b7cf34b423911543207e9e0f29c9725b71f901277d78c80d1"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/layout.js",
+      "bytes": 1586,
+      "sha256": "b27a6b8bad76f72536d7eb397c3c02a689237baaea3fca66536ae48c87499f4c"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
-      "bytes": 152,
-      "sha256": "84746ba1b0b19f640fee845bfcaf103566d1e115666c0014e72a3b3f723ec40a"
+      "bytes": 369,
+      "sha256": "b7cdc816080d2ec56cc54d9233f4ace269b07e389dda296a9bd4e8445bb96d08"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/layout.js",
+      "bytes": 1866,
+      "sha256": "8f145a8d15418a180ed3dea8369e34ddb087f581b3237a9f5a8b478f86d4fccb"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
-      "bytes": 153,
-      "sha256": "21dd6fd5564395bef8d117e7929ef975cf577fbb7735a4c886f5d381b98ee189"
+      "bytes": 370,
+      "sha256": "2a8c4a28b7b30656a1f925f16c21d2caca4925cd6b9f35952c66b1d835f582a9"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/layout.js",
+      "bytes": 1151,
+      "sha256": "d357f5a62830b342040605a2be5376d03da434b5eab1e55432eaa638afb1f29e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
-      "bytes": 163,
-      "sha256": "4140ed3d9c67335e4e5c634cec0d71814979b83a7265b6a4b9c2932f9b0e0706"
+      "bytes": 394,
+      "sha256": "077ec2636d9cdcaf0afde5aaeb9961da259e6b43a9cab299a31df778656f4b16"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/layout.js",
+      "bytes": 814,
+      "sha256": "71ab217d41657a326fcf1e86424c68477fa10a248e4476244fee9b85f124835e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/shared.js",
-      "bytes": 3286,
-      "sha256": "da25e45328eee6d9f233e0366669620fd4ab0b266f4b5d60abe56d9059f0b92f"
+      "bytes": 3251,
+      "sha256": "37c28abb74fce12542cc18b27461fbb650614572108dfa0e7c3da8fa2d32b48a"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "bytes": 329883,
+      "sha256": "11856d090cc6412ecf2f35d5878297a66ea2008f0368ae12d7ed98a8785e485f"
     },
     {
       "path": "content/campaigns/thePathToCarcosa/carcosa-chaos.js",
@@ -1523,18 +1678,18 @@
     },
     {
       "path": "content/packs/ticCampaign/manifest.js",
-      "bytes": 168,
-      "sha256": "45de6d508d12ee25445a6262f9c618cc40a0b3bee024b3022673cd2ac3cc9820"
+      "bytes": 2418,
+      "sha256": "92795f0eebea782113a12dd090b277d77b78b9b507c639025d061d8dd293ff0c"
     },
     {
       "path": "content/packs/ticInvestigators/manifest.js",
-      "bytes": 170,
-      "sha256": "e0133d983c6a7d9c7c6e4f02e044a9254e1fed1bbae1ead3f3e080a8a5ef38f6"
+      "bytes": 2466,
+      "sha256": "5cbf91beae3126e58301abd21ec057d28353e325462ec54dc1335fcb3558bad5"
     },
     {
       "path": "content/packs/ticPlayer/manifest.js",
-      "bytes": 163,
-      "sha256": "5cf6ff5b8f87d5500ceb6830b315a1c4f57eee053d45f5ba96d08a35cc7ec78d"
+      "bytes": 2833,
+      "sha256": "949b387e8f322dca541a8d47d6ceae181ac2dce977d2ec201011e5b29f70820d"
     },
     {
       "path": "content/presentation/attack-styles.js",
@@ -1543,8 +1698,8 @@
     },
     {
       "path": "content/registered.js",
-      "bytes": 9855,
-      "sha256": "dc7420c0e6bfb5d290865700b8f9eb981829208a1463a4f4af562a7f140eba60"
+      "bytes": 12545,
+      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
     },
     {
       "path": "content/registry.js",
@@ -1558,8 +1713,8 @@
     },
     {
       "path": "content/scenario-guides.js",
-      "bytes": 18194,
-      "sha256": "9d07bcf22afc4e4c0cffcb6f79e0ba8688a57b464d229200fd319d533a2a316e"
+      "bytes": 22319,
+      "sha256": "79d9ed61db864ecb16a95d36f5c63dcb211cd30e5df1adb4fffd5c7e4a51df89"
     },
     {
       "path": "content/scenario-manifest.js",
@@ -1568,13 +1723,13 @@
     },
     {
       "path": "content/schema.js",
-      "bytes": 16295,
-      "sha256": "c9db1553650ebd5774c4606a0a6edcbfb63587f7d818f81a033e9e33f2a4b999"
+      "bytes": 16418,
+      "sha256": "bba6487fba8a95a184da9029cddf0d93ad4bdecc82a87eb6569876ff4824be0c"
     },
     {
-      "path": "playwright.tic.config.mjs",
-      "bytes": 749,
-      "sha256": "0b5947f1533bd875d8f6003a900db33093ff91f10a12f7280f974041dae1523a"
+      "path": "package.json",
+      "bytes": 16377,
+      "sha256": "5dd8c7a89ff8a4e3da67279a78285ce635ce03a92a1350a7390032ce2e40d76d"
     },
     {
       "path": "src/ai/agent-plans.js",
@@ -1603,8 +1758,8 @@
     },
     {
       "path": "src/campaign/campaign-effects.js",
-      "bytes": 53373,
-      "sha256": "cb9fa7822210e9afc0d363561b74b296ee2260aea5e034775a3cd35c1168958a"
+      "bytes": 53523,
+      "sha256": "e2efb570cb719313afe758191686dd679ec95887f9240f682116ae246f035f27"
     },
     {
       "path": "src/campaign/campaign-flow.js",
@@ -1623,8 +1778,13 @@
     },
     {
       "path": "src/campaign/campaign.js",
-      "bytes": 21572,
-      "sha256": "d15a0e46d15a85ca09c06c944cf300618f9572a981dc2c1c92ea1c493f314290"
+      "bytes": 21879,
+      "sha256": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee"
+    },
+    {
+      "path": "src/campaign/content-effects.js",
+      "bytes": 614,
+      "sha256": "cb59b3b57109a37ab3b23160abfdf74b8c9d353296549ccd7090223c53a3f697"
     },
     {
       "path": "src/campaign/dual-runtime.js",
@@ -1658,13 +1818,13 @@
     },
     {
       "path": "src/campaign/story.js",
-      "bytes": 39614,
-      "sha256": "ce1b1b4256be70514a665a8cd6c490d4cc1db0a567c8a02f33be8e7abc8e6e6e"
+      "bytes": 39930,
+      "sha256": "3b3e890a150b12d2ea5a8e86ba3eb247f36d0f77fff687d0722573400b3c56bb"
     },
     {
       "path": "src/cards/campaign-plugin.js",
-      "bytes": 30920,
-      "sha256": "f80a64f555fd70811e279e16f8f9a4fae299a3339bfa5db86d895143b7c35fc7"
+      "bytes": 30966,
+      "sha256": "a18e18c43c4df2f1493e62feb026c7582efc3d33c4a48b531b065783d7c0dfbe"
     },
     {
       "path": "src/cards/campaign-state.js",
@@ -1719,7 +1879,7 @@
     {
       "path": "src/cards/cards-data.js",
       "bytes": 13532239,
-      "sha256": "89169e7fb93555b05a8323dace35bdb831d673a8d91d29c6d7ace0f6d02a22e3"
+      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
     },
     {
       "path": "src/cards/core-acceptance.js",
@@ -1743,13 +1903,13 @@
     },
     {
       "path": "src/cards/encounter-entries/_shared.js",
-      "bytes": 32606,
-      "sha256": "86cd7ffa1ba6f12d5d4896fc8444cae8db32c8ad67852afe465ad66323c93429"
+      "bytes": 70684,
+      "sha256": "e592ba5edc891e8a0587fb9fe7125e402fd53d3d52605c483b6a28919e2fb92b"
     },
     {
       "path": "src/cards/encounter-entries/index.js",
-      "bytes": 81069,
-      "sha256": "6c316ad5ef24396861c61ea3b2cedb83532fe405385166a2e25100614971ddab"
+      "bytes": 101701,
+      "sha256": "029633de31989f1cd9484ee880623bb4fbb57ffa8d5d71408e676eb406a0d0d8"
     },
     {
       "path": "src/cards/encounter-entries/nightOfTheZealot/theDevourerBelow/01156.js",
@@ -6097,6 +6257,1266 @@
       "sha256": "1315f6e36484a08aaa4a2e9518f46feee26d1c8d610c4c40259b769b709afda3"
     },
     {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07084.js",
+      "bytes": 876,
+      "sha256": "51486c5852da9af88377dbbb3bc2d51cc93f7babd34b1c6a555003fc60ecb3ba"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js",
+      "bytes": 458,
+      "sha256": "d7298fa536be13484de093e3b09073785539eb5da056078808f4dff9190e2dc9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07086.js",
+      "bytes": 1957,
+      "sha256": "f1f4cc765768f63961ed5abadcab3401fafe127aa8c77026da1de60fc558d447"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07087.js",
+      "bytes": 536,
+      "sha256": "8d0743393a02081c15dd7414622d3a990b237b5dda883399b49346845561ad1d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+      "bytes": 960,
+      "sha256": "01cadd6d63350dc1e166e075b5b24eb79686b923be32f11a167b1557ef7ba2ee"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+      "bytes": 296,
+      "sha256": "5b240e1aeb243848a1326792802299fe5ab0b78107ac557ac1dec565140ef166"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
+      "bytes": 3008,
+      "sha256": "6037c296e10c7df6fdf3bb27659405fd7e24327c3ce0433a4316d08d496d5074"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07102.js",
+      "bytes": 1298,
+      "sha256": "5fb47b68b53ac5b28d00261c0fb575c973129e3e7c687d670d01d0d6f842aaf6"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07103.js",
+      "bytes": 344,
+      "sha256": "8933efc31d25be3be1a06cbce59a13307372c26b6433f92e2de30b4fa2726317"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07104.js",
+      "bytes": 223,
+      "sha256": "06a61b10fb9cd69a4992c5efa2ae606613e393a093a37880372cbc4ed92a0995"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07094.js",
+      "bytes": 1373,
+      "sha256": "63ccb92427620b6513c9ffd052f7ab2d711eed73eb4be11ea9498a2fb5b6b0d5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07095.js",
+      "bytes": 2323,
+      "sha256": "3573199608773d1514f7d1cf30cb1575ce040cf7ddbba19d30ba405c300a8c63"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/malfunction/07099.js",
+      "bytes": 5822,
+      "sha256": "cd6e2e3d4e844e7d9885feb4e82871464d399e984611b92c12a3c934580cef76"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js",
+      "bytes": 1354,
+      "sha256": "4d9889e70a803abaaaf265cccc2892a11bb06d6d36c30d2b63d2e2399f9c5991"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07092.js",
+      "bytes": 1120,
+      "sha256": "6fa6ea562ab4a26b52ce82a9a3df84c4e661411db89756e3dcf263ed7ce042ca"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07093.js",
+      "bytes": 1008,
+      "sha256": "6f8751506b5de94a985130051a7d4de13e15dd3d818cd18553dc174996e48381"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07096.js",
+      "bytes": 315,
+      "sha256": "3a7a87e497f091be240ed4ed25047547cb8c67338e54991f088d12b4293bc02c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07097.js",
+      "bytes": 314,
+      "sha256": "46d33679825fb9d561212cc849d63fc8a91b18bfc8e58f9f85fd03b4f1954b73"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07098.js",
+      "bytes": 383,
+      "sha256": "1677212272769be97536197475d5dc6ebb832cbe14e09456104d6f2ff6edfaa3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/syzygy/07100.js",
+      "bytes": 1014,
+      "sha256": "7075e938d67900cbe45d13c7e958fef9a4dd128deee941091c7ef17978630839"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/syzygy/07101.js",
+      "bytes": 885,
+      "sha256": "1e1130711fa39e9aff14a5f1b6ebed1c7eb1ed0fcfcd195c2748534cc616c308"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/the_locals/07105.js",
+      "bytes": 1864,
+      "sha256": "55eaec3f396de9c96a6ce7245b5623463cb5eda5e4f63bada33b89cb1c8ecb6f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/the_locals/07106.js",
+      "bytes": 2550,
+      "sha256": "653f9fc038aa23d75b98ad6764e9f2d8cebdbbc9df369316b2615fdb962f2574"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/the_locals/07107.js",
+      "bytes": 2225,
+      "sha256": "9954b3f82b9f85fb66785980527a5e698a91037b2156ab3fee3c3cdcbb868ee9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07231.js",
+      "bytes": 2477,
+      "sha256": "fffe5628e7ab1c0a0240413468d39172a2dc5f4ca58b03a7f89b20756c201556"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07232.js",
+      "bytes": 3152,
+      "sha256": "03335f59f8ec2d145604b2aba2257dec32f359476807a238c66183154673cd27"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07233.js",
+      "bytes": 6367,
+      "sha256": "0d8effd5854b775143e8acd2f682a1a112a233866a25cbfd2597e223f2ccd665"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07234.js",
+      "bytes": 5401,
+      "sha256": "ff3c789d853b77254c7b6f595225b748fd642b571522bad4963a36aba4c2510e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07235.js",
+      "bytes": 2832,
+      "sha256": "119fb3b5972c43e7032c7543813d52c89a0f7c03589897b6e21004e2503f424c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07236.js",
+      "bytes": 2985,
+      "sha256": "495c7ff4535ee91b44a9af04ed2ee67b815d9e0b099f252b37420466ce4b48c5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07237.js",
+      "bytes": 3516,
+      "sha256": "7101e52c1f695f4cd44201fd75db169503d82abfd032c45920860daf1d0b6088"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07238.js",
+      "bytes": 4040,
+      "sha256": "b6322244e7e5482ad3ae380f3daf5fd22b47fd50174b16d8c43397447af611a0"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07239.js",
+      "bytes": 2546,
+      "sha256": "05ce6c9daae185accb3ed6feecbe76ed55c8f6eb6bdb49443158808f7499a8f3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07240.js",
+      "bytes": 1005,
+      "sha256": "93ce3adae4ca38568d09705b52679d19cda4755115b7032d2981eb642c8eec8a"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07241.js",
+      "bytes": 342,
+      "sha256": "f09309f99b224f39f2818fbbff1c3e0d8fd4cd175d93bec0d0caf30da7d64dc7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07242.js",
+      "bytes": 331,
+      "sha256": "869292481b69717ab98c5b385eb9aadd4f72f0fb3376ea438e68370cb43ef5af"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07243.js",
+      "bytes": 338,
+      "sha256": "39733dbc25f82a4b292593f6307f78df4f5d1f51f672433c4ea9eb11a40a6e53"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07244.js",
+      "bytes": 879,
+      "sha256": "e76b0d707f7753e83cb50532db5dcd29e6b1bec20e170e07cf92891eb934de81"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07245.js",
+      "bytes": 624,
+      "sha256": "ac70da679d3e3620bbc1063337f909c38e80725b8d10f532d438a8327f38465b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07246.js",
+      "bytes": 624,
+      "sha256": "be08a3730a5e7d872a7d66a7f04bc2ce22d059d47b7dffd1cc9f3be755f22dd2"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07247.js",
+      "bytes": 1801,
+      "sha256": "723d8c291a202c16015812095d32f74b7f081b472dcb680f5a13a6aa54733d5f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07248.js",
+      "bytes": 399,
+      "sha256": "f2b88ab57d00fbe30a7a621f8aaaeeddf9af4ba48ae862d1f410f9bbcf6d3070"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07249.js",
+      "bytes": 2461,
+      "sha256": "f77a71ffb0a2c28796f771a93f57b73a9917642cfaeae970d2fcb202076b2126"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07250.js",
+      "bytes": 1380,
+      "sha256": "5640fce27675d906f16bf518f7621043774812fd21e3bd98ce62224812561650"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07251.js",
+      "bytes": 1730,
+      "sha256": "33a6ae98d61c04f3c6df67a1390d7bef4a486fefda8fdf2bb63fdb987b7fd748"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07252.js",
+      "bytes": 3363,
+      "sha256": "e015d814df2ef2e0c48ce07c1221bec16c5ebc61f4977792284d802a006725da"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07252b.js",
+      "bytes": 4705,
+      "sha256": "fd8da707237b3f50618329f9ffb77802f04c337f8cbe7ec4b87f9843c9082d08"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07253.js",
+      "bytes": 5150,
+      "sha256": "df19f42545a0a7240f458b59b7272e9c37cb05ff8f6ac2a9a2a31369553872ab"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07254.js",
+      "bytes": 938,
+      "sha256": "9d5983a08070c4bf4bda5f773e1d7962740a14984f51f07c91e294e6e13cd7a3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07255.js",
+      "bytes": 2244,
+      "sha256": "4d64100a9c80e89d8d0f2ba791c6ee10e6f2d9937d595caf7a0124ea4bc04109"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07256.js",
+      "bytes": 912,
+      "sha256": "e719fd495010b79d9e5b9ac2cc9b856bacb8c4bc12f8168689b0df84673871f6"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07257.js",
+      "bytes": 1106,
+      "sha256": "20ca8f96d36da7931e883b28d8b0810b5c9f818fd047413286149b440156427e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07258.js",
+      "bytes": 1168,
+      "sha256": "b76ace91b78fda3f616a4faa00bd51e575627fd1c8d6156a478c603da0b0a589"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07259.js",
+      "bytes": 4474,
+      "sha256": "e4718bd821869687240a6afd25a0a987d2f893971eb1845d33b1dcc677d73c09"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07260.js",
+      "bytes": 1853,
+      "sha256": "2c137896a6fc16381071c29c077cb4245ffc7232295d2904b757b01a86c2b80d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07163.js",
+      "bytes": 1571,
+      "sha256": "39ea4c71c3f9d494cd197653ea2d2902b89d48464ea8a5341cc2b4297912c8b5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07164.js",
+      "bytes": 2093,
+      "sha256": "692247f2e3e5cc331f957abac95c2ae999cc74e3723c9e8f35ffecc89066ab7c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07164b.js",
+      "bytes": 2429,
+      "sha256": "8122b27e9920b494ce27029441d3b67e295af82c613a767b3ccb04d61638ce5f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165.js",
+      "bytes": 1244,
+      "sha256": "c94ab309b09ab9def03023e2b661548e978af68923972a48a46f4143e28eaa4f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165b.js",
+      "bytes": 3217,
+      "sha256": "0ef549f967f31588e6b008da1f5b3b8a4df9062ba2e1d5c911b1a8b0da586222"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07166.js",
+      "bytes": 2318,
+      "sha256": "c4d0ee7d0aaa131211a1d5cd60229a5a4fbf36b6f3bdf545c42897a18123495d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07167.js",
+      "bytes": 379,
+      "sha256": "8524a431edf6f098144c93d392f861920d63f28c78534384b909aa13abbb2de5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07168.js",
+      "bytes": 2595,
+      "sha256": "99f2be3b08a446468d92c5a7f803b487930d7d85f1bda2acba2059af7671a27e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07169.js",
+      "bytes": 661,
+      "sha256": "51e38b743499fa5ec08830159825c9183c185a597c291f8c0a53d079ee798ade"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07170.js",
+      "bytes": 762,
+      "sha256": "9e33a130bcd88a4349a22ade28e0ae36d79fb2146e676f0d26b79275c4e2b665"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07171.js",
+      "bytes": 891,
+      "sha256": "18fce38a4fbc4fca1e383bfb37836ded854b81c5e85d48cd4b714d09acc59ab5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07172.js",
+      "bytes": 1410,
+      "sha256": "408d7950eb3399d97181c4b6e7d37049a98eccf39c1aaddcdb3604ca24ee4b44"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07173.js",
+      "bytes": 889,
+      "sha256": "e66de86392137f3199cd27b39cb00ad6532f4dd318ec5dfa0d085a587d4ae29b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07174a.js",
+      "bytes": 647,
+      "sha256": "a62299fd70a28b7242538b563ee8028dde21ace0bc36e9fadb2721bb9bd1a95f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07174b.js",
+      "bytes": 652,
+      "sha256": "32dc8b4aaffd249980f88f18a0d75c4f15f0bffcbb31727ef8ba191334222d87"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07175a.js",
+      "bytes": 581,
+      "sha256": "bc52437edb5b23c0153625ae216a9c304216715daa36ee28e47f66c46ec2f310"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07175b.js",
+      "bytes": 585,
+      "sha256": "fa39f73ca2e9565bc2a11be76a80f1830886c5d8c7f6451b268c37433e54850a"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07176a.js",
+      "bytes": 580,
+      "sha256": "a67c5a293e0d2a5f5b4c2493d9b3cf875fd7bf727a9852704ae3ea466a9f53cf"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07176b.js",
+      "bytes": 580,
+      "sha256": "34f858cdca0cd0f23cf6dee367e4e9014b091f7cb2c2fe9c87899d77b4f9741b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07177a.js",
+      "bytes": 533,
+      "sha256": "e4e66c9a9c75a7da0170b6544499a9e78f8f2bd4b6ff7e72cb1c75a6df9a325f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07177b.js",
+      "bytes": 535,
+      "sha256": "ae763415a887ac40ce7d1387d662e33960eb2d9dc9c4e3d61b1e849939cb3ea7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07178.js",
+      "bytes": 1498,
+      "sha256": "2e82b3a6ea062f0c366a03634b15f7198bfc36658ba578ed26a537737e476d98"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07179.js",
+      "bytes": 673,
+      "sha256": "ef49d040cc587a26907962639b5452a5837a05cab0101b7f1f07aef9b74f6e75"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07180.js",
+      "bytes": 715,
+      "sha256": "805bc56f6dd5e14a3bee9025e7cc30e0a2e7550189bff906b6aeeba5f3badd22"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07181.js",
+      "bytes": 1039,
+      "sha256": "4a971c3c13c8ae5d803ca9869ec98ff1c2565bd365a9684823b815f39b36c051"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07182.js",
+      "bytes": 2401,
+      "sha256": "b17d4b476cb67bdc49c1dda1c7b77a0b3779e767914dab6ad5e6542f5cf56b4d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07183.js",
+      "bytes": 1629,
+      "sha256": "bfd98d39c2072f6a6c585215a9ad5708869ca746a4cfa794f6878f0c7b3845d7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07184.js",
+      "bytes": 501,
+      "sha256": "fe27a28b75257b479338b96d697ae344bd970e3cd0d6a79f5efd8b44dfd16247"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07185.js",
+      "bytes": 2468,
+      "sha256": "b903f9cecef4e748a78b9c226a5a5556a965a47d5fde30817748b139e41f498b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07186.js",
+      "bytes": 417,
+      "sha256": "10d8fa518e84e7802ad1294b5fbad20d906a3e4f2b698bbbeebc2040aca196f4"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07187.js",
+      "bytes": 1895,
+      "sha256": "13d68af8ab6b839ea9f3771747486bac37dca31b7a39034c89be3389dc4a0f69"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07188.js",
+      "bytes": 2135,
+      "sha256": "5eea4f79e884d294af6af763faf9f2ced84d823390498fd5b5ab69b47df0e209"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07198.js",
+      "bytes": 2906,
+      "sha256": "f02de6031788f8e4c8f0e1a87793395d182c3a6dee20e78fca44d135ca9e312d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199.js",
+      "bytes": 3343,
+      "sha256": "0192c24594f6c0dde600c0a4ca00895db3d26bdabb146256e8eed7154f748d47"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199b.js",
+      "bytes": 1879,
+      "sha256": "256de28c25bc1068cad977c07caffa42f9d6617cd109f7301f4beb0123d5ba2f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07200.js",
+      "bytes": 5129,
+      "sha256": "543050c019b63f46af96c903db317fd24d0d49934c85abcc684cf366cc20bc76"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07201.js",
+      "bytes": 2191,
+      "sha256": "2543ec43685a92b2b7764055e9655301b275c0ba457ca1e286b127bee9d1001a"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07202.js",
+      "bytes": 4892,
+      "sha256": "2e04e190375544c7bea46d862d5c27843827f14485c5105357111157f9446b79"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07203.js",
+      "bytes": 426,
+      "sha256": "c17e26223beb613ef12024019263b45195d338326854621faa96fdf94c59e90d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204a.js",
+      "bytes": 1496,
+      "sha256": "ac6c85928bc77a835fcaa4e6b3046f7db40490c1c980b69211c34eb48b32d569"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204b.js",
+      "bytes": 1496,
+      "sha256": "38b9b7b0732ef3502f85c0fc64263461bddde00a92cda876e33b2e8721825b42"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204c.js",
+      "bytes": 1496,
+      "sha256": "87764192b2f49374a3ef1eead419fe33f7e8f6c62bb364c1980065eb8a701904"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205a.js",
+      "bytes": 3211,
+      "sha256": "3d2234304ad64829985a3418ad22571ad54cfd1333926a08f733d445ff22963c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205b.js",
+      "bytes": 3458,
+      "sha256": "d82b88b77dd18afb5272bc34720088bde90d07238d77e2c4fb54abaee1637c7f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206a.js",
+      "bytes": 803,
+      "sha256": "e15e3127268902b01c139395a3b89a45261051787a2c9a0b7fe10ddd78bc85f3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206b.js",
+      "bytes": 803,
+      "sha256": "e632764e7104e39ab94e7e2773417251d13c79d7de08e47b3d08a48cef3deaa5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207a.js",
+      "bytes": 803,
+      "sha256": "8d4c66038644ac5d5ccb049d9287524e076fe33c2176057e0b7a037db819b0c8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207b.js",
+      "bytes": 803,
+      "sha256": "a9d1020423853fc57c6fb74784cde5db8d8e2baaa3337491c6b59dba5d6477cb"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208a.js",
+      "bytes": 1490,
+      "sha256": "7e7c592244896db3e92054306d992c54be82c0354f0195d771d82b05ef3a0b44"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208b.js",
+      "bytes": 1490,
+      "sha256": "15c6eb320960ff80e6b17fab05bd3d9ff1046938fc9f2e15eb7b06fdb381f2c1"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208c.js",
+      "bytes": 1490,
+      "sha256": "d6ed9dae9f9634650b2f10de78787222fd97b768f443e6a5095b92c4ddbb61c5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209a.js",
+      "bytes": 1727,
+      "sha256": "f1bcd12223c2e2abedb327f896a0cd4a03b225296bccf8860af0dd1a2009ae2e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209b.js",
+      "bytes": 1724,
+      "sha256": "0c2b8547e4ca19970fae83988012a96488d47f3a7497ac0cd3f7199f7d2aec4f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07210.js",
+      "bytes": 1390,
+      "sha256": "d6b5ad6ad2c1ba16ef96ef0463602e039e682352c158239fe1b53ddfdac7cca8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07211a.js",
+      "bytes": 2495,
+      "sha256": "a9f7707523228d8e037716c5e15ee62bcbeca23797cd01dd1163ee3449b9516c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07211b.js",
+      "bytes": 1266,
+      "sha256": "9b3ab6726b54d99b17c51371b394fddabb06fcdfbe92f9922b4c57afbddc07d4"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07212a.js",
+      "bytes": 2495,
+      "sha256": "baf4fc9e1446c300d951286a17bf32fa1636113cee9d28408a702fb1fdd613cb"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07212b.js",
+      "bytes": 1266,
+      "sha256": "4b8e3230c60d5243a0609e8d07b3c66000f1b4e996242da4953645940abd6e35"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07213.js",
+      "bytes": 4245,
+      "sha256": "042606d52be6806fec962a42baedb661d6bd3ff49b80efa67d4ed7b1a89cf3e5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07214.js",
+      "bytes": 3497,
+      "sha256": "663ec2064c963d2eecb4d03432d916f504bafeb3f7732f8abf1e05a9c2774508"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07215.js",
+      "bytes": 550,
+      "sha256": "b010885ffc7c15445389274d70db7f6d7540283731c28ea50fdeae66471cef14"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07216.js",
+      "bytes": 880,
+      "sha256": "b2481ac98d92e40091191bf6a34e537c3d2dcb93a005812968ac5ddd5da66cc8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07217.js",
+      "bytes": 884,
+      "sha256": "aa5a59ed684ba83a20d579f5629850445f1c2d86ca82fc61c3ea31535c03affe"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07218.js",
+      "bytes": 1973,
+      "sha256": "cca89ead030a0c4adfabc15f8e02967569cd51688c9b748df50ad3f2e3ead253"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07219.js",
+      "bytes": 982,
+      "sha256": "0a2e9388732c619603c46d392af4eec9a21634b46673bc38a7b26943179c5a90"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07123.js",
+      "bytes": 2565,
+      "sha256": "39889a4deef2acf4d19c0e42dc89c7f41833dfabe8e98daabd5b3f5aeb71adc1"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07124.js",
+      "bytes": 1133,
+      "sha256": "c9efba17bba8a8b4cfc63081df84948bb26c59987a932de711e1ccd7ca0d9320"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07125.js",
+      "bytes": 741,
+      "sha256": "29649d747942ddeeadfb387b7c44ee3765c0f2c8a9c299d1b928d293b0e39bac"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07126.js",
+      "bytes": 715,
+      "sha256": "fbe31b50b20c20e023621b87beda47b7b491c015e27d3e98e8df39bd98b35782"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07127.js",
+      "bytes": 740,
+      "sha256": "085799236f2850f60df42cb2d0b75fd7ec805f477821f19e84782fd485f7f551"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07128.js",
+      "bytes": 883,
+      "sha256": "864e9b41838a2246e4d98978a5150486a3b6e0951bd9e7bf614fb39946817e8f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07129.js",
+      "bytes": 687,
+      "sha256": "9c30f4a3df6ca3abfb02164fccbda9f8fec4a8d7586297f701b04bfbf78726bc"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07130.js",
+      "bytes": 867,
+      "sha256": "dd512c077031321b2568d16207ef214075d6e9e96723a147ca3d7688ee5605a9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07131.js",
+      "bytes": 564,
+      "sha256": "2df1ef955583b3a14048026706f3d8044cc516b2e58def86997ac2cc90b7e087"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07132.js",
+      "bytes": 569,
+      "sha256": "5cfb57a96d43f99acaf4af3db20293a00adc67fe25377a2a34003d1c10a65870"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07133.js",
+      "bytes": 670,
+      "sha256": "c3e9eb28d91b708a59e2f494ff7d9258cecf24b3cd5395e54d911ad550cc3a4a"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07134.js",
+      "bytes": 587,
+      "sha256": "b17cb40f8b0a94b8ac41b7b9abd26477222fbf4bf361159e848a289dfd5bd1ff"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07135.js",
+      "bytes": 691,
+      "sha256": "7615590785e0717eb9ec2e6a822922b585a2efbb7a17a1846ecc984ab7aaeeb3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07136.js",
+      "bytes": 775,
+      "sha256": "4db14a7bd995bfd0a178ebef705816a3d23a1a9b72e70c07b439ed280fa8b9e3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07137.js",
+      "bytes": 1665,
+      "sha256": "c07106d30562be047d70de2a9db91516fb36525d111669a03778bd903974799c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07138.js",
+      "bytes": 1041,
+      "sha256": "2737cf0c7486692c50439089f6e3e4b43abe0b823b28048e16a0a770cca258d3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07139.js",
+      "bytes": 939,
+      "sha256": "b66d68ebe87c952a892be484a5b63d815888cc89b5a359614630ea842e67cf09"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07140.js",
+      "bytes": 998,
+      "sha256": "457e14a0f40d33fbcde9da9e609eebdc238cbf861ef36a66dc1b0a5690ece9ad"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07141.js",
+      "bytes": 1375,
+      "sha256": "9732595f5b89f24f29e7ba67ef0b5de8106fede7f394878e41567447eb376fb6"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07142.js",
+      "bytes": 686,
+      "sha256": "4fc0b56ca8d3bb0bec8fd8816ec9dee361072bb2ce705dd03d21ce0f319daf86"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07143.js",
+      "bytes": 215,
+      "sha256": "d6f109a00f4bfcfc3c6bc1580847a2df12927ca9a900f9cddfa32e700831b226"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07144.js",
+      "bytes": 686,
+      "sha256": "9caef7b2dc9ec68a2580ae0c7615789abb8a118849d759a0d83ad2e3e3888a73"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07145.js",
+      "bytes": 1688,
+      "sha256": "0b7b9904aace1bd29616ed301c474fd98abf437cafa8469a8c8fc39febfbea64"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07146.js",
+      "bytes": 647,
+      "sha256": "9a25879f864ead2196ed8e3c8b935142e83738cf40d1ed1722ec2deb9f3619a3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07147.js",
+      "bytes": 824,
+      "sha256": "b28b69210d148b2f73ee76f0ce272453efa4ff49c4d27afaa2148af3387a8281"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07148.js",
+      "bytes": 1146,
+      "sha256": "344c1d7b922d4d1a1daed1edf397f660bfd17ad6151ad4998a45ee6b36fe8951"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07149.js",
+      "bytes": 606,
+      "sha256": "ebee1200afd532e00517cff48c9f8c11b135511d6798b1fe8b73bcd40e95cae2"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07150.js",
+      "bytes": 1412,
+      "sha256": "fb7552a109d1f0595b4220bd1af97888d0020aba447e08672fd660b07300a030"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07151.js",
+      "bytes": 3101,
+      "sha256": "c6a98f190aeaf8b65115fec21d97413d41bb32b56ec12000ab77d97177af523b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07311.js",
+      "bytes": 1692,
+      "sha256": "233454f840ffb5f5e6b9bf0e4b04a8f216d739e8f6753b3dadacac51855faf42"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07312.js",
+      "bytes": 375,
+      "sha256": "2a558e5319da9b7ee2be5a6e0a53990143329a2d8f931ee5b441eab55301a9fa"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07313.js",
+      "bytes": 1341,
+      "sha256": "6fc063da3a376fddfb2c377eccd940daf6bc5ce5577d9eb07b1436097089739b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07314.js",
+      "bytes": 1576,
+      "sha256": "0245e9a68f68bdfb823f88b2c47fa181d311733fc086e965a627d2dbe8d62927"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07315.js",
+      "bytes": 2841,
+      "sha256": "3a6d3c3a4019b1d1f56a77f27ad726dddf3d30cfa70da1a806b261e537edda04"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07316.js",
+      "bytes": 7064,
+      "sha256": "6501dd365f624f0c68b2a50caacc35153b24a75b7574425041264be47b9c9b33"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07317.js",
+      "bytes": 3476,
+      "sha256": "db7dc6567d7cce6c97f14f885b3af12fcdbc2f2974eb6bbc3fa533dcba2a6b7c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07318.js",
+      "bytes": 2738,
+      "sha256": "8cea224b91df331ee2e8052395da3e9d3f57e660a46e7d626e9cb0de9240bbb0"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07319.js",
+      "bytes": 716,
+      "sha256": "f19f7b74a15b7de99b7392ac282cfd462b9a1d046a0c65b57b72028fff5f2806"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07320.js",
+      "bytes": 846,
+      "sha256": "cc0d10c3e742e2bdd757ff14c36e38bf6f547dff321d62151f29b729381d7632"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07321.js",
+      "bytes": 2733,
+      "sha256": "0925a084084fa11fe688c860f8bc0424b38b0b224c1174540d1d4dcd52f77ade"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07322.js",
+      "bytes": 1451,
+      "sha256": "94bc039071ff731256617eb86ca24f1a622bc78fecbb2109ea2e26b3e3903cb3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07323.js",
+      "bytes": 920,
+      "sha256": "fa35440d226daa8be2f86ae52e11de0df4e8283785eb775c9f8458cc1f430bfe"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07324.js",
+      "bytes": 989,
+      "sha256": "247fffcde18cfb328c1e8789c7e838aef29f6ff0512e56d6202819a76c0fad86"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07325.js",
+      "bytes": 874,
+      "sha256": "d6ee75d2092546127379e7e093dd145582dfcd8d68e3da65bd3ec14c27e222db"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07326.js",
+      "bytes": 1229,
+      "sha256": "5c4ddf56b54a49aa0719cc974dc9ac9fef1f6fb0a968a5e26bd172b392cd6a11"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07327.js",
+      "bytes": 842,
+      "sha256": "b6f486fede1700a915147b03e0a4acc10214c27b99965f9c4b8c73ed57e03f9b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07328.js",
+      "bytes": 898,
+      "sha256": "02bfa9c1ec9f0a0791f897568d429775c10b43c3fdf1414ae7ac97d3fa49ad32"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07329.js",
+      "bytes": 1617,
+      "sha256": "ce084c2d9afa4bfae8574e30f8d2089fe6d1f02cdefceb94b5de0dbb42423d10"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07330a.js",
+      "bytes": 1151,
+      "sha256": "d9dc94e03ac46f4dc7baae4bbad5da53eb1bbceb910d70e0c675d2e17f860c22"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07330b.js",
+      "bytes": 1108,
+      "sha256": "d8d5f9611c7dd2df0cb832aff9cc85767fe52e0aa818df620d45dfc665c52e98"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07331a.js",
+      "bytes": 996,
+      "sha256": "2bc8c65ef5fb05136dea6f4b30e5a0bfcff6db2adcb2a56e8ee91dfe18161f2d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07331b.js",
+      "bytes": 721,
+      "sha256": "e9d0a08432e835e98d97777b415537f408c64f235db6d116e36c67f30df0f905"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07332.js",
+      "bytes": 2595,
+      "sha256": "8aee2968acaa0bf27dbdef316847fbe5004ebd5a77a59500d5449b93f1a4520d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07333.js",
+      "bytes": 1270,
+      "sha256": "7a6588c147a7a0a22df648377313753e375d430e05c599f7aaf1cbe3e75c0c87"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07334.js",
+      "bytes": 1291,
+      "sha256": "d41a04e2342e9006167048b3edb56a28e24b9a490637929d0d0f4568c14d3db1"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07335.js",
+      "bytes": 1884,
+      "sha256": "4e9b217237e35c993823dac1610ff62fe6e2d36e85db9eb3410a6443d4988e0e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07336.js",
+      "bytes": 1688,
+      "sha256": "ccd627c62a8a6b09f9e2e3727b72c1f0ff00d44ecccfd3b5c14f756628485e5c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07337.js",
+      "bytes": 1980,
+      "sha256": "825dcf162f81d2622595a39011e169228429ef24b17f233287cb445998ece1dd"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07338.js",
+      "bytes": 2359,
+      "sha256": "16c3452dc289047f2f9457000d07e33fc2f88fb23850397cfa614788255ec7d8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07274.js",
+      "bytes": 1749,
+      "sha256": "739e3c95df4a3d2cd9fa7858f968c2fcfd7c0ab2e4a2b7bf67598c31447d6be3"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07275.js",
+      "bytes": 2280,
+      "sha256": "943e3d37568c3c287a25b354fdabe527111ac1e73c42e45013871801ca2cc3fc"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07276.js",
+      "bytes": 906,
+      "sha256": "74d89791b5c230f63eef3a012907a3e48275706ffd11f5be8a65bd7ed22000dc"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07277.js",
+      "bytes": 308,
+      "sha256": "6d5b724fc494edbf76959f9c754f37c40baf1d1d6f4806abc5ed910684e10ff2"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07278.js",
+      "bytes": 1249,
+      "sha256": "5e3793e99f1674ad3001fe3e8beceaf527b5b067bc8cf7422797aa9ee8b03231"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07279.js",
+      "bytes": 453,
+      "sha256": "2a78d3d1edcf6b482ca9a977523c4275b23d3561599cf93b5217b33662b29172"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js",
+      "bytes": 9951,
+      "sha256": "4640a61e1e41a534eb05d4364ace846265d786db2c7360016c622f45b46059a8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js",
+      "bytes": 6857,
+      "sha256": "f99ee2cce64723126bf8cfe18b117b54047d5b87df377c37743513c2561ccb5c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js",
+      "bytes": 5086,
+      "sha256": "a2810a41e72e760abd775845b0cd6a0e1fa6e7652ab53082d86d59cc4fccde87"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07283.js",
+      "bytes": 709,
+      "sha256": "b513af2a4377494ad3b5477823fba4ad52f1ccfb90525139fec10582e7caf6d9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07284.js",
+      "bytes": 521,
+      "sha256": "ca50e3a852b47bde9ae6b39c8a9261bff9a7ee7065cdf6021dba342e8a58d68d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07285.js",
+      "bytes": 561,
+      "sha256": "fafa55038990f52a189cc68ea2fb3dd9aefc14f4e91f43f0b2f5b71c40974d02"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07286.js",
+      "bytes": 383,
+      "sha256": "779ed6d5ff91962c19994022192a60dd8d21da9f3396c9418fe8bddf61456954"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07287.js",
+      "bytes": 1905,
+      "sha256": "78fe68ea1c6109b82281f78b6f2e32eed50b437b5556425ab7ef4a483acab7bf"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07288.js",
+      "bytes": 300,
+      "sha256": "3c6b49bd43b22727eb695ade34bd9c00b25315275ac4924989db863ad4441871"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07289.js",
+      "bytes": 717,
+      "sha256": "1300bffb6ec71550c30910221af037bf61015fc5ecfd6c338c6623d66a1c593d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07290.js",
+      "bytes": 1265,
+      "sha256": "de9300a2001151132a20d08165f667fde8da434bf996f0cfa14f051d9f4ff796"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07291.js",
+      "bytes": 2706,
+      "sha256": "93c23b91fb061b045f57c04978267c92d1dfa7a6716b26ed3a0884d64ee1e4a4"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292a.js",
+      "bytes": 2411,
+      "sha256": "5c85d4da580f71e5e1eb480733aae2baf05106dd8815e2f9edbe2a11f79177eb"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292b.js",
+      "bytes": 1682,
+      "sha256": "e77df0ce882704331fb570ad387c29be76478a3d616cd2155497af1067e880b7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07293.js",
+      "bytes": 2699,
+      "sha256": "33fe571f9493ab0f1191268043999a4e1c1994badc702470b056198ccb1e6508"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07294.js",
+      "bytes": 518,
+      "sha256": "6b07bd74efaa51ae029ba526ba17ab592202ced4e32efc86cec44ee8a4f0c6ff"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07295.js",
+      "bytes": 626,
+      "sha256": "da8c9c4938151f62c8c1575b9f65a0ee96662ecf971e4679cceee08a7751c0d6"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07296.js",
+      "bytes": 548,
+      "sha256": "357834c36e804c3a88fb56ac6c470358193eb75ff7f013eba5451242c51be43d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07297.js",
+      "bytes": 3261,
+      "sha256": "3d7392b656f8fe29b8df9aa16c39d068ec93bbf14019eddccb9b24c68977470d"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07298.js",
+      "bytes": 602,
+      "sha256": "2d5506601e18cca6f96b7a5cc53403826d684deafedfa194feb9bca40d066e5b"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07299.js",
+      "bytes": 5905,
+      "sha256": "9e180ff5969d66f1d64b64ab7cb1c364260c2f37bd7a75100c12868f4dc0fc21"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300.js",
+      "bytes": 864,
+      "sha256": "316ef329f4ba9f3c914d36774abbf24f956fa22a6e30440b751127c79c00dd87"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300b.js",
+      "bytes": 1064,
+      "sha256": "5db74187eb33db1bba692d12f6dd5627f818e86358d19830017c9c82e0f339a9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07041.js",
+      "bytes": 1334,
+      "sha256": "f5bf49e3238f8b435d02df035e73c50bad4b9d798f0e5a9973eb2366d455c946"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07042.js",
+      "bytes": 515,
+      "sha256": "ff55f573a9a008adc00c25ca6ab9631aa514438df58f8e52308bfcfb1f8b6f99"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07043.js",
+      "bytes": 440,
+      "sha256": "a3dc515c599ef76da1f63fceb6dfa2e1816aa5b5d7d140f2426c52a5e5b3177e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07044.js",
+      "bytes": 497,
+      "sha256": "27532b9f5f3e72a63071c0a80350df32b669a02e12b4bd05dfac9486ab822cfa"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07045.js",
+      "bytes": 1643,
+      "sha256": "293e13125c3785722bc3be7349fe572e8584d2d4600d065242cae44cc3370931"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07046.js",
+      "bytes": 879,
+      "sha256": "65d50fd3b472fc67fa57040c6505a7ba019f865640e079b6774d9e44c7d46e55"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07047.js",
+      "bytes": 309,
+      "sha256": "794fa24029991987c266fab54306c9a3f6a80b4f69b0a170ef4f86bf66293fe4"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07048.js",
+      "bytes": 425,
+      "sha256": "3b3ec7694a7295a39cf93cffad3648e57d7838b6ac5c5bcca652caeaed7730c9"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07049.js",
+      "bytes": 698,
+      "sha256": "af9a2c4def1ad82b571ef63eb92602d71f76aafbef22209450d656aff24f20c8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07050.js",
+      "bytes": 790,
+      "sha256": "32c895c540fe1ab85784bcbe1dbd52e6dc65003654af8dd8797b4a80b25e0bdf"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07051.js",
+      "bytes": 438,
+      "sha256": "00377a3e6d0a4012818f699ca43a0c1065b2dddbf33cd393ccd06f8ea6a9d020"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07052.js",
+      "bytes": 961,
+      "sha256": "c1631599e66246b1d70844ee2c22cccf9e6b4a771216739b8db21a5fb43d0bc2"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07053.js",
+      "bytes": 2626,
+      "sha256": "593fd21fc2de04b1517b79701fce3f7ec674750afe53fb42cbff284d71d6d6b1"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07054.js",
+      "bytes": 1166,
+      "sha256": "ba45317c0d84c38b1f92652d55fb82eea65cb8694cac56fca7d3580914469bf7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07055.js",
+      "bytes": 723,
+      "sha256": "a6fd01a832ee49130ee5a654522f50bbe7a997e92696af971565e5490302954e"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js",
+      "bytes": 2354,
+      "sha256": "430e5fa5dc11adaf866d3016aa6113e2bd6949ffb8e1431bd61c7e298811f3b7"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07057.js",
+      "bytes": 1462,
+      "sha256": "945220350bacfd8873733d89b373816db8abbaec7abac321330ad3532ee1e583"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js",
+      "bytes": 500,
+      "sha256": "14fcda598cf8234b25ef6bb1830a59757f9bac7aa05282f8835862caa27a8743"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07059.js",
+      "bytes": 500,
+      "sha256": "aa7ec8076387815a751fe8f0ad037d0ef3204744b59f676b9fd5463e5d6bcc40"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
+      "bytes": 9745,
+      "sha256": "1b5db4aaf13d59a3cd37820568fac4f95a44bbc1657c0337b51aa87a57a0b3fd"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07061.js",
+      "bytes": 6777,
+      "sha256": "0efa4abc5a1db70c8d8ffd605c0f1db23bd6ed96fbfabc325e3675247837b018"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07062a.js",
+      "bytes": 1271,
+      "sha256": "8440cc854eda2a0bf1366accf1ecec6d1acb79cb2d0df9dd9fe2b5b3077f4d86"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07062b.js",
+      "bytes": 354,
+      "sha256": "59103d315d84929ed6f9ca2fa8159ebac78dd7bb17a1d48864942d34fe5358bd"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07063.js",
+      "bytes": 473,
+      "sha256": "5aa9ce080c4c36bfb706d5d9965b275730cff9fd925dabb7ba48a113b9168382"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07064.js",
+      "bytes": 1085,
+      "sha256": "edd0755a1c0cf195c9596c4b4e7fd060a635265c249941844906b865d52c8775"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07065.js",
+      "bytes": 1462,
+      "sha256": "3315c18a99775596e68d91d645ebe6c8388cc6edea54651784eb4d356446a7ee"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07066.js",
+      "bytes": 700,
+      "sha256": "9dfcc69479af847617b87499a66739b7579329dd43a281dc9cedb7ea6b18f4e8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js",
+      "bytes": 659,
+      "sha256": "67e81d66375aa20ae192ddbe4d5cf6f999c1aa69c206f7bbccd0983974fa7b19"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07068.js",
+      "bytes": 484,
+      "sha256": "5bf1b4e4ce9a79134217008d04b5c06c3dc91e53e0363c2860e0df08eb7a0e41"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07069.js",
+      "bytes": 494,
+      "sha256": "a93e7e2742fb45815fa38c4306772ef38d0702f1399f97b09d1d3cda5bd63fbb"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js",
+      "bytes": 743,
+      "sha256": "4b5435b0ea98469fa76fc2652a1163207c9501f97ecac69b2eb5afa3a30a01ca"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07071.js",
+      "bytes": 538,
+      "sha256": "d3de22cc2579afd3764cee5fc5359c9528e22b98afdb07f29ca942b6a6680c66"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07072.js",
+      "bytes": 690,
+      "sha256": "e2e0cd00b5e3a0856f11b2e54f0a920dbbd47e985f73c9e1512f85fa7201ea79"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07073.js",
+      "bytes": 1243,
+      "sha256": "fa5d245d62418a18a55e5244f4190d7fcf67ddb67eb0614a4ed847a87856cea5"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js",
+      "bytes": 743,
+      "sha256": "2ab40120485caee901f6ed5e1c1a342307bbbd6d36afd1b2d56ee5f14f14cedd"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07075.js",
+      "bytes": 812,
+      "sha256": "b104248397a4f3a4b357a3823ac29e5eda628ce284a05ad338f960e2f693f333"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07076.js",
+      "bytes": 251,
+      "sha256": "562fc754fe9293f84417cf2532ca29a76f7d64cd0fa44790c142302cf74f146c"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07077.js",
+      "bytes": 211,
+      "sha256": "123af1ffbba04016a4768a3a4650a80cc415fc0d96aa22301d6dcc888745b34a"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07078.js",
+      "bytes": 242,
+      "sha256": "67b1801b81f0fc6da8924d6a74b12be0cd0056db20a47748ed3075f943e188b0"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07079.js",
+      "bytes": 253,
+      "sha256": "a58c7bca46113de8d4e72c302772a257ed1362a65e20678b047e86ad0352bba8"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07080.js",
+      "bytes": 213,
+      "sha256": "f0b613e409765963eef9fa10c7d01cc417ac1fff152b1fa10d7ed598b4360f22"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07081.js",
+      "bytes": 198,
+      "sha256": "e53769bb244877f2a2951ed65a1fe5ce2c8933d2fa73359a254ec4b71e9a793f"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07082.js",
+      "bytes": 754,
+      "sha256": "c4383a4de3ed69e36f32b35c0bb6bf9703390e5a7b551562a5f6213768d48e12"
+    },
+    {
+      "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07083.js",
+      "bytes": 542,
+      "sha256": "878522a3646fe4e289f375235f8f80425667bb6b4f9dcba766fc1843191abd51"
+    },
+    {
       "path": "src/cards/encounter-entries/thePathToCarcosa/_shared/byakhee/03086.js",
       "bytes": 1547,
       "sha256": "7c86e503639a10564e4a9884dd3497654bd2415029a7b5b13147b76b498365c8"
@@ -7623,8 +9043,8 @@
     },
     {
       "path": "src/cards/entries/02017.js",
-      "bytes": 1508,
-      "sha256": "0f06be2da01b740e065c835560a9f43a125f1439e4c71ddd385899b6975cf1a7"
+      "bytes": 1507,
+      "sha256": "920d80b870844f4f7a8d9afc2b10fef65f4dfcc52547cdaa909fc6eb95e927de"
     },
     {
       "path": "src/cards/entries/02018.js",
@@ -7633,8 +9053,8 @@
     },
     {
       "path": "src/cards/entries/02019.js",
-      "bytes": 1608,
-      "sha256": "a3151f05cf4ecf067aacbc0b93f67a9e606e077ffc839460fd379bac96c9fcc0"
+      "bytes": 1607,
+      "sha256": "46774caf99e8ff75b17eeee804d4c2918ec70e05db294962a87529d2f994bcd2"
     },
     {
       "path": "src/cards/entries/02020.js",
@@ -10372,24 +11792,554 @@
       "sha256": "42995b4dd9287b47e67c33222046fa16c661fa5d8636b5aff8423d9dd56393e5"
     },
     {
+      "path": "src/cards/entries/07001.js",
+      "bytes": 572,
+      "sha256": "fd381bcb08f827c4b7acdb8bfd024c54e1d61011eb2a501e113f1266356db2fa"
+    },
+    {
+      "path": "src/cards/entries/07002.js",
+      "bytes": 1436,
+      "sha256": "f98ec6750a9cdcdf5167b529dd8cd2a81b9742802dd7aa9b7e66d9b0f08d09aa"
+    },
+    {
+      "path": "src/cards/entries/07003.js",
+      "bytes": 1991,
+      "sha256": "9ffd658410c9bb7c005d0ac1cc9e50014bd7dfd491e0425d6d0968a6e62f3366"
+    },
+    {
+      "path": "src/cards/entries/07004.js",
+      "bytes": 1860,
+      "sha256": "3d0e0ccc73fb066e320a94c8ef1c9532e33a187c1bdab8ea26e839d61941b8a8"
+    },
+    {
+      "path": "src/cards/entries/07005.js",
+      "bytes": 758,
+      "sha256": "754d055a1686dbb76b40eac0019a91f6760c9602c7d282c1a1958ee97c90379c"
+    },
+    {
+      "path": "src/cards/entries/07006.js",
+      "bytes": 491,
+      "sha256": "f9ee03915ce1a2f91b33913f8e02a2dae6e805d9b303b62368f14d364ce7c318"
+    },
+    {
+      "path": "src/cards/entries/07007.js",
+      "bytes": 694,
+      "sha256": "1abb14df9c1a3c3c7629967fad8363f1c5738abbeeee357aa3beb80b47a158c3"
+    },
+    {
+      "path": "src/cards/entries/07008.js",
+      "bytes": 322,
+      "sha256": "74d5645967807b3c5cc26ddce4d135132672840cc0c38e3afc5189a78aeafbf2"
+    },
+    {
+      "path": "src/cards/entries/07009.js",
+      "bytes": 223,
+      "sha256": "405f3d8af30f4b93cd99bbae121bc776ffbaa72056caa90bdc8318043bec2c1d"
+    },
+    {
+      "path": "src/cards/entries/07010.js",
+      "bytes": 532,
+      "sha256": "721c2cacfc47c1d3adc6f587e83963dff898a9767c272cb56154ad29143c0a26"
+    },
+    {
+      "path": "src/cards/entries/07011.js",
+      "bytes": 452,
+      "sha256": "e3cdc6279ed760b1eec4f407b9f71a54b1058b69aac346a948c78ea2820ffed2"
+    },
+    {
+      "path": "src/cards/entries/07012.js",
+      "bytes": 380,
+      "sha256": "a07a1a7c919068de3665a4a7e9f79ca863800a9ff4c85da5cc93bd464b8ef3eb"
+    },
+    {
+      "path": "src/cards/entries/07013.js",
+      "bytes": 351,
+      "sha256": "2bfe913cbacc218d358ada97d4427a9eebada06c556f87110fdea02e1a152f1f"
+    },
+    {
+      "path": "src/cards/entries/07014.js",
+      "bytes": 621,
+      "sha256": "17ec9d75326b3c7de3e80072820e387b48acaaee20ff4c4bc33f0988eb152372"
+    },
+    {
+      "path": "src/cards/entries/07015.js",
+      "bytes": 713,
+      "sha256": "594a2cfada289c61e2ad8ebe2ddca3cc0b4a5ff739f6751b2a9b46177242e976"
+    },
+    {
+      "path": "src/cards/entries/07016.js",
+      "bytes": 331,
+      "sha256": "c8304c6a460265ff2007fd19978589957bdd2bedf0168212a844158350c46969"
+    },
+    {
       "path": "src/cards/entries/07017.js",
-      "bytes": 1873,
-      "sha256": "17e6c05fcd5dc602c17bbc7b025019edd91ac8781144da79639d06e244ab0561"
+      "bytes": 1063,
+      "sha256": "17443996b7f1ef853d8277984fc4abd79810f488fad311369b4bba9b3970e2d7"
+    },
+    {
+      "path": "src/cards/entries/07018.js",
+      "bytes": 1091,
+      "sha256": "bf47ad300ce9c352883569234517a924ba8ac55df9d5b438ad0ecdfd1f3d4081"
+    },
+    {
+      "path": "src/cards/entries/07019.js",
+      "bytes": 970,
+      "sha256": "9dbd78f89a23332ea53b7d2e72fc00a63c2b0ed22bfe7b93a8acd492b0a5affe"
+    },
+    {
+      "path": "src/cards/entries/07020.js",
+      "bytes": 446,
+      "sha256": "4ba1c1aebcc28bf92e0a9e29a2394447042ad6bee9dc49e0cba2f21c811889c8"
+    },
+    {
+      "path": "src/cards/entries/07021.js",
+      "bytes": 505,
+      "sha256": "5e121e75050e852f0f190484ad71297488c95b6e117a498c9a4b2fd2c49e78f8"
+    },
+    {
+      "path": "src/cards/entries/07022.js",
+      "bytes": 612,
+      "sha256": "8419fe9a0d15bb04d0cf0208b96ec8f257a4f7c7dd400d515f015809f8f8884f"
+    },
+    {
+      "path": "src/cards/entries/07023.js",
+      "bytes": 830,
+      "sha256": "fd0d74d3da5313b85bb5a4eacbd05afe509364f4424d0f06aeb8107a93746646"
+    },
+    {
+      "path": "src/cards/entries/07024.js",
+      "bytes": 662,
+      "sha256": "80153e5cf0968a3007da7f8c4951253c3ec2ecb947e1d99df23c9aba4fdc4dda"
     },
     {
       "path": "src/cards/entries/07025.js",
-      "bytes": 1559,
-      "sha256": "a1377feabf4330619893f35a10b5389c6b0c3391a34bf313490428df983a402f"
+      "bytes": 492,
+      "sha256": "07f2603e3e7cfb99fab3581de803824b643b9e897c330ac05ab70fd3cec7383c"
+    },
+    {
+      "path": "src/cards/entries/07026.js",
+      "bytes": 799,
+      "sha256": "db06192c9a4a0283ddb1fa25234ba1378a1a09eea1eaa9a584e5cbbafba87a91"
     },
     {
       "path": "src/cards/entries/07027.js",
-      "bytes": 930,
-      "sha256": "5efeb6cd25555f0a4204f888c74688ba02ed0e6ccee642654e5fb9a983630b01"
+      "bytes": 381,
+      "sha256": "da62ddcd0fcdb7a4d47117e4727106edf579b0ac834517306c9df86eef412f8b"
+    },
+    {
+      "path": "src/cards/entries/07028.js",
+      "bytes": 709,
+      "sha256": "99ff5bec2b2b456b9207991ead9b0cbdae6a716e980b6ebda0c78240b3f65635"
+    },
+    {
+      "path": "src/cards/entries/07029.js",
+      "bytes": 1883,
+      "sha256": "43bc29b4a51e45ac523fd17b28b5686087c57f1973bef122bfbca1e0c42464cb"
+    },
+    {
+      "path": "src/cards/entries/07030.js",
+      "bytes": 499,
+      "sha256": "5eca4c75114c143efef7fc5612b0e63c123f1c460de6a0a12e8bd36c03597cc5"
+    },
+    {
+      "path": "src/cards/entries/07031.js",
+      "bytes": 594,
+      "sha256": "7c3fb8de01158d7cb91db3e4f8c6426fa6f7082bb63c734de27578d8a6da59cd"
+    },
+    {
+      "path": "src/cards/entries/07032.js",
+      "bytes": 262,
+      "sha256": "189478d575db315b2ad4e599f9b8cd99f10d1d2ff7495a481417a9357fce9e51"
+    },
+    {
+      "path": "src/cards/entries/07033.js",
+      "bytes": 600,
+      "sha256": "f39dbd25b68e4547b94f8e46af9d81ea0d0a0ea1cfa953e16792133fb3ba7904"
+    },
+    {
+      "path": "src/cards/entries/07034.js",
+      "bytes": 254,
+      "sha256": "1bbd6dbb873148f33dd52301ef68633b75100a0dcbf89b9a19d8f20b201bfc02"
+    },
+    {
+      "path": "src/cards/entries/07035.js",
+      "bytes": 976,
+      "sha256": "0f7c2bc8cc44e945dbc78c82f457dfdc8bec344e5eca27541fccbc153620089f"
+    },
+    {
+      "path": "src/cards/entries/07036.js",
+      "bytes": 612,
+      "sha256": "d57e84a6ad3428f217909d0c645278519db425b92660b981948167291d6c8cee"
+    },
+    {
+      "path": "src/cards/entries/07037.js",
+      "bytes": 364,
+      "sha256": "9fed48ad4df536aba51a9f88b949e0fdd81ffb379bc82b43272a3dc22fe15c21"
+    },
+    {
+      "path": "src/cards/entries/07038.js",
+      "bytes": 362,
+      "sha256": "2665c01656adf4190a2fa1dfe161315a954ed4a5c33e610f6c979b5e0e88140e"
+    },
+    {
+      "path": "src/cards/entries/07039.js",
+      "bytes": 182,
+      "sha256": "0d604bb08330cacf7c372446bade79bc41ebae2b019a96afe7c3f4e02dbe15a6"
+    },
+    {
+      "path": "src/cards/entries/07040.js",
+      "bytes": 249,
+      "sha256": "48f6349aaca67d5edb6833094d46e227e94bfa8a3f8245ebe9338865a5c209bd"
+    },
+    {
+      "path": "src/cards/entries/07108.js",
+      "bytes": 177,
+      "sha256": "738369faee0d0ea73d088985d45d04494794b35d9c4f49942197027e62d989d8"
+    },
+    {
+      "path": "src/cards/entries/07109.js",
+      "bytes": 1763,
+      "sha256": "fc3c11267d6aaad267641112e1ab9d379ffd5ee7168a957efb550f79cc08b7de"
+    },
+    {
+      "path": "src/cards/entries/07110.js",
+      "bytes": 386,
+      "sha256": "bfe6b570305eda7eff1f5be28482d91e3a5d3522ca1cbf973f638f9fcb05e43b"
+    },
+    {
+      "path": "src/cards/entries/07111.js",
+      "bytes": 1411,
+      "sha256": "42dc7bf607348bc0397654667842deee1177371a75561f746e36a6d46221a176"
+    },
+    {
+      "path": "src/cards/entries/07112.js",
+      "bytes": 236,
+      "sha256": "3a9a830cfd3b36eae6b3d5c6877dfb557ade45fb9a46c94a06734c958c296969"
+    },
+    {
+      "path": "src/cards/entries/07113.js",
+      "bytes": 441,
+      "sha256": "0c6e7328e49f23d341b20a285ab951c8c5b1492023bf0f1ec53f1b7bd27514ab"
+    },
+    {
+      "path": "src/cards/entries/07114.js",
+      "bytes": 891,
+      "sha256": "a751bb0365c055dfff5fbdbea127ed6c3f3795b0707ccf7c856b38dde6846b5e"
+    },
+    {
+      "path": "src/cards/entries/07115.js",
+      "bytes": 173,
+      "sha256": "5ed2b7678ef177d8710014af5089fb6eef7126ab1e5768ab9b1536eed5304b27"
+    },
+    {
+      "path": "src/cards/entries/07116.js",
+      "bytes": 453,
+      "sha256": "9c4a38a0451d29a4130fe3a310e085db2caec37cdd2ed58cbb22c6151176b1fb"
+    },
+    {
+      "path": "src/cards/entries/07117.js",
+      "bytes": 467,
+      "sha256": "0f7440fcb13bc876b187eb4d9ad29e2260b37810c22e3bd27628b65f8692bc96"
+    },
+    {
+      "path": "src/cards/entries/07118.js",
+      "bytes": 448,
+      "sha256": "5b33daf0f9b711889ef3d75ab92d296c6ef82401d861f9340fe6186b8a0e19fc"
+    },
+    {
+      "path": "src/cards/entries/07119.js",
+      "bytes": 555,
+      "sha256": "8a283fca4fe367c72647bb9a0a76699267d43fceec8dd7b7fcd295c579662299"
+    },
+    {
+      "path": "src/cards/entries/07120.js",
+      "bytes": 414,
+      "sha256": "095d17ed081917f795ffded29800a08cc6198ffd169e6eec6c6fce5f067a90c6"
+    },
+    {
+      "path": "src/cards/entries/07121.js",
+      "bytes": 771,
+      "sha256": "53f688c64f2bdf262039f2b9fdd3f670b7be0295b354ed722e7a7ab56f392bbd"
+    },
+    {
+      "path": "src/cards/entries/07122.js",
+      "bytes": 502,
+      "sha256": "85c4fe44b0e1a201603ac6bd2cf16e1df4535348208b87944ede314ad9bb02d8"
+    },
+    {
+      "path": "src/cards/entries/07152.js",
+      "bytes": 425,
+      "sha256": "db87fe1e245eb9272dc0aafad756831dc19e5372ea2bde8ec0960a66ca19d12a"
+    },
+    {
+      "path": "src/cards/entries/07153.js",
+      "bytes": 1309,
+      "sha256": "be4e92df16c094d258805827c3cc18d58a915c454fbb65587456c1388942b960"
+    },
+    {
+      "path": "src/cards/entries/07154.js",
+      "bytes": 1739,
+      "sha256": "2cd73b411b440d992ddac0a089cd747cfacc3cf3035fd1e30638ffcd1ecb3f3f"
+    },
+    {
+      "path": "src/cards/entries/07155.js",
+      "bytes": 1055,
+      "sha256": "739a6a42e1cb580fc7a691678bccd7723f2fe2d5fa390dd56c9a5ef726cf91d6"
+    },
+    {
+      "path": "src/cards/entries/07156.js",
+      "bytes": 924,
+      "sha256": "ef640a51c8da34347a43b7a7901e01b2aaa57ef977d90d8f0dc86a722e9222ba"
+    },
+    {
+      "path": "src/cards/entries/07157.js",
+      "bytes": 569,
+      "sha256": "54129a5122a4d576ec2ba4cd6b779db66643b00d215be67cfdcaf6350d9448b0"
+    },
+    {
+      "path": "src/cards/entries/07158.js",
+      "bytes": 516,
+      "sha256": "8b6717ba4fd83162505fcc516f8be41ad3837abe9f2ea189a1b21fe368637715"
+    },
+    {
+      "path": "src/cards/entries/07159.js",
+      "bytes": 951,
+      "sha256": "55402e1bf7532b7a26276e98282d104d64eed1b8a46259f5fcb62830c4574238"
+    },
+    {
+      "path": "src/cards/entries/07160.js",
+      "bytes": 450,
+      "sha256": "91815cc05315c3d825a40bed277624aae4c0c928d167cf21f61f286dd46758b4"
+    },
+    {
+      "path": "src/cards/entries/07161.js",
+      "bytes": 325,
+      "sha256": "63ce4bf76725f7ea95718646f3ea9a012816f67f2a37df425c35c4b60bea3313"
+    },
+    {
+      "path": "src/cards/entries/07162.js",
+      "bytes": 1971,
+      "sha256": "6d18c935a25bb80ed3d3b3c5e76097a36d7992dc01bf39854bba121896cfa433"
+    },
+    {
+      "path": "src/cards/entries/07189.js",
+      "bytes": 603,
+      "sha256": "f52c43c83c61c3b26356453579a82c6afa1b3cd252805aa0f0c472457a2818ed"
+    },
+    {
+      "path": "src/cards/entries/07190.js",
+      "bytes": 857,
+      "sha256": "e64a1b2e0b6ab3be8571b52ab0008608a5625191b50563ae76a3193c13f13d08"
+    },
+    {
+      "path": "src/cards/entries/07191.js",
+      "bytes": 1409,
+      "sha256": "d5d4b2229e9c51814d95f333c9bfb2251722aa344ea82616d543ea2a6ccf8a23"
+    },
+    {
+      "path": "src/cards/entries/07192.js",
+      "bytes": 747,
+      "sha256": "2a9014a0a5cfe4584bdf92f861a34dc0dce380fb0c32d284fc0444073f195738"
+    },
+    {
+      "path": "src/cards/entries/07193.js",
+      "bytes": 1044,
+      "sha256": "afc3f675f50bedd41d84b0d98a9e4601d85cef5322e97e6eaf0181d6f75d6b1f"
+    },
+    {
+      "path": "src/cards/entries/07194.js",
+      "bytes": 1327,
+      "sha256": "30ed7b1fab44947bc0b036ba1c1dcf85e69449a9dac0f8640e6406cc6949f6af"
+    },
+    {
+      "path": "src/cards/entries/07195.js",
+      "bytes": 853,
+      "sha256": "2159b65b5f88db4855ddbd58221c02132a92a63a0fe0e0ffa032b89271781263"
+    },
+    {
+      "path": "src/cards/entries/07196.js",
+      "bytes": 587,
+      "sha256": "6b9978e885bc0d5c8989ea58698f151532ea04eba5a44ee491cdfa4e71d28fa7"
+    },
+    {
+      "path": "src/cards/entries/07197.js",
+      "bytes": 381,
+      "sha256": "c89fc0a68cf0e97c56fad1aa00cfd7277688133bc0bd6524ae5dda6c60e2d139"
+    },
+    {
+      "path": "src/cards/entries/07220.js",
+      "bytes": 473,
+      "sha256": "df92e3a2a7d047b15ccdf3a1eb3d80d056e7fbb0205fcdf1d948aad616ced44b"
+    },
+    {
+      "path": "src/cards/entries/07221.js",
+      "bytes": 688,
+      "sha256": "dababdf5c9f081a26e7d542f25af81a7845bcc92871e647334cd892b53b1fae5"
+    },
+    {
+      "path": "src/cards/entries/07222.js",
+      "bytes": 443,
+      "sha256": "32a48b46199879708c4d55c233c0d83172287bd8c68a466d86bb03a9e20ecf1d"
+    },
+    {
+      "path": "src/cards/entries/07223.js",
+      "bytes": 500,
+      "sha256": "7151fa1361b6e7e0b7059d5059e8b4d0a8f25f302e32d0a9af03ffa08df4315a"
+    },
+    {
+      "path": "src/cards/entries/07224.js",
+      "bytes": 622,
+      "sha256": "2a5b1e5b45495f671c0b1fd4487d609cf8916c4863b49a195caa2d43ed788711"
+    },
+    {
+      "path": "src/cards/entries/07225.js",
+      "bytes": 442,
+      "sha256": "19313ddf38fecbda582800c04e37ca97986cd0efd2a74b16b232f53e1b34c3e4"
+    },
+    {
+      "path": "src/cards/entries/07226.js",
+      "bytes": 467,
+      "sha256": "a411bd95061ad1d8770f2b2b6bad0d6eeb8191af576b5bcdb6c860328d100f29"
+    },
+    {
+      "path": "src/cards/entries/07227.js",
+      "bytes": 445,
+      "sha256": "0754fe11dcc82afa3a364b1911f3c7cb5c5a7bc99d792e3f107b62d2f9086bfc"
+    },
+    {
+      "path": "src/cards/entries/07228.js",
+      "bytes": 564,
+      "sha256": "998bd8ff72af896f5db8f074ce553c616e0aebc430aef649a0f73fa5c19eb785"
+    },
+    {
+      "path": "src/cards/entries/07229.js",
+      "bytes": 761,
+      "sha256": "3ecb3cd88d3e527c2ed4a91ac7f81707edf96bbc8aab049951193b0b4f8d9b54"
+    },
+    {
+      "path": "src/cards/entries/07230.js",
+      "bytes": 417,
+      "sha256": "ab054d57c1f6ad3d4f603c91b4f53a04b35b520cc3bf6e45a1ef6beee30b260c"
+    },
+    {
+      "path": "src/cards/entries/07261.js",
+      "bytes": 560,
+      "sha256": "a852cc3c6382f000230c7b2b802ed0b4bc961825ca748897b7b3180bdfd415af"
+    },
+    {
+      "path": "src/cards/entries/07262.js",
+      "bytes": 1697,
+      "sha256": "4d2c0ef7fc0f40e9ca2672d97ada7908b207cbc87f8978aac1c51784cac156c0"
+    },
+    {
+      "path": "src/cards/entries/07263.js",
+      "bytes": 538,
+      "sha256": "cdc83ab18f312bb0a199ffa98fab21793f3ce22dae7c74663b8f15c7b4200292"
+    },
+    {
+      "path": "src/cards/entries/07264.js",
+      "bytes": 703,
+      "sha256": "c9be8b379afb4e8ca8ff64434a88f87ecde7b75115c4ea60477498aeebc42695"
+    },
+    {
+      "path": "src/cards/entries/07265.js",
+      "bytes": 1049,
+      "sha256": "473fe29ee213ffc850741a100c0063cd64624cebc346e85617d0294140208260"
+    },
+    {
+      "path": "src/cards/entries/07266.js",
+      "bytes": 858,
+      "sha256": "326baa9f7af2287a47ce27dbcd0aa7c6e3ea333a38c155fce21386e2ca492d40"
+    },
+    {
+      "path": "src/cards/entries/07267.js",
+      "bytes": 776,
+      "sha256": "06174f845e250f9fdecbc89af5cda5a18a42a61d0fa33abb7ca6f7826acb104d"
+    },
+    {
+      "path": "src/cards/entries/07268.js",
+      "bytes": 2265,
+      "sha256": "0761a6435aee34d17f6a6a66a4e9ab5bdf0120a61ef5773f84649f9f8230caa6"
+    },
+    {
+      "path": "src/cards/entries/07269.js",
+      "bytes": 433,
+      "sha256": "1b2d9a194982b4566a42dc576da53d31d46e7b0783ac501fa25f6179c5e19750"
+    },
+    {
+      "path": "src/cards/entries/07270.js",
+      "bytes": 664,
+      "sha256": "96f5c9074b71724cdf0091b11318ad6f04997d3c61f1be338b9f06383b728d35"
+    },
+    {
+      "path": "src/cards/entries/07271.js",
+      "bytes": 728,
+      "sha256": "f0a94d24c8017c80da1dca0afae9424be66cd1a1629f712b7582c90835dbecc5"
+    },
+    {
+      "path": "src/cards/entries/07272.js",
+      "bytes": 657,
+      "sha256": "cf55e5786928fb36a7c33d98e0132e73f653726bbcac498f1d35027b5fb316e2"
+    },
+    {
+      "path": "src/cards/entries/07273.js",
+      "bytes": 1503,
+      "sha256": "e09726590b32d1f4ad3da5751a7bdc6ebdda0457fd541c353cbe5cf18ed74232"
+    },
+    {
+      "path": "src/cards/entries/07301.js",
+      "bytes": 983,
+      "sha256": "27d30e1d910a18c9d5ee5e1516f2ae556a826dd3ab915216a2f6f8c37e911c85"
+    },
+    {
+      "path": "src/cards/entries/07302.js",
+      "bytes": 1519,
+      "sha256": "00a9a72327432c2bdef985568dff9a166e84cead697a9e7aa7f12d2952b22975"
+    },
+    {
+      "path": "src/cards/entries/07303.js",
+      "bytes": 1656,
+      "sha256": "a57c0addc32abdc5032bdca133ac547099adb8da1d87f6f9870381c859a04c81"
+    },
+    {
+      "path": "src/cards/entries/07304.js",
+      "bytes": 1476,
+      "sha256": "529afc74be42f087976b68216185770558cffc99f759379be0b76b77cb923415"
+    },
+    {
+      "path": "src/cards/entries/07305.js",
+      "bytes": 821,
+      "sha256": "ee11ba8819613d2c335cba9e6bf98246d391d09922908f42fbb91cf79b50e66e"
+    },
+    {
+      "path": "src/cards/entries/07306.js",
+      "bytes": 303,
+      "sha256": "632904205020200d7cfc3638ff4e37c9242b51ff17d53347e351802375779e3c"
+    },
+    {
+      "path": "src/cards/entries/07307.js",
+      "bytes": 539,
+      "sha256": "f0e2e8cdfbc417cd373aae6a1de4499b347ca14fdcc843e5aa82ea7d464f585e"
+    },
+    {
+      "path": "src/cards/entries/07308.js",
+      "bytes": 2796,
+      "sha256": "3e8e4496018eb8243db856e11602a13a435bf901e0e620c5c3880b58607f82a2"
+    },
+    {
+      "path": "src/cards/entries/07309.js",
+      "bytes": 670,
+      "sha256": "fa4a5c5595d29be59c0ea6b65f5294cc37fc154eb309030849bc216a187d7f02"
+    },
+    {
+      "path": "src/cards/entries/07310.js",
+      "bytes": 606,
+      "sha256": "3732af74cfbb2f7d41cbb61ba785d6a951ff4c02cf611ce6dc74988534fa4bc5"
     },
     {
       "path": "src/cards/entries/_reprint-aliases.js",
-      "bytes": 1585,
-      "sha256": "957eb19911ecfc807b13b779c4a78fb11166621984ee6e0e98633c1b5ad167e8"
+      "bytes": 1659,
+      "sha256": "86b548ca44f513b221bfcb419608b9198d791c488742530afb746639937c4e39"
     },
     {
       "path": "src/cards/entries/_shared.js",
@@ -10398,8 +12348,8 @@
     },
     {
       "path": "src/cards/entries/index.js",
-      "bytes": 28486,
-      "sha256": "55d60f739bb5eed758fdee8e0a7d4fc3e929b41a0a42b57700934d3c88548348"
+      "bytes": 32938,
+      "sha256": "a5a05a72d21b1e8eab55f2df2267267f737b0983f216d177e2fb03a48235c4bc"
     },
     {
       "path": "src/cards/investigator-abilities.js",
@@ -10424,7 +12374,12 @@
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "f12e0f943c20e18e90754e1e7d782eb43ed1a3da0ece8f05228c5207749b0454"
+      "sha256": "f6a87bc916369ac32bf70c67c23ba3d0a58ae2477d05e1ab37d35810d4c05ba6"
+    },
+    {
+      "path": "src/cards/tic-player-acceptance.js",
+      "bytes": 1860,
+      "sha256": "1b53b6249f2925a3cf94c1dc60116f203bfb51e95f595fff8c67809ff8d1fa2b"
     },
     {
       "path": "src/cards/trait-labels.js",
@@ -10433,8 +12388,8 @@
     },
     {
       "path": "src/deck/availability.js",
-      "bytes": 14105,
-      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
+      "bytes": 15454,
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
     },
     {
       "path": "src/deck/card-pool.js",
@@ -10448,43 +12403,48 @@
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "bytes": 26133,
-      "sha256": "627547c495fc8efff2ceb0c9b66a5bf2e913db7c27f1902bfbedc00cc5841772"
+      "bytes": 26194,
+      "sha256": "38a6dbe9e8be0e649337d3cc44fcd0dd4d273588a9f6e8a2243667c682f2e9ef"
     },
     {
       "path": "src/engine/ability-exec.js",
-      "bytes": 32859,
-      "sha256": "5f408f398c8d325e92cab09b48a0afe30821a44ef69428dc147e0692d6a48cc1"
+      "bytes": 34215,
+      "sha256": "080245611c889cb71f90f20534422ea1d231cf80c007d92985bef9e7549f994c"
     },
     {
       "path": "src/engine/ability-rules.js",
-      "bytes": 17988,
-      "sha256": "f08af50019f1690bb4f97de8101d624d82485faeed48c937aa5e8bdc7716690e"
+      "bytes": 24976,
+      "sha256": "ae0700cc1c5f61601ed3dea8966def53004b1130250a54810bc9801be78f01de"
     },
     {
       "path": "src/engine/ability.js",
-      "bytes": 74467,
-      "sha256": "88e8cc8b521c7182a4ec39a06f437daa8018fdfdac8a2f23558a79039e5c5903"
+      "bytes": 94871,
+      "sha256": "0f8a3b00e73c697f9466d064b70cae931ec3a1f2907517fa3fd45803553024f8"
     },
     {
       "path": "src/engine/act-agenda.js",
-      "bytes": 22813,
-      "sha256": "2d15d568ae2224c8794907147798bf207f0237b79fcbd214f1d1a5a3b069c9b2"
+      "bytes": 31513,
+      "sha256": "9b505f82c73f7d31bddaff3b5df9723929e07f14340877b29fae58c96e252b02"
     },
     {
       "path": "src/engine/action-history.js",
-      "bytes": 1933,
-      "sha256": "772005f573cdaa585dff4275422889ca596dd6e41defe6242fa084598ff7fba0"
+      "bytes": 1970,
+      "sha256": "b642718961fa88661b23f6cd6a2b4dc33ec115075c3f1fdb0a190bf2e71ee080"
     },
     {
       "path": "src/engine/actions-extra.js",
-      "bytes": 24386,
-      "sha256": "f87a291c66a2028bf52b959af2c2baaee60fb3f6530bfdfd333a3ef06c4dd3b4"
+      "bytes": 24475,
+      "sha256": "e2b4d47739321a0712379d57f888a277576b871780032825baf1e47a33c9e976"
     },
     {
       "path": "src/engine/actions.js",
-      "bytes": 36967,
-      "sha256": "8102adef5079256407dab8bcbd9aa2d7774d30bbc41a54658454b910d78e1c23"
+      "bytes": 39069,
+      "sha256": "187a265cb8303a2827a1b174f10ded6036bdf963a172818a04af8531b1ece883"
+    },
+    {
+      "path": "src/engine/agenda-advance-frame.js",
+      "bytes": 657,
+      "sha256": "e02178c9c268a0d2f123f887b54ae95db0c29b83469d817acba348b850f33c40"
     },
     {
       "path": "src/engine/alt-decks.js",
@@ -10493,13 +12453,13 @@
     },
     {
       "path": "src/engine/api-card.js",
-      "bytes": 20691,
-      "sha256": "c13a9cc08fb24869b525c398084e870d2de1c83c1d91904d92dbbf40c19457c1"
+      "bytes": 20843,
+      "sha256": "1e1416a22ab201b985f2afb774354eeded000a9696763753d631ab4149a209f9"
     },
     {
       "path": "src/engine/api-clue.js",
-      "bytes": 8090,
-      "sha256": "90e71f77ccc6daa8486161c229fc5d55bb8c5b8ffc9a0e844cc119479d6c37b8"
+      "bytes": 8275,
+      "sha256": "3a5e6c63ac6dcb784d81b470c502098bf45cb106fd81dcfc6ef8585972e6a426"
     },
     {
       "path": "src/engine/api-enemy.js",
@@ -10508,23 +12468,23 @@
     },
     {
       "path": "src/engine/api-mechanics.js",
-      "bytes": 4678,
-      "sha256": "2c8947d95d6390c2b518ce978eb9a27805768eee45c7991a0b35e9543b37cdf6"
+      "bytes": 9091,
+      "sha256": "d4553363a9fc1b9afa99caf5a2cca2f9a94f289618745d99ed3b088cf24c758d"
     },
     {
       "path": "src/engine/api-misc.js",
-      "bytes": 69874,
-      "sha256": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765"
+      "bytes": 73130,
+      "sha256": "a78a32e0b1e4f76cabb70e41695ec9c22cc66d0eec87424656dd029c98e7547d"
     },
     {
       "path": "src/engine/api-test.js",
-      "bytes": 11118,
-      "sha256": "a1bd33578c8d891157d5cd24a6800aedb3fae85444ac54c184ec70b64aad73ee"
+      "bytes": 11273,
+      "sha256": "1af589dbb08485cea4e93f94aafcc25288708de53053e6d749bf2c09c7eef895"
     },
     {
       "path": "src/engine/as-if-location.js",
-      "bytes": 1218,
-      "sha256": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5"
+      "bytes": 1246,
+      "sha256": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc"
     },
     {
       "path": "src/engine/asset-defeat.js",
@@ -10533,8 +12493,8 @@
     },
     {
       "path": "src/engine/assets.js",
-      "bytes": 26726,
-      "sha256": "198e0c3fd07b3db5ff45e08408d72e2af1047145df3e2c3b660ad2be39786ede"
+      "bytes": 28300,
+      "sha256": "0955c4aa611fc1c034f1ec351c939105b08b6a8d87a7b887964c90446c6b36f0"
     },
     {
       "path": "src/engine/bonded-location.js",
@@ -10548,13 +12508,18 @@
     },
     {
       "path": "src/engine/campaign-flow.js",
-      "bytes": 15998,
-      "sha256": "5a685e1f01f193b61809d011b13c1261e3f7c43c37b8339eee2bd3295ba0971f"
+      "bytes": 16258,
+      "sha256": "53496fdfbca92835b51e9186176c3aba699c0356b6fd0bf947d95aa938eb46e6"
     },
     {
       "path": "src/engine/cancel-note.js",
       "bytes": 2496,
       "sha256": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2"
+    },
+    {
+      "path": "src/engine/capture.js",
+      "bytes": 15135,
+      "sha256": "8c7a882d5570ec23dd4ad84511e631433bf2d0e4e969d66cf1279a96cb837df2"
     },
     {
       "path": "src/engine/card-counters.js",
@@ -10563,18 +12528,18 @@
     },
     {
       "path": "src/engine/card-defs.js",
-      "bytes": 20861,
-      "sha256": "eef891c3bc7a957cd25a5060582bca4be65cf1e710527300301e4764c128d738"
+      "bytes": 21236,
+      "sha256": "1449cf2ccdc7ccce1f2646c1e6e183ad0e0e169c0dc7149bd644ef833f858c50"
     },
     {
       "path": "src/engine/card-lookup.js",
-      "bytes": 4329,
-      "sha256": "354bf4a0bfcc6e6bbf68f425974b5a73f12b5787d6127001dde157a6ee77728f"
+      "bytes": 4357,
+      "sha256": "f4cf0a51915146923d301a17d8ad6dd691712312093ebffd6de857cbe1a6c5a2"
     },
     {
       "path": "src/engine/card-ops.js",
-      "bytes": 20886,
-      "sha256": "deda87447dcced3f228c5899dfc0c48235d22a951a3c87c673928c433cd11953"
+      "bytes": 21010,
+      "sha256": "5db037fef2c0c3b679c1f0337786bbd4d759144ce980a1188eeca98339038a75"
     },
     {
       "path": "src/engine/card-text.js",
@@ -10588,8 +12553,8 @@
     },
     {
       "path": "src/engine/chaos-token-effects.js",
-      "bytes": 1686,
-      "sha256": "fc0cb687a8638ec6fbb1b2b80227ef61700b1b6e1ee89747ee8de55bf44ccbae"
+      "bytes": 1706,
+      "sha256": "637bf2c8f2af3214984e2fead75c1edabe350eeefda69570ea8b2ba5c5955f30"
     },
     {
       "path": "src/engine/chaos-token-pool.js",
@@ -10598,28 +12563,28 @@
     },
     {
       "path": "src/engine/combat-odds.js",
-      "bytes": 12068,
-      "sha256": "95b3082d8ab5e2aadc6c696d95d2012bc3b6b944051facc2c5919e91d518d6a2"
+      "bytes": 12111,
+      "sha256": "d9a41f7468c87863eedbe192ac7f7b35fec5bc886ed4a25e6b137a868da51aa3"
     },
     {
       "path": "src/engine/combat.js",
-      "bytes": 43580,
-      "sha256": "961d89506a0aa315d60a796389364b56e0d637073d450115a817196c114f1b63"
+      "bytes": 49178,
+      "sha256": "3b17f4e590aec28835c81d0a08644548a9d31097fc88f11b2a1e74a5289cae99"
     },
     {
       "path": "src/engine/commit-origins.js",
-      "bytes": 2692,
-      "sha256": "c7c57ddbdcc81242e7e3d49aa2fa8c82d8b6f1d36f3c8b400eec1b78657df30d"
+      "bytes": 3723,
+      "sha256": "c26ec24f2413e0b41a43b7875489e025b7fcd7514c5e823657686be357e2f9d0"
     },
     {
       "path": "src/engine/commit-rules.js",
-      "bytes": 2714,
-      "sha256": "bb0e99bff115ebab3a6a566614be26d00da7d6663cd7c79703de2773fee62858"
+      "bytes": 3927,
+      "sha256": "050204c4a7d5aaae091f4c272afdc601c04ea3a94723946737de1cfd4dd9989e"
     },
     {
       "path": "src/engine/cost.js",
-      "bytes": 9572,
-      "sha256": "1867e653581edd0491b2aeaad42ca7c9d5c16b6762655b29b9e43165cea80d23"
+      "bytes": 9755,
+      "sha256": "765523dc01ec5523e3bbe7857d827af1ef6f0be2c1092a06803c19323f7dee6a"
     },
     {
       "path": "src/engine/counters.js",
@@ -10633,8 +12598,8 @@
     },
     {
       "path": "src/engine/deck-ops.js",
-      "bytes": 30553,
-      "sha256": "4745fbee363e9d34e71b5ab8dbc7cbb647ad5b0762f16b4397aa0e6d59c3590d"
+      "bytes": 31978,
+      "sha256": "d8fd08297a233467b4c50edf16c0f681a4a1862f42b7d1c9afcb88894e924567"
     },
     {
       "path": "src/engine/describe-ai.js",
@@ -10643,18 +12608,33 @@
     },
     {
       "path": "src/engine/describe.js",
-      "bytes": 22152,
-      "sha256": "38c5551b0c5d491c7ed02f8858e2f941d728f13b6ed37d90ef79d88cefa2fc02"
+      "bytes": 22821,
+      "sha256": "046b552e4d540b465a74ca78618671fb67781c2008edb928a458c9456a4cdbdf"
+    },
+    {
+      "path": "src/engine/discard-costs.js",
+      "bytes": 5134,
+      "sha256": "536283161a36e41d430cacf4c7ab2a98e6f982757624adbae8f4061615e27890"
     },
     {
       "path": "src/engine/dispatch.js",
-      "bytes": 38524,
-      "sha256": "25da13f6d7646719a9187a660f55742c6058098951a1d9598ba87d9a817bb89e"
+      "bytes": 38701,
+      "sha256": "523db1becd523f86295f9a2cfe3c97503e9dc77288177dac33608ebbf41b262e"
     },
     {
       "path": "src/engine/dream-gate.js",
-      "bytes": 4493,
-      "sha256": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58"
+      "bytes": 4604,
+      "sha256": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc"
+    },
+    {
+      "path": "src/engine/edge-barriers.js",
+      "bytes": 1982,
+      "sha256": "1fd9875bf7cc0ecf9d10916dae132f7180042614037f1c39a58ba3e49f95ebad"
+    },
+    {
+      "path": "src/engine/effect-provenance.js",
+      "bytes": 10113,
+      "sha256": "9aab929be23c2212a22d1942d37775e01931717d0d3e15963cd693b22eb774ca"
     },
     {
       "path": "src/engine/effect-recipient.js",
@@ -10663,8 +12643,8 @@
     },
     {
       "path": "src/engine/effect-state.js",
-      "bytes": 12201,
-      "sha256": "4ce99635835886d6181dc927a1e258b857bf10b91e9fee034713a8b0892ea692"
+      "bytes": 12453,
+      "sha256": "9d8fde4cb5f62e8ff72a5c26b4f93f435e1ed75b18bf5b3e1b890574a9ba26cc"
     },
     {
       "path": "src/engine/effects.js",
@@ -10673,13 +12653,18 @@
     },
     {
       "path": "src/engine/encounter.js",
-      "bytes": 41009,
-      "sha256": "d751ec833f22ce9e58c497e89d42843a1e7aee34788283950f9f6dd0d4b1da0f"
+      "bytes": 44945,
+      "sha256": "48aaedf445d30199b6c015ca2f35e82ef16d0cf7b7478e4fed532cf352c16096"
     },
     {
       "path": "src/engine/enemies.js",
-      "bytes": 42615,
-      "sha256": "a1f4f0772d22e7bb0511157c350006ccfe317fca6055357d159e7c70a09436dd"
+      "bytes": 58609,
+      "sha256": "eca8e1b1597a4f20b6392095c1dd0301729531204eb5a01fd23d19288ba11b03"
+    },
+    {
+      "path": "src/engine/enemy-aloof.js",
+      "bytes": 1821,
+      "sha256": "1580f1eb37bedf083038fd21e1689e398ecbdadb27c7dfe39441cc94c9154cb3"
     },
     {
       "path": "src/engine/enemy-clues.js",
@@ -10688,23 +12673,58 @@
     },
     {
       "path": "src/engine/enemy-entry.js",
-      "bytes": 929,
-      "sha256": "fc549141a1e6bf291ee71ff1e378eb0da9092c44036d06bc5fe7bd33161ec052"
+      "bytes": 2467,
+      "sha256": "a7a937e2da8f664e40ce81d3dbcce500b9ae3d696284da9e257212c6310cc58c"
     },
     {
       "path": "src/engine/enemy-faces.js",
-      "bytes": 5958,
-      "sha256": "4b20bd551ad99d2bbd9dde339781804f231c2b727a3ffb56576f2be609953fdd"
+      "bytes": 7488,
+      "sha256": "f1b30abba00fd47c817d78b3fd593dfb293004a54d42955b1aa7a897686151d1"
+    },
+    {
+      "path": "src/engine/enemy-outcomes.js",
+      "bytes": 4285,
+      "sha256": "3a53f606a8dd5acc3eec894803f4e3149d4b63528bbc1a0c6950bed749826e86"
+    },
+    {
+      "path": "src/engine/enemy-query.js",
+      "bytes": 1040,
+      "sha256": "98b59d47acabf183fa7bff3eb4340f3b10c0c314161645d53cb4dc77d69af4a3"
+    },
+    {
+      "path": "src/engine/enemy-routes.js",
+      "bytes": 1967,
+      "sha256": "e4d5352ceeb142e2a9f625e4d1a721c7294be51e0ffd64d5128990d7a8d72dc6"
+    },
+    {
+      "path": "src/engine/enemy-zones.js",
+      "bytes": 5473,
+      "sha256": "70858079374268bb07051de64fc1a0ea825c35f48a6cf1e0c939065e32ebe61c"
     },
     {
       "path": "src/engine/engine.js",
-      "bytes": 146299,
-      "sha256": "03452aa24188c15def4a0dc6db84046ee714fdfcc615438134f8b345c92a6e91"
+      "bytes": 158631,
+      "sha256": "1b97726ced5ab591d50096903708b7ae8a484b762e690a2c1f87cd4f684da782"
+    },
+    {
+      "path": "src/engine/event-window.js",
+      "bytes": 406,
+      "sha256": "6835db8513a84b24acd8c2ac47bfe573fec0880943786224a8e30cb0d85ee6f8"
     },
     {
       "path": "src/engine/flood.js",
-      "bytes": 2601,
-      "sha256": "a492331e8681f46308704e05b0c8f7f584f94216e18ba7d295361d147b30dc1c"
+      "bytes": 4617,
+      "sha256": "1712de9d80f9ca269440dd1b8149f3c6d0a4acbbce10f50df7075c6ef29d9695"
+    },
+    {
+      "path": "src/engine/grid-map.js",
+      "bytes": 4362,
+      "sha256": "80fd364832e3ef3a4629821966ce182d5d1caacffbb33bf50e9af616b185b3e6"
+    },
+    {
+      "path": "src/engine/group-cost.js",
+      "bytes": 1182,
+      "sha256": "934f6a1457ec618a674d3be8c12e7007d60116bb21b77d1bfebbf18b82ac483f"
     },
     {
       "path": "src/engine/hand-discard-window.js",
@@ -10712,9 +12732,14 @@
       "sha256": "e9e25873dd8162d30b68171f4dbac240f85cca2f32f0c27bd7b95bceedc6abeb"
     },
     {
+      "path": "src/engine/hand-entry.js",
+      "bytes": 440,
+      "sha256": "b8144de94dfc5ab3591ed93e360c7cab2f5cd1eb3d99fbb82a2ceaec71ada877"
+    },
+    {
       "path": "src/engine/harm-threat.js",
-      "bytes": 38155,
-      "sha256": "5b9b03857699231a5e46d8ddc8469cf9619c75cba21ece081194e54832953fe9"
+      "bytes": 38454,
+      "sha256": "5c2ebaa7a6b5b1883b5c57ecc91bdb471150f550a5c2b5d078008bc334ec250b"
     },
     {
       "path": "src/engine/harm-transfer.js",
@@ -10733,8 +12758,8 @@
     },
     {
       "path": "src/engine/hidden-rules.js",
-      "bytes": 10186,
-      "sha256": "c49c88f50fef5622ecef16ef460cb7b0ccea3b3124659dc55c45330bd1686ba5"
+      "bytes": 11544,
+      "sha256": "081bebcc34f0d383c5c1f5fd2d2f28a230c6339e66fa912fc354c9468e9a1082"
     },
     {
       "path": "src/engine/hub.js",
@@ -10745,6 +12770,16 @@
       "path": "src/engine/hunch-deck.js",
       "bytes": 10435,
       "sha256": "600807bafbbdef09a48f49316105c7f56f33ba3f14d54e5725fbc718bc5fe5e6"
+    },
+    {
+      "path": "src/engine/investigator-mechanics.js",
+      "bytes": 9323,
+      "sha256": "df90ec3f864eecd68747dfe89b34af7558d8cbb69d88785d6073b0599e786649"
+    },
+    {
+      "path": "src/engine/key-cost.js",
+      "bytes": 2865,
+      "sha256": "193fe09e7b333423efcb7f408c0dc7af1e117e6f8749db3bf0052f4ed1cb4920"
     },
     {
       "path": "src/engine/lane-runtime.js",
@@ -10758,8 +12793,8 @@
     },
     {
       "path": "src/engine/limits.js",
-      "bytes": 10761,
-      "sha256": "c2c774f588f4f6b992bf536286b5b7d4d30e2e338eafb42d70cefb35df0e1980"
+      "bytes": 11436,
+      "sha256": "2ed5371d32eb08ee69275e4ba2e5325a95e7b8c7247beb1fba8ee28f66111b29"
     },
     {
       "path": "src/engine/location-attachments.js",
@@ -10787,6 +12822,11 @@
       "sha256": "efacb331baad505fdc4e5a6d4ba4a1dc62fb9bac6802c0d2dff78c6a37c77354"
     },
     {
+      "path": "src/engine/location-look.js",
+      "bytes": 905,
+      "sha256": "c59c858f47a5fc71cd805c3975319e2bd9b393672cf9221b712db8c9ed7de80a"
+    },
+    {
       "path": "src/engine/location-state.js",
       "bytes": 4093,
       "sha256": "08dde3271c3f339d968422a078383f8f6a7a0b46bb5209ee3df8bd761b57a0d0"
@@ -10797,19 +12837,24 @@
       "sha256": "72938842bfd72c47e46f748a2ef692ce01e7d8358585f490eba30b9d082f3b0d"
     },
     {
+      "path": "src/engine/location-symbols.js",
+      "bytes": 1118,
+      "sha256": "50b5f51b8ac65b638d72c1f45ecb7f53dee147cc7f6a098d6543f1e1ca419c0b"
+    },
+    {
       "path": "src/engine/location-traits.js",
-      "bytes": 11345,
-      "sha256": "a42533fd3baa8b1793eec27fb96d8df41533698d984a0672684f980740f45042"
+      "bytes": 11847,
+      "sha256": "4059ffe2b9b34e030f987c22a90a5de65b0f7ded1c8b53dc02ccda201aba6d73"
     },
     {
       "path": "src/engine/locations.js",
-      "bytes": 22133,
-      "sha256": "83825dad418e30fb8a895cc5e9d46ffd4184af331f2c94bee159ac860d0963a3"
+      "bytes": 25026,
+      "sha256": "d537a5377cad0c85b5a5a818ab957ee1df5f1f79e5613f5708e101d6d1bd22ff"
     },
     {
       "path": "src/engine/look.js",
-      "bytes": 6321,
-      "sha256": "d2d26116cf25766ddaa348dea0c961c91172d150c54c114f198456cdf34c2d7f"
+      "bytes": 6474,
+      "sha256": "dcba4e7587a7700c0e5b9a144dd8007a585afa004d2815b16d30828d1d5f782e"
     },
     {
       "path": "src/engine/map-graph.js",
@@ -10827,24 +12872,29 @@
       "sha256": "6f7cdeccc66b5c1191e97cd9d4795ce80599ef315aea2437bc6d4f6a7165d37a"
     },
     {
+      "path": "src/engine/mechanic-choices.js",
+      "bytes": 10298,
+      "sha256": "7286f5689da71fee36488b0ab19525b76abd98f56a9d0706abe472ab45a0b357"
+    },
+    {
       "path": "src/engine/mechanic-state.js",
-      "bytes": 3319,
-      "sha256": "a5733fa6b6f9fbc4bd672608d7371537bf2352f5069a665d68fa247b0b399fca"
+      "bytes": 8176,
+      "sha256": "c1eccb5292fab0f1dd1afc763799eba2812a909215f08b33bd7e1ab390f21fb0"
     },
     {
       "path": "src/engine/modifiers.js",
-      "bytes": 32013,
-      "sha256": "6633e3629ad4040775c6e1c59bfe868eab24bba5fb28d33ea5ad48223fdd928e"
+      "bytes": 37037,
+      "sha256": "98c1d7305641c649e836fd86b96a1387a69c00a93570f8edc1ffe25ba42e3a4d"
     },
     {
       "path": "src/engine/movement.js",
-      "bytes": 21707,
-      "sha256": "2049fbd5a7cecd44421274d0e567fd3f59a65c1b3b5d5477b816f282e001b115"
+      "bytes": 23993,
+      "sha256": "d07b58d5f3115411baad7de936ad164272ef7e58770dae38dc45f47bf68705d9"
     },
     {
       "path": "src/engine/moves.js",
-      "bytes": 58730,
-      "sha256": "26bce0f0592c82bdad760537747cc5a2bdc6a3096b2514794aa688eb6d49af41"
+      "bytes": 62296,
+      "sha256": "fd78cb25a0eb777092cb4448226cf9073bcece276a7978527bf49298a224bbbb"
     },
     {
       "path": "src/engine/myriad.js",
@@ -10852,14 +12902,24 @@
       "sha256": "67ec1fcb5e22ee48bb71374bc2407d8d8c07cc1500890dd53688a88b94796278"
     },
     {
+      "path": "src/engine/parallel-acts.js",
+      "bytes": 7684,
+      "sha256": "208a40654c8d3c6328c2b205b78f46079ce03ed6c89e95d77ca13658673a9c26"
+    },
+    {
       "path": "src/engine/parley.js",
-      "bytes": 5334,
-      "sha256": "6d61c6475d48bb054d5af55be235840b20710c1ecdc6ae33eef9a4cfaa93d2b5"
+      "bytes": 11258,
+      "sha256": "290960288196b905ce5f38dc85a13bd2d6fa3374adc249093cce1c8997e1b073"
     },
     {
       "path": "src/engine/phases.js",
-      "bytes": 11904,
-      "sha256": "32a3bbb7b988b748da716050d6df6e4f83cb06d61fa97c684b288999321ed8e9"
+      "bytes": 14307,
+      "sha256": "d3a227e9361255f0a90c09e424a0af1536a6ba66a2d00897a6dd8301b3270fa2"
+    },
+    {
+      "path": "src/engine/physical-faces.js",
+      "bytes": 4146,
+      "sha256": "f783b52bac6c690b634de2a25de3171da9cb02e4485b08083a4e3d2cf23757ab"
     },
     {
       "path": "src/engine/play-attempt.js",
@@ -10873,8 +12933,18 @@
     },
     {
       "path": "src/engine/play-condition.js",
-      "bytes": 7035,
-      "sha256": "71e15e29f296412f56838ca8856b5abc0c8169abd1cedc6dfab9ca461bd437ff"
+      "bytes": 7217,
+      "sha256": "bb272a64d5c5c7b412f39de65cb38d2d251c535a689b87379ddc27e174c652c8"
+    },
+    {
+      "path": "src/engine/play-timing.js",
+      "bytes": 970,
+      "sha256": "ba88889781b810b5dec688a8f77c0f0b4700be2f655f14eca7caa5bdda4eb78a"
+    },
+    {
+      "path": "src/engine/player-mechanics.js",
+      "bytes": 18385,
+      "sha256": "b1b454b1cff7fb00ee30ba5808495442157689e4aa9de40c9b2a6cf58c8b767e"
     },
     {
       "path": "src/engine/player-zones.js",
@@ -10903,8 +12973,8 @@
     },
     {
       "path": "src/engine/resource-bank.js",
-      "bytes": 8006,
-      "sha256": "45c7986486cea766ee10ec4db234df64f53badee5ed54fc2189df2133c9621a0"
+      "bytes": 8364,
+      "sha256": "f5355de2e60bc8d19dec23f7938e66884d7e8c6fa7c31b1b5a162d18a3fb0df9"
     },
     {
       "path": "src/engine/resource-loss.js",
@@ -10913,28 +12983,38 @@
     },
     {
       "path": "src/engine/restricted-actions.js",
-      "bytes": 5626,
-      "sha256": "7be7d6e89382fbe2e552329e7a1c9a12f0a2556b1398ef3d9d5a28d36f6ebd2f"
+      "bytes": 6379,
+      "sha256": "23f748f3606fa1a4fb3b13224fff03f1ab876bdf43d9777a9e2938d00261b58a"
     },
     {
       "path": "src/engine/reveal.js",
-      "bytes": 17870,
-      "sha256": "aae5b16d24e46840329d4078d7913dc5e6e5ec2d489688c9cb090f9e5b825f65"
+      "bytes": 19184,
+      "sha256": "d89d0209e8cc33259368d939779d0a74f74635fb9e150fd779b8908af073424f"
+    },
+    {
+      "path": "src/engine/road-hazards.js",
+      "bytes": 2533,
+      "sha256": "3249e9145d441019941cf1868c77e0bbec5b4351e06a8868408aee651167ca66"
     },
     {
       "path": "src/engine/rules-state.js",
-      "bytes": 2725,
-      "sha256": "a31b8e6c7c97dc51ad56b3f0ca58111e82447d0c78b65339265616ce97e0f69c"
+      "bytes": 2766,
+      "sha256": "991e76d68eb209dd4c1a5351f5ce64754a1f35e0dd0a83f41228f9d6d2c3fe38"
     },
     {
       "path": "src/engine/save-migration.js",
-      "bytes": 22487,
-      "sha256": "b201977a2e60750ad3bb4432da9676e3444fe4950846feebfa6448a68f3ed2b7"
+      "bytes": 22650,
+      "sha256": "5fed366c33ada1093d8f77d1720ec50cb8100607aaa8e31fcfdf0966dd5d0f12"
+    },
+    {
+      "path": "src/engine/scenario-decks.js",
+      "bytes": 4478,
+      "sha256": "b1d8ae693fcc5fea46bbd13780272b921ac10bd7d6d82ca0875b24f1097f8174"
     },
     {
       "path": "src/engine/scenario-keys.js",
-      "bytes": 4242,
-      "sha256": "123fd7e4eddedea4f3a494e47168f0ac9ca0ca9f97b12af1ac1a7908c2170902"
+      "bytes": 7596,
+      "sha256": "caf44d3faa1bad0bfe06b1417be476e2926e04d9fe60613887105b0addfaab1f"
     },
     {
       "path": "src/engine/scenario-runtime-extras.js",
@@ -10943,8 +13023,8 @@
     },
     {
       "path": "src/engine/scenario-runtime.js",
-      "bytes": 83952,
-      "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681"
+      "bytes": 107369,
+      "sha256": "bbe41a9821bd21d4f12c5ca3ea9025c2236da84db0766c1c0a63b82ec491b566"
     },
     {
       "path": "src/engine/script-cards.js",
@@ -10953,13 +13033,13 @@
     },
     {
       "path": "src/engine/setup.js",
-      "bytes": 41211,
-      "sha256": "9dc7b2e5ba572567ce3146d686874ae9b1577b78a075f57291c824b4480ecd20"
+      "bytes": 41872,
+      "sha256": "ab872b273e9a2d4aec649e485259620ebf23ffe287e7754078d8a720d6410791"
     },
     {
       "path": "src/engine/skill-effects.js",
-      "bytes": 20491,
-      "sha256": "fcb3468a1664ba520d3c252d0cf0210d2105cda2ff627cb4779522f9ce54d75f"
+      "bytes": 20860,
+      "sha256": "243e564e3491f4a884c79bde2de9a9784a3af96d53040972d74390b06f0fd7fd"
     },
     {
       "path": "src/engine/skill-substitution.js",
@@ -10973,8 +13053,8 @@
     },
     {
       "path": "src/engine/stats.js",
-      "bytes": 18338,
-      "sha256": "ffae0dc02d5d2f59631c8b000278a79c55d46f7a87315df3759442399f61402b"
+      "bytes": 20285,
+      "sha256": "42ca39db9415edf6f851c59c90971945981983df05d40fb3cc8fcb860d0402ca"
     },
     {
       "path": "src/engine/story-investigators.js",
@@ -10993,13 +13073,13 @@
     },
     {
       "path": "src/engine/table-decisions.js",
-      "bytes": 26362,
-      "sha256": "2805fbffb7103af4705a1cde49f8dca89064c2f15585058fd2a9eec97016e32b"
+      "bytes": 27253,
+      "sha256": "4a2b0269ee251e96bf8b5a312a1bcf27c4e0174f4589c1dec7dea2c482079132"
     },
     {
       "path": "src/engine/targets.js",
-      "bytes": 6153,
-      "sha256": "2c74d8fc9c59823c600047ad831984146fa17ceb3dd807b8b5edcf78dbd127c3"
+      "bytes": 8480,
+      "sha256": "fcab40d426d98500b337b4118e67c40bfca73ee4fda598bfa9aeddba4ea37330"
     },
     {
       "path": "src/engine/tarot-slot.js",
@@ -11018,8 +13098,8 @@
     },
     {
       "path": "src/engine/tests.js",
-      "bytes": 78733,
-      "sha256": "70f8e5ccde5b4fbe7e9ac388119206f62a12265871e3bff800031129517c9d22"
+      "bytes": 88949,
+      "sha256": "20f0826c3255b045c042dc6887cdc0b1ff244463b595d02fe34cebcc2236516c"
     },
     {
       "path": "src/engine/threat-entry.js",
@@ -11032,19 +13112,24 @@
       "sha256": "f189e38ec60b3f5422238ab8c571add679fe564bacc1e7281fad577a08936497"
     },
     {
+      "path": "src/engine/token-cost.js",
+      "bytes": 1761,
+      "sha256": "988c912e9804f4e2f0062b0185eac7080815428b1b873ca383014db3f70edc15"
+    },
+    {
       "path": "src/engine/trait-passives.js",
       "bytes": 2051,
       "sha256": "3450dc5c3ff56dc43be68b295ca7ce9f027005e2a7a91a3b60be34d65dcdd3b2"
     },
     {
       "path": "src/engine/treachery-tokens.js",
-      "bytes": 22623,
-      "sha256": "e6ea01362361a8a9e3d87ddd54d4bddb7bb152ce1eedd558ac6e9427800cbb93"
+      "bytes": 23684,
+      "sha256": "8d15e58c36923527f475ef10939a22ae73ee5a21e1086753daad993a1e671eda"
     },
     {
       "path": "src/engine/turn-flow.js",
-      "bytes": 31097,
-      "sha256": "529f9261c120af2b2acbba13e34b6c3da3fd424264acd7f4d8d71301ac416920"
+      "bytes": 34554,
+      "sha256": "2772296ed815b78914c47bd3294b39058d9d6474a4ba300f6af6579991d68340"
     },
     {
       "path": "src/engine/turn-promises.js",
@@ -11053,23 +13138,28 @@
     },
     {
       "path": "src/engine/turn.js",
-      "bytes": 29444,
-      "sha256": "48a3525644501dcc83d8d7ea45920b1fd6c8974f731c5b50135e1e7eac63958d"
+      "bytes": 36696,
+      "sha256": "a36ae22759196f39b5e8480ed8edc3465c3606bbad1367c92d267aaec9ed686a"
     },
     {
       "path": "src/engine/use-transfer.js",
-      "bytes": 2036,
-      "sha256": "6cc48ea520ac785b308fd10f8a6018b1fa8516ee2d52933d0878fe8cba00e04a"
+      "bytes": 3417,
+      "sha256": "cc5390ebfba1dcc4e667ce2467d7b0909c07f78519405fda5cb4a9fff63a99c3"
     },
     {
       "path": "src/engine/uses.js",
-      "bytes": 1210,
-      "sha256": "e94e0c61879b732a29d22b7c3f4d4acf3f542b99d78fa89ff754ada76c4d4a51"
+      "bytes": 1414,
+      "sha256": "50b027d0795eb22e7fb7e5d6260b907aeec7654c6b32447943fb6a0609e5ef93"
+    },
+    {
+      "path": "src/engine/vehicle-state.js",
+      "bytes": 1866,
+      "sha256": "fe54ddcc39c0b33914d5c42da5a57ce3a175bac682eccd8245b9aca6f3321f2e"
     },
     {
       "path": "src/engine/vehicles.js",
-      "bytes": 4311,
-      "sha256": "4b09b362552a4bf4d07e7ffc04b3b22d200ac890accf324b52bd2db96ad7f44d"
+      "bytes": 8013,
+      "sha256": "fe85c54a646eea230322cfb316cf1bb309331a783866e4ba73608cbc44cf87e7"
     },
     {
       "path": "src/engine/veiled.js",
@@ -11082,14 +13172,24 @@
       "sha256": "0e319b1c97ead9d2560a3790dd64d3d4d6cf84d90a015dfbca09257ce8ec075f"
     },
     {
+      "path": "src/engine/victory-destination.js",
+      "bytes": 334,
+      "sha256": "9dcb0846006db040890c786fe43879c5036a0ccf01340ab6488cbdece9181fc3"
+    },
+    {
       "path": "src/engine/weakness.js",
       "bytes": 15152,
       "sha256": "30f6c63bddd6b22d887fdcf61d15855b1142ddd934780f2fbf7eeee9e1fae277"
     },
     {
+      "path": "src/engine/window-listeners.js",
+      "bytes": 1859,
+      "sha256": "59a80e793f9bab6b872f4d2aa3e87e068da8a404e8582459440abfb0835183a7"
+    },
+    {
       "path": "src/engine/windows.js",
-      "bytes": 13282,
-      "sha256": "a480ab3957d786fc9829e4cb00ffccd5b7357c49f5641e2642e3364032b9dc5d"
+      "bytes": 15141,
+      "sha256": "41c90c651af3fd254c20fdb26431330ae8e9bec23457ebe749c79ecb835f8297"
     },
     {
       "path": "src/engine/zones.js",
@@ -11132,6 +13232,11 @@
       "sha256": "96df0a79982155ded9ae4f84d22ff9b0be6002ab56384bb39389fca818731a18"
     },
     {
+      "path": "src/integration/mechanic-view.js",
+      "bytes": 4458,
+      "sha256": "1459d8c6855577da62e0b29defd8bb1dc29a3759dce2ad7f28d7dae4558cd2bc"
+    },
+    {
       "path": "src/integration/music-cache.js",
       "bytes": 4323,
       "sha256": "add4d06aafe98ee7423bdeb6b38db826b443dc8dc5c7fd126738888abae00fda"
@@ -11143,8 +13248,8 @@
     },
     {
       "path": "src/integration/observation.js",
-      "bytes": 27278,
-      "sha256": "a3aa49751ccc5a1cabbd60df08c6f551226e954c4474d5abcde085170578d2ad"
+      "bytes": 29149,
+      "sha256": "ad527934ebd4980edb33b89dbed2caa7363121797fc840666771473d1ae0b42c"
     },
     {
       "path": "src/integration/parallel-runtime.js",
@@ -11153,8 +13258,8 @@
     },
     {
       "path": "src/integration/presentation-state.js",
-      "bytes": 12144,
-      "sha256": "b59841cd4f33add66c6e195bb66ef81a1d7375b5267a162ce1dcc4c8f34463de"
+      "bytes": 12569,
+      "sha256": "99ead702e8cbfb24ac9cef00c0043d130d5c96dc4867e7ec41dc4ec74a65d6e5"
     },
     {
       "path": "src/integration/scenario-images.js",
@@ -11172,19 +13277,214 @@
       "sha256": "00f964ad6ca92efa3d40171be630c29726a1cab29a82540d5392d0b5473fa149"
     },
     {
+      "path": "tests/ability-layer.test.mjs",
+      "bytes": 25796,
+      "sha256": "c580dcd56da3bf4afa9fd68d8c16a6cf8191628755e0c5906685aad5425d8027"
+    },
+    {
+      "path": "tests/availability.test.mjs",
+      "bytes": 9931,
+      "sha256": "3fcf5ccde5cbc61060acd89dffe39dc64b54e7aaa22036d5d3a96693621bb207"
+    },
+    {
       "path": "tests/core-fixture.mjs",
       "bytes": 2867,
       "sha256": "e1e8685165c99983695339489fed098477ceba9a99752c60f7e6704d36e6d937"
     },
     {
+      "path": "tests/fixtures/replay/tic-p4-baseline.json",
+      "bytes": 220315,
+      "sha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344"
+    },
+    {
+      "path": "tests/fixtures/replay/tic-p5-baseline.json",
+      "bytes": 220315,
+      "sha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344"
+    },
+    {
+      "path": "tests/fixtures/replay/tic-p6-baseline.json",
+      "bytes": 220315,
+      "sha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344"
+    },
+    {
+      "path": "tests/fixtures/replay/tic-p8-baseline.json",
+      "bytes": 231515,
+      "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+    },
+    {
+      "path": "tests/i18n-dict.test.mjs",
+      "bytes": 5810,
+      "sha256": "d9a72d6ad68ddf3323d43c6954ba50d9be412f04c4afc6be043cf61810f22149"
+    },
+    {
+      "path": "tests/node-suite.mjs",
+      "bytes": 14134,
+      "sha256": "f83a7958f1a20d333a99f2b1f2f7c4c35c150a1928ef11f21909367d4aa7124a"
+    },
+    {
+      "path": "tests/p0-regressions.test.mjs",
+      "bytes": 9396,
+      "sha256": "d85242e50ec599ae6249b62fb57134da34c3fd4ec60b319d4533a496923c1861"
+    },
+    {
+      "path": "tests/playwright/playwright.tic-p4.config.mjs",
+      "bytes": 823,
+      "sha256": "77e41805d9331dc79ba28ea6cad1388e3365249911b02bbeefaf23cc73259b9c"
+    },
+    {
+      "path": "tests/playwright/playwright.tic-release.config.mjs",
+      "bytes": 3283,
+      "sha256": "5c0aad76de74816a4cad0ab7b43f8c95041eecdcc5f3b4550ea4284726c17c60"
+    },
+    {
+      "path": "tests/playwright/playwright.tic.config.mjs",
+      "bytes": 1623,
+      "sha256": "9cbffddcf5ff96aa03fa1a6619c16b6dc4a520c05a7604efc0bee7dc174b4659"
+    },
+    {
+      "path": "tests/reaction-preferences.test.mjs",
+      "bytes": 24634,
+      "sha256": "68882d006560ff358c7dcf10421922b09b2c0be6c4ab493643c1dc5f899b4493"
+    },
+    {
+      "path": "tests/replay-tic-p8.test.mjs",
+      "bytes": 5679,
+      "sha256": "ac1b2ac18db8eec0be538837fd41af42a184e9f390ba609eaf41bf5b1695a4a6"
+    },
+    {
+      "path": "tests/reprint-aliases.test.mjs",
+      "bytes": 5728,
+      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+    },
+    {
+      "path": "tests/scenario-guides.browser.mjs",
+      "bytes": 5034,
+      "sha256": "6f776b2d2f1e2ba4cba648cdfeba0b4ff4126338994af1f51a4191b9d658d568"
+    },
+    {
+      "path": "tests/script-actions-tfa.browser.mjs",
+      "bytes": 6736,
+      "sha256": "13b66be076293e77a93ea88969716c2fea54105f73c2ad8fb45ec80f25513533"
+    },
+    {
+      "path": "tests/suites.mjs",
+      "bytes": 25036,
+      "sha256": "d5e530d66b33b7c87a1a69b076a0001f75847e659643eb21feb8add3a40d30a4"
+    },
+    {
+      "path": "tests/tcu-wages-of-sin.test.mjs",
+      "bytes": 89501,
+      "sha256": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712"
+    },
+    {
+      "path": "tests/tic-browser-helpers.mjs",
+      "bytes": 18706,
+      "sha256": "37cb094ac246c5ca1407f7d2a73ad3e9876939e83eb6f397f78a57b12de70efd"
+    },
+    {
+      "path": "tests/tic-interaction-fixture.mjs",
+      "bytes": 4258,
+      "sha256": "360b62d62c0e3b953d28a023c76d9f6380cbb6364f2f7cbc63ce6e72fa4cbfca"
+    },
+    {
+      "path": "tests/tic-interactions.browser.mjs",
+      "bytes": 9498,
+      "sha256": "a1918e5217f56f9cf592c1b43cd252fb27cae335af46b0539a1ed17d7a0825fd"
+    },
+    {
+      "path": "tests/tic-interactions.test.mjs",
+      "bytes": 10266,
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "path": "tests/tic-investigators.browser.mjs",
+      "bytes": 4635,
+      "sha256": "6031a89aa1f2d6c36c87dc59b0fce519ac77e2074b225222486f645ceaccc028"
+    },
+    {
+      "path": "tests/tic-investigators.test.mjs",
+      "bytes": 24225,
+      "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+    },
+    {
+      "path": "tests/tic-late-b-cards.test.mjs",
+      "bytes": 29488,
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
       "path": "tests/tic-migration.test.mjs",
-      "bytes": 4395,
-      "sha256": "d5fc9a54b8549b304770bdd1f82d11e228cb4e5c25aa49511213f0bb64ebc170"
+      "bytes": 8923,
+      "sha256": "60637f1a9477286d81a3ef8b7234997b4339097ec8c6a12f71c5aa550d3b1ce5"
+    },
+    {
+      "path": "tests/tic-online.browser.mjs",
+      "bytes": 11369,
+      "sha256": "36da9177e012986d02d09639d142cd7f197f54f195cd1d3549d094abdac18885"
+    },
+    {
+      "path": "tests/tic-p8-campaign.test.mjs",
+      "bytes": 48035,
+      "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+    },
+    {
+      "path": "tests/tic-p8-fixture.mjs",
+      "bytes": 23815,
+      "sha256": "0f4938cff50584c1c53317f5dcc5c04d49f455503503a444cb3ef04ecbd37e7c"
+    },
+    {
+      "path": "tests/tic-p8-multiplayer.test.mjs",
+      "bytes": 23942,
+      "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+    },
+    {
+      "path": "tests/tic-p8-registration.test.mjs",
+      "bytes": 11318,
+      "sha256": "d67dcfba103ca7a38e6a9bf69a682faee417e37ad495e239d2f2f934b6c289a9"
+    },
+    {
+      "path": "tests/tic-player-fixture.mjs",
+      "bytes": 986,
+      "sha256": "43dbe3705bb4a2dae73e4733d6881ce1449fa45eb92911f6e53bab6f38de8d8c"
+    },
+    {
+      "path": "tests/tic-player-guardian-seeker.test.mjs",
+      "bytes": 21855,
+      "sha256": "8a148e0a399e26b712a7ee2a10fa357089e4526c2361cb9dcd0e3759b216d515"
+    },
+    {
+      "path": "tests/tic-player-primitives.test.mjs",
+      "bytes": 14192,
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    },
+    {
+      "path": "tests/tic-player-rogue-mystic.test.mjs",
+      "bytes": 24315,
+      "sha256": "ba36e4b080a77b67e4b8f79a52c81587ee1bf6d6c15a481c2a94e1f81b50b2b5"
+    },
+    {
+      "path": "tests/tic-player-survivor-neutral.test.mjs",
+      "bytes": 30244,
+      "sha256": "b42c89a825e4c88c2a773b1e87f7a4e84aff00c39cc7c15b84fe543960e5f4d8"
+    },
+    {
+      "path": "tests/tic-player.browser.mjs",
+      "bytes": 3757,
+      "sha256": "b3db9c87c68616fa61317cdfe419fff9c74fc7856f2619aef0a01fb9efee847c"
     },
     {
       "path": "tests/tic-primitives.test.mjs",
       "bytes": 21724,
       "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "path": "tests/tic-progression.browser.mjs",
+      "bytes": 13856,
+      "sha256": "12dc1068c6fffacb105283586f126da5ade794598eb255301f0d13bea46f4d41"
+    },
+    {
+      "path": "tests/tic-release.browser.mjs",
+      "bytes": 8766,
+      "sha256": "443c9d0f36bb02158060ad1f59b6c216f5fc0d3436a17f51d4f02cb464273738"
     },
     {
       "path": "tests/tic-rules.browser.mjs",
@@ -11197,19 +13497,59 @@
       "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
     },
     {
+      "path": "tools/audit-tic-interactions.mjs",
+      "bytes": 3137,
+      "sha256": "41c9c654aee4debe8177234225413de965a135f19742470518ed3affaf68e14c"
+    },
+    {
+      "path": "tools/audit-tic-investigators.mjs",
+      "bytes": 5324,
+      "sha256": "dd5ed05acc19cdbe615bdbbcab444c52e9006e0f367b5d67fa3fd3651473b330"
+    },
+    {
+      "path": "tools/audit-tic-player.mjs",
+      "bytes": 7252,
+      "sha256": "6ec17122cf4975117e524c1147105588fff5b59f4aea14913385f1057d0d6312"
+    },
+    {
       "path": "tools/audit-tic-primitives.mjs",
-      "bytes": 3133,
-      "sha256": "0969e8cd11c11f681d493c5b7158cb3d4bd270980560c1a1deb5e097f7e85f64"
+      "bytes": 4285,
+      "sha256": "d8aaf2c81dfe0ca590c4e2bd6c05c3a7fb4a6c94b53fb76dcd52b078dd40edca"
+    },
+    {
+      "path": "tools/audit-tic-release.mjs",
+      "bytes": 12618,
+      "sha256": "b325d478cc9d32689864bc59d0e1a357b750ac3a0d14eb3d1d7802bca13780f9"
+    },
+    {
+      "path": "tools/audit-tic-scenarios.mjs",
+      "bytes": 68533,
+      "sha256": "f774f4ff008be53107362ef4683ed6303130bb15c6760055e94b1f7f876edc49"
     },
     {
       "path": "tools/audit-tic.mjs",
-      "bytes": 5263,
-      "sha256": "aed636753f00285acb3a38489de87706aae9e7ee6f46103ba31555ab1975a5b6"
+      "bytes": 99176,
+      "sha256": "c4f8719bbb1a80a94c635d84c6d67d2e58c3b3ca94629a6e4dddf55d238dac43"
+    },
+    {
+      "path": "tools/check-tic-registry.mjs",
+      "bytes": 13671,
+      "sha256": "e6822fbedece98239049ced864048046eab9ebe58d1f5f184a084298f3aa4804"
+    },
+    {
+      "path": "tools/playwright-tic-p4-reporter.mjs",
+      "bytes": 1095,
+      "sha256": "d9407f357bd78b645d0b9debef590785290fadc7005cc060a9b8c03ec1884f32"
+    },
+    {
+      "path": "tools/playwright-tic-release-reporter.mjs",
+      "bytes": 12543,
+      "sha256": "faab9fc104a346c71a7f31608791538e0d20587390122928b951a5bf4903ccc2"
     },
     {
       "path": "tools/playwright-tic-reporter.mjs",
-      "bytes": 1575,
-      "sha256": "88b18612e1d82b39c5c67f0f8f593ed97e2df180f59b26a2eb499687ed7a8209"
+      "bytes": 5198,
+      "sha256": "dfa1165e3a70a462d0852b08a0f9ce83fa319ab084b369fc502da78fc4cd2106"
     },
     {
       "path": "tools/replay-fixtures.mjs",
@@ -11218,13 +13558,33 @@
     },
     {
       "path": "tools/replay-games.mjs",
-      "bytes": 16083,
-      "sha256": "5cdc0936c7779f102555b584aebf1b532616854d102715e3923178c22d9b1e66"
+      "bytes": 22881,
+      "sha256": "70a5d232d5e913a43a830e5ec9e7411f4cd0924d8b00470b1a64024e838a88ec"
+    },
+    {
+      "path": "tools/replay-tic-fixtures.mjs",
+      "bytes": 11127,
+      "sha256": "be5be932c58b2b75354db123439a26185ab4ee3516f68f7d8956fe28fa8a5bb2"
+    },
+    {
+      "path": "tools/replay-tic-recipes.mjs",
+      "bytes": 4895,
+      "sha256": "68a4659fdad213f81bfb83fc46cbca85a430167bdd1de0d981a5b4d533604988"
     },
     {
       "path": "tools/run-tic-browser.mjs",
-      "bytes": 1541,
-      "sha256": "6e38b7f5baa7ebc5b24074bac66120db15bad094e2fdb3d2cf6358a134442057"
+      "bytes": 1558,
+      "sha256": "190492d58b88c993a62816f39bad6b4cc1bdf83c0cf4d8873f8be15b08f9d1b7"
+    },
+    {
+      "path": "tools/run-tic-interactions-browser.mjs",
+      "bytes": 1870,
+      "sha256": "7be35781a99c6e1418ac458f717715b7634345be4f5c86da907b8240c10e4633"
+    },
+    {
+      "path": "tools/run-tic-release-browser.mjs",
+      "bytes": 2849,
+      "sha256": "a8132d6382fa422968fb639e936dbf39a211efe683927a39b865657756af0ef2"
     },
     {
       "path": "tools/scan-tic-mechanisms.mjs",
@@ -11238,18 +13598,18 @@
     },
     {
       "path": "tools/tic-control-regression.mjs",
-      "bytes": 4528,
-      "sha256": "48550886ea39b0760f953636161fe6b3697465abf1bf489b2a48d53a88cb2025"
+      "bytes": 6122,
+      "sha256": "c4cb3fd3aad1a34632af23f8c2d2de77c4d65062b5a64177e5a2647fd271170d"
     },
     {
       "path": "tools/tic-evidence.mjs",
-      "bytes": 3114,
-      "sha256": "7dda27f8321b750a503c4393c619ef03fd12e77ca3da633cb159e70ef6ebb9b1"
+      "bytes": 6278,
+      "sha256": "d74d602a1d8a502f9e2503d03e80df5a89fb2f40285d6e64dc16c34a898469b0"
     },
     {
       "path": "tools/tic-mechanisms.mjs",
-      "bytes": 6952,
-      "sha256": "976ab1d66863a04ab8856bce885e993778bad3bb50fdbf2ff32482b570636554"
+      "bytes": 6974,
+      "sha256": "409ed985e894464a0c5db0f219208b886e4e1f74530a9aa5f30a7792f14accf5"
     },
     {
       "path": "tools/tic-migration-lib.mjs",
@@ -11263,28 +13623,283 @@
     },
     {
       "path": "tools/verify-tic.mjs",
-      "bytes": 4100,
-      "sha256": "08d27af011c0c9b19d010a4a4886215b78977b3a75e65392ad78a4c6073f7aab"
+      "bytes": 9400,
+      "sha256": "5b5d89d236736f6f5b864e55b53c36b832c9ff61ebf8e61cd859db3d5964df3f"
+    },
+    {
+      "path": "web/arkhamdb-import.js",
+      "bytes": 6211,
+      "sha256": "79ed0ba28ed8c6c4f700a1e29fc3d9aed7ff1155abd41d6f0d394c4b89e425a0"
+    },
+    {
+      "path": "web/attack-fx.js",
+      "bytes": 13795,
+      "sha256": "feff4dbca8eee1327f33b264a062d554753dd94d03fa507265960964c5538c98"
+    },
+    {
+      "path": "web/campaign-experience.css",
+      "bytes": 23743,
+      "sha256": "ba36562ce4e37e322075a17755657f21e2da264f7b4fc154e1a90b4fe539993c"
+    },
+    {
+      "path": "web/campaign-presentation.js",
+      "bytes": 9791,
+      "sha256": "1f9f32c69d91e3ccee1b6d484c690e255d55b94727e58e20ef24932d9f9f8277"
+    },
+    {
+      "path": "web/campaign-records.js",
+      "bytes": 1094,
+      "sha256": "7a4d52b8f4ab967128318f98c14e0f16ecc6c7839aae29f985757034c23d92b4"
+    },
+    {
+      "path": "web/campaign-theme.css",
+      "bytes": 63941,
+      "sha256": "ea00504723fa92cba7c134a697adac8e830e55b4448393ecc496f3b9f38ec611"
+    },
+    {
+      "path": "web/card-dossier.css",
+      "bytes": 8481,
+      "sha256": "ffa05c99570581009e553c05d4ae2da632f1dbf24eb2558d4be0c31cbf325790"
+    },
+    {
+      "path": "web/card-filters.js",
+      "bytes": 6601,
+      "sha256": "9352acd1cd76ef234ed938330a98babd411df776b6fa98750e7f1c1adf0ab8d3"
+    },
+    {
+      "path": "web/card-interactions.css",
+      "bytes": 21898,
+      "sha256": "0128d26534e65c80b9c3ba3bf6dbd040d1e31297acf38ec37f707a4789476ede"
+    },
+    {
+      "path": "web/card-interactions.js",
+      "bytes": 30903,
+      "sha256": "ecbbbcf674d4a46e679f372fe497e6419e1bbce069c05e67810d93808695c53b"
+    },
+    {
+      "path": "web/card-text.js",
+      "bytes": 6073,
+      "sha256": "eea695e91501b280be439ad6827e983702c1aa270e3b4faece3038b35aca952c"
+    },
+    {
+      "path": "web/card-zones.css",
+      "bytes": 5562,
+      "sha256": "453d4c9fca12d6ee3e1bcd231748e97f6f0b763e6ed349c372f9e66b65be6869"
+    },
+    {
+      "path": "web/card-zoom.js",
+      "bytes": 7092,
+      "sha256": "8c8aab19d2e74de16bfab902c76b33b92ce67d48eb09464007eaaf0720b55ffc"
+    },
+    {
+      "path": "web/catalog.js",
+      "bytes": 27666,
+      "sha256": "0e7a1c83a530a598402ab8ca90a218cef461fc156878e05f8bbf0ef5c50ecdce"
+    },
+    {
+      "path": "web/chaos-bag-view.js",
+      "bytes": 4427,
+      "sha256": "c4eb18a580fe3042b42b98fc6420ea9b2452f54b4da7b0f84ebac8fc6e0930bb"
+    },
+    {
+      "path": "web/chaos-token.js",
+      "bytes": 2691,
+      "sha256": "99494abf914c82393e2913234505c5940f2e0e4d74cf838dc7569f3b85c3023d"
+    },
+    {
+      "path": "web/combat-sound.js",
+      "bytes": 2959,
+      "sha256": "3a136780711c830903015239d66f4ff0ba06895ce13800cc793b6836701d5bbc"
+    },
+    {
+      "path": "web/command-deck.css",
+      "bytes": 15860,
+      "sha256": "52b9d8078e2ddeec04c2c37d6938bcbd0d2cbfeda964353eb59fb9e02e8da6ae"
+    },
+    {
+      "path": "web/debug-console.css",
+      "bytes": 6632,
+      "sha256": "d1adb226f5cb0a1db453389c88924b2368ec550a19005ce851f3b1be99934ba9"
+    },
+    {
+      "path": "web/debug-console.js",
+      "bytes": 17929,
+      "sha256": "12d74914ea41b1dcb0c5b99cfe663a140b90ce9351846368f5d9d89b2da307ed"
+    },
+    {
+      "path": "web/deck-library.js",
+      "bytes": 882,
+      "sha256": "fe91c741f7475cd077b984618c28d10e7ebf6873b1d676b372ca6db8e1146fc9"
     },
     {
       "path": "web/deck-rules.js",
-      "bytes": 19663,
-      "sha256": "e5f0fbb14785c73c34c6e814a169cc8c1886685e79842cc078155021f9579d66"
+      "bytes": 20639,
+      "sha256": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a"
+    },
+    {
+      "path": "web/departure-lanes.js",
+      "bytes": 1766,
+      "sha256": "54e45b1a6ab07880f2e963ecf1a461f462c12c6b31cb44c295172c1f05ca5164"
+    },
+    {
+      "path": "web/game-symbols.css",
+      "bytes": 835,
+      "sha256": "fb0318605643b479450e220459ee15d7ef49d361a513435f0b95c7286b72924d"
+    },
+    {
+      "path": "web/game-symbols.js",
+      "bytes": 1649,
+      "sha256": "2c708358fa8e7f5d3926609a6b50f474a8ef80ce216d049ad4a73c6b4451189b"
     },
     {
       "path": "web/game-ui.js",
-      "bytes": 164319,
-      "sha256": "3092c21d6da216eb129f07a8e2045cebe6bd0d2b8e062951c4f18a8ce4e02d4b"
+      "bytes": 167256,
+      "sha256": "a24b0b26a98756b72d0056207ea2a693a2fdec56b7636e5ba3a88cdc5be94589"
+    },
+    {
+      "path": "web/hub-mode-view.js",
+      "bytes": 3506,
+      "sha256": "b2d8f813ae53b5512c09b385a9d1dbb63ea5d0e9a59bf7b82fef6ec453e79b7a"
+    },
+    {
+      "path": "web/hub-office.css",
+      "bytes": 65068,
+      "sha256": "706e500201a0c7d02f40f010f548006d0cdb13bf4e3ee6dda8f57814f2853791"
+    },
+    {
+      "path": "web/hub.js",
+      "bytes": 126321,
+      "sha256": "ffcf31deecaa86eff8a7f102c852aa6753591e5b6c2d5b829288903f025e6df8"
+    },
+    {
+      "path": "web/i18n.js",
+      "bytes": 2493,
+      "sha256": "f8ead2384f21b5b40da943f3b6f1af197c7039548ffac8ee7c0ab89d1b1b3074"
+    },
+    {
+      "path": "web/images.js",
+      "bytes": 6105,
+      "sha256": "cf2cb72c4631a9cb4cbe896bc9668119e8aa6b0c9b406342c9e9d1caf678e868"
+    },
+    {
+      "path": "web/locales/en.core.js",
+      "bytes": 8112,
+      "sha256": "59788b31c2bf52a056b46f7443737fe543e38e50aa06eb5db450ae60fbd14dd7"
+    },
+    {
+      "path": "web/locales/en.gameui.js",
+      "bytes": 23804,
+      "sha256": "d38dcefee64a0aa32a9d8c4aaa632a3469e0b39e0e191a34c10977b6d2766456"
+    },
+    {
+      "path": "web/locales/en.hub.js",
+      "bytes": 29197,
+      "sha256": "2f618f7ca2446cdd722a2352f8be517ebe6c5c3dbd5057a2a2682acea80fc65b"
+    },
+    {
+      "path": "web/locales/en.js",
+      "bytes": 616,
+      "sha256": "18ef13ac961891a40b23d374d172b820807c6f02c9e94c66c205db684d9a18f4"
+    },
+    {
+      "path": "web/locales/en.lore.js",
+      "bytes": 3972,
+      "sha256": "9fcd9a31f05c239902250e63e203f619841deb869b7b1a7ad44f5c1780dfe8c5"
     },
     {
       "path": "web/locales/en.misc.js",
-      "bytes": 3512,
-      "sha256": "e74007fed3b5ab38f5a5308d077532d27b9224f81402a3d1042c3aa836cf7d49"
+      "bytes": 6096,
+      "sha256": "51794bbf3c6f792e96cf4efdc115ad10d2355ec53769333d770b51a73738060d"
+    },
+    {
+      "path": "web/locales/en.panels.js",
+      "bytes": 16960,
+      "sha256": "b4601d2d8704d59abde27f922d58c0c24e990d417e866c19d934f98f4297202f"
+    },
+    {
+      "path": "web/locales/en.table.js",
+      "bytes": 14370,
+      "sha256": "e295c8b8c625225cab23c882ca1e63a47f07e08831f1d705f9f60b4d9c7fb836"
+    },
+    {
+      "path": "web/locales/zh-CN.core.js",
+      "bytes": 7951,
+      "sha256": "9b9eb2ac3eb20f65ced4ee695d47ec476c05c57df69a771f97c0ec4a249adc13"
+    },
+    {
+      "path": "web/locales/zh-CN.gameui.js",
+      "bytes": 23529,
+      "sha256": "c1dd3559a7e03c7b420161d8dd70af437d9a71948d3ccb73cc3b469d6c610403"
+    },
+    {
+      "path": "web/locales/zh-CN.hub.js",
+      "bytes": 27730,
+      "sha256": "43da112f0687f373cd9763563372d749b57a024a6bf43bb378ed6d70e0f8acef"
+    },
+    {
+      "path": "web/locales/zh-CN.js",
+      "bytes": 637,
+      "sha256": "a68d4d7fa3e03c266e65bf386887e5adfd20df904257d4e38bece01daa661bbe"
+    },
+    {
+      "path": "web/locales/zh-CN.lore.js",
+      "bytes": 3876,
+      "sha256": "93068bfef16fd1858c5b0fcb8493f0b02d49dd3468b0314afafbde13aa06ba1b"
     },
     {
       "path": "web/locales/zh-CN.misc.js",
-      "bytes": 3310,
-      "sha256": "e63718de094f39f7c9b15ebd303605fc7fa8427d6bcd2e237caf69192bfb1880"
+      "bytes": 5877,
+      "sha256": "dc0c8ad6ac272958f1ed969b287732c2be3365f1ceefbd0f983f43b29a422b0c"
+    },
+    {
+      "path": "web/locales/zh-CN.panels.js",
+      "bytes": 16526,
+      "sha256": "601cddfeacec0671a53750df6f5a2beeff3f48da5480ece99fff8eaa6952e6f7"
+    },
+    {
+      "path": "web/locales/zh-CN.table.js",
+      "bytes": 14114,
+      "sha256": "28b00598b648a61e7c7168d965766c2af9e0b98b9ed553169b60d489f602fb6c"
+    },
+    {
+      "path": "web/map-layout.js",
+      "bytes": 5233,
+      "sha256": "8599eb86b5db1d4d769842adf86b6aa4666c1317ffef0a5e7534ed504748d092"
+    },
+    {
+      "path": "web/mechanic-ui.css",
+      "bytes": 3227,
+      "sha256": "81c5e8540aadd1628029915acf7af04b92f93765c5954dee01da8e83073e7174"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "bytes": 9366,
+      "sha256": "b29d638333c1407443425e31c76d3f7aadd78189074876ec7cc043983227881c"
+    },
+    {
+      "path": "web/music-player.css",
+      "bytes": 4100,
+      "sha256": "28b614f3a681c737cf93e7ae4aa06b491272c635c0696809d178257ed85edc79"
+    },
+    {
+      "path": "web/music-player.js",
+      "bytes": 29704,
+      "sha256": "1f042e7e8d0d7b6a3f6d435d01b5f79ae97c861b3e03ea67883d52a15f74b95f"
+    },
+    {
+      "path": "web/noir.css",
+      "bytes": 42947,
+      "sha256": "9ddc92709e37195281eb06825f0e732e3d019be8a6eef3357da66c91ffa210e4"
+    },
+    {
+      "path": "web/player-dashboard.css",
+      "bytes": 15738,
+      "sha256": "e2dbc7829eb96449de117fb6277c95f0f792ce6e425ed16ad642a3cd81910a92"
+    },
+    {
+      "path": "web/reaction-preferences.js",
+      "bytes": 9388,
+      "sha256": "c9e8e919ece1f8c1508b64229f66eb34adafa8646fb05f6db5af9ec2c26dfe2e"
     },
     {
       "path": "web/rulebook-data.js",
@@ -11297,9 +13912,159 @@
       "sha256": "df654a87185e258e3044740b8fd86056e8609e7cfb3758a81fe16712588556b0"
     },
     {
+      "path": "web/scenario-guides/aLightInTheFog.json",
+      "bytes": 24230,
+      "sha256": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31"
+    },
+    {
+      "path": "web/scenario-guides/devilReef.json",
+      "bytes": 29105,
+      "sha256": "da8c37d6980342b4da7fd9fe67a2a4ef3fbeee9d281ecb47b65a268b9e494538"
+    },
+    {
+      "path": "web/scenario-guides/horrorInHighGear.json",
+      "bytes": 20909,
+      "sha256": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423"
+    },
+    {
+      "path": "web/scenario-guides/inTooDeep.json",
+      "bytes": 32647,
+      "sha256": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83"
+    },
+    {
+      "path": "web/scenario-guides/intoTheMaelstrom.json",
+      "bytes": 30055,
+      "sha256": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b"
+    },
+    {
+      "path": "web/scenario-guides/theLairOfDagon.json",
+      "bytes": 33006,
+      "sha256": "813590e9d37022e1622e3f89e9dffd4dbdbb68bf9db4018da6e5f084f66ec4d0"
+    },
+    {
+      "path": "web/scenario-guides/thePitOfDespair.json",
+      "bytes": 31921,
+      "sha256": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb"
+    },
+    {
+      "path": "web/scenario-guides/theVanishingOfElinaHarper.json",
+      "bytes": 40613,
+      "sha256": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4"
+    },
+    {
+      "path": "web/scenario-music.js",
+      "bytes": 9257,
+      "sha256": "e979ef7e00a26c60577100043e88a9ca35107208a0a74e8b545a32366ef22a65"
+    },
+    {
+      "path": "web/scenario-setup-view.js",
+      "bytes": 6221,
+      "sha256": "2090f409dba4e5c588bb9d4d82ca3a66c6715f1fe03ed4ad4d61cdc1585fac60"
+    },
+    {
+      "path": "web/scenario-setup.css",
+      "bytes": 5195,
+      "sha256": "844213e13a4f94ea952a5b8f2017775b4d3da75d56a12a0eeab5641eb843aed5"
+    },
+    {
+      "path": "web/scroll-state.js",
+      "bytes": 2359,
+      "sha256": "2983d0bbc2e9ca785ddcdcbf45505c139c7096b68a3019008eeba019951cc928"
+    },
+    {
+      "path": "web/situation-view.js",
+      "bytes": 35399,
+      "sha256": "41362a204cef8ebf0efc1fe074655e45dd1f01ee1d6ad65df70e45766c6e3d36"
+    },
+    {
+      "path": "web/situation.css",
+      "bytes": 26025,
+      "sha256": "5333597e63d860ce1cb7ba526aa144a5eb8a25167dec9fc1313f64bc0ebbc0a6"
+    },
+    {
+      "path": "web/skill-presentation.js",
+      "bytes": 1619,
+      "sha256": "7630e61c28af9ef9f82657ea12f299ef650c17050a99689153da2a37b807b96a"
+    },
+    {
+      "path": "web/story-book.css",
+      "bytes": 10929,
+      "sha256": "4843d80fc9e21b2f50efb1976f4751e17a0791355574eedd649339516332e746"
+    },
+    {
+      "path": "web/story-reader.js",
+      "bytes": 3856,
+      "sha256": "8a3bdcd44cab670828a2a8535a5f3223cb44de14a2dd3e1953543f79bbba855f"
+    },
+    {
+      "path": "web/style.css",
+      "bytes": 62266,
+      "sha256": "503c550f3e1ce94a505c4389a2b5185549a2487b2dc0f6012615602c3c6d4342"
+    },
+    {
+      "path": "web/supply-picker.js",
+      "bytes": 8257,
+      "sha256": "173cb05350eedb8f95f4efcf2821ff2006536b02d516b49ab0ec7e3d297c6c15"
+    },
+    {
+      "path": "web/table-art.js",
+      "bytes": 4629,
+      "sha256": "149562f9fa34ef169e10be4db83e37b0a89af6fb0ea4411ae8f6255c06cacd05"
+    },
+    {
+      "path": "web/table-components.js",
+      "bytes": 7189,
+      "sha256": "91f98e9b462f93a4f387401b83cac2dc7bb980413e763d21087d10b18b1d9a0f"
+    },
+    {
+      "path": "web/table-presentation.js",
+      "bytes": 57705,
+      "sha256": "a96a10df0ace407f0ba797d2b20e7069e9305a96c7e154ac410787a2d708bb78"
+    },
+    {
+      "path": "web/table-regions.js",
+      "bytes": 14453,
+      "sha256": "2a2d6c4015033983a9983f81bfee63b9b95f40083b2f08f1ae4fd0abf664c4b7"
+    },
+    {
+      "path": "web/table-surface.css",
+      "bytes": 12418,
+      "sha256": "0a63ffc3a82f81d51c23f4ce6500f2f50a871bb78600abdce037c01680e1d1f5"
+    },
+    {
+      "path": "web/table-timeline.js",
+      "bytes": 6620,
+      "sha256": "557d74539f33ada86729f92b38f747db959339851922c3dcbd633a2b6cb9edc8"
+    },
+    {
+      "path": "web/tcu-panels.css",
+      "bytes": 10399,
+      "sha256": "de9fdc79321d67c427a9e802a8557a35b8dbedc6207f1cfd706acd18df26f17f"
+    },
+    {
+      "path": "web/tcu-ui.js",
+      "bytes": 26207,
+      "sha256": "6c4e052412857dd11349caf6baf8d8fda4d91ad50a53f7db72a6668ff535a1b5"
+    },
+    {
+      "path": "web/tde-ui.js",
+      "bytes": 4874,
+      "sha256": "f01c7a58d8d0a8ff63cf1c1053a72b547e6af494c4de6d4cd2bb435fc9250dd5"
+    },
+    {
       "path": "web/tic-rules.js",
       "bytes": 18221,
       "sha256": "434e0ea93b8894c4fb7d7ce82bfa877be89a3cf404a121f4587a69329ff6f39a"
+    },
+    {
+      "path": "web/ui-cards.js",
+      "bytes": 6563,
+      "sha256": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de"
+    },
+    {
+      "path": "web/vitals.js",
+      "bytes": 1245,
+      "sha256": "b5b5f73ed3da5b60475e1e2bab1f30e9277cd14f6032dd17ecd63c645cbdafea"
     }
   ]
 }

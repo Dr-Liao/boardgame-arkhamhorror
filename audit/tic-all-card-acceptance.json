@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 80 个 tests/tic-*.test.mjs（1531 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
+    "basis": "实跑 80 个 tests/tic-*.test.mjs（1532 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）：文件级证据只在该测试文件**实跑有通过用例**时成立，且与标题命中分开记账（strongEvidence / fileLevelEvidence）。整体仍要求「实跑通过 + 卡号命中」，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified。simplified 只在「已实现且有测试证据，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified；gate 口径（w3）允许 verified+simplified 通过、no-behavior 单列、missing 必须为 0。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -27,15 +27,15 @@
   },
   "summary": {
     "total": 252,
-    "verified": 234,
-    "simplified": 17,
+    "verified": 251,
+    "simplified": 0,
     "missing": 0,
     "blocked": 0,
     "noBehavior": 1,
     "pending": 0,
     "verifiedPlusSimplified": 251,
     "gateComplete": true,
-    "strictComplete": false,
+    "strictComplete": true,
     "campaignPartition": 252,
     "allRecords": 361,
     "partitions": {
@@ -49,15 +49,15 @@
     "testFiles": 80,
     "testFilesWithoutEvents": 0,
     "wrapperTestFiles": 1,
-    "testsPassed": 1531,
+    "testsPassed": 1532,
     "testsFailed": 0,
-    "pendingPrimitiveRequests": 10,
-    "behaviorPrimitiveRequests": 9,
+    "pendingPrimitiveRequests": 1,
+    "behaviorPrimitiveRequests": 0,
     "refactorPrimitiveRequests": 1,
     "recordsWithEntryFile": 252,
     "recordsImplemented": 252,
     "recordsWithTestEvidence": 252,
-    "verifiedByTitle": 212,
+    "verifiedByTitle": 229,
     "verifiedByFileOnly": 22,
     "implementedWithoutEvidence": 0,
     "reasonBuckets": {
@@ -84,6 +84,10 @@
         "07056",
         "07057",
         "07059",
+        "07060",
+        "07061",
+        "07062a",
+        "07062b",
         "07063",
         "07064",
         "07065",
@@ -207,8 +211,11 @@
         "07219",
         "07231",
         "07232",
+        "07233",
         "07234",
         "07235",
+        "07236",
+        "07237",
         "07238",
         "07239",
         "07241",
@@ -222,17 +229,23 @@
         "07249",
         "07250",
         "07251",
+        "07252",
+        "07252b",
+        "07253",
         "07254",
         "07256",
         "07257",
         "07258",
         "07259",
+        "07260",
         "07274",
         "07275",
         "07276",
         "07277",
         "07278",
         "07279",
+        "07280",
+        "07281",
         "07282",
         "07283",
         "07284",
@@ -258,6 +271,10 @@
         "07312",
         "07313",
         "07314",
+        "07315",
+        "07316",
+        "07317",
+        "07318",
         "07319",
         "07321",
         "07322",
@@ -332,11 +349,11 @@
   },
   "snapshot": {
     "scopeSha256": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
-    "primitivePlanSha256": "41f3dea25ed705497a2e7625c0980530e060af07d884e347984322f72661e353",
+    "primitivePlanSha256": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
     "testRun": {
       "exit": 0,
       "files": 80,
-      "passed": 1531,
+      "passed": 1532,
       "failed": 0,
       "filesWithoutEvents": [],
       "wrapperFiles": [
@@ -458,7 +475,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-        "sha256": "51c82c3be4650864cbaf5dce308ef4c7a438fa4ed4173ac346a29b5f3b8621dd"
+        "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
       },
       {
         "file": "games/arkhamhorror/tests/tic-light-in-the-fog-agendas.test.mjs",
@@ -667,69 +684,22 @@
     ],
     "primitivePlan": {
       "newTotal": 13,
-      "newDone": 0,
+      "newDone": 13,
       "reuseTotal": 7,
-      "reuseDone": 0,
-      "pendingNew": [
-        "chaos.pool",
-        "chaos.seal",
-        "chaos.resolution",
-        "location.flood",
-        "investigator.air",
-        "scenario.keys",
-        "scenario.vehicle",
-        "location.graph",
-        "campaign.recordSet",
-        "test.commitOrigin",
-        "deck.traitLimit",
-        "turn.promise",
-        "uses.transfer"
-      ],
+      "reuseDone": 7,
+      "pendingNew": [],
       "gates": {
         "scanPassed": true,
         "exportsPresent": true,
         "nodeAcceptance": true,
-        "regressionAcceptance": false,
-        "allNewDone": false,
+        "regressionAcceptance": true,
+        "allNewDone": true,
         "primitiveMechanismsPlanned": true,
         "noEscape": true
       },
       "referenceOnly": "audit/tic-primitive-plan.json 是规划基线，不参与单卡 blocked/verified 判定；权威实现证据是源码导出与 node 验收。"
     },
     "pendingPrimitiveRequests": [
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
-        "id": "p7-a1-07105-spawn-most-clues",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": []
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
-        "id": "p7-a1-07178-vehicle-location-sync",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": []
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-        "id": "p7-a2-act-clue-objective-data",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07236"
-        ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-        "id": "w5-07280-act1-back-layout",
-        "kind": "content-read-point",
-        "refactorOnly": false,
-        "cards": [
-          "07280",
-          "07281"
-        ]
-      },
       {
         "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
         "id": "w5-07280-oath-shared-rules",
@@ -740,80 +710,22 @@
           "07281",
           "07282"
         ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-        "id": "w6-act-agenda-deck-ops",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07060",
-          "07061",
-          "07236",
-          "07237",
-          "07315"
-        ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-        "id": "w6-capture-mechanism",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07233",
-          "07252",
-          "07252b",
-          "07253",
-          "07260"
-        ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-        "id": "w6-harper-scenario-events",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07060",
-          "07061",
-          "07062a",
-          "07062b"
-        ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
-        "id": "w6-holding-cells-restrictions",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07252b"
-        ]
-      },
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-        "id": "w6-parallel-acts",
-        "kind": "unknown",
-        "refactorOnly": false,
-        "cards": [
-          "07316",
-          "07317",
-          "07318"
-        ]
       }
     ]
   },
   "byType": {
     "act": {
       "total": 17,
-      "verified": 7,
-      "simplified": 10,
+      "verified": 17,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0
     },
     "agenda": {
       "total": 28,
-      "verified": 27,
-      "simplified": 1,
+      "verified": 28,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0
@@ -828,16 +740,16 @@
     },
     "enemy": {
       "total": 40,
-      "verified": 38,
-      "simplified": 2,
+      "verified": 40,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0
     },
     "location": {
       "total": 101,
-      "verified": 99,
-      "simplified": 1,
+      "verified": 100,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 1
@@ -852,16 +764,16 @@
     },
     "story": {
       "total": 2,
-      "verified": 0,
-      "simplified": 2,
+      "verified": 2,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0
     },
     "treachery": {
       "total": 41,
-      "verified": 40,
-      "simplified": 1,
+      "verified": 41,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0
@@ -889,19 +801,14 @@
       "name": "艾莲娜·哈珀失踪案",
       "nameEn": "The Vanishing of Elina Harper",
       "total": 36,
-      "verified": 32,
-      "simplified": 4,
+      "verified": 36,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
       "pending": 0,
       "pendingCodes": [],
-      "simplifiedCodes": [
-        "07060",
-        "07061",
-        "07062a",
-        "07062b"
-      ]
+      "simplifiedCodes": []
     },
     {
       "id": "inTooDeep",
@@ -954,22 +861,14 @@
       "name": "雾中之光",
       "nameEn": "A Light in the Fog",
       "total": 42,
-      "verified": 35,
-      "simplified": 7,
+      "verified": 42,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
       "pending": 0,
       "pendingCodes": [],
-      "simplifiedCodes": [
-        "07233",
-        "07236",
-        "07237",
-        "07252",
-        "07252b",
-        "07253",
-        "07260"
-      ]
+      "simplifiedCodes": []
     },
     {
       "id": "theLairOfDagon",
@@ -977,17 +876,14 @@
       "name": "达贡巢穴",
       "nameEn": "The Lair of Dagon",
       "total": 36,
-      "verified": 34,
-      "simplified": 2,
+      "verified": 36,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 0,
       "pending": 0,
       "pendingCodes": [],
-      "simplifiedCodes": [
-        "07280",
-        "07281"
-      ]
+      "simplifiedCodes": []
     },
     {
       "id": "intoTheMaelstrom",
@@ -995,19 +891,14 @@
       "name": "暗潮之下",
       "nameEn": "Into the Maelstrom",
       "total": 43,
-      "verified": 38,
-      "simplified": 4,
+      "verified": 42,
+      "simplified": 0,
       "missing": 0,
       "blocked": 0,
       "noBehavior": 1,
       "pending": 0,
       "pendingCodes": [],
-      "simplifiedCodes": [
-        "07315",
-        "07316",
-        "07317",
-        "07318"
-      ]
+      "simplifiedCodes": []
     }
   ],
   "entries": [
@@ -3310,8 +3201,7 @@
       "chapters": [
         "theVanishingOfElinaHarper"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
@@ -3482,20 +3372,6 @@
           "line": 95,
           "test": "P7 哈珀 setup 初始设置与区域守恒：07062a 剧情资产/私有迹象牌堆/7 地点/幕 07060 议程 07057",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-          "id": "w6-act-agenda-deck-ops",
-          "kind": "unknown",
-          "title": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation"
-        },
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-          "id": "w6-harper-scenario-events",
-          "kind": "unknown",
-          "title": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人"
         }
       ]
     },
@@ -3519,8 +3395,7 @@
       "chapters": [
         "theVanishingOfElinaHarper"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
@@ -3704,20 +3579,6 @@
           "test": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局",
           "titleMatched": true
         }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-          "id": "w6-act-agenda-deck-ops",
-          "kind": "unknown",
-          "title": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation"
-        },
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-          "id": "w6-harper-scenario-events",
-          "kind": "unknown",
-          "title": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人"
-        }
       ]
     },
     {
@@ -3737,8 +3598,7 @@
       "chapters": [
         "theVanishingOfElinaHarper"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3814,14 +3674,6 @@
           "test": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场",
           "titleMatched": true
         }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-          "id": "w6-harper-scenario-events",
-          "kind": "unknown",
-          "title": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人"
-        }
       ]
     },
     {
@@ -3843,8 +3695,7 @@
       "chapters": [
         "theVanishingOfElinaHarper"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3889,14 +3740,6 @@
           "line": 662,
           "test": "P7 07062b health scales once per investigator and prevents actual opportunity attack",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-          "id": "w6-harper-scenario-events",
-          "kind": "unknown",
-          "title": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人"
         }
       ]
     },
@@ -4635,7 +4478,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4771,7 +4614,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4822,7 +4665,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4906,7 +4749,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6284,7 +6127,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6299,7 +6142,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6343,7 +6186,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6364,7 +6207,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6416,7 +6259,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6479,7 +6322,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6555,7 +6398,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6576,7 +6419,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6621,7 +6464,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6642,7 +6485,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16190,13 +16033,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 89,
+          "line": 90,
           "test": "07232 背面：毁灭移到下个密谋、马什与队长交战带蓝钥匙、全员失线索、灯塔地下室入场、场景直接推进 2a",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 80,
+          "line": 81,
           "test": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal",
           "titleMatched": true
         },
@@ -16227,7 +16070,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16246,13 +16089,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 89,
+          "line": 90,
           "test": "07232 背面：毁灭移到下个密谋、马什与队长交战带蓝钥匙、全员失线索、灯塔地下室入场、场景直接推进 2a",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 80,
+          "line": 81,
           "test": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal",
           "titleMatched": true
         },
@@ -16295,8 +16138,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
@@ -16331,7 +16173,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16371,14 +16213,6 @@
           "line": 271,
           "test": "aLightInTheFog 议程 07233 围捕：被俘推进议程、毁灭转移、全员被俘、地图扩张并直接推进 3a",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-          "id": "w6-capture-mechanism",
-          "kind": "unknown",
-          "title": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）"
         }
       ]
     },
@@ -16491,25 +16325,25 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 138,
+          "line": 139,
           "test": "07235 背面：可提升地点不足 4 张 → 结局 3",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 148,
+          "line": 149,
           "test": "07235 背面：足够 4 张时提升最底下 4 处并翻回正面继续",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 126,
+          "line": 127,
           "test": "07235 正面：只有奥赛罗思·马什得到 +2[每调查员] 生命值",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 116,
+          "line": 117,
           "test": "07235 注册为 agenda：马什生命修正 + 背面 onReveal",
           "titleMatched": true
         },
@@ -16546,7 +16380,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16565,25 +16399,25 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 138,
+          "line": 139,
           "test": "07235 背面：可提升地点不足 4 张 → 结局 3",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 148,
+          "line": 149,
           "test": "07235 背面：足够 4 张时提升最底下 4 处并翻回正面继续",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 126,
+          "line": 127,
           "test": "07235 正面：只有奥赛罗思·马什得到 +2[每调查员] 生命值",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 116,
+          "line": 117,
           "test": "07235 注册为 agenda：马什生命修正 + 背面 onReveal",
           "titleMatched": true
         },
@@ -16639,8 +16473,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
@@ -16698,20 +16531,6 @@
           "test": "07236 灯塔：线索目标推进后生成横置马什/蓝钥匙、洗入尽腥尽力、地下室放到梯井正下方",
           "titleMatched": true
         }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-          "id": "p7-a2-act-clue-objective-data",
-          "kind": "unknown",
-          "title": null
-        },
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-          "id": "w6-act-agenda-deck-ops",
-          "kind": "unknown",
-          "title": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation"
-        }
       ]
     },
     {
@@ -16733,8 +16552,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
@@ -16769,7 +16587,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16809,14 +16627,6 @@
           "line": 185,
           "test": "07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-          "id": "w6-act-agenda-deck-ops",
-          "kind": "unknown",
-          "title": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation"
         }
       ]
     },
@@ -16979,7 +16789,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -17354,7 +17164,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -17940,8 +17750,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
@@ -17992,14 +17801,6 @@
           "line": 249,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-          "id": "w6-capture-mechanism",
-          "kind": "unknown",
-          "title": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）"
         }
       ]
     },
@@ -18023,8 +17824,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
@@ -18076,20 +17876,6 @@
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-          "id": "w6-capture-mechanism",
-          "kind": "unknown",
-          "title": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）"
-        },
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
-          "id": "w6-holding-cells-restrictions",
-          "kind": "unknown",
-          "title": "locationRule.enemiesCannotEnter + locationRule.enemySpawnRedirect（地点侧敌人进入/生成限制）"
-        }
       ]
     },
     {
@@ -18112,8 +17898,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
@@ -18142,7 +17927,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -18182,14 +17967,6 @@
           "line": 309,
           "test": "07253 敌军阶段攻击后被俘+钥匙放马什；非敌军阶段不触发",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-          "id": "w6-capture-mechanism",
-          "kind": "unknown",
-          "title": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）"
         }
       ]
     },
@@ -18535,7 +18312,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -18609,8 +18386,7 @@
       "chapters": [
         "aLightInTheFog"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
@@ -18661,14 +18437,6 @@
           "line": 249,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-          "id": "w6-capture-mechanism",
-          "kind": "unknown",
-          "title": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）"
         }
       ]
     },
@@ -19642,37 +19410,42 @@
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 211,
+          "line": 212,
           "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 234,
+          "line": 235,
           "test": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 198,
+          "line": 199,
           "test": "07280 目标：全员在宏伟入口且“解锁了洞穴的入口”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 177,
+          "line": 178,
           "test": "07280 正面：[[嫌犯]]敌人 +1[每调查员]生命、失去冷漠、不能谈判；非嫌犯不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 163,
+          "line": 164,
           "test": "07280 注册为 act：三行实体规则 + 免费弃屏障能力 + 目标函数",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 271,
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
         {
@@ -19696,7 +19469,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19709,32 +19482,38 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 211,
+          "line": 212,
           "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 234,
+          "line": 235,
           "test": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 198,
+          "line": 199,
           "test": "07280 目标：全员在宏伟入口且“解锁了洞穴的入口”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 177,
+          "line": 178,
           "test": "07280 正面：[[嫌犯]]敌人 +1[每调查员]生命、失去冷漠、不能谈判；非嫌犯不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 163,
+          "line": 164,
           "test": "07280 注册为 act：三行实体规则 + 免费弃屏障能力 + 目标函数",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 271,
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
         {
@@ -19748,14 +19527,6 @@
           "line": 145,
           "test": "幕 07280 目标：全员在宏伟入口且解锁洞穴入口时才成立（objective）",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-          "id": "w5-07280-act1-back-layout",
-          "kind": "content-read-point",
-          "title": "《达贡密教巢穴》幕背面 act1BackMap 矩阵布局的数据解释器（07280b 潮水通道摆位 + 07281b 达贡巢穴槽位）"
         }
       ],
       "refactorRequests": [
@@ -19787,30 +19558,35 @@
       "chapters": [
         "theLairOfDagon"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 289,
+          "line": 271,
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 325,
           "test": "07281 背面：达贡巢穴完全淹没入场、沉睡达贡入场、密谋1a 加 10 诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 308,
+          "line": 344,
           "test": "07281 背面：密谋2a 加 5 诅咒、密谋3a 不加诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 280,
+          "line": 316,
           "test": "07281 目标：有调查员“解锁了最终深渊”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 270,
+          "line": 306,
           "test": "07281 注册为 act：三行实体规则 + 免费弃屏障能力 + 解锁最终深渊目标",
           "titleMatched": true
         },
@@ -19823,7 +19599,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19836,25 +19612,31 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 289,
+          "line": 271,
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 325,
           "test": "07281 背面：达贡巢穴完全淹没入场、沉睡达贡入场、密谋1a 加 10 诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 308,
+          "line": 344,
           "test": "07281 背面：密谋2a 加 5 诅咒、密谋3a 不加诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 280,
+          "line": 316,
           "test": "07281 目标：有调查员“解锁了最终深渊”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 270,
+          "line": 306,
           "test": "07281 注册为 act：三行实体规则 + 免费弃屏障能力 + 解锁最终深渊目标",
           "titleMatched": true
         },
@@ -19863,14 +19645,6 @@
           "line": 183,
           "test": "幕 07281 背面：达贡巢穴完全淹没、沉睡达贡入场、诅咒按密谋次序加入",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-          "id": "w5-07280-act1-back-layout",
-          "kind": "content-read-point",
-          "title": "《达贡密教巢穴》幕背面 act1BackMap 矩阵布局的数据解释器（07280b 潮水通道摆位 + 07281b 达贡巢穴槽位）"
         }
       ],
       "refactorRequests": [
@@ -19906,25 +19680,25 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 345,
+          "line": 381,
           "test": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 356,
+          "line": 392,
           "test": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 333,
+          "line": 369,
           "test": "07282 目标：本幕上的线索达到 3[每调查员] 才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 323,
+          "line": 359,
           "test": "07282 注册为 act：三行实体规则 + 本幕线索目标",
           "titleMatched": true
         },
@@ -19937,7 +19711,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19950,25 +19724,25 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 345,
+          "line": 381,
           "test": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 356,
+          "line": 392,
           "test": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 333,
+          "line": 369,
           "test": "07282 目标：本幕上的线索达到 3[每调查员] 才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 323,
+          "line": 359,
           "test": "07282 注册为 act：三行实体规则 + 本幕线索目标",
           "titleMatched": true
         },
@@ -20030,7 +19804,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20491,7 +20265,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20582,7 +20356,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20692,7 +20466,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20802,7 +20576,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -21368,31 +21142,31 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 211,
+          "line": 212,
           "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 460,
+          "line": 496,
           "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 474,
+          "line": 510,
           "test": "07299 显现：附属地点已淹没时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 487,
+          "line": 523,
           "test": "07299 行动：检定敏捷(1)/战力(2)/智力(3)，失败不横置、成功横置；重整时不能离开，补给阶段重整",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 449,
+          "line": 485,
           "test": "07299 注册为 treachery：地点附属行动 + 重整时封锁移动声明",
           "titleMatched": true
         },
@@ -21411,7 +21185,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -21430,31 +21204,31 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 211,
+          "line": 212,
           "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 460,
+          "line": 496,
           "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 474,
+          "line": 510,
           "test": "07299 显现：附属地点已淹没时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 487,
+          "line": 523,
           "test": "07299 行动：检定敏捷(1)/战力(2)/智力(3)，失败不横置、成功横置；重整时不能离开，补给阶段重整",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 449,
+          "line": 485,
           "test": "07299 注册为 treachery：地点附属行动 + 重整时封锁移动声明",
           "titleMatched": true
         },
@@ -22368,8 +22142,7 @@
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
@@ -22450,14 +22223,6 @@
           "line": 113,
           "test": "intoTheMaelstrom 幕/议程：07315 目标（全员门扉+四色钥匙）与背面按 2 人图示布置 Act 2 地图并生成两古神",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-          "id": "w6-act-agenda-deck-ops",
-          "kind": "unknown",
-          "title": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation"
         }
       ]
     },
@@ -22481,8 +22246,7 @@
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
@@ -22630,14 +22394,6 @@
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-          "id": "w6-parallel-acts",
-          "kind": "unknown",
-          "title": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择"
-        }
       ]
     },
     {
@@ -22659,8 +22415,7 @@
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
@@ -22741,14 +22496,6 @@
           "line": 139,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-          "id": "w6-parallel-acts",
-          "kind": "unknown",
-          "title": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择"
         }
       ]
     },
@@ -22771,8 +22518,7 @@
       "chapters": [
         "intoTheMaelstrom"
       ],
-      "status": "simplified",
-      "reason": "pending-behavior-primitive-request",
+      "status": "verified",
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
@@ -22853,14 +22599,6 @@
           "line": 139,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
-        }
-      ],
-      "pendingBehaviorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-          "id": "w6-parallel-acts",
-          "kind": "unknown",
-          "title": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择"
         }
       ]
     },
@@ -23289,7 +23027,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -24601,19 +24339,19 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 386,
+          "line": 422,
           "test": "07337 注册为 treachery 且实现现通道",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 403,
+          "line": 439,
           "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧，两者互不影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 394,
+          "line": 430,
           "test": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧",
           "titleMatched": true
         },
@@ -24638,7 +24376,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 26,
+          "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -24651,19 +24389,19 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 386,
+          "line": 422,
           "test": "07337 注册为 treachery 且实现现通道",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 403,
+          "line": 439,
           "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧，两者互不影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 394,
+          "line": 430,
           "test": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧",
           "titleMatched": true
         },
@@ -24775,148 +24513,7 @@
   ],
   "missing": [],
   "blocked": [],
-  "simplified": [
-    {
-      "code": "07060",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-act-agenda-deck-ops",
-        "w6-harper-scenario-events"
-      ]
-    },
-    {
-      "code": "07061",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-act-agenda-deck-ops",
-        "w6-harper-scenario-events"
-      ]
-    },
-    {
-      "code": "07062a",
-      "type": "story",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-harper-scenario-events"
-      ]
-    },
-    {
-      "code": "07062b",
-      "type": "enemy",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-harper-scenario-events"
-      ]
-    },
-    {
-      "code": "07233",
-      "type": "agenda",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-capture-mechanism"
-      ]
-    },
-    {
-      "code": "07236",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "p7-a2-act-clue-objective-data",
-        "w6-act-agenda-deck-ops"
-      ]
-    },
-    {
-      "code": "07237",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-act-agenda-deck-ops"
-      ]
-    },
-    {
-      "code": "07252",
-      "type": "story",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-capture-mechanism"
-      ]
-    },
-    {
-      "code": "07252b",
-      "type": "location",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-capture-mechanism",
-        "w6-holding-cells-restrictions"
-      ]
-    },
-    {
-      "code": "07253",
-      "type": "enemy",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-capture-mechanism"
-      ]
-    },
-    {
-      "code": "07260",
-      "type": "treachery",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-capture-mechanism"
-      ]
-    },
-    {
-      "code": "07280",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w5-07280-act1-back-layout"
-      ]
-    },
-    {
-      "code": "07281",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w5-07280-act1-back-layout"
-      ]
-    },
-    {
-      "code": "07315",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-act-agenda-deck-ops"
-      ]
-    },
-    {
-      "code": "07316",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-parallel-acts"
-      ]
-    },
-    {
-      "code": "07317",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-parallel-acts"
-      ]
-    },
-    {
-      "code": "07318",
-      "type": "act",
-      "reason": "pending-behavior-primitive-request",
-      "requests": [
-        "w6-parallel-acts"
-      ]
-    }
-  ],
+  "simplified": [],
   "noBehavior": [
     {
       "code": "07320",
@@ -24925,23 +24522,5 @@
     }
   ],
   "unassignedChapterCards": [],
-  "remaining": [
-    "simplified 07060（pending-behavior-primitive-request）",
-    "simplified 07061（pending-behavior-primitive-request）",
-    "simplified 07062a（pending-behavior-primitive-request）",
-    "simplified 07062b（pending-behavior-primitive-request）",
-    "simplified 07233（pending-behavior-primitive-request）",
-    "simplified 07236（pending-behavior-primitive-request）",
-    "simplified 07237（pending-behavior-primitive-request）",
-    "simplified 07252（pending-behavior-primitive-request）",
-    "simplified 07252b（pending-behavior-primitive-request）",
-    "simplified 07253（pending-behavior-primitive-request）",
-    "simplified 07260（pending-behavior-primitive-request）",
-    "simplified 07280（pending-behavior-primitive-request）",
-    "simplified 07281（pending-behavior-primitive-request）",
-    "simplified 07315（pending-behavior-primitive-request）",
-    "simplified 07316（pending-behavior-primitive-request）",
-    "simplified 07317（pending-behavior-primitive-request）",
-    "simplified 07318（pending-behavior-primitive-request）"
-  ]
+  "remaining": []
 }

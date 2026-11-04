@@ -1,9 +1,10 @@
-import { putInHand } from '../../../src/engine/hand-entry.js'
-
 // Recollections temporarily obtain Harper from the rebuilt scenario deck.
 // Campaign ownership remains intact for the next ReloadDecks.
 // 卡号是内容数据：这里只声明「哪些战役同伴会被回忆章节暂取」，不写按卡号的规则分支
 //（内容层 `code === '0xxxx'` 分支的守卫基线是 0）。
+// 注意：本模块不 import src/engine/hand-entry.js —— 那是 chapter-entry → companions-setup
+// → hand-entry → content/registered.js 静态环的唯一收口边，会触发 TDZ；改走场景运行时
+// 暴露的 api.putInHand(seat, code)（与 hand-entry 同一份唯一入手指令）。
 const RECALLED_COMPANIONS = ['07083']
 const DAWSON = '07082'
 export function prepareCompanions(state, events, api) {
@@ -28,5 +29,5 @@ export function prepareCompanions(state, events, api) {
   const inv=state.investigators[seat]
   if (!candidates.includes(inv)) throw new Error('Invalid companion recipient')
   if (records.TheMissionFailed) inv.deck=api.shuffle([...inv.deck,DAWSON])
-  else putInHand(state,inv,DAWSON)
+  else api.putInHand(inv.seat,DAWSON)
 }

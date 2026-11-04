@@ -17,6 +17,7 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { enemy, legalMoves, move, settle, validateMove } from './core-fixture.mjs'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -262,6 +263,41 @@ test('07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场�
   assert.deepEqual(s.encounterDiscard, [], '遭遇弃牌堆清空')
   assert.equal(s.scenarioZones.setAside.includes('07100'), false)
   assert.equal(s.scenarioZones.setAside.includes('07101'), false)
+})
+
+// 幕背面落位必须与 chapter-data 的 act1BackMap.rawMatrix 完全一致（印刷图示的 2x2 格矩阵）：
+// 07280b 把 7 张潮水通道放进 tidalTunnel1-7 槽位，07281b 把 07291 放进 lairOfDagon 槽位。
+// 这条断言防止有人把 07280/07281 文件里的相对位移表改错（此前只有「全部入场」的断言，不校验坐标）。
+test('07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）', () => {
+  const data = JSON.parse(readFileSync(new URL('../content/campaigns/theInnsmouthConspiracy/chapter-data.json',
+    import.meta.url), 'utf8'))
+  const spec = data.theLairOfDagon.setup.act1BackMap
+  const blocks = {}
+  spec.rawMatrix.forEach((row, y) => row.forEach((slot, x) => {
+    if (slot !== '.' && !blocks[slot]) blocks[slot] = { x, y }
+  }))
+  const grandBlock = blocks.grandEntryway
+  const relative = slot => ({ x: blocks[slot].x - grandBlock.x, y: blocks[slot].y - grandBlock.y })
+  const s = chapterFixture('theLairOfDagon', 2)
+  s.enemies = []
+  for (const inv of s.investigators) inv.engaged = []
+  transaction(s, draft => scenarioRuntime(draft, []).advanceAct())
+  const map = createMechanicsApi(s).map
+  const grand = s.locations.find(location => codeOf(location) === '07283')
+  const anchor = map.position(grand.id)
+  const tunnelSlots = [1, 2, 3, 4, 5, 6, 7].map(index => relative(`tidalTunnel${index}`))
+  const tunnelCodes = ['07102', '07103', '07104', '07290']
+  const tunnels = s.locations.filter(location => tunnelCodes.includes(codeOf(location))).map(location => {
+    const point = map.position(location.id)
+    return { x: point.x - anchor.x, y: point.y - anchor.y }
+  })
+  const sorted = points => [...points].sort((a, b) => a.x - b.x || a.y - b.y)
+  assert.deepEqual(sorted(tunnels), sorted(tunnelSlots), '7 张潮水通道按矩阵 tidalTunnel1-7 槽位落位')
+  transaction(s, draft => scenarioRuntime(draft, []).advanceAct())
+  const lair = s.locations.find(location => codeOf(location) === '07291')
+  const lairPoint = map.position(lair.id)
+  assert.deepEqual({ x: lairPoint.x - anchor.x, y: lairPoint.y - anchor.y }, relative('lairOfDagon'),
+    '07291 达贡巢穴按矩阵 lairOfDagon 槽位落位')
 })
 
 // ---------------------------------------------------------------------------

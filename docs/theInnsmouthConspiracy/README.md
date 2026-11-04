@@ -2,7 +2,7 @@
 
 英文名：The Innsmouth Conspiracy。战役标识：`theInnsmouthConspiracy`；本轮工具及审计简称：`tic`；来源战役编号：`07`。
 
-建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P7 已完成，[总审计](../../audit/tic-migration.json)八阶段 P0–P7 均为 `verified`，`node tools/audit-tic.mjs --check` 复算一致。五位调查员、专属依赖及 93 条一般玩家卡记录已验收（90 张可构筑，3 张基础弱点只作依赖）；八章逐章 12 项验收 **8/8** 全绿，逐卡账本 252 张 `missing=0`。发布仍属于 P8：战役保持 `catalog-only`，TIC 战役与八章目录已注册进内容注册表（`development`）但大厅启动开关留待 P8 打开。
+建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P8 已完成，[总审计](../../audit/tic-migration.json) 状态 `playable`，P0–P8 均为 `verified`，`node tools/audit-tic.mjs --check` 复算一致。五位调查员、专属依赖及 93 条一般玩家卡记录已验收（90 张可构筑，3 张基础弱点只作依赖）；八章逐章 12 项验收 **8/8** 全绿，逐卡账本 252 张 `strictComplete`（`missing=0 / simplified=0`）。P8 已把 TIC 从 `catalog-only` 升级为生产可玩：战役与八章静态注册进内容组合根、大厅可启动、真实 layout 与逐章推进验收完成；`earlyAccess: false`，发布验收全部完成，详见 [P8 发布验收记录](p8-release.md)。
 
 实施接口与证据说明见[原语契约](primitives.md)。本轮复算输入签入 `audit/tic-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 artifacts 保存运行镜像与过程资料，继续忽略，不放开整个目录。
 
@@ -154,13 +154,18 @@
 
 ### P8：整体验收与发布（规范第 6 步，M5）
 
-- [ ] 汇总 `audit/tic-migration.json`：来源哈希、逐卡账本、原语队列、章节、关键词、规则书、指南和截图证据可追溯。
-- [ ] 覆盖完整合法战役、失败／撤退路线、关键分支、条件记忆、四档难度、存档恢复和 replay。
-- [ ] 从真实大厅验证选战役、选人、构筑、开局、逐章推进、升级与尾声；覆盖多人、AI、断线恢复和权限边界。
-- [ ] 通过单卡及合规门禁、指南生成检查、本循环测试与审计、既有 replay、全量回归、展示数据和浏览器检查。
-- [ ] 核对本循环英文／中文卡图库存与远程回退，发布运行时不依赖 `参考资源/`。
-- [ ] `confirmations.scenarios / keywords / rulebook` 全部 `verified`，且发布验收全部完成后，才确认完整迁移完成。
-- [ ] 如决定提前开放，另行证明基础门禁，在 `releaseAcceptance.deferred`、`remaining` 和大厅明确延后项，保留 `earlyAccess: true`；延后项不打勾。
+2026-11-05：P8 完整发布验收完成，证据与逐项说明见 [P8 发布验收记录](p8-release.md)。TIC 已从
+`catalog-only` 升级为生产可玩：战役与 8 章 `playable`、静态注册进组合根、真实 layout 与大厅启动
+链路落地；三位调查员包、逐卡账本、节点/浏览器/replay 验收全部通过，`earlyAccess: false`，
+`releaseAcceptance.deferred: []`，`remaining: []`。
+
+- [x] 汇总 `audit/tic-migration.json`：来源哈希、逐卡账本、原语队列、章节、关键词、规则书、指南和截图证据可追溯。证据：`audit/tic-migration.json`（`--write`/`--check` 复算一致）、`audit/tic-scope.json`、`audit/tic-all-card-acceptance.json`、`audit/tic-scenario-acceptance.json`、`audit/tic-browser-acceptance.json`、`audit/tic-release-browser.json`、`audit/tic-release-acceptance.json`。
+- [x] 覆盖完整合法战役、失败／撤退路线、关键分支、条件记忆、四档难度、存档恢复和 replay。证据：`tests/tic-p8-campaign.test.mjs`（19 例）、`tests/tic-p8-multiplayer.test.mjs`（11 例）、`tests/replay-tic-p8.test.mjs` 与 `tests/fixtures/replay/tic-p8-baseline.json`（13 局 / 853 步 / 8 章覆盖）、`audit/tic-p8-replay.json`。
+- [x] 从真实大厅验证选战役、选人、构筑、开局、逐章推进、升级与尾声；覆盖多人、AI、断线恢复和权限边界。证据：`tests/tic-release.browser.mjs`、`tests/tic-progression.browser.mjs`、`tests/tic-online.browser.mjs`（6/6 通过、30 张截图）与 `audit/tic-release-browser.json`、`audit/tic-release-acceptance.json`（12/12）。
+- [x] 通过单卡及合规门禁、指南生成检查、本循环测试与审计、既有 replay、全量回归、展示数据和浏览器检查。证据：`cards:check` / `cards:encounter-check` / `audit:entries`、`import-scenario-guides --check`（54 关）、`import-tic-story --check`、`test:fast` 6393/6390/0、既有 golden replay 13/13、`build-presentation --check`、`check-doc-links`（broken 0）。
+- [x] 核对本循环英文／中文卡图库存与远程回退，发布运行时不依赖 `参考资源/`。证据：总审计 `images` 门禁（361 条记录均有 `imagesrc` 远程回退，本地缓存与远程回退策略登记；runtime 入口扫描 0 条 `参考资源/` 绑定引用）。
+- [x] `confirmations.scenarios / keywords / rulebook` 全部 `verified`，且发布验收全部完成后，才确认完整迁移完成。证据：`audit/tic-migration.json` 的 `confirmations`（8 章 12/12、18 条关键词、10 条规则书）、`releaseAcceptance.required` 全 true、`gate.releaseGate.pass: true`。
+- [x] 未采用提前开放：已按完整发布验收收口，`earlyAccess: false`、`releaseAcceptance.deferred: []`、`remaining: []`；无需保留提前开放标识。1 条同句模板重构项登记为 `maintenance`（不改变行为、不阻塞发布）。
 
 退出门禁：无新增失败，既有失败单独记账；无未披露的近似、阻塞卡或待实现原语。全部发布证据完成后才能撤销提前开放标识。
 
@@ -260,7 +265,7 @@ npm run images:verify
 npm run docs:check
 ```
 
-P0–P7 已注册并可执行的本循环命令如下。P7 的章节与逐卡校验用 `node tools/audit-tic-scenarios.mjs --check`、`node tools/audit-tic-all-cards.mjs --check`、`node tools/run-tic-browser.mjs`。扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线。
+P0–P8 已注册并可执行的本循环命令如下。P7 的章节与逐卡校验用 `node tools/audit-tic-scenarios.mjs --check`、`node tools/audit-tic-all-cards.mjs --check`、`node tools/run-tic-browser.mjs`；P8 的注册检查、行为回放、真实大厅发布验收与总账本分别用 `node tools/check-tic-registry.mjs`、`node tools/verify-tic.mjs --p8-replay`、`node tools/run-tic-release-browser.mjs` + `node tools/audit-tic-release.mjs --check`、`node tools/audit-tic.mjs --check`。扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线。
 
 ```powershell
 npm run scan:tic:scope:check
@@ -270,6 +275,13 @@ npm run test:tic:interactions:browser
 node tools/verify-tic.mjs --p4-regression
 node tools/verify-tic.mjs --p5-replay
 node tools/verify-tic.mjs --p6-replay
+node tools/verify-tic.mjs --p8-replay
+node tools/check-tic-registry.mjs
+node --test tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs
+node tools/run-tic-release-browser.mjs
+node tools/audit-tic-release.mjs --check
+node tools/audit-tic-scenarios.mjs --check
+node tools/audit-tic-all-cards.mjs --check
 npm run test:tic:player
 npm run audit:tic:player
 npm run plan:tic:primitives
@@ -282,7 +294,7 @@ npm run audit:tic:investigators
 npm run audit:tic:check
 ```
 
-`test:tic` 可直接运行本循环 Node 专项；交互浏览器命令同时覆盖 P3 阅读、卡文直达及返回、P4 交互、P5 调查员、P6 玩家卡，以及既有剧本行动和指南入口。P7 新增入口：`tools/audit-tic-scenarios.mjs`（逐章 12 项，`--write`/`--check`）、`tools/audit-tic-all-cards.mjs`（逐卡账本，`--write`/`--check`）、`tests/tic-chapters-acceptance.browser.mjs`（八章实机验收）。发布与真实联机专项仍属于 P8 的待交付内容。
+`test:tic` 可直接运行本循环 Node 专项；交互浏览器命令同时覆盖 P3 阅读、卡文直达及返回、P4 交互、P5 调查员、P6 玩家卡，以及既有剧本行动和指南入口。P7 新增入口：`tools/audit-tic-scenarios.mjs`（逐章 12 项，`--write`/`--check`）、`tools/audit-tic-all-cards.mjs`（逐卡账本，`--write`/`--check`）、`tests/tic-chapters-acceptance.browser.mjs`（八章实机验收）。P8 新增入口：`tests/tic-p8-{registration,campaign,multiplayer}.test.mjs`、`tests/replay-tic-p8.test.mjs`、`tests/{tic-release,tic-progression,tic-online}.browser.mjs`、`tools/audit-tic-release.mjs`、`tools/check-tic-registry.mjs`，发布验收结论见 [P8 发布验收记录](p8-release.md)。
 
 ### 阶段总览与证据登记
 
@@ -294,7 +306,7 @@ npm run audit:tic:check
 - [x] P5 调查员及专属依赖完成。
 - [x] P6 一般玩家卡完成。
 - [x] P7 八章、幕间、指南及战役流程完成。
-- [ ] P8 发布验收完成，完整迁移交付。
+- [x] P8 发布验收完成，完整迁移交付。
 
 | 日期 | 项目 | 状态／勾选依据 | 验证结果 | 证据路径 |
 | --- | --- | --- | --- | --- |
@@ -308,10 +320,12 @@ npm run audit:tic:check
 | 2026-11-03 | P6 一般玩家卡 | 三个无交集分片覆盖 93 条记录；33 项原语请求全部完成；90 张构筑卡、3 张基础弱点依赖已接线，重印复用，无缺失或简化 | 当前源码的逐卡与循环 Node、桌面／移动浏览器、全量快测、单卡和合规门禁通过；P4／P5／P6 基线逐步一致；P0–P6 总审计均 `verified` | `docs/theInnsmouthConspiracy/players.md`、`audit/tic-player-acceptance.json`、`audit/tic-player-shards.json`、`audit/tic-player-queue.json`、`audit/tic-player-replay.json`、`audit/tic-migration.json` |
 | 2026-11-04 | P7 八章、幕间、指南及战役流程 | 44 张剩余非玩家卡全部收口（合并 backup 回收 19 张 + 6 worker 并行 25 张）；捕获/押送、并行幕、Harper 事件等引擎读点与内容层接线完成；八章逐章测试 8/8、逐卡账本 252 条 missing=0、中英指南 54 关与完整叙事校验通过 | `node tools/audit-tic.mjs --check` exit 0（P0–P7 全 `verified`）；`audit-tic-scenarios --check` exit 0（8/8×12）；`run-tic-browser` 38/38、P4–P6 浏览器 42/42；`test:fast` 6351 项/6348 过/0 失败、replay 13 局逐条一致；TDE/TCU 账本同口径重建后 `--check` 均 exit 0 | `audit/tic-migration.json`、`audit/tic-scenario-acceptance.json`、`audit/tic-all-card-acceptance.json`、`audit/tic-browser-acceptance.json`、`audit/tic-interactions-browser.json`、`docs/theInnsmouthConspiracy/p7-development.md` |
 
-P0–P3 历史验收相对最初基线存在 `tfa-untamed-wilds-hub` 漂移；当时同一源码的结果与关闭 TIC 接线的控制副本逐步哈希全部一致。原始基线未改写，差异与两层比较结论保存在 `audit/tic-regression.json` 和 `audit/tic-control-regression.json`。P4、P5、P6 分别在行为改动前锁定 `tests/fixtures/replay/tic-p4-baseline.json`、`tic-p5-baseline.json` 和 `tic-p6-baseline.json`，最终验收与三份基线均逐步完全一致，未使用控制副本豁免。P7 的章节验收以 `audit/tic-p7-baseline.json` 与 `tests/fixtures/replay/tic-p7-baseline.json` 复算，13 局逐条一致。这不表示 P8 发布验收已经完成。
+P0–P3 历史验收相对最初基线存在 `tfa-untamed-wilds-hub` 漂移；当时同一源码的结果与关闭 TIC 接线的控制副本逐步哈希全部一致。原始基线未改写，差异与两层比较结论保存在 `audit/tic-regression.json` 和 `audit/tic-control-regression.json`。P4、P5、P6 分别在行为改动前锁定 `tests/fixtures/replay/tic-p4-baseline.json`、`tic-p5-baseline.json` 和 `tic-p6-baseline.json`，最终验收与三份基线均逐步完全一致，未使用控制副本豁免。P7 的章节验收以 `audit/tic-p7-baseline.json` 与 `tests/fixtures/replay/tic-p7-baseline.json` 复算，13 局逐条一致。P8 发布验收以 `tests/fixtures/replay/tic-p8-baseline.json`（TIC 13 局 / 853 步 / 8 章）与 `audit/tic-p8-replay.json` 复算，`--compare` 13/13 一致；P8 已按完整发布收口，不再是待办。
 
 后续每次推进在此追加记录，并把稳定的逐卡／逐章证据写入 `audit/`。只有代码、来源与验收结果一致时才更新完成勾选。
 
 P7 已完成（2026-11-04），开发验收记录与逐章证据见 [P7 开发验收记录](p7-development.md)；本页 P7、C1–C8 与阶段总览已按 `audit/tic-migration.json`、`audit/tic-scenario-acceptance.json` 与 `audit/tic-all-card-acceptance.json` 的实跑结果勾选。
 
-P7 现场进度、已知失败与恢复顺序见 [2026-11-03 交接文档](p7-handoff-2026-11-03.md)（历史资料）。P7 已完成；P8 发布验收仍未开始。
+P8 已完成（2026-11-05），实现内容、证据与已披露限制见 [P8 发布验收记录](p8-release.md)；本页 P8 与阶段总览已按 `audit/tic-migration.json`（`status: playable`、`earlyAccess: false`、`releaseAcceptance` 全 true、`remaining: []`）、`audit/tic-release-browser.json`、`audit/tic-release-acceptance.json`、`audit/tic-p8-replay.json` 与逐卡/逐章账本的实跑结果勾选。
+
+P7 现场进度、已知失败与恢复顺序见 [2026-11-03 交接文档](p7-handoff-2026-11-03.md)（历史资料）。P7、P8 均已完成；TIC 已作为完整迁移内容在大厅开放。

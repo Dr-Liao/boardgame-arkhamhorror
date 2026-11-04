@@ -133,6 +133,128 @@ export function createGenericPolicy(seed) {
   }
 }
 
+// ── TIC P8 章节阶梯驱动器（tools/replay-tic-recipes.mjs 的 recipe 专用）──────────
+//
+// 为什么单独一条 driver：TIC 8 章需要行为级 replay 覆盖，但 tests/fixtures/replay/
+// golden-replays.json 的 13 条 recipe 被 TDE/TCU 冻结账本逐条锁死（ids + hashes + steps），
+// 不能往 REPLAY_RECIPES 里加条目。TIC 因此用独立 recipe 清单与独立基线
+// （tests/fixtures/replay/tic-p8-baseline.json），复用同一套驱动器注册表。
+//
+// 阶梯：局外准备 → 从第 1 章起逐章开局；未到目标章时用调试结算原语
+// （`{ action:'debug', kind:'endScenario' }`，validateMove 认可的调试动作）立刻结束该章，
+// 再经 hubContinue / 幕间窗口推进到下一章；到达目标章后交给 generic 策略走
+// recipe.targetSteps 步。这样既覆盖真实战役流程（幕间、升级、记录继承），
+// 又不用把整轮战役打进同一份基线。
+//
+// 与 generic 的三处差异（generic 本身逐字节不动，13 条旧基线因此零漂移）：
+//   1. 局外准备：按 settings.seatInvestigators / settings.playerInvestigator 选人，
+//      避免 generic 的 `by('hubSelectInvestigator')` 永远落回 01001；
+//   2. 替补感知：关间/关卡准备时若席位已阵亡/疯狂（record.status !== 'active'），
+//      走「选择替补 → 自动构筑 → 确认」而不是 generic 的 moves[0] 空转；
+//   3. 阶梯/目标章：未到目标章时用调试结算推进，到目标章后由 generic 场景策略接管。
+function ticHubPreparationMove(state, seat, recipe) {
+  const moves = legalMoves(state, seat)
+  if (!moves.length) return null
+  const by = action => moves.find(move => move.action === action)
+  const record = state.campaign?.investigators?.[seat]
+  // 替补感知（见上）：席位在上一关阵亡/疯狂时，先换人再自动构筑。
+  if (['interlude', 'scenarioSetup'].includes(state.uiState) && record && record.status !== 'active') {
+    const selection = moves.find(move => move.action === 'hubSelectInvestigator')
+    if (selection) return selection
+    if (by('hubAutoDeck')) return by('hubAutoDeck')
+    if (by('hubDoneSeat')) return by('hubDoneSeat')
+    return moves[0] ?? null
+  }
+  if (!record?.deck?.length) {
+    const preferred = Array.isArray(recipe.settings?.seatInvestigators) ? recipe.settings.seatInvestigators[seat] : null
+    if (!state.hubSeatSelected?.[seat]) {
+      if (preferred) {
+        const selection = moves.find(move => move.action === 'hubSelectInvestigator' && move.code === preferred)
+        if (selection) return selection
+      }
+      const selection = moves.find(move => move.action === 'hubSelectInvestigator')
+      if (selection) return selection
+    }
+    if (by('hubAutoDeck')) return by('hubAutoDeck')
+  }
+  return null
+}
+
+// TIC 阶梯驱动：recipe.target 是目标章节；recipe.steps 是总动作数上限；
+// recipe.targetSteps 是到达目标章后要走的场景步数（失败路线里 = 结算失败前先走的步数）。
+function playTic(recipe) {
+  const seats = recipe.players ?? 2
+  const players = Array.from({ length: seats }, (_, seat) => ({ seat, role: seat === 0 ? 'human' : 'ai' }))
+  const settings = { campaignHub: true, difficulty: 'standard', ...recipe.settings, seed: recipe.seed }
+  const state = createGameState(settings, players)
+  const hashes = [stateHash(state)]
+  const turns = []
+  const generic = createGenericPolicy(recipe.seed)
+  const target = recipe.target ?? recipe.settings?.scenarioId ?? null
+  const targetSteps = recipe.targetSteps ?? recipe.steps ?? 60
+  const limit = recipe.steps ?? 240
+  const failure = recipe.failureResolution ?? null
+  let targetEntered = false
+  let playedInTarget = 0
+  let failureEmitted = false
+  const decide = (current, seat) => {
+    if (current.pendingChoice) return generic(current, seat)
+    if (current.uiState === 'inScenario') {
+      // 阶梯：还没到目标章就先结算掉；失败路线在目标章走够 targetSteps 步后才结算失败结局。
+      if (target && current.scenario?.id !== target) {
+        return { action: 'debug', kind: 'endScenario', resolutionKey: recipe.skipResolution ?? 'noResolution' }
+      }
+      if (failure && !failureEmitted && playedInTarget >= targetSteps) {
+        return { action: 'debug', kind: 'endScenario', resolutionKey: failure }
+      }
+      return generic(current, seat)
+    }
+    return ticHubPreparationMove(current, seat, recipe) ?? generic(current, seat)
+  }
+  for (let index = 0; index < limit; index++) {
+    if (state.status !== 'playing') break
+    const seatsNow = actingSeats(state)
+    if (!seatsNow.length) break
+    let selection = null
+    for (const seat of seatsNow) {
+      const move = decide(state, seat)
+      if (move && validateMove(state, seat, move) === null) { selection = { seat, move }; break }
+    }
+    if (!selection) break
+    const before = state.revision
+    applyMove(state, selection.seat, selection.move)
+    if (state.revision !== before + 1) throw new Error(`动作没有推进版本号：${JSON.stringify(selection.move)}`)
+    turns.push(selection)
+    hashes.push(stateHash(state))
+    if (target && state.uiState === 'inScenario' && state.scenario?.id === target) {
+      targetEntered = true
+      playedInTarget += 1
+      // 失败路线不在这里停：等 decide 用失败结局收尾。
+      if (!failure && playedInTarget >= targetSteps) break
+    } else if (targetEntered && state.uiState !== 'inScenario') {
+      // 目标章已结算（scenarioResult / 幕间）：停在结算形态，不继续爬后面的章。
+      break
+    }
+    if (recipe.pauseAfter != null && turns.length >= recipe.pauseAfter && state.pendingChoice) break
+  }
+  // 失败路线：循环上限内没能触发（例如目标章一直停在待决选择）时兜底结算一次，
+  // 保证 fixture 终态是失败分支；正常路径下 decide 已经结算过，这里不会重复。
+  if (failure && !failureEmitted && state.uiState === 'inScenario' && (!target || state.scenario?.id === target)) {
+    const seat = actingSeats(state)[0]
+    const move = { action: 'debug', kind: 'endScenario', resolutionKey: failure }
+    if (seat == null || validateMove(state, seat, move) !== null) {
+      throw new Error(`TIC 失败路线无法结算：${failure}`)
+    }
+    const before = state.revision
+    applyMove(state, seat, move)
+    if (state.revision !== before + 1) throw new Error('动作没有推进版本号')
+    failureEmitted = true
+    turns.push({ seat, move })
+    hashes.push(stateHash(state))
+  }
+  return { state, hashes, turns, log: captureReplayLog(state) }
+}
+
 // 纯随机走子器：场景内每条合法动作等概率；待决选择也随机回答。
 // 局外阶段不随机——准备阶段的"换人/难度"动作永远合法，随机走会把对局永久留在准备界面，
 // 反而测不到规则结算；这里固定走"能推进"的那条，把随机性留给真正会改状态的场景阶段。
@@ -215,9 +337,11 @@ function playP6(recipe) {
   return { state, hashes, log: captureReplayLog(state) }
 }
 
-// 驱动器注册表：recipe.driver 选一个。`generic` 是默认，p6 只用于《夜之狂热》。
+// 驱动器注册表：recipe.driver 选一个。`generic` 是默认，p6 只用于《夜之狂热》，
+// tic 只用于《印斯茅斯暗潮》P8 的独立基线（不进入 REPLAY_RECIPES）。
 const DRIVERS = {
   p6: playP6,
+  tic: playTic,
   generic(recipe) {
     const seats = recipe.players ?? 1
     const players = Array.from({ length: seats }, (_, seat) => ({ seat, role: seat === 0 ? 'human' : 'ai' }))

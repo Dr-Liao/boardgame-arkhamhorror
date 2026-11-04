@@ -112,7 +112,13 @@ export function createTreacheryTokens(deps) {
     }
     if (t.entryRevelation === true) {
       const entry = registeredEntry(t.originalCode || t.code), api = scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code })
-      if (entry?.encounterResolve) return entry.encounterResolve(state, inv, t, api)
+      // 第 5 参是遭遇结算上下文：部分条目（01168 朦胧之雾、04076/04088/04093、03091/03094、03262 等）
+      // 声明 `encounterResolve(state, inv, card, api, { location })` 以读取「调查员所在地点」。
+      // 之前只传 4 参，这些条目一被真实遭遇抽到就抛「Cannot destructure property 'location' of 'undefined'」。
+      // 未声明第 5 参的条目会忽略多余参数；声明了但地点缺失的条目自行返回 false（继续走后续通用分支）。
+      if (entry?.encounterResolve) return entry.encounterResolve(state, inv, t, api, {
+        location: state.locations.find(location => location.id === inv.location) || null,
+      })
       if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api)
     }
     if (t.effect?.kind === 'campaignRule') return scenarioBehavior(state).resolveEncounter(state, inv, t, scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code }))

@@ -1,50 +1,2596 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "cycle": "tic",
+  "cycleName": "The Innsmouth Conspiracy",
+  "cycleNameZh": "印斯茅斯暗潮",
   "campaignId": "theInnsmouthConspiracy",
-  "status": "catalog-only",
-  "playable": false,
-  "earlyAccess": false,
-  "equivalenceCertified": false,
-  "generatedBy": "node tools/audit-tic.mjs --write",
-  "stages": {
-    "P0": "verified",
-    "P1": "verified",
-    "P2": "verified",
-    "P3": "verified",
-    "P4": "verified",
-    "P5": "verified",
-    "P6": "verified",
-    "P7": "verified"
+  "milestone": "M5",
+  "stage": "P8",
+  "generatedBy": "tools/audit-tic.mjs",
+  "docs": "docs/arkham-content-migration.md",
+  "scope": {
+    "path": "audit/tic-scope.json",
+    "sha256": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f"
   },
-  "summary": {
+  "baseline": {
+    "path": "audit/baseline.json",
+    "retaken": false,
+    "milestone": "P10",
+    "note": "发布收尾需 node tools/audit-baseline.mjs --write 记录 TIC 审计命令"
+  },
+  "campaign": {
+    "id": "theInnsmouthConspiracy",
+    "status": "playable",
+    "name": "印斯茅斯暗潮",
+    "nameEn": "The Innsmouth Conspiracy",
+    "chapters": 8,
+    "scenarioIds": [
+      "thePitOfDespair",
+      "theVanishingOfElinaHarper",
+      "inTooDeep",
+      "devilReef",
+      "horrorInHighGear",
+      "aLightInTheFog",
+      "theLairOfDagon",
+      "intoTheMaelstrom"
+    ],
+    "requiredPackIds": [
+      "core",
+      "ticCampaign",
+      "ticInvestigators",
+      "ticPlayer"
+    ],
+    "sharedEncounterGroupIds": [
+      "agents_of_dagon",
+      "agents_of_hydra",
+      "creatures_of_the_deep",
+      "flooded_caverns",
+      "fog_over_innsmouth",
+      "malfunction",
+      "rising_tide",
+      "shattered_memories",
+      "syzygy",
+      "the_locals"
+    ],
+    "unlock": {
+      "thePitOfDespair": [],
+      "theVanishingOfElinaHarper": [
+        "thePitOfDespair"
+      ],
+      "inTooDeep": [
+        "theVanishingOfElinaHarper"
+      ],
+      "devilReef": [
+        "inTooDeep"
+      ],
+      "horrorInHighGear": [
+        "devilReef"
+      ],
+      "aLightInTheFog": [
+        "horrorInHighGear"
+      ],
+      "theLairOfDagon": [
+        "aLightInTheFog"
+      ],
+      "intoTheMaelstrom": [
+        "theLairOfDagon"
+      ]
+    },
+    "flowNodes": 17,
+    "recordKeys": 36,
+    "chaosBags": {
+      "easy": {
+        "tokens": 19,
+        "skull": 2
+      },
+      "standard": {
+        "tokens": 20,
+        "skull": 2
+      },
+      "hard": {
+        "tokens": 22,
+        "skull": 2
+      },
+      "expert": {
+        "tokens": 22,
+        "skull": 2
+      }
+    },
+    "launchBlocked": false,
+    "launchError": null,
+    "lobbyVisible": true,
+    "lobbyEarlyAccess": false
+  },
+  "status": "playable",
+  "playable": true,
+  "launchEnabled": true,
+  "earlyAccess": false,
+  "earlyAccessReason": null,
+  "equivalenceCertified": true,
+  "releaseAcceptance": {
+    "required": {
+      "launch": true,
+      "lobby": true,
+      "chapters": true,
+      "allCards": true,
+      "allCardsStrict": true,
+      "node": true,
+      "browser": true,
+      "replay": true,
+      "regression": true,
+      "story": true,
+      "guides": true,
+      "images": true,
+      "presentation": true,
+      "docs": true,
+      "disclosure": true
+    },
+    "deferred": []
+  },
+  "releaseGate": {
+    "launch": true,
+    "lobby": true,
+    "chapters": true,
+    "allCards": true,
+    "allCardsStrict": true,
+    "node": true,
+    "browser": true,
+    "replay": true,
+    "regression": true,
+    "story": true,
+    "guides": true,
+    "images": true,
+    "presentation": true,
+    "docs": true,
+    "disclosure": true,
+    "pass": true
+  },
+  "releaseDisclosure": {
+    "earlyAccess": false,
+    "deferred": [],
+    "lobbyEarlyAccess": false,
+    "lobbyMarked": false,
+    "pass": true
+  },
+  "maintenance": [
+    {
+      "id": "w5-07280-oath-shared-rules.json",
+      "kind": "shared-factory",
+      "status": "pending",
+      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+      "cards": [],
+      "note": "同句模板共享工厂重构（code hygiene）；不改变卡牌行为，不阻塞 P8 发布。"
+    }
+  ],
+  "verifiedScope": "M0 范围 361 条 07 记录（322 主卡 + 39 关联面；战役 252 / 调查员 16 / 玩家 93），18 遭遇组；M1 五位调查员；M2 93 张玩家卡；M3 八章逐章 12/12 检查与逐卡 252/252；M4 18 条关键词与 10 条规则书条目；M5 生产注册、真实大厅启动、P8 完整战役/失败路线/存档/多人 AI/真实联机/重放/浏览器发布验收。原始循环已完成，显式简化、章节缺口与行为类原语债务均为零；同句模板共享工厂维护债务见 maintenance。",
+  "packs": [
+    {
+      "id": "ticCampaign",
+      "exists": true,
+      "status": "playable",
+      "cards": 252,
+      "faces": 39,
+      "records": 252,
+      "live": {
+        "main": 213,
+        "faces": 39,
+        "records": 252
+      },
+      "rulesImplemented": 252,
+      "deckbuilding": 0,
+      "dependencyOnly": 0,
+      "cardRanges": [
+        "07001-07338",
+        "07001a-07338z"
+      ],
+      "encounterGroupIds": [
+        "aLightInTheFog",
+        "agentsOfDagon",
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "devilReef",
+        "floodedCaverns",
+        "fogOverInnsmouth",
+        "horrorInHighGear",
+        "inTooDeep",
+        "intoTheMaelstrom",
+        "malfunction",
+        "risingTide",
+        "shatteredMemories",
+        "syzygy",
+        "theLairOfDagon",
+        "theLocals",
+        "thePitOfDespair",
+        "theVanishingOfElinaHarper"
+      ],
+      "behaviorIds": 0,
+      "checks": {
+        "exists": true,
+        "statusPlayable": true,
+        "cardsAligned": true,
+        "recordsAligned": true,
+        "rulesImplemented": true,
+        "cardRangesCover": true,
+        "facesRegisteredOrRanged": true,
+        "cardsWithinRanges": true,
+        "noDuplicateCards": true,
+        "encounterGroupIds": true
+      },
+      "pass": true
+    },
+    {
+      "id": "ticInvestigators",
+      "exists": true,
+      "status": "playable",
+      "cards": 16,
+      "faces": 0,
+      "records": 16,
+      "live": {
+        "main": 16,
+        "faces": 0,
+        "records": 16
+      },
+      "rulesImplemented": 16,
+      "deckbuilding": 0,
+      "dependencyOnly": 11,
+      "cardRanges": [
+        "07001-07016"
+      ],
+      "encounterGroupIds": [],
+      "behaviorIds": 16,
+      "checks": {
+        "exists": true,
+        "statusPlayable": true,
+        "cardsAligned": true,
+        "recordsAligned": true,
+        "rulesImplemented": true,
+        "cardRangesCover": true,
+        "facesRegisteredOrRanged": true,
+        "cardsWithinRanges": true,
+        "noDuplicateCards": true,
+        "encounterGroupIds": true
+      },
+      "pass": true
+    },
+    {
+      "id": "ticPlayer",
+      "exists": true,
+      "status": "playable",
+      "cards": 93,
+      "faces": 0,
+      "records": 93,
+      "live": {
+        "main": 93,
+        "faces": 0,
+        "records": 93
+      },
+      "rulesImplemented": 93,
+      "deckbuilding": 90,
+      "dependencyOnly": 3,
+      "cardRanges": [
+        "07017-07040",
+        "07108-07122",
+        "07152-07162",
+        "07189-07197",
+        "07220-07230",
+        "07261-07273",
+        "07301-07310"
+      ],
+      "encounterGroupIds": [],
+      "behaviorIds": 93,
+      "checks": {
+        "exists": true,
+        "statusPlayable": true,
+        "cardsAligned": true,
+        "recordsAligned": true,
+        "rulesImplemented": true,
+        "cardRangesCover": true,
+        "facesRegisteredOrRanged": true,
+        "cardsWithinRanges": true,
+        "noDuplicateCards": true,
+        "encounterGroupIds": true
+      },
+      "pass": true
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "thePitOfDespair",
+      "code": "07041",
+      "name": "绝望深坑",
+      "nameEn": "The Pit of Despair",
+      "status": "playable",
+      "referenceCode": "07041",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "shatteredMemories",
+        "thePitOfDespair"
+      ],
+      "testFile": "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "testCases": 10,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "theVanishingOfElinaHarper",
+      "code": "07056",
+      "name": "艾莲娜·哈珀失踪案",
+      "nameEn": "The Vanishing of Elina Harper",
+      "status": "playable",
+      "referenceCode": "07056",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfDagon",
+        "fogOverInnsmouth",
+        "theLocals",
+        "theVanishingOfElinaHarper"
+      ],
+      "testFile": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "testCases": 13,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "inTooDeep",
+      "code": "07123",
+      "name": "深陷危局",
+      "nameEn": "In Too Deep",
+      "status": "playable",
+      "referenceCode": "07123",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "creaturesOfTheDeep",
+        "inTooDeep",
+        "risingTide",
+        "syzygy",
+        "theLocals"
+      ],
+      "testFile": "tests/tic-scenario-inTooDeep.test.mjs",
+      "testCases": 11,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "devilReef",
+      "code": "07163",
+      "name": "魔鬼礁石",
+      "nameEn": "Devil Reef",
+      "status": "playable",
+      "referenceCode": "07163",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "devilReef",
+        "floodedCaverns",
+        "malfunction",
+        "risingTide"
+      ],
+      "testFile": "tests/tic-scenario-devilReef.test.mjs",
+      "testCases": 7,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "horrorInHighGear",
+      "code": "07198",
+      "name": "全速恐惧",
+      "nameEn": "Horror in High Gear",
+      "status": "playable",
+      "referenceCode": "07198",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "fogOverInnsmouth",
+        "horrorInHighGear",
+        "malfunction",
+        "shatteredMemories"
+      ],
+      "testFile": "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "testCases": 9,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "aLightInTheFog",
+      "code": "07231",
+      "name": "雾中之光",
+      "nameEn": "A Light in the Fog",
+      "status": "playable",
+      "referenceCode": "07231",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "aLightInTheFog",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "syzygy"
+      ],
+      "testFile": "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "testCases": 12,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "theLairOfDagon",
+      "code": "07274",
+      "name": "达贡巢穴",
+      "nameEn": "The Lair of Dagon",
+      "status": "playable",
+      "referenceCode": "07274",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfDagon",
+        "floodedCaverns",
+        "syzygy",
+        "theLairOfDagon"
+      ],
+      "testFile": "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "testCases": 26,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    },
+    {
+      "id": "intoTheMaelstrom",
+      "code": "07311",
+      "name": "暗潮之下",
+      "nameEn": "Into the Maelstrom",
+      "status": "playable",
+      "referenceCode": "07311",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "intoTheMaelstrom",
+        "shatteredMemories",
+        "syzygy"
+      ],
+      "testFile": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+      "testCases": 9,
+      "launchable": true,
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "thePitOfDespair",
+      "code": "07041",
+      "name": "绝望深坑",
+      "nameEn": "The Pit of Despair",
+      "status": "playable",
+      "referenceCode": "07041",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "shatteredMemories",
+        "thePitOfDespair"
+      ],
+      "expectedEncounterGroupIds": [
+        "thePitOfDespair",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "shatteredMemories"
+      ],
+      "crossCycleGroups": [
+        "agentsOfCthulhu",
+        "rats"
+      ],
+      "recordReads": [],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "testCases": 10,
+      "inventory": {
+        "locations": 12,
+        "acts": 2,
+        "agendas": 3,
+        "enemies": 5,
+        "treacheries": 10,
+        "encounterCards": 25
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "theVanishingOfElinaHarper",
+      "code": "07056",
+      "name": "艾莲娜·哈珀失踪案",
+      "nameEn": "The Vanishing of Elina Harper",
+      "status": "playable",
+      "referenceCode": "07056",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfDagon",
+        "fogOverInnsmouth",
+        "theLocals",
+        "theVanishingOfElinaHarper"
+      ],
+      "expectedEncounterGroupIds": [
+        "theVanishingOfElinaHarper",
+        "agentsOfDagon",
+        "fogOverInnsmouth",
+        "theLocals"
+      ],
+      "crossCycleGroups": [
+        "chillingCold",
+        "lockedDoors",
+        "nightgaunts"
+      ],
+      "recordReads": [
+        "harperHideout",
+        "harperSuspect",
+        "memoriesRecovered",
+        "possibleHideouts",
+        "possibleSuspects"
+      ],
+      "recordWrites": [
+        "harperHideout",
+        "harperSuspect",
+        "memoriesRecovered",
+        "possibleHideouts",
+        "possibleSuspects"
+      ],
+      "testFile": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "testCases": 13,
+      "inventory": {
+        "locations": 13,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 12,
+        "treacheries": 9,
+        "encounterCards": 25
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "inTooDeep",
+      "code": "07123",
+      "name": "深陷危局",
+      "nameEn": "In Too Deep",
+      "status": "playable",
+      "referenceCode": "07123",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "creaturesOfTheDeep",
+        "inTooDeep",
+        "risingTide",
+        "syzygy",
+        "theLocals"
+      ],
+      "expectedEncounterGroupIds": [
+        "inTooDeep",
+        "creaturesOfTheDeep",
+        "risingTide",
+        "syzygy",
+        "theLocals"
+      ],
+      "crossCycleGroups": [
+        "agentsOfCthulhu"
+      ],
+      "recordReads": [
+        "harperHideout",
+        "memoriesRecovered",
+        "outForBlood"
+      ],
+      "recordWrites": [
+        "memoriesRecovered",
+        "outForBlood"
+      ],
+      "testFile": "tests/tic-scenario-inTooDeep.test.mjs",
+      "testCases": 11,
+      "inventory": {
+        "locations": 15,
+        "acts": 1,
+        "agendas": 4,
+        "enemies": 7,
+        "treacheries": 12,
+        "encounterCards": 33
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "devilReef",
+      "code": "07163",
+      "name": "魔鬼礁石",
+      "nameEn": "Devil Reef",
+      "status": "playable",
+      "referenceCode": "07163",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "devilReef",
+        "floodedCaverns",
+        "malfunction",
+        "risingTide"
+      ],
+      "expectedEncounterGroupIds": [
+        "devilReef",
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "malfunction",
+        "risingTide"
+      ],
+      "crossCycleGroups": [],
+      "recordReads": [
+        "memoriesRecovered"
+      ],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-devilReef.test.mjs",
+      "testCases": 7,
+      "inventory": {
+        "locations": 20,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 7,
+        "treacheries": 11,
+        "encounterCards": 33
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "horrorInHighGear",
+      "code": "07198",
+      "name": "全速恐惧",
+      "nameEn": "Horror in High Gear",
+      "status": "playable",
+      "referenceCode": "07198",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "fogOverInnsmouth",
+        "horrorInHighGear",
+        "malfunction",
+        "shatteredMemories"
+      ],
+      "expectedEncounterGroupIds": [
+        "horrorInHighGear",
+        "fogOverInnsmouth",
+        "malfunction",
+        "shatteredMemories"
+      ],
+      "crossCycleGroups": [
+        "ancientEvils"
+      ],
+      "recordReads": [
+        "memoriesRecovered"
+      ],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "testCases": 9,
+      "inventory": {
+        "locations": 21,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 10,
+        "encounterCards": 28
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "aLightInTheFog",
+      "code": "07231",
+      "name": "雾中之光",
+      "nameEn": "A Light in the Fog",
+      "status": "playable",
+      "referenceCode": "07231",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "aLightInTheFog",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "syzygy"
+      ],
+      "expectedEncounterGroupIds": [
+        "aLightInTheFog",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "risingTide",
+        "syzygy"
+      ],
+      "crossCycleGroups": [
+        "strikingFear"
+      ],
+      "recordReads": [
+        "memoriesRecovered"
+      ],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "testCases": 12,
+      "inventory": {
+        "locations": 18,
+        "acts": 3,
+        "agendas": 4,
+        "enemies": 5,
+        "treacheries": 14,
+        "encounterCards": 36
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "theLairOfDagon",
+      "code": "07274",
+      "name": "达贡巢穴",
+      "nameEn": "The Lair of Dagon",
+      "status": "playable",
+      "referenceCode": "07274",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfDagon",
+        "floodedCaverns",
+        "syzygy",
+        "theLairOfDagon"
+      ],
+      "expectedEncounterGroupIds": [
+        "theLairOfDagon",
+        "agentsOfDagon",
+        "floodedCaverns",
+        "syzygy"
+      ],
+      "crossCycleGroups": [
+        "pentagram",
+        "lockedDoors"
+      ],
+      "recordReads": [
+        "memoriesRecovered"
+      ],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "testCases": 26,
+      "inventory": {
+        "locations": 15,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 8,
+        "treacheries": 9,
+        "encounterCards": 27
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    },
+    {
+      "id": "intoTheMaelstrom",
+      "code": "07311",
+      "name": "暗潮之下",
+      "nameEn": "Into the Maelstrom",
+      "status": "playable",
+      "referenceCode": "07311",
+      "requiredPackIds": [
+        "core",
+        "notz",
+        "ticCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "intoTheMaelstrom",
+        "shatteredMemories",
+        "syzygy"
+      ],
+      "expectedEncounterGroupIds": [
+        "intoTheMaelstrom",
+        "agentsOfHydra",
+        "creaturesOfTheDeep",
+        "floodedCaverns",
+        "shatteredMemories",
+        "syzygy"
+      ],
+      "crossCycleGroups": [
+        "ancientEvils"
+      ],
+      "recordReads": [
+        "memoriesRecovered"
+      ],
+      "recordWrites": [
+        "memoriesRecovered"
+      ],
+      "testFile": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+      "testCases": 9,
+      "inventory": {
+        "locations": 22,
+        "acts": 2,
+        "agendas": 3,
+        "enemies": 10,
+        "treacheries": 11,
+        "encounterCards": 33
+      },
+      "checks": {
+        "campaignRegistered": true,
+        "statusPlayable": true,
+        "referenceCodeMatches": true,
+        "campaignIdMatches": true,
+        "referenceCardExists": true,
+        "layoutComplete": true,
+        "layoutEdgesLegal": true,
+        "requiredPacksExist": true,
+        "requiredMechanicsSupported": true,
+        "recordKeysExist": true,
+        "encounterGroupsRegistered": true,
+        "expectedGroupsDeclared": true,
+        "crossCycleGroupsResolved": true,
+        "stageStructurePresent": true,
+        "ledgerItemPresent": true,
+        "ledgerTwelveTrue": true,
+        "ledgerFileHashesFresh": true,
+        "testFilePresent": true
+      },
+      "launchable": true,
+      "pass": true
+    }
+  ],
+  "encounterGroups": [
+    "a_light_in_the_fog",
+    "agents_of_dagon",
+    "agents_of_hydra",
+    "creatures_of_the_deep",
+    "devil_reef",
+    "flooded_caverns",
+    "fog_over_innsmouth",
+    "horror_in_high_gear",
+    "in_too_deep",
+    "into_the_maelstrom",
+    "malfunction",
+    "rising_tide",
+    "shattered_memories",
+    "syzygy",
+    "the_lair_of_dagon",
+    "the_locals",
+    "the_pit_of_despair",
+    "the_vanishing_of_elina_harper"
+  ],
+  "counts": {
     "records": 361,
+    "main": 322,
+    "faces": 39,
     "partitions": {
       "ticCampaign": 252,
       "ticInvestigators": 16,
       "ticPlayer": 93
     },
-    "sourceFiles": 359,
-    "mechanisms": 44,
-    "newPrimitives": 13,
-    "reusedPrimitives": 7,
+    "packCards": {
+      "ticCampaign": 252,
+      "ticInvestigators": 16,
+      "ticPlayer": 93
+    },
+    "packRecords": {
+      "ticCampaign": 252,
+      "ticInvestigators": 16,
+      "ticPlayer": 93
+    },
+    "chapters": 8,
+    "encounterGroups": 18,
     "keywords": 18,
     "rulebookEntries": 10
   },
-  "sourcePolicy": {
-    "root": "参考资源/ArkhamHorror-main",
-    "scopeSha256": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
-    "scanSha256": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
-    "canonicalSnapshots": "audit/tic-*.json",
-    "runtimeArtifacts": "大厅根目录 artifacts/migration/tic/",
-    "sourceDriftBlocksCheck": true
+  "chaosBags": {
+    "easy": {
+      "tokens": 19,
+      "skull": 2
+    },
+    "standard": {
+      "tokens": 20,
+      "skull": 2
+    },
+    "hard": {
+      "tokens": 22,
+      "skull": 2
+    },
+    "expert": {
+      "tokens": 22,
+      "skull": 2
+    }
   },
+  "recordSchema": {
+    "AgentHarpersMissionIsComplete": "boolean",
+    "AgentHarpersMissionIsCompleteButAtWhatCost": "boolean",
+    "DagonHasAwakened": "boolean",
+    "DagonStillSlumbers": "boolean",
+    "InnsmouthWasConsumedByTheRisingTide": "boolean",
+    "TheDeepOnesHaveFloodedTheEarth": "boolean",
+    "TheFloodHasBegun": "boolean",
+    "TheGatekeeperHasBeenDefeated": "boolean",
+    "TheGatewayToYhanthleiRecognizesYouAsTheRightfulKeeper": "boolean",
+    "TheGuardianOfYhanthleiIsDispatched": "boolean",
+    "TheHeaddressWasBroughtToTheLighthouse": "boolean",
+    "TheHorribleTruth": "boolean",
+    "TheIdolWasBroughtToTheLighthouse": "boolean",
+    "TheInvestigatorsEscapedYhanthlei": "boolean",
+    "TheInvestigatorsMadeItSafelyToTheirVehicles": "boolean",
+    "TheInvestigatorsPossessAMapOfYhaNthlei": "boolean",
+    "TheInvestigatorsPossessTheKeyToYhaNthlei": "boolean",
+    "TheInvestigatorsReachedFalconPointAfterSunrise": "boolean",
+    "TheInvestigatorsReachedFalconPointBeforeSunrise": "boolean",
+    "TheMantleWasBroughtToTheLighthouse": "boolean",
+    "TheMissionFailed": "boolean",
+    "TheMissionWasSuccessful": "boolean",
+    "TheOrdersRitualWasDisrupted": "boolean",
+    "ThePlotOfTheDeepOnesWasThwarted": "boolean",
+    "TheRichesOfTheDeepAreLostForever": "boolean",
+    "TheRichesOfTheDeepAreLostForeverButAtWhatCost": "boolean",
+    "TheTerrorOfDevilReefIsDead": "boolean",
+    "TheTerrorOfDevilReefIsStillAlive": "boolean",
+    "TheTideHasGrownStronger": "boolean",
+    "harperHideout": "string",
+    "harperSuspect": "string",
+    "memoriesRecovered": "string[]",
+    "outForBlood": "string[]",
+    "possibleHideouts": "string[]",
+    "possibleSuspects": "string[]",
+    "teachingsChoices": "string[]"
+  },
+  "investigatorCodes": [
+    "07001",
+    "07002",
+    "07003",
+    "07004",
+    "07005"
+  ],
+  "keywords": {
+    "status": "verified",
+    "items": [
+      {
+        "id": "bless",
+        "ruleId": "ticBless",
+        "zh": "祝福",
+        "kind": "token",
+        "cards": [
+          "07001",
+          "07006",
+          "07007",
+          "07017",
+          "07018",
+          "07019",
+          "07020",
+          "07022",
+          "07030",
+          "07031",
+          "07033",
+          "07034",
+          "07035",
+          "07036",
+          "07037",
+          "07109",
+          "07110",
+          "07115",
+          "07120",
+          "07122",
+          "07153",
+          "07156",
+          "07162",
+          "07190",
+          "07194",
+          "07196",
+          "07197",
+          "07220",
+          "07221",
+          "07224",
+          "07225",
+          "07229",
+          "07230",
+          "07262",
+          "07269",
+          "07272",
+          "07287",
+          "07300b",
+          "07301",
+          "07302",
+          "07308",
+          "07309"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "curse",
+        "ruleId": "ticCurse",
+        "zh": "诅咒",
+        "kind": "token",
+        "cards": [
+          "07007",
+          "07022",
+          "07023",
+          "07026",
+          "07028",
+          "07030",
+          "07032",
+          "07033",
+          "07035",
+          "07037",
+          "07038",
+          "07039",
+          "07112",
+          "07113",
+          "07115",
+          "07116",
+          "07117",
+          "07118",
+          "07119",
+          "07120",
+          "07136",
+          "07151",
+          "07155",
+          "07156",
+          "07162",
+          "07191",
+          "07192",
+          "07193",
+          "07194",
+          "07195",
+          "07222",
+          "07224",
+          "07225",
+          "07226",
+          "07227",
+          "07228",
+          "07229",
+          "07230",
+          "07263",
+          "07265",
+          "07268",
+          "07271",
+          "07274",
+          "07275",
+          "07276",
+          "07277",
+          "07278",
+          "07281",
+          "07289",
+          "07293",
+          "07294",
+          "07296",
+          "07297",
+          "07298",
+          "07300",
+          "07300b",
+          "07306",
+          "07307",
+          "07308"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "seal",
+        "ruleId": "ticSeal",
+        "zh": "封印",
+        "kind": "keyword",
+        "cards": [
+          "07019",
+          "07026",
+          "07040",
+          "07045",
+          "07052",
+          "07153",
+          "07196",
+          "07221",
+          "07252",
+          "07262",
+          "07268",
+          "07271",
+          "07272",
+          "07301",
+          "07302"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "vehicle",
+        "ruleId": "ticVehicles",
+        "zh": "载具",
+        "kind": "keyword",
+        "cards": [
+          "07099",
+          "07163",
+          "07164",
+          "07165",
+          "07166",
+          "07178",
+          "07183",
+          "07187",
+          "07188",
+          "07198",
+          "07199",
+          "07200",
+          "07201",
+          "07202",
+          "07204a",
+          "07204b",
+          "07204c",
+          "07205a",
+          "07205b",
+          "07208a",
+          "07208b",
+          "07208c",
+          "07209a",
+          "07209b",
+          "07210",
+          "07211a",
+          "07211b",
+          "07212a",
+          "07212b",
+          "07213",
+          "07216",
+          "07217",
+          "07218",
+          "07219"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "road",
+        "ruleId": "ticRoad",
+        "zh": "道路 X",
+        "kind": "keyword",
+        "cards": [
+          "07204a",
+          "07204b",
+          "07204c",
+          "07205a",
+          "07205b",
+          "07206a",
+          "07206b",
+          "07207a",
+          "07207b",
+          "07208a",
+          "07208b",
+          "07208c",
+          "07209a",
+          "07209b",
+          "07210"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "researched",
+        "ruleId": "ticResearched",
+        "zh": "研究完成",
+        "kind": "keyword",
+        "cards": [
+          "07191",
+          "07192"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "covenant",
+        "ruleId": "ticCovenant",
+        "zh": "契约",
+        "kind": "restriction",
+        "cards": [
+          "07110",
+          "07113",
+          "07116",
+          "07120",
+          "07122"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "exceptional",
+        "ruleId": "upgrade",
+        "zh": "卓越",
+        "kind": "keyword",
+        "cards": [
+          "07224",
+          "07225",
+          "07265",
+          "07268",
+          "07303",
+          "07307"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "permanent",
+        "ruleId": "permanent",
+        "zh": "永久",
+        "kind": "keyword",
+        "cards": [
+          "07110",
+          "07113",
+          "07116",
+          "07120",
+          "07122",
+          "07151",
+          "07303"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "fast",
+        "ruleId": "fast",
+        "zh": "快速",
+        "kind": "keyword",
+        "cards": [
+          "07008",
+          "07010",
+          "07020",
+          "07025",
+          "07027",
+          "07030",
+          "07031",
+          "07034",
+          "07037",
+          "07160",
+          "07161",
+          "07191",
+          "07263",
+          "07269",
+          "07271",
+          "07272",
+          "07305"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "hunter",
+        "ruleId": "hunter",
+        "zh": "猎手",
+        "kind": "keyword",
+        "cards": [
+          "07011",
+          "07053",
+          "07062b",
+          "07086",
+          "07094",
+          "07105",
+          "07144",
+          "07145",
+          "07146",
+          "07147",
+          "07164b",
+          "07165b",
+          "07182",
+          "07183",
+          "07198",
+          "07199b",
+          "07202",
+          "07213",
+          "07214",
+          "07215",
+          "07219",
+          "07253",
+          "07259",
+          "07294",
+          "07330b",
+          "07331b",
+          "07332",
+          "07333",
+          "07334"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "aloof",
+        "ruleId": "aloof",
+        "zh": "冷漠",
+        "kind": "keyword",
+        "cards": [
+          "07038",
+          "07061",
+          "07076",
+          "07077",
+          "07078",
+          "07079",
+          "07080",
+          "07081",
+          "07086",
+          "07124",
+          "07125",
+          "07126",
+          "07127",
+          "07231",
+          "07254",
+          "07255",
+          "07280",
+          "07281",
+          "07282"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "massive",
+        "ruleId": "massive",
+        "zh": "庞大",
+        "kind": "keyword",
+        "cards": [
+          "07062b",
+          "07144",
+          "07164b",
+          "07165b",
+          "07199b",
+          "07292b",
+          "07330b",
+          "07331b"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "retaliate",
+        "ruleId": "retaliate",
+        "zh": "报复",
+        "kind": "keyword",
+        "cards": [
+          "07062b",
+          "07164b",
+          "07165b",
+          "07199b",
+          "07214",
+          "07253",
+          "07254",
+          "07330b",
+          "07331b"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "surge",
+        "ruleId": "surge",
+        "zh": "涌动",
+        "kind": "keyword",
+        "cards": [
+          "07055",
+          "07087",
+          "07091",
+          "07092",
+          "07093",
+          "07100",
+          "07149",
+          "07187",
+          "07254",
+          "07255",
+          "07256",
+          "07298",
+          "07299",
+          "07337"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "peril",
+        "ruleId": "peril",
+        "zh": "险境",
+        "kind": "keyword",
+        "cards": [
+          "07100",
+          "07101",
+          "07335",
+          "07336"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "victory",
+        "ruleId": "victory",
+        "zh": "胜利点",
+        "kind": "keyword",
+        "cards": [
+          "07061",
+          "07075",
+          "07076",
+          "07077",
+          "07078",
+          "07079",
+          "07080",
+          "07081",
+          "07199",
+          "07200",
+          "07201",
+          "07234",
+          "07237",
+          "07259",
+          "07280",
+          "07282",
+          "07315",
+          "07316",
+          "07317",
+          "07318"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      },
+      {
+        "id": "revelation",
+        "ruleId": "revelation",
+        "zh": "显现",
+        "kind": "keyword",
+        "cards": [
+          "07007",
+          "07016",
+          "07031",
+          "07039",
+          "07040",
+          "07054",
+          "07055",
+          "07070",
+          "07071",
+          "07072",
+          "07073",
+          "07074",
+          "07075",
+          "07076",
+          "07077",
+          "07078",
+          "07079",
+          "07080",
+          "07081",
+          "07087",
+          "07090",
+          "07091",
+          "07092",
+          "07093",
+          "07095",
+          "07096",
+          "07097",
+          "07098",
+          "07099",
+          "07100",
+          "07101",
+          "07106",
+          "07107",
+          "07146",
+          "07147",
+          "07148",
+          "07149",
+          "07184",
+          "07185",
+          "07186",
+          "07187",
+          "07188",
+          "07216",
+          "07217",
+          "07218",
+          "07219",
+          "07256",
+          "07257",
+          "07258",
+          "07259",
+          "07260",
+          "07273",
+          "07275",
+          "07276",
+          "07295",
+          "07296",
+          "07297",
+          "07298",
+          "07299",
+          "07335",
+          "07336",
+          "07337"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/tic-mechanism-scan.json",
+          "audit/tic-primitive-plan.json",
+          "audit/tic-node-acceptance.json",
+          "web/tic-rules.js"
+        ]
+      }
+    ]
+  },
+  "mechanics": {
+    "status": "verified",
+    "items": [
+      {
+        "id": "ticCampaign",
+        "registered": false,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticBless",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticCurse",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticSeal",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticFlood",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticKeys",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticVehicles",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticRoad",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticCovenant",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      },
+      {
+        "id": "ticResearched",
+        "registered": true,
+        "evidence": "tests/tic-rules.test.mjs"
+      }
+    ]
+  },
+  "primitives": {
+    "path": "audit/tic-primitive-plan.json",
+    "new": 13,
+    "done": 13,
+    "reuse": 7,
+    "unfinished": [],
+    "deferred": 0,
+    "escape": 0,
+    "requests": {
+      "files": 17,
+      "done": 16,
+      "pending": 1,
+      "behaviorPending": [],
+      "refactorPending": [
+        "w5-07280-oath-shared-rules.json"
+      ],
+      "rejected": [],
+      "withdrawn": []
+    },
+    "planGates": {
+      "scanPassed": true,
+      "exportsPresent": true,
+      "nodeAcceptance": true,
+      "regressionAcceptance": true,
+      "allNewDone": true,
+      "primitiveMechanismsPlanned": true,
+      "noEscape": true
+    },
+    "snapshot": true,
+    "pass": true,
+    "outstanding": {
+      "behaviorPending": [],
+      "refactorPending": [
+        "w5-07280-oath-shared-rules.json"
+      ],
+      "rejected": [],
+      "withdrawn": [],
+      "deferred": 0,
+      "escape": 0
+    }
+  },
+  "sources": [
+    {
+      "path": "content/registered.js",
+      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
+    },
+    {
+      "path": "content/registry.js",
+      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
+    },
+    {
+      "path": "content/mechanics.js",
+      "sha256": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836"
+    },
+    {
+      "path": "content/schema.js",
+      "sha256": "bba6487fba8a95a184da9029cddf0d93ad4bdecc82a87eb6569876ff4824be0c"
+    },
+    {
+      "path": "content/scenario-manifest.js",
+      "sha256": "5b1d3c2d563ad825d7a2a785af01ed7e1ad2aebe0b6b9936a3fa2abc10baf3fe"
+    },
+    {
+      "path": "content/migration-confirmation.js",
+      "sha256": "77d41a7ea6ae703083a3691a1d293c103d1568748910f4a1447238d6c01cd18e"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/shared.js",
+      "sha256": "37c28abb74fce12542cc18b27461fbb650614572108dfa0e7c3da8fa2d32b48a"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/manifest.js",
+      "sha256": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/records.js",
+      "sha256": "35f89ad13a156283d60a081196c80ec2ee7c577a81cccb3fb4010fa8aed06e08"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/keywords.js",
+      "sha256": "0aac1cc76b1d8f031c4af7e2d9ff06f024e51953c5b089b2c9a4016109f9baa2"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-entry.js",
+      "sha256": "27e712c165d8515fc7024ded7000c537c6682fab41db3e142730e72b3fff5371"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-definition.js",
+      "sha256": "22994886db8f1ac701051cdc0a4bb6f60570ade256caf2a843e61189126f17cd"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+      "sha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/flow.js",
+      "sha256": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+      "sha256": "4b194ea00a288ad2d999e1e0164236338759ce875985b42c17223aa4553cd398"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+      "sha256": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/interludes.js",
+      "sha256": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "sha256": "11856d090cc6412ecf2f35d5878297a66ea2008f0368ae12d7ed98a8785e485f"
+    },
+    {
+      "path": "content/packs/ticCampaign/manifest.js",
+      "sha256": "92795f0eebea782113a12dd090b277d77b78b9b507c639025d061d8dd293ff0c"
+    },
+    {
+      "path": "content/packs/ticInvestigators/manifest.js",
+      "sha256": "5cbf91beae3126e58301abd21ec057d28353e325462ec54dc1335fcb3558bad5"
+    },
+    {
+      "path": "content/packs/ticPlayer/manifest.js",
+      "sha256": "949b387e8f322dca541a8d47d6ceae181ac2dce977d2ec201011e5b29f70820d"
+    },
+    {
+      "path": "web/rulebook-data.js",
+      "sha256": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4"
+    },
+    {
+      "path": "web/tic-rules.js",
+      "sha256": "434e0ea93b8894c4fb7d7ce82bfa877be89a3cf404a121f4587a69329ff6f39a"
+    },
+    {
+      "path": "web/deck-rules.js",
+      "sha256": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a"
+    },
+    {
+      "path": "presentation/art-rules.js",
+      "sha256": "d4f7cbc4a00e3b20a72c841ce0f1be9b9a94aaaf47d2f93868db257d96774ddc"
+    },
+    {
+      "path": "src/cards/cards-data.js",
+      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
+    },
+    {
+      "path": "src/cards/card-rules.js",
+      "sha256": "01839d93008d092a9bea8c6e3f3dd33f3498cd897908f82f193a2cf2d9e3d354"
+    },
+    {
+      "path": "src/cards/core-acceptance.js",
+      "sha256": "34e6a4e317508f9f5317c8bd63123bb3964eb7084fcdc346cefc3ae480a81018"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
+    },
+    {
+      "path": "tools/audit-tic.mjs",
+      "sha256": "82dae98a032b63ee098dfa82d9d39d6f6448cf07b559c3094a389047d87ebba8"
+    },
+    {
+      "path": "tools/audit-tic-scenarios.mjs",
+      "sha256": "f774f4ff008be53107362ef4683ed6303130bb15c6760055e94b1f7f876edc49"
+    },
+    {
+      "path": "tools/audit-tic-all-cards.mjs",
+      "sha256": "48fbe9c41db137f479f6af6a604aff486d084c7e333ba533bed2a82c787cb06b"
+    },
+    {
+      "path": "tools/tic-evidence.mjs",
+      "sha256": "d74d602a1d8a502f9e2503d03e80df5a89fb2f40285d6e64dc16c34a898469b0"
+    },
+    {
+      "path": "tools/verify-tic.mjs",
+      "sha256": "5b5d89d236736f6f5b864e55b53c36b832c9ff61ebf8e61cd859db3d5964df3f"
+    },
+    {
+      "path": "tools/check-tic-registry.mjs",
+      "sha256": "e6822fbedece98239049ced864048046eab9ebe58d1f5f184a084298f3aa4804"
+    },
+    {
+      "path": "tools/import-scenario-guides.mjs",
+      "sha256": "3564f47584bd7acf770233dbaa665782ad0e9e51216f8b15cc9b7283926d31e0"
+    },
+    {
+      "path": "tools/audit-tic-release.mjs",
+      "sha256": "b325d478cc9d32689864bc59d0e1a357b750ac3a0d14eb3d1d7802bca13780f9"
+    },
+    {
+      "path": "tools/playwright-tic-release-reporter.mjs",
+      "sha256": "faab9fc104a346c71a7f31608791538e0d20587390122928b951a5bf4903ccc2"
+    },
+    {
+      "path": "tools/run-tic-release-browser.mjs",
+      "sha256": "a8132d6382fa422968fb639e936dbf39a211efe683927a39b865657756af0ef2"
+    },
+    {
+      "path": "tools/replay-tic-recipes.mjs",
+      "sha256": "68a4659fdad213f81bfb83fc46cbca85a430167bdd1de0d981a5b4d533604988"
+    },
+    {
+      "path": "tools/replay-tic-fixtures.mjs",
+      "sha256": "be5be932c58b2b75354db123439a26185ab4ee3516f68f7d8956fe28fa8a5bb2"
+    },
+    {
+      "path": "tests/playwright/playwright.tic-release.config.mjs",
+      "sha256": "5c0aad76de74816a4cad0ab7b43f8c95041eecdcc5f3b4550ea4284726c17c60"
+    },
+    {
+      "path": "tests/tic-browser-helpers.mjs",
+      "sha256": "37cb094ac246c5ca1407f7d2a73ad3e9876939e83eb6f397f78a57b12de70efd"
+    },
+    {
+      "path": "tests/tic-release.browser.mjs",
+      "sha256": "443c9d0f36bb02158060ad1f59b6c216f5fc0d3436a17f51d4f02cb464273738"
+    },
+    {
+      "path": "tests/tic-online.browser.mjs",
+      "sha256": "36da9177e012986d02d09639d142cd7f197f54f195cd1d3549d094abdac18885"
+    },
+    {
+      "path": "tests/tic-progression.browser.mjs",
+      "sha256": "12dc1068c6fffacb105283586f126da5ade794598eb255301f0d13bea46f4d41"
+    },
+    {
+      "path": "tests/replay-tic-p8.test.mjs",
+      "sha256": "ac1b2ac18db8eec0be538837fd41af42a184e9f390ba609eaf41bf5b1695a4a6"
+    },
+    {
+      "path": "tests/fixtures/replay/tic-p8-baseline.json",
+      "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+    },
+    {
+      "path": "tests/tic-p8-fixture.mjs",
+      "sha256": "0f4938cff50584c1c53317f5dcc5c04d49f455503503a444cb3ef04ecbd37e7c"
+    },
+    {
+      "path": "tests/tic-migration.test.mjs",
+      "sha256": "60637f1a9477286d81a3ef8b7234997b4339097ec8c6a12f71c5aa550d3b1ce5"
+    },
+    {
+      "path": "tests/tic-chapter-fixture.mjs",
+      "sha256": "914089ce9de9736389c5161d785250144569224aa854523749a1d2f039bf2c2f"
+    },
+    {
+      "path": "tests/tic-p8-registration.test.mjs",
+      "sha256": "d67dcfba103ca7a38e6a9bf69a682faee417e37ad495e239d2f2f934b6c289a9"
+    },
+    {
+      "path": "tests/tic-p8-campaign.test.mjs",
+      "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+    },
+    {
+      "path": "tests/tic-p8-multiplayer.test.mjs",
+      "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+    },
+    {
+      "path": "tests/tic-late-b-cards.test.mjs",
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
+      "path": "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "sha256": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
+    },
+    {
+      "path": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "sha256": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
+    },
+    {
+      "path": "tests/tic-scenario-inTooDeep.test.mjs",
+      "sha256": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
+    },
+    {
+      "path": "tests/tic-scenario-devilReef.test.mjs",
+      "sha256": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
+    },
+    {
+      "path": "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "sha256": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
+    },
+    {
+      "path": "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "sha256": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
+    },
+    {
+      "path": "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "sha256": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
+    },
+    {
+      "path": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+      "sha256": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+      "sha256": "2a8c4a28b7b30656a1f925f16c21d2caca4925cd6b9f35952c66b1d835f582a9"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+      "sha256": "077ec2636d9cdcaf0afde5aaeb9961da259e6b43a9cab299a31df778656f4b16"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+      "sha256": "1aa771a6c2c7f797b6b5091c84b4f49f809b759526c9e20ad0d468fe448d2b62"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+      "sha256": "2efe92eda86905c57a2c03f8a1133df4ad221194fceb400f7a6d37f0a30eff43"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+      "sha256": "61db717095a1bccd622f0a194914571fe2b589e7ed81b0d7cab4e1ed53392a58"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+      "sha256": "78eecd44f48fb5a55ef62b8f331097241f8ea77900697ea04dd41ecbe8e15602"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+      "sha256": "b7cdc816080d2ec56cc54d9233f4ace269b07e389dda296a9bd4e8445bb96d08"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+      "sha256": "9956d856a661173b7cf34b423911543207e9e0f29c9725b71f901277d78c80d1"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/layout.js",
+      "sha256": "d357f5a62830b342040605a2be5376d03da434b5eab1e55432eaa638afb1f29e"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/layout.js",
+      "sha256": "71ab217d41657a326fcf1e86424c68477fa10a248e4476244fee9b85f124835e"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/layout.js",
+      "sha256": "386f1cbd804830a8538bb7001a7b3a0e3484d89ee81bd235682019e598fb0424"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/layout.js",
+      "sha256": "c981a595a56947f303c7932ec06347a9bb2de585e3c43a2ae68ffbba30f69766"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/layout.js",
+      "sha256": "1cf9bbbc8d7d368ef1feee302b03cfd649d3a04d35a284e4bd133b04269bece7"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/layout.js",
+      "sha256": "0ebab3ff8d5535bf1b4bf24bb4d72ec0956e8bbec3dc9f9586c117f496cb4dbf"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/layout.js",
+      "sha256": "8f145a8d15418a180ed3dea8369e34ddb087f581b3237a9f5a8b478f86d4fccb"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/layout.js",
+      "sha256": "b27a6b8bad76f72536d7eb397c3c02a689237baaea3fca66536ae48c87499f4c"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/layout.js",
+      "sha256": "82d98fcc5caa7b17726ee869ff83b0bf3e458cb0a7533eaa21cee3ef354fa0c5"
+    },
+    {
+      "path": "docs/arkham-content-migration.md",
+      "sha256": "6dcb28b9cea2d5f0123b633be579cd56850a6a721303dd247266d31ecbf3ab27"
+    }
+  ],
   "confirmations": {
     "scenarios": {
       "status": "verified",
+      "milestone": "M3",
+      "stage": "P8",
+      "chapters": 8,
+      "checks": {
+        "sourceLocked": 8,
+        "identityRegistered": 8,
+        "setupAndZones": 8,
+        "actsAndAgendas": 8,
+        "locationsAndConnections": 8,
+        "encounterBehaviors": 8,
+        "literalCardBehavior": 8,
+        "chaosEffects": 8,
+        "resolutionsAndRecords": 8,
+        "storyText": 8,
+        "saveReplay": 8,
+        "browserAcceptance": 8
+      },
+      "summary": {
+        "chapters": 8,
+        "completeChapters": 8,
+        "developmentChapters": 0,
+        "pendingChapters": 0,
+        "checkTotals": {
+          "sourceLocked": 8,
+          "identityRegistered": 8,
+          "setupAndZones": 8,
+          "actsAndAgendas": 8,
+          "locationsAndConnections": 8,
+          "encounterBehaviors": 8,
+          "literalCardBehavior": 8,
+          "chaosEffects": 8,
+          "resolutionsAndRecords": 8,
+          "storyText": 8,
+          "saveReplay": 8,
+          "browserAcceptance": 8
+        },
+        "structuralTotals": {
+          "setupAndZones": 8,
+          "actsAndAgendas": 8,
+          "locationsAndConnections": 8,
+          "encounterBehaviors": 8,
+          "chaosEffects": 8,
+          "resolutionsAndRecords": 8
+        },
+        "missingChapterTests": [],
+        "missingChapterTestFiles": [
+          "tests/tic-scenario-thePitOfDespair.test.mjs",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "tests/tic-scenario-inTooDeep.test.mjs",
+          "tests/tic-scenario-devilReef.test.mjs",
+          "tests/tic-scenario-horrorInHighGear.test.mjs",
+          "tests/tic-scenario-aLightInTheFog.test.mjs",
+          "tests/tic-scenario-theLairOfDagon.test.mjs",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+        ],
+        "literalCardLedger": {
+          "file": "audit/tic-all-card-acceptance.json",
+          "entries": 252,
+          "pending": 0
+        },
+        "browserEvidence": {
+          "status": "passed",
+          "coverage": {
+            "desktop:zh-CN": true,
+            "desktop:en": true,
+            "mobile:zh-CN": true,
+            "mobile:en": true
+          }
+        },
+        "storyImport": {
+          "gates": {
+            "completeChinese": true,
+            "allChapters": true
+          },
+          "missing": 0,
+          "sourceFiles": 18
+        },
+        "referenceAvailable": true,
+        "replayFixtureFile": "tests/fixtures/replay/tic-p8-baseline.json",
+        "replayFixtures": 13,
+        "replayFixtureCampaigns": [
+          "theInnsmouthConspiracy"
+        ],
+        "replayCoversTicChapters": true,
+        "primitiveRequests": {
+          "total": 17,
+          "pending": 1,
+          "pendingFiles": [
+            "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json"
+          ]
+        },
+        "engineGapNotes": 7
+      },
       "items": [
         {
           "id": "thePitOfDespair",
           "code": "07041",
+          "name": "绝望深坑",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -61,12 +2607,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "theVanishingOfElinaHarper",
           "code": "07056",
+          "name": "艾莲娜·哈珀失踪案",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -83,12 +2631,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "inTooDeep",
           "code": "07123",
+          "name": "深陷危局",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -105,12 +2655,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "devilReef",
           "code": "07163",
+          "name": "魔鬼礁石",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -127,12 +2679,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "horrorInHighGear",
           "code": "07198",
+          "name": "全速恐惧",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -149,12 +2703,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "aLightInTheFog",
           "code": "07231",
+          "name": "雾中之光",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -171,12 +2727,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "theLairOfDagon",
           "code": "07274",
+          "name": "达贡巢穴",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -193,12 +2751,14 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         },
         {
           "id": "intoTheMaelstrom",
           "code": "07311",
+          "name": "暗潮之下",
           "status": "verified",
           "checks": {
             "sourceLocked": true,
@@ -215,17 +2775,41 @@
             "browserAcceptance": true
           },
           "evidence": [
-            "audit/tic-scenario-acceptance.json"
+            "audit/tic-scenario-acceptance.json",
+            "tools/audit-tic-scenarios.mjs"
           ]
         }
+      ],
+      "ledger": {
+        "path": "audit/tic-scenario-acceptance.json",
+        "sha256": "7b98bc2e27d9c53da188080cd9a3f6aa155b9289fab23c8e6bf96d76cea3a69e"
+      },
+      "evidence": [
+        "tools/audit-tic-scenarios.mjs",
+        "audit/tic-scenario-acceptance.json",
+        "audit/tic-scope.json",
+        "audit/tic-all-card-acceptance.json",
+        "audit/tic-browser-acceptance.json",
+        "tests/tic-scenario-thePitOfDespair.test.mjs",
+        "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "tests/tic-scenario-inTooDeep.test.mjs",
+        "tests/tic-scenario-devilReef.test.mjs",
+        "tests/tic-scenario-horrorInHighGear.test.mjs",
+        "tests/tic-scenario-aLightInTheFog.test.mjs",
+        "tests/tic-scenario-theLairOfDagon.test.mjs",
+        "tests/tic-scenario-intoTheMaelstrom.test.mjs"
       ]
     },
     "keywords": {
       "status": "verified",
+      "total": 18,
+      "verified": 18,
       "items": [
         {
           "id": "bless",
           "ruleId": "ticBless",
+          "zh": "祝福",
+          "kind": "token",
           "cards": [
             "07001",
             "07006",
@@ -288,6 +2872,8 @@
         {
           "id": "curse",
           "ruleId": "ticCurse",
+          "zh": "诅咒",
+          "kind": "token",
           "cards": [
             "07007",
             "07022",
@@ -367,6 +2953,8 @@
         {
           "id": "seal",
           "ruleId": "ticSeal",
+          "zh": "封印",
+          "kind": "keyword",
           "cards": [
             "07019",
             "07026",
@@ -402,6 +2990,8 @@
         {
           "id": "vehicle",
           "ruleId": "ticVehicles",
+          "zh": "载具",
+          "kind": "keyword",
           "cards": [
             "07099",
             "07163",
@@ -456,6 +3046,8 @@
         {
           "id": "road",
           "ruleId": "ticRoad",
+          "zh": "道路 X",
+          "kind": "keyword",
           "cards": [
             "07204a",
             "07204b",
@@ -491,6 +3083,8 @@
         {
           "id": "researched",
           "ruleId": "ticResearched",
+          "zh": "研究完成",
+          "kind": "keyword",
           "cards": [
             "07191",
             "07192"
@@ -513,6 +3107,8 @@
         {
           "id": "covenant",
           "ruleId": "ticCovenant",
+          "zh": "契约",
+          "kind": "restriction",
           "cards": [
             "07110",
             "07113",
@@ -538,6 +3134,8 @@
         {
           "id": "exceptional",
           "ruleId": "upgrade",
+          "zh": "卓越",
+          "kind": "keyword",
           "cards": [
             "07224",
             "07225",
@@ -564,6 +3162,8 @@
         {
           "id": "permanent",
           "ruleId": "permanent",
+          "zh": "永久",
+          "kind": "keyword",
           "cards": [
             "07110",
             "07113",
@@ -591,6 +3191,8 @@
         {
           "id": "fast",
           "ruleId": "fast",
+          "zh": "快速",
+          "kind": "keyword",
           "cards": [
             "07008",
             "07010",
@@ -628,6 +3230,8 @@
         {
           "id": "hunter",
           "ruleId": "hunter",
+          "zh": "猎手",
+          "kind": "keyword",
           "cards": [
             "07011",
             "07053",
@@ -677,6 +3281,8 @@
         {
           "id": "aloof",
           "ruleId": "aloof",
+          "zh": "冷漠",
+          "kind": "keyword",
           "cards": [
             "07038",
             "07061",
@@ -716,6 +3322,8 @@
         {
           "id": "massive",
           "ruleId": "massive",
+          "zh": "庞大",
+          "kind": "keyword",
           "cards": [
             "07062b",
             "07144",
@@ -744,6 +3352,8 @@
         {
           "id": "retaliate",
           "ruleId": "retaliate",
+          "zh": "报复",
+          "kind": "keyword",
           "cards": [
             "07062b",
             "07164b",
@@ -773,6 +3383,8 @@
         {
           "id": "surge",
           "ruleId": "surge",
+          "zh": "涌动",
+          "kind": "keyword",
           "cards": [
             "07055",
             "07087",
@@ -807,6 +3419,8 @@
         {
           "id": "peril",
           "ruleId": "peril",
+          "zh": "险境",
+          "kind": "keyword",
           "cards": [
             "07100",
             "07101",
@@ -831,6 +3445,8 @@
         {
           "id": "victory",
           "ruleId": "victory",
+          "zh": "胜利点",
+          "kind": "keyword",
           "cards": [
             "07061",
             "07075",
@@ -871,6 +3487,8 @@
         {
           "id": "revelation",
           "ruleId": "revelation",
+          "zh": "显现",
+          "kind": "keyword",
           "cards": [
             "07007",
             "07016",
@@ -950,10 +3568,34 @@
             "web/tic-rules.js"
           ]
         }
+      ],
+      "scan": {
+        "path": "audit/tic-mechanism-scan.json",
+        "sha256": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2"
+      },
+      "evidence": [
+        "content/campaigns/theInnsmouthConspiracy/keywords.js",
+        "tests/tic-rules.test.mjs",
+        "audit/tic-mechanism-scan.json",
+        "audit/tic-primitive-plan.json",
+        "web/tic-rules.js"
       ]
     },
     "rulebook": {
       "status": "verified",
+      "entries": 10,
+      "requiredRuleIds": [
+        "ticCampaign",
+        "ticBless",
+        "ticCurse",
+        "ticSeal",
+        "ticFlood",
+        "ticKeys",
+        "ticVehicles",
+        "ticRoad",
+        "ticCovenant",
+        "ticResearched"
+      ],
       "checks": {
         "campaignOverview": true,
         "scenarioMechanics": true,
@@ -962,91 +3604,1514 @@
         "desktopBrowser": true,
         "mobileBrowser": true
       },
+      "details": {
+        "campaignOverview": {
+          "entryPresent": true,
+          "listsEveryChapter": true,
+          "listsInterludes": true,
+          "statesScenarioOrder": true,
+          "relatedRulesExist": true
+        },
+        "scenarioMechanics": {
+          "planGates": true,
+          "requiredRuleEntries": 10,
+          "entriesPresent": true,
+          "entriesInGroup": true,
+          "entriesRelatedResolved": true,
+          "scenarioReferenceCards": true,
+          "scenarioCardsLinkCampaignRule": true
+        },
+        "keywordEntries": {
+          "total": 18,
+          "entriesPresent": true,
+          "searchable": true,
+          "statusVerified": true,
+          "status": "verified"
+        },
+        "cardLinks": {
+          "cards": 361,
+          "linked": 361,
+          "unlinked": [],
+          "keywordLinkTargets": true,
+          "keywordCards": 367
+        },
+        "desktopBrowser": true,
+        "mobileBrowser": true,
+        "legacyDesktopBrowser": true,
+        "legacyMobileBrowser": true
+      },
       "evidence": [
+        "web/rulebook-data.js",
         "web/tic-rules.js",
+        "content/campaigns/theInnsmouthConspiracy/keywords.js",
+        "tests/tic-rules.test.mjs",
         "audit/tic-browser-acceptance.json"
       ]
     }
   },
-  "regressionEvidence": [
-    "audit/tic-baseline.json",
-    "audit/tic-node-acceptance.json",
-    "audit/tic-regression.json",
-    "audit/tic-control-regression.json",
-    "audit/tic-p4-baseline.json",
-    "audit/tic-interaction-regression.json"
-  ],
-  "interactions": {
-    "status": "verified",
-    "evidence": "audit/tic-interactions.json"
-  },
-  "investigators": {
-    "status": "verified",
-    "evidence": "audit/tic-investigators.json",
-    "items": [
-      {
-        "code": "07001",
-        "status": "verified"
-      },
-      {
-        "code": "07002",
-        "status": "verified"
-      },
-      {
-        "code": "07003",
-        "status": "verified"
-      },
-      {
-        "code": "07004",
-        "status": "verified"
-      },
-      {
-        "code": "07005",
-        "status": "verified"
-      }
-    ]
-  },
-  "players": {
-    "status": "verified",
-    "gates": {
-      "everyCardVerified": true,
-      "implementationCurrent": true,
-      "executedNode": true,
-      "replayUnchanged": true,
-      "fullFastPassed": true,
-      "desktopAndMobile": true,
-      "shardsAndQueue": true
+  "evidence": {
+    "files": {
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json": "6145871f0172f661fc34f35d52a80f17c5db99fabff0bb7dd07a20c687675c69",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json": "2a2460f4ff4ae6e9b37aed2aa7c571007a425e7a54f8a873fec24047c9683ebf",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-maelstrom-flood-on-enter.json": "08add86475e52156194ff05c4054476789ee01eee67bd1137342d89519fac930",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json": "1aea84b7d588de70954d16255b40bd80d8f1c4918a3a0676c77f9caaeda9b368",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-all-resigned-hook.json": "67b39a4c2534d919ea8833aac6e8d45952e8ac0571c56cab71dd5658817899ee",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-location-clue-discovery.json": "88412d00a78bb51b47545a2ea7e841619209dddd0c8c6e4fc5fe3aec3d4118e9",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-location-victory-display.json": "f84ca2bc51837a04dce6d0c075c11a0abbc5fa8f9eaf4ef7a586e75b9766b2a7",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-skip-agenda-advance.json": "89b02343936ff465494b10d58b185de527593336f30a0c2a4ef75fad96fade95",
+      "artifacts/migration/tic/p7/primitive-requests/p7-b-07168-story-asset-removal.json": "a66f5441a7c17fa6fecbc55a34a382ee0cdd7b3e75bce319571759a7b223bc63",
+      "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json": "ab26b835b2370eda30b6b259e9011fb455e8a213126bff19ac7bad7abd12050f",
+      "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json": "548b95baffb2f76d35ae6238116961b5de175f2d3ad73befcfc22da95cf2421e",
+      "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json": "3bd506de36f9d19d3fb48321924d759ef9e50880d3d30dd0d546e4241b6b8b48",
+      "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json": "0423dbce29b25630b199d04d689891c493bea452b64d86f06ed1e2bf9656b4eb",
+      "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json": "621cb9f6959b8fc52c6089a258e49e37bd6d928ed1aefa17daae522a3b17ca7e",
+      "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json": "04ab1f1f562fc670021c57557a88cc76d3148050bb42f8db343b2cc99614ab32",
+      "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json": "0b20fabad97bb160e4e2f3af36f4ae5c3d818d61456e0652e8078094aa7d1f76",
+      "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json": "cb5de0a415985b3bf16419d71c76c8dc3c7f1ba6a2a9a2a4b160b69054055f47",
+      "audit/presentation-report.json": "18ba2ab773dfd7736529f648dd42cbdf61d1c2b5aabf0ffc888b8e89df29ed19",
+      "audit/tic-all-card-acceptance.json": "f831a2b87238ab389f72fc31dfbcf7c48aeb5294d6af66755b2b2eb6e22dc0f0",
+      "audit/tic-browser-acceptance.json": "781b7d5645c68a4705b6352da602e53506892b9361932e5bdee8a01d549e1a5d",
+      "audit/tic-control-regression.json": "9467ddf166a857cc89e2283cc59c2164fba3400c829c6882a41a72b323a09385",
+      "audit/tic-interaction-regression.json": "dea5b24d2490890b979040543750e114afec0bc428a8f91eae6049b3ceeca2bc",
+      "audit/tic-interactions.json": "d5fce3fedd66027107b105419f79f70bb5f28302ef7fd2da7f566f997cab1cb2",
+      "audit/tic-investigators.json": "0f56253bcc9dc0e7c227152a6365095ba36f298314a1bf3e403cf09be0df4205",
+      "audit/tic-mechanism-scan.json": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
+      "audit/tic-node-acceptance.json": "467c9a09f1a2e5646dbf81f6f76fe59c80c0da2ee35d9c58f1f3f25ebce274d6",
+      "audit/tic-p8-replay.json": "af4c204c7baa5652e336ee2d511be612a4128edef29a2ae48f1002492b29a25e",
+      "audit/tic-player-acceptance.json": "865a02a85c8ae9d95a26d7595b0ce244d4ef4da941742fb50f0de48b526df9e5",
+      "audit/tic-player-queue.json": "66d4e35ddb501e18002c982db7cccc51c8bb2ecc9b9c78143982d9b224ac3808",
+      "audit/tic-player-shards.json": "d644d3cb370e87ae8da4a14dbbd81d1cbe3ff27c69a8bb4c539b8bf335754d16",
+      "audit/tic-primitive-catalog.json": "d688a7835fdf0c38b1fc3dc2999619ccff3863e74850a29eba8fb56c3ba7041e",
+      "audit/tic-primitive-plan.json": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
+      "audit/tic-regression.json": "344e1de3143e65ce52f3adfa3a1dade63490b5cf6745a87663e3dfbff6d6cb87",
+      "audit/tic-release-acceptance.json": "0f4b31c5ed1902e38207a4e1437733f1c35ee5c1fe16837917f1c3a11c024a05",
+      "audit/tic-release-browser.json": "0939e9731e90fe08168298f0532bd2c86e2c678b9d31640a08c2efa3b1b3e56d",
+      "audit/tic-scenario-acceptance.json": "7b98bc2e27d9c53da188080cd9a3f6aa155b9289fab23c8e6bf96d76cea3a69e",
+      "audit/tic-scope.json": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
+      "audit/tic-story-acceptance.json": "11f904fe53da94a8836ddc9f1793494a5c499447c75c25c71165c21eb52dfcfa",
+      "tests/fixtures/replay/tic-p8-baseline.json": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
     },
-    "evidence": [
-      "audit/tic-player-acceptance.json",
-      "audit/tic-player-shards.json",
-      "audit/tic-player-queue.json",
-      "audit/tic-node-acceptance.json",
-      "audit/tic-player-replay.json",
-      "audit/tic-interactions-browser.json",
-      "audit/tic-interaction-regression.json"
-    ],
-    "summary": {
+    "browser": {
+      "legacy": {
+        "path": "audit/tic-browser-acceptance.json",
+        "status": "passed",
+        "coverage": {
+          "desktop:zh-CN": true,
+          "desktop:en": true,
+          "mobile:zh-CN": true,
+          "mobile:en": true
+        },
+        "links": {
+          "desktop": true,
+          "mobile": true
+        },
+        "tests": 38,
+        "screenshots": 68,
+        "scenariosCovered": 8
+      },
+      "release": {
+        "path": "audit/tic-release-browser.json",
+        "status": "passed",
+        "complete": true,
+        "checks": {
+          "desktopBrowser": true,
+          "mobileBrowser": true,
+          "release": {
+            "desktop": true,
+            "mobile": true
+          },
+          "online": {
+            "desktop": true,
+            "mobile": true
+          },
+          "progression": {
+            "desktop": true,
+            "mobile": true
+          },
+          "privacy": {
+            "desktop": true,
+            "mobile": true
+          },
+          "permission": true,
+          "disconnect": true
+        },
+        "tests": 6,
+        "screenshots": 0,
+        "specs": [
+          "tests/tic-online.browser.mjs",
+          "tests/tic-progression.browser.mjs",
+          "tests/tic-release.browser.mjs"
+        ],
+        "expectedSpecs": [
+          "tests/tic-release.browser.mjs",
+          "tests/tic-progression.browser.mjs",
+          "tests/tic-online.browser.mjs"
+        ],
+        "sourceStableDuringRun": true
+      },
+      "merged": {
+        "path": "audit/tic-release-acceptance.json",
+        "present": true,
+        "status": "passed",
+        "gatePass": true,
+        "checks": {
+          "launch": true,
+          "chapters": true,
+          "releaseDesktop": true,
+          "releaseMobile": true,
+          "onlineDesktop": true,
+          "onlineMobile": true,
+          "progressionDesktop": true,
+          "progressionMobile": true,
+          "privacyDesktop": true,
+          "privacyMobile": true,
+          "permissionBoundary": true,
+          "disconnectRecovery": true
+        }
+      }
+    },
+    "scenarioLedger": {
+      "path": "audit/tic-scenario-acceptance.json",
+      "status": "verified",
+      "chapters": 8,
+      "sourceStableDuringRun": true,
+      "summary": {
+        "chapters": 8,
+        "completeChapters": 8,
+        "developmentChapters": 0,
+        "pendingChapters": 0,
+        "checkTotals": {
+          "sourceLocked": 8,
+          "identityRegistered": 8,
+          "setupAndZones": 8,
+          "actsAndAgendas": 8,
+          "locationsAndConnections": 8,
+          "encounterBehaviors": 8,
+          "literalCardBehavior": 8,
+          "chaosEffects": 8,
+          "resolutionsAndRecords": 8,
+          "storyText": 8,
+          "saveReplay": 8,
+          "browserAcceptance": 8
+        },
+        "structuralTotals": {
+          "setupAndZones": 8,
+          "actsAndAgendas": 8,
+          "locationsAndConnections": 8,
+          "encounterBehaviors": 8,
+          "chaosEffects": 8,
+          "resolutionsAndRecords": 8
+        },
+        "missingChapterTests": [],
+        "missingChapterTestFiles": [
+          "tests/tic-scenario-thePitOfDespair.test.mjs",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "tests/tic-scenario-inTooDeep.test.mjs",
+          "tests/tic-scenario-devilReef.test.mjs",
+          "tests/tic-scenario-horrorInHighGear.test.mjs",
+          "tests/tic-scenario-aLightInTheFog.test.mjs",
+          "tests/tic-scenario-theLairOfDagon.test.mjs",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+        ],
+        "literalCardLedger": {
+          "file": "audit/tic-all-card-acceptance.json",
+          "entries": 252,
+          "pending": 0
+        },
+        "browserEvidence": {
+          "status": "passed",
+          "coverage": {
+            "desktop:zh-CN": true,
+            "desktop:en": true,
+            "mobile:zh-CN": true,
+            "mobile:en": true
+          }
+        },
+        "storyImport": {
+          "gates": {
+            "completeChinese": true,
+            "allChapters": true
+          },
+          "missing": 0,
+          "sourceFiles": 18
+        },
+        "referenceAvailable": true,
+        "replayFixtureFile": "tests/fixtures/replay/tic-p8-baseline.json",
+        "replayFixtures": 13,
+        "replayFixtureCampaigns": [
+          "theInnsmouthConspiracy"
+        ],
+        "replayCoversTicChapters": true,
+        "primitiveRequests": {
+          "total": 17,
+          "pending": 1,
+          "pendingFiles": [
+            "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json"
+          ]
+        },
+        "engineGapNotes": 7
+      }
+    },
+    "allCardLedger": {
+      "path": "audit/tic-all-card-acceptance.json",
+      "generatedBy": "tools/audit-tic-all-cards.mjs",
+      "summary": {
+        "total": 252,
+        "verified": 251,
+        "simplified": 0,
+        "missing": 0,
+        "blocked": 0,
+        "noBehavior": 1,
+        "pending": 0,
+        "verifiedPlusSimplified": 251,
+        "gateComplete": true,
+        "strictComplete": true,
+        "campaignPartition": 252,
+        "allRecords": 361,
+        "partitions": {
+          "ticCampaign": 252,
+          "ticInvestigators": 16,
+          "ticPlayer": 93
+        },
+        "chapters": 8,
+        "unassignedChapterCards": 0,
+        "chapterCoverageConserved": true,
+        "testFiles": 80,
+        "testFilesWithoutEvents": 0,
+        "wrapperTestFiles": 1,
+        "testsPassed": 1532,
+        "testsFailed": 0,
+        "pendingPrimitiveRequests": 1,
+        "behaviorPrimitiveRequests": 0,
+        "refactorPrimitiveRequests": 1,
+        "recordsWithEntryFile": 252,
+        "recordsImplemented": 252,
+        "recordsWithTestEvidence": 252,
+        "verifiedByTitle": 229,
+        "verifiedByFileOnly": 22,
+        "implementedWithoutEvidence": 0,
+        "reasonBuckets": {
+          "explicitImplementedFalse": [],
+          "noBehaviorKeys": [],
+          "noTestEvidence": [],
+          "noEntryFile": [],
+          "verifiedByTitle": [
+            "07041",
+            "07042",
+            "07043",
+            "07044",
+            "07045",
+            "07046",
+            "07047",
+            "07048",
+            "07049",
+            "07050",
+            "07051",
+            "07052",
+            "07053",
+            "07054",
+            "07055",
+            "07056",
+            "07057",
+            "07059",
+            "07060",
+            "07061",
+            "07062a",
+            "07062b",
+            "07063",
+            "07064",
+            "07065",
+            "07066",
+            "07067",
+            "07068",
+            "07069",
+            "07070",
+            "07071",
+            "07072",
+            "07073",
+            "07075",
+            "07076",
+            "07077",
+            "07079",
+            "07080",
+            "07081",
+            "07082",
+            "07083",
+            "07084",
+            "07085",
+            "07086",
+            "07087",
+            "07088",
+            "07090",
+            "07091",
+            "07092",
+            "07093",
+            "07094",
+            "07095",
+            "07096",
+            "07097",
+            "07098",
+            "07099",
+            "07105",
+            "07106",
+            "07107",
+            "07123",
+            "07124",
+            "07125",
+            "07127",
+            "07128",
+            "07129",
+            "07130",
+            "07131",
+            "07132",
+            "07133",
+            "07134",
+            "07135",
+            "07136",
+            "07137",
+            "07138",
+            "07139",
+            "07140",
+            "07142",
+            "07143",
+            "07144",
+            "07145",
+            "07146",
+            "07147",
+            "07149",
+            "07150",
+            "07151",
+            "07163",
+            "07164",
+            "07164b",
+            "07165",
+            "07165b",
+            "07166",
+            "07167",
+            "07168",
+            "07169",
+            "07170",
+            "07171",
+            "07172",
+            "07173",
+            "07174a",
+            "07174b",
+            "07175a",
+            "07175b",
+            "07176a",
+            "07176b",
+            "07177a",
+            "07177b",
+            "07178",
+            "07179",
+            "07180",
+            "07181",
+            "07182",
+            "07183",
+            "07184",
+            "07185",
+            "07186",
+            "07187",
+            "07188",
+            "07198",
+            "07199",
+            "07199b",
+            "07200",
+            "07201",
+            "07202",
+            "07203",
+            "07204b",
+            "07204c",
+            "07205a",
+            "07206a",
+            "07206b",
+            "07207a",
+            "07207b",
+            "07208a",
+            "07209a",
+            "07210",
+            "07211a",
+            "07211b",
+            "07213",
+            "07214",
+            "07215",
+            "07216",
+            "07217",
+            "07218",
+            "07219",
+            "07231",
+            "07232",
+            "07233",
+            "07234",
+            "07235",
+            "07236",
+            "07237",
+            "07238",
+            "07239",
+            "07241",
+            "07242",
+            "07243",
+            "07244",
+            "07245",
+            "07246",
+            "07247",
+            "07248",
+            "07249",
+            "07250",
+            "07251",
+            "07252",
+            "07252b",
+            "07253",
+            "07254",
+            "07256",
+            "07257",
+            "07258",
+            "07259",
+            "07260",
+            "07274",
+            "07275",
+            "07276",
+            "07277",
+            "07278",
+            "07279",
+            "07280",
+            "07281",
+            "07282",
+            "07283",
+            "07284",
+            "07285",
+            "07286",
+            "07287",
+            "07288",
+            "07289",
+            "07290",
+            "07291",
+            "07292a",
+            "07292b",
+            "07293",
+            "07294",
+            "07295",
+            "07296",
+            "07297",
+            "07298",
+            "07299",
+            "07300",
+            "07300b",
+            "07311",
+            "07312",
+            "07313",
+            "07314",
+            "07315",
+            "07316",
+            "07317",
+            "07318",
+            "07319",
+            "07321",
+            "07322",
+            "07323",
+            "07324",
+            "07325",
+            "07326",
+            "07327",
+            "07329",
+            "07330a",
+            "07330b",
+            "07331a",
+            "07331b",
+            "07332",
+            "07333",
+            "07334",
+            "07335",
+            "07336",
+            "07337",
+            "07338"
+          ],
+          "verifiedByFileOnly": [
+            "07058",
+            "07074",
+            "07078",
+            "07089",
+            "07100",
+            "07101",
+            "07102",
+            "07103",
+            "07104",
+            "07126",
+            "07141",
+            "07148",
+            "07204a",
+            "07205b",
+            "07208b",
+            "07208c",
+            "07209b",
+            "07212a",
+            "07212b",
+            "07240",
+            "07255",
+            "07328"
+          ],
+          "fileLevelEvidenceOnly": [
+            "07058",
+            "07074",
+            "07078",
+            "07089",
+            "07100",
+            "07101",
+            "07102",
+            "07103",
+            "07104",
+            "07126",
+            "07141",
+            "07148",
+            "07204a",
+            "07205b",
+            "07208b",
+            "07208c",
+            "07209b",
+            "07212a",
+            "07212b",
+            "07240",
+            "07255",
+            "07328"
+          ],
+          "implementedWithoutEvidence": []
+        }
+      }
+    },
+    "node": {
+      "path": "audit/tic-node-acceptance.json",
+      "generatedBy": "node tools/verify-tic.mjs --node",
+      "status": "passed",
+      "commands": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
+      "p8Files": [
+        "tests/tic-p8-registration.test.mjs",
+        "tests/tic-p8-campaign.test.mjs",
+        "tests/tic-p8-multiplayer.test.mjs",
+        "replay-tic-p8"
+      ],
+      "summary": {
+        "tests": 234,
+        "pass": 234,
+        "fail": 0,
+        "skipped": 0
+      },
+      "sourceFiles": 2808
+    },
+    "replay": {
+      "path": "audit/tic-p8-replay.json",
+      "generatedBy": "node tools/verify-tic.mjs --p8-replay",
+      "status": "passed",
+      "fixture": {
+        "path": "tests/fixtures/replay/tic-p8-baseline.json",
+        "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b",
+        "fixtures": 13,
+        "steps": 853,
+        "hashMatches": true
+      },
+      "replay": {
+        "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p8-baseline.json",
+        "exitCode": 0
+      }
+    },
+    "regression": {
+      "path": "audit/tic-interaction-regression.json",
+      "generatedBy": "node tools/verify-tic.mjs --p4-regression",
+      "status": "passed",
+      "fast": {
+        "command": "node tools/run-tests.mjs fast --test-concurrency=6",
+        "exitCode": 0,
+        "log": "artifacts/migration/tic/reports/p4-fast-final.log",
+        "logSha256": "23bc7c5dda6622ce69be6c1ac9ca83d98695c02cdf406bbd0fd7d401d9cf24b1",
+        "failures": []
+      },
+      "replay": {
+        "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p4-baseline.json",
+        "exitCode": 0
+      }
+    },
+    "story": {
+      "path": "audit/tic-story-acceptance.json",
+      "generatedBy": "node tools/import-tic-story.mjs --write",
+      "checks": {
+        "completeChinese": true,
+        "allChapters": true
+      },
+      "missing": 0,
+      "sourceFiles": 18
+    },
+    "images": {
+      "records": 361,
+      "enLocal": 67,
+      "zhLocal": 76,
+      "remoteFallbackAvailable": 361,
+      "remoteFallbackMissing": 0,
+      "referenceSourceMentions": 37,
+      "referenceSourceBound": 0,
+      "runtimeFilesScanned": 2807
+    },
+    "guides": {
+      "command": "node tools/import-scenario-guides.mjs",
+      "exitCode": 0,
+      "chapters": 8,
+      "complete": 8
+    },
+    "presentation": {
+      "command": "node tools/build-presentation.mjs --check",
+      "exitCode": 0,
+      "presentationVersion": "f55858a6751f07e06f46bf2c3f71a2d65ea9d928d5f125c3120233eacfb5fa33",
+      "ticDescriptorsResolved": 361
+    },
+    "docs": {
+      "command": "node tools/check-doc-links.mjs --json",
+      "exitCode": 0,
+      "files": 40,
+      "links": 132,
+      "broken": 0
+    },
+    "registry": {
+      "command": "node tools/check-tic-registry.mjs",
+      "exitCode": 0
+    },
+    "baseline": {
+      "path": "audit/baseline.json",
+      "milestone": "P10"
+    }
+  },
+  "tests": {
+    "node": {
+      "path": "audit/tic-node-acceptance.json",
+      "generatedBy": "node tools/verify-tic.mjs --node",
+      "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
+      "status": "passed",
+      "tests": 234,
+      "pass": 234,
+      "fail": 0,
+      "skipped": 0,
+      "sourceFiles": 2808,
+      "sourceStableDuringRun": true,
+      "p8Files": [
+        "tests/tic-p8-registration.test.mjs",
+        "tests/tic-p8-campaign.test.mjs",
+        "tests/tic-p8-multiplayer.test.mjs",
+        "replay-tic-p8"
+      ],
+      "current": true
+    },
+    "browser": {
+      "legacy": 38,
+      "release": 6,
+      "screenshots": 0
+    },
+    "replay": {
+      "fixtures": 13,
+      "steps": 853
+    },
+    "scenarioAcceptance": {
+      "testFiles": [
+        "tests/tic-scenario-thePitOfDespair.test.mjs",
+        "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "tests/tic-scenario-inTooDeep.test.mjs",
+        "tests/tic-scenario-devilReef.test.mjs",
+        "tests/tic-scenario-horrorInHighGear.test.mjs",
+        "tests/tic-scenario-aLightInTheFog.test.mjs",
+        "tests/tic-scenario-theLairOfDagon.test.mjs",
+        "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+      ],
+      "passedCases": 97
+    }
+  },
+  "remaining": [
+    "audit/baseline.json 尚未记录 TIC 发布审计（milestone P10）：发布收尾需 node tools/audit-baseline.mjs --write（AUDITS 增加 node tools/scan-tic-scope.mjs --check 与 node tools/audit-tic.mjs --check）"
+  ],
+  "gate": {
+    "scopeLedger": {
+      "path": "audit/tic-scope.json",
+      "sha256": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
+      "gates": {
+        "allCardsPartitioned": true,
+        "noOverlap": true,
+        "unionConserved": true,
+        "scenarioIdentities": true,
+        "initialChaosBagsMatchSource": true,
+        "sourcesPresent": true,
+        "crossCycleGroupsResolved": true
+      },
+      "snapshot": true,
+      "pass": true
+    },
+    "scanLedger": {
+      "path": "audit/tic-mechanism-scan.json",
+      "sha256": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
+      "gates": {
+        "scopePassed": true,
+        "allCardsClassified": true,
+        "primitiveCandidatesKnown": true,
+        "sixTypesCovered": true,
+        "allGuidesInventoried": true
+      },
+      "snapshot": true,
+      "pass": true
+    },
+    "planLedger": {
+      "path": "audit/tic-primitive-plan.json",
+      "sha256": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
+      "gates": {
+        "scanPassed": true,
+        "exportsPresent": true,
+        "nodeAcceptance": true,
+        "regressionAcceptance": true,
+        "allNewDone": true,
+        "primitiveMechanismsPlanned": true,
+        "noEscape": true
+      },
+      "snapshot": true,
+      "pass": true
+    },
+    "records": {
+      "totalConserved": true,
+      "sharedMatchesLive": {
+        "ticCampaign": true,
+        "ticInvestigators": true,
+        "ticPlayer": true
+      },
+      "noOverlap": true,
+      "scopePartitionsMatch": {
+        "ticCampaign": true,
+        "ticInvestigators": true,
+        "ticPlayer": true
+      },
+      "scopeCardsMatch": true,
+      "mainAndFaces": true,
+      "pass": true,
+      "total": 361,
+      "main": 322,
+      "faces": 39
+    },
+    "packsByPhase": {
+      "campaign": {
+        "status": "playable",
+        "cards": 252,
+        "records": 252,
+        "pass": true
+      },
+      "investigators": {
+        "status": "playable",
+        "cards": 16,
+        "records": 16,
+        "pass": true
+      },
+      "player": {
+        "status": "playable",
+        "cards": 93,
+        "records": 93,
+        "deckbuilding": 90,
+        "pass": true
+      },
+      "pass": true
+    },
+    "campaignLaunchable": {
+      "registered": true,
+      "statusPlayable": true,
+      "assertLaunchable": true,
+      "lobbyVisible": true,
+      "libraryScenarioCount": 8,
+      "scenarioCountMatches": true,
+      "scenarioIdsOrdered": true,
+      "requiredPacks": [
+        "core",
+        "ticCampaign",
+        "ticInvestigators",
+        "ticPlayer"
+      ],
+      "requiredPacksExist": true,
+      "chaosBagsMatch": true,
+      "recordSchemaMatches": true,
+      "interludeHandler": "innsmouthInterludes",
+      "resolutionIds": [
+        "victory",
+        "defeat"
+      ],
+      "pass": true
+    },
+    "launchEnabled": {
+      "enabled": true,
+      "error": null,
+      "pass": true
+    },
+    "lobby": {
+      "visible": true,
+      "earlyAccess": false,
+      "scenarios": 8,
+      "expectedScenarios": 8,
+      "standard": true,
+      "nameMatches": true,
+      "pass": true
+    },
+    "chaptersLaunchable": {
+      "chapters": 8,
+      "launchable": 8,
+      "lobbyChapters": 8,
+      "pass": true
+    },
+    "encounterGroups": {
+      "expected": 18,
+      "registered": 18,
+      "unique": true,
+      "matchesExpected": true,
+      "chapterGroups": 8,
+      "sharedGroups": 10,
+      "chapterGroupsRegistered": true,
+      "sharedGroupsRegistered": true,
+      "unresolvedChapterGroups": [],
+      "externalGroupsDeclared": [
+        "agentsOfCthulhu",
+        "ancientEvils",
+        "chillingCold",
+        "darkCult",
+        "lockedDoors",
+        "nightgaunts",
+        "pentagram",
+        "rats",
+        "strikingFear"
+      ],
+      "pass": true
+    },
+    "packCounts": {
+      "packs": {
+        "ticCampaign": {
+          "cards": 252,
+          "records": 252
+        },
+        "ticInvestigators": {
+          "cards": 16,
+          "records": 16
+        },
+        "ticPlayer": {
+          "cards": 93,
+          "records": 93
+        }
+      },
+      "totalRecords": 361,
+      "liveRecords": 361,
+      "campaignPartition": 252,
+      "investigatorPartition": 16,
+      "playerPartition": 93,
+      "allCardLedgerTotal": 252,
+      "allCardLedgerAllRecords": 361,
+      "pass": true
+    },
+    "requiredPacksExist": {
+      "packs": [
+        "core",
+        "ticCampaign",
+        "ticInvestigators",
+        "ticPlayer"
+      ],
+      "pass": true
+    },
+    "keywordScanAligned": {
+      "scanMechanisms": [
+        "aloof",
+        "bless",
+        "covenant",
+        "curse",
+        "exceptional",
+        "fast",
+        "hunter",
+        "massive",
+        "peril",
+        "permanent",
+        "researched",
+        "retaliate",
+        "revelation",
+        "road",
+        "seal",
+        "surge",
+        "vehicle",
+        "victory"
+      ],
+      "keywordMechanisms": [
+        "aloof",
+        "bless",
+        "covenant",
+        "curse",
+        "exceptional",
+        "fast",
+        "hunter",
+        "massive",
+        "peril",
+        "permanent",
+        "researched",
+        "retaliate",
+        "revelation",
+        "road",
+        "seal",
+        "surge",
+        "vehicle",
+        "victory"
+      ],
+      "missing": [],
+      "extra": [],
+      "snapshot": true,
+      "pass": true
+    },
+    "keywordsVerified": {
+      "total": 18,
+      "verified": 18,
+      "pending": [],
+      "pass": true
+    },
+    "rulebookEntries": {
+      "expected": 10,
+      "present": 10,
+      "pass": true
+    },
+    "rulebookVerified": {
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "status": "verified",
+      "pass": true
+    },
+    "mechanicsRegistered": {
+      "expected": 9,
+      "registered": 9,
+      "missing": [],
+      "campaignOverviewRule": "ticCampaign",
+      "pass": true
+    },
+    "nodeAcceptance": {
+      "path": "audit/tic-node-acceptance.json",
+      "evidence": {
+        "summary": {
+          "tests": 234,
+          "pass": 234,
+          "fail": 0,
+          "skipped": 0
+        },
+        "testTitles": 234
+      },
+      "generatedBy": "node tools/verify-tic.mjs --node",
+      "status": "passed",
+      "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
+      "tests": 234,
+      "pass": true,
+      "fail": 0,
+      "skipped": 0,
+      "sourceFiles": 2808,
+      "sourceStableDuringRun": true,
+      "p8Markers": [
+        "tests/tic-p8-registration.test.mjs",
+        "tests/tic-p8-campaign.test.mjs",
+        "tests/tic-p8-multiplayer.test.mjs",
+        "replay-tic-p8"
+      ],
+      "p8Files": [
+        "tests/tic-p8-registration.test.mjs",
+        "tests/tic-p8-campaign.test.mjs",
+        "tests/tic-p8-multiplayer.test.mjs",
+        "replay-tic-p8"
+      ],
+      "current": true,
+      "passGate": true
+    },
+    "regressionVerified": {
+      "path": "audit/tic-interaction-regression.json",
+      "generatedBy": "node tools/verify-tic.mjs --p4-regression",
+      "status": "passed",
+      "sourceStableDuringRun": true,
+      "fastExitCode": 0,
+      "replayExitCode": 0,
+      "failures": 0,
+      "present": true,
+      "current": true,
+      "pass": true
+    },
+    "replayVerified": {
+      "path": "audit/tic-p8-replay.json",
+      "present": true,
+      "generatedBy": "node tools/verify-tic.mjs --p8-replay",
+      "status": "passed",
+      "sourceStableDuringRun": true,
+      "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p8-baseline.json",
+      "exitCode": 0,
+      "fixture": {
+        "path": "tests/fixtures/replay/tic-p8-baseline.json",
+        "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b",
+        "fixtures": 13,
+        "steps": 853,
+        "hashMatches": true
+      },
+      "chaptersCovered": 8,
+      "sourceFiles": {
+        "total": 2808,
+        "verified": 2808,
+        "fresh": true
+      },
+      "pass": true
+    },
+    "investigatorsVerified": {
+      "path": "audit/tic-investigators.json",
+      "status": "verified",
+      "formal": 5,
+      "items": 5,
+      "verified": 5,
+      "gates": {
+        "investigators": true,
+        "packBoundary": true,
+        "dexterCardEntry": true,
+        "jsonAndMultiplayer": true,
+        "originalBaselinePreserved": true,
+        "replayExact": true,
+        "fastZeroFailures": true
+      },
+      "pass": true
+    },
+    "playerCardsVerified": {
+      "path": "audit/tic-player-acceptance.json",
+      "status": "verified",
       "total": 93,
       "verified": 93,
       "missing": 0,
       "simplified": 0,
       "buildable": 90,
       "dependencyOnly": 3,
-      "testsPassed": 122
+      "testsPassed": 122,
+      "packCards": 93,
+      "deckbuilding": 90,
+      "shardCodes": 93,
+      "entryCodes": 93,
+      "queue": {
+        "requests": 33,
+        "done": 33,
+        "pending": 0,
+        "rejected": 0
+      },
+      "gates": {
+        "shardsExact": true,
+        "noPendingRequests": true
+      },
+      "pass": true
+    },
+    "scenariosVerified": {
+      "ledgerPresent": true,
+      "ledgerStatus": "verified",
+      "ledgerVerified": true,
+      "chaptersAligned": true,
+      "twelveOfTwelve": true,
+      "fileHashesFresh": true,
+      "sourceStableDuringRun": true,
+      "testsPresent": true,
+      "pendingRequests": 1,
+      "pendingRequestFiles": 1,
+      "pass": true,
+      "verified": 8,
+      "total": 8
+    },
+    "allCardsVerified": {
+      "path": "audit/tic-all-card-acceptance.json",
+      "present": true,
+      "generatedBy": "tools/audit-tic-all-cards.mjs",
+      "total": 252,
+      "verified": 251,
+      "simplified": 0,
+      "noBehavior": 1,
+      "missing": 0,
+      "blocked": 0,
+      "pending": 0,
+      "strictComplete": true,
+      "gateComplete": true,
+      "testsPassed": 1532,
+      "testFiles": 80,
+      "simplifiedCodes": [],
+      "behaviorRequests": 0,
+      "refactorRequests": 1,
+      "countsAligned": true,
+      "entriesPassing": true,
+      "ledger": {
+        "path": "audit/tic-all-card-acceptance.json",
+        "sha256": "f831a2b87238ab389f72fc31dfbcf7c48aeb5294d6af66755b2b2eb6e22dc0f0"
+      },
+      "pass": true,
+      "strictPass": true
+    },
+    "allCardsStrict": {
+      "strictComplete": true,
+      "simplified": 0,
+      "behaviorRequests": 0,
+      "pass": true
+    },
+    "browserAcceptance": {
+      "reportPresent": true,
+      "generatedBy": "playwright + tools/playwright-tic-reporter.mjs",
+      "status": "passed",
+      "current": false,
+      "coverage": {
+        "desktop:zh-CN": true,
+        "desktop:en": true,
+        "mobile:zh-CN": true,
+        "mobile:en": true
+      },
+      "links": {
+        "desktop": true,
+        "mobile": true
+      },
+      "tests": 38,
+      "screenshots": 68,
+      "scenariosCovered": 8,
+      "desktop": true,
+      "mobile": true,
+      "pass": true
+    },
+    "releaseBrowserVerified": {
+      "path": "audit/tic-release-browser.json",
+      "mergedPath": "audit/tic-release-acceptance.json",
+      "present": true,
+      "mergedPresent": true,
+      "generatedBy": "playwright + tools/playwright-tic-release-reporter.mjs",
+      "status": "passed",
+      "complete": true,
+      "sourceStableDuringRun": true,
+      "sourceFiles": {
+        "total": 2808,
+        "verified": 2808,
+        "fresh": true
+      },
+      "specs": [
+        "tests/tic-online.browser.mjs",
+        "tests/tic-progression.browser.mjs",
+        "tests/tic-release.browser.mjs"
+      ],
+      "expectedSpecs": [
+        "tests/tic-release.browser.mjs",
+        "tests/tic-progression.browser.mjs",
+        "tests/tic-online.browser.mjs"
+      ],
+      "specsCovered": true,
+      "tests": 6,
+      "screenshots": 0,
+      "checks": {
+        "desktopBrowser": true,
+        "mobileBrowser": true,
+        "release": {
+          "desktop": true,
+          "mobile": true
+        },
+        "online": {
+          "desktop": true,
+          "mobile": true
+        },
+        "progression": {
+          "desktop": true,
+          "mobile": true
+        },
+        "privacy": {
+          "desktop": true,
+          "mobile": true
+        },
+        "permission": true,
+        "disconnect": true
+      },
+      "acceptance": {
+        "status": "passed",
+        "gatePass": true,
+        "checks": {
+          "launch": true,
+          "chapters": true,
+          "releaseDesktop": true,
+          "releaseMobile": true,
+          "onlineDesktop": true,
+          "onlineMobile": true,
+          "progressionDesktop": true,
+          "progressionMobile": true,
+          "privacyDesktop": true,
+          "privacyMobile": true,
+          "permissionBoundary": true,
+          "disconnectRecovery": true
+        },
+        "missing": 0,
+        "screenshots": {
+          "total": 30,
+          "verified": 30,
+          "existing": 30,
+          "missing": 0,
+          "mismatched": 0
+        }
+      },
+      "pass": true
+    },
+    "storyVerified": {
+      "path": "audit/tic-story-acceptance.json",
+      "generatedBy": "node tools/import-tic-story.mjs --write",
+      "sourceKind": "source-chinese-with-self-translated-supplements",
+      "officialChinese": false,
+      "checks": {
+        "completeChinese": true,
+        "allChapters": true
+      },
+      "missing": 0,
+      "sourceFiles": 18,
+      "translated": 348,
+      "existing": 201,
+      "pass": true
+    },
+    "guidesVerified": {
+      "command": "node tools/import-scenario-guides.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "missing": false,
+      "chapters": 8,
+      "complete": 8,
+      "pass": true
+    },
+    "imagesVerified": {
+      "policy": {
+        "english": "web/img/cards/",
+        "chinese": "web/img/zh/cards/",
+        "remoteFallback": [
+          "imagesrc",
+          "backimagesrc"
+        ],
+        "cycleCopies": false
+      },
+      "policyExpected": {
+        "english": "web/img/cards/",
+        "chinese": "web/img/zh/cards/",
+        "remoteFallback": [
+          "imagesrc",
+          "backimagesrc"
+        ],
+        "cycleCopies": false
+      },
+      "policyMatches": true,
+      "dirs": {
+        "en": {
+          "dir": "web/img/cards",
+          "dirExists": true,
+          "files": 67,
+          "covered": 35,
+          "records": 361,
+          "outsideCycleCodes": [
+            "07048b",
+            "07063b",
+            "07064b",
+            "07066b",
+            "07067b",
+            "07068b",
+            "07069b",
+            "07102b",
+            "07129b",
+            "07130b",
+            "07131b",
+            "07132b",
+            "07133b",
+            "07134b",
+            "07135b",
+            "07136b",
+            "07137b",
+            "07138b",
+            "07139b",
+            "07140b",
+            "07141b",
+            "07142b",
+            "07169b",
+            "07203b",
+            "07240b",
+            "07241b",
+            "07242b",
+            "07243b",
+            "07284b",
+            "07286b",
+            "07287b",
+            "07289b"
+          ]
+        },
+        "zh": {
+          "dir": "web/img/zh/cards",
+          "dirExists": true,
+          "files": 76,
+          "covered": 44,
+          "records": 361,
+          "outsideCycleCodes": [
+            "07048b",
+            "07063b",
+            "07064b",
+            "07066b",
+            "07067b",
+            "07068b",
+            "07069b",
+            "07102b",
+            "07129b",
+            "07130b",
+            "07131b",
+            "07132b",
+            "07133b",
+            "07134b",
+            "07135b",
+            "07136b",
+            "07137b",
+            "07138b",
+            "07139b",
+            "07140b",
+            "07141b",
+            "07142b",
+            "07169b",
+            "07203b",
+            "07240b",
+            "07241b",
+            "07242b",
+            "07243b",
+            "07284b",
+            "07286b",
+            "07287b",
+            "07289b"
+          ]
+        }
+      },
+      "remoteFallback": {
+        "fields": [
+          "imagesrc",
+          "backimagesrc"
+        ],
+        "records": 361,
+        "withImagesrc": 361,
+        "withBackimagesrc": 149,
+        "availableForAllRecords": true
+      },
+      "referenceSourceScan": {
+        "scope": [
+          "index.js",
+          "lib/**",
+          "src/**",
+          "content/**",
+          "web/**"
+        ],
+        "filesScanned": 2807,
+        "mentionCount": 37,
+        "boundReferenceCount": 0,
+        "boundReferences": []
+      },
+      "pass": true
+    },
+    "presentationVerified": {
+      "command": "node tools/build-presentation.mjs --check",
+      "exitCode": 0,
+      "ok": true,
+      "missing": false,
+      "report": {
+        "path": "audit/presentation-report.json",
+        "present": true,
+        "presentationVersion": "f55858a6751f07e06f46bf2c3f71a2d65ea9d928d5f125c3120233eacfb5fa33",
+        "catalogCards": 5930,
+        "imageResolutionCards": 1
+      },
+      "ticDescriptors": {
+        "resolved": 361,
+        "records": 361
+      },
+      "pass": true
+    },
+    "docsVerified": {
+      "command": "node tools/check-doc-links.mjs --json",
+      "exitCode": 0,
+      "ok": true,
+      "missing": false,
+      "files": 40,
+      "links": 132,
+      "broken": 0,
+      "brokenLinks": [],
+      "pass": true
+    },
+    "registryCheck": {
+      "command": "node tools/check-tic-registry.mjs",
+      "exitCode": 0,
+      "ok": true,
+      "missing": false,
+      "pass": true
+    },
+    "primitivesDone": {
+      "path": "audit/tic-primitive-plan.json",
+      "new": 13,
+      "done": 13,
+      "reuse": 7,
+      "unfinished": [],
+      "deferred": 0,
+      "escape": 0,
+      "requests": {
+        "files": 17,
+        "done": 16,
+        "pending": 1,
+        "behaviorPending": [],
+        "refactorPending": [
+          "w5-07280-oath-shared-rules.json"
+        ],
+        "rejected": [],
+        "withdrawn": []
+      },
+      "planGates": {
+        "scanPassed": true,
+        "exportsPresent": true,
+        "nodeAcceptance": true,
+        "regressionAcceptance": true,
+        "allNewDone": true,
+        "primitiveMechanismsPlanned": true,
+        "noEscape": true
+      },
+      "snapshot": true,
+      "pass": true
+    },
+    "interactionVerified": {
+      "path": "audit/tic-interactions.json",
+      "status": "verified",
+      "checks": {
+        "nodeAcceptance": true,
+        "sourceStable": true,
+        "desktopAndMobile": true,
+        "scriptOwnership": true,
+        "guidePlacementAndPrivacy": true,
+        "guideFailureRetryAndKeyboard": true,
+        "baselineUnchanged": true,
+        "fastZeroFailures": true,
+        "replayExact": true
+      },
+      "pass": true
+    },
+    "baseline": {
+      "path": "audit/baseline.json",
+      "milestone": "P10",
+      "ticAuditRecorded": false,
+      "pass": true
+    },
+    "pass": true,
+    "releaseGate": {
+      "launch": true,
+      "lobby": true,
+      "chapters": true,
+      "allCards": true,
+      "allCardsStrict": true,
+      "node": true,
+      "browser": true,
+      "replay": true,
+      "regression": true,
+      "story": true,
+      "guides": true,
+      "images": true,
+      "presentation": true,
+      "docs": true,
+      "disclosure": true,
+      "pass": true
+    },
+    "releaseDisclosure": {
+      "earlyAccess": false,
+      "deferred": [],
+      "lobbyEarlyAccess": false,
+      "lobbyMarked": false,
+      "pass": true
     }
-  },
-  "remaining": [
-    "P8：完整战役、失败分支、存档、多人与 AI、真实联机和发布验收；内容不可启动。"
-  ],
-  "gates": {
-    "p0": true,
-    "p1": true,
-    "p2": true,
-    "p3": true,
-    "p4": true,
-    "p5": true,
-    "p6": true,
-    "p7": true
   }
 }

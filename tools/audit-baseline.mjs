@@ -40,6 +40,10 @@ const AUDITS = [
   // P10（食梦者 M5）：范围账本 + 发布账本，与既有循环同一条门禁。
   { id: 'tdeScope', script: 'tools/scan-tde-scope.mjs', args: ['--check'] },
   { id: 'tdeMigration', script: 'tools/audit-tde.mjs', args: ['--check'] },
+  // P8（印斯茅斯暗潮 M5）：范围账本 + 发布账本 + 真实大厅浏览器发布验收，与既有循环同一条门禁。
+  { id: 'ticScope', script: 'tools/scan-tic-scope.mjs', args: ['--check'] },
+  { id: 'ticMigration', script: 'tools/audit-tic.mjs', args: ['--check'] },
+  { id: 'ticRelease', script: 'tools/audit-tic-release.mjs', args: ['--check'] },
 ]
 
 const run = (command, args, { timeout = 600_000 } = {}) => {

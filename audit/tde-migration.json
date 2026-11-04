@@ -10,7 +10,7 @@
   "docs": "docs/arkham-content-migration.md",
   "scope": {
     "path": "artifacts/migration/tde/scope.json",
-    "sha256": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d"
+    "sha256": "3cb4c49251c24d154b74f6862a74c75c2f502e29dac84a514705d4bd95055373"
   },
   "baseline": {
     "path": "audit/baseline.json",
@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "0d8788cd970bc4e1bd929cbcea77b80a48ff59878369e4d89dcd2d0e537820bf"
+      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
     },
     {
       "path": "content/registry.js",
@@ -2478,7 +2478,7 @@
       "artifacts/migration/tde/mechanism-scan.json": "19acbba9595c9d01a0051d48a7348a5fd0993001e3ab929ee7557f57ac701a56",
       "artifacts/migration/tde/primitive-catalog.json": "939c85e9ebb343078e666378a86e1a6b3c8183f998c0bc9f81ff2d0234ab9292",
       "artifacts/migration/tde/primitive-plan.json": "c3bb30c437e7113544c476ddf27b358c11b1db17794f658d38894d6f73d55b63",
-      "artifacts/migration/tde/scope.json": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d",
+      "artifacts/migration/tde/scope.json": "3cb4c49251c24d154b74f6862a74c75c2f502e29dac84a514705d4bd95055373",
       "audit/tde-all-card-acceptance.json": "3158ec209f0426a32b82b4d3c99209134a1107e9c8c099f758fd4aa750a6c60f",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
       "audit/tde-investigators.json": "eefa6c46c69158d7f67e2cb93cfd34b7137ac0c44b17f8b53f5b52bfae5bc3ab",
@@ -2883,7 +2883,7 @@
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tde/scope.json",
-      "sha256": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d",
+      "sha256": "3cb4c49251c24d154b74f6862a74c75c2f502e29dac84a514705d4bd95055373",
       "milestone": "M0",
       "gatePass": true,
       "registration": {

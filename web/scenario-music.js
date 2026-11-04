@@ -60,6 +60,18 @@ export const SCENARIO_MUSIC = Object.freeze({
     whereTheGodsDwell: chapter('神居之所', '冷原冰封荒土、缟玛瑙城堡、食梦者终局', ['tdeAirPrelude', 'tdeFrozenStar', 'thunderDreams']),
     weaverOfTheCosmos: chapter('编织宇宙', '巨网竖列、蛛后阿特拉克·纳克亚、现实交织', ['tdeDreamsBecomeReal', 'tdeFrozenStar', 'darkestChild']),
   }),
+  // 印斯茅斯暗潮（六循环 P8 注册时补）：复用既有曲库（不新增音频、不复制文件），
+  // 按「深海／小镇疑云／洪水追逐／灯塔终局」配速；每章 2–3 首，避免与前三循环曲目重复计次。
+  theInnsmouthConspiracy: Object.freeze({
+    thePitOfDespair: chapter('绝望深坑', '洞穴深处、淹没水道、钥匙与记忆', ['rites', 'ancientRite', 'controlledChaos']),
+    theVanishingOfElinaHarper: chapter('艾莲娜·哈珀失踪案', '小镇疑云、封锁街区、指认与营救', ['penumbra', 'darkWalk', 'gloomHorizon']),
+    inTooDeep: chapter('深陷危局', '洪水漫城、路障封锁、逐街推进', ['controlledChaos', 'staticMotion', 'itIsLost']),
+    devilReef: chapter('魔鬼礁石', '渔船出海、沉没洞窟、海底钥匙', ['tdeFloatingCities', 'truthInTheStones', 'invariance']),
+    horrorInHighGear: chapter('全速恐惧', '旧公路追逐、载具疾驰、抵达时机', ['itIsLost', 'orion300xb', 'staticMotion']),
+    aLightInTheFog: chapter('雾中之光', '灯塔迷雾、停尸房与地下室、多线终局', ['tcuMystOnTheMoor', 'tdeDreamlike', 'lostFrontier']),
+    theLairOfDagon: chapter('达贡巢穴', '深海祭坛、誓约仪式、诅咒与祝福', ['tdeUnnaturalSituation', 'rites', 'thunderDreams']),
+    intoTheMaelstrom: chapter('暗潮之下', '伊哈·恩斯雷门扉、深海之城、终局抉择', ['tdeFrozenStar', 'ancientRite', 'itIsLost']),
+  }),
 })
 
 export const scenarioPlaylistId = (campaignId, scenarioId) =>

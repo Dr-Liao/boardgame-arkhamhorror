@@ -90,6 +90,9 @@ export const FAST_TESTS = Object.freeze([
   'tic-scenario-shared-encounters.test.mjs', // 10 张共享遭遇卡逐卡验收（w5）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
+  'tic-p8-registration.test.mjs', // P8 生产注册：战役/8 章/三包 playable、layout、遭遇组、记录键、大厅可见
+  'tic-p8-campaign.test.mjs', // P8 完整战役：八章推进、失败/撤退、四档难度、记忆/闪回、存档/replay 确定性
+  'tic-p8-multiplayer.test.mjs', // P8 多人/AI/观察隐私/权限边界/断线恢复
   'tic-interactions.test.mjs',
   'tic-investigators.test.mjs',
   'tic-primitives.test.mjs',
@@ -110,6 +113,7 @@ export const FAST_TESTS = Object.freeze([
   'attack-style.test.mjs',
   'rules-n3.test.mjs',
   'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具
+  'encounter-resolve-context.test.mjs', // 真实遭遇抽取把所在地点作为第 5 参传给 encounterResolve（01168 崩溃回归）
   'card-fidelity-p0.test.mjs', // 卡牌保真度审计 P0 逐卡行为回归（24 张高严重度）
   'card-fidelity-p1.test.mjs', // 卡牌保真度审计 P1/P2：地点限制与双实现收敛
   'card-fidelity-core-p3.test.mjs', // 卡牌保真度 P3：核心包批次
@@ -141,6 +145,7 @@ export const FAST_TESTS = Object.freeze([
   'replay-golden-notz-gathering.test.mjs', // golden replay 分组 1：夜之狂热·集结 5 局
   'replay-golden-notz-long.test.mjs', // golden replay 分组 2：midnight-masks 长局 + strict 3 人随机局
   'replay-golden-campaigns.test.mjs', // golden replay 分组 3：卡尔克萨 / 敦威治 / 失落时代 5 局
+  'replay-tic-p8.test.mjs', // TIC P8 独立 replay 基线：8 章阶梯 + 4 难度 + 失败路线（独立 payload，不动 golden）
   'decision-http.test.mjs',
   'ai-completion.test.mjs',
   'ai-combat-odds.test.mjs', // AI 决策资料里的战斗/躲避预估（combat-odds.js）：只给 AI 读

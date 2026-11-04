@@ -32,11 +32,40 @@ const sources = [
   'tests/p0-regressions.test.mjs', 'tests/reprint-aliases.test.mjs', 'tests/tcu-wages-of-sin.test.mjs',
   'tools/tic-replay-snapshot.mjs',
 ]
+// P8 发布收口新增的证据输入：生产注册章节/包、逐章验收生成器、发布浏览器链、P8 Node 验收与重放。
+// 这些文件由并行任务创建，生成证据时要求全部存在；为避免半成品阶段让所有 runner 因缺文件抛错，
+// 这里只纳入当前已落盘的文件（正式 --write 时它们必须全部存在，缺一个会改变 sourceFiles 并触发重跑）。
+const p8Sources = [
+  'tools/audit-tic-scenarios.mjs',
+  'tools/check-tic-registry.mjs',
+  'tools/audit-tic-release.mjs',
+  'tools/playwright-tic-release-reporter.mjs',
+  'tools/run-tic-release-browser.mjs',
+  'tools/replay-tic-recipes.mjs',
+  'tools/replay-tic-fixtures.mjs',
+  'tests/playwright/playwright.tic-release.config.mjs',
+  'tests/tic-browser-helpers.mjs',
+  'tests/tic-release.browser.mjs',
+  'tests/tic-online.browser.mjs',
+  'tests/tic-progression.browser.mjs',
+  'tests/tic-p8-fixture.mjs',
+  'tests/tic-p8-registration.test.mjs',
+  'tests/tic-p8-campaign.test.mjs',
+  'tests/tic-p8-multiplayer.test.mjs',
+  'tests/replay-tic-p8.test.mjs',
+  'tests/replay-tic-p8-recipes.test.mjs',
+  'tests/tic-late-b-cards.test.mjs',
+  'tests/fixtures/replay/tic-p8-baseline.json',
+  'content/campaigns/theInnsmouthConspiracy/chapter-data.json',
+  ...['thePitOfDespair', 'theVanishingOfElinaHarper', 'inTooDeep', 'devilReef', 'horrorInHighGear',
+    'aLightInTheFog', 'theLairOfDagon', 'intoTheMaelstrom'].map(id => `web/scenario-guides/${id}.json`),
+].filter(path => existsSync(join(MOD, path)))
+const allSources = [...sources, ...p8Sources]
 export function evidenceFiles() {
   // Include transitive server/content code as well: another chat can change an existing reader
   // without touching our new modules. Never let such a change inherit an earlier passing proof.
   const unrelatedGenerated = new Set(['src/cards/tde-campaign-acceptance.js', 'src/cards/tde-player-acceptance.js'])
-  return [...new Set([...sources, ...['src', 'content', 'web'].flatMap(dir => walk(join(MOD, dir))
+  return [...new Set([...allSources, ...['src', 'content', 'web'].flatMap(dir => walk(join(MOD, dir))
     .filter(path => /\.(js|css)$/.test(path)).map(path => relative(MOD, path).replaceAll('\\', '/')))])]
     // These two generated acceptance lists are rewritten by the concurrent TDE audit. They are
     // outside this cycle; their failures and legacy behavior are compared with the control run.

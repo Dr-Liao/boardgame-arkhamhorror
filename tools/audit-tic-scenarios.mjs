@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-// 印斯茅斯暗潮（The Innsmouth Conspiracy）P7 逐章验收账本：N 章 × 12 项检查，全部由代码与实跑证据计算。
+// 印斯茅斯暗潮（The Innsmouth Conspiracy）P8 逐章验收账本：N 章 × 12 项检查，全部由代码与实跑证据计算。
+// P8 起章节来自生产注册表的 chapter-entry（generatedFrom='production registration'），
+// 发布门禁由 tools/audit-tic.mjs 的发布账本裁定；本账本是它的逐章证据输入。
 //
 //   node tools/audit-tic-scenarios.mjs           打印 JSON 账本（不落盘）
 //   node tools/audit-tic-scenarios.mjs --write   写 audit/tic-scenario-acceptance.json
@@ -1012,9 +1014,25 @@ const structuralTotals = Object.fromEntries(['setupAndZones', 'actsAndAgendas', 
   [check, items.filter(item => item.notes?.subsignals?.structural?.[check]).length]))
 const missingChapterTests = items.filter(item => !item.notes?.chapterTest?.exists).map(item => item.id)
 const missingChapterTestFiles = items.map(item => item.notes?.chapterTest?.file).filter(Boolean)
-const replayFixture = readJson('tests/fixtures/replay/tic-p7-baseline.json')
-const replayFixtureCampaigns = uniq((replayFixture?.fixtures || [])
+// P8：TIC 战役重放基线（rep 维护）。旧 tic-p7-baseline 只有跨循环 13 局；P8 新增
+// tests/fixtures/replay/tic-p8-baseline.json（含 8 章 TIC recipe）后，saveReplay 的
+// replayCoversTicChapters 才为 true。证据文件 audit/tic-p8-replay.json 的 fixture.path
+// 也是候选（避免两份清单命名漂移）。**优先取覆盖了本战役章节的基线**（P8 基线），
+// 再退回第一个可用清单——否则 p7 的跨循环基线会先命中，永远看不到 TIC 覆盖。
+const replayCandidates = uniq([
+  'tests/fixtures/replay/tic-p7-baseline.json',
+  'tests/fixtures/replay/tic-p8-baseline.json',
+  (readJson('audit/tic-p8-replay.json')?.fixture?.path || null),
+].filter(Boolean))
+const campaignsOfReplay = report => uniq((report?.fixtures || [])
   .map(fixture => fixture.recipe?.settings?.campaignId || fixture.recipe?.campaignId).filter(Boolean))
+const replayCandidateReports = replayCandidates.map(candidate => ({ path: candidate, report: readJson(candidate) }))
+  .filter(entry => entry.report?.fixtures)
+const replayChosen = replayCandidateReports.find(entry => campaignsOfReplay(entry.report).includes(CAMPAIGN_ID))
+  || replayCandidateReports[0]
+const replayFixture = replayChosen?.report || readJson('tests/fixtures/replay/tic-p7-baseline.json')
+const replayFixturePath = replayChosen?.path || 'tests/fixtures/replay/tic-p7-baseline.json'
+const replayFixtureCampaigns = campaignsOfReplay(replayFixture)
 const replayCoversTicChapters = replayFixtureCampaigns.includes(CAMPAIGN_ID)
 const staleEvidence = []
 for (const [name, relative] of [
@@ -1030,9 +1048,10 @@ for (const [name, relative] of [
 const report = {
   schemaVersion: 1,
   campaignId: CAMPAIGN_ID,
-  milestone: 'M3',
-  stage: 'P7',
-  generatedFrom: 'development-chapters-only (production registration closed)',
+  milestone: 'M5',
+  stage: 'P8',
+  generatedFrom: 'production registration',
+  productionGate: 'playable',
   generatedBy: 'node tools/audit-tic-scenarios.mjs --write',
   checks: SCENARIO_MIGRATION_CHECKS,
   summary: {
@@ -1056,6 +1075,7 @@ const report = {
       sourceFiles: (storyAcceptance.sourceFiles || []).length,
     } : null,
     referenceAvailable: referenceOk,
+    replayFixtureFile: replayFixturePath,
     replayFixtures: replayFixture?.fixtures?.length ?? null,
     replayFixtureCampaigns,
     replayCoversTicChapters,
@@ -1093,20 +1113,22 @@ const report = {
     !browserReport || (browserReport.coverage && Object.values(browserReport.coverage).every(value => !value))
       ? 'browserAcceptance：audit/tic-browser-acceptance.json status=failed/coverage 全 false，缺 8 章 desktop+mobile 实机证据与指南入口截图' : null,
     !replayCoversTicChapters
-      ? `saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 ${replayFixture?.fixtures?.length ?? 0} 局基线不含 TIC 章节（campaignId 仅 ${replayFixtureCampaigns.join('/') || '空'}），需补八章 replay 基线并重建 audit/tic-p7-baseline.json` : null,
+      ? `saveReplay：${replayFixturePath} 的 ${replayFixture?.fixtures?.length ?? 0} 局基线不含 TIC 章节（campaignId 仅 ${replayFixtureCampaigns.join('/') || '空'}），需补八章 replay 基线并重建 audit/tic-p8-replay.json`
+      : null,
     pendingPrimitiveRequests.length
       ? `引擎原语队列仍有 ${pendingPrimitiveRequests.length} 条 pending：${pendingPrimitiveRequests.map(request => request.id).join(', ')}（${pendingPrimitiveRequests.map(request => request.file).join(', ')}）` : null,
     danglingChapterSources.length ? 'audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）' : null,
     ...staleEvidence.filter(entry => entry.status === 'stale').map(entry =>
-      `${entry.file} 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建`),
+      `${entry.file} 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建`),
   ].filter(Boolean)),
 }
 
 // ---------------------------------------------------------------- 输出
 const serialized = json(report)
-const summaryLine = `TIC P7 逐章验收：${report.summary.completeChapters}/${report.summary.chapters} 章 12/12`
+const summaryLine = `TIC P8 逐章验收：${report.summary.completeChapters}/${report.summary.chapters} 章 12/12`
   + `；检查项通过章数 ${SCENARIO_MIGRATION_CHECKS.map(check => `${check}=${checkTotals[check]}`).join(' ')}`
-  + `；缺本章验收测试 ${missingChapterTests.length} 章；pending 原语 ${pendingPrimitiveRequests.length} 条；remaining ${report.remaining.length} 条`
+  + `；缺本章验收测试 ${missingChapterTests.length} 章；pending 原语 ${pendingPrimitiveRequests.length} 条；`
+  + `replay ${replayFixturePath}（${replayFixture?.fixtures?.length ?? 0} 局，覆盖 TIC ${replayCoversTicChapters}）；remaining ${report.remaining.length} 条`
 if (MODE === 'write') {
   await writeFile(LEDGER, serialized)
   console.log(`已写入 audit/tic-scenario-acceptance.json。${summaryLine}`)

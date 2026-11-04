@@ -1,4 +1,8 @@
-// Catalog identities only. Rules/chapters are promoted independently after acceptance.
+// 《印斯茅斯暗潮》战役共用身份与目录数据（纯数据模块）。
+//
+// P7 之前这里导出 `catalogPack()`，用一张宽泛的卡号范围生成三个 catalog-only 内容包。
+// P8 生产注册后三个包各自有真实 manifest（content/packs/tic*/manifest.js），本文件
+// 只保留「哪些卡属于哪个包/遭遇组」的唯一定义，供包清单、章节装配与审计工具复用。
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 
 export const CAMPAIGN_ID = 'theInnsmouthConspiracy'
@@ -22,6 +26,11 @@ export const CARD_PARTITIONS = Object.freeze({
   ticPlayer: Object.freeze(CYCLE_CODES.filter(code => !ALL_CARDS[code].encounterCode && !investigators.has(code))),
 })
 export const ENCOUNTER_GROUPS = Object.freeze([...new Set(CARD_PARTITIONS.ticCampaign.map(code => ALL_CARDS[code].encounterCode))].sort())
+// 包清单使用的 camelCase 遭遇组 id（与 content/schema.js 的 `id` 约束一致）。
+export const toCamelCase = value => String(value).replace(/_([a-z])/g, (_, lower) => lower.toUpperCase())
+export const ENCOUNTER_GROUP_IDS = Object.freeze(ENCOUNTER_GROUPS.map(toCamelCase))
+// 八张剧本参考卡：它们的「实现」就是对应章节的 definition/behavior（没有单卡行为文件）。
+export const SCENARIO_REFERENCE_CODES = Object.freeze(chapters.map(chapter => chapter.code))
 const symbols = ['skull', 'skull', 'cultist', 'cultist', 'tablet', 'tablet', 'elderthing', 'elderthing', 'autofail', 'eldersign']
 export const CHAOS_BAGS = Object.freeze({
   easy: Object.freeze(['+1', '+1', '0', '0', '0', '-1', '-1', '-2', '-2', ...symbols]),
@@ -29,17 +38,3 @@ export const CHAOS_BAGS = Object.freeze({
   hard: Object.freeze(['0', '0', '0', '-1', '-1', '-1', '-2', '-2', '-3', '-3', '-4', '-5', ...symbols]),
   expert: Object.freeze(['0', '-1', '-1', '-2', '-2', '-3', '-3', '-4', '-4', '-5', '-6', '-8', ...symbols]),
 })
-
-export function catalogPack(id, name) {
-  const codes = CARD_PARTITIONS[id]
-  if (!codes) throw new RangeError(`未知目录包 ${id}`)
-  return Object.freeze({ schemaVersion: 1, id, name, contentVersion: '0.1.0', minRulesVersion: 'n6.0',
-    status: 'catalog-only', dependencies: ['core'],
-    cardRanges: [{ from: '07001', to: '07338' }, { from: '07001a', to: '07338z' }],
-    cards: codes.map(code => ({ code, name: ALL_CARDS[code].nameZh || ALL_CARDS[code].name,
-      type: id === 'ticCampaign' ? ['enemy', 'treachery'].includes(ALL_CARDS[code].type) ? 'encounter' : 'other' : 'player',
-      cataloged: true, imageAvailable: !!ALL_CARDS[code].imagesrc, rulesImplemented: false, deckbuilding: false })),
-    encounterGroupIds: id === 'ticCampaign' ? ENCOUNTER_GROUPS.map(group => group.replace(/_([a-z])/g, (_, c) => c.toUpperCase())) : [],
-    behaviorIds: [],
-  })
-}

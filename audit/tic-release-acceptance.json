@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theInnsmouthConspiracy",
+  "milestone": "P8",
+  "generatedBy": "node tools/audit-tic-release.mjs --write",
+  "status": "passed",
+  "evidence": {
+    "command": "node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tic-release.config.mjs",
+    "browserLedger": "audit/tic-release-browser.json",
+    "scenarioLedger": "audit/tic-scenario-acceptance.json",
+    "acceptanceLedger": "audit/tic-release-acceptance.json",
+    "screenshotRoot": "artifacts/migration/tic/p8/screenshots/"
+  },
+  "campaign": {
+    "launchable": true,
+    "status": "playable",
+    "launchError": null,
+    "lobbyVisible": true,
+    "earlyAccess": false,
+    "scenarios": [
+      "thePitOfDespair",
+      "theVanishingOfElinaHarper",
+      "inTooDeep",
+      "devilReef",
+      "horrorInHighGear",
+      "aLightInTheFog",
+      "theLairOfDagon",
+      "intoTheMaelstrom"
+    ],
+    "scenarioCount": 8,
+    "chapterCount": 8,
+    "rulebookEntries": 10
+  },
+  "chapters": [
+    {
+      "id": "thePitOfDespair",
+      "code": "07041",
+      "name": "绝望深坑",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "theVanishingOfElinaHarper",
+      "code": "07056",
+      "name": "艾莲娜·哈珀失踪案",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "inTooDeep",
+      "code": "07123",
+      "name": "深陷危局",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "devilReef",
+      "code": "07163",
+      "name": "魔鬼礁石",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "horrorInHighGear",
+      "code": "07198",
+      "name": "全速恐惧",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "aLightInTheFog",
+      "code": "07231",
+      "name": "雾中之光",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "theLairOfDagon",
+      "code": "07274",
+      "name": "达贡巢穴",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "intoTheMaelstrom",
+      "code": "07311",
+      "name": "暗潮之下",
+      "status": "verified",
+      "verified": true
+    }
+  ],
+  "checks": {
+    "launch": true,
+    "chapters": true,
+    "releaseDesktop": true,
+    "releaseMobile": true,
+    "onlineDesktop": true,
+    "onlineMobile": true,
+    "progressionDesktop": true,
+    "progressionMobile": true,
+    "privacyDesktop": true,
+    "privacyMobile": true,
+    "permissionBoundary": true,
+    "disconnectRecovery": true
+  },
+  "missing": [],
+  "browser": {
+    "ledger": "audit/tic-release-browser.json",
+    "status": "passed",
+    "complete": true,
+    "sourceStableDuringRun": true,
+    "specs": [
+      "tests/tic-online.browser.mjs",
+      "tests/tic-progression.browser.mjs",
+      "tests/tic-release.browser.mjs"
+    ],
+    "expectedSpecs": [
+      "tests/tic-release.browser.mjs",
+      "tests/tic-progression.browser.mjs",
+      "tests/tic-online.browser.mjs"
+    ],
+    "tests": 6,
+    "testsPassed": 6,
+    "testsBySpec": {
+      "tests/tic-online.browser.mjs": 2,
+      "tests/tic-progression.browser.mjs": 2,
+      "tests/tic-release.browser.mjs": 2
+    },
+    "sourceFiles": 2808,
+    "sourceFilesSha256": "f29cdc67c8fe26f47954bcbf32e9eee95e486ed0ff2b0a043d01c47d54adebb9"
+  },
+  "screenshots": {
+    "total": 30,
+    "verified": 30,
+    "base": "repo-root",
+    "byPhase": {
+      "release": 10,
+      "online": 6,
+      "progression": 14
+    },
+    "byPhaseViewport": {
+      "release": {
+        "desktop": true,
+        "mobile": true
+      },
+      "online": {
+        "desktop": true,
+        "mobile": true
+      },
+      "progression": {
+        "desktop": true,
+        "mobile": true
+      }
+    },
+    "existing": 30,
+    "missing": [],
+    "mismatched": []
+  },
+  "deferred": [
+    {
+      "id": "victoryEpilogue",
+      "reason": "浏览器证据覆盖第一章→幕间升级→第二章→最终章失败结局（campaignResult）；胜利尾声逐段叙事由 Node 战役验收（tic-p8-campaign/tic-interludes）覆盖。"
+    },
+    {
+      "id": "manualUpgradePurchase",
+      "reason": "关间升级窗验证了真实 hubAutoUpgrade（自动购买一次合法升级）；hubPurchase 手动选择由 Node 与 TCU/TDE 既有浏览器证据覆盖。"
+    },
+    {
+      "id": "relayReconnect",
+      "reason": "联机断线恢复验证到页面重开 + 真实会话版本号/手牌隐私一致；中转服务级断线重连由大厅通用联机回归覆盖。"
+    }
+  ],
+  "sourceFiles": 2808,
+  "gate": {
+    "pass": true
+  }
+}

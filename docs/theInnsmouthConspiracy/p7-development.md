@@ -138,7 +138,7 @@ P7 **已完成**（2026-11-04 晚，多智能体收口轮）：八章逐章 12 �
 
 「大海的秘密」的三张版本议程（恶魔礁按记忆二选一 + 第二阶段）印着同一条全局规则：「你不在载具上时，作为在[[海洋]]地点间移动的额外费用，你必须花费 2 行动」，第二句是「求取空气」的强制结算。
 
-- 新增 `movementActionSurcharge`（`actRule` / `agendaRule`，形状 `{ amount, betweenTraits? }` 或纯数字，注册期校验）：读点是 [turn-flow.js](games/arkhamhorror/src/engine/turn-flow.js) 的 `actionCost`——**只加在基础移动行动**上，起止地点都要带 `betweenTraits` 特性，在载具上的调查员不付（`vehicleOf` 按 `mechanicState.vehicles` 的乘客判定）。当前幕/议程两张条目相加，同一张卡只算一次。
+- 新增 `movementActionSurcharge`（`actRule` / `agendaRule`，形状 `{ amount, betweenTraits? }` 或纯数字，注册期校验）：读点是 [turn-flow.js](../../src/engine/turn-flow.js) 的 `actionCost`——**只加在基础移动行动**上，起止地点都要带 `betweenTraits` 特性，在载具上的调查员不付（`vehicleOf` 按 `mechanicState.vehicles` 的乘客判定）。当前幕/议程两张条目相加，同一张卡只算一次。
 - 三张议程卡（`devilReef/07164–07166`）只声明这条规则：`movementActionSurcharge: { amount: 2, betweenTraits: ['Ocean'] }`。
 - 第二句「求取空气」**不需要条目声明**：引擎的 `flood.js` 已有 `beginAirTurn`（回合开始、`water.air` 驱动）→ `checkAirAfterMove`（进入未淹没/部分淹没地点或载具即解除）→ `endAirTurn`（回合结束结算 5 点直接伤害），恶魔礁与达贡巢穴都配置了 `water: { air: true, damage: 5 }`。本轮补了可复算用例证明这条读点真实生效。
 - 证据：`tests/tic-walking-surcharge.test.mjs`（5 例）覆盖三张议程的「海洋→海洋 = 3 行动」、海洋→内陆与无该议程时 = 1 行动、注册期形状校验、完全淹没地点「回合开始→回合结束 5 点直接伤害」、以及载具 `protectsFromFlood` 把有效淹没压到 0 因而不记录空气风险。全量快测 **5954 项 0 失败**、replay 13 局 797 步一致。

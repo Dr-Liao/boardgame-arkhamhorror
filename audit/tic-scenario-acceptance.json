@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
   "campaignId": "theInnsmouthConspiracy",
-  "milestone": "M3",
-  "stage": "P7",
-  "generatedFrom": "development-chapters-only (production registration closed)",
+  "milestone": "M5",
+  "stage": "P8",
+  "generatedFrom": "production registration",
+  "productionGate": "playable",
   "generatedBy": "node tools/audit-tic-scenarios.mjs --write",
   "checks": [
     "sourceLocked",
@@ -80,28 +81,17 @@
       "sourceFiles": 18
     },
     "referenceAvailable": true,
+    "replayFixtureFile": "tests/fixtures/replay/tic-p8-baseline.json",
     "replayFixtures": 13,
     "replayFixtureCampaigns": [
-      "thePathToCarcosa",
-      "theDunwichLegacy",
-      "theForgottenAge",
-      "nightOfTheZealot"
+      "theInnsmouthConspiracy"
     ],
-    "replayCoversTicChapters": false,
+    "replayCoversTicChapters": true,
     "primitiveRequests": {
       "total": 17,
-      "pending": 10,
+      "pending": 1,
       "pendingFiles": [
-        "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
-        "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
-        "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-        "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-        "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-        "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-        "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-        "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-        "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
-        "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json"
+        "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json"
       ]
     },
     "engineGapNotes": 7
@@ -156,7 +146,7 @@
     "content/campaigns/theInnsmouthConspiracy/introduction.js": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e",
     "content/campaigns/theInnsmouthConspiracy/flashbacks.js": "4d3ec7aeb4b0349c73c6f42ceb2bbaca0aba44b46020e6e14f9e7e68749fb548",
     "content/campaigns/theInnsmouthConspiracy/interludes.js": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a",
-    "content/campaigns/theInnsmouthConspiracy/manifest.js": "655c2c802d094a8c4a9f6b8da5a93c36356a6a8b29ac1bca9bbbebfdc8974d9d",
+    "content/campaigns/theInnsmouthConspiracy/manifest.js": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be",
     "content/campaigns/theInnsmouthConspiracy/flow.js": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b",
     "content/campaigns/theInnsmouthConspiracy/story-text.js": "11856d090cc6412ecf2f35d5878297a66ea2008f0368ae12d7ed98a8785e485f",
     "content/campaigns/theInnsmouthConspiracy/chapter-data.json": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
@@ -290,103 +280,11 @@
   ],
   "pendingPrimitiveRequests": [
     {
-      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
-      "id": "p7-a1-07105-spawn-most-clues",
-      "status": "pending",
-      "primitive": "enemySpawnRule.spawnMostClues",
-      "cards": [
-        "07105"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
-      "id": "p7-a1-07178-vehicle-location-sync",
-      "status": "pending",
-      "primitive": "vehicles.move 同步剧情资产 location",
-      "cards": [
-        "07178"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-      "id": "p7-a2-act-clue-objective-data",
-      "status": "pending",
-      "primitive": "content/campaigns/theInnsmouthConspiracy/chapter-data.json 的 aLightInTheFog.acts 给 07236 补 `objective: { type: 'clues', perInvestigator: 3 }`（以及 07237/07238 若需原生展示可补对应 objective 数据）。",
-      "cards": [
-        "07236"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-      "id": "w5-07280-act1-back-layout.json",
-      "status": "pending",
-      "primitive": null,
-      "cards": []
-    },
-    {
       "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
       "id": "w5-07280-oath-shared-rules.json",
       "status": "pending",
       "primitive": null,
       "cards": []
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-      "id": "w6-act-agenda-deck-ops",
-      "status": "pending",
-      "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
-      "cards": [
-        "07060",
-        "07061",
-        "07236",
-        "07237",
-        "07315"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-      "id": "w6-capture-mechanism",
-      "status": "pending",
-      "primitive": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）",
-      "cards": [
-        "07233",
-        "07252",
-        "07252b",
-        "07253",
-        "07260"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-      "id": "w6-harper-scenario-events",
-      "status": "pending",
-      "primitive": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人",
-      "cards": [
-        "07060",
-        "07061",
-        "07062a",
-        "07062b"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
-      "id": "w6-holding-cells-restrictions",
-      "status": "pending",
-      "primitive": "locationRule.enemiesCannotEnter + locationRule.enemySpawnRedirect（地点侧敌人进入/生成限制）",
-      "cards": [
-        "07252b"
-      ]
-    },
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-      "id": "w6-parallel-acts",
-      "status": "pending",
-      "primitive": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择",
-      "cards": [
-        "07316",
-        "07317",
-        "07318"
-      ]
     }
   ],
   "danglingEvidence": [
@@ -719,13 +617,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
@@ -915,7 +806,7 @@
         "identities": 32
       },
       "fileHashes": {
-        "scenarioIndex": "dd62aac7b9a58317e26e182904d6307c14b222af16a28b174a001aa33cae1b14",
+        "scenarioIndex": "2a8c4a28b7b30656a1f925f16c21d2caca4925cd6b9f35952c66b1d835f582a9",
         "guide": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb",
         "acceptanceTest": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
       },
@@ -1260,43 +1151,11 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
             "primitive": null,
             "cards": []
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-            "id": "w6-act-agenda-deck-ops",
-            "status": "pending",
-            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
-            "cards": [
-              "07060",
-              "07061",
-              "07236",
-              "07237",
-              "07315"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
-            "id": "w6-harper-scenario-events",
-            "status": "pending",
-            "primitive": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人",
-            "cards": [
-              "07060",
-              "07061",
-              "07062a",
-              "07062b"
-            ]
           }
         ],
         "existingEvidence": {
@@ -1495,7 +1354,7 @@
         "identities": 40
       },
       "fileHashes": {
-        "scenarioIndex": "2435f521bbe9ba9aba7011dd510eb000d6e7626f48ce6a6180b4c50e52d907c4",
+        "scenarioIndex": "077ec2636d9cdcaf0afde5aaeb9961da259e6b43a9cab299a31df778656f4b16",
         "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4",
         "acceptanceTest": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
       },
@@ -1809,13 +1668,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
@@ -2009,7 +1861,7 @@
         "identities": 41
       },
       "fileHashes": {
-        "scenarioIndex": "1d85f3ffd62edf3f640dc06b6a47576e4e822625bbaccae84f9a491bb3d08ee9",
+        "scenarioIndex": "1aa771a6c2c7f797b6b5091c84b4f49f809b759526c9e20ad0d468fe448d2b62",
         "guide": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83",
         "acceptanceTest": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
       },
@@ -2305,22 +2157,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
-            "id": "p7-a1-07178-vehicle-location-sync",
-            "status": "pending",
-            "primitive": "vehicles.move 同步剧情资产 location",
-            "cards": [
-              "07178"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
@@ -2514,7 +2350,7 @@
         "identities": 45
       },
       "fileHashes": {
-        "scenarioIndex": "e0d59e92ae59addf38dc8f193f846a378bc3fdf39bc743142cb675c864287c53",
+        "scenarioIndex": "2efe92eda86905c57a2c03f8a1133df4ad221194fceb400f7a6d37f0a30eff43",
         "guide": "da8c37d6980342b4da7fd9fe67a2a4ef3fbeee9d281ecb47b65a268b9e494538",
         "acceptanceTest": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
       },
@@ -2808,13 +2644,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
@@ -3000,7 +2829,7 @@
         "identities": 43
       },
       "fileHashes": {
-        "scenarioIndex": "5cc37c6e640e2441d610c3d2341ae724d7d572af4d8d559bb1f0ed9ca9b75a42",
+        "scenarioIndex": "61db717095a1bccd622f0a194914571fe2b589e7ed81b0d7cab4e1ed53392a58",
         "guide": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423",
         "acceptanceTest": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
       },
@@ -3340,62 +3169,11 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
-            "id": "p7-a2-act-clue-objective-data",
-            "status": "pending",
-            "primitive": "content/campaigns/theInnsmouthConspiracy/chapter-data.json 的 aLightInTheFog.acts 给 07236 补 `objective: { type: 'clues', perInvestigator: 3 }`（以及 07237/07238 若需原生展示可补对应 objective 数据）。",
-            "cards": [
-              "07236"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
             "primitive": null,
             "cards": []
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-            "id": "w6-act-agenda-deck-ops",
-            "status": "pending",
-            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
-            "cards": [
-              "07060",
-              "07061",
-              "07236",
-              "07237",
-              "07315"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
-            "id": "w6-capture-mechanism",
-            "status": "pending",
-            "primitive": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）",
-            "cards": [
-              "07233",
-              "07252",
-              "07252b",
-              "07253",
-              "07260"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
-            "id": "w6-holding-cells-restrictions",
-            "status": "pending",
-            "primitive": "locationRule.enemiesCannotEnter + locationRule.enemySpawnRedirect（地点侧敌人进入/生成限制）",
-            "cards": [
-              "07252b"
-            ]
           }
         ],
         "existingEvidence": {
@@ -3591,7 +3369,7 @@
         "identities": 45
       },
       "fileHashes": {
-        "scenarioIndex": "18111d595fcb601a44c4fa445f659908e9dfef3d1f2f9686551527881cd98f15",
+        "scenarioIndex": "78eecd44f48fb5a55ef62b8f331097241f8ea77900697ea04dd41ecbe8e15602",
         "guide": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31",
         "acceptanceTest": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
       },
@@ -3924,13 +3702,6 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
@@ -4139,7 +3910,7 @@
         "identities": 40
       },
       "fileHashes": {
-        "scenarioIndex": "61ef78a0a9bbb50f1bd7fee34f2a45ff973bf09ea5a4d3deda8e855d91ff1ead",
+        "scenarioIndex": "b7cdc816080d2ec56cc54d9233f4ace269b07e389dda296a9bd4e8445bb96d08",
         "guide": "813590e9d37022e1622e3f89e9dffd4dbdbb68bf9db4018da6e5f084f66ec4d0",
         "acceptanceTest": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
       },
@@ -4472,42 +4243,11 @@
         },
         "pendingPrimitiveRequests": [
           {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
-            "id": "w5-07280-act1-back-layout.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          },
-          {
             "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
             "id": "w5-07280-oath-shared-rules.json",
             "status": "pending",
             "primitive": null,
             "cards": []
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
-            "id": "w6-act-agenda-deck-ops",
-            "status": "pending",
-            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
-            "cards": [
-              "07060",
-              "07061",
-              "07236",
-              "07237",
-              "07315"
-            ]
-          },
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
-            "id": "w6-parallel-acts",
-            "status": "pending",
-            "primitive": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择",
-            "cards": [
-              "07316",
-              "07317",
-              "07318"
-            ]
           }
         ],
         "existingEvidence": {
@@ -4703,7 +4443,7 @@
         "identities": 49
       },
       "fileHashes": {
-        "scenarioIndex": "558906b4e05214035c3268e75cfd53d5fccaf5cb4096eceb85c15b6ad891d12a",
+        "scenarioIndex": "9956d856a661173b7cf34b423911543207e9e0f29c9725b71f901277d78c80d1",
         "guide": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b",
         "acceptanceTest": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
       },
@@ -4711,9 +4451,8 @@
     }
   ],
   "remaining": [
-    "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
-    "引擎原语队列仍有 10 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
+    "引擎原语队列仍有 1 条 pending：w5-07280-oath-shared-rules.json（artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json）",
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
-    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建"
+    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建"
   ]
 }

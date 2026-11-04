@@ -319,6 +319,8 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theCircleUndone: 5,
   // P10（M5 发布）：食梦者 06 段是第六循环，已注册进生产组合根并在大厅可启动。
   theDreamEaters: 6,
+  // P8（M5 发布）：印斯茅斯暗潮 07 段是第七循环，已注册进生产组合根并在大厅可启动。
+  theInnsmouthConspiracy: 7,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

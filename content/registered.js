@@ -73,6 +73,25 @@ import * as tdeWeaverOfTheCosmos from './campaigns/theDreamEaters/scenarios/weav
 import { manifest as ticCampaignPack } from './packs/ticCampaign/manifest.js'
 import { manifest as ticInvestigators } from './packs/ticInvestigators/manifest.js'
 import { manifest as ticPlayer } from './packs/ticPlayer/manifest.js'
+// P8（六循环发布）：《印斯茅斯暗潮》战役 + 8 章真实章节 + 三个内容包进入生产组合根。
+// 8 章模块经 chapter-entry.js 构建：真实 layout + status 'playable'（P7 逐章验收 8/8 已完成）。
+//
+// 静态 import 环的处理：本章装配链原本经 companions-setup.js 直接 import
+//   `src/engine/hand-entry.js`，而 hand-entry → content/registered.js，形成
+//   registered → scenarios/<id>/index.js → chapter-entry → companions-setup → hand-entry → registered。
+// 在 registered.js 作为入口时该环可求值，但「先 import chapter-entry」的测试/工具会因
+// hand-entry 的 contentRegistry 绑定尚未初始化而 TDZ。P8 已把 companions-setup 改为走场景
+// 运行时 api.putInHand(seat, code)（src/engine/scenario-runtime.js），环因此断开；这里不再
+// 保留 P7 的惰性 `ensureInnsmouthCatalogRegistered()` 注册路径（保留同名空操作仅为兼容旧测试）。
+import { manifest as theInnsmouthConspiracy } from './campaigns/theInnsmouthConspiracy/manifest.js'
+import * as ticThePitOfDespair from './campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js'
+import * as ticTheVanishingOfElinaHarper from './campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js'
+import * as ticInTooDeep from './campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js'
+import * as ticDevilReef from './campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js'
+import * as ticHorrorInHighGear from './campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js'
+import * as ticALightInTheFog from './campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js'
+import * as ticTheLairOfDagon from './campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js'
+import * as ticIntoTheMaelstrom from './campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
@@ -80,7 +99,7 @@ let bundle = {
     tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer,
     ticCampaignPack, ticInvestigators, ticPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
-    theDreamEaters],
+    theDreamEaters, theInnsmouthConspiracy],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -91,7 +110,9 @@ let bundle = {
     tcuTheWagesOfSin, tcuForTheGreaterGood, tcuUnionAndDisillusion, tcuInTheClutchesOfChaos,
     tcuBeforeTheBlackThrone,
     tdeBeyondTheGatesOfSleep, tdeWakingNightmare, tdeTheSearchForKadath, tdeAThousandShapesOfHorror,
-    tdeDarkSideOfTheMoon, tdePointOfNoReturn, tdeWhereTheGodsDwell, tdeWeaverOfTheCosmos],
+    tdeDarkSideOfTheMoon, tdePointOfNoReturn, tdeWhereTheGodsDwell, tdeWeaverOfTheCosmos,
+    ticThePitOfDespair, ticTheVanishingOfElinaHarper, ticInTooDeep, ticDevilReef, ticHorrorInHighGear,
+    ticALightInTheFog, ticTheLairOfDagon, ticIntoTheMaelstrom],
 }
 export let contentRegistry = createContentRegistry(bundle)
 
@@ -110,22 +131,11 @@ export function registerContentBundle(additions) {
   contentRegistry = validated
 }
 
-// P7《印斯茅斯暗潮》：目录级注册（campaign catalog-only + 8 章 development）。
-// 生产组合根静态 import 会形成 chapter-entry ↔ engine ↔ registered 的循环依赖，
-// 因此改为显式惰性注册：测试/工具在需要 enumerate 全部战役章节时调用；
-// P8 发布时再把 8 章升级为 playable 并静态接入（见 docs/theInnsmouthConspiracy/p7-development.md）。
-let innsmouthCatalogRegistered = false
+// P8《印斯茅斯暗潮》：战役与 8 章已在组合根静态注册（见上方 import 区注释），
+// 这里只保留 P7 的异步入口作为兼容别名：旧测试（tests/campaign-experience.test.mjs）
+// 与外部工具仍可 `await ensureInnsmouthCatalogRegistered()`，返回当前生产战役清单。
+// 运行时不需要它，也不得用它做重复注册（registerContentBundle 会因重复 ID 失败）。
 export async function ensureInnsmouthCatalogRegistered() {
-  if (innsmouthCatalogRegistered || contentRegistry.getCampaign('theInnsmouthConspiracy')) {
-    innsmouthCatalogRegistered = true
-    return contentRegistry.getCampaign('theInnsmouthConspiracy')
-  }
-  const { manifest } = await import('./campaigns/theInnsmouthConspiracy/manifest.js')
-  const { developmentChapter } = await import('./campaigns/theInnsmouthConspiracy/chapter-entry.js')
-  const { chapters } = await import('./campaigns/theInnsmouthConspiracy/shared.js')
-  registerContentBundle({ campaigns: [{ ...manifest, status: 'development' }],
-    scenarios: chapters.map(chapter => developmentChapter(chapter.id)) })
-  innsmouthCatalogRegistered = true
   return contentRegistry.getCampaign('theInnsmouthConspiracy')
 }
 

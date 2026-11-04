@@ -1633,6 +1633,14 @@ function scenarioRuntime(state, events, testSource = null) {
       putInHand(state, inv, pile.splice(index, 1)[0])
       return true
     },
+    // 内容层「把某张牌直接交给某席位」的写入口（蒂奇/哈珀章节 setup 等）。
+    // 走 hand-entry 的唯一入手指令，避免内容模块直接 import 引擎牌堆实现——
+    // 那条 import 会与 content/registered.js 形成 chapter-entry → companions-setup →
+    // hand-entry → registered 的静态环，并在「先 import chapter-entry」时触发 TDZ。
+    putInHand: (seat, code) => {
+      const inv = state.investigators?.[seat]
+      return inv ? putInHand(state, inv, code) : null
+    },
     exemptAssetSlot: (asset, slot) => {
       const actual = state.investigators.flatMap(inv => inv.assets).find(candidate => candidate.id === (typeof asset === 'string' ? asset : asset?.id))
       if (!actual || !['ally','hand','arcane','body','accessory','tarot'].includes(slot)) return false
