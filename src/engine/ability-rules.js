@@ -346,12 +346,19 @@ export function createAbilityRules(deps) {
     for (const enemy of state.enemies || []) {
       if (enemy.defeated || enemy.removedFromGame) continue
       push(enemy)
+      // 附属在敌人身上的遭遇卡（07259 尽腥尽力）也是窗口来源：它声明在敌人身上的强制
+      // （猎手移动后再次移动、攻击加成）由该附属条目结算。
+      for (const attachment of enemy.attachments || []) push(attachment)
     }
     for (const location of state.locations || []) push(location, { requireRevealed: true })
     if(registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope==='scenario')push(state.scenario)
     push((state.acts || [])[state.actIndex])
     push((state.agendas || [])[state.agendaIndex])
-    for (const asset of state.storyAssets || []) if (!asset.uncontrolled) push(asset)
+    for (const asset of state.storyAssets || []) {
+      if (!asset.uncontrolled) push(asset)
+      // 附属在剧情支援上的遭遇卡（07099 机械故障）同样作为窗口来源。
+      for (const attachment of asset.attachments || []) push(attachment)
+    }
     // 窗口上下文里带的实体也算来源：`defeatEnemy` 打开时敌人已经从 state 移除，
     // 但它的「被击败时」能力仍然要结算（来源就是这次结算的敌人本身）。
     push(context.enemy)

@@ -152,6 +152,13 @@ export function parleyMovesFor(state, inv, usable = null) {
       out.push(...parleyMoves(state, inv, attachment, 'locationAttachment', usable))
     }
   }
+  // 剧情支援/敌人身上的附属卡自身行动（07099 机械故障的「[action] 智力(3) 弃掉本卡」）。
+  for (const host of [...(state.storyAssets || []), ...(state.enemies || [])]) {
+    for (const attachment of host.attachments || []) {
+      if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attachmentAbilities?.length) continue
+      out.push(...parleyMoves(state, inv, attachment, 'encounterAttachment', usable))
+    }
+  }
   const reference=scenarioReferenceEntity(state)
   if(reference)out.push(...parleyMoves(state,inv,reference,'scenario',usable))
   for (const stage of activeStageEntities(state)) out.push(...parleyMoves(state, inv, stage, registeredEntry(stage.originalCode || stage.code)?.scope || 'act', usable))

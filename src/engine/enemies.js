@@ -790,6 +790,21 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   damage = Math.max(0, harmContext.damage || 0)
   horror = Math.max(0, harmContext.horror || 0)
   if (!(damage > 0 || horror > 0)) return
+  // 07338 潜水服：「当任意数量的伤害将要放置到你身上时：将其中 1 点放到潜水服上」。
+  // 条目声明 `assetRule.redirectOneDamageToSelf: true`；每次结算最多转移 1 点，直接伤害也适用
+  // （印刷是「any amount of damage」，不分直接/非直接），转移后总量不变、剩余照常分配。
+  if (damage > 0) {
+    const carriers = [...(inv.assets || []),
+      ...(state.storyAssets || []).filter(asset => asset.controllerSeat === inv.seat)]
+    const suit = carriers.find(asset => registeredEntry(asset.code)?.assetRule?.redirectOneDamageToSelf === true
+      && !asset.removedFromGame)
+    if (suit) {
+      suit.damage = (suit.damage || 0) + 1
+      damage -= 1
+      info(state, events, `🩱 「${cardName(suit.code)}」转移了 1 点伤害（剩余 ${damage} 点由${inv.name}承受）。`)
+    }
+  }
+  if (!(damage > 0 || horror > 0)) return
   if (direct && inv.assets.some(asset => !assetPassiveData(asset.code)?.assignDirectHarm
     && ((damage > 0 && cardDef(asset.code)?.health > 0) || (horror > 0 && cardDef(asset.code)?.sanity > 0))))
     info(state, events, `本次为直接${damage > 0 && horror > 0 ? '伤害与恐惧' : damage > 0 ? '伤害' : '恐惧'}，只能由${inv.name}本人承受，不能分配给支援卡。`)

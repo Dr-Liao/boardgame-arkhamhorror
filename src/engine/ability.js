@@ -731,6 +731,8 @@ export function registerCardAbilities(entries) {
     if (entry.treacheryRule?.blocksMovementWhileReady != null && typeof entry.treacheryRule.blocksMovementWhileReady !== 'boolean') throw new TypeError('Invalid ready movement block rule')
     if (entry.treacheryRule?.attachToNearestVehicleStoryAsset != null && typeof entry.treacheryRule.attachToNearestVehicleStoryAsset !== 'boolean') throw new TypeError('Invalid vehicle story asset attachment rule')
     if (entry.assetRule?.ignoreAgendaForced != null && typeof entry.assetRule.ignoreAgendaForced !== 'boolean') throw new TypeError('Invalid agenda forced ignore rule')
+    // 07338 潜水服：伤害转移读点在 enemies.js#applyHarm（每次结算最多 1 点）。
+    if (entry.assetRule?.redirectOneDamageToSelf != null && typeof entry.assetRule.redirectOneDamageToSelf !== 'boolean') throw new TypeError('Invalid damage redirect rule')
     if (entry.treacheryRule?.attackBonus != null) {
       const bonus = entry.treacheryRule.attackBonus
       assertKnownKeys(bonus, new Set(['damage', 'horror', 'discardOnAttack']), 'treacheryRule.attackBonus')
