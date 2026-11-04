@@ -21,8 +21,8 @@
   ],
   "summary": {
     "chapters": 8,
-    "completeChapters": 1,
-    "developmentChapters": 7,
+    "completeChapters": 8,
+    "developmentChapters": 0,
     "pendingChapters": 0,
     "checkTotals": {
       "sourceLocked": 8,
@@ -31,7 +31,7 @@
       "actsAndAgendas": 8,
       "locationsAndConnections": 8,
       "encounterBehaviors": 8,
-      "literalCardBehavior": 1,
+      "literalCardBehavior": 8,
       "chaosEffects": 8,
       "resolutionsAndRecords": 8,
       "storyText": 8,
@@ -106,7 +106,7 @@
     },
     "engineGapNotes": 7
   },
-  "status": "development",
+  "status": "verified",
   "sourceStableDuringRun": true,
   "evidenceSources": {
     "scope": "audit/tic-scope.json",
@@ -417,7 +417,7 @@
       "code": "07041",
       "name": "绝望深坑",
       "nameEn": "The Pit of Despair",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -425,7 +425,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -919,16 +919,14 @@
         "guide": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb",
         "acceptanceTest": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182"
-      ]
+      "gaps": []
     },
     {
       "id": "theVanishingOfElinaHarper",
       "code": "07056",
       "name": "艾莲娜·哈珀失踪案",
       "nameEn": "The Vanishing of Elina Harper",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -936,7 +934,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -1501,16 +1499,14 @@
         "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4",
         "acceptanceTest": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 01167, 01168, 01173, 01174, 01135, 01136"
-      ]
+      "gaps": []
     },
     {
       "id": "inTooDeep",
       "code": "07123",
       "name": "深陷危局",
       "nameEn": "In Too Deep",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -1518,7 +1514,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -2017,9 +2013,7 @@
         "guide": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83",
         "acceptanceTest": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182"
-      ]
+      "gaps": []
     },
     {
       "id": "devilReef",
@@ -2531,7 +2525,7 @@
       "code": "07198",
       "name": "全速恐惧",
       "nameEn": "Horror in High Gear",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -2539,7 +2533,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -3010,16 +3004,14 @@
         "guide": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423",
         "acceptanceTest": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166"
-      ]
+      "gaps": []
     },
     {
       "id": "aLightInTheFog",
       "code": "07231",
       "name": "雾中之光",
       "nameEn": "A Light in the Fog",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -3027,7 +3019,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -3603,16 +3595,14 @@
         "guide": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31",
         "acceptanceTest": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01163, 01164, 01165"
-      ]
+      "gaps": []
     },
     {
       "id": "theLairOfDagon",
       "code": "07274",
       "name": "达贡巢穴",
       "nameEn": "The Lair of Dagon",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -3620,7 +3610,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -4153,16 +4143,14 @@
         "guide": "813590e9d37022e1622e3f89e9dffd4dbdbb68bf9db4018da6e5f084f66ec4d0",
         "acceptanceTest": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01169, 01170, 01171, 01174"
-      ]
+      "gaps": []
     },
     {
       "id": "intoTheMaelstrom",
       "code": "07311",
       "name": "暗潮之下",
       "nameEn": "Into the Maelstrom",
-      "status": "development",
+      "status": "verified",
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
@@ -4170,7 +4158,7 @@
         "actsAndAgendas": true,
         "locationsAndConnections": true,
         "encounterBehaviors": true,
-        "literalCardBehavior": false,
+        "literalCardBehavior": true,
         "chaosEffects": true,
         "resolutionsAndRecords": true,
         "storyText": true,
@@ -4719,18 +4707,10 @@
         "guide": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b",
         "acceptanceTest": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
       },
-      "gaps": [
-        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166"
-      ]
+      "gaps": []
     }
   ],
   "remaining": [
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 01167, 01168, 01173, 01174, 01135, 01136",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01166",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01163, 01164, 01165",
-    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01169, 01170, 01171, 01174",
     "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
     "引擎原语队列仍有 10 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",

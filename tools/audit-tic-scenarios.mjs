@@ -724,7 +724,11 @@ for (const chapter of chapters) {
   ].filter(Boolean))
 
   // ---------- 8. literalCardBehavior：逐卡账本（§5.2）
-  const literalScope = uniq([...chapterGroupCodes, ...encounterDefinitionCodes]).filter(code => ALL_CARDS[code] && code !== chapter.code)
+  // 逐卡账本只覆盖 TIC 范围（scope.cards）；章节遭遇定义里会收进跨循环核心卡（011xx），
+  // 它们的字面行为归核心卡账本，不能要求出现在 TIC 账本里（否则 literalCardBehavior 永远 false）。
+  const ticScopeCodes = new Set((scope.cards || []).map(card => card.code))
+  const literalScope = uniq([...chapterGroupCodes, ...encounterDefinitionCodes])
+    .filter(code => ALL_CARDS[code] && code !== chapter.code && ticScopeCodes.has(code))
   const literal = literalLedgerFor(literalScope)
 
   // ---------- 9. resolutionsAndRecords：结局键 + 结算读点 + 记录/混乱袋写入
