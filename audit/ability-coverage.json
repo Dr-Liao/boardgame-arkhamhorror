@@ -7,11 +7,11 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 771,
-    "descriptorAbilities": 976,
+    "descriptorAbilities": 984,
     "abilityKinds": 12,
     "windows": 113,
     "effectPrimitives": 56,
-    "nonPlayerCards": 199,
+    "nonPlayerCards": 209,
     "behaviorLines": 29028,
     "declaredScenarios": 3
   },
@@ -21,11 +21,11 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 63,
+      "enemy": 66,
       "location": 82,
       "storyAsset": 24,
-      "treachery": 10,
-      "act": 4,
+      "treachery": 11,
+      "act": 10,
       "scenario": 8,
       "agenda": 8
     },
@@ -84,6 +84,8 @@
       "07057",
       "07058",
       "07059",
+      "07060",
+      "07061",
       "07062b",
       "07063",
       "07064",
@@ -144,6 +146,8 @@
       "07150",
       "07151",
       "07163",
+      "07164b",
+      "07165b",
       "07168",
       "07172",
       "07174a",
@@ -163,6 +167,7 @@
       "07188",
       "07198",
       "07199b",
+      "07202",
       "07206a",
       "07206b",
       "07207a",
@@ -192,7 +197,11 @@
       "07255",
       "07257",
       "07258",
+      "07259",
       "07274",
+      "07280",
+      "07281",
+      "07282",
       "07283",
       "07284",
       "07285",
@@ -222,6 +231,7 @@
       "07330b",
       "07331a",
       "07331b",
+      "07332",
       "07333",
       "07334",
       "goatSpawn",
@@ -230,8 +240,8 @@
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 207,
-    "modifiers": 80
+    "abilities": 215,
+    "modifiers": 94
   },
   "declaration": {
     "abilityScopes": [

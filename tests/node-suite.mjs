@@ -342,5 +342,10 @@ import './tic-scenarios-light-in-the-fog.test.mjs'
 import './tic-alight-cards.test.mjs'
 import './tic-maelstrom-treacheries.test.mjs'
 import './tic-light-in-the-fog-agendas.test.mjs'
+// 2026-11-04 晚：剩余单卡批（middle/late/新卡）与 late pending 官方验收套件。
+import './tic-middle-remaining.test.mjs'
+import './tic-late-b-cards.test.mjs'
+import './tic-w2-new-cards.test.mjs'
+import './tic-scenarios-late-registered.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

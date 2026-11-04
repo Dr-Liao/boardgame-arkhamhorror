@@ -1169,10 +1169,12 @@ export function chaseRoundEndCleanup(state, api) {
     || (state.enemies || []).some(enemy => enemy.location === id && !enemy.defeated && !enemy.removedFromGame)
     || vehicles.some(vehicle => vehicle.location === id)
   const investigatorColumns = active.map(inv => columnOf(inv.location)).filter(Number.isFinite)
+  // 参考实现 advanceRoad：`mStopAt = 最后方调查员所在列 - 1`，该列**停下并保留**；
+  // 因此列号 >= stopColumn 的地点不再清理（stopColumn 本身保留）。
   const stopColumn = investigatorColumns.length ? Math.min(...investigatorColumns) - 1 : null
   const removed = []
   for (const item of ranked) {
-    if (stopColumn != null && item.column > stopColumn) break
+    if (stopColumn != null && item.column >= stopColumn) break
     if (occupied(item.id)) break
     const location = (state.locations || []).find(loc => loc.id === item.id)
     if (!location) continue

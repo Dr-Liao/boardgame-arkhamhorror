@@ -22,22 +22,34 @@ import { registeredEntry } from './ability.js'
 import { all as matchAll } from './matcher.js'
 import { enumerateTargets } from './targets.js'
 import { capabilityBlocked, entityRuleActive } from './modifiers.js'
+import { actsInPlay } from './parallel-acts.js'
 
 export function scenarioReferenceEntity(state) {
   return registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope === 'scenario' ? state.scenario : null
 }
 export function activeStageEntities(state) {
-  return [state.acts?.[state.actIndex], state.agendas?.[state.agendaIndex]].filter(Boolean)
+  // P7 并行幕：当前线性幕 + 额外活动幕 + 议程。没有 parallelActs 时与旧的
+  // [state.acts[state.actIndex], state.agendas[state.agendaIndex]] 完全一致。
+  return [...actsInPlay(state), state.agendas?.[state.agendaIndex]].filter(Boolean)
 }
 export function actionEntityById(state, id) {
   return [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || []),
     ...(state.locations || []).flatMap(location => location.attachments || []),
+    ...(state.storyAssets || []).flatMap(host => host.attachments || []),
+    ...(state.enemies || []).flatMap(host => host.attachments || []),
     ...activeStageEntities(state), scenarioReferenceEntity(state)].filter(Boolean).find(entity => entity.id === id)
 }
-// 地点附属实体（07299 石障）：附属对象本身没有 location 字段，宿主地点由归属扫描得到。
+// 附属实体（07299 石障 / 07099 机械故障）：附属对象本身没有 location 字段，宿主由归属扫描得到。
+// 地点附属返回地点 id；剧情支援/敌人附属返回其宿主当前地点（用于 range 判定）。
 export function locationOfAttachment(state, attachment) {
   if (!attachment) return null
-  return (state.locations || []).find(location => (location.attachments || []).includes(attachment))?.id || null
+  const location = (state.locations || []).find(item => (item.attachments || []).includes(attachment))
+  if (location) return location.id
+  const storyHost = (state.storyAssets || []).find(item => (item.attachments || []).includes(attachment))
+  if (storyHost) return storyHost.location ?? null
+  const enemyHost = (state.enemies || []).find(item => (item.attachments || []).includes(attachment))
+  if (enemyHost) return enemyHost.location ?? null
+  return null
 }
 export const PARLEY_ACTION_KIND = 'parley'
 

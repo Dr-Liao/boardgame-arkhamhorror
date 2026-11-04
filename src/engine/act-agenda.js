@@ -5,6 +5,7 @@ import { withAgendaAdvanceFrame } from './agenda-advance-frame.js'
 // 第 5 步 P6：放置毁灭可能新增「法术专用额外行动」（玛丽·朗博），授权逻辑在 spell-actions.js。
 import { grantSpellCredit } from './spell-actions.js'
 import { releaseChaosTokens } from './chaos-bag.js'
+import { checkParallelActObjectives } from './parallel-acts.js'
 
 export function createActAgenda(deps) {
   const {
@@ -173,7 +174,7 @@ export function createActAgenda(deps) {
     advanceAct(state, events)
   }
 
-  function checkAct(state, events) {
+  function checkLinearAct(state, events) {
     if (state.status === 'playing') {
       const objectiveLocation = state.locations.find(loc => loc.revealed
         && registeredEntry(loc.originalCode || loc.code)?.locationRule?.objective?.(state, loc, scenarioRuntime(state, events)) === true)
@@ -209,6 +210,26 @@ export function createActAgenda(deps) {
         options: [{ id: 'skip', label: '暂不推进' }, { id: 'advance', label: '共同支付并推进' }] })
       if (answer === 'advance') payAndAdvanceAct(state, events)
     }
+  }
+
+  // P7《暗潮之下》第八章：并行幕目标（07316/07317/07318「深海之城」v.I/II/III）。
+  // 与线性幕共用「每次行动后检查」的时机：内容层 behavior 声明 checkParallelActs 时由它统一
+  // 分派（w6 设计口径）；否则引擎按条目 actRule.objective/onComplete 通用分派。纯读 + 命中才写。
+  function checkParallelActs(state, events) {
+    if (state.status !== 'playing') return
+    const hook = scenarioBehavior(state).checkParallelActs
+    if (typeof hook === 'function') {
+      hook(state, scenarioRuntime(state, events))
+      return
+    }
+    checkParallelActObjectives(state, scenarioRuntime(state, events), registeredEntry)
+  }
+
+  // checkAct 的对外语义不变：线性幕 + 额外活动幕都在每次行动后检查目标。
+  // 单独拆 wrapper 是为了「当前线性幕已经推进到尽头（无当前幕）但仍有并行幕」时也能检查。
+  function checkAct(state, events) {
+    checkLinearAct(state, events)
+    checkParallelActs(state, events)
   }
 
   function locationRevealCue(loc, entered = false, seat = null) {

@@ -1896,6 +1896,14 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   return performTestImpl(state, seat, skill, difficulty, options)
 }
 
+// P7《暗潮之下》第八章：并行幕（07316/07317/07318「深海之城」v.I/II/III）。
+// 叶子模块只读/纯数据结构；运行时写入口在 scenario-runtime 的 api.scenario.*。
+// 没有 state.parallelActs 时 actsInPlay 退化为 [当前幕]，旧剧本/旧 replay 零变化。
+export {
+  parallelActs, actsInPlay, findParallelAct, appendParallelAct, removeParallelAct,
+  addActToVictory, completeParallelAct, checkParallelActObjectives, resolveActCompletion,
+} from './parallel-acts.js'
+
 // Phase 6（6d-13）：剧本运行时搬进 scenario-runtime.js；同样用惰性装配（依赖表在顶层立即求值）。
 let scenarioRuntimeImpl = null
 export function scenarioRuntime(state, events, testSource = null) {

@@ -38,6 +38,7 @@ import { EFFECTS } from '../cards/card-effects.js'
 import { hasTrait } from './matcher.js'
 import { blanksTraits } from '../cards/card-rules.js'
 import { enemyIsSlumbering, enemyModifierAllowed } from './effect-provenance.js'
+import { actsInPlay } from './parallel-acts.js'
 
 const MODIFIER_CACHE = new Map()
 
@@ -474,7 +475,7 @@ function entityModifierRows(state, entity) {
     const inherited = locationCode ? modifiersOf(locationCode).filter(m=>m.audience!=='enemies') : []
     if (inherited.length) rows.push({ source: location, host: 'location', list: inherited })
   }
-  for (const list of [state?.acts?.[state?.actIndex], state?.agendas?.[state?.agendaIndex]]) {
+  for (const list of [...actsInPlay(state), state?.agendas?.[state?.agendaIndex]]) {
     const code = list?.originalCode || list?.code
     const scene = code ? modifiersOf(code).filter(m=>m.audience!=='enemies') : []
     if (scene.length) rows.push({ source: list, host: 'scene', list: scene })

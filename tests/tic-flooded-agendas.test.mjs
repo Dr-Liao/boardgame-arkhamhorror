@@ -75,9 +75,18 @@ test('capability:parley：调查员「不能谈判」时所有谈判行动都不
   assert.match(String(forged), /谈判/)
 })
 
-test('压迫议程的规则只在它是当前议程时生效', () => {
-  // 换成另一章的议程（达贡巢穴 07275）后，嫌犯不再是「失去冷漠 / 不能谈判」。
-  const s = chapterFixture('theLairOfDagon')
+test('压迫议程的规则只在它是当前幕/议程时生效', () => {
+  // 2026-11-04 合并后修正：达贡巢穴的当前幕 07280「第一誓约」印刷就带
+  // 「每个[[嫌犯]]敌人…失去冷漠、不能谈判」，因此在那里应生效；
+  // 换到没有该规则的章节（绝望深坑）后，嫌犯不再「失去冷漠 / 不能谈判」。
+  const lair = chapterFixture('theLairOfDagon')
+  lair.enemies = []
+  for (const inv of lair.investigators) { inv.engaged = []; inv.assets = [] }
+  const lairTarget = suspect(lair)
+  assert.equal(entityRuleActive(lair, lairTarget, 'loses:aloof'), true, '07280 当前幕的嫌犯规则应生效')
+  assert.equal(entityRuleActive(lair, lairTarget, 'cannot:parley'), true, '07280 当前幕的嫌犯规则应生效')
+
+  const s = chapterFixture('thePitOfDespair')
   s.enemies = []
   for (const inv of s.investigators) { inv.engaged = []; inv.assets = [] }
   const target = suspect(s)

@@ -39,6 +39,12 @@ import { enemyCanEnterLocation } from './enemy-entry.js'
 import { dispatchVehicleEvent, roadHazardOnce } from './road-hazards.js'
 import { mechanicState } from './mechanic-state.js'
 import { removeVehicle } from './vehicles.js'
+// P7《暗潮之下》第八章：并行幕（深海之城 v.I/II/III）的运行时入口。
+import {
+  actsInPlay as actsInPlayList, parallelActs as parallelActsList, appendParallelAct,
+  removeParallelAct as removeParallelActInState, completeParallelAct as completeParallelActInState,
+  addActToVictory, resolveActCompletion as resolveActCompletionRule,
+} from './parallel-acts.js'
 
 export function createScenarioRuntime(deps) {
   const {
@@ -721,6 +727,43 @@ function scenarioRuntime(state, events, testSource = null) {
     advanceAgenda: () => advanceAgenda(state, events),
     // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
     advanceAgendaTo: index => advanceAgendaTo(state, events, index),
+    // P7《暗潮之下》第八章：并行幕（07316/07317/07318「深海之城」v.I/II/III）。
+    // state.acts/actIndex 的线性语义不变；这些幕只是「额外的活动幕」，各自独立目标/独立完成。
+    addParallelAct: code => {
+      const actCode = String(code)
+      const definition = state.scenario?.stageCards?.[actCode]
+      if (!definition || definition.type !== 'act') return false
+      const act = structuredClone(definition)
+      act.scenarioId = state.scenario?.id ?? null
+      act.victory = Number(cardDef(actCode)?.victory ?? act.victory ?? 0)
+      if (!appendParallelAct(state, act)) return false
+      info(state, events, `📜 新的场景目标：${act.stage}「${act.name}」—— ${act.text}`)
+      return true
+    },
+    // 完成一张并行幕：加入胜利区（Victory X）并从活动槽移除。
+    completeParallelAct: idOrCode => {
+      const act = completeParallelActInState(state, idOrCode)
+      if (!act) return false
+      info(state, events, `💎 场景「${act.name}」加入胜利区（胜利 ${Number(act.victory) || 0}）。`)
+      return true
+    },
+    removeParallelAct: idOrCode => Boolean(removeParallelActInState(state, idOrCode)),
+    // 只读快照（卡/内容层不要直接改 state.parallelActs）。
+    parallelActs: () => parallelActsList(state).map(act => ({ ...act })),
+    actsInPlay: () => actsInPlayList(state).map(act => ({ ...act })),
+    // 线性幕（07316）完成时加入胜利区；指针仍由 advanceAct 推进。
+    addCurrentActToVictory: () => {
+      const act = state.acts?.[state.actIndex]
+      if (!act) return false
+      return addActToVictory(state, act, Number(cardDef(act.originalCode || act.code)?.victory ?? act.victory ?? 0))
+    },
+    // 「深海之城」背面同文：无其他场景卡→立即进入结局；有另一张场景卡→队长选择继续/立即结局。
+    resolveActCompletion: options => resolveActCompletionRule(state, {
+      ...options,
+      choose: request => requestChoice(state, request),
+      decideSeat: () => leadDecisionSeat(state),
+      finish: key => finishScenario(state, key, events),
+    }),
     // P7：《暗潮之下》幕背面布置把「Victory X 且无线索」的地点加入胜利区。
     awardLocationVictory: id => {
       const location = state.locations.find(item => item.id === id)
@@ -881,13 +924,28 @@ function scenarioRuntime(state, events, testSource = null) {
       return asset ? attachCardTo(state, null, code, asset, { encounterAttached: true, ...extra }) : null
     },
     detachEncounterAttachment: source => {
-      const hosts = [...state.locations, ...state.acts, ...state.agendas, ...state.enemies,
+      const hosts = [...state.locations, ...state.acts, ...state.agendas, ...state.enemies, ...(state.storyAssets || []),
         ...state.investigators.flatMap(inv => inv.assets)]
       const host = hosts.find(item => item.attachments?.includes(source))
       if (!host) return false
       host.attachments.splice(host.attachments.indexOf(source), 1)
       state.encounterDiscard.push(source.originalCode || source.code)
       return true
+    },
+    // 按 id 摘除遭遇附属：供「检定成功后再弃掉本卡」这类异步回调使用——事务重放会替换
+    // state 内容，回调里捕获的附属对象引用可能已经失效，而 id 跨克隆稳定（07099 机械故障）。
+    detachEncounterAttachmentById: attachmentId => {
+      if (attachmentId == null) return false
+      const hosts = [...state.locations, ...state.acts, ...state.agendas, ...state.enemies, ...(state.storyAssets || []),
+        ...state.investigators.flatMap(inv => inv.assets)]
+      for (const host of hosts) {
+        const attachment = (host.attachments || []).find(item => item.id === attachmentId)
+        if (!attachment) continue
+        host.attachments.splice(host.attachments.indexOf(attachment), 1)
+        state.encounterDiscard.push(attachment.originalCode || attachment.code)
+        return true
+      }
+      return false
     },
     putNextToAgenda: (code, extra = {}) => {
       const card = newCardInstance(state, code, { originalCode: code, ...extra })

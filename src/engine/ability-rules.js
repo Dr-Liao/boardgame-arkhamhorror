@@ -21,6 +21,7 @@ import { entityAbilityInRange } from './parley.js'
 import { NON_PLAYER_SCOPES } from './ability.js'
 import { groupClueTotal, payGroupClueCost } from './group-cost.js'
 import { effectiveFloodLevel, floodLevel } from './flood.js'
+import { actsInPlay } from './parallel-acts.js'
 
 export function createAbilityRules(deps) {
   const {
@@ -352,7 +353,9 @@ export function createAbilityRules(deps) {
     }
     for (const location of state.locations || []) push(location, { requireRevealed: true })
     if(registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope==='scenario')push(state.scenario)
-    push((state.acts || [])[state.actIndex])
+    // P7 并行幕：额外的活动幕（深海之城 v.I/II/III）也要作为窗口里的强制/反应来源。
+    // 没有 parallelActs 时 actsInPlay 退化为 [当前幕]，与旧的单点读法逐字一致。
+    for (const act of actsInPlay(state)) push(act)
     push((state.agendas || [])[state.agendaIndex])
     for (const asset of state.storyAssets || []) {
       if (!asset.uncontrolled) push(asset)

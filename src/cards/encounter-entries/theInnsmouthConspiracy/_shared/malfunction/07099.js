@@ -20,31 +20,39 @@
 // 引擎读点：
 //   · 显现附属：`api.scenario.attachEncounterToStoryAsset('07099', <storyAssetId>)`
 //     （scenario-runtime.js，写宿主 `host.attachments`，encounterAttached:true）。
-//     「最近的[[载具]]剧情支援」：候选 = `state.storyAssets` 里带 [[Vehicle]] 特性的实例；
-//     距离用 `api.scenario.locationDistance(inv.location, [host.location])`（BFS，scenario-runtime.js:385），
-//     -1 视为不可达；并列最近时由揭示者 `api.choose` 选一个（参考实现 chooseTargetM 同口径）。
+//     「最近的[[载具]]剧情支援」：候选 = `state.storyAssets` 里已在载具登记表中的实例
+//     （`_shared` 的 vehicleRecord；剧情支援实例不复制卡面 traits，不能直接读实例的 Vehicle 特性）。
+//     距离用 `api.locationDistance(inv.location, [host.location])`（BFS，scenario-runtime.js；
+//     encounterResolve 的 api 是 scenarioRuntime 扁平接口），-1 视为不可达；并列最近时由揭示者
+//     `api.choose` 选一个（参考实现 chooseTargetM 同口径）。
 //   · 宿主行动封锁：条目级 `treacheryRule.suppressesHostActions: true`，
 //     读点 parley.js#parleyMoves（宿主的 action/free 描述子不再进入合法表；forced/reaction 照常）。
 //   · 本卡自身行动：`treacheryRule.attachmentAbilities`（读点 parley.js#entityActionDescriptors 与
-//     parleyMovesFor 的 encounterAttachment 枚举；执行走 ability-exec#doEntityAbility 的实体管线）。
-//     成功弃掉本卡用 `api.scenario.detachEncounterAttachment(source)`（资源写入口）。
-//   · 「载具」特性来自 cards-data（07178 渔船 / 07211-07212 两辆车都带 Vehicle）；
-//     剧情支援宿主实例由章节 setup 放进 `state.storyAssets`（middle-setup.js 注册渔船与两辆车）。
+//     parleyMovesFor 的 encounterAttachment 枚举；执行走 ability-exec#doEntityAbility 的实体管线，
+//     actionEntityById / locationOfAttachment 已覆盖剧情支援/敌人宿主）。
+//     检定成功弃掉本卡用 `api.scenario.detachEncounterAttachment(source)`（唯一写入口，
+//     hosts 已含 state.storyAssets）。
+//   · 「[[载具]]剧情支援」候选 = `state.storyAssets` 里已在载具登记表中的实例（07178 渔船 /
+//     07211-07212 两辆车由章节 setup 注册，见 middle-setup.js）；剧情支援实例本身不复制卡面
+//     traits，因此用 `_shared` 的 vehicleRecord 读登记表，而不是读实例特性。
 //
 // 实现状态：implemented:true（三条印刷条款全部接线）。
 //
 // 一卡一文件：本卡行为只在这里维护；不要写回 encounter-abilities.js。
 
-import { hasTrait } from '../../../_shared.js'
+import { vehicleRecord } from '../../../_shared.js'
 
 const MALFUNCTION = '07099'
 
 function nearestVehicleStoryAsset(state, inv, api) {
+  // 「[[载具]]剧情支援」：章节 setup 把渔船/两辆车注册成载具（middle-setup.js），
+  // `vehicleRecord` 是唯一只读入口（剧情支援实例本身不复制卡面 traits）。
   const hosts = (state.storyAssets || []).filter(host => host && !host.removedFromGame
-    && hasTrait(host, 'Vehicle') && host.location)
+    && host.location && vehicleRecord(state, host.id))
   if (!hosts.length) return null
   const steps = host => {
-    const distance = api.scenario.locationDistance(inv.location, [host.location])
+    // encounterResolve 的 api 是 scenarioRuntime（扁平接口），不是能力面的 api.scenario。
+    const distance = api.locationDistance(inv.location, [host.location])
     return distance < 0 ? Infinity : distance
   }
   const ranked = hosts.map(host => ({ host, steps: steps(host) })).sort((left, right) => left.steps - right.steps)
@@ -68,8 +76,14 @@ export default {
       actionKind: 'activate',
       label: '检定智力(3)：成功则弃掉机械故障',
       resolve: ({ inv, source, api }) => {
-        api.test(inv.seat, 'intellect', 3, result => {
-          if (result.success) api.scenario.detachEncounterAttachment(source)
+        // 能力面的 api.test 是对象签名（{ resolve }），不是 encounterResolve 的回调签名。
+        api.test(inv.seat, 'intellect', 3, {
+          source: { type: 'scenario', action: 'activate', code: MALFUNCTION,
+            label: '机械故障：检定智力(3)' },
+          resolve: result => {
+            // 事务重放会替换 state 内容，回调里用 id 摘除（引用可能已失效）。
+            if (result.success) api.scenario.detachEncounterAttachmentById(source.id)
+          },
         })
       },
     }],

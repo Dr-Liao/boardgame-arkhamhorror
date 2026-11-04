@@ -1,0 +1,4613 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theInnsmouthConspiracy",
+  "milestone": "M3",
+  "stage": "P7",
+  "generatedFrom": "development-chapters-only (production registration closed)",
+  "generatedBy": "node tools/audit-tic-scenarios.mjs --write",
+  "checks": [
+    "sourceLocked",
+    "identityRegistered",
+    "setupAndZones",
+    "actsAndAgendas",
+    "locationsAndConnections",
+    "encounterBehaviors",
+    "literalCardBehavior",
+    "chaosEffects",
+    "resolutionsAndRecords",
+    "storyText",
+    "saveReplay",
+    "browserAcceptance"
+  ],
+  "summary": {
+    "chapters": 8,
+    "completeChapters": 0,
+    "developmentChapters": 8,
+    "pendingChapters": 0,
+    "checkTotals": {
+      "sourceLocked": 8,
+      "identityRegistered": 8,
+      "setupAndZones": 0,
+      "actsAndAgendas": 0,
+      "locationsAndConnections": 0,
+      "encounterBehaviors": 0,
+      "literalCardBehavior": 0,
+      "chaosEffects": 0,
+      "resolutionsAndRecords": 0,
+      "storyText": 8,
+      "saveReplay": 0,
+      "browserAcceptance": 0
+    },
+    "structuralTotals": {
+      "setupAndZones": 8,
+      "actsAndAgendas": 2,
+      "locationsAndConnections": 7,
+      "encounterBehaviors": 7,
+      "chaosEffects": 8,
+      "resolutionsAndRecords": 8
+    },
+    "missingChapterTests": [
+      "thePitOfDespair",
+      "theVanishingOfElinaHarper",
+      "inTooDeep",
+      "devilReef",
+      "horrorInHighGear",
+      "aLightInTheFog",
+      "theLairOfDagon",
+      "intoTheMaelstrom"
+    ],
+    "missingChapterTestFiles": [
+      "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "tests/tic-scenario-inTooDeep.test.mjs",
+      "tests/tic-scenario-devilReef.test.mjs",
+      "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+    ],
+    "literalCardLedger": null,
+    "browserEvidence": {
+      "status": "failed",
+      "coverage": {
+        "desktop:zh-CN": false,
+        "desktop:en": false,
+        "mobile:zh-CN": false,
+        "mobile:en": false
+      }
+    },
+    "storyImport": {
+      "gates": {
+        "completeChinese": true,
+        "allChapters": true
+      },
+      "missing": 0,
+      "sourceFiles": 18
+    },
+    "referenceAvailable": true,
+    "replayFixtures": 13,
+    "replayFixtureCampaigns": [
+      "thePathToCarcosa",
+      "theDunwichLegacy",
+      "theForgottenAge",
+      "nightOfTheZealot"
+    ],
+    "replayCoversTicChapters": false,
+    "primitiveRequests": {
+      "total": 17,
+      "pending": 11,
+      "pendingFiles": [
+        "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
+        "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
+        "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
+        "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
+        "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+        "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+        "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
+        "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
+        "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
+        "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
+        "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json"
+      ]
+    },
+    "engineGapNotes": 0
+  },
+  "status": "development",
+  "sourceStableDuringRun": true,
+  "evidenceSources": {
+    "scope": "audit/tic-scope.json",
+    "story": "audit/tic-story-acceptance.json",
+    "browser": "audit/tic-browser-acceptance.json",
+    "chapterSourceAudit": "audit/tic-chapter-sources.json",
+    "allCardLedger": null,
+    "guides": [
+      "web/scenario-guides/thePitOfDespair.json",
+      "web/scenario-guides/theVanishingOfElinaHarper.json",
+      "web/scenario-guides/inTooDeep.json",
+      "web/scenario-guides/devilReef.json",
+      "web/scenario-guides/horrorInHighGear.json",
+      "web/scenario-guides/aLightInTheFog.json",
+      "web/scenario-guides/theLairOfDagon.json",
+      "web/scenario-guides/intoTheMaelstrom.json"
+    ],
+    "acceptanceTests": [
+      "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "tests/tic-scenario-inTooDeep.test.mjs",
+      "tests/tic-scenario-devilReef.test.mjs",
+      "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+    ],
+    "candidateAcceptanceTests": [
+      "tests/tic-scenario-thePitOfDespair.test.mjs",
+      "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "tests/tic-scenario-inTooDeep.test.mjs",
+      "tests/tic-scenario-devilReef.test.mjs",
+      "tests/tic-scenario-horrorInHighGear.test.mjs",
+      "tests/tic-scenario-aLightInTheFog.test.mjs",
+      "tests/tic-scenario-theLairOfDagon.test.mjs",
+      "tests/tic-scenario-intoTheMaelstrom.test.mjs"
+    ],
+    "primitiveRequests": "artifacts/migration/tic/p7/primitive-requests/"
+  },
+  "sharedFileHashes": {
+    "content/campaigns/theInnsmouthConspiracy/chapter-definition.js": "22994886db8f1ac701051cdc0a4bb6f60570ade256caf2a843e61189126f17cd",
+    "content/campaigns/theInnsmouthConspiracy/entry-rules.js": "a7b80a6a790db65aeb2e7e158d7c735457026864633128937165e91339b9ebec",
+    "content/campaigns/theInnsmouthConspiracy/chapter-setup.js": "5494d5859ec81d48c5f99113943de84eb6ae1d4948f451c5b9ae1e8b91579597",
+    "content/campaigns/theInnsmouthConspiracy/middle-setup.js": "5c4ef5d030169d05d96c0052f26767a2cf2e443d0b77241bda362b2eabbf70e9",
+    "content/campaigns/theInnsmouthConspiracy/late-setup.js": "447e4477896f7000f2c217738979499fb6cd9a98f288f3f4b5c2e914f2b866a4",
+    "content/campaigns/theInnsmouthConspiracy/resolutions.js": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737",
+    "content/campaigns/theInnsmouthConspiracy/introduction.js": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e",
+    "content/campaigns/theInnsmouthConspiracy/flashbacks.js": "8e0133494a0cc3685c9b118156b738e150fc3c443a9419386d9f20cfa4e3a549",
+    "content/campaigns/theInnsmouthConspiracy/interludes.js": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a",
+    "content/campaigns/theInnsmouthConspiracy/manifest.js": "655c2c802d094a8c4a9f6b8da5a93c36356a6a8b29ac1bca9bbbebfdc8974d9d",
+    "content/campaigns/theInnsmouthConspiracy/flow.js": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b",
+    "content/campaigns/theInnsmouthConspiracy/story-text.js": "11856d090cc6412ecf2f35d5878297a66ea2008f0368ae12d7ed98a8785e485f",
+    "content/campaigns/theInnsmouthConspiracy/chapter-data.json": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+  },
+  "storySources": [
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/base.json",
+      "ok": true,
+      "registeredSha256": "4cda92f24353dc76d6b1f8edb794585a1e07a9353e4d7a1e020cf1a5fc97af09",
+      "actualSha256": "4cda92f24353dc76d6b1f8edb794585a1e07a9353e4d7a1e020cf1a5fc97af09"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/base.json",
+      "ok": true,
+      "registeredSha256": "53b5174147538d1b92da144fb128bacdc41f371f8b3423fa59d3762c30681723",
+      "actualSha256": "53b5174147538d1b92da144fb128bacdc41f371f8b3423fa59d3762c30681723"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/thePitOfDespair.json",
+      "ok": true,
+      "registeredSha256": "829c4ef8447718b085a2a7181c38bf7508f5d1dd295b18e1e4de712bd1fec09d",
+      "actualSha256": "829c4ef8447718b085a2a7181c38bf7508f5d1dd295b18e1e4de712bd1fec09d"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/thePitOfDespair.json",
+      "ok": true,
+      "registeredSha256": "62aa9dbdf0fe592b02fdc7610434792b1753ffe3dd50527f302c39d1892a2ffd",
+      "actualSha256": "62aa9dbdf0fe592b02fdc7610434792b1753ffe3dd50527f302c39d1892a2ffd"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper.json",
+      "ok": true,
+      "registeredSha256": "2eddebe1ec4e53014abcede72c0c1f95b57a579c8cf621ba8a9b7f780a2e6f3a",
+      "actualSha256": "2eddebe1ec4e53014abcede72c0c1f95b57a579c8cf621ba8a9b7f780a2e6f3a"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper.json",
+      "ok": true,
+      "registeredSha256": "bd9ab889de9e31637811e3ba201f2e442b1e957332271c1110501e76c0e280ca",
+      "actualSha256": "bd9ab889de9e31637811e3ba201f2e442b1e957332271c1110501e76c0e280ca"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/inTooDeep.json",
+      "ok": true,
+      "registeredSha256": "fcc86aff1dec448d8acecf939daf21872d1b4fc717dae330f820145be48e9067",
+      "actualSha256": "fcc86aff1dec448d8acecf939daf21872d1b4fc717dae330f820145be48e9067"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/inTooDeep.json",
+      "ok": true,
+      "registeredSha256": "fcdd1ea396489a8e163ef75c175fcff2bde989477844c25553c7e289cc2ba10c",
+      "actualSha256": "fcdd1ea396489a8e163ef75c175fcff2bde989477844c25553c7e289cc2ba10c"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/devilReef.json",
+      "ok": true,
+      "registeredSha256": "a735ec62409d7a4d784d93c2ec45f4d96c51c7dd1d2fb33deb8bc0c757698f7a",
+      "actualSha256": "a735ec62409d7a4d784d93c2ec45f4d96c51c7dd1d2fb33deb8bc0c757698f7a"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/devilReef.json",
+      "ok": true,
+      "registeredSha256": "04ec11e3ca4b475f0bcbea0432b705bab874f3e7821516d6181158bb05096173",
+      "actualSha256": "04ec11e3ca4b475f0bcbea0432b705bab874f3e7821516d6181158bb05096173"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/horrorInHighGear.json",
+      "ok": true,
+      "registeredSha256": "7f9ca1b73fe9cc174c7bcbc3590701882863a6dd064c568a4dec7d5272b60e60",
+      "actualSha256": "7f9ca1b73fe9cc174c7bcbc3590701882863a6dd064c568a4dec7d5272b60e60"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/horrorInHighGear.json",
+      "ok": true,
+      "registeredSha256": "9e681bc922010c463cbdf23a12e3fc8899db668d15b1e2205def70d1ad92ac1d",
+      "actualSha256": "9e681bc922010c463cbdf23a12e3fc8899db668d15b1e2205def70d1ad92ac1d"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/aLightInTheFog.json",
+      "ok": true,
+      "registeredSha256": "3fdf5be635a34d05bbc3ea2bd33da82bfafaaf17cd5d83953071159a10dc03ee",
+      "actualSha256": "3fdf5be635a34d05bbc3ea2bd33da82bfafaaf17cd5d83953071159a10dc03ee"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/aLightInTheFog.json",
+      "ok": true,
+      "registeredSha256": "4bd1607b5c0dcbced2b3e9adbf51e6ee8800df12b72c54f831f156dda136d552",
+      "actualSha256": "4bd1607b5c0dcbced2b3e9adbf51e6ee8800df12b72c54f831f156dda136d552"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/theLairOfDagon.json",
+      "ok": true,
+      "registeredSha256": "e2213418139453ad461845b1e1405994d7ea078a734eda86201ce2e83e991d23",
+      "actualSha256": "e2213418139453ad461845b1e1405994d7ea078a734eda86201ce2e83e991d23"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/theLairOfDagon.json",
+      "ok": true,
+      "registeredSha256": "8e6fb321a395c047330592babddca8420177ce216793fd53fef16bbf15a3f7bc",
+      "actualSha256": "8e6fb321a395c047330592babddca8420177ce216793fd53fef16bbf15a3f7bc"
+    },
+    {
+      "path": "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/intoTheMaelstrom.json",
+      "ok": true,
+      "registeredSha256": "c6c13d678c9d6ff19487cd5db87b43372b102a4f457fe1590934f68cd1a71b2e",
+      "actualSha256": "c6c13d678c9d6ff19487cd5db87b43372b102a4f457fe1590934f68cd1a71b2e"
+    },
+    {
+      "path": "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/intoTheMaelstrom.json",
+      "ok": true,
+      "registeredSha256": "b436818ffa6f93d119997a8973715eb030a3b61317d958ab7334deaac66b77e0",
+      "actualSha256": "b436818ffa6f93d119997a8973715eb030a3b61317d958ab7334deaac66b77e0"
+    }
+  ],
+  "staleEvidence": [
+    {
+      "name": "nodeAcceptance",
+      "file": "audit/tic-node-acceptance.json",
+      "status": "stale"
+    },
+    {
+      "name": "regression",
+      "file": "audit/tic-regression.json",
+      "status": "stale"
+    },
+    {
+      "name": "interactionRegression",
+      "file": "audit/tic-interaction-regression.json",
+      "status": "stale"
+    }
+  ],
+  "pendingPrimitiveRequests": [
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json",
+      "id": "p7-a1-07105-spawn-most-clues",
+      "status": "pending",
+      "primitive": "enemySpawnRule.spawnMostClues",
+      "cards": [
+        "07105"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
+      "id": "p7-a1-07178-vehicle-location-sync",
+      "status": "pending",
+      "primitive": "vehicles.move 同步剧情资产 location",
+      "cards": [
+        "07178"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
+      "id": "p7-a2-act-clue-objective-data",
+      "status": "pending",
+      "primitive": "content/campaigns/theInnsmouthConspiracy/chapter-data.json 的 aLightInTheFog.acts 给 07236 补 `objective: { type: 'clues', perInvestigator: 3 }`（以及 07237/07238 若需原生展示可补对应 objective 数据）。",
+      "cards": [
+        "07236"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
+      "id": "p7-b-07299-location-attachment-ability.json",
+      "status": "pending",
+      "primitive": null,
+      "cards": [
+        "07299"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+      "id": "w5-07280-act1-back-layout.json",
+      "status": "pending",
+      "primitive": null,
+      "cards": []
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+      "id": "w5-07280-oath-shared-rules.json",
+      "status": "pending",
+      "primitive": null,
+      "cards": []
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
+      "id": "w6-act-agenda-deck-ops",
+      "status": "pending",
+      "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
+      "cards": [
+        "07060",
+        "07061",
+        "07236",
+        "07237",
+        "07315"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
+      "id": "w6-capture-mechanism",
+      "status": "pending",
+      "primitive": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）",
+      "cards": [
+        "07233",
+        "07252",
+        "07252b",
+        "07253",
+        "07260"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
+      "id": "w6-harper-scenario-events",
+      "status": "pending",
+      "primitive": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人",
+      "cards": [
+        "07060",
+        "07061",
+        "07062a",
+        "07062b"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
+      "id": "w6-holding-cells-restrictions",
+      "status": "pending",
+      "primitive": "locationRule.enemiesCannotEnter + locationRule.enemySpawnRedirect（地点侧敌人进入/生成限制）",
+      "cards": [
+        "07252b"
+      ]
+    },
+    {
+      "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
+      "id": "w6-parallel-acts",
+      "status": "pending",
+      "primitive": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择",
+      "cards": [
+        "07316",
+        "07317",
+        "07318"
+      ]
+    }
+  ],
+  "danglingEvidence": [
+    {
+      "file": "early-chapter-facts.json",
+      "expectedSha256": "d070bb1468617863c8d35906d9baf6c8be4d53e4fc5e4d8ee7588ca633f8cceb",
+      "reason": "审计引用的复核事实文件在仓库内不存在"
+    },
+    {
+      "file": "early-definition-brief.json",
+      "expectedSha256": "2e1b9465d1fa84f42ba86f967d891deb3d621b736aacb196037c5399db152f2e",
+      "reason": "审计引用的复核事实文件在仓库内不存在"
+    },
+    {
+      "file": "middle-chapter-facts.json",
+      "expectedSha256": "bca554763ab6fc2a2a6bd7041d0d9173c5eda5f48fe608d6451c9949a2f50e26",
+      "reason": "审计引用的复核事实文件在仓库内不存在"
+    },
+    {
+      "file": "late-plan.json",
+      "expectedSha256": "35ebd68ad6a9a848f544d56f21a4bd6e7b235d5cf013abf10479648d20f260db",
+      "reason": "审计引用的复核事实文件在仓库内不存在"
+    }
+  ],
+  "items": [
+    {
+      "id": "thePitOfDespair",
+      "code": "07041",
+      "name": "绝望深坑",
+      "nameEn": "The Pit of Despair",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/ThePitOfDespair.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/thePitOfDespair.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/thePitOfDespair.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07041.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js:39",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07045.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07046.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07042.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07043.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07044.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07047.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07048.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07049.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07050.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07051.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07052.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07102.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/shared/rats/01159.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07053.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07054.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07055.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07041.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/thePitOfDespair.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-thePitOfDespair.test.mjs",
+            "tests/tic-scenario-the-pit-of-despair.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-thePitOfDespair.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 29,
+            "gatherSets": 7,
+            "encounterDeck": 25,
+            "reservedEncounter": 6,
+            "zonesDeclared": true,
+            "encounterCards": 25,
+            "setAsideCards": 12,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "chapter-setup.js",
+            "phaseHookLines": [
+              39
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07045",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07045.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07046",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07046.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07042",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07042.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07043",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07043.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07044",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07044.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [],
+            "variantStageCards": [],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 5,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 12,
+            "connectivitySource": [
+              "grid",
+              "adjacentInitialPositions",
+              "initialTunnelPool",
+              "randomTunnelPhysicalPool"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 15,
+            "sharedEncounterCodes": 1,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 27,
+            "coveredRecords": 27,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07041.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1"
+            ],
+            "resolutionsInSpec": 2,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "interlude1"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 2
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/thePitOfDespair.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 4,
+                "en": 4
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "p",
+              "div",
+              "h1",
+              "hr"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 controlling all three relics completes the printed Devil Reef act and hands the campaign to interlude3"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07046 inactive act cannot expand and empty tunnel deck never duplicates physical locations"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07046 objective uses actual checkAct: one surviving investigator remaining prevents advance"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 real selected Depth locations pay local group clues and invoke their actual relic flashback"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07049 actual end-turn horror checks the ending investigator own keys and actual location"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07046 inactive act cannot expand and empty tunnel deck never duplicates physical locations"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-enemy-outcomes.test.mjs",
+              "title": "07055 semantics use actual encounter draw: active->depths preserves keys and truly surges; next draw restores same id without surge"
+            },
+            {
+              "file": "tests/tic-enemy-outcomes.test.mjs",
+              "title": "07054 failed actual agility draw restores existing depths enemy then performs one real effect attack"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-scenario-reference-final.test.mjs",
+              "title": "07041 ${difficulty} exact flood${level} skull and cultist condition"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 Deep random keys never include an unrecorded black key"
+            },
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 black key uses recorded hideout "
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07044 effect defeat grants one physical trauma only to survivors without exceeding health"
+            }
+          ],
+          "saveReplay": []
+        }
+      },
+      "inventory": {
+        "locations": 12,
+        "acts": 2,
+        "agendas": 3,
+        "enemies": 5,
+        "treacheries": 10,
+        "storyAssets": 0,
+        "resolutions": [
+          "resolution1"
+        ],
+        "encounterCards": 25,
+        "setAsideCards": 12,
+        "chapterRecords": 27,
+        "chapterRecordsCovered": 27,
+        "identities": 32
+      },
+      "fileHashes": {
+        "scenarioIndex": "dd62aac7b9a58317e26e182904d6307c14b222af16a28b174a001aa33cae1b14",
+        "guide": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "theVanishingOfElinaHarper",
+      "code": "07056",
+      "name": "艾莲娜·哈珀失踪案",
+      "nameEn": "The Vanishing of Elina Harper",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/TheVanishingOfElinaHarper.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js:46",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/<missing>/07060.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07057.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07063.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07064.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07065.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07066.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07068.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07069.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/shared/nightgaunts/01172.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07062b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07076.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07077.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07078.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07079.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07080.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07081.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07084.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/theVanishingOfElinaHarper.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+            "tests/tic-scenario-the-vanishing-of-elina-harper.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 23,
+            "gatherSets": 7,
+            "encounterDeck": 25,
+            "reservedEncounter": 3,
+            "zonesDeclared": true,
+            "encounterCards": 25,
+            "setAsideCards": 13,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "chapter-setup.js",
+            "phaseHookLines": [
+              46
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07060",
+                "type": "act",
+                "entry": null,
+                "onReveal": false,
+                "needsObjective": true,
+                "hasObjective": false,
+                "loadError": null
+              },
+              {
+                "code": "07057",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07057.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07058",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07060"
+            ],
+            "variantStageCards": [
+              "07059",
+              "07061"
+            ],
+            "variantGaps": [
+              {
+                "code": "07061",
+                "reason": "缺单卡条目"
+              }
+            ],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 2,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 13,
+            "connectivitySource": [
+              "initialLocations"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 24,
+            "sharedEncounterCodes": 2,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 43,
+            "coveredRecords": 42,
+            "uncoveredRecords": [
+              "07061"
+            ]
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4",
+              "resolution5",
+              "resolution6",
+              "resolution7"
+            ],
+            "resolutionsInSpec": 8,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "interlude2"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 8
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4",
+              "resolution5",
+              "resolution6",
+              "resolution7"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/theVanishingOfElinaHarper.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 1,
+                "en": 1
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "header",
+              "p",
+              "ul",
+              "li",
+              "b"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
+            "id": "w6-act-agenda-deck-ops",
+            "status": "pending",
+            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
+            "cards": [
+              "07060",
+              "07061",
+              "07236",
+              "07237",
+              "07315"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json",
+            "id": "w6-harper-scenario-events",
+            "status": "pending",
+            "primitive": "scenarioBehavior.events 处理器 + roundEnded 分派 + 07083 压地点下方 + 07062a→07062b 翻面敌人",
+            "cards": [
+              "07060",
+              "07061",
+              "07062a",
+              "07062b"
+            ]
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时选择恐惧则不放置；失败时两者都执行"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07107 鬼祟的当地人：放到密谋牌库旁后所有调查员不能谈判"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：从遭遇牌库生成在「线索最多的地点」"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：从遭遇牌库生成在「线索最多的地点」"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：「线索最多」并列时由领队选择生成地点"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：谈判把 1 个线索放到本地点、横置它，并在下一个补给阶段不重整"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07105：谈判把 1 个线索放到你所在地点，横置且下个补给阶段不重整"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07105：可以从连接地点发起谈判，线索放到行动者所在地点"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07107 鬼祟的当地人：放到密谋牌库旁后所有调查员不能谈判"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：从遭遇牌库生成在「线索最多的地点」"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：谈判把 1 个线索放到本地点、横置它，并在下一个补给阶段不重整"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：没有线索时谈判不出现在合法行动里"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07105：谈判把 1 个线索放到你所在地点，横置且下个补给阶段不重整"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07105：可以从连接地点发起谈判，线索放到行动者所在地点"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07297：失败且揭示了诅咒标记 → 两个分支都执行"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 Deep random keys never include an unrecorded black key"
+            },
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 black key uses recorded hideout "
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
+            }
+          ],
+          "saveReplay": [
+            {
+              "file": "tests/tic-innsmouth-look.test.mjs",
+              "title": "07106：意志(3) 成功弃掉本卡后属性与特性一起恢复；失败则保留"
+            }
+          ]
+        }
+      },
+      "inventory": {
+        "locations": 13,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 12,
+        "treacheries": 9,
+        "storyAssets": 3,
+        "resolutions": [
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5",
+          "resolution6",
+          "resolution7"
+        ],
+        "encounterCards": 25,
+        "setAsideCards": 13,
+        "chapterRecords": 43,
+        "chapterRecordsCovered": 42,
+        "identities": 40
+      },
+      "fileHashes": {
+        "scenarioIndex": "2435f521bbe9ba9aba7011dd510eb000d6e7626f48ce6a6180b4c50e52d907c4",
+        "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07060(缺 onReveal)；变体幕/议程未落地：07061(缺单卡条目)",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "inTooDeep",
+      "code": "07123",
+      "name": "深陷危局",
+      "nameEn": "In Too Deep",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/InTooDeep.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/inTooDeep.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/inTooDeep.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07123.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js:47",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07128.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07124.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07125.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07126.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07127.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/chapter-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07129.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07130.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07131.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07132.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07133.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07134.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07135.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07136.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/the_locals/07105.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07144.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07145.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07146.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07123.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/inTooDeep.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-inTooDeep.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-inTooDeep.test.mjs",
+            "tests/tic-scenario-in-too-deep.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-inTooDeep.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 22,
+            "gatherSets": 6,
+            "encounterDeck": 33,
+            "reservedEncounter": 5,
+            "zonesDeclared": true,
+            "encounterCards": 33,
+            "setAsideCards": 15,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "chapter-setup.js",
+            "phaseHookLines": [
+              47
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07128",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07128.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07124",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07124.js",
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07125",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07125.js",
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07126",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07126.js",
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07127",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07127.js",
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07124",
+              "07125",
+              "07126",
+              "07127"
+            ],
+            "variantStageCards": [],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 5,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 15,
+            "connectivitySource": [
+              "connections",
+              "grid"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 21,
+            "sharedEncounterCodes": 2,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 42,
+            "coveredRecords": 42,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07123.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1"
+            ],
+            "resolutionsInSpec": 2,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "devilReef"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 2
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/inTooDeep.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 4,
+                "en": 4
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "p",
+              "div",
+              "h1",
+              "hr",
+              "span",
+              "b"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时选择恐惧则不放置；失败时两者都执行"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07107 鬼祟的当地人：放到密谋牌库旁后所有调查员不能谈判"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "轮末弃置：每轮最多从场上弃掉 1 张同名旁置卡，其余留到下一轮"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 controlling all three relics completes the printed Devil Reef act and hands the campaign to interlude3"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "压迫议程的规则只在它是当前议程时生效"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07128 real act free ability charges global group clues and removes actor-local barrier without actions"
+            },
+            {
+              "file": "tests/tic-walking-surcharge.test.mjs",
+              "title": "海洋→内陆不付步行费用；没有这类议程时海洋→海洋也只花 1 行动"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-effect-barriers.test.mjs",
+              "title": "P7 explicit effect move ignores only barriers and still enforces other physical movement restrictions"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 real selected Depth locations pay local group clues and invoke their actual relic flashback"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07107 鬼祟的当地人：放到密谋牌库旁后所有调查员不能谈判"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "07124 路障重重：只有[[嫌犯]]敌人失去冷漠，其他人保持冷漠"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "capability:parley：调查员「不能谈判」时所有谈判行动都不再合法"
+            },
+            {
+              "file": "tests/tic-fog-and-locals.test.mjs",
+              "title": "07105 印斯茅斯闹事者：从遭遇牌库生成在「线索最多的地点」"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-scenario-reference-final.test.mjs",
+              "title": "07123 ${difficulty} skull counts real east cells across a gap and isolated origin counts zero"
+            },
+            {
+              "file": "tests/tic-scenarios-early.test.mjs",
+              "title": "P7 07136 shroud counts physical barrier tokens and exact curse fee rejects insufficient supply"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 Deep random keys never include an unrecorded black key"
+            },
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 black key uses recorded hideout "
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            }
+          ],
+          "saveReplay": [
+            {
+              "file": "tests/tic-innsmouth-look.test.mjs",
+              "title": "07106：意志(3) 成功弃掉本卡后属性与特性一起恢复；失败则保留"
+            }
+          ]
+        }
+      },
+      "inventory": {
+        "locations": 15,
+        "acts": 1,
+        "agendas": 4,
+        "enemies": 7,
+        "treacheries": 12,
+        "storyAssets": 2,
+        "resolutions": [
+          "resolution1"
+        ],
+        "encounterCards": 33,
+        "setAsideCards": 15,
+        "chapterRecords": 42,
+        "chapterRecordsCovered": 42,
+        "identities": 41
+      },
+      "fileHashes": {
+        "scenarioIndex": "1d85f3ffd62edf3f640dc06b6a47576e4e822625bbaccae84f9a491bb3d08ee9",
+        "guide": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07124(缺 onReveal), 07125(缺 onReveal), 07126(缺 onReveal), 07127(缺 onReveal)",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "devilReef",
+      "code": "07163",
+      "name": "魔鬼礁石",
+      "nameEn": "Devil Reef",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/DevilReef.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/devilReef.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/devilReef.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07163.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/middle-setup.js:30",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07167.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07166.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/middle-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07102.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07103.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/flooded_caverns/07104.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07168.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07169.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07086.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07164b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07182.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07183.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07087.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07163.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/devilReef.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-devilReef.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-devilReef.test.mjs",
+            "tests/tic-scenario-devil-reef.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-devilReef.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 16,
+            "gatherSets": 6,
+            "encounterDeck": 33,
+            "reservedEncounter": 0,
+            "zonesDeclared": true,
+            "encounterCards": 33,
+            "setAsideCards": 20,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "middle-setup.js",
+            "phaseHookLines": [
+              30
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07167",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07167.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07165",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07166",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07166.js",
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07166"
+            ],
+            "variantStageCards": [
+              "07164"
+            ],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 3,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 20,
+            "connectivitySource": [
+              "initialLocations",
+              "tidalTunnelDeck"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 22,
+            "sharedEncounterCodes": 1,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 41,
+            "coveredRecords": 41,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07163.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1"
+            ],
+            "resolutionsInSpec": 2,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "interlude3"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 2
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/devilReef.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 3,
+                "en": 3
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "header",
+              "p",
+              "b",
+              "div",
+              "h1",
+              "hr",
+              "span"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json",
+            "id": "p7-a1-07178-vehicle-location-sync",
+            "status": "pending",
+            "primitive": "vehicles.move 同步剧情资产 location",
+            "cards": [
+              "07178"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07213：目标不在载具上时攻击 +2 伤害，在载具上则不加"
+            },
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：本地有调查员没有手牌时失去冷漠，不出现攻击行动；有手牌时仍是冷漠目标"
+            },
+            {
+              "file": "tests/tic-fishing-vessel.test.mjs",
+              "title": "07178 渔船：移动到内陆（非[[海洋]]）地点不是合法目标"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 controlling all three relics completes the printed Devil Reef act and hands the campaign to interlude3"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "${agendaCode} 大海的秘密（版本${version}）：背面把 ${terrorCode} 生成在渔船所在地点"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            },
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：失去冷漠后会被移动进来的调查员自动交战"
+            },
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：敌军阶段结束时，此地与连接地点的调查员各随机弃 1 张手牌，更远的调查员不受影响"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+            },
+            {
+              "file": "tests/tic-fishing-vessel.test.mjs",
+              "title": "07178 渔船：只在载具所在地点提供「移动到连接的[[海洋]]地点」，移动时带走乘客与卡面"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "两张卡都标记为已实现且声明了生成/攻击加成读点"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）"
+            },
+            {
+              "file": "tests/tic-scenario-reference-final.test.mjs",
+              "title": "07163 ${difficulty} vehicle tablet prevention and carried-only key elderthing exclusion"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 Deep random keys never include an unrecorded black key"
+            },
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 black key uses recorded hideout "
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07201：背面「燃料耗尽」击败所有调查员并各承受 1 点肉体创伤"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07202：声明「每个敌人获得猎手」「调查阶段末载具移动」与背面结局1"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
+            }
+          ],
+          "saveReplay": [
+            {
+              "file": "tests/tic-vehicle-restrictions.test.mjs",
+              "title": "07183 追猎的深潜者：交战期间不能进入载具，也不能获得资源；解除交战即恢复"
+            }
+          ]
+        }
+      },
+      "inventory": {
+        "locations": 20,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 7,
+        "treacheries": 11,
+        "storyAssets": 4,
+        "resolutions": [
+          "resolution1"
+        ],
+        "encounterCards": 33,
+        "setAsideCards": 20,
+        "chapterRecords": 41,
+        "chapterRecordsCovered": 41,
+        "identities": 45
+      },
+      "fileHashes": {
+        "scenarioIndex": "e0d59e92ae59addf38dc8f193f846a378bc3fdf39bc743142cb675c864287c53",
+        "guide": "da8c37d6980342b4da7fd9fe67a2a4ef3fbeee9d281ecb47b65a268b9e494538"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07166(缺 onReveal)",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "horrorInHighGear",
+      "code": "07198",
+      "name": "全速恐惧",
+      "nameEn": "Horror in High Gear",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/HorrorInHighGear.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/horrorInHighGear.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/horrorInHighGear.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07198.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/middle-setup.js:12",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07202.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07201.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/middle-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07203.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204c.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206b.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07094.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07213.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07214.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07215.js",
+          "src/cards/encounter-entries/shared/ancient_evils/01166.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07095.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07096.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07097.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/shattered_memories/07098.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07198.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/horrorInHighGear.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-horrorInHighGear.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-horrorInHighGear.test.mjs",
+            "tests/tic-scenario-horror-in-high-gear.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-horrorInHighGear.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 14,
+            "gatherSets": 5,
+            "encounterDeck": 28,
+            "reservedEncounter": 0,
+            "zonesDeclared": true,
+            "encounterCards": 28,
+            "setAsideCards": 21,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "middle-setup.js",
+            "phaseHookLines": [
+              12
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07202",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07202.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": false,
+                "loadError": null
+              },
+              {
+                "code": "07199",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07199.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07201",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07201.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07202"
+            ],
+            "variantStageCards": [
+              "07200"
+            ],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 3,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 21,
+            "connectivitySource": [
+              "roadDeck",
+              "longWayPool"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 19,
+            "sharedEncounterCodes": 1,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 40,
+            "coveredRecords": 40,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07198.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1"
+            ],
+            "resolutionsInSpec": 2,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "beforeFog"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 2
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/horrorInHighGear.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 0,
+                "en": 0
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "p",
+              "b"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时选择恐惧则不放置；失败时两者都执行"
+            },
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07213：目标不在载具上时攻击 +2 伤害，在载具上则不加"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "${agendaCode} 大海的秘密（版本${version}）：背面把 ${terrorCode} 生成在渔船所在地点"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）"
+            },
+            {
+              "file": "tests/tic-scenarios-middle-setup.test.mjs",
+              "title": "Middle agenda variants use recovered devil battle and actual Terror death record, not difficulty or an arbitrary default"
+            },
+            {
+              "file": "tests/tic-scenarios-middle.test.mjs",
+              "title": "07203: actual last investigator movement advances current chase act exactly once, despite enemies at Approach"
+            },
+            {
+              "file": "tests/tic-scenarios-middle.test.mjs",
+              "title": "07203: an absent undefeated investigator prevents objective; actual defeat removes that requirement"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-aside-hazards.test.mjs",
+              "title": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+            },
+            {
+              "file": "tests/tic-car-faces.test.mjs",
+              "title": "07211a 行驶：抽一张遭遇牌，然后把车开到一个连接的[[道路]]地点（每轮一次）"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 no actual move finds first Vehicle ${code} at physical rearmost location"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 exhausted Hunter does not count as moving; fallback does not move/exhaust it"
+            },
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            },
+            {
+              "file": "tests/tic-hybrid-assassin.test.mjs",
+              "title": "07215 effect move does not consume limit; subsequent Hunter move still triggers extra"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-car-faces.test.mjs",
+              "title": "07211a 行驶：抽一张遭遇牌，然后把车开到一个连接的[[道路]]地点（每轮一次）"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 actual successful Hunter movement prevents fallback search and never attacks/exhausts"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 exhausted Hunter does not count as moving; fallback does not move/exhaust it"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 missing matching Vehicle terminates on empty deck without fabricated enemy"
+            },
+            {
+              "file": "tests/tic-catching-up.test.mjs",
+              "title": "07219 actual Hunter displacement later reversed by another effect still suppresses fallback"
+            },
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-chase-vehicles.test.mjs",
+              "title": "两张卡都标记为已实现且声明了生成/攻击加成读点"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）"
+            },
+            {
+              "file": "tests/tic-road-hazards.test.mjs",
+              "title": "道路危害条目都声明了载具事件读点，且每张卡都有 implemented 标记"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07198 ${difficulty} skull actual Road deck threshold6 vs7"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07198 canceled elderthing does not move Hunters or fabricate provenance"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07231 ${difficulty} cultist ST8 uses location after original result callback"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07201：背面「燃料耗尽」击败所有调查员并各承受 1 点肉体创伤"
+            },
+            {
+              "file": "tests/tic-middle-remaining.test.mjs",
+              "title": "07202：声明「每个敌人获得猎手」「调查阶段末载具移动」与背面结局1"
+            },
+            {
+              "file": "tests/tic-scenarios-middle-setup.test.mjs",
+              "title": "Middle agenda variants use recovered devil battle and actual Terror death record, not difficulty or an arbitrary default"
+            }
+          ],
+          "saveReplay": []
+        }
+      },
+      "inventory": {
+        "locations": 21,
+        "acts": 1,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 10,
+        "storyAssets": 4,
+        "resolutions": [
+          "resolution1"
+        ],
+        "encounterCards": 28,
+        "setAsideCards": 21,
+        "chapterRecords": 40,
+        "chapterRecordsCovered": 40,
+        "identities": 43
+      },
+      "fileHashes": {
+        "scenarioIndex": "5cc37c6e640e2441d610c3d2341ae724d7d572af4d8d559bb1f0ed9ca9b75a42",
+        "guide": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07202(缺 objective)",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "aLightInTheFog",
+      "code": "07231",
+      "name": "雾中之光",
+      "nameEn": "A Light in the Fog",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/ALightInTheFog.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/aLightInTheFog.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/aLightInTheFog.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07231.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js:14",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07236.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07237.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07238.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07232.js",
+          "src/cards/encounter-entries/<missing>/07233.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07234.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07235.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js",
+          "src/cards/encounter-entries/<missing>/07252b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07239.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07240.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07241.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07242.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07243.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07244.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07245.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07246.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07254.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07255.js",
+          "src/cards/encounter-entries/shared/striking_fear/01163.js",
+          "src/cards/encounter-entries/shared/striking_fear/01164.js",
+          "src/cards/encounter-entries/shared/striking_fear/01165.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js",
+          "src/cards/encounter-entries/<missing>/07253.js",
+          "src/cards/encounter-entries/<missing>/07260.js",
+          "src/cards/encounter-entries/<missing>/07252.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07231.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/aLightInTheFog.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-aLightInTheFog.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-aLightInTheFog.test.mjs",
+            "tests/tic-scenario-a-light-in-the-fog.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-aLightInTheFog.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 34,
+            "gatherSets": 6,
+            "encounterDeck": 36,
+            "reservedEncounter": 5,
+            "zonesDeclared": true,
+            "encounterCards": 36,
+            "setAsideCards": 18,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "late-setup.js",
+            "phaseHookLines": [
+              14
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07236",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07236.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07237",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07237.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07238",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07238.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07232",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07232.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07233",
+                "type": "agenda",
+                "entry": null,
+                "onReveal": false,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07234",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07234.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07235",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07235.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07233"
+            ],
+            "variantStageCards": [],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 6,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 18,
+            "connectivitySource": [
+              "initialLocations",
+              "expandedMap"
+            ],
+            "placementWired": true,
+            "missingLocationRules": [
+              "07252b"
+            ]
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 20,
+            "sharedEncounterCodes": 2,
+            "implementedMissing": [
+              "07253",
+              "07260",
+              "07252"
+            ],
+            "rulesPending": [],
+            "records": 42,
+            "coveredRecords": 42,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07231.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4"
+            ],
+            "resolutionsInSpec": 5,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "theLairOfDagon"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 5
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/aLightInTheFog.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 2,
+                "en": 2
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "p",
+              "hr",
+              "div",
+              "h1"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json",
+            "id": "p7-a2-act-clue-objective-data",
+            "status": "pending",
+            "primitive": "content/campaigns/theInnsmouthConspiracy/chapter-data.json 的 aLightInTheFog.acts 给 07236 补 `objective: { type: 'clues', perInvestigator: 3 }`（以及 07237/07238 若需原生展示可补对应 objective 数据）。",
+            "cards": [
+              "07236"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
+            "id": "w6-act-agenda-deck-ops",
+            "status": "pending",
+            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
+            "cards": [
+              "07060",
+              "07061",
+              "07236",
+              "07237",
+              "07315"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json",
+            "id": "w6-capture-mechanism",
+            "status": "pending",
+            "primitive": "capture mechanic（被俘权威状态 + 引擎写入口 + 全局读点 + 场景事件）",
+            "cards": [
+              "07233",
+              "07252",
+              "07252b",
+              "07253",
+              "07260"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json",
+            "id": "w6-holding-cells-restrictions",
+            "status": "pending",
+            "primitive": "locationRule.enemiesCannotEnter + locationRule.enemySpawnRedirect（地点侧敌人进入/生成限制）",
+            "cards": [
+              "07252b"
+            ]
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-agenda-revert.test.mjs",
+              "title": "P7 agenda reversion retains its physical card and attachments after ordinary doom clearing, including repeated JSON continuation"
+            },
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07236 灯塔：线索不足时目标入口不出现；支付后背面横置马什+蓝钥匙并直接推进议程 2a"
+            },
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07237 寻找前路：无人在地下室时目标不推进；进入地下室后推进并铺开 2b"
+            },
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07239 猎鹰岬门房：不能被完全淹没；在门房才能撤退，黑/红钥匙放到当前幕"
+            },
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07247 海德拉祭坛：揭示放红钥匙；绿钥匙在本地点 -3 帷幕；线索只能靠调查发现"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 controlling all three relics completes the printed Devil Reef act and hands the campaign to interlude3"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07234 浪潮汹涌：背面从场外生成马什、移出猎鹰岬地点、提升最底下 4 处淹没"
+            },
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07247 海德拉祭坛：揭示放红钥匙；绿钥匙在本地点 -3 帷幕；线索只能靠调查发现"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 real selected Depth locations pay local group clues and invoke their actual relic flashback"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-enemy-flow.test.mjs",
+              "title": "P7 nearest enemy query and Massive engagement use live engine semantics"
+            },
+            {
+              "file": "tests/tic-enemy-flow.test.mjs",
+              "title": "P7 enemy auras stack, observe source blanking and never count twice as self modifiers"
+            },
+            {
+              "file": "tests/tic-enemy-flow.test.mjs",
+              "title": "P7 printed enemy Surge draws once after spawn, suppression lasts one physical draw only"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 正面：[[嫌犯]]敌人 +1[每调查员]生命、失去冷漠、不能谈判；非嫌犯不受影响"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07198 ${difficulty} skull actual Road deck threshold6 vs7"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07198 canceled elderthing does not move Hunters or fabricate provenance"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07231 ${difficulty} cultist ST8 uses location after original result callback"
+            },
+            {
+              "file": "tests/tic-scenario-reference-moving.test.mjs",
+              "title": "07231 ${difficulty} unflooded skull reveals no additional token; unflooded tablet no damage"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-alight-cards.test.mjs",
+              "title": "07249 月之室：揭示提升淹没；未淹没才出现撤退入口；撤退记录 resignedInMoonRoom"
+            },
+            {
+              "file": "tests/tic-flashbacks.test.mjs",
+              "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 背面：可提升地点不足 4 张 → 结局 3"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1"
+            },
+            {
+              "file": "tests/tic-light-in-the-fog-agendas.test.mjs",
+              "title": "advanceActDirectly：不结算当前幕背面（不生成马什/不放地下室），只换到下一张幕"
+            }
+          ],
+          "saveReplay": []
+        }
+      },
+      "inventory": {
+        "locations": 18,
+        "acts": 3,
+        "agendas": 4,
+        "enemies": 5,
+        "treacheries": 14,
+        "storyAssets": 1,
+        "resolutions": [
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4"
+        ],
+        "encounterCards": 36,
+        "setAsideCards": 18,
+        "chapterRecords": 42,
+        "chapterRecordsCovered": 42,
+        "identities": 45
+      },
+      "fileHashes": {
+        "scenarioIndex": "18111d595fcb601a44c4fa445f659908e9dfef3d1f2f9686551527881cd98f15",
+        "guide": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07233(缺 onReveal)",
+        "locationsAndConnections：结构缺口 — 有印刷行为但缺地点条目：07252b",
+        "encounterBehaviors：结构缺口 — 遭遇卡未实现：07253, 07260, 07252",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "theLairOfDagon",
+      "code": "07274",
+      "name": "达贡巢穴",
+      "nameEn": "The Lair of Dagon",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/TheLairOfDagon.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/theLairOfDagon.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/theLairOfDagon.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07274.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js:18",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07276.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07278.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07279.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07283.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07284.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07285.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07286.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07287.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07288.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07289.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07290.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/shared/pentagram/01169.js",
+          "src/cards/encounter-entries/shared/pentagram/01170.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07084.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07293.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07294.js",
+          "src/cards/encounter-entries/shared/pentagram/01171.js",
+          "src/cards/encounter-entries/shared/locked_doors/01174.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07274.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/theLairOfDagon.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-theLairOfDagon.test.mjs",
+            "tests/tic-scenario-the-lair-of-dagon.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-theLairOfDagon.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 35,
+            "gatherSets": 6,
+            "encounterDeck": 27,
+            "reservedEncounter": 5,
+            "zonesDeclared": true,
+            "encounterCards": 27,
+            "setAsideCards": 15,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "late-setup.js",
+            "phaseHookLines": [
+              18
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07280",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07281",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07282",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js",
+                "onReveal": true,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07276",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07276.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07278",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07278.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07279",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07279.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [],
+            "variantStageCards": [
+              "07275",
+              "07277"
+            ],
+            "variantGaps": [],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 6,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 15,
+            "connectivitySource": [
+              "connections",
+              "randomInitialSlots",
+              "initialLocations"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 19,
+            "sharedEncounterCodes": 5,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 37,
+            "coveredRecords": 37,
+            "uncoveredRecords": []
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07274.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4"
+            ],
+            "resolutionsInSpec": 5,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "interlude4"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 5
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/theLairOfDagon.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 0,
+                "en": 0
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "header",
+              "p",
+              "b"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json",
+            "id": "p7-b-07299-location-attachment-ability.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": [
+              "07299"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+            },
+            {
+              "file": "tests/tic-slumbering-bosses.test.mjs",
+              "title": "07292a 沉睡达贡：远处地点的检定失败不放置资源"
+            },
+            {
+              "file": "tests/tic-slumbering-bosses.test.mjs",
+              "title": "07330a 沉睡达贡：行动失败低于难度 3 点才放置 1 个毁灭"
+            },
+            {
+              "file": "tests/tic-slumbering-bosses.test.mjs",
+              "title": "07330a/07331a：调查阶段结束时，在巢穴且有调查员且处于重整才放置毁灭"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "typed target：玩家卡来源的敌人类目标过滤沉睡敌人，遭遇来源不过滤"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "持久修正行：沉睡目标只接受非玩家来源的行，运行期修正同样过滤"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "压迫议程的规则只在它是当前议程时生效"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07232 背面：毁灭移到下个密谋、马什与队长交战带蓝钥匙、全员失线索、灯塔地下室入场、场景直接推进 2a"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 注册为 agenda：马什生命修正 + 背面 onReveal"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡敌人：被移动进调查员地点也不会自动交战，也不会攻击调查员"
+            },
+            {
+              "file": "tests/tic-flooded-agendas.test.mjs",
+              "title": "07124：完全淹没地点的回合结束受到 1 点伤害，部分淹没不触发"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 背面：可提升地点不足 4 张 → 结局 3"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "来源类别：玩家卡（含无人控制的剧情资产）与遭遇/剧本来源分开，未知类型不猜"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡敌人：玩家卡效果与无来源伤害都不生效，剧本/遭遇来源照常"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡判定只认当前印刷面：没有 slumbering 的敌人照常受伤，抹除文本后恢复"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡敌人：攻击/躲避/交战既不出现在合法行动里，提交也会被拒绝"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡敌人：被移动进调查员地点也不会自动交战，也不会攻击调查员"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡敌人：玩家卡效果不能横置/位移/交战/躲避/击败，遭遇来源与敌人阶段照常"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-scenario-reference-printed.test.mjs",
+              "title": "07274 modifier0 curse remains revealed and must still automatically fail Lair cultist"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07297：失败且揭示了诅咒标记 → 两个分支都执行"
+            },
+            {
+              "file": "tests/tic-scenarios-late.test.mjs",
+              "title": "TIC 07289: actual unrevealed lock reads shared remembered token, reveal places purple; local failure adds one curse"
+            },
+            {
+              "file": "tests/tic-scenarios-late.test.mjs",
+              "title": "TIC 07292b: actual ${token} failure readies Dagon and attacks only performer once, with real teammate commitment"
+            },
+            {
+              "file": "tests/tic-scenarios-late.test.mjs",
+              "title": "TIC 07276: no jailbreak does not spawn a Suspect; zero curse supply does not create tokens"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "进程内帧：嵌套结算压栈并在退出时逐层还原，结算完不残留"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "真实描述子结算：帧覆盖整段 resolve，退出后还原"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 背面：可提升地点不足 4 张 → 结局 3"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
+            }
+          ],
+          "saveReplay": [
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "沉睡判定只认当前印刷面：没有 slumbering 的敌人照常受伤，抹除文本后恢复"
+            },
+            {
+              "file": "tests/tic-effect-provenance.test.mjs",
+              "title": "provenance 不写 state：存档往返不出现来源字段"
+            }
+          ]
+        }
+      },
+      "inventory": {
+        "locations": 15,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 8,
+        "treacheries": 9,
+        "storyAssets": 2,
+        "resolutions": [
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4"
+        ],
+        "encounterCards": 27,
+        "setAsideCards": 15,
+        "chapterRecords": 37,
+        "chapterRecordsCovered": 37,
+        "identities": 40
+      },
+      "fileHashes": {
+        "scenarioIndex": "61ef78a0a9bbb50f1bd7fee34f2a45ff973bf09ea5a4d3deda8e855d91ff1ead",
+        "guide": "813590e9d37022e1622e3f89e9dffd4dbdbb68bf9db4018da6e5f084f66ec4d0"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    },
+    {
+      "id": "intoTheMaelstrom",
+      "code": "07311",
+      "name": "暗潮之下",
+      "nameEn": "Into the Maelstrom",
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": false,
+        "actsAndAgendas": false,
+        "locationsAndConnections": false,
+        "encounterBehaviors": false,
+        "literalCardBehavior": false,
+        "chaosEffects": false,
+        "resolutionsAndRecords": false,
+        "storyText": true,
+        "saveReplay": false,
+        "browserAcceptance": false
+      },
+      "evidence": {
+        "sourceLocked": [
+          "audit/tic-scope.json",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-chapter-sources.json",
+          "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheInnsmouthConspiracy/IntoTheMaelstrom.hs",
+          "frontend/src/locales/en/theInnsmouthConspiracy/scenarios/intoTheMaelstrom.json",
+          "frontend/src/locales/zh/theInnsmouthConspiracy/scenarios/intoTheMaelstrom.json"
+        ],
+        "identityRegistered": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/shared.js",
+          "content/campaigns/theInnsmouthConspiracy/card-data.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07311.js",
+          "audit/tic-scope.json"
+        ],
+        "setupAndZones": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js:34",
+          "content/scenario-manifest.js"
+        ],
+        "actsAndAgendas": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07315.js",
+          "src/cards/encounter-entries/<missing>/07316.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07312.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07313.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07314.js"
+        ],
+        "locationsAndConnections": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+          "content/campaigns/theInnsmouthConspiracy/late-setup.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07319.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07320.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07321.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07322.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07323.js"
+        ],
+        "encounterBehaviors": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "audit/tic-scope.json",
+          "audit/tic-mechanism-scan.json",
+          "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_hydra/07086.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07330a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07330b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07331a.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07331b.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07332.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07333.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07334.js"
+        ],
+        "literalCardBehavior": [
+          "audit/tic-all-card-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js"
+        ],
+        "chaosEffects": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07311.js",
+          "audit/tic-scope.json"
+        ],
+        "resolutionsAndRecords": [
+          "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theInnsmouthConspiracy/flow.js",
+          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+        ],
+        "storyText": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "audit/tic-story-acceptance.json",
+          "content/campaigns/theInnsmouthConspiracy/introduction.js",
+          "content/campaigns/theInnsmouthConspiracy/resolutions.js",
+          "content/campaigns/theInnsmouthConspiracy/interludes.js",
+          "web/scenario-guides/intoTheMaelstrom.json",
+          "tests/tic-interactions.test.mjs"
+        ],
+        "saveReplay": [
+          "tests/fixtures/replay/tic-p7-baseline.json",
+          "audit/tic-p7-baseline.json"
+        ],
+        "browserAcceptance": [
+          "tests/scenario-guides.browser.mjs",
+          "tests/playwright/playwright.tic.config.mjs"
+        ]
+      },
+      "notes": {
+        "chapterTest": {
+          "file": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "candidates": [
+            "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+            "tests/tic-scenario-into-the-maelstrom.test.mjs"
+          ],
+          "exists": false,
+          "registered": false,
+          "referencesChapter": false,
+          "passed": false,
+          "passedCases": 0,
+          "failedCases": 0,
+          "missingReasons": [
+            "缺少本章验收测试文件；建议实现 tests/tic-scenario-intoTheMaelstrom.test.mjs"
+          ]
+        },
+        "subsignals": {
+          "structural": {
+            "setupAndZones": true,
+            "actsAndAgendas": false,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true
+          },
+          "setupAndZones": {
+            "specSetupKeys": 36,
+            "gatherSets": 7,
+            "encounterDeck": 33,
+            "reservedEncounter": 2,
+            "zonesDeclared": true,
+            "encounterCards": 33,
+            "setAsideCards": 22,
+            "optionalSets": [],
+            "duplicateActiveZoneCodes": [],
+            "optionalZoneCollisions": [],
+            "phaseHooks": true,
+            "phaseModule": "late-setup.js",
+            "phaseHookLines": [
+              34
+            ],
+            "zoneReportError": null
+          },
+          "actsAndAgendas": {
+            "stageCards": [
+              {
+                "code": "07315",
+                "type": "act",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07315.js",
+                "onReveal": false,
+                "needsObjective": true,
+                "hasObjective": true,
+                "loadError": null
+              },
+              {
+                "code": "07316",
+                "type": "act",
+                "entry": null,
+                "onReveal": false,
+                "needsObjective": true,
+                "hasObjective": false,
+                "loadError": null
+              },
+              {
+                "code": "07312",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07312.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07313",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07313.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              },
+              {
+                "code": "07314",
+                "type": "agenda",
+                "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07314.js",
+                "onReveal": true,
+                "needsObjective": false,
+                "hasObjective": null,
+                "loadError": null
+              }
+            ],
+            "rulesWithHookMissing": [
+              "07315",
+              "07316"
+            ],
+            "variantStageCards": [
+              "07317",
+              "07318"
+            ],
+            "variantGaps": [
+              {
+                "code": "07317",
+                "reason": "缺单卡条目"
+              },
+              {
+                "code": "07318",
+                "reason": "缺单卡条目"
+              }
+            ],
+            "scriptCardsDeclared": false,
+            "nativeStageAbilities": 4,
+            "stageActionGaps": []
+          },
+          "locationsAndConnections": {
+            "locations": 22,
+            "connectivitySource": [
+              "connections",
+              "initialLocations",
+              "initialRandomLocations"
+            ],
+            "placementWired": true,
+            "missingLocationRules": []
+          },
+          "encounterBehaviors": {
+            "encounterDefinitionCodes": 22,
+            "sharedEncounterCodes": 2,
+            "implementedMissing": [],
+            "rulesPending": [],
+            "records": 41,
+            "coveredRecords": 39,
+            "uncoveredRecords": [
+              "07317",
+              "07318"
+            ]
+          },
+          "chaosEffects": {
+            "behaviorResolveChaosToken": true,
+            "behaviorAfterTest": true,
+            "referenceEntry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07311.js",
+            "resolveChaosToken": true,
+            "applyTokenEffect": true,
+            "easyStandard": true,
+            "hardExpert": true
+          },
+          "resolutionsAndRecords": {
+            "resolutionIds": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4",
+              "resolution5",
+              "resolution6",
+              "resolution7",
+              "resolution8"
+            ],
+            "resolutionsInSpec": 9,
+            "behaviorResolution": true,
+            "missingResolutionStory": [],
+            "chapterBranchInResolutions": true,
+            "flowNode": {
+              "type": "scenario",
+              "next": "epilogue"
+            },
+            "recordSchema": true,
+            "manifestResolutionIds": 10
+          },
+          "storyText": {
+            "importGates": true,
+            "sourceFiles": 18,
+            "zhChapter": true,
+            "enChapter": true,
+            "narrativeCompleteZh": true,
+            "narrativeCompleteEn": true,
+            "baseNarrativeZh": true,
+            "baseNarrativeEn": true,
+            "narrativeResolutionKeys": [
+              "resolution1",
+              "resolution2",
+              "resolution3",
+              "resolution4",
+              "resolution5",
+              "resolution6",
+              "resolution7",
+              "resolution8"
+            ],
+            "missingResolutionStoryBothLanguages": [],
+            "guide": {
+              "path": "web/scenario-guides/intoTheMaelstrom.json",
+              "ok": true,
+              "zh": true,
+              "en": true,
+              "storyBlocks": {
+                "zh": 1,
+                "en": 1
+              },
+              "reason": null
+            },
+            "controlMarkers": false,
+            "presentationTags": [
+              "p",
+              "hr",
+              "ul",
+              "li",
+              "span",
+              "div",
+              "h1",
+              "b"
+            ],
+            "privacyEvidence": [
+              {
+                "file": "tests/tic-interactions.test.mjs",
+                "titles": [
+                  "P4 隐私投影：宿主下方仅本人，未揭示钥匙不泄色；隐藏解答、未来路牌及未触发记忆不投影"
+                ]
+              }
+            ]
+          },
+          "engineGaps": []
+        },
+        "pendingPrimitiveRequests": [
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json",
+            "id": "w5-07280-act1-back-layout.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+            "id": "w5-07280-oath-shared-rules.json",
+            "status": "pending",
+            "primitive": null,
+            "cards": []
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json",
+            "id": "w6-act-agenda-deck-ops",
+            "status": "pending",
+            "primitive": "api.scenario.setActDeckCards / setAgendaDeckCards / advanceAgendaTo（补 skip 语义）/ attachUnderLocation",
+            "cards": [
+              "07060",
+              "07061",
+              "07236",
+              "07237",
+              "07315"
+            ]
+          },
+          {
+            "file": "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json",
+            "id": "w6-parallel-acts",
+            "status": "pending",
+            "primitive": "parallel acts：多条活动幕共存 + 各自目标独立完成 + 完成时 lead「继续/R1」选择",
+            "cards": [
+              "07316",
+              "07317",
+              "07318"
+            ]
+          }
+        ],
+        "existingEvidence": {
+          "setupAndZones": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "takeEncounterCard：按物理卡从牌库顶或弃牌堆取出一张，找不到返回 null"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+            },
+            {
+              "file": "tests/tic-scenarios-late.test.mjs",
+              "title": "TIC 07320 definition/setup-only: real partial flood, orthogonal adjacency, play-zone and investigator starts"
+            }
+          ],
+          "actsAndAgendas": [
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：本地有调查员没有手牌时失去冷漠，不出现攻击行动；有手牌时仍是冷漠目标"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07232 背面：毁灭移到下个密谋、马什与队长交战带蓝钥匙、全员失线索、灯塔地下室入场、场景直接推进 2a"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 注册为 agenda：马什生命修正 + 背面 onReveal"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 注册为 act：三行实体规则 + 免费弃屏障能力 + 目标函数"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 目标：全员在宏伟入口且“解锁了洞穴的入口”才推进"
+            }
+          ],
+          "locationsAndConnections": [
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：失去冷漠后会被移动进来的调查员自动交战"
+            },
+            {
+              "file": "tests/tic-dynamic-aloof.test.mjs",
+              "title": "07086 洛依高尔：敌军阶段结束时，此地与连接地点的调查员各随机弃 1 张手牌，更远的调查员不受影响"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "canEnemyEnterLocation：按条目 enterOnlyTraits 判断，卡面不用重写规则"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 背面：可提升地点不足 4 张 → 结局 3"
+            }
+          ],
+          "encounterBehaviors": [
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "takeEncounterCard：按物理卡从牌库顶或弃牌堆取出一张，找不到返回 null"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "canEnemyEnterLocation：按条目 enterOnlyTraits 判断，卡面不用重写规则"
+            },
+            {
+              "file": "tests/tic-encounter-search.test.mjs",
+              "title": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 正面：[[嫌犯]]敌人 +1[每调查员]生命、失去冷漠、不能谈判；非嫌犯不受影响"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07337 注册为 treachery 且实现现通道"
+            }
+          ],
+          "chaosEffects": [
+            {
+              "file": "tests/tic-scenario-reference-printed.test.mjs",
+              "title": "07311 ${difficulty} tablet locked flood leaves only legal damage choice; carried-only key causes no horror"
+            },
+            {
+              "file": "tests/tic-scenario-reference-printed.test.mjs",
+              "title": "07311 skull switches only at4 real in-play unflooded Yha-nthlei; nonYha and remote water do not fake threshold"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+            },
+            {
+              "file": "tests/tic-scenarios-a1.test.mjs",
+              "title": "07297：失败且揭示了诅咒标记 → 两个分支都执行"
+            },
+            {
+              "file": "tests/tic-slumbering-bosses.test.mjs",
+              "title": "07330a 沉睡达贡：行动失败低于难度 3 点才放置 1 个毁灭"
+            }
+          ],
+          "resolutionsAndRecords": [
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 Deep random keys never include an unrecorded black key"
+            },
+            {
+              "file": "tests/tic-companions-setup.test.mjs",
+              "title": "P7 black key uses recorded hideout "
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07235 背面：可提升地点不足 4 张 → 结局 3"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1"
+            },
+            {
+              "file": "tests/tic-late-b-cards.test.mjs",
+              "title": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1"
+            },
+            {
+              "file": "tests/tic-maelstrom-act.test.mjs",
+              "title": "07315 背面：DagonHasAwakened 记录让达贡以苏醒狂怒面入场"
+            }
+          ],
+          "saveReplay": []
+        }
+      },
+      "inventory": {
+        "locations": 22,
+        "acts": 2,
+        "agendas": 3,
+        "enemies": 10,
+        "treacheries": 11,
+        "storyAssets": 1,
+        "resolutions": [
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5",
+          "resolution6",
+          "resolution7",
+          "resolution8"
+        ],
+        "encounterCards": 33,
+        "setAsideCards": 22,
+        "chapterRecords": 41,
+        "chapterRecordsCovered": 39,
+        "identities": 49
+      },
+      "fileHashes": {
+        "scenarioIndex": "558906b4e05214035c3268e75cfd53d5fccaf5cb4096eceb85c15b6ad891d12a",
+        "guide": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b"
+      },
+      "gaps": [
+        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07315(缺 onReveal), 07316(缺 onReveal)；变体幕/议程未落地：07317(缺单卡条目), 07318(缺单卡条目)",
+        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+        "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+      ]
+    }
+  ],
+  "remaining": [
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-thePitOfDespair.test.mjs",
+    "literalCardBehavior：逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替",
+    "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07060(缺 onReveal)；变体幕/议程未落地：07061(缺单卡条目)",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07124(缺 onReveal), 07125(缺 onReveal), 07126(缺 onReveal), 07127(缺 onReveal)",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-inTooDeep.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07166(缺 onReveal)",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-devilReef.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07202(缺 objective)",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-horrorInHighGear.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07233(缺 onReveal)",
+    "locationsAndConnections：结构缺口 — 有印刷行为但缺地点条目：07252b",
+    "encounterBehaviors：结构缺口 — 遭遇卡未实现：07253, 07260, 07252",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-aLightInTheFog.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theLairOfDagon.test.mjs",
+    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07315(缺 onReveal), 07316(缺 onReveal)；变体幕/议程未落地：07317(缺单卡条目), 07318(缺单卡条目)",
+    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
+    "literalCardBehavior：逐卡验收账本 audit/tic-all-card-acceptance.json 缺失（需 tools/audit-tic-all-cards.mjs 风格的 TIC 版逐卡工具）",
+    "browserAcceptance：audit/tic-browser-acceptance.json status=failed/coverage 全 false，缺 8 章 desktop+mobile 实机证据与指南入口截图",
+    "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
+    "引擎原语队列仍有 11 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, p7-b-07299-location-attachment-ability.json, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",
+    "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
+    "audit/tic-node-acceptance.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
+    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建",
+    "audit/tic-interaction-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P7 验收前需重跑并重建"
+  ]
+}

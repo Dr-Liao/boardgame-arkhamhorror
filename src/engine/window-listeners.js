@@ -1,4 +1,5 @@
 import { registeredEntry } from './ability.js'
+import { actsInPlay } from './parallel-acts.js'
 
 // 窗口监听者的统一探测（只读）。
 //
@@ -18,7 +19,8 @@ export function hasWindowListener(state, windowId) {
     ...(state.enemies || []),
     ...(state.locations || []).filter(location => location.revealed),
     ...(state.playerLocationAttachments || []),
-    state.acts?.[state.actIndex],
+    // P7 并行幕：全部活动幕都算窗口监听来源（无 parallelActs 时等于旧的「当前幕」单点）。
+    ...actsInPlay(state),
     state.agendas?.[state.agendaIndex],
     ...(state.storyAssets || []),
     ...(state.investigators || []).flatMap(inv => [inv, { code: inv?.code, originalCode: inv?.originalCode },

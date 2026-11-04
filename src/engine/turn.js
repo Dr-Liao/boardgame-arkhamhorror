@@ -309,7 +309,12 @@ function hunterRoute(state,enemy,targetIds,prompt) {
     prompt:'选择猎手的目标地点。',options:targets.map(id=>({id,label:locName(state,id)}))})
   const {destinations}=hunterRouteCandidates(state,enemy,[target],{
     ignoreBarriers:!enemyTextBlanked(state,enemy)&&registeredEntry(enemy.originalCode||enemy.code)?.enemyRule?.ignoreHunterBarriers===true,
-    connections:id=>{const loc=state.locations.find(l=>l.id===id);return [...new Set([...(loc?.connections||[]),...(scenarioBehavior(state).enemyConnections?.(state,enemy,loc)||[])])]},
+    connections:id=>{const loc=state.locations.find(l=>l.id===id);const extra=[...(loc?.connections||[]),...(scenarioBehavior(state).enemyConnections?.(state,enemy,loc)||[])];
+      // 07332 水生异怪：「移动时，完全淹没的地点视作相互连接」——路障路径（hunterRoute）同样要加这条边。
+      if(registeredEntry(enemy.originalCode||enemy.code)?.enemyRule?.hunterTreatsFloodedConnected===true&&floodLevel(state,id)>=2){
+        for(const other of state.locations)if(other&&other.id!==id&&floodLevel(state,other.id)>=2)extra.push(other.id)
+      }
+      return [...new Set(extra)]},
     canEnter:(e,id)=>enemyCanEnterLocation(state,e,id)&&(!state.locations.find(l=>l.id===id)?.barricade||e.elite)&&!dreamGateEntryError(null,state.locations.find(l=>l.id===id))
   })
   if(!destinations.length)return null

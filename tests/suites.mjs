@@ -70,6 +70,11 @@ export const FAST_TESTS = Object.freeze([
   'tic-alight-cards.test.mjs', // 2026-11-04 合并后：雾中之光 8 卡专属验收（w1）
   'tic-maelstrom-treacheries.test.mjs',
   'tic-light-in-the-fog-agendas.test.mjs',
+  // 2026-11-04 晚：剩余单卡批（middle/late/新卡）与 late pending 官方验收套件。
+  'tic-middle-remaining.test.mjs', // 07164b/07165b/07185/07199–07202（w4）
+  'tic-late-b-cards.test.mjs', // 07280–07282/07299（w5）
+  'tic-w2-new-cards.test.mjs', // 07099/07259/07332/07338（w2）
+  'tic-scenarios-late-registered.test.mjs', // late pending 14 例（w1；ready 76 例已由 tic-scenarios-late.test.mjs 注册）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'tic-interactions.test.mjs',
