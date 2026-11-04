@@ -15,6 +15,8 @@ import { addPoolTokens, releasePoolTokens } from './chaos-token-pool.js'
 import { tokenEffect } from './chaos-token-effects.js'
 import { floodLevel } from './flood.js'
 import { notePromiseEvent } from './turn-promises.js'
+// 07185 的条目级标记读点（floodedAttackExtraTokenRule）是模块级函数，需要 ability.js 的注册表读法。
+import { registeredEntry } from './ability.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
