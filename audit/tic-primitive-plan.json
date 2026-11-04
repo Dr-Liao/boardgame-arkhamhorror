@@ -16,7 +16,7 @@
         "07225",
         "07265"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -27,7 +27,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -44,7 +44,7 @@
         "07304",
         "07327"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -55,7 +55,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -423,7 +423,7 @@
         "07337",
         "07338"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -434,7 +434,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -449,7 +449,7 @@
         "07191",
         "07192"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -460,7 +460,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -483,7 +483,7 @@
         "07303",
         "07307"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -494,7 +494,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -553,7 +553,7 @@
         "07333",
         "07334"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -564,7 +564,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -639,7 +639,7 @@
         "07336",
         "07337"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "复用既有规则入口",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -650,7 +650,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     }
@@ -758,7 +758,7 @@
         "07308",
         "07309"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -769,7 +769,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -873,7 +873,7 @@
         "07308",
         "07309"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -884,7 +884,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -994,7 +994,7 @@
         "07308",
         "07309"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1005,7 +1005,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1114,7 +1114,7 @@
         "07335",
         "07337"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1125,7 +1125,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1234,7 +1234,7 @@
         "07335",
         "07337"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1245,7 +1245,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1344,7 +1344,7 @@
         "07331b",
         "07336"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1355,7 +1355,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1413,7 +1413,7 @@
         "07218",
         "07219"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1424,7 +1424,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1527,7 +1527,7 @@
         "07280",
         "07323"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1538,7 +1538,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1588,7 +1588,7 @@
         "07315",
         "07328"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1599,7 +1599,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1628,7 +1628,7 @@
         "07265",
         "07303"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1639,7 +1639,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1657,7 +1657,7 @@
         "07120",
         "07122"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1668,7 +1668,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1688,7 +1688,7 @@
         "07225",
         "07265"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1699,7 +1699,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     },
@@ -1719,7 +1719,7 @@
         "07304",
         "07327"
       ],
-      "status": "done",
+      "status": "pending",
       "api": "ctx.api（域接口见 docs/theInnsmouthConspiracy/primitives.md）",
       "docs": "docs/theInnsmouthConspiracy/primitives.md",
       "tests": [
@@ -1730,7 +1730,7 @@
       ],
       "evidence": [
         "audit/tic-node-acceptance.json",
-        "audit/tic-interaction-regression.json"
+        "audit/tic-regression.json"
       ],
       "exportsPresent": true
     }
@@ -1817,14 +1817,44 @@
         "order": 38
       },
       {
+        "id": "enemyWouldBeDefeated",
+        "label": "敌人将要被击败",
+        "kind": "interrupt",
+        "order": 38
+      },
+      {
+        "id": "enemyWouldBeEvaded",
+        "label": "敌人将要被躲避",
+        "kind": "interrupt",
+        "order": 38
+      },
+      {
         "id": "assetDefeated",
         "label": "你控制的支援被击败时",
         "kind": "reaction",
         "order": 39
       },
       {
+        "id": "enemyDamaged",
+        "label": "敌人受到伤害后",
+        "kind": "reaction",
+        "order": 39
+      },
+      {
         "id": "enemyDefeated",
         "label": "敌人被击败时",
+        "kind": "reaction",
+        "order": 39
+      },
+      {
+        "id": "enemyEnteredLocation",
+        "label": "敌人进入地点后",
+        "kind": "reaction",
+        "order": 39
+      },
+      {
+        "id": "enemyMoved",
+        "label": "敌人移动后",
         "kind": "reaction",
         "order": 39
       },
@@ -2031,6 +2061,12 @@
         "label": "打出一张事件后",
         "kind": "reaction",
         "order": 72
+      },
+      {
+        "id": "investigationPhaseEnds",
+        "label": "调查阶段结束时",
+        "kind": "reaction",
+        "order": 73
       },
       {
         "id": "actionResolvedAtLocation",
@@ -2445,6 +2481,12 @@
         "label": "重整结束",
         "kind": "player",
         "order": 200
+      },
+      {
+        "id": "floodChanged",
+        "label": "地点淹没等级改变后",
+        "kind": "reaction",
+        "order": 220
       }
     ],
     "interactionOperations": [
@@ -2493,8 +2535,8 @@
     "scanPassed": true,
     "exportsPresent": true,
     "nodeAcceptance": true,
-    "regressionAcceptance": true,
-    "allNewDone": true,
+    "regressionAcceptance": false,
+    "allNewDone": false,
     "primitiveMechanismsPlanned": true,
     "noEscape": true
   }

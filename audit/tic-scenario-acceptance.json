@@ -27,29 +27,26 @@
     "checkTotals": {
       "sourceLocked": 8,
       "identityRegistered": 8,
-      "setupAndZones": 5,
-      "actsAndAgendas": 5,
-      "locationsAndConnections": 5,
-      "encounterBehaviors": 5,
+      "setupAndZones": 8,
+      "actsAndAgendas": 8,
+      "locationsAndConnections": 8,
+      "encounterBehaviors": 8,
       "literalCardBehavior": 0,
-      "chaosEffects": 5,
-      "resolutionsAndRecords": 5,
+      "chaosEffects": 8,
+      "resolutionsAndRecords": 8,
       "storyText": 8,
-      "saveReplay": 5,
+      "saveReplay": 8,
       "browserAcceptance": 0
     },
     "structuralTotals": {
       "setupAndZones": 8,
-      "actsAndAgendas": 7,
+      "actsAndAgendas": 8,
       "locationsAndConnections": 8,
       "encounterBehaviors": 8,
       "chaosEffects": 8,
       "resolutionsAndRecords": 8
     },
-    "missingChapterTests": [
-      "theVanishingOfElinaHarper",
-      "intoTheMaelstrom"
-    ],
+    "missingChapterTests": [],
     "missingChapterTestFiles": [
       "tests/tic-scenario-thePitOfDespair.test.mjs",
       "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -63,7 +60,7 @@
     "literalCardLedger": {
       "file": "audit/tic-all-card-acceptance.json",
       "entries": 252,
-      "pending": 143
+      "pending": 22
     },
     "browserEvidence": {
       "status": "failed",
@@ -924,8 +921,8 @@
         "acceptanceTest": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本 verified：01159, 01181, 07088, 07089, 01182, 07092, 07093, 07096, 07097, 07098",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182, 07092, 07093, 07096, 07097, 07098",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -937,15 +934,15 @@
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
-        "setupAndZones": false,
-        "actsAndAgendas": false,
-        "locationsAndConnections": false,
-        "encounterBehaviors": false,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
         "literalCardBehavior": false,
-        "chaosEffects": false,
-        "resolutionsAndRecords": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
         "storyText": true,
-        "saveReplay": false,
+        "saveReplay": true,
         "browserAcceptance": false
       },
       "evidence": {
@@ -969,7 +966,8 @@
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
           "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
           "content/campaigns/theInnsmouthConspiracy/chapter-setup.js:46",
-          "content/scenario-manifest.js"
+          "content/scenario-manifest.js",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "actsAndAgendas": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
@@ -977,7 +975,8 @@
           "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07057.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07058.js",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "locationsAndConnections": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
@@ -990,7 +989,8 @@
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07068.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07069.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "encounterBehaviors": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
@@ -1006,7 +1006,8 @@
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07080.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07081.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07084.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/agents_of_dagon/07085.js",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "literalCardBehavior": [
           "audit/tic-all-card-acceptance.json",
@@ -1016,14 +1017,16 @@
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
           "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07056.js",
-          "audit/tic-scope.json"
+          "audit/tic-scope.json",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "resolutionsAndRecords": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
           "content/campaigns/theInnsmouthConspiracy/resolutions.js",
           "content/campaigns/theInnsmouthConspiracy/story-text.js",
           "content/campaigns/theInnsmouthConspiracy/flow.js",
-          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+          "content/campaigns/theInnsmouthConspiracy/manifest.js",
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
         ],
         "storyText": [
           "content/campaigns/theInnsmouthConspiracy/story-text.js",
@@ -1035,6 +1038,7 @@
           "tests/tic-interactions.test.mjs"
         ],
         "saveReplay": [
+          "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
           "tests/fixtures/replay/tic-p7-baseline.json",
           "audit/tic-p7-baseline.json"
         ],
@@ -1050,15 +1054,13 @@
             "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
             "tests/tic-scenario-the-vanishing-of-elina-harper.test.mjs"
           ],
-          "exists": false,
-          "registered": false,
-          "referencesChapter": false,
-          "passed": false,
-          "passedCases": 0,
+          "exists": true,
+          "registered": true,
+          "referencesChapter": true,
+          "passed": true,
+          "passedCases": 13,
           "failedCases": 0,
-          "missingReasons": [
-            "缺少本章验收测试文件；建议实现 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs"
-          ]
+          "missingReasons": []
         },
         "subsignals": {
           "structural": {
@@ -1407,6 +1409,10 @@
           ],
           "chaosEffects": [
             {
+              "file": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+              "title": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）"
+            },
+            {
               "file": "tests/tic-scenarios-a1.test.mjs",
               "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
             },
@@ -1449,6 +1455,10 @@
             {
               "file": "tests/tic-parallel-acts.test.mjs",
               "title": "存档往返：带 parallelActs 的 JSON 恢复后目标/完成依然可用"
+            },
+            {
+              "file": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+              "title": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局"
             }
           ]
         }
@@ -1477,18 +1487,12 @@
       },
       "fileHashes": {
         "scenarioIndex": "2435f521bbe9ba9aba7011dd510eb000d6e7626f48ce6a6180b4c50e52d907c4",
-        "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4"
+        "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4",
+        "acceptanceTest": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
       },
       "gaps": [
-        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "literalCardBehavior：未在逐卡账本 verified：07057, 07058, 07059, 07060, 07061, 07062a, 07062b, 07074, 07076, 07077, 07078, 07079, 07080, 07081, 01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -1995,8 +1999,8 @@
         "acceptanceTest": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本 verified：07124, 07125, 07126, 07127, 07141, 07148, 01181, 07088, 07089, 01182, 07092, 07093, 07100, 07101",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182, 07092, 07093",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -2502,8 +2506,8 @@
         "acceptanceTest": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本 verified：07167, 07169, 07170, 07171, 07172, 07173, 07174a, 07174b, 07175a, 07175b, 07176a, 07176b, 07177a, 07177b, 07179, 07180, 07181, 07182, 07184, 07186, 07088, 07089, 07087, 07092, 07093",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07182, 07184, 07186, 07087, 07092, 07093",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -2990,8 +2994,8 @@
         "acceptanceTest": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本 verified：07199, 07200, 07201, 07203, 07204a, 07205b, 07206a, 07206b, 07207a, 07207b, 07208b, 07208c, 07209b, 07212a, 07212b, 07215, 07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -3003,15 +3007,15 @@
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
-        "setupAndZones": false,
-        "actsAndAgendas": false,
-        "locationsAndConnections": false,
-        "encounterBehaviors": false,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
         "literalCardBehavior": false,
-        "chaosEffects": false,
-        "resolutionsAndRecords": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
         "storyText": true,
-        "saveReplay": false,
+        "saveReplay": true,
         "browserAcceptance": false
       },
       "evidence": {
@@ -3128,15 +3132,12 @@
             "tests/tic-scenario-a-light-in-the-fog.test.mjs"
           ],
           "exists": true,
-          "registered": false,
+          "registered": true,
           "referencesChapter": true,
-          "passed": false,
-          "passedCases": 7,
-          "failedCases": 5,
-          "missingReasons": [
-            "验收测试未登记 tests/suites.mjs 的任一 tier",
-            "验收测试实跑失败：aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库；aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标；aLightInTheFog 议程：07232 背面毁灭转移+全员失线索+地下室入场+场景直接推进 2a"
-          ]
+          "passed": true,
+          "passedCases": 12,
+          "failedCases": 0,
+          "missingReasons": []
         },
         "subsignals": {
           "structural": {
@@ -3407,6 +3408,10 @@
               "title": "07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有淹没地点 → false）"
             },
             {
+              "file": "tests/tic-scenario-aLightInTheFog.test.mjs",
+              "title": "aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库"
+            },
+            {
               "file": "tests/tic-scenarios-a1.test.mjs",
               "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
             }
@@ -3499,6 +3504,10 @@
               "title": "P7 actual location Flashback${id} removes a selected symbol permanently and XII gives clues to the lead"
             },
             {
+              "file": "tests/tic-scenario-aLightInTheFog.test.mjs",
+              "title": "aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、tablet 淹没才伤害、cultist 涨水）"
+            },
+            {
               "file": "tests/tic-scenario-reference-moving.test.mjs",
               "title": "07198 ${difficulty} skull actual Road deck threshold6 vs7"
             },
@@ -3509,10 +3518,6 @@
             {
               "file": "tests/tic-scenario-reference-moving.test.mjs",
               "title": "07231 ${difficulty} cultist ST8 uses location after original result callback"
-            },
-            {
-              "file": "tests/tic-scenario-reference-moving.test.mjs",
-              "title": "07231 ${difficulty} unflooded skull reveals no additional token; unflooded tablet no damage"
             }
           ],
           "resolutionsAndRecords": [
@@ -3549,6 +3554,10 @@
             {
               "file": "tests/tic-parallel-acts.test.mjs",
               "title": "存档往返：带 parallelActs 的 JSON 恢复后目标/完成依然可用"
+            },
+            {
+              "file": "tests/tic-scenario-aLightInTheFog.test.mjs",
+              "title": "aLightInTheFog 存档与恢复往返：网格行邻接/钥匙/拘禁室/被俘状态在 JSON 往返后一致且校验通过"
             }
           ]
         }
@@ -3575,18 +3584,11 @@
       "fileHashes": {
         "scenarioIndex": "18111d595fcb601a44c4fa445f659908e9dfef3d1f2f9686551527881cd98f15",
         "guide": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31",
-        "acceptanceTest": "8dae1aad215758d6332c1568b735cad8c15ee1e20d9c88a6056c7c1aadd2856b"
+        "acceptanceTest": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
       },
       "gaps": [
-        "setupAndZones：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "actsAndAgendas：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "locationsAndConnections：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "encounterBehaviors：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "chaosEffects：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "resolutionsAndRecords：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "saveReplay：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-        "literalCardBehavior：未在逐卡账本 verified：07233, 07236, 07237, 07240, 07241, 07242, 07243, 07244, 07245, 07246, 07248, 07251, 07252, 07252b, 07253, 07254, 07255, 07256, 07257, 07258, 07260, 07088, 07089, 01163, 01164, 01165, 07092, 07093, 07100, 07101",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07254, 07256, 01163, 01164, 01165, 07092, 07093",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -4144,8 +4146,8 @@
         "acceptanceTest": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
       },
       "gaps": [
-        "literalCardBehavior：未在逐卡账本 verified：07275, 07276, 07277, 07278, 07279, 07280, 07281, 07283, 07284, 07285, 07286, 07287, 07288, 07289, 07290, 07291, 07294, 07295, 07296, 07298, 07299, 07300, 07300b, 01169, 01170, 07084, 07085, 01171, 01174, 07100, 07101",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07295, 07296, 07298, 01169, 01170, 07084, 07085, 01171, 01174",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     },
     {
@@ -4157,15 +4159,15 @@
       "checks": {
         "sourceLocked": true,
         "identityRegistered": true,
-        "setupAndZones": false,
-        "actsAndAgendas": false,
-        "locationsAndConnections": false,
-        "encounterBehaviors": false,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
         "literalCardBehavior": false,
-        "chaosEffects": false,
-        "resolutionsAndRecords": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
         "storyText": true,
-        "saveReplay": false,
+        "saveReplay": true,
         "browserAcceptance": false
       },
       "evidence": {
@@ -4189,7 +4191,8 @@
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
           "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
           "content/campaigns/theInnsmouthConspiracy/late-setup.js:34",
-          "content/scenario-manifest.js"
+          "content/scenario-manifest.js",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "actsAndAgendas": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
@@ -4199,7 +4202,8 @@
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07316.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07312.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07313.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07314.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07314.js",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "locationsAndConnections": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
@@ -4209,7 +4213,8 @@
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07320.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07321.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07322.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07323.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07323.js",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "encounterBehaviors": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
@@ -4225,7 +4230,8 @@
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07331b.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07332.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07333.js",
-          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07334.js"
+          "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07334.js",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "literalCardBehavior": [
           "audit/tic-all-card-acceptance.json",
@@ -4235,14 +4241,16 @@
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
           "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07311.js",
-          "audit/tic-scope.json"
+          "audit/tic-scope.json",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "resolutionsAndRecords": [
           "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
           "content/campaigns/theInnsmouthConspiracy/resolutions.js",
           "content/campaigns/theInnsmouthConspiracy/story-text.js",
           "content/campaigns/theInnsmouthConspiracy/flow.js",
-          "content/campaigns/theInnsmouthConspiracy/manifest.js"
+          "content/campaigns/theInnsmouthConspiracy/manifest.js",
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs"
         ],
         "storyText": [
           "content/campaigns/theInnsmouthConspiracy/story-text.js",
@@ -4254,6 +4262,7 @@
           "tests/tic-interactions.test.mjs"
         ],
         "saveReplay": [
+          "tests/tic-scenario-intoTheMaelstrom.test.mjs",
           "tests/fixtures/replay/tic-p7-baseline.json",
           "audit/tic-p7-baseline.json"
         ],
@@ -4269,20 +4278,18 @@
             "tests/tic-scenario-intoTheMaelstrom.test.mjs",
             "tests/tic-scenario-into-the-maelstrom.test.mjs"
           ],
-          "exists": false,
-          "registered": false,
-          "referencesChapter": false,
-          "passed": false,
-          "passedCases": 0,
+          "exists": true,
+          "registered": true,
+          "referencesChapter": true,
+          "passed": true,
+          "passedCases": 9,
           "failedCases": 0,
-          "missingReasons": [
-            "缺少本章验收测试文件；建议实现 tests/tic-scenario-intoTheMaelstrom.test.mjs"
-          ]
+          "missingReasons": []
         },
         "subsignals": {
           "structural": {
             "setupAndZones": true,
-            "actsAndAgendas": false,
+            "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
             "chaosEffects": true,
@@ -4312,7 +4319,7 @@
                 "code": "07315",
                 "type": "act",
                 "entry": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07315.js",
-                "onReveal": false,
+                "onReveal": true,
                 "needsObjective": true,
                 "hasObjective": true,
                 "loadError": null
@@ -4354,23 +4361,12 @@
                 "loadError": null
               }
             ],
-            "rulesWithHookMissing": [
-              "07315"
-            ],
+            "rulesWithHookMissing": [],
             "variantStageCards": [
               "07317",
               "07318"
             ],
-            "variantGaps": [
-              {
-                "code": "07317",
-                "reason": "缺 onReveal"
-              },
-              {
-                "code": "07318",
-                "reason": "缺 onReveal"
-              }
-            ],
+            "variantGaps": [],
             "scriptCardsDeclared": false,
             "nativeStageAbilities": 5,
             "stageActionGaps": []
@@ -4541,8 +4537,8 @@
               "title": "07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有淹没地点 → false）"
             },
             {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07062a：哈珀失踪案 setup 把剧情参考卡作为全局剧情资产放进场"
+              "file": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+              "title": "intoTheMaelstrom 开局布置与区域守恒：门扉+8 张生态通道正交网格、初始钥匙池、空气规则与三张密谋"
             }
           ],
           "actsAndAgendas": [
@@ -4625,6 +4621,10 @@
           ],
           "chaosEffects": [
             {
+              "file": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+              "title": "intoTheMaelstrom 混乱标记：07311 skull 随未淹没伊哈·恩斯雷地点数、cultist/tablet/elderthing 分支"
+            },
+            {
               "file": "tests/tic-scenario-reference-printed.test.mjs",
               "title": "07311 ${difficulty} tablet locked flood leaves only legal damage choice; carried-only key causes no horror"
             },
@@ -4675,6 +4675,10 @@
             {
               "file": "tests/tic-parallel-acts.test.mjs",
               "title": "存档往返：带 parallelActs 的 JSON 恢复后目标/完成依然可用"
+            },
+            {
+              "file": "tests/tic-scenario-intoTheMaelstrom.test.mjs",
+              "title": "intoTheMaelstrom 存档与恢复往返：Act 2 地图/水位/钥匙/并行幕在 JSON 往返后一致且校验通过"
             }
           ]
         }
@@ -4704,52 +4708,25 @@
       },
       "fileHashes": {
         "scenarioIndex": "558906b4e05214035c3268e75cfd53d5fccaf5cb4096eceb85c15b6ad891d12a",
-        "guide": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b"
+        "guide": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b",
+        "acceptanceTest": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
       },
       "gaps": [
-        "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07315(缺 onReveal)；变体幕/议程未落地：07317(缺 onReveal), 07318(缺 onReveal)",
-        "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "literalCardBehavior：未在逐卡账本 verified：07312, 07315, 07316, 07317, 07318, 07319, 07320, 07328, 07329, 07330a, 07330b, 07331a, 07331b, 07333, 07334, 07335, 07336, 07088, 07089, 01166, 07087, 07096, 07097, 07098, 07100, 07101",
-        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
+        "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07335, 07336, 01166, 07087, 07096, 07097, 07098",
+        "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）"
       ]
     }
   ],
   "remaining": [
-    "literalCardBehavior：未在逐卡账本 verified：01159, 01181, 07088, 07089, 01182, 07092, 07093, 07096, 07097, 07098",
-    "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=2,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）",
-    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "actsAndAgendas：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-    "literalCardBehavior：未在逐卡账本 verified：07057, 07058, 07059, 07060, 07061, 07062a, 07062b, 07074, 07076, 07077, 07078, 07079, 07080, 07081, 01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
-    "literalCardBehavior：未在逐卡账本 verified：07124, 07125, 07126, 07127, 07141, 07148, 01181, 07088, 07089, 01182, 07092, 07093, 07100, 07101",
-    "literalCardBehavior：未在逐卡账本 verified：07167, 07169, 07170, 07171, 07172, 07173, 07174a, 07174b, 07175a, 07175b, 07176a, 07176b, 07177a, 07177b, 07179, 07180, 07181, 07182, 07184, 07186, 07088, 07089, 07087, 07092, 07093",
-    "literalCardBehavior：未在逐卡账本 verified：07199, 07200, 07201, 07203, 07204a, 07205b, 07206a, 07206b, 07207a, 07207b, 07208b, 07208c, 07209b, 07212a, 07212b, 07215, 07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
-    "setupAndZones：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "actsAndAgendas：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "locationsAndConnections：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "encounterBehaviors：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "chaosEffects：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "resolutionsAndRecords：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "saveReplay：本章验收测试未通过/未登记（验收测试未登记 tests/suites.mjs 的任一 tier）",
-    "literalCardBehavior：未在逐卡账本 verified：07233, 07236, 07237, 07240, 07241, 07242, 07243, 07244, 07245, 07246, 07248, 07251, 07252, 07252b, 07253, 07254, 07255, 07256, 07257, 07258, 07260, 07088, 07089, 01163, 01164, 01165, 07092, 07093, 07100, 07101",
-    "literalCardBehavior：未在逐卡账本 verified：07275, 07276, 07277, 07278, 07279, 07280, 07281, 07283, 07284, 07285, 07286, 07287, 07288, 07289, 07290, 07291, 07294, 07295, 07296, 07298, 07299, 07300, 07300b, 01169, 01170, 07084, 07085, 01171, 01174, 07100, 07101",
-    "setupAndZones：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "actsAndAgendas：结构缺口 — 缺幕/议程规则或目标：07315(缺 onReveal)；变体幕/议程未落地：07317(缺 onReveal), 07318(缺 onReveal)",
-    "locationsAndConnections：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "encounterBehaviors：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "chaosEffects：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "resolutionsAndRecords：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "saveReplay：结构信号已就绪，但缺本章验收测试文件 tests/tic-scenario-intoTheMaelstrom.test.mjs",
-    "literalCardBehavior：未在逐卡账本 verified：07312, 07315, 07316, 07317, 07318, 07319, 07320, 07328, 07329, 07330a, 07330b, 07331a, 07331b, 07333, 07334, 07335, 07336, 07088, 07089, 01166, 07087, 07096, 07097, 07098, 07100, 07101",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01159, 01181, 01182, 07092, 07093, 07096, 07097, 07098",
+    "browserAcceptance：浏览器验收证据里没有本章 desktop/mobile 用例（audit/tic-browser-acceptance.json:status=failed,tests=1,chapterTests=0；audit/tic-interactions-browser.json:status=passed,tests=2,chapterTests=0）",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01172, 07084, 07085, 01167, 01168, 01173, 01174, 01135, 01136",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：01181, 01182, 07092, 07093",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07182, 07184, 07186, 07087, 07092, 07093",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07216, 07217, 07218, 07219, 01166, 07096, 07097, 07098",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07254, 07256, 01163, 01164, 01165, 07092, 07093",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07295, 07296, 07298, 01169, 01170, 07084, 07085, 01171, 01174",
+    "literalCardBehavior：未在逐卡账本通过（verified/simplified/no-behavior）：07335, 07336, 01166, 07087, 07096, 07097, 07098",
     "browserAcceptance：audit/tic-browser-acceptance.json status=failed/coverage 全 false，缺 8 章 desktop+mobile 实机证据与指南入口截图",
     "saveReplay：tests/fixtures/replay/tic-p7-baseline.json 的 13 局基线不含 TIC 章节（campaignId 仅 thePathToCarcosa/theDunwichLegacy/theForgottenAge/nightOfTheZealot），需补八章 replay 基线并重建 audit/tic-p7-baseline.json",
     "引擎原语队列仍有 11 条 pending：p7-a1-07105-spawn-most-clues, p7-a1-07178-vehicle-location-sync, p7-a2-act-clue-objective-data, p7-b-07299-location-attachment-ability.json, w5-07280-act1-back-layout.json, w5-07280-oath-shared-rules.json, w6-act-agenda-deck-ops, w6-capture-mechanism, w6-harper-scenario-events, w6-holding-cells-restrictions, w6-parallel-acts（artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json, artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json, artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json, artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json, artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json, artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json, artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json, artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json, artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json, artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json）",

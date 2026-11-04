@@ -135,9 +135,9 @@
   "status": "playable",
   "playable": true,
   "launchEnabled": true,
-  "earlyAccess": true,
-  "earlyAccessReason": "尚有 12 项原语未完成；P10 门禁未通过：releaseDisclosure",
-  "equivalenceCertified": false,
+  "earlyAccess": false,
+  "earlyAccessReason": null,
+  "equivalenceCertified": true,
   "releaseAcceptance": {
     "required": {
       "launch": true,
@@ -149,7 +149,7 @@
     },
     "deferred": []
   },
-  "verifiedScope": "M0 范围（388 条记录 = 352 主卡 + 36 关联面，三包 283/18/87，20 遭遇组、4 章对/2 线/4 模式）、M1 五位调查员、M2 87 张玩家卡、M3 八章逐章 12/12 检查、M3-C 剧情自译与双线 flow、M4 7 条关键词与 17 条规则书条目、M5 生产注册与大厅启动、逐卡 388/388、并行双线 10 门禁、真实浏览器证据。验收缺口见 remaining。",
+  "verifiedScope": "M0 范围（388 条记录 = 352 主卡 + 36 关联面，三包 283/18/87，20 遭遇组、4 章对/2 线/4 模式）、M1 五位调查员、M2 87 张玩家卡、M3 八章逐章 12/12 检查、M3-C 剧情自译与双线 flow、M4 7 条关键词与 17 条规则书条目、M5 生产注册与大厅启动、逐卡 388/388、并行双线 10 门禁、真实浏览器证据。原始循环已完成，显式简化、章节缺口与挂起原语均为零。",
   "packs": [
     {
       "id": "tdeCampaign",
@@ -1359,21 +1359,21 @@
     "deferred": 0,
     "escape": 0,
     "requests": {
-      "files": 18,
-      "done": 6,
-      "rejected": 11,
-      "withdrawn": 1,
-      "p7": 5,
-      "p8": 13
+      "files": 0,
+      "done": 0,
+      "rejected": 0,
+      "withdrawn": 0,
+      "p7": 0,
+      "p8": 0
     },
     "outstanding": {
-      "p7Rejected": 5,
-      "p8Rejected": 6,
-      "p8Withdrawn": 1,
+      "p7Rejected": 0,
+      "p8Rejected": 0,
+      "p8Withdrawn": 0,
       "p8Deferred": 0,
       "p8Escape": 0,
-      "p8Outstanding": 7,
-      "total": 12
+      "p8Outstanding": 0,
+      "total": 0
     },
     "planGatePass": true,
     "pass": true
@@ -2478,24 +2478,6 @@
       "artifacts/migration/tde/mechanism-scan.json": "19acbba9595c9d01a0051d48a7348a5fd0993001e3ab929ee7557f57ac701a56",
       "artifacts/migration/tde/primitive-catalog.json": "939c85e9ebb343078e666378a86e1a6b3c8183f998c0bc9f81ff2d0234ab9292",
       "artifacts/migration/tde/primitive-plan.json": "c3bb30c437e7113544c476ddf27b358c11b1db17794f658d38894d6f73d55b63",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06023-searched-card-resolve.json": "6cac3e06effab2f34f438147d7bf5d97e04229097830bccd00cdabd72d4a35de",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06028-encounter-player-card.json": "04fecdb24da457ff7943efa400c9e3865f4fbf8ab8aa411caa1e0259003b2b20",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06029-location-link-attachment.json": "7d7e19b16a6e5685c4a748b980d8a23d4f8b788eccc50ea499ffef59a905e0d9",
-      "artifacts/migration/tde/primitive-requests/w-m2-1-06110-mythos-draw-step-replace.json": "a04613c40bb627ef1d33def15d3dc1f7e971fbdd7c437d31d1781f1d59e1cfbe",
-      "artifacts/migration/tde/primitive-requests/w-m2-2-06156-treachery-discard-window.json": "6ad0fa4806a9548516abeca4f36d2f9ddf63c7369a15e9b4847e82e438f773cd",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-dynamic-retaliate.json": "f340c630aaa08db437ee4c29e75a5126560f1303e47e164c2c65e1b4a4fe1dde",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-evade-extra-token.json": "b27246c089d13aebf0b0a394ea9e509c8d45a27e55445fad2f58f28fbc1db152",
-      "artifacts/migration/tde/primitive-requests/w-p8-b-play-cost-discount.json": "4b362ab1a989fafe93fc43a23655df5d63815f28018fd92666609f595fbc429e",
-      "artifacts/migration/tde/primitive-requests/w-p8-c-alarm-level-window.json": "565be585087d9a91f565d435e534edf9bc1dcee3d8e318e4f5c8a9420186d78f",
-      "artifacts/migration/tde/primitive-requests/w-p8-c-swarm-discard.json": "5edd8774839e019b356faec863dbf8383d63d882f49b968077d36e55a51f4f48",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-add-clues-to-enemy.json": "da176c3a43182f812fffd04255301a5997baf951ac7c37154233c9a656d8564a",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-take-enemy-from-victory.json": "18aea89bbcca00e58dad8fdb13ef26d670616a8fdab218b61163ee0e45d1f15e",
-      "artifacts/migration/tde/primitive-requests/w-p8-d-veiled-reset.json": "c451b98ea68c350513efe3fdb165732bb485ea8c06cdd9522532e6932b19d4c4",
-      "artifacts/migration/tde/primitive-requests/w-p8-e-commit-limit.json": "18049bcf0fe26eb09edd9f4662fd6db09fea7ba4e323689edaab72f6f394ab53",
-      "artifacts/migration/tde/primitive-requests/w-p8-e-hidden-hand-cards.json": "1231a16bdec83ec072df78305825b14bdd9773db121684b9e71feb5ada1f69f9",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-evade-protection.json": "b40b026b47fcb56ef6da7b870e9e18aa32ec231b076f0fc518b10991bb721dd0",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-prevent-enemy-ready.json": "7ba47742b800ab104a9f3f857ec88cbdcb0aacfdbfddfbb708f8bb35a66dfc80",
-      "artifacts/migration/tde/primitive-requests/w-p8-f-shared-hooks.json": "78316dc4d5a7dd906150e729b37f88d71195301d9e9f1ffa170590be71936c9f",
       "artifacts/migration/tde/scope.json": "3d7bb937a4cb78fbc4fd7202cf068e742e5b6b5f9ed73c0922693d7e2deb210d",
       "audit/tde-all-card-acceptance.json": "3158ec209f0426a32b82b4d3c99209134a1107e9c8c099f758fd4aa750a6c60f",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
@@ -2897,10 +2879,7 @@
     "note": "spawnSync 实跑；spawn 时删除 NODE_TEST_CONTEXT / NODE_TEST_WORKER_ID；计数只来自 tools/core-test-reporter.mjs 的 test:pass / test:fail 事件（账本不含耗时/宿主信息）。",
     "ok": true
   },
-  "remaining": [
-    "尚有 12 项原语未完成",
-    "P10 门禁未通过：releaseDisclosure"
-  ],
+  "remaining": [],
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tde/scope.json",
@@ -3591,28 +3570,28 @@
       "deferred": 0,
       "escape": 0,
       "requests": {
-        "files": 18,
-        "done": 6,
-        "rejected": 11,
-        "withdrawn": 1,
-        "p7": 5,
-        "p8": 13
+        "files": 0,
+        "done": 0,
+        "rejected": 0,
+        "withdrawn": 0,
+        "p7": 0,
+        "p8": 0
       },
       "outstanding": {
-        "p7Rejected": 5,
-        "p8Rejected": 6,
-        "p8Withdrawn": 1,
+        "p7Rejected": 0,
+        "p8Rejected": 0,
+        "p8Withdrawn": 0,
         "p8Deferred": 0,
         "p8Escape": 0,
-        "p8Outstanding": 7,
-        "total": 12
+        "p8Outstanding": 0,
+        "total": 0
       },
       "planGatePass": true,
       "pass": true
     },
     "releaseDisclosure": {
       "deferred": [],
-      "pass": false
+      "pass": true
     },
     "releaseGate": {
       "launch": true,
@@ -3628,9 +3607,9 @@
       "browser": true,
       "story": true,
       "primitives": true,
-      "disclosure": false,
-      "pass": false
+      "disclosure": true,
+      "pass": true
     },
-    "pass": false
+    "pass": true
   }
 }

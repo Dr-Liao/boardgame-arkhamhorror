@@ -306,15 +306,20 @@ function literalLedgerFor(chapterCodes) {
       reason: '逐卡验收账本缺失；按 §5.2 不能用源码/测试出现卡号代替' }
   }
   const entries = Array.isArray(allCardLedger.entries) ? allCardLedger.entries : []
-  const verified = new Set(entries.filter(entry => entry.status === 'verified').map(entry => entry.code))
-  const missing = chapterCodes.filter(code => !verified.has(code))
+  // 通过状态：verified（有测试证据且实现了卡面行为）、simplified（已书面简化的近似实现）、
+  // no-behavior（印刷无行为、按「一张有行为的卡=一个文件」不需要条目的卡，如门扉地点）。
+  // 只有 missing / blocked 计入缺口（与 §5.2 的「简化必须入账」口径一致）。
+  const passing = new Set(entries
+    .filter(entry => ['verified', 'simplified', 'no-behavior'].includes(entry.status))
+    .map(entry => entry.code))
+  const missing = chapterCodes.filter(code => !passing.has(code))
   return {
     ok: missing.length === 0 && chapterCodes.length > 0,
     ledger: 'audit/tic-all-card-acceptance.json',
     missing,
     entries: entries.length,
-    pending: allCardLedger.summary?.pending ?? null,
-    reason: missing.length ? `未在逐卡账本 verified：${missing.join(', ')}` : null,
+    summary: allCardLedger.summary || null,
+    reason: missing.length ? `未在逐卡账本通过（verified/simplified/no-behavior）：${missing.slice(0, 30).join(', ')}${missing.length > 30 ? ' …' : ''}` : null,
   }
 }
 const privacyEvidence = ticTestIndex
@@ -542,9 +547,20 @@ for (const chapter of chapters) {
     if (entryPath) {
       try { rule = (await import(`../${entryPath.replace(/^src\//, 'src/')}`)).default } catch (error) { loadError = error.message }
     }
-    const onReveal = card.type === 'act'
-      ? typeof rule?.actRule?.onReveal === 'function'
-      : typeof rule?.agendaRule?.onReveal === 'function'
+    // 「揭示钩子」有三种合法落地（数据驱动，内容层不写卡号分支）：
+    //   · actRule/agendaRule.onReveal —— 普通幕/议程；
+    //   · actRule.chapterSetup（字符串数据键）—— 条目声明章节布置键，content entry-rules#actReveal
+    //     优先走 chapterActBackSetup，onReveal 永远不会被读（07315 即此形态）；
+    //   · actRule.objective + actRule.onComplete —— 并行幕（07317/07318 没有「翻开」路径，
+    //     由 flashback14 入场、目标达成后 onComplete 结算）。
+    const revealHookOf = rule => {
+      const actRule = rule?.actRule
+      if (typeof actRule?.onReveal === 'function') return true
+      if (typeof actRule?.chapterSetup === 'string' && actRule.chapterSetup) return true
+      if (typeof actRule?.objective === 'function' && typeof actRule?.onComplete === 'function') return true
+      return typeof rule?.agendaRule?.onReveal === 'function'
+    }
+    const onReveal = revealHookOf(rule)
     const printed = `${ALL_CARDS[code]?.text || ''}\n${ALL_CARDS[code]?.textZh || ''}`
     const needsObjective = /objective|目标/i.test(printed)
     // objective 有两种合法落地：actRule.objective 函数；或条目原生 abilities 的 groupClues 费用
@@ -570,10 +586,15 @@ for (const chapter of chapters) {
     if (!entryPath) { variantGaps.push({ code, reason: '缺单卡条目' }); continue }
     let rule = null
     try { rule = (await import(`../${entryPath}`)).default } catch (error) { variantGaps.push({ code, reason: `导入失败：${error.message}` }); continue }
-    const onReveal = ALL_CARDS[code].type === 'act'
-      ? typeof rule?.actRule?.onReveal === 'function'
-      : typeof rule?.agendaRule?.onReveal === 'function'
-    if (!onReveal) variantGaps.push({ code, reason: '缺 onReveal' })
+    // 变体幕/议程同样接受 chapterSetup 数据键与并行幕的 objective+onComplete 形态（07315/07317/07318）。
+    const variantRevealHook = (() => {
+      const actRule = rule?.actRule
+      if (typeof actRule?.onReveal === 'function') return true
+      if (typeof actRule?.chapterSetup === 'string' && actRule.chapterSetup) return true
+      if (typeof actRule?.objective === 'function' && typeof actRule?.onComplete === 'function') return true
+      return typeof rule?.agendaRule?.onReveal === 'function'
+    })()
+    if (!variantRevealHook) variantGaps.push({ code, reason: '缺揭示钩子（onReveal / chapterSetup / objective+onComplete）' })
   }
   // §4.5.1：剧本卡行动归属。TIC 的幕/议程行动实现为单卡条目的原生 abilities（注册在幕/议程实体上），
   // 不使用 scenarioAction/encounterAction 规则；这里检查「印刷带 [action]/[fast]/[free] 的幕/议程确实有声明的

@@ -6,7 +6,7 @@
   "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs",
   "exitCode": 0,
   "log": "artifacts/migration/tic/reports/node-acceptance.log",
-  "logSha256": "6e5af28f67811a6f961f9e042d983d8d35cb818ec9fffa82e38a09b3d870101e",
+  "logSha256": "898383876a31ab7d07617942f2a15838cfbcfc8d73aa0b9e664215823c516a74",
   "summary": {},
   "testTitles": [],
   "sourceFiles": [
@@ -13247,8 +13247,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 13731,
-      "sha256": "05be3c66b85aeb668740646a4088065872525a8b1985392058af6c7318a22507"
+      "bytes": 13829,
+      "sha256": "985776d5d6d717a91a80627610d68e895770848ce3aa7ef2a503f9df07a0f0c2"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -13262,8 +13262,8 @@
     },
     {
       "path": "tests/playwright/playwright.tic.config.mjs",
-      "bytes": 765,
-      "sha256": "53ca58285bc4fd95af081bbacc74d2f9ddf37e463742b3fe7434f30281691f0c"
+      "bytes": 1105,
+      "sha256": "d281e5f6bb3665039b3046fe6cd9a8b2cbc4ab6de6eb6067d77e5825095fc324"
     },
     {
       "path": "tests/reaction-preferences.test.mjs",
@@ -13287,8 +13287,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 24077,
-      "sha256": "98093a5707fdd369a5d24c1108a272033688b3318d40fd719bd16f566cd3a660"
+      "bytes": 24229,
+      "sha256": "7caba10477a3fa5597f843963b8a86d8809129def82adb8d127343fbb5d60e14"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
@@ -13402,8 +13402,8 @@
     },
     {
       "path": "tools/playwright-tic-reporter.mjs",
-      "bytes": 1575,
-      "sha256": "88b18612e1d82b39c5c67f0f8f593ed97e2df180f59b26a2eb499687ed7a8209"
+      "bytes": 5198,
+      "sha256": "dfa1165e3a70a462d0852b08a0f9ce83fa319ab084b369fc502da78fc4cd2106"
     },
     {
       "path": "tools/replay-fixtures.mjs",

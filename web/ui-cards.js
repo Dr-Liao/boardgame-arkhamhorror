@@ -79,6 +79,17 @@ export const UI_CARDS = Object.freeze({
     pointOfNoReturn: '06247',
     whereTheGodsDwell: '06286',
     weaverOfTheCosmos: '06333',
+    // 印斯茅斯暗潮（八循环，P7 注册时补）：id / 卡号与
+    // content/campaigns/theInnsmouthConspiracy/shared.js 的 chapters 一致；
+    // 这是各章桌面上那张剧本参考卡（简单/普通看正面，困难/专家看背面）。
+    thePitOfDespair: '07041',
+    theVanishingOfElinaHarper: '07056',
+    inTooDeep: '07123',
+    devilReef: '07163',
+    horrorInHighGear: '07198',
+    aLightInTheFog: '07231',
+    theLairOfDagon: '07274',
+    intoTheMaelstrom: '07311',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',

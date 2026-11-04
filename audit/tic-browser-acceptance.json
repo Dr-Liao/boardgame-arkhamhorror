@@ -1,68 +1,101 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedBy": "playwright + tools/playwright-tic-reporter.mjs",
-  "status": "passed",
-  "sourceStableDuringRun": true,
+  "evidenceCommand": "node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tic.config.mjs",
+  "status": "failed",
+  "sourceStableDuringRun": false,
   "coverage": {
-    "desktop:zh-CN": true,
-    "desktop:en": true,
-    "mobile:zh-CN": true,
-    "mobile:en": true
+    "desktop:zh-CN": false,
+    "desktop:en": false,
+    "mobile:zh-CN": false,
+    "mobile:en": false
   },
   "links": {
-    "desktop": true,
-    "mobile": true
+    "desktop": false,
+    "mobile": false
   },
+  "scenarios": [
+    {
+      "scenario": "thePitOfDespair",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "theVanishingOfElinaHarper",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "inTooDeep",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "devilReef",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "horrorInHighGear",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "aLightInTheFog",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "theLairOfDagon",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    },
+    {
+      "scenario": "intoTheMaelstrom",
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
+    }
+  ],
+  "scenariosComplete": false,
+  "chapterCount": 8,
   "tests": [
     {
-      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
-      "status": "passed",
+      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收",
+      "scenario": null,
+      "viewport": "desktop",
+      "status": "failed",
       "screenshots": [
         {
-          "path": "artifacts/migration/tic/reports/screenshots/desktop-zh-CN.png",
-          "sha256": "dbbd63dea53f3e479ccc582530b241ff21e5632ff7ec2858d2bebdf861904c47"
+          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
+          "sha256": "3a4eee09936bf0450d644ce07fb6eccf9a950cd0d7683dbbb2785a20eaf71a6d"
         }
       ]
-    },
+    }
+  ],
+  "screenshots": [
     {
-      "title": "P3 desktop en 规则目录、阅读与返回",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/reports/screenshots/desktop-en.png",
-          "sha256": "6c3b8f63143e25b0ab028cc4289513d148af69965a0541ef2ef632ad4c8c3a77"
-        }
-      ]
-    },
-    {
-      "title": "P3 desktop 卡文直达并恢复详情焦点",
-      "status": "passed",
-      "screenshots": []
-    },
-    {
-      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/reports/screenshots/mobile-zh-CN.png",
-          "sha256": "dcfae556cc1d0655551ef297598d4edbf35b3ac17e3524b1ab276b9b1ea31726"
-        }
-      ]
-    },
-    {
-      "title": "P3 mobile en 规则目录、阅读与返回",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/reports/screenshots/mobile-en.png",
-          "sha256": "49725cf22d0f41c0a4cd5f408e115a3fa87b4f55383d2a88328e3e23e1fc7836"
-        }
-      ]
-    },
-    {
-      "title": "P3 mobile 卡文直达并恢复详情焦点",
-      "status": "passed",
-      "screenshots": []
+      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
+      "sha256": "3a4eee09936bf0450d644ce07fb6eccf9a950cd0d7683dbbb2785a20eaf71a6d",
+      "exists": true,
+      "scenario": null,
+      "viewport": "desktop",
+      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
     }
   ],
   "sourceFiles": [
@@ -12364,7 +12397,7 @@
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "ebff5417371003ac2bbe912fa88478fa51c12d543ba1d67b5aa14b4ca06aef78"
+      "sha256": "97996526dea01ba96af9583c790d72bacfc68f5fc4f88dc1003f7179c24c00e6"
     },
     {
       "path": "src/cards/tic-player-acceptance.js",
@@ -13303,8 +13336,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 13731,
-      "sha256": "05be3c66b85aeb668740646a4088065872525a8b1985392058af6c7318a22507"
+      "bytes": 13829,
+      "sha256": "985776d5d6d717a91a80627610d68e895770848ce3aa7ef2a503f9df07a0f0c2"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -13318,8 +13351,8 @@
     },
     {
       "path": "tests/playwright/playwright.tic.config.mjs",
-      "bytes": 765,
-      "sha256": "53ca58285bc4fd95af081bbacc74d2f9ddf37e463742b3fe7434f30281691f0c"
+      "bytes": 1105,
+      "sha256": "d281e5f6bb3665039b3046fe6cd9a8b2cbc4ab6de6eb6067d77e5825095fc324"
     },
     {
       "path": "tests/reaction-preferences.test.mjs",
@@ -13343,8 +13376,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 24077,
-      "sha256": "98093a5707fdd369a5d24c1108a272033688b3318d40fd719bd16f566cd3a660"
+      "bytes": 24229,
+      "sha256": "7caba10477a3fa5597f843963b8a86d8809129def82adb8d127343fbb5d60e14"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
@@ -13458,8 +13491,8 @@
     },
     {
       "path": "tools/playwright-tic-reporter.mjs",
-      "bytes": 1575,
-      "sha256": "88b18612e1d82b39c5c67f0f8f593ed97e2df180f59b26a2eb499687ed7a8209"
+      "bytes": 5198,
+      "sha256": "dfa1165e3a70a462d0852b08a0f9ce83fa319ab084b369fc502da78fc4cd2106"
     },
     {
       "path": "tools/replay-fixtures.mjs",
@@ -13913,8 +13946,8 @@
     },
     {
       "path": "web/ui-cards.js",
-      "bytes": 6062,
-      "sha256": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e"
+      "bytes": 6563,
+      "sha256": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de"
     },
     {
       "path": "web/vitals.js",
