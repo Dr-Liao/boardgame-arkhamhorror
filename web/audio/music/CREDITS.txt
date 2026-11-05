@@ -185,3 +185,40 @@ https://creativecommons.org/licenses/by/4.0/
 Official licensing: https://incompetech.com/music/royalty-free/licenses/
 Original MP3 files re-encoded to 128 kbps MP3 at 44.1 kHz with ffmpeg (libmp3lame); no cuts or mixing.
 Official track pages and original/encoded file hashes are recorded in sources.json.
+
+The Innsmouth Conspiracy additions / 印斯茅斯暗潮新增曲目 (2026-11-05)
+"Ice Demon" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200061
+"Bent and Broken" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200087
+"Awkward Meeting" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100574
+"Distant Tension" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100257
+"Deep Haze" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100886
+"Dark Times" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100747
+"Night of Chaos" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300042
+"Darkness is Coming" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100584
+"Hitman" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300013
+"Clash Defiant" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600003
+"Dark Fog" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300031
+"Hush" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400004
+"Oppressive Gloom" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100885
+"Anxiety" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100328
+"The Descent" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200094
+"Stormfront" Kevin MacLeod (incompetech.com)
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200043
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Re-encoded to 128 kbps MP3, 44.1 kHz; no cuts or mixing.

@@ -895,7 +895,7 @@ test('混乱标记选项显示真实标记图案与名称，不再把 emoji 当�
     const option=choices.locator(`.ah-visual-option[data-option-id="${id}"]`)
     await expect(option).toHaveAttribute('aria-label',name)
     await expect(option).toContainText(name)
-    await expect(option.locator('img.ah-choice-token')).toHaveAttribute('src',new RegExp(file+'\\.png$'))
+    await expect(option.locator('img.ah-choice-token')).toHaveAttribute('src',new RegExp(file+'\\.webp$'))
   }
   for(const emoji of ['💀','🕯️','🗿','👁️'])await expect(choices).not.toContainText(emoji)
   await expect.poll(()=>page.evaluate(()=>[...document.querySelectorAll('.ah-choice-token')].every(img=>img.complete&&img.naturalWidth>0))).toBe(true)

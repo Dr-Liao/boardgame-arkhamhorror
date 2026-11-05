@@ -1,3 +1,7 @@
 Copied without modification from the bundled reference:
 参考资源/ArkhamHorror-main/frontend/public/img/arkham/chaos-tokens/
 Original Arkham Horror game token artwork; local presentation assets.
+
+Release delivery: the 21 tokens are shipped as WebP (ct-<key>.webp, quality 90, alpha preserved);
+the PNG originals above are the source and are no longer kept in the repo. Reproduce with any
+WebP encoder from the reference files, keeping the 300/384/406 px dimensions and transparency.

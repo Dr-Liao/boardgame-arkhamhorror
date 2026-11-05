@@ -354,6 +354,7 @@ export const ASSET_TESTS = Object.freeze([
   'p7-images.test.mjs',
   'music-assets.test.mjs',
   'tcu-media.test.mjs',
+  'tic-media.test.mjs',
   'carcosa-migration.test.mjs',
   'carcosa-story.test.mjs',
 ])

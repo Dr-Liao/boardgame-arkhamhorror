@@ -8,7 +8,9 @@ function canUse(state, enemy) {
   return !enemy.elite && (destinations(state, enemy).length > 0
     || enemy.damage > 0 && state.enemies.some(other => other.id !== enemy.id && other.location === enemy.location))
 }
-export default { code: '07268', chooseResourceCostOnPlay: true, abilities: [
+// 官方卡面/参考实现口径：Cost: X + Seal (up to X curse) —— 打出时选 X，支付 X 资源，
+// X 记入 paidX 供 entersPlay 的「封印至多 X」读点使用（不再是旧实现的 X−2 折扣）。
+export default { code: '07268', chooseResourceCostOnPlay: true, variableCostPaidAs: 'paidX', abilities: [
   { kind: 'entersPlay', label: '封印至多 X 枚诅咒',
     resolve: ({ inv, source, api }) => api.playerTools.sealVariableCost(inv.seat, source.id, 'curse') },
   { kind: 'action', label: '横置并释放 1 诅咒：移动非精英敌人或使其对另一个敌人造成伤害',

@@ -88,11 +88,9 @@
     ],
     "replayCoversTicChapters": true,
     "primitiveRequests": {
-      "total": 17,
-      "pending": 1,
-      "pendingFiles": [
-        "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json"
-      ]
+      "total": 0,
+      "pending": 0,
+      "pendingFiles": []
     },
     "engineGapNotes": 7
   },
@@ -143,7 +141,7 @@
     "content/campaigns/theInnsmouthConspiracy/middle-setup.js": "5c4ef5d030169d05d96c0052f26767a2cf2e443d0b77241bda362b2eabbf70e9",
     "content/campaigns/theInnsmouthConspiracy/late-setup.js": "447e4477896f7000f2c217738979499fb6cd9a98f288f3f4b5c2e914f2b866a4",
     "content/campaigns/theInnsmouthConspiracy/resolutions.js": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737",
-    "content/campaigns/theInnsmouthConspiracy/introduction.js": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e",
+    "content/campaigns/theInnsmouthConspiracy/introduction.js": "5b89b93e4c3ad50e3806f45cb75f265cee06f39480d79414796b400dfaa18efa",
     "content/campaigns/theInnsmouthConspiracy/flashbacks.js": "4d3ec7aeb4b0349c73c6f42ceb2bbaca0aba44b46020e6e14f9e7e68749fb548",
     "content/campaigns/theInnsmouthConspiracy/interludes.js": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a",
     "content/campaigns/theInnsmouthConspiracy/manifest.js": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be",
@@ -278,15 +276,7 @@
       "status": "fresh"
     }
   ],
-  "pendingPrimitiveRequests": [
-    {
-      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-      "id": "w5-07280-oath-shared-rules.json",
-      "status": "pending",
-      "primitive": null,
-      "cards": []
-    }
-  ],
+  "pendingPrimitiveRequests": [],
   "danglingEvidence": [
     {
       "file": "early-chapter-facts.json",
@@ -615,15 +605,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -1149,15 +1131,7 @@
             }
           ]
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -1666,15 +1640,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -2155,15 +2121,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -2642,15 +2600,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -3167,15 +3117,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -3700,15 +3642,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -4241,15 +4175,7 @@
           },
           "engineGaps": []
         },
-        "pendingPrimitiveRequests": [
-          {
-            "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-            "id": "w5-07280-oath-shared-rules.json",
-            "status": "pending",
-            "primitive": null,
-            "cards": []
-          }
-        ],
+        "pendingPrimitiveRequests": [],
         "existingEvidence": {
           "setupAndZones": [
             {
@@ -4451,7 +4377,6 @@
     }
   ],
   "remaining": [
-    "引擎原语队列仍有 1 条 pending：w5-07280-oath-shared-rules.json（artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json）",
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
     "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建"
   ]

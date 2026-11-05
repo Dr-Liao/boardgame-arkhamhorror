@@ -34,7 +34,7 @@ test('点击混乱袋查看实时图标与数量，揭示和封印单列，支�
   await expect(dialog).toBeVisible()
   await expect(dialog).toContainText('袋内 9 枚 · 7 种标记')
   await expect(dialog.locator('[data-bag-zone="bag"] [data-token="skull"]')).toHaveAttribute('aria-label','骷髅，2 枚')
-  await expect(dialog.locator('[data-bag-zone="bag"] [data-token="eldersign"] img')).toHaveAttribute('src',/ct-eldersign\.png$/)
+  await expect(dialog.locator('[data-bag-zone="bag"] [data-token="eldersign"] img')).toHaveAttribute('src',/ct-eldersign\.webp$/)
   await expect(dialog.locator('[data-bag-zone="revealed"] [data-token="cultist"]')).toBeVisible()
   await expect(dialog.locator('[data-bag-zone="sealed"] [data-token="tablet"]')).toBeVisible()
   await expect(dialog.locator('[data-token="curse"]')).toHaveCount(0)

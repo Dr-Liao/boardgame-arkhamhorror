@@ -1,0 +1,118 @@
+{
+  "campaignId": "theInnsmouthConspiracy",
+  "created": "2026-11-05",
+  "source": "Original AI-generated artwork using OpenAI built-in image_gen; not official game art.",
+  "palette": "petroleum teal, sea green, charcoal, tarnished brass, pale salt fog",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "印斯茅斯·暗潮港湾",
+      "file": "hub/innsmouth-harbor.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 390038,
+      "sha256": "d48a7a15c0cf8792c96fc0a2ec05bf24fd308c1fdb70abf8b2877b004dba810f",
+      "original": "artifacts/tic-media/originals/hub.png",
+      "prompt": "Use case: stylized-concept. Asset type: original Arkham Horror Innsmouth Conspiracy campaign hub illustration, landscape 1536x1024. Premium painterly realistic 1920s cosmic horror tabletop art. Panoramic decaying New England fishing town Innsmouth, crooked shingled warehouses, wet wharves, a distant isolated lighthouse and Devil Reef barely emerging from turbulent Atlantic water, sinister deep-sea architecture faintly beneath the foreground water. Deep petroleum teal, sea green, charcoal, tarnished brass, pale fog and tiny amber windows. Evocative atmospheric coherent brushwork, strong readable silhouette, no text, no lettering, no logos, no watermark, no UI or cards. Full bleed 3:2 landscape, visually quiet upper left for interface overlay."
+    },
+    {
+      "id": "table",
+      "title": "印斯茅斯·潮汐调查桌",
+      "file": "table/investigation-desk.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 229834,
+      "sha256": "c5048cc5bc4aa7ba39b903e48c37d339e1e193d5cc2f9ab153cd25b08951476b",
+      "original": "artifacts/tic-media/originals/table.png",
+      "prompt": "Use case: stylized-concept. Asset type: original Innsmouth Conspiracy card-game table background, 1536x1024 landscape. Strict overhead top-down view of a dark matte sea-green investigator desk in 1920s New England. Large 70 percent quiet nearly black low-contrast center for playable cards. Along outer edges only: faded nautical contour charts, a worn brass compass, saltwater-stained blank notes, a rusted iron key, a fragment of fishing net, faint tidal rings, folded coastal map. Restrained petroleum teal, charcoal, tarnished brass, muted bone. Painterly realistic premium tabletop production texture, subtle diffuse lighting. No readable text, letters, numerals, logos, watermarks, game cards, UI, people. Full bleed, not an isometric desk, no busy central objects."
+    },
+    {
+      "id": "thePitOfDespair",
+      "title": "绝望深坑",
+      "file": "scenarios/thePitOfDespair/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 400784,
+      "sha256": "fdcf1c1f412a30482bf7eed6a9960e1b908b9756ecac38a10d914f60fdeebff9",
+      "original": "artifacts/tic-media/originals/thePitOfDespair.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration for Arkham Horror Innsmouth Conspiracy: The Pit of Despair. 1536x1024 landscape full bleed premium painterly realistic 1920s cosmic horror. View from within a claustrophobic tidal cavern, rising black seawater flooding rough stone passages, a dim abandoned hurricane lantern on foreground ledge beside an old iron key, distant half-submerged cyclopean doorway and barely visible aquatic silhouette underwater. Petroleum teal, desaturated sea green, wet charcoal stone, tiny amber light. Oppressive amnesia and urgent escape, crisp focal ledge, deep atmospheric perspective. No text, letters, numbers, logos, watermark, UI, cards."
+    },
+    {
+      "id": "theVanishingOfElinaHarper",
+      "title": "艾莲娜·哈珀失踪案",
+      "file": "scenarios/theVanishingOfElinaHarper/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 447384,
+      "sha256": "57c995b85b2429930ab33bb5048b1ecac20bdeb3b9dbaeec1a088f494ba91251",
+      "original": "artifacts/tic-media/originals/theVanishingOfElinaHarper.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: The Vanishing of Elina Harper. Premium painterly realistic 1920s noir cosmic horror, full bleed landscape 1536x1024. Detective eye level down an oppressive crooked New England fishing town street, dilapidated hotel and shuttered shops, wet cobblestones, telephone poles and fog, a small investigator silhouette in period coat following a distant suspicious figure toward an amber-lit doorway. A dropped woman's glove in foreground suggests a disappearance. Sea-green petroleum teal shadows, charcoal, warm brass lamps, pale mist. Suspenseful investigation rather than battle. No readable text, signage, letters, numbers, logos, watermark, cards or UI."
+    },
+    {
+      "id": "inTooDeep",
+      "title": "深陷危局",
+      "file": "scenarios/inTooDeep/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 563428,
+      "sha256": "41da319f9ef816ed0c6a39cb308bfa70e3fefa4fa4602972217d858c37a7dcfb",
+      "original": "artifacts/tic-media/originals/inTooDeep.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: In Too Deep. Premium painterly realistic 1920s cosmic horror, landscape 1536x1024 full bleed. Dramatic elevated diagonal view of Innsmouth streets overwhelmed by surging seawater at night, a splintered wooden barricade and submerged 1920s automobile blocking a narrow intersection, a desperate escape route across rooftops and fire escape toward higher ground, distant vague hunched pursuers in fog, no close faces. Floodwater is dominant, violent teal reflections, charcoal shingled houses, scattered amber lamps, cold storm sky. Cinematic urgent escape, legible environment detail. No text, signage, letters, numbers, logos, watermark, UI or cards."
+    },
+    {
+      "id": "devilReef",
+      "title": "魔鬼礁石",
+      "file": "scenarios/devilReef/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 483084,
+      "sha256": "bc0b36af5dc2d50ec0691c5a4ec5baaa33a0f5aeee6af4f9e4dfc7d383f9302f",
+      "original": "artifacts/tic-media/originals/devilReef.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: Devil Reef. Premium painterly realistic 1920s cosmic horror, landscape 1536x1024 full bleed. Low view from behind a small weathered motor fishing boat approaching jagged black offshore reef islands in rough dark Atlantic water, a narrow tidal sea cave glowing faintly green beneath a broken rock arch, submerged stone steps just visible through translucent foreground waves, seabirds and distant storm clouds, no giant tentacles. Petroleum teal, charcoal basalt, bone seafoam, tiny amber boat lantern. Lonely maritime exploration and ominous discovery, atmospheric scale. No text, letters, numbers, logos, watermark, cards or UI."
+    },
+    {
+      "id": "horrorInHighGear",
+      "title": "全速恐惧",
+      "file": "scenarios/horrorInHighGear/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 414936,
+      "sha256": "95efac871825c2552e0c29e2feca628e4d3dbe44fc20cb665479a64531caee80",
+      "original": "artifacts/tic-media/originals/horrorInHighGear.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: Horror in High Gear. Premium painterly realistic 1920s cosmic horror, landscape 1536x1024 full bleed. Dynamic low rear three-quarter view of a 1920s touring automobile speeding along a narrow wet coastal dirt road at night, tires throwing mud, headlights cutting dense fog ahead, steep cliff and black ocean on one side, twisted bare trees on the other, distant pursuing headlights around the bend and one indistinct hunched shape at roadside. Period accurate vehicle, no modern elements. Petroleum teal night, charcoal, pale fog and amber headlights, cinematic forward momentum and dread. No text, letters, license plate characters, logos, watermark, cards or UI."
+    },
+    {
+      "id": "aLightInTheFog",
+      "title": "雾中之光",
+      "file": "scenarios/aLightInTheFog/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 332452,
+      "sha256": "e3051748fac72fd98845709db29fc1c06037bc9510a148b235d0c5eaa308248a",
+      "original": "artifacts/tic-media/originals/aLightInTheFog.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: A Light in the Fog. Premium painterly realistic 1920s cosmic horror, landscape 1536x1024 full bleed. A towering old coastal stone lighthouse on a fogbound rocky island, viewed from a slippery approach stair, a powerful narrow pale amber light slicing sea mist, keeper's cottage beside its base and an ominous open basement doorway with wet stairs descending below rock. One empty stretcher barely visible through basement doorway, no gore. Huge rolling black ocean, seaweed on rocks, desaturated petroleum teal, cold bone fog, tarnished brass light. Isolation and hidden captivity, sharply readable lighthouse silhouette. No text, letters, logos, watermark, cards or UI."
+    },
+    {
+      "id": "theLairOfDagon",
+      "title": "达贡巢穴",
+      "file": "scenarios/theLairOfDagon/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 491608,
+      "sha256": "a8e7f90c43eea9844b78e10abf79add3beea3cb348768cbbaf59667ca8fb6fa1",
+      "original": "artifacts/tic-media/originals/theLairOfDagon.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: The Lair of Dagon. Premium painterly realistic cosmic horror, landscape 1536x1024 full bleed. A vast secret tidal temple cavern beneath an old New England town, low viewpoint between barnacle-encrusted basalt columns toward a massive ancient fishlike deity idol above a green-lit altar. Dark seawater channels around a narrow stone processional walkway, tiny hooded cultist silhouettes gathered far away, tarnished gold ritual ornaments and a few pale candles. Monumental oppressive architecture, petroleum teal and charcoal, corroded brass accents, suspended sea mist. Ritual infiltration and overwhelming ancient presence. No readable runes or text, no letters, numbers, logos, watermark, cards or UI."
+    },
+    {
+      "id": "intoTheMaelstrom",
+      "title": "暗潮之下",
+      "file": "scenarios/intoTheMaelstrom/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 574082,
+      "sha256": "8412921178dd7724805de60980712f47caab52a4c97df33100f966b532d8c5f2",
+      "original": "artifacts/tic-media/originals/intoTheMaelstrom.png",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Innsmouth Conspiracy: Into the Maelstrom. Premium painterly realistic cosmic horror, landscape 1536x1024 full bleed. Vast underwater city Y'ha-nthlei, impossible ancient cyclopean domes and arched gateways encrusted in coral and barnacles, viewed down a descending ruined causeway beneath dark Atlantic water. Above the city an enormous spiraling maelstrom funnels silvery surface light into the abyss; looming shadowy aquatic colossi frame the far distance, tiny 1920s brass diving-helmet explorer silhouettes on the foreground causeway convey scale. Petroleum teal, abyssal charcoal, pale silver-green caustics, sparse ancient tarnished gold. Awe, final confrontation and cosmic scale, distinct submerged architecture. No text, letters, numbers, logos, watermark, cards or UI."
+    }
+  ]
+}

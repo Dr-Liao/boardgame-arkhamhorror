@@ -67,13 +67,13 @@
       "id": "abilities",
       "command": "node tools/audit-abilities.mjs --check",
       "status": 0,
-      "lastLine": "通道：descriptor=667 data=4"
+      "lastLine": "通道：descriptor=771 data=4"
     },
     {
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 93 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 113 个"
     },
     {
       "id": "deadPrimitives",
@@ -110,11 +110,29 @@
       "command": "node tools/audit-tde.mjs --check",
       "status": 0,
       "lastLine": "audit 复算一致：M5 · P10，范围 388 条，关键词 7/7，规则书 verified，逐卡 388/388，剧本 8/8，并行 10/10，gate pass"
+    },
+    {
+      "id": "ticScope",
+      "command": "node tools/scan-tic-scope.mjs --check",
+      "status": 0,
+      "lastLine": "tic scope: 复算一致"
+    },
+    {
+      "id": "ticMigration",
+      "command": "node tools/audit-tic.mjs --check",
+      "status": 0,
+      "lastLine": "TIC P8 发布账本：milestone M5 · P8 · gate pass · 记录 361（252/16/93） · 八章 8/8 verified（launchable 8/8） · 逐卡 251/252 strict · earlyAccess false · equivalenceCertified true · maintenance 0 · remaining 0"
+    },
+    {
+      "id": "ticRelease",
+      "command": "node tools/audit-tic-release.mjs --check",
+      "status": 0,
+      "lastLine": "tic release acceptance: 复算一致 · passed"
     }
   ],
   "docLinks": {
-    "files": 30,
-    "links": 74,
+    "files": 38,
+    "links": 128,
     "broken": 0
   },
   "goldenReplay": {
@@ -127,8 +145,8 @@
   "tests": {
     "command": "node tools/run-tests.mjs fast",
     "status": 0,
-    "tests": 4854,
-    "pass": 4851,
+    "tests": 6393,
+    "pass": 6390,
     "fail": 0
   },
   "notes": [

@@ -6,7 +6,7 @@
   "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
   "exitCode": 0,
   "log": "artifacts/migration/tic/reports/node-acceptance.log",
-  "logSha256": "095741c41618c5fd379aa06d108d2356cf8196010b9d1f16590512c013b20902",
+  "logSha256": "5ca89421eb3bc5efa8b1e516231800f421dc4e39580c41a401d3bb7803c01935",
   "summary": {
     "tests": 234,
     "pass": 234,
@@ -184,7 +184,7 @@
     "P6 07194 Tristan picks two distinct skills until that investigator next turn",
     "P6 07194 Tristan plays from hand free after three actual special tokens",
     "P6 07225 Djinn sets current base to five without lasting into later tests or others turns",
-    "P6 07268 Flute X minus two resource cost seals up to X and release is required",
+    "P6 07268 Flute X resource cost seals up to X and release is required",
     "P6 07307 Dice exact curse cost ignores one token and guarded next curse returns asset",
     "P6 07157 Under Surveillance triggers once on nonElite spawn and retains event until entry",
     "P6 07157 Under Surveillance triggers once on nonElite move and retains event until entry",
@@ -1427,8 +1427,8 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/introduction.js",
-      "bytes": 1168,
-      "sha256": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e"
+      "bytes": 1169,
+      "sha256": "5b89b93e4c3ad50e3806f45cb75f265cee06f39480d79414796b400dfaa18efa"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/keywords.js",
@@ -2007,8 +2007,8 @@
     },
     {
       "path": "src/campaign/content-effects.js",
-      "bytes": 614,
-      "sha256": "cb59b3b57109a37ab3b23160abfdf74b8c9d353296549ccd7090223c53a3f697"
+      "bytes": 615,
+      "sha256": "3504dbba957bdbdf1e605af5f53d0d81abffef200cb4cd91a1d33e4ded140202"
     },
     {
       "path": "src/campaign/dual-runtime.js",
@@ -2068,7 +2068,7 @@
     {
       "path": "src/cards/carcosa-player-acceptance.js",
       "bytes": 1900,
-      "sha256": "97daf5cd61b7ae665b6f1986aa9be6b4aa4d1a40d6cac10fefcf13f563d3599b"
+      "sha256": "a56854250b773b5d849682ce5013725bfbcfef2449ab4564a977a5d77b36de11"
     },
     {
       "path": "src/cards/card-abilities.js",
@@ -9232,8 +9232,8 @@
     },
     {
       "path": "src/cards/entries/02010.js",
-      "bytes": 733,
-      "sha256": "280d471180ffce64d599376d6d5835942a0aaaef6990e0362e29a4669df6229c"
+      "bytes": 942,
+      "sha256": "719cca115196600e56730db7169a287a8bbd0e18c3d2e0d4cc0788724113f4e3"
     },
     {
       "path": "src/cards/entries/02011.js",
@@ -9267,8 +9267,8 @@
     },
     {
       "path": "src/cards/entries/02017.js",
-      "bytes": 1507,
-      "sha256": "920d80b870844f4f7a8d9afc2b10fef65f4dfcc52547cdaa909fc6eb95e927de"
+      "bytes": 1508,
+      "sha256": "0f06be2da01b740e065c835560a9f43a125f1439e4c71ddd385899b6975cf1a7"
     },
     {
       "path": "src/cards/entries/02018.js",
@@ -9277,8 +9277,8 @@
     },
     {
       "path": "src/cards/entries/02019.js",
-      "bytes": 1607,
-      "sha256": "46774caf99e8ff75b17eeee804d4c2918ec70e05db294962a87529d2f994bcd2"
+      "bytes": 1608,
+      "sha256": "a3151f05cf4ecf067aacbc0b93f67a9e606e077ffc839460fd379bac96c9fcc0"
     },
     {
       "path": "src/cards/entries/02020.js",
@@ -12482,8 +12482,8 @@
     },
     {
       "path": "src/cards/entries/07268.js",
-      "bytes": 2265,
-      "sha256": "0761a6435aee34d17f6a6a66a4e9ab5bdf0120a61ef5773f84649f9f8230caa6"
+      "bytes": 2517,
+      "sha256": "7766a0a207b9acda895956ba2e84c0223435c8abd0178a51695858441e47d4a0"
     },
     {
       "path": "src/cards/entries/07269.js",
@@ -12598,7 +12598,7 @@
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "f6a87bc916369ac32bf70c67c23ba3d0a58ae2477d05e1ab37d35810d4c05ba6"
+      "sha256": "488861380965cad6adf64c52fe555bc1379e3cc4bdefb1737e2c93d836b5d6dd"
     },
     {
       "path": "src/cards/tic-player-acceptance.js",
@@ -12642,8 +12642,8 @@
     },
     {
       "path": "src/engine/ability.js",
-      "bytes": 94871,
-      "sha256": "0f8a3b00e73c697f9466d064b70cae931ec3a1f2907517fa3fd45803553024f8"
+      "bytes": 95377,
+      "sha256": "951af1455585d7c1fbc97852a94f83de5fc7e4516cccf5ab4127fc4c41b281a0"
     },
     {
       "path": "src/engine/act-agenda.js",
@@ -12662,8 +12662,8 @@
     },
     {
       "path": "src/engine/actions.js",
-      "bytes": 39069,
-      "sha256": "187a265cb8303a2827a1b174f10ded6036bdf963a172818a04af8531b1ece883"
+      "bytes": 39472,
+      "sha256": "243bc0dded6fe86ac4806864cc3312f6f45a84b7a1a097662925e77dd9b5d640"
     },
     {
       "path": "src/engine/agenda-advance-frame.js",
@@ -12707,8 +12707,8 @@
     },
     {
       "path": "src/engine/as-if-location.js",
-      "bytes": 1246,
-      "sha256": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc"
+      "bytes": 1218,
+      "sha256": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5"
     },
     {
       "path": "src/engine/asset-defeat.js",
@@ -12847,8 +12847,8 @@
     },
     {
       "path": "src/engine/dream-gate.js",
-      "bytes": 4604,
-      "sha256": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc"
+      "bytes": 4493,
+      "sha256": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58"
     },
     {
       "path": "src/engine/edge-barriers.js",
@@ -12957,8 +12957,8 @@
     },
     {
       "path": "src/engine/hand-entry.js",
-      "bytes": 440,
-      "sha256": "b8144de94dfc5ab3591ed93e360c7cab2f5cd1eb3d99fbb82a2ceaec71ada877"
+      "bytes": 441,
+      "sha256": "2ec4f9db52145a1e4e32c34871519e1a1a02b3a1d0b03eb4cd36b05d23915093"
     },
     {
       "path": "src/engine/harm-threat.js",
@@ -13542,8 +13542,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 14134,
-      "sha256": "f83a7958f1a20d333a99f2b1f2f7c4c35c150a1928ef11f21909367d4aa7124a"
+      "bytes": 14164,
+      "sha256": "8b0344529ca22ceffa94b35b70d597ecd1084df895d504714fb3b5ff84c203ca"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -13592,8 +13592,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 25036,
-      "sha256": "d5e530d66b33b7c87a1a69b076a0001f75847e659643eb21feb8add3a40d30a4"
+      "bytes": 25060,
+      "sha256": "816ca60cad2bd0bc5a785b6feba9135d4009b21168204805b52449e5a5fbe41a"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
@@ -13672,8 +13672,8 @@
     },
     {
       "path": "tests/tic-player-guardian-seeker.test.mjs",
-      "bytes": 21855,
-      "sha256": "8a148e0a399e26b712a7ee2a10fa357089e4526c2361cb9dcd0e3759b216d515"
+      "bytes": 21859,
+      "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
     },
     {
       "path": "tests/tic-player-primitives.test.mjs",
@@ -13682,13 +13682,13 @@
     },
     {
       "path": "tests/tic-player-rogue-mystic.test.mjs",
-      "bytes": 24315,
-      "sha256": "ba36e4b080a77b67e4b8f79a52c81587ee1bf6d6c15a481c2a94e1f81b50b2b5"
+      "bytes": 24418,
+      "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
     },
     {
       "path": "tests/tic-player-survivor-neutral.test.mjs",
-      "bytes": 30244,
-      "sha256": "b42c89a825e4c88c2a773b1e87f7a4e84aff00c39cc7c15b84fe543960e5f4d8"
+      "bytes": 30249,
+      "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
     },
     {
       "path": "tests/tic-player.browser.mjs",
@@ -13867,8 +13867,8 @@
     },
     {
       "path": "web/campaign-presentation.js",
-      "bytes": 9791,
-      "sha256": "1f9f32c69d91e3ccee1b6d484c690e255d55b94727e58e20ef24932d9f9f8277"
+      "bytes": 10745,
+      "sha256": "3b2491cd65f6ded7b5d0ec8a70ea27b9e833d2449353b2452e1c2ce6981be0fe"
     },
     {
       "path": "web/campaign-records.js",
@@ -13987,8 +13987,8 @@
     },
     {
       "path": "web/hub-office.css",
-      "bytes": 65068,
-      "sha256": "706e500201a0c7d02f40f010f548006d0cdb13bf4e3ee6dda8f57814f2853791"
+      "bytes": 65776,
+      "sha256": "4ade95744cc1478efad759c5c08c754c60612d83a0cdd0f713588845a71879f8"
     },
     {
       "path": "web/hub.js",
@@ -14107,8 +14107,8 @@
     },
     {
       "path": "web/music-player.js",
-      "bytes": 29704,
-      "sha256": "1f042e7e8d0d7b6a3f6d435d01b5f79ae97c861b3e03ea67883d52a15f74b95f"
+      "bytes": 32032,
+      "sha256": "23ecdf0ab1054af3d11c15fb6ee6ae2cd145b768f68b9a518b34fa4d0947eae7"
     },
     {
       "path": "web/noir.css",
@@ -14177,8 +14177,8 @@
     },
     {
       "path": "web/scenario-music.js",
-      "bytes": 9257,
-      "sha256": "e979ef7e00a26c60577100043e88a9ca35107208a0a74e8b545a32366ef22a65"
+      "bytes": 9136,
+      "sha256": "3fbcb8115da8871a76bd51254bf25d560e31ef718381a6651efa3859ad3169ce"
     },
     {
       "path": "web/scenario-setup-view.js",

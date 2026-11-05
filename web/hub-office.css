@@ -155,7 +155,11 @@
 .ah-office .ah-save-actions .bg-btn { min-height: 32px; padding: 7px 12px; font-size: 12px; }
 .ah-office .ah-hub-pane.ah-office-overview { background: transparent; padding: 0; }
 .ah-office-hero { position: relative; isolation: isolate; min-height: 390px; display: flex; align-items: center; overflow: hidden; border-bottom: 1px solid var(--office-edge); }
-.ah-office-hero > .ah-office-decor { position: absolute; z-index: 0; right: 0; top: -55px; width: 66%; height: 470px; opacity: .9; -webkit-mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent); }
+/* 战役总览主视觉：原画是硬边矩形，只做左右渐隐时上下仍会在 hero 边界切出直边。
+   这里用 cover 填满 hero 右侧 66%，盒子与 hero 同高，再叠横向 + 纵向两条渐隐遮罩
+   （mask-composite: intersect），四边都羽化进页面底色；盒子不再越出 hero，
+   任何视口高度下渐隐带都完整可见，不会在裁切线上留下硬边。 */
+.ah-office-hero > .ah-office-decor { position: absolute; z-index: 0; right: 0; top: 0; width: 66%; height: 100%; opacity: .9; object-fit: cover; object-position: 50% 50%; -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-composite: intersect; }
 .ah-office-hero-copy { position: relative; z-index: 1; max-width: 54%; padding: 35px 0 44px; }
 .ah-office-hero h1 { font-size: clamp(36px, 4.2vw, 62px); color: #efdeb0; letter-spacing: 7px; margin: 20px 0; line-height: 1.2; text-shadow: 0 4px 20px #0007; }
 .ah-office-hero-copy > p { color: #adbaa7; font-size: 14px; letter-spacing: 2px; }
@@ -406,7 +410,7 @@
   .ah-office .ah-hub-setup-rulebook { width: 44px; min-width: 44px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
   .ah-office .ah-hub-setup-rulebook .ah-icon { width: 18px; height: 18px; }
   .ah-office .ah-hub-pane { width: calc(100% - 24px); padding: 14px; }.ah-office .ah-hub-pane h2 { font-size: 22px; }
-  .ah-office-hero { min-height: 390px; align-items: flex-end; overflow: hidden; }.ah-office-hero > .ah-office-decor { width: 105%; height: 310px; top: -45px; right: 0; opacity: .6; -webkit-mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); }
+  .ah-office-hero { min-height: 390px; align-items: flex-end; overflow: hidden; }.ah-office-hero > .ah-office-decor { width: 105%; height: 310px; top: -45px; right: 0; opacity: .6; object-fit: contain; object-position: 50% 50%; -webkit-mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); }
   .ah-office-hero-copy { max-width: 100%; padding: 125px 12px 25px; }.ah-office-hero h1 { font-size: 38px; letter-spacing: 3px; }.ah-office-hero-copy > p { font-size: 11px; letter-spacing: 1px; }.ah-office-metrics { gap: 22px; margin: 20px 0; }
   .ah-office-overview-grid { grid-template-columns: 1fr; gap: 0; }.ah-office-dossier { aspect-ratio: 1.65; width: 100%; }.ah-office-dossier-copy { top: 24%; }.ah-office-team-panel { padding: 0 12px 20px; }.ah-office-team { grid-template-columns: 1fr 1fr; gap: 8px; }.ah-office-teammate { padding: 8px; gap: 7px; }.ah-office-teammate .ah-office-portrait { width: 35px; height: 50px; }.ah-office-teammate strong { font-size: 11px; }
   .ah-office .ah-content-packs { margin: 0 12px; }.ah-office-overview > .ah-hub-actions { padding: 0 12px; }

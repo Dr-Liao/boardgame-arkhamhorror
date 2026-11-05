@@ -3,6 +3,22 @@ import { SCENARIO_MUSIC, SCENARIO_PLAYLISTS } from './scenario-music.js'
 import { subscribeLocaleChange, t } from './i18n.js'
 
 export const MUSIC_TRACKS = [
+  {id: "ticIceDemon",title: "Ice Demon",mood: "潮水洞穴中的空洞低鸣",file: "common/ice-demon.mp3",isrc: "USUAN1200061"},
+  {id: "ticBentAndBroken",title: "Bent and Broken",mood: "失忆与水下追猎",file: "common/bent-and-broken.mp3",isrc: "USUAN1200087"},
+  {id: "ticAwkwardMeeting",title: "Awkward Meeting",mood: "失踪案中的疑点与不安",file: "common/awkward-meeting.mp3",isrc: "USUAN1100574"},
+  {id: "ticDistantTension",title: "Distant Tension",mood: "封锁小镇中的暗处目光",file: "common/distant-tension.mp3",isrc: "USUAN1100257"},
+  {id: "ticDeepHaze",title: "Deep Haze",mood: "洪水逼近，逐街突围",file: "common/deep-haze.mp3",isrc: "USUAN1100886"},
+  {id: "ticDarkTimes",title: "Dark Times",mood: "被淹没街区的沉重绝望",file: "common/dark-times.mp3",isrc: "USUAN1100747"},
+  {id: "ticNightOfChaos",title: "Night of Chaos",mood: "礁石边的诡秘海雾",file: "common/night-of-chaos.mp3",isrc: "USUAN1300042"},
+  {id: "ticDarknessIsComing",title: "Darkness is Coming",mood: "海底洞窟中的未知威胁",file: "common/darkness-is-coming.mp3",isrc: "USUAN1100584"},
+  {id: "ticHitman",title: "Hitman",mood: "公路追逐的疾速节拍",file: "common/hitman.mp3",isrc: "USUAN1300013"},
+  {id: "ticClashDefiant",title: "Clash Defiant",mood: "载具突围与险境对抗",file: "common/clash-defiant.mp3",isrc: "USUAN1600003"},
+  {id: "ticDarkFog",title: "Dark Fog",mood: "灯塔迷雾与艰难抉择",file: "common/dark-fog.mp3",isrc: "USUAN1300031"},
+  {id: "ticHush",title: "Hush",mood: "地下室潜伏与突然袭击",file: "common/hush.mp3",isrc: "USUAN1400004"},
+  {id: "ticOppressiveGloom",title: "Oppressive Gloom",mood: "深潜者祭仪的压迫低音",file: "common/oppressive-gloom.mp3",isrc: "USUAN1100885"},
+  {id: "ticAnxiety",title: "Anxiety",mood: "达贡巢穴中的持续紧张",file: "common/anxiety.mp3",isrc: "USUAN1100328"},
+  {id: "ticTheDescent",title: "The Descent",mood: "沉向深海之城的终局推进",file: "common/the-descent.mp3",isrc: "USUAN1200094"},
+  {id: "ticStormfront",title: "Stormfront",mood: "漩涡中的风暴与最后冲刺",file: "common/stormfront.mp3",isrc: "USUAN1200043"},
   { id: 'tcuVanishing', title: "Vanishing", mood: "庄园晚宴、失踪者、暮色疑云", file: 'common/vanishing.mp3', isrc: 'USUAN1600050' },
   { id: 'tcuEveningFallPiano', title: "Evening Fall (Piano)", mood: "庄园晚宴、失踪者、暮色疑云", file: 'common/evening-fall-piano.mp3', isrc: 'USUAN1100235' },
   { id: 'tcuThisHouse', title: "This House", mood: "庄园晚宴、失踪者、暮色疑云", file: 'common/this-house.mp3', isrc: 'USUAN1500055' },
@@ -97,6 +113,7 @@ export const MUSIC_PLAYLISTS = Object.freeze({
   theCircleUndone: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theCircleUndone).flatMap(chapter => chapter.tracks))]),
   // P10：食梦者（五循环）营地/关间播放整条循环的曲目并集；章节内再按 scenarioPlaylistId 细分。
   theDreamEaters: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDreamEaters).flatMap(chapter => chapter.tracks))]),
+  theInnsmouthConspiracy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theInnsmouthConspiracy).flatMap(chapter => chapter.tracks))]),
   ...SCENARIO_PLAYLISTS,
 })
 export function musicTracksForPlaylist(id) {

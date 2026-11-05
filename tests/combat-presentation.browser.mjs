@@ -303,7 +303,7 @@ test('顶部阶段提示无溢出，遭遇牌堆抽牌翻面，检定来源和�
   await expect(chaos).toHaveAttribute('data-token','skull')
   await expect(chaos).toHaveAttribute('data-revealed','true')
   await expect(chaos.locator('.ah-chaos-reveal-token')).toHaveAccessibleName('骷髅')
-  await expect(chaos.locator('.ah-chaos-reveal-token img')).toHaveAttribute('src',/ct-skull\.png$/)
+  await expect(chaos.locator('.ah-chaos-reveal-token img')).toHaveAttribute('src',/ct-skull\.webp$/)
   expect(await chaos.locator('.ah-chaos-reveal-token img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true)
   await expect(chaos).toContainText('腐烂残骸')
   await page.screenshot({path:output+'chaos-draw-mobile.png',animations:'disabled'})

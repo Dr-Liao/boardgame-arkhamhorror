@@ -3,6 +3,22 @@
   "playlists": {
     "common": {
       "tracks": [
+        "ticIceDemon",
+        "ticBentAndBroken",
+        "ticAwkwardMeeting",
+        "ticDistantTension",
+        "ticDeepHaze",
+        "ticDarkTimes",
+        "ticNightOfChaos",
+        "ticDarknessIsComing",
+        "ticHitman",
+        "ticClashDefiant",
+        "ticDarkFog",
+        "ticHush",
+        "ticOppressiveGloom",
+        "ticAnxiety",
+        "ticTheDescent",
+        "ticStormfront",
         "tcuVanishing",
         "tcuEveningFallPiano",
         "tcuThisHouse",
@@ -78,7 +94,15 @@
         "itIsLost",
         "interloper",
         "truthInTheStones",
-        "thunderDreams"
+        "thunderDreams",
+        "tdeDreamlike",
+        "tdeAirPrelude",
+        "tdeUnnaturalSituation",
+        "tdeFloatingCities",
+        "tdeFrozenStar",
+        "tdeDreamsBecomeReal",
+        "tdeSpiderEyes",
+        "tdeSoporific"
       ],
       "includeCustom": true
     },
@@ -202,6 +226,56 @@
         "tcuOssuary3Words",
         "tcuSymmetry",
         "tcuShadowlands6ThePit"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters": {
+      "tracks": [
+        "tdeDreamsBecomeReal",
+        "tdeDreamlike",
+        "magicForest",
+        "tdeUnnaturalSituation",
+        "tdeSpiderEyes",
+        "controlledChaos",
+        "tdeAirPrelude",
+        "tdeFloatingCities",
+        "ancientRite",
+        "tdeSoporific",
+        "enterTheMaze",
+        "orion300xb",
+        "interloper",
+        "tdeFrozenStar",
+        "thunderDreams",
+        "darkestChild"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy": {
+      "tracks": [
+        "ticIceDemon",
+        "ticBentAndBroken",
+        "rites",
+        "ticAwkwardMeeting",
+        "ticDistantTension",
+        "penumbra",
+        "ticDeepHaze",
+        "ticDarkTimes",
+        "controlledChaos",
+        "ticNightOfChaos",
+        "ticDarknessIsComing",
+        "truthInTheStones",
+        "ticHitman",
+        "ticClashDefiant",
+        "chasePulse",
+        "ticDarkFog",
+        "ticHush",
+        "lostFrontier",
+        "ticOppressiveGloom",
+        "ticAnxiety",
+        "ancientRite",
+        "ticTheDescent",
+        "ticStormfront",
+        "thunderDreams"
       ],
       "includeCustom": true
     },
@@ -502,6 +576,134 @@
         "ossuarySixAir",
         "ossuarySevenResolve",
         "shadowlandsSevenCodex"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/beyondTheGatesOfSleep": {
+      "tracks": [
+        "tdeDreamsBecomeReal",
+        "tdeDreamlike",
+        "magicForest"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/wakingNightmare": {
+      "tracks": [
+        "tdeUnnaturalSituation",
+        "tdeSpiderEyes",
+        "controlledChaos"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/theSearchForKadath": {
+      "tracks": [
+        "tdeAirPrelude",
+        "tdeFloatingCities",
+        "ancientRite"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/aThousandShapesOfHorror": {
+      "tracks": [
+        "tdeDreamlike",
+        "tdeSoporific",
+        "enterTheMaze"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/darkSideOfTheMoon": {
+      "tracks": [
+        "tdeFloatingCities",
+        "tdeSoporific",
+        "orion300xb"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/pointOfNoReturn": {
+      "tracks": [
+        "tdeUnnaturalSituation",
+        "tdeSpiderEyes",
+        "interloper"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/whereTheGodsDwell": {
+      "tracks": [
+        "tdeAirPrelude",
+        "tdeFrozenStar",
+        "thunderDreams"
+      ],
+      "includeCustom": true
+    },
+    "theDreamEaters/weaverOfTheCosmos": {
+      "tracks": [
+        "tdeDreamsBecomeReal",
+        "tdeFrozenStar",
+        "darkestChild"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/thePitOfDespair": {
+      "tracks": [
+        "ticIceDemon",
+        "ticBentAndBroken",
+        "rites"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/theVanishingOfElinaHarper": {
+      "tracks": [
+        "ticAwkwardMeeting",
+        "ticDistantTension",
+        "penumbra"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/inTooDeep": {
+      "tracks": [
+        "ticDeepHaze",
+        "ticDarkTimes",
+        "controlledChaos"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/devilReef": {
+      "tracks": [
+        "ticNightOfChaos",
+        "ticDarknessIsComing",
+        "truthInTheStones"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/horrorInHighGear": {
+      "tracks": [
+        "ticHitman",
+        "ticClashDefiant",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/aLightInTheFog": {
+      "tracks": [
+        "ticDarkFog",
+        "ticHush",
+        "lostFrontier"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/theLairOfDagon": {
+      "tracks": [
+        "ticOppressiveGloom",
+        "ticAnxiety",
+        "ancientRite"
+      ],
+      "includeCustom": true
+    },
+    "theInnsmouthConspiracy/intoTheMaelstrom": {
+      "tracks": [
+        "ticTheDescent",
+        "ticStormfront",
+        "thunderDreams"
       ],
       "includeCustom": true
     }

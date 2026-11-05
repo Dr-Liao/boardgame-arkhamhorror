@@ -1136,14 +1136,19 @@
       "sha256": "094740de869194ac43e805ccaf41250842bf0fef31428237f6dd2b6c683e6508"
     },
     {
+      "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
+      "bytes": 392355,
+      "sha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+    },
+    {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-definition.js",
       "bytes": 3254,
       "sha256": "22994886db8f1ac701051cdc0a4bb6f60570ade256caf2a843e61189126f17cd"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-entry.js",
-      "bytes": 2030,
-      "sha256": "f5439bb813e8b6c6be2a1728bfd4fe3efae113aeaf0af69f2ae174a96027ae2a"
+      "bytes": 12113,
+      "sha256": "27e712c165d8515fc7024ded7000c537c6682fab41db3e142730e72b3fff5371"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-setup.js",
@@ -1152,13 +1157,13 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapters.js",
-      "bytes": 1064,
-      "sha256": "190e3451e0a6324bfb012b318802899dfb99b93ec9a69e2f26af678e335a45fd"
+      "bytes": 1564,
+      "sha256": "a27a5ba9c89fea235ae614ec90404c4190a6536b988ff7c6b4494401969c02f5"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/companions-setup.js",
-      "bytes": 1763,
-      "sha256": "be098d225df982e5b7905ab18210fb7d5389abbe8ea72502f2e54859edf489a8"
+      "bytes": 2011,
+      "sha256": "d4cec26b44c1655e1791d93b8b7b46c80e92a35cc65d3aeb9adceac68316605b"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
@@ -1182,8 +1187,8 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/introduction.js",
-      "bytes": 1168,
-      "sha256": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e"
+      "bytes": 1169,
+      "sha256": "5b89b93e4c3ad50e3806f45cb75f265cee06f39480d79414796b400dfaa18efa"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/keywords.js",
@@ -1196,9 +1201,14 @@
       "sha256": "447e4477896f7000f2c217738979499fb6cd9a98f288f3f4b5c2e914f2b866a4"
     },
     {
+      "path": "content/campaigns/theInnsmouthConspiracy/layout.js",
+      "bytes": 3093,
+      "sha256": "82d98fcc5caa7b17726ee869ff83b0bf3e458cb0a7533eaa21cee3ef354fa0c5"
+    },
+    {
       "path": "content/campaigns/theInnsmouthConspiracy/manifest.js",
-      "bytes": 970,
-      "sha256": "655c2c802d094a8c4a9f6b8da5a93c36356a6a8b29ac1bca9bbbebfdc8974d9d"
+      "bytes": 2503,
+      "sha256": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/middle-setup.js",
@@ -1222,48 +1232,88 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js",
-      "bytes": 177,
-      "sha256": "18111d595fcb601a44c4fa445f659908e9dfef3d1f2f9686551527881cd98f15"
+      "bytes": 369,
+      "sha256": "78eecd44f48fb5a55ef62b8f331097241f8ea77900697ea04dd41ecbe8e15602"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/layout.js",
+      "bytes": 1785,
+      "sha256": "0ebab3ff8d5535bf1b4bf24bb4d72ec0956e8bbec3dc9f9586c117f496cb4dbf"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/index.js",
-      "bytes": 172,
-      "sha256": "e0d59e92ae59addf38dc8f193f846a378bc3fdf39bc743142cb675c864287c53"
+      "bytes": 364,
+      "sha256": "2efe92eda86905c57a2c03f8a1133df4ad221194fceb400f7a6d37f0a30eff43"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/devilReef/layout.js",
+      "bytes": 1094,
+      "sha256": "c981a595a56947f303c7932ec06347a9bb2de585e3c43a2ae68ffbba30f69766"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/index.js",
-      "bytes": 179,
-      "sha256": "5cc37c6e640e2441d610c3d2341ae724d7d572af4d8d559bb1f0ed9ca9b75a42"
+      "bytes": 371,
+      "sha256": "61db717095a1bccd622f0a194914571fe2b589e7ed81b0d7cab4e1ed53392a58"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/horrorInHighGear/layout.js",
+      "bytes": 1389,
+      "sha256": "1cf9bbbc8d7d368ef1feee302b03cfd649d3a04d35a284e4bd133b04269bece7"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/index.js",
-      "bytes": 172,
-      "sha256": "1d85f3ffd62edf3f640dc06b6a47576e4e822625bbaccae84f9a491bb3d08ee9"
+      "bytes": 364,
+      "sha256": "1aa771a6c2c7f797b6b5091c84b4f49f809b759526c9e20ad0d468fe448d2b62"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/inTooDeep/layout.js",
+      "bytes": 718,
+      "sha256": "386f1cbd804830a8538bb7001a7b3a0e3484d89ee81bd235682019e598fb0424"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js",
-      "bytes": 179,
-      "sha256": "558906b4e05214035c3268e75cfd53d5fccaf5cb4096eceb85c15b6ad891d12a"
+      "bytes": 371,
+      "sha256": "9956d856a661173b7cf34b423911543207e9e0f29c9725b71f901277d78c80d1"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/layout.js",
+      "bytes": 1586,
+      "sha256": "b27a6b8bad76f72536d7eb397c3c02a689237baaea3fca66536ae48c87499f4c"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js",
-      "bytes": 177,
-      "sha256": "61ef78a0a9bbb50f1bd7fee34f2a45ff973bf09ea5a4d3deda8e855d91ff1ead"
+      "bytes": 369,
+      "sha256": "b7cdc816080d2ec56cc54d9233f4ace269b07e389dda296a9bd4e8445bb96d08"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/layout.js",
+      "bytes": 1866,
+      "sha256": "8f145a8d15418a180ed3dea8369e34ddb087f581b3237a9f5a8b478f86d4fccb"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/index.js",
-      "bytes": 178,
-      "sha256": "dd62aac7b9a58317e26e182904d6307c14b222af16a28b174a001aa33cae1b14"
+      "bytes": 370,
+      "sha256": "2a8c4a28b7b30656a1f925f16c21d2caca4925cd6b9f35952c66b1d835f582a9"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/thePitOfDespair/layout.js",
+      "bytes": 1151,
+      "sha256": "d357f5a62830b342040605a2be5376d03da434b5eab1e55432eaa638afb1f29e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/index.js",
-      "bytes": 188,
-      "sha256": "2435f521bbe9ba9aba7011dd510eb000d6e7626f48ce6a6180b4c50e52d907c4"
+      "bytes": 394,
+      "sha256": "077ec2636d9cdcaf0afde5aaeb9961da259e6b43a9cab299a31df778656f4b16"
+    },
+    {
+      "path": "content/campaigns/theInnsmouthConspiracy/scenarios/theVanishingOfElinaHarper/layout.js",
+      "bytes": 814,
+      "sha256": "71ab217d41657a326fcf1e86424c68477fa10a248e4476244fee9b85f124835e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/shared.js",
-      "bytes": 3286,
-      "sha256": "da25e45328eee6d9f233e0366669620fd4ab0b266f4b5d60abe56d9059f0b92f"
+      "bytes": 3251,
+      "sha256": "37c28abb74fce12542cc18b27461fbb650614572108dfa0e7c3da8fa2d32b48a"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/story-text.js",
@@ -1612,18 +1662,18 @@
     },
     {
       "path": "content/packs/ticCampaign/manifest.js",
-      "bytes": 168,
-      "sha256": "45de6d508d12ee25445a6262f9c618cc40a0b3bee024b3022673cd2ac3cc9820"
+      "bytes": 2418,
+      "sha256": "92795f0eebea782113a12dd090b277d77b78b9b507c639025d061d8dd293ff0c"
     },
     {
       "path": "content/packs/ticInvestigators/manifest.js",
-      "bytes": 630,
-      "sha256": "2ad382d772d93add63bde704431e4a7b8c1515186967568525d8fc53b860609e"
+      "bytes": 2466,
+      "sha256": "5cbf91beae3126e58301abd21ec057d28353e325462ec54dc1335fcb3558bad5"
     },
     {
       "path": "content/packs/ticPlayer/manifest.js",
-      "bytes": 1054,
-      "sha256": "dfb8651713454f4558e8f03c14cc39759ef943284f64cf4385240e0887fe3777"
+      "bytes": 2833,
+      "sha256": "949b387e8f322dca541a8d47d6ceae181ac2dce977d2ec201011e5b29f70820d"
     },
     {
       "path": "content/presentation/attack-styles.js",
@@ -1632,8 +1682,8 @@
     },
     {
       "path": "content/registered.js",
-      "bytes": 11098,
-      "sha256": "0d8788cd970bc4e1bd929cbcea77b80a48ff59878369e4d89dcd2d0e537820bf"
+      "bytes": 12545,
+      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
     },
     {
       "path": "content/registry.js",
@@ -1647,8 +1697,8 @@
     },
     {
       "path": "content/scenario-guides.js",
-      "bytes": 18194,
-      "sha256": "9d07bcf22afc4e4c0cffcb6f79e0ba8688a57b464d229200fd319d533a2a316e"
+      "bytes": 22319,
+      "sha256": "79d9ed61db864ecb16a95d36f5c63dcb211cd30e5df1adb4fffd5c7e4a51df89"
     },
     {
       "path": "content/scenario-manifest.js",
@@ -1717,8 +1767,8 @@
     },
     {
       "path": "src/campaign/content-effects.js",
-      "bytes": 614,
-      "sha256": "cb59b3b57109a37ab3b23160abfdf74b8c9d353296549ccd7090223c53a3f697"
+      "bytes": 615,
+      "sha256": "3504dbba957bdbdf1e605af5f53d0d81abffef200cb4cd91a1d33e4ded140202"
     },
     {
       "path": "src/campaign/dual-runtime.js",
@@ -1778,7 +1828,7 @@
     {
       "path": "src/cards/carcosa-player-acceptance.js",
       "bytes": 1900,
-      "sha256": "97daf5cd61b7ae665b6f1986aa9be6b4aa4d1a40d6cac10fefcf13f563d3599b"
+      "sha256": "a56854250b773b5d849682ce5013725bfbcfef2449ab4564a977a5d77b36de11"
     },
     {
       "path": "src/cards/card-abilities.js",
@@ -8942,8 +8992,8 @@
     },
     {
       "path": "src/cards/entries/02010.js",
-      "bytes": 733,
-      "sha256": "280d471180ffce64d599376d6d5835942a0aaaef6990e0362e29a4669df6229c"
+      "bytes": 942,
+      "sha256": "719cca115196600e56730db7169a287a8bbd0e18c3d2e0d4cc0788724113f4e3"
     },
     {
       "path": "src/cards/entries/02011.js",
@@ -8977,8 +9027,8 @@
     },
     {
       "path": "src/cards/entries/02017.js",
-      "bytes": 1507,
-      "sha256": "920d80b870844f4f7a8d9afc2b10fef65f4dfcc52547cdaa909fc6eb95e927de"
+      "bytes": 1508,
+      "sha256": "0f06be2da01b740e065c835560a9f43a125f1439e4c71ddd385899b6975cf1a7"
     },
     {
       "path": "src/cards/entries/02018.js",
@@ -8987,8 +9037,8 @@
     },
     {
       "path": "src/cards/entries/02019.js",
-      "bytes": 1607,
-      "sha256": "46774caf99e8ff75b17eeee804d4c2918ec70e05db294962a87529d2f994bcd2"
+      "bytes": 1608,
+      "sha256": "a3151f05cf4ecf067aacbc0b93f67a9e606e077ffc839460fd379bac96c9fcc0"
     },
     {
       "path": "src/cards/entries/02020.js",
@@ -12192,8 +12242,8 @@
     },
     {
       "path": "src/cards/entries/07268.js",
-      "bytes": 2265,
-      "sha256": "0761a6435aee34d17f6a6a66a4e9ab5bdf0120a61ef5773f84649f9f8230caa6"
+      "bytes": 2517,
+      "sha256": "7766a0a207b9acda895956ba2e84c0223435c8abd0178a51695858441e47d4a0"
     },
     {
       "path": "src/cards/entries/07269.js",
@@ -12308,7 +12358,7 @@
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "ac6c27fcd94d65c798fccefec4b6d2eb201fca457dbd1e8c3e16b27e99846999"
+      "sha256": "488861380965cad6adf64c52fe555bc1379e3cc4bdefb1737e2c93d836b5d6dd"
     },
     {
       "path": "src/cards/tic-player-acceptance.js",
@@ -12352,8 +12402,8 @@
     },
     {
       "path": "src/engine/ability.js",
-      "bytes": 94871,
-      "sha256": "0f8a3b00e73c697f9466d064b70cae931ec3a1f2907517fa3fd45803553024f8"
+      "bytes": 95377,
+      "sha256": "951af1455585d7c1fbc97852a94f83de5fc7e4516cccf5ab4127fc4c41b281a0"
     },
     {
       "path": "src/engine/act-agenda.js",
@@ -12372,8 +12422,8 @@
     },
     {
       "path": "src/engine/actions.js",
-      "bytes": 39069,
-      "sha256": "187a265cb8303a2827a1b174f10ded6036bdf963a172818a04af8531b1ece883"
+      "bytes": 39472,
+      "sha256": "243bc0dded6fe86ac4806864cc3312f6f45a84b7a1a097662925e77dd9b5d640"
     },
     {
       "path": "src/engine/agenda-advance-frame.js",
@@ -12417,8 +12467,8 @@
     },
     {
       "path": "src/engine/as-if-location.js",
-      "bytes": 1246,
-      "sha256": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc"
+      "bytes": 1218,
+      "sha256": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5"
     },
     {
       "path": "src/engine/asset-defeat.js",
@@ -12557,8 +12607,8 @@
     },
     {
       "path": "src/engine/dream-gate.js",
-      "bytes": 4604,
-      "sha256": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc"
+      "bytes": 4493,
+      "sha256": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58"
     },
     {
       "path": "src/engine/edge-barriers.js",
@@ -12667,8 +12717,8 @@
     },
     {
       "path": "src/engine/hand-entry.js",
-      "bytes": 440,
-      "sha256": "b8144de94dfc5ab3591ed93e360c7cab2f5cd1eb3d99fbb82a2ceaec71ada877"
+      "bytes": 441,
+      "sha256": "2ec4f9db52145a1e4e32c34871519e1a1a02b3a1d0b03eb4cd36b05d23915093"
     },
     {
       "path": "src/engine/harm-threat.js",
@@ -12957,8 +13007,8 @@
     },
     {
       "path": "src/engine/scenario-runtime.js",
-      "bytes": 106823,
-      "sha256": "4b0aeea96d9997835e10fde6dc1a7c0c6adc21314a80ac11cfe4a9c18dc2a76c"
+      "bytes": 107369,
+      "sha256": "bbe41a9821bd21d4f12c5ca3ea9025c2236da84db0766c1c0a63b82ec491b566"
     },
     {
       "path": "src/engine/script-cards.js",
@@ -13057,8 +13107,8 @@
     },
     {
       "path": "src/engine/treachery-tokens.js",
-      "bytes": 23060,
-      "sha256": "7d15c32c78f934280cd7f2f1832238e64b534803bfd5a79374c52d6c33806e53"
+      "bytes": 23684,
+      "sha256": "8d15e58c36923527f475ef10939a22ae73ee5a21e1086753daad993a1e671eda"
     },
     {
       "path": "src/engine/turn-flow.js",
@@ -13241,14 +13291,19 @@
       "sha256": "b35da8858eb81dbc210399c301bfec5bf202ebd15a6e8bfdd151d039791fa344"
     },
     {
+      "path": "tests/fixtures/replay/tic-p8-baseline.json",
+      "bytes": 231515,
+      "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+    },
+    {
       "path": "tests/i18n-dict.test.mjs",
       "bytes": 5810,
       "sha256": "d9a72d6ad68ddf3323d43c6954ba50d9be412f04c4afc6be043cf61810f22149"
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 13939,
-      "sha256": "43780afc6879646b94651f726fcdd629c5da53528f436fc6535cc6cd60b2af87"
+      "bytes": 14164,
+      "sha256": "8b0344529ca22ceffa94b35b70d597ecd1084df895d504714fb3b5ff84c203ca"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -13261,6 +13316,11 @@
       "sha256": "77e41805d9331dc79ba28ea6cad1388e3365249911b02bbeefaf23cc73259b9c"
     },
     {
+      "path": "tests/playwright/playwright.tic-release.config.mjs",
+      "bytes": 3283,
+      "sha256": "5c0aad76de74816a4cad0ab7b43f8c95041eecdcc5f3b4550ea4284726c17c60"
+    },
+    {
       "path": "tests/playwright/playwright.tic.config.mjs",
       "bytes": 1623,
       "sha256": "9cbffddcf5ff96aa03fa1a6619c16b6dc4a520c05a7604efc0bee7dc174b4659"
@@ -13269,6 +13329,11 @@
       "path": "tests/reaction-preferences.test.mjs",
       "bytes": 24634,
       "sha256": "68882d006560ff358c7dcf10421922b09b2c0be6c4ab493643c1dc5f899b4493"
+    },
+    {
+      "path": "tests/replay-tic-p8.test.mjs",
+      "bytes": 5679,
+      "sha256": "ac1b2ac18db8eec0be538837fd41af42a184e9f390ba609eaf41bf5b1695a4a6"
     },
     {
       "path": "tests/reprint-aliases.test.mjs",
@@ -13287,13 +13352,18 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 24405,
-      "sha256": "6e27c46b756ef6451877e5e8cc6ce2083b39aa40d7a8022c342e05f68a145e1f"
+      "bytes": 25060,
+      "sha256": "816ca60cad2bd0bc5a785b6feba9135d4009b21168204805b52449e5a5fbe41a"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
       "bytes": 89501,
       "sha256": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712"
+    },
+    {
+      "path": "tests/tic-browser-helpers.mjs",
+      "bytes": 18706,
+      "sha256": "37cb094ac246c5ca1407f7d2a73ad3e9876939e83eb6f397f78a57b12de70efd"
     },
     {
       "path": "tests/tic-interaction-fixture.mjs",
@@ -13321,9 +13391,39 @@
       "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
     },
     {
+      "path": "tests/tic-late-b-cards.test.mjs",
+      "bytes": 29488,
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
       "path": "tests/tic-migration.test.mjs",
-      "bytes": 4618,
-      "sha256": "46f9a4f0247014b12e7618d2126da6ca5c7a52927ed0300ad091ab1575449246"
+      "bytes": 8923,
+      "sha256": "60637f1a9477286d81a3ef8b7234997b4339097ec8c6a12f71c5aa550d3b1ce5"
+    },
+    {
+      "path": "tests/tic-online.browser.mjs",
+      "bytes": 11369,
+      "sha256": "36da9177e012986d02d09639d142cd7f197f54f195cd1d3549d094abdac18885"
+    },
+    {
+      "path": "tests/tic-p8-campaign.test.mjs",
+      "bytes": 48035,
+      "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+    },
+    {
+      "path": "tests/tic-p8-fixture.mjs",
+      "bytes": 23815,
+      "sha256": "0f4938cff50584c1c53317f5dcc5c04d49f455503503a444cb3ef04ecbd37e7c"
+    },
+    {
+      "path": "tests/tic-p8-multiplayer.test.mjs",
+      "bytes": 23942,
+      "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+    },
+    {
+      "path": "tests/tic-p8-registration.test.mjs",
+      "bytes": 11318,
+      "sha256": "d67dcfba103ca7a38e6a9bf69a682faee417e37ad495e239d2f2f934b6c289a9"
     },
     {
       "path": "tests/tic-player-fixture.mjs",
@@ -13332,8 +13432,8 @@
     },
     {
       "path": "tests/tic-player-guardian-seeker.test.mjs",
-      "bytes": 21855,
-      "sha256": "8a148e0a399e26b712a7ee2a10fa357089e4526c2361cb9dcd0e3759b216d515"
+      "bytes": 21859,
+      "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
     },
     {
       "path": "tests/tic-player-primitives.test.mjs",
@@ -13342,13 +13442,13 @@
     },
     {
       "path": "tests/tic-player-rogue-mystic.test.mjs",
-      "bytes": 24315,
-      "sha256": "ba36e4b080a77b67e4b8f79a52c81587ee1bf6d6c15a481c2a94e1f81b50b2b5"
+      "bytes": 24418,
+      "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
     },
     {
       "path": "tests/tic-player-survivor-neutral.test.mjs",
-      "bytes": 30244,
-      "sha256": "b42c89a825e4c88c2a773b1e87f7a4e84aff00c39cc7c15b84fe543960e5f4d8"
+      "bytes": 30249,
+      "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
     },
     {
       "path": "tests/tic-player.browser.mjs",
@@ -13359,6 +13459,16 @@
       "path": "tests/tic-primitives.test.mjs",
       "bytes": 21724,
       "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "path": "tests/tic-progression.browser.mjs",
+      "bytes": 13856,
+      "sha256": "12dc1068c6fffacb105283586f126da5ade794598eb255301f0d13bea46f4d41"
+    },
+    {
+      "path": "tests/tic-release.browser.mjs",
+      "bytes": 8766,
+      "sha256": "443c9d0f36bb02158060ad1f59b6c216f5fc0d3436a17f51d4f02cb464273738"
     },
     {
       "path": "tests/tic-rules.browser.mjs",
@@ -13391,14 +13501,34 @@
       "sha256": "d8aaf2c81dfe0ca590c4e2bd6c05c3a7fb4a6c94b53fb76dcd52b078dd40edca"
     },
     {
+      "path": "tools/audit-tic-release.mjs",
+      "bytes": 12618,
+      "sha256": "b325d478cc9d32689864bc59d0e1a357b750ac3a0d14eb3d1d7802bca13780f9"
+    },
+    {
+      "path": "tools/audit-tic-scenarios.mjs",
+      "bytes": 68533,
+      "sha256": "f774f4ff008be53107362ef4683ed6303130bb15c6760055e94b1f7f876edc49"
+    },
+    {
       "path": "tools/audit-tic.mjs",
-      "bytes": 8409,
-      "sha256": "4325d6e4843e369707d9a9beabbf42a7fb8de8ea3050de47d450e644533d11f4"
+      "bytes": 99847,
+      "sha256": "82dae98a032b63ee098dfa82d9d39d6f6448cf07b559c3094a389047d87ebba8"
+    },
+    {
+      "path": "tools/check-tic-registry.mjs",
+      "bytes": 13671,
+      "sha256": "e6822fbedece98239049ced864048046eab9ebe58d1f5f184a084298f3aa4804"
     },
     {
       "path": "tools/playwright-tic-p4-reporter.mjs",
       "bytes": 1095,
       "sha256": "d9407f357bd78b645d0b9debef590785290fadc7005cc060a9b8c03ec1884f32"
+    },
+    {
+      "path": "tools/playwright-tic-release-reporter.mjs",
+      "bytes": 12543,
+      "sha256": "faab9fc104a346c71a7f31608791538e0d20587390122928b951a5bf4903ccc2"
     },
     {
       "path": "tools/playwright-tic-reporter.mjs",
@@ -13412,8 +13542,18 @@
     },
     {
       "path": "tools/replay-games.mjs",
-      "bytes": 16083,
-      "sha256": "5cdc0936c7779f102555b584aebf1b532616854d102715e3923178c22d9b1e66"
+      "bytes": 22881,
+      "sha256": "70a5d232d5e913a43a830e5ec9e7411f4cd0924d8b00470b1a64024e838a88ec"
+    },
+    {
+      "path": "tools/replay-tic-fixtures.mjs",
+      "bytes": 11127,
+      "sha256": "be5be932c58b2b75354db123439a26185ab4ee3516f68f7d8956fe28fa8a5bb2"
+    },
+    {
+      "path": "tools/replay-tic-recipes.mjs",
+      "bytes": 4895,
+      "sha256": "68a4659fdad213f81bfb83fc46cbca85a430167bdd1de0d981a5b4d533604988"
     },
     {
       "path": "tools/run-tic-browser.mjs",
@@ -13424,6 +13564,11 @@
       "path": "tools/run-tic-interactions-browser.mjs",
       "bytes": 1870,
       "sha256": "7be35781a99c6e1418ac458f717715b7634345be4f5c86da907b8240c10e4633"
+    },
+    {
+      "path": "tools/run-tic-release-browser.mjs",
+      "bytes": 2849,
+      "sha256": "a8132d6382fa422968fb639e936dbf39a211efe683927a39b865657756af0ef2"
     },
     {
       "path": "tools/scan-tic-mechanisms.mjs",
@@ -13437,13 +13582,13 @@
     },
     {
       "path": "tools/tic-control-regression.mjs",
-      "bytes": 4528,
-      "sha256": "48550886ea39b0760f953636161fe6b3697465abf1bf489b2a48d53a88cb2025"
+      "bytes": 6122,
+      "sha256": "c4cb3fd3aad1a34632af23f8c2d2de77c4d65062b5a64177e5a2647fd271170d"
     },
     {
       "path": "tools/tic-evidence.mjs",
-      "bytes": 4712,
-      "sha256": "5cd04c3ac0c7f556928c361a3bb9e4cf3d75e7692ca30b699130dc826e265b74"
+      "bytes": 6278,
+      "sha256": "d74d602a1d8a502f9e2503d03e80df5a89fb2f40285d6e64dc16c34a898469b0"
     },
     {
       "path": "tools/tic-mechanisms.mjs",
@@ -13462,8 +13607,8 @@
     },
     {
       "path": "tools/verify-tic.mjs",
-      "bytes": 6335,
-      "sha256": "ab6ac850e33e72723ef386b08071408185b89a2b29eaf570d5e4563799ac21fa"
+      "bytes": 9400,
+      "sha256": "5b5d89d236736f6f5b864e55b53c36b832c9ff61ebf8e61cd859db3d5964df3f"
     },
     {
       "path": "web/arkhamdb-import.js",
@@ -13482,8 +13627,8 @@
     },
     {
       "path": "web/campaign-presentation.js",
-      "bytes": 9791,
-      "sha256": "1f9f32c69d91e3ccee1b6d484c690e255d55b94727e58e20ef24932d9f9f8277"
+      "bytes": 10745,
+      "sha256": "3b2491cd65f6ded7b5d0ec8a70ea27b9e833d2449353b2452e1c2ce6981be0fe"
     },
     {
       "path": "web/campaign-records.js",
@@ -13572,8 +13717,8 @@
     },
     {
       "path": "web/deck-rules.js",
-      "bytes": 20490,
-      "sha256": "e781c9173510847c2b9ac7bd1742eddcb987524bf1b6d693a158feb4b15ca3c0"
+      "bytes": 20639,
+      "sha256": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a"
     },
     {
       "path": "web/departure-lanes.js",
@@ -13602,8 +13747,8 @@
     },
     {
       "path": "web/hub-office.css",
-      "bytes": 65068,
-      "sha256": "706e500201a0c7d02f40f010f548006d0cdb13bf4e3ee6dda8f57814f2853791"
+      "bytes": 65776,
+      "sha256": "4ade95744cc1478efad759c5c08c754c60612d83a0cdd0f713588845a71879f8"
     },
     {
       "path": "web/hub.js",
@@ -13722,8 +13867,8 @@
     },
     {
       "path": "web/music-player.js",
-      "bytes": 29704,
-      "sha256": "1f042e7e8d0d7b6a3f6d435d01b5f79ae97c861b3e03ea67883d52a15f74b95f"
+      "bytes": 32032,
+      "sha256": "23ecdf0ab1054af3d11c15fb6ee6ae2cd145b768f68b9a518b34fa4d0947eae7"
     },
     {
       "path": "web/noir.css",
@@ -13751,9 +13896,49 @@
       "sha256": "df654a87185e258e3044740b8fd86056e8609e7cfb3758a81fe16712588556b0"
     },
     {
+      "path": "web/scenario-guides/aLightInTheFog.json",
+      "bytes": 24230,
+      "sha256": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31"
+    },
+    {
+      "path": "web/scenario-guides/devilReef.json",
+      "bytes": 29105,
+      "sha256": "da8c37d6980342b4da7fd9fe67a2a4ef3fbeee9d281ecb47b65a268b9e494538"
+    },
+    {
+      "path": "web/scenario-guides/horrorInHighGear.json",
+      "bytes": 20909,
+      "sha256": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423"
+    },
+    {
+      "path": "web/scenario-guides/inTooDeep.json",
+      "bytes": 32647,
+      "sha256": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83"
+    },
+    {
+      "path": "web/scenario-guides/intoTheMaelstrom.json",
+      "bytes": 30055,
+      "sha256": "6944bbf2c50ce1f24507c975c82428980cd33ce48a2942c153b1eb0052677c6b"
+    },
+    {
+      "path": "web/scenario-guides/theLairOfDagon.json",
+      "bytes": 33006,
+      "sha256": "813590e9d37022e1622e3f89e9dffd4dbdbb68bf9db4018da6e5f084f66ec4d0"
+    },
+    {
+      "path": "web/scenario-guides/thePitOfDespair.json",
+      "bytes": 31921,
+      "sha256": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb"
+    },
+    {
+      "path": "web/scenario-guides/theVanishingOfElinaHarper.json",
+      "bytes": 40613,
+      "sha256": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4"
+    },
+    {
       "path": "web/scenario-music.js",
-      "bytes": 7785,
-      "sha256": "d3be2ba1a5fc8eb3eb79ec61b5583289bed3dea1447155b627dddcb4d07fc789"
+      "bytes": 9136,
+      "sha256": "3fbcb8115da8871a76bd51254bf25d560e31ef718381a6651efa3859ad3169ce"
     },
     {
       "path": "web/scenario-setup-view.js",

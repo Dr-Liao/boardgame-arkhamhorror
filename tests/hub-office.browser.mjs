@@ -409,3 +409,41 @@ test('开局封面主图上下虚化：照片边缘渐隐并叠渐进模糊带�
   expect(report.artAfter.content).toBe('""')
   expect(report.artAfter.blur).toContain('blur(')
 })
+
+test('战役总览主视觉四边虚化：横向 + 纵向渐隐相交，图盒贴住 hero 不露硬边', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  const setup = await open(page)
+  await setup.getByRole('button', { name: '开始新游戏' }).click()
+  const hub = page.locator('.ah-hub')
+  await settleArt(page)
+  const report = await hub.evaluate(() => {
+    const hero = document.querySelector('.ah-office-hero')
+    const art = hero.querySelector(':scope > .ah-office-decor')
+    const style = getComputedStyle(art)
+    const box = node => {
+      const rect = node.getBoundingClientRect()
+      return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left }
+    }
+    return {
+      maskImage: style.maskImage,
+      webkitMaskImage: style.webkitMaskImage,
+      maskComposite: style.maskComposite,
+      webkitMaskComposite: style.webkitMaskComposite,
+      objectFit: style.objectFit,
+      art: box(art),
+      hero: box(hero),
+    }
+  })
+  // 横向 18/82 + 纵向 22/78 两条渐隐遮罩取交集：四边 alpha 都在边缘收到 0，不再只有左右渐隐。
+  expect(report.maskImage).toContain('linear-gradient')
+  expect(report.webkitMaskImage).toContain('linear-gradient')
+  expect((report.maskImage.match(/linear-gradient/g) || []).length).toBe(2)
+  expect(report.maskComposite).toContain('intersect')
+  expect(report.webkitMaskComposite).toContain('intersect')
+  expect(report.objectFit).toBe('cover')
+  // 图盒与 hero 同高、贴右边：渐隐带完整落在 hero 内，不会被 overflow 裁成上下直边。
+  expect(report.art.top).toBeGreaterThanOrEqual(report.hero.top - 0.5)
+  expect(report.art.bottom).toBeLessThanOrEqual(report.hero.bottom + 0.5)
+  expect(report.art.right).toBeLessThanOrEqual(report.hero.right + 0.5)
+  expect(report.art.bottom - report.art.top).toBeGreaterThanOrEqual(380)
+})

@@ -258,11 +258,12 @@ test('P6 07225 Djinn sets current base to five without lasting into later tests 
   run(s,d=>performTest(d,0,'willpower',0,{}),first)
   assert.equal(s.lastTestResult.value,s.investigators[0].willpower);assert.equal(s.investigators[0].assets[0].exhausted,false)
 })
-test('P6 07268 Flute X minus two resource cost seals up to X and release is required',()=>{
+test('P6 07268 Flute X resource cost seals up to X and release is required',()=>{
   const s=setup();s.chaosBag=['0','curse','curse','curse'];const e=enemy(s,{elite:false,damage:2}),victim=enemy(s,{engagedSeat:null})
   play(s,'07268',c=>c.source==='07268'?'2':c.kind==='mechanic'?c.options.some(o=>o.id==='confirm')?'confirm':c.options.find(o=>o.id.startsWith('pick:')&&!o.selected)?.id:c.options.some(o=>o.id==='2')?'2':null)
   const a=s.investigators[0].assets.find(a=>a.code==='07268');assert.ok(a)
-  assert.equal(s.investigators[0].resources,30);assert.equal(s.chaos.sealed.filter(t=>t.source===a.id).length,2)
+  // 官方卡面/参考实现口径：Cost X = 实付 X 资源（PaidForCardCost 的 totalResourcePayment）。
+  assert.equal(s.investigators[0].resources,28);assert.equal(s.chaos.sealed.filter(t=>t.source===a.id).length,2)
   const cmd=legalMoves(s,0).find(m=>m.action==='ability'&&m.assetId===a.id&&m.targetId===e.id)
   assert.ok(cmd);move(s,cmd);settle(s,c=>c.source==='07268'?'damage:'+victim.id:null)
   assert.equal(s.enemies.find(x=>x.id===victim.id).damageTaken,2);assert.equal(s.chaos.sealed.filter(t=>t.source===a.id).length,1)

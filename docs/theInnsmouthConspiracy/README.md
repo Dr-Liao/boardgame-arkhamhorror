@@ -328,4 +328,4 @@ P7 已完成（2026-11-04），开发验收记录与逐章证据见 [P7 开发�
 
 P8 已完成（2026-11-05），实现内容、证据与已披露限制见 [P8 发布验收记录](p8-release.md)；本页 P8 与阶段总览已按 `audit/tic-migration.json`（`status: playable`、`earlyAccess: false`、`releaseAcceptance` 全 true、`remaining: []`）、`audit/tic-release-browser.json`、`audit/tic-release-acceptance.json`、`audit/tic-p8-replay.json` 与逐卡/逐章账本的实跑结果勾选。
 
-P7 现场进度、已知失败与恢复顺序见 [2026-11-03 交接文档](p7-handoff-2026-11-03.md)（历史资料）。P7、P8 均已完成；TIC 已作为完整迁移内容在大厅开放。
+P7 现场进度、已知失败与恢复顺序见 [P7 开发验收记录](p7-development.md)（历史资料）。P7、P8 均已完成；TIC 已作为完整迁移内容在大厅开放。

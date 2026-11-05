@@ -12,7 +12,7 @@ const face = value => {
 }
 export function chaosTokenFace(value) {
   const key = face(value)
-  return { key: key || String(value), label: tokenLabel(key) || String(value), src: key ? ROOT + 'ct-' + key + '.png' : null }
+  return { key: key || String(value), label: tokenLabel(key) || String(value), src: key ? ROOT + 'ct-' + key + '.webp' : null }
 }
 // 引擎给「选择混乱标记」类选项下发的 label 是 state.tokenLabels 里的展示名
 // （💀 / 🕯️ / ±数字，见 src/engine/presentation-constants.js 的 TOKEN_LABEL）。
@@ -27,7 +27,7 @@ export function chaosTokenFaceByLabel(labels, label) {
 }
 function preload(key) {
   if (!images.has(key)) {
-    const image = new Image(); image.src = ROOT + 'ct-' + key + '.png'
+    const image = new Image(); image.src = ROOT + 'ct-' + key + '.webp'
     images.set(key,image.decode().catch(()=>{}))
   }
   return images.get(key)
@@ -43,6 +43,6 @@ export async function showChaosToken(holder, value) {
   await preload(key)
   if (holder.dataset.chaosToken !== String(value)) return
   const img = document.createElement('img')
-  img.src = ROOT + 'ct-' + key + '.png'; img.alt = ''; img.draggable = false
+  img.src = ROOT + 'ct-' + key + '.webp'; img.alt = ''; img.draggable = false
   holder.replaceChildren(img)
 }

@@ -17,6 +17,8 @@ export default {
       effect: { type: 'fight', combatBonus: 2, damageBonus: 1 },
     },
   ],
+  // 打出时选 X：支付 X 资源、装填 X 发弹药（uses = 实付资源；参考实现 PaidForCardCost → Uses n）。
+  // 不声明 variableCostPaidAs（缺省 uses），X 即支付与使用量。
   chooseResourceCostOnPlay: true,
   modifiers: [
 

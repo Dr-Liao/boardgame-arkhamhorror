@@ -7,3 +7,5 @@
 - See [SCENARIO-PLAYLISTS.md](SCENARIO-PLAYLISTS.md) for chapter playlists (two or three distinct tracks per chapter).
 
 The setup dialog must not mount the player. Playback starts only after a game session enters its campaign hub or table.
+
+The Innsmouth Conspiracy: eight chapters, three tracks each; 16 new tracks and eight reused tracks (33.3% reused), no repeated tracks within this campaign. See SCENARIO-PLAYLISTS.md.

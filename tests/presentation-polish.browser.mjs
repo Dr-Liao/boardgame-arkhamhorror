@@ -149,7 +149,7 @@ test('Noir 真实结果驱动动画，重绘不重播，设置可保存', async 
   await page.getByRole('button', { name: '调查', exact: true }).click()
   await expect(page.locator('.ah-fx-banner')).toContainText('检定成功')
   await expect(page.locator('.ah-fx-chaos')).toHaveAccessibleName('-1')
-  await expect(page.locator('.ah-fx-chaos img')).toHaveAttribute('src',/ct-minus1\.png$/)
+  await expect(page.locator('.ah-fx-chaos img')).toHaveAttribute('src',/ct-minus1\.webp$/)
   await expect.poll(() => page.locator('.ah-fx-banner').evaluate(el => Number(getComputedStyle(el).opacity))).toBeGreaterThan(.95)
   await page.locator('.ah-fx-chaos').evaluate(el => Promise.all(el.getAnimations().map(a => a.finished)))
   await page.screenshot({ path: path.join(output, 'noir-test-result.png') })

@@ -153,12 +153,20 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const usesLolaDiscount = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
       && (playedDef.factions || [playedDef.klass, playedDef.klass2, playedDef.klass3].filter(Boolean)).includes(inv.lolaDiscount.role)
     // Phase 5（5a-18）：「打出时自选花费若干资源」由条目级 chooseResourceCostOnPlay 声明。
-    let cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
-      ? Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
-        prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
-        options: Array.from({ length: availableResources(inv) - Math.min(0, playedDef.cost || 0) + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
-      })) : playCost(state, inv, playedDef)
-    if (registeredEntry(cardId)?.chooseResourceCostOnPlay && playedDef.cost < 0) { chosenVariableCost = cost; cost = Math.max(0, cost + playedDef.cost) }
+    // X 费用口径（2026-11-05 对齐官方卡面/参考实现 PaidForCardCost）：一律支付 X 资源，X 的去向由
+    // variableCostPaidAs 决定——缺省 uses（02010 珍妮的双枪：装填 X 发弹药）；paidX（07268 外神的长笛：
+    // 「封印至多 X」读 paidX）。旧实现把 cards-data 的 cost<0 当隐式折扣（X−2），会误伤 02010 已修复。
+    const variableCostEntry = registeredEntry(cardId)?.chooseResourceCostOnPlay ? registeredEntry(cardId) : null
+    let cost
+    if (variableCostEntry) {
+      cost = Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
+        prompt: `选择为「${cardName(cardId)}」支付多少资源（X）。`,
+        options: Array.from({ length: availableResources(inv) + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
+      }))
+      if (variableCostEntry.variableCostPaidAs === 'paidX') chosenVariableCost = cost
+    } else {
+      cost = playCost(state, inv, playedDef)
+    }
     // 2026-10-27「如同手牌」通道：折扣由 play-channels 原语显式传入（直觉牌库等），
     // 不再写 inv.playDiscount；预览/校验/扣费同源，支付前窗口看到的也是折后费用。
     if (playDiscount) cost = Math.max(0, cost - playDiscount)

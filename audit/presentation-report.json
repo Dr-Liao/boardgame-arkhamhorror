@@ -138,7 +138,7 @@
   },
   {
    "path": "games/arkhamhorror/web/hub-office.css",
-   "sha256": "706e500201a0c7d02f40f010f548006d0cdb13bf4e3ee6dda8f57814f2853791"
+   "sha256": "4ade95744cc1478efad759c5c08c754c60612d83a0cdd0f713588845a71879f8"
   },
   {
    "path": "games/arkhamhorror/web/table-art.js",
@@ -297,7 +297,7 @@
   }
  },
  "phase": "N2",
- "presentationVersion": "f55858a6751f07e06f46bf2c3f71a2d65ea9d928d5f125c3120233eacfb5fa33",
+ "presentationVersion": "f240e551fbbf0e7946afa5bd60b601783f072ea4ade4abc0655f632106ec4a9f",
  "samples": [
   {
    "code": "01001",

@@ -1,0 +1,128 @@
+﻿  },
+  "07001": {
+    "agility": 3,
+    "availability": "catalog-only",
+    "backFlavor": "The more Sister Mary learns of the strange and arcane forces that sometimes manifest in this world, the more certain she is that she has been set upon a path to ward off these forces and protect the innocent wherever possible. Armed only with the trappings of her church and an unshakable faith, Sister Mary seeks out every supernatural threat she hears of through her fellow priests and nuns. Other members of her church may dismiss such things as medieval nonsense, but Sister Mary knows the real evils that exist in the shadows - and she knows that if such evils are left unchecked, they will bring ruin and horror to all of creation.",
+    "backFlavorZh": "鐜涗附淇コ鍧氫俊锛岃秺鏄湁璇″濂ヤ箟鐨勫姏閲忓湪涓栦笂浣滄€紝鑷繁灏辫秺瑕佸湪杩欐潯閬撹矾涓婃姷寰￠偅浜涘姏閲忥紝鍙鏈夊彲鑳斤紝鏃犺鏈夊杩滐紝閮借淇濇姢鏃犺緶涔嬩汉銆傚敖绠￠櫎浜嗘暀浼氱殑缃╄鍜屽潥瀹氱殑淇′话涔嬪鍒棤浠栫墿锛屼絾鐜涗附淇コ鍙涓€浠庡悓渚偅閲屽惉闂昏秴鑷劧鐨勫▉鑳佷綔绁燂紝蹇呯劧鎸鸿韩鍓嶅線涓€鎺㈢┒绔熴€傛暀浼氫腑鍏朵粬鎴愬憳瀵规涓嶅睉涓€椤撅紝浠ヤ负杩欎簺閮芥槸涓笘绾殑鏃犵煡濡勮█銆備絾鐜涗附淇コ鐭ラ亾锛岃繖浜涢槾褰变腑娼滆棌鐫€鐪熷疄鐨勯偑鎭垛€斺€斿ス杩樼煡閬撹繖浜涢偑鎭跺鏋滃惉涔嬩换涔嬶紝浼氱粰涓诲垱閫犵殑涓€鍒囬兘甯︽潵姣佺伃鍜屾亹鎬栥€?,
+    "backNameZh": "",
+    "backText": "Deck Size: 30.\nDeckbuilding Options: Guardian cards ([guardian]) level 0-5, Neutral cards level 0-5, Mystic cards ([mystic]) level 0-2.\nDeckbuilding Requirements (do not count toward deck size): Guardian Angel, Crisis of Faith, 1 random basic weakness.",
+    "backTextZh": "鐗屽簱鍗＄墝寮犳暟锛?0銆俓n鐗屽簱鏋勫缓閫夐」锛氬畧鍗€呭崱鐗?[guardian])绛夌骇0-5锛屼腑绔嬪崱鐗岀瓑绾?-5锛屾綔淇€呭崱鐗?[mystic])绛夌骇0-2銆俓n鐗屽簱鏋勫缓闇€姹?涓嶈鍏ュ崱鐗屽紶鏁?锛氬畧鎶ゅぉ浣裤€佷俊浠板嵄鏈恒€?寮犻殢鏈哄熀纭€寮辩偣銆?,
+    "backimagesrc": "/bundles/cards/07001b.png",
+    "code": "07001",
+    "combat": 3,
+    "customizationChange": "",
+    "customizationChangeZh": "",
+    "customizationText": "",
+    "customizationTextZh": "",
+    "dataStatus": "validated",
+    "deckLimit": 1,
+    "deckOptions": [
+      {
+        "faction": [
+          "guardian",
+          "neutral"
+        ],
+        "factions": [
+          "guardian",
+          "neutral"
+        ],
+        "level": {
+          "max": 5,
+          "min": 0
+        }
+      },
+      {
+        "faction": [
+          "mystic"
+        ],
+        "factions": [
+          "mystic"
+        ],
+        "level": {
+          "max": 2,
+          "min": 0
+        }
+      }
+    ],
+    "deckRequirements": {
+      "card": {
+        "07006": {
+          "07006": "07006"
+        },
+        "07007": {
+          "07007": "07007"
+        }
+      },
+      "random": [
+        {
+          "target": "subtype",
+          "value": "basicweakness"
+        }
+      ],
+      "signatureCards": [
+        "07006",
+        "07007"
+      ],
+      "size": 30
+    },
+    "doubleSided": true,
+    "effectStatus": "unverified",
+    "exceptional": false,
+    "exile": false,
+    "factionName": "Guardian",
+    "flavor": "\"The Lord watches over my path. I am armored in faith.\"",
+    "flavorZh": "鈥滀富鐪嬫姢鎴戠殑閬撹矾銆俓n鎴戜互淇′负鑳勩€傗€?,
+    "health": 5,
+    "healthPerInvestigator": false,
+    "hidden": false,
+    "illustrator": "Cristi Balanescu",
+    "imageStatus": "unresolved",
+    "imagesrc": "/bundles/cards/07001.png",
+    "intellect": 2,
+    "klass": "guardian",
+    "localeStatus": "complete",
+    "myriad": false,
+    "name": "Sister Mary",
+    "nameZh": "鐜涗附淇コ",
+    "originalCode": "07001",
+    "pack": "tic",
+    "packName": "The Innsmouth Conspiracy",
+    "permanent": false,
+    "position": 1,
+    "provenanceId": "07001",
+    "quantity": 1,
+    "sanity": 9,
+    "subname": "The Nun",
+    "subnameZh": "濂充慨閬撳＋",
+    "text": "During setup, add 2 [bless] tokens to the chaos bag.\n[reaction] When the round ends: Add 1 [bless] token to the chaos bag.\n[elder_sign] effect: +1. If you succeed, add 1 [bless] token to the chaos bag.",
+    "textZh": "鍐掗櫓璁剧疆鏈熼棿锛屽湪娣蜂贡琚嬩腑鍔犲叆2涓猍bless]鏍囪銆俓n[reaction]鍦ㄤ竴杞粨鏉熸椂锛氬湪娣蜂贡琚嬩腑鍔犲叆1涓猍bless]鏍囪銆俓n[elder_sign]鏁堟灉锛?1銆傚鏋滀綘妫€瀹氭垚鍔燂紝鍦ㄦ贩涔辫涓姞鍏ヤ竴涓猍bless]鏍囪銆?,
+    "traits": [
+      "Believer",
+      "Blessed"
+    ],
+    "traitsZh": [
+      "淇″緬",
+      "绁濈"
+    ],
+    "type": "investigator",
+    "typeName": "Investigator",
+    "unique": true,
+    "url": "https://arkhamdb.com/card/07001",
+    "willpower": 4
+  },
+  "07002": {
+    "agility": 2,
+    "availability": "catalog-only",
+    "backFlavor": "Amanda Sharpe was on track to become one of Miskatonic University's most accomplished graduates. However, ever since she saw a strange painting of an enormous creature's emergence from the depths of the ocean, her classwork has suffered. Her dreams are overwhelmed by images of a vast submerged city and whispers in a language she does not understand. She remains dedicated to her studies, but her goal is no longer to graduate at the top of her class; rather, she seeks to discover the meaning behind the occult secrets concealed between the lines of reality.",
+    "backFlavorZh": "闃挎浖杈韭峰鏅溂鐪嬪氨瑕佹垚涓虹背澶ф渶鏉板嚭鐨勬瘯涓氱敓銆備絾鑷粠濂圭湅瑙佷竴骞呰濂囩殑缁樼敾涔嬪悗锛岃涓氬氨鍙楀埌浜嗗奖鍝嶃€傜敾涓婃槸涓€涓簽鐒跺法鐗╀粠娣辨捣娑岃捣銆傚ス鐨勬ⅵ澧冧腑鍏ㄦ槸涓€搴у法澶х殑娌夋病涔嬪煄锛岃繕鏈変笉鏄庤█璇殑浣庤銆傚ス缁х画鍩嬪ご鐮旂┒锛屼絾鐩爣宸蹭笉鏄互灏栧瓙鐢熺殑韬唤姣曚笟锛岃€屾槸濂瑰畾瑕佹壘鍒扮幇瀹炰箣闂存綔钘忕殑寮傛暀绉樺瘑绌剁珶鏈変綍鍚箟銆?,
+    "backNameZh": "",
+    "backText": "Deck Size: 30.\nDeckbuilding Options: Seeker cards ([seeker]) level 0-5, Neutral cards level 0-5, [[Practiced]] skills level 0-3.\nDeckbuilding Requirements (do not count toward deck size): Obscure Studies, Whispers from the Deep, 1 random basic weakness.",
+    "backTextZh": "鐗屽簱鍗＄墝寮犳暟锛?0銆俓n鐗屽簱鏋勫缓閫夐」锛氭帰姹傝€呭崱鐗?[seeker])绛夌骇0-5锛屼腑绔嬪崱鐗岀瓑绾?-5锛孾[绮鹃€歖]鎶€鑳藉崱鐗岀瓑绾?-3銆俓n鐗屽簱鏋勫缓闇€姹?涓嶈鍏ュ崱鐗屽紶鏁?锛氭櫐娑╃爺绌躲€佹繁娴蜂綆璇€?寮犻殢鏈哄熀纭€寮辩偣銆?,
+    "backimagesrc": "/bundles/cards/07002b.png",
+    "code": "07002",
+    "combat": 2,
+    "customizationChange": "",
+    "customizationChangeZh": "",
+    "customizationText": "",
+    "customizationTextZh": "",
+    "dataStatus": "validated",

@@ -113,3 +113,51 @@
 
 卡城幽影
   campaigns/thePathToCarcosa/dimCarcosa/
+
+梦境门外
+  campaigns/theDreamEaters/beyondTheGatesOfSleep/
+
+清醒噩梦
+  campaigns/theDreamEaters/wakingNightmare/
+
+寻觅卡达斯
+  campaigns/theDreamEaters/theSearchForKadath/
+
+万千骇形
+  campaigns/theDreamEaters/aThousandShapesOfHorror/
+
+月之暗面
+  campaigns/theDreamEaters/darkSideOfTheMoon/
+
+无归之地
+  campaigns/theDreamEaters/pointOfNoReturn/
+
+神居之所
+  campaigns/theDreamEaters/whereTheGodsDwell/
+
+编织宇宙
+  campaigns/theDreamEaters/weaverOfTheCosmos/
+
+绝望深坑
+  campaigns/theInnsmouthConspiracy/thePitOfDespair/
+
+艾莲娜·哈珀失踪案
+  campaigns/theInnsmouthConspiracy/theVanishingOfElinaHarper/
+
+深陷危局
+  campaigns/theInnsmouthConspiracy/inTooDeep/
+
+魔鬼礁石
+  campaigns/theInnsmouthConspiracy/devilReef/
+
+全速恐惧
+  campaigns/theInnsmouthConspiracy/horrorInHighGear/
+
+雾中之光
+  campaigns/theInnsmouthConspiracy/aLightInTheFog/
+
+达贡巢穴
+  campaigns/theInnsmouthConspiracy/theLairOfDagon/
+
+暗潮之下
+  campaigns/theInnsmouthConspiracy/intoTheMaelstrom/

@@ -1,5 +1,85 @@
 [
   {
+    "id": "ticIceDemon",
+    "title": "Ice Demon",
+    "file": "common/ice-demon.mp3"
+  },
+  {
+    "id": "ticBentAndBroken",
+    "title": "Bent and Broken",
+    "file": "common/bent-and-broken.mp3"
+  },
+  {
+    "id": "ticAwkwardMeeting",
+    "title": "Awkward Meeting",
+    "file": "common/awkward-meeting.mp3"
+  },
+  {
+    "id": "ticDistantTension",
+    "title": "Distant Tension",
+    "file": "common/distant-tension.mp3"
+  },
+  {
+    "id": "ticDeepHaze",
+    "title": "Deep Haze",
+    "file": "common/deep-haze.mp3"
+  },
+  {
+    "id": "ticDarkTimes",
+    "title": "Dark Times",
+    "file": "common/dark-times.mp3"
+  },
+  {
+    "id": "ticNightOfChaos",
+    "title": "Night of Chaos",
+    "file": "common/night-of-chaos.mp3"
+  },
+  {
+    "id": "ticDarknessIsComing",
+    "title": "Darkness is Coming",
+    "file": "common/darkness-is-coming.mp3"
+  },
+  {
+    "id": "ticHitman",
+    "title": "Hitman",
+    "file": "common/hitman.mp3"
+  },
+  {
+    "id": "ticClashDefiant",
+    "title": "Clash Defiant",
+    "file": "common/clash-defiant.mp3"
+  },
+  {
+    "id": "ticDarkFog",
+    "title": "Dark Fog",
+    "file": "common/dark-fog.mp3"
+  },
+  {
+    "id": "ticHush",
+    "title": "Hush",
+    "file": "common/hush.mp3"
+  },
+  {
+    "id": "ticOppressiveGloom",
+    "title": "Oppressive Gloom",
+    "file": "common/oppressive-gloom.mp3"
+  },
+  {
+    "id": "ticAnxiety",
+    "title": "Anxiety",
+    "file": "common/anxiety.mp3"
+  },
+  {
+    "id": "ticTheDescent",
+    "title": "The Descent",
+    "file": "common/the-descent.mp3"
+  },
+  {
+    "id": "ticStormfront",
+    "title": "Stormfront",
+    "file": "common/stormfront.mp3"
+  },
+  {
     "id": "tcuVanishing",
     "title": "Vanishing",
     "file": "common/vanishing.mp3"

@@ -13,6 +13,7 @@ const DUNWICH = `${ROOT}/img/campaigns/theDunwichLegacy`
 const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
 const CIRCLE = `${ROOT}/img/campaigns/theCircleUndone`
 const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
+const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -36,6 +37,25 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  theInnsmouthConspiracy: Object.freeze({
+    id: 'theInnsmouthConspiracy',
+    palette: Object.freeze({
+      background: '#0b191c', panel: '#11282b', header: '#061114',
+      accent: '#80bdb5', accentStrong: '#c9e9df', muted: '#9caeaa', edge: '#80bdb566',
+    }),
+    assets: Object.freeze({
+      hubHero: `${INNSMOUTH}/hub/innsmouth-harbor.webp`,
+      tableOverlay: `${INNSMOUTH}/table/investigation-desk.webp`,
+      storyDefault: `${INNSMOUTH}/hub/innsmouth-harbor.webp`,
+    }),
+    musicPlaylist: 'theInnsmouthConspiracy',
+    scenarios: Object.freeze(Object.fromEntries([
+      'thePitOfDespair', 'theVanishingOfElinaHarper', 'inTooDeep', 'devilReef',
+      'horrorInHighGear', 'aLightInTheFog', 'theLairOfDagon', 'intoTheMaelstrom',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${INNSMOUTH}/scenarios/${id}/scene.webp`,
+    }) })]))),
+  }),
   theCircleUndone: Object.freeze({
     id: 'theCircleUndone',
     palette: Object.freeze({
@@ -126,7 +146,7 @@ const CAMPAIGNS = Object.freeze({
     assets: Object.freeze({
       hubHero: `${NOTZ}/hub/office-hero.webp`,
       tableOverlay: `${NOTZ}/table/investigation-map.webp`,
-      storyDefault: `${NOTZ}/story/default.png`,
+      storyDefault: `${NOTZ}/story/default.webp`,
     }),
     musicPlaylist: 'nightOfTheZealot',
     scenarios: Object.freeze(Object.fromEntries([

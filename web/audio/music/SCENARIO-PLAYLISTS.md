@@ -1,6 +1,6 @@
 # 关卡 BGM 分配
 
-覆盖 4 个战役、29 个关卡，每关 2–3 首。前三个战役原有 56 个歌曲位置只用了 17 首不同曲目；补充 15 首后，56 个位置使用 32 首不同曲目，同一首最多分配两次。三循环另有 17 首曲目，其十章歌单不复用前三个战役的曲目。音频文件不重复存储。
+覆盖 7 个战役、54 个关卡，每关 2–3 首；六循环八关均为三首。前三个战役原有 56 个歌曲位置只用了 17 首不同曲目；补充 15 首后，56 个位置使用 32 首不同曲目，同一首最多分配两次。三循环另有 17 首曲目，其十章歌单不复用前三个战役的曲目。音频文件不重复存储。
 
 进入关卡或关间准备选定下一关后，播放器切换到该关歌单并以首曲开场；同一关刷新不重播，手动暂停后切关保持暂停。重载同一歌单恢复所选曲目。无具体关卡时使用战役歌单，未知关卡回退战役歌单，未知战役回退通用歌单。
 
@@ -73,3 +73,19 @@
 | 编织宇宙 | Dreams Become Real → Frozen Star → Darkest Child |
 
 新增曲目来自 Kevin MacLeod 的 Incompetech 官方站，依 CC BY 4.0 署名。官方原始 MP3 保存在大厅仓库 `artifacts/tde-music-originals/`；网页文件为 44.1 kHz、128 kbps MP3，原始及转码后的大小与 SHA-256 见 `sources.json`。2026-11-02 已将八首新曲上传至 R2 `boardgame/arkhamhorror/music/common/`，公开 CDN 的八个对象均返回 HTTP 200、`audio/mpeg` 与匹配的文件大小。
+
+
+## 印斯茅斯暗潮（六循环）
+
+八关各三首，24 个播放位置使用 24 首不同曲目。新增 16 首，复用旧曲 8 首，按播放位置和独立曲目数计算的旧曲复用率均为 33.3%，循环内重复率为 0%。新增音频统一放 common/，官方来源与哈希见 sources.json，署名见 CREDITS.txt。
+
+| 关卡 | 场景风格 | 播放顺序（★为新增） |
+| --- | --- | --- |
+| 绝望深坑 | 洞穴深处、淹没水道、钥匙与记忆 | ★ Ice Demon → ★ Bent and Broken → Rites |
+| 艾莲娜·哈珀失踪案 | 小镇疑云、封锁街区、指认与营救 | ★ Awkward Meeting → ★ Distant Tension → Penumbra |
+| 深陷危局 | 洪水漫城、路障封锁、逐街推进 | ★ Deep Haze → ★ Dark Times → Controlled Chaos |
+| 魔鬼礁石 | 渔船出海、沉没洞窟、海底钥匙 | ★ Night of Chaos → ★ Darkness is Coming → Truth in the Stones |
+| 全速恐惧 | 旧公路追逐、载具疾驰、抵达时机 | ★ Hitman → ★ Clash Defiant → Chase Pulse |
+| 雾中之光 | 灯塔迷雾、停尸房与地下室、多线终局 | ★ Dark Fog → ★ Hush → Lost Frontier |
+| 达贡巢穴 | 深海祭坛、誓约仪式、诅咒与祝福 | ★ Oppressive Gloom → ★ Anxiety → Ancient Rite |
+| 暗潮之下 | 伊哈·恩斯雷门扉、深海之城、终局抉择 | ★ The Descent → ★ Stormfront → Thunder Dreams |

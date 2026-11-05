@@ -518,7 +518,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
         else if (steps[index].effect === 'encounter') {
           // Public hidden-card cues intentionally omit the real card identity.
           const hidden = node('img', 'ah-encounter-hidden-art')
-          hidden.src = ROOT + 'img/backs/hidden-encounter.png'
+          hidden.src = ROOT + 'img/backs/hidden-encounter.webp'
           hidden.alt = t('table.cinematic.privateCard')
           stepArt.append(hidden)
         }

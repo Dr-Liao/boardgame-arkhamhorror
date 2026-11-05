@@ -59,8 +59,10 @@ P7 结束时 TIC 只是目录级注册（`catalog-only` 战役 + `development` �
   capture、harper events、holding cells、parallel acts、act/agenda deck ops、act clue objective
   的 Lead 裁决桥、07280/07281 act1BackMap 坐标）。其中 `07280/07281` 的潮水通道与达贡巢穴落位
   新增回归测试，直接由 `chapter-data.json#act1BackMap.rawMatrix` 推导并断言坐标。
-- 仅剩 1 条 **重构类**维护项（`w5-07280-oath-shared-rules`：三张达贡幕共用正面模板工厂）登记在
-  总审计 `maintenance`，不改变任何卡牌行为，也不阻止发布。
+- 仅剩 1 条 **重构类**维护项（`w5-07280-oath-shared-rules`：三张达贡幕共用正面模板工厂）在 P8 开发期
+  登记为总审计 `maintenance`，不改变任何卡牌行为，也不阻止发布。该请求队列文件位于开发机本地的
+  `artifacts/migration/tic/p7/primitive-requests/`（未入库），同步后缺失；本机二次收口（§9）复算的
+  `maintenance` 因此为空，重构候选本身仍未完成（见 §7 第 1 条）。
 - 既有合规门禁：`cards:check` / `cards:encounter-check` / `audit:entries`（R1/R2/R3）通过；
   `node tools/audit-abilities.mjs --check`（engineCodes=0 / effectsEntries=0 / escapeCards=0）通过。
 
@@ -165,13 +167,17 @@ node tools/replay-fixtures.mjs --check          # 13/13
 ## 7. 已披露限制与维护项
 
 1. `w5-07280-oath-shared-rules`：三张达贡幕的正面模板仍是三份手写声明（同句规则只写一次口径的
-   重构候选），行为测试覆盖，登记为 `maintenance`，不阻塞发布。
+   重构候选），行为测试覆盖，不阻塞发布。P8 开发期它在 request 队列里登记为 `maintenance`；该队列
+   目录是开发机本地未入库产物，同步后缺失，本机复算的总审计 `maintenance` 为空 —— 属于证据输入
+   丢失，不是重构已完成，后续做模板工厂时仍需一并处理。
 2. `content/scenario-guides.js` 的 TIC 设置说明为 P8 补写；完整指南正文仍以
    `web/scenario-guides/<id>.json`（54 关生成校验）为准。
 3. `web/campaign-presentation.js` 暂无 TIC 专属主题/战役插画，走 COMMON 回退（不产生 404）；
    `web/scenario-music.js` 已补 8 章播放列表（复用既有曲库，不新增音频）。
 4. 浏览器推进证据中段章节使用调试跳关（上文已披露）；联机证据覆盖页面重载后的会话恢复，
    未覆盖中转服务整体重启（该场景在仓库内无法低成本复现）。
+5. `tests/fixtures/replay/golden-replays.json` 等跨循环基线未改写；本机二次收口只重新生成 TIC/TCU/TDE
+   与旧循环验收账本，并重采 `audit/baseline.json`。
 
 ## 8. 最终账本
 
@@ -181,3 +187,22 @@ node tools/replay-fixtures.mjs --check          # 13/13
 `node tools/audit-tic.mjs --check` 与 `node tools/audit-baseline.mjs --check` 复算一致。
 `audit/baseline.json` 在发布收口时按两遍协议重采（先记录审计快照，再在总审计 `baseline.retaken`
 翻为 true 后收口），保持 `milestone: "P10"` 以不改写 TDE 账本口径。
+
+## 9. 发布收口复核（2026-11-05 二次收口）
+
+P8 发布提交同步到本机后做了独立复核（真实大厅浏览器链重跑 6/6、Node 验收、逐章/逐卡/回放账本
+复算），发现两处收尾问题，本轮已修复并重新生成全部证据：
+
+- **共享引擎 X 费用回归（阻塞旧循环门禁）**：`src/engine/actions.js` 的 `chooseResourceCostOnPlay`
+  把 cards-data 的 `cost: -2`（X 费用约定）当成隐式「X−2」折扣，导致 02010「珍妮的.45双枪」
+  只付 2 资源、装填 0 发，`audit-dunwich-acceptance` 失败；Carcosa/P6 的验收账本也因共享代码
+  哈希漂移无法复算。现改为条目级显式 `variableCostPaidAs`（缺省 `uses`：支付 X 并把 X 记入 `uses`；
+  `paidX`：只把 X 记入 `paidX` 供卡面读点），`audit-dunwich-acceptance`、`audit-carcosa-player`、
+  `audit-p6` 重建后 `--check` 通过。
+- **07268 口径修正为官方卡面/参考实现**：X 费用卡统一「支付 X 资源」，不再有隐式 X−2。
+  07268「外神的长笛」声明 `variableCostPaidAs: 'paidX'`，即「选 X、支付 X、封印至多 X」
+  （此前实现为支付 X−2）；对应 TIC 测试 `tests/tic-player-rogue-mystic.test.mjs` 的资源断言同步更新。
+- **账本与基线按本机证据重采**：TIC 的 Node/回放/回归/逐章/逐卡/发布浏览器证据与 TCU/TDE、旧循环
+  验收账本、`audit/baseline.json` 均在最终源码上重新生成（30 张发布截图重新生成），两遍协议收口后
+  `node tools/audit-baseline.mjs --check` 复算一致，TIC 总账本 `remaining: []`。
+

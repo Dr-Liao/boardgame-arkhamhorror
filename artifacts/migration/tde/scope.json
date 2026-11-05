@@ -1791,7 +1791,7 @@
     "replayBeforeIdsMatch": true,
     "replayBeforeHashesMatch": true,
     "git": {
-      "head": "4a1823e77c8195767fbbb94371e1801d5a620bac",
+      "head": "5e4ff98e01edc805bf59ed1133e1db326dcc4a58",
       "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
     }
   },

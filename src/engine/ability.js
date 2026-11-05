@@ -301,6 +301,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5a-18）：打出的事件进牌库顶（温蒂的护身符）/ 打出时自选花费（珍妮的双枪）。
   'playedEventsToDeckTop',
   'chooseResourceCostOnPlay',
+  // 2026-11-05：X 费用卡把「选定的 X」记到哪：缺省 uses（02010 装填等量弹药）；paidX 供卡面读点
+  // 使用（07268「封印至多 X」读 paidX）。参考实现两者都按 PaidForCardCost 的实付资源结算。
+  'variableCostPaidAs',
   // Phase 5（5a-18）：打出后留在场上（屏障这类附属事件）。
   'keepOnPlay',
   // Phase 5（5a-19）：调查员被消除时离场（远古遗物这类支援）。
@@ -937,6 +940,8 @@ export function registerCardAbilities(entries) {
       weaknessExhaustsAssets: entry.weaknessExhaustsAssets === true,
       playedEventsToDeckTop: entry.playedEventsToDeckTop === true,
       chooseResourceCostOnPlay: entry.chooseResourceCostOnPlay === true,
+      // 2026-11-05：X 费用卡的 X 去向（见 actions.js#payPlayCost）。缺省 null 视为 uses。
+      variableCostPaidAs: entry.variableCostPaidAs === 'paidX' ? 'paidX' : entry.variableCostPaidAs === 'uses' ? 'uses' : null,
       keepOnPlay: entry.keepOnPlay === true,
       discardOnElimination: entry.discardOnElimination === true,
       rerollTokenCost: entry.rerollTokenCost ?? null,

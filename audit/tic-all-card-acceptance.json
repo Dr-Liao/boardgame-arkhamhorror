@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 80 个 tests/tic-*.test.mjs（1532 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
+    "basis": "实跑 84 个 tests/tic-*.test.mjs（1570 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）：文件级证据只在该测试文件**实跑有通过用例**时成立，且与标题命中分开记账（strongEvidence / fileLevelEvidence）。整体仍要求「实跑通过 + 卡号命中」，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified。simplified 只在「已实现且有测试证据，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified；gate 口径（w3）允许 verified+simplified 通过、no-behavior 单列、missing 必须为 0。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -46,14 +46,14 @@
     "chapters": 8,
     "unassignedChapterCards": 0,
     "chapterCoverageConserved": true,
-    "testFiles": 80,
+    "testFiles": 84,
     "testFilesWithoutEvents": 0,
     "wrapperTestFiles": 1,
-    "testsPassed": 1532,
+    "testsPassed": 1570,
     "testsFailed": 0,
-    "pendingPrimitiveRequests": 1,
+    "pendingPrimitiveRequests": 0,
     "behaviorPrimitiveRequests": 0,
-    "refactorPrimitiveRequests": 1,
+    "refactorPrimitiveRequests": 0,
     "recordsWithEntryFile": 252,
     "recordsImplemented": 252,
     "recordsWithTestEvidence": 252,
@@ -352,8 +352,8 @@
     "primitivePlanSha256": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
     "testRun": {
       "exit": 0,
-      "files": 80,
-      "passed": 1532,
+      "files": 84,
+      "passed": 1570,
       "failed": 0,
       "filesWithoutEvents": [],
       "wrapperFiles": [
@@ -387,7 +387,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
-        "sha256": "bbc1dd4a72bd38316116227027b13694d78e67d9324d2efbd3e44c354910334c"
+        "sha256": "1cdd96a0234e3a3c3ce314488336c3edaae303238bc017f37e82023821fb3317"
       },
       {
         "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
@@ -467,7 +467,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-interludes.test.mjs",
-        "sha256": "d02d0a32dbd23a82764fdffb6eea629db615491bdd22928371fc3a4458c34c1a"
+        "sha256": "44da143b800492ba27600f250bac7d68d80c2764204b151fd15dd131ded924d9"
       },
       {
         "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
@@ -494,12 +494,28 @@
         "sha256": "a79c19de114a992f96e8bda07bf5ad24d894072972ede0a37c44b4bb916d0714"
       },
       {
+        "file": "games/arkhamhorror/tests/tic-media.test.mjs",
+        "sha256": "210098983a400c927e65648b25b7c918e940cefe2da5563df2a44bdd799804fd"
+      },
+      {
         "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
         "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
       },
       {
         "file": "games/arkhamhorror/tests/tic-migration.test.mjs",
-        "sha256": "46f9a4f0247014b12e7618d2126da6ca5c7a52927ed0300ad091ab1575449246"
+        "sha256": "60637f1a9477286d81a3ef8b7234997b4339097ec8c6a12f71c5aa550d3b1ce5"
+      },
+      {
+        "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+        "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+      },
+      {
+        "file": "games/arkhamhorror/tests/tic-p8-multiplayer.test.mjs",
+        "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+      },
+      {
+        "file": "games/arkhamhorror/tests/tic-p8-registration.test.mjs",
+        "sha256": "d67dcfba103ca7a38e6a9bf69a682faee417e37ad495e239d2f2f934b6c289a9"
       },
       {
         "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -511,7 +527,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-        "sha256": "8a148e0a399e26b712a7ee2a10fa357089e4526c2361cb9dcd0e3759b216d515"
+        "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
@@ -519,11 +535,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
-        "sha256": "ba36e4b080a77b67e4b8f79a52c81587ee1bf6d6c15a481c2a94e1f81b50b2b5"
+        "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
-        "sha256": "b42c89a825e4c88c2a773b1e87f7a4e84aff00c39cc7c15b84fe543960e5f4d8"
+        "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
       },
       {
         "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
@@ -539,7 +555,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-advanced-followup.test.mjs",
-        "sha256": "dd7150eb84c539f919f45cacf646e197b05708ecac3bb7ae9531b42dfdc7e913"
+        "sha256": "9ee0f03f333ca683626cc1ba9f38b744a88d2e28f8614d74ec058710278fe872"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
@@ -551,7 +567,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-combined-harm.test.mjs",
-        "sha256": "bcd768de7f12b7336f932b1a15bb67a009e46173b1fabf540b218c34e9d9c3e9"
+        "sha256": "53a82c50fa899db7c0ed9f13192838db1c1a33ea8a25142a7288175841de0a0e"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-cost-followup.test.mjs",
@@ -583,7 +599,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-occurrences.test.mjs",
-        "sha256": "cc444fd7a9597e15e1546f57cec867bcdd1edb1a6b59ad9560db77ec169c25ed"
+        "sha256": "99dc6a75c0e06b40528244928f904336951d8cf8189d18ac4e9eca03063200db"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-primitives.test.mjs",
@@ -603,7 +619,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-reference.test.mjs",
-        "sha256": "cd7722e98daecae87b4f754ec50a78bc305f1f04515613745c8e5fb856e82691"
+        "sha256": "b637b38abc3c10647ca4451ea1a148d315d2badd80e2ed8233d5a34c5dfe6f66"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
@@ -611,11 +627,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-spawn-followup.test.mjs",
-        "sha256": "ac804bb691abcd90ff9e5945fa5fb6398ed3e63723a3810c9c380d90b07a1eae"
+        "sha256": "fc2f367686955567b674f395781dacc63ee68d606e2c512a1763e5e450c21549"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-template-followup.test.mjs",
-        "sha256": "b4802ab295e68352d1f56e0859975fbe678e3993c3bdbc5b205d45004ade4c69"
+        "sha256": "38b472925d4b6d73bf35e91a3e0354f1a190ea24f0bf2a0897bcec98765167f5"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -631,7 +647,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-zones-followup.test.mjs",
-        "sha256": "33a1ecf9577fae61c77d8e45302ea4274f29bfc555aefb2a3851cac2479c11c0"
+        "sha256": "8f7d42b7bc277af244219d678de7a61e70e96377b203baa7cdeb41dcc955687c"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
@@ -699,19 +715,7 @@
       },
       "referenceOnly": "audit/tic-primitive-plan.json 是规划基线，不参与单卡 blocked/verified 判定；权威实现证据是源码导出与 node 验收。"
     },
-    "pendingPrimitiveRequests": [
-      {
-        "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-        "id": "w5-07280-oath-shared-rules",
-        "kind": "shared-factory",
-        "refactorOnly": true,
-        "cards": [
-          "07280",
-          "07281",
-          "07282"
-        ]
-      }
-    ]
+    "pendingPrimitiveRequests": []
   },
   "byType": {
     "act": {
@@ -3047,6 +3051,12 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -3152,6 +3162,12 @@
           "line": 318,
           "test": "P7 哈珀 议程 07059 狂热追击：推进 → resolution1/TheMissionFailed 结算并交接到 interlude2",
           "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -3280,6 +3296,12 @@
           "titleMatched": false,
           "passingTests": 13,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -3480,6 +3502,18 @@
           "titleMatched": false,
           "passingTests": 13,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-multiplayer.test.mjs",
+          "titleMatched": false,
+          "passingTests": 11,
+          "sampleTest": "TIC P8 多人断线恢复：四席位存档重连后视图与合法动作一致，恢复分支继续行动结果相同"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -3710,6 +3744,12 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
           "passingTests": 11,
@@ -3867,6 +3907,12 @@
           "line": 668,
           "test": "P7 07065 resource-paid free move is no ordinary action and rejects non-Innsmouth destinations",
           "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -4753,6 +4799,12 @@
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
           "titleMatched": false,
           "passingTests": 13,
@@ -5046,6 +5098,12 @@
           "titleMatched": false,
           "passingTests": 28,
           "sampleTest": "P7 epilogue all fourteen memories recover the printed horrible truth"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -10137,6 +10195,12 @@
           "sampleTest": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle-setup.test.mjs",
           "titleMatched": false,
           "passingTests": 10,
@@ -10502,6 +10566,12 @@
           "titleMatched": false,
           "passingTests": 24,
           "sampleTest": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
@@ -11868,6 +11938,12 @@
           "sampleTest": "P7 epilogue all fourteen memories recover the printed horrible truth"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
           "titleMatched": false,
           "passingTests": 88,
@@ -11939,6 +12015,12 @@
           "titleMatched": false,
           "passingTests": 14,
           "sampleTest": "P7 Flashback10 gives the actual set-aside relic and links its physical identity to the key through JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-zones-followup.test.mjs",
@@ -12031,6 +12113,12 @@
           "titleMatched": false,
           "passingTests": 14,
           "sampleTest": "P7 Flashback10 gives the actual set-aside relic and links its physical identity to the key through JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -19528,13 +19616,6 @@
           "test": "幕 07280 目标：全员在宏伟入口且解锁洞穴入口时才成立（objective）",
           "titleMatched": true
         }
-      ],
-      "refactorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-          "id": "w5-07280-oath-shared-rules",
-          "kind": "shared-factory"
-        }
       ]
     },
     {
@@ -19646,13 +19727,6 @@
           "test": "幕 07281 背面：达贡巢穴完全淹没、沉睡达贡入场、诅咒按密谋次序加入",
           "titleMatched": true
         }
-      ],
-      "refactorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-          "id": "w5-07280-oath-shared-rules",
-          "kind": "shared-factory"
-        }
       ]
     },
     {
@@ -19751,13 +19825,6 @@
           "line": 199,
           "test": "幕 07282 背面：记录仪式被破坏与达贡仍沉睡，结算结局 1",
           "titleMatched": true
-        }
-      ],
-      "refactorRequests": [
-        {
-          "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
-          "id": "w5-07280-oath-shared-rules",
-          "kind": "shared-factory"
         }
       ]
     },
@@ -22181,6 +22248,12 @@
           "sampleTest": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -22321,6 +22394,12 @@
           "sampleTest": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -22430,6 +22509,18 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 414,
+          "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 463,
+          "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "line": 328,
           "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立",
@@ -22452,6 +22543,12 @@
           "titleMatched": false,
           "passingTests": 23,
           "sampleTest": "P7 Devil Reef captures actual investigator/act key argument 0 before teardown"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -22477,6 +22574,18 @@
           "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
           "line": 37,
           "test": "P7 final completed acts 07317 follow the actual resolution chain and trauma",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 414,
+          "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 463,
+          "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
           "titleMatched": true
         },
         {
@@ -22533,6 +22642,12 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 414,
+          "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "line": 378,
           "test": "07318 目标：达贡与海德拉各至少 4[每调查员]伤害（3 人局需各 12 点）",
@@ -22555,6 +22670,12 @@
           "titleMatched": false,
           "passingTests": 23,
           "sampleTest": "P7 Devil Reef captures actual investigator/act key argument 0 before teardown"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -22580,6 +22701,12 @@
           "file": "games/arkhamhorror/tests/tic-chapter-resolutions.test.mjs",
           "line": 37,
           "test": "P7 final completed acts 07318 follow the actual resolution chain and trauma",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "line": 414,
+          "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
@@ -22715,6 +22842,12 @@
           "titleMatched": false,
           "passingTests": 4,
           "sampleTest": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -23591,6 +23724,12 @@
           "sampleTest": "07313 天体阵列：已苏醒的面不重复翻，未在场的不报错"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -23725,6 +23864,12 @@
           "sampleTest": "07313 天体阵列：已苏醒的面不重复翻，未在场的不报错"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -23841,6 +23986,12 @@
           "sampleTest": "07313 天体阵列：已苏醒的面不重复翻，未在场的不报错"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -23937,6 +24088,12 @@
           "titleMatched": false,
           "passingTests": 6,
           "sampleTest": "07313 天体阵列：已苏醒的面不重复翻，未在场的不报错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",

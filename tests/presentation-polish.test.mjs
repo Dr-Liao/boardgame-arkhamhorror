@@ -4,6 +4,7 @@ import { presentationChanges, publicSequence } from '../web/table-presentation.j
 import { createGameState, applyMove } from '../src/engine/engine.js'
 import { mapGeometry } from '../web/map-layout.js'
 import { campaignPresentation, presentationAttributes } from '../web/campaign-presentation.js'
+import { chaosTokenFace } from '../web/chaos-token.js'
 import { buildChapter, chapterSpecs, locationId } from '../content/campaigns/theDunwichLegacy/chapters.js'
 import { layout as essexLayout, manifest as essexManifest } from '../content/campaigns/theDunwichLegacy/scenarios/theEssexCountyExpress/index.js'
 import { readFileSync } from 'node:fs'
@@ -58,7 +59,7 @@ test('campaign presentation layers common assets with opening-campaign art and p
   assert.match(theme.assets.hubHero, /campaigns\/nightOfTheZealot\/hub\/office-hero\.webp$/)
   assert.match(theme.assets.tableOverlay, /campaigns\/nightOfTheZealot\/table\/investigation-map\.webp$/)
   assert.match(theme.assets.storyDefault, /campaigns\/nightOfTheZealot\/scenarios\/theGathering\/scene\.webp$/)
-  assert.match(campaignPresentation('nightOfTheZealot').assets.storyDefault, /campaigns\/nightOfTheZealot\/story\/default\.png$/)
+  assert.match(campaignPresentation('nightOfTheZealot').assets.storyDefault, /campaigns\/nightOfTheZealot\/story\/default\.webp$/)
   assert.match(campaignPresentation('nightOfTheZealot', 'theMidnightMasks').assets.storyDefault, /scenarios\/theMidnightMasks\/scene\.webp$/)
   assert.match(campaignPresentation('nightOfTheZealot', 'theDevourerBelow').assets.storyDefault, /scenarios\/theDevourerBelow\/scene\.webp$/)
   assert.match(theme.assets.casefile, /img\/ui\/hub-casefile\.webp$/)
@@ -70,16 +71,28 @@ test('campaign presentation layers common assets with opening-campaign art and p
   for (const relative of [
     'hub/office-hero.webp', 'table/investigation-map.webp',
     'scenarios/theGathering/scene.webp', 'scenarios/theMidnightMasks/scene.webp',
-    'scenarios/theDevourerBelow/scene.webp',
+    'scenarios/theDevourerBelow/scene.webp', 'story/default.webp',
   ]) {
     const file = new URL(`../web/img/campaigns/nightOfTheZealot/${relative}`, import.meta.url)
     assert.equal(readFileSync(file).subarray(0, 4).toString('ascii'), 'RIFF', relative)
   }
-  for (const relative of ['story/default.png']) {
-    const file = new URL(`../web/img/campaigns/nightOfTheZealot/${relative}`, import.meta.url)
-    assert.deepEqual([...readFileSync(file).subarray(0, 8)], [137,80,78,71,13,10,26,10], relative)
-  }
+  // 隐藏遭遇的通用卡背同样走 WebP 交付（PNG 原图仅留作来源记录，不进发布包）。
+  const hiddenBack = new URL('../web/img/backs/hidden-encounter.webp', import.meta.url)
+  assert.equal(readFileSync(hiddenBack).subarray(0, 4).toString('ascii'), 'RIFF')
+  assert.ok(readFileSync(hiddenBack).length > 100 * 1024)
   assert.equal(campaignPresentation('unregisteredCampaign').id, 'common')
+})
+
+test('chaos token faces resolve to the delivered WebP assets', () => {
+  for (const [value, file] of [['skull', 'ct-skull'], ['+1', 'ct-plus1'], ['-4', 'ct-minus4'], ['0', 'ct-0'], ['autofail', 'ct-autofail']]) {
+    assert.equal(chaosTokenFace(value).src, `/mods/arkhamhorror/img/chaos-tokens/${file}.webp`, value)
+  }
+  for (const file of ['ct-skull', 'ct-eldersign', 'ct-frost']) {
+    const bytes = readFileSync(new URL(`../web/img/chaos-tokens/${file}.webp`, import.meta.url))
+    assert.equal(bytes.subarray(0, 4).toString('ascii'), 'RIFF', file)
+    assert.ok(bytes.length > 10 * 1024, file)
+  }
+  assert.equal(chaosTokenFace('unknown-token').src, null)
 })
 
 test('presentation handles duplicate cards, private hands and public move targets', () => {

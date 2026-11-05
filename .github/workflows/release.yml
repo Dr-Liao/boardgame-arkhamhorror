@@ -54,3 +54,13 @@ jobs:
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: node hall/tools/release/r2.mjs release dist --dir=arkhamhorror --tag="$GITHUB_REF_NAME"
+      - name: Prune old releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_KEEP: ${{ vars.RELEASE_KEEP }}
+          R2_ACCOUNT_ID: ${{ vars.R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        # 脚本在大厅仓库。新版本上传后再删旧包；git tag 保留。RELEASE_KEEP 缺省时保留 3 个版本。
+        run: node hall/tools/release/prune-releases.mjs --dir=arkhamhorror --current="$GITHUB_REF_NAME" --repo="$GITHUB_REPOSITORY"
