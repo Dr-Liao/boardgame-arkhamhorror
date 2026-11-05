@@ -896,24 +896,33 @@ export function floodedTurnEndAgenda({ code, label, horror = 0, discard = 0, onR
 
 // 07124 路障重重 背面：「所有[[沿海]]地点提升淹没等级；把 07145 与 01181 从旁置区洗入遭遇牌库；
 // 把遭遇弃牌堆洗回遭遇牌库。」
+// 旁置区各有 2 张物理副本（01181×2、07145×2）：参考实现的 shuffleSetAsideIntoEncounterDeck
+// 是「取走全部同名卡」，逐卡只取 1 张会让另 1 张永久缺席、遭遇牌库少 2 张（审计 M3）。
 export function barricadedStreetsBack(state, agenda, api) {
   for (const location of state.locations || []) {
     if (hasTrait(location, 'Coastal') && api.mechanics.water.canChange(location.id, 1)) api.mechanics.water.change(location.id, 1)
   }
   const reshuffled = []
-  for (const code of ['07145', '01181']) if (api.takeFromSetAside(code)) reshuffled.push(code)
+  for (const code of ['07145', '01181']) while (api.takeFromSetAside(code)) reshuffled.push(code)
   if (reshuffled.length) api.shuffleIntoEncounterDeck(reshuffled, { shuffle: false })
   api.shuffleDiscard()
 }
 
 // 07125 无情浪潮 背面：「所有[[市中心]]地点提升淹没等级；把愤怒暴民 07062b 生成在印斯茅斯广场并
 // 在其上放置 1 个未揭示的钥匙。」
+// 广场按**印刷卡名**定位（《深陷危局》是 07139；同一战役《哈珀》的版本 07065 不能被跨章误用，
+// 修复前硬编码 07065 导致本章整段背面效果失效、07062b 滞留旁置区——审计 H8）。
+const INNSMOUTH_SQUARE_NAME = 'Innsmouth Square'
+function printedNameOf(location) {
+  return ALL_CARDS[location?.originalCode || location?.code]?.name || location?.nameEn || location?.name || ''
+}
 export function relentlessTideBack(state, agenda, api) {
   for (const location of state.locations || []) {
     if (hasTrait(location, 'Midtown') && api.mechanics.water.canChange(location.id, 1)) api.mechanics.water.change(location.id, 1)
   }
-  const square = (state.locations || []).find(location => String(location.originalCode || location.code) === '07065')
-  const mob = square ? api.spawn('07062b', square.id) : null
+  const square = (state.locations || []).find(location => printedNameOf(location) === INNSMOUTH_SQUARE_NAME)
+  // 愤怒暴民在旁置区：先从旁置区取走再生成，保持区域守恒（印有「放到一边」）。
+  const mob = square && api.takeFromSetAside?.('07062b') ? api.spawn('07062b', square.id) : null
   if (mob?.id != null) api.mechanics.keys.placeRandom(`enemy:${mob.id}`)
 }
 
@@ -968,6 +977,10 @@ export function slumberingAncientOneEntry({ code, lairCode, actionLabel }) {
   return {
     code, scope: 'enemy', implemented: true,
     enemyRule: { slumbering: true },
+    // 沉睡面印刷「他不能攻击」：用声明式实体规则收口（读点 enemyCannotAttack →
+    // entityRuleActive('cannot:attack')）。修复前只靠「不会交战」间接实现，导致 07336 这类
+    // 「最近的古神攻击你」把沉睡古神当成可攻击目标（审计 M35）。
+    modifiers: [{ target: 'cannot:attack' }],
     abilities: [{
       kind: 'forced', trigger: 'investigationPhaseEnds',
       label: '调查阶段结束时：若有调查员在巢穴且她处于重整，在她身上放置1个毁灭',

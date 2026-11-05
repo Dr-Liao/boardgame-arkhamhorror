@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, move, play, settle, legalMoves, validateMove } from './core-fixture.mjs'
+import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { performTest, drawCards, reactionWindow, drawEncounter, advanceAgenda, runMythos, enemyPhase, damageEnemy, playerWindow, descriptorSources } from '../src/engine/engine.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
 import { randomValue } from '../src/engine/rules-state.js'
@@ -68,6 +69,33 @@ test('P6 07230 Harmony Restored removes only up to bag bless count and gains act
 
 
 test('P6 07121 Mariners Compass bonus clue depends on resources at success, boosts are limited to three',()=>{for(const resources of [0,3,4]){const s=fixture(),inv=s.investigators[0],a=asset(s,'07121');inv.resources=resources;const loc=s.locations.find(l=>l.id===inv.location);loc.clues=6;loc.shroud=0;move(s,{action:'ability',assetId:a.id,abilityIndex:0});settle(s,c=>c.kind==='playerWindow'?c.options.find(o=>o.assetId===a.id&&o.abilityIndex===1||o.id==='free-descriptor:07121:1')?.id:null);assert.equal(s.lastTestResult.source.assetId,a.id);assert.equal(s.investigators[0].resources,resources===4?1:0);assert.equal(s.investigators[0].clues,resources===4?1:2);assert.equal(s.lastTestResult.value,s.investigators[0].intellect+Math.min(3,resources));assert.equal(s.investigators[0].assets.find(x=>x.id===a.id).exhausted,true)}})
+test('P6 07121 罗盘加智力的上限是「每次调查 3 次」而不是「每回合 3 次」（审计 M32 perTest 键回归）', () => {
+  // perTest 实例 id 只在 TIC 章节写入；07121 是 TIC 玩家卡，用真实章节夹具。
+  const s = chapterFixture('theVanishingOfElinaHarper'), inv = s.investigators[0], a = asset(s, '07121')
+  s.enemies = []
+  inv.resources = 30
+  const loc = s.locations.find(l => l.id === inv.location)
+  loc.clues = 6
+  loc.shroud = 0
+  const boostsInOneInvestigation = () => {
+    let count = 0
+    move(s, { action: 'ability', assetId: a.id, abilityIndex: 0 })
+    settle(s, c => {
+      if (c.kind !== 'playerWindow') return null
+      const option = c.options.find(o => o.assetId === a.id && o.abilityIndex === 1)
+      if (!option) return null
+      count++
+      return option.id
+    })
+    return count
+  }
+  assert.equal(boostsInOneInvestigation(), 3, '第一次调查可用 3 次')
+  // 第二次调查：把罗盘重整（真实游戏里靠重整效果），perTest 键必须换成新检定的实例。
+  s.investigators[0].assets.find(item => item.id === a.id).exhausted = false
+  assert.equal(boostsInOneInvestigation(), 3, '同一回合的第二次调查仍可用 3 次（不能退化成每回合 3 次）')
+  assert.equal(s.investigators[0].resources, 30 - 6, '六次加成各花 1 资源')
+})
+
 test('P6 07197 Signum Crucis uses base skill excluding passive bonuses and cannot help others', () => {
   const state = fixture(); asset(state, '01018'); state.investigators[0].hand = ['07197']
   const base = state.investigators[0].combat, removed = state.chaos.removed.filter(face => face === 'bless').length

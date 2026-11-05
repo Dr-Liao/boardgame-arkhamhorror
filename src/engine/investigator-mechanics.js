@@ -1,4 +1,5 @@
 import { beneathCards, storeBeneath, takeBeneath } from './commit-origins.js'
+import { eventWindowContext } from './event-window.js'
 import { registeredEntry } from './ability.js'
 import { cardDef } from './card-lookup.js'
 
@@ -12,8 +13,8 @@ export function canDiscardControlledAsset(state, inv, asset) {
 export function notifyPlacedAsset(state, seat, asset, events, reactionWindow) {
   if (!asset || !state.investigators.some(inv => (inv.assets || []).some(source =>
     registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('assetEnteredPlay'))))) return
-  reactionWindow(state, 'assetEnteredPlay', { when: 'assetEnteredPlay', seat,
-    assetId: asset.id, assetCode: asset.code, location: state.investigators[seat].location }, events, { allowNested: true })
+  reactionWindow(state, 'assetEnteredPlay', eventWindowContext(state, { when: 'assetEnteredPlay', seat,
+    assetId: asset.id, assetCode: asset.code, location: state.investigators[seat].location }), events, { allowNested: true })
 }
 
 export function createInvestigatorApi(state, events, deps) {

@@ -34,7 +34,9 @@ export default {
   }, {
     kind: 'action', actionKind: 'activate',
     label: '花费1个钥匙：从达贡上移除1个资源',
-    additionalKeyCost: { colors: ALL_KEY_COLORS, scope: 'here' },
+    // 「Spend 1 key」= 花费**你自己控制**的钥匙；scope:'here' 会允许花同地点其他调查员的钥匙
+    // （审计 M30：参考实现是 SpendKeyCost）。
+    additionalKeyCost: { colors: ALL_KEY_COLORS },
     criteria: ({ source }) => Number(source?.resources || 0) > 0,
     resolve: ({ source, api }) => {
       api.scenario.setEnemyResources(source, Math.max(0, Number(source.resources || 0) - 1))

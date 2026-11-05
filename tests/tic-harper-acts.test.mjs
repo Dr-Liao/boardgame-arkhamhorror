@@ -166,9 +166,14 @@ test('07060 团队线索谈判：花费 X[每调查员]、揭示并抽取 1 张�
   settle(state, choice => (choice.kind === 'effect' ? '2' : choice.options[0]?.id))
   assert.equal(state.clues, 2, 'X=2 × 2 人 = 4 个团队线索')
   assert.deepEqual(state.investigators.map(inv => inv.clues), [1, 1], '线索由两位调查员分摊')
-  assert.deepEqual(state.scenarioFlags.harperDrawnLeads, [topTwo[0]], '抽取牌堆顶 1 张并记入已取得')
+  // 抽到的迹象经**真实遭遇结算管线**入场（嫌疑敌人显现 / 藏身地点放入场），不再只写记账 flag。
+  const drawnCode = topTwo[0]
+  const enteredPlay = state.locations.some(location => (location.originalCode || location.code) === drawnCode)
+    || state.enemies.some(enemy => (enemy.originalCode || enemy.code) === drawnCode)
+  assert.equal(enteredPlay, true, '抽取的迹象应经遭遇结算真实入场（审计 H1）')
+  assert.equal(state.scenarioFlags.harperDrawnLeads, undefined, '不再写无人读取的记账 flag')
   const deck = state.scenarioFlags.mechanics.scenarioDecks.leads.deck
-  assert.equal(deck.includes(topTwo[0]), false, '抽到的迹象离开迹象牌堆')
+  assert.equal(deck.includes(drawnCode), false, '抽到的迹象离开迹象牌堆')
   assert.equal(deck.length, leadsBefore.length, '其余 1 张 + 遭遇牌库顶 1 张洗回：数量不变')
   for (const code of topTwo) assert.ok(state.scenarioFlags.crossedOff.includes(code), `揭示的 ${code} 应被划掉`)
   assert.equal(entityParley(state), undefined, '团队每轮仅限一次')
@@ -180,6 +185,18 @@ test('07060 团队线索不足时谈判入口不出现', () => {
   state.investigators[1].clues = 0
   state.clues = 0
   assert.equal(entityParley(state), undefined, '连 X=1 都付不起时不应给出死按钮')
+})
+
+test('07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）', () => {
+  const state = harperFixture(2)
+  state.scenarioFlags.mechanics.scenarioDecks.leads.deck = ['07074']
+  let drawn = null
+  transaction(state, draft => {
+    drawn = scenarioRuntime(draft, []).mechanics.scenarioDecks.revealChooseDraw('leads', 0, 1)
+  })
+  assert.equal(drawn, '07074')
+  assert.ok(state.locations.some(location => (location.originalCode || location.code) === '07074'),
+    '07074 的 [显现] 把它放入场并揭示（修复前缺 encounterResolve → 未知遭遇卡）')
 })
 
 // ---------------------------------------------------------------------------

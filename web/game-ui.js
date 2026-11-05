@@ -561,6 +561,9 @@ function cardDisplay(def) {
     exile: !!def.exile,
     doubleSided: !!def.doubleSided,
     victory: def.victory || 0,
+    // 「复仇 X」和胜利点一样是印刷在卡面上的数值关键词（ArkhamDB 的 vengeance 字段），
+    // 卡文里不一定出现「复仇」二字，详情与桌面徽记必须读这个字段。
+    vengeance: def.vengeance || 0,
     willpower: def.willpower, intellect: def.intellect, combat: def.combat, agility: def.agility,
     health: def.health, sanity: def.sanity,
     fight: def.fight, evade: def.evade,
@@ -689,6 +692,7 @@ function renderFullCard(def) {
     if (d.elite) enemyKws.push(t('game.kw.elite'))
     if (d.massive) enemyKws.push(t('game.kw.massive'))
     if (d.victory) enemyKws.push(t('game.kw.victory', { points: d.victory }))
+    if (d.vengeance) enemyKws.push(t('game.kw.vengeance', { points: d.vengeance }))
     if (enemyKws.length) statRows.push(h('div', { className: 'ah-card-full-kws' },
       enemyKws.map((k) => h('span', { className: 'ah-kw ah-kw-flag' }, k))))
   }
@@ -710,6 +714,7 @@ function renderFullCard(def) {
   if (d.exile) flags.push(t('game.flag.exile'))
   if (d.doubleSided) flags.push(t('game.flag.doubleSided'))
   if (d.victory && !d.isEnemy) flags.push(t('game.kw.victory', { points: d.victory }))
+  if (d.vengeance && !d.isEnemy) flags.push(t('game.kw.vengeance', { points: d.vengeance }))
   if (flags.length) kws.push(flags.join(' · '))
 
   return h('div', { className: 'ah-card-full', style: { borderTop: '3px solid ' + color } },
@@ -852,6 +857,7 @@ function renderLocationDetail(detail) {
           h('div',{},...cardRuleIds(loc).map(id=>ruleLink(h,id)),ruleLink(h,'clues',t('game.rule.clues')),ruleLink(h,'encounter',t('game.rule.encounter'))),
           front && loc.resign ? h('span',{className:'ah-location-trait'},t('game.location.resign')) : null,
           front && loc.victory ? h('span',{className:'ah-location-trait'},t('game.kw.victory', { points: loc.victory })) : null,
+          front && loc.vengeance ? h('span',{className:'ah-location-trait'},t('game.kw.vengeance', { points: loc.vengeance })) : null,
           loc.locked ? h('span',{className:'ah-location-trait is-danger'},t('game.location.locked')) : null),
         h('section',{className:'ah-location-occupants'},h('h3',{},t('game.location.occupants')),
           people.length || enemies.length ? h('div',{},
@@ -2375,6 +2381,7 @@ function renderEnemyChip(s, e, { map = false } = {}) {
   if (e.massive) kws.push(t('game.kw.massive'))
   if (e.prey) kws.push(t('game.kw.prey', { prey: ahPreyLabel(e.prey) }))
   if (e.victory) kws.push(t('game.kw.victoryCompact', { points: e.victory }))
+  if (e.vengeance) kws.push(t('game.kw.vengeanceCompact', { points: e.vengeance }))
   // 万象无终（P5）：异端者的多面与「不能以任何方式被击败」写在敌人卡上，翻面/放逐动作仍来自 legalMoves。
   const face = enemyFaceBadge(e)
   if (face?.label) kws.push(face.label)

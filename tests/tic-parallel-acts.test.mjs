@@ -20,7 +20,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { move, settle } from './core-fixture.mjs'
-import { advanceAct, checkAct, legalMoves, nonPlayerAbilitySources, scenarioRuntime } from '../src/engine/engine.js'
+import { advanceAct, checkAct, enemyPhase, legalMoves, nonPlayerAbilitySources, scenarioRuntime } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
@@ -224,7 +224,7 @@ test('07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有�
   assert.equal(rule.objective(state, state.acts[state.actIndex]), false, '任一部分淹没即不成立')
 })
 
-test('07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）', () => {
+test('07316 [快速] 能力 a：移除古神 1[每调查员]伤害作为费用，并降低淹没等级（审计 H15 回归）', () => {
   const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
   const lair = locationByCode(state, '07328')
   const dagon = state.enemies.find(item => ['07330a', '07330b'].includes(codeOf(item)))
@@ -232,6 +232,9 @@ test('07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每�
   state.investigators[0].location = lair.id
   state.currentSeat = 0
   dagon.damageTaken = 3
+  const flooded = () => state.locations.filter(location => floodLevel(state, location.id) > 0)
+  const beforeFlooded = flooded().length
+  assert.ok(beforeFlooded > 0, 'Act 2 初始有淹没地点')
   const command = actMove(state, 0)
   assert.equal(command.actionKind, 'activate')
   const actionsLeft = state.investigators[0].actionsLeft
@@ -240,7 +243,22 @@ test('07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每�
   const healed = state.enemies.find(item => item.id === dagon.id)
   assert.equal(healed.damageTaken, 3 - state.numInvestigators, '移除 1[每调查员] 伤害')
   assert.equal(state.investigators[0].actionsLeft, actionsLeft, '[快速] 不消耗行动点')
+  // 印刷的两条选项结算效果都是「降低任意非[[圣堂]]地点的淹没等级」：修复前选项 A 只治疗、不排水。
+  assert.ok(flooded().length < beforeFlooded, '选项 A 同样降低了一个地点的淹没等级')
 })
+
+test('07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）', () => {
+  const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
+  const lair = locationByCode(state, '07328')
+  const dagon = state.enemies.find(item => ['07330a', '07330b'].includes(codeOf(item)))
+  assert.ok(lair && dagon)
+  state.investigators[0].location = lair.id
+  state.currentSeat = 0
+  dagon.damageTaken = 0
+  assert.equal(legalMoves(state).some(item => item.action === 'entityAbility'
+    && item.entityId === 'act07316' && item.abilityIndex === 0), false, '没有伤害可移除时选项 A 不在合法行动里')
+})
+
 
 test('07316 [快速] 能力 b：[[巢穴]]地点的调查员共同花费线索，降低非[[圣堂]]地点淹没等级', () => {
   const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
@@ -343,6 +361,43 @@ test('07317 目标：三处地点无线索且财富宝库带紫钥匙才成立',
   assert.equal(rule.objective(state, act), false, '紫钥匙不在宝库上 → 不成立')
 })
 
+test('07317 目标：按「带紫钥匙的那一份财富宝库」判定，而不是按卡号取第一张（审计 H16 回归）', () => {
+  const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
+  transaction(state, draft => scenarioRuntime(draft, []).addParallelAct('07317'))
+  const rule = registeredEntry('07317').actRule
+  const act = parallelActs(state)[0]
+  // 本章 07322 有 2 个物理副本：把第二份放进场，并确认两份都在场。
+  const copies = state.locations.filter(location => codeOf(location) === '07322')
+  let second = copies[1]
+  if (!second) {
+    const definitions = Object.entries(state.scenario.locations)
+      .filter(([, definition]) => codeOf(definition) === '07322')
+    for (const [definitionId] of definitions) {
+      if (!state.locations.some(location => location.id === definitionId)) {
+        transaction(state, draft => scenarioRuntime(draft, []).place(definitionId))
+      }
+    }
+    second = state.locations.filter(location => codeOf(location) === '07322')[1]
+  }
+  assert.ok(second, '财富宝库有第二份物理副本')
+  const first = state.locations.find(location => codeOf(location) === '07322' && location.id !== second.id)
+  assert.ok(first, '第一份也在场')
+  // 两处巢穴与两份宝库都无线索，紫钥匙放到**第二份**宝库上。
+  for (const code of ['07328', '07329', '07322']) {
+    for (const location of state.locations.filter(item => codeOf(item) === code)) location.clues = 0
+  }
+  const api = createMechanicsApi(state)
+  const purple = state.scenarioFlags.mechanics.keys.purple
+  assert.equal(api.keys.transfer('purple', purple.holder, `location:${second.id}`, { reveal: true }), true)
+  assert.equal(rule.objective(state, act), true, '钥匙在第二份宝库上时目标成立（修复前只查第一份 → 永不成立）')
+  // 第一份（不带钥匙）有线索不应影响目标；带钥匙的那份有线索则不成立。
+  first.clues = 2
+  assert.equal(rule.objective(state, act), true, '不带紫钥匙的宝库有线索不阻塞目标')
+  first.clues = 0
+  second.clues = 1
+  assert.equal(rule.objective(state, act), false, '带紫钥匙的宝库有线索 → 目标不成立')
+})
+
 test('07317 完成：有另一张场景卡 → 选择继续，加入胜利区并移出活动槽；无其他幕 → 自动 R1', () => {
   const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
   transaction(state, draft => scenarioRuntime(draft, []).addParallelAct('07317'))
@@ -369,6 +424,91 @@ test('07317 完成：有另一张场景卡 → 选择继续，加入胜利区并
   transaction(lone, draft => checkAct(draft, []))
   assert.equal(lone.resolution, 'resolution1', '没有其他幕时自动 R1')
   assert.equal(lone.victoryDisplay.filter(card => codeOf(card) === '07318').length, 1)
+})
+
+// ---------------------------------------------------------------------------
+// 4b. 07327 缟玛瑙守卫（敌军阶段的 as-if-engaged 攻击）
+// ---------------------------------------------------------------------------
+
+test('07327 缟玛瑙守卫：敌军阶段期间重整的[[古神]]敌人攻击本地点的调查员（审计 H16 回归）', () => {
+  const state = advanceToAct2(chapterFixture('intoTheMaelstrom'))
+  const definitionId = Object.entries(state.scenario.locations).find(([, definition]) => codeOf(definition) === '07327')?.[0]
+  assert.ok(definitionId, '剧本定义里有缟玛瑙守卫')
+  transaction(state, draft => scenarioRuntime(draft, []).place(definitionId))
+  const onyx = locationByCode(state, '07327')
+  assert.ok(onyx, '缟玛瑙守卫入场')
+  assert.deepEqual(registeredEntry('07327').locationRule.enemiesAttackAsIfEngagedHere, ['Ancient One'],
+    '地点条目声明 as-if-engaged 规则')
+  assert.equal(registeredEntry('07327').locationRule.entersPlayFlooded, 2, '以完全淹没入场')
+  // 清空场上其它敌人，避免干扰；两位调查员都站在守卫地点。
+  state.enemies = []
+  for (const inv of state.investigators) inv.location = onyx.id
+  state.currentSeat = 0
+  // 冷漠（aloof）使敌军阶段开始时不会被自动交战，因此在正常情况下永远不会攻击；
+  // 「如同已交战」规则让它在守卫地点照样攻击。
+  const ancient = { id: 'testOnyxAncientOne', code: 'testTicOnyxAncientOne', name: '测试古神',
+    location: onyx.id, fight: 3, evade: 3, health: 20, damage: 2, horror: 0, damageTaken: 0,
+    engagedSeat: null, aloof: true, traits: ['Ancient One', 'Monster'] }
+  state.enemies.push(ancient)
+  const before = state.investigators[0].damage
+  const result = transaction(state, draft => enemyPhase(draft))
+  assert.ok(result !== undefined)
+  assert.equal(state.investigators[0].damage, before + 2, '未交战的古神如同已交战般攻击本地点调查员')
+  assert.equal(state.enemies.find(item => item.id === ancient.id)?.exhausted, true, '攻击后横置')
+
+  // 对照：同样的古神站在没有该规则的地点时不攻击。
+  const control = advanceToAct2(chapterFixture('intoTheMaelstrom'))
+  const elsewhere = locationByCode(control, '07328')
+  assert.ok(elsewhere)
+  control.enemies = []
+  for (const inv of control.investigators) inv.location = elsewhere.id
+  control.currentSeat = 0
+  control.enemies.push({ ...ancient, id: 'testOnyxAncientOneControl', location: elsewhere.id,
+    engagedSeat: null, exhausted: false, damageTaken: 0 })
+  const controlBefore = control.investigators[0].damage
+  transaction(control, draft => enemyPhase(draft))
+  assert.equal(control.investigators[0].damage, controlBefore, '没有 as-if-engaged 规则的地点不攻击')
+})
+
+// ---------------------------------------------------------------------------
+// 4c. 07328 达贡巢穴：7 把钥匙都在地点上 → 记忆闪回 XIV（审计 H17 回归）
+// ---------------------------------------------------------------------------
+
+test('07328 达贡巢穴：7 把钥匙都在地点上且仪式被破坏时可触发记忆闪回 XIV（审计 H17 回归）', () => {
+  // 战役记录让 setup 发放 4 把记录钥匙；隐藏池 3 把 → 场上共 7 把钥匙（印刷的钥匙经济上限）。
+  const state = advanceToAct2(chapterFixture('intoTheMaelstrom', 1, { records: {
+    TheInvestigatorsPossessTheKeyToYhaNthlei: true,
+    TheInvestigatorsPossessAMapOfYhaNthlei: true,
+    TheGuardianOfYhanthleiIsDispatched: true,
+    TheGatewayToYhanthleiRecognizesYouAsTheRightfulKeeper: true,
+  } }))
+  state.campaign.records.TheOrdersRitualWasDisrupted = true
+  const dagonLair = locationByCode(state, '07328')
+  assert.ok(dagonLair, '达贡巢穴在场')
+  const abilityMove = () => legalMoves(state).find(item => item.action === 'entityAbility'
+    && item.entityId === dagonLair.id && item.abilityIndex === 0)
+  assert.equal(abilityMove(), undefined, '钥匙不在地点上时闪回能力不可用')
+  const keys = state.scenarioFlags.mechanics.keys
+  const colors = Object.keys(keys)
+  assert.equal(colors.length, 7, '场上应有 7 把钥匙（4 记录 + 3 隐藏）')
+  const api = createMechanicsApi(state)
+  const targets = state.locations.filter(location => location.id !== dagonLair.id).slice(0, colors.length)
+  assert.ok(targets.length >= colors.length, '有足够的地点放置 7 把钥匙')
+  colors.forEach((color, index) => {
+    assert.equal(api.keys.transfer(color, keys[color].holder, `location:${targets[index].id}`, { reveal: true }), true,
+      `把 ${color} 钥匙放到地点上`)
+  })
+  // 地点能力只在已揭示且调查员在场时枚举（读点：nonPlayerAbilitySources / entityAbilityInRange）。
+  state.currentSeat = 0
+  state.investigators[0].location = dagonLair.id
+  transaction(state, draft => scenarioRuntime(draft, []).reveal(draft.locations.find(location => location.id === dagonLair.id).id))
+  const command = abilityMove()
+  assert.ok(command, '7 把钥匙都在地点上时出现「记忆闪回 XIV」能力')
+  move(state, command)
+  settle(state, choice => (choice.options.some(option => option.id === 'helpHarper') ? 'helpHarper' : null))
+  assert.ok(state.campaign.records.memoriesRecovered.includes('AConversationWithMrMoore')
+    || (state.parallelActs || []).some(act => codeOf(act) === '07317'),
+    '闪回 XIV 真实结算（记忆/帮助哈珀并行幕）')
 })
 
 // ---------------------------------------------------------------------------

@@ -12,11 +12,29 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { enemy, legalMoves, move, settle, validateMove } from './core-fixture.mjs'
-import { aloofPreventsAttack } from '../src/engine/engine.js'
+import { aloofPreventsAttack, scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { entityRuleActive } from '../src/engine/modifiers.js'
 import { parleyForbidden } from '../src/engine/parley.js'
+
+// 真实事务推进（内容层 agendaReveal → 条目 agendaRule.onReveal）。
+function run(state, execute) {
+  const executeOnce = draft => {
+    try { return execute(draft) } catch (error) {
+      if (error.constructor?.name !== 'ScenarioEnded') throw error
+    }
+  }
+  resolveTransaction(state, 0, { action: 'testTicFloodedAgendas' }, executeOnce)
+  for (let guard = 0; state.pendingChoice; guard++) {
+    assert.ok(guard < 150, 'TIC 深陷危局议程 choice loop')
+    const choice = state.pendingChoice
+    const optionId = ['done', 'skip', 'self'].find(id => choice.options.some(option => option.id === id))
+      ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, executeOnce)
+  }
+}
 
 // 只在测试进程登记的「可谈判敌人」与「调查员不能谈判」的威胁卡。
 const parleyProbe = {
@@ -132,4 +150,23 @@ test('07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷', 
     // 维持阶段会补抽 1 张，所以净变化 = 抽牌 - 随机弃牌。
     assert.equal(hand + 1 - after.hand.length, expectedDiscards, `${code} 随机弃牌数量`)
   }
+})
+
+test('07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）', () => {
+  const s = chapterFixture('inTooDeep', 1)
+  s.enemies = []
+  s.agendaIndex = 1
+  assert.equal((s.agendas[1].originalCode || s.agendas[1].code), '07125')
+  const square = s.locations.find(location => (location.originalCode || location.code) === '07139')
+  assert.ok(square, '《深陷危局》的印斯茅斯广场是 07139（修复前硬编码哈珀章的 07065，整段失效）')
+  assert.ok(s.scenarioZones.setAside.includes('07062b'), '愤怒暴民在旁置区')
+  run(s, draft => scenarioRuntime(draft, []).advanceAgenda())
+  const mob = s.enemies.find(entity => (entity.originalCode || entity.code) === '07062b')
+  assert.ok(mob, '愤怒暴民真实生成')
+  assert.equal(mob.location, square.id, '生成在印斯茅斯广场')
+  assert.equal(s.scenarioZones.setAside.includes('07062b'), false, '旁置区取走该卡（区域守恒）')
+  const held = Object.entries(s.scenarioFlags.mechanics.keys)
+    .filter(([, key]) => key.holder === `enemy:${mob.id}`)
+  assert.equal(held.length, 1, '在暴民上随机放置 1 把钥匙')
+  assert.equal(held[0][1].revealed, false, '放置的钥匙未揭示')
 })

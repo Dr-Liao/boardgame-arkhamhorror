@@ -183,11 +183,27 @@ export function entityMoves(st, key) {
     // 直觉牌库本阶段揭示的那张（乔·戴蒙德）：id 是卡号。
     if (kind === 'hunch') return move.fromHunch === true && move.cardId === id
     if (kind === 'enemy') return move.enemyId === id
-    // 地点附属（卡尔克萨尖柱等）：键是 attachment:<地点 id>:<附属下标>，只挂这条附属自己的行动。
+    // 地点附属（卡尔克萨尖柱 / 疯狂生长 / 石障 / 玩家卡附属「捷径」等）：键是
+    // attachment:<地点 id>:<附属下标>，只挂这条附属自己的行动，否则点附属卡只会打开卡牌详情。
+    // 「这个行动属于哪条附属」在不同循环用了不同字段族，这里一次收口（服务端无需为界面加 uiKey）：
+    //   · locationId + attachmentIndex：Carcosa 03091/03094 的 attachmentAction、04270 的解除行动；
+    //   · attachmentId：失落时代 / 万象无终 / 食梦者的 threatAction 与部分场景行动；
+    //   · entityId：条目级 attachmentAbilities（07299/07099）经 parley 枚举的 entityAbility；
+    //   · assetId：玩家卡地点附属自身的能力（sharedLocationAbility）；
+    //   · rule 后缀：食梦者把附属 id 嵌在剧本规则名里（locationAttachment:<id> /
+    //     discardSickeningWebs:<id>），没有独立字段；id 唯一，按后缀匹配不猜卡号。
+    // 「捷径」的 shortcutMove 不带附属引用，由观察投影派生的 markerAction 声明（见 presentation-state）。
     if (kind === 'attachment') {
       const index = Number(parts.at(-1))
       const locationId = parts.slice(0, -1).join(':')
-      return move.locationId === locationId && Number(move.attachmentIndex) === index
+      if (move.locationId === locationId && Number(move.attachmentIndex) === index) return true
+      const attachment = st.locations?.find(location => location.id === locationId)?.attachments?.[index]
+      const attachmentId = attachment && typeof attachment === 'object' ? attachment.id : null
+      const ruleText = typeof move.rule === 'string' ? move.rule : ''
+      if (attachmentId != null && (move.attachmentId === attachmentId || move.entityId === attachmentId
+        || move.assetId === attachmentId || move.uiKey === `locationAttachment:${attachmentId}`
+        || ruleText.endsWith(`:${attachmentId}`))) return true
+      return attachment?.markerAction === 'shortcutMove' && move.action === 'shortcutMove'
     }
     if (kind === 'location') return move.locationId === id || (inv?.location === id && ['investigate', 'breakDoor', 'parleyLita'].includes(move.action))
     if (kind === 'investigator') return String(inv?.seat) === id && (move.action === 'freeAction'

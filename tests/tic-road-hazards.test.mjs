@@ -1,11 +1,11 @@
 // 道路危害：载具在道路地点进出时的强制结算（高度惊魂 07204–07210）。
 //
 // 读点与共享实现：
-//   · `vehicles.moveVehicle` 移动成功后回调 `vehicleLeft` / `vehicleEntered`
+//   · `vehicles.moveVehicle` 在移动前回调 `vehicleLeft`、移动后回调 `vehicleEntered`
 //     （road-hazards.js#dispatchVehicleEvent → 地点条目的 locationRule.vehicleLeft / vehicleEntered）；
 //   · 「每个载具每场游戏仅限一次」的记账 = `api.roadHazardOnce`（mechanicState.roadHazards）；
 //   · 「该地点的调查员共同支付 N 个线索」的差额结算 = `api.payGroupClues(required, { allowShort: true })`；
-//     付款人是**载具开走后仍在该地点**的调查员（乘客已随车离开，与印刷时点一致）；
+//     付款人是**出发地**的调查员（含仍算在出发地的乘客；印刷的 VehicleLeaves #when 时点）；
 //   · 07210 的「不能离开直到下一轮结束」= `api.mechanics.vehicles.lockUntil` → moveVehicle 的离开校验。
 //
 // 测试不依赖随机铺开的道路布局：把测试用到的那个地点改成目标卡的卡号（条目查 originalCode || code），
@@ -151,3 +151,65 @@ test('道路危害条目都声明了载具事件读点，且每张卡都有 impl
       `${code} 声明了 vehicleLeft / vehicleEntered`)
   }
 })
+
+test('07204c：乘客仍算在出发地，可以用自己的线索共同付费（审计 H3 回归）', () => {
+  const { s, vehicleId, destination } = roadScene('07204c')
+  // 车上乘客自己有 2 个线索、留在原地的调查员 0 个：修复前「载具开走后」才结算，乘客已经
+  // 随车离开出发地、不能被选中付款，共同付费分支恒为 0；修复后（移动前结算）乘客仍在出发地。
+  s.investigators[0].clues = 2
+  const horror = s.investigators[0].horror
+  assert.equal(driveInTransaction(s, vehicleId, destination.id,
+    choice => (choice.kind === 'payment' ? '1' : null)), true)
+  assert.equal(s.investigators[0].horror, horror, '乘客付清线索后不受恐惧')
+  assert.equal(s.investigators[0].clues, 0, '由乘客本人支付了 2 个线索')
+})
+
+test('轮末清理后扩路不再因悬空列号回滚（审计 H4 回归）', () => {
+  const s = scene()
+  const columns = () => s.scenarioFlags.mechanics.road.columns
+  const ranked = () => Object.entries(columns()).map(([id, column]) => ({ id, column: Number(column) }))
+    .sort((left, right) => left.column - right.column)
+  // 清掉开局自带的初始遭遇载具后跑一次轮末清理：最后方无占用的道路地点被移出游戏。
+  transactionOf(s, draft => registeredEntry('07199').agendaRule.onRoundEnd(draft, draft.agendas[draft.agendaIndex], scenarioRuntime(draft, [])))
+  const front = ranked().at(-1)
+  assert.ok(front, '清理后仍有前方的道路地点')
+  const removed = Object.keys(columns()).filter(id => !s.locations.some(location => location.id === id))
+  assert.deepEqual(removed, [], '被移出游戏的地点不再留下列号')
+  const before = Object.keys(columns()).length
+  // 修复前：extendRoad 遍历全部列号时对已移除地点 locationAt → RangeError，整个事务回滚。
+  transactionOf(s, draft => {
+    const placed = scenarioRuntime(draft, []).mechanics.map.extendRoad(front.id, 2)
+    assert.ok(placed.length > 0, '清理后仍能扩路')
+  })
+  assert.ok(Object.keys(columns()).length > before, '扩路产生了新的一列')
+})
+
+test('扩路对不在场的残留列号做防御：跳过并清理，而不是抛「无效地点」', () => {
+  const s = scene()
+  const front = Object.entries(s.scenarioFlags.mechanics.road.columns)
+    .map(([id, column]) => ({ id, column: Number(column) })).sort((left, right) => right.column - left.column)[0]
+  const phantom = 'location00000-ghost'
+  s.scenarioFlags.mechanics.road.columns[phantom] = 9
+  const before = Object.keys(s.scenarioFlags.mechanics.road.columns).length
+  transactionOf(s, draft => {
+    const placed = scenarioRuntime(draft, []).mechanics.map.extendRoad(front.id, 1)
+    assert.ok(placed.length > 0, '悬空列号不阻止扩路')
+  })
+  assert.equal(Object.hasOwn(s.scenarioFlags.mechanics.road.columns, phantom), false, '悬空列号被清理')
+  assert.ok(Object.keys(s.scenarioFlags.mechanics.road.columns).length >= before, '扩路照常')
+})
+
+function transactionOf(state, execute, select = () => null) {
+  const run = draft => {
+    try { return execute(draft) } catch (error) { if (error.constructor?.name !== 'ScenarioEnded') throw error }
+  }
+  resolveTransaction(state, 0, { action: 'ticRoadHazardAcceptance' }, run)
+  for (let guard = 0; state.pendingChoice; guard++) {
+    assert.ok(guard < 60, `choice loop ${state.pendingChoice.source}`)
+    const choice = state.pendingChoice
+    const id = select(choice, state) ?? ['done', 'skip', 'self'].find(candidate => choice.options.some(option => option.id === candidate))
+      ?? choice.options[0]?.id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, run)
+  }
+}
+

@@ -104,9 +104,9 @@
   "status": "playable",
   "playable": true,
   "launchEnabled": true,
-  "earlyAccess": false,
-  "earlyAccessReason": null,
-  "equivalenceCertified": true,
+  "earlyAccess": true,
+  "earlyAccessReason": "",
+  "equivalenceCertified": false,
   "releaseAcceptance": {
     "required": {
       "launch": true,
@@ -114,16 +114,16 @@
       "chapters": true,
       "allCards": true,
       "allCardsStrict": true,
-      "node": true,
+      "node": false,
       "browser": true,
-      "replay": true,
-      "regression": true,
+      "replay": false,
+      "regression": false,
       "story": true,
       "guides": true,
       "images": true,
       "presentation": true,
       "docs": true,
-      "disclosure": true
+      "disclosure": false
     },
     "deferred": []
   },
@@ -133,27 +133,27 @@
     "chapters": true,
     "allCards": true,
     "allCardsStrict": true,
-    "node": true,
+    "node": false,
     "browser": true,
-    "replay": true,
-    "regression": true,
+    "replay": false,
+    "regression": false,
     "story": true,
     "guides": true,
     "images": true,
     "presentation": true,
     "docs": true,
-    "disclosure": true,
-    "pass": true
+    "disclosure": false,
+    "pass": false
   },
   "releaseDisclosure": {
-    "earlyAccess": false,
+    "earlyAccess": true,
     "deferred": [],
     "lobbyEarlyAccess": false,
     "lobbyMarked": false,
-    "pass": true
+    "pass": false
   },
   "maintenance": [],
-  "verifiedScope": "M0 范围 361 条 07 记录（322 主卡 + 39 关联面；战役 252 / 调查员 16 / 玩家 93），18 遭遇组；M1 五位调查员；M2 93 张玩家卡；M3 八章逐章 12/12 检查与逐卡 252/252；M4 18 条关键词与 10 条规则书条目；M5 生产注册、真实大厅启动、P8 完整战役/失败路线/存档/多人 AI/真实联机/重放/浏览器发布验收。原始循环已完成，显式简化、章节缺口与行为类原语债务均为零；同句模板共享工厂维护债务见 maintenance。",
+  "verifiedScope": "M0 范围 361 条 07 记录（322 主卡 + 39 关联面；战役 252 / 调查员 16 / 玩家 93），18 遭遇组；M1 五位调查员；M2 93 张玩家卡；M3 八章逐章 12/12 检查与逐卡 252/252；M4 18 条关键词与 10 条规则书条目；M5 生产注册、真实大厅启动、P8 完整战役/失败路线/存档/多人 AI/真实联机/重放/浏览器发布验收。仍有余项以 earlyAccess 披露，见 remaining 与 releaseAcceptance.deferred。",
   "packs": [
     {
       "id": "ticCampaign",
@@ -390,7 +390,7 @@
         "theLocals"
       ],
       "testFile": "tests/tic-scenario-inTooDeep.test.mjs",
-      "testCases": 11,
+      "testCases": 12,
       "launchable": true,
       "checks": {
         "campaignRegistered": true,
@@ -476,7 +476,7 @@
         "shatteredMemories"
       ],
       "testFile": "tests/tic-scenario-horrorInHighGear.test.mjs",
-      "testCases": 9,
+      "testCases": 10,
       "launchable": true,
       "checks": {
         "campaignRegistered": true,
@@ -519,7 +519,7 @@
         "syzygy"
       ],
       "testFile": "tests/tic-scenario-aLightInTheFog.test.mjs",
-      "testCases": 12,
+      "testCases": 13,
       "launchable": true,
       "checks": {
         "campaignRegistered": true,
@@ -812,7 +812,7 @@
         "outForBlood"
       ],
       "testFile": "tests/tic-scenario-inTooDeep.test.mjs",
-      "testCases": 11,
+      "testCases": 12,
       "inventory": {
         "locations": 15,
         "acts": 1,
@@ -946,7 +946,7 @@
         "memoriesRecovered"
       ],
       "testFile": "tests/tic-scenario-horrorInHighGear.test.mjs",
-      "testCases": 9,
+      "testCases": 10,
       "inventory": {
         "locations": 21,
         "acts": 1,
@@ -1014,7 +1014,7 @@
         "memoriesRecovered"
       ],
       "testFile": "tests/tic-scenario-aLightInTheFog.test.mjs",
-      "testCases": 12,
+      "testCases": 13,
       "inventory": {
         "locations": 18,
         "acts": 3,
@@ -1292,7 +1292,7 @@
     "07005"
   ],
   "keywords": {
-    "status": "verified",
+    "status": "pending",
     "items": [
       {
         "id": "bless",
@@ -1345,12 +1345,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1426,12 +1426,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1463,12 +1463,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1519,12 +1519,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1556,12 +1556,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1580,12 +1580,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1607,12 +1607,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1635,12 +1635,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1664,12 +1664,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1703,12 +1703,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1754,12 +1754,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1795,12 +1795,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1825,12 +1825,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1856,12 +1856,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1892,12 +1892,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1918,12 +1918,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -1960,12 +1960,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -2044,12 +2044,12 @@
         ],
         "checks": {
           "sourceInventoried": true,
-          "engineBehavior": true,
-          "nodeAcceptance": true,
+          "engineBehavior": false,
+          "nodeAcceptance": false,
           "rulebookEntry": true,
           "cardLinks": true
         },
-        "status": "verified",
+        "status": "pending",
         "evidence": [
           "audit/tic-mechanism-scan.json",
           "audit/tic-primitive-plan.json",
@@ -2117,9 +2117,23 @@
   "primitives": {
     "path": "audit/tic-primitive-plan.json",
     "new": 13,
-    "done": 13,
+    "done": 0,
     "reuse": 7,
-    "unfinished": [],
+    "unfinished": [
+      "chaos.pool",
+      "chaos.seal",
+      "chaos.resolution",
+      "location.flood",
+      "investigator.air",
+      "scenario.keys",
+      "scenario.vehicle",
+      "location.graph",
+      "campaign.recordSet",
+      "test.commitOrigin",
+      "deck.traitLimit",
+      "turn.promise",
+      "uses.transfer"
+    ],
     "deferred": 0,
     "escape": 0,
     "requests": {
@@ -2134,14 +2148,14 @@
     "planGates": {
       "scanPassed": true,
       "exportsPresent": true,
-      "nodeAcceptance": true,
-      "regressionAcceptance": true,
-      "allNewDone": true,
+      "nodeAcceptance": false,
+      "regressionAcceptance": false,
+      "allNewDone": false,
       "primitiveMechanismsPlanned": true,
       "noEscape": true
     },
-    "snapshot": true,
-    "pass": true,
+    "snapshot": false,
+    "pass": false,
     "outstanding": {
       "behaviorPending": [],
       "refactorPending": [],
@@ -2182,7 +2196,7 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/manifest.js",
-      "sha256": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be"
+      "sha256": "970ca601252a499d19c165c60fc71ad9a2205a68866bea1a764ba0581c8945da"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/records.js",
@@ -2202,11 +2216,11 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
-      "sha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+      "sha256": "820fb043d934bef8e00600583da7fb194b66b5eaa8645faf2e5b4d1ed3ecaaa8"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/flow.js",
-      "sha256": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b"
+      "sha256": "938109f6d9514e0559e895b0b647ad5d9e06676bddcf725b94208afc399e110f"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/entry-rules.js",
@@ -2218,7 +2232,7 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/interludes.js",
-      "sha256": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a"
+      "sha256": "6ec52311f7ac7b513b2d17ba2d33495f17021d97d965a9d2e3018ea8b27275d0"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/story-text.js",
@@ -2342,7 +2356,7 @@
     },
     {
       "path": "tests/fixtures/replay/tic-p8-baseline.json",
-      "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+      "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b"
     },
     {
       "path": "tests/tic-p8-fixture.mjs",
@@ -2362,7 +2376,7 @@
     },
     {
       "path": "tests/tic-p8-campaign.test.mjs",
-      "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+      "sha256": "afd0260c9d1689705305ca7e6f302084b755d6528641178cea95de7e964e0ee1"
     },
     {
       "path": "tests/tic-p8-multiplayer.test.mjs",
@@ -2374,15 +2388,15 @@
     },
     {
       "path": "tests/tic-scenario-thePitOfDespair.test.mjs",
-      "sha256": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
+      "sha256": "9afbcf1ea4c1b728595e0863e87fca3ca6e9af29fb959b522e8516217d376445"
     },
     {
       "path": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-      "sha256": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
+      "sha256": "2da6257f85a067539555ccea5097bcc4bf2c451b80c012bda1c25f540416c079"
     },
     {
       "path": "tests/tic-scenario-inTooDeep.test.mjs",
-      "sha256": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
+      "sha256": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
     },
     {
       "path": "tests/tic-scenario-devilReef.test.mjs",
@@ -2390,11 +2404,11 @@
     },
     {
       "path": "tests/tic-scenario-horrorInHighGear.test.mjs",
-      "sha256": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
+      "sha256": "226cd7eb964248780d3416bcf1016004644abc248c9a2cbd10b89e1974a38183"
     },
     {
       "path": "tests/tic-scenario-aLightInTheFog.test.mjs",
-      "sha256": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
+      "sha256": "864afbe29ed09d1157c108d0109685f9091c927779ba58bc4f5a48fc2284848d"
     },
     {
       "path": "tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -2569,7 +2583,7 @@
           "pending": 0,
           "pendingFiles": []
         },
-        "engineGapNotes": 7
+        "engineGapNotes": 4
       },
       "items": [
         {
@@ -2767,7 +2781,7 @@
       ],
       "ledger": {
         "path": "audit/tic-scenario-acceptance.json",
-        "sha256": "e444bd83ba9fbfd44a125bb2d4e62b8acf9af6e48733af0f008b6fa4b3b274e8"
+        "sha256": "ee9580114569be90fbbdfd0452064daa1421a40d122e4a576126eae603659095"
       },
       "evidence": [
         "tools/audit-tic-scenarios.mjs",
@@ -2786,9 +2800,9 @@
       ]
     },
     "keywords": {
-      "status": "verified",
+      "status": "pending",
       "total": 18,
-      "verified": 18,
+      "verified": 0,
       "items": [
         {
           "id": "bless",
@@ -2841,12 +2855,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -2922,12 +2936,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -2959,12 +2973,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3015,12 +3029,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3052,12 +3066,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3076,12 +3090,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3103,12 +3117,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3131,12 +3145,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3160,12 +3174,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3199,12 +3213,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3250,12 +3264,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3291,12 +3305,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3321,12 +3335,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3352,12 +3366,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3388,12 +3402,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3414,12 +3428,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3456,12 +3470,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3540,12 +3554,12 @@
           ],
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": true,
-            "nodeAcceptance": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
             "rulebookEntry": true,
             "cardLinks": true
           },
-          "status": "verified",
+          "status": "pending",
           "evidence": [
             "audit/tic-mechanism-scan.json",
             "audit/tic-primitive-plan.json",
@@ -3567,7 +3581,7 @@
       ]
     },
     "rulebook": {
-      "status": "verified",
+      "status": "pending",
       "entries": 10,
       "requiredRuleIds": [
         "ticCampaign",
@@ -3583,8 +3597,8 @@
       ],
       "checks": {
         "campaignOverview": true,
-        "scenarioMechanics": true,
-        "keywordEntries": true,
+        "scenarioMechanics": false,
+        "keywordEntries": false,
         "cardLinks": true,
         "desktopBrowser": true,
         "mobileBrowser": true
@@ -3598,7 +3612,7 @@
           "relatedRulesExist": true
         },
         "scenarioMechanics": {
-          "planGates": true,
+          "planGates": false,
           "requiredRuleEntries": 10,
           "entriesPresent": true,
           "entriesInGroup": true,
@@ -3610,8 +3624,8 @@
           "total": 18,
           "entriesPresent": true,
           "searchable": true,
-          "statusVerified": true,
-          "status": "verified"
+          "statusVerified": false,
+          "status": "pending"
         },
         "cardLinks": {
           "cards": 361,
@@ -3636,28 +3650,28 @@
   },
   "evidence": {
     "files": {
-      "audit/presentation-report.json": "b1bb857b045d4e50ad50450b84cc77ca248e45f60be9d9a2db29f7d7384bfa21",
-      "audit/tic-all-card-acceptance.json": "34de808b10d0efe206f3af09074033df29ee5f94cfa5ce88b2a320f4c091a9e1",
+      "audit/presentation-report.json": "c86ce7824691decdfc43d9259e093d81165e4784d9c654bf006c1d6035dbf005",
+      "audit/tic-all-card-acceptance.json": "f84ec3aa909b6b22e119e75721831ae300cb9242227a88990b02102b034ef140",
       "audit/tic-browser-acceptance.json": "9a2c88c2071e2195fd3ec62cd50d0d043ac5df64e4364bbca8766ba9eaca4a4e",
       "audit/tic-control-regression.json": "9467ddf166a857cc89e2283cc59c2164fba3400c829c6882a41a72b323a09385",
-      "audit/tic-interaction-regression.json": "277ec89ace7d536f042a741b0bf5a237fc49103ebe23375d9e3a43e71a760b43",
-      "audit/tic-interactions.json": "d5fce3fedd66027107b105419f79f70bb5f28302ef7fd2da7f566f997cab1cb2",
-      "audit/tic-investigators.json": "0f56253bcc9dc0e7c227152a6365095ba36f298314a1bf3e403cf09be0df4205",
+      "audit/tic-interaction-regression.json": "ef246a83209cdd86a8080ece8f457078ea44616f27b1a49751d32a9942d9a412",
+      "audit/tic-interactions.json": "0b874aab2e09a4522b81568bf05834682ef18be9087592a79225922bf905dee6",
+      "audit/tic-investigators.json": "b234e9c1bf649e985ef6412a7a392c9c5d21b313f4ad2ab0bb6a60358e6ce24c",
       "audit/tic-mechanism-scan.json": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
-      "audit/tic-node-acceptance.json": "5ab8b3f3fa74fab3424635f3b29ec6ec8c849c7f43b47ac2430002507cb92e86",
-      "audit/tic-p8-replay.json": "7bfeead0133299436cce16f04f6d17f622443d8341b4f406da4d101078bd191e",
+      "audit/tic-node-acceptance.json": "fef251b42805f7a3ee1b4cca47276ff7d7a9fd7c16c9a0d101d2c71b98afb1b2",
+      "audit/tic-p8-replay.json": "95f3d84e3fa73b7024ca6dbae093f6658d063fc8da9d5cce4d2fa66d4dc6d1aa",
       "audit/tic-player-acceptance.json": "e0cdcb06c4ef2d582e9a3878a4a52f47cf0a4cb3928537eb31d95491739e7af1",
       "audit/tic-player-queue.json": "66d4e35ddb501e18002c982db7cccc51c8bb2ecc9b9c78143982d9b224ac3808",
       "audit/tic-player-shards.json": "d644d3cb370e87ae8da4a14dbbd81d1cbe3ff27c69a8bb4c539b8bf335754d16",
       "audit/tic-primitive-catalog.json": "d688a7835fdf0c38b1fc3dc2999619ccff3863e74850a29eba8fb56c3ba7041e",
       "audit/tic-primitive-plan.json": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
-      "audit/tic-regression.json": "344e1de3143e65ce52f3adfa3a1dade63490b5cf6745a87663e3dfbff6d6cb87",
+      "audit/tic-regression.json": "dc0d4c535bb84e7687524030e8c4aebe1b13d5a8fcb8028ce47e73aba77be022",
       "audit/tic-release-acceptance.json": "65a6c2ba6189623b429120cb9e1f9dc6e97ef54f88b7630df6a60e08dbabb4d4",
       "audit/tic-release-browser.json": "380784ef1a994ba900168b643844340c495d9b4f9b5b8264b14748eb3de4c2cb",
-      "audit/tic-scenario-acceptance.json": "e444bd83ba9fbfd44a125bb2d4e62b8acf9af6e48733af0f008b6fa4b3b274e8",
+      "audit/tic-scenario-acceptance.json": "ee9580114569be90fbbdfd0452064daa1421a40d122e4a576126eae603659095",
       "audit/tic-scope.json": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
       "audit/tic-story-acceptance.json": "11f904fe53da94a8836ddc9f1793494a5c499447c75c25c71165c21eb52dfcfa",
-      "tests/fixtures/replay/tic-p8-baseline.json": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+      "tests/fixtures/replay/tic-p8-baseline.json": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b"
     },
     "browser": {
       "legacy": {
@@ -3815,7 +3829,7 @@
           "pending": 0,
           "pendingFiles": []
         },
-        "engineGapNotes": 7
+        "engineGapNotes": 4
       }
     },
     "allCardLedger": {
@@ -3845,7 +3859,7 @@
         "testFiles": 84,
         "testFilesWithoutEvents": 0,
         "wrapperTestFiles": 1,
-        "testsPassed": 1570,
+        "testsPassed": 1593,
         "testsFailed": 0,
         "pendingPrimitiveRequests": 0,
         "behaviorPrimitiveRequests": 0,
@@ -3853,8 +3867,8 @@
         "recordsWithEntryFile": 252,
         "recordsImplemented": 252,
         "recordsWithTestEvidence": 252,
-        "verifiedByTitle": 229,
-        "verifiedByFileOnly": 22,
+        "verifiedByTitle": 231,
+        "verifiedByFileOnly": 20,
         "implementedWithoutEvidence": 0,
         "reasonBuckets": {
           "explicitImplementedFalse": [],
@@ -3895,6 +3909,7 @@
             "07071",
             "07072",
             "07073",
+            "07074",
             "07075",
             "07076",
             "07077",
@@ -4079,6 +4094,7 @@
             "07325",
             "07326",
             "07327",
+            "07328",
             "07329",
             "07330a",
             "07330b",
@@ -4094,7 +4110,6 @@
           ],
           "verifiedByFileOnly": [
             "07058",
-            "07074",
             "07078",
             "07089",
             "07100",
@@ -4113,12 +4128,10 @@
             "07212a",
             "07212b",
             "07240",
-            "07255",
-            "07328"
+            "07255"
           ],
           "fileLevelEvidenceOnly": [
             "07058",
-            "07074",
             "07078",
             "07089",
             "07100",
@@ -4137,8 +4150,7 @@
             "07212a",
             "07212b",
             "07240",
-            "07255",
-            "07328"
+            "07255"
           ],
           "implementedWithoutEvidence": []
         }
@@ -4146,22 +4158,12 @@
     },
     "node": {
       "path": "audit/tic-node-acceptance.json",
-      "generatedBy": "node tools/verify-tic.mjs --node",
-      "status": "passed",
-      "commands": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
-      "p8Files": [
-        "tests/tic-p8-registration.test.mjs",
-        "tests/tic-p8-campaign.test.mjs",
-        "tests/tic-p8-multiplayer.test.mjs",
-        "replay-tic-p8"
-      ],
-      "summary": {
-        "tests": 234,
-        "pass": 234,
-        "fail": 0,
-        "skipped": 0
-      },
-      "sourceFiles": 2808
+      "generatedBy": null,
+      "status": null,
+      "commands": null,
+      "p8Files": [],
+      "summary": null,
+      "sourceFiles": null
     },
     "replay": {
       "path": "audit/tic-p8-replay.json",
@@ -4169,9 +4171,9 @@
       "status": "passed",
       "fixture": {
         "path": "tests/fixtures/replay/tic-p8-baseline.json",
-        "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b",
+        "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b",
         "fixtures": 13,
-        "steps": 853,
+        "steps": 855,
         "hashMatches": true
       },
       "replay": {
@@ -4181,18 +4183,12 @@
     },
     "regression": {
       "path": "audit/tic-interaction-regression.json",
-      "generatedBy": "node tools/verify-tic.mjs --p4-regression",
-      "status": "passed",
-      "fast": {
-        "command": "node tools/run-tests.mjs fast --test-concurrency=6",
-        "exitCode": 0,
-        "log": "artifacts/migration/tic/reports/p4-fast-final.log",
-        "logSha256": "c9d1cb26f8807098120022c9ae5ef890f024b620f0c0de998f35463e79c0f2b2",
-        "failures": []
-      },
+      "generatedBy": null,
+      "status": null,
+      "fast": null,
       "replay": {
-        "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p4-baseline.json",
-        "exitCode": 0
+        "command": null,
+        "exitCode": null
       }
     },
     "story": {
@@ -4213,7 +4209,7 @@
       "remoteFallbackMissing": 0,
       "referenceSourceMentions": 37,
       "referenceSourceBound": 0,
-      "runtimeFilesScanned": 2808
+      "runtimeFilesScanned": 2809
     },
     "guides": {
       "command": "node tools/import-scenario-guides.mjs",
@@ -4224,14 +4220,14 @@
     "presentation": {
       "command": "node tools/build-presentation.mjs --check",
       "exitCode": 0,
-      "presentationVersion": "f240e551fbbf0e7946afa5bd60b601783f072ea4ade4abc0655f632106ec4a9f",
+      "presentationVersion": "1d9d4f31dab048572c6ac818d1059676783baafa5315da22f633aabf7d61fede",
       "ticDescriptorsResolved": 361
     },
     "docs": {
       "command": "node tools/check-doc-links.mjs --json",
       "exitCode": 0,
-      "files": 38,
-      "links": 128,
+      "files": 39,
+      "links": 134,
       "broken": 0
     },
     "registry": {
@@ -4246,22 +4242,17 @@
   "tests": {
     "node": {
       "path": "audit/tic-node-acceptance.json",
-      "generatedBy": "node tools/verify-tic.mjs --node",
-      "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
-      "status": "passed",
-      "tests": 234,
-      "pass": 234,
-      "fail": 0,
-      "skipped": 0,
-      "sourceFiles": 2808,
-      "sourceStableDuringRun": true,
-      "p8Files": [
-        "tests/tic-p8-registration.test.mjs",
-        "tests/tic-p8-campaign.test.mjs",
-        "tests/tic-p8-multiplayer.test.mjs",
-        "replay-tic-p8"
-      ],
-      "current": true
+      "generatedBy": null,
+      "command": null,
+      "status": null,
+      "tests": null,
+      "pass": null,
+      "fail": null,
+      "skipped": null,
+      "sourceFiles": null,
+      "sourceStableDuringRun": null,
+      "p8Files": [],
+      "current": false
     },
     "browser": {
       "legacy": 38,
@@ -4270,7 +4261,7 @@
     },
     "replay": {
       "fixtures": 13,
-      "steps": 853
+      "steps": 855
     },
     "scenarioAcceptance": {
       "testFiles": [
@@ -4283,10 +4274,29 @@
         "tests/tic-scenario-theLairOfDagon.test.mjs",
         "tests/tic-scenario-intoTheMaelstrom.test.mjs"
       ],
-      "passedCases": 97
+      "passedCases": 100
     }
   },
-  "remaining": [],
+  "remaining": [
+    "Node 验收账本不 current/未通过（audit/tic-node-acceptance.json；缺失，P8 文件 0/3，请 node tools/verify-tic.mjs --node）",
+    "P8 战役重放证据缺失或未通过（audit/tic-p8-replay.json：status=passed，fixture 覆盖 8 章；请 node tools/verify-tic.mjs --p8-replay）",
+    "回归证据不 current/未通过（audit/tic-interaction-regression.json）",
+    "关键词未 verified：bless、curse、seal、vehicle、road、researched、covenant、exceptional、permanent、fast、hunter、aloof、massive、retaliate、surge、peril、victory、revelation",
+    "规则书未 verified：scenarioMechanics、keywordEntries",
+    "发布验收未通过：node",
+    "发布验收未通过：replay",
+    "发布验收未通过：regression",
+    "P8 门禁未通过：planLedger",
+    "P8 门禁未通过：keywordsVerified",
+    "P8 门禁未通过：rulebookVerified",
+    "P8 门禁未通过：nodeAcceptance",
+    "P8 门禁未通过：regressionVerified",
+    "P8 门禁未通过：replayVerified",
+    "P8 门禁未通过：investigatorsVerified",
+    "P8 门禁未通过：primitivesDone",
+    "P8 门禁未通过：interactionVerified",
+    "发布门禁未通过：node、replay、regression、disclosure"
+  ],
   "gate": {
     "scopeLedger": {
       "path": "audit/tic-scope.json",
@@ -4322,14 +4332,14 @@
       "gates": {
         "scanPassed": true,
         "exportsPresent": true,
-        "nodeAcceptance": true,
-        "regressionAcceptance": true,
-        "allNewDone": true,
+        "nodeAcceptance": false,
+        "regressionAcceptance": false,
+        "allNewDone": false,
         "primitiveMechanismsPlanned": true,
         "noEscape": true
       },
-      "snapshot": true,
-      "pass": true
+      "snapshot": false,
+      "pass": false
     },
     "records": {
       "totalConserved": true,
@@ -4521,9 +4531,28 @@
     },
     "keywordsVerified": {
       "total": 18,
-      "verified": 18,
-      "pending": [],
-      "pass": true
+      "verified": 0,
+      "pending": [
+        "bless",
+        "curse",
+        "seal",
+        "vehicle",
+        "road",
+        "researched",
+        "covenant",
+        "exceptional",
+        "permanent",
+        "fast",
+        "hunter",
+        "aloof",
+        "massive",
+        "retaliate",
+        "surge",
+        "peril",
+        "victory",
+        "revelation"
+      ],
+      "pass": false
     },
     "rulebookEntries": {
       "expected": 10,
@@ -4533,14 +4562,14 @@
     "rulebookVerified": {
       "checks": {
         "campaignOverview": true,
-        "scenarioMechanics": true,
-        "keywordEntries": true,
+        "scenarioMechanics": false,
+        "keywordEntries": false,
         "cardLinks": true,
         "desktopBrowser": true,
         "mobileBrowser": true
       },
-      "status": "verified",
-      "pass": true
+      "status": "pending",
+      "pass": false
     },
     "mechanicsRegistered": {
       "expected": 9,
@@ -4551,50 +4580,32 @@
     },
     "nodeAcceptance": {
       "path": "audit/tic-node-acceptance.json",
-      "evidence": {
-        "summary": {
-          "tests": 234,
-          "pass": 234,
-          "fail": 0,
-          "skipped": 0
-        },
-        "testTitles": 234
-      },
-      "generatedBy": "node tools/verify-tic.mjs --node",
-      "status": "passed",
-      "command": "node --test tests/tic-migration.test.mjs tests/tic-primitives.test.mjs tests/tic-rules.test.mjs tests/tic-interactions.test.mjs tests/tic-investigators.test.mjs tests/tic-player-primitives.test.mjs tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-p8-registration.test.mjs tests/tic-p8-campaign.test.mjs tests/tic-p8-multiplayer.test.mjs tests/replay-tic-p8.test.mjs",
-      "tests": 234,
-      "pass": true,
-      "fail": 0,
-      "skipped": 0,
-      "sourceFiles": 2808,
-      "sourceStableDuringRun": true,
-      "p8Markers": [
-        "tests/tic-p8-registration.test.mjs",
-        "tests/tic-p8-campaign.test.mjs",
-        "tests/tic-p8-multiplayer.test.mjs",
-        "replay-tic-p8"
-      ],
-      "p8Files": [
-        "tests/tic-p8-registration.test.mjs",
-        "tests/tic-p8-campaign.test.mjs",
-        "tests/tic-p8-multiplayer.test.mjs",
-        "replay-tic-p8"
-      ],
-      "current": true,
-      "passGate": true
+      "evidence": null,
+      "generatedBy": null,
+      "status": null,
+      "command": null,
+      "tests": null,
+      "pass": false,
+      "fail": null,
+      "skipped": null,
+      "sourceFiles": null,
+      "sourceStableDuringRun": null,
+      "p8Markers": [],
+      "p8Files": [],
+      "current": false,
+      "passGate": false
     },
     "regressionVerified": {
       "path": "audit/tic-interaction-regression.json",
-      "generatedBy": "node tools/verify-tic.mjs --p4-regression",
-      "status": "passed",
-      "sourceStableDuringRun": true,
-      "fastExitCode": 0,
-      "replayExitCode": 0,
-      "failures": 0,
-      "present": true,
-      "current": true,
-      "pass": true
+      "generatedBy": null,
+      "status": null,
+      "sourceStableDuringRun": null,
+      "fastExitCode": null,
+      "replayExitCode": null,
+      "failures": null,
+      "present": false,
+      "current": false,
+      "pass": false
     },
     "replayVerified": {
       "path": "audit/tic-p8-replay.json",
@@ -4606,35 +4617,35 @@
       "exitCode": 0,
       "fixture": {
         "path": "tests/fixtures/replay/tic-p8-baseline.json",
-        "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b",
+        "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b",
         "fixtures": 13,
-        "steps": 853,
+        "steps": 855,
         "hashMatches": true
       },
       "chaptersCovered": 8,
       "sourceFiles": {
-        "total": 2808,
-        "verified": 2808,
-        "fresh": true
+        "total": 2809,
+        "verified": 2806,
+        "fresh": false
       },
-      "pass": true
+      "pass": false
     },
     "investigatorsVerified": {
       "path": "audit/tic-investigators.json",
-      "status": "verified",
+      "status": "pending",
       "formal": 5,
       "items": 5,
-      "verified": 5,
+      "verified": 0,
       "gates": {
-        "investigators": true,
+        "investigators": false,
         "packBoundary": true,
-        "dexterCardEntry": true,
-        "jsonAndMultiplayer": true,
+        "dexterCardEntry": false,
+        "jsonAndMultiplayer": false,
         "originalBaselinePreserved": true,
-        "replayExact": true,
-        "fastZeroFailures": true
+        "replayExact": false,
+        "fastZeroFailures": false
       },
-      "pass": true
+      "pass": false
     },
     "playerCardsVerified": {
       "path": "audit/tic-player-acceptance.json",
@@ -4690,7 +4701,7 @@
       "pending": 0,
       "strictComplete": true,
       "gateComplete": true,
-      "testsPassed": 1570,
+      "testsPassed": 1593,
       "testFiles": 84,
       "simplifiedCodes": [],
       "behaviorRequests": 0,
@@ -4699,7 +4710,7 @@
       "entriesPassing": true,
       "ledger": {
         "path": "audit/tic-all-card-acceptance.json",
-        "sha256": "34de808b10d0efe206f3af09074033df29ee5f94cfa5ce88b2a320f4c091a9e1"
+        "sha256": "f84ec3aa909b6b22e119e75721831ae300cb9242227a88990b02102b034ef140"
       },
       "pass": true,
       "strictPass": true
@@ -4743,8 +4754,8 @@
       "sourceStableDuringRun": true,
       "sourceFiles": {
         "total": 2808,
-        "verified": 2808,
-        "fresh": true
+        "verified": 2739,
+        "fresh": false
       },
       "specs": [
         "tests/tic-online.browser.mjs",
@@ -5150,7 +5161,7 @@
           "content/**",
           "web/**"
         ],
-        "filesScanned": 2808,
+        "filesScanned": 2809,
         "mentionCount": 37,
         "boundReferenceCount": 0,
         "boundReferences": []
@@ -5165,7 +5176,7 @@
       "report": {
         "path": "audit/presentation-report.json",
         "present": true,
-        "presentationVersion": "f240e551fbbf0e7946afa5bd60b601783f072ea4ade4abc0655f632106ec4a9f",
+        "presentationVersion": "1d9d4f31dab048572c6ac818d1059676783baafa5315da22f633aabf7d61fede",
         "catalogCards": 5930,
         "imageResolutionCards": 1
       },
@@ -5180,8 +5191,8 @@
       "exitCode": 0,
       "ok": true,
       "missing": false,
-      "files": 38,
-      "links": 128,
+      "files": 39,
+      "links": 134,
       "broken": 0,
       "brokenLinks": [],
       "pass": true
@@ -5196,9 +5207,23 @@
     "primitivesDone": {
       "path": "audit/tic-primitive-plan.json",
       "new": 13,
-      "done": 13,
+      "done": 0,
       "reuse": 7,
-      "unfinished": [],
+      "unfinished": [
+        "chaos.pool",
+        "chaos.seal",
+        "chaos.resolution",
+        "location.flood",
+        "investigator.air",
+        "scenario.keys",
+        "scenario.vehicle",
+        "location.graph",
+        "campaign.recordSet",
+        "test.commitOrigin",
+        "deck.traitLimit",
+        "turn.promise",
+        "uses.transfer"
+      ],
       "deferred": 0,
       "escape": 0,
       "requests": {
@@ -5213,30 +5238,30 @@
       "planGates": {
         "scanPassed": true,
         "exportsPresent": true,
-        "nodeAcceptance": true,
-        "regressionAcceptance": true,
-        "allNewDone": true,
+        "nodeAcceptance": false,
+        "regressionAcceptance": false,
+        "allNewDone": false,
         "primitiveMechanismsPlanned": true,
         "noEscape": true
       },
-      "snapshot": true,
-      "pass": true
+      "snapshot": false,
+      "pass": false
     },
     "interactionVerified": {
       "path": "audit/tic-interactions.json",
-      "status": "verified",
+      "status": "pending",
       "checks": {
-        "nodeAcceptance": true,
-        "sourceStable": true,
-        "desktopAndMobile": true,
-        "scriptOwnership": true,
-        "guidePlacementAndPrivacy": true,
-        "guideFailureRetryAndKeyboard": true,
+        "nodeAcceptance": false,
+        "sourceStable": false,
+        "desktopAndMobile": false,
+        "scriptOwnership": false,
+        "guidePlacementAndPrivacy": false,
+        "guideFailureRetryAndKeyboard": false,
         "baselineUnchanged": true,
-        "fastZeroFailures": true,
-        "replayExact": true
+        "fastZeroFailures": false,
+        "replayExact": false
       },
-      "pass": true
+      "pass": false
     },
     "baseline": {
       "path": "audit/baseline.json",
@@ -5244,31 +5269,31 @@
       "ticAuditRecorded": true,
       "pass": true
     },
-    "pass": true,
+    "pass": false,
     "releaseGate": {
       "launch": true,
       "lobby": true,
       "chapters": true,
       "allCards": true,
       "allCardsStrict": true,
-      "node": true,
+      "node": false,
       "browser": true,
-      "replay": true,
-      "regression": true,
+      "replay": false,
+      "regression": false,
       "story": true,
       "guides": true,
       "images": true,
       "presentation": true,
       "docs": true,
-      "disclosure": true,
-      "pass": true
+      "disclosure": false,
+      "pass": false
     },
     "releaseDisclosure": {
-      "earlyAccess": false,
+      "earlyAccess": true,
       "deferred": [],
       "lobbyEarlyAccess": false,
       "lobbyMarked": false,
-      "pass": true
+      "pass": false
     }
   }
 }

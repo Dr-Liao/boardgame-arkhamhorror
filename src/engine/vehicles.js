@@ -99,6 +99,14 @@ export function moveVehicle(state, id, destination, { moveInvestigator, entryErr
   }
   const origin = vehicle.location
   const seats = [...vehicle.passengers]
+  // 道路危害的两个分发口（07204–07210）：**离开**本地点是 `#when` 时点，必须在乘客随车
+  // 离开之前结算——印刷要求「该地点的调查员共同花费线索」，此时乘客仍被算在出发地
+  // （参考实现 handleVehicleLeaves 在 VehicleLeaves #when 窗口里 `investigatorAt here`）。
+  // 修复前先移动后派发，`payGroupClues(atLocation: 出发地)` 找不到乘客，共同付费分支恒为 0（审计 H3）。
+  const event = { vehicleId: id, seats, origin, destination }
+  if (typeof vehicleLeft === 'function') vehicleLeft(event)
+  // 危害可能把载具移出游戏（07205a/b 崖边道路：司机检定失败弃车）：移动作废，乘客留在出发地。
+  if (!mechanicState(state)?.vehicles?.[id]) return true
   vehicle.location = destination
   // 载具的**物理卡**本身也要跟着走：剧情支援（渔船这类）用实例上的 location 记录位置，
   // 下一次 [action] 的范围判定（entityAbilityInRange）就靠它。受控载具（汽车）挂在调查员
@@ -109,9 +117,7 @@ export function moveVehicle(state, id, destination, { moveInvestigator, entryErr
     moveInvestigator(seat, destination)
     if (state.investigators[seat].location !== destination) throw new Error('载具移动中止：必须回滚整个规则事务')
   }
-  // 道路危害的两个分发口（07204–07210）：移动成功之后才结算，事件里带出发地/目的地与乘客快照。
-  const event = { vehicleId: id, seats, origin, destination }
-  if (typeof vehicleLeft === 'function') vehicleLeft(event)
+  // 「进入本地点后」的强制（07210 蜿蜒长路）才是移动后的时点。
   if (typeof vehicleEntered === 'function') vehicleEntered(event)
   return true
 }

@@ -17,7 +17,7 @@ import assert from 'node:assert/strict'
 import { fixture, move, settle, enemy as testEnemy } from './core-fixture.mjs'
 import {
   applyDamage, applyMove, createGameState, decisionSeat, disengageAll, getHandSize, getStat, legalMoves, lookAt,
-  payAbilityCost, performTest, validateMove,
+  payAbilityCost, performTest, placeLocation, validateMove,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -451,6 +451,19 @@ test('P6 派翠丝的小提琴：弃 1 张手牌并横置，同地点一位调�
 // 9. 卢克·罗宾逊（06004 / 06013 / 06014）—— 已知简化
 // ---------------------------------------------------------------------------
 
+// 卢克的能力读「连接地点」；核心剧本的书房印刷上没有固定连接，这里搭一张最小地图：
+// 书房 ↔ 走廊（走廊已在场），连接表里再挂一个只在关卡定义、尚未入场的地点（阁楼）。
+// 这正是 TFA 的形状：连接表来自关卡定义，雨林地点开局还在探索牌库。
+function lukeMapFixture() {
+  const state = investigatorFixture('06004')
+  const inv = me(state)
+  placeLocation(state, 'hallway', [])
+  const here = state.locations.find(location => location.id === inv.location)
+  here.connections = ['hallway', 'attic']
+  const there = state.locations.find(location => location.id === 'hallway')
+  return { state, inv, here, there }
+}
+
 test('P6 卢克：旧印 +1 并在门之匣上放 1 充能', () => {
   const state = investigatorFixture('06004')
   const inv = me(state)
@@ -461,19 +474,78 @@ test('P6 卢克：旧印 +1 并在门之匣上放 1 充能', () => {
 })
 
 test('P6 卢克：每回合可以把 1 张事件如同位于连接地点打出', () => {
-  const state = investigatorFixture('06004')
-  const inv = me(state)
-  const here = state.locations.find(location => location.id === inv.location)
-  const otherId = here.connections[0]
-  state.enemies.push({ id: 'there', code: '01116', name: '敌人', location: otherId, health: 2, engagedSeat: null, exhausted: false })
-  inv.hand = ['01016']
-  inv.resources = 5
-  const asIf = legalMoves(state, 0).find(item => item.action === 'play' && item.asIfLocation === otherId)
-  assert.ok(asIf, '连接地点应出现在打出选项里')
-  applyMove(state, 0, { action: 'play', cardId: asIf.cardId, asIfLocation: otherId })
+  const { state, inv, here, there } = lukeMapFixture()
+  state.enemies.push({ id: 'there', code: '01116', name: '敌人', location: there.id, health: 2, engagedSeat: null, exhausted: false })
+  inv.hand = ['01088']
+  inv.resources = 10
+  const asIf = legalMoves(state, 0).find(item =>
+    item.action === 'play' && item.cardId === '01088' && item.asIfLocation === there.id)
+  assert.ok(asIf, '在场的连接地点应出现在打出选项里')
+  assert.ok(asIf.label.includes(`如同位于「${there.name}」`), `文案应使用地点名：${asIf.label}`)
+  applyMove(state, 0, { action: 'play', cardId: '01088', asIfLocation: there.id })
   assert.equal(me(state).location, here.id, '事件没有带走调查员时回到原地点')
-  assert.equal(state.enemies.find(enemy => enemy.id === 'there').engagedSeat, null)
+  assert.equal(state.enemies.find(enemy => enemy.id === 'there').engagedSeat, null, '结算结束后解除临时交战')
+  assert.equal(me(state).resources, 13, '事件按如同位于的方式真实结算（应急物品获得 3 资源）')
   assert.equal(legalMoves(state, 0).some(item => item.asIfLocation), false, '本回合不能再用第二次')
+})
+
+test('P6 卢克：如同位于只列出已经在场的连接地点', () => {
+  const { state, inv } = lukeMapFixture()
+  // 前置：阁楼只在关卡定义里、还没入场——复现 TFA「探险营地 → 雨林地点还在探索牌库」的形状。
+  assert.ok(state.scenario.locations.attic, '阁楼在关卡定义里')
+  assert.equal(state.locations.some(location => location.id === 'attic'), false, '阁楼未入场')
+  inv.hand = ['01088']
+  inv.resources = 10
+  const moves = legalMoves(state, 0).filter(item => item.action === 'play' && item.cardId === '01088')
+  assert.equal(moves.some(item => item.asIfLocation === 'attic'), false, '未入场的连接地点不应出现在打出选项里')
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01088', asIfLocation: 'attic' }), '那个地点不在场',
+    '直接提交未入场地点的如同位于打法必须被拒绝')
+})
+
+// 现场症状（2026-11-05）：卢克在《失落的时代》第一关拿着「捷径」等快速事件时，
+// 点任意行动（如「探索」）都会弹出「选择选项 id 重复（playerWindow：fast-card:02022）」，
+// 整局卡死。根因是 legalMoves 会为「如同位于连接地点」再给同一张手牌各生成一份 0 行动
+// 打出移动，而玩家窗口只按卡号拼 option id，多份变体撞成同一个 id；requestChoice 的
+// 唯一性检查（P0，避免软锁）因此把整个行动回滚。
+test('P6 卢克：玩家窗口里的快速事件按「如同位于」分组，选项 id 不重复', () => {
+  const { state, inv } = lukeMapFixture()
+  inv.hand = ['01036']
+  inv.resources = 10
+  inv.actionsLeft = 3
+  // 任意行动之后都会开「行动后玩家窗口」：快速事件的两条写法都在这里出现。
+  applyMove(state, 0, { action: 'draw' })
+  assert.equal(state.pendingChoice?.kind, 'playerWindow', '行动后打开玩家窗口')
+  const ids = state.pendingChoice.options.map(option => option.id)
+  assert.equal(new Set(ids).size, ids.length, `选项 id 必须唯一：${ids.join('、')}`)
+  assert.ok(ids.includes('fast-card:01036'), '普通「快速打出」沿用旧 id，既有对局形状不变')
+  const there = state.locations.find(location => location.id === 'hallway')
+  const asIfId = `fast-card:01036:asif:${there.id}`
+  const asIf = state.pendingChoice.options.find(option => option.id === asIfId)
+  assert.ok(asIf, `如同位于变体应有独立 id：${ids.join('、')}`)
+  assert.match(asIf.label, new RegExp(`如同位于「${there.name}」`), '标签写清是哪个连接地点')
+  assert.equal(asIf.cardCode, '01036', '下发卡号，快速反应开关才能按卡过滤这些变体')
+})
+
+test('P6 卢克：玩家窗口里选「如同位于」快速事件按该地点结算并在结束后还原', () => {
+  const { state, inv, here, there } = lukeMapFixture()
+  const hereId = here.id, thereId = there.id
+  here.clues = 5
+  there.clues = 2
+  inv.hand = ['01037'] // 专业的直觉：快速。只能在你回合期间打出。发现你所在地点的 1 个线索。
+  inv.resources = 10
+  inv.actionsLeft = 3
+  const turnSerial = state.turnSerial
+  applyMove(state, 0, { action: 'draw' })
+  const asIfId = `fast-card:01037:asif:${thereId}`
+  assert.ok(state.pendingChoice?.options.some(option => option.id === asIfId), '窗口里给出如同位于变体')
+  move(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId: asIfId })
+  // 结算期间卢克「如同位于」走廊：线索发现发生在走廊，而不是原地点书房。
+  assert.equal(state.locations.find(location => location.id === thereId).clues, 1, '按如同位于的连接地点结算（走廊 2 → 1）')
+  assert.equal(state.locations.find(location => location.id === hereId).clues, 5, '原地点的线索不变（书房仍是 5）')
+  assert.equal(me(state).location, hereId, '如同位于只在结算期间生效，结束后回到原地点')
+  assert.equal(me(state).asIfEventTurn, turnSerial, '用掉了本回合那一次如同位于')
+  assert.ok(me(state).discard.includes('01037'), '快速事件正常结算并进弃牌堆')
+  assert.equal(state.pendingChoice, null, '结算后继续原来的回合，不再弹错误')
 })
 
 test('P6 卢克：门之匣放置梦境之门并移动过去', () => {

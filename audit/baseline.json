@@ -30,8 +30,8 @@
     {
       "id": "carcosaPlayer",
       "command": "node tools/audit-carcosa-player.mjs",
-      "status": 0,
-      "lastLine": "{\"total\":95,\"constructible\":92,\"basicWeaknesses\":3,\"verified\":95,\"unverified\":0,\"testsPassed\":109}"
+      "status": 1,
+      "lastLine": "Node.js v24.19.0"
     },
     {
       "id": "carcosaAllCards",
@@ -60,8 +60,8 @@
     {
       "id": "p6",
       "command": "node tools/audit-p6.mjs --check",
-      "status": 0,
-      "lastLine": "{\"cards\":300,\"scopedFixes\":6,\"fullCardEquivalenceClaimed\":0,\"needsBehaviorReview\":177,\"catalogOnly\":117}"
+      "status": 1,
+      "lastLine": "账本漂移：p6-behavior-ledger.json"
     },
     {
       "id": "abilities",
@@ -102,14 +102,14 @@
     {
       "id": "tdeScope",
       "command": "node tools/scan-tde-scope.mjs --check",
-      "status": 0,
-      "lastLine": "scope 复算一致：388 条记录（352 主卡 + 36 面），三包 283/18/87，20 个遭遇组，8 章，43 个来源"
+      "status": 1,
+      "lastLine": "scope.json 与来源不一致（重新 --write 并审阅 diff）"
     },
     {
       "id": "tdeMigration",
       "command": "node tools/audit-tde.mjs --check",
-      "status": 0,
-      "lastLine": "audit 复算一致：M5 · P10，范围 388 条，关键词 7/7，规则书 verified，逐卡 388/388，剧本 8/8，并行 10/10，gate pass"
+      "status": 1,
+      "lastLine": "audit/tde-migration.json 与内容不一致（重新 --write 并审阅 diff）：earlyAccessReason, confirmations, tests, remaining, gate"
     },
     {
       "id": "ticScope",
@@ -120,8 +120,8 @@
     {
       "id": "ticMigration",
       "command": "node tools/audit-tic.mjs --check",
-      "status": 0,
-      "lastLine": "TIC P8 发布账本：milestone M5 · P8 · gate pass · 记录 361（252/16/93） · 八章 8/8 verified（launchable 8/8） · 逐卡 251/252 strict · earlyAccess false · equivalenceCertified true · maintenance 0 · remaining 0"
+      "status": 1,
+      "lastLine": "audit/tic-migration.json 与内容不一致（重新 --write 并审阅 diff）：baseline, releaseAcceptance, releaseGate, evidence, remaining, gate"
     },
     {
       "id": "ticRelease",
@@ -131,8 +131,8 @@
     }
   ],
   "docLinks": {
-    "files": 38,
-    "links": 128,
+    "files": 39,
+    "links": 134,
     "broken": 0
   },
   "goldenReplay": {
@@ -144,10 +144,10 @@
   },
   "tests": {
     "command": "node tools/run-tests.mjs fast",
-    "status": 0,
-    "tests": 6393,
-    "pass": 6390,
-    "fail": 0
+    "status": 1,
+    "tests": 6422,
+    "pass": 6414,
+    "fail": 5
   },
   "notes": [
     "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",

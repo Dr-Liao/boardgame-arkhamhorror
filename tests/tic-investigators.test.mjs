@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, move, settle, answer } from './core-fixture.mjs'
+import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
@@ -80,13 +81,25 @@ test('P5 玛丽：真实开局两祝福、轮末上限与旧印成功／失败',
   }
 })
 
-test('P5 信仰危机只处理袋内祝福；诅咒池满时替换仍移除祝福，恐惧选项保留祝福', () => {
+test('P5 信仰危机只处理袋内祝福；诅咒池满时不再提供「替换为诅咒」选项（审计 M5）', () => {
   const s = setup('07001'); s.chaosBag = ['0', 'bless', 'bless', ...Array(10).fill('curse')]
   createMechanicsApi(s).chaosTokens.seal('angel', 'bless', 1)
   s.investigators[0].deck.push('07007')
+  const before = s.investigators[0].horror
   transact(s, draft => drawCards(draft, draft.investigators[0], 1, []), c => c.source === '07007' ? 'curse' : null)
-  assert.equal(s.chaosBag.includes('bless'), false); assert.equal(s.chaos.sealed.length, 1)
+  // 物理诅咒池已满（10 枚）→「替换为诅咒」不合法，只能承受恐惧；祝福保留、诅咒数不越界。
+  // seal 已从袋内封掉 1 个祝福，袋里剩 1 个 → 只处理这 1 个，承受 1 恐惧。
+  assert.equal(s.chaosBag.filter(t => t === 'bless').length, 1)
+  assert.equal(s.investigators[0].horror, before + 1)
   assert.equal(s.chaosBag.filter(t => t === 'curse').length, 10)
+  assert.equal(s.chaos.sealed.length, 1)
+  // 池有余量时替换是精确替换：祝福 -1、诅咒 +1。
+  const r = setup('07001'); r.chaosBag = ['0', 'bless', 'bless']
+  r.investigators[0].deck.push('07007')
+  transact(r, draft => drawCards(draft, draft.investigators[0], 1, []), c => c.source === '07007' ? 'curse' : null)
+  assert.equal(r.chaosBag.filter(t => t === 'bless').length, 0)
+  assert.equal(r.chaosBag.filter(t => t === 'curse').length, 2)
+  // 恐惧分支保留祝福。
   const t = setup('07001'); t.chaosBag.push('bless'); t.investigators[0].deck.push('07007')
   transact(t, draft => drawCards(draft, draft.investigators[0], 1, []), c => c.source === '07007' ? 'horror' : null)
   assert.equal(t.investigators[0].horror, 1); assert.ok(t.chaosBag.includes('bless'))
@@ -110,6 +123,39 @@ test('P5 守护天使承接连接地点队友伤害，致命分配也能加入�
     return null
   })
   assert.equal(s.investigators[1].horror, 1)
+})
+
+test('P5 守护天使：同一事务里两次伤害分配各加 1 祝福（审计 H9 perWindow 键回归）', () => {
+  // 窗口实例键按章节开关（TIC `eventWindowInstances`）写入；07006 是 TIC 调查员卡，用真实章节夹具。
+  const s = chapterFixture('theVanishingOfElinaHarper', 2), angel = asset(s, '07006')
+  s.enemies = []
+  const home = s.investigators[0].location
+  s.locations.push({ id: 'adjacent', name: '相邻地点', connections: [home], revealed: true, clues: 0, shroud: 1 })
+  s.locations.find(location => location.id === home).connections.push('adjacent')
+  s.investigators[1].location = 'adjacent'
+  // 同一事务内的两次独立伤害分配：窗口实例键必须区分两次事件（敌人阶段多名敌人攻击、
+  // 一次行动多段伤害都会走到这里）。修复前 perWindow 键不含事件实例，第二次被折叠。
+  transact(s, draft => {
+    applyDamage(draft, draft.investigators[1], 1, [])
+    applyDamage(draft, draft.investigators[1], 1, [])
+  }, c => (c.kind === 'assign-damage' ? angel.id : firstAbility(c)))
+  assert.equal(s.investigators[0].assets.find(item => item.code === '07006').damage, 2, '两点伤害都分配给守护天使')
+  assert.equal(s.chaosBag.filter(token => token === 'bless').length, 2, '每次分配各加 1 祝福')
+})
+
+test('P5 表演技巧：同一事务里两张支援先后入场各触发一次 +2（审计 M7 窗口实例键回归）', () => {
+  const s = chapterFixture('theVanishingOfElinaHarper', 1)
+  s.enemies = []
+  asset(s, '07012')
+  s.investigators[0].hand.push('01031', '01030')
+  const descriptor = { ...registeredEntry('testTicTriggeredSkill').abilities[0],
+    resolve: ({ inv, api }) => { api.putAssetIntoPlay(inv.seat, '01031'); api.putAssetIntoPlay(inv.seat, '01030') } }
+  transact(s, draft => executeDescriptor(draft, { inv: draft.investigators[0], source: draft.investigators[0].assets[0],
+    descriptor, alreadyPaid: true, events: [] }), firstAbility)
+  const book = s.investigators[0].assets.find(a => a.code === '01031')
+  const other = s.investigators[0].assets.find(a => a.code === '01030')
+  assert.equal(book?.triggeredSkillBonus.amount, 2, '第一张入场支援获得 +2')
+  assert.equal(other?.triggeredSkillBonus.amount, 2, '第二张入场支援同样获得 +2')
 })
 
 test('P5 阿曼达轮换：先抽、清理旧牌、强制选择深海低语；多人窗口与 JSON 恢复', () => {

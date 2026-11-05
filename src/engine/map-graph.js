@@ -31,10 +31,46 @@ export function initializeRoad(state, { deck, detours = [], columns }) {
   if (data.road) throw new Error('道路已初始化')
   data.road = { deck: [...deck], detours: [...detours], columns: { ...columns } }
 }
+// 道路列的横向连接唯一同步点：同一列的地点互不连接，只连接相邻列（07204–07210 的「道路 N」）。
+// 遍历时**只处理仍在场的地点**：轮末清理 / 幕背面布置会移除地点，残留的列号不能变成
+// 「无效地点」异常（审计 H4：清理后再扩路曾整个事务回滚）。
+function syncRoadConnections(state, road) {
+  const inPlay = new Map((state.locations || []).map(location => [location.id, location]))
+  for (const [id, x] of Object.entries(road.columns)) {
+    const location = inPlay.get(id)
+    if (!location) continue
+    location.connections = Object.entries(road.columns)
+      .filter(([other, y]) => other !== id && Math.abs(y - x) === 1 && inPlay.has(other))
+      .map(([other]) => other)
+  }
+}
+// 清掉不在场的道路列号（防御性：地点可能从其它路径离场，例如履历/存档迁移）。
+function pruneRoadColumns(state, road) {
+  const inPlay = new Set((state.locations || []).map(location => location.id))
+  let changed = false
+  for (const id of Object.keys(road.columns)) if (!inPlay.has(id)) { delete road.columns[id]; changed = true }
+  return changed
+}
+// 地点离场（移出游戏 / 进胜利区后不再在场）时同步清掉它的道路列号。
+// 读点：locations.js#removeLocation。返回是否真的清掉了一列。
+export function forgetRoadLocation(state, id) {
+  const road = mechanicState(state)?.road
+  if (!road?.columns) return false
+  const removed = Object.hasOwn(road.columns, id)
+  if (removed) delete road.columns[id]
+  const pruned = pruneRoadColumns(state, road)
+  if (removed || pruned) syncRoadConnections(state, road)
+  return removed
+}
 export function extendRoad(state, from, count, place) {
   integer(count); locationAt(state, from)
-  const road = mechanicState(state)?.road, column = road?.columns?.[from]
-  if (column == null || Object.values(road.columns).some(value => value > column) || !road.deck.length || !count) return []
+  const road = mechanicState(state)?.road
+  if (!road?.columns) return []
+  // 清理悬空列号后再判断「是不是最前方」：否则被移出场地的列号会永远拦住扩路（审计 H4）。
+  pruneRoadColumns(state, road)
+  const column = road.columns[from]
+  if (column == null || Object.values(road.columns).some(value => value > column)
+    || !road.deck.length || !count) return []
   if (typeof place !== 'function') throw new TypeError('道路扩展需要地点放置入口')
   const detours = Math.min(count - 1, road.detours.length)
   const next = [road.deck.at(-1), ...road.detours.slice(road.detours.length - detours)]
@@ -43,8 +79,6 @@ export function extendRoad(state, from, count, place) {
   if (placed.some(id => !id || Object.hasOwn(road.columns, id))) throw new Error('道路放置未返回新的地点 id')
   for (const id of placed) { locationAt(state, id); road.columns[id] = column + 1 }
   road.deck.pop(); road.detours.splice(road.detours.length - (next.length - 1), next.length - 1)
-  for (const [id, x] of Object.entries(road.columns)) {
-    locationAt(state, id).connections = Object.entries(road.columns).filter(([other, y]) => other !== id && Math.abs(y - x) === 1).map(([other]) => other)
-  }
+  syncRoadConnections(state, road)
   return placed
 }

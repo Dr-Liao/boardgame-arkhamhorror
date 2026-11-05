@@ -153,6 +153,42 @@ test('horrorInHighGear 地点与连接/清理：道路列邻接、载具移动�
   assert.equal(cleanupState.locations.length >= 3, true, '最后方调查员后方的地点保留')
 })
 
+test('horrorInHighGear 道路1 揭示后同样扩路（审计 H2 回归）：前方没有下一列时放 1 张道路卡、不放蜿蜒长路', () => {
+  const s = chapterFixture('horrorInHighGear', 2)
+  // 局面回退到「只有初始 3 列、道路牌堆/绕路池满」：移除开局时前方道路触发的第 4 列。
+  for (const [id, column] of Object.entries(columns(s))) {
+    if (Number(column) > 3) {
+      s.locations = s.locations.filter(location => location.id !== id)
+      delete columns(s)[id]
+    }
+  }
+  road(s).deck = [...s.scenarioFlags.initialRoad.deck]
+  road(s).detours = [...s.scenarioFlags.initialRoad.detours]
+  const inPlay = new Set(s.locations.map(location => location.id))
+  const code = ['07204a', '07204b', '07204c', '07205a', '07205b',
+    '07208a', '07208b', '07208c', '07209a', '07209b'].find(candidate => !inPlay.has(s.scenarioFlags.innsmouthLocations[candidate]))
+  assert.ok(code, '存在尚未入场的「道路1」地点卡')
+  const id = s.scenarioFlags.innsmouthLocations[code]
+  const definition = s.scenario.locations[id]
+  assert.equal(definition.road, 1, '地点数据声明「道路1」（修复前逐卡实现只覆盖道路2/3）')
+  s.locations.push({ ...structuredClone(definition), id, revealed: false, connections: [], clues: 0 })
+  columns(s)[id] = 4
+  const deckBefore = road(s).deck.length
+  const detoursBefore = road(s).detours.length
+  transaction(s, draft => scenarioRuntime(draft, []).reveal(id))
+  assert.equal(road(s).deck.length, deckBefore - 1, '道路1 只放 1 张道路卡')
+  assert.equal(road(s).detours.length, detoursBefore, '道路1 不放蜿蜒长路')
+  assert.equal(rankedRoad(s).filter(item => item.column === 5).length, 1, '下一列只有 1 张地点')
+  // 非最前方的道路地点揭示不再扩路（门禁：已有更大列号时跳过）。
+  const rear = rankedRoad(s).find(item => item.column === 1)
+  const deckAfterFront = road(s).deck.length
+  transaction(s, draft => scenarioRuntime(draft, []).reveal(rear.id))
+  if (!s.locations.find(location => location.id === rear.id)?.revealed) {
+    assert.equal(road(s).deck.length, deckAfterFront, '非最前方道路揭示不扩路')
+  }
+})
+
+
 test('horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动', () => {
   const s = chapterFixture('horrorInHighGear', 2)
   const car = carOf(s)

@@ -45,6 +45,7 @@ node tools/build-presentation.mjs --write
 
 安装脚本把暂存 AVIF 复制到 `web/img/zh/cards/`，登记到
 `presentation/generated-localized-arts.json` 与 `audit/local-images.json`；重复执行会跳过已有文件。
+生成中文图使用专用来源标记 `codex-imagegen`；游戏显示“中文卡图 · AI 汉化”，英文回退不带此标记。
 上传时通过进程环境提供 `R2_ACCOUNT_ID`、`R2_ACCESS_KEY_ID`、
 `R2_SECRET_ACCESS_KEY`、`R2_BUCKET`，然后运行：
 
@@ -55,4 +56,6 @@ node tools/upload-card-images.mjs --staged --concurrency=8
 上传器只处理暂存的中文卡图，R2 已有的对象会跳过。对象键为
 `arkhamhorror/cards/zh/<美术编号>.avif`，游戏默认 CDN 地址为
 `https://drliao1.com/arkhamhorror/cards/zh/<美术编号>.avif`。
+R2 对象元数据记录 `localization-source=codex-imagegen`、`language=zh-CN` 和文件 SHA-256。
+需要同步更新已有中文对象或补全来源元数据时，加 `--replace`；此参数仅允许与 `--staged` 一同使用。
 确认上传成功后可以清空对应的暂存 AVIF；已登记的卡图不会因为暂存文件移除而重新进入生图计划。

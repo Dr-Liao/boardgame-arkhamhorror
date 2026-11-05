@@ -13,7 +13,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import {
-  describeState, getMaxSanity, getStat, investigatorHasTrait, investigatorTraits, legalMoves, scenarioRuntime,
+  describeState, drawEncounter, getMaxSanity, getStat, investigatorHasTrait, investigatorTraits, legalMoves, scenarioRuntime,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
@@ -105,3 +105,56 @@ test('调查员特性授予与运行期 inv.traits 合并去重', () => {
   const traits = investigatorTraits(s, inv)
   assert.equal(traits.filter(trait => trait.toLowerCase() === 'deep one').length, 1, '同名特性不重复')
 })
+
+// ---------------------------------------------------------------------------
+// 01181 / 01182：克苏鲁的爪牙跨循环依赖（审计 H14 回归）
+// ---------------------------------------------------------------------------
+function drawCard(s, code) {
+  s.encounterDeck.push(code)
+  const execute = draft => drawEncounter(draft, draft.investigators[0], [])
+  resolveTransaction(s, 0, { action: 'testTicSharedCthulhuDraw' }, execute)
+  for (let guard = 0; s.pendingChoice; guard++) {
+    assert.ok(guard < 60, 'choice loop')
+    const choice = s.pendingChoice
+    const id = ['done', 'skip', 'self'].find(option => choice.options.some(item => item.id === option)) ?? choice.options[0].id
+    resolveTransaction(s, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, execute)
+  }
+}
+
+test('01181 年幼的深潜者：TIC 章节按印刷卡号真实抽取并结算「交战后受 1 恐惧」（审计 H14 回归）', () => {
+  const s = scene()
+  s.enemies = []
+  const horror = s.investigators[0].horror
+  drawCard(s, '01181')
+  const young = s.enemies.find(enemy => (enemy.originalCode || enemy.code) === '01181')
+  assert.ok(young, '按印刷卡号注册的条目真实生成（修复前 registeredEntry("01181") 为 MISSING）')
+  assert.equal(young.engagedSeat, 0, '普通敌人与抽牌者交战')
+  assert.equal(s.investigators[0].horror, horror + 1, '交战强制：受到 1 点恐惧')
+})
+
+test('01182 拉莱耶之梦：TIC 章节真实抽取进入威胁区，-1 意志/-1 神智，检定成功弃掉（审计 H14 回归）', () => {
+  const s = scene(2)
+  const before = {
+    willpower: getStat(s, s.investigators[0], 'willpower'),
+    sanity: getMaxSanity(s.investigators[0]),
+    otherWillpower: getStat(s, s.investigators[1], 'willpower'),
+  }
+  drawCard(s, '01182')
+  const inv = s.investigators[0]
+  const card = inv.threat.find(item => (item.originalCode || item.code) === '01182')
+  assert.ok(card, '真实抽取后进入威胁区（修复前静默进遭遇弃牌堆、无任何效果）')
+  assert.equal(s.encounterDiscard.includes('01182'), false, '进威胁区而不是遭遇弃牌堆')
+  assert.equal(getStat(s, inv, 'willpower'), before.willpower - 1, '意志 -1')
+  assert.equal(getMaxSanity(inv), before.sanity - 1, '神智 -1')
+  assert.equal(getStat(s, s.investigators[1], 'willpower'), before.otherWillpower, '另一位调查员不受影响')
+  // [action] 检定意志(3)：成功 → 弃掉本卡，属性恢复。
+  s.currentSeat = 0
+  s.chaosBag = ['+5']
+  const action = legalMoves(s).find(command => command.action === 'ability' && command.assetId === card.id)
+  assert.ok(action, '威胁区卡出现检定行动')
+  move(s, action)
+  settle(s)
+  assert.deepEqual(s.investigators[0].threat, [], '检定成功后弃掉拉莱耶之梦')
+  assert.equal(getStat(s, s.investigators[0], 'willpower'), before.willpower, '意志恢复印刷值')
+})
+

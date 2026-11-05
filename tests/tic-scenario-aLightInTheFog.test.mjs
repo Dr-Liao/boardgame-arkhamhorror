@@ -219,6 +219,38 @@ test('aLightInTheFog 地点与连接：同一行地点互相连接、灯光室�
   assert.equal(water.canChange(locationOf(s, '07241').id, 1), false, '灯光室不可涨水')
 })
 
+test('aLightInTheFog 揭示后连接守恒（审计 H5 回归）：单面地点的印刷连接图标不因揭示清空，拘禁室按图标连入沉没岩洞', () => {
+  const s = chapterFixture('aLightInTheFog', 2)
+  const stairwell = locationOf(s, '07240')
+  const lantern = locationOf(s, '07241')
+  assert.equal(stairwell.connections.includes(lantern.id), true, '揭示前灯塔梯井↔灯光室')
+  transaction(s, draft => revealLocation(draft, stairwell.id, [], 0))
+  assert.equal(locationOf(s, '07240').connections.includes(lantern.id), true,
+    '揭示梯井后连接仍在（修复前揭示即永久清空并连带清掉对端）')
+  assert.equal(locationOf(s, '07241').connections.includes(stairwell.id), true, '对端连线同样保留')
+  // 沉没岩洞链 07244（波纹）/ 07245（方形）/ 07246（菱形）：分别放在不同行，行邻接不会掩盖图标连接。
+  placeAt(s, '07244', 0, -1)
+  placeAt(s, '07245', 0, -2)
+  placeAt(s, '07246', 0, -3)
+  const upper = locationOf(s, '07244'), lower = locationOf(s, '07245'), final = locationOf(s, '07246')
+  assert.equal(lower.connections.includes(upper.id), true, '未揭示时 07245↔07244 由图标连接')
+  transaction(s, draft => revealLocation(draft, lower.id, [], 0))
+  assert.equal(locationOf(s, '07245').connections.includes(upper.id), true, '揭示 07245 后仍连 07244')
+  assert.equal(locationOf(s, '07245').connections.includes(final.id), true, '揭示 07245 后仍连 07246')
+  transaction(s, draft => revealLocation(draft, final.id, [], 0))
+  assert.equal(locationOf(s, '07246').connections.includes(lower.id), true, '揭示 07246 后仍连 07245')
+  // 拘禁室 07252b：被俘入场即揭示，必须按「连接图标」连到沉没岩洞（修复前 connections 恒为 []）。
+  s.chaosBag = ['autofail']
+  draw(s, '07260')
+  const cells = locationOf(s, '07252b')
+  assert.ok(cells, '07252 翻面成拘禁室入场')
+  assert.ok(cells.connections.length > 0, '拘禁室按连接图标连入沉没岩洞')
+  for (const id of cells.connections) {
+    assert.ok([upper.id, lower.id, final.id].includes(id), '拘禁室的连接目标都是沉没岩洞地点')
+  }
+})
+
+
 test('aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙', () => {
   const s = chapterFixture('aLightInTheFog', 2)
   const api = createMechanicsApi(s)

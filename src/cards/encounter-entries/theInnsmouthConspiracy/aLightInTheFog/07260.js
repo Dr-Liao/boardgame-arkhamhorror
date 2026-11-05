@@ -18,6 +18,9 @@
 //   · 失败被俘 + 钥匙放拘禁室：api.scenario.capture(inv.seat, { source:'07260', keysTo:'destination' })
 //     —— capture.js 是唯一写入口；'destination' = 本次捕获的关押地点（拘禁室）。
 //   · 成功：无附加效果（印刷无）。
+//   · 返回值 = 「是否已安置、不进遭遇弃牌堆」：本卡没有入场效果（只有显现检定），结算后按
+//     诡计常规进入遭遇弃牌堆。修复前无条件 return true 会被引擎当成「已处理」，卡凭空离场
+//     （审计 M16；同族 07256 返回 false）。
 //
 // implemented: true
 
@@ -33,6 +36,6 @@ export default {
       }
       runtime.capture(inv.seat, { source: '07260', keysTo: 'destination' })
     })
-    return true
+    return false
   },
 }

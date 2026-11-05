@@ -15,30 +15,21 @@
 // 读点 / 内容接线（详细契约见 artifacts/migration/tic/p7/workers/w6/harper-report.md）：
 //   · actRule.objective：函数恒 false —— 印刷是「可以推进」的可选目标，引擎不自动推进
 //     （act-agenda.js#checkAct 的条目函数分支只读返回值；返回 false 即不推进）。
-//   · actRule.roundEndCheck：轮末可选推进。内容层需要在 content/.../entry-rules.js 增加
-//     `roundEnded(state, api)` 分派（引擎 phases.js:225 调 scenarioBehavior.roundEnded）：
-//       const act = state.acts?.[state.actIndex]
+//   · actRule.roundEndCheck：轮末可选推进。内容层在 content/.../entry-rules.js 的
+//     `roundEnded(state, api)` 里分派（引擎 phases.js 调 scenarioBehavior.roundEnded）：
 //       registeredEntry(act?.originalCode || act?.code)?.actRule?.roundEndCheck?.(state, act, api)
-//     未接线时本卡不会报错，只是「轮末推进」不出现（等待 Lead 接线）。
-//   · actRule.onReveal（背面「阅读冒险幕间：指控」）：调
-//       api.scenario.resolveScenarioEvent('ticHarperAccusation', {...})   （能力面）
-//       或 api.resolveScenarioEvent(...)                                   （幕 onReveal 面=场景运行时）
-//     事件处理器由 Lead 在 content/.../entry-rules.js 的 `events` 里实现：选择嫌疑/窝点、按正确数
-//     分支（0 正确=全员撤退→R1；1 正确=翻出「愤怒暴民」；2 正确=直接转营救）、
-//     圈出真实答案到 campaign records、把营救幕 07061 装进幕牌库下一格、推进到「狂热追击」07059、
-//     布置藏身处与绑架犯。内容层未接线时 onReveal 只登记警告，不误结算（安全降级）。
+//   · actRule.onReveal（背面「阅读冒险幕间：指控」）：调 api.scenario.resolveScenarioEvent('ticHarperAccusation')；
+//     事件处理器在 content/.../entry-rules.js 的 `events` 里（选择嫌疑/窝点、正确数分支、装入营救幕 07061）。
 //   · abilities（团队每轮一次的 [fast] 谈判）：读点 = parley.js#parleyMovesFor（当前幕实体参与枚举）
 //     → ability-exec#executeDescriptor（kind:'free' 自动 action:false）；
 //     费用 = api.scenario.payGroupClues(X × 人数)（scenario-runtime.js 的团队线索支付）；
-//     迹象牌堆 = api.mechanics.scenarioDecks（initialize/cards/take/put/addEncounterTop/peek）；
 //     X 的「先选 X 再付费」现有 cost.groupClues 不支持动态 X，故在 resolve 内手动选择 + 支付。
-//     揭示时必须触发 content 的 scenarioCardsSeen（crossedOff / possible* 记录剔除）：当前引擎只有
-//     scenarioDecks.peek / revealChooseDraw 会触发；本卡优先用未来的 revealChooseKeep(id,seat,count,
-//     {mixEncounterTop:true})，缺失时降级为 peek（多一次「查看这些牌，然后继续」提示）+ 自行抽取混洗。
-//
-// implemented: true（目标/轮末推进/背面事件契约/团队线索谈判均可用；轮末与指控的具体流程等
-//   Lead 在内容层接线 events/roundEnded 后生效，卡内已按契约调用并有降级保护）。
-// 事件发送：能力面（api.scenario.resolveScenarioEvent）与幕 onReveal 面（api 本身是场景运行时）都兼容。
+//     **抽取必须走真实遭遇结算管线**：`scenarioDecks.revealChooseDraw('leads', seat, X,
+//     { mixEncounterTop: true })` —— 揭示 → 选择 1 张 → `deps.drawCard` 把它压进遭遇牌库顶再
+//     `drawEncounter` 结算（嫌疑敌人按 `enemyRule.revelationSpawn` 显现、藏身地点按
+//     `encounterResolve = putRevealedPrintedLocation` 入场），其余牌 + 遭遇库顶洗回迹象牌堆。
+//     修复前用 `peek + take + put` 降级链路，抽到的卡只写进无人读取的 `harperDrawnLeads`
+//     记账、从不入场，10 张迹象的真实效果全部不可达（审计 H1）。
 function emitScenarioEvent(api, id, payload) {
   const target = api?.scenario && typeof api.scenario.resolveScenarioEvent === 'function' ? api.scenario : api
   const resolve = target?.resolveScenarioEvent
@@ -118,34 +109,10 @@ export default {
       if (!Number.isInteger(picked) || picked < 1 || picked > max) return
       const paid = api.scenario?.payGroupClues?.(picked * perInvestigator)
       if (!paid || paid.paid !== picked * perInvestigator) return
-      // 揭示前记录牌堆顶顺序（scenarioDecks 约定：数组末位是牌堆顶，take 返回顶到底）。
-      const revealed = decks.cards('leads').slice(-picked).reverse()
-      if (!revealed.length) return
-      let chosen = null
-      const revealChooseKeep = decks.revealChooseKeep
-      if (typeof revealChooseKeep === 'function') {
-        // 未来原语（见 harper-report.md §原语请求）：触发 scenarioCardsSeen、把其余牌 + 遭遇牌库顶洗回。
-        chosen = revealChooseKeep.call(decks, 'leads', inv.seat, picked, { mixEncounterTop: true })
-      } else {
-        // 降级：peek 触发内容的 scenarioCardsSeen（crossedOff / possible* 剔除），随后自行抽取与混洗。
-        // 代价是多一次「查看这些牌，然后继续」的选择；Lead 落 revealChooseKeep 后自动走干净路径。
-        decks.peek('leads', inv.seat, picked)
-        chosen = revealed.length === 1 ? revealed[0] : String(choiceOf(api, {
-          kind: 'card', seat: inv.seat, source: '07060', prompt: '从揭示的迹象牌中抽取 1 张。',
-          options: revealed.map(code => ({ id: code, cardCode: code, label: api.cardName(code) || code })),
-        }))
-        if (!revealed.includes(chosen)) return
-        decks.take('leads', picked)
-        decks.put('leads', revealed.filter(code => code !== chosen), { shuffle: false })
-        // 「将其余卡牌和遭遇牌库顶的卡牌一起混洗入迹象牌堆」。
-        decks.addEncounterTop('leads')
-      }
-      if (!chosen) return
-      // 抽到的迹象牌离开迹象牌堆、由本局「取得」（印刷无后续规则读取；只为物理去向记账）。
-      const drawn = api.scenarioFlag?.('harperDrawnLeads')
-      const next = Array.isArray(drawn) ? [...drawn, chosen] : [chosen]
-      api.setScenarioFlag?.('harperDrawnLeads', next)
-      api.info(`🕵️ 查看迹象牌顶 ${picked} 张，取得「${api.cardName(chosen) || chosen}」。`)
+      // 真实遭遇结算管线：揭示 → 选 1 张抽取（嫌疑显现 / 藏身地点入场）→ 其余 + 遭遇顶洗回牌堆。
+      const drawn = decks.revealChooseDraw('leads', inv.seat, picked, { mixEncounterTop: true })
+      if (!drawn) return
+      api.info(`🕵️ 查看迹象牌顶 ${picked} 张，取得「${api.cardName(drawn) || drawn}」。`)
     },
   }],
 }

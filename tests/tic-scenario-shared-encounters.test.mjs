@@ -29,7 +29,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
-import { enemy } from './core-fixture.mjs'
+import { enemy, legalMoves, move, settle } from './core-fixture.mjs'
 import { drawEncounter, enemyEvadeValue, enemyFightValue, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
@@ -111,6 +111,20 @@ test('07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有�
   assert.equal(inPlay(s, '07084').doom, 1, '重整且无毁灭 → 轮末放 1 毁灭')
   roundEnds(s)
   assert.equal(inPlay(s, '07084').doom, 1, '已有毁灭时不再叠加')
+})
+
+test('07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）', () => {
+  const s = cleanScene(chapterFixture('theVanishingOfElinaHarper', 1))
+  draw(s, '07084')
+  inPlay(s, '07084').exhausted = false
+  const before = s.round
+  for (const inv of s.investigators) inv.actionsLeft = 0
+  // 真实结束回合 → 引擎跑完敌方阶段/维持阶段进入轮末。修复前 roundEnds 只对旧式
+  // investigatorRule.roundEndReaction 开窗（全仓仅 07001），非玩家实体的强制永不结算。
+  move(s, legalMoves(s).find(command => command.action === 'endTurn'))
+  settle(s)
+  assert.ok(s.round > before, '回合已推进')
+  assert.equal(inPlay(s, '07084')?.doom, 1, '真实轮末流程中达贡祭司放置 1 毁灭')
 })
 
 test('07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场', () => {
@@ -439,4 +453,26 @@ test('07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定�
   assert.ok(def)
   assert.equal(def.aloof, true, '冷漠')
   assert.equal(def.retaliate, true, '反击')
+})
+
+// ---------------------------------------------------------------------------
+// 07094 长翼者：X = 所在地点隐蔽值的动态躲避值（审计 H13 回归）
+// ---------------------------------------------------------------------------
+test('07094 长翼者：躲避值等于所在地点的隐蔽值 X（审计 H13 回归）', () => {
+  const s = cleanScene(chapterFixture('devilReef', 1))
+  s.enemies = []
+  const location = s.locations.find(item => item.shroud != null) || s.locations[0]
+  // 印刷卡表的 evade 是 X 占位符（-2）；数据层字面值不能直接当作躲避值使用。
+  const winged = enemy(s, { code: '07094', originalCode: '07094', name: '长翼者',
+    fight: 3, evade: -2, health: 4, location: location.id, engagedSeat: null, traits: ['Monster'] })
+  assert.equal(ALL_CARDS['07094'].evade, -2, '数据层 evade 是 X 占位符')
+  for (const shroud of [1, 4, 6]) {
+    location.shroud = shroud
+    assert.equal(enemyEvadeValue(s, winged, 0), shroud, `隐蔽值 ${shroud} → 长翼者躲避值为 ${shroud}`)
+  }
+  // 换地点后同样跟随所在地点。
+  const other = s.locations.find(item => item.id !== location.id)
+  other.shroud = 2
+  winged.location = other.id
+  assert.equal(enemyEvadeValue(s, winged, 0), 2, '躲避值跟随所在地点变化')
 })

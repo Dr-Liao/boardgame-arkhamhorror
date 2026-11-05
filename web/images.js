@@ -66,8 +66,9 @@ export function imageCandidates(descriptor, { side = 'front', host = DEFAULT_IMA
     // 使用默认 CDN 时加 cache=cdn：文件缺失才由大厅下载到同一路径；已存在则直接静态返回。
     if (wantsLocalized && (candidate.localized || candidate.localLocalized)) {
       const localUrl = `${LOCAL_ROOT}/${LOCALIZED_PREFIX}/${candidate.path}` + (cacheThroughServer ? '?cache=cdn' : '')
-      add({ url: localUrl, language: 'zh', origin: 'local', path: candidate.path, source: candidate.source })
-      if (base) add({ url: `${base}/${remoteImagePath(`${LOCALIZED_PREFIX}/${candidate.path}`)}`, language: 'zh', origin: 'remote', path: candidate.path, source: candidate.source })
+      const provenance = candidate.localizedSource ? { localizedSource: candidate.localizedSource } : {}
+      add({ url: localUrl, language: 'zh', origin: 'local', path: candidate.path, source: candidate.source, ...provenance })
+      if (base) add({ url: `${base}/${remoteImagePath(`${LOCALIZED_PREFIX}/${candidate.path}`)}`, language: 'zh', origin: 'remote', path: candidate.path, source: candidate.source, ...provenance })
     }
     const localUrl = `${LOCAL_ROOT}/${candidate.path}` + (cacheThroughServer ? '?cache=cdn' : '')
     add({ url: localUrl, language: generic ? 'back' : 'en', origin: 'local', path: candidate.path, source: candidate.source })

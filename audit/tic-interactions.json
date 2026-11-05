@@ -3,31 +3,31 @@
   "cycle": "tic",
   "phase": "P4",
   "generatedBy": "tools/audit-tic-interactions.mjs",
-  "status": "verified",
+  "status": "pending",
   "coverage": {
     "desktop": {
-      "seal": true,
-      "keys": true,
-      "vehicle": true,
-      "origins": true
+      "seal": false,
+      "keys": false,
+      "vehicle": false,
+      "origins": false
     },
     "mobile": {
-      "seal": true,
-      "keys": true,
-      "vehicle": true,
-      "origins": true
+      "seal": false,
+      "keys": false,
+      "vehicle": false,
+      "origins": false
     }
   },
   "checks": {
-    "nodeAcceptance": true,
-    "sourceStable": true,
-    "desktopAndMobile": true,
-    "scriptOwnership": true,
-    "guidePlacementAndPrivacy": true,
-    "guideFailureRetryAndKeyboard": true,
+    "nodeAcceptance": false,
+    "sourceStable": false,
+    "desktopAndMobile": false,
+    "scriptOwnership": false,
+    "guidePlacementAndPrivacy": false,
+    "guideFailureRetryAndKeyboard": false,
     "baselineUnchanged": true,
-    "fastZeroFailures": true,
-    "replayExact": true
+    "fastZeroFailures": false,
+    "replayExact": false
   },
   "contract": {
     "actions": "Only server legalMoves and requestChoice; no browser rule checks or arbitrary client mechanics commands.",
@@ -43,14 +43,14 @@
     "audit/tic-p4-baseline.json"
   ],
   "gates": {
-    "nodeAcceptance": true,
-    "sourceStable": true,
-    "desktopAndMobile": true,
-    "scriptOwnership": true,
-    "guidePlacementAndPrivacy": true,
-    "guideFailureRetryAndKeyboard": true,
+    "nodeAcceptance": false,
+    "sourceStable": false,
+    "desktopAndMobile": false,
+    "scriptOwnership": false,
+    "guidePlacementAndPrivacy": false,
+    "guideFailureRetryAndKeyboard": false,
     "baselineUnchanged": true,
-    "fastZeroFailures": true,
-    "replayExact": true
+    "fastZeroFailures": false,
+    "replayExact": false
   }
 }

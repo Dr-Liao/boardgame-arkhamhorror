@@ -7,7 +7,8 @@ export default {
   locationRule: { entersPlayFlooded: 1 },
   abilities: [{
     kind: 'action', actionKind: 'activate', label: '将紫色钥匙放在宝库：自动躲避并移入一名非精英敌人',
-    limit: { scope: 'perGame', owner: 'instance' },
+    // 印刷是「团队每场游戏仅限一次」：owner 必须是 group，不是每份物理副本各一次（审计 M34）。
+    limit: { scope: 'perGame', owner: 'group' },
     criteria: ({ state, inv }) => keysAt(state, `investigator:${inv.seat}`).includes('purple'),
     resolve: ({ state, inv, source, api }) => {
       if (!api.keys.transfer('purple', `investigator:${inv.seat}`, `location:${source.id}`, { reveal: true })) return

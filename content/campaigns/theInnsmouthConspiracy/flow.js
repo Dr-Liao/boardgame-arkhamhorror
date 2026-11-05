@@ -5,7 +5,8 @@ export const flow={start:'prologue',nodes:{
  prologue:{type:'story',next:'thePitOfDespair',effects:[effect('prologue')]},
  thePitOfDespair:scenario('thePitOfDespair','interlude1'),
  interlude1:interlude('interlude1','harperPreparation',false),
- harperPreparation:{...interlude('prepareHarper','theVanishingOfElinaHarper'),title:'艾莲娜·哈珀失踪案：故事与牌组升级'},
+ // 参考 nextStep：interlude1 → continueNoUpgrade TheVanishingOfElinaHarper（无升级窗口，审计 M40）。
+ harperPreparation:{...interlude('prepareHarper','theVanishingOfElinaHarper',false),title:'艾莲娜·哈珀失踪案：故事与牌组升级'},
  theVanishingOfElinaHarper:scenario('theVanishingOfElinaHarper','interlude2'),
  interlude2:interlude('interlude2','inTooDeep'),
  inTooDeep:scenario('inTooDeep','devilReef'),

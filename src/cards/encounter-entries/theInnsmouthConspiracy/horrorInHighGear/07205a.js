@@ -8,7 +8,7 @@
 //          (每个载具每场游戏仅限一次。)
 //
 // 引擎读点：
-//   · `locationRule.vehicleLeft`：载具移动成功后由 `vehicles.moveVehicle` 回调分发
+//   · `locationRule.vehicleLeft`：载具移动**前**由 `vehicles.moveVehicle` 回调分发
 //     （road-hazards.js#dispatchVehicleEvent），事件带 { vehicleId, seats, origin, destination }。
 //   · 共用前半句（乘客快照 → 每场一次记账 → 共同支付线索并取差额）在
 //     `_shared.js#roadHazardCharge`；每场一次的记账原语是 `api.roadHazardOnce`。

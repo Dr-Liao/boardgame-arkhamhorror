@@ -28,6 +28,7 @@ export function installTranslatedImages() {
   }
 
   const registry = JSON.parse(readFileSync(REGISTRY, 'utf8'))
+  registry.source = { id: 'codex-imagegen', label: 'AI 汉化', language: 'zh-CN' }
   registry.arts = [...new Set([...(registry.arts || []), ...names.map(name => `cards/${name}`)])].sort()
   writeFileSync(REGISTRY, JSON.stringify(registry, null, 1) + '\n')
 

@@ -4,7 +4,6 @@
 import { registerNonPlayerEntries } from './_lookup.js'
 
 import ewolfManDrew from './nightOfTheZealot/theMidnightMasks/wolfManDrew.js'
-import eyoungDeepOne from './nightOfTheZealot/theDevourerBelow/youngDeepOne.js'
 import egoatSpawn from './shared/agents_of_shub/goatSpawn.js'
 import erelentlessDarkYoung from './shared/agents_of_shub/relentlessDarkYoung.js'
 import e01172 from './shared/nightgaunts/01172.js'
@@ -1311,10 +1310,11 @@ import e07260 from './theInnsmouthConspiracy/aLightInTheFog/07260.js'
 import e07316 from './theInnsmouthConspiracy/intoTheMaelstrom/07316.js'
 import e07317 from './theInnsmouthConspiracy/intoTheMaelstrom/07317.js'
 import e07318 from './theInnsmouthConspiracy/intoTheMaelstrom/07318.js'
+import e01181 from './shared/agents_of_cthulhu/01181.js'
+import e01182 from './shared/agents_of_cthulhu/01182.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
-  eyoungDeepOne,
   egoatSpawn,
   erelentlessDarkYoung,
   e01172,
@@ -2621,6 +2621,8 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07316,
   e07317,
   e07318,
+  e01181,
+  e01182,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

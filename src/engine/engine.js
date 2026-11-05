@@ -1185,6 +1185,8 @@ const commonDeps = {
   effectError,
   endChaosTest,
   enemiesEngagedWith,
+  // 07327：地点声明「敌军阶段期间，重整的古神敌人可以攻击本地点的调查员（如同已交战）」。
+  enemyAttacksAsIfEngaged,
   enemyAttack,
   enemyCanBeDefeated,
   enemyCannotBeAttacked,
@@ -2372,7 +2374,7 @@ export function enemyOutcomePublicApi(...args) { return enemiesApi().enemyOutcom
 export function prepareEnemyOutcome(...args) { return enemiesApi().prepareEnemyOutcome(...args) }
 export function canDamageEnemy(...args) { return enemiesApi().canDamageEnemy(...args) }
 export function enemyHealth(...args) { return enemiesApi().enemyHealth(...args) } export function enemyFightValue(...args) { return enemiesApi().enemyFightValue(...args) } export function enemyEvadeValue(...args) { return enemiesApi().enemyEvadeValue(...args) }
-export function enemiesEngagedWith(...args) { return enemiesApi().enemiesEngagedWith(...args) } export function enemyAttack(...args) { return enemiesApi().enemyAttack(...args) } export function spawnEnemy(...args) { return enemiesApi().spawnEnemy(...args) }
+export function enemiesEngagedWith(...args) { return enemiesApi().enemiesEngagedWith(...args) } export function enemyAttacksAsIfEngaged(...args) { return enemiesApi().enemyAttacksAsIfEngaged(...args) } export function enemyAttack(...args) { return enemiesApi().enemyAttack(...args) } export function spawnEnemy(...args) { return enemiesApi().spawnEnemy(...args) }
 export function engageEnemy(...args) { return enemiesApi().engageEnemy(...args) } export function disengageEnemy(...args) { return enemiesApi().disengageEnemy(...args) } export function defeatEnemy(...args) { return enemiesApi().defeatEnemy(...args) }
 export function damageEnemy(...args) { return enemiesApi().damageEnemy(...args) } export function autoEvadeEnemy(...args) { return enemiesApi().autoEvadeEnemy(...args) } export function applyHarm(...args) { return enemiesApi().applyHarm(...args) }
 export function defeatedAssetRetaliation(...args) { return enemiesApi().defeatedAssetRetaliation(...args) } export function applyDamage(...args) { return enemiesApi().applyDamage(...args) } export function applyHorror(...args) { return enemiesApi().applyHorror(...args) }

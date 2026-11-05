@@ -119,6 +119,8 @@ export default {
   'game.kw.massive': '庞大',
   'game.kw.victory': '胜利点 {points}',
   'game.kw.victoryCompact': '胜利点{points}',
+  'game.kw.vengeance': '复仇 {points}',
+  'game.kw.vengeanceCompact': '复仇{points}',
   'game.kw.prey': '猎物：{prey}',
   'game.token.clue': '线索',
   'game.token.resource': '资源',

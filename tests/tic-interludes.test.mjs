@@ -41,5 +41,8 @@ test('P7 interlude IV independently applies both passages and preserves the prio
 })
 for(const complete of [false,true])test(`P7 epilogue ${complete?'all fourteen memories recover the printed horrible truth':'an incomplete set reads the alternate ending'}`,()=>{
  const s=fixture();delete s.campaign.flow;s.campaign.records.memoriesRecovered=complete?[...all]:all.slice(0,-1);run(s,'epilogue')
- assert.equal(!!s.campaign.records.TheHorribleTruth,complete);assert.equal(s.campaign.records.memoriesRecovered.includes('TheHorribleTruth'),complete)
+ assert.equal(!!s.campaign.records.TheHorribleTruth,complete);
+ // 参考实现把「可怕的真相」写成战役**记录**，不是记忆：14 段记忆列表不得被第 15 个 id 污染（审计 M42）。
+ assert.equal(s.campaign.records.memoriesRecovered.includes('TheHorribleTruth'),false)
+ assert.equal(s.campaign.records.memoriesRecovered.length,complete?all.length:all.length-1)
 })

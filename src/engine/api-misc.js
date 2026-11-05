@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { eventWindowContext } from './event-window.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { notifyPlacedAsset } from './investigator-mechanics.js'
 import { setLocationFlag } from './location-state.js'
@@ -1306,7 +1307,7 @@ export function createMiscApi(state, events, deps) {
         controller.assets.push(asset)
         played = asset
         triggerReaction(state, seat, 'assetEnteredPlay', events,
-          { seat, assetCode: code, assetId: asset.id, location: controller.location })
+          eventWindowContext(state, { seat, assetCode: code, assetId: asset.id, location: controller.location }))
       }
       owner.deck = replacePlayerZoneCards(state, owner, shuffle(owner.deck, () => randomValue(state)), 'shuffle')
       return played

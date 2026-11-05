@@ -70,7 +70,7 @@ export function runInterludeEffect(state,{event},log){
   }
  }else if(event==='epilogue'){
   show('epilogue1')
-  if(memories.every(memory=>recovered.includes(memory))){show('flashback15');recordSetAdd(campaign,'memoriesRecovered','TheHorribleTruth');records.TheHorribleTruth=true}
+  if(memories.every(memory=>recovered.includes(memory))){show('flashback15');records.TheHorribleTruth=true}
   else show('epilogue2')
  }else throw new Error('Unknown Innsmouth interlude '+event)
 }

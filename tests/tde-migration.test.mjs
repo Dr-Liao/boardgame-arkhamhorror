@@ -212,7 +212,8 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   assert.equal(audit.gate.scenariosVerified.chapterRecords, 253)
   assert.equal(audit.gate.scenariosVerified.coveredChapterRecords, 253)
   assert.equal(audit.gate.scenariosVerified.pass, true)
-  // 全卡账本：388/388 verified，两套分区守恒，83 条显式简化（P7 53 + P8 30），417 例实跑证据 6 文件。
+  // 全卡账本：388/388 verified，两套分区守恒，83 条显式简化（P7 53 + P8 30），≥417 例实跑证据 6 文件
+  //（用例数随逐卡验收测试增加，只守下限，不写死具体数字）。
   assert.equal(audit.gate.allCardsVerified.total, 388)
   assert.equal(audit.gate.allCardsVerified.records, 352)
   assert.equal(audit.gate.allCardsVerified.faces, 36)
@@ -224,7 +225,7 @@ test('P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/
   assert.equal(audit.gate.allCardsVerified.simplifiedPlayer, 0)
   assert.equal(audit.gate.allCardsVerified.simplifiedCampaign, 0)
   assert.equal(audit.gate.allCardsVerified.testFiles, 6)
-  assert.equal(audit.gate.allCardsVerified.testsPassed, 417)
+  assert.ok(audit.gate.allCardsVerified.testsPassed >= 417, '逐卡验收证据数不得低于 P9 基线')
   assert.equal(audit.gate.allCardsVerified.testFilesFresh, true)
   assert.equal(audit.gate.allCardsVerified.pass, true)
   // 并行双线：门禁、实跑用例、dualLineGate 与开闸证据账本一致。

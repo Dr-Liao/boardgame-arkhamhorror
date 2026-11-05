@@ -250,7 +250,7 @@ function scenarioRuntime(state, events, testSource = null) {
       entryError: (seat, destination) => deps.mechanicsEntryError?.(state, seat, destination) || null,
       directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
       moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
-      // 道路危害的两个分发口：载具移动成功后由 vehicles.moveVehicle 回调（07204–07210）。
+      // 道路危害的两个分发口：`vehicleLeft` 在移动前（乘客仍算在出发地）、`vehicleEntered` 在移动后。
       vehicleLeft: event => dispatchVehicleEvent(state, 'left', event, () => scenarioRuntime(state, events)),
       vehicleEntered: event => dispatchVehicleEvent(state, 'entered', event, () => scenarioRuntime(state, events)),
       placeLocation: id => { placeLocation(state, id, events); return state.locations.some(loc => loc.id === id) ? id : null },

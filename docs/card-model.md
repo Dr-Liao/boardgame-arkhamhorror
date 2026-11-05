@@ -421,6 +421,26 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    回归护栏：`tests/play-channels.test.mjs`（通道 × 窗口矩阵 + uiKey 端到端）、
    `tests/cards-under-ui.test.mjs`、`tests/cards-under.browser.mjs`、`tests/turn-end-window.test.mjs`。
 
+**地点附属卡的主动能力挂载（2026-11-05）**：`location.attachments` 与观察投影合并进来的玩家卡
+地点附属（`state.playerLocationAttachments`）都用 `attachment:<地点 id>:<下标>` 当牌桌实体键。
+「这个行动属于哪张附属」在服务端有四种字段族 + 一种规则名兼容，`web/card-interactions.js` 的
+`entityMoves()` 一次收口，避免每个循环各写一套界面判断：
+
+| 字段族 | 来源 | 例子 |
+| --- | --- | --- |
+| `locationId` + `attachmentIndex` | 按地点下标指回附属 | Carcosa 03091/03094 的 `treacheryRule.attachmentAction`、04270 的解除行动 |
+| `attachmentId` | 按附属实例 id 指回 | 失落时代 04076 的 `threatAction`；TCU/TDE 同类行动 |
+| `entityId`（+ `uiKey: locationAttachment:<id>`） | 附属自身的能力枚举 | TIC 07299/07099 的 `treacheryRule.attachmentAbilities`（parley 的 `entityAbility`） |
+| `assetId` | 玩家卡地点附属自身能力 | `assetRule.sharedLocationAbility` 的 07310 |
+| `rule` 后缀 `:<附属 id>` | 规则名里嵌附属 id，无独立字段 | 食梦者 `locationAttachment:<id>` / `discardSickeningWebs:<id>` 的摆脱行动 |
+
+玩家卡地点附属「捷径」（03232）的 `shortcutMove` 不带任何附属引用，由观察投影的
+`publicAttachments()` 派生 `markerAction: 'shortcutMove'`（只做展示标记，可用性仍只由
+`legalMoves` 决定）。有行动时左键点头部卡弹出这张卡自己的选项（`ah-card-action-popover`），
+没有行动时才回落到打开卡牌详情。回归护栏：`tests/card-interactions.test.mjs`、
+`tests/state-presentation.test.mjs`、`tests/location-attachment-actions.browser.mjs`
+（桌面 1440 / 移动 390）。
+
 原语登记：直觉牌库在 `tools/tcu-primitive-spec.mjs` 的 `hunchDeck`（checks 覆盖 channel 读点）；
 其余通道是引擎级通用基础设施，登记在本节。`docs/tcu-primitives.md` §3.1 与
 `docs/tcu-investigators.md` §3.1 同步描述。
@@ -461,6 +481,22 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 
 回归护栏：`tests/location-traits.test.mjs`（授予/多来源/撤销/幂等/存档往返/声明接线）、
 `tests/echoes-passageways.test.mjs`（真实引擎的往事回声端到端）、`tests/carcosa-middle-a.test.mjs`。
+
+### 7.2b 物理面翻面（07300 / 07211 / 07212 / 07330–07331）
+
+- **唯一写入口**：`api.flipAsset(asset, nextCode)`（能力面 / 场景运行时都可用）→
+  `src/engine/physical-faces.js#applyPhysicalFace`。同一个物理实例只替换印刷特征：
+  实例 id、横置状态、控制者、位置、附属、计数全部保留；不模拟入场/离场/生成/揭示钩子。
+- **合法性**：`cards-data` 的 `linkedCardCode`/`linkedToCode` 成对声明，`planPhysicalFace`
+  在注册期外做同类型/成对校验；不在场的实体或非成对卡返回 null/抛错（`physicalFacePlanIfAny`）。
+- **能力枚举**：翻面后实例的 `code/originalCode` 变为新面，引擎按
+  `registeredEntry(source.originalCode || source.code)` 读**当前物理面**的条目。因此双面卡
+  每个面各有一个单卡文件（如 `07300.js` / `07300b.js`、`07211a.js`/`07211b.js`），
+  卡面能力只写在对应面的文件里。
+- **首个使用方**：07211/07212 载具（运行/熄火面，翻面时同步 `running`）、07300 雕塑
+  （[action] 花费蓝/白/红/黄钥匙 → 重整 + 翻到 07300b 的祝福转换面，审计 H11）、
+  07330/07331 沉睡/苏醒古神（`flipEnemy` 同一条物理面管线）。
+- 回归护栏：`tests/tic-physical-faces.test.mjs`、`tests/tic-scenarios-late.test.mjs`。
 
 ### 7.3 快速事件统一通道与重印别名（P2-4，2026-10-28）
 

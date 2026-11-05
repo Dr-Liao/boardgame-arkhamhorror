@@ -15,6 +15,7 @@ import { addPoolTokens, releasePoolTokens } from './chaos-token-pool.js'
 import { tokenEffect } from './chaos-token-effects.js'
 import { floodLevel } from './flood.js'
 import { notePromiseEvent } from './turn-promises.js'
+import { nextInstanceId } from './rules-state.js'
 // 07185 的条目级标记读点（floodedAttackExtraTokenRule）是模块级函数，需要 ability.js 的注册表读法。
 import { registeredEntry } from './ability.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
@@ -159,7 +160,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   const previousTest = state.skillTest || null
   const typedTarget = (registeredEntry(state.scenario?.referenceCode)?.scenarioRule?.trackTestTarget === true || state.investigators.some(owner => owner.assets.some(card => registeredEntry(card.originalCode || card.code)?.assetRule?.trackTestTarget)))
     ? options.testTarget : null
+  // 每次检定的实例 id（limit.perTest 的键）：修复前引擎从未给 state.skillTest.id 赋值，
+  // perTest 退化成一串 round/turn 键，同一回合的第二次检定被误判为同一次（审计 M27/M32）。
+  // 只在「章节开启 eventWindowInstances」的 TIC 写实例 id：其它战役的 skillTest 形状与
+  // 重放指纹逐字不变（id 会出现在暂停中的检定状态里，属于基线指纹的一部分）。
+  const enableTestInstance = state.scenario?.eventWindowInstances === true
   state.skillTest = { seat, skill: skillContext, difficulty: Math.max(0, difficulty), stage: 'ST.1', committed: [], publicLog: [...state.log],
+    ...(enableTestInstance ? { id: nextInstanceId(state, 'test') } : {}),
     ...(typedTarget ? { actionKind: options.actionKind || typedTarget.actionKind, target: { kind: typedTarget.kind, id: typedTarget.id } } : {}),
     ...(options.actionKind ? { actionKind: String(options.actionKind) } : {}),
     ...(options.basicAction ? { basicAction: options.basicAction } : {}),
@@ -1122,6 +1129,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     delta -= state.skillTest.ignoredTokenModifiers || 0
   }
+  // 揭示步骤结束后重读「自动成功」：07120 矛盾圣约在 `chaosRevealStepEnded` 窗口里调用
+  // api.setTestAutoSuccess()，而该窗口在揭示循环之后才结算。修复前成功判定只读揭示前取下的
+  // 局部变量 elderAutoSuccess，窗口写入的 state.skillTest.autoSuccess 再无人读取（审计 H10）。
+  if (state.skillTest?.autoSuccess === true) elderAutoSuccess = true
   state.skillTest.stage = 'ST.5'
   if (state.skillTest.retargetDifficulty) difficulty = state.skillTest.difficulty
   // 「本次攻击期间揭示了 X 则自动失败」（04273 陈旧猎枪的卡膛）：在成算之前把检定改为自动失败。

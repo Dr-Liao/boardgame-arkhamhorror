@@ -17,6 +17,7 @@ import { markForcedRevelation } from './resolution-scope.js'
 // 抽牌；不传 `deck` 时完全走原来的普通遭遇牌堆（行为零变化）。牌堆读写统一走 alt-decks.js。
 
 import { enumerateTargets } from './targets.js'
+import { beginAsIf, endAsIf } from './as-if-location.js'
 
 export function createEncounter(deps) {
   // 「生成 - <某类地点>」的条目级声明（位置由 enemies.js#spawnEnemy 解析，抽牌时不与抽牌者交战）。
@@ -618,16 +619,21 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       for (const { move, entry } of fastHandPlays(state, inv, opts)) {
         // 2026-10-27「如同手牌」通道统一：option id 保留手牌/直觉牌库的旧格式，其余通道用
         // `fast-card:<通道id>`；同时下发 uiKey，牌桌据此把选项挂回直觉区/下方/宿主支援。
+        // 2026-11-05：卢克·罗宾逊的「每回合 1 张事件如同位于连接地点」会让同一张手牌的
+        // 0 行动事件在 legalMoves 里各有「普通」与「如同位于」两份移动。asIfLocation 不进
+        // id 时它们会撞成同一个 option id，requestChoice 的唯一性检查（P0）直接抛
+        // 「选择选项 id 重复」，把每一个玩家窗口都变成软锁（《失落的时代》第一关切「探索」即复现）。
         const optionId = entry
           ? (entry.channel === 'hunch' ? `fast-card:hunch:${move.cardId}` : `fast-card:${playChannels.candidateId(entry)}`)
-          : `fast-card:${move.cardId}${move.fastSourceId ? ':' + move.fastSourceId : ''}`
+          : `fast-card:${move.cardId}${move.asIfLocation ? ':asif:' + move.asIfLocation : ''}${move.fastSourceId ? ':' + move.fastSourceId : ''}`
         if (blockedFast.has(optionId)) continue
         const resourceCost = entry
           ? playChannels.discountedCost(playCost(state, inv, cardDef(move.cardId)), entry)
           : playCost(state, inv, cardDef(move.cardId))
+        const asIfLabel = move.asIfLocation ? `（如同位于「${locName(state, move.asIfLocation)}」）` : ''
         options.push({ id: optionId,
-          label: `⚡ 快速打出「${cardName(move.cardId)}」${entry?.labelSuffix || ''}${resourceCost ? `（${resourceCost} 资源）` : ''}`,
-          cardCode: move.cardId, ...(move.fastSourceId ? { fastSourceId: move.fastSourceId } : {}), ...(entry?.uiKey ? { uiKey: entry.uiKey } : {}), fromChannel: entry })
+          label: `⚡ 快速打出「${cardName(move.cardId)}」${asIfLabel}${entry?.labelSuffix || ''}${resourceCost ? `（${resourceCost} 资源）` : ''}`,
+          cardCode: move.cardId, ...(move.asIfLocation ? { asIfLocation: move.asIfLocation } : {}), ...(move.fastSourceId ? { fastSourceId: move.fastSourceId } : {}), ...(entry?.uiKey ? { uiKey: entry.uiKey } : {}), fromChannel: entry })
       }
     }
     if (!options.length) { passed++; continue }
@@ -635,11 +641,13 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       prompt: inv.seat === fastCardSeat && options.some(option => option.cardCode)
         ? '回合结束前：可以打出快速卡或使用免费触发能力，或让过。'
         : `${playerWindowLabel(timing)}：可以使用免费触发能力，或让过。`, canSkip: true,
-      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId, cardCode, uiKey, fromChannel }) => ({
+      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId, cardCode, uiKey, fromChannel, asIfLocation }) => ({
         id, label, assetId, abilityIndex: index, targetId,
         // 只有「如同手牌」通道候选才补 cardCode/uiKey（手牌快速卡保持原有选择负载，
-        // 避免改变既有对局的待决选择形状/重放指纹）。
-        ...(fromChannel ? { ...(cardCode ? { cardCode } : {}), ...(uiKey ? { uiKey } : {}) } : {}),
+        // 避免改变既有对局的待决选择形状/重放指纹）。卢克的「如同位于」是 2026-11-05 新增的
+        // 独立 id，补 cardCode 让「快速反应开关」按卡号过滤时也能覆盖这些变体。
+        ...(fromChannel ? { ...(cardCode ? { cardCode } : {}), ...(uiKey ? { uiKey } : {}) }
+          : (asIfLocation ? { cardCode } : {})),
       }))] })
     if (answer === 'skip') { passed++; continue }
     passed = 0
@@ -667,7 +675,14 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
         continue
       }
       const before = inv.hand.filter(code => code === chosen.cardCode).length
-      doPlay(state, inv.seat, chosen.cardCode, events, false, true, null, null, null, null, 0, chosen.fastSourceId || null)
+      // 卢克·罗宾逊：「如同位于连接地点」的快速事件必须在该地点上下文里结算
+      // （beginAsIf 改写地点与临时交战，endAsIf 在结算后还原）。
+      if (chosen.asIfLocation) beginAsIf(state, inv, chosen.asIfLocation)
+      try {
+        doPlay(state, inv.seat, chosen.cardCode, events, false, true, null, null, null, null, 0, chosen.fastSourceId || null)
+      } finally {
+        if (chosen.asIfLocation) endAsIf(state, inv)
+      }
       const after = state.investigators[inv.seat].hand.filter(code => code === chosen.cardCode).length
       if (after >= before) blockedFast.add(chosen.id)
       continue

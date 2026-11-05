@@ -151,6 +151,15 @@ test('P7 绝望深坑 幕 07046 目标与背面：全部撤退/败北才推进�
   assert.equal(s.campaign.scenarioResults.length, 1)
   assert.equal(s.campaign.pendingNode, 'interlude1')
   assert.deepEqual(s.campaign.scenarioResults[0].story.sections.map(section => section.title), ['resolution1'])
+  // 真实撤退动作驱动幕推进（审计 H7 回归）：最后一名调查员撤退时引擎 doResign 先给当前幕
+  // allResigned 钩子；修复前缺失它，checkOutcome 抢先落到 noResolution，结局键退化。
+  const driven = pit(2)
+  driven.actIndex = 1
+  run(driven, draft => scenarioRuntime(draft, []).resign(0))
+  assert.equal(driven.campaign.scenarioResults.length, 0, '仍有幸存者时不结算')
+  run(driven, draft => scenarioRuntime(draft, []).resign(1))
+  assert.equal(driven.campaign.scenarioResults.length, 1)
+  assert.equal(driven.campaign.scenarioResults[0].resolution, 'resolution1', '真实撤退驱动得到 R1 而非 noResolution')
 })
 
 test('P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算', () => {

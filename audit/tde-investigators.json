@@ -618,7 +618,7 @@
   "nodeAcceptance": {
     "command": "node --test tests/tde-investigators.test.mjs",
     "status": 0,
-    "tests": 25,
+    "tests": 28,
     "fail": 0,
     "ok": true
   },
@@ -652,7 +652,7 @@
     "nodeAcceptance": {
       "command": "node --test tests/tde-investigators.test.mjs",
       "status": 0,
-      "tests": 25,
+      "tests": 28,
       "fail": 0,
       "ok": true
     },
@@ -680,7 +680,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
     },
     {
       "path": "src/cards/entries",
@@ -688,7 +688,7 @@
     },
     {
       "path": "tests/tde-investigators.test.mjs",
-      "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+      "sha256": "b6e832ed924bf762208d0c4cc1a85e5262a40552fa5a0029afbad8817bd43be0"
     },
     {
       "path": "docs/tde-investigators.md",

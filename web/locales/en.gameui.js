@@ -118,6 +118,8 @@ export default {
   'game.kw.massive': 'Massive',
   'game.kw.victory': 'Victory {points}',
   'game.kw.victoryCompact': 'Victory {points}',
+  'game.kw.vengeance': 'Vengeance {points}',
+  'game.kw.vengeanceCompact': 'Vengeance {points}',
   'game.kw.prey': 'Prey: {prey}',
   'game.token.clue': 'Clues',
   'game.token.resource': 'Resources',

@@ -73,3 +73,30 @@ for (const [label, width, height, code, ruleId] of [
     await expect(catalog).toBeVisible()
   })
 }
+
+// 「复仇 X」印在卡文之外（ArkhamDB 的 vengeance 字段），卡文里不一定出现「复仇」；
+// 详情面板必须像其它印刷关键词一样显示它。
+for (const [label, width, height, code, points] of [
+  ['desktop', 1440, 950, '04078', 1], // 敌人：关键词显示在敌人关键词行
+  ['mobile', 390, 844, '04078', 1],
+  ['desktop', 1440, 950, '04068', 2], // 地点：关键词显示在卡面标记行
+  ['mobile', 390, 844, '04068', 2],
+]) {
+  test(`M4 印刷的复仇关键词在${label}端卡牌详情可见（${code}）`, async ({ page }) => {
+    await page.setViewportSize({ width, height })
+    const hub = await start(page)
+    await hub.getByRole('button', { name: '全卡图鉴' }).click()
+    const catalog = page.getByRole('dialog', { name: '诡镇全卡图鉴' })
+    await catalog.getByRole('textbox', { name: '卡号或名称' }).fill(code)
+    await expect(catalog.locator('.ah-catalog-card')).toHaveCount(1)
+    await catalog.locator('.ah-catalog-card').click()
+    const detail = page.getByRole('dialog', { name: '卡牌详情' })
+    const keyword = detail.locator('.ah-card-full-kws').filter({ hasText: `复仇 ${points}` })
+    await expect(keyword).toHaveCount(1)
+    await expect(keyword).toContainText(`复仇 ${points}`)
+    expect(await detail.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
+    const shot = `${output}m4-vengeance-keyword-${code}-${label}.png`
+    await page.screenshot({ path: shot, animations: 'disabled' })
+    test.info().annotations.push({ type: 'screenshot', description: shot })
+  })
+}

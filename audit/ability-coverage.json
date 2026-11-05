@@ -7,11 +7,11 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 771,
-    "descriptorAbilities": 989,
+    "descriptorAbilities": 991,
     "abilityKinds": 12,
     "windows": 113,
     "effectPrimitives": 56,
-    "nonPlayerCards": 212,
+    "nonPlayerCards": 214,
     "behaviorLines": 29028,
     "declaredScenarios": 3
   },
@@ -21,15 +21,17 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 67,
+      "enemy": 68,
       "location": 83,
       "storyAsset": 24,
-      "treachery": 11,
+      "treachery": 12,
       "act": 11,
       "scenario": 8,
       "agenda": 8
     },
     "codes": [
+      "01181",
+      "01182",
       "03093",
       "03103",
       "03137",
@@ -114,6 +116,7 @@
       "07088",
       "07089",
       "07091",
+      "07094",
       "07095",
       "07102",
       "07103",
@@ -240,11 +243,10 @@
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
-      "wolfManDrew",
-      "youngDeepOne"
+      "wolfManDrew"
     ],
-    "abilities": 220,
-    "modifiers": 95
+    "abilities": 222,
+    "modifiers": 99
   },
   "declaration": {
     "abilityScopes": [

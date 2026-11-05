@@ -246,7 +246,9 @@ Swarming X 求值。四种 X 口径（固定 / [per_investigator] / 警报等级
 
 事件如同位于连接地点打出。卢克·罗宾逊每回合 1 张事件。
 
-接口：`beginAsIf / endAsIf`。
+接口：`beginAsIf / endAsIf`。收尾玩家窗口里的快速事件同样按该地点结算：选项 id 用
+`fast-card:<卡号>:asif:<地点 id>` 与普通打出区分（`src/engine/encounter.js#playerWindow`）；
+同名的普通/如同位于变体不得共用一个 id，否则 `requestChoice` 会抛「选择选项 id 重复」软锁。
 
 证据：`tests/tde-investigators.test.mjs`。
 

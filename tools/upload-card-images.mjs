@@ -16,6 +16,8 @@ const PREFIX = 'arkhamhorror/cards/'
 const TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif' }
 const argv = process.argv.slice(2)
 const staged = argv.includes('--staged')
+const replace = argv.includes('--replace')
+if (replace && !staged) throw new Error('--replace 仅用于 --staged')
 const limit = Number(argv.find(value => value.startsWith('--limit='))?.split('=')[1] || Infinity)
 if (limit !== Infinity && (!staged || !Number.isInteger(limit) || limit < 1)) throw new Error('--limit 仅用于 --staged，且需为正整数')
 const concurrency = Number(argv.find(value => value.startsWith('--concurrency='))?.split('=')[1] || 8)
@@ -82,7 +84,7 @@ let cursor = 0
 
 async function once(file) {
   const key = PREFIX + remoteImagePath(file)
-  if (present.has(key)) { stats.skipped++; return }
+  if (!replace && present.has(key)) { stats.skipped++; return }
   let body
   if (staged) {
     body = readFileSync(new URL(`../artifacts/card-translation/${file}`, import.meta.url))
@@ -96,7 +98,15 @@ async function once(file) {
   const extension = file.slice(file.lastIndexOf('.')).toLowerCase()
   await s3('PUT', key, {
     body,
-    headers: { 'cache-control': 'public, max-age=31536000, immutable', 'content-type': TYPES[extension] || 'application/octet-stream' },
+    headers: {
+      'cache-control': 'public, max-age=31536000, immutable',
+      'content-type': TYPES[extension] || 'application/octet-stream',
+      ...(staged ? {
+        'x-amz-meta-localization-source': 'codex-imagegen',
+        'x-amz-meta-language': 'zh-CN',
+        'x-amz-meta-sha256': createHash('sha256').update(body).digest('hex'),
+      } : {}),
+    },
   })
   stats.uploaded++
   stats.bytes += body.length

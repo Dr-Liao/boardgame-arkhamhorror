@@ -26,7 +26,9 @@
 //     `actRule.onComplete`。纯读；只有目标命中才写。
 //   · 「地点有没有线索」读 location.clues（setup 后由 syncClues/投资行动维护，见 locations.js）；
 //     「财富宝库 with the purple key」读 scenario-keys.js#keysAt（`_shared.js` 再导出）：
-//     紫色钥匙的 holder 必须是 `location:<宝库 id>`；钥匙被拿走则目标不满足（与印刷一致）。
+//     **紫色钥匙所在的那一份**财富宝库才算目标地点——本章 07322 有 2 个物理副本，
+//     按卡号只取第一张会让「钥匙在第二张」或「第一张带线索」时目标判定错卡/永不成立（审计 H16）。
+//     钥匙被拿走则目标不满足（与印刷一致）。
 //   · 背面：`api.completeParallelAct(act.id)` 把本卡加入胜利区（Victory 2）并从活动幕槽移除；
 //     `api.resolveActCompletion({ act })` 统一结算「仍有另一张场景卡 → 队长选择继续/立即 R1；
 //     没有 → 立即 R1」。三张同文逻辑只在 parallel-acts.js 写一次。
@@ -41,7 +43,8 @@ const LAIR_OF_HYDRA = '07329'
 const VAULT_OF_RICHES = '07322'
 const PURPLE_KEY = 'purple'
 
-const locationByCode = (state, code) => (state.locations || []).find(location => String(originalOf(location)) === code) || null
+const locationsByCode = (state, code) => (state.locations || []).filter(location => String(originalOf(location)) === code)
+const locationByCode = (state, code) => locationsByCode(state, code)[0] || null
 
 export default {
   code: '07317', scope: 'act', implemented: true,
@@ -49,13 +52,15 @@ export default {
     objective(state) {
       const lairOfDagon = locationByCode(state, LAIR_OF_DAGON)
       const lairOfHydra = locationByCode(state, LAIR_OF_HYDRA)
-      const vault = locationByCode(state, VAULT_OF_RICHES)
-      // 缺任一地点就不虚构目标达成（地点被移出游戏/尚未入场 → false）。
+      // 「放置了紫色钥匙的财富宝库」：两个物理副本里按**钥匙持有者**定位那一份。
+      const vault = locationsByCode(state, VAULT_OF_RICHES)
+        .find(candidate => keysAt(state, `location:${candidate.id}`, { reveal: true }).includes(PURPLE_KEY))
+      // 缺任一地点就不虚构目标达成（地点被移出游戏/尚未入场/钥匙不在宝库上 → false）。
       if (!lairOfDagon || !lairOfHydra || !vault) return false
       if ((lairOfDagon.clues || 0) > 0) return false
       if ((lairOfHydra.clues || 0) > 0) return false
       if ((vault.clues || 0) > 0) return false
-      return keysAt(state, `location:${vault.id}`, { reveal: true }).includes(PURPLE_KEY)
+      return true
     },
     onComplete(state, act, api) {
       api.completeParallelAct(act.id)

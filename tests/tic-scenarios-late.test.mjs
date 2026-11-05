@@ -691,6 +691,27 @@ export function registerLateTests(lateFixture) {
     assert.equal(legalMoves(s).some(command=>command.assetId===statue.id&&command.abilityIndex===1),false)
     assert.equal(statue.exhausted,false);assert.equal(tokens.count('curse'),2)
   })
+  test('TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)',()=>{
+    const s=lateFixture('theLairOfDagon');s.investigators[0].assets=[];s.enemies=[]
+    const statue=asset(s,'07300',{exhausted:true})
+    const keys=createMechanicsApi(s).keys
+    // 没有费用颜色的钥匙时，第二条能力不出现在合法行动里。
+    assert.equal(legalMoves(s).some(command=>command.assetId===statue.id&&command.abilityIndex===1),false)
+    // 绿色钥匙不在「蓝/白/红/黄」费用里。
+    keys.transfer('green','setAside','investigator:0',{reveal:true})
+    assert.equal(legalMoves(s).some(command=>command.assetId===statue.id&&command.abilityIndex===1),false)
+    keys.transfer('blue','setAside','investigator:0',{reveal:true})
+    const command=legalMoves(s).find(command=>command.assetId===statue.id&&command.abilityIndex===1)
+    assert.ok(command,'持有蓝色钥匙时出现「花费钥匙：重整并翻面」行动')
+    move(s,command);settle(s)
+    const flipped=s.investigators[0].assets.find(item=>item.id===statue.id)
+    assert.equal(flipped.code,'07300b','翻到汨动遗物面')
+    assert.equal(flipped.exhausted,false,'重整')
+    assert.equal(keysAt(s,'investigator:0').includes('blue'),false,'蓝色钥匙被花费（到场外）')
+    // 翻面后能力枚举读 07300b 条目：第一条 fast 能力（横置：1 点伤害）可用。
+    s.enemies=[enemy(s,{traits:['Humanoid']})]
+    assert.ok(legalMoves(s).some(item=>item.assetId===statue.id&&item.abilityIndex===0),'07300b 面的能力可用')
+  })
   test('TIC 07294: real Hunter move engages lowest-willpower prey and adds two physically capped curses',()=>{
     const s=lateFixture('theLairOfDagon',2);s.humanSeats=[0,1]
     s.enemies=[];for(const inv of s.investigators)inv.engaged=[]
@@ -841,8 +862,29 @@ export function registerLateTests(lateFixture) {
     enemy(s,{id:'sleep',code:'07331a',originalCode:'07331a',traits:['Ancient One'],engagedSeat:null,damage:3,horror:3})
     s.investigators[0].willpower=0;s.chaosBag=['autofail'];const before=s.investigators[0].damage
     s.encounterDeck.push('07336')
-    transaction(s,draft=>drawEncounter(draft,draft.investigators[0],[]),choice=>choice.options.some(option=>option.id==='attack')?'attack':null)
-    assert.equal(s.investigators[0].damage,before+1)
+    let attackerOptions=null,sawAttackOption=false
+    transaction(s,draft=>drawEncounter(draft,draft.investigators[0],[]),choice=>{
+      if(choice.kind==='enemy'){attackerOptions=choice.options.map(option=>option.id);return choice.options[0].id}
+      if(choice.options.some(option=>option.id==='attack')){sawAttackOption=true;return 'attack'}
+      return null
+    })
+    // 沉睡面（07331a）印刷「不能攻击」：不得出现在「最近的古神攻击你」候选里（审计 M35）。
+    // 唯一可攻击者 = 苏醒的达贡 07330b（伤害 1），因此不再弹「选哪只古神」，直接命中。
+    assert.equal(sawAttackOption,true,'苏醒古神应可作为攻击者')
+    assert.equal(attackerOptions,null,'只剩一名可攻击古神时不弹二次选择')
+    assert.equal(s.investigators[0].damage,before+1,'承受的是苏醒达贡 1 点伤害，不是沉睡达贡的 3 点')
+    // 场上只有沉睡古神时没有攻击选项，只能选「放置 1 毁灭」。
+    const onlySleep=lateFixture('intoTheMaelstrom');onlySleep.enemies=[];onlySleep.investigators[0].engaged=[]
+    enemy(onlySleep,{id:'sleep2',code:'07331a',originalCode:'07331a',traits:['Ancient One'],engagedSeat:null,damage:3,horror:3})
+    onlySleep.investigators[0].willpower=0;onlySleep.chaosBag=['autofail']
+    const doomBefore=onlySleep.doom;onlySleep.encounterDeck.push('07336')
+    let sleepingSideAttackOption=false
+    transaction(onlySleep,draft=>drawEncounter(draft,draft.investigators[0],[]),choice=>{
+      if(choice.options.some(option=>option.id==='attack'))sleepingSideAttackOption=true
+      return null
+    })
+    assert.equal(sleepingSideAttackOption,false,'沉睡古神不可作为攻击者')
+    assert.equal(onlySleep.doom,doomBefore+1,'只能选择放置 1 毁灭')
   })
   for(const existing of [0,9]) test(`TIC 07277: actual memory-selected v.I agenda back adds four capped curses with ${existing} existing`,()=>{
     const s=lateFixture('theLairOfDagon',1,{memoriesRecovered:['ADecisionToStickTogether']})

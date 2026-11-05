@@ -7949,6 +7949,10 @@
           "back": {
             "symbol": "nosymbol",
             "links": []
+          },
+          "front": {
+            "symbol": "nosymbol",
+            "links": []
           }
         }
       },
@@ -7966,6 +7970,13 @@
               "triangle",
               "squiggle"
             ]
+          },
+          "front": {
+            "symbol": "equals",
+            "links": [
+              "triangle",
+              "squiggle"
+            ]
           }
         }
       },
@@ -7975,15 +7986,22 @@
         "shroud": 2,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "back": {
             "symbol": "triangle",
             "links": [
               "equals"
             ]
+          },
+          "front": {
+            "symbol": "triangle",
+            "links": [
+              "equals"
+            ]
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07242",
@@ -7996,6 +8014,10 @@
           "back": {
             "symbol": "nosymbol",
             "links": []
+          },
+          "front": {
+            "symbol": "nosymbol",
+            "links": []
           }
         }
       },
@@ -8005,13 +8027,18 @@
         "shroud": 4,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "back": {
             "symbol": "nosymbol",
             "links": []
+          },
+          "front": {
+            "symbol": "nosymbol",
+            "links": []
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07244",
@@ -8054,6 +8081,14 @@
               "diamond",
               "t"
             ]
+          },
+          "front": {
+            "symbol": "square",
+            "links": [
+              "squiggle",
+              "diamond",
+              "t"
+            ]
           }
         }
       },
@@ -8071,6 +8106,13 @@
               "square",
               "t"
             ]
+          },
+          "front": {
+            "symbol": "diamond",
+            "links": [
+              "square",
+              "t"
+            ]
           }
         }
       },
@@ -8080,7 +8122,8 @@
         "shroud": 5,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false
+        "hasVictory": true,
+        "victory": 1
       },
       {
         "id": "07248",
@@ -8104,8 +8147,9 @@
         "shroud": 2,
         "clues": 1,
         "cluesFixed": false,
-        "hasVictory": false,
-        "symbols": {}
+        "hasVictory": true,
+        "symbols": {},
+        "victory": 1
       },
       {
         "id": "07251",
@@ -8121,7 +8165,7 @@
         "shroud": 3,
         "clues": 1,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "back": {
             "symbol": "t",
@@ -8130,8 +8174,17 @@
               "square",
               "diamond"
             ]
+          },
+          "front": {
+            "symbol": "t",
+            "links": [
+              "squiggle",
+              "square",
+              "diamond"
+            ]
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07102#1",
@@ -10150,6 +10203,15 @@
               "plus",
               "trefoil"
             ]
+          },
+          "front": {
+            "symbol": "triangle",
+            "links": [
+              "square",
+              "star",
+              "plus",
+              "trefoil"
+            ]
           }
         }
       },
@@ -10181,7 +10243,7 @@
         "shroud": 3,
         "clues": 1,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "front": {
             "symbol": "plus",
@@ -10195,7 +10257,8 @@
               "triangle"
             ]
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07286",
@@ -10233,7 +10296,7 @@
         "shroud": 4,
         "clues": 1,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "front": {
             "symbol": "equals",
@@ -10247,7 +10310,8 @@
               "star"
             ]
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07288",
@@ -10316,18 +10380,25 @@
       {
         "id": "07291",
         "code": "07291",
-        "shroud": 6,
+        "shroud": 3,
         "clues": 3,
         "cluesFixed": false,
-        "hasVictory": false,
+        "hasVictory": true,
         "symbols": {
           "back": {
             "symbol": "diamond",
             "links": [
               "circle"
             ]
+          },
+          "front": {
+            "symbol": "diamond",
+            "links": [
+              "circle"
+            ]
           }
-        }
+        },
+        "victory": 1
       },
       {
         "id": "07102#1",
@@ -10371,8 +10442,9 @@
         "shroud": 4,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
-        "symbols": {}
+        "hasVictory": true,
+        "symbols": {},
+        "victory": 1
       },
       {
         "id": "07104#2",
@@ -10380,8 +10452,9 @@
         "shroud": 4,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
-        "symbols": {}
+        "hasVictory": true,
+        "symbols": {},
+        "victory": 1
       }
     ],
     "acts": [
@@ -12364,8 +12437,9 @@
         "shroud": 4,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
-        "symbols": {}
+        "hasVictory": true,
+        "symbols": {},
+        "victory": 1
       },
       {
         "id": "07104#2",
@@ -12373,8 +12447,9 @@
         "shroud": 4,
         "clues": 2,
         "cluesFixed": false,
-        "hasVictory": false,
-        "symbols": {}
+        "hasVictory": true,
+        "symbols": {},
+        "victory": 1
       }
     ],
     "acts": [

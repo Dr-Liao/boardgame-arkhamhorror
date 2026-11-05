@@ -137,6 +137,28 @@ test('P7 深陷危局 幕 07128 背面：推进结算记录 TheInvestigatorsMade
   assert.equal(s.campaign.investigators[0].xp, 2, '安全抵达载具的 2 点经验真实发放')
 })
 
+test('P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）', () => {
+  const s = deep(2)
+  const resignLocation = s.locations.find(location => codeOf(location) === '07142')
+  assert.ok(resignLocation, '07142「被淹没的村镇」是本章撤退点')
+  for (const inv of s.investigators) inv.location = resignLocation.id
+  // 真实对局里站上地点即揭示；这里直接走同一个揭示入口再枚举合法行动。
+  run(s, draft => scenarioRuntime(draft, []).reveal(resignLocation.id))
+  const resignMove = () => legalMoves(s).find(move => move.action === 'entityAbility'
+    && move.entityId === resignLocation.id)
+  assert.ok(resignMove(), '撤退行动出现在合法行动里')
+  move(s, resignMove())
+  settle(s)
+  assert.equal(s.investigators[0].resigned, true, '第一位调查员撤退')
+  assert.equal(s.campaign.scenarioResults.length, 0, '仍有幸存者时局面不结束')
+  // 最后一名幸存者撤退：引擎 doResign 先给当前幕 allResigned 钩子 → 推进 07128 背面。
+  // 修复前缺失该钩子，引擎 checkOutcome 抢先落到 noResolution（记录 / R1 / 2 XP 全丢）。
+  move(s, resignMove())
+  settle(s)
+  assert.equal(s.campaign.records.TheInvestigatorsMadeItSafelyToTheirVehicles, true, '07128 背面记录写入')
+  assert.equal(s.campaign.scenarioResults.at(-1)?.resolution, 'resolution1', '结局键是 R1 而不是 noResolution')
+})
+
 test('P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）', () => {
   const s = deep()
   assert.deepEqual(s.agendas.map(codeOf), ['07124', '07125', '07126', '07127'])

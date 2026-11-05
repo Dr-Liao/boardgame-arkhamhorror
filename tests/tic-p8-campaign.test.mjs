@@ -246,10 +246,12 @@ test('TIC P8 前七章真实大厅走查：区域守恒、幕间窗口、升级�
   assert.deepEqual(chapters.map(chapter => chapter.interludeNodes), [
     ['interlude1', 'harperPreparation'], ['interlude2'], [], ['interlude3'], ['beforeFog'], [], ['interlude4'],
   ])
-  // interlude1 的 upgrades:false；harperPreparation 起升级窗口开放。
-  assert.deepEqual(chapters[0].upgrades.allowed, [false, true])
-  assert.equal(chapters[0].upgrades.purchased, true, '有经验时 harperPreparation 窗口应能完成一次真实升级')
-  assert.ok(chapters[0].upgrades.purchases > 0)
+  // 参考流程（审计 M40）：第一章后的 interlude1 与 harperPreparation 都不开放升级；
+  // 真正的升级窗口在第二章后的 interlude2。
+  assert.deepEqual(chapters[0].upgrades.allowed, [false, false])
+  assert.deepEqual(chapters[1].upgrades.allowed, [true])
+  assert.equal(chapters[1].upgrades.purchased, true, '有经验时 interlude2 窗口应能完成一次真实升级')
+  assert.ok(chapters[1].upgrades.purchases > 0)
   seen.upgrades = chapters.reduce((sum, chapter) => sum + (chapter.upgrades?.purchases || 0), 0)
   assert.ok(seen.upgrades > 0, '跨章升级应真实写入战役记录')
   // 升级真实扣经验：第一章后每人 6（调试）+4（4 段记忆）=10，购买后仍应 < 10。
@@ -448,8 +450,10 @@ test('TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/
   assert.equal(records(state).ThePlotOfTheDeepOnesWasThwarted, true)
   assert.equal(records(state).TheRichesOfTheDeepAreLostForever, true)
   assert.ok(state.victoryDisplay.some(card => codeOf(card) === '07316'))
-  // R1 的「停止阴谋 + 违抗哈珀」奖励：3 点额外经验（4 胜利点 + 3 奖励 = 每人 7）。
-  for (const record of Object.values(state.campaign.investigators)) assert.equal(record.xp, 7, '每人应得 7 XP')
+  // R1 的「停止阴谋 + 违抗哈珀」奖励：3 点额外经验。
+  // 胜利点：07316(2) + 07318(2) + 两张「地下暗河」07104 的印刷 Victory 1（审计 M24 修复前
+  // 这两处 hasVictory:false 被吞掉）= 6，6 + 3 奖励 = 每人 9 XP。
+  for (const record of Object.values(state.campaign.investigators)) assert.equal(record.xp, 9, '每人应得 9 XP')
   for (const trauma of Object.values(state.campaign.trauma)) assert.equal(trauma.physical, 2)
   continueFromResult(world, state, { upgrades: false })
   assert.equal(state.uiState, 'campaignResult')
@@ -617,7 +621,8 @@ test('TIC P8 条件记忆闪回：按章节门槛结算、重复结算不再发�
   finishScenario(world, state, 'resolution1')
   const interludeInfo = continueFromResult(world, state, { upgrades: false })
   assert.deepEqual(interludeInfo.nodes, ['interlude1', 'harperPreparation'])
-  assert.deepEqual(interludeInfo.upgradesAllowed, [false, true])
+  // 参考 nextStep：interlude1 与 harperPreparation 都不开放升级（审计 M40）。
+  assert.deepEqual(interludeInfo.upgradesAllowed, [false, false])
   for (const record of Object.values(state.campaign.investigators)) assert.equal(record.xp, 4, '每段记忆 1 XP，共 4')
   const restored = saveAndRestore(world, state)
   assert.equal(restored.state.campaign.records.memoriesRecovered.length, 4)
@@ -690,19 +695,35 @@ test('TIC P8 幕间升级窗口存档恢复：购买候选一致，恢复后完�
     settleChoices(world, state)
   }
   finishScenario(world, state, 'resolution1')
-  // 进入 interlude1 窗口并清空其确认，再进入 harperPreparation（第一个真正开放升级的窗口）。
+  // 参考流程（审计 M40）：interlude1 → continueNoUpgrade → harperPreparation 也**不是**升级窗口；
+  // 第三章前的幕间 II 才是真正的牌组升级窗口。
+  const first = continueFromResult(world, state, { upgrades: false })
+  assert.deepEqual(first.upgradesAllowed, [false, false], '第一章后不应有升级窗口')
+  assert.equal(state.campaign.upgradesAllowed, false)
+  const confirmUntil = target => {
+    for (let guard = 0; guard < 12; guard++) {
+      settleChoices(world, state)
+      if (target && typeof target === 'object'
+        ? state.campaign.flow.nodeId === target.node
+        : state.uiState === target) return
+      const seat = decisionSeat(world, state)
+      const done = legalFor(world, state, seat).find(move => move.action === 'hubDoneSeat')
+      if (!done) return
+      playMove(world, state, done, seat)
+    }
+  }
+  // 完成幕间 I 的确认 → 第二章 setup → 开局 → 用调试指令结束第二章（走真实结局链路）。
+  confirmUntil('scenarioSetup')
+  assert.equal(state.uiState, 'scenarioSetup')
+  beginChapter(world, state)
+  assert.equal(state.scenario.id, 'theVanishingOfElinaHarper')
+  finishScenario(world, state, 'resolution1')
   playMove(world, state, { action: 'hubContinue' }, 0)
   settleChoices(world, state)
-  assert.equal(state.uiState, 'interlude')
-  for (let guard = 0; guard < 4 && state.campaign.flow.nodeId !== 'harperPreparation'; guard++) {
-    const seat = decisionSeat(world, state)
-    const done = legalFor(world, state, seat).find(move => move.action === 'hubDoneSeat')
-    assert.ok(done)
-    playMove(world, state, done, seat)
-    settleChoices(world, state)
-  }
-  assert.equal(state.campaign.flow.nodeId, 'harperPreparation')
-  assert.equal(state.campaign.upgradesAllowed, true)
+  confirmUntil({ node: 'interlude2' })
+  assert.equal(state.campaign.flow.nodeId, 'interlude2')
+  assert.equal(world.engine.legalMoves(state).length > 0, true)
+  assert.equal(state.campaign.upgradesAllowed, true, '幕间 II 应开放升级')
   const purchaseMoves = legalFor(world, state, decisionSeat(world, state)).filter(move => move.action === 'hubPurchase')
   assert.ok(purchaseMoves.length > 0, '有经验时应出现真实购买候选')
   const saved = saveAndRestore(world, state)

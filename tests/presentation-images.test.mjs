@@ -16,6 +16,18 @@ const HOST = 'https://example.test'
 const SYMBOL_FONTS = ['arkham.ttf', 'arkhamicons.ttf', 'arkhamslim.ttf']
 const paths = face => face.candidates.map(candidate => candidate.path)
 
+test('AI 汉化来源随中文候选保留，英文回退不带汉化标记', () => {
+  const descriptor = imageDescriptor('12027')
+  assert.equal(descriptor.front.candidates[0].localizedSource, 'codex-imagegen')
+  const candidates = imageCandidates(descriptor)
+  assert.ok(candidates.some(candidate => candidate.language === 'zh'))
+  for (const candidate of candidates) {
+    assert.equal(candidate.localizedSource, candidate.language === 'zh' ? 'codex-imagegen' : undefined)
+  }
+  const explicit = imageDescriptor('12027', { artId: '12027' })
+  assert.equal(explicit.front.candidates[0].localizedSource, 'codex-imagegen')
+})
+
 test('卡图解析优先真实美术编号与关联面，而不是统一加 b 猜测', () => {
   // 末位 a 面候选是参考项目 altFrontImage 的一次兜底（实测 03221 只发布 03221a），首选仍是权威编号。
   assert.deepEqual(paths(imageDescriptor('01001').front), ['cards/01001.avif', 'cards/01001a.avif'])
@@ -149,10 +161,10 @@ test('全部 5,930 张卡都能解析，且逐类型统计可复核', () => {
   assert.equal(stats.cards, 5930)
   assert.equal(stats.resolved, 5930)
   assert.deepEqual(stats.unresolved, [])
-  assert.equal(stats.localizedFront, 3956)
+  assert.equal(stats.localizedFront, 5211)
   assert.equal(stats.withBackArt, 2592)
   assert.deepEqual(stats.genericBack, { encounter: 1635, player: 1703 })
-  assert.equal(stats.localizedArtEntries, 5243)
+  assert.equal(stats.localizedArtEntries, 6493)
   assert.equal(stats.localMediaCopied, 0)
   assert.equal(LOCALIZED_ART_SOURCE.language, 'zh')
   assert.equal(LOCALIZED_ART_SOURCE.urlPrefix, 'img/arkham/zh/')
@@ -275,8 +287,8 @@ test('实现状态与可用性取值与目录一致，展示层有对应中文�
 
 test('本地图库覆盖全部卡面，候选优先同源地址并可离线使用', () => {
   assert.equal(LOCAL_IMAGE_LIBRARY.available, true)
-  assert.equal(LOCAL_IMAGE_LIBRARY.total, 13423)
-  assert.deepEqual(LOCAL_IMAGE_LIBRARY.byLanguage, { en: 8180, zh: 5243 })
+  assert.equal(LOCAL_IMAGE_LIBRARY.total, 14673)
+  assert.deepEqual(LOCAL_IMAGE_LIBRARY.byLanguage, { en: 8180, zh: 6493 })
 
   let local = 0
   const remote = []

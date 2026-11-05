@@ -29,17 +29,19 @@
 //     `api.addCurrentActToVictory()` 把本卡加入胜利区（Victory 2）；
 //     `api.resolveActCompletion({ act })` 是并行幕（parallel-acts.js）的统一完成结算：
 //     场上没有其他场景卡 → 立即 finish('resolution1')；还有另一张场景卡 → 队长选择「继续/立即R1」。
-//   · [快速] 二选一能力：分别写成两条 `kind:'free', actionKind:'activate', range:'anywhere'`
-//     （幕实体没有地点，range 必须 anywhere；条件用 criteria 收窄到「你所在地点」）。
+//   · [快速] 能力（参考实现是**一条** `FastAbility $ OrCost [RemoveEnemyDamageCost …, GroupClueCost …]`，
+//     结算统一为「降低淹没等级」）：引擎没有 OrCost 原语，这里保留两条独立能力，但**两条都必须
+//     执行印刷的结算**「降低任意非[[圣堂]]地点的淹没等级」。选项 A 的「从古神敌人移除伤害」
+//     是费用（参考 RemoveEnemyDamageCost）：伤害不够时不可用，结算后同样排水。
+//     修复前选项 A 只治疗、不排水且无费用，凭空多出印刷没有的效果（审计 H15）。
 //     读点：parley.js#activeStageEntities → parleyMovesFor → legalMoves 的 entityAbility
 //     → ability-exec#doEntityAbility（费用/日志/结算与其它实体能力同一管线）。
-//     或费用 `cost.groupClues`（本地点团队线索，默认 scope='here'）由 ability-rules#canAffordAbility/
+//     或费用 `cost.groupClues`（本地点团队线索，scope='here'）由 ability-rules#canAffordAbility/
 //     payAbilityCost 读；淹没读写走 api.mechanics.water（flood.js，0 未淹没 / 1 部分 / 2 完全）。
 //   · 「移除伤害」走 api.healEnemy（api-misc：只写 damageTaken，不触发击败/胜利结算）。
 //
-// 与印刷的差异（无）：
-//   · 「[快速]」= kind:'free'；两条能力同来源、各自独立出现在合法行动里（不引入 OrCost）。
-//   · 「降低任意一个非[[圣堂]]地点」的「任意」由施术调查员选择（api.choice kind:'location'）。
+// 与印刷的差异（登记项）：OrCost 尚无引擎原语，两条选项拆成两条合法行动；费用互斥与结算
+// 效果与印刷一致（每条能力只有一个「二选一」费用可选，不会同时支付）。
 //
 // implemented: true
 
@@ -58,6 +60,26 @@ const locationByEntity = (state, locationId) => (state.locations || []).find(loc
 // 可被降低淹没等级的地点：场上、已淹没、非[[圣堂]]。
 const drainableLocations = state => (state.locations || []).filter(location =>
   floodLevel(state, location.id) > 0 && !hasTrait(location, SANCTUM_TRAIT))
+
+// 可以付「移除 1[每调查员]伤害」费用的古神敌人（伤害不足的不能选）。
+const damageableAncientOnes = (state, locationId) => ancientOnesAt(state, locationId)
+  .filter(enemy => (Number(enemy.damageTaken) || 0) >= state.numInvestigators)
+
+// 两条选项共同的结算：选择并降低一个非[[圣堂]]地点的淹没等级 1。
+function drainOneLocation(state, inv, api, source) {
+  const candidates = drainableLocations(state)
+  if (!candidates.length) return false
+  const id = candidates.length === 1 ? candidates[0].id : api.choice({
+    kind: 'location', source, seat: inv.seat,
+    prompt: '选择要降低淹没等级的非[[圣堂]]地点。',
+    options: candidates.map(location => ({ id: location.id, label: location.name })),
+  })
+  const location = candidates.find(item => item.id === id)
+  if (!location) return false
+  api.mechanics.water.change(location.id, -1)
+  api.info?.(`🌊 「${location.name}」的淹没等级降低 1（当前 ${floodLevel(state, location.id)}）。`)
+  return true
+}
 
 export default {
   code: '07316', scope: 'act', implemented: true,
@@ -79,12 +101,13 @@ export default {
     },
   },
   abilities: [{
-    // 选项 A：从你所在地点的一个[[古神]]敌人上移除 1[每调查员]点伤害。
+    // 选项 A：从你所在地点的一个[[古神]]敌人上移除 1[每调查员]点伤害（费用）→ 降低淹没等级。
     kind: 'free', actionKind: 'activate', range: 'anywhere',
-    label: '从你所在地点的一个[[古神]]敌人上移除1[每调查员]点伤害',
-    criteria: ({ state, inv }) => ancientOnesAt(state, inv.location).length > 0,
+    label: '从你所在地点的一个[[古神]]敌人上移除1[每调查员]点伤害：降低任意非[[圣堂]]地点的淹没等级',
+    criteria: ({ state, inv }) => damageableAncientOnes(state, inv.location).length > 0
+      && drainableLocations(state).length > 0,
     resolve: ({ state, inv, api }) => {
-      const enemies = ancientOnesAt(state, inv.location)
+      const enemies = damageableAncientOnes(state, inv.location)
       if (!enemies.length) return
       const id = enemies.length === 1 ? enemies[0].id : api.choice({
         kind: 'enemy', source: '07316', seat: inv.seat,
@@ -95,9 +118,10 @@ export default {
       if (!enemy) return
       api.healEnemy(enemy, state.numInvestigators)
       api.info?.(`🌊 从「${enemy.name}」上移除 ${state.numInvestigators} 点伤害。`)
+      drainOneLocation(state, inv, api, '07316')
     },
   }, {
-    // 选项 B：在[[巢穴]]地点的调查员共同花费 1[每调查员]个线索：降低任意非[[圣堂]]地点的淹没等级 1。
+    // 选项 B：在[[巢穴]]地点的调查员共同花费 1[每调查员]个线索 → 降低淹没等级。
     kind: 'free', actionKind: 'activate', range: 'anywhere',
     label: '在[[巢穴]]地点共同花费1[每调查员]个线索：降低任意非[[圣堂]]地点的淹没等级',
     groupClueScope: 'here',
@@ -108,17 +132,7 @@ export default {
     },
     cost: { groupClues: ({ state }) => state.numInvestigators },
     resolve: ({ state, inv, api }) => {
-      const candidates = drainableLocations(state)
-      if (!candidates.length) return
-      const id = candidates.length === 1 ? candidates[0].id : api.choice({
-        kind: 'location', source: '07316', seat: inv.seat,
-        prompt: '选择要降低淹没等级的非[[圣堂]]地点。',
-        options: candidates.map(location => ({ id: location.id, label: location.name })),
-      })
-      const location = candidates.find(item => item.id === id)
-      if (!location) return
-      api.mechanics.water.change(location.id, -1)
-      api.info?.(`🌊 「${location.name}」的淹没等级降低 1（当前 ${floodLevel(state, location.id)}）。`)
+      drainOneLocation(state, inv, api, '07316')
     },
   }],
 }

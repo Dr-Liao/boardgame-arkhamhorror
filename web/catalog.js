@@ -196,6 +196,7 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   holder.append(status)
   const fallback = () => {
     holder.dataset.imageState = 'text-fallback'
+    delete holder.dataset.localizedSource
     status.textContent = preferences.enabled ? t('image.unavailable') : t('image.textMode')
   }
   if (!descriptor || !preferences.enabled) { fallback(); return holder }
@@ -229,8 +230,12 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
     if (!current || !img.naturalWidth) return
     imageCache.succeed(current.url)
     holder.dataset.imageState = 'displayable'
+    if (current.localizedSource) holder.dataset.localizedSource = current.localizedSource
+    else delete holder.dataset.localizedSource
     holder.classList.toggle('ah-art-landscape', img.naturalWidth > img.naturalHeight)
-    status.textContent = current.source?.startsWith('declared-variant')
+    status.textContent = current.localizedSource === 'codex-imagegen'
+      ? t('image.aiTranslated')
+      : current.source?.startsWith('declared-variant')
       ? t('image.revised')
       : current.language === 'zh' ? t('image.zh') : current.language === 'en' ? t('image.en') : t('image.back')
   })

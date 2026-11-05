@@ -5,6 +5,7 @@ import { resolvePoolSchedules } from './chaos-token-pool.js'
 import { availableResources } from './resource-bank.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { swarmGroup } from './swarm.js'
+import { hasWindowListener } from './window-listeners.js'
 // 阶段机（补给阶段 / 密谋揭示）从 engine.js 拆出的第五个模块（Phase 6 · 6d-5）。
 //
 // roadmap 的「按域拆分」里，阶段机是第三块：它把「一个阶段的固定流程」从引擎主循环里分出来，
@@ -253,7 +254,10 @@ function upkeepPhase(state) {
       roundEndRule.onRoundEnd(state, roundEndAgenda, scenarioRuntime(state, events))
     }
   }
-  if (state.investigators.some(inv => investigatorRule(inv.code)?.roundEndReaction)) {
+  // 轮末强制/反应窗口的开门条件 = **有没有任何窗口监听者**（敌人/地点/幕/议程/剧情资产/
+  // 调查员的卡）。修复前只检查老式 `investigatorRule.roundEndReaction`（全仓仅 07001），
+  // 非玩家实体的描述子强制（07084/07085 达贡祭司的「轮末放 1 毁灭」）永远等不到窗口（审计 H12）。
+  if (hasWindowListener(state, 'roundEnds')) {
     openAbilityWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, events)
   }
   resolvePoolSchedules(state)

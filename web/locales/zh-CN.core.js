@@ -13,6 +13,7 @@ export default {
   'image.textMode': '纯文字模式',
   'image.revised': '修订版替代美术',
   'image.zh': '中文卡图',
+  'image.aiTranslated': '中文卡图 · AI 汉化',
   'image.en': '英文卡图',
   'image.back': '卡背',
 

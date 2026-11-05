@@ -487,7 +487,9 @@ test('07172: purple key looks at an arbitrary distant hidden tunnel/depth withou
 for (const [code, count] of [['07206a', 2], ['07206b', 2], ['07207a', 3], ['07207b', 3]]) {
   test(`${code}: actual front-road reveal creates Road ${count} physical choices, conserves pool and never extends twice`, () => {
     const s = fixture(), here = s.investigators[0].location
-    Object.assign(s.locations.find(loc => loc.id === here), { code, originalCode: code, revealed: false })
+    // 道路 N 的「揭示后扩路」是引擎按地点数据 `road:N` 统一触发（审计 H2 修复），
+    // 测试夹具直接构造地点实例时必须把印刷的 Road 值一起写上。
+    Object.assign(s.locations.find(loc => loc.id === here), { code, originalCode: code, revealed: false, road: count })
     for (const id of ['middle-road-A', 'middle-road-B', 'middle-detour-A', 'middle-detour-B']) {
       s.scenario.locations[id] = { code: id.includes('detour') ? '07210' : '07209a', originalCode: id.includes('detour') ? '07210' : '07209a',
         name: 'Old Innsmouth Road', connections: [], clues: 0, shroud: 1 }

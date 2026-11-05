@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { eventWindowContext } from './event-window.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 ﻿import { investigatorRule } from '../cards/card-rules.js'
@@ -231,7 +232,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
       campaignState.setRoundEndDiscard(asset, state.round)
       inv.assets.push(asset)
       info(state, null, `${inv.name} 的「${cardName(code)}」作为支援进入游戏区域，并在轮末弃掉。`)
-      triggerReaction(state, inv.seat, 'assetEnteredPlay', [], { assetCode: code, assetId: asset.id, location: inv.location })
+      triggerReaction(state, inv.seat, 'assetEnteredPlay', [], eventWindowContext(state, { assetCode: code, assetId: asset.id, location: inv.location }))
     }
     if (o.searchTop) searchTop(state, inv.seat, { amount: o.searchTop, source: code }, [])
     // Phase 5（5a-33）：「家庭前线」的伤害转移由调查员能力数据声明。

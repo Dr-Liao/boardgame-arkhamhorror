@@ -25,6 +25,7 @@ import { capabilityBlocked } from './modifiers.js'
 import { swarmGroup, returnSwarmCard, swarmCardsOf } from './swarm.js'
 import { tracksHistory } from './action-history.js'
 import { effectRecipient } from './effect-recipient.js'
+import { hasTrait } from './matcher.js'
 // P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
 import { checkAssetDefeated } from './asset-defeat.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
@@ -157,6 +158,24 @@ function enemyEvadeValue(state, enemy, inv) {
 function enemiesEngagedWith(state, inv) {
   if (capabilityBlocked(state, inv, 'engage')) return []
   return state.enemies.filter((e) => e.engagedSeat === inv.seat || (e.massive && !enemyTextBlanked(state, e) && e.location === inv.location))
+}
+
+// 「敌军阶段期间，每个处于重整状态的<TRAIT>敌人可以攻击本地点的调查员，如同其已交战」
+// （07327 缟玛瑙守卫）：地点条目声明 `locationRule.enemiesAttackAsIfEngagedHere`（特性数组
+// 或 { traits }），读点是敌军阶段的攻击枚举（turn.js#enemyPhase / resolveEnemyPhaseOf）。
+// 只影响「谁能攻击」，不建立交战关系（不写 engagedSeat、不影响攻击行动目标）。
+function enemyAttacksAsIfEngaged(state, enemy, inv) {
+  if (!enemy || !inv || enemy.defeated || enemy.removedFromGame || enemy.exhausted) return false
+  if (inv.defeated || inv.resigned) return false
+  if (enemy.location == null || enemy.location !== inv.location) return false
+  if (enemyTextBlanked(state, enemy)) return false
+  // 沉睡面印刷「不能攻击」：as-if-engaged 不能覆盖它自己的禁止攻击文本。
+  if (enemyIsSlumbering(state, enemy, { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
+  const location = (state.locations || []).find(item => item.id === enemy.location)
+  const rule = registeredEntry(location?.originalCode || location?.code)?.locationRule?.enemiesAttackAsIfEngagedHere
+  if (!rule) return false
+  const traits = Array.isArray(rule) ? rule : (rule.traits || [])
+  return !traits.length || traits.some(trait => hasTrait(enemy, trait))
 }
 
 // 猎物（prey）排序：数值越小越优先，便于统一计算并列集合。
@@ -867,8 +886,12 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
     if (context.cancelDamage) assignedDamage.set(recipient, Math.max(0, amount - context.cancelDamage))
     const owner = state.investigators.find(other => other.assets.includes(recipient))
     if (owner && registeredEntry(recipient.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('assetDamageAssigned'))) {
-      reactionWindow(state, 'assetDamageAssigned', { when: 'assetDamageAssigned', seat: owner.seat,
-        assetId: recipient.id, amount: assignedDamage.get(recipient) }, events, { allowNested: true })
+      // 窗口实例：07006「每次分配伤害」按 **每次分配** 触发。没有实例键时，同一事务里
+      // 多次分配（敌人阶段多名敌人攻击 / 一次攻击多段伤害）会被 limit.perWindow 折叠成
+      // 同一次触发（审计 H9）。eventWindowContext 只在 `scenario.eventWindowInstances`
+      // （TIC）时写实例 id，其余战役的存档/重放形状不变。
+      reactionWindow(state, 'assetDamageAssigned', eventWindowContext(state, { when: 'assetDamageAssigned', seat: owner.seat,
+        assetId: recipient.id, amount: assignedDamage.get(recipient) }), events, { allowNested: true })
     }
   }
   // "When dealt damage" reactions occur after assignment, before placement and
@@ -967,5 +990,5 @@ function applyHorror(state, inv, amount, events, direct) {
   applyHarm(state, inv, 0, amount, events, direct)
 }
 
-  return { enemyZoneApi, enemyOutcomePublicApi, prepareEnemyOutcome, canDamageEnemy, enemyHealth, enemyFightValue, enemyEvadeValue, enemiesEngagedWith, enemyAttack, spawnEnemy, engageEnemy, disengageEnemy, defeatEnemy, damageEnemy, autoEvadeEnemy, applyHarm, defeatedAssetRetaliation, applyDamage, applyHorror }
+  return { enemyZoneApi, enemyOutcomePublicApi, prepareEnemyOutcome, canDamageEnemy, enemyHealth, enemyFightValue, enemyEvadeValue, enemiesEngagedWith, enemyAttacksAsIfEngaged, enemyAttack, spawnEnemy, engageEnemy, disengageEnemy, defeatEnemy, damageEnemy, autoEvadeEnemy, applyHarm, defeatedAssetRetaliation, applyDamage, applyHorror }
 }

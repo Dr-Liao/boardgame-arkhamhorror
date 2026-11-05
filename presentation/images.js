@@ -33,6 +33,7 @@ const mediaRegistry = JSON.parse(readFileSync(new URL('./media-registry.json', i
 export const LOCALIZED_ART_SOURCE = Object.freeze({ ...localized.source })
 export const MEDIA_REGISTRY = Object.freeze(mediaRegistry)
 const localizedArts = new Set([...localized.arts, ...generatedLocalized.arts])
+const generatedArts = new Set(generatedLocalized.arts)
 
 // 关联面是双向关系，但目录只记录一侧；反向索引让「背面卡」也能找到自己的正面。
 const linkedFronts = new Map()
@@ -47,11 +48,12 @@ const descriptors = new Map()
 
 /** 给每个候选补 local／localLocalized 标记：本地有文件时前端可直接用同源地址，无需远程。 */
 function annotateLocal(descriptor) {
-  if (!descriptor || !localPaths.size) return descriptor
+  if (!descriptor) return descriptor
   for (const face of [descriptor.front, descriptor.back]) {
     for (const candidate of [...face.candidates, ...Object.values(face.variants || {})]) {
       candidate.local = localPaths.has(candidate.path)
       candidate.localLocalized = candidate.localized && localPaths.has('zh/' + candidate.path)
+      if (generatedArts.has(candidate.path)) candidate.localizedSource = 'codex-imagegen'
     }
   }
   return descriptor

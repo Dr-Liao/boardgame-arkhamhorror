@@ -3,7 +3,7 @@
   "cycle": "tic",
   "phase": "P5",
   "generatedBy": "tools/audit-tic-investigators.mjs",
-  "status": "verified",
+  "status": "pending",
   "items": [
     {
       "code": "07001",
@@ -26,21 +26,21 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "1abb14df9c1a3c3c7629967fad8363f1c5738abbeeee357aa3beb80b47a158c3"
+          "sha256": "c8e6e1cba365c53a39f9ccb840a241954e21911a69479be32fb0a12f75c4d65a"
         }
       ],
       "checks": {
         "registered": true,
         "elderSign": true,
         "signatures": true,
-        "deckConstruction": true,
-        "behaviors": true,
-        "desktop": true,
-        "mobile": true,
+        "deckConstruction": false,
+        "behaviors": false,
+        "desktop": false,
+        "mobile": false,
         "selectable": true,
-        "sourceCurrent": true
+        "sourceCurrent": false
       },
-      "status": "verified",
+      "status": "pending",
       "evidence": [
         "tests/tic-investigators.test.mjs",
         "audit/tic-node-acceptance.json",
@@ -75,14 +75,14 @@
         "registered": true,
         "elderSign": true,
         "signatures": true,
-        "deckConstruction": true,
-        "behaviors": true,
-        "desktop": true,
-        "mobile": true,
+        "deckConstruction": false,
+        "behaviors": false,
+        "desktop": false,
+        "mobile": false,
         "selectable": true,
-        "sourceCurrent": true
+        "sourceCurrent": false
       },
-      "status": "verified",
+      "status": "pending",
       "evidence": [
         "tests/tic-investigators.test.mjs",
         "audit/tic-node-acceptance.json",
@@ -117,14 +117,14 @@
         "registered": true,
         "elderSign": true,
         "signatures": true,
-        "deckConstruction": true,
-        "behaviors": true,
-        "desktop": true,
-        "mobile": true,
+        "deckConstruction": false,
+        "behaviors": false,
+        "desktop": false,
+        "mobile": false,
         "selectable": true,
-        "sourceCurrent": true
+        "sourceCurrent": false
       },
-      "status": "verified",
+      "status": "pending",
       "evidence": [
         "tests/tic-investigators.test.mjs",
         "audit/tic-node-acceptance.json",
@@ -159,14 +159,14 @@
         "registered": true,
         "elderSign": true,
         "signatures": true,
-        "deckConstruction": true,
-        "behaviors": true,
-        "desktop": true,
-        "mobile": true,
+        "deckConstruction": false,
+        "behaviors": false,
+        "desktop": false,
+        "mobile": false,
         "selectable": true,
-        "sourceCurrent": true
+        "sourceCurrent": false
       },
-      "status": "verified",
+      "status": "pending",
       "evidence": [
         "tests/tic-investigators.test.mjs",
         "audit/tic-node-acceptance.json",
@@ -210,14 +210,14 @@
         "registered": true,
         "elderSign": true,
         "signatures": true,
-        "deckConstruction": true,
-        "behaviors": true,
-        "desktop": true,
-        "mobile": true,
+        "deckConstruction": false,
+        "behaviors": false,
+        "desktop": false,
+        "mobile": false,
         "selectable": true,
-        "sourceCurrent": true
+        "sourceCurrent": false
       },
-      "status": "verified",
+      "status": "pending",
       "evidence": [
         "tests/tic-investigators.test.mjs",
         "audit/tic-node-acceptance.json",
@@ -244,12 +244,12 @@
     "audit/tic-p5-baseline.json"
   ],
   "gates": {
-    "investigators": true,
+    "investigators": false,
     "packBoundary": true,
-    "dexterCardEntry": true,
-    "jsonAndMultiplayer": true,
+    "dexterCardEntry": false,
+    "jsonAndMultiplayer": false,
     "originalBaselinePreserved": true,
-    "replayExact": true,
-    "fastZeroFailures": true
+    "replayExact": false,
+    "fastZeroFailures": false
   }
 }

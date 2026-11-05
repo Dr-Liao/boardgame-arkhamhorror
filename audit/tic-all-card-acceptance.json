@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 84 个 tests/tic-*.test.mjs（1570 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
+    "basis": "实跑 84 个 tests/tic-*.test.mjs（1593 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）：文件级证据只在该测试文件**实跑有通过用例**时成立，且与标题命中分开记账（strongEvidence / fileLevelEvidence）。整体仍要求「实跑通过 + 卡号命中」，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified。simplified 只在「已实现且有测试证据，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified；gate 口径（w3）允许 verified+simplified 通过、no-behavior 单列、missing 必须为 0。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -49,7 +49,7 @@
     "testFiles": 84,
     "testFilesWithoutEvents": 0,
     "wrapperTestFiles": 1,
-    "testsPassed": 1570,
+    "testsPassed": 1593,
     "testsFailed": 0,
     "pendingPrimitiveRequests": 0,
     "behaviorPrimitiveRequests": 0,
@@ -57,8 +57,8 @@
     "recordsWithEntryFile": 252,
     "recordsImplemented": 252,
     "recordsWithTestEvidence": 252,
-    "verifiedByTitle": 229,
-    "verifiedByFileOnly": 22,
+    "verifiedByTitle": 231,
+    "verifiedByFileOnly": 20,
     "implementedWithoutEvidence": 0,
     "reasonBuckets": {
       "explicitImplementedFalse": [],
@@ -99,6 +99,7 @@
         "07071",
         "07072",
         "07073",
+        "07074",
         "07075",
         "07076",
         "07077",
@@ -283,6 +284,7 @@
         "07325",
         "07326",
         "07327",
+        "07328",
         "07329",
         "07330a",
         "07330b",
@@ -298,7 +300,6 @@
       ],
       "verifiedByFileOnly": [
         "07058",
-        "07074",
         "07078",
         "07089",
         "07100",
@@ -317,12 +318,10 @@
         "07212a",
         "07212b",
         "07240",
-        "07255",
-        "07328"
+        "07255"
       ],
       "fileLevelEvidenceOnly": [
         "07058",
-        "07074",
         "07078",
         "07089",
         "07100",
@@ -341,8 +340,7 @@
         "07212a",
         "07212b",
         "07240",
-        "07255",
-        "07328"
+        "07255"
       ],
       "implementedWithoutEvidence": []
     }
@@ -353,7 +351,7 @@
     "testRun": {
       "exit": 0,
       "files": 84,
-      "passed": 1570,
+      "passed": 1593,
       "failed": 0,
       "filesWithoutEvents": [],
       "wrapperFiles": [
@@ -443,7 +441,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-        "sha256": "56439b56300e296c5fe5637fee68078a2b63b724e18b97d7765e47058d49f699"
+        "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
       },
       {
         "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
@@ -451,7 +449,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-        "sha256": "a40b7c1e7ee0729000f0b24a5ba8ff796fe8cfdfdc3bb9ddd8310afb6659dda9"
+        "sha256": "56d390512f57573f8bc2cf40671fac78edcc1a26e6e101ada9b4e38071c408a6"
       },
       {
         "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
@@ -459,7 +457,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
-        "sha256": "c27983d67e92c232d27d86929c7d8ead53cb065a439b402bfd385ce768496ac9"
+        "sha256": "3b91f7f45bf739f9051fe7e4a61ce6f10ea83ec8c54a23154c856ca4157878de"
       },
       {
         "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
@@ -467,11 +465,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-interludes.test.mjs",
-        "sha256": "44da143b800492ba27600f250bac7d68d80c2764204b151fd15dd131ded924d9"
+        "sha256": "571f9f687637f63bb894b080b6d606ca05c42a0b361576f67b5f9cb105f5212a"
       },
       {
         "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
-        "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+        "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
       },
       {
         "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
@@ -507,7 +505,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-        "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+        "sha256": "afd0260c9d1689705305ca7e6f302084b755d6528641178cea95de7e964e0ee1"
       },
       {
         "file": "games/arkhamhorror/tests/tic-p8-multiplayer.test.mjs",
@@ -519,7 +517,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-        "sha256": "f50ae10c9197608b7eba9372476b1777d2c91b7d21602e3aa31c71ebe36516ad"
+        "sha256": "2112b6318d9e04c73d080314ebd3bff5b37f778590f945b18caf330629f61e69"
       },
       {
         "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
@@ -527,7 +525,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-        "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+        "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
@@ -535,11 +533,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
-        "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+        "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
-        "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+        "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
       },
       {
         "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
@@ -547,7 +545,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
-        "sha256": "dc2a0005588cac7a525aabc2e786245aaa5ad6dc2be13f80b77b49db8ea0ba04"
+        "sha256": "88c8e7f725ed3c4ae41c00491aa8adbb719cd08182152982c76ef003e1afecd6"
       },
       {
         "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
@@ -559,7 +557,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-        "sha256": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
+        "sha256": "864afbe29ed09d1157c108d0109685f9091c927779ba58bc4f5a48fc2284848d"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-atomic-spawn.test.mjs",
@@ -583,11 +581,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-        "sha256": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
+        "sha256": "226cd7eb964248780d3416bcf1016004644abc248c9a2cbd10b89e1974a38183"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-        "sha256": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
+        "sha256": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -623,7 +621,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-        "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+        "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-spawn-followup.test.mjs",
@@ -639,11 +637,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-        "sha256": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
+        "sha256": "9afbcf1ea4c1b728595e0863e87fca3ca6e9af29fb959b522e8516217d376445"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-        "sha256": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
+        "sha256": "2da6257f85a067539555ccea5097bcc4bf2c451b80c012bda1c25f540416c079"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-zones-followup.test.mjs",
@@ -663,7 +661,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-        "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+        "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
@@ -675,7 +673,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-        "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+        "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
       },
       {
         "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
@@ -687,7 +685,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
-        "sha256": "6212016d64b5c37e027d658661381d00a4a17e8190be26ca94ffb99b228ad5e7"
+        "sha256": "f85cc1d6dd686d39a29c9c6bda0a33787e11356f630239e4fe7b95ac96dc7419"
       },
       {
         "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
@@ -1735,7 +1733,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 156,
+          "line": 165,
           "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算",
           "titleMatched": true
         },
@@ -1761,7 +1759,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 156,
+          "line": 165,
           "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算",
           "titleMatched": true
         },
@@ -1796,7 +1794,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 156,
+          "line": 165,
           "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算",
           "titleMatched": true
         },
@@ -1822,7 +1820,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 156,
+          "line": 165,
           "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算",
           "titleMatched": true
         },
@@ -1941,7 +1939,7 @@
       "entryScope": "act",
       "canonicalCode": "07046",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07046.js",
-      "entrySha256": "65d50fd3b472fc67fa57040c6505a7ba019f865640e079b6774d9e44c7d46e55",
+      "entrySha256": "3a0304d67b9b65df1dbc8dc805b04b559d1c56cff3dc40419b2c5d4821ad2083",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -1956,7 +1954,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 210,
+          "line": 219,
           "test": "P7 绝望深坑 地点揭示与连接扩张：07046 背面只扩空位且 8 条物理隧道总数守恒",
           "titleMatched": true
         },
@@ -2000,7 +1998,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 210,
+          "line": 219,
           "test": "P7 绝望深坑 地点揭示与连接扩张：07046 背面只扩空位且 8 条物理隧道总数守恒",
           "titleMatched": true
         },
@@ -2350,7 +2348,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         },
@@ -2376,7 +2374,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         }
@@ -2417,7 +2415,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         },
@@ -2455,7 +2453,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         }
@@ -2496,7 +2494,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         },
@@ -2534,7 +2532,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
-          "line": 192,
+          "line": 201,
           "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现",
           "titleMatched": true
         }
@@ -2780,7 +2778,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 329,
+          "line": 334,
           "test": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）",
           "titleMatched": true
         },
@@ -3016,7 +3014,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 329,
+          "line": 334,
           "test": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）",
           "titleMatched": true
         }
@@ -3059,8 +3057,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3159,7 +3157,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 318,
+          "line": 323,
           "test": "P7 哈珀 议程 07059 狂热追击：推进 → resolution1/TheMissionFailed 结算并交接到 interlude2",
           "titleMatched": true
         },
@@ -3172,8 +3170,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3191,7 +3189,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 318,
+          "line": 323,
           "test": "P7 哈珀 议程 07059 狂热追击：推进 → resolution1/TheMissionFailed 结算并交接到 interlude2",
           "titleMatched": true
         }
@@ -3206,7 +3204,7 @@
       "entryScope": "act",
       "canonicalCode": "07060",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-      "entrySha256": "1b5db4aaf13d59a3cd37820568fac4f95a44bbc1657c0337b51aa87a57a0b3fd",
+      "entrySha256": "226379bc6a3ce2e3b7a6e70ed5cdb84b36371fd9282d1e34de5820b74ffe1e50",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -3233,7 +3231,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 177,
+          "line": 182,
           "test": "07060 团队线索不足时谈判入口不出现",
           "titleMatched": true
         },
@@ -3251,13 +3249,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 324,
+          "line": 341,
           "test": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 176,
+          "line": 181,
           "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061",
           "titleMatched": true
         },
@@ -3269,19 +3267,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 234,
+          "line": 239,
           "test": "P7 哈珀 幕 07060 指控 0 正确：全员撤退 → resolution1/TheMissionFailed 记录、不转场",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -3294,7 +3292,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -3306,8 +3304,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3337,7 +3335,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 177,
+          "line": 182,
           "test": "07060 团队线索不足时谈判入口不出现",
           "titleMatched": true
         },
@@ -3355,13 +3353,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 324,
+          "line": 341,
           "test": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 176,
+          "line": 181,
           "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061",
           "titleMatched": true
         },
@@ -3373,19 +3371,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 234,
+          "line": 239,
           "test": "P7 哈珀 幕 07060 指控 0 正确：全员撤退 → resolution1/TheMissionFailed 记录、不转场",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -3427,80 +3425,80 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 272,
+          "line": 289,
           "test": "07061 背面推进发出 ticHarperRescue 事件（经真实 advanceAct → actReveal 链路）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 288,
+          "line": 305,
           "test": "07061 六种绑架犯 → resolution2..7，且每个结局键在 content 剧本文本中存在",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 250,
+          "line": 267,
           "test": "07061 目标：1 人局任一条件 / ≥2 人局两条件都必须满足",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 263,
+          "line": 280,
           "test": "07061 目标：艾莲娜按「地点下方」或「地点附属」两种形态都能定位",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 198,
+          "line": 215,
           "test": "07061 修正：绑架犯失去冷漠/不能谈判/+1[每调查员]生命，其他嫌疑不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 218,
+          "line": 235,
           "test": "07061 修正：真实章节 state 下同样生效（fixture 换当前幕为 07061）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 176,
+          "line": 181,
           "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 263,
+          "line": 268,
           "test": "P7 哈珀 幕 07061 目标：1 人局 OR / ≥2 人局 AND（绑架犯在胜利区 + 藏身处无线索）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 246,
+          "line": 251,
           "test": "P7 哈珀 幕 07061 修正：绑架犯失去冷漠/不能谈判/+1×人数生命，其他嫌疑敌人不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 301,
+          "line": 306,
           "test": "P7 哈珀 幕 07061 营救结局：六种绑架犯 → resolution2–7 + TheMissionWasSuccessful 记录",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 364,
+          "line": 369,
           "test": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -3518,8 +3516,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
@@ -3543,73 +3541,73 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 272,
+          "line": 289,
           "test": "07061 背面推进发出 ticHarperRescue 事件（经真实 advanceAct → actReveal 链路）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 288,
+          "line": 305,
           "test": "07061 六种绑架犯 → resolution2..7，且每个结局键在 content 剧本文本中存在",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 250,
+          "line": 267,
           "test": "07061 目标：1 人局任一条件 / ≥2 人局两条件都必须满足",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 263,
+          "line": 280,
           "test": "07061 目标：艾莲娜按「地点下方」或「地点附属」两种形态都能定位",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 198,
+          "line": 215,
           "test": "07061 修正：绑架犯失去冷漠/不能谈判/+1[每调查员]生命，其他嫌疑不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
-          "line": 218,
+          "line": 235,
           "test": "07061 修正：真实章节 state 下同样生效（fixture 换当前幕为 07061）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 176,
+          "line": 181,
           "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 263,
+          "line": 268,
           "test": "P7 哈珀 幕 07061 目标：1 人局 OR / ≥2 人局 AND（绑架犯在胜利区 + 藏身处无线索）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 246,
+          "line": 251,
           "test": "P7 哈珀 幕 07061 修正：绑架犯失去冷漠/不能谈判/+1×人数生命，其他嫌疑敌人不受影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 301,
+          "line": 306,
           "test": "P7 哈珀 幕 07061 营救结局：六种绑架犯 → resolution2–7 + TheMissionWasSuccessful 记录",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 364,
+          "line": 369,
           "test": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局",
           "titleMatched": true
         }
@@ -3636,13 +3634,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -3686,13 +3684,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -3733,7 +3731,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
@@ -3744,6 +3742,12 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "titleMatched": false,
+          "passingTests": 7,
+          "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
           "titleMatched": false,
           "passingTests": 19,
@@ -3752,7 +3756,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -3771,7 +3775,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 221,
+          "line": 226,
           "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061",
           "titleMatched": true
         },
@@ -3907,6 +3911,12 @@
           "line": 668,
           "test": "P7 07065 resource-paid free move is no ordinary action and rejects non-Innsmouth destinations",
           "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "titleMatched": false,
+          "passingTests": 7,
+          "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
@@ -4169,7 +4179,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4372,11 +4382,12 @@
       "entryScope": "location",
       "canonicalCode": "07074",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js",
-      "entrySha256": "2ab40120485caee901f6ed5e1c1a342307bbbd6d36afd1b2d56ee5f14f14cedd",
+      "entrySha256": "bab84844505ed9760b18d0dccf8afcd2f7da4610c10a89aed19fa26425f37e04",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
-        "abilities"
+        "abilities",
+        "encounterResolve"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -4384,6 +4395,18 @@
       ],
       "status": "verified",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "line": 190,
+          "test": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "titleMatched": false,
+          "passingTests": 14,
+          "sampleTest": "07060 团队线索不足时谈判入口不出现"
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
           "titleMatched": false,
@@ -4397,19 +4420,12 @@
           "sampleTest": "P7 07042 raises revealed locations and future actual reveal exactly once across save"
         }
       ],
-      "strongEvidence": [],
-      "fileLevelEvidence": [
+      "strongEvidence": [
         {
-          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "titleMatched": false,
-          "passingTests": 13,
-          "sampleTest": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局"
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
-          "titleMatched": false,
-          "passingTests": 77,
-          "sampleTest": "P7 07042 raises revealed locations and future actual reveal exactly once across save"
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "line": 190,
+          "test": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）",
+          "titleMatched": true
         }
       ]
     },
@@ -4512,13 +4528,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4598,7 +4614,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4654,7 +4670,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4672,7 +4688,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -4696,7 +4712,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -4705,7 +4721,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4723,7 +4739,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -4747,7 +4763,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ]
@@ -4789,7 +4805,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4869,7 +4885,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -4937,7 +4953,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -5029,7 +5045,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -5065,7 +5081,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -5090,7 +5106,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 13,
+          "passingTests": 14,
           "sampleTest": "07060 团队线索不足时谈判入口不出现"
         },
         {
@@ -5121,7 +5137,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-          "line": 192,
+          "line": 197,
           "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a",
           "titleMatched": true
         },
@@ -5170,14 +5186,20 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 116,
+          "line": 130,
           "test": "07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 116,
+          "test": "07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
@@ -5196,8 +5218,14 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 116,
+          "line": 130,
           "test": "07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 116,
+          "test": "07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）",
           "titleMatched": true
         }
       ]
@@ -5228,45 +5256,45 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 142,
+          "line": 156,
           "test": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 151,
+          "line": 165,
           "test": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 166,
+          "line": 180,
           "test": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 142,
+          "line": 156,
           "test": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 151,
+          "line": 165,
           "test": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 166,
+          "line": 180,
           "test": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭",
           "titleMatched": true
         }
@@ -5328,7 +5356,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -5383,33 +5411,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 181,
+          "line": 195,
           "test": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 193,
+          "line": 207,
           "test": "07087 魂牵梦绕：随机弃 1 张手牌，按印刷费用做意志检定，失败失去 1 行动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 181,
+          "line": 195,
           "test": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 193,
+          "line": 207,
           "test": "07087 魂牵梦绕：随机弃 1 张手牌，按印刷费用做意志检定，失败失去 1 行动",
           "titleMatched": true
         }
@@ -5650,21 +5678,21 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 174,
+          "line": 196,
           "test": "P7 深陷危局 遭遇共享组 07091 暗流：淹没地点显现后进入威胁区",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 174,
+          "line": 196,
           "test": "P7 深陷危局 遭遇共享组 07091 暗流：淹没地点显现后进入威胁区",
           "titleMatched": true
         }
@@ -5696,33 +5724,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 226,
+          "line": 240,
           "test": "07092 潮起：没有可提升淹没等级的地点时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 211,
+          "line": 225,
           "test": "07092 潮起：提升最近且可提升淹没等级的地点 1 级",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 226,
+          "line": 240,
           "test": "07092 潮起：没有可提升淹没等级的地点时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 211,
+          "line": 225,
           "test": "07092 潮起：提升最近且可提升淹没等级的地点 1 级",
           "titleMatched": true
         }
@@ -5754,45 +5782,45 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 253,
+          "line": 267,
           "test": "07093 激流：部分淹没时敏捷(3)，失败弃掉 1 个支援",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 241,
+          "line": 255,
           "test": "07093 激流：所在地点未淹没时获得涌动且不进行检定",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 266,
+          "line": 280,
           "test": "07093 激流：完全淹没时敏捷(4)，不能弃支援则按失败差值失去资源",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 253,
+          "line": 267,
           "test": "07093 激流：部分淹没时敏捷(3)，失败弃掉 1 个支援",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 241,
+          "line": 255,
           "test": "07093 激流：所在地点未淹没时获得涌动且不进行检定",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 266,
+          "line": 280,
           "test": "07093 激流：完全淹没时敏捷(4)，不能弃支援则按失败差值失去资源",
           "titleMatched": true
         }
@@ -5807,10 +5835,11 @@
       "entryScope": "enemy",
       "canonicalCode": "07094",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07094.js",
-      "entrySha256": "63ccb92427620b6513c9ffd052f7ab2d711eed73eb4be11ea9498a2fb5b6b0d5",
+      "entrySha256": "04b517b49270209bba060591ad5715a2886cff22344be55846b2e99b023a9195",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
+        "modifiers",
         "enemyRule"
       ],
       "printedBehavior": true,
@@ -5833,10 +5862,22 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 461,
+          "test": "07094 长翼者：躲避值等于所在地点的隐蔽值 X（审计 H13 回归）",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
           "titleMatched": false,
           "passingTests": 7,
           "sampleTest": "07094 长翼者：[[近战]]武器攻击被减 1 点伤害，[[枪械]]攻击不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "titleMatched": false,
+          "passingTests": 26,
+          "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
@@ -5850,6 +5891,12 @@
           "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
           "line": 71,
           "test": "07094 长翼者：空手攻击同样减伤，但最低仍造成 1 点",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "line": 461,
+          "test": "07094 长翼者：躲避值等于所在地点的隐蔽值 X（审计 H13 回归）",
           "titleMatched": true
         }
       ]
@@ -5937,33 +5984,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 294,
+          "line": 308,
           "test": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 282,
+          "line": 296,
           "test": "07096 死亡纪念：意志(3)失败受到 2 点恐惧",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 294,
+          "line": 308,
           "test": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 282,
+          "line": 296,
           "test": "07096 死亡纪念：意志(3)失败受到 2 点恐惧",
           "titleMatched": true
         }
@@ -5994,21 +6041,21 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 309,
+          "line": 323,
           "test": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 309,
+          "line": 323,
           "test": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害",
           "titleMatched": true
         }
@@ -6039,33 +6086,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 338,
+          "line": 352,
           "test": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 325,
+          "line": 339,
           "test": "07098 湮灭记忆：选择智力(4)，失败按差值弃掉相应数量手牌",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 338,
+          "line": 352,
           "test": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 325,
+          "line": 339,
           "test": "07098 湮灭记忆：选择智力(4)，失败按差值弃掉相应数量手牌",
           "titleMatched": true
         }
@@ -6353,7 +6400,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -6416,7 +6463,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -6526,6 +6573,12 @@
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
           "titleMatched": false,
           "passingTests": 26,
@@ -6545,6 +6598,12 @@
           "titleMatched": false,
           "passingTests": 27,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
+          "titleMatched": false,
+          "passingTests": 19,
+          "sampleTest": "TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队长/开始第一章"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -6722,8 +6781,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
           "titleMatched": false,
-          "passingTests": 5,
-          "sampleTest": "07106 印斯茅斯面容：进入威胁区，智识 -1、神智 -1，并获得[[深潜者]]特性"
+          "passingTests": 7,
+          "sampleTest": "01181 年幼的深潜者：TIC 章节按印刷卡号真实抽取并结算「交战后受 1 恐惧」（审计 H14 回归）"
         }
       ],
       "strongEvidence": [
@@ -7220,7 +7279,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7642,38 +7701,38 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 55,
+          "line": 73,
           "test": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 44,
+          "line": 62,
           "test": "07124 路障重重：只有[[嫌犯]]敌人失去冷漠，其他人保持冷漠",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 98,
+          "line": 116,
           "test": "07124：完全淹没地点的回合结束受到 1 点伤害，部分淹没不触发",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 140,
+          "line": 162,
           "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7692,25 +7751,25 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 55,
+          "line": 73,
           "test": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 44,
+          "line": 62,
           "test": "07124 路障重重：只有[[嫌犯]]敌人失去冷漠，其他人保持冷漠",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 98,
+          "line": 116,
           "test": "07124：完全淹没地点的回合结束受到 1 点伤害，部分淹没不触发",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 140,
+          "line": 162,
           "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）",
           "titleMatched": true
         }
@@ -7741,20 +7800,26 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 119,
+          "line": 155,
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "line": 137,
           "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7767,7 +7832,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 119,
+          "line": 155,
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "line": 137,
           "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷",
           "titleMatched": true
         }
@@ -7799,13 +7870,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7820,13 +7891,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7862,26 +7933,26 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 119,
+          "line": 137,
           "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 140,
+          "line": 162,
           "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7894,13 +7965,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
-          "line": 119,
+          "line": 137,
           "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 140,
+          "line": 162,
           "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）",
           "titleMatched": true
         }
@@ -7915,7 +7986,7 @@
       "entryScope": "act",
       "canonicalCode": "07128",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07128.js",
-      "entrySha256": "864e9b41838a2246e4d98978a5150486a3b6e0951bd9e7bf614fb39946817e8f",
+      "entrySha256": "d45eddde0fcf6af86eb467b144a0b76c7c1005a6890499cfde0d5b8bd4efc4e8",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -7932,6 +8003,12 @@
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "line": 131,
           "test": "P7 深陷危局 幕 07128 背面：推进结算记录 TheInvestigatorsMadeItSafelyToTheirVehicles 并交接到 devilReef",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "line": 140,
+          "test": "P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）",
           "titleMatched": true
         },
         {
@@ -7955,7 +8032,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -7970,6 +8047,12 @@
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "line": 131,
           "test": "P7 深陷危局 幕 07128 背面：推进结算记录 TheInvestigatorsMadeItSafelyToTheirVehicles 并交接到 devilReef",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "line": 140,
+          "test": "P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）",
           "titleMatched": true
         },
         {
@@ -8072,7 +8155,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8172,7 +8255,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8480,7 +8563,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8522,6 +8605,12 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "line": 155,
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "line": 70,
           "test": "P7 07139 actual flashback activation checks actor/group keys and shared limit across JSON",
@@ -8546,6 +8635,12 @@
           "sampleTest": "P7 Flashback10 gives the actual set-aside relic and links its physical identity to the key through JSON"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "titleMatched": false,
+          "passingTests": 7,
+          "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "titleMatched": false,
           "passingTests": 77,
@@ -8553,6 +8648,12 @@
         }
       ],
       "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "line": 155,
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）",
+          "titleMatched": true
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "line": 70,
@@ -8604,7 +8705,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8690,6 +8791,12 @@
           "titleMatched": true
         },
         {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "titleMatched": false,
+          "passingTests": 12,
+          "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "titleMatched": false,
           "passingTests": 77,
@@ -8735,7 +8842,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8791,14 +8898,14 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 185,
+          "line": 207,
           "test": "P7 深陷危局 遭遇敌人 07144 印斯茅斯修格斯：真实显现生成与生命值随人数缩放",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8811,7 +8918,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 185,
+          "line": 207,
           "test": "P7 深陷危局 遭遇敌人 07144 印斯茅斯修格斯：真实显现生成与生命值随人数缩放",
           "titleMatched": true
         }
@@ -8841,7 +8948,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 200,
+          "line": 222,
           "test": "P7 深陷危局 淹没规则：07145 袭击者的战斗值随所在地点水位提高",
           "titleMatched": true
         },
@@ -8866,7 +8973,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -8879,7 +8986,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
-          "line": 200,
+          "line": 222,
           "test": "P7 深陷危局 淹没规则：07145 袭击者的战斗值随所在地点水位提高",
           "titleMatched": true
         },
@@ -9149,7 +9256,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -9216,7 +9323,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
           "titleMatched": false,
-          "passingTests": 11,
+          "passingTests": 12,
           "sampleTest": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
         },
         {
@@ -10665,7 +10772,7 @@
       "entryScope": "location",
       "canonicalCode": "07168",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07168.js",
-      "entrySha256": "99f2be3b08a446468d92c5a7f803b487930d7d85f1bda2acba2059af7671a27e",
+      "entrySha256": "894edb5d0a8870ec73fa379d7e96bf344c9cf2f11fc4682829edc63c32307214",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -10685,13 +10792,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
-          "line": 33,
+          "line": 35,
           "test": "07168 急涡水域：船上的人撤退、渔船移出游戏、紫黑白钥匙放到当前场景",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
-          "line": 24,
+          "line": 26,
           "test": "07168 急涡水域：只有在渔船上才出现撤退行动",
           "titleMatched": true
         },
@@ -10723,13 +10830,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
-          "line": 33,
+          "line": 35,
           "test": "07168 急涡水域：船上的人撤退、渔船移出游戏、紫黑白钥匙放到当前场景",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
-          "line": 24,
+          "line": 26,
           "test": "07168 急涡水域：只有在渔船上才出现撤退行动",
           "titleMatched": true
         }
@@ -11381,13 +11488,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07175a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07175a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11413,13 +11520,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07175a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07175a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -11449,13 +11556,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07175b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07175b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11481,13 +11588,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07175b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07175b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -11517,13 +11624,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07176a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07176a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11549,13 +11656,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07176a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07176a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -11585,13 +11692,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07176b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07176b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11617,13 +11724,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07176b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07176b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -11653,13 +11760,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07177a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07177a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11685,13 +11792,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07177a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07177a: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -11721,13 +11828,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07177b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07177b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         },
@@ -11753,13 +11860,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 614,
+          "line": 616,
           "test": "07177b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "07177b: remote or eliminated key holder and insufficient local clues prevent claim without spending",
           "titleMatched": true
         }
@@ -12189,45 +12296,45 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 371,
+          "line": 385,
           "test": "07182 掠食的深潜者：交战后你的钥匙移到它身上，击败时取回",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 388,
+          "line": 402,
           "test": "07182 掠食的深潜者：印刷关键词（猎手）与数值来自关卡定义",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 353,
+          "line": 367,
           "test": "07182 掠食的深潜者：与你交战后你的 1 个线索移到它身上，击败时取回",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 371,
+          "line": 385,
           "test": "07182 掠食的深潜者：交战后你的钥匙移到它身上，击败时取回",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 388,
+          "line": 402,
           "test": "07182 掠食的深潜者：印刷关键词（猎手）与数值来自关卡定义",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 353,
+          "line": 367,
           "test": "07182 掠食的深潜者：与你交战后你的 1 个线索移到它身上，击败时取回",
           "titleMatched": true
         }
@@ -12587,7 +12694,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
         }
       ],
@@ -12693,7 +12800,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 210,
+          "line": 246,
           "test": "horrorInHighGear 混乱标记：07198 skull 按道路牌堆剩余张数、cultist/tablet 按失败差值丢失乘客资源/线索",
           "titleMatched": true
         },
@@ -12946,7 +13053,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -12959,7 +13066,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 210,
+          "line": 246,
           "test": "horrorInHighGear 混乱标记：07198 skull 按道路牌堆剩余张数、cultist/tablet 按失败差值丢失乘客资源/线索",
           "titleMatched": true
         },
@@ -13263,9 +13370,15 @@
           "sampleTest": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "titleMatched": false,
+          "passingTests": 11,
+          "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -13356,7 +13469,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
@@ -13508,7 +13621,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -13606,7 +13719,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -13690,19 +13803,19 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 573,
+          "line": 575,
           "test": "07203: actual last investigator movement advances current chase act exactly once, despite enemies at Approach",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 584,
+          "line": 586,
           "test": "07203: an absent undefeated investigator prevents objective; actual defeat removes that requirement",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 594,
+          "line": 596,
           "test": "07203: unrevealed location, wrong act and empty undefeated group never advance",
           "titleMatched": true
         },
@@ -13722,19 +13835,19 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 573,
+          "line": 575,
           "test": "07203: actual last investigator movement advances current chase act exactly once, despite enemies at Approach",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 584,
+          "line": 586,
           "test": "07203: an absent undefeated investigator prevents objective; actual defeat removes that requirement",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 594,
+          "line": 596,
           "test": "07203: unrevealed location, wrong act and empty undefeated group never advance",
           "titleMatched": true
         }
@@ -13749,7 +13862,7 @@
       "entryScope": "location",
       "canonicalCode": "07204a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204a.js",
-      "entrySha256": "ac6c85928bc77a835fcaa4e6b3046f7db40490c1c980b69211c34eb48b32d569",
+      "entrySha256": "a3efe310a1fb6f3086b99105a1fc7606db18e074bdbd386fae3ea527c158c1a6",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -13764,8 +13877,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-primitives.test.mjs",
@@ -13779,8 +13898,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-primitives.test.mjs",
@@ -13799,7 +13924,7 @@
       "entryScope": "location",
       "canonicalCode": "07204b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204b.js",
-      "entrySha256": "38b9b7b0732ef3502f85c0fc64263461bddde00a92cda876e33b2e8721825b42",
+      "entrySha256": "2dc54853af2e17310afc8f3201b628e39a6b88d5aa3ee1c20473ab1d87afaf2c",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -13820,8 +13945,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [
@@ -13842,7 +13973,7 @@
       "entryScope": "location",
       "canonicalCode": "07204c",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204c.js",
-      "entrySha256": "87764192b2f49374a3ef1eead419fe33f7e8f6c62bb364c1980065eb8a701904",
+      "entrySha256": "92db68d5929a59528053bc95236b0d96611837fc88d8419c33d32c2ffccde04f",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -13862,6 +13993,12 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "line": 155,
+          "test": "07204c：乘客仍算在出发地，可以用自己的线索共同付费（审计 H3 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "line": 84,
           "test": "07204c：留在原地的人线索够时先付线索，乘客不受伤",
           "titleMatched": true
@@ -13869,8 +14006,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [
@@ -13878,6 +14021,12 @@
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "line": 72,
           "test": "07204c 昏暗道路：付不出线索时，差额每位让一位乘客受 2 点恐惧（每载具每场一次）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "line": 155,
+          "test": "07204c：乘客仍算在出发地，可以用自己的线索共同付费（审计 H3 回归）",
           "titleMatched": true
         },
         {
@@ -13897,7 +14046,7 @@
       "entryScope": "location",
       "canonicalCode": "07205a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205a.js",
-      "entrySha256": "3d2234304ad64829985a3418ad22571ad54cfd1333926a08f733d445ff22963c",
+      "entrySha256": "da176c578a1e09873ddcde7bbfc9516c593471064aab80250be2d6c722815782",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -13918,8 +14067,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [
@@ -13940,7 +14095,7 @@
       "entryScope": "location",
       "canonicalCode": "07205b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205b.js",
-      "entrySha256": "d82b88b77dd18afb5272bc34720088bde90d07238d77e2c4fb54abaee1637c7f",
+      "entrySha256": "0c1345f8e9e57aebd45d5dbd2ccc8f1c563a2f5e06cc716ab8ad6b1894c160b3",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -13955,8 +14110,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [],
@@ -13964,8 +14125,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ]
     },
@@ -13978,12 +14145,11 @@
       "entryScope": "location",
       "canonicalCode": "07206a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206a.js",
-      "entrySha256": "e15e3127268902b01c139395a3b89a45261051787a2c9a0b7fe10ddd78bc85f3",
+      "entrySha256": "fa0dccb34ea4e37503e595f7ac084f91d3f442c917db5dd526faa1fdcb4ff05f",
       "implemented": true,
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
-        "abilities",
-        "locationRule"
+        "abilities"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -13999,13 +14165,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07206a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07206a: remote clues cannot fund this local look ability",
           "titleMatched": true
         },
@@ -14025,13 +14191,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07206a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07206a: remote clues cannot fund this local look ability",
           "titleMatched": true
         }
@@ -14046,12 +14212,11 @@
       "entryScope": "location",
       "canonicalCode": "07206b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206b.js",
-      "entrySha256": "e632764e7104e39ab94e7e2773417251d13c79d7de08e47b3d08a48cef3deaa5",
+      "entrySha256": "1ad6ef46f8fa17cf869475921cd2f52d829141b27a5b5f705bcc55586646eef9",
       "implemented": true,
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
-        "abilities",
-        "locationRule"
+        "abilities"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -14067,13 +14232,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07206b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07206b: remote clues cannot fund this local look ability",
           "titleMatched": true
         },
@@ -14093,13 +14258,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07206b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07206b: remote clues cannot fund this local look ability",
           "titleMatched": true
         }
@@ -14114,12 +14279,11 @@
       "entryScope": "location",
       "canonicalCode": "07207a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207a.js",
-      "entrySha256": "8d4c66038644ac5d5ccb049d9287524e076fe33c2176057e0b7a037db819b0c8",
+      "entrySha256": "216177a8ff04c11b74b19e29619bcc87e3937a8e3379ef45e86860dafa2142b8",
       "implemented": true,
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
-        "abilities",
-        "locationRule"
+        "abilities"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -14135,13 +14299,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07207a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07207a: remote clues cannot fund this local look ability",
           "titleMatched": true
         },
@@ -14161,13 +14325,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07207a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07207a: remote clues cannot fund this local look ability",
           "titleMatched": true
         }
@@ -14182,12 +14346,11 @@
       "entryScope": "location",
       "canonicalCode": "07207b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207b.js",
-      "entrySha256": "a9d1020423853fc57c6fb74784cde5db8d8e2baaa3337491c6b59dba5d6477cb",
+      "entrySha256": "6f63e0861eb43e036a1a6e7ed59d61fcb6f51a5c24260f50fe58d3b7a9f6ddb1",
       "implemented": true,
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
-        "abilities",
-        "locationRule"
+        "abilities"
       ],
       "printedBehavior": true,
       "chapters": [
@@ -14203,20 +14366,20 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07207b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07207b: remote clues cannot fund this local look ability",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14235,13 +14398,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 514,
+          "line": 516,
           "test": "07207b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
-          "line": 550,
+          "line": 552,
           "test": "07207b: remote clues cannot fund this local look ability",
           "titleMatched": true
         }
@@ -14256,7 +14419,7 @@
       "entryScope": "location",
       "canonicalCode": "07208a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208a.js",
-      "entrySha256": "7e7c592244896db3e92054306d992c54be82c0354f0195d771d82b05ef3a0b44",
+      "entrySha256": "14721885bd8cc2e6b4e815995ac2da4e164d5f381ad47cfec527d36dc0541923",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -14277,8 +14440,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [
@@ -14299,7 +14468,7 @@
       "entryScope": "location",
       "canonicalCode": "07208b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208b.js",
-      "entrySha256": "15c6eb320960ff80e6b17fab05bd3d9ff1046938fc9f2e15eb7b06fdb381f2c1",
+      "entrySha256": "7a5176c8f9e62c5a55f2f0570d390e0d01ea06f2709773107f4a26a45055b1c0",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -14314,8 +14483,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [],
@@ -14323,8 +14498,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ]
     },
@@ -14337,7 +14518,7 @@
       "entryScope": "location",
       "canonicalCode": "07208c",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208c.js",
-      "entrySha256": "d6ed9dae9f9634650b2f10de78787222fd97b768f443e6a5095b92c4ddbb61c5",
+      "entrySha256": "2803d15ad2693779433f2478b3b80e7ed82a57f79815cfeb0766ccb2525b671a",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -14352,8 +14533,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [],
@@ -14361,8 +14548,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ]
     },
@@ -14375,7 +14568,7 @@
       "entryScope": "location",
       "canonicalCode": "07209a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209a.js",
-      "entrySha256": "f1bcd12223c2e2abedb327f896a0cd4a03b225296bccf8860af0dd1a2009ae2e",
+      "entrySha256": "97fe429211e45c44093e8db18c2ef16a673a526b1ec735f150c32603647d4eed",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -14396,8 +14589,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
@@ -14424,7 +14623,7 @@
       "entryScope": "location",
       "canonicalCode": "07209b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209b.js",
-      "entrySha256": "0c2b8547e4ca19970fae83988012a96488d47f3a7497ac0cd3f7199f7d2aec4f",
+      "entrySha256": "e720cf7e3c22278695ddaebc625a52cda109ac19d2645c9b1555db07f11b293f",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -14439,8 +14638,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
       "strongEvidence": [],
@@ -14448,8 +14653,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "titleMatched": false,
+          "passingTests": 10,
+          "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ]
     },
@@ -14483,7 +14694,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
         },
         {
@@ -14544,7 +14755,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 156,
+          "line": 192,
           "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动",
           "titleMatched": true
         },
@@ -14563,7 +14774,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14594,7 +14805,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 156,
+          "line": 192,
           "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动",
           "titleMatched": true
         }
@@ -14629,7 +14840,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 156,
+          "line": 192,
           "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动",
           "titleMatched": true
         },
@@ -14648,7 +14859,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
@@ -14661,7 +14872,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 156,
+          "line": 192,
           "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动",
           "titleMatched": true
         }
@@ -14698,7 +14909,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14719,7 +14930,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14760,7 +14971,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ],
@@ -14775,7 +14986,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         }
       ]
@@ -14822,7 +15033,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 177,
+          "line": 213,
           "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害",
           "titleMatched": true
         },
@@ -14847,13 +15058,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
           "titleMatched": false,
-          "passingTests": 8,
+          "passingTests": 11,
           "sampleTest": "07204b 昏暗道路：每差额 1 点恐惧"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14884,7 +15095,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 177,
+          "line": 213,
           "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害",
           "titleMatched": true
         }
@@ -14925,7 +15136,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 177,
+          "line": 213,
           "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害",
           "titleMatched": true
         },
@@ -14944,7 +15155,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -14969,7 +15180,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
-          "line": 177,
+          "line": 213,
           "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害",
           "titleMatched": true
         }
@@ -15047,7 +15258,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
           "titleMatched": false,
-          "passingTests": 9,
+          "passingTests": 10,
           "sampleTest": "horrorInHighGear 地点与连接/清理：道路列邻接、载具移动带走乘客、轮末清理空的后方道路地点"
         },
         {
@@ -15436,7 +15647,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 285,
+          "line": 317,
           "test": "aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、tablet 淹没才伤害、cultist 涨水）",
           "titleMatched": true
         },
@@ -15761,7 +15972,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -15774,7 +15985,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 285,
+          "line": 317,
           "test": "aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、tablet 淹没才伤害、cultist 涨水）",
           "titleMatched": true
         },
@@ -16170,7 +16381,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         }
       ],
@@ -16242,7 +16453,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 271,
+          "line": 303,
           "test": "aLightInTheFog 议程 07233 围捕：被俘推进议程、毁灭转移、全员被俘、地图扩张并直接推进 3a",
           "titleMatched": true
         },
@@ -16273,7 +16484,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16298,7 +16509,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 271,
+          "line": 303,
           "test": "aLightInTheFog 议程 07233 围捕：被俘推进议程、毁灭转移、全员被俘、地图扩张并直接推进 3a",
           "titleMatched": true
         }
@@ -16358,7 +16569,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16480,7 +16691,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         }
       ],
@@ -16590,7 +16801,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16687,7 +16898,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16779,7 +16990,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16889,7 +17100,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16901,7 +17112,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -16969,7 +17180,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -16990,7 +17201,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -17024,7 +17235,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17036,27 +17247,27 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 889,
+          "line": 931,
           "test": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17068,7 +17279,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 889,
+          "line": 931,
           "test": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON",
           "titleMatched": true
         }
@@ -17117,7 +17328,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -17153,13 +17364,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 889,
+          "line": 931,
           "test": "TIC 07243: real reveal places exactly its reserved key, cap remains after JSON",
           "titleMatched": true
         },
@@ -17172,13 +17383,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -17191,13 +17402,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 889,
+          "line": 931,
           "test": "TIC 07243: real reveal places exactly its reserved key, cap remains after JSON",
           "titleMatched": true
         }
@@ -17227,7 +17438,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07244: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         },
@@ -17264,13 +17475,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -17283,7 +17494,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07244: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         },
@@ -17318,7 +17529,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07245: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         },
@@ -17337,13 +17548,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -17356,7 +17567,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07245: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         }
@@ -17385,7 +17596,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07246: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         },
@@ -17404,13 +17615,13 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -17423,7 +17634,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 759,
+          "line": 780,
           "test": "TIC 07246: local team pays n clues for same-row private look, no reveal or clues",
           "titleMatched": true
         }
@@ -17459,7 +17670,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17484,7 +17695,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -17509,7 +17720,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17564,7 +17775,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -17607,7 +17818,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17626,7 +17837,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -17645,7 +17856,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17686,7 +17897,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17711,7 +17922,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -17736,7 +17947,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 222,
+          "line": 254,
           "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙",
           "titleMatched": true
         },
@@ -17777,45 +17988,45 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin -1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin 1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin 2",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin -1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin 1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 870,
+          "line": 912,
           "test": "TIC 07251: real skill choice and water transfer at success margin 2",
           "titleMatched": true
         }
@@ -17854,7 +18065,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         },
@@ -17867,7 +18078,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         }
       ],
@@ -17886,7 +18097,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         }
@@ -17928,7 +18139,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         },
@@ -17941,7 +18152,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         }
       ],
@@ -17960,7 +18171,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         }
@@ -18027,7 +18238,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -18082,45 +18293,45 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 399,
+          "line": 413,
           "test": "07254 深潜者保姆：未交战时同地点与连接地点的其他[[深潜者]] +1 攻击/+1 躲避",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 436,
+          "line": 450,
           "test": "07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定义",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 423,
+          "line": 437,
           "test": "07254 深潜者保姆：与你交战后抽取遭遇牌库顶牌且该牌失去涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
           "titleMatched": false,
-          "passingTests": 24,
+          "passingTests": 26,
           "sampleTest": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 399,
+          "line": 413,
           "test": "07254 深潜者保姆：未交战时同地点与连接地点的其他[[深潜者]] +1 攻击/+1 躲避",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 436,
+          "line": 450,
           "test": "07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定义",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
-          "line": 423,
+          "line": 437,
           "test": "07254 深潜者保姆：与你交战后抽取遭遇牌库顶牌且该牌失去涌动",
           "titleMatched": true
         }
@@ -18187,33 +18398,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 903,
+          "line": 945,
           "test": "TIC 07256: highest actual Deep One fight sets a real test; non-Deep-One value excluded",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 914,
+          "line": 956,
           "test": "TIC 07256: no Deep Ones surges once and performs no skill test",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 903,
+          "line": 945,
           "test": "TIC 07256: highest actual Deep One fight sets a real test; non-Deep-One value excluded",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 914,
+          "line": 956,
           "test": "TIC 07256: no Deep Ones surges once and performs no skill test",
           "titleMatched": true
         }
@@ -18263,7 +18474,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -18312,33 +18523,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 733,
+          "line": 754,
           "test": "TIC 07258: failed revelation creates one physical threat; real flooded entry hurts only owner; own turn end discards once",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 753,
+          "line": 774,
           "test": "TIC 07258: successful revelation discards immediately and creates no persistent movement effect",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 733,
+          "line": 754,
           "test": "TIC 07258: failed revelation creates one physical threat; real flooded entry hurts only owner; own turn end discards once",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 753,
+          "line": 774,
           "test": "TIC 07258: successful revelation discards immediately and creates no persistent movement effect",
           "titleMatched": true
         }
@@ -18412,7 +18623,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -18464,7 +18675,7 @@
       "entryScope": "treachery",
       "canonicalCode": "07260",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07260.js",
-      "entrySha256": "2c137896a6fc16381071c29c077cb4245ffc7232295d2904b757b01a86c2b80d",
+      "entrySha256": "2ae1ca0588aa7ba43a6e19b90f3af9fc43d9d32e7d1245c6e52cd2acbbc9e254",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -18484,7 +18695,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         },
@@ -18503,7 +18714,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
           "titleMatched": false,
-          "passingTests": 12,
+          "passingTests": 13,
           "sampleTest": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
         },
         {
@@ -18522,7 +18733,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
-          "line": 249,
+          "line": 281,
           "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救",
           "titleMatched": true
         }
@@ -19263,7 +19474,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -19323,13 +19534,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 847,
+          "line": 889,
           "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 0 existing",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 847,
+          "line": 889,
           "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 9 existing",
           "titleMatched": true
         },
@@ -19342,7 +19553,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -19355,13 +19566,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 847,
+          "line": 889,
           "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 0 existing",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 847,
+          "line": 889,
           "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 9 existing",
           "titleMatched": true
         }
@@ -19458,7 +19669,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -19551,7 +19762,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
           "titleMatched": false,
-          "passingTests": 6,
+          "passingTests": 7,
           "sampleTest": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
         },
         {
@@ -19883,7 +20094,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -19938,7 +20149,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 939,
+          "line": 981,
           "test": "TIC 07284: reveal red key; failed investigation at this physical hall causes exactly one horror",
           "titleMatched": true
         },
@@ -19951,7 +20162,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -19964,7 +20175,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 939,
+          "line": 981,
           "test": "TIC 07284: reveal red key; failed investigation at this physical hall causes exactly one horror",
           "titleMatched": true
         }
@@ -20013,7 +20224,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20074,7 +20285,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20141,7 +20352,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20208,7 +20419,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20270,7 +20481,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20344,7 +20555,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20398,25 +20609,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 712,
+          "line": 733,
           "test": "TIC 07291: actual entry tests one of tied lowest modified skills and applies horror on failure",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (0 available), optional key only when another clue exists",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (1 available), optional key only when another clue exists",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (2 available), optional key only when another clue exists",
           "titleMatched": true
         },
@@ -20435,7 +20646,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20448,25 +20659,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 712,
+          "line": 733,
           "test": "TIC 07291: actual entry tests one of tied lowest modified skills and applies horror on failure",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (0 available), optional key only when another clue exists",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (1 available), optional key only when another clue exists",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 722,
+          "line": 743,
           "test": "TIC 07291: real action moves own clues (2 available), optional key only when another clue exists",
           "titleMatched": true
         }
@@ -20481,7 +20692,7 @@
       "entryScope": "enemy",
       "canonicalCode": "07292a",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292a.js",
-      "entrySha256": "5c85d4da580f71e5e1eb480733aae2baf05106dd8815e2f9edbe2a11f79177eb",
+      "entrySha256": "15238d21e184e542322fed5d937d4810b35558c348e7742fd379be315eee50ce",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -20661,7 +20872,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -20753,7 +20964,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20801,7 +21012,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 694,
+          "line": 715,
           "test": "TIC 07294: real Hunter move engages lowest-willpower prey and adds two physically capped curses",
           "titleMatched": true
         },
@@ -20814,7 +21025,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20827,7 +21038,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 694,
+          "line": 715,
           "test": "TIC 07294: real Hunter move engages lowest-willpower prey and adds two physically capped curses",
           "titleMatched": true
         }
@@ -20862,25 +21073,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act1 makes 1 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act2 makes 2 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act3 makes 3 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 933,
+          "line": 975,
           "test": "TIC 07295: successful tests cause no damage",
           "titleMatched": true
         },
@@ -20893,7 +21104,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20906,25 +21117,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act1 makes 1 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act2 makes 2 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 923,
+          "line": 965,
           "test": "TIC 07295: act3 makes 3 distinct consecutive tests and failed damage",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 933,
+          "line": 975,
           "test": "TIC 07295: successful tests cause no damage",
           "titleMatched": true
         }
@@ -20959,19 +21170,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 976,
+          "line": 1018,
           "test": "TIC 07296: failed real test with curse places Cultist doom and exact horror",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 976,
+          "line": 1018,
           "test": "TIC 07296: failed real test without curse places Cultist doom and exact horror",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 991,
+          "line": 1033,
           "test": "TIC 07296: successful test adds the printed curse but no Cultist doom or horror",
           "titleMatched": true
         },
@@ -20984,7 +21195,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -20997,19 +21208,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 976,
+          "line": 1018,
           "test": "TIC 07296: failed real test with curse places Cultist doom and exact horror",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 976,
+          "line": 1018,
           "test": "TIC 07296: failed real test without curse places Cultist doom and exact horror",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 991,
+          "line": 1033,
           "test": "TIC 07296: successful test adds the printed curse but no Cultist doom or horror",
           "titleMatched": true
         }
@@ -21117,25 +21328,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 0 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 1 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 2 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1010,
+          "line": 1052,
           "test": "TIC 07298: insufficient physical curse supply adds only remaining tokens and surges once",
           "titleMatched": true
         },
@@ -21148,7 +21359,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -21161,25 +21372,25 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 0 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 1 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1001,
+          "line": 1043,
           "test": "TIC 07298: actual water 2 sets difficulty and adds failed-by curses",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 1010,
+          "line": 1052,
           "test": "TIC 07298: insufficient physical curse supply adds only remaining tokens and surges once",
           "titleMatched": true
         }
@@ -21264,7 +21475,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -21322,9 +21533,9 @@
       "entryScope": null,
       "canonicalCode": "07300",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300.js",
-      "entrySha256": "316ef329f4ba9f3c914d36774abbf24f956fa22a6e30440b751127c79c00dd87",
+      "entrySha256": "2bc1a429c75117cca2e05ad6cd6c33563b1bfa9416b943a7af3a817cdb8c379a",
       "implemented": true,
-      "implementedFlag": "behavior-keys",
+      "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities"
       ],
@@ -21338,6 +21549,12 @@
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 669,
           "test": "TIC 07300: exact two-curse additional cost preflight preserves exhaustion and target when physical supply short",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "line": 694,
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)",
           "titleMatched": true
         },
         {
@@ -21361,7 +21578,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -21370,6 +21587,12 @@
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 669,
           "test": "TIC 07300: exact two-curse additional cost preflight preserves exhaustion and target when physical supply short",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "line": 694,
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)",
           "titleMatched": true
         },
         {
@@ -21389,9 +21612,9 @@
       "entryScope": null,
       "canonicalCode": "07300b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300b.js",
-      "entrySha256": "5db74187eb33db1bba692d12f6dd5627f818e86358d19830017c9c82e0f339a9",
+      "entrySha256": "f6a09d37fb95d060a7a924eaf6d072a58dc5c72b7ec5ed6be488295d32122cbe",
       "implemented": true,
-      "implementedFlag": "behavior-keys",
+      "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities"
       ],
@@ -21401,6 +21624,12 @@
       ],
       "status": "verified",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "line": 694,
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)",
+          "titleMatched": true
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 687,
@@ -21440,11 +21669,17 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "line": 694,
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)",
+          "titleMatched": true
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "line": 687,
@@ -22007,7 +22242,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -22256,8 +22491,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -22308,7 +22543,7 @@
       "entryScope": "act",
       "canonicalCode": "07316",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07316.js",
-      "entrySha256": "6501dd365f624f0c68b2a50caacc35153b24a75b7574425041264be47b9c9b33",
+      "entrySha256": "cfdf1b31cd9c340881c3405148f8aa05da0a9fa2a18caccc21198456992671a3",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -22341,13 +22576,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 227,
-          "test": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）",
+          "line": 250,
+          "test": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 245,
+          "line": 227,
+          "test": "07316 [快速] 能力 a：移除古神 1[每调查员]伤害作为费用，并降低淹没等级（审计 H15 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 263,
           "test": "07316 [快速] 能力 b：[[巢穴]]地点的调查员共同花费线索，降低非[[圣堂]]地点淹没等级",
           "titleMatched": true
         },
@@ -22359,19 +22600,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 266,
+          "line": 284,
           "test": "07316 完成：无其他场景卡 → 立即结局1（加入胜利区，Victory 2）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 278,
+          "line": 296,
           "test": "07316 完成：有并行幕时队长选择「继续游戏」，actIndex 推进且场景继续",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 291,
+          "line": 309,
           "test": "07316 完成：有并行幕时选择「立即进入结局1」→ resolution1",
           "titleMatched": true
         },
@@ -22402,8 +22643,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -22433,13 +22674,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 227,
-          "test": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）",
+          "line": 250,
+          "test": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 245,
+          "line": 227,
+          "test": "07316 [快速] 能力 a：移除古神 1[每调查员]伤害作为费用，并降低淹没等级（审计 H15 回归）",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 263,
           "test": "07316 [快速] 能力 b：[[巢穴]]地点的调查员共同花费线索，降低非[[圣堂]]地点淹没等级",
           "titleMatched": true
         },
@@ -22451,19 +22698,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 266,
+          "line": 284,
           "test": "07316 完成：无其他场景卡 → 立即结局1（加入胜利区，Victory 2）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 278,
+          "line": 296,
           "test": "07316 完成：有并行幕时队长选择「继续游戏」，actIndex 推进且场景继续",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 291,
+          "line": 309,
           "test": "07316 完成：有并行幕时选择「立即进入结局1」→ resolution1",
           "titleMatched": true
         },
@@ -22484,7 +22731,7 @@
       "entryScope": "act",
       "canonicalCode": "07317",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07317.js",
-      "entrySha256": "db7dc6567d7cce6c97f14f885b3af12fcdbc2f2974eb6bbc3fa533dcba2a6b7c",
+      "entrySha256": "022957dd641f4222d0105a354bdc8fa305c5451a557d787735fc2dfc0eb3ee79",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -22510,25 +22757,31 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 414,
+          "line": 416,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 463,
+          "line": 467,
           "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 328,
-          "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立",
+          "line": 364,
+          "test": "07317 目标：按「带紫钥匙的那一份财富宝库」判定，而不是按卡号取第一张（审计 H16 回归）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "line": 346,
+          "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 401,
           "test": "07317 完成：有另一张场景卡 → 选择继续，加入胜利区并移出活动槽；无其他幕 → 自动 R1",
           "titleMatched": true
         },
@@ -22553,8 +22806,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -22578,25 +22831,31 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 414,
+          "line": 416,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 463,
+          "line": 467,
           "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 328,
-          "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立",
+          "line": 364,
+          "test": "07317 目标：按「带紫钥匙的那一份财富宝库」判定，而不是按卡号取第一张（审计 H16 回归）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "line": 346,
+          "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 401,
           "test": "07317 完成：有另一张场景卡 → 选择继续，加入胜利区并移出活动槽；无其他幕 → 自动 R1",
           "titleMatched": true
         },
@@ -22643,19 +22902,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 414,
+          "line": 416,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 378,
+          "line": 518,
           "test": "07318 目标：达贡与海德拉各至少 4[每调查员]伤害（3 人局需各 12 点）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 396,
+          "line": 536,
           "test": "07318 完成：加入胜利区（Victory 2）并在无其他幕时自动进入结局1",
           "titleMatched": true
         },
@@ -22680,8 +22939,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -22705,19 +22964,19 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 414,
+          "line": 416,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 378,
+          "line": 518,
           "test": "07318 目标：达贡与海德拉各至少 4[每调查员]伤害（3 人局需各 12 点）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "line": 396,
+          "line": 536,
           "test": "07318 完成：加入胜利区（Victory 2）并在无其他幕时自动进入结局1",
           "titleMatched": true
         },
@@ -22778,7 +23037,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -22833,7 +23092,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 858,
+          "line": 900,
           "test": "TIC 07320 definition/setup-only: real partial flood, orthogonal adjacency, play-zone and investigator starts",
           "titleMatched": true
         },
@@ -22864,7 +23123,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -22877,7 +23136,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 858,
+          "line": 900,
           "test": "TIC 07320 definition/setup-only: real partial flood, orthogonal adjacency, play-zone and investigator starts",
           "titleMatched": true
         }
@@ -22944,7 +23203,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -22978,7 +23237,7 @@
       "entryScope": "location",
       "canonicalCode": "07322",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07322.js",
-      "entrySha256": "94bc039071ff731256617eb86ca24f1a622bc78fecbb2109ea2e26b3e3903cb3",
+      "entrySha256": "747719f7dda5f743c2482ad251e3ae7e231ecc4825e1ee169dcdc5c58ef8c319",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -23012,8 +23271,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -23030,7 +23289,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -23073,7 +23332,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 952,
+          "line": 994,
           "test": "TIC 07323: real key-placement action, free connected movement and per-investigator round limit survive JSON",
           "titleMatched": true
         },
@@ -23098,14 +23357,14 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 952,
+          "line": 994,
           "test": "TIC 07323: real key-placement action, free connected movement and per-investigator round limit survive JSON",
           "titleMatched": true
         }
@@ -23190,7 +23449,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23283,7 +23542,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23375,7 +23634,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
@@ -23409,7 +23668,7 @@
       "entryScope": "location",
       "canonicalCode": "07327",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07327.js",
-      "entrySha256": "b6f486fede1700a915147b03e0a4acc10214c27b99965f9c4b8c73ed57e03f9b",
+      "entrySha256": "fc5011a0d063e9effb15f35188762fb5427f8ffbfcd70a165e3c1f417b0fe962",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -23422,6 +23681,12 @@
       ],
       "status": "verified",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 433,
+          "test": "07327 缟玛瑙守卫：敌军阶段期间重整的[[古神]]敌人攻击本地点的调查员（审计 H16 回归）",
+          "titleMatched": true
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
           "line": 153,
@@ -23447,6 +23712,12 @@
           "sampleTest": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
         },
         {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "titleMatched": false,
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
           "titleMatched": false,
           "passingTests": 9,
@@ -23461,11 +23732,17 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 433,
+          "test": "07327 缟玛瑙守卫：敌军阶段期间重整的[[古神]]敌人攻击本地点的调查员（审计 H16 回归）",
+          "titleMatched": true
+        },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
           "line": 153,
@@ -23509,6 +23786,12 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "line": 477,
+          "test": "07328 达贡巢穴：7 把钥匙都在地点上且仪式被破坏时可触发记忆闪回 XIV（审计 H17 回归）",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
           "titleMatched": false,
           "passingTests": 4,
@@ -23517,8 +23800,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -23529,7 +23812,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23539,37 +23822,12 @@
           "sampleTest": "07292a 沉睡达贡：本地点的调查员检定失败后上资源，达到 1[per_investigator]+2 才翻面"
         }
       ],
-      "strongEvidence": [],
-      "fileLevelEvidence": [
-        {
-          "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "titleMatched": false,
-          "passingTests": 4,
-          "sampleTest": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
-        },
+      "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
-          "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "titleMatched": false,
-          "passingTests": 9,
-          "sampleTest": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害"
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "titleMatched": false,
-          "passingTests": 166,
-          "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
-          "titleMatched": false,
-          "passingTests": 14,
-          "sampleTest": "07292a 沉睡达贡：本地点的调查员检定失败后上资源，达到 1[per_investigator]+2 才翻面"
+          "line": 477,
+          "test": "07328 达贡巢穴：7 把钥匙都在地点上且仪式被破坏时可触发记忆闪回 XIV（审计 H17 回归）",
+          "titleMatched": true
         }
       ]
     },
@@ -23616,8 +23874,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
@@ -23628,7 +23886,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23667,6 +23925,7 @@
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
         "abilities",
+        "modifiers",
         "enemyRule"
       ],
       "printedBehavior": true,
@@ -23732,8 +23991,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
@@ -23750,7 +24009,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23872,8 +24131,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
@@ -23890,7 +24149,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -23947,6 +24206,7 @@
       "implementedFlag": "behavior-keys",
       "behaviorKeys": [
         "abilities",
+        "modifiers",
         "enemyRule"
       ],
       "printedBehavior": true,
@@ -23994,8 +24254,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
@@ -24012,7 +24272,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -24098,8 +24358,8 @@
         {
           "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
           "titleMatched": false,
-          "passingTests": 19,
-          "sampleTest": "07316 [快速] 能力 a：从所在地点的[[古神]]敌人移除 1[每调查员]点伤害（不消耗行动）"
+          "passingTests": 23,
+          "sampleTest": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
         },
         {
           "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
@@ -24116,7 +24376,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -24202,7 +24462,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -24276,7 +24536,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -24338,7 +24598,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         },
         {
@@ -24386,33 +24646,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 800,
+          "line": 821,
           "test": "TIC 07335: discard enough printed asset cost using real leave-play; Permanent excluded",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 817,
+          "line": 838,
           "test": "TIC 07335: insufficient asset total cannot choose discard; real water cap leaves no fake choice",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 800,
+          "line": 821,
           "test": "TIC 07335: discard enough printed asset cost using real leave-play; Permanent excluded",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 817,
+          "line": 838,
           "test": "TIC 07335: insufficient asset total cannot choose discard; real water cap leaves no fake choice",
           "titleMatched": true
         }
@@ -24441,33 +24701,33 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 827,
+          "line": 848,
           "test": "TIC 07336: difficulty counts keyed Sanctum locations, not number of keys; failure can actually advance agenda",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 838,
+          "line": 859,
           "test": "TIC 07336: nearest attack option excludes sleeping/cannot-attack Ancient Ones; assigned damage remains real",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
           "titleMatched": false,
-          "passingTests": 166,
+          "passingTests": 168,
           "sampleTest": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
         }
       ],
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 827,
+          "line": 848,
           "test": "TIC 07336: difficulty counts keyed Sanctum locations, not number of keys; failure can actually advance agenda",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
-          "line": 838,
+          "line": 859,
           "test": "TIC 07336: nearest attack option excludes sleeping/cannot-attack Ancient Ones; assigned damage remains real",
           "titleMatched": true
         }

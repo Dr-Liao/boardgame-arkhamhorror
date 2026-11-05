@@ -92,7 +92,7 @@
       "pending": 0,
       "pendingFiles": []
     },
-    "engineGapNotes": 7
+    "engineGapNotes": 4
   },
   "status": "verified",
   "sourceStableDuringRun": true,
@@ -143,11 +143,11 @@
     "content/campaigns/theInnsmouthConspiracy/resolutions.js": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737",
     "content/campaigns/theInnsmouthConspiracy/introduction.js": "5b89b93e4c3ad50e3806f45cb75f265cee06f39480d79414796b400dfaa18efa",
     "content/campaigns/theInnsmouthConspiracy/flashbacks.js": "4d3ec7aeb4b0349c73c6f42ceb2bbaca0aba44b46020e6e14f9e7e68749fb548",
-    "content/campaigns/theInnsmouthConspiracy/interludes.js": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a",
-    "content/campaigns/theInnsmouthConspiracy/manifest.js": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be",
-    "content/campaigns/theInnsmouthConspiracy/flow.js": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b",
+    "content/campaigns/theInnsmouthConspiracy/interludes.js": "6ec52311f7ac7b513b2d17ba2d33495f17021d97d965a9d2e3018ea8b27275d0",
+    "content/campaigns/theInnsmouthConspiracy/manifest.js": "970ca601252a499d19c165c60fc71ad9a2205a68866bea1a764ba0581c8945da",
+    "content/campaigns/theInnsmouthConspiracy/flow.js": "938109f6d9514e0559e895b0b647ad5d9e06676bddcf725b94208afc399e110f",
     "content/campaigns/theInnsmouthConspiracy/story-text.js": "11856d090cc6412ecf2f35d5878297a66ea2008f0368ae12d7ed98a8785e485f",
-    "content/campaigns/theInnsmouthConspiracy/chapter-data.json": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+    "content/campaigns/theInnsmouthConspiracy/chapter-data.json": "820fb043d934bef8e00600583da7fb194b66b5eaa8645faf2e5b4d1ed3ecaaa8"
   },
   "storySources": [
     {
@@ -263,7 +263,7 @@
     {
       "name": "nodeAcceptance",
       "file": "audit/tic-node-acceptance.json",
-      "status": "fresh"
+      "status": "stale"
     },
     {
       "name": "regression",
@@ -273,7 +273,7 @@
     {
       "name": "interactionRegression",
       "file": "audit/tic-interaction-regression.json",
-      "status": "fresh"
+      "status": "stale"
     }
   ],
   "pendingPrimitiveRequests": [],
@@ -374,9 +374,11 @@
           "audit/tic-mechanism-scan.json",
           "src/cards/core-acceptance.js",
           "src/cards/encounter-entries/shared/rats/01159.js",
+          "src/cards/encounter-entries/shared/agents_of_cthulhu/01181.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07053.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
+          "src/cards/encounter-entries/shared/agents_of_cthulhu/01182.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07054.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07055.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
@@ -751,16 +753,16 @@
               "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
             },
             {
+              "file": "tests/tic-innsmouth-look.test.mjs",
+              "title": "01181 年幼的深潜者：TIC 章节按印刷卡号真实抽取并结算「交战后受 1 恐惧」（审计 H14 回归）"
+            },
+            {
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）"
+            },
+            {
               "file": "tests/tic-scenario-shared-encounters.test.mjs",
               "title": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定"
-            },
-            {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 幕 07046 目标与背面：全部撤退/败北才推进，推进结算 resolution1 记录"
-            },
-            {
-              "file": "tests/tic-scenario-thePitOfDespair.test.mjs",
-              "title": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算"
             }
           ],
           "saveReplay": [
@@ -790,7 +792,7 @@
       "fileHashes": {
         "scenarioIndex": "2a8c4a28b7b30656a1f925f16c21d2caca4925cd6b9f35952c66b1d835f582a9",
         "guide": "574dfa85e03355671e5e0eb7a27cab505063bb38198808bf05ab48745f4999eb",
-        "acceptanceTest": "746d5e88679d194add60b41dc174b8905b0fccde3d34887ee8b8fff5fae6b679"
+        "acceptanceTest": "9afbcf1ea4c1b728595e0863e87fca3ca6e9af29fb959b522e8516217d376445"
       },
       "gaps": []
     },
@@ -1096,27 +1098,12 @@
           "engineGaps": [
             {
               "file": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-              "line": 22,
-              "text": "//     未接线时本卡不会报错，只是「轮末推进」不出现（等待 Lead 接线）。"
-            },
-            {
-              "file": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-              "line": 29,
-              "text": "//     布置藏身处与绑架犯。内容层未接线时 onReveal 只登记警告，不误结算（安全降级）。"
-            },
-            {
-              "file": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-              "line": 37,
-              "text": "//     {mixEncounterTop:true})，缺失时降级为 peek（多一次「查看这些牌，然后继续」提示）+ 自行抽取混洗。"
-            },
-            {
-              "file": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-              "line": 51,
+              "line": 42,
               "text": "target.info?.(`⚠️ 内容层尚未接线场景事件 ${id}：本次只记录，指控流程待 Lead 接线（见 harper-report.md）。`)"
             },
             {
               "file": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-              "line": 70,
+              "line": 61,
               "text": "// 轮末可选推进（内容层 roundEnded 分派到本函数；未接线时本函数不会被调用）。"
             },
             {
@@ -1152,11 +1139,11 @@
             },
             {
               "file": "tests/tic-harper-acts.test.mjs",
-              "title": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键"
+              "title": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）"
             },
             {
-              "file": "tests/tic-parallel-acts.test.mjs",
-              "title": "07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有淹没地点 → false）"
+              "file": "tests/tic-harper-acts.test.mjs",
+              "title": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键"
             }
           ],
           "actsAndAgendas": [
@@ -1207,8 +1194,8 @@
               "title": "07061 目标：艾莲娜按「地点下方」或「地点附属」两种形态都能定位"
             },
             {
-              "file": "tests/tic-parallel-acts.test.mjs",
-              "title": "07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有淹没地点 → false）"
+              "file": "tests/tic-investigators.test.mjs",
+              "title": "P5 守护天使承接连接地点队友伤害，致命分配也能加入祝福，恐惧不能跨座位承接"
             }
           ],
           "encounterBehaviors": [
@@ -1239,28 +1226,28 @@
           ],
           "chaosEffects": [
             {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07030 bag replacement leaves sealed tokens alone and schedules reverse replacement"
             },
             {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07031 five-token reveal cancels only with bless or elder sign and returns all physical tokens"
             },
             {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07195 second curse can become skull and optionally retain its physical token"
             },
             {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07308 add tokens or heal horror distributed over local investigator and asset"
             },
             {
-              "file": "tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
-              "title": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07194 Tristan plays from hand free after three actual special tokens"
             },
             {
-              "file": "tests/tic-scenarios-a1.test.mjs",
-              "title": "07293：+1 生命/调查员，入场放黑钥匙，调查员造成伤害后加诅咒标记"
+              "file": "tests/tic-player-rogue-mystic.test.mjs",
+              "title": "P6 07307 Dice exact curse cost ignores one token and guarded next curse returns asset"
             }
           ],
           "resolutionsAndRecords": [
@@ -1281,18 +1268,22 @@
               "title": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键"
             },
             {
-              "file": "tests/tic-parallel-acts.test.mjs",
-              "title": "07316 完成：无其他场景卡 → 立即结局1（加入胜利区，Victory 2）"
+              "file": "tests/tic-investigators.test.mjs",
+              "title": "P5 阿曼达每次检定重复投入同一实体并重复结算技能；不能投入图标不匹配的牌"
             },
             {
               "file": "tests/tic-parallel-acts.test.mjs",
-              "title": "07316 完成：有并行幕时选择「立即进入结局1」→ resolution1"
+              "title": "07316 完成：无其他场景卡 → 立即结局1（加入胜利区，Victory 2）"
             }
           ],
           "saveReplay": [
             {
               "file": "tests/tic-innsmouth-look.test.mjs",
               "title": "07106：意志(3) 成功弃掉本卡后属性与特性一起恢复；失败则保留"
+            },
+            {
+              "file": "tests/tic-investigators.test.mjs",
+              "title": "P5 阿曼达轮换：先抽、清理旧牌、强制选择深海低语；多人窗口与 JSON 恢复"
             },
             {
               "file": "tests/tic-parallel-acts.test.mjs",
@@ -1330,7 +1321,7 @@
       "fileHashes": {
         "scenarioIndex": "077ec2636d9cdcaf0afde5aaeb9961da259e6b43a9cab299a31df778656f4b16",
         "guide": "6dced151cc0bff740e8555f69d0005457452876c914eb58878ff9b6f94f88ff4",
-        "acceptanceTest": "0a9d98f2bfe55393cb63c5c18e1d5a3d1071b5d0d77b7d5a7c9eaa4fef28e26f"
+        "acceptanceTest": "2da6257f85a067539555ccea5097bcc4bf2c451b80c012bda1c25f540416c079"
       },
       "gaps": []
     },
@@ -1408,12 +1399,14 @@
           "audit/tic-scope.json",
           "audit/tic-mechanism-scan.json",
           "src/cards/core-acceptance.js",
+          "src/cards/encounter-entries/shared/agents_of_cthulhu/01181.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07088.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07089.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/the_locals/07105.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07144.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07145.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07146.js",
+          "src/cards/encounter-entries/shared/agents_of_cthulhu/01182.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/creatures_of_the_deep/07090.js",
           "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/rising_tide/07091.js",
           "tests/tic-scenario-inTooDeep.test.mjs"
@@ -1468,7 +1461,7 @@
           "registered": true,
           "referencesChapter": true,
           "passed": true,
-          "passedCases": 11,
+          "passedCases": 12,
           "failedCases": 0,
           "missingReasons": []
         },
@@ -1687,11 +1680,11 @@
             },
             {
               "file": "tests/tic-scenario-inTooDeep.test.mjs",
-              "title": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）"
+              "title": "P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）"
             },
             {
               "file": "tests/tic-scenario-inTooDeep.test.mjs",
-              "title": "P7 深陷危局 JSON 保存/恢复：合法动作一致且恢复后可继续执行幕行动"
+              "title": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）"
             }
           ],
           "locationsAndConnections": [
@@ -1786,16 +1779,16 @@
               "title": "P7 actual chapter Flashback${id} records the printed memory and permanently removes only one matching symbol"
             },
             {
+              "file": "tests/tic-innsmouth-look.test.mjs",
+              "title": "01181 年幼的深潜者：TIC 章节按印刷卡号真实抽取并结算「交战后受 1 恐惧」（审计 H14 回归）"
+            },
+            {
               "file": "tests/tic-scenario-inTooDeep.test.mjs",
               "title": "P7 深陷危局 幕 07128 背面：推进结算记录 TheInvestigatorsMadeItSafelyToTheirVehicles 并交接到 devilReef"
             },
             {
               "file": "tests/tic-scenario-inTooDeep.test.mjs",
-              "title": "P7 深陷危局 结局与记录：resolution1 安全抵达载具经验 +2 且交接到 devilReef；noResolution 重定向"
-            },
-            {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定"
+              "title": "P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）"
             }
           ],
           "saveReplay": [
@@ -1829,7 +1822,7 @@
       "fileHashes": {
         "scenarioIndex": "1aa771a6c2c7f797b6b5091c84b4f49f809b759526c9e20ad0d468fe448d2b62",
         "guide": "cfb438a0061c06f87f9f2dd8044bb6fa6b87745d955660e32e68a36d8059af83",
-        "acceptanceTest": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
+        "acceptanceTest": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
       },
       "gaps": []
     },
@@ -2448,7 +2441,7 @@
           "registered": true,
           "referencesChapter": true,
           "passed": true,
-          "passedCases": 9,
+          "passedCases": 10,
           "failedCases": 0,
           "missingReasons": []
         },
@@ -2781,7 +2774,7 @@
       "fileHashes": {
         "scenarioIndex": "61db717095a1bccd622f0a194914571fe2b589e7ed81b0d7cab4e1ed53392a58",
         "guide": "2920819d16ef5dfdcc990fd688b28c3e614007315caed2a4f519218cc9d8a423",
-        "acceptanceTest": "39e5f7bd6113d11f833cf2c2cf73cd34a20df2f66ad22fc793648a66f5cffcdd"
+        "acceptanceTest": "226cd7eb964248780d3416bcf1016004644abc248c9a2cbd10b89e1974a38183"
       },
       "gaps": []
     },
@@ -2923,7 +2916,7 @@
           "registered": true,
           "referencesChapter": true,
           "passed": true,
-          "passedCases": 12,
+          "passedCases": 13,
           "failedCases": 0,
           "missingReasons": []
         },
@@ -3141,8 +3134,8 @@
               "title": "aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库"
             },
             {
-              "file": "tests/tic-scenario-shared-encounters.test.mjs",
-              "title": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+              "file": "tests/tic-scenario-aLightInTheFog.test.mjs",
+              "title": "aLightInTheFog 揭示后连接守恒（审计 H5 回归）：单面地点的印刷连接图标不因揭示清空，拘禁室按图标连入沉没岩洞"
             }
           ],
           "actsAndAgendas": [
@@ -3313,7 +3306,7 @@
       "fileHashes": {
         "scenarioIndex": "78eecd44f48fb5a55ef62b8f331097241f8ea77900697ea04dd41ecbe8e15602",
         "guide": "912ba9a1972e4280f116a3b8081179bf39d840c44fdaef7cda49b6a1dcf8cb31",
-        "acceptanceTest": "b33db74d9caf45ff9e5f46bc1a7370dcee5c6654813e1b9eadd3aaa3ec3dae1f"
+        "acceptanceTest": "864afbe29ed09d1157c108d0109685f9091c927779ba58bc4f5a48fc2284848d"
       },
       "gaps": []
     },
@@ -3796,8 +3789,8 @@
               "title": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1"
             },
             {
-              "file": "tests/tic-scenario-theLairOfDagon.test.mjs",
-              "title": "幕 07282 背面：记录仪式被破坏与达贡仍沉睡，结算结局 1"
+              "file": "tests/tic-scenario-shared-encounters.test.mjs",
+              "title": "07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）"
             }
           ],
           "saveReplay": [
@@ -4378,6 +4371,8 @@
   ],
   "remaining": [
     "audit/tic-chapter-sources.json 引用的复核事实文件在仓库内不存在（证据链断裂）",
-    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建"
+    "audit/tic-node-acceptance.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建",
+    "audit/tic-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建",
+    "audit/tic-interaction-regression.json 与当前源码不一致（sourceFiles 哈希已漂移）：P8 发布前需重跑并重建"
   ]
 }

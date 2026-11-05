@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
+import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { performTest, reactionWindow, drawCards, executeDescriptor, getStat, legalMoves, validateMove, spawnEnemy, relocateEnemy } from '../src/engine/engine.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
@@ -116,11 +117,37 @@ test('P6 07116 False Covenant exhausts to cancel a physical curse and redraw',()
   assert.equal(s.chaos.revealed.length,0);assert.equal(s.investigators[0].assets[0].exhausted,true)
 })
 test('P6 07120 Paradoxical Covenant accepts both revealed faces and rejects one-face tests',()=>{
+  // 单元级：窗口里两个面都揭示时才提供反应；只揭示一面时不提供。
   const s=setup();asset(s,'07120')
-  const context={when:'chaosRevealStepEnded',seat:0,location:s.investigators[0].location,tokens:[{face:'bless',index:0},{face:'curse',index:1}]}
+  const both={when:'chaosRevealStepEnded',seat:0,location:s.investigators[0].location,tokens:[{face:'bless',index:0},{face:'curse',index:1}]}
   s.skillTest={seat:0,stage:'ST.4',value:0,difficulty:99,committed:[]}
-  run(s,d=>reactionWindow(d,'chaosRevealStepEnded',context,[]),first)
+  run(s,d=>reactionWindow(d,'chaosRevealStepEnded',both,[]),first)
   assert.equal(s.skillTest.autoSuccess,true);assert.equal(s.investigators[0].assets[0].exhausted,true)
+  const one=setup();asset(one,'07120')
+  one.skillTest={seat:0,stage:'ST.4',value:0,difficulty:99,committed:[]}
+  run(one,d=>reactionWindow(d,'chaosRevealStepEnded',{...both,location:one.investigators[0].location,tokens:[{face:'bless',index:0}]},[]),first)
+  assert.equal(one.skillTest.autoSuccess,undefined)
+})
+test('P6 07120 真实检定揭示祝福+诅咒后自动成功（审计 H10 回归）',()=>{
+  // 祝福/诅咒都会「再揭示一枚」：袋里只有这三枚时，链式揭示必然同时出现祝福与诅咒。
+  // 找到能稳定复现该顺序的种子（随机只走 randomValue，测试不 mock 随机）。
+  let success=null, attempts=0
+  for(let seed=1;seed<400&&!success;seed++) {
+    const s=setup();const a=asset(s,'07120')
+    s.chaosBag=['bless','curse','0'];s.rngState=seed
+    let result
+    run(s,d=>{result=performTest(d,0,'willpower',30,{})},c=>c.source===a.id?'trigger':first(c))
+    const drawn=result?.drawn||[]
+    if(!drawn.includes('bless')||!drawn.includes('curse')) continue
+    attempts++
+    // 基础意志 3 + 祝福/诅咒/0 的修正远低于难度 30：只有 autoSuccess 能让本次检定成功。
+    assert.equal(result.success,true,'揭示祝福+诅咒后自动成功（修复前窗口写入的 autoSuccess 无人读）')
+    assert.equal(s.investigators[0].assets.find(item=>item.code==='07120')?.exhausted,true,'横置代价已支付')
+    assert.equal(result.value<30,true,'不是靠数值通过')
+    success=result
+  }
+  assert.ok(success,'应至少有一个种子能同时揭示祝福与诅咒')
+  assert.ok(attempts>0)
 })
 test('P6 07156 enters-play blessing reaction is optional; upkeep curse or discard',()=>{
   const s=setup();play(s,'07156',first);assert.equal(s.chaosBag.filter(t=>t==='bless').length,3)
@@ -216,6 +243,27 @@ test('P6 07158 doom is a cost, adds two only to the matching test and is once pe
     if(o){used=true;return o.id}return null
   })
   assert.equal(s.investigators[0].assets[0].doom,1);assert.equal(s.lastTestResult.value,s.investigators[0].willpower+2)
+})
+test('P6 07158 「每次检定一次」在同一回合的第二次检定仍可用（审计 M27 perTest 键回归）',()=>{
+  // perTest 实例 id 只在 TIC 章节（eventWindowInstances）写入；07158 是 TIC 玩家卡，用真实章节夹具。
+  const s=chapterFixture('theVanishingOfElinaHarper');s.enemies=[];asset(s,'07158')
+  const useInOneTest=()=>{
+    let uses=0
+    run(s,d=>performTest(d,0,'willpower',0,{}),c=>{
+      if(c.kind!=='playerWindow')return null
+      const o=c.options.find(o=>o.label?.includes('意志')&&o.label?.includes('毁灭'))
+      if(o){uses++;return o.id}
+      return null
+    })
+    return uses
+  }
+  assert.equal(useInOneTest(),1,'第一次检定支付 1 毁灭、+2 意志')
+  assert.equal(s.lastTestResult.value,s.investigators[0].willpower+2)
+  // 修复前 perTest 键取从未赋值的 state.skillTest.id，回落到 round/turnSerial → 同一回合的
+  // 第二次检定被误判为「同一次检定」，能力消失（审计 M27/M32 根因）。
+  assert.equal(useInOneTest(),1,'同一回合的第二次检定仍可用')
+  assert.equal(s.lastTestResult.value,s.investigators[0].willpower+2)
+  assert.equal(s.investigators[0].assets[0].doom,2,'两次检定各支付 1 毁灭')
 })
 test('P6 07267 captures a basic weakness from its actual owner and draws it on leave',()=>{
   const s=setup(2),a=asset(s,'07267');s.investigators[1].deck.push('01098')

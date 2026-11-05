@@ -293,10 +293,14 @@ export function createMoves(deps) {
       label: `⚡ ${cardName(source.code)}：快速打出「${cardName(code)}」(${Math.max(0, cost - (spec.discount || 0))} 资源)` })
     if (def.type === 'event' && registeredEntry(inv.code)?.asIfEvent === true && canAsIfPlay(inv, state)) {
       const here = state.locations.find(location => location.id === inv.location)
-      for (const locationId of here?.connections || []) {
-        const name = state.locations.find(location => location.id === locationId)?.name || locationId
+      // 连接表去重：同一地点被印刷符号/关卡连线重复写入时，「如同位于」不能给出两个
+      // 完全相同的打出移动（玩家窗口会按 asIfLocation 拼 option id，重复移动会撞 id）。
+      for (const locationId of new Set(here?.connections || [])) {
+        // 「如同位于」只能指向已经在场的连接地点：关卡的连接表是按印刷符号预先连好的，
+        // 里面还带着探索牌库/放在一边的地点（这些地点开局尚未入场，不算相邻地点）。
+        if (!locationExists(state, locationId)) continue
         moves.push({ action: 'play', cardId: code, asIfLocation: locationId,
-          label: `🃏 如同位于「${name}」打出「${cardName(code)}」(${cost} 资源)` })
+          label: `🃏 如同位于「${locLabel(state, locationId)}」打出「${cardName(code)}」(${cost} 资源)` })
       }
     }
   }
@@ -685,6 +689,8 @@ export function createMoves(deps) {
       if (isSteadfastCard(def) && steadfastInPlay(state)) return '沉稳卡牌场上仅限 1 张'
       if (move.asIfLocation) {
         if (registeredEntry(inv.code)?.asIfEvent !== true || !canAsIfPlay(inv, state)) return '本回合不能再如同位于连接地点打出事件'
+        // 目标必须已经在场：连接表按关卡定义预先连好，不能把探索牌库/放在一边的地点当成相邻地点。
+        if (!locationExists(state, move.asIfLocation)) return '那个地点不在场'
         if (def.type !== 'event') return '只能这样打出事件'
         const here = state.locations.find(location => location.id === inv.location)
         if (!here?.connections?.includes(move.asIfLocation)) return '那个地点与你不相连'

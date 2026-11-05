@@ -79,7 +79,10 @@ test('P6 07192 Cryptic Grimoire replaces actual encounter top draw with player d
  const s=fixture('07002');asset(s,'07192',{uses:5});const before=s.encounterDeck.length;run(s,d=>drawEncounter(d,d.investigators[0],[]),desc);assert.equal(s.encounterDeck.length,before);assert.equal(s.investigators[0].hand.length,1);assert.equal(owned(s,'07192').uses,0)
 })
 test('P6 07220 Holy Rosary boosts willpower and adds bless after a treachery willpower success',()=>{
- const s=fixture('07001');asset(s,'07220');assert.equal(getStat(s,s.investigators[0],'willpower'),s.investigators[0].willpower+1);run(s,d=>reactionWindow(d,'treacheryTestSuccess',{when:'treacheryTestSuccess',seat:0,location:d.investigators[0].location,skill:'willpower',cardCode:'rottingRemains'},[]),desc);assert.equal(s.chaosBag.filter(t=>t==='bless').length,2);assert.equal(owned(s,'07220').exhausted,true)
+ const s=fixture('07001');asset(s,'07220');assert.equal(getStat(s,s.investigators[0],'willpower'),s.investigators[0].willpower+1);
+ // 审计 M8：「你」= 检定的执行者；窗口上下文里的 seat 是诡计座位而不是检定者，改由 skillTest.seat 判定。
+ s.skillTest={...s.skillTest,seat:1,skill:'willpower'};run(s,d=>reactionWindow(d,'treacheryTestSuccess',{when:'treacheryTestSuccess',seat:0,location:d.investigators[0].location,skill:'willpower',cardCode:'rottingRemains'},[]),desc);assert.equal(s.chaosBag.filter(t=>t==='bless').length,0,'别人检定成功不触发');
+ s.skillTest={...s.skillTest,seat:0};run(s,d=>reactionWindow(d,'treacheryTestSuccess',{when:'treacheryTestSuccess',seat:0,location:d.investigators[0].location,skill:'willpower',cardCode:'rottingRemains'},[]),desc);assert.equal(s.chaosBag.filter(t=>t==='bless').length,2);assert.equal(owned(s,'07220').exhausted,true)
 })
 test('P6 07221 Shield of Faith releases its last seal to cancel actual attack and discards',()=>{
  const s=fixture('07001');const a=asset(s,'07221');s.chaosBag=['0','bless'];seal(s,a.id);const e=enemy(s,{damage:2,horror:1});run(s,d=>enemyAttack(d,d.enemies.find(x=>x.id===e.id),d.investigators[0],[],'test'),desc);assert.equal(s.investigators[0].damage,0);assert.equal(owned(s,'07221'),undefined);assert.equal(s.chaosBag.includes('bless'),true)

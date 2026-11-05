@@ -183,6 +183,63 @@ test('卡尔克萨尖柱的调查挂在附属卡上，地点上的放大镜也�
   assert.equal(entityMoves(st, 'location:hall').some(move => move.rule === 'clearSpiresOfCarcosa'), true)
 })
 
+test('地点附属的主动能力按服务端各字段族挂回卡面（疯狂生长 / 地点附属能力 / 玩家卡附属）', async () => {
+  // 2026-11-05：地点附属卡（疯狂生长等）的主动能力此前只认 Carcosa 的 locationId+attachmentIndex，
+  // 失落时代换成 attachmentId、条目级 attachmentAbilities 用 entityId 之后，左键点地图上的附属卡
+  // 只会打开卡牌详情，技能检定选项只能从底部动作栏点到。这里钉住四条通道都挂得回卡面。
+  const { encounterRules } = await import('../content/campaigns/theForgottenAge/encounter-rules.js')
+  const overgrowth = { id: 'overgrowth:1:hall', code: '04076', originalCode: '04076' }
+  const state = {
+    currentSeat: 0,
+    investigators: [{ seat: 0, location: 'hall', hand: [], assets: [], threat: [], clues: 0 }],
+    locations: [{ id: 'hall', revealed: true, attachments: [overgrowth, { id: 'attach:03091:1', code: '03091' }] }],
+    enemies: [], storyAssets: [], acts: [], agendas: [], actIndex: 0, agendaIndex: 0,
+  }
+  // 真实内容链路：TFA 04076 的两个「检定战斗/智识(4)清除疯狂生长」由 encounterActions 下发，
+  // 移动带的是 attachmentId（不是 locationId+attachmentIndex）。
+  const real = encounterRules.encounterActions(state, state.investigators[0])
+  assert.deepEqual(real.map(move => move.skill), ['combat', 'intellect'])
+  const bound = entityMoves({ ...state, legalMoves: real }, 'attachment:hall:0')
+  assert.deepEqual(bound.map(move => move.label), ['♻️ 检定战斗(4)清除疯狂生长', '♻️ 检定智识(4)清除疯狂生长'])
+  // 同一地点上另一张没有行动的下标不串门。
+  assert.equal(entityMoves({ ...state, legalMoves: real }, 'attachment:hall:1').length, 0)
+
+  // 其余字段族：entityAbility（attachmentAbilities / 谈判）、assetId（玩家卡地点附属能力）。
+  const mixed = { ...state, legalMoves: [
+    { action: 'entityAbility', entityType: 'locationAttachment', entityId: 'overgrowth:1:hall', abilityIndex: 0, label: '石障' },
+    { action: 'ability', assetId: 'overgrowth:1:hall', abilityIndex: 1, label: '玩家卡附属能力' },
+    { action: 'entityAbility', entityType: 'locationAttachment', entityId: 'attach:03091:1', abilityIndex: 0, label: '别人的能力' },
+  ] }
+  assert.deepEqual(entityMoves(mixed, 'attachment:hall:0').map(move => move.action), ['entityAbility', 'ability'])
+  assert.deepEqual(entityMoves(mixed, 'attachment:hall:1').map(move => move.label), ['别人的能力'])
+
+  // 玩家卡地点附属「捷径」：shortcutMove 不带附属 id，由观察投影派生的 markerAction 挂回；
+  // 没有 markerAction 的附属不能被当成捷径入口。
+  const shortcut = { currentSeat: 0, investigators: [{ seat: 0, location: 'hall', hand: [], assets: [] }],
+    legalMoves: [{ action: 'shortcutMove', locationId: 'lobby', label: '🏃 捷径：移动到「大厅」' }],
+    locations: [{ id: 'hall', attachments: [{ code: '03232', location: 'hall', ownerSeat: 0, exhausted: false, markerAction: 'shortcutMove' }] }] }
+  assert.equal(entityMoves(shortcut, 'attachment:hall:0').length, 1)
+  delete shortcut.locations[0].attachments[0].markerAction
+  assert.equal(entityMoves(shortcut, 'attachment:hall:0').length, 0)
+})
+
+test('食梦者把附属 id 嵌在剧本规则名里的摆脱行动，左键也能挂回卡面', () => {
+  // 06103 恶心蛛网在食梦者的两处行动里没有独立 attachmentId 字段：
+  // 共享遭遇规则用 rule = `locationAttachment:<id>`，章节行为用 `discardSickeningWebs:<id>`。
+  // entityMoves 按 id 后缀兼容这两种规则名（id 唯一，不猜卡号）。
+  const st = {
+    currentSeat: 0,
+    investigators: [{ seat: 0, location: 'theGreatWeb1', hand: [], assets: [] }],
+    locations: [{ id: 'theGreatWeb1', attachments: [{ id: 'webs:1', code: '06103' }, { id: 'webs:2', code: '06103' }] }],
+    legalMoves: [
+      { action: 'scenarioAction', rule: 'locationAttachment:webs:1', actions: 1, label: '[行动] 摆脱「恶心蛛网」' },
+      { action: 'scenarioAction', rule: 'discardSickeningWebs:webs:2', actions: 1, label: '检定战斗/敏捷(3)：弃掉「恶心蛛网」' },
+    ],
+  }
+  assert.deepEqual(entityMoves(st, 'attachment:theGreatWeb1:0').map(move => move.rule), ['locationAttachment:webs:1'])
+  assert.deepEqual(entityMoves(st, 'attachment:theGreatWeb1:1').map(move => move.rule), ['discardSickeningWebs:webs:2'])
+})
+
 test('迷失时空地点搜索：内容层必须随选项下发 cardCode（界面整卡展示的输入契约）', () => {
   // 实机里 view.cards 不含 encounterDiscard 里的地点卡，界面整卡完全依赖内容层下发 cardCode。
   // 这里直接跑 later-behaviors 的 performAction（drawLocation 打桩），守住内容层不丢 cardCode。

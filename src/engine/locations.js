@@ -7,6 +7,7 @@
 import { registeredEntry } from './ability.js'
 import { applyRevealFloodPolicy, floodLevel, setFloodLevel } from './flood.js'
 import { syncDynamicLocationSymbols } from './location-symbols.js'
+import { forgetRoadLocation } from './map-graph.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 
 // 地点卡自己的「揭示时」规则由条目声明（静态注册表，不进 state）。
@@ -271,6 +272,13 @@ function revealLocation(state, id, events, seat = null) {
       scenarioBehavior(state).locationRevealed?.(state, loc, scenarioRuntime(state, events), seat)
       // 第 55 轮：地点卡自己的「揭示时」规则（02173/02176/02177/02285–02292 等）。
       locationRuleOf(loc)?.onReveal?.(state, loc, scenarioRuntime(state, events), seat)
+      // 道路地点的「揭示后扩路」（07204–07210 的「道路 N」，参考实现 SilentForcedAbility →
+      // `road N`）：地点定义用纯数据 `road: N` 声明，引擎只在「当前没有下一列」时扩路
+      // （门禁在 map-graph.js#extendRoad），不再逐卡重复实现同句规则（审计 H2）。
+      const roadCount = Number(loc.road)
+      if (Number.isSafeInteger(roadCount) && roadCount > 0) {
+        scenarioRuntime(state, events).mechanics.map.extendRoad(loc.id, roadCount)
+      }
     }
     if (seat != null) triggerReaction(state, seat, 'locationRevealed', events, { when: 'locationRevealed', seat, location: loc.id })
     // 「地点入场/被揭示后」的玩家卡（04306 有利位置）读最近一次揭示；回合结束自然过期。
@@ -300,6 +308,9 @@ function removeLocation(state, id, events, options = {}) {
     // 网格坐标随地点一起清掉（读点：grid-map 的 placeGridLocation 用 grid 判占用；
     // 存档校验也会 locationAt 每个 grid 键，残留会直接判「无效地点」）。
     if (state.scenarioFlags?.mechanics?.grid) delete state.scenarioFlags.mechanics.grid[loc.id]
+    // 道路列号随地点一起清掉：残留的列号会让之后的扩路对已离场地点 locationAt 抛
+    // RangeError、整个载具移动事务回滚（审计 H4）。
+    forgetRoadLocation(state, loc.id)
     for (const attachment of loc.attachments || []) {
       const code = typeof attachment === 'string' ? attachment : attachment?.code
       if (code && ALL_TREACHERIES[code]) state.encounterDiscard.push(code)

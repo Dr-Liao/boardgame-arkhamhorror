@@ -170,6 +170,21 @@ test('玩家附着到地点的卡与剧情卡进入实时观察和演出快照',
   assert.deepEqual(snapshot.storyAssets,s.storyAssets)
 })
 
+test('玩家卡地点附属「捷径」在观察投影里派生行动通道标记', () => {
+  // 捷径（03232）的 shortcutMove 不带附属 id，牌桌靠投影派生的 markerAction 把
+  // 「左键弹出可去地点」挂回地图上那张附属卡；标记只做展示，可用性仍由 legalMoves 决定。
+  const s=createGameState({seed:'shortcut-marker-action'},[{seat:0}])
+  const location=s.investigators[0].location
+  s.playerLocationAttachments=[{code:'03232',location,ownerSeat:0,exhausted:false}]
+  const live=viewState(s,0).locations.find(loc=>loc.id===location).attachments
+  assert.equal(live[0].markerAction,'shortcutMove')
+  const snapshot=captureTableState(s,getStat,getMaxSanity).locations.find(loc=>loc.id===location).attachments
+  assert.equal(snapshot[0].markerAction,'shortcutMove','演出快照重绘地图时也要保留同一标记')
+  // 其他玩家卡地点附属没有主动行动通道，不派生标记（避免点它们时误弹捷径选项）。
+  s.playerLocationAttachments=[{code:'03038',location,ownerSeat:0,exhausted:false}]
+  assert.equal(viewState(s,0).locations.find(loc=>loc.id===location).attachments[0].markerAction,undefined)
+})
+
 test('实时观察公开胜利区与仍放在一边的卡牌，但不公开其他剧本区域', () => {
   const s=createGameState({seed:'public-scenario-zones'},[{seat:0}])
   const initial=viewState(s,0)

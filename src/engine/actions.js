@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { eventWindowContext } from './event-window.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
 import { actionTestSkill } from './skill-substitution.js'
@@ -380,7 +381,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         resolveEffect(state, seat, enterEffect, makeRuntime(state, events))
       }
     }
-    triggerReaction(state, seat, 'assetEnteredPlay', events, { seat, assetCode: cardId, assetId: asset.id, location: inv.location })
+    triggerReaction(state, seat, 'assetEnteredPlay', events, eventWindowContext(state, { seat, assetCode: cardId, assetId: asset.id, location: inv.location }))
   } else if (def.type === 'event') {
     const eff = {}
     // Phase 5（5c-10）：打出后的去向（移出游戏 / 洗回牌库）也可以写在 played 描述子上。

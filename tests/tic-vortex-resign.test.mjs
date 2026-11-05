@@ -6,7 +6,9 @@
 // 读点：
 //   · 「你在渔船上」= _shared.js 的 vehicleAssetOf（vehicleOf → 载具的物理卡，不读 mechanicState）；
 //   · 船上的人 = vehiclePassengers 快照，逐个 api.resign（撤退后果沿用既有入口）；
-//   · 钥匙 = keys.transfer(color, 'investigator:<seat>', 'reference')，只搬紫/黑/白；
+//   · 钥匙 = keys.transfer(color, 'investigator:<seat>', 'act:<当前幕 id>')，只搬紫/黑/白；
+//     「当前场景」= 当前幕，content resolutions.js 的 recoveredKeys 只统计 act:<当前幕>/调查员持有
+//     （审计 H6：修复前放 'reference'，幕间 III 奖励与《雾中之光》条件链全部丢失）；
 //   · 移除渔船 = api.scenario.removeStoryAsset（离场不进弃牌堆，并触发 storyAssetLeftPlay 清理）
 //     + vehicles.remove 注销载具。
 
@@ -48,10 +50,11 @@ test('07168 急涡水域：船上的人撤退、渔船移出游戏、紫黑白�
   assert.equal(s.scenarioFlags.mechanics.vehicles[boat.id], undefined, '载具从登记表注销')
 
   const keys = s.scenarioFlags.mechanics.keys
+  const currentAct = `act:${s.acts[s.actIndex].id}`
   for (const color of ['purple', 'black', 'white']) {
-    assert.equal(keys[color].holder, 'reference', `${color} 钥匙放在当前场景上`)
+    assert.equal(keys[color].holder, currentAct, `${color} 钥匙放在当前幕上（审计 H6）`)
   }
-  assert.notEqual(keys.red.holder, 'reference', '其他颜色的钥匙不放到场景上')
+  assert.notEqual(keys.red.holder, currentAct, '其他颜色的钥匙不放到场景上')
   assert.equal(keys.red.holder, `location:${s.investigators[0].location}`, '撤退清理把其余钥匙留在原地')
   assert.equal(api.vehicles.of(0), null, '撤退的人不再属于任何载具')
 })

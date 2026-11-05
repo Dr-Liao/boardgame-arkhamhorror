@@ -47,6 +47,8 @@ export function createTurn(deps) {
     distanceToInvestigator,
     drawEncounter,
     enemiesEngagedWith,
+    // 07327 缟玛瑙守卫：地点声明「敌军阶段期间，重整的古神敌人可以攻击本地点的调查员」。
+    enemyAttacksAsIfEngaged,
     enemyAttack,
     enemyDef,
     enemyTextBlanked,
@@ -202,7 +204,8 @@ function resolveEnemyPhaseOf(state, enemy, events = []) {
   autoEngageAll(state, events)
   let attacked = false
   for (const member of swarmGroup(state, enemy)) if (!member.exhausted && member.skipAttackRound !== state.round) {
-    for (const inv of aliveInvestigators(state).filter(inv => enemiesEngagedWith(state, inv).includes(member))) {
+    for (const inv of aliveInvestigators(state).filter(inv => enemiesEngagedWith(state, inv).includes(member)
+      || enemyAttacksAsIfEngaged(state, member, inv))) {
       if (inv.onTheLam && !member.elite) continue
       if (inv.infighting?.round === state.round && inv.infighting.phase === 'enemy' && !member.elite) continue
       if (member.attackProtection?.[inv.seat] === state.round) continue
@@ -255,7 +258,11 @@ function enemyPhase(state) {
     (a.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators -
     (b.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators)
   for (const inv of seats) {
-    const pending = enemiesEngagedWith(state, inv)
+    // 「敌军阶段期间，每个处于重整状态的古神敌人可以攻击本地点的调查员，如同其已交战」
+    // （07327 缟玛瑙守卫）：未交战的本地敌人也进入本轮的待攻击名单。
+    const engaged = enemiesEngagedWith(state, inv)
+    const asIfEngaged = state.enemies.filter(enemy => enemyAttacksAsIfEngaged(state, enemy, inv))
+    const pending = [...new Set([...engaged, ...asIfEngaged])]
       .filter(e => !e.exhausted && e.skipAttackRound !== state.round && e.attackProtection?.[inv.seat] !== state.round)
       .map(e => e.id)
     while (pending.length && !inv.defeated && !inv.resigned) {

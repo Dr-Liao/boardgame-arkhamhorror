@@ -2,9 +2,11 @@
 
 英文名：The Innsmouth Conspiracy。战役标识：`theInnsmouthConspiracy`；本轮工具及审计简称：`tic`；来源战役编号：`07`。
 
-建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P8 已完成，[总审计](../../audit/tic-migration.json) 状态 `playable`，P0–P8 均为 `verified`，`node tools/audit-tic.mjs --check` 复算一致。五位调查员、专属依赖及 93 条一般玩家卡记录已验收（90 张可构筑，3 张基础弱点只作依赖）；八章逐章 12 项验收 **8/8** 全绿，逐卡账本 252 张 `strictComplete`（`missing=0 / simplified=0`）。P8 已把 TIC 从 `catalog-only` 升级为生产可玩：战役与八章静态注册进内容组合根、大厅可启动、真实 layout 与逐章推进验收完成；`earlyAccess: false`，发布验收全部完成，详见 [P8 发布验收记录](p8-release.md)。
+建立日期：2026-11-02。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 → P8 已完成，[总审计](../../audit/tic-migration.json) 状态 `playable`，`node tools/audit-tic.mjs --check` 复算一致；但**不得据此宣称「规则全部 verified」**：2026-11-05 的独立审计（`artifacts/migration/tic/audit-2026-11-05/AUDIT-REPORT.md`）按「卡面 + 引擎读点 + 可复现探针」复核后，判定 `MATCH` 约 78.4%，另有 PARTIAL/WRONG 与 17 处 HIGH；审计同时指出本仓库账本的 `verified` 口径偏弱（文件级证据、测试与实现同源），因此「账本 verified」只表示迁移完成度登记，不等于逐句规则等价。该轮审计的修复与未完成项见 `artifacts/migration/tic/audit-2026-11-05/FIX-REPORT.md`（HIGH 全部修复并配回归，MEDIUM 部分修复，其余如实登记待办）。五位调查员、专属依赖及 93 条一般玩家卡记录已验收（90 张可构筑，3 张基础弱点只作依赖）；八章逐章 12 项验收 **8/8** 全绿，逐卡账本 252 张 `strictComplete`（`missing=0 / simplified=0`）。P8 已把 TIC 从 `catalog-only` 升级为生产可玩：战役与八章静态注册进内容组合根、大厅可启动、真实 layout 与逐章推进验收完成；`earlyAccess: false`，发布验收全部完成，详见 [P8 发布验收记录](p8-release.md)。
 
 实施接口与证据说明见[原语契约](primitives.md)。本轮复算输入签入 `audit/tic-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 artifacts 保存运行镜像与过程资料，继续忽略，不放开整个目录。
+
+逐卡/逐章/原语/交互的验收条件、判定词、必测回归清单与完成门禁见[验收条件清单](acceptance.md)；后续每轮验收按该清单执行并登记证据，不以本文件的勾选或审计账本自述替代复核。
 
 ## 1. 依据与打勾规则
 
@@ -329,3 +331,11 @@ P7 已完成（2026-11-04），开发验收记录与逐章证据见 [P7 开发�
 P8 已完成（2026-11-05），实现内容、证据与已披露限制见 [P8 发布验收记录](p8-release.md)；本页 P8 与阶段总览已按 `audit/tic-migration.json`（`status: playable`、`earlyAccess: false`、`releaseAcceptance` 全 true、`remaining: []`）、`audit/tic-release-browser.json`、`audit/tic-release-acceptance.json`、`audit/tic-p8-replay.json` 与逐卡/逐章账本的实跑结果勾选。
 
 P7 现场进度、已知失败与恢复顺序见 [P7 开发验收记录](p7-development.md)（历史资料）。P7、P8 均已完成；TIC 已作为完整迁移内容在大厅开放。
+
+## 2026-11-05 独立审计修复轮（TIC 第六循环）
+
+- 审计：`artifacts/migration/tic/audit-2026-11-05/AUDIT-REPORT.md`（独立复核：MATCH 约 78.4%，17 处 HIGH、43 处 MEDIUM、若干 LOW）。修复记录见同目录 `FIX-REPORT.md`。
+- 已修复：HIGH 17 项全部修复且各有回归测试（H1–H17；其中 H17 经复核后确认审计的「7 把钥匙不可达」判断有误——2 张「潮池」07103 也会放置暗置钥匙，故钥匙经济可达，改为补端到端回归）。MEDIUM 已修复 M1、M3、M5、M7、M8、M16、M23、M24、M30、M31、M33、M34、M35、M37、M38、M40、M41、M42、M43（逐项状态以 `FIX-REPORT.md` 为准）。
+- 未完成（如实登记，不计入完成度）：M2（「指控」幕间文本需从印花战役指南补译）、M9、M10、M11、M12、M13、M14、M17、M18、M19、M20、M21、M25、M26、M28、M29、M36、M39、§六.4（`attachUnderLocation` 原语）、§六.7/M14（「你可以选择推进」的声明位）与 LOW 汇总项。
+- 证据链：`audit-tic-scenarios.mjs --check` 复算一致（8/8 × 12/12）；`audit-tic-all-cards.mjs --check` 通过；`audit-tic.mjs --check` 的 remaining 门禁按重算后的真实证据登记（node/replay/regression 由 `tools/verify-tic.mjs` 重新生成），不再沿用旧「P0–P8 全部 verified」口径；本文件顶部说明已同步修正。
+- 基线重采：golden replay 仅 notz-long 的 6 个哈希变化（Devourer Below 的强制窗口记账键 `youngDeepOne#0` → `01181#0`，H14 卡号化改名，状态逐字段一致）；TIC P8 replay 基线因本轮真实行为修复而重采（13 局 / 855 步）。

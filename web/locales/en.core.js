@@ -13,6 +13,7 @@ export default {
   'image.textMode': 'Text-only mode',
   'image.revised': 'Revised alternate art',
   'image.zh': 'Chinese card image',
+  'image.aiTranslated': 'Chinese card image · AI translated',
   'image.en': 'English card image',
   'image.back': 'Card back',
 

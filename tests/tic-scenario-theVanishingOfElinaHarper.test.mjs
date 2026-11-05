@@ -165,9 +165,14 @@ test('P7 哈珀 幕 07060 团队线索谈判：花费 X[每调查员]、揭示�
   settle(s, choice => (choice.kind === 'effect' ? '2' : null))
   assert.equal(s.clues, 2, 'X=2 × 2 人 = 4 个团队线索')
   assert.deepEqual(s.investigators.map(inv => inv.clues), [1, 1], '线索由两位调查员分摊')
-  assert.deepEqual(s.scenarioFlags.harperDrawnLeads, [topTwo[0]], '抽取牌堆顶 1 张并记账')
+  // 抽到的迹象经真实遭遇结算管线入场（审计 H1：修复前只写 harperDrawnLeads 记账、10 张迹象永不可达）。
+  const drawnCode = topTwo[0]
+  const enteredPlay = s.locations.some(location => (location.originalCode || location.code) === drawnCode)
+    || s.enemies.some(enemy => (enemy.originalCode || enemy.code) === drawnCode)
+  assert.equal(enteredPlay, true, '抽取的迹象应经遭遇结算真实入场')
+  assert.equal(s.scenarioFlags.harperDrawnLeads, undefined, '不再写无人读取的记账 flag')
   const deck = s.scenarioFlags.mechanics.scenarioDecks.leads.deck
-  assert.equal(deck.includes(topTwo[0]), false, '抽到的迹象离开迹象牌堆')
+  assert.equal(deck.includes(drawnCode), false, '抽到的迹象离开迹象牌堆')
   assert.equal(deck.length, leadsBefore.length, '其余 1 张 + 遭遇牌库顶 1 张洗回：数量守恒')
   for (const code of topTwo) assert.ok(s.scenarioFlags.crossedOff.includes(code), `揭示的 ${code} 应被划掉`)
   assert.equal(entityParley(s), undefined, '团队每轮仅限一次')

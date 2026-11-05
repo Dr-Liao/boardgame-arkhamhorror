@@ -1,5 +1,6 @@
 import { contentRegistry } from '../../content/registered.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
+import { registeredEntry } from '../engine/ability.js'
 import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES, hiddenPathBack } from '../../content/campaigns/thePathToCarcosa/presentation.js'
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
@@ -38,7 +39,12 @@ export function publicAttachments(state) {
   const locations = Object.fromEntries(Object.entries(found.locations || {}).map(([id, cards]) => [id, [...cards]]))
   for (const attachment of state.playerLocationAttachments || []) {
     if (!attachment?.code || !attachment.location) continue
-    ;(locations[attachment.location] ||= []).push(structuredClone(attachment))
+    const visible = structuredClone(attachment)
+    // 玩家卡地点附属可能有卡面主动能力（03232 捷径的「横置：移动到连接地点」）：对应的
+    // shortcutMove 不带附属 id，观察投影在这里派生「这张附属挂在哪个行动通道」，前端据此
+    // 把左键弹出选项挂回正确的那张卡。只做展示标记，可用性仍只由 legalMoves 决定。
+    if (registeredEntry(attachment.code)?.grantsShortcutMove) visible.markerAction = 'shortcutMove'
+    ;(locations[attachment.location] ||= []).push(visible)
   }
   return { act: [...(found.act || [])], agenda: [...(found.agenda || [])], locations }
 }
