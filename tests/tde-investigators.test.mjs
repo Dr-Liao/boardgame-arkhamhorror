@@ -509,6 +509,8 @@ test('P6 卢克：如同位于只列出已经在场的连接地点', () => {
 // 唯一性检查（P0，避免软锁）因此把整个行动回滚。
 test('P6 卢克：玩家窗口里的快速事件按「如同位于」分组，选项 id 不重复', () => {
   const { state, inv } = lukeMapFixture()
+  // 两个在场的连接地点：普通 + 每个如同位于变体都要有独立 id。
+  placeLocation(state, 'attic', [])
   inv.hand = ['01036']
   inv.resources = 10
   inv.actionsLeft = 3
@@ -518,12 +520,39 @@ test('P6 卢克：玩家窗口里的快速事件按「如同位于」分组，�
   const ids = state.pendingChoice.options.map(option => option.id)
   assert.equal(new Set(ids).size, ids.length, `选项 id 必须唯一：${ids.join('、')}`)
   assert.ok(ids.includes('fast-card:01036'), '普通「快速打出」沿用旧 id，既有对局形状不变')
-  const there = state.locations.find(location => location.id === 'hallway')
-  const asIfId = `fast-card:01036:asif:${there.id}`
-  const asIf = state.pendingChoice.options.find(option => option.id === asIfId)
-  assert.ok(asIf, `如同位于变体应有独立 id：${ids.join('、')}`)
-  assert.match(asIf.label, new RegExp(`如同位于「${there.name}」`), '标签写清是哪个连接地点')
-  assert.equal(asIf.cardCode, '01036', '下发卡号，快速反应开关才能按卡过滤这些变体')
+  for (const locationId of ['hallway', 'attic']) {
+    const there = state.locations.find(location => location.id === locationId)
+    const asIf = state.pendingChoice.options.find(option => option.id === `fast-card:01036:asif:${there.id}`)
+    assert.ok(asIf, `如同位于「${there.name}」应有独立 id：${ids.join('、')}`)
+    assert.match(asIf.label, new RegExp(`如同位于「${there.name}」`), '标签写清是哪个连接地点')
+    assert.equal(asIf.cardCode, '01036', '下发卡号，快速反应开关才能按卡过滤这些变体')
+  }
+})
+
+test('P6 卢克：连接表重复写同一地点时「如同位于」只给一份打出移动', () => {
+  const { state, inv, here } = lukeMapFixture()
+  here.connections = ['hallway', 'hallway']
+  inv.hand = ['01088']
+  inv.resources = 10
+  const asIfMoves = legalMoves(state, 0).filter(item => item.action === 'play' && item.asIfLocation === 'hallway')
+  assert.equal(asIfMoves.length, 1, '重复的连接表不能让「如同位于」变体重复')
+})
+
+test('P6 卢克：手牌里两张同名快速事件不会重复 id，打出一张后窗口仍能打出另一张', () => {
+  const { state, inv } = lukeMapFixture()
+  inv.hand = ['01036', '01036'] // 同名事件在牌组里可以有两张（deckLimit 2）
+  inv.resources = 20
+  inv.actionsLeft = 3
+  applyMove(state, 0, { action: 'draw' })
+  const ids = state.pendingChoice.options.map(option => option.id)
+  assert.equal(new Set(ids).size, ids.length, `选项 id 必须唯一：${ids.join('、')}`)
+  assert.equal(ids.filter(id => id === 'fast-card:01036').length, 1, '同名副本共用一份「快速打出」选项')
+  move(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'fast-card:01036' })
+  assert.equal(state.pendingChoice?.kind, 'playerWindow', '打出一张后窗口重新询问')
+  assert.ok(state.pendingChoice.options.some(option => option.id === 'fast-card:01036'), '第二张同名副本仍可打出')
+  move(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'fast-card:01036' })
+  assert.deepEqual(me(state).discard.filter(code => code === '01036').length, 2, '两张都正常打出')
+  assert.equal(state.pendingChoice, null)
 })
 
 test('P6 卢克：玩家窗口里选「如同位于」快速事件按该地点结算并在结束后还原', () => {
