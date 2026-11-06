@@ -24,7 +24,7 @@ export default {
       label: '横置：一位调查员查找牌库顶 3 张，抽 1 张并洗回；可花 1 秘密让其费用 -2 立即打出',
       cost: { action: true, exhaust: true },
       target: { kind: 'investigator', label: '你所在地点的一位调查员' },
-      resolve: ({ inv, api, target }) => {
+      resolve: ({ inv, api, target, source }) => {
         const targetSeat = Number.isInteger(target?.entity?.seat) ? target.entity.seat : inv.seat
         const taken = api.lookAt(targetSeat, {
           zone: 'deck',
@@ -37,16 +37,17 @@ export default {
         const code = Array.isArray(taken) ? taken[0] : null
         if (!code) { api.info('没有找到可以抽取的卡牌。'); return }
         api.info(`📖 ${api.cardName('06279')}：${inv.name} 让一位调查员抽走了「${api.cardName(code)}」。`)
-        if ((inv.assets || []).every(item => item.code !== '06279')) return
-        const book = (inv.assets || []).find(item => item.code === '06279')
-        if (!book || (book.uses || 0) < 1) return
+        // 2026-11-06 修复：秘密属于「正在使用的那一本」——必须用 ctx.source（被激活的实例），
+        // 不能按卡号 find；两张同名古书同场时旧写法会把第一本的秘密花掉。
+        if (!source || source.code !== '06279' || !(inv.assets || []).includes(source)) return
+        if ((source.uses || 0) < 1) return
         const answer = api.choice({
           kind: 'effect', source: '06279', seat: inv.seat,
           prompt: `是否花费 1 秘密，让该调查员立即打出「${api.cardName(code)}」（费用 -2）？`,
           options: [{ id: 'pay', label: '花费 1 秘密并打出' }, { id: 'skip', label: '不打出' }],
         })
         if (answer !== 'pay') return
-        api.addUses(book, -1)
+        api.addUses(source, -1)
         api.playCard(targetSeat, code, { discount: 2 })
       },
     },

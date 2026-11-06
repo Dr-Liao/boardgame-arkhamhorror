@@ -465,8 +465,9 @@ function effectError(state, inv, effect) {
   } else if (['fight', 'evade', 'dealDamage'].includes(effect.type) && !abilityTargets(state, inv, effect).length) return '没有合法敌人目标'
   if (effect.type === 'chooseOne' && effect.options.every(option => effectError(state, inv, option.effect))) return '没有可执行的效果选项'
   if (effect.type === 'investigate') {
+    // 2026-11-06 规则修正：调查类效果不要求地点还有线索（成功只是不发现线索）。
     const loc = state.locations.find(item => item.id === inv.location)
-    if (!loc || loc.locked || loc.clues <= 0) return '这里不能调查'
+    if (!loc || loc.locked) return '这里不能调查'
   }
   if (effect.type === 'discoverClue') {
     const loc = state.locations.find(item => item.id === inv.location)
@@ -520,8 +521,9 @@ function effectError(state, inv, effect) {
       if (!ally) return '手牌中没有可打出的盟友支援'
     }
     if (effect.action === 'investigateAction') {
+      // 2026-11-06 规则修正：授予的调查行动同样不要求地点还有线索（成功不发现线索）。
       const loc = state.locations.find(item => item.id === inv.location)
-      if (!loc || loc.locked || loc.clues <= 0) return '这里不能调查'
+      if (!loc || loc.locked) return '这里不能调查'
     }
   }
   if (effect.type === 'searchTop' && !inv.deck.length) return '牌库中没有可搜索的牌'

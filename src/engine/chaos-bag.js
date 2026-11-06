@@ -50,8 +50,21 @@ function restoreOrder(state, order) {
 }
 
 export function drawChaosToken(state) {
-  if (!state.chaosBag.length) throw new Error('混乱袋为空，无法揭示标记')
-  const token = state.chaosBag.splice(Math.floor(randomValue(state) * state.chaosBag.length), 1)[0]
+  let index = -1
+  if (Array.isArray(state.debugNextTokens) && state.debugNextTokens.length) {
+    const forced = state.debugNextTokens.shift()
+    if (!state.debugNextTokens.length) delete state.debugNextTokens
+    index = state.chaosBag.indexOf(forced)
+    if (index < 0 && typeof forced === 'string') {
+      state.chaosBag.push(forced)
+      index = state.chaosBag.length - 1
+    }
+  }
+  if (index < 0) {
+    if (!state.chaosBag.length) throw new Error('混乱袋为空，无法揭示标记')
+    index = Math.floor(randomValue(state) * state.chaosBag.length)
+  }
+  const token = state.chaosBag.splice(index, 1)[0]
   zones(state).revealed.push(token)
   const test = state.skillTest
   state._resolution?.events.push({ type: 'presentation', kind: 'chaos', token,

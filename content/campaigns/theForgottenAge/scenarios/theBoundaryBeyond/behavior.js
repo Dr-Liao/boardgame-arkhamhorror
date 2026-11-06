@@ -197,30 +197,30 @@ function sweepTenochtitlan(state, api, { onlyCleared = true } = {}) {
 }
 
 // 2b / 2b 背面：对每个在场的现代地点，从探索牌库找一张同符号的古代地点覆盖上去。
-function shiftRemainingPresentDay(state, api, source = '04163') {
+//
+// 同符号的古代地点各有两张（同名、同符号、同连线，只是卡面数值不同），2b 牌面只写
+// 「找出 1 张左上角带有对应地点符号的地点卡」，并没有指定由谁挑选；2026-11-06 实机
+// 反馈：「选择覆盖的那一张」让调查员队长二选一没有意义——两张选项同名，界面分不出
+// 卡面，队长也拿不到可决策的信息。改为不询问，按探索牌库顺序自动取「从牌库顶往下
+// 找到的第一张同符号古代地点」：变体和本章的探索行动一样由洗牌后的牌库顺序决定，
+// 而不是由玩家挑选。若以后要恢复玩家选择，必须同时给两个选项补 cardCode，
+// 否则界面仍只会显示两个同名的空占位选项。
+function shiftRemainingPresentDay(state, api) {
   for (const slot of [...state.locations]) {
     if (!isPresentDay(slot)) continue
     const symbol = symbolOf(slot)
-    const matches = (state.explorationDeck || []).filter(entry => {
-      const definition = definitionById(state, entry)
-      return definition && symbolOf(definition) === symbol
-    })
-    if (!matches.length) {
+    const deck = state.explorationDeck || []
+    let deckIndex = -1
+    for (let index = deck.length - 1; index >= 0; index--) {
+      const definition = definitionById(state, deck[index])
+      if (definition && symbolOf(definition) === symbol) { deckIndex = index; break }
+    }
+    if (deckIndex < 0) {
       api.info?.(`🧭 探索牌库里已没有与「${slot.name}」同符号的古代地点。`)
       continue
     }
-    const picked = matches.length === 1 ? matches[0] : (() => {
-      const answer = api.choose({
-        kind: 'location', source, seat: state.campaign.leadSeat,
-        prompt: `探索牌库中有 ${matches.length} 张与「${slot.name}」同符号的古代地点，选择覆盖的那一张。`,
-        options: matches.map(entry => ({
-          id: entry, label: definitionById(state, entry)?.name || entry,
-        })),
-      })
-      return matches.includes(answer) ? answer : matches[matches.length - 1]
-    })()
-    const deckIndex = state.explorationDeck.indexOf(picked)
-    if (deckIndex >= 0) state.explorationDeck.splice(deckIndex, 1)
+    // 引擎约定探索牌库数组末尾是牌库顶（探索行动用 pop 抽牌），所以从末尾往前找。
+    const [picked] = deck.splice(deckIndex, 1)
     shiftSlot(state, api, slot.id, picked)
   }
 }
@@ -561,6 +561,20 @@ function notifyAncientLastClue(state, location, api) {
   api.info?.(`🌑 古代地点的最后一个线索被发现：兄弟会之手上放置 1 个毁灭标记。`)
 }
 
+// 04179 的反应：抽取一张[[巫术]]（Hex）卡牌后发现本地点的 1 个线索（团队每阶段一次）。
+// 巫术卡都是遭遇诡计，因此主触发点是引擎的 encounterDrawn 钩子（src/engine/encounter.js
+// 在抽到遭遇牌、结算显现之前调用）；玩家牌库抽牌仍走 cardDrawn，两处共用这一份实现。
+// 「本地点的 1 个线索」是从地点搬到调查员的线索池（discoverAt），不是往地点上加线索。
+function chapultepecHillHexReaction(state, inv, code, api) {
+  if (!inv) return
+  const location = here(state, inv)
+  if (original(location) !== '04179' || !hasTrait({ code }, 'Hex')) return
+  if (brotherhoodHandBlocks(state, inv.location)) return
+  if (!teamOnce(state, '04179clue')) return
+  const found = discoverAt(state, api, inv, location, 1)
+  if (found) api.info?.(`🌿 查普尔特佩克山：${inv.name} 抽到巫术卡牌后发现了 ${found} 个线索。`)
+}
+
 // 04174 的反应：在本地点击败或躲避蛇族后，发现本地点的 1 个线索（团队每阶段一次）。
 function temploMayorReaction(state, api, enemy, seat) {
   if (!enemy || !hasTrait(enemy, 'Serpent')) return
@@ -589,7 +603,7 @@ function useAncientAction(state, inv, api, location, code) {
 function boundaryHooks(state, api) {
   return {
     sweep: options => sweepTenochtitlan(state, api, options),
-    shiftPresentDay: source => shiftRemainingPresentDay(state, api, source),
+    shiftPresentDay: () => shiftRemainingPresentDay(state, api),
     loseAllClues: () => loseAllClues(state),
     spawnPadma: () => spawnPadma(state, api),
     spawnHarbinger: () => spawnHarbinger(state, api),
@@ -815,13 +829,14 @@ export const behavior = {
   },
 
   // 04179 的反应：抽取一张巫术卡牌后发现本地点的 1 个线索（团队每阶段一次）。
+  // 遭遇牌（巫术诡计）由 encounterDrawn 触发；玩家牌库抽牌由 cardDrawn 触发。
+  encounterDrawn(state, inv, code, api) {
+    chapultepecHillHexReaction(state, inv, code, api)
+  },
+
   cardDrawn(state, inv, code, api) {
     encounterRules.cardDrawn?.(state, inv, code, api)
-    if (original(here(state, inv)) !== '04179' || !hasTrait({ code }, 'Hex')) return
-    if (brotherhoodHandBlocks(state, inv.location)) return
-    if (!teamOnce(state, '04179clue')) return
-    const found = discoverAt(state, api, inv, here(state, inv), 1)
-    if (found) api.info?.(`🌿 查普尔特佩克山：${inv.name} 抽到巫术卡牌后发现了 ${found} 个线索。`)
+    chapultepecHillHexReaction(state, inv, code, api)
   },
 
   // 04174 的反应：在本地点击败蛇族后，发现本地点的 1 个线索（团队每阶段一次）。

@@ -539,3 +539,68 @@ test('v1.1 指令随 actionLog 重放（verifyReplay）', () => {
   assert.equal(replay.ok, true, `v1.1 调试动作重放应一致：${JSON.stringify(replay.differences)}`)
   assert.ok(replay.moves >= 7)
 })
+
+test('v1.2 新原语：发卡进场 / 推进场景与密谋 / 地点线索 / 抽遭遇 / 锁定标记 / 充能与重置 / 跳过待决', () => {
+  const state = newGame('debug-v12-engine')
+  // 1) 发卡直接进场（zone: 'play'，01016 .45自动手枪 起始 4 发弹药）
+  runDebug(state, 0, { action: 'debug', kind: 'card', code: '01016', targetSeat: 0, zone: 'play' })
+  const gun = state.investigators[0].assets.find(asset => asset.code === '01016')
+  assert.ok(gun, '01016 应直接进入场上支援区')
+  assert.equal(gun.uses, 4)
+  // 事件卡不能直接进场
+  assert.ok(validateMove(state, 0, { action: 'debug', kind: 'card', code: '01023', targetSeat: 0, zone: 'play' }))
+
+  // 2) 支援卡使用标记调整 & 重置卡牌
+  runDebug(state, 0, { action: 'debug', kind: 'uses', targetSeat: 0, assetId: gun.id, amount: 3 })
+  assert.equal(state.investigators[0].assets.find(asset => asset.id === gun.id).uses, 7)
+
+  state.investigators[0].assets[0].exhausted = true
+  state.investigators[0].usedReactions = { test: true }
+  runDebug(state, 0, { action: 'debug', kind: 'ready', targetSeat: 0 })
+  assert.equal(state.investigators[0].assets[0].exhausted, false)
+  assert.deepEqual(state.investigators[0].usedReactions, {})
+
+  // 3) 地点线索调整
+  const studyBefore = state.locations.find(loc => loc.id === 'study').clues
+  runDebug(state, 0, { action: 'debug', kind: 'locationClues', locationId: 'study', amount: 3 })
+  assert.equal(state.locations.find(loc => loc.id === 'study').clues, studyBefore + 3)
+  runDebug(state, 0, { action: 'debug', kind: 'locationClues', locationId: 'study', amount: -2 })
+  assert.equal(state.locations.find(loc => loc.id === 'study').clues, studyBefore + 1)
+
+  // 4) 锁定混乱标记 + 清除
+  runDebug(state, 0, { action: 'debug', kind: 'forceToken', token: 'eldersign' })
+  assert.deepEqual(state.debugNextTokens, ['eldersign'])
+  runDebug(state, 0, { action: 'debug', kind: 'forceToken', clear: true })
+  assert.equal(state.debugNextTokens, undefined)
+
+  // 5) 推进场景 / 推进密谋
+  assert.equal(state.actIndex, 0)
+  runDebug(state, 0, { action: 'debug', kind: 'advanceAct' })
+  assert.equal(state.actIndex, 1)
+  assert.equal(state.agendaIndex, 0)
+  runDebug(state, 0, { action: 'debug', kind: 'advanceAgenda' })
+  assert.equal(state.agendaIndex, 1)
+
+  // 6) 抽取指定遭遇牌
+  const enemiesBefore = state.enemies.length
+  runDebug(state, 0, { action: 'debug', kind: 'encounter', code: GHOUL_MINION, targetSeat: 0 })
+  assert.equal(state.enemies.length, enemiesBefore + 1)
+
+  // 7) 待决窗口期允许 scenario 跳关/重开，以及 resolveChoice 跳过
+  const unready = createGameState({
+    campaignId: 'nightOfTheZealot',
+    playerInvestigator: '01001',
+    seatInvestigators: ['01001', '01002'],
+    legacyAutoStart: true,
+    seed: 'debug-pending-choice',
+  }, PLAYERS.map(player => ({ ...player })))
+  assert.ok(unready.pendingChoice, '起手换牌应有待决窗口')
+  const choiceId = unready.pendingChoice.id
+  assert.equal(validateMove(unready, 0, { action: 'debug', kind: 'resolveChoice', choiceId, optionId: 'done' }), null)
+  applyMove(unready, 0, { action: 'debug', kind: 'resolveChoice', choiceId, optionId: 'done' })
+  assert.notEqual(unready.pendingChoice?.id, choiceId, '第一个座位的起手换牌已被回答')
+  // 在仍有第二个座位待决窗口时直接重开/跳关也允许
+  assert.equal(validateMove(unready, 0, { action: 'debug', kind: 'scenario', scenarioId: 'theGathering' }), null)
+  applyMove(unready, 0, { action: 'debug', kind: 'scenario', scenarioId: 'theGathering' })
+  assert.equal(unready.pendingChoice, null)
+})

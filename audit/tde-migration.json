@@ -1461,11 +1461,11 @@
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
-      "sha256": "c3b7c6e25824dd87984443b1f392912556df33c7592e3b8d19e39e532df7c857"
+      "sha256": "87a6e1746a38c1ce358eda0c9d18fc7195450dea7f8922c8f02898b3e2fd4f44"
     },
     {
       "path": "src/cards/tde-campaign-acceptance.js",
-      "sha256": "e776db99ab3e0eee7a21418f18ee4e4388e004b2aecc95996dc71f6c5001f2c6"
+      "sha256": "b1e36e6152debd2d4596b8309dcefd392bdf80b13d8a2b65713d34c6aa60d672"
     },
     {
       "path": "src/deck/availability.js",
@@ -2479,19 +2479,19 @@
       "artifacts/migration/tde/primitive-catalog.json": "939c85e9ebb343078e666378a86e1a6b3c8183f998c0bc9f81ff2d0234ab9292",
       "artifacts/migration/tde/primitive-plan.json": "c3bb30c437e7113544c476ddf27b358c11b1db17794f658d38894d6f73d55b63",
       "artifacts/migration/tde/scope.json": "897e39941d999758f2dbc0b4b45bab38f0b8d1fb3d9454867bc853acb8bc571e",
-      "audit/tde-all-card-acceptance.json": "0feb454fcf2403ecbbdb4ad557d7aecdfafa4d028828bae0969056fd12e3307e",
+      "audit/tde-all-card-acceptance.json": "0f1c3cefba340957801158b1fc106d052bb4bff03cbc8062300fddc95601659b",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
-      "audit/tde-investigators.json": "d856edf9e87a6f28b80107aea540ea92fa86010597f77a76cbb0275d822b7e72",
+      "audit/tde-investigators.json": "a77e06689b5fa33b7528cd4fe52cb54880d5219633d245770d57aa8c8414373e",
       "audit/tde-parallel-acceptance.json": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674",
-      "audit/tde-player-acceptance.json": "e82b95acec547abfaff061f57b1d146c9bbd8bc80bda20050cd32a25bf0ed636",
-      "audit/tde-rules.json": "d130940eabc63117f328eb181451d8298c1a726d00cc08dd3f35b0aa99b82b7b",
+      "audit/tde-player-acceptance.json": "ec65a592c603d735935123d2bbd1c54b923d02e5bbd96e877297630abd6a5e82",
+      "audit/tde-rules.json": "556a40680796b6ddc89380028597e753ebebfaba330e51e051c7038a66415d72",
       "audit/tde-scenario-acceptance.json": "0a559cc27213ee39896178deb74cf27fcbff5d5f57976206cebec184bb1fbf78",
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
       "content/campaigns/theDreamEaters/story-text.js": "0c951e348f4752e2cf8c956d484c41a0360dc698058ef3b9469893113d3568f5",
-      "src/cards/tde-campaign-acceptance.js": "e776db99ab3e0eee7a21418f18ee4e4388e004b2aecc95996dc71f6c5001f2c6",
-      "src/cards/tde-player-acceptance.js": "c3b7c6e25824dd87984443b1f392912556df33c7592e3b8d19e39e532df7c857"
+      "src/cards/tde-campaign-acceptance.js": "b1e36e6152debd2d4596b8309dcefd392bdf80b13d8a2b65713d34c6aa60d672",
+      "src/cards/tde-player-acceptance.js": "87a6e1746a38c1ce358eda0c9d18fc7195450dea7f8922c8f02898b3e2fd4f44"
     },
     "browser": {
       "path": "audit/tde-browser-acceptance.json",
@@ -2586,7 +2586,7 @@
           "encounter-entry": 273,
           "linked-face": 2
         },
-        "testsPassed": 420,
+        "testsPassed": 426,
         "testFiles": 6
       }
     },
@@ -2727,7 +2727,7 @@
         "nodeAcceptance": {
           "command": "node --test tests/tde-investigators.test.mjs",
           "status": 0,
-          "tests": 28,
+          "tests": 32,
           "fail": 0,
           "ok": true
         },
@@ -2759,7 +2759,7 @@
         "verified": 87,
         "unverified": 0,
         "simplified": 0,
-        "testsPassed": 103
+        "testsPassed": 105
       }
     },
     "storyLedger": {
@@ -2794,8 +2794,8 @@
       "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
     ],
     "status": 0,
-    "tests": 674,
-    "passed": 674,
+    "tests": 680,
+    "passed": 680,
     "failed": 0,
     "perFile": {
       "tde-all-card-ledger.test.mjs": {
@@ -2815,7 +2815,7 @@
         "failed": 0
       },
       "tde-investigators.test.mjs": {
-        "passed": 28,
+        "passed": 32,
         "failed": 0
       },
       "tde-player-ledger.test.mjs": {
@@ -2823,7 +2823,7 @@
         "failed": 0
       },
       "tde-player-m2-1.test.mjs": {
-        "passed": 26,
+        "passed": 27,
         "failed": 0
       },
       "tde-player-m2-2.test.mjs": {
@@ -2835,7 +2835,7 @@
         "failed": 0
       },
       "tde-player-m2-4.test.mjs": {
-        "passed": 31,
+        "passed": 32,
         "failed": 0
       },
       "tde-rules.test.mjs": {
@@ -3103,8 +3103,8 @@
         "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
       ],
       "fileCount": 19,
-      "tests": 674,
-      "passed": 674,
+      "tests": 680,
+      "passed": 680,
       "failed": 0,
       "missingFiles": [],
       "ok": true,
@@ -3126,7 +3126,7 @@
       "buildable": 72,
       "dependencyOnly": 15,
       "basicWeaknesses": 4,
-      "testsPassed": 103,
+      "testsPassed": 105,
       "ledgerVerified": 87,
       "nodeAcceptance": true,
       "ledgerTest": true,
@@ -3182,12 +3182,12 @@
       "simplified": 0,
       "simplifiedPlayer": 0,
       "simplifiedCampaign": 0,
-      "testsPassed": 420,
+      "testsPassed": 426,
       "testFiles": 6,
       "testFilesFresh": true,
       "ledger": {
         "path": "audit/tde-all-card-acceptance.json",
-        "sha256": "0feb454fcf2403ecbbdb4ad557d7aecdfafa4d028828bae0969056fd12e3307e"
+        "sha256": "0f1c3cefba340957801158b1fc106d052bb4bff03cbc8062300fddc95601659b"
       },
       "pass": true
     },

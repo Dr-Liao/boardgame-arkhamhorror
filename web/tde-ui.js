@@ -74,11 +74,10 @@ export function renderScenarioInteractions(h, model, { moves = [], submit, canAc
         location.name || location.id)))))
   }
   if (model.epilogue) {
+    // 只投影已到达的结局（未到达时引擎不传 epilogue），所以这里不再有「结局尚未到达」占位。
     blocks.push(section(h, 'epilogue', t('tde.epilogue.title'),
       (model.epilogue.gates || []).map(gate => h('p', {}, t('tde.epilogue.gate', { name: gate.name || gate.id }))),
-      model.epilogue.status === 'reached'
-        ? h('p', {}, model.epilogue.title || t('tde.epilogue.reached'))
-        : h('p', {}, t('tde.epilogue.pending'))))
+      h('p', {}, model.epilogue.title || t('tde.epilogue.reached'))))
   }
   if (!blocks.length) return null
   return h('div', { className: 'ah-scenario-interactions', role: 'region', 'aria-label': t('tde.interactions') }, ...blocks)

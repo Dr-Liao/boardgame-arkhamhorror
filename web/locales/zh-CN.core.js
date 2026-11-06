@@ -161,7 +161,6 @@ export default {
   'tde.epilogue.title': '梦境之门与结局',
   'tde.epilogue.gate': '梦境之门：{name}',
   'tde.epilogue.reached': '结局已到达',
-  'tde.epilogue.pending': '结局尚未到达',
   'table.menu': '对局菜单',
   'table.sound.on': '音效：开',
   'table.sound.off': '音效：关',

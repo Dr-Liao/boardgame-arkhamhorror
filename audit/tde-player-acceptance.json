@@ -26,13 +26,13 @@
     "verified": 87,
     "unverified": 0,
     "simplified": 0,
-    "testsPassed": 103
+    "testsPassed": 105
   },
   "remaining": [],
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
-      "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+      "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
@@ -44,7 +44,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-      "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
     }
   ],
   "implementationFiles": [
@@ -54,19 +54,19 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
+      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
     },
     {
       "file": "games/arkhamhorror/src/deck/deckbuilding.js",
-      "sha256": "627547c495fc8efff2ceb0c9b66a5bf2e913db7c27f1902bfbedc00cc5841772"
+      "sha256": "38a6dbe9e8be0e649337d3cc44fcd0dd4d273588a9f6e8a2243667c682f2e9ef"
     },
     {
       "file": "games/arkhamhorror/web/deck-rules.js",
-      "sha256": "e5f0fbb14785c73c34c6e814a169cc8c1886685e79842cc078155021f9579d66"
+      "sha256": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "d15a0e46d15a85ca09c06c944cf300618f9572a981dc2c1c92ea1c493f314290"
+      "sha256": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
@@ -78,11 +78,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "163a446d4fb538bd6466f208792b5ce36304f6e2cf3922d16b657ab4550624ad"
+      "sha256": "816ca60cad2bd0bc5a785b6feba9135d4009b21168204805b52449e5a5fbe41a"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
-      "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+      "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
@@ -94,7 +94,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-      "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
     }
   ],
   "entries": [
@@ -214,6 +214,11 @@
           "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
           "line": 239,
           "test": "TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 637,
+          "test": "TDE 06023 骇人真相 老千先生（05153）查找牌库顶时也能触发"
         }
       ]
     },
@@ -1474,6 +1479,11 @@
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
           "line": 225,
           "test": "TDE 06279 智慧古书 横置搜索牌库顶3张并可花1秘密让该调查员费用-2立即打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 250,
+          "test": "TDE 06279 智慧古书 两张同场：激活第二本花的是第二本的秘密，第一本不动"
         }
       ]
     },
@@ -1491,7 +1501,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 254,
+          "line": 278,
           "test": "TDE 06280 绞喉索 只能攻击剩余生命值为1的敌人，攻击+2战斗"
         }
       ]
@@ -1510,7 +1520,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 279,
+          "line": 303,
           "test": "TDE 06281 黛利拉·欧鲁尔克 花X资源（X=躲避值）造成1伤害，已横置敌人则2伤害"
         }
       ]
@@ -1529,12 +1539,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 308,
+          "line": 332,
           "test": "TDE 06282 受召猎犬 打出时把脱缰野兽洗入牌库，横置以基础值5攻击"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 327,
+          "line": 351,
           "test": "TDE 06282 受召猎犬 横置以基础智识值5调查"
         }
       ]
@@ -1553,12 +1563,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 346,
+          "line": 370,
           "test": "TDE 06283 脱缰野兽 显现：有受召猎犬则猎犬离场且野兽与持有者交战"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 363,
+          "line": 387,
           "test": "TDE 06283 脱缰野兽 显现：场上没有受召猎犬时放在一边、不生成"
         }
       ]
@@ -1577,12 +1587,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 377,
+          "line": 401,
           "test": "TDE 06284 背水一战 资源与手牌补至5并从游戏中移除"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 390,
+          "line": 414,
           "test": "TDE 06284 背水一战 资源与手牌都不少于5时不能打出"
         }
       ]
@@ -1601,7 +1611,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 402,
+          "line": 426,
           "test": "TDE 06285 黑猫 数据通道：盟友槽位/2个万能图标，符号替换主效果显式简化"
         }
       ]
@@ -1620,12 +1630,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 422,
+          "line": 446,
           "test": "TDE 06323 摒绝杂念 弃掉手中一张同名卡，治愈本拷贝全部伤害与恐惧"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 437,
+          "line": 461,
           "test": "TDE 06323 摒绝杂念 手中没有同名卡时能力不可用"
         }
       ]
@@ -1644,7 +1654,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 450,
+          "line": 474,
           "test": "TDE 06324 阿比盖尔·福尔曼 附属一张书籍支援后不占手部槽位"
         }
       ]
@@ -1663,7 +1673,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 470,
+          "line": 494,
           "test": "TDE 06325 真理之眼 投入时提供 4 个万能图标（主效果显式简化）"
         }
       ]
@@ -1682,12 +1692,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 485,
+          "line": 509,
           "test": "TDE 06326 乔伊“老鼠”弗吉尔 花1资源打出手中道具支援"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 499,
+          "line": 523,
           "test": "TDE 06326 乔伊“老鼠”弗吉尔 弃掉场上一个道具支援获得2资源"
         }
       ]
@@ -1706,7 +1716,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 518,
+          "line": 542,
           "test": "TDE 06327 短管霰弹枪 按成功差值造成伤害（不造成标准伤害）"
         }
       ]
@@ -1725,12 +1735,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 535,
+          "line": 559,
           "test": "TDE 06328 神识之眼 检定开始花1秘密把本次检定改为按意志值结算"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 556,
+          "line": 580,
           "test": "TDE 06328 神识之眼 弃掉手中一张同名卡放置2秘密"
         }
       ]
@@ -1749,7 +1759,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 573,
+          "line": 597,
           "test": "TDE 06329 闪耀的偏方三八面体 意志(X)检定成功则法术费用视为已支付"
         }
       ]
@@ -1768,7 +1778,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 592,
+          "line": 616,
           "test": "TDE 06330 噩梦球 入场取出3张梦境寄生物，揭示自动失败时取消标记并洗回1张"
         }
       ]
@@ -1787,7 +1797,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 613,
+          "line": 637,
           "test": "TDE 06331 梦境寄生物 下一次检定强制投入，扣除图标并在失败时造成伤害与恐惧"
         }
       ]
@@ -1806,12 +1816,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 639,
+          "line": 663,
           "test": "TDE 06332 拾荒 成功调查超过难度2点后横置，从弃牌堆取回道具"
         },
         {
           "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
-          "line": 670,
+          "line": 694,
           "test": "TDE 06332 拾荒 成功差值只有1点时不能触发"
         }
       ]

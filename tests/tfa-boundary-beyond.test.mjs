@@ -440,6 +440,26 @@ test('密谋 2 背面：只有没有线索的古代地点进胜利区，场景 3
   assert.ok(state.enemies.some(enemy => enemy.originalCode === '04186'))
 })
 
+test('2b 换图：同符号有两张时不再询问队长，按探索牌库顺序自动覆盖', () => {
+  // 回归 2026-11-06 实机反馈：2b「找出同符号的古代地点」曾弹「选择覆盖的那一张」，
+  // 两张古代地点同名、界面无法区分，队长没有可决策的信息。现在不询问，直接从探索
+  // 牌库顶（数组末尾）往下找第一张同符号的古代地点。
+  const state = chapterState()
+  state.explorationDeck = ['canalsOfTenochtitlan180', 'canalsOfTenochtitlan181', '04190']
+  state.agendaIndex = 1
+  const api = makeApi(state)
+  behavior.agendaReveal(state, state.agendas[1], api)
+  assert.deepEqual(api.calls.choices, [], '同符号覆盖不再要求调查员队长二选一')
+  // 索卡洛广场是菱形：牌库顶最近的同符号地点是 181，覆盖 180 是旧实现「二选一」的可能结果。
+  assert.equal(locationOf(state, 'zocalo').originalCode, '04181', '取牌库顶最近的同符号古代地点')
+  assert.deepEqual(state.explorationDeck, ['canalsOfTenochtitlan180', '04190'],
+    '只移走被覆盖的那一张，其余顺序不变')
+  // 其余格位没有同符号的古代地点时保持现代面，不产生待决选择。
+  for (const slot of ['templeRuins', 'metropolitanCathedral', 'chapultepecPark', 'xochimilco', 'coyoacan']) {
+    assert.equal(locationOf(state, slot).underneath, undefined, `${slot} 保持现代面`)
+  }
+})
+
 test('密谋 3 背面 → 结局 2', () => {
   const state = chapterState()
   state.agendas = [...state.agendas.slice(0, 2), clone(definition.agendas[2])]
@@ -886,6 +906,31 @@ test('古代地点常驻：帷幕/属性/敌人躲避的剧本修正', () => {
   const scared = sanity.investigators[0]
   scared.maxSanity = 5; scared.horror = 2
   assert.equal(behavior.locationShroudModifier(sanity, locationOf(sanity, 'xochimilco'), scared), -2)
+})
+
+test('04179 抽到巫术遭遇卡：从本地发现 1 个线索（团队每阶段一次）', () => {
+  const hill = chapterState(1)
+  forceShift(hill, 'chapultepecPark', 'chapultepecHill179')
+  const inv = hill.investigators[0]
+  inv.location = 'chapultepecPark'
+  const location = locationOf(hill, 'chapultepecPark')
+  location.clues = 2
+  // 巫术牌都是遭遇诡计：引擎抽遭遇牌时只调用 encounterDrawn（不走 cardDrawn），
+  // 所以这里必须用 encounterDrawn 验证，否则这张卡的反应永远不会触发。
+  behavior.encounterDrawn(hill, inv, '04090', makeApi(hill))
+  assert.equal(inv.clues, 1, '发现的是调查员的线索')
+  assert.equal(location.clues, 1, '线索从地点搬到调查员，而不是往地点上加')
+  // 团队每阶段仅限一次：同阶段第二次抽到巫术不再发现。
+  behavior.encounterDrawn(hill, inv, '04090', makeApi(hill))
+  assert.equal(inv.clues, 1)
+  assert.equal(location.clues, 1)
+  // 非巫术遭遇牌不触发；进入新阶段后可以再次触发。
+  behavior.encounterDrawn(hill, inv, '04087', makeApi(hill))
+  assert.equal(inv.clues, 1)
+  hill.phase = 'mythos'
+  behavior.encounterDrawn(hill, inv, '04090', makeApi(hill))
+  assert.equal(inv.clues, 2)
+  assert.equal(location.clues, 0)
 })
 
 test('古代地点反应：04174 击败/躲避蛇族后发现 1 个线索（团队每阶段一次）', () => {

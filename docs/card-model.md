@@ -302,6 +302,7 @@ api.commitCards(inv.seat, ['01025'])    // 强制投入（不询问）
 harm({ damage, horror, strategy })               // B2：distribute / self / assetsFirst / soakFirst / assetsOnly
 lookAt(seat, { zone, count, arrange, returnStrategy, choose, filter, targetSeat })   // B5
 searchDeck(seat, { trait, type, usesType, count, choose, shuffle, optional })         // B5
+searchTop(seat, { amount, trait, traits, typeFilter, choose, optional, prompt, drawWeakness })  // 查找牌库顶 N 张
 moveCard({ code 或 id, from, to, attachTo, beneath, facedown })                      // B6
 testResult() / describeTest() / testStage()      // B3
 retryTest(seat, { bonus }) / commitCards(seat, codes)                                // B3
@@ -310,6 +311,10 @@ addAssetHorror(card, n) / setAssetUses(card, n) / discardTopOfDeck(seat, n) /
 tempShroudMod(location, n) / moveClueToLocation(from, to, n) / removeThreat(card) /
 drawEncounter(seat) / endTurn(seat) / cardIcons(code) / cardTraits(code) / describeLimit(descriptor)
 ```
+
+`searchTop` 与 `lookAt` / `searchDeck` 一样会先结算条目级 `searchedCardRule`（被查找到的牌自身规则，
+如 06023 骇人真相、06008 神秘证据、06009 惊人的发现）；`drawWeakness: true` 表示「如果查找过的
+牌中有弱点，也抽取其中 1 张」（05153「老千」先生），选中的牌本身是弱点时不追加。
 
 ---
 
@@ -413,6 +418,16 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    选项 id 是 `fast-card:<卡号>` / `fast-card:hunch:<卡号>`；`reactionChoices` 从 id 反查卡号，
    关闭开关就过滤掉该候选、唯一候选时整窗自动让过。存档迁移用同一口径检测内嵌卡面缺
    `hasReactionPrompt` 的旧存档并强制刷新（`save-migration.js#needsReactionPromptFlags`）。
+   **手牌快速卡询问直接挂回手牌（2026-11-06）**：`choicePresentation()` 把玩家窗口里的
+   `fast-card:<卡号>`（以及卢克·罗宾逊的 `fast-card:<卡号>:asif:<地点 id>`、牌桌来源的
+   `fast-card:<卡号>:<fastSourceId>` 变体）按卡号反查手牌位，挂成 `hand:<座位>:<下标>`，
+   不再作为 `.ah-visual-choices` 面板画在牌桌中央：手牌高亮成「可快速打出」（`.ah-fast-prompt`）、
+   点牌/回车即打出。同一张牌的多份变体共用同一手牌位，点牌弹出贴着那张牌的动作浮层
+   （`ah-card-action-popover`）选具体打法；只有一份候选时直接提交。手牌不在投影里（卡号查不到）
+   时保留旧的选项面板兜底。底栏仍保留「让过 / 本局不再询问」，并提示点按高亮手牌。
+   回归护栏：`tests/card-interactions.test.mjs`（合成选项 + 真实引擎的卢克玩家窗口投影断言）、
+   `tests/fast-card-prompt.browser.mjs`（桌面 1440 / 移动 390，截图写入
+   `artifacts/arkham-polish/fast-card-prompt-*.png`）。
 3. **新增通道或新增窗口都只改一处**：新增通道 = 在 `play-channels.js` 的 `entriesOf` /
    `CHANNEL_ORDER` / `WINDOW_CHANNEL_ORDER` 加一条并补 `entryError`/`takeToHand`/`actionTake` 的
    switch 分支；新增窗口 = 遍历 `entries()` / `windowEntries()`。窗口、validate、dispatch、UI 不需要

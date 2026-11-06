@@ -6,7 +6,7 @@ import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
 import {
   ANCIENT_HALL, BURIAL_PIT, CHAMBER_OF_TIME, ENTRYWAY, EXPLORATION_LOCATIONS,
-  EXPLORATION_TREACHERIES, GRAND_CHAMBER, HARBINGER, RELIC_OF_AGES, SECRET_PASSAGE,
+  EXPLORATION_TREACHERIES, GRAND_CHAMBER, HARBINGER, POISONED, RELIC_OF_AGES, SECRET_PASSAGE,
   UNDERGROUND_RUINS,
 } from './definition.js'
 
@@ -23,6 +23,15 @@ export const implementedEncounterCodes = [
 ]
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
+// 「中毒」弱点共 4 张：已经在调查员牌组里的部分不再放在一边（卡面设置：
+// Set aside each Poisoned weakness that is not already in an investigator's deck）。
+// 中毒在上一章「永久加入牌库」后，这里必须按牌组张数扣减；同口径见参考实现
+// getSetAsidePoisonedCount = 4 - InDeckOf anyone <> cardIs poisoned。
+export function poisonSetAsideCount(state) {
+  const inDecks = Object.values(state.campaign?.investigators || {})
+    .reduce((sum, record) => sum + (record?.deck || []).filter(code => code === POISONED).length, 0)
+  return Math.max(0, 4 - inDecks)
+}
 // 引擎的探索牌库放的是**地点 id**（`state.scenario.locations[code]`），
 // 而放在一边/清单里记的是印刷卡号，两者分开。
 const CHAMBER_ID = 'chamberOfTime'
@@ -238,7 +247,9 @@ export const behavior = {
     const plan = setupPlan(state, helper)
     state.scenarioZones ||= {}
     state.scenarioZones.setAside = [
-      RELIC_OF_AGES, HARBINGER, '04102', '04102', '04102', '04102', CHAMBER_OF_TIME,
+      RELIC_OF_AGES, HARBINGER,
+      ...Array(poisonSetAsideCount(state)).fill(POISONED),
+      CHAMBER_OF_TIME,
     ]
     state.scenarioZones.removed = []
     state.scenarioZones.explorationLocations = [...plan.locations]
@@ -542,6 +553,9 @@ function recordHarbingerDamage(state) {
 }
 
 // 伊格之怒 ≥ 4 时，被击败的调查员在结算中死亡；否则复仇 +3（Haskell ScenarioResolution）。
+// 注意「被击败」不等于退出战役：撤退是活着逃出（结局 1 正是全员撤退），被击败者也会带着创伤
+// 进入下一关。只有「全员都被击败、无一人撤退，且伊格之怒 ≥ 4」时整队才会阵亡、无人可继续，
+// 此时才判战役失败（对应 Haskell gameOver）；混合结果必须继续战役。
 function applyDefeatedInvestigators(state, api) {
   const defeated = state.investigators.filter(inv => inv.defeated && !inv.resigned)
   if (!defeated.length) return []
@@ -556,13 +570,11 @@ function applyDefeatedInvestigators(state, api) {
       killed.push(inv.seat)
       api?.info?.(`☠️ 伊格之怒已达 4 点：${inv.name} 没能离开遗迹。`)
     }
-    // 全员被击败：战役到此为止（不再有下一关）。
-    if (!state.investigators.some(inv => !inv.defeated && !inv.resigned)) state.campaign.failed = true
+    // 撤退者没有出现在 defeated 里：只有全员被击败才全军覆没、战役无法继续。
+    if (defeated.length === state.investigators.length) state.campaign.failed = true
   } else {
     records.yigsFury = Number(records.yigsFury || 0) + 3
   }
-  // 全员被击败（无论伊格之怒多少）都意味着没有人能继续战役。
-  if (!state.investigators.some(inv => !inv.defeated && !inv.resigned)) state.campaign.failed = true
   return killed
 }
 
@@ -572,11 +584,12 @@ function applyResolution(state, key, events, api, defeatedApplied = false) {
   const records = recordsFor(state)
   state.scenarioFlags ||= {}
   if (key === 'noResolution') {
-    // 卡面：无人被击败 → 结局 3；有人被击败时先按伊格之怒处理
-    // （<4 加 3 点后走结局 2；≥4 杀死被击败者，若全员被击败则战役失败），
-    // 再走结局 2。被击败者的处理放在最终分支里执行一次，避免递归重复结算。
+    // 卡面「调查员被击败」：有人被击败时按伊格之怒分流——≥4 → 结局 2；≤3 → 结局 3
+    // （先补记 3 点伊格之怒）。无人被击败（例如全员在幕 3 前撤退）→ 结局 3。
+    // 被击败者的阵亡 / 伊格之怒只在最终分支的 applyDefeatedInvestigators 里结算一次。
     const defeated = state.investigators.filter(inv => inv.defeated && !inv.resigned)
-    return applyResolution(state, defeated.length ? 'r2' : 'r3', events, api)
+    const nextKey = defeated.length && Number(records.yigsFury || 0) >= 4 ? 'r2' : 'r3'
+    return applyResolution(state, nextKey, events, api)
   }
   if (!defeatedApplied) applyDefeatedInvestigators(state, api)
   if (key === 'r1') {

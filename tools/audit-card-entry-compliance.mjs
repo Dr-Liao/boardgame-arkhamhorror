@@ -9,6 +9,9 @@
 // 观察项（不阻断，只记数）：
 //   R4 singleCardField    只被 1 个条目写的状态字段——原语缺口信号。
 //   R5 testWrapper        「显现 - 检定」条目整体只是 api.test(...) + return false 的包装。
+//   R6 selfCodeInstanceLookup  把自身卡号当实例身份做 find/filter/some/every——同名多份
+//                         （05154 鹰眼相机、06279 智慧古书）只结算第一张的静态信号。
+//                         同名多份统计语义的多重卡（06021/06034/06199/06245 等）在此登记为白名单。
 //
 // 用法：
 //   node tools/audit-card-entry-compliance.mjs --write    # 重写 audit/card-entry-compliance.json
@@ -50,6 +53,28 @@ const WRITE_RE = new RegExp(
   'g',
 )
 
+// R6（观察项）：把「自身卡号」当成实例身份做集合查找。
+// 触发式: `... .find/filter/some/every/flatMap(... code === '<自身卡号>' / selfCode ...)`。
+// 同名多份时应使用 ctx.source / context.assetId 等实例指代；按卡号查只适用于
+// 「按同名张数统计」的多重卡（06021/06034/06199/06245 等），进 watch 白名单，不阻断。
+const LOOKUP_CALL_RE = /\.(?:find|filter|some|every|flatMap)\(/
+const selfCodePatterns = code => [
+  new RegExp(`(?:^|[^\\w$])code\\s*[!=]==?\\s*['"]${code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`),
+  /(?:^|[^\w$])code\s*[!=]==?\s*selfCode\b/,
+]
+function scanSelfCodeLookups(lines, rawLines, code) {
+  const patterns = selfCodePatterns(code)
+  const hits = []
+  for (let index = 0; index < lines.length; index++) {
+    // 允许跨一行（`find(asset =>` 换行后写 `asset.code === '...'`）。
+    const text = `${lines[index]} ${lines[index + 1] || ''}`
+    if (!LOOKUP_CALL_RE.test(lines[index]) && !LOOKUP_CALL_RE.test(lines[index + 1] || '')) continue
+    if (!patterns.some(pattern => pattern.test(text))) continue
+    hits.push({ line: index + 1, text: rawLines[index].trim().slice(0, 140) })
+  }
+  return hits
+}
+
 function entryCode(source, file) {
   const match = source.match(/["']?code["']?\s*:\s*['"]([^'"]+)['"]/)
   return match ? match[1] : path.basename(file, '.js')
@@ -59,13 +84,14 @@ function scanEntry(file, area) {
   const raw = readFileSync(file, 'utf8')
   const code = entryCode(raw, file)
   const source = stripComments(raw)
+  const rawLines = raw.split('\n')
   const writes = []
   const lines = source.split('\n')
   lines.forEach((line, index) => {
     WRITE_RE.lastIndex = 0
     let match
     while ((match = WRITE_RE.exec(line))) {
-      writes.push({ root: match[1], field: match[2], line: index + 1, text: raw.split('\n')[index].trim().slice(0, 140) })
+      writes.push({ root: match[1], field: match[2], line: index + 1, text: rawLines[index].trim().slice(0, 140) })
     }
   })
   return {
@@ -75,6 +101,7 @@ function scanEntry(file, area) {
     source,
     raw,
     writes,
+    selfCodeLookups: scanSelfCodeLookups(lines, rawLines, code),
     hasPlayCondition: /\bplayCondition\s*:/.test(source),
     hasTest: /\bapi\.test\s*\(/.test(source),
     pureTestWrapper: /encounterResolve\s*\([^)]*\)\s*\{\s*api\.test\([\s\S]*?\)\s*return false\s*\}/.test(source.replace(/\s+/g, ' ')),
@@ -129,6 +156,9 @@ const playConditionGap = entries.filter(entry => {
 const testWrappers = entries.filter(entry => entry.pureTestWrapper)
 const revelationTest = entries.filter(entry => /Revelation\s*[-–]\s*Test\b/i.test(String(ALL_CARDS[entry.code]?.text || '')))
 
+// R6（观察项）：把自身卡号当实例身份做集合查找。06279/05154 这类同名多份 bug 的静态信号。
+const selfCodeLookup = entries.filter(entry => entry.selfCodeLookups.length > 0)
+
 const packageScope = entries.filter(entry => {
   const prefix = String(entry.code).slice(0, 2)
   return ['01', '02', '03', '04', '05'].includes(prefix)
@@ -144,6 +174,7 @@ const report = {
     { id: 'R3', name: 'playConditionGap', blocking: true, description: '卡文要求「只能在你回合打出」但条目没有 playCondition' },
     { id: 'R4', name: 'singleCardField', blocking: false, description: '只被 1 个条目写的状态字段（原语缺口信号）' },
     { id: 'R5', name: 'testWrapper', blocking: false, description: '「显现 - 检定」条目整体只是 api.test(...) + return false 的包装' },
+    { id: 'R6', name: 'selfCodeInstanceLookup', blocking: false, description: '把自身卡号当实例身份做 find/filter/some/every（同名多份时应使用 ctx.source / context.assetId 等实例指代；按同名张数统计的多重卡属白名单）' },
   ],
   scope: {
     entries: entries.length,
@@ -158,6 +189,7 @@ const report = {
     playConditionGap: playConditionGap.length,
     testWrapper: testWrappers.length,
     revelationTestCards: revelationTest.length,
+    selfCodeInstanceLookup: selfCodeLookup.length,
   },
   // 阻断项基线：这些卡号允许保留现状（存量债），新增违规会让 --check 失败。
   baseline: {
@@ -171,6 +203,10 @@ const report = {
     testWrapperCodes: testWrappers.map(entry => entry.code).sort(),
     revelationTestWrappers: revelationTest.filter(entry => entry.hasTest).map(entry => entry.code).sort(),
     revelationTestStubs: revelationTest.filter(entry => !entry.hasTest).map(entry => entry.code).sort(),
+    // R6：卡号 → 命中行；同名多份统计语义的卡在此登记为白名单（清掉真 bug 后基线只减不增）。
+    selfCodeInstanceLookup: selfCodeLookup
+      .map(entry => ({ code: entry.code, file: entry.file, hits: entry.selfCodeLookups }))
+      .sort((a, b) => a.code.localeCompare(b.code)),
   },
   fields: Object.fromEntries([...fieldWriters.entries()].map(([field, codes]) => [field, [...codes].sort()]).sort(([a], [b]) => a.localeCompare(b))),
 }

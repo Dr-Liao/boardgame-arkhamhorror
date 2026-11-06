@@ -31,6 +31,9 @@ export function noteCardCancelled(reactionWindow, state, events, { seat = null, 
     cardSeat: cardSeat ?? seat,
     location: owner?.location ?? null,
     cardCode,
+    // 取消方如果是场上支援，记下它的实例 id：同名多份时（如两张 03268「建议」）
+    // 监听者要能精确指到「真正取消的那一张」，不能只按 cardCode 找。
+    assetId: state?._resolvingAssetId ?? null,
     what: what || null,
     prompt: `${owner?.name || '调查员'} 的「${cardCode}」取消了一项效果`,
   }

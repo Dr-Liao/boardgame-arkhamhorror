@@ -123,7 +123,8 @@
 .ah-office.ah-hub-setup .bg-seat-list { gap: 6px; }
 .ah-office.ah-hub-setup .bg-seat-row { padding: 7px 10px; border-color: var(--office-edge); }
 .ah-office.ah-hub-setup .bg-seat-number { background: #b59b6018; color: var(--office-gold); }
-.ah-office.ah-hub-setup .bg-modal-foot { position: sticky; bottom: -1px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; background: #14241e; margin: 4px -36px 0; padding: 12px 36px 10px; border-top: 1px solid var(--office-edge); }
+.ah-office.ah-hub-setup .bg-modal-foot { position: sticky; bottom: -1px; z-index: 2; display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; background: #14241e; margin: 4px -36px 0; padding: 12px 36px 10px; border-top: 1px solid var(--office-edge); }
+.ah-office.ah-hub-setup .bg-modal-foot .bg-btn { min-height: 38px; padding: 8px 10px; font-size: 12px; white-space: nowrap; }
 .ah-hub-setup-rulebook { margin-right: auto; display: inline-flex; align-items: center; gap: 7px; }
 .ah-office .ah-hub-setup-fields .bg-field > span { color: #d4c7a0; font-size: 13px; }
 .ah-office .ah-hub-setup-fields small { font-size: 11px; line-height: 1.6; }

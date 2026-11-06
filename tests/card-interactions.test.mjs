@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { choicePresentation, entityMoves, targetMoves, investigatorHoldsCard } from '../web/card-interactions.js'
-import { createGameState, legalMoves, validateMove, applyMove } from '../src/engine/engine.js'
+import { createGameState, legalMoves, validateMove, applyMove, placeLocation } from '../src/engine/engine.js'
 import { viewState } from '../src/integration/observation.js'
 import { laterBehavior } from '../content/campaigns/theDunwichLegacy/later-behaviors.js'
 
@@ -285,4 +285,80 @@ test('迷失时空实机口径：观察投影保留选项 cardCode，视图 card
   // 视图没有卡定义时用选项 label 兜底成最小卡面数据，提交动作保持不变。
   assert.deepEqual(items[0].cards, [{ name: '无尽之桥', code: '02326' }])
   assert.deepEqual(items.map(item => item.move.optionId), ['0', '1'])
+})
+
+test('收尾玩家窗口的快速卡候选挂回手牌实体，点牌即打出（2026-11-06）', () => {
+  // 玩家窗口的快速卡选项 id 是 fast-card:<卡号>（卢克的如同位于变体追加 :asif:<地点>，
+  // 牌桌来源追加 :<fastSourceId>），选项本身不带 cardCode。界面必须把它们挂回手牌位：
+  // 卡面高亮 + 左键直接打出，而不是在牌桌中央浮出选项面板。
+  const st = {
+    investigators: [{ seat: 0, hand: ['02022', '01036'], assets: [] }],
+    cards: { '02022': { code: '02022', name: '捷径' }, '01036': { code: '01036', name: '心胜于物' } },
+    pendingChoice: { id: 'w', kind: 'playerWindow', seat: 0, canSkip: true, prompt: '检定开始、投入前：可以使用免费触发能力，或让过。',
+      options: [
+        { id: 'skip', label: '让过' },
+        { id: 'fast-card:02022', label: '⚡ 快速打出「捷径」（2 资源）' },
+        { id: 'fast-card:02022:asif:river', label: '⚡ 快速打出「捷径」（如同位于「河流峡谷」）（2 资源）', cardCode: '02022' },
+        { id: 'fast-card:01036:asset-1', label: '⚡ 快速打出「心胜于物」（1 资源）', cardCode: '01036' },
+      ] },
+    legalMoves: ['skip', 'fast-card:02022', 'fast-card:02022:asif:river', 'fast-card:01036:asset-1'].map(optionId =>
+      ({ action: 'choose', choiceId: 'w', optionId })),
+  }
+  const items = choicePresentation(st)
+  const byId = id => items.find(item => item.move.optionId === id)
+  assert.equal(byId('fast-card:02022').key, 'hand:0:0', '普通快速卡挂回手牌位')
+  assert.equal(byId('fast-card:02022:asif:river').key, 'hand:0:0', '如同位于变体与普通打法是同一张手牌')
+  assert.equal(byId('fast-card:01036:asset-1').key, 'hand:0:1', '带 fastSourceId 的变体同样按卡号挂回')
+  // 点一次手牌 = 提交这张牌的所有可选打法（多份变体由动作浮层选具体打法）。
+  assert.deepEqual(entityMoves(st, 'hand:0:0').map(move => move.optionId).sort(),
+    ['fast-card:02022', 'fast-card:02022:asif:river'].sort())
+  assert.deepEqual(entityMoves(st, 'hand:0:1').map(move => move.optionId), ['fast-card:01036:asset-1'])
+  // 卡号不在手牌里（例如视图未下发该手牌）时不挂任何实体，保留旧的选项面板兜底。
+  const missing = { ...st, investigators: [{ seat: 0, hand: ['01036'], assets: [] }] }
+  assert.equal(choicePresentation(missing).find(item => item.move.optionId === 'fast-card:02022').key, null)
+  // 只挂 hand: 实体；视觉选项面板据此不再显示这些候选（renderPendingChoice 过滤 hand: key）。
+  assert.equal(items.filter(item => item.key?.startsWith('hand:')).length, 3)
+  // 同名副本共用一份引擎候选：绑定键只落在第一张副本上，但第二张副本按卡号也能点（高亮 + 提交同一份）。
+  const duplicate = { ...st, investigators: [{ seat: 0, hand: ['02022', '02022'], assets: [] }],
+    legalMoves: st.legalMoves.filter(move => move.optionId !== 'fast-card:01036:asset-1'),
+    pendingChoice: { ...st.pendingChoice, options: st.pendingChoice.options.filter(option => option.id !== 'fast-card:01036:asset-1') } }
+  assert.equal(choicePresentation(duplicate).find(item => item.move.optionId === 'fast-card:02022').key, 'hand:0:0')
+  assert.deepEqual(entityMoves(duplicate, 'hand:0:1').map(move => move.optionId).sort(),
+    ['fast-card:02022', 'fast-card:02022:asif:river'].sort(), '第二张同名副本也能点（含变体）')
+  // 其它选择类型不享受这个按卡号兜底（避免把别的窗口的手牌选项误挂成快速卡）。
+  const otherChoice = { ...duplicate, pendingChoice: { ...duplicate.pendingChoice, kind: 'reaction' } }
+  assert.deepEqual(entityMoves(otherChoice, 'hand:0:1'), [])
+})
+
+test('卢克·罗宾逊的真实玩家窗口：快速事件候选全部挂回同一张手牌', async () => {
+  // 实机形状（2026-11-05 修复「选项 id 重复」后）：Luke 的普通打法与每个如同位于变体是独立的
+  // option id，但都打同一张手牌。界面要能把这些候选都收拢到那张手牌上。
+  const { fixture } = await import('./core-fixture.mjs')
+  const { ALL_CARDS } = await import('../src/cards/cards-data.js')
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  const luke = ALL_CARDS['06004']
+  Object.assign(inv, { code: '06004', name: luke.nameZh, nameEn: luke.name, klass: luke.klass,
+    willpower: luke.willpower, intellect: luke.intellect, combat: luke.combat, agility: luke.agility,
+    health: luke.health, sanity: luke.sanity, maxHealth: luke.health, maxSanity: luke.sanity,
+    beneath: [], assets: [], threat: [], damage: 0, horror: 0 })
+  placeLocation(state, 'hallway', [])
+  const here = state.locations.find(location => location.id === inv.location)
+  here.connections = ['hallway']
+  inv.hand = ['02022']
+  inv.resources = 10
+  inv.actionsLeft = 3
+  applyMove(state, 0, { action: 'draw' })
+  assert.equal(state.pendingChoice?.kind, 'playerWindow', '抽牌后的收尾玩家窗口')
+  const fastIds = state.pendingChoice.options.map(option => option.id).filter(id => id.startsWith('fast-card:'))
+  assert.ok(fastIds.length >= 2, `普通打法 + 如同位于变体都应出现：${fastIds.join('、')}`)
+  const view = viewState(state, 0)
+  const bound = choicePresentation(view).filter(item => String(item.move.optionId).startsWith('fast-card:'))
+  assert.deepEqual(bound.map(item => item.key), fastIds.map(() => 'hand:0:0'), '全部候选挂回同一张手牌')
+  assert.deepEqual(entityMoves(view, 'hand:0:0').map(move => move.optionId).sort(), [...fastIds].sort())
+  // 点牌提交的仍是合法动作：普通打法可以直接结算，窗口随之推进。
+  const normal = entityMoves(view, 'hand:0:0').find(move => move.optionId === 'fast-card:02022')
+  assert.equal(validateMove(state, 0, normal), null)
+  applyMove(state, 0, normal)
+  assert.equal(state.investigators[0].hand.includes('02022'), false, '点手牌真的打出了那张快速事件')
 })

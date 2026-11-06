@@ -32,21 +32,28 @@
    "name": "testWrapper",
    "blocking": false,
    "description": "「显现 - 检定」条目整体只是 api.test(...) + return false 的包装"
+  },
+  {
+   "id": "R6",
+   "name": "selfCodeInstanceLookup",
+   "blocking": false,
+   "description": "把自身卡号当实例身份做 find/filter/some/every（同名多份时应使用 ctx.source / context.assetId 等实例指代；按同名张数统计的多重卡属白名单）"
   }
  ],
  "scope": {
-  "entries": 1727,
-  "player": 671,
-  "encounter": 1056,
-  "cycles01to05": 1339
+  "entries": 2086,
+  "player": 777,
+  "encounter": 1309,
+  "cycles01to05": 1341
  },
  "counts": {
   "directStateWrite": 149,
   "singleCardField": 0,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
-  "testWrapper": 15,
-  "revelationTestCards": 55
+  "testWrapper": 19,
+  "revelationTestCards": 71,
+  "selfCodeInstanceLookup": 16
  },
  "baseline": {
   "directStateWrite": [
@@ -220,7 +227,11 @@
    "04088",
    "04090",
    "04300",
-   "04301"
+   "04301",
+   "07054",
+   "07148",
+   "07218",
+   "07297"
   ],
   "revelationTestWrappers": [
    "01167",
@@ -253,7 +264,20 @@
    "05092",
    "05099",
    "05104",
-   "05107"
+   "05107",
+   "07054",
+   "07095",
+   "07107",
+   "07148",
+   "07184",
+   "07186",
+   "07218",
+   "07257",
+   "07258",
+   "07260",
+   "07297",
+   "07298",
+   "07336"
   ],
   "revelationTestStubs": [
    "01162",
@@ -279,7 +303,292 @@
    "06231",
    "06268",
    "06274",
-   "06322"
+   "06322",
+   "07096",
+   "07097",
+   "07098"
+  ],
+  "selfCodeInstanceLookup": [
+   {
+    "code": "05011",
+    "file": "src/cards/entries/05011.js",
+    "hits": [
+     {
+      "line": 25,
+      "text": "? Number(api.bankedResources(inv.seat) || 0)"
+     },
+     {
+      "line": 26,
+      "text": ": Number(api.resourceBank?.bankedOf?.(inv) ?? (inv.assets || []).find(card => card.code === '05011')?.resources ?? 0)"
+     }
+    ]
+   },
+   {
+    "code": "05089",
+    "file": "src/cards/encounter-entries/theCircleUndone/_shared/agents_of_azathoth/05089.js",
+    "hits": [
+     {
+      "line": 57,
+      "text": "api.info?.('「魔鬼的笛声」被放到密谋牌库旁边。')"
+     },
+     {
+      "line": 58,
+      "text": "const copies = aside.filter(item => item.code === '05089')"
+     },
+     {
+      "line": 60,
+      "text": "// 3 张齐了：弃掉这 3 张，吹笛手与猎物交战生成（从场外任意区域）。"
+     },
+     {
+      "line": 61,
+      "text": "zones.agendaAside = aside.filter(item => item.code !== '05089')"
+     }
+    ]
+   },
+   {
+    "code": "05107",
+    "file": "src/cards/encounter-entries/theCircleUndone/_shared/inexorable_fate/05107.js",
+    "hits": [
+     {
+      "line": 40,
+      "text": "const aside = (zones.agendaAside ||= [])"
+     },
+     {
+      "line": 41,
+      "text": "const existing = aside.filter(entry => entry.code === '05107')"
+     },
+     {
+      "line": 45,
+      "text": "// 第三张：牌库旁 2 张 + 当前这张共 3 张全部弃掉；当前这张交给引擎弃置（会进本次抽牌牌堆的弃牌堆）。"
+     },
+     {
+      "line": 46,
+      "text": "zones.agendaAside = aside.filter(entry => entry.code !== '05107')"
+     }
+    ]
+   },
+   {
+    "code": "05152",
+    "file": "src/cards/entries/05152.js",
+    "hits": [
+     {
+      "line": 26,
+      "text": "const upgrades = context.asset?.attachments || []"
+     },
+     {
+      "line": 27,
+      "text": "return upgrades.some(entry => entry.code === '05152')"
+     }
+    ]
+   },
+   {
+    "code": "06010",
+    "file": "src/cards/entries/06010.js",
+    "hits": [
+     {
+      "line": 28,
+      "text": "criteria: [({ inv, context }) => {"
+     },
+     {
+      "line": 29,
+      "text": "const contracts = (inv.assets || []).find(asset => asset.code === '06010')"
+     },
+     {
+      "line": 32,
+      "text": "resolve: ({ inv, context, api }) => {"
+     },
+     {
+      "line": 33,
+      "text": "const contracts = (inv.assets || []).find(asset => asset.code === '06010')"
+     },
+     {
+      "line": 54,
+      "text": "criteria: [({ inv, context }) => Boolean(context?.enemy)"
+     },
+     {
+      "line": 55,
+      "text": "&& (inv.assets || []).some(asset => asset.code === '06010')"
+     }
+    ]
+   },
+   {
+    "code": "06019",
+    "file": "src/cards/entries/06019.js",
+    "hits": [
+     {
+      "line": 27,
+      "text": "api.attachPlayerCardToAsset('06019', blade, { ownerSeat: inv.seat })"
+     },
+     {
+      "line": 28,
+      "text": "api.info(`「嗜血」：从「渴血之刃」移除 2 点贡品，嗜血附属到其上（已附属 ${(blade.attachments || []).filter(card => card.code === '06019').length} 张）。`)"
+     }
+    ]
+   },
+   {
+    "code": "06021",
+    "file": "src/cards/entries/06021.js",
+    "hits": [
+     {
+      "line": 21,
+      "text": "cost: { action: false },"
+     },
+     {
+      "line": 22,
+      "text": "criteria: [({ inv }) => (inv.assets || []).filter(item => item.code === '06021').length >= 3],"
+     },
+     {
+      "line": 23,
+      "text": "resolve: ({ inv, api }) => {"
+     },
+     {
+      "line": 24,
+      "text": "const copies = (inv.assets || []).filter(item => item.code === '06021').slice(0, 3)"
+     }
+    ]
+   },
+   {
+    "code": "06031",
+    "file": "src/cards/entries/06031.js",
+    "hits": [
+     {
+      "line": 82,
+      "text": "if (answer !== 'yes') return"
+     },
+     {
+      "line": 83,
+      "text": "const inPlay = (inv.assets || []).find(asset => asset.code === selfCode)"
+     }
+    ]
+   },
+   {
+    "code": "06032",
+    "file": "src/cards/entries/06032.js",
+    "hits": [
+     {
+      "line": 76,
+      "text": "if (answer !== 'yes') return"
+     },
+     {
+      "line": 77,
+      "text": "const inPlay = (inv.assets || []).find(asset => asset.code === selfCode)"
+     }
+    ]
+   },
+   {
+    "code": "06033",
+    "file": "src/cards/entries/06033.js",
+    "hits": [
+     {
+      "line": 72,
+      "text": "if (answer !== 'yes') return"
+     },
+     {
+      "line": 73,
+      "text": "const inPlay = (inv.assets || []).find(asset => asset.code === selfCode)"
+     }
+    ]
+   },
+   {
+    "code": "06034",
+    "file": "src/cards/entries/06034.js",
+    "hits": [
+     {
+      "line": 20,
+      "text": "resolve: ({ inv, api }) => {"
+     },
+     {
+      "line": 21,
+      "text": "const x = (inv.discard || []).filter(code => code === '06034').length"
+     }
+    ]
+   },
+   {
+    "code": "06162",
+    "file": "src/cards/entries/06162.js",
+    "hits": [
+     {
+      "line": 25,
+      "text": "label: '发动技能检定时：押注最多 3 资源，检定成功后获得等量资源',"
+     },
+     {
+      "line": 26,
+      "text": "criteria: [({ inv }) => (inv.assets || []).some(asset => asset.code === '06162' && (asset.uses || 0) > 0)],"
+     },
+     {
+      "line": 27,
+      "text": "resolve: ({ state, inv, api }) => {"
+     },
+     {
+      "line": 28,
+      "text": "const asset = (inv.assets || []).find(item => item.code === '06162')"
+     }
+    ]
+   },
+   {
+    "code": "06199",
+    "file": "src/cards/entries/06199.js",
+    "hits": [
+     {
+      "line": 21,
+      "text": "onCommit: ({ test, api }) => {"
+     },
+     {
+      "line": 22,
+      "text": "if ((test.committed || []).filter(item => item.code === '06199').length === 3) api.setTestAutoSuccess()"
+     },
+     {
+      "line": 24,
+      "text": "afterTest: ({ inv, source, test, result, api }) => {"
+     },
+     {
+      "line": 25,
+      "text": "const copies = (test.committed || []).filter(item => item.code === '06199')"
+     }
+    ]
+   },
+   {
+    "code": "06205",
+    "file": "src/cards/entries/06205.js",
+    "hits": [
+     {
+      "line": 20,
+      "text": "const candidates = [...new Set([...playArea, ...hand])]"
+     },
+     {
+      "line": 21,
+      "text": ".filter(code => code !== '06205' && (inv.deck || []).includes(code))"
+     }
+    ]
+   },
+   {
+    "code": "06245",
+    "file": "src/cards/entries/06245.js",
+    "hits": [
+     {
+      "line": 24,
+      "text": "resolve: ({ inv, api }) => {"
+     },
+     {
+      "line": 25,
+      "text": "const copies = (inv.discard || []).filter(code => code === '06245')"
+     }
+    ]
+   },
+   {
+    "code": "07157",
+    "file": "src/cards/entries/07157.js",
+    "hits": [
+     {
+      "line": 2,
+      "text": "assetRule: { enemyEntryAmbush: { autoEvade: true, clues: 1, preventReady: 1 } },"
+     },
+     {
+      "line": 3,
+      "text": "playCondition: [{ when: ({ state, inv }) => !(state.playerLocationAttachments || []).some(card => card.code === '07157' && card.location ==="
+     }
+    ]
+   }
   ]
  },
  "fields": {

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, move, answer, settle, asset, enemy, play, use, validateMove } from './core-fixture.mjs'
+import { fixture, move, answer, settle, asset, enemy, play, use, validateMove, legalMoves } from './core-fixture.mjs'
 import { getStat, prepareInvestigator } from '../src/engine/engine.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 
@@ -110,6 +110,20 @@ test('Core 01087 手电筒消耗补给并降低调查难度，自动失败仍失
   use(s,a); settle(s); assert.equal(s.investigators[0].clues,1)
   s.chaosBag=['autofail']; use(s,s.investigators[0].assets[0]); settle(s)
   assert.equal(s.investigators[0].clues,1); assert.equal(s.investigators[0].assets[0].uses,1)
+})
+
+test('Core 01087 手电筒在零线索地点仍可调查：照常过检定、只消耗补给',()=>{
+  // 2026-11-06 规则修正：调查行动不要求地点还有线索，「调查类」支援能力同理（成功只是不发现线索）。
+  const s=fixture(); const a=asset(s,'01087'); s.locations[0].clues=0
+  s.investigators[0].intellect=5; s.chaosBag=['0']
+  assert.ok(legalMoves(s).some(m=>m.action==='ability'&&m.assetId===a.id),'零线索地点仍给出手电筒的调查能力')
+  use(s,a); settle(s)
+  // 规则事务会重建 state 内的对象，断言必须重新取引用。
+  const flashlight=s.investigators[0].assets.find(item=>item.code==='01087')
+  assert.equal(flashlight.uses,2,'照亮消耗 1 补给')
+  assert.equal(s.investigators[0].clues,0)
+  assert.equal(s.locations[0].clues,0)
+  assert.ok(s.log.some(line=>line.includes('没有线索可发现')))
 })
 
 test('Core 01058 禁忌知识横置并支付恐惧，最后资源取走后弃置',()=>{

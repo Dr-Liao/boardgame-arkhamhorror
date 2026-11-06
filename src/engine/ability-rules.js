@@ -16,7 +16,7 @@ import { currentRevelation } from './resolution-scope.js'
 import { poolTokenRoom } from './chaos-token-pool.js'
 import { canDiscardControlledAsset } from './investigator-mechanics.js'
 import { afterUsesSpent } from './uses.js'
-import { assetTextBlankedExceptForced } from './card-text.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { entityAbilityInRange } from './parley.js'
 import { NON_PLAYER_SCOPES } from './ability.js'
 import { groupClueTotal, payGroupClueCost } from './group-cost.js'
@@ -175,6 +175,11 @@ export function createAbilityRules(deps) {
     // forced（强制）在规则上仍然结算，不能被"不能触发能力"挡住。
     if (descriptor.kind !== 'forced' && capabilityBlocked(state, inv, 'triggerAbilities')) return false
     if (descriptor.kind !== 'forced' && assetTextBlankedExceptForced(source)) return false
+    // 2026-11-06：04099 毒蛇灾厄 / 02088 等「文本框视为空白」的整类规则也压到描述子上。
+    // 旧 DSL 走 stats.assetEffect 已被清空，描述子却是 legalMoves / 反应窗口 / playerWindow 的
+    // 唯一枚举来源；漏掉这一句，被空白化的支援仍会出现在窗口里（06013 门之匣 + 04099 实机复现）。
+    // 与逐张宿主的 blankHostExceptForced 不同，整张文本框空白没有强制例外。
+    if (assetTextBlanked(source, inv)) return false
     if (descriptor.requiresNoClues) {
       const here = state.locations.find(location => location.id === inv.location)
       if (here && here.clues > 0) return false

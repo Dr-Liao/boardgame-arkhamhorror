@@ -4,6 +4,8 @@
 // 其它战役的视图不增加 scenarioInteractions。
 // 隐私：蜂拥卡面朝下（不给卡号）、滋生袋只给张数和已揭示、隐藏牌只给观察者自己的卡号、
 // 掩藏背面故事只在翻面之后出现、结局矩阵只给已经到达的那一格。
+// 「梦境之门与结局」面板只在结局矩阵查表命中「已到达」时才投影：梦境之门是卢克的绑定地点
+// （玩家卡可跨战役使用），它单独在场不能触发食梦者专题条，否则别的战役也会冒出「结局尚未到达」。
 import { swarmCardsOf, swarmBlockedReason } from '../engine/swarm.js'
 import { tokenBagInfo, INFESTATION_BAG_ID, infestedCount } from '../engine/token-bag.js'
 import { counterMax, counterSummary, ALARM_LEVEL_MAX } from '../engine/counters.js'
@@ -91,21 +93,23 @@ export function scenarioInteractionsView(state, observerSeat = null) {
     }))
   }
 
-  const gates = (state.locations || []).filter(location => location?.dreamGate === true).map(location => ({
-    id: location.id,
-    name: location.name || null,
-  }))
+  // 只有已到达的结局才投影：未到达时不显示占位文案，也不因为牌桌上有梦境之门就显示面板
+  // （梦境之门来自卢克的玩家卡，可以被带进任意战役）。
   const matrix = state.campaign?.epilogueMatrix
-  if (gates.length || isEpilogueMatrix(matrix)) {
-    const resolved = state.campaign?.epilogueResolved
-    const reached = isEpilogueMatrix(matrix) && resolved?.a && resolved?.b
-      ? epilogueFor(matrix, resolved.a, resolved.b)
-      : null
+  const resolved = state.campaign?.epilogueResolved
+  const reached = isEpilogueMatrix(matrix) && resolved?.a && resolved?.b
+    ? epilogueFor(matrix, resolved.a, resolved.b)
+    : null
+  if (reached) {
+    const gates = (state.locations || []).filter(location => location?.dreamGate === true).map(location => ({
+      id: location.id,
+      name: location.name || null,
+    }))
     view.epilogue = {
       gates,
-      status: reached ? 'reached' : 'pending',
-      title: reached?.title || null,
-      textKey: reached?.textKey || null,
+      status: 'reached',
+      title: reached.title || null,
+      textKey: reached.textKey || null,
     }
   }
 

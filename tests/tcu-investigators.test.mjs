@@ -1146,6 +1146,45 @@ test('task-41 05004 黛安娜：真实闪避 01023 取消攻击后触发反应�
   assert.equal(me(state).resources, 10 - dodgeCost + 1, '支付闪避费用后由反应获得 1 资源')
 })
 
+test('R8 05004 黛安娜：两张同名取消支援时，cardCancelled 只弃真正取消的那一张', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  // 两张 03268 建议（非唯一、可同场；Arcane 槽 2 张）：用第二张取消攻击，
+  // 黛安娜的反应必须弃第二张，而不是按卡号 find 出来的第一张。
+  inv.assets = [
+    { id: 'sugA', code: '03268', uses: 3, usesType: 'charges', exhausted: false },
+    { id: 'sugB', code: '03268', uses: 3, usesType: 'charges', exhausted: false },
+  ]
+  inv.hand = []
+  inv.deck = ['01088']
+  inv.discard = []
+  inv.resources = 0
+  inv.beneath = []
+  enemy(state, { id: 'sug-enemy', engagedSeat: 0, damage: 1, horror: 0, health: 5 })
+  state.chaosBag = ['0']
+  runTransaction(state, current => {
+    const target = current.enemies.find(item => item.id === 'sug-enemy')
+    enemyAttack(current, target, current.investigators[0], [], '测试攻击')
+  }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const cancel = pending.options.find(option => option.cardCode === '03268'
+      && String(option.id).includes(':sugB'))
+    if (cancel) return cancel.id
+    const diana = pending.options.find(option => option.cardCode === '05004')
+    if (diana) return diana.id
+    return null
+  })
+  const after = me(state)
+  assert.equal(after.assets.some(item => item.id === 'sugB'), false, '取消用的那张建议被弃掉')
+  assert.equal(after.assets.some(item => item.id === 'sugA'), true, '另一张同名建议留在场')
+  assert.equal(after.assets.find(item => item.id === 'sugA').uses, 3, '留存那张的充能未动')
+  // 被弃的取消方随后由 deferCardBeneath 从弃牌堆挪到黛安娜底下，所以弃牌堆里不会留下它。
+  assert.equal((after.discard || []).includes('03268'), false, '取消方不再留在弃牌堆')
+  assert.ok((after.beneath || []).includes('03268'), '取消方卡牌压到黛安娜底下')
+  assert.equal(after.damage || 0, 0, '攻击已被取消')
+  assert.equal(after.resources, 1, '反应获得 1 资源')
+})
+
 test('task-41 05047 杰罗姆：真实 treachery 窗口按智力图标弃牌取消显现', () => {
   // 图标不足：只有 0 智力图标的手牌 → 不提供反应。
   const weakState = investigatorFixture('05047')

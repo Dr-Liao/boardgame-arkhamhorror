@@ -336,3 +336,27 @@ test('Carcosa 03193 古代雕文 成功后自动躲避一个交战敌人', () =>
   assert.equal(after.exhausted, true)
   assert.equal(after.engagedSeat, null)
 })
+
+test('Carcosa 03271 新晋术士 场上已有一张时，再入场只触发一次入场强制能力', () => {
+  const s = fixture()
+  asset(s, '02158') // 魅力超凡：+1 盟友槽，构造两张新晋术士同场
+  const first = asset(s, '03271')
+  s.investigators[0].hand = ['03271']
+  s.investigators[0].resources = 10
+  let entryPrompts = 0
+  move(s, { action: 'play', cardId: '03271' })
+  settle(s, pending => {
+    if (pending.kind === 'effect' && String(pending.prompt).includes('放置1毁灭或2恐惧')) {
+      entryPrompts += 1
+      return 'doom'
+    }
+    return null
+  })
+  const copies = s.investigators[0].assets.filter(item => item.code === '03271')
+  assert.equal(copies.length, 2, '两张新晋术士同场')
+  assert.equal(entryPrompts, 1, '只有刚入场的那张触发一次入场强制能力')
+  const entered = copies.find(item => item.id !== first.id)
+  const stayed = copies.find(item => item.id === first.id)
+  assert.equal(entered.doom || 0, 1, '入场那张放置 1 毁灭')
+  assert.equal(stayed.doom || 0, 0, '在场的那张不跟着触发')
+})

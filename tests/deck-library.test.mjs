@@ -45,9 +45,14 @@ test('本地卡组库：保存、覆盖、列出、删除，与存档目录分�
   assert.equal(empty.cache, 'no-store')
 
   const draft = legal.slice(0, 10)
-  const created = await request('POST', 'decks', { name: '  罗兰草稿  ', investigator_code: '01001', slots: codesToSlots(draft) })
+  const created = await request('POST', 'decks', {
+    name: '  罗兰草稿  ', investigator_code: '01001', slots: codesToSlots(draft),
+    arkhamdbId: '24680', arkhamdbKind: 'decklist',
+  })
   assert.equal(created.status, 200, created.error)
   assert.equal(created.deck.name, '罗兰草稿')
+  assert.equal(created.deck.arkhamdbId, '24680')
+  assert.equal(created.deck.arkhamdbKind, 'decklist')
   assert.equal(created.deck.description.investigatorCode, '01001')
   assert.equal(created.deck.description.entries.reduce((sum, entry) => sum + entry.count, 0), 10)
   assert.ok(deckLibraryFile().startsWith(home))
@@ -57,6 +62,9 @@ test('本地卡组库：保存、覆盖、列出、删除，与存档目录分�
   const updated = await request('PUT', 'decks/' + created.deck.id, { name: '罗兰完整', investigator_code: '01001', slots: codesToSlots(legal) })
   assert.equal(updated.status, 200, updated.error)
   assert.equal(updated.deck.createdAt, created.deck.createdAt)
+  assert.equal(updated.deck.arkhamdbId, '24680', '覆盖时保留 ArkhamDB 来源')
+  assert.equal(updated.deck.description.id, '24680')
+  assert.equal(updated.deck.description.kind, 'decklist')
   const second = await request('POST', 'decks', { investigator_code: '01001', slots: { [legal[0]]: 1 } })
   assert.equal(second.deck.name, '未命名牌组')
 
@@ -68,9 +76,14 @@ test('本地卡组库：保存、覆盖、列出、删除，与存档目录分�
   assert.equal(plan.ready, true)
   assert.deepEqual([...plan.codes].sort(), [...legal].sort(), '载入后的草稿与收藏时一致')
 
-  assert.equal((await request('DELETE', 'decks/' + second.deck.id)).status, 200)
+  const batch = await request('POST', 'decks/batch-delete', { ids: [second.deck.id] })
+  assert.equal(batch.status, 200, batch.error)
+  assert.deepEqual(batch.deleted, [second.deck.id])
+  assert.equal(batch.count, 1)
   assert.equal((await request('DELETE', 'decks/' + second.deck.id)).status, 404)
   assert.deepEqual((await request('GET', 'decks')).decks.map(deck => deck.id), [created.deck.id])
+  assert.equal((await request('DELETE', 'decks/' + created.deck.id)).status, 200)
+  assert.deepEqual((await request('GET', 'decks')).decks, [])
 }))
 
 test('本地卡组库拒绝无效数据、跨站请求与非 JSON 写入', { timeout: 30000 }, () => withHall(async request => {

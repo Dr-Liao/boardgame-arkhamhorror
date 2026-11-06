@@ -14,32 +14,42 @@
 
 import { validateMove } from '../engine/engine.js'
 import { randomValue } from '../engine/rules-state.js'
-import { ALL_ENEMIES, cardDef, cardName, enemyDef } from '../engine/card-lookup.js'
+import { ALL_ENEMIES, ALL_TREACHERIES, cardDef, cardName, enemyDef } from '../engine/card-lookup.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { contentRegistry } from '../../content/registered.js'
+import { isParallelState, laneOfSeat } from './parallel-runtime.js'
+import { laneSeatForRoom } from '../engine/lane-runtime.js'
 
 const HELP_TEXT = [
   '🛠️ 调试控制台 · 指令帮助',
   '',
   '【关卡】',
   '  跳到 <关卡>（跳关 / goto / jump / scenario）：序号 1 起、关卡 ID 或名称，例：跳到 2',
-  '  重开本关（restart / 重新开始本关）：重新布置当前关卡',
-  '  立即结束这关（结束这关 / 随机结局 / end scenario）：立刻结算当前关卡，并在本关结局中随机选一个',
+  '  重开本关（restart / 重新开始本关）：重新布置当前关卡（可无视待决窗口）',
+  '  立即结束这关（随机结局）：立刻结算当前关卡，并在本关结局中随机选一个',
+  '  结束这关 [结局]（结算结局 / end scenario [r1]）：指定结局（如 R1 / 1 / noResolution）结束本关',
+  '  推进场景（advance act / 下一幕）、推进密谋（advance agenda / 下一密谋）',
+  '  跳过待决 [选项]（关闭窗口 / skip choice）：回答或跳过当前待决选择窗口',
   '',
   '【敌人】',
   '  生成 <敌人>（刷出 / spawn / addEnemy）：在目标调查员所在地点生成并交战',
   '  消灭 <敌人>（击杀 / 杀死 / kill / defeat）；消灭全部 / kill all 清空全场',
+  '  抽遭遇 [卡牌]（结算遭遇 / draw encounter）：抽 1 张遭遇牌，或抽取并结算指定诡计/敌人',
   '',
   '【卡牌 / 手牌】',
   '  发 <卡牌> 到手上（发卡 / 给卡 / give）：可写卡号或卡名；',
-  '  也可发到牌库顶 / 牌库底 / 弃牌堆，例：发 01025 到牌库顶',
+  '  也可发到 场上（直接进场）/ 牌库顶 / 牌库底 / 弃牌堆，例：发 01016 到场上 · 发 01025 到牌库顶',
   '  抽 [N]（抽牌 / draw / 摸牌）：默认抽 1 张，例：抽 2',
+  '  充能 +N [资产]（弹药 / 秘密 / 补给 / uses ±N [资产]）：调整场上支援卡使用标记',
+  '  重置卡牌（重置全部 / ready）：重置目标调查员所有横置卡牌并清空本轮能力冷却',
   '  行动点 +N（actions / 行动 +N / 给 N 行动点），例：行动点 +1',
   '',
   '【资源 / 经验 / 线索】',
   '  给 <N> 经验（xp / 经验），例：给 3 经验',
   '  获得 <N> 资源（资源 / resources），例：获得 3 资源',
   '  获得 <N> 线索（线索 / clues），例：获得 3 线索',
+  '  地点线索 +N [地点]（locclues ±N [地点]）：增减指定或当前所在地点的线索',
+  '  锁定标记 <标记>（下次检定 / force token）：如 锁定标记 大成功 / 自动失败 / 骷髅 / +1 / 清除',
   '',
   '【治疗 / 伤害 / 位置】',
   '  治疗 <N>（回复 <N>）：伤害与恐惧各恢复 N',
@@ -53,19 +63,27 @@ const HELP_TEXT = [
   '  状态（info / status）：显示场景、轮次、调查员、敌人、线索与毁灭摘要',
   '',
   '帮助：帮助 / help / ? / 指令。目标座位由面板「目标调查员」下拉选择，缺省为自己。',
-  '示例：跳到 2 · 生成 食尸鬼爪牙 · 抽 2 · 传送到 河岸城 · 治疗 2 · 受到 1 伤害 · 加毁灭 1',
+  '示例：跳到 2 · 结束这关 R1 · 生成 食尸鬼爪牙 · 发 01016 到场上 · 抽遭遇 · 锁定标记 大成功',
 ].join('\n')
 
 // 精确等于这些词 = 帮助；「帮助？」这类带问号的写法在匹配时先去掉问号再判定。
 const HELP_ALIASES = new Set(['帮助', 'help', '?', '？', '指令', 'help?', '帮助?', '帮助？'])
 
 // 指令别名表。顺序即匹配优先级：更长 / 更具体的别名在前（例如「给卡」先于「给」，「发卡」先于「发」，
-// 「治疗伤害」先于「治疗」，「抽牌」先于「抽」）。
+// 「治疗伤害」先于「治疗」，「抽牌」先于「抽」，「抽遭遇」先于「抽」，「地点线索」先于「线索」）。
 // kind 为 null 表示由剩余文本决定（「获得 3 资源」/「给 2 经验」/「给 1 行动点」这类通用动词）。
 const COMMAND_GROUPS = [
   { aliases: ['跳到', '跳关', 'goto', 'jump', 'scenario'], kind: 'scenario' },
   { aliases: ['重开本关', '重新开始本关', 'restart'], kind: 'restart' },
-  { aliases: ['立即结束这关', '结束这关', '随机结局', 'end scenario', 'endscenario'], kind: 'endScenario' },
+  { aliases: ['立即结束这关', '结束这关', '结算结局', '指定结局', '随机结局', 'end scenario', 'endscenario'], kind: 'endScenario' },
+  { aliases: ['推进场景', '推进幕', '下一幕', 'advance act', 'advanceact'], kind: 'advanceAct' },
+  { aliases: ['推进密谋', '推进议程', '下一密谋', 'advance agenda', 'advanceagenda'], kind: 'advanceAgenda' },
+  { aliases: ['跳过待决', '关闭待决', '跳过选择', '关闭窗口', '回答待决', 'skip choice', 'skipchoice', 'resolve choice', 'resolvechoice'], kind: 'resolveChoice' },
+  { aliases: ['抽遭遇', '结算遭遇', '遭遇牌', 'draw encounter', 'drawencounter', 'encounter'], kind: 'encounter' },
+  { aliases: ['锁定标记', '锁定混乱标记', '下次标记', '下次检定', 'force token', 'forcetoken'], kind: 'forceToken' },
+  { aliases: ['地点线索', '场所线索', 'locclues', 'location clues'], kind: 'locationClues' },
+  { aliases: ['充能', '弹药', '秘密', '补给', '使用标记', 'uses', 'adduses', 'charge'], kind: 'uses' },
+  { aliases: ['重置全部', '重置卡牌', '重置支援', '重置资产', 'ready all', 'readyall', 'ready'], kind: 'ready' },
   { aliases: ['生成', '刷出', 'spawn', 'addenemy'], kind: 'spawn' },
   { aliases: ['消灭', '击杀', '杀死', 'kill', 'defeat'], kind: 'defeat' },
   { aliases: ['发卡', '给卡', 'give', '发'], kind: 'card' },
@@ -183,7 +201,10 @@ function scenarioNameParts(manifest, id) {
 function scenarioCandidates(state) {
   const campaign = state?.campaign?.id ? contentRegistry.getCampaign(state.campaign.id) : null
   if (!campaign) throw new Error('当前对局没有战役信息。')
-  const ids = Array.isArray(campaign.scenarioIds) ? campaign.scenarioIds : []
+  const mode = state?.campaign?.mode
+  const ids = campaign.parts && (mode === 'singleA' || mode === 'singleB')
+    ? (campaign.parts[mode === 'singleA' ? 'A' : 'B']?.chapters || []).map(ch => typeof ch === 'string' ? ch : ch?.scenarioId).filter(Boolean)
+    : (Array.isArray(campaign.scenarioIds) ? campaign.scenarioIds : [])
   if (!ids.length) throw new Error('当前战役没有可跳转的关卡。')
   return ids.map((id, index) => {
     const manifest = contentRegistry.getScenario(id)
@@ -493,16 +514,48 @@ function findInvestigator(state, seat) {
   return (state?.investigators || []).find(inv => inv?.seat === seat) || null
 }
 
-function resolveTargetSeat(state, seat, command, { requireCampaignRecord = false } = {}) {
-  const raw = command?.targetSeat
+function parseSeatInput(raw, fallback) {
   let target = raw
-  if (target === undefined || target === null || target === '') target = seat
+  if (target === undefined || target === null || target === '') target = fallback
   if (typeof target === 'number') {
     if (!Number.isInteger(target)) throw new Error(`目标座位无效：${JSON.stringify(raw)}。`)
-  } else if (typeof target === 'string' && /^\d+$/u.test(target.trim())) {
-    target = Number(target.trim())
-  } else {
-    throw new Error(`目标座位无效：${JSON.stringify(raw)}。`)
+    return target
+  }
+  if (typeof target === 'string' && /^\d+$/u.test(target.trim())) {
+    return Number(target.trim())
+  }
+  throw new Error(`目标座位无效：${JSON.stringify(raw)}。`)
+}
+
+function resolveDebugContext(containerState, seat, command) {
+  if (!isParallelState(containerState)) {
+    const laneSeat = containerState?.laneRuntime ? (laneSeatForRoom(containerState, seat) ?? 0) : seat
+    return { state: containerState, lane: null, effectiveSeat: laneSeat }
+  }
+  const hasExplicit = command?.targetSeat !== undefined && command?.targetSeat !== null && command?.targetSeat !== ''
+  const preferredRoom = hasExplicit ? parseSeatInput(command.targetSeat, seat) : seat
+  const lane = laneOfSeat(containerState, preferredRoom) || laneOfSeat(containerState, seat) || 'A'
+  const laneState = containerState.parallel.lanes[lane] || containerState.parallel.lanes.A
+  const idx = laneState.laneRuntime?.roomSeats?.indexOf(seat) ?? -1
+  return { state: laneState, lane, effectiveSeat: idx >= 0 ? idx : 0 }
+}
+
+function resolveTargetSeat(state, seat, command, { requireCampaignRecord = false } = {}) {
+  const raw = command?.targetSeat
+  const hasExplicit = raw !== undefined && raw !== null && raw !== ''
+  let target = parseSeatInput(raw, seat)
+  const roomSeats = state?.laneRuntime?.roomSeats
+  if (Array.isArray(roomSeats) && roomSeats.length) {
+    if (hasExplicit) {
+      const mapped = roomSeats.indexOf(target)
+      if (mapped >= 0) target = mapped
+      else if (!findInvestigator(state, target)) {
+        throw new Error(`目标座位无效：${target}（当前线可用座位：${roomSeats.join('、')}）。`)
+      }
+    } else if (!findInvestigator(state, target)) {
+      const mapped = roomSeats.indexOf(target)
+      target = mapped >= 0 ? mapped : (state.investigators?.[0]?.seat ?? 0)
+    }
   }
   const inv = findInvestigator(state, target)
   if (!inv) {
@@ -543,14 +596,15 @@ function locationName(state, locationId) {
   return location?.name || location?.id || '未知地点'
 }
 
-// 卡牌目的地：到手上（默认）/ 牌库顶 / 牌库底 / 弃牌堆。返回 { zone, arg }，arg 去掉目的地后缀。
+// 卡牌目的地：到手上（默认）/ 场上 / 牌库顶 / 牌库底 / 弃牌堆。返回 { zone, arg }，arg 去掉目的地后缀。
 const CARD_ZONE_SUFFIXES = [
+  ['play', ['到场上', '进场上', '进场', '上场', '置入场上', '直接进场', '到桌面', '到场']],
   ['deckTop', ['到牌库顶部', '到牌堆顶部', '到牌库顶', '到牌堆顶', '牌库顶部', '牌堆顶部', '牌库顶', '牌堆顶', '到牌库上方']],
   ['deckBottom', ['到牌库底部', '到牌堆底部', '到牌库底', '到牌堆底', '牌库底部', '牌堆底部', '牌库底', '牌堆底', '到牌库下方']],
   ['discard', ['到弃牌堆', '进弃牌堆', '弃牌堆']],
   ['hand', ['到手上', '到手牌', '到手中', '到手', '进手上', '进手牌', '进手', '放入手牌', '加入手牌']],
 ]
-const CARD_ZONE_LABELS = { hand: '手牌', deckTop: '牌库顶', deckBottom: '牌库底', discard: '弃牌堆' }
+const CARD_ZONE_LABELS = { hand: '手牌', deckTop: '牌库顶', deckBottom: '牌库底', discard: '弃牌堆', play: '场上' }
 
 function parseCardDestination(value) {
   const text = value.trim()
@@ -872,19 +926,321 @@ function scenarioInProgress(state) {
   return !!state?.scenario?.id && !(state.hubFlow && state.uiState && state.uiState !== 'inScenario')
 }
 
-function buildEndScenarioCommand(state, rest) {
-  if (cleanArg(rest)) throw new Error('立即结束这关不需要参数。')
+function buildEndScenarioCommand(state, rest, alias) {
+  const arg = cleanArg(rest)
+  if (arg && (alias === '立即结束这关' || alias === '随机结局')) {
+    throw new Error('立即结束这关不需要参数（若需指定结局，请使用「结束这关 R1」或「end scenario r1」）。')
+  }
   if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法结束本关。')
   const keys = Object.keys(state.scenario.resolutions || {})
   if (!keys.length) throw new Error('本关没有可结算的结局。')
+  const fullName = String(state.scenario.name || state.scenario.id)
+  const shortName = fullName.split(/[：:]/u).pop().trim() || fullName
+  if (arg) {
+    const resolved = resolveScenarioResolutionKey(keys, arg)
+    if (!resolved) {
+      throw new Error(`立即结束这关不支持结局「${arg}」（本关可用结局：${keys.map(resolutionLabel).join('、')}）。`)
+    }
+    return {
+      move: { action: 'debug', kind: 'endScenario', resolutionKey: resolved },
+      message: `已立即结束「${shortName}」，结算结局：${resolutionLabel(resolved)}。`,
+    }
+  }
   // 只读地看一眼对局随机序列，不推进 rngState。抽中的结局写进 move，重放时不再重抽。
   const probe = { rngState: Number.isInteger(state.rngState) ? state.rngState : 0 }
   const resolutionKey = keys[Math.floor(randomValue(probe) * keys.length)]
-  const fullName = String(state.scenario.name || state.scenario.id)
-  const shortName = fullName.split(/[：:]/u).pop().trim() || fullName
   return {
     move: { action: 'debug', kind: 'endScenario', resolutionKey },
     message: `已立即结束「${shortName}」，随机结局：${resolutionLabel(resolutionKey)}。`,
+  }
+}
+
+function resolveScenarioResolutionKey(keys, arg) {
+  const lower = arg.trim().toLowerCase()
+  const exact = keys.find(k => k.toLowerCase() === lower)
+  if (exact) return exact
+  if (['未达成结局', '无结局', 'noresolution', 'no_resolution', 'none', 'r0', '0'].includes(lower)) {
+    return keys.find(k => k === 'noResolution') || null
+  }
+  const match = lower.match(/^(?:结局\s*|r|resolution\s*)?(\d+)$/u)
+  if (match) {
+    const n = match[1]
+    return keys.find(k => k.toLowerCase() === `r${n}` || k.toLowerCase() === `resolution${n}`) || null
+  }
+  return null
+}
+
+function buildAdvanceActCommand(state, rest) {
+  if (cleanArg(rest)) throw new Error('推进场景不需要参数。')
+  if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法推进场景。')
+  const cur = state.acts?.[state.actIndex]
+  if (!cur) throw new Error('当前没有可推进的场景。')
+  return {
+    move: { action: 'debug', kind: 'advanceAct' },
+    message: `已推进场景「${cur.name || cur.id || state.actIndex + 1}」。`,
+  }
+}
+
+function buildAdvanceAgendaCommand(state, rest) {
+  if (cleanArg(rest)) throw new Error('推进密谋不需要参数。')
+  if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法推进密谋。')
+  const cur = state.agendas?.[state.agendaIndex]
+  if (!cur) throw new Error('当前没有可推进的密谋。')
+  return {
+    move: { action: 'debug', kind: 'advanceAgenda' },
+    message: `已推进密谋「${cur.name || cur.id || state.agendaIndex + 1}」。`,
+  }
+}
+
+function buildResolveChoiceCommand(state, rest) {
+  const choice = state?.pendingChoice
+  if (!choice) throw new Error('当前没有待处理的待决选择。')
+  const options = Array.isArray(choice.options) ? choice.options : []
+  if (!options.length) throw new Error('当前待决选择没有可用选项。')
+  const arg = cleanArg(rest)
+  let picked = null
+  if (!arg) {
+    const preferredIds = ['skip', 'done', 'confirm', 'pass', 'cancel', 'self']
+    for (const id of preferredIds) {
+      picked = options.find(opt => opt.id === id)
+      if (picked) break
+    }
+    picked ||= options[0]
+  } else {
+    const lower = arg.toLowerCase()
+    picked = options.find(opt => String(opt.id).toLowerCase() === lower)
+      || options.find(opt => String(opt.label || '').toLowerCase() === lower)
+    if (!picked && /^\d+$/u.test(lower)) {
+      const idx = Number(lower) - 1
+      if (idx >= 0 && idx < options.length) picked = options[idx]
+    }
+    if (!picked) {
+      picked = options.find(opt => String(opt.label || '').toLowerCase().includes(lower))
+    }
+    if (!picked) {
+      throw new Error(`未找到待决选项「${arg}」（可选：${options.map((o, i) => `${i + 1}.${o.label || o.id}(${o.id})`).join('、')}）。`)
+    }
+  }
+  return {
+    move: { action: 'debug', kind: 'resolveChoice', choiceId: choice.id, optionId: picked.id },
+    message: `已跳过/回答待决选择：「${picked.label || picked.id}」。`,
+  }
+}
+
+let treacheryPoolCache
+
+function baseTreacheryPool() {
+  if (treacheryPoolCache) return treacheryPoolCache
+  const byKey = new Map()
+  const ensure = key => {
+    let entry = byKey.get(key)
+    if (!entry) {
+      const card = ALL_CARDS[key]
+      entry = {
+        key, originalCode: key, codes: new Set([key]), labels: new Set(),
+        aliases: [], preferredCode: key,
+        nameZh: card?.nameZh || null, nameEn: card?.name || null, pack: card?.pack || null,
+      }
+      byKey.set(key, entry)
+    }
+    return entry
+  }
+  for (const [alias, def] of Object.entries(ALL_TREACHERIES)) {
+    if (!def || typeof def !== 'object') continue
+    const key = def.originalCode && ALL_CARDS[def.originalCode] ? def.originalCode : alias
+    const entry = ensure(key)
+    entry.codes.add(alias)
+    entry.aliases.push(alias)
+    if (def.name) entry.labels.add(def.name)
+  }
+  for (const [code, card] of Object.entries(ALL_CARDS)) {
+    if (!card || card.type !== 'treachery') continue
+    const key = card.duplicateOfCode && ALL_CARDS[card.duplicateOfCode] ? card.duplicateOfCode
+      : (card.originalCode && ALL_CARDS[card.originalCode] ? card.originalCode : code)
+    const entry = ensure(key)
+    entry.codes.add(code)
+    if (card.name) { entry.labels.add(card.name); entry.nameEn ||= card.name }
+    if (card.nameZh) { entry.labels.add(card.nameZh); entry.nameZh ||= card.nameZh }
+    entry.pack ||= card.pack || null
+  }
+  for (const entry of byKey.values()) {
+    entry.preferredCode = entry.aliases[0] || entry.originalCode
+    const card = ALL_CARDS[entry.originalCode]
+    entry.display = entry.nameZh || card?.nameZh || entry.nameEn || entry.originalCode
+    entry.labels = [...entry.labels]
+    entry.codes = [...new Set([entry.preferredCode, ...entry.codes])]
+  }
+  treacheryPoolCache = [...byKey.values()]
+  return treacheryPoolCache
+}
+
+function resolveEncounterCandidate(state, arg) {
+  const needle = arg.toLowerCase()
+  const deckSet = new Set([...(state?.encounterDeck || []), ...(state?.encounterDiscard || [])])
+  const scenarioTreacheryByOriginal = new Map()
+  for (const [alias, def] of Object.entries(state?.scenario?.treacheries || {})) {
+    if (!def || typeof def !== 'object') continue
+    const key = def.originalCode || alias
+    if (!scenarioTreacheryByOriginal.has(key)) scenarioTreacheryByOriginal.set(key, alias)
+  }
+  const campaignPacks = campaignPackSet(state)
+  const treacheries = baseTreacheryPool().map(candidate => {
+    const scenarioAlias = scenarioTreacheryByOriginal.get(candidate.originalCode)
+      || candidate.codes.find(code => deckSet.has(code)) || null
+    const code = scenarioAlias || candidate.preferredCode
+    return {
+      ...candidate,
+      code,
+      codes: [...new Set([code, ...candidate.codes])],
+      scenarioRelevant: Boolean(scenarioAlias) || candidate.codes.some(c => deckSet.has(c)),
+      packRelevant: Boolean(candidate.pack) && campaignPacks.has(candidate.pack),
+    }
+  })
+  const enemies = spawnCandidatesFor(state)
+  const pool = [...treacheries, ...enemies]
+  const exactCode = pool.filter(candidate => candidate.codes.some(code => String(code).toLowerCase() === needle))
+  if (exactCode.length === 1) return exactCode[0]
+  if (exactCode.length > 1) {
+    const preferred = preferCandidates(exactCode, { scenario: true, packs: true })
+    if (preferred.length === 1) return preferred[0]
+  }
+  const best = matchByLabels(pool, needle)
+  if (!best) throw new Error(`没有找到遭遇牌「${arg}」。`)
+  if (best.list.length === 1) return best.list[0]
+  const preferred = preferCandidates(best.list, { scenario: true, packs: true })
+  if (preferred.length === 1) return preferred[0]
+  throw new Error(`遭遇牌「${arg}」不唯一：${preferred.slice(0, 8).map(formatSpawnCandidate).join('、')}。请使用更精确的名称或卡号。`)
+}
+
+function buildEncounterCommand(state, seat, command, rest) {
+  if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法抽取遭遇牌。')
+  const targetSeat = resolveTargetSeat(state, seat, command)
+  const inv = findInvestigator(state, targetSeat)
+  const arg = cleanArg(rest)
+  if (!arg) {
+    return {
+      move: { action: 'debug', kind: 'encounter', targetSeat },
+      message: `${inv.name}抽取了 1 张遭遇牌。`,
+    }
+  }
+  const candidate = resolveEncounterCandidate(state, arg)
+  return {
+    move: { action: 'debug', kind: 'encounter', code: candidate.code, targetSeat },
+    message: `${inv.name}抽取并结算遭遇牌「${candidate.display}」。`,
+  }
+}
+
+const CHAOS_TOKEN_ALIASES = new Map([
+  ['+1', '+1'], ['1', '+1'], ['0', '0'],
+  ['-1', '-1'], ['-2', '-2'], ['-3', '-3'], ['-4', '-4'], ['-5', '-5'], ['-6', '-6'], ['-7', '-7'], ['-8', '-8'],
+  ['skull', 'skull'], ['骷髅', 'skull'], ['💀', 'skull'],
+  ['cultist', 'cultist'], ['异教徒', 'cultist'], ['🕯️', 'cultist'],
+  ['tablet', 'tablet'], ['石板', 'tablet'], ['🗿', 'tablet'],
+  ['elderthing', 'elderthing'], ['elder_thing', 'elderthing'], ['古神仆从', 'elderthing'], ['古老者', 'elderthing'], ['👁️', 'elderthing'],
+  ['autofail', 'autofail'], ['auto_fail', 'autofail'], ['tentacle', 'autofail'], ['自动失败', 'autofail'], ['大失败', 'autofail'], ['触手', 'autofail'], ['☠️', 'autofail'],
+  ['eldersign', 'eldersign'], ['elder_sign', 'eldersign'], ['star', 'eldersign'], ['旧印', 'eldersign'], ['古神之印', 'eldersign'], ['大成功', 'eldersign'], ['星星', 'eldersign'], ['✨', 'eldersign'],
+  ['bless', 'bless'], ['祝福', 'bless'],
+  ['curse', 'curse'], ['诅咒', 'curse'],
+  ['frost', 'frost'], ['霜寒', 'frost'], ['冰霜', 'frost'],
+])
+const CHAOS_TOKEN_DISPLAY = {
+  '+1': '+1', '0': '0', '-1': '-1', '-2': '-2', '-3': '-3', '-4': '-4', '-5': '-5', '-6': '-6', '-7': '-7', '-8': '-8',
+  skull: '💀 骷髅', cultist: '🕯️ 异教徒', tablet: '🗿 石板', elderthing: '👁️ 古老者',
+  autofail: '☠️ 自动失败', eldersign: '✨ 旧印（大成功）', bless: '祝福', curse: '诅咒', frost: '霜寒',
+}
+const CLEAR_TOKEN_WORDS = new Set(['清除', '取消', '清空', '关闭', '重置', 'clear', 'none', 'off', 'reset'])
+
+function buildForceTokenCommand(state, rest) {
+  const arg = cleanArg(rest)
+  if (!arg) throw new Error('请指定要锁定的混乱标记（如：大成功、自动失败、骷髅、+1、0、-2、祝福、诅咒，或「清除」）。')
+  const key = arg.toLowerCase().replace(/\s+/g, '')
+  if (CLEAR_TOKEN_WORDS.has(key)) {
+    return {
+      move: { action: 'debug', kind: 'forceToken', clear: true },
+      message: '已清除锁定的混乱标记。',
+    }
+  }
+  const token = CHAOS_TOKEN_ALIASES.get(key)
+  if (!token) {
+    throw new Error(`未知的混乱标记「${arg}」（支持：大成功/旧印、自动失败/触手、骷髅、异教徒、石板、古老者、祝福、诅咒、+1、0、-1~-8，或「清除」）。`)
+  }
+  return {
+    move: { action: 'debug', kind: 'forceToken', token },
+    message: `已锁定下次检定混乱标记为「${CHAOS_TOKEN_DISPLAY[token] || token}」。`,
+  }
+}
+
+function parseSignedDelta(text, label = '数量') {
+  const match = text.match(/([+-＋−]?\s*\d+)/u)
+  if (!match) throw new Error(`请提供${label}调整值（如 +2 或 -1）。`)
+  const raw = match[1].replace(/\s+/g, '').replace('＋', '+').replace('−', '-')
+  const amount = Number(raw)
+  if (!Number.isSafeInteger(amount) || amount === 0 || amount < -999 || amount > 999) {
+    throw new Error(`${label}调整必须是 -999 到 999 之间的非零整数。`)
+  }
+  return { amount, restText: (text.slice(0, match.index) + ' ' + text.slice(match.index + match[0].length)).trim() }
+}
+
+function buildLocationCluesCommand(state, seat, command, rest) {
+  if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法调整地点线索。')
+  const { amount, restText } = parseSignedDelta(cleanArg(rest), '地点线索')
+  const locArg = cleanArg(restText)
+  let locationId
+  let locDisplay
+  if (locArg) {
+    const loc = resolveLocation(state, locArg)
+    locationId = loc.id
+    locDisplay = loc.name
+  } else {
+    const targetSeat = resolveTargetSeat(state, seat, command)
+    const inv = findInvestigator(state, targetSeat)
+    if (!inv?.location) throw new Error('目标调查员当前没有所在地点。')
+    locationId = inv.location
+    locDisplay = locationName(state, locationId)
+  }
+  return {
+    move: { action: 'debug', kind: 'locationClues', locationId, amount },
+    message: `「${locDisplay}」线索 ${amount > 0 ? '+' : ''}${amount}。`,
+  }
+}
+
+function buildUsesCommand(state, seat, command, rest) {
+  const targetSeat = resolveTargetSeat(state, seat, command)
+  const inv = findInvestigator(state, targetSeat)
+  if (!(inv.assets || []).length) throw new Error(`${inv.name}场上没有支援卡。`)
+  const arg = cleanArg(rest)
+  const { amount, restText } = arg ? parseSignedDelta(arg, '使用标记') : { amount: 1, restText: '' }
+  const assetArg = cleanArg(restText)
+  if (!assetArg) {
+    return {
+      move: { action: 'debug', kind: 'uses', targetSeat, amount },
+      message: `${inv.name}场上支援卡使用标记 ${amount > 0 ? '+' : ''}${amount}。`,
+    }
+  }
+  const needle = assetArg.toLowerCase()
+  const candidates = (inv.assets || []).map(asset => {
+    const def = cardDef(asset.code)
+    return {
+      asset,
+      display: asset.name || def?.nameZh || def?.name || asset.code,
+      labels: [asset.id, asset.code, asset.name, def?.name, def?.nameZh].filter(Boolean),
+    }
+  })
+  const best = matchByLabels(candidates, needle)
+  if (!best) throw new Error(`${inv.name}场上没有找到支援卡「${assetArg}」。`)
+  const targetAsset = best.list[0].asset
+  return {
+    move: { action: 'debug', kind: 'uses', targetSeat, assetId: targetAsset.id, amount },
+    message: `「${best.list[0].display}」使用标记 ${amount > 0 ? '+' : ''}${amount}。`,
+  }
+}
+
+function buildReadyCommand(state, seat, command) {
+  const targetSeat = resolveTargetSeat(state, seat, command)
+  const inv = findInvestigator(state, targetSeat)
+  return {
+    move: { action: 'debug', kind: 'ready', targetSeat },
+    message: `已重置${inv.name}的所有横置卡牌与能力冷却。`,
   }
 }
 
@@ -909,8 +1265,8 @@ function buildRestartCommand(state) {
  * @returns {{ move: object|null, message: string }} move 为 null 时只回显 message（帮助 / 状态），不提交
  */
 export function buildDebugCommand(session, seat, command) {
-  const state = session?.state
-  if (!state || typeof state !== 'object') throw new Error('当前没有可用的对局状态。')
+  const containerState = session?.state
+  if (!containerState || typeof containerState !== 'object') throw new Error('当前没有可用的对局状态。')
   if (!command || typeof command !== 'object' || Array.isArray(command)) throw new Error('调试指令格式无效。')
   if (!Number.isInteger(seat)) throw new Error('调试控制台座位无效。')
   const text = normalizeText(command.text)
@@ -923,6 +1279,8 @@ export function buildDebugCommand(session, seat, command) {
   const matched = matchCommand(text)
   if (!matched) throw new Error(`未知调试指令「${text}」。发送「帮助」查看可用指令。`)
 
+  const { state, lane, effectiveSeat } = resolveDebugContext(containerState, seat, command)
+
   let result
   switch (matched.kind) {
     case 'scenario':
@@ -932,31 +1290,55 @@ export function buildDebugCommand(session, seat, command) {
       result = buildRestartCommand(state)
       break
     case 'endScenario':
-      result = buildEndScenarioCommand(state, matched.rest)
+      result = buildEndScenarioCommand(state, matched.rest, matched.alias)
+      break
+    case 'advanceAct':
+      result = buildAdvanceActCommand(state, matched.rest)
+      break
+    case 'advanceAgenda':
+      result = buildAdvanceAgendaCommand(state, matched.rest)
+      break
+    case 'resolveChoice':
+      result = buildResolveChoiceCommand(state, matched.rest)
+      break
+    case 'encounter':
+      result = buildEncounterCommand(state, effectiveSeat, command, matched.rest)
+      break
+    case 'forceToken':
+      result = buildForceTokenCommand(state, matched.rest)
+      break
+    case 'locationClues':
+      result = buildLocationCluesCommand(state, effectiveSeat, command, matched.rest)
+      break
+    case 'uses':
+      result = buildUsesCommand(state, effectiveSeat, command, matched.rest)
+      break
+    case 'ready':
+      result = buildReadyCommand(state, effectiveSeat, command)
       break
     case 'spawn':
-      result = buildSpawnCommand(state, seat, command, matched.rest)
+      result = buildSpawnCommand(state, effectiveSeat, command, matched.rest)
       break
     case 'defeat':
       result = buildDefeatCommand(state, matched.rest)
       break
     case 'card':
-      result = buildCardCommand(state, seat, command, matched.rest)
+      result = buildCardCommand(state, effectiveSeat, command, matched.rest)
       break
     case 'draw':
-      result = buildDrawCommand(state, seat, command, matched.rest)
+      result = buildDrawCommand(state, effectiveSeat, command, matched.rest)
       break
     case 'actions':
-      result = buildActionsCommand(state, seat, command, matched.rest)
+      result = buildActionsCommand(state, effectiveSeat, command, matched.rest)
       break
     case 'moveTo':
-      result = buildMoveToCommand(state, seat, command, matched.rest)
+      result = buildMoveToCommand(state, effectiveSeat, command, matched.rest)
       break
     case 'heal':
-      result = buildHealCommand(state, seat, command, matched.rest, matched.alias)
+      result = buildHealCommand(state, effectiveSeat, command, matched.rest, matched.alias)
       break
     case 'harm':
-      result = buildHarmCommand(state, seat, command, matched.rest, matched.alias)
+      result = buildHarmCommand(state, effectiveSeat, command, matched.rest, matched.alias)
       break
     case 'reveal':
       result = buildRevealCommand(state, matched.rest, matched.alias)
@@ -970,15 +1352,16 @@ export function buildDebugCommand(session, seat, command) {
     case 'xp':
     case 'resources':
     case 'clues':
-      result = buildAmountCommand(state, seat, command, matched.unit, matched.rest)
+      result = buildAmountCommand(state, effectiveSeat, command, matched.unit, matched.rest)
       break
     default:
       throw new Error(`未知调试指令「${text}」。发送「帮助」查看可用指令。`)
   }
   // 契约 §4/§5：解析后必须用引擎 validateMove 复核，有错误直接把引擎错误文本抛给玩家。
   if (result.move) {
-    const error = validateMove(state, seat, result.move)
+    const error = validateMove(state, effectiveSeat, result.move)
     if (error) throw new Error(String(error))
+    if (lane) result.move = { ...result.move, lane }
   }
   return result
 }

@@ -138,6 +138,31 @@ test('N3 资源不足、禁打牌及唯一资产全部支付前拒绝', () => {
   reject(state, { action: 'play', cardId: '01048' }, /唯一/)
 })
 
+test('N3 零线索地点仍可调查：照常过检定、不发现线索，保留成功调查窗口', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const here = state.locations.find(loc => loc.id === inv.location)
+  here.clues = 0
+  inv.intellect = 5
+  state.chaosBag = ['+1']
+  assert.ok(legalMoves(state).some(move => move.action === 'investigate'), '零线索不影响调查行动枚举')
+  assert.equal(validateMove(state, 0, { action: 'investigate' }), null)
+  applyMove(state, 0, { action: 'investigate' })
+  settle(state)
+  // 规则事务会重建 state 内的对象，断言必须重新取引用。
+  const after = state.investigators[0]
+  const hereAfter = state.locations.find(loc => loc.id === after.location)
+  assert.equal(after.actionsLeft, 2, '调查照常消耗 1 行动')
+  assert.equal(hereAfter.clues, 0)
+  assert.equal(after.clues, 0, '零线索地点不发现线索')
+  assert.ok(state.log.some(line => line.includes('调查成功（')), '检定照常结算')
+  assert.ok(state.log.some(line => line.includes('没有线索可发现')), '成功但没有线索可发现')
+  assert.ok(!state.log.some(line => /获得 \d+ 个线索/.test(line)), '不能凭空发现线索')
+  // 上锁与剧本级限制仍然拦截调查（不是「任何情况下都能查」）。
+  hereAfter.locked = true
+  assert.match(validateMove(state, 0, { action: 'investigate' }), /上锁/)
+})
+
 test('N3 地点减费被合法列表、校验和执行共同使用', () => {
   const state = fixture()
   const inv = state.investigators[0]

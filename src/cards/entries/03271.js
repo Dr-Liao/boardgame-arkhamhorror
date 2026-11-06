@@ -12,16 +12,16 @@ export default {
   abilities: [
     {
       kind: 'forced', trigger: 'assetEnteredPlay', label: '入场：放 1 毁灭或受 2 恐惧',
-      criteria: [ctx => ctx.context?.assetCode === '03271'],
-      resolve: ({ inv, context, api }) => {
-        const entered = inv.assets.find(item => item.id === context?.assetId)
-          || inv.assets.find(item => item.code === '03271')
-        if (!entered) return
+      // 2026-11-06 修复：「新晋术士入场后」只属于刚入场的那一张（自指文本 = 本卡）。
+      // 只检查 assetCode 会让场上已有的同名牌也触发一次（需要魅力超凡才可能出现 2 张）。
+      criteria: [({ context, source }) => context?.assetCode === '03271' && context?.assetId === source?.id],
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
         const answer = api.choice({ kind: 'effect', source: '03271', seat: inv.seat,
           prompt: '选择放置1毁灭或2恐惧。',
           options: [{ id: 'doom', label: '放置1毁灭' }, { id: 'horror', label: '放置2恐惧' }] })
-        if (answer === 'doom') api.placeDoomOnCard(entered, 1)
-        else api.addAssetHorror(entered, 2)
+        if (answer === 'doom') api.placeDoomOnCard(source, 1)
+        else api.addAssetHorror(source, 2)
       },
     },
     {

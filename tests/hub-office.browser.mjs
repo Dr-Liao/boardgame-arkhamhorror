@@ -253,10 +253,15 @@ test('开局页脚的规则书入口不再压住「开始新游戏」，按钮�
   const footer = setup.locator('.bg-modal-foot')
   const modalBox = await setup.boundingBox(), footerBox = await footer.boundingBox()
   const startBox = await footer.getByRole('button', { name: '开始新游戏' }).boundingBox()
+  const actionBoxes = await footer.locator('button').evaluateAll(buttons => buttons.map(button => {
+    const box = button.getBoundingClientRect()
+    return { top: box.top, bottom: box.bottom }
+  }))
   // 页脚铺满右侧面板，操作按钮靠右且留出与弹窗边界一致的内边距。
   expect(footerBox.x + footerBox.width).toBeLessThanOrEqual(modalBox.x + modalBox.width)
   expect(startBox.x + startBox.width).toBeLessThanOrEqual(footerBox.x + footerBox.width - 24)
   expect(startBox.x + startBox.width).toBeLessThan(modalBox.x + modalBox.width)
+  expect(Math.max(...actionBoxes.map(box => box.top)) - Math.min(...actionBoxes.map(box => box.top))).toBeLessThan(2)
   await footer.getByRole('button', { name: '规则书', exact: true }).click()
   const book = page.getByRole('dialog', { name: '游戏规则书' })
   await expect(book).toBeVisible()

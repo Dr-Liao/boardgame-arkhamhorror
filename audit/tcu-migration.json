@@ -3841,6 +3841,16 @@
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
               "line": 735,
               "test": "TCU 05153 “老千”先生 找出的卡走真实抽牌通道：选中的弱点按显现结算"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 1197,
+              "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 1225,
+              "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密"
             }
           ]
         },
@@ -3865,6 +3875,16 @@
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
               "line": 763,
               "test": "TCU 05154 鹰眼折叠相机 最后线索后放证据；证据给意志/智识/神智加值"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 793,
+              "test": "TCU 05154 鹰眼折叠相机 同场两张：最后线索后两张各触发一次，证据各记各的"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 819,
+              "test": "TCU 05154 鹰眼折叠相机 每台相机在每个地点仅限一次，换地点可再拿"
             }
           ]
         },
@@ -3887,12 +3907,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 797,
+              "line": 856,
               "test": "TCU 05155 亨利·万 选择停下后，每揭示 1 枚标记抽 1 张或获得 1 资源"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 818,
+              "line": 877,
               "test": "TCU 05155 亨利·万 揭示符号标记时无事发生"
             }
           ]
@@ -3916,7 +3936,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 835,
+              "line": 894,
               "test": "TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数"
             }
           ]
@@ -3940,8 +3960,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 850,
+              "line": 909,
               "test": "TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 964,
+              "test": "TCU 05157 凋零术 同一场检定只结算一次符号效果（不重复叠加 -1）"
             }
           ]
         },
@@ -3964,23 +3989,28 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 909,
+              "line": 988,
               "test": "TCU 05158 第六感 符号后改为在连接的已揭示地点调查（使用新地点隐藏值）"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 938,
+              "line": 1017,
               "test": "TCU 05158 第六感 符号后可选使用原调查地点的隐藏值"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 966,
+              "line": 1045,
               "test": "TCU 05158 第六感 未揭示/不相连的地点不可选（无合法目标时不触发）"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 986,
+              "line": 1065,
               "test": "TCU 05158 第六感 非符号不触发"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 1084,
+              "test": "TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）"
             }
           ]
         },
@@ -4003,7 +4033,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 1009,
+              "line": 1116,
               "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
             }
           ]
@@ -4027,12 +4057,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 1039,
+              "line": 1146,
               "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 1060,
+              "line": 1167,
               "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
             }
           ]
@@ -5308,11 +5338,11 @@
       "simplified": [],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "e19ec34ca61d96b6fde18cadaca87fe9675ab447ba96fb5855940f209692f01c"
+        "sha256": "463dbc75ab6e5f91700ca1c104c4752aca8ef5678def8395bd534e4f696fc178"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "488861380965cad6adf64c52fe555bc1379e3cc4bdefb1737e2c93d836b5d6dd"
+        "sha256": "e2638bc637e43700f28c82f942f06e315f08f57ecaedd27a2a3dde29fe13e1e8"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5367,16 +5397,16 @@
           "constructible": 85,
           "deckable": 83,
           "simplified": 0,
-          "testsPassed": 531,
+          "testsPassed": 538,
           "testFiles": 6
         },
         "ledger": {
           "path": "audit/tcu-all-card-acceptance.json",
-          "sha256": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83"
+          "sha256": "2300384db2543b34fcc3348c55a559545851494bd39e82b8caf918ee533d5d77"
         },
         "module": {
           "path": "src/cards/tcu-campaign-acceptance.js",
-          "sha256": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461"
+          "sha256": "7094da663e61c3d75ff97833fad952ec4e9ed325b4313261cefeab0cd9f0469a"
         }
       },
       "browser": {
@@ -5538,20 +5568,20 @@
       "audit/tcu-browser-acceptance.json": "30b9dda7139df3b6486e65f7041470bd801cef47ba184811f76133562d0f0946",
       "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
       "content/packs/tcuInvestigators/manifest.js": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3",
-      "tests/tcu-investigators.test.mjs": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6",
+      "tests/tcu-investigators.test.mjs": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938",
       "src/engine/hunch-deck.js": "600807bafbbdef09a48f49316105c7f56f33ba3f14d54e5725fbc718bc5fe5e6",
       "src/engine/resource-bank.js": "f5355de2e60bc8d19dec23f7938e66884d7e8c6fa7c31b1b5a162d18a3fb0df9",
       "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
-      "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
+      "src/engine/cancel-note.js": "c048a6b87483d59c201213da84f893739c1093513358c286a1ce497a9ece23b1",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "e19ec34ca61d96b6fde18cadaca87fe9675ab447ba96fb5855940f209692f01c",
-      "src/cards/tcu-player-acceptance.js": "488861380965cad6adf64c52fe555bc1379e3cc4bdefb1737e2c93d836b5d6dd",
+      "audit/tcu-player-acceptance.json": "463dbc75ab6e5f91700ca1c104c4752aca8ef5678def8395bd534e4f696fc178",
+      "src/cards/tcu-player-acceptance.js": "e2638bc637e43700f28c82f942f06e315f08f57ecaedd27a2a3dde29fe13e1e8",
       "tests/tcu-player-ledger.test.mjs": "a858a50a144b718a4387b38d18dc23f57879aaac087a15d2e86ced4d3db9051e",
       "src/deck/availability.js": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681",
       "src/campaign/campaign.js": "3c8616893322c690347d7f07d9f3fecb8bea3cba0e0c6e27d867c2056316f0ee",
       "tests/tcu-player-m2-1.test.mjs": "42edf1bf7c8b7d3dae6fb65b6704b90d213e59e145d602807e6e8e07aa81fe9d",
-      "tests/tcu-player-m2-2.test.mjs": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01",
+      "tests/tcu-player-m2-2.test.mjs": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18",
       "tests/tcu-player-m2-3.test.mjs": "eafa654fcad4d44e784a4f46f61db84a23171cad1af164e36d36920fa4cbc4fe",
       "tests/tcu-player-m2-4.test.mjs": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53",
       "tools/audit-tcu-scenarios.mjs": "692246267c1f2538d158eefe4ec85a35aa293188015e04114ed70c87e968914b",
@@ -5577,8 +5607,8 @@
       "src/campaign/campaign-effects.js": "e2efb570cb719313afe758191686dd679ec95887f9240f682116ae246f035f27",
       "src/campaign/campaign-flow.js": "44fcf2c761ca22029abd1c93beaec13eda0da4a00d7091ac2226f40ebe5a2da3",
       "tools/audit-tcu-all-cards.mjs": "b434697282c38233eb284a5b5fb3fddf1e132385491bec5b71ca809cbd7ce4be",
-      "audit/tcu-all-card-acceptance.json": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83",
-      "src/cards/tcu-campaign-acceptance.js": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461",
+      "audit/tcu-all-card-acceptance.json": "2300384db2543b34fcc3348c55a559545851494bd39e82b8caf918ee533d5d77",
+      "src/cards/tcu-campaign-acceptance.js": "7094da663e61c3d75ff97833fad952ec4e9ed325b4313261cefeab0cd9f0469a",
       "tests/tcu-all-card-ledger.test.mjs": "7589b56d582af7c856356975b0a460d6d0e9975b7a0b4908c3fcb94739c3a638",
       "tests/tcu-campaign-card-acceptance.test.mjs": "bfccf38913dc74e1ffd05fb7a426f1379e03b91ee1bcadbc781ff0a0067b25fa",
       "content/campaigns/theCircleUndone/card-acceptance.js": "c6bdec9266ac7bfd026aaff57a9fcfbac853fce4fae155f7f57391933c2215d4",
@@ -5622,8 +5652,8 @@
     "investigatorAcceptance": {
       "command": "node --test tests/tcu-investigators.test.mjs",
       "status": 0,
-      "tests": 90,
-      "passed": 90,
+      "tests": 91,
+      "passed": 91,
       "failed": 0,
       "ok": true
     },
@@ -5637,7 +5667,7 @@
         "basicWeaknesses": 2,
         "verified": 87,
         "unverified": 0,
-        "testsPassed": 166
+        "testsPassed": 172
       }
     },
     "playerLedgerAcceptance": {
@@ -6027,16 +6057,16 @@
         "constructible": 85,
         "deckable": 83,
         "simplified": 0,
-        "testsPassed": 531,
+        "testsPassed": 538,
         "testFiles": 6
       },
       "ledger": {
         "path": "audit/tcu-all-card-acceptance.json",
-        "sha256": "aee425a763ce776bea06a8debdf7eb9cc683bbd79397a851d51051a9f5365c83"
+        "sha256": "2300384db2543b34fcc3348c55a559545851494bd39e82b8caf918ee533d5d77"
       },
       "module": {
         "path": "src/cards/tcu-campaign-acceptance.js",
-        "sha256": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461"
+        "sha256": "7094da663e61c3d75ff97833fad952ec4e9ed325b4313261cefeab0cd9f0469a"
       },
       "badEvidence": [],
       "simplified": 0,

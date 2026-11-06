@@ -11,6 +11,7 @@ export function createCampaignPlugin(deps) {
     RELIC_OF_AGES_CODE,
     aliveInvestigators,
     assetReplacementPlans,
+    campaignCardChange,
     cardDef,
     cardName,
     cardPlayFlag,
@@ -119,7 +120,16 @@ export function createCampaignPlugin(deps) {
     // Phase 5（5a-4）：威胁卡卡号只在内容层出现。
     const poisonCode = poisonThreatCode()
     inv.threat.push(newCardInstance(state, poisonCode, { permanent: true }))
-    info(state, events, `🧪 ${inv.name} 中毒了（「${cardName(poisonCode)}」进入威胁区域）。`)
+    // 04102「中毒」是永久弱点：除了本关进入威胁区域，还要写进战役牌组记录。
+    // 参考实现 becomePoisoned = createWeaknessInThreatArea + addCampaignCardToDeck(DoNotShuffleIn)：
+    // 只写威胁区的话，下一关按战役记录重建牌组时中毒会凭空消失，补给点/幕间的
+    // 「从牌库移除中毒弱点」也永远找不到这张卡。永久卡在开局准备时自动从牌组进入威胁区域
+    // （setup.js 的 permanent 循环），因此下一关开局即视为已中毒。
+    const record = state.campaign?.investigators?.[seat]
+    if (record && Array.isArray(record.deck) && !record.deck.includes(poisonCode)) {
+      campaignCardChange(state.campaign, seat, poisonCode, 'add', 'poison')
+    }
+    info(state, events, `🧪 ${inv.name} 中毒了（「${cardName(poisonCode)}」永久加入牌库，本关进入威胁区域）。`)
     return true
   }
 

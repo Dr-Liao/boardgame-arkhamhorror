@@ -106,7 +106,7 @@ const AGENT_HINT = [
   '【离场与聊天】先核对座位身份和当前队伍参与状态。被击败、撤退、永久死亡、永久疯狂必须区分；被击败不等于永久死亡。已离场调查员不能继续本关行动或提供投入、支援，不得要求其调查、战斗、移动或等待其行动，也不得臆造治疗复活。真人仍能聊天和讨论策略；玩家继续发言不代表调查员恢复行动。回应其倒下或讨论分工时，应承认当前状态并由仍在场队友接手。当前状态优先于旧聊天、备忘和计划；准备、结算及更换调查员仍以当前合法选项为准。',
   '【实现边界】当前可启动《夜之狂热》《敦威治遗产》《卡尔克萨之路》《失落的时代》和《万象无终》；部分内容带 earlyAccess 或明确登记的近似实现，不是严格规则等价认证。全卡图鉴收录不等于可玩，以当前战役状态、合法行动和服务端结算为准，不根据原版卡文臆造效果。',
   '你们正在推进当前战役；关卡顺序、可用机制和结局以服务端状态与合法动作列表为准。',
-  '【线索与移动】按当前场景推进条件核对所需线索、支付地点和时机，不从剧情文字猜测开门或触发条件。以收集线索为目标时选择仍有线索且可调查的地点；零线索地点仍可用于必经路线、支付推进、战斗、支援或撤退，但移动必须有具体目的。不要在条件未变化时反复往返两个空地点来试探剧情；每步核对线索缺口，旧计划声称“线索带齐”不能覆盖当前数值。要求回合结束支付时，凑齐后留在指定地点等支付窗口，不要因当前没有 advanceAct 就离开。',
+  '【线索与移动】按当前场景推进条件核对所需线索、支付地点和时机，不从剧情文字猜测开门或触发条件。以收集线索为目标时选择仍有线索且可调查的地点；零线索地点仍可用于必经路线、支付推进、战斗、支援或撤退，但移动必须有具体目的。零线索地点的「调查」本身仍然合法（检定成功不会发现线索）；只有地点/卡牌明确以「成功调查」为触发（例如梦境之门·无谓现实翻面、调查成功反应、放大镜类支援的检定加成）时才值得花行动去查，否则不要为了拿线索去调查零线索地点。不要在条件未变化时反复往返两个空地点来试探剧情；每步核对线索缺口，旧计划声称“线索带齐”不能覆盖当前数值。要求回合结束支付时，凑齐后留在指定地点等支付窗口，不要因当前没有 advanceAct 就离开。',
   '【战役目标与合作】胜利点、创伤与冒险日志会跨关继承。请以团队整体利益为重：让高智识者调查、高战斗者处理敌人，配合队友推进场景目标；奖励、创伤及后续布置以当前实现的结算状态为准。',
   '收到待决选择时，不论当前是谁的回合，都只由指定回答座位提交 {"action":"choose","choiceId":"...","optionId":"..."}。可以跳过也必须使用合法列表提供的跳过选项；多步选择逐次回答、逐次读取新状态。',
   '没有待决选择时，从合法列表选一个普通行动作为 move；行动成本与可支付性以列表为准，免费行动不消耗行动点。',
@@ -149,6 +149,7 @@ const parallelLaunchMove = (state, move) => state?.campaign?.mode === 'parallel'
 const hostedValidateMove = (state, seat, move) => {
   if (parallelLaunchMove(state, move)) return parallelLaunchReason(state)
   if (isParallelState(state)) return parallelValidateMove(state, seat, move)
+  if (move?.action === 'debug') return validateMove(state, laneSeatOfRoom(state, seat) ?? 0, move)
   if (seatIsWaiting(state, seat)) return '现在不是你的行动时机（另一条线）'
   return validateMove(state, laneSeatOfRoom(state, seat), move)
 }
@@ -166,6 +167,7 @@ const hostedApplyMove = (state, seat, move) => {
     syncParallelStatus(state)
     return [{ type: 'info', text: '两条线同时进入梦境。', lane: null }]
   }
+  if (move?.action === 'debug') return applyMove(state, laneSeatOfRoom(state, seat) ?? 0, move)
   if (seatIsWaiting(state, seat)) throw new Error('现在不是你的行动时机（另一条线）')
   return applyMove(state, laneSeatOfRoom(state, seat), move)
 }

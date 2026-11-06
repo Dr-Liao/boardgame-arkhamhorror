@@ -122,7 +122,7 @@ test('AI location briefing: revealed locations expose implemented entry and move
   assert.equal(context(s).locations.find(loc => loc.id === 'cellar').entry.blocked, undefined)
 })
 
-test('AI location briefing: ability and investigation report why the engine will not trigger them', () => {
+test('AI location briefing: ability and investigation report availability reasons', () => {
   const s = scene('theMidnightMasks')
   s.investigators[0].location = 'northside'
   s.investigators[0].resources = 0
@@ -135,8 +135,10 @@ test('AI location briefing: ability and investigation report why the engine will
   s.locations.find(loc => loc.id === 'northside').clues = 0
   data = context(s)
   north = data.locations.find(loc => loc.id === 'northside')
-  assert.equal(north.investigate.available, false)
-  assert.equal(north.investigate.reason, '这里没有线索可调查')
+  // 2026-11-06 规则修正：零线索只影响成功后的线索收益，不影响「能不能调查」。
+  assert.equal(north.investigate.available, true)
+  assert.equal(north.investigate.reason, null)
+  assert.match(north.investigate.note, /无线索/)
 
   s.locationAbilityTeamUsed = { northside: true }
   assert.match(context(s).locations.find(loc => loc.id === 'northside').ability.reason, /本场游戏队伍已使用/)

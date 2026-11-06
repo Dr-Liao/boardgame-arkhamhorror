@@ -105,12 +105,14 @@ function lookZoneAdapter(state, seat, zone, targetSeat = null, count = 3) {
 
 // 看牌：默认「看 N 张、洗回」；choose>0 时把选中的牌放进手牌（检索语义）。
 
-// P6（食梦者）查找牌库的两道读点（deck-ops 是「查找」的唯一实现）：
+// P6（食梦者）查找牌库的两道读点（`lookAt` / `searchDeck` 与 card-ops 的 `searchTop` 共用）：
 //   · 窗口 searchWouldResolve：查找开始之前。曼蒂·汤普森「该调查员可以额外查找 3 张卡牌，或者
 //     该次查找多结算 1 个目标」——能力写 context.extraCards / context.extraTargets。
 //   · 条目级 searchedCardRule：本次查找的牌确定之后，「被找到的那张牌自己」的规则
 //     （神秘证据 reveal/take、惊人的发现 discard + cancelSearch）。牌还在牌库里，所以不是窗口。
-// 两者只对「正在查找牌库/遭遇牌库」的座位生效。
+// 两者只对「正在查找牌库/遭遇牌库」的座位生效。`searchedCardsWindow` 由 deck-ops 导出，
+// 供 card-ops 的 `searchTop`（另一条「查找牌库顶 N 张」实现）复用同一读点，避免两张卡
+// 对同一句「在你查找牌库时」各自解释（05153 查找不触发 06023 即此读点缺失）。
 function searchExplain(zone) {
   return zone === 'encounterDeck' ? '遭遇牌库' : '牌库'
 }
@@ -645,5 +647,5 @@ function removeCardByCode(arr, code) {
 // 敌人
 // ---------------------------------------------------------------------------
 
-  return { lookZoneAdapter, lookAt, scryDeck, searchDeck, moveCardTo, drawCards, discardRandomFromHand, removeOne, removeCardByCode }
+  return { lookZoneAdapter, lookAt, scryDeck, searchDeck, searchedCardsWindow, moveCardTo, drawCards, discardRandomFromHand, removeOne, removeCardByCode }
 }

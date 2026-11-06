@@ -46,7 +46,10 @@ export default {
       trigger: 'assetEnteredPlay',
       id: 'longColtSecondCopy',
       label: '打出后：免费从手牌打出另一张同名枪',
-      criteria: [({ inv, context }) => context?.assetCode === '06011'
+      // 2026-11-06：「你打出这张枪后」是自指文本，只属于刚打出的那一张；
+      // 场上已有的同名枪不跟着触发（两张同场时旧写法会多出一个候选）。
+      criteria: [({ inv, context, source }) => context?.assetCode === '06011'
+        && context?.assetId === source?.id
         && (inv.hand || []).includes('06011')],
       resolve: ({ inv, api }) => {
         api.playCardFromHandFree(inv.seat, '06011')

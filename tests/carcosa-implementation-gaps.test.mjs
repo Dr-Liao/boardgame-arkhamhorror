@@ -398,7 +398,9 @@ test('放大镜可以调查没有线索的卡尔克萨尖柱，成功只移除�
   state.investigators[0].intellect = 3
   state.investigators[0].clues = 0
   state.chaosBag = ['0']
-  assert.equal(legalMoves(state).some(item => item.action === 'investigate'), false)
+  // 2026-11-06 规则修正：零线索地点也可以发起基础调查（成功只是不发现线索）。
+  // 需要的是「尖柱自己的调查」照常可做且不发现线索。
+  assert.equal(legalMoves(state).some(item => item.action === 'investigate'), true)
   const spire = legalMoves(state).find(item => item.rule === 'clearSpiresOfCarcosa')
   assert.ok(spire)
   assert.equal(spire.actionKind, 'investigate')

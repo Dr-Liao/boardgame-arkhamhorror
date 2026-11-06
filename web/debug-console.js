@@ -8,10 +8,29 @@
 // 所有用户可见文案都走 debug.* 词典 key（词典片段：web/locales/zh-CN.gameui.js + en.gameui.js）。
 
 const LOG_LIMIT = 20
+const HISTORY_LIMIT = 50
 // 服务端解析器的英文别名：web/ 里不写中文指令字面量。
 const HELP_COMMAND = 'help'
 // 自动帮助遇到用户正在提交时稍后再试：不和普通指令抢大厅的 busy 通道。
 const AUTO_HELP_RETRY_MS = 300
+
+const QUICK_ACTIONS = [
+  { key: 'debug.quick.resources', runKey: 'debug.quick.cmd.resources' },
+  { key: 'debug.quick.clues', runKey: 'debug.quick.cmd.clues' },
+  { key: 'debug.quick.actions', runKey: 'debug.quick.cmd.actions' },
+  { key: 'debug.quick.draw', runKey: 'debug.quick.cmd.draw' },
+  { key: 'debug.quick.heal', runKey: 'debug.quick.cmd.heal' },
+  { key: 'debug.quick.ready', runKey: 'debug.quick.cmd.ready' },
+  { key: 'debug.quick.revealAll', runKey: 'debug.quick.cmd.revealAll' },
+  { key: 'debug.quick.killAll', runKey: 'debug.quick.cmd.killAll' },
+  { key: 'debug.quick.advanceAct', runKey: 'debug.quick.cmd.advanceAct' },
+  { key: 'debug.quick.elderSign', runKey: 'debug.quick.cmd.elderSign' },
+  { key: 'debug.quick.skipChoice', runKey: 'debug.quick.cmd.skipChoice' },
+  { key: 'debug.quick.status', runKey: 'debug.quick.cmd.status' },
+  { key: 'debug.quick.fillGive', fillKey: 'debug.quick.fillGive.prefix' },
+  { key: 'debug.quick.fillSpawn', fillKey: 'debug.quick.fillSpawn.prefix' },
+  { key: 'debug.quick.fillMove', fillKey: 'debug.quick.fillMove.prefix' },
+]
 
 export function createDebugConsole({ h, t, api, render, state }) {
   let opened = false
@@ -20,6 +39,7 @@ export function createDebugConsole({ h, t, api, render, state }) {
   let log = []
   let logSeq = 0
   let helpText = ''
+  let serverHelpExpanded = false
   // 帮助是只读指令（move:null），不锁全局 busy；helpPending 只用于去重自动/手动请求。
   let helpPending = null
   let helpSeq = 0
@@ -29,6 +49,9 @@ export function createDebugConsole({ h, t, api, render, state }) {
   let optionKey = ''
   // render() 每次牌桌重绘都会被调用；只有日志内容变了才重建 DOM，避免频繁 replaceChildren。
   let paintedLogSeq = -1
+  let history = []
+  let historyIndex = -1
+  let historyDraft = ''
 
   // 联机：连接中且自己是房主；单机（没有 state.online.room）：本机可用。
   function canUse(session) {
@@ -81,8 +104,41 @@ export function createDebugConsole({ h, t, api, render, state }) {
     autocomplete: 'off',
     spellcheck: 'false',
     onkeydown: event => {
+      if (event.isComposing) return
       // Enter 直接提交；输入法组合中的回车交给输入法。
-      if (event.key === 'Enter' && !event.isComposing) { event.preventDefault(); submit() }
+      if (event.key === 'Enter') { event.preventDefault(); submit(); return }
+      // ↑ / ↓ 翻阅已执行指令历史。
+      if (event.key === 'ArrowUp') {
+        if (!history.length) return
+        event.preventDefault()
+        if (historyIndex < 0) {
+          historyDraft = input.value
+          historyIndex = history.length - 1
+        } else if (historyIndex > 0) {
+          historyIndex--
+        }
+        input.value = history[historyIndex]
+        queueMicrotask(() => {
+          const end = input.value.length
+          if (typeof input.setSelectionRange === 'function') input.setSelectionRange(end, end)
+        })
+        return
+      }
+      if (event.key === 'ArrowDown') {
+        if (historyIndex < 0) return
+        event.preventDefault()
+        if (historyIndex < history.length - 1) {
+          historyIndex++
+          input.value = history[historyIndex]
+        } else {
+          historyIndex = -1
+          input.value = historyDraft
+        }
+        queueMicrotask(() => {
+          const end = input.value.length
+          if (typeof input.setSelectionRange === 'function') input.setSelectionRange(end, end)
+        })
+      }
     },
   })
   const commandField = h('label', { className: 'ah-debug-field ah-debug-command' }, inputLabel, input)
@@ -96,6 +152,28 @@ export function createDebugConsole({ h, t, api, render, state }) {
   })
   const actionRow = h('div', { className: 'ah-debug-actions' }, runButton, helpButton)
 
+  const quickTitle = h('h3', { className: 'ah-debug-section-title' })
+  const quickButtons = QUICK_ACTIONS.map(item => {
+    const button = h('button', {
+      type: 'button',
+      className: 'ah-debug-chip' + (item.fillKey ? ' is-fill' : ''),
+      onclick: () => {
+        if (busy || !opened) return
+        if (item.fillKey) {
+          input.value = t(item.fillKey)
+          input.focus({ preventScroll: true })
+          const end = input.value.length
+          if (typeof input.setSelectionRange === 'function') input.setSelectionRange(end, end)
+          return
+        }
+        submit(t(item.runKey))
+      },
+    })
+    return { item, button }
+  })
+  const quickRow = h('div', { className: 'ah-debug-quick-list' }, ...quickButtons.map(entry => entry.button))
+  const quickSection = h('section', { className: 'ah-debug-quick' }, quickTitle, quickRow)
+
   const helpTitle = h('h3', { className: 'ah-debug-section-title' })
   const helpExamples = h('pre', { className: 'ah-debug-help-examples' })
   const helpServer = h('pre', { className: 'ah-debug-help-server' })
@@ -107,7 +185,7 @@ export function createDebugConsole({ h, t, api, render, state }) {
   const logSection = h('section', { className: 'ah-debug-log-section' }, logTitle, logList, logEmpty)
 
   const body = h('div', { className: 'ah-debug-body' },
-    targetField, commandField, actionRow, helpSection, logSection)
+    targetField, commandField, actionRow, quickSection, helpSection, logSection)
   const panel = h('section', {
     className: 'ah-debug-panel',
     role: 'dialog',
@@ -145,10 +223,15 @@ export function createDebugConsole({ h, t, api, render, state }) {
     helpButton.textContent = t('debug.helpButton')
     helpButton.setAttribute('aria-label', t('debug.helpButton'))
     helpButton.title = t('debug.helpButton')
+    quickTitle.textContent = t('debug.quickTitle')
+    for (const entry of quickButtons) {
+      entry.button.textContent = t(entry.item.key)
+      entry.button.disabled = busy
+    }
     helpTitle.textContent = t('debug.help')
     helpExamples.textContent = t('debug.helpExamples')
     helpServer.textContent = helpText
-    helpServer.hidden = !helpText
+    helpServer.hidden = !helpText || !serverHelpExpanded
     logTitle.textContent = t('debug.logTitle')
     logList.setAttribute('aria-label', t('debug.logTitle'))
     logEmpty.textContent = t('debug.empty')
@@ -267,6 +350,7 @@ export function createDebugConsole({ h, t, api, render, state }) {
 
   async function showHelp() {
     if (!opened || busy) return
+    serverHelpExpanded = true
     // 与打开面板时的自动请求合并：等它回来直接展示，不再多发一次。
     if (helpPending) {
       await helpPending
@@ -274,6 +358,12 @@ export function createDebugConsole({ h, t, api, render, state }) {
       const current = state.session
       if (!current || current.sessionId !== sessionId) return
       if (!helpText) { requestHelp({ logResult: true }); return }
+      pushLog('success', helpText)
+      update()
+      render()
+      return
+    }
+    if (helpText) {
       pushLog('success', helpText)
       update()
       render()
@@ -308,6 +398,10 @@ export function createDebugConsole({ h, t, api, render, state }) {
     logSeq = 0
     paintedLogSeq = -1
     helpText = ''
+    serverHelpExpanded = false
+    history = []
+    historyIndex = -1
+    historyDraft = ''
     clearAutoHelpTimer()
     autoHelpSessionId = null
     helpSeq++
@@ -368,17 +462,23 @@ export function createDebugConsole({ h, t, api, render, state }) {
     if (!switchedSession && !newerSnapshot) state.session = session
   }
 
-  async function submit() {
+  async function submit(overrideText = null) {
     if (busy || !opened) return
     const session = state.session
     if (!session || session.sessionId !== sessionId || !canUse(session)) return
-    const text = String(input.value || '').trim()
+    const text = String(overrideText != null ? overrideText : (input.value || '')).trim()
     if (!text) { input.focus({ preventScroll: true }); return }
+    if (history.at(-1) !== text) {
+      history.push(text)
+      if (history.length > HISTORY_LIMIT) history.splice(0, history.length - HISTORY_LIMIT)
+    }
+    historyIndex = -1
+    historyDraft = ''
     const command = { text }
     if (Number.isInteger(targetSeat)) command.targetSeat = targetSeat
     const submitted = session
     busy = true
-    input.value = ''
+    if (overrideText == null) input.value = ''
     update()
     // 打开面板时的自动帮助可能还在飞：先等它落地（只读、不推进 revision），
     // 否则两个请求会同时占住大厅 busy 通道，普通指令可能被 SESSION_BUSY 拒绝。
@@ -400,7 +500,10 @@ export function createDebugConsole({ h, t, api, render, state }) {
       const message = typeof result?.debug?.message === 'string' ? result.debug.message : ''
       // move === null 表示帮助类指令：服务端只回文本、不提交、不改 revision。
       if (result?.debug?.move == null) {
-        if (message) helpText = message
+        if (message && text.toLowerCase() === HELP_COMMAND) {
+          helpText = message
+          serverHelpExpanded = true
+        }
         pushLog('success', message || t('debug.help'))
       } else {
         pushLog('success', message || t('debug.logOk'))

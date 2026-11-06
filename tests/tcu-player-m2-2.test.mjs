@@ -790,6 +790,65 @@ test('TCU 05154 鹰眼折叠相机 最后线索后放证据；证据给意志/�
   assert.equal(getMaxSanity(me(state)), baseSanity + 1)
 })
 
+test('TCU 05154 鹰眼折叠相机 同场两张：最后线索后两张各触发一次，证据各记各的', () => {
+  const state = fixture('01001')
+  const first = asset(state, '05154')
+  const second = asset(state, '05154')
+  const location = state.locations[0]
+  location.clues = 1
+  location.shroud = 2
+  state.chaosBag = ['0']
+  const baseWillpower = getStat(state, me(state), 'willpower')
+  // 每张相机都是独立的能力实例（规则书 Ability）：最后一个线索被发现后，
+  // 两张都应该出现在候选里；结算完一张，另一张仍可触发。
+  const cameraOptionsPerPrompt = []
+  run(state, current => { discoverClueAt(current, current.investigators[0], 1, []) }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const cameras = pending.options.filter(option => option.cardCode === '05154')
+    if (!cameras.length) return null
+    cameraOptionsPerPrompt.push(cameras.length)
+    return cameras[0].id
+  })
+  const after = me(state).assets.filter(item => item.id === first.id || item.id === second.id)
+  assert.deepEqual(cameraOptionsPerPrompt, [2, 1], '同一窗口先给出两张候选，结算一张后另一张仍可触发')
+  assert.deepEqual(after.map(item => item.uses), [1, 1], '两张相机各放置 1 个证据')
+  assert.deepEqual(after.map(item => item.evidenceLocations), [[location.id], [location.id]], '两张各自记账该地点')
+  assert.equal(getStat(state, me(state), 'willpower'), baseWillpower + 2, '两张各 +1 意志，加成互相独立')
+})
+
+test('TCU 05154 鹰眼折叠相机 每台相机在每个地点仅限一次，换地点可再拿', () => {
+  const state = fixture('01001')
+  const camera = asset(state, '05154')
+  const study = state.locations[0]
+  study.clues = 1
+  study.shroud = 2
+  state.chaosBag = ['0']
+  const triggerAtCurrentLocation = () => {
+    let triggered = 0
+    run(state, current => { discoverClueAt(current, current.investigators[0], 1, []) }, pending => {
+      if (pending.kind !== 'reaction') return null
+      const option = pending.options.find(candidate => candidate.cardCode === '05154')
+      if (!option) return null
+      triggered += 1
+      return option.id
+    })
+    return triggered
+  }
+  assert.equal(triggerAtCurrentLocation(), 1)
+  assert.equal(me(state).assets.find(item => item.id === camera.id).uses, 1)
+  // 同一地点再次出现最后线索：本相机已经在该地点记过账，不能再拿。
+  state.locations.find(item => item.id === study.id).clues = 1
+  assert.equal(triggerAtCurrentLocation(), 0, '同一地点第二次清空不再触发')
+  // 换到新地点：每台相机在每个地点各限一次，可以再拿 1 个证据。
+  const attic = addLocation(state, 'attic')
+  me(state).location = attic
+  state.locations.find(item => item.id === attic).clues = 1
+  assert.equal(triggerAtCurrentLocation(), 1, '新地点可以再触发一次')
+  const after = me(state).assets.find(item => item.id === camera.id)
+  assert.equal(after.uses, 2)
+  assert.deepEqual([...(after.evidenceLocations || [])].sort(), [study.id, attic].sort())
+})
+
 // ---------------------------------------------------------------------------
 // 05155 亨利·万
 // ---------------------------------------------------------------------------
@@ -902,6 +961,26 @@ test('TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值',
   assert.equal(aooState.investigators[0].damage, damageBefore, 'Fight 行动不引发借机攻击')
 })
 
+test('TCU 05157 凋零术 同一场检定只结算一次符号效果（不重复叠加 -1）', () => {
+  const state = fixture('01001')
+  const wither = asset(state, '05157')
+  const target = enemy(state, { id: 'wither-once', fight: 3, evade: 1, health: 9 })
+  state.chaosBag = ['skull']
+  let offers = 0
+  move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => /凋零术/.test(String(item.label)))
+      if (option) { offers += 1; return option.id }
+    }
+    return null
+  })
+  assert.equal(offers, 1, '符号窗口只提供并结算一次凋零术（引擎会开两次窗口，候选询问也会重列）')
+  const after = state.enemies.find(item => item.id === target.id)
+  assert.equal((after.statMods || []).filter(item => item.fight === -1).length, 1, '只叠加一次 -1 攻击值/-1 躲避值')
+  assert.equal(enemyEvadeValue(state, after), 1, '躲避 1 仍按最低 1 钳制')
+})
+
 // ---------------------------------------------------------------------------
 // 05158 第六感
 // ---------------------------------------------------------------------------
@@ -1002,6 +1081,34 @@ test('TCU 05158 第六感 非符号不触发', () => {
   assert.equal(state.locations.find(location => location.id === study.id).clues, 0, '线索在原调查地点被发现')
 })
 
+test('TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）', () => {
+  const state = fixture('01001')
+  asset(state, '05158')
+  const study = state.locations[0]
+  study.clues = 1
+  study.shroud = 3
+  const atticId = addLocation(state, 'attic')
+  const attic = state.locations.find(location => location.id === atticId)
+  attic.clues = 1
+  attic.shroud = 0
+  state.chaosBag = ['skull']
+  let offers = 0
+  move(state, { action: 'ability', assetId: me(state).assets[0].id, abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => item.cardCode === '05158')
+      if (option) { offers += 1; return option.id }
+    }
+    if (pending.kind === 'location') return 'attic'
+    if (pending.kind === 'effect') return 'new'
+    return null
+  })
+  assert.equal(offers, 1, '同一场检定只提供并结算一次第六感（不因窗口重开或候选重列重复触发）')
+  assert.equal(state.lastTestResult.difficulty, 0, '难度仍按所选地点的隐藏值结算')
+  assert.equal(state.locations.find(location => location.id === atticId).clues, 0, '线索仍只在新目标地点发现一次')
+  assert.equal(state.locations.find(location => location.id === study.id).clues, 1, '原地点线索未被发现')
+})
+
 // ---------------------------------------------------------------------------
 // 05159 险中求胜
 // ---------------------------------------------------------------------------
@@ -1077,4 +1184,67 @@ test('TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出', () => {
   assert.equal(offered, false, '成功点数不足 2 时不提供勇闯虎穴')
   assert.equal(me(state).hand.includes('05160'), true)
   assert.equal(state.locations[0].clues, 1)
+})
+
+// ---------------------------------------------------------------------------
+// 05153 “老千”先生 × 06023 骇人真相（跨循环：食梦者的「研究」卡）
+//
+// 回归：本卡此前用 api.topDeckCodes 自己实现查找，绕过 deck-ops 的 searchedCardRule 读点，
+// 所以查找的牌里有「骇人真相」时它的反应永远不触发。现在查找走公共原语 api.searchTop，
+// 与智慧古书 01031 / 新晋术士 03271 共用同一份「被查找到的牌自身规则」。
+// ---------------------------------------------------------------------------
+
+test('TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源', () => {
+  const state = fixture('01001')
+  const rook = asset(state, '05153')
+  const inv = me(state)
+  // 牌库底 → 牌库顶：最后一个是牌库顶。顶 3 张 = 01088 / 06023 / 01089。
+  inv.deck = ['01016', '01088', '06023', '01089']
+  inv.hand = []
+  const resourcesBefore = inv.resources
+  let offered = false
+  move(state, { action: 'ability', assetId: rook.id, abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === '06023') { offered = true; return 'trigger' }
+    if (pending.kind === 'effect' && pending.source === '06023') return 'resources'
+    if (pending.kind === 'search') {
+      const cards = pending.options.filter(option => option.cardCode)
+      if (!cards.length) return '3'
+      return (cards.find(option => option.cardCode === '01089') ?? cards[0]).id
+    }
+    return null
+  })
+  assert.equal(offered, true, '查找的牌中有骇人真相：必须给出反应询问')
+  assert.equal(me(state).discard.includes('06023'), true, '触发后骇人真相被弃掉')
+  assert.equal(me(state).resources, resourcesBefore + 2, '选择获得 2 资源')
+  assert.equal(me(state).hand.includes('01089'), true, '查找照常抽出选中的牌')
+  const after = me(state).assets.find(item => item.id === rook.id)
+  assert.equal(after.uses, 2, '能力自己花费的 1 秘密不因骇人真相回补')
+})
+
+test('TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密', () => {
+  const state = fixture('01001')
+  const rook = asset(state, '05153')
+  const inv = me(state)
+  inv.deck = ['01016', '01088', '06023', '01089']
+  inv.hand = []
+  const resourcesBefore = inv.resources
+  move(state, { action: 'ability', assetId: rook.id, abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === '06023') return 'trigger'
+    if (pending.kind === 'effect' && pending.source === '06023') {
+      return pending.options.find(option => option.cardCode === '05153')?.id
+    }
+    if (pending.kind === 'search') {
+      const cards = pending.options.filter(option => option.cardCode)
+      if (!cards.length) return '3'
+      return (cards.find(option => option.cardCode === '01088') ?? cards[0]).id
+    }
+    return null
+  })
+  assert.equal(me(state).discard.includes('06023'), true)
+  assert.equal(me(state).resources, resourcesBefore, '选择放置秘密时不获得资源')
+  const after = me(state).assets.find(item => item.id === rook.id)
+  // 起始 3 秘密：能力花费 1，骇人真相在支援上放置 1。
+  assert.equal(after.uses, 3, '在「老千」先生上放置 1 秘密')
 })

@@ -618,7 +618,7 @@
   "nodeAcceptance": {
     "command": "node --test tests/tde-investigators.test.mjs",
     "status": 0,
-    "tests": 28,
+    "tests": 32,
     "fail": 0,
     "ok": true
   },
@@ -652,7 +652,7 @@
     "nodeAcceptance": {
       "command": "node --test tests/tde-investigators.test.mjs",
       "status": 0,
-      "tests": 28,
+      "tests": 32,
       "fail": 0,
       "ok": true
     },
@@ -688,7 +688,7 @@
     },
     {
       "path": "tests/tde-investigators.test.mjs",
-      "sha256": "b6e832ed924bf762208d0c4cc1a85e5262a40552fa5a0029afbad8817bd43be0"
+      "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
     },
     {
       "path": "docs/tde-investigators.md",

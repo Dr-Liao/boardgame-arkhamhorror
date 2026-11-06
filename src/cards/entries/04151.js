@@ -14,10 +14,12 @@ export default {
     {
       kind: 'free', label: '横置：本次检定按所选支援的匹配图标加值',
       cost: { action: false, exhaust: true }, duringOwnSkillTest: true,
-      resolve: ({ state, inv, api }) => {
+      resolve: ({ state, inv, api, source }) => {
         const skill = state.skillTest?.skill
         if (!skill) { api.info('只能在技能检定期间使用。'); return }
-        const candidates = inv.assets.filter(card => card.code !== '04151' && Number(api.cardIcons(card.code)[skill] || 0) > 0)
+        // 2026-11-06：排除的是「正在使用的这一张」（实例），不是所有同名卡；
+        // 两张准备万全同场时，另一张也是一张「你控制的支援卡牌」（本卡无印刷技能图标，实际仍要求有匹配图标）。
+        const candidates = inv.assets.filter(card => card.id !== source?.id && Number(api.cardIcons(card.code)[skill] || 0) > 0)
         if (!candidates.length) { api.info('没有提供匹配图标的支援。'); return }
         const chosen = candidates.length === 1 ? candidates[0].id
           : api.choice({ kind: 'target', source: '04151', seat: inv.seat,

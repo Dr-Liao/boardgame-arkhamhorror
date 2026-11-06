@@ -136,12 +136,41 @@
 .ah-debug-panel .ah-debug-run:disabled { opacity: .55; cursor: default; }
 
 .ah-debug-help,
+.ah-debug-quick,
 .ah-debug-log-section {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding-top: 10px;
   border-top: 1px solid #b0965826;
+}
+.ah-debug-quick-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ah-debug-chip {
+  min-height: 26px;
+  padding: 3px 9px;
+  border: 1px solid #8d754580;
+  border-radius: 4px;
+  background: #122820;
+  color: #e4d4ac;
+  font-size: 12px;
+  line-height: 1.3;
+}
+.ah-debug-chip:hover:not(:disabled) {
+  border-color: #d7ba7b;
+  background: #1d3c30;
+  color: #fff3cb;
+}
+.ah-debug-chip.is-fill {
+  border-style: dashed;
+  color: #c9b681;
+}
+.ah-debug-chip:disabled {
+  opacity: .55;
+  cursor: default;
 }
 .ah-debug-section-title {
   margin: 0;

@@ -410,3 +410,26 @@ test('通道里的快速事件收尾候选（fast-card:hunch:<卡号>）同样�
   setReactionState(session.sessionId,0,'01050',null)
 })
 
+test('玩家窗口里的描述子免费能力（free-descriptor:<卡号>:<下标>）也能映射回卡号并整窗让过',()=>{
+  // 能力层描述子枚举的免费触发选项负载没有 assetId/cardCode（选项 id 自带卡号），
+  // 只能从 id 反查。06013 门之匣被 04099 毒蛇灾厄空白化后旧 DSL 通道已清空，
+  // 玩家窗口只剩这条描述子候选：映射不出来时卡面开关既过滤不掉选项也不会整窗代答
+  // （实机复现：关掉门之匣的快速反应按钮，遭遇牌结算后的窗口仍然弹询问）。
+  const st={
+    revision:7,
+    cards:{'06013':{code:'06013',name:'门之匣',hasReactionPrompt:true,hasAutoReaction:false,autoByDefault:false}},
+    investigators:[{seat:0,code:'06004',hand:[],assets:[{id:'gatebox',code:'06013',uses:3,exhausted:false}],threat:[]}],
+    pendingChoice:{id:'encounter-window',kind:'playerWindow',seat:0,canSkip:true,source:'mythos.afterEncounter',
+      options:[{id:'skip',label:'让过'},
+        {id:'free-descriptor:06013:0',label:'门之匣：横置并花费 1 充能：解除交战，放置梦境之门并移动过去',targetId:null}]},
+    legalMoves:[{action:'choose',choiceId:'encounter-window',optionId:'skip'},
+      {action:'choose',choiceId:'encounter-window',optionId:'free-descriptor:06013:0'}],
+  }
+  const session={sessionId:'free-descriptor-window',state:st}
+  assert.deepEqual(reactionChoices(st).map(item=>item.code),['06013'],'窗口能映射回卡号，开关才对它有作用')
+  setReactionState(session.sessionId,0,'06013','skip')
+  assert.deepEqual(reactionView(session).state.legalMoves.map(move=>move.optionId),['skip'])
+  assert.equal(reactionAutoPlan(session,0,true)?.move?.optionId,'skip')
+  setReactionState(session.sessionId,0,'06013',null)
+})
+

@@ -31,6 +31,8 @@ export function createCardOps(deps) {
     requestChoice,
     scenarioBehavior,
     searchDeck,
+    // P6（食梦者）：被查找到的牌自身规则（searchedCardRule）的唯一读点，与 deck-ops 共用。
+    searchedCardsWindow,
     shuffle,
   } = deps
 
@@ -246,12 +248,34 @@ export function createCardOps(deps) {
     return Number(id)
   }
 
+  // 真实抽牌通道：把牌库里的指定牌移到牌库顶，再用 drawCards 抽 1 张
+  // （弱点按显现结算、抽牌窗口/日志与其他抽取一致）。
+  function drawDeckCard(state, inv, code, events) {
+    const index = inv.deck.lastIndexOf(code)
+    if (index >= 0) inv.deck.splice(index, 1)
+    inv.deck.push(code)
+    for (const text of drawCards(state, inv, 1, events)) info(state, events, text)
+  }
+
   function searchTop(state, seat, effect, events) {
     const inv = state.investigators[seat]
     const n = Math.max(1, effect.amount || 3)
     const cards = inv.deck.slice(-Math.min(n, inv.deck.length))
     if (!cards.length) { info(state, events, `${inv.name} 的牌库已空，无法搜索。`); return }
-    const matches = cards.filter(code => {
+    // P6（食梦者）查找牌库的第二道读点：被查找到的牌自身的规则（神秘证据 / 惊人的发现 /
+    // 骇人真相……）由条目上的 `searchedCardRule` 声明。`searchTop` 与 `lookAt` 都是
+    // 「查找牌库顶 N 张」，必须共用这一个读点，否则会漏触发（05153「老千」先生的查找
+    // 不触发 06023「骇人真相」就是这条读点缺失）。
+    // 传给读点的顺序与 lookAt 一致（牌库顶向下）；结算后还原成牌库底→牌库顶的候选顺序，
+    // 既有选项编号保持不变。
+    const revealed = searchedCardsWindow(state, inv, { owner: inv }, [...cards].reverse(), events)
+    if (revealed.cancel) {
+      inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
+      info(state, events, `${inv.name} 的这次查找被取消，牌库已洗回。`)
+      return
+    }
+    const searched = revealed.pile.filter(code => inv.deck.includes(code)).reverse()
+    const matches = searched.filter(code => {
       const def = cardDef(code)
       if (!def) return false
       if (effect.typeFilter && def.type !== effect.typeFilter) return false
@@ -271,17 +295,31 @@ export function createCardOps(deps) {
     const optional = effect.optional === true
     const answer = requestChoice(state, {
       kind: 'search', source: effect.source || 'search-top', seat, canSkip: optional,
-      prompt: `查看牌库顶 ${cards.length} 张，选择 ${effect.choose || 1} 张抽取，其余洗回。`,
+      prompt: effect.prompt || `查看牌库顶 ${cards.length} 张，选择 ${effect.choose || 1} 张抽取，其余洗回。`,
       options: [...(optional ? [{ id: 'skip', label: '不选择' }] : []),
         ...matches.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))],
     })
+    let drawnCode = null
     if (answer !== 'skip') {
-      const code = matches[Number(answer)]
-      const idx = inv.deck.lastIndexOf(code)
+      drawnCode = matches[Number(answer)]
       // 把选中的牌放到牌库顶，再走统一抽牌管线：弱点、抽牌窗口与日志都按「抽取」结算。
-      if (idx >= 0) inv.deck.splice(idx, 1)
-      inv.deck.push(code)
-      for (const text of drawCards(state, inv, 1, events)) info(state, events, text)
+      if (drawnCode) drawDeckCard(state, inv, drawnCode, events)
+    }
+    // 「如果查找的卡牌中有至少 1 张弱点，也抽取其中 1 张弱点」（05153）：
+    // 选中的牌本身是弱点时，它就是「抽取的弱点」，不再追加；多张时由玩家选择。
+    if (effect.drawWeakness && drawnCode && !isWeaknessCode(drawnCode)) {
+      const weaknessCodes = searched.filter(code => code !== drawnCode && inv.deck.includes(code) && isWeaknessCode(code))
+      if (weaknessCodes.length) {
+        const weaknessCode = weaknessCodes.length === 1 ? weaknessCodes[0] : (() => {
+          const picked = Number(requestChoice(state, {
+            kind: 'search', source: effect.source || 'search-top', seat,
+            prompt: '查找的牌中有多张弱点，选择抽取其中 1 张。',
+            options: weaknessCodes.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })),
+          }))
+          return weaknessCodes[picked] || weaknessCodes[0]
+        })()
+        drawDeckCard(state, inv, weaknessCode, events)
+      }
     }
     inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
   }

@@ -42,6 +42,10 @@ export default {
     },
     {
       kind: 'reaction', trigger: 'symbolRevealed', partOfAbility: 0,
+      // 同一场检定只结算一次：符号窗口在引擎里会开两次（reactionWindow 与 triggerReaction 的
+      // 能力窗口尾部），且窗口内的候选询问循环在结算后会把仍然可用的候选再列一遍；
+      // 卡面是「这次调查中揭示了符号」的一次性改写，不是每次枚举各结算一次。
+      limit: { scope: 'perTest', owner: 'instance' },
       label: '第六感：改为在连接的已揭示地点调查',
       criteria: [({ state, inv, context }) => {
         if (!context || context.seat !== inv.seat) return false

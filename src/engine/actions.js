@@ -477,8 +477,10 @@ function runInvestigate(state, seat, opts, events, noSpend) {
     ? beforeHook.call(scenarioBehavior(state), state, inv, loc, scenarioRuntime(state, events)) : undefined
   if (before === false) return
   if (!noSpend) spendAction(state, inv)
-  if (!loc || (loc.clues <= 0 && !opts.allowNoClues)) {
-    info(state, events, `${inv.name} 调查了「${loc ? loc.name : inv.location}」，但这里已经没有线索了。`)
+  // 2026-11-06 规则修正：调查行动不要求地点还有线索。零线索地点照样过检定，成功后只是
+  // 没有线索可发现；「成功调查后」类窗口（06015b 梦境之门翻转、调查成功反应等）必须保留。
+  if (!loc) {
+    info(state, events, `${inv.name} 调查了「${inv.location}」，但这里没有可调查的地点。`)
     return
   }
   if (loc.locked) {
@@ -592,7 +594,13 @@ function runInvestigate(state, seat, opts, events, noSpend) {
           discoverClueAt(state, inv, gain, events, { locationId: dual.locationId, investigation: true })
           const dualLoc = state.locations.find(l => l.id === dual.locationId)
           info(state, events, `🔎 ${inv.name} 同时在「${dualLoc?.name || dual.locationId}」调查，线索在该地点也被发现。`)
-        } else discoverClueAt(state, inv, gain, events, { investigation: true })
+        } else if ((loc.clues || 0) > 0) {
+          discoverClueAt(state, inv, gain, events, { investigation: true })
+        } else {
+          // 2026-11-06 规则修正：零线索地点的成功调查不发现线索（不触发「发现线索」窗口），
+          // 但上面的 investigateSuccess / 地点成功调查窗口已经正常结算（06015b 梦境之门在此翻面）。
+          info(state, events, `🔍 ${inv.name} 调查成功，但「${loc.name}」没有线索可发现。`)
+        }
       }
       // 2026-10-25 第四轮修复 after-investigate-hook（05175 教堂阁楼等）：卡面「成功调查后」
       // 的窗口必须在发现线索之后触发（此前只有 investigateResult = 发现线索之前）。

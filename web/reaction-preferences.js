@@ -86,6 +86,17 @@ const fastCardOptionCode = id => {
   return match ? match[1] : null
 }
 
+// 能力层免费触发（playerWindow 的描述子枚举路径）：选项 id 形如
+// `free-descriptor:<卡号>:<条目下标>[:<目标 id>][:<来源 id>]`，负载没有 assetId / cardCode
+// （见 src/engine/encounter.js#playerWindow）。卡面闪电开关按卡号记忆，必须能从 id 反查，
+// 否则「本局不再询问」既过滤不掉选项、也不会整窗让过——06013 门之匣被 04099 毒蛇灾厄
+// 空白化后旧 DSL 通道已清空，窗口只剩这条描述子候选，实机复现「关了开关仍然弹」。
+const freeDescriptorOptionCode = id => {
+  // 卡号是 5 位数字，剧情支援/双面卡可能带面后缀（07274a）；条目下标一定是数字。
+  const match = /^free-descriptor:(\d{5}[a-z]?):\d+/.exec(String(id || ''))
+  return match ? match[1] : null
+}
+
 export function reactionChoices(st) {
   const choice = st.pendingChoice
   if (!choice?.canSkip || !['reaction', 'playerWindow', 'boost'].includes(choice.kind)) return []
@@ -98,6 +109,7 @@ export function reactionChoices(st) {
   return (st.legalMoves || []).filter(move => move.action === 'choose' && move.choiceId === choice.id && move.optionId !== 'skip').map(move => {
     const option = choice.options?.find(option => option.id === move.optionId)
     const code = option?.cardCode || fastCardOptionCode(move.optionId)
+      || freeDescriptorOptionCode(move.optionId)
       || (choice.kind === 'reaction' && /^\d+$/.test(move.optionId) ? inv.hand?.[Number(move.optionId)] : null)
       || assets.find(asset => move.optionId === asset.id || move.optionId.startsWith(asset.id + ':'))?.code || sourceCard
     return { move, code }

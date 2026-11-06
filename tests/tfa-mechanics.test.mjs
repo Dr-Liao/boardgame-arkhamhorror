@@ -9,9 +9,11 @@ import {
   yigsFury, addYigsFury,
   expeditionLeaderSeat, setExpeditionLeader,
   moveRelicOfAges, relicOfAges, relicOfAgesLocation,
+  applyMove, createGameState, finishScenario, startScenario,
 } from '../src/engine/engine.js'
 import { supportedMechanics, missingMechanics } from '../content/mechanics.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { contentRegistry } from '../content/registered.js'
 
 const me = state => state.investigators[0]
 const TFA_MECHANICS = ['tfaExploration', 'tfaSupplies', 'tfaVengeance', 'tfaYigsFury',
@@ -138,10 +140,68 @@ test('M3-A poison puts the permanent Poisoned weakness into the threat area once
   assert.equal(isPoisoned(me(state)), true)
   assert.equal(ALL_CARDS['04102'].nameZh, '中毒')
   assert.ok(me(state).threat.some(card => card.code === '04102'))
+  const record = state.campaign.investigators[0]
+  assert.deepEqual(record.deck.filter(code => code === '04102'), ['04102'],
+    '永久弱点同时写入战役牌组记录')
   assert.equal(poisonInvestigator(state, 0), false, '同一调查员只中毒一次')
+  assert.equal(record.deck.filter(code => code === '04102').length, 1, '重复调用不会再写第二张')
   const restored = JSON.parse(JSON.stringify(state))
   assert.equal(isPoisoned(restored.investigators[0]), true, '中毒状态随存档保留')
+  assert.equal(restored.campaign.investigators[0].deck.filter(code => code === '04102').length, 1,
+    '牌组中的中毒弱点随存档保留')
 })
+
+// 回归：中毒必须永久进入战役牌组记录，下一关按记录重建牌组时以永久卡开局入场。
+// 口径 = 参考实现 becomePoisoned（createWeaknessInThreatArea + addCampaignCardToDeck DoNotShuffleIn）。
+test('M3-A poison persists in the campaign deck and is in play at the next scenario', () => {
+  const state = createGameState(
+    { campaignId: 'theForgottenAge', campaignHub: true, seed: 'tfa-poison-persist' },
+    [{ seat: 0, role: 'human' }])
+  const scenarioIds = contentRegistry.getCampaign('theForgottenAge').scenarioIds
+  startScenario(state, scenarioIds.indexOf('theUntamedWilds'), [])
+  settleTfaChoices(state)
+  assert.equal(isPoisoned(state.investigators[0]), false, '第一关开局未中毒')
+  assert.equal(poisonInvestigator(state, 0, []), true)
+  const record = state.campaign.investigators[0]
+  assert.ok(record.deck.includes('04102'), '中毒弱点写入战役牌组记录')
+
+  // 下一关：按战役记录重建牌组，永久卡开局进入威胁区域。
+  startScenario(state, scenarioIds.indexOf('theDoomOfEztli'), [])
+  settleTfaChoices(state)
+  assert.equal(isPoisoned(state.investigators[0]), true, '下一关开局即处于中毒状态')
+  assert.ok(state.investigators[0].threat.some(card => card.code === '04102'), '中毒弱点在威胁区域')
+  assert.equal(state.campaign.investigators[0].deck.filter(code => code === '04102').length, 1,
+    '战役记录只保留一张中毒弱点')
+  assert.equal((state.scenarioZones.setAside || []).filter(code => code === '04102').length, 3,
+    '已在牌组里的中毒弱点不再放在一边（4 张里只剩 3 张）')
+})
+
+// 兼容旧存档（更新前「中毒只进威胁区」）：关末把威胁区里的永久弱点补记进战役牌组，
+// 否则旧存档跨关后中毒仍会丢失（canonical 修复点在 campaign-plugin#poisonInvestigator）。
+test('M3-A legacy save: poison in the threat area is persisted to the campaign deck at scenario end', () => {
+  const state = createGameState(
+    { campaignId: 'theForgottenAge', campaignHub: true, seed: 'tfa-legacy-poison' },
+    [{ seat: 0, role: 'human' }])
+  const scenarioIds = contentRegistry.getCampaign('theForgottenAge').scenarioIds
+  startScenario(state, scenarioIds.indexOf('theUntamedWilds'), [])
+  settleTfaChoices(state)
+  state.investigators[0].threat.push({ id: 'legacy-poison', code: '04102', originalCode: '04102', permanent: true })
+  const record = state.campaign.investigators[0]
+  assert.equal(record.deck.includes('04102'), false, '旧存档的战役牌组里还没有中毒弱点')
+  assert.throws(() => finishScenario(state, 'noResolution', []),
+    error => error?.constructor?.name === 'ScenarioEnded')
+  assert.equal(record.deck.filter(code => code === '04102').length, 1,
+    '关末把威胁区的中毒弱点补记进战役牌组（只记一张）')
+})
+
+function settleTfaChoices(state, limit = 300) {
+  for (let guard = 0; state.pendingChoice && guard < limit; guard++) {
+    const pending = state.pendingChoice
+    const optionId = ['done', 'skip', 'self'].find(id => pending.options.some(option => option.id === id))
+      ?? pending.options[0].id
+    applyMove(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId })
+  }
+}
 
 test('M3-A Relic of Ages follows its bearer and can be placed at a location', () => {
   const state = fixture('01001')

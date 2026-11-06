@@ -362,18 +362,21 @@ export function createMoves(deps) {
     moves.push({ action: 'move', locationId: nb, label: `🚶 移动到「${locLabel(state, nb)}」（线索 ${target.clues}${target.locked ? '，上锁' : ''}${entryNotice ? `；进入后：${entryNotice}` : ''}）` })
   }
 
-  // 2026-10-25 第四轮修复 investigate-empty-location（05133 凯夏的房间等）：
-  // 地点/剧本可以声明「0 线索也能调查」（调查本身仍要过检定，只是不发现线索）。
+  // 2026-11-06 规则修正：调查行动不要求地点还有线索（Rules Reference「Investigate」）。
+  // 零线索地点照常可以调查，检定成功只是不发现线索；地点/剧本声明的 investigateWithoutClues
+  // 仍照读（旧数据兼容），但可用性不再依赖它。上锁与剧本级限制仍然生效。
   const emptyInvestigate = loc && loc.clues <= 0 && !loc.locked
     && (loc.investigateWithoutClues === true
       || scenarioBehavior(state).investigateWithoutClues?.(state, inv, loc) === true)
-  if (loc && (loc.clues > 0 || emptyInvestigate) && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
+  if (loc && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
     const skill = scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
       + entityModifierTotal(state, loc, 'locationShroud')
     const shroud = loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0) + scenarioShroud
+    // 零线索地点仍可调查（成功不会发现线索），label 里标出来，玩家/AI 才知道这次行动没有线索收益。
+    const noClues = (loc.clues || 0) <= 0
     moves.push({ action: 'investigate', ...(emptyInvestigate ? { allowNoClues: true } : {}),
-      label: `🔍 调查「${loc.name}」（${SKILL_NAMES[skill]} vs 帷幕 ${shroud}）` })
+      label: `🔍 调查「${loc.name}」（${SKILL_NAMES[skill]} vs 帷幕 ${shroud}${noClues ? '，无线索' : ''}）` })
   }
 
   if (loc && loc.ability && locationAbilityAvailable(state, loc, inv)
@@ -502,7 +505,10 @@ export function createMoves(deps) {
       }
       if (ab.effect?.type === 'fight' && !abilityTargets(state, inv, ab.effect).length
         && !canExtendFirearmTarget(inv, a)) return
-      if (ab.effect && (ab.effect.type === 'investigate' || ab.effect.type === 'discoverClue') && (!loc || loc.clues <= 0)) return
+      // 2026-11-06 规则修正：调查类能力在零线索地点同样可以发起（成功不发现线索）；
+      // 「发现线索」类能力仍要求地点还有线索。可用性与 validateMove 的 effectError 同源。
+      if (ab.effect && ['investigate', 'discoverClue'].includes(ab.effect.type)
+        && effectError(state, inv, ab.effect)) return
       if (ab.effect && ab.effect.type === 'dealDamage' && abilityTargets(state, inv, ab.effect).length === 0) return
       // choose 分支：每个选项拆成一条独立行动（optionIndex 从 0 起）。
       if (ab.effect && ab.effect.type === 'chooseOne' && Array.isArray(ab.effect.options)) {
@@ -824,13 +830,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'investigate')) return '当前效果禁止你调查'
       const loc = state.locations.find((l) => l.id === inv.location)
       if (!loc) return '这里没有地点可调查'
-      if (loc.clues <= 0) {
-        // 2026-10-25 第四轮修复 investigate-empty-location：0 线索地点默认不能被调查，
-        // 除非地点/剧本明确允许（此时调查仍可进行，只是不发现线索）。
-        const allowed = loc.investigateWithoutClues === true
-          || scenarioBehavior(state).investigateWithoutClues?.(state, inv, loc) === true
-        if (!allowed) return '这里没有线索可调查'
-      }
+      // 2026-11-06 规则修正：地点有没有线索不影响「能不能调查」，只影响成功后发现线索。
       if (loc.locked) return '地点被上锁的门封锁'
       const reason = scenarioBehavior(state).investigationError?.(state, inv, loc)
       if (reason) return reason

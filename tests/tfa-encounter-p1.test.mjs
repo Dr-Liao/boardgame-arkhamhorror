@@ -1,8 +1,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview } from '../src/engine/engine.js'
+import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview, assetEffect, descriptorUsable, playerWindow } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
 import { addLocationShroud } from '../src/engine/location-attachments.js'
 
@@ -65,6 +66,36 @@ test('毒蛇灾厄（04099）：非弱点道具的文字视为空白', () => {
   assert.equal(getStat(state, me(state), 'willpower'), before - 1, '道具的 +1 意志被抹掉')
   // Phase 5：passive.stats 已迁成声明式修正（唯一读点 modifiers.js）。
   assert.deepEqual(registeredEntry('01059').modifiers, [{ target: 'skill:willpower', amount: 1 }])
+})
+
+test('毒蛇灾厄（04099）也空白化描述子能力：门之匣的免费能力不再进入玩家窗口', () => {
+  // 旧 DSL 读点 stats.assetEffect 一直会清空道具文本；能力层描述子（06013 门之匣的 [free]）
+  // 是 legalMoves / 反应窗口 / playerWindow 的唯一枚举来源，漏判时被空白化的支援仍会开选项
+  // （实机复现：关掉门之匣的快速反应按钮后，遭遇牌结算后的窗口仍然弹询问）。
+  const openWindow = state => {
+    resolveTransaction(state, 0, { action: 'tfaEncounterP1Window' }, current => {
+      playerWindow(current, 'mythos.afterEncounter', [])
+    })
+    return state.pendingChoice
+  }
+  const isGateBoxWindow = pending => (pending?.options || []).some(option =>
+    option.assetId === 'gatebox' || String(option.id).startsWith('free-descriptor:06013'))
+
+  const control = launchTfa('tfa-encounter-p1-blank-control')
+  const controlAsset = { id: 'gatebox', code: '06013', uses: 3, exhausted: false }
+  me(control).assets.push(controlAsset)
+  assert.equal(isGateBoxWindow(openWindow(control)), true, '未被空白化时免费能力照常提供')
+
+  const blanked = launchTfa('tfa-encounter-p1-blank')
+  const gateBox = { id: 'gatebox', code: '06013', uses: 3, exhausted: false }
+  me(blanked).assets.push(gateBox)
+  me(blanked).threat.push({ id: 't04099', code: '04099', originalCode: '04099', blankItemAssets: true })
+  const descriptor = registeredEntry('06013').abilities.find(ability => ability.kind === 'free')
+  // 两条枚举通道必须同时被拦住：旧 DSL（shim → assetEffect）与能力层描述子。
+  assert.equal(assetEffect(me(blanked), gateBox)?.abilities?.length ?? 0, 0, '旧 DSL 通道已清空')
+  assert.equal(descriptorUsable(blanked, me(blanked), gateBox, descriptor,
+    { windowId: 'mythos.afterEncounter', mode: 'free' }), false, '描述子通道同样必须拦住')
+  assert.equal(isGateBoxWindow(openWindow(blanked)), false, '被空白化的道具不再提供免费能力')
 })
 
 test('半身入土（04089）：不能解除交战，躲避成功也不再解除', () => {

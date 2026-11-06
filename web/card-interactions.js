@@ -6,6 +6,15 @@ import { t } from './i18n.js'
 // 用 Unicode 转义保存同一个字符串，避免词典完整性测试把它误判成残留中文；比较行为不变。
 const TURN_ORDER_START_LABEL = '\u5f00\u59cb\u884c\u52a8'
 
+// 收尾玩家窗口（playerWindow）的手牌快速卡候选：`fast-card:<卡号>`、卢克·罗宾逊的
+// `fast-card:<卡号>:asif:<地点 id>` 以及带 fastSourceId 的 `fast-card:<卡号>:<来源 id>`。
+// 选项按旧形状只带 id（不带 cardCode），界面用这个反查手牌位，把选项挂回手牌实体：
+// 高亮卡面、点牌即打出，不再在牌桌中央浮出选项面板。id 格式见 src/engine/encounter.js#playerWindow。
+const fastCardOptionCode = id => {
+  const match = /^fast-card:(\d{5})(?::|$)/.exec(String(id || ''))
+  return match ? match[1] : null
+}
+
 // 2026-10-31 通用兜底：选项没有 `cardCode` 时，用「完整卡名唯一精确匹配」从展示表挂回卡面。
 // 这是给旧内容/只下发卡名的选项的兼容路径：实机「迷失时空」地点候选由内容层直接下发 cardCode，
 // 而观察投影的 view.cards 不含 encounterDiscard 里的地点卡，所以名称兜底对那一类选项无效。
@@ -89,6 +98,18 @@ export function choicePresentation(st) {
           cards: [{ ...(st.cards?.[code] || {}), code }] }
       }
     }
+    // 2026-11-06：收尾玩家窗口的手牌快速卡挂回手牌位。同一张牌可能有多份候选（卢克的
+    // 「如同位于连接地点」变体），它们都指向同一张手牌；点牌后由动作浮层选具体打法，
+    // 只有一份候选时直接提交。绑定后 renderPendingChoice 不再把这些选项画成视觉卡片面板。
+    if (choice.kind === 'playerWindow') {
+      const fastCode = fastCardOptionCode(id)
+      const handIndex = fastCode && owner ? (owner.hand || []).indexOf(fastCode) : -1
+      if (handIndex >= 0) {
+        return { ...item, key: `hand:${owner.seat}:${handIndex}`, code: fastCode,
+          cards: item.cards.length ? item.cards
+            : [{ ...(st.cards?.[fastCode] || {}), code: fastCode }] }
+      }
+    }
     if (['turnOrder', 'investigator', 'prey', 'storyCard'].includes(choice.kind)) {
       const inv = st.investigators.find(inv => String(inv.seat) === id)
       if (inv) return { ...item, key: `investigator:${inv.seat}`, code: inv.code }
@@ -162,9 +183,26 @@ export function investigatorHoldsCard(inv, st, code) {
     || (asset.attachments || []).some(item => (item?.code ?? item) === code))
 }
 
+// 手牌快速卡候选在引擎里按卡号只给一份选项（同名副本共用，见 tests/tde-investigators.test.mjs），
+// 但牌桌上两张同名副本都应能点。绑定键只挂到第一张副本，其余副本按卡号找回同一份候选。
+// 只在待决窗口是 playerWindow 且该卡确有 fast-card 候选时返回，其它选择/手牌不受影响。
+export function fastCardMovesForHand(st, key) {
+  if (!st.pendingChoice || st.pendingChoice.kind !== 'playerWindow' || !key?.startsWith('hand:')) return []
+  const [, seat, index] = key.split(':')
+  const inv = st.investigators.find(item => String(item.seat) === seat)
+  const code = inv?.hand?.[Number(index)]
+  if (!code) return []
+  return choicePresentation(st).filter(item => item.key?.startsWith('hand:')
+    && item.code === code && String(item.move.optionId).startsWith('fast-card:'))
+    .map(item => item.move)
+}
+
 export function entityMoves(st, key) {
   if (!key) return []
-  if (st.pendingChoice) return choicePresentation(st).filter(item => item.key === key).map(item => item.move)
+  if (st.pendingChoice) {
+    const direct = choicePresentation(st).filter(item => item.key === key).map(item => item.move)
+    return direct.length ? direct : fastCardMovesForHand(st, key)
+  }
   const [kind, ...parts] = key.split(':'); const id = parts.join(':')
   const inv = st.investigators.find(inv => inv.seat === st.currentSeat)
   return (st.legalMoves || []).filter(move => {
@@ -283,7 +321,12 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   const entities = [...root.querySelectorAll('[data-interaction]')]
   const choices = choicePresentation(st)
   const selected = selectedKey()
-  const commit = moves => { if (!allowed() || !moves.length) return; if (moves.length === 1) submit(moves[0], session); else showActions(moves) }
+  const commit = (moves, source = null) => {
+    if (!allowed() || !moves.length) return
+    if (moves.length === 1) submit(moves[0], session)
+    // 多个候选（同一张手牌的「如同位于」变体等）在动作浮层里选具体打法；带上来源键让浮层贴着那张牌。
+    else showActions(moves, source)
+  }
   const movesTo = (source, target) => {
     if (!allowed()) return []
     const filter = state.arkhamTargetAbility
@@ -311,7 +354,25 @@ export function mountCardInteractions(root, session, { state, submit, select, in
     if (allowed() && moves.length) el.classList.add(st.pendingChoice ? 'ah-direct-choice' : 'ah-card-ready')
     if (selected && movesOnto(selected, el).length) el.classList.add('ah-drop-valid')
     const bound = choices.find(item => item.key === key)
-    if (bound && allowed()) { el.dataset.optionId = bound.move.optionId; el.classList.add('ah-choice-option-direct'); el.title = bound.label }
+    // 快速卡询问（playerWindow 的 fast-card 候选）已经挂回手牌实体：卡面高亮 + 左键直接打出，
+    // 替代原先浮在牌桌中央的选项卡片面板。多份「如同位于」变体共用同一个手牌位，点击后由
+    // 动作浮层选具体打法（commit 的长度 > 1 分支）；同名副本共用一份候选，没被绑定的副本
+    // 按卡号找回同一份快速卡选项，同样高亮、同样可点（entityMoves 的 fastCardMovesForHand）。
+    const handFastMove = bound
+      ? (key.startsWith('hand:') && String(bound.move.optionId).startsWith('fast-card:') ? bound.move : null)
+      : allowed() && key.startsWith('hand:') ? fastCardMovesForHand(st, key)[0] || null : null
+    if (bound && allowed() && !handFastMove) {
+      el.dataset.optionId = bound.move.optionId
+      el.classList.add('ah-choice-option-direct')
+      el.title = bound.label
+    }
+    if (handFastMove && allowed()) {
+      el.dataset.optionId = handFastMove.optionId
+      el.classList.add('ah-choice-option-direct', 'ah-fast-prompt')
+      el.dataset.fastPrompt = 'true'
+      el.title = handFastMove.label + '\n\n' + el.title
+      el.setAttribute('aria-description', t('game.reaction.fastPromptAria'))
+    }
     if (!el.hasAttribute('tabindex')) el.tabIndex = 0
   }
   // Show candidates outside the player's board (e.g. another investigator's assets)
@@ -358,7 +419,8 @@ export function mountCardInteractions(root, session, { state, submit, select, in
     // to the investigator or the engagement zone keeps working as before.
     const engageable = key.startsWith('enemy:') && moves.some(move => move.action === 'engage')
     if (direct.length || targeted.length) {
-      event.preventDefault(); event.stopImmediatePropagation(); commit(direct.length ? direct : targeted)
+      event.preventDefault(); event.stopImmediatePropagation()
+      commit(direct.length ? direct : targeted, direct.length ? key : (selected && selected !== key ? selected.key : null))
     } else if (engageable) {
       event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     } else if (el.dataset.inspectDefault === 'true') {
@@ -481,7 +543,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
       if (!dragging) return
       suppressClick = true
       if (!current) return
-      if (moves.length) commit(moves)
+      if (moves.length) commit(moves, source)
       else if (target && target !== sourceEl) feedback(t('interaction.drag.invalid'))
     }
     cleanupDrag = cancel

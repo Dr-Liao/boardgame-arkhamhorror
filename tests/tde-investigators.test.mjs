@@ -33,6 +33,7 @@ import {
 } from '../src/engine/restricted-actions.js'
 import { addCardCounter, cardCounterOf, moveCardCounters } from '../src/engine/card-counters.js'
 import { harmRoom, moveHarm } from '../src/engine/harm-transfer.js'
+import { flipOrPlaceDreamGate } from '../src/engine/dream-gate.js'
 
 const FORMAL = ['06001', '06002', '06003', '06004', '06005']
 const SIGNATURES = {
@@ -401,6 +402,25 @@ test('P6 托尼的 .38：每个赏金 +1 战斗，伤害 +1', () => {
   assert.equal(me(state).assets.find(asset => asset.id === 'colt').uses, 2, '花 1 子弹')
 })
 
+test('P6 托尼的 .38：场上有另一张同名枪时，入场反应只由刚打出的那张提供', () => {
+  const state = investigatorFixture('06003')
+  const inv = me(state)
+  // 构造「场上 1 + 手牌 2」三张（超出牌库上限，只为验证入场反应按实例过滤，不按卡号枚举）。
+  inv.assets = [{ id: 'colt1', code: '06011', uses: 3, usesType: 'ammo' }]
+  inv.hand = ['06011', '06011']
+  inv.resources = 10
+  let candidates = null
+  move(state, { action: 'play', cardId: '06011' })
+  settle(state, pending => {
+    if (pending.kind !== 'reaction' || candidates != null) return null
+    const options = pending.options.filter(option => option.cardCode === '06011')
+    if (!options.length) return null
+    candidates = options.length
+    return options[0].id
+  })
+  assert.equal(candidates, 1, '只应提供「刚打出的那一张」一个候选，场上旧枪不跟着触发')
+})
+
 test('P6 托尼的猎物：生成在最远地点，入场放 1 毁灭与 1 赏金', () => {
   const state = investigatorFixture('06003')
   const inv = me(state)
@@ -588,6 +608,38 @@ test('P6 卢克：门之匣放置梦境之门并移动过去', () => {
   assert.equal(gate.code, '06015a')
   assert.equal(me(state).location, gate.id)
   assert.ok(gate.connections.includes(state.locations.find(location => location.id !== gate.id && location.revealed !== false).id))
+})
+
+// 2026-11-06：06015b「无谓现实」是 0 线索地点，卡面反应是「成功调查后翻面」——零线索也必须
+// 允许调查，否则卢克的绑定地点永远翻不回 06015a。这里走真实弱点条目 06014 的结算进场。
+test('P6 卢克：成功调查零线索的梦境之门（无谓现实）后翻面', () => {
+  const state = investigatorFixture('06004')
+  const inv = me(state)
+  registeredEntry('06014').abilities[0].resolve({
+    state, inv,
+    api: {
+      disengageAll: () => {},
+      flipOrPlaceDreamGate: options => flipOrPlaceDreamGate(state, options),
+      moveInvestigator: (seat, locationId) => { state.investigators[seat].location = locationId },
+      info: () => {},
+    },
+  })
+  const gate = state.locations.find(location => location.dreamGate)
+  assert.equal(gate.code, '06015b', '脱离现实把无谓现实（06015b）放进场')
+  assert.equal(gate.clues, 0)
+  assert.equal(inv.location, gate.id)
+  inv.intellect = 8
+  state.chaosBag = ['+1']
+  state.pendingChoice = null
+  assert.ok(legalMoves(state, 0).some(move => move.action === 'investigate'), '零线索的梦境之门也能调查')
+  applyMove(state, 0, { action: 'investigate' })
+  settle(state)
+  const flipped = state.locations.find(location => location.dreamGate)
+  assert.equal(flipped.code, '06015a', '成功调查后翻面回奇妙旅程')
+  assert.equal(flipped.clues, 0)
+  assert.equal(me(state).location, flipped.id, '翻面后卢克仍在门上')
+  assert.equal(me(state).clues, 0, '翻面不是发现线索')
+  assert.ok(flipped.connections.length > 0, '06015a 与每个已揭示地点相连')
 })
 
 // ---------------------------------------------------------------------------

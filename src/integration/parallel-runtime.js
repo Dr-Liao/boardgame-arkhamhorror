@@ -201,6 +201,23 @@ function remapEventSeats(event, roomSeats) {
 /** 大厅命令：按座位路由到本线运行时。 */
 export function parallelApplyMove(state, seat, move) {
   if (!isParallelState(state)) throw new Error('不是并行双运行时状态')
+  if (move?.action === 'debug' && !sharedState(state)) {
+    const lane = LANES.includes(move.lane) ? move.lane : (laneOfSeat(state, seat) || 'A')
+    const laneState = state.parallel.lanes[lane]
+    if (!laneState) throw new Error('未知的双线运行时')
+    const { lane: _omitLane, ...cleanMove } = withoutRevision(move)
+    const idx = laneState.laneRuntime?.roomSeats?.indexOf(seat) ?? -1
+    const events = applyMove(laneState, idx >= 0 ? idx : 0, cleanMove) || []
+    state.revision = (state.revision ?? 0) + 1
+    if (laneState.uiState === 'scenarioResult' || laneState.uiState === 'campaignResult') markLaneFinished(state, lane)
+    syncParallelStatus(state)
+    const roomSeats = laneState.laneRuntime?.roomSeats || []
+    return events.map(event => {
+      const copy = remapEventSeats(event, roomSeats)
+      copy.lane = copy.lane || lane
+      return copy
+    })
+  }
   if (sharedState(state)) {
     const coordinator = sharedState(state)
     const error = choiceError(coordinator, seat, move)
@@ -270,6 +287,14 @@ export function syncParallelStatus(state) {
 
 /** 本线命令校验；座位不属于运行时返回原因字符串。 */
 export function parallelValidateMove(state, seat, move) {
+  if (move?.action === 'debug' && !sharedState(state)) {
+    const lane = LANES.includes(move.lane) ? move.lane : (laneOfSeat(state, seat) || 'A')
+    const laneState = state.parallel?.lanes?.[lane]
+    if (!laneState) return '未知的双线运行时'
+    const { lane: _omitLane, ...cleanMove } = withoutRevision(move)
+    const idx = laneState.laneRuntime?.roomSeats?.indexOf(seat) ?? -1
+    return validateMove(laneState, idx >= 0 ? idx : 0, cleanMove)
+  }
   if (sharedState(state)) return choiceError(sharedState(state), seat, move)
   if (coordinationFor(state) && move?.action === 'hubContinue') {
     const lane = laneStateOf(state, seat)

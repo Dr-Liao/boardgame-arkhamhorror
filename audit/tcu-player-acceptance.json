@@ -22,7 +22,7 @@
     "basicWeaknesses": 2,
     "verified": 87,
     "unverified": 0,
-    "testsPassed": 166
+    "testsPassed": 172
   },
   "testFiles": [
     {
@@ -31,7 +31,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+      "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
@@ -69,7 +69,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+      "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
@@ -795,6 +795,16 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
           "line": 735,
           "test": "TCU 05153 “老千”先生 找出的卡走真实抽牌通道：选中的弱点按显现结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 1197,
+          "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 1225,
+          "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密"
         }
       ]
     },
@@ -811,6 +821,16 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
           "line": 763,
           "test": "TCU 05154 鹰眼折叠相机 最后线索后放证据；证据给意志/智识/神智加值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 793,
+          "test": "TCU 05154 鹰眼折叠相机 同场两张：最后线索后两张各触发一次，证据各记各的"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 819,
+          "test": "TCU 05154 鹰眼折叠相机 每台相机在每个地点仅限一次，换地点可再拿"
         }
       ]
     },
@@ -825,12 +845,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 797,
+          "line": 856,
           "test": "TCU 05155 亨利·万 选择停下后，每揭示 1 枚标记抽 1 张或获得 1 资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 818,
+          "line": 877,
           "test": "TCU 05155 亨利·万 揭示符号标记时无事发生"
         }
       ]
@@ -846,7 +866,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 835,
+          "line": 894,
           "test": "TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数"
         }
       ]
@@ -862,8 +882,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 850,
+          "line": 909,
           "test": "TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 964,
+          "test": "TCU 05157 凋零术 同一场检定只结算一次符号效果（不重复叠加 -1）"
         }
       ]
     },
@@ -878,23 +903,28 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 909,
+          "line": 988,
           "test": "TCU 05158 第六感 符号后改为在连接的已揭示地点调查（使用新地点隐藏值）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 938,
+          "line": 1017,
           "test": "TCU 05158 第六感 符号后可选使用原调查地点的隐藏值"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 966,
+          "line": 1045,
           "test": "TCU 05158 第六感 未揭示/不相连的地点不可选（无合法目标时不触发）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 986,
+          "line": 1065,
           "test": "TCU 05158 第六感 非符号不触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 1084,
+          "test": "TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）"
         }
       ]
     },
@@ -909,7 +939,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1009,
+          "line": 1116,
           "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
         }
       ]
@@ -925,12 +955,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1039,
+          "line": 1146,
           "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1060,
+          "line": 1167,
           "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
         }
       ]

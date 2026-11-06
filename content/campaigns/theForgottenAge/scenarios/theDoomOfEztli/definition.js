@@ -8,7 +8,8 @@ import {
 // Haskell setup（Scenario/Scenarios/TheForgottenAge/TheDoomOfEztli.hs）：
 // 收齐「埃兹特里的覆灭”“伊格的使徒”“伊格的毒液”“时间洪流”“致命陷阱”
 // “被遗忘的遗迹”“毒素”“地窖寒风”；把时间石室、古代遗物、瓦卢西亚的预示者
-// 与 4 张「中毒」放在一边，再从遗迹入口开始。
+// 与「不在调查员牌组里」的中毒弱点放在一边（实际张数由 behavior.setupLocations 按牌组计算），
+// 再从遗迹入口开始。
 export const RELIC_OF_AGES = '04061'
 export const HARBINGER = '04062'
 export const CHAMBER_OF_TIME = '04068'
@@ -22,7 +23,8 @@ export const SECRET_PASSAGE = '04067'
 const deckGroups = [
   'theDoomOfEztli', 'agentsOfYig', 'venom', 'flux', 'traps', 'ruins', 'poison', 'chillingCold',
 ]
-// 预示者与 4 张「中毒」放在一边，因此不能再声明进遭遇牌库（区域不得重复入牌）。
+// 预示者与 4 张印刷「中毒」不声明进遭遇牌库（区域不得重复入牌）；运行时放多少张在一边
+// 由 behavior.poisonSetAsideCount 按调查员牌组里已有的张数扣减。
 const setAsideCodes = [RELIC_OF_AGES, HARBINGER, '04102', '04102', '04102', '04102']
 const setAside = new Set(setAsideCodes)
 const gathered = encounterCards(deckGroups).filter(card => !setAside.has(card.code))

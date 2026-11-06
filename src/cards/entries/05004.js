@@ -73,7 +73,11 @@ export default {
         const code = context.cardCode
         // 取消方可能是场上的支援（直接离场进弃牌堆），也可能是刚打出的事件/技能
         // （它们要等自己的结算走完才进弃牌堆）——两种都汇到 executeDescriptor 的延后搬运里。
-        const asset = (inv.assets || []).find(item => item.code === code)
+        // 2026-11-06 修复：支援按实例 id 定位（引擎在 cardCancelled 上下文里补了 assetId），
+        // 否则场上有两张同名非唯一支援时，会把第一张（没参与取消的那张）弃掉。
+        const asset = context.assetId != null
+          ? (inv.assets || []).find(item => item.id === context.assetId)
+          : (inv.assets || []).find(item => item.code === code)
         if (asset) api.discardAsset(inv.seat, asset)
         inv.beneath ||= []
         // 日志由本反应自己写。冲刷时若再写一行「被放在底下」，同一张卡看起来像放了两次。

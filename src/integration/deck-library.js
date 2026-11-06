@@ -55,12 +55,18 @@ function normalizeInput(body) {
     slots[code] = count
   }
   const name = String(body.name ?? '').trim().slice(0, MAX_NAME) || '未命名牌组'
-  return { name, investigator_code: investigator, slots }
+  const meta = {}
+  if (body.arkhamdbId != null && /^\d{1,10}$/.test(String(body.arkhamdbId))) {
+    meta.arkhamdbId = String(body.arkhamdbId)
+    if (body.arkhamdbKind === 'decklist' || body.arkhamdbKind === 'deck') meta.arkhamdbKind = body.arkhamdbKind
+  }
+  return { name, investigator_code: investigator, slots, ...meta }
 }
 
 function view(deck) {
   let description = null
-  try { description = describeArkhamDbDeck(deck) } catch { /* empty decks have nothing to load */ }
+  const source = deck.arkhamdbId ? { id: deck.arkhamdbId, kind: deck.arkhamdbKind || 'decklist' } : {}
+  try { description = describeArkhamDbDeck(deck, source) } catch { /* empty decks have nothing to load */ }
   return { ...deck, description }
 }
 
@@ -78,6 +84,20 @@ export function handleDeckLibrary({ method, path: route, body }) {
     decks.push(deck)
     writeLibrary(decks)
     return { body: { deck: view(deck) } }
+  }
+  if (route === 'decks/batch-delete') {
+    if (method !== 'POST') return { status: 405, error: '不支持的请求方式' }
+    if (!body || typeof body !== 'object' || Array.isArray(body) || !Array.isArray(body.ids) || !body.ids.length || body.ids.length > MAX_DECKS) {
+      return { status: 400, error: '无效的批量删除参数' }
+    }
+    const ids = body.ids.map(item => String(item ?? ''))
+    if (ids.some(id => !ID.test(id))) return { status: 400, error: '无效的卡组编号' }
+    const target = new Set(ids)
+    const decks = readLibrary()
+    const deleted = decks.filter(deck => target.has(deck.id)).map(deck => deck.id)
+    const remaining = decks.filter(deck => !target.has(deck.id))
+    if (deleted.length) writeLibrary(remaining)
+    return { body: { deleted, count: deleted.length } }
   }
   if (!route.startsWith('decks/')) return null
   const id = route.slice('decks/'.length)

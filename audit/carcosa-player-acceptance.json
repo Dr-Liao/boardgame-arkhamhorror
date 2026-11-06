@@ -20,12 +20,12 @@
     "basicWeaknesses": 3,
     "verified": 95,
     "unverified": 0,
-    "testsPassed": 109
+    "testsPassed": 110
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+      "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
     }
   ],
   "implementationFiles": [
@@ -47,7 +47,7 @@
     },
     {
       "file": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "1b97726ced5ab591d50096903708b7ae8a484b762e690a2c1f87cd4f684da782"
+      "sha256": "7508a23d392d4a9ee90ba7325bbbb64a3007e42dd762b57182aedd5026369a29"
     }
   ],
   "entries": [
@@ -1275,6 +1275,10 @@
         {
           "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
           "test": "Carcosa 03271 新晋术士 主要印刷效果契约可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03271 新晋术士 场上已有一张时，再入场只触发一次入场强制能力"
         }
       ]
     },

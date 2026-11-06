@@ -595,7 +595,7 @@
   "files": {
     "content/campaigns/theDreamEaters/keywords.js": "417ae76f8ed99fdbd0e8dd8f8b6feae690c7c5ef3e7fb510b64ef3ef10aa5259",
     "web/rulebook-data.js": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4",
-    "web/ui-cards.js": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e",
+    "web/ui-cards.js": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de",
     "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
     "content/mechanics.js": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836",
     "tests/tde-rules.test.mjs": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797",

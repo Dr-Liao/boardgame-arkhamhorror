@@ -626,3 +626,35 @@ test('TDE M2-1 分片 22 张条目全部注册且 code 与文件名一致', () =
     assert.ok(card, `${code} 在卡表中`)
   }
 })
+
+// ---------------------------------------------------------------------------
+// 06023 骇人真相 × 05153 “老千”先生（跨循环：万象无终的查找卡）
+//
+// 「老千」先生此前自实现查找、绕过 searchedCardRule 读点，导致它翻到骇人真相时不触发。
+// 现在两条查找实现共用 deck-ops 的 searchedCardsWindow。
+// ---------------------------------------------------------------------------
+
+test('TDE 06023 骇人真相 老千先生（05153）查找牌库顶时也能触发', () => {
+  const state = fixture('01001')
+  const rook = asset(state, '05153')
+  const inv = me(state)
+  // 牌库底 → 牌库顶：最后一个是牌库顶。顶 3 张 = 01088 / 06023 / 01089。
+  inv.deck = ['01016', '01088', '06023', '01089']
+  inv.hand = []
+  const resourcesBefore = inv.resources
+  let offered = false
+  move(state, { action: 'ability', assetId: rook.id, abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === '06023') { offered = true; return 'trigger' }
+    if (pending.kind === 'effect' && pending.source === '06023') return 'resources'
+    if (pending.kind === 'search') {
+      const cards = pending.options.filter(option => option.cardCode)
+      if (!cards.length) return '3'
+      return (cards.find(option => option.cardCode === '01089') ?? cards[0]).id
+    }
+    return null
+  })
+  assert.equal(offered, true, '被查找过的牌里有骇人真相：反应必须触发')
+  assert.equal(me(state).discard.includes('06023'), true, '触发后骇人真相被弃掉')
+  assert.equal(me(state).resources, resourcesBefore + 2, '选择获得 2 资源')
+})

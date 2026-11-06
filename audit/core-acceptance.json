@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 378
+    "testsPassed": 380
   },
   "testFiles": [
     {
@@ -29,7 +29,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
-      "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+      "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
     },
     {
       "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+      "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",
@@ -1454,6 +1454,10 @@
         {
           "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
           "test": "Core 01087 Flashlight: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01087 手电筒在零线索地点仍可调查：照常过检定、只消耗补给"
         },
         {
           "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",

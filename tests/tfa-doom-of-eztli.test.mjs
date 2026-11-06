@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as eztli from '../content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js'
+import { poisonSetAsideCount } from '../content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js'
 import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
 } from '../content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/definition.js'
@@ -148,6 +149,17 @@ test('布置把时间石室、古代遗物、预示者与 4 张中毒放在一�
   assert.ok(aside.includes('04068'), '时间石室')
   assert.deepEqual(state.relicOfAges, { code: '04061', location: null, seat: null })
   assert.equal(eztli.behavior.totalVengeance(state), 0)
+})
+
+test('布置：已经在调查员牌组里的中毒弱点不再放在一边（上一章永久中毒的延续）', () => {
+  const state = stateFor(2)
+  state.campaign.investigators[0].deck.push('04102')
+  setup(state)
+  assert.equal(state.scenarioZones.setAside.filter(code => code === '04102').length, 3,
+    '4 张中毒里已有 1 张在牌组中，只放 3 张在一边')
+  assert.equal(poisonSetAsideCount(state), 3)
+  state.campaign.investigators[1].deck.push('04102')
+  assert.equal(poisonSetAsideCount(state), 2)
 })
 
 test('两张密谋都得到 +1×人数 的毁灭阀值', () => {
@@ -541,7 +553,7 @@ test('结局 3：默认摧毁遗迹走结局 5；也可选择回到遗迹深处�
   assert.throws(() => eztli.behavior.resolution(direct, 'r9', [], {}), /未知埃兹特里覆灭结局/)
 })
 
-test('无结局按卡面分流：无人被击败 → 结局 3；有人被击败 → 结局 2', () => {
+test('无结局按卡面分流：伊格之怒 ≥4 且有人被击败 → 结局 2；否则 → 结局 3', () => {
   // 无人被击败：进入结局 3 的二选一（这里选摧毁 → 结局 5）。
   const clean = setup(placed(stateFor(1), ['entryway']))
   const asked = []
@@ -553,17 +565,29 @@ test('无结局按卡面分流：无人被击败 → 结局 3；有人被击败 
   assert.equal(clean.scenarioFlags.finalChoice, 'destroy')
   assert.equal(clean.campaign.records.theInvestigatorsRecoveredTheRelicOfAges, true, '只有走结局 5 才发遗物')
 
-  // 有人被击败且伊格之怒 <4：+3 复仇后走结局 2（亚历山卓夺回遗物，不给调查员加卡）。
-  const defeated = setup(placed(stateFor(2), ['entryway']))
-  defeated.investigators[0].defeated = true
-  defeated.investigators[1].resigned = true
-  const second = eztli.behavior.resolution(defeated, 'noResolution', [], {})
-  assert.equal(defeated.campaign.records.yigsFury, 3)
-  assert.equal(defeated.campaign.records.alejandroRecoveredTheRelicOfAges, true)
-  assert.equal(defeated.campaign.records.theInvestigatorsRecoveredTheRelicOfAges, undefined, '结局 2 不发遗物')
-  assert.equal(second.award, true)
+  // 有人被击败且伊格之怒 ≤3：先记录 3 点伊格之怒，再走结局 3（这里选摧毁 → 结局 5）。
+  const lowFury = setup(placed(stateFor(2), ['entryway']))
+  lowFury.investigators[0].defeated = true
+  lowFury.investigators[1].resigned = true
+  eztli.behavior.resolution(lowFury, 'noResolution', [], { choose: () => 'destroy' })
+  assert.equal(lowFury.campaign.records.yigsFury, 3 + 10, '≤3：+3 伊格之怒，结局 5 再记录 10 点')
+  assert.equal(lowFury.campaign.records.alejandroRecoveredTheRelicOfAges, undefined, '≤3 不走结局 2')
+  assert.equal(lowFury.campaign.investigators[0].status, 'active', '≤3 只记录伊格之怒，不杀被击败者')
+  assert.equal(lowFury.campaign.failed, undefined, '有人撤退（活着）时战役必须继续')
 
-  // 伊格之怒 ≥4 且全员被击败：战役失败，不再有下一关。
+  // 有人被击败且伊格之怒 ≥4：走结局 2，被击败者阵亡；撤退者活着，战役继续。
+  const highFury = setup(placed(stateFor(2), ['entryway']))
+  highFury.investigators[0].defeated = true
+  highFury.investigators[1].resigned = true
+  highFury.campaign.records.yigsFury = 4
+  eztli.behavior.resolution(highFury, 'noResolution', [], {})
+  assert.equal(highFury.campaign.records.yigsFury, 4, '≥4 不再额外加 3')
+  assert.equal(highFury.campaign.records.alejandroRecoveredTheRelicOfAges, true, '≥4 走结局 2')
+  assert.equal(highFury.campaign.investigators[0].status, 'killed', '≥4 时被击败者阵亡')
+  assert.equal(highFury.campaign.investigators[1].status, 'active', '撤退者活着')
+  assert.equal(highFury.campaign.failed, undefined, '还有撤退者活着，战役继续')
+
+  // 伊格之怒 ≥4 且全员被击败（无人撤退）：整队阵亡，战役失败，不再有下一关。
   const wiped = setup(placed(stateFor(1), ['entryway']))
   wiped.investigators[0].defeated = true
   wiped.campaign.records.yigsFury = 4
@@ -601,6 +625,27 @@ test('伊格之怒 ≥4 时被击败的调查员在结算中死亡，否则复�
   eztli.behavior.resolution(spared, 'r2', [], {})
   assert.equal(spared.campaign.records.yigsFury, 3)
   assert.equal(spared.campaign.investigators[0].status, 'active')
+  assert.notEqual(spared.campaign.failed, true, '被击败但未阵亡，战役继续')
+})
+
+test('回归：撤退者活着逃出、被击败者未阵亡时，战役不判负（三循环继续）', () => {
+  // 复现「一人撤退 + 一人被击败」的结局 1：撤退是活着逃出，被击败者只是带创伤继续，
+  // 战役必须进入幕间故事II，而不是「调查失败，战役结束」。
+  const state = setup(placed(stateFor(2), ['entryway']))
+  state.investigators[0].resigned = true
+  state.investigators[1].defeated = true
+  state.relicOfAges = { code: '04061', location: 'entryway', seat: 0 }
+  state.victoryDisplay = [
+    { id: 'enemy1', code: '04070', vengeance: 1 },
+    { id: 'enemy2', code: '04071', vengeance: 1 },
+  ]
+  const result = eztli.behavior.resolution(state, 'r1', [], { info: () => {} })
+  assert.equal(result.award, true)
+  assert.notEqual(state.campaign.failed, true, '有人活着逃出时战役必须继续')
+  assert.equal(state.campaign.records.yigsFury, 3 + 2, '结算前 <4：+3，随后结局 1 记录 2 点复仇')
+  assert.equal(state.campaign.investigators[0].status, 'active', '撤退者仍在役')
+  assert.equal(state.campaign.investigators[1].status, 'active', '伊格之怒 <4 时被击败者不会阵亡')
+  assert.ok(state.campaign.investigators[0].deck.includes('04061'), '撤退者把古代遗物带回牌库')
 })
 
 test('遗迹入口提供撤退与火把检查行动', () => {
@@ -726,13 +771,16 @@ test('04067 秘密通道：任何一位在此的调查员带绳索都忽略强�
   assert.equal(location.doom, 1)
 })
 
-test('全员被击败时战役结束（无论伊格之怒）', () => {
+test('全员被击败但伊格之怒 ≤3：只记录 3 点伊格之怒，战役继续（带创伤进入下一关）', () => {
   const state = setup(placed(stateFor(2), ['entryway']))
   for (const inv of state.investigators) inv.defeated = true
   state.campaign.records.yigsFury = 0
   const api = { info: () => {}, addTrauma: () => {} }
   eztli.behavior.resolution(state, 'r2', [], api)
-  assert.equal(state.campaign.failed, true)
+  assert.equal(state.campaign.records.yigsFury, 3)
+  assert.notEqual(state.campaign.failed, true, '被击败不等于阵亡，战役不应就此结束')
+  assert.equal(state.campaign.investigators[0].status, 'active')
+  assert.equal(state.campaign.investigators[1].status, 'active')
 })
 
 test('探索只在幕 1/2 可用，幕 3 不能再探索', () => {

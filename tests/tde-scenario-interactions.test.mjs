@@ -1,4 +1,5 @@
 // 食梦者交互 3–10：观察投影不泄露朝下的牌、袋序、他人隐藏牌和未到达结局；掩藏翻面走合法行动。
+// 另外守住「梦境之门」不单独触发结局面板：卢克的绑定地点可被带进任意战役，不能泄漏食梦者专题条。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
@@ -8,6 +9,25 @@ import { scenarioInteractionsView } from '../src/integration/scenario-interactio
 
 test('没有蜂拥、滋生袋、警报、隐藏牌、掩藏、计数、纵链或结局时不增加视图字段', () => {
   const state = fixture()
+  assert.equal(scenarioInteractionsView(state, 0), null)
+  assert.equal('scenarioInteractions' in mod.viewState(state, 0), false)
+})
+
+test('梦境之门单独在场（其它战役带卢克）不投影结局面板', () => {
+  const state = fixture()
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  here.dreamGate = true
+  assert.equal(scenarioInteractionsView(state, 0), null)
+  assert.equal('scenarioInteractions' in mod.viewState(state, 0), false)
+})
+
+test('结局矩阵已就位但尚未到达时不显示「结局尚未到达」占位面板', () => {
+  const state = fixture()
+  state.campaign.epilogueMatrix = {
+    a: [{ id: 'a1' }],
+    b: [{ id: 'b1' }],
+    entries: { 'a1|b1': { title: '不应提前显示', textKey: 'secret-ending' } },
+  }
   assert.equal(scenarioInteractionsView(state, 0), null)
   assert.equal('scenarioInteractions' in mod.viewState(state, 0), false)
 })

@@ -91,7 +91,7 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
   }
 }
 
-  function restartScenario(state) {
+  function restartScenario(state, events = []) {
   const campaign = state.campaign
   if (!campaign || !state.scenario) return false
   const graph = campaignGraph(campaignManifestFor(state))
@@ -103,9 +103,28 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
   if (!roster.length) return false
   // 有人死亡/疯狂/退场时不在原地重开：让正常结算流程处理替补。
   if (roster.some(inv => campaign.investigators[inv.seat].status !== 'active')) return false
+  // 旧存档兜底：重开前把威胁区里的中毒弱点补记进战役牌组，否则重开后按记录重建牌组会丢中毒。
+  persistPoisonedWeaknesses(state, events)
   campaign.flow.visits ||= {}
   campaign.flow.visits[nodeId] = (campaign.flow.visits[nodeId] || 1) + 1
   return true
+}
+
+// 04102「中毒」是永久弱点：正常获得时 poisonInvestigator 已把卡写进战役牌组记录；
+// 这里兜底旧存档——更新前中毒只进了威胁区域、战役记录里没有这张卡。结算时按威胁区补记，
+// 否则旧存档跨关后中毒仍会凭空消失（同一调查员只保留一张，campaignCardChange 前先查重）。
+function persistPoisonedWeaknesses(state, events) {
+  const campaign = state.campaign
+  for (const inv of state.investigators || []) {
+    const record = campaign.investigators?.[inv.seat]
+    if (!record || !Array.isArray(record.deck)) continue
+    const poison = (inv.threat || [])
+      .map(card => card?.code)
+      .find(code => code && registeredEntry(code)?.poisonWeakness === true)
+    if (!poison || record.deck.includes(poison)) continue
+    campaignCardChange(campaign, inv.seat, poison, 'add', 'poison')
+    info(state, events, `🧪 ${inv.name} 的中毒弱点补记入战役牌组（永久弱点跨关保留）。`)
+  }
 }
 
 function finishScenario(state, resolutionKey, events) {
@@ -149,6 +168,7 @@ function finishScenario(state, resolutionKey, events) {
   applyDefeatTrauma(state, events)
   const resolutionResult = applyResolutionEffects(state, resolutionKey, events)
   if (resolutionResult?.story) story = resolutionResult.story
+  persistPoisonedWeaknesses(state, events)
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {
     // Phase 5（5a-8）：威胁卡带来的创伤由条目级标记声明（计数 / 充能阈值）。
@@ -228,7 +248,7 @@ function applyResolutionEffects(state, resolutionKey, events) {
       // 以及「重演本场冒险」的剧本重开原语（04059 结局 4）。
       choose: request => requestChoice(state, request),
       restartScenario: () => {
-        if (!restartScenario(state)) return false
+        if (!restartScenario(state, events)) return false
         throw new ScenarioRestarted()
       } }) || {}
   if (result.flowData !== undefined) campaign.flowPayload = structuredClone(result.flowData)

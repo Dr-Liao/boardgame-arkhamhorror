@@ -161,7 +161,6 @@ export default {
   'tde.epilogue.title': 'Dream gate and epilogue',
   'tde.epilogue.gate': 'Dream gate: {name}',
   'tde.epilogue.reached': 'Epilogue reached',
-  'tde.epilogue.pending': 'Epilogue not reached yet',
   'table.menu': 'Game menu',
   'table.sound.on': 'Sound: on',
   'table.sound.off': 'Sound: off',

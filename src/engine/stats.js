@@ -3,7 +3,7 @@ import { ALL_CARDS } from '../cards/cards-data.js'
 import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
 import { commitProfile } from './lifecycle.js'
-import { assetTextBlankedExceptForced } from './card-text.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -17,7 +17,6 @@ export function createStats(deps) {
     agendaHandSizePenalty,
     applyFreeTriggers,
     assetPassiveBonus,
-    blanksTraits,
     cardDef,
     cardName,
     collectGrants,
@@ -36,13 +35,9 @@ export function createStats(deps) {
   } = deps
 
   function assetEffect(inv, asset) {
-    if (assetTextBlankedExceptForced(asset)) return {}
-    // Phase 5（5a-20）：「毒蛇灾厄」清空某类特长卡的文字——规则数据在 BLANKS_TRAITS 里。
-    const blankedTraits = (inv.threat || []).flatMap(item => blanksTraits(item.code))
-    if (blankedTraits.length
-      && (cardDef(asset?.code)?.traits || []).some(trait => blankedTraits.includes(String(trait).toLowerCase()))) return {}
-    // 「毒蛇灾厄」（04099）：非弱点道具的文字视为空白。
-    if (inv.threat?.some(item => item.blankItemAssets) && (cardDef(asset?.code)?.traits || []).includes('Item')) return {}
+    // 文本空白（宿主逐张空白 / 04099 毒蛇灾厄的道具 / 02088 的盟友）：旧 DSL 能力与修正一起清空。
+    // 判定与 modifiers.sourceBlanked、ability-rules.descriptorUsable 共用 card-text.js 的同一份。
+    if (assetTextBlankedExceptForced(asset) || assetTextBlanked(asset, inv)) return {}
     // Phase 5（D2）：使用次数元数据（uses / usesType / discardWhenEmpty）可以整组搬到
     // 注册表条目上；这里与描述子一起合并，读点（补充弹药、充能耗尽、界面文字）不需要
     // 知道自己拿到的是旧 DSL 还是新条目。

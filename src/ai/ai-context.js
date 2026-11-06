@@ -274,7 +274,7 @@ export function aiDecisionContext(state, seat) {
   const story = storyDecisionContext(state, seat)
   if (story) data.story = story
   data.cards = [...known].sort().map(card)
-  return '\n【决策资料】\n' + JSON.stringify(data) + '\nprintedText 是原卡参考；implemented 和当前合法选项才是本实现的效果依据。地点条目里 entry / ability / investigate 是本实现已声明的效果，available 为 false 时 reason 说明当前为什么不能触发；reason 为 null 表示没有额外门槛。地点条目的 text 是该地点卡面原文（已经剔除与 entry / rules 重复的句子），卡面写明的进入限制、撤退、谈判与强制规则都在里面，判断「值不值得来」时先看它。available 只反映地点本身的门槛（揭示、位置、次数、费用、目标），不代表现在轮到你或有行动点；能否提交仍以合法行动列表为准。不要猜测未提供的隐藏信息。'
+  return '\n【决策资料】\n' + JSON.stringify(data) + '\nprintedText 是原卡参考；implemented 和当前合法选项才是本实现的效果依据。地点条目里 entry / ability / investigate 是本实现已声明的效果，available 为 false 时 reason 说明当前为什么不能触发；reason 为 null 表示没有额外门槛。investigate.available 不因地点线索数为 0 变 false：零线索地点仍可调查（成功不会发现线索），此时带 note 提醒没有线索收益；不要为了拿线索去调查零线索地点，除非地点/卡牌明确以「成功调查」为触发。地点条目的 text 是该地点卡面原文（已经剔除与 entry / rules 重复的句子），卡面写明的进入限制、撤退、谈判与强制规则都在里面，判断「值不值得来」时先看它。available 只反映地点本身的门槛（揭示、位置、次数、费用、目标），不代表现在轮到你或有行动点；能否提交仍以合法行动列表为准。不要猜测未提供的隐藏信息。'
     + 'actionCosts 里行动若带 odds，是本次攻击/躲避的单标记成功率预估（不是结算结果）：value 是你这次检定的总值，target 是敌人的战斗/躲避值，need 是需要混乱标记至少提供的修正，chance 是 0~1 的成功率，tokens 是当前袋中标记数；攻击还带 damage（命中伤害）与 hits（还需命中几次才能击败它），onFail 是失败时对方的反击/警戒，note 说明哪些成分没算进预估（例如旧印效果未知）。有 odds 时优先按 chance 与 hits 取舍，不要自己从混乱袋心算；没有 odds 的行动仍按卡面与规则判断。'
     + 'commitAdvice/commitOptions 是本次技能检定投入建议：value 是当前总值（未计混乱标记修正）、difficulty 是难度、gap 是还差几个图标；prefer:true 的是纯技能卡，优先投；cardType 为 asset/event 的牌投入后进入弃牌堆，投出后无法再打出，除非必要不要投。'
 }

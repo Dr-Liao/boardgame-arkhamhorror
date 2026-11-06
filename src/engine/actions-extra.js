@@ -442,18 +442,21 @@ export function createActionsExtra(deps) {
     return { available: true, reason: null }
   }
 
-  // 调查的可用性同样给出原因：禁止调查 / 无线索 / 上锁 / 剧本限制。
+  // 调查的可用性同样给出原因：禁止调查 / 上锁 / 剧本限制。
   // 与 moves.js 的 investigate case 对齐，但不看行动点。
+  // 2026-11-06 规则修正：地点线索数不影响「能不能调查」；零线索地点照样可调查，
+  // 只是成功后不发现线索——用 note 让 AI 知道这次调查没有线索收益。
   function locationInvestigateStatus(state, loc, inv) {
     if (!loc) return { available: false, reason: '地点不存在' }
     if (!loc.revealed) return { available: false, reason: '地点尚未揭示' }
     if (inv.location !== loc.id) return { available: false, reason: '你不在该地点' }
     if (capabilityBlocked(state, inv, 'investigate')) return { available: false, reason: '当前效果禁止你调查' }
-    if ((loc.clues || 0) <= 0) return { available: false, reason: '这里没有线索可调查' }
     if (loc.locked) return { available: false, reason: '地点被上锁的门封锁' }
     const reason = scenarioBehavior(state).investigationError?.(state, inv, loc)
     if (reason) return { available: false, reason }
-    return { available: true, reason: null }
+    const noClues = (loc.clues || 0) <= 0
+    return { available: true, reason: null,
+      ...(noClues ? { note: '这里已无线索：调查仍可进行，但成功不会发现线索' } : {}) }
   }
 
   function markLocationAbilityUsed(state, loc, inv) {

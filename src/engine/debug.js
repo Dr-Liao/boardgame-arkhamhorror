@@ -16,15 +16,33 @@ import { discardPlayerCards } from './player-zones.js'
 // tools/hardcode-audit.mjs 会扫描 src/engine/**）；关卡、卡牌与敌人一律按战役清单与
 // 卡面数据表查。
 import { contentRegistry } from '../../content/registered.js'
-import { cardDef, enemyDef } from './card-lookup.js'
+import { ALL_TREACHERIES, cardDef, enemyDef } from './card-lookup.js'
+import { TOKEN_LABEL } from './presentation-constants.js'
 
 // 允许通过调试指令发放的玩家卡类型（永久卡另有排除，见 debugMoveError）。
 const PLAYER_CARD_TYPES = new Set(['asset', 'event', 'skill'])
 const MIN_AMOUNT = 1
 const MAX_AMOUNT = 999
-// card kind 的放置区域（缺省 hand，行为与 §3.1 一致）。
-const CARD_ZONES = ['hand', 'deckTop', 'deckBottom', 'discard']
-const ZONE_LABELS = { hand: '手牌', deckTop: '牌库顶', deckBottom: '牌库底', discard: '弃牌堆' }
+// card kind 的放置区域（缺省 hand，行为与 §3.1 一致；play 直接将支援卡置入场上）。
+const CARD_ZONES = ['hand', 'deckTop', 'deckBottom', 'discard', 'play']
+const ZONE_LABELS = { hand: '手牌', deckTop: '牌库顶', deckBottom: '牌库底', discard: '弃牌堆', play: '场上' }
+const VALID_CHAOS_TOKENS = new Set([...Object.keys(TOKEN_LABEL), '-7', 'bless', 'curse', 'frost'])
+const EXTRA_TOKEN_LABELS = { bless: '祝福', curse: '诅咒', frost: '霜寒', '-7': '-7' }
+
+function chaosTokenLabel(token) {
+  return TOKEN_LABEL[token] || EXTRA_TOKEN_LABELS[token] || token
+}
+
+function inScenarioProgress(state) {
+  return Boolean(state.scenario?.id) && !(state.hubFlow && state.uiState && state.uiState !== 'inScenario')
+}
+
+function isEncounterCard(code) {
+  if (typeof code !== 'string' || !code) return false
+  if (ALL_TREACHERIES[code] || enemyDef(code)) return true
+  const def = cardDef(code)
+  return Boolean(def && (def.type === 'treachery' || def.type === 'enemy'))
+}
 
 export function isDebugMove(move) {
   return move?.action === 'debug'
@@ -32,7 +50,15 @@ export function isDebugMove(move) {
 
 function campaignScenarioIds(state) {
   if (!state.campaign?.id) return []
-  return contentRegistry.getCampaign(state.campaign.id)?.scenarioIds || []
+  const manifest = contentRegistry.getCampaign(state.campaign.id)
+  if (!manifest) return []
+  const mode = state.campaign?.mode
+  if (manifest.parts && (mode === 'singleA' || mode === 'singleB')) {
+    const part = mode === 'singleA' ? 'A' : 'B'
+    const chapters = manifest.parts[part]?.chapters || []
+    return chapters.map(ch => typeof ch === 'string' ? ch : ch?.scenarioId).filter(Boolean)
+  }
+  return manifest.scenarioIds || []
 }
 
 function locationExists(state, locationId) {
@@ -76,8 +102,16 @@ function cardZoneOf(move) {
 // 返回中文错误文本或 null。不检查 revision（由 validateMove 统一处理）。
 export function debugMoveError(state, seat, move) {
   if (state.status !== 'playing') return '对局已结束'
-  if (state.pendingChoice) return '请先处理当前待决选择，再使用调试控制台'
   if (!state.campaign?.id) return '当前对局没有战役信息'
+  if (move?.kind === 'resolveChoice') {
+    if (!state.pendingChoice) return '当前没有待决选择'
+    if (typeof move.choiceId === 'string' && move.choiceId !== state.pendingChoice.id) return '待决选择已变化'
+    if (typeof move.optionId !== 'string' || !state.pendingChoice.options?.some(opt => opt.id === move.optionId)) {
+      return '无效的选择选项'
+    }
+    return null
+  }
+  if (state.pendingChoice && move?.kind !== 'scenario') return '请先处理当前待决选择，再使用调试控制台'
   switch (move?.kind) {
     case 'scenario': {
       if (typeof move.scenarioId !== 'string' || !campaignScenarioIds(state).includes(move.scenarioId)) return '未知关卡'
@@ -98,12 +132,13 @@ export function debugMoveError(state, seat, move) {
     }
     case 'card': {
       const zone = cardZoneOf(move)
-      if (!CARD_ZONES.includes(zone)) return '未知的放置区域（hand / deckTop / deckBottom / discard）'
+      if (!CARD_ZONES.includes(zone)) return '未知的放置区域（hand / deckTop / deckBottom / discard / play）'
       if (typeof move.code !== 'string') return '未知卡牌'
       const def = cardDef(move.code)
       if (!def) return '未知卡牌'
       if (!PLAYER_CARD_TYPES.has(def.type)) return '只能发放玩家卡（资产 / 事件 / 技能）'
       if (def.permanent) return '永久卡不能发放'
+      if (zone === 'play' && def.type !== 'asset') return '只有支援卡（资产）可以直接置入场上'
       const inv = targetInv(state, move.targetSeat)
       if (!inv) return '无效的目标调查员'
       // 缺省 hand 的「手牌已有」拦截保持 §3.1 语义；其它区域允许把同一张牌从手牌挪过去。
@@ -160,12 +195,62 @@ export function debugMoveError(state, seat, move) {
       return null
     }
     case 'endScenario': {
-      if (!state.scenario?.id || (state.hubFlow && state.uiState && state.uiState !== 'inScenario')) {
-        return '当前没有进行中的关卡'
-      }
+      if (!inScenarioProgress(state)) return '当前没有进行中的关卡'
       const resolutions = state.scenario.resolutions || {}
       if (!Object.keys(resolutions).length) return '本关没有可结算的结局'
       if (typeof move.resolutionKey !== 'string' || !Object.hasOwn(resolutions, move.resolutionKey)) return '未知剧本结局'
+      return null
+    }
+    case 'advanceAct': {
+      if (!inScenarioProgress(state)) return '当前没有进行中的关卡'
+      if (!state.acts?.[state.actIndex]) return '当前没有可推进的场景'
+      return null
+    }
+    case 'advanceAgenda': {
+      if (!inScenarioProgress(state)) return '当前没有进行中的关卡'
+      if (!state.agendas?.[state.agendaIndex]) return '当前没有可推进的密谋'
+      return null
+    }
+    case 'locationClues': {
+      if (!inScenarioProgress(state)) return '当前没有进行中的关卡'
+      if (typeof move.locationId !== 'string' || !locationExists(state, move.locationId)) return '目标地点未入场'
+      const amount = move.amount
+      if (!Number.isSafeInteger(amount) || amount === 0 || amount < -MAX_AMOUNT || amount > MAX_AMOUNT) {
+        return '地点线索调整必须是 -999 到 999 之间的非零整数'
+      }
+      return null
+    }
+    case 'encounter': {
+      if (!inScenarioProgress(state)) return '当前没有进行中的关卡'
+      if (!targetInv(state, move.targetSeat)) return '无效的目标调查员'
+      if (move.code !== undefined) {
+        if (!isEncounterCard(move.code)) return '未知的遭遇牌（仅限诡计或敌人）'
+      } else if (!(state.encounterDeck?.length || 0) && !(state.encounterDiscard?.length || 0)) {
+        return '遭遇牌堆为空'
+      }
+      return null
+    }
+    case 'forceToken': {
+      if (move.clear === true) return null
+      if (typeof move.token !== 'string' || !VALID_CHAOS_TOKENS.has(move.token)) return '未知的混乱标记'
+      return null
+    }
+    case 'uses': {
+      const inv = targetInv(state, move.targetSeat)
+      if (!inv) return '无效的目标调查员'
+      const amount = move.amount
+      if (!Number.isSafeInteger(amount) || amount === 0 || amount < -MAX_AMOUNT || amount > MAX_AMOUNT) {
+        return '使用标记调整必须是 -999 到 999 之间的非零整数'
+      }
+      if (move.assetId !== undefined) {
+        if (!(inv.assets || []).some(asset => asset.id === move.assetId)) return '目标调查员场上没有指定的支援卡'
+      } else if (!(inv.assets || []).length) {
+        return '目标调查员场上没有支援卡'
+      }
+      return null
+    }
+    case 'ready': {
+      if (!targetInv(state, move.targetSeat)) return '无效的目标调查员'
       return null
     }
     default:
@@ -220,6 +305,10 @@ export function createDebugExecutor(deps) {
     cardName,
     awardExperience,
     finishScenario,
+    advanceAct,
+    advanceAgenda,
+    drawEncounter,
+    newPlayerAssetInstance,
   } = deps
   // deps.syncClues 由 engine.js 一并注入，但执行器不直接调用：公共线索是个人线索之和的
   // 派生值，统一由 applyMove 收尾的 syncClues 收敛（见 debug.js 文件头）。
@@ -270,6 +359,10 @@ export function createDebugExecutor(deps) {
       // §3.1 语义不变：目标牌库/弃牌堆里已有这张牌时先取走一张再进手牌。
       takeCardFromZones(inv, code, ['deck', 'discard'])
       inv.hand.push(code)
+    } else if (zone === 'play') {
+      takeCardFromZones(inv, code, ['hand', 'deck', 'discard'])
+      const asset = newPlayerAssetInstance(state, inv, code)
+      inv.assets.push(asset)
     } else {
       // §10.1：同 code 已在手牌/牌库/弃牌堆时先移走一张，再放入目标区域，避免多出一份。
       takeCardFromZones(inv, code, ['hand', 'deck', 'discard'])
@@ -371,14 +464,109 @@ export function createDebugExecutor(deps) {
   }
 
   function executeEndScenario(state, move, events) {
-    info(state, events, `🛠️ 调试：立即结束本关，随机结局「${resolutionLabel(move.resolutionKey)}」。`)
+    info(state, events, `🛠️ 调试：立即结束本关，结局「${resolutionLabel(move.resolutionKey)}」。`)
     finishScenario(state, move.resolutionKey, events)
+  }
+
+  function executeResolveChoice(state, move, events) {
+    // 若存在真实 continuation，resolveTransaction 已自动消费 move.optionId 并重跑原事务；
+    // 这里处理测试夹具直接挂在 state.pendingChoice（无 continuation）的情况。
+    state.pendingChoice = null
+    info(state, events, `🛠️ 调试：已回答待决选择（${move.optionId}）。`)
+  }
+
+  function executeAdvanceAct(state, move, events) {
+    const cur = state.acts?.[state.actIndex]
+    info(state, events, `🛠️ 调试：推进场景「${cur?.name || cur?.id || state.actIndex + 1}」。`)
+    advanceAct(state, events)
+  }
+
+  function executeAdvanceAgenda(state, move, events) {
+    const cur = state.agendas?.[state.agendaIndex]
+    info(state, events, `🛠️ 调试：推进密谋「${cur?.name || cur?.id || state.agendaIndex + 1}」。`)
+    advanceAgenda(state, events)
+  }
+
+  function executeLocationClues(state, move, events) {
+    const location = state.locations.find(item => item.id === move.locationId)
+    if (!location) throw new Error('目标地点未入场')
+    location.clues = Math.max(0, (location.clues || 0) + move.amount)
+    const delta = move.amount > 0 ? `+${move.amount}` : String(move.amount)
+    info(state, events, `🛠️ 调试：「${locName(state, location.id)}」线索 ${delta}（当前 ${location.clues}）。`)
+  }
+
+  function executeEncounter(state, move, events) {
+    const inv = state.investigators[move.targetSeat]
+    if (move.code) {
+      state.encounterDeck ||= []
+      const deckIdx = state.encounterDeck.lastIndexOf(move.code)
+      if (deckIdx >= 0) state.encounterDeck.splice(deckIdx, 1)
+      else {
+        const discardIdx = (state.encounterDiscard || []).lastIndexOf(move.code)
+        if (discardIdx >= 0) state.encounterDiscard.splice(discardIdx, 1)
+      }
+      state.encounterDeck.push(move.code)
+      info(state, events, `🛠️ 调试：${inv.name} 抽取指定遭遇牌「${cardName(move.code)}」。`)
+    } else {
+      info(state, events, `🛠️ 调试：${inv.name} 抽取 1 张遭遇牌。`)
+    }
+    drawEncounter(state, inv, events)
+  }
+
+  function executeForceToken(state, move, events) {
+    if (move.clear === true) {
+      delete state.debugNextTokens
+      info(state, events, '🛠️ 调试：已清空锁定的混乱标记。')
+      return
+    }
+    state.debugNextTokens ||= []
+    state.debugNextTokens.push(move.token)
+    info(state, events, `🛠️ 调试：已锁定下次检定混乱标记「${chaosTokenLabel(move.token)}」。`)
+  }
+
+  function executeUses(state, move, events) {
+    const inv = state.investigators[move.targetSeat]
+    const assets = move.assetId
+      ? (inv.assets || []).filter(asset => asset.id === move.assetId)
+      : (() => {
+          const withUses = (inv.assets || []).filter(asset => Number.isInteger(asset.uses))
+          return withUses.length ? withUses : (inv.assets || [])
+        })()
+    if (!assets.length) throw new Error('目标调查员场上没有匹配的支援卡')
+    for (const asset of assets) {
+      asset.uses = Math.max(0, (asset.uses || 0) + move.amount)
+    }
+    const delta = move.amount > 0 ? `+${move.amount}` : String(move.amount)
+    const names = assets.map(asset => `「${asset.name || cardName(asset.code)}」(${asset.uses})`).join('、')
+    info(state, events, `🛠️ 调试：${inv.name} 支援卡使用标记 ${delta}：${names}。`)
+  }
+
+  function executeReady(state, move, events) {
+    const inv = state.investigators[move.targetSeat]
+    let count = 0
+    for (const card of [...(inv.assets || []), ...(inv.threat || [])]) {
+      if (card?.exhausted) {
+        card.exhausted = false
+        count++
+      }
+    }
+    inv.usedAbilities = {}
+    inv.usedReactions = {}
+    info(state, events, `🛠️ 调试：已重置 ${inv.name} 的 ${count} 张横置卡牌并清空能力冷却。`)
   }
 
   function executeDebugMove(state, seat, move, events) {
     switch (move.kind) {
       case 'scenario': return executeScenario(state, move, events)
       case 'endScenario': return executeEndScenario(state, move, events)
+      case 'resolveChoice': return executeResolveChoice(state, move, events)
+      case 'advanceAct': return executeAdvanceAct(state, move, events)
+      case 'advanceAgenda': return executeAdvanceAgenda(state, move, events)
+      case 'locationClues': return executeLocationClues(state, move, events)
+      case 'encounter': return executeEncounter(state, move, events)
+      case 'forceToken': return executeForceToken(state, move, events)
+      case 'uses': return executeUses(state, move, events)
+      case 'ready': return executeReady(state, move, events)
       case 'spawn': return executeSpawn(state, move, events)
       case 'defeat': return executeDefeat(state, move, events)
       case 'card': return executeCard(state, move, events)

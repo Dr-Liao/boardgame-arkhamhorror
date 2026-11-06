@@ -273,8 +273,8 @@ export function createUI(host) {
   hubUi = createHubUI({ ...host, canAct, submitMove: cardMove, refreshSession: refreshCardSession,
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
-    onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
-    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; tableSession = null },
+    onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; state.arkhamDeckLibraryOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
+    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; state.arkhamDeckLibraryOpen = false; tableSession = null },
     // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
     // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
     onLocaleChange(next) {
@@ -283,7 +283,7 @@ export function createUI(host) {
       setHostLocale(locale)
       render()
     },
-    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened || scenarioSetupView.opened || debugConsole.opened),
+    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || state.arkhamDeckLibraryOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened || scenarioSetupView.opened || debugConsole.opened),
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
@@ -308,7 +308,9 @@ export function createUI(host) {
     renderOverlays: () => {
       const overlaySession = state.session
       const overlayTheme = overlaySession?.modId === 'arkhamhorror' && overlaySession.state
-        ? presentationAttributes(overlaySession.state) : null
+        ? presentationAttributes(overlaySession.state)
+        : state.setup?.game?.id === 'arkhamhorror'
+          ? presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } }) : null
       // 弹窗/浮层挂在牌桌与局外面板之外，收不到 .ah-theme 上的战役色板：
       // 给每个浮层根节点补上主题类与变量，样式仍只消费 --ah-theme-*。
       const themed = node => {
@@ -335,6 +337,7 @@ export function createUI(host) {
           sync: tableSession && state.arkhamSync?.sessionId === tableSession.sessionId ? state.arkhamSync.message : null })),
         themed(!presentation.isBlocking && state.arkhamZoneOpen && tableSession ? renderCardZoneModal(tableSession) : null),
         themed(!presentation.isBlocking && state.arkhamDeckOpen && state.session ? hubUi.renderDeckModal(state.session) : null),
+        themed(!presentation.isBlocking && state.arkhamDeckLibraryOpen ? hubUi.renderLibraryModal(state.session) : null),
         themed(arkhamCatalog.isOpen ? arkhamCatalog.render() : null),
         themed(state.cardDetail ? renderCardDetailModal(state.cardDetail) : null),
         themed(scenarioSetupView.render(state.view === 'game' ? tableSession : null)),
@@ -394,14 +397,16 @@ function slotLabel(slot) {
 }
 
 function ahCardDef(s, code) {
-  return (s.state && s.state.cards && s.state.cards[code]) || {}
+  if (s?.state?.cards?.[code]) return s.state.cards[code]
+  const builder = state?.catalog?.find(item => item.id === 'arkhamhorror')?.clientData?.deckBuilder
+  return builder?.cardPool?.find(card => card.code === code) || builder?.investigators?.find(inv => inv.code === code) || {}
 }
 
 // 卡牌实例与剧本条目常用「规则代号」（如夜之狂热的 frozenInFear），
 // 而卡图、图鉴和卡牌详情只按真实卡号索引；展示前统一回落到原卡号。
 function ahArtCode(s, code) {
   if (!code) return code
-  return (s.state && s.state.cards && s.state.cards[code] && s.state.cards[code].originalCode) || code
+  return (s?.state && s.state.cards && s.state.cards[code] && s.state.cards[code].originalCode) || code
 }
 
 function locationAttachments(s, loc) {
@@ -1144,6 +1149,8 @@ function renderCardActionPopover(s, humanTurn) {
   if (!explicit && state.arkhamTargetAbility?.sessionId === s.sessionId && state.arkhamTargetAbility.revision === s.state.revision) return null
   // Cards with one destination are used on that destination. Multiple abilities stay next to their source.
   const moves = explicit || (selection && !selection.key?.startsWith('hand:') ? selectedMoves(s, selection) : [])
+  // 显式的多候选浮层带 key 时贴着那张牌（快速卡的「如同位于」变体等）；否则沿用当前选中的实体。
+  const anchorKey = explicit && state.arkhamDirectActions?.key ? state.arkhamDirectActions.key : selection?.key
   // 上限已经用掉的能力仍列出来（置灰），否则「点开这张卡没有任何按钮」和
   // 「这张卡本来就没有能力」看起来一模一样。
   const usedRows = !explicit && selection?.assetId ? usedAbilityLines(abilityUsageFor(s.state, selection.assetId)) : []
@@ -1177,7 +1184,7 @@ function renderCardActionPopover(s, humanTurn) {
     if (!popover.isConnected) return
     const action = popover.querySelector('.ah-action:not(:disabled)')
     if (action && !popover.contains(document.activeElement)) action.focus({ preventScroll: true })
-    const source = [...document.querySelectorAll('[data-interaction]')].find(el => el.dataset.interaction === selection?.key)
+    const source = [...document.querySelectorAll('[data-interaction]')].find(el => el.dataset.interaction === anchorKey)
     const box = source?.getBoundingClientRect()
     if (box) { popover.style.left = Math.max(8, Math.min(innerWidth - popover.offsetWidth - 8, box.x + box.width / 2 - popover.offsetWidth / 2)) + 'px'; popover.style.top = Math.max(65, Math.min(innerHeight - popover.offsetHeight - 12, box.y - popover.offsetHeight - 8)) + 'px' }
   })
@@ -1266,6 +1273,10 @@ function renderPendingChoice(s, humanTurn) {
   if (hauntedPanel) return renderHauntedChoice(h, hauntedPanel, panelProps)
   const items = choicePresentation(s.state)
   const reactions = reactionChoices(s.state)
+  // 快速卡候选已挂回手牌实体（card-interactions.js#choicePresentation）：这些项不再进视觉选项面板，
+  // 由手牌本身承载点击。底栏给一句说明，让玩家知道高亮的手牌就是按钮。
+  const fastPrompt = humanTurn && items.some(item => item.key?.startsWith('hand:')
+    && String(item.move.optionId).startsWith('fast-card:'))
   const names = { turnOrder: t('game.choice.turnOrder'), mulligan: t('game.choice.mulligan'), commit: t('game.choice.commit'),
     discard: t('game.choice.discard'), 'discard-hand': t('game.choice.discardHand'), card: t('game.choice.card'),
     assetReplacement: t('game.choice.assetReplacement'),
@@ -1292,7 +1303,8 @@ function renderPendingChoice(s, humanTurn) {
     'data-choice-seat': choice.seat, 'data-interaction': choice.kind === 'commit' ? 'zone:commit' : 'zone:discard' },
     h('div', { className: 'ah-direct-instruction', role: 'status' },
       h('strong', { className: test ? 'ah-test-context' : '' }, test ? `${testSource?.label || t('game.test.generic')} · ${testSource?.name || t('game.test.named', { skill: skillName })}` : humanTurn ? names[choice.kind] || t('game.choice.resolving') : t('game.choice.waitingTeammate')),
-      h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false,skills:true}))),
+      h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false,skills:true})),
+      fastPrompt ? h('small', { className: 'ah-fast-prompt-hint' }, tableIcon('fast'), t('game.reaction.fastPromptHint')) : null),
     testSourceCode ? h('button', { className: 'ah-test-source', 'data-card-code': testSourceCode, title: t('game.test.sourceTitle', { name: testSource.name }),
       onclick: () => openCardDetailDef({ ...ahCardDef(s, testSource.code), originalCode: testSourceCode, code: testSourceCode, name: testSource.name }) }, tableArt(h, testSourceCode, testSource.name)) : null,
     test ? h('div', { className: 'ah-test-preview' + (multi?.multi ? ' is-multi-skill' : ''),
@@ -1590,7 +1602,12 @@ function renderCardGame(s, autoPassing = false) {
     canInteract: () => !presentation.isBlocking && canAct(s, decisionSeatOf(s)),
     selectedKey: () => currentSelection(s)?.key,
     select: key => selectEntity(s, key), inspect: key => inspectEntity(s, key),
-    showActions: moves => { state.arkhamDirectActions = { sessionId: s.sessionId, revision: st.revision, moves }; render() },
+    showActions: (moves, sourceKey) => {
+      // 多个候选挂在同一张牌上（例如卢克·罗宾逊的「如同位于连接地点」变体）：把选择浮层
+      // 定位到那张牌，而不是留在牌桌中央。key 由 renderCardActionPopover 用来找来源元素。
+      state.arkhamDirectActions = { sessionId: s.sessionId, revision: st.revision, moves, key: sourceKey || null }
+      render()
+    },
     feedback: message => { state.error = message; render() } })
   const highlightResources = target => {
     const card=target?.closest?.('.ah-hand-card'), pool=root.querySelector('.ah-pool-resource')

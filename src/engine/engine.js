@@ -138,7 +138,7 @@ import { describeTeamParticipation, investigatorParticipation, investigatorAssig
 import { narrativeLogTexts } from '../ai/ai-story.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, randomValue, nextInstanceId, stateCompatibilityError, agendaDoom, totalDoom, doomCards, enemyHealthValue } from './rules-state.js'
 import { swarmGroup, returnSwarmCard } from './swarm.js'
-import { assetTextBlankedExceptForced } from './card-text.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { requestChoice, choiceMoves, choiceSeats, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
 import { introduction, resolutionStory } from '../campaign/story.js'
 import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
@@ -163,15 +163,8 @@ setTargetHooks({ enemyHealth: (...args) => enemyHealth(...args), enemyEvade: (st
   cardDef, entryOf: registeredEntry, enemyBlanked: enemyTextBlanked })
 setModifierHooks({
   maxSanity: getMaxSanity,
-  // 与 assetEffect 的空白判定保持一致：文本空白时被动与声明式修正都不生效。
-  sourceBlanked: (state, inv, source) => {
-    if (assetTextBlankedExceptForced(source)) return true
-    const traits = cardDef(source?.code)?.traits || []
-    // Phase 5（5a-3）：「清空某类特质文案」在内容层数据里，按标记判断。
-    if (inv?.threat?.some(item => blanksTraits(item.code).includes('ally')) && traits.includes('Ally')) return true
-    if (inv?.threat?.some(item => item.blankItemAssets) && traits.includes('Item')) return true
-    return false
-  },
+  // 与 assetEffect 的空白判定保持一致：文本空白时被动与声明式修正都不生效（同一份判定见 card-text.js）。
+  sourceBlanked: (state, inv, source) => assetTextBlankedExceptForced(source) || assetTextBlanked(source, inv),
   investigatorBlanked: (state, inv) => investigatorTextBlanked(state, inv),
   // Phase 3（D1）：非玩家实体的「文本视为空白」——敌人 textBlanked 时，
   // 它自己声明的修正与布尔规则都不再生效（与支援的空白口径一致）。
@@ -1864,6 +1857,10 @@ function debugApi() {
     syncClues,
     awardExperience,
     finishScenario,
+    advanceAct,
+    advanceAgenda,
+    drawEncounter,
+    newPlayerAssetInstance,
   })
   return debugImpl
 }
@@ -2838,6 +2835,7 @@ let createCampaignPluginImpl = null
 function createCampaignPluginApi() {
   createCampaignPluginImpl ||= createCampaignPlugin({
     ...commonDeps,
+    campaignCardChange,
     doInvestigate,
     doPlay,
     grantedInvestigateAction,
@@ -2980,7 +2978,6 @@ function createStatsApi() {
     agendaHandSizePenalty,
     applyFreeTriggers,
     assetPassiveBonus,
-    blanksTraits,
     cardName,
     collectGrants,
     doAbility,
@@ -3047,6 +3044,8 @@ function createCardOpsApi() {
   createCardOpsImpl ||= createCardOps({
     ...commonDeps,
     searchDeck,
+    // P6（食梦者）：「被查找到的牌自身规则」读点由 deck-ops 提供；searchTop 与 lookAt 共用。
+    searchedCardsWindow: (...args) => deckOpsApi().searchedCardsWindow(...args),
     afterEvade,
     describePrey,
     discardLocked,

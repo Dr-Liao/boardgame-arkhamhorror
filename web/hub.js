@@ -1,7 +1,7 @@
 import { renderRulesText } from './card-text.js'
 import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
-import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
+import { listLocalDecks, saveLocalDeck, deleteLocalDeck, batchDeleteLocalDecks, slotsToCodes, formatDeckLibraryJson } from './deck-library.js'
 import { tableArt } from './table-art.js'
 import { tableIcon, classIcon } from './table-components.js'
 import { cardDisplayName, cardDisplayText, cardDisplayTraits } from './catalog.js'
@@ -191,6 +191,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const focusedSelect = previous?.contains(active) && active.tagName === 'SELECT'
       ? [...previous.querySelectorAll('select')].indexOf(active) : -1
     const focusKey = previous?.contains(active) ? active.dataset.focusKey : null
+    const selectionStart = focusKey && typeof active.selectionStart === 'number' ? active.selectionStart : null
+    const selectionEnd = focusKey && typeof active.selectionEnd === 'number' ? active.selectionEnd : null
     const next = build()
     const panel = next?.matches(selector) ? next : next?.querySelector(selector)
     if (!panel) return next
@@ -216,7 +218,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     queueMicrotask(() => {
       if (!panel.isConnected) return
       if (focusedSelect >= 0) panel.querySelectorAll('select')[focusedSelect]?.focus({ preventScroll: true })
-      if (focusKey) [...panel.querySelectorAll('[data-focus-key]')].find(el => el.dataset.focusKey === focusKey && !el.disabled)?.focus({ preventScroll: true })
+      if (focusKey) {
+        const target = [...panel.querySelectorAll('[data-focus-key]')].find(el => el.dataset.focusKey === focusKey && !el.disabled)
+        target?.focus({ preventScroll: true })
+        if (selectionStart != null && target?.setSelectionRange) {
+          try { target.setSelectionRange(selectionStart, selectionEnd ?? selectionStart) } catch {}
+        }
+      }
     })
     restoreScrollWhenMounted(panel, scroll)
     return next
@@ -501,12 +509,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       || document.querySelector('[data-hub-action="edit-deck"]')
     target?.focus({ preventScroll: true })
   }
-  const deckSeat = s => s.mySeat ?? 0
-  const deckInvestigator = (s, g) => g?.clientData?.deckBuilder?.investigators.find(item => item.code === s.state.investigators[deckSeat(s)].code)
+  const deckSeat = s => s?.mySeat ?? 0
+  const deckInvestigator = (s, g) => s?.state?.investigators?.[deckSeat(s)]
+    ? g?.clientData?.deckBuilder?.investigators.find(item => item.code === s.state.investigators[deckSeat(s)].code) : null
   // 按「卡牌范围」收窄构筑资料（导入/卡组库与服务端做同一判断）。
   const scopedBuilder = (s, builder) => {
-    const scope = s.state.cardPoolScope
-    const cycle = campaignCycle(s.state.campaign?.id)
+    const scope = s ? s.state.cardPoolScope : state.setup?.form?.cardPoolScope || 'all'
+    const cycle = campaignCycle(s ? s.state.campaign?.id : state.setup?.form?.campaignId)
     return {
       ...builder,
       investigators: (builder?.investigators || []).filter(inv => cardAllowedByScope(inv.code, scope, cycle)),
@@ -515,43 +524,91 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   // A local draft survives only while its saved source stays unchanged. An
   // automatic build or a saved edit must become the next editing baseline.
-  const deckDraftKey = (s, inv) => JSON.stringify([s.sessionId, inv?.code, [...(recordForSeat(s, deckSeat(s))?.deck || [])].sort()])
-  const savedDraft = (s, inv) => (recordForSeat(s, deckSeat(s))?.deck || []).filter(code => inv?.allowedCards.includes(code))
+  const deckDraftKey = (s, inv) => s ? JSON.stringify([s.sessionId, inv?.code, [...(recordForSeat(s, deckSeat(s))?.deck || [])].sort()]) : ''
+  const savedDraft = (s, inv) => s ? (recordForSeat(s, deckSeat(s))?.deck || []).filter(code => inv?.allowedCards.includes(code)) : []
   const sameCards = (a, b) => a.length === b.length && [...a].sort().join() === [...b].sort().join()
-  function openDeck(s, g, { importing = false, library = false } = {}) {
+  const ensureDeckDraft = (s, g) => {
+    if (!s || !g) return []
     const inv = deckInvestigator(s, g)
     const key = deckDraftKey(s, inv)
     if (state.arkhamDeckDraftKey !== key) {
       state.arkhamDeckDraft = savedDraft(s, inv)
       state.arkhamDeckDraftKey = key; state.arkhamDeckUndo = []; state.arkhamDeckRedo = []
     }
+    return state.arkhamDeckDraft || []
+  }
+  function openDeck(s, g, { importing = false, library = false } = {}) {
+    ensureDeckDraft(s, g)
     state.deckFilters = {}
-    state.arkhamDeckReturnFocus = importing ? 'import-deck' : library ? 'deck-library' : 'edit-deck'
+    if (library) {
+      openLibraryModal({ s, g, returnFocus: 'deck-library' })
+      return
+    }
+    state.arkhamDeckReturnFocus = importing ? 'import-deck' : 'edit-deck'
     // Keep the object captured by an in-flight read when reopening the modal.
     Object.assign(state.arkhamDeckImport ||= { text: '' }, { open: importing, notice: '', pending: null })
-    Object.assign(deckLibrary(), { open: library, notice: '', error: '', confirmDelete: null })
+    Object.assign(deckLibrary(), { open: false, notice: '', error: '', confirmDelete: null })
     state.arkhamDeckOpen = true
     render()
     if (importing) setTimeout(() => document.querySelector('.ah-deck-import input')?.focus({ preventScroll: true }), 0)
-    if (library) refreshLibrary()
   }
   // The local library lives beside, not inside, the campaign save.
-  const deckLibrary = () => state.arkhamDeckLibrary ||= { open: false, decks: null, name: '', currentId: null }
+  const deckLibrary = () => state.arkhamDeckLibrary ||= {
+    open: false, decks: null, name: '', currentId: null, selectedId: null,
+    filterClass: 'all', filterInvestigator: 'all', filterStatus: 'all', sort: 'updated', search: '',
+    detailView: 'grid', batchMode: false, selectedIds: [], confirmBatchDelete: false,
+    importOpen: false, renamingId: null, renameText: '',
+  }
+  function openLibraryModal({ s = state.session, g = game(), importing = false, returnFocus = 'deck-library' } = {}) {
+    if (s && g) ensureDeckDraft(s, g)
+    const lib = deckLibrary()
+    Object.assign(lib, {
+      open: true, notice: '', error: '', confirmDelete: null, confirmBatchDelete: false,
+      importOpen: importing, renamingId: null,
+    })
+    if (importing) Object.assign(state.arkhamDeckImport ||= { text: '' }, { open: true, notice: '', error: '', pending: null })
+    state.arkhamLibraryReturnFocus = returnFocus
+    state.arkhamDeckLibraryOpen = true
+    render()
+    refreshLibrary()
+    if (importing) setTimeout(() => document.querySelector('.ah-deck-library-modal .ah-deck-import input')?.focus({ preventScroll: true }), 0)
+  }
+  function closeLibraryModal() {
+    state.arkhamDeckLibraryOpen = false
+    const lib = deckLibrary()
+    Object.assign(lib, {
+      open: false, notice: '', error: '', confirmDelete: null, confirmBatchDelete: false,
+      renamingId: null, batchMode: false, selectedIds: [],
+    })
+    render()
+    const target = state.arkhamDeckOpen
+      ? document.querySelector('[data-deck-tool="library"]')
+      : document.querySelector(`[data-hub-action="${state.arkhamLibraryReturnFocus || 'deck-library'}"]`)
+        || document.querySelector('[data-setup-action="deck-library"]')
+        || document.querySelector('[data-hub-action="deck-library"]')
+    target?.focus({ preventScroll: true })
+  }
   async function refreshLibrary() {
     const lib = deckLibrary()
     if (lib.loading) return
     lib.loading = true; lib.error = ''; render()
-    try { lib.decks = await listLocalDecks(api) } catch (error) { lib.error = t('hub.deckLibrary.readFailed') + String(error?.message || error) }
+    try {
+      lib.decks = await listLocalDecks(api)
+      if (lib.decks.length && (!lib.selectedId || !lib.decks.some(d => d.id === lib.selectedId))) {
+        lib.selectedId = lib.currentId && lib.decks.some(d => d.id === lib.currentId) ? lib.currentId : lib.decks[0].id
+      }
+    } catch (error) { lib.error = t('hub.deckLibrary.readFailed') + String(error?.message || error) }
     lib.loading = false; render()
   }
-  async function storeLibraryDeck(inv, draft, overwrite) {
+  async function storeLibraryDeck(inv, draft, overwrite, targetId = null) {
     const lib = deckLibrary()
     if (lib.saving || !inv || !draft.length) return
     lib.saving = true; lib.error = ''; lib.notice = ''; lib.confirmDelete = null; render()
     try {
-      const deck = await saveLocalDeck(api, { id: overwrite ? lib.currentId : null, name: lib.name.trim() || t('hub.deckLibrary.defaultName', { name: inv.name }),
+      const id = overwrite ? (targetId || lib.currentId) : null
+      const deck = await saveLocalDeck(api, { id, name: lib.name.trim() || t('hub.deckLibrary.defaultName', { name: inv.name }),
         investigatorCode: inv.code, codes: draft })
-      lib.currentId = deck.id; lib.name = deck.name
+      lib.currentId = deck.id; lib.selectedId = deck.id; lib.name = deck.name
       lib.decks = [deck, ...(lib.decks || []).filter(item => item.id !== deck.id)]
       lib.notice = t(overwrite ? 'hub.deckLibrary.overwritten' : 'hub.deckLibrary.saved', { deck: deck.name, count: draft.length })
     } catch (error) { lib.error = t('hub.deckLibrary.saveFailed') + String(error?.message || error) }
@@ -564,10 +621,111 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     try {
       await deleteLocalDeck(api, deck.id)
       lib.decks = (lib.decks || []).filter(item => item.id !== deck.id)
+      lib.selectedIds = (lib.selectedIds || []).filter(id => id !== deck.id)
       if (lib.currentId === deck.id) lib.currentId = null
+      if (lib.selectedId === deck.id) lib.selectedId = lib.decks[0]?.id || null
       lib.notice = t('hub.deckLibrary.deleted', { deck: deck.name })
     } catch (error) { lib.error = t('hub.deckLibrary.deleteFailed') + String(error?.message || error) }
     lib.confirmDelete = null; lib.saving = false; render()
+  }
+  async function batchRemoveLibraryDecks(ids) {
+    const lib = deckLibrary()
+    if (lib.saving || !ids?.length) return
+    lib.saving = true; lib.error = ''; lib.notice = ''; render()
+    try {
+      const removed = new Set(ids)
+      await batchDeleteLocalDecks(api, ids)
+      lib.decks = (lib.decks || []).filter(item => !removed.has(item.id))
+      lib.selectedIds = (lib.selectedIds || []).filter(id => !removed.has(id))
+      if (removed.has(lib.currentId)) lib.currentId = null
+      if (removed.has(lib.selectedId)) lib.selectedId = lib.decks[0]?.id || null
+      lib.notice = t('hub.library.batchDeleted', { count: ids.length })
+    } catch (error) { lib.error = t('hub.deckLibrary.deleteFailed') + String(error?.message || error) }
+    lib.confirmBatchDelete = false; lib.saving = false; render()
+  }
+  async function renameLibraryDeck(deck, nextName) {
+    const lib = deckLibrary()
+    if (lib.saving || !deck) return
+    lib.saving = true; lib.error = ''; lib.notice = ''; render()
+    try {
+      const updated = await saveLocalDeck(api, {
+        id: deck.id, name: String(nextName ?? '').trim() || deck.name,
+        investigatorCode: deck.investigator_code, slots: deck.slots,
+        arkhamdbId: deck.arkhamdbId, arkhamdbKind: deck.arkhamdbKind,
+      })
+      lib.decks = (lib.decks || []).map(item => item.id === updated.id ? updated : item)
+      if (lib.currentId === updated.id) lib.name = updated.name
+      lib.renamingId = null
+      lib.notice = t('hub.library.renamed', { deck: updated.name })
+    } catch (error) { lib.error = t('hub.deckLibrary.saveFailed') + String(error?.message || error) }
+    lib.saving = false; render()
+  }
+  async function duplicateLibraryDeck(deck) {
+    const lib = deckLibrary()
+    if (lib.saving || !deck) return
+    lib.saving = true; lib.error = ''; lib.notice = ''; render()
+    try {
+      const copy = await saveLocalDeck(api, {
+        name: t('hub.library.duplicateSuffix', { deck: deck.name }).slice(0, 60),
+        investigatorCode: deck.investigator_code, slots: deck.slots,
+        arkhamdbId: deck.arkhamdbId, arkhamdbKind: deck.arkhamdbKind,
+      })
+      lib.decks = [copy, ...(lib.decks || [])]
+      lib.selectedId = copy.id; lib.currentId = copy.id; lib.name = copy.name
+      lib.notice = t('hub.library.duplicated', { deck: copy.name })
+    } catch (error) { lib.error = t('hub.deckLibrary.saveFailed') + String(error?.message || error) }
+    lib.saving = false; render()
+  }
+  async function exportLibraryDeck(deck) {
+    const lib = deckLibrary()
+    if (!deck) return
+    const json = formatDeckLibraryJson(deck)
+    try {
+      const blob = new Blob([json], { type: 'application/json;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${deck.name.replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_') || 'arkham-deck'}.json`
+      link.hidden = true
+      document.body.append(link)
+      link.click()
+      link.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 0)
+      lib.notice = t('hub.library.exportedDownloaded', { deck: deck.name })
+      lib.error = ''
+    } catch (error) {
+      try {
+        await globalThis.navigator?.clipboard?.writeText(json)
+        lib.notice = t('hub.library.exportedCopied', { deck: deck.name })
+        lib.error = ''
+      } catch {
+        lib.error = t('hub.library.exportFailed', { deck: deck.name })
+      }
+    }
+    render()
+  }
+  async function saveImportedToLibrary(importedDeck, plan, { onSaved } = {}) {
+    const lib = deckLibrary()
+    if (lib.saving || !importedDeck || !plan?.codes?.length) return
+    lib.saving = true; lib.error = ''; lib.notice = ''; render()
+    try {
+      const saved = await saveLocalDeck(api, {
+        name: importedDeck.name,
+        investigatorCode: importedDeck.investigatorCode,
+        codes: plan.codes,
+        arkhamdbId: importedDeck.id,
+        arkhamdbKind: importedDeck.kind,
+      })
+      lib.decks = [saved, ...(lib.decks || []).filter(item => item.id !== saved.id)]
+      lib.selectedId = saved.id; lib.currentId = saved.id; lib.name = saved.name
+      lib.importOpen = false
+      lib.notice = t('hub.library.importSaved', { deck: saved.name })
+      lib.saving = false
+      if (onSaved) onSaved(saved)
+      else render()
+      return
+    } catch (error) { lib.error = t('hub.deckLibrary.saveFailed') + String(error?.message || error) }
+    lib.saving = false; render()
   }
   async function readArkhamDbDeck() {
     const imp = state.arkhamDeckImport
@@ -618,9 +776,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       renderOnlineSetup?.(g),
       h('div', { className: 'bg-modal-foot' },
         // 开局界面盖住了右下角的浮动规则书入口（会压到「开始新游戏」上），
-        // 改为放在页脚左侧，仍然随时可查规则。
+        // 改为放在页脚左侧，仍然随时可查规则与管理本地卡组库。
         rulebookOpen ? h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-rulebook',
           title: t('table.rulebook'), 'aria-label': t('table.rulebook'), onclick: rulebookOpen }, tableIcon('book'), t('table.rulebook')) : null,
+        h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-library', 'data-setup-action': 'deck-library',
+          title: t('hub.deck.library'), 'aria-label': t('hub.deck.library'),
+          onclick: () => openLibraryModal({ s: null, g, returnFocus: 'deck-library' }) }, tableIcon('supply'), t('hub.deck.library')),
         h('button', { className: 'bg-btn secondary', onclick: () => { state.setup = null; render() } }, t('common.cancel')),
         h('button', { className: 'bg-btn', disabled: state.busy, onclick: startGame }, state.busy ? t('hub.setup.starting') : t('hub.setup.start'))))
     const saveList = h('div', { className: 'ah-save-list' },
@@ -1104,12 +1265,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       unsavedDraft ? t('hub.deck.manualDraft', { count: draft.length }) : saved ? t('hub.deck.manualSaved') : t('hub.deck.manualNew', { count: inv?.deckSize || 30 })) : null
     const importButton = () => canEdit ? h('button', { className: 'bg-btn secondary', 'data-hub-action': 'import-deck', disabled: locked(s),
       onclick: () => openDeck(s, g, { importing: true }) }, tableIcon('book'), t('hub.deck.import')) : null
-    const libraryButton = () => canEdit ? h('button', { className: 'bg-btn secondary', 'data-hub-action': 'deck-library', disabled: locked(s),
-      onclick: () => openDeck(s, g, { library: true }) }, tableIcon('book'), t('hub.deck.library')) : null
+    const libraryButton = () => h('button', { className: 'bg-btn secondary', 'data-hub-action': 'deck-library', disabled: state.busy,
+      onclick: () => openLibraryModal({ s, g, returnFocus: 'deck-library' }) }, tableIcon('book'), t('hub.deck.library'))
     return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.tab.deck')),
       h('div', { className: 'ah-office-deck-heading' }, portrait(s.state.investigators[s.mySeat ?? 0]), h('div', {},
         h('h3', {}, s.state.investigators[s.mySeat ?? 0].name),
         saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: deckCodes.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
+      state.arkhamDeckLibrary?.notice && !state.arkhamDeckLibraryOpen
+        ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, state.arkhamDeckLibrary.notice) : null,
       saved && legal(s, 'hubDoneSeat').length ? h('section', { className: 'ah-deck-next-action', role: 'status' },
         h('div', {}, h('strong', {}, t('hub.deck.savedTitle')), h('small', {}, t('hub.deck.savedNote'))),
         action(s, legal(s, 'hubDoneSeat')[0], t('hub.task.confirmReady')),
@@ -1356,6 +1519,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function renderGame(s) {
     const g = game()
+    applyPendingImport(s, g, deckInvestigator(s, g))
     // 并行/双线战役：模式未定时先给「开局模式」整屏，页签与其它局外面板全部不出现。
     const modeModel = modePanelModel(s.state, s.state.legalMoves || [])
     if (modeModel.visible && modeModel.firstScreen && s.state.uiState === 'campaignHub') {
@@ -1367,6 +1531,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('div', { className: 'bg-game-actions' },
             h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, t('table.rulebook')),
             h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, t('table.catalog')),
+            h('button', { className: 'bg-btn secondary', 'data-hub-action': 'top-deck-library',
+              onclick: () => openLibraryModal({ s, g, returnFocus: 'top-deck-library' }) }, t('hub.deck.library')),
             h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, t('hub.refresh')),
             h('button', { className: 'bg-btn secondary', onclick: leave }, t('table.leave')),
             feedbackEntry())),
@@ -1398,6 +1564,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('div', { className: 'bg-game-actions' },
           h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, t('table.rulebook')),
           h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, t('table.catalog')),
+          h('button', { className: 'bg-btn secondary', 'data-hub-action': 'top-deck-library',
+            onclick: () => openLibraryModal({ s, g, returnFocus: 'top-deck-library' }) }, t('hub.deck.library')),
           h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, t('hub.refresh')),
           h('button', { className: 'bg-btn secondary', onclick: leave }, t('table.leave')),
           feedbackEntry())),
@@ -1485,64 +1653,481 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         actions) : null)
   }
 
-  function libraryPanel(s, g, inv, draft, replaceDraft) {
-    const lib = deckLibrary()
-    const imp = state.arkhamDeckImport
-    const builder = g.clientData?.deckBuilder
+  function libraryDeckModel(deck, s, g) {
+    const builder = g?.clientData?.deckBuilder || { investigators: [], cardPool: [] }
     const scoped = scopedBuilder(s, builder)
-    const investigatorName = code => builder?.investigators.find(item => item.code === code)?.name || nameOf(g, code)
-    const current = lib.decks?.find(deck => deck.id === lib.currentId && deck.investigator_code === inv?.code)
-    // Decks for the current investigator first; otherwise keep the newest-first order.
-    const decks = [...(lib.decks || [])].sort((a, b) => (b.investigator_code === inv?.code) - (a.investigator_code === inv?.code))
-    const total = deck => Object.values(deck.slots || {}).reduce((sum, count) => sum + count, 0)
-    const fail = message => { lib.error = message; lib.notice = ''; render() }
-    const load = deck => {
-      const plan = deck.description && planArkhamDbImport(deck.description, { investigators: scoped?.investigators, cardPool: scoped?.cardPool, currentCode: inv?.code })
-      if (!plan) return fail(t('hub.library.loadFailedEmpty', { deck: deck.name }))
-      if (!plan.ready) return fail(t('hub.library.loadFailedBlocked', { deck: deck.name, count: plan.blocked.length })
-        + plan.blocked.slice(0, 4).map(item => t('hub.import.blockedItem', { name: item.name, reason: item.reason })).join(t('hub.list.separator')) + (plan.blocked.length > 4 ? t('hub.import.blockedMore') : ''))
-      Object.assign(lib, { currentId: deck.id, name: deck.name, error: '', notice: '', confirmDelete: null })
-      if (plan.mismatch) {
-        const move = legal(s, 'hubSelectInvestigator').find(item => item.code === plan.investigator.code)
-        if (!move || locked(s)) return fail(t('hub.import.mismatch', { name: plan.investigator.name }))
-        // applyPendingImport finishes the load once the investigator switch is committed.
-        Object.assign(imp, { deck: deck.description, pending: { sessionId: s.sessionId, code: plan.investigator.code } })
-        lib.open = false
-        submitMove(move, s)
+    const current = s ? deckInvestigator(s, g) : null
+    const investigator = builder.investigators.find(item => item.code === deck.investigator_code) || null
+    const plan = deck.description ? planArkhamDbImport(deck.description, {
+      investigators: scoped.investigators,
+      cardPool: scoped.cardPool,
+      currentCode: current?.code,
+    }) : null
+    const rawCodes = slotsToCodes(deck.slots)
+    const codes = plan?.codes?.length ? plan.codes : rawCodes
+    const cardMap = new Map(builder.cardPool.map(card => [card.code, card]))
+    const counts = Object.fromEntries(Object.entries(deck.slots || {}).filter(([, count]) => Number(count) > 0))
+    const cards = Object.keys(counts).map(code => cardMap.get(code) || {
+      code,
+      name: deck.description?.entries?.find(entry => entry.code === code)?.name || code,
+      type: null,
+      cost: null,
+      icons: {},
+    })
+    const distribution = cards.reduce((out, card) => {
+      const count = counts[card.code] || 0
+      const type = ['asset', 'event', 'skill'].includes(card.type) ? card.type : 'other'
+      out[type] = (out[type] || 0) + count
+      return out
+    }, {})
+    const size = investigator?.deckSize || investigator?.rules?.size || 30
+    const ready = !!plan?.ready && !plan.errors.length && codes.length === size
+    const blocked = plan?.blocked?.length || 0
+    const equipped = !!(s && current?.code === deck.investigator_code
+      && sameCards(codes, savedDraft(s, current)))
+    const skillIcons = ['willpower', 'intellect', 'combat', 'agility', 'wild'].map(skill => [skill,
+      cards.reduce((sum, card) => sum + (Number(card.icons?.[skill]) || 0) * (counts[card.code] || 0), 0)])
+    return {
+      deck, investigator, plan, codes, cards, counts, distribution, size, ready, blocked, equipped, skillIcons,
+      total: rawCodes.length,
+    }
+  }
+
+  async function applyLibraryDeck(model, s, g, { edit = false } = {}) {
+    const lib = deckLibrary()
+    if (!s || state.busy || !model.plan?.ready || !model.codes.length) return
+    let session = s
+    let inv = deckInvestigator(session, g)
+    let switchedInvestigator = false
+    if (inv?.code !== model.investigator?.code) {
+      const switchMove = legal(session, 'hubSelectInvestigator').find(move => move.code === model.investigator?.code)
+      if (!switchMove) {
+        lib.error = t('hub.import.mismatch', { name: model.investigator?.name || t('hub.investigator.fallbackName') })
+        render()
         return
       }
-      lib.open = false
-      imp.notice = plan.errors.length ? t('hub.library.loadedWithErrors', { deck: deck.name }) : t('hub.library.loadedOk', { deck: deck.name })
-      replaceDraft(plan.codes)
+      Object.assign(state.arkhamDeckImport ||= { text: '' }, {
+        deck: model.deck.description,
+        pending: edit ? { sessionId: session.sessionId, code: model.investigator.code } : null,
+      })
+      await submitMove(switchMove, session)
+      session = state.session
+      inv = deckInvestigator(session, g)
+      if (!session || inv?.code !== model.investigator.code) return
+      switchedInvestigator = true
     }
-    return h('section', { className: 'ah-deck-import ah-deck-library', 'aria-label': t('hub.library.aria') },
-      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, t('hub.library.title')),
-        h('small', {}, t('hub.library.note'))),
+    if (edit || model.plan.errors.length) {
+      ensureDeckDraft(session, g)
+      state.arkhamDeckUndo = [[...(state.arkhamDeckDraft || [])]]
+      state.arkhamDeckRedo = []
+      state.arkhamDeckDraft = [...model.codes]
+      state.arkhamDeckDraftKey = deckDraftKey(session, inv)
+      state.arkhamDeckReturnFocus = 'deck-library'
+      Object.assign(state.arkhamDeckImport ||= { text: '' }, {
+        pending: null, open: false,
+        notice: model.plan.errors.length
+          ? t('hub.library.loadedWithErrors', { deck: model.deck.name })
+          : t('hub.library.loadedOk', { deck: model.deck.name }),
+      })
+      state.arkhamDeckLibraryOpen = false
+      state.arkhamDeckOpen = true
+      render()
+      return
+    }
+    const setMove = legal(session, 'hubSetDeck')[0]
+    if (!setMove) {
+      lib.error = t('hub.library.applyDisabledLocked')
+      render()
+      return
+    }
+    await submitMove({ action: 'hubSetDeck', codes: [...model.codes] }, session)
+    if (state.session?.state?.investigators?.[deckSeat(state.session)]?.code !== model.investigator.code) return
+    lib.notice = switchedInvestigator
+      ? t('hub.library.switchedAndApplied', { name: model.investigator.name, deck: model.deck.name })
+      : t('hub.library.appliedOk', { deck: model.deck.name, count: model.codes.length })
+    state.arkhamDeckLibraryOpen = false
+    state.arkhamHubTab = 'deck'
+    render()
+  }
+
+  function libraryImportPanel(s, g) {
+    const lib = deckLibrary()
+    const imp = state.arkhamDeckImport ||= { text: '', open: false }
+    const builder = scopedBuilder(s, g?.clientData?.deckBuilder)
+    const deck = imp.deck
+    const plan = deck ? planArkhamDbImport(deck, {
+      investigators: builder?.investigators,
+      cardPool: builder?.cardPool,
+      currentCode: s ? deckInvestigator(s, g)?.code : null,
+    }) : null
+    const total = deck ? deck.entries.reduce((sum, entry) => sum + entry.count, 0) : 0
+    const list = (items, className) => h('ul', { className }, items.map(item => h('li', {},
+      h('b', {}, `${item.name} ×${item.count}`), h('span', {}, item.reason))))
+    const canApply = !!(s && plan?.ready && !plan.errors.length)
+    return h('section', { className: 'ah-deck-import ah-deck-library-import', 'aria-label': t('hub.import.aria') },
+      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, t('hub.import.title')),
+        h('small', {}, t('hub.import.note'))),
       h('div', { className: 'ah-deck-import-form' },
-        h('input', { type: 'text', value: lib.name || '', placeholder: t('hub.library.namePlaceholder', { name: inv?.name || t('hub.investigator.fallbackName') }), maxlength: '60', 'aria-label': t('hub.library.nameAria'),
-          'data-focus-key': 'library-name', autocomplete: 'off', oninput: event => { lib.name = event.target.value } }),
-        current ? h('button', { className: 'bg-btn', disabled: !!lib.saving || !draft.length, onclick: () => storeLibraryDeck(inv, draft, true) },
-          t('hub.library.overwrite', { deck: current.name })) : null,
-        h('button', { className: current ? 'bg-btn secondary' : 'bg-btn', disabled: !!lib.saving || !draft.length || !inv,
-          title: draft.length ? '' : t('hub.library.emptyDraftTitle'), onclick: () => storeLibraryDeck(inv, draft, false) }, t('hub.library.saveAsNew', { count: draft.length })),
-        h('button', { className: 'bg-btn secondary', onclick: () => { lib.open = false; render() } }, t('hub.import.collapse'))),
-      lib.error ? h('p', { className: 'ah-deck-import-error', role: 'alert' }, lib.error) : null,
-      lib.notice ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, lib.notice) : null,
-      !lib.decks ? h('p', { className: 'ah-deck-import-note' }, lib.loading ? t('hub.library.loading') : t('hub.library.unavailable'))
-        : !decks.length ? h('p', { className: 'ah-deck-import-note' }, t('hub.library.empty'))
-          : h('ul', { className: 'ah-deck-library-list', 'aria-label': t('hub.library.listAria') }, decks.map(deck => h('li', {
-            className: deck.investigator_code === inv?.code ? 'is-current-investigator' : '', 'data-library-deck': deck.id },
-          h('div', {}, h('strong', {}, deck.name),
-            h('small', {}, t('hub.library.entryMeta', {
-              investigator: investigatorName(deck.investigator_code), count: total(deck),
-              date: new Date(deck.updatedAt).toLocaleString('zh-CN', { dateStyle: 'short', timeStyle: 'short' }),
-            }))),
-          h('div', {},
-            h('button', { className: 'bg-btn', disabled: !!lib.saving || state.busy, onclick: () => load(deck) },
-              deck.investigator_code === inv?.code ? (draft.length ? t('hub.library.loadReplace') : t('hub.library.load')) : t('hub.library.switchAndLoad', { name: investigatorName(deck.investigator_code) })),
-            lib.confirmDelete === deck.id
-              ? h('button', { className: 'bg-btn', disabled: !!lib.saving, onclick: () => removeLibraryDeck(deck) }, t('hub.library.confirmDelete'))
-              : h('button', { className: 'bg-btn secondary', disabled: !!lib.saving, onclick: () => { lib.confirmDelete = deck.id; render() } }, t('hub.delete')))))))
+        h('input', { type: 'text', value: imp.text || '', placeholder: 'https://arkhamdb.com/decklist/view/12345',
+          'aria-label': t('hub.import.inputAria'), 'data-focus-key': 'arkhamdb-input', spellcheck: 'false',
+          autocomplete: 'off', oninput: event => { imp.text = event.target.value; imp.error = '' },
+          onkeydown: event => { if (event.key === 'Enter') { event.preventDefault(); readArkhamDbDeck() } } }),
+        h('button', { className: 'bg-btn', disabled: !!imp.loading, onclick: readArkhamDbDeck },
+          imp.loading ? t('hub.import.reading') : t('hub.import.read')),
+        h('button', { className: 'bg-btn secondary', onclick: () => {
+          lib.importOpen = false; imp.open = false; render()
+        } }, t('hub.import.collapse'))),
+      imp.error ? h('p', { className: 'ah-deck-import-error', role: 'alert' }, imp.error) : null,
+      plan ? h('div', { className: 'ah-deck-import-result' + (plan.ready ? ' is-ready' : ' is-blocked'),
+        'aria-live': 'polite' },
+        h('header', {}, h('strong', {}, deck.name),
+          h('small', {}, t('hub.import.deckSummary', { investigator: deck.investigatorName, count: total })
+            + (deck.xp ? t('hub.deck.xpSuffix', { xp: deck.xp }) : '')),
+          deck.url ? h('a', { href: deck.url, target: '_blank', rel: 'noopener noreferrer' },
+            t('hub.import.viewOnArkhamDb')) : null),
+        plan.blocked.length ? h('div', { className: 'ah-deck-import-blocked' },
+          h('p', {}, t('hub.import.blocked', { count: plan.blocked.length })), list(plan.blocked, 'is-blocked')) : null,
+        plan.errors.length ? h('div', { className: 'ah-deck-import-warn' },
+          h('p', {}, t('hub.import.errors', { count: plan.errors.length })),
+          plan.errors.slice(0, 4).map(error => h('p', {}, '· ' + error))) : null,
+        plan.ready && !plan.errors.length ? h('p', { className: 'ah-deck-import-ok' },
+          t('hub.import.ok', { count: plan.codes.length })) : null,
+        plan.auto.length ? h('div', { className: 'ah-deck-import-auto' },
+          h('p', {}, t('hub.import.auto')), list(plan.auto, 'is-auto')) : null,
+        plan.notes.map(note => h('p', { className: 'ah-deck-import-note' }, note)),
+        plan.ready ? h('div', { className: 'ah-deck-library-import-actions' },
+          h('button', { className: 'bg-btn', disabled: lib.saving,
+            onclick: () => saveImportedToLibrary(deck, plan) }, t('hub.library.importSaveToLib')),
+          canApply ? h('button', { className: 'bg-btn secondary', disabled: lib.saving || state.busy,
+            onclick: () => saveImportedToLibrary(deck, plan, { onSaved: async saved => {
+              const model = libraryDeckModel(saved, state.session, g)
+              await applyLibraryDeck(model, state.session, g)
+            } }) }, t('hub.library.importSaveAndApply')) : null) : null) : null)
+  }
+
+  function renderLibraryModal(s) {
+    if (!state.arkhamDeckLibraryOpen) return null
+    const g = game()
+    const lib = deckLibrary()
+    const builder = g?.clientData?.deckBuilder || { investigators: [], cardPool: [] }
+    const currentInv = s ? deckInvestigator(s, g) : null
+    const currentDraft = s && currentInv ? ensureDeckDraft(s, g) : []
+    const baseline = s && currentInv ? savedDraft(s, currentInv) : []
+    const source = currentDraft.length ? currentDraft : baseline
+    const sourceIsDraft = !!(currentDraft.length && !sameCards(currentDraft, baseline))
+    const models = (lib.decks || []).map(deck => libraryDeckModel(deck, s, g))
+    const investigatorCounts = models.reduce((out, model) => {
+      out[model.deck.investigator_code] = (out[model.deck.investigator_code] || 0) + 1
+      return out
+    }, {})
+    const query = String(lib.search || '').trim().toLocaleLowerCase()
+    const filtered = models.filter(model => {
+      if (lib.filterClass !== 'all' && model.investigator?.klass !== lib.filterClass) return false
+      if (lib.filterInvestigator === 'current' && model.deck.investigator_code !== currentInv?.code) return false
+      if (!['all', 'current'].includes(lib.filterInvestigator) && model.deck.investigator_code !== lib.filterInvestigator) return false
+      if (lib.filterStatus === 'ready' && !model.ready) return false
+      if (lib.filterStatus === 'draft' && model.ready) return false
+      if (query && ![model.deck.name, model.investigator?.name, model.investigator?.nameEn,
+        ...model.cards.flatMap(card => [cardDisplayName(card), card.name, card.nameEn])]
+        .some(value => String(value || '').toLocaleLowerCase().includes(query))) return false
+      return true
+    }).sort((a, b) => {
+      if (lib.sort === 'created') return String(a.deck.createdAt).localeCompare(String(b.deck.createdAt))
+      if (lib.sort === 'name') return a.deck.name.localeCompare(b.deck.name)
+      if (lib.sort === 'investigator') return String(a.investigator?.name || '').localeCompare(String(b.investigator?.name || ''))
+      return String(b.deck.updatedAt).localeCompare(String(a.deck.updatedAt))
+    })
+    const selected = filtered.find(model => model.deck.id === lib.selectedId) || filtered[0] || null
+    if (selected && lib.selectedId !== selected.deck.id) lib.selectedId = selected.deck.id
+    const selectedIds = new Set(lib.selectedIds || [])
+    const filterOptions = [
+      ['all', t('hub.library.filterAllInvestigators')],
+      ...(currentInv ? [['current', t('hub.library.filterCurrentInvestigator', { name: currentInv.name })]] : []),
+      ...builder.investigators.filter(inv => investigatorCounts[inv.code]).map(inv =>
+        [inv.code, t('hub.library.filterInvestigatorOption', { name: inv.name, count: investigatorCounts[inv.code] })]),
+    ]
+    const currentSelected = selected?.deck.investigator_code === currentInv?.code
+    const applyAllowed = !!(s && selected?.plan?.ready && !selected.plan.errors.length
+      && (currentSelected
+        ? legal(s, 'hubSetDeck').length
+        : legal(s, 'hubSelectInvestigator').some(move => move.code === selected?.investigator?.code)))
+    const editAllowed = !!(s && selected?.plan?.ready
+      && (currentSelected
+        ? legal(s, 'hubSetDeck').length
+        : legal(s, 'hubSelectInvestigator').some(move => move.code === selected?.investigator?.code)))
+    const types = [['asset', t('hub.cardKind.asset')], ['event', t('hub.cardKind.event')],
+      ['skill', t('hub.cardKind.skill')], ['other', t('hub.cardKind.other')]]
+    const groupedCards = selected ? types.map(([type, label]) => ({
+      type, label, cards: selected.cards.filter(card =>
+        type === 'other' ? !['asset', 'event', 'skill'].includes(card.type) : card.type === type),
+    })).filter(group => group.cards.length) : []
+    const selectedDate = selected ? new Date(selected.deck.updatedAt).toLocaleString() : ''
+    const costCounts = selected ? [0, 1, 2, 3, 4, 5].map(cost => selected.cards.reduce((sum, card) => {
+      const value = Number(card.cost)
+      return sum + (Number.isFinite(value) && (cost === 5 ? value >= 5 : value === cost)
+        ? selected.counts[card.code] || 0 : 0)
+    }, 0)) : []
+    const maxCost = Math.max(1, ...costCounts)
+    const skillLabels = {
+      willpower: t('hub.skill.willpower'), intellect: t('hub.skill.intellect'),
+      combat: t('hub.skill.combat'), agility: t('hub.skill.agility'),
+      wild: t('hub.library.skillWild'),
+    }
+    const currentBar = currentInv ? h('section', { className: 'ah-deck-library-current' },
+      portrait(currentInv),
+      h('div', {}, h('strong', {}, t('hub.library.currentBarTitle', { name: currentInv.name })),
+        h('small', {}, source.length
+          ? t(sourceIsDraft ? 'hub.library.currentSourceDraft' : 'hub.library.currentSourceSaved', { count: source.length })
+          : t('hub.library.currentSourceEmpty'))),
+      h('input', { type: 'text', value: lib.name || '', maxlength: '60',
+        placeholder: t('hub.library.namePlaceholder', { name: currentInv.name }),
+        'aria-label': t('hub.library.nameAria'), 'data-focus-key': 'library-current-name',
+        oninput: event => { lib.name = event.target.value } }),
+      selected && selected.deck.investigator_code === currentInv.code
+        ? h('button', { className: 'bg-btn secondary', disabled: lib.saving || !source.length,
+          onclick: () => storeLibraryDeck(currentInv, source, true, selected.deck.id) },
+          t('hub.library.overwrite', { deck: selected.deck.name })) : null,
+      h('button', { className: 'bg-btn', disabled: lib.saving || !source.length,
+        onclick: () => storeLibraryDeck(currentInv, source, false) },
+        t('hub.library.saveAsNew', { count: source.length }))) : null
+    const toggleSelected = id => {
+      const next = new Set(lib.selectedIds || [])
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      lib.selectedIds = [...next]
+      render()
+    }
+    const pack = model => {
+      const klass = model.investigator?.klass || 'neutral'
+      const count = model.total
+      const status = model.blocked
+        ? t('hub.library.packBlocked', { count: model.blocked })
+        : model.ready
+          ? t('hub.library.packReady', { count, size: model.size })
+          : t('hub.library.packDraft', { count, size: model.size })
+      const checked = selectedIds.has(model.deck.id)
+      const modelCurrent = model.deck.investigator_code === currentInv?.code
+      const modelApplyAllowed = !!(s && model.plan?.ready && !model.plan.errors.length
+        && (modelCurrent
+          ? legal(s, 'hubSetDeck').length
+          : legal(s, 'hubSelectInvestigator').some(move => move.code === model.investigator?.code)))
+      const modelEditAllowed = !!(s && model.plan?.ready
+        && (modelCurrent
+          ? legal(s, 'hubSetDeck').length
+          : legal(s, 'hubSelectInvestigator').some(move => move.code === model.investigator?.code)))
+      return h('article', { className: `ah-deck-pack is-${klass}` + (model.deck.id === selected?.deck.id ? ' is-active' : '')
+        + (model.equipped ? ' is-equipped' : ''), 'data-library-deck': model.deck.id },
+        h('div', { className: 'ah-deck-pack-seal' },
+          h('span', {}, tableIcon(classIcon(klass)), classLabel(klass)),
+          lib.batchMode ? h('button', { className: 'ah-deck-pack-check',
+            'aria-label': t('hub.library.packSelect', { deck: model.deck.name }),
+            'aria-pressed': String(checked), onclick: () => toggleSelected(model.deck.id) },
+            checked ? t('hub.library.packChecked') : t('hub.library.packUnchecked')) : null),
+        h('button', { className: 'ah-deck-pack-main',
+          'aria-label': t('hub.library.packInspect', { deck: model.deck.name }),
+          'aria-pressed': String(model.deck.id === selected?.deck.id),
+          onclick: () => { if (lib.batchMode) toggleSelected(model.deck.id); else { lib.selectedId = model.deck.id; render() } } },
+          h('div', { className: 'ah-deck-pack-portrait' }, portrait(model.investigator || {
+            code: model.deck.investigator_code, name: model.deck.description?.investigatorName || t('hub.investigator.fallbackName'),
+          })),
+          h('div', { className: 'ah-deck-pack-identity' },
+            h('strong', {}, model.investigator?.name || model.deck.description?.investigatorName || model.deck.investigator_code),
+            model.investigator?.subname ? h('small', {}, model.investigator.subname) : null),
+          h('div', { className: 'ah-deck-pack-band' },
+            h('h3', {}, model.deck.name),
+            h('div', { className: 'ah-deck-pack-badges' },
+              model.equipped ? h('b', { className: 'is-equipped' }, t('hub.library.packEquipped')) : null,
+              h('b', { className: model.ready ? 'is-ready' : 'is-draft' }, status)),
+            h('div', { className: 'ah-deck-pack-distribution', 'aria-hidden': 'true' },
+              ['asset', 'event', 'skill'].map(type => h('i', {
+                className: `is-${type}`,
+                style: `flex:${Math.max(0, model.distribution[type] || 0)} 0 0`,
+              }))),
+            h('small', {}, t('hub.builder.distribution', {
+              asset: model.distribution.asset || 0, event: model.distribution.event || 0,
+              skill: model.distribution.skill || 0,
+            })),
+            h('time', { datetime: model.deck.updatedAt }, new Date(model.deck.updatedAt).toLocaleString()))),
+        !lib.batchMode ? h('footer', {},
+          model.ready && modelApplyAllowed ? h('button', { className: 'bg-btn', disabled: state.busy,
+            onclick: () => applyLibraryDeck(model, s, g) },
+            modelCurrent ? t('hub.library.applyDirect') : t('hub.library.switchAndApply', { name: model.investigator?.name || '' })) : null,
+          !model.ready && modelEditAllowed ? h('button', { className: 'bg-btn', disabled: state.busy,
+            onclick: () => applyLibraryDeck(model, s, g, { edit: true }) }, t('hub.library.editInBuilder')) : null,
+          h('button', { className: 'bg-btn secondary', onclick: () => { lib.selectedId = model.deck.id; render() } },
+            t('hub.library.detailBtn'))) : null)
+    }
+    const detail = selected ? h('aside', { className: 'ah-deck-library-detail', 'aria-label': t('hub.library.detailAria') },
+      h('header', {},
+        portrait(selected.investigator || { code: selected.deck.investigator_code, name: selected.deck.description?.investigatorName }),
+        h('div', {},
+          lib.renamingId === selected.deck.id
+            ? h('div', { className: 'ah-deck-library-rename' },
+              h('input', { type: 'text', maxlength: '60', value: lib.renameText,
+                'aria-label': t('hub.library.nameAria'), 'data-focus-key': 'library-rename',
+                oninput: event => { lib.renameText = event.target.value },
+                onkeydown: event => { if (event.key === 'Enter') renameLibraryDeck(selected.deck, event.target.value) } }),
+              h('button', { className: 'bg-btn', disabled: lib.saving,
+                onclick: () => renameLibraryDeck(selected.deck, lib.renameText) }, t('hub.library.renameSave')),
+              h('button', { className: 'bg-btn secondary',
+                onclick: () => { lib.renamingId = null; render() } }, t('hub.library.renameCancel')))
+            : h('h2', {}, selected.deck.name),
+          h('p', {}, `${selected.investigator?.name || selected.deck.description?.investigatorName || selected.deck.investigator_code} · ${classLabel(selected.investigator?.klass || 'neutral')}`),
+          h('small', {}, t('hub.library.entryMeta', {
+            investigator: selected.investigator?.name || selected.deck.description?.investigatorName || selected.deck.investigator_code,
+            count: selected.total, date: selectedDate,
+          })))),
+      h('div', { className: 'ah-deck-library-detail-actions' },
+        selected.ready && applyAllowed ? h('button', { className: 'bg-btn', disabled: state.busy,
+          onclick: () => applyLibraryDeck(selected, s, g) },
+          currentSelected ? t('hub.library.applyDirectFull') : t('hub.library.switchAndApply', { name: selected.investigator?.name || '' })) : null,
+        editAllowed ? h('button', { className: 'bg-btn secondary', disabled: state.busy,
+          onclick: () => applyLibraryDeck(selected, s, g, { edit: true }) }, t('hub.library.editInBuilder')) : null,
+        h('button', { className: 'bg-btn secondary', onclick: () => {
+          lib.renamingId = selected.deck.id; lib.renameText = selected.deck.name; render()
+          setTimeout(() => document.querySelector('[data-focus-key="library-rename"]')?.select(), 0)
+        } }, t('hub.library.rename')),
+        h('button', { className: 'bg-btn secondary', disabled: lib.saving,
+          onclick: () => duplicateLibraryDeck(selected.deck) }, t('hub.library.duplicate')),
+        h('button', { className: 'bg-btn secondary', onclick: () => exportLibraryDeck(selected.deck) },
+          t('hub.library.exportJson')),
+        lib.confirmDelete === selected.deck.id
+          ? h('button', { className: 'bg-btn is-danger', disabled: lib.saving,
+            onclick: () => removeLibraryDeck(selected.deck) }, t('hub.library.confirmDelete'))
+          : h('button', { className: 'bg-btn secondary is-danger',
+            onclick: () => { lib.confirmDelete = selected.deck.id; render() } }, t('hub.delete'))),
+      selected.plan?.errors.length ? h('div', { className: 'ah-deck-library-errors', role: 'status' },
+        selected.plan.errors.map(error => h('p', {}, error))) : null,
+      selected.blocked ? h('div', { className: 'ah-deck-library-errors', role: 'status' },
+        selected.plan.blocked.map(item => h('p', {}, t('hub.import.blockedItem', { name: item.name, reason: item.reason })))) : null,
+      h('section', { className: 'ah-deck-library-stats' },
+        h('div', {}, h('h3', {}, t('hub.builder.costCurveAria')),
+          h('div', { className: 'ah-office-cost-curve', 'aria-label': t('hub.builder.costCurveAria') },
+            costCounts.map((count, cost) => h('div', {
+              title: t('hub.builder.costBarTitle', { cost: cost === 5 ? '5+' : cost, count }),
+            }, h('small', {}, String(count)),
+            h('i', { style: `height:${Math.max(2, count / maxCost * 42)}px` }),
+            h('span', {}, cost === 5 ? '5+' : String(cost)))))),
+        h('div', {}, h('h3', {}, t('hub.library.skillIconsAria')),
+          h('div', { className: 'ah-deck-library-icons', 'aria-label': t('hub.library.skillIconsAria') },
+            selected.skillIcons.map(([skill, count]) => h('span', { title: skillLabels[skill] || skill },
+              tableIcon(skill), h('b', {}, String(count))))))),
+      h('div', { className: 'ah-deck-library-view-tabs', role: 'group', 'aria-label': t('hub.library.detailAria') },
+        h('button', { 'aria-pressed': String(lib.detailView === 'grid'),
+          onclick: () => { lib.detailView = 'grid'; render() } }, t('hub.library.viewGrid')),
+        h('button', { 'aria-pressed': String(lib.detailView === 'list'),
+          onclick: () => { lib.detailView = 'list'; render() } }, t('hub.library.viewList'))),
+      lib.detailView === 'grid'
+        ? h('div', { className: 'ah-deck-library-card-grid' }, selected.cards.map(card => h('button', {
+          'data-zoom-code': card.code, 'data-zoom-name': cardDisplayName(card) || card.name || card.code,
+          'aria-label': t('hub.card.inspectName', { name: cardDisplayName(card) || card.name || card.code }),
+          onclick: () => inspectCard(card.code),
+        }, art(card.code, cardDisplayName(card) || card.name || card.code),
+        h('span', {}, cardDisplayName(card) || card.name || card.code),
+        h('b', {}, `×${selected.counts[card.code] || 0}`))))
+        : h('div', { className: 'ah-deck-library-card-list' }, groupedCards.map(group => h('section', {},
+          h('h3', {}, `${group.label} · ${group.cards.reduce((sum, card) => sum + (selected.counts[card.code] || 0), 0)}`),
+          group.cards.map(card => h('button', { 'data-zoom-code': card.code,
+            'data-zoom-name': cardDisplayName(card) || card.name || card.code,
+            onclick: () => inspectCard(card.code) },
+            art(card.code, cardDisplayName(card) || card.name || card.code),
+            h('span', {}, cardDisplayName(card) || card.name || card.code),
+            h('b', {}, `×${selected.counts[card.code] || 0}`))))))) : h('div', { className: 'ah-deck-library-detail-empty' },
+      tableIcon('book'), h('p', {}, t('hub.library.detailEmpty')))
+    const keys = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        closeLibraryModal()
+        return
+      }
+      modalKeys(closeLibraryModal)(event)
+    }
+    return h('div', { className: 'bg-backdrop ah-deck-library-backdrop',
+      onclick: event => { if (event.target === event.currentTarget) closeLibraryModal() } },
+      h('section', { className: 'bg-modal ah-office ah-deck-library-modal', role: 'dialog',
+        'aria-modal': 'true', 'aria-label': t('hub.library.aria'), onkeydown: keys,
+        onclick: event => event.stopPropagation(), 'data-scroll-context': 'deck-library' },
+        h('header', { className: 'ah-deck-library-head' },
+          h('div', {}, h('small', { className: 'ah-office-eyebrow' }, t('hub.library.eyebrow')),
+            h('h1', {}, t('hub.library.title')),
+            h('p', {}, t('hub.library.packCount', { count: models.length }))),
+          h('div', { className: 'ah-deck-library-head-actions' },
+            h('button', { className: 'bg-btn secondary', 'aria-pressed': String(lib.importOpen),
+              onclick: () => {
+                lib.importOpen = !lib.importOpen
+                Object.assign(state.arkhamDeckImport ||= { text: '' }, { open: lib.importOpen, error: '', pending: null })
+                render()
+                if (lib.importOpen) setTimeout(() => document.querySelector('.ah-deck-library-modal .ah-deck-import input')?.focus({ preventScroll: true }), 0)
+              } }, t('hub.library.importToggle')),
+            h('button', { className: 'bg-btn secondary', 'aria-pressed': String(lib.batchMode),
+              onclick: () => {
+                lib.batchMode = !lib.batchMode
+                if (!lib.batchMode) { lib.selectedIds = []; lib.confirmBatchDelete = false }
+                render()
+              } }, lib.batchMode ? t('hub.library.batchExit') : t('hub.library.batchToggle')),
+            h('button', { className: 'bg-btn secondary ah-deck-library-close',
+              title: t('hub.library.closeAria'), 'aria-label': t('hub.library.closeAria'),
+              onclick: closeLibraryModal }, '×'))),
+        lib.importOpen ? libraryImportPanel(s, g) : null,
+        currentBar,
+        lib.error ? h('p', { className: 'ah-deck-import-error', role: 'alert' }, lib.error) : null,
+        lib.notice ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, lib.notice) : null,
+        h('div', { className: 'ah-deck-library-filters' },
+          h('div', { className: 'ah-deck-library-class-filter', role: 'group',
+            'aria-label': t('hub.investigators.classAria') },
+            [['all', t('hub.investigators.allClasses')], ...Object.keys(CLASS_KEYS).filter(key => key !== 'neutral')
+              .map(key => [key, classLabel(key)])].map(([key, label]) => h('button', {
+                className: `is-${key}`, 'aria-pressed': String(lib.filterClass === key),
+                onclick: () => { lib.filterClass = key; render() },
+              }, key === 'all' ? null : tableIcon(classIcon(key)), label))),
+          select(filterOptions.map(([value, label]) => ({ value, label })), lib.filterInvestigator,
+            value => { lib.filterInvestigator = value; render() }, { 'aria-label': t('hub.library.filterInvestigatorAria') }),
+          select([
+            { value: 'all', label: t('hub.library.filterStatusAll') },
+            { value: 'ready', label: t('hub.library.filterStatusReady') },
+            { value: 'draft', label: t('hub.library.filterStatusDraft') },
+          ], lib.filterStatus, value => { lib.filterStatus = value; render() },
+          { 'aria-label': t('hub.library.filterStatusAria') }),
+          select([
+            { value: 'updated', label: t('hub.library.sortUpdated') },
+            { value: 'created', label: t('hub.library.sortCreated') },
+            { value: 'name', label: t('hub.library.sortName') },
+            { value: 'investigator', label: t('hub.library.sortInvestigator') },
+          ], lib.sort, value => { lib.sort = value; render() }, { 'aria-label': t('hub.library.sortAria') }),
+          h('input', { type: 'search', value: lib.search || '', placeholder: t('hub.library.searchPlaceholder'),
+            'aria-label': t('hub.library.searchAria'), 'data-focus-key': 'library-search',
+            oninput: event => { lib.search = event.target.value; render() } })),
+        lib.batchMode ? h('section', { className: 'ah-deck-library-batch', role: 'status' },
+          h('strong', {}, t('hub.library.batchSelected', { count: selectedIds.size })),
+          h('button', { className: 'bg-btn secondary', onclick: () => {
+            lib.selectedIds = filtered.map(model => model.deck.id); render()
+          } }, t('hub.library.batchSelectAll')),
+          h('button', { className: 'bg-btn secondary', disabled: !selectedIds.size,
+            onclick: () => { lib.selectedIds = []; lib.confirmBatchDelete = false; render() } },
+            t('hub.library.batchClear')),
+          lib.confirmBatchDelete
+            ? h('button', { className: 'bg-btn is-danger', disabled: lib.saving || !selectedIds.size,
+              onclick: () => batchRemoveLibraryDecks([...selectedIds]) },
+              t('hub.library.batchConfirmDelete', { count: selectedIds.size }))
+            : h('button', { className: 'bg-btn secondary is-danger', disabled: !selectedIds.size,
+              onclick: () => { lib.confirmBatchDelete = true; render() } },
+              t('hub.library.batchDelete', { count: selectedIds.size }))) : null,
+        h('div', { className: 'ah-deck-library-summary' },
+          t('hub.library.filteredCount', { shown: filtered.length, total: models.length })),
+        h('div', { className: 'ah-deck-library-layout' },
+          h('section', { className: 'ah-deck-library-packs', 'aria-label': t('hub.library.listAria') },
+            lib.loading && !lib.decks ? h('div', { className: 'ah-office-empty' }, t('hub.library.loading'))
+              : !models.length ? h('div', { className: 'ah-office-empty' }, tableIcon('book'),
+                h('p', {}, t('hub.library.empty')))
+                : !filtered.length ? h('div', { className: 'ah-office-empty' },
+                  h('p', {}, t('hub.library.emptyFiltered')),
+                  h('button', { className: 'bg-btn secondary', onclick: () => {
+                    Object.assign(lib, { filterClass: 'all', filterInvestigator: 'all', filterStatus: 'all', search: '' })
+                    render()
+                  } }, t('hub.library.clearFilters')))
+                  : filtered.map(pack)),
+          detail)))
   }
 
   function renderDeckModal(s) {
@@ -1610,11 +2195,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         restore(redo ? 'arkhamDeckRedo' : 'arkhamDeckUndo', redo ? 'arkhamDeckUndo' : 'arkhamDeckRedo')
         return
       }
-      if (event.key === 'Escape' && lib.open && event.target?.closest?.('.ah-deck-library')) {
-        event.preventDefault(); event.stopPropagation(); lib.open = false; render()
-        document.querySelector('[data-deck-tool="library"]')?.focus({ preventScroll: true })
-        return
-      }
       if (event.key === 'Escape' && imp.open && event.target?.closest?.('.ah-deck-import')) {
         event.preventDefault(); event.stopPropagation(); imp.open = false; render()
         document.querySelector('[data-deck-tool="import"]')?.focus({ preventScroll: true })
@@ -1632,15 +2212,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
               imp.open = !imp.open; if (imp.open) lib.open = false; render()
               if (imp.open) setTimeout(() => document.querySelector('.ah-deck-import:not(.ah-deck-library) input')?.focus({ preventScroll: true }), 0)
             } }, t('hub.builder.import')),
-            h('button', { className: 'bg-btn' + (lib.open ? '' : ' secondary'), 'data-deck-tool': 'library', 'aria-expanded': String(!!lib.open), onclick: () => {
-              lib.open = !lib.open
-              if (lib.open) { imp.open = false; Object.assign(lib, { notice: '', error: '', confirmDelete: null }) }
-              render()
-              if (lib.open) refreshLibrary()
+            h('button', { className: 'bg-btn secondary', 'data-deck-tool': 'library', onclick: () => {
+              imp.open = false
+              openLibraryModal({ s, g, returnFocus: 'deck-library' })
             } }, t('hub.builder.library')),
             h('small', { className: 'ah-db-modal-hint' }, t('hub.builder.hint')))),
         imp.open ? importPanel(s, g, inv, draft, replaceDraft) : null,
-        lib.open ? libraryPanel(s, g, inv, draft, replaceDraft) : null,
         h('div', { className: 'ah-office-builder' },
         h('section', { className: 'ah-office-library', 'aria-label': t('hub.builder.poolAria') },
         filterControls('deck', pool, shown),
@@ -1712,5 +2289,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     renderSetupModal: g => stablePanel('.ah-hub-setup', () => renderSetupModal(g)),
     renderGame: s => stablePanel('.ah-hub', () => renderGame(s)),
     renderDeckModal: s => stablePanel('.ah-db-modal', () => renderDeckModal(s)),
+    renderLibraryModal: s => stablePanel('.ah-deck-library-modal', () => renderLibraryModal(s)),
   }
 }

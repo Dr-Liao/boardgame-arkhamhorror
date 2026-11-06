@@ -247,6 +247,30 @@ test('TDE 06279 智慧古书 横置搜索牌库顶3张并可花1秘密让该调�
   assert.equal(inv.assets.find(item => item.id === book.id).uses, 1, '花费 1 秘密')
 })
 
+test('TDE 06279 智慧古书 两张同场：激活第二本花的是第二本的秘密，第一本不动', () => {
+  const state = fixture('01001')
+  state.investigators[0].assets = []
+  const first = asset(state, '06279')
+  const second = asset(state, '06279')
+  state.investigators[0].deck = ['01088', '01088', '01088']
+  state.investigators[0].resources = 5
+  move(state, { action: 'ability', assetId: second.id, abilityIndex: 0, targetId: '0' })
+  settle(state, pending => {
+    if (pending.kind === 'search') {
+      const option = pending.options.find(item => String(item.cardCode) === '01088')
+      return option ? option.id : null
+    }
+    if (pending.kind === 'effect') return pending.options.find(item => item.id === 'pay')?.id ?? null
+    return null
+  })
+  const books = state.investigators[0].assets.filter(item => item.code === '06279')
+  const used = books.find(item => item.id === second.id)
+  const untouched = books.find(item => item.id === first.id)
+  assert.equal(used.uses, 1, '被激活的第二本花费 1 秘密')
+  assert.equal(used.exhausted, true, '被激活的第二本横置')
+  assert.equal(untouched.uses, 2, '另一本同名古书的秘密不变')
+})
+
 // ---------------------------------------------------------------------------
 // 06280 绞喉索
 // ---------------------------------------------------------------------------

@@ -684,3 +684,70 @@ test('v1.1 参数校验：非法数量 / 缺少类型 / 未知卡牌与地点', 
   noScenario.scenario = undefined
   assert.throws(() => parse(noScenario, '重开本关'), /没有进行中的关卡/)
 })
+
+test('v1.2 解析与执行：指定结局、推进幕/密谋、抽遭遇、发卡进场、充能/重置、地点线索、锁定标记、跳过待决', () => {
+  const state = newGame()
+  // 1) 指定结局结束本关
+  const r2 = parse(state, '结束这关 R2')
+  assert.deepEqual(r2.move, { action: 'debug', kind: 'endScenario', resolutionKey: 'r2' })
+  assert.equal(parse(state, 'end scenario 1').move.resolutionKey, 'r1')
+  assert.equal(parse(state, '结算结局 未达成结局').move.resolutionKey, 'noResolution')
+  assert.throws(() => parse(state, '结束这关 R9'), /不支持结局/)
+
+  // 2) 发卡直接进场 + 充能 + 重置（01016 .45自动手枪 起始 4 发弹药）
+  const playCard = run(state, '发 01016 到场上')
+  assert.deepEqual(playCard.move, { action: 'debug', kind: 'card', code: '01016', targetSeat: 0, zone: 'play' })
+  const asset = state.investigators[0].assets.find(item => item.code === '01016')
+  assert.ok(asset)
+  const usesBefore = asset.uses
+  assert.equal(usesBefore, 4)
+  const usesPlan = run(state, '弹药 +2 .45')
+  assert.equal(usesPlan.move.kind, 'uses')
+  assert.equal(state.investigators[0].assets.find(item => item.code === '01016').uses, usesBefore + 2)
+  state.investigators[0].assets[0].exhausted = true
+  run(state, '重置卡牌')
+  assert.equal(state.investigators[0].assets[0].exhausted, false)
+
+  // 3) 地点线索
+  const cluesBefore = state.locations.find(loc => loc.id === 'study').clues
+  run(state, '地点线索 +3')
+  assert.equal(state.locations.find(loc => loc.id === 'study').clues, cluesBefore + 3)
+
+  // 4) 锁定标记 + 检定验证
+  run(state, '锁定标记 大成功')
+  assert.deepEqual(state.debugNextTokens, ['eldersign'])
+  run(state, '锁定标记 清除')
+  assert.equal(state.debugNextTokens, undefined)
+
+  // 5) 推进场景 / 推进密谋
+  run(state, '推进场景')
+  assert.equal(state.actIndex, 1)
+  run(state, '推进密谋')
+  assert.equal(state.agendaIndex, 1)
+
+  // 6) 抽取指定遭遇牌
+  run(state, '抽遭遇 食尸鬼爪牙')
+  assert.ok(state.enemies.some(enemy => enemy.name === '食尸鬼爪牙'))
+
+  // 7) 跳过待决选择
+  const pendingState = createGameState({ ...SETTINGS }, PLAYERS)
+  assert.ok(pendingState.pendingChoice)
+  const skipPlan = parse(pendingState, '跳过待决')
+  assert.equal(skipPlan.move.kind, 'resolveChoice')
+  assert.equal(skipPlan.move.optionId, 'done')
+})
+
+test('双线/分选与并行运行时下调试指令路由与座位映射正常', () => {
+  // 分选线（laneRuntime）：房主座位 0 在 A 线等待，当前跑 B 线（roomSeats = [1]）
+  const state = newGame()
+  state.laneRuntime = { part: 'B', roomSeats: [1], backup: {} }
+  state.investigators = [{ ...state.investigators[1], seat: 0 }]
+  state.campaign.investigators = { 0: { ...state.campaign.investigators[1], seat: 0, roomSeat: 1 } }
+  // 房主 seat=0 调用，command.targetSeat=1（B 线的 roomSeat 1）应映射到线内 seat 0
+  const plan = mod.debugCommand({ state }, 0, { text: '获得 3 资源', targetSeat: 1 })
+  assert.deepEqual(plan.move, { action: 'debug', kind: 'resources', amount: 3, targetSeat: 0 })
+  assert.equal(mod.validateMove(state, 0, plan.move), null, '房主在等待线时也允许提交调试指令')
+  const before = state.investigators[0].resources
+  mod.applyMove(state, 0, plan.move)
+  assert.equal(state.investigators[0].resources, before + 3)
+})

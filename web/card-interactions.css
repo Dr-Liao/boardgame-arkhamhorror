@@ -38,6 +38,29 @@
 .ah-table.ah-calm.ah-noir .ah-direct-choice,.ah-table.ah-calm.ah-noir .ah-drop-valid { outline: 2px solid #92d7aa; outline-offset: 2px; box-shadow: 0 0 15px #8fc4a044; cursor: pointer; }
 .ah-table.ah-calm.ah-noir .ah-drop-invalid { filter: saturate(.65); }
 .ah-table.ah-calm.ah-noir .ah-drop-hover { outline: 3px solid #ffe6a2; box-shadow: 0 0 24px #d1c28477; }
+/* 快速卡玩家窗口（2026-11-06）：候选挂回手牌本身，高亮卡面、点牌即打出，不再浮出选项面板。 */
+.ah-table.ah-calm.ah-noir .ah-hand-card.ah-fast-prompt {
+  outline: 2px solid #f2d99b; outline-offset: 3px; border-color: #f2d99b;
+  box-shadow: 0 0 0 4px #f2d99b2e, 0 0 26px #e8c56866;
+  animation: ah-fast-prompt-pulse 1.8s ease-in-out infinite;
+}
+.ah-table.ah-calm.ah-noir .ah-hand-card.ah-fast-prompt.ah-choice-option-direct { z-index: 20; }
+.ah-table.ah-calm.ah-noir .ah-hand-card.ah-fast-prompt:hover,
+.ah-table.ah-calm.ah-noir .ah-hand-card.ah-fast-prompt:focus-visible {
+  animation: none; box-shadow: 0 0 0 4px #f2d99b3d, 0 0 34px #e8c56899;
+}
+@keyframes ah-fast-prompt-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #f2d99b26, 0 0 18px #e8c5684d; }
+  50% { box-shadow: 0 0 0 5px #f2d99b42, 0 0 30px #e8c56880; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ah-table .ah-hand-card.ah-fast-prompt { animation: none; }
+}
+.ah-table .ah-direct-instruction .ah-fast-prompt-hint {
+  display: flex; align-items: center; gap: 5px; margin-top: 5px;
+  color: #f2d99b; font-size: 12px; line-height: 1.5;
+}
+.ah-table .ah-direct-instruction .ah-fast-prompt-hint > .ah-icon { width: 13px; height: 13px; }
 .ah-direct-table [data-interaction^="hand:"],.ah-direct-table [data-interaction^="asset:"],.ah-direct-table [data-interaction^="investigator:"],.ah-direct-table [data-interaction^="enemy:"] { touch-action: none; user-select: none; }
 .ah-direct-table [data-interaction] img { -webkit-user-drag: none; }
 .ah-direct-table .is-dragging { opacity: .35; }

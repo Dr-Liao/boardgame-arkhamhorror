@@ -153,6 +153,11 @@ export function createDispatch(deps) {
 function applyMove(state, seat, move) {
   const error = validateMove(state, seat, move)
   if (error) throw new Error(error)
+  // 调试跳关 / 重开本关允许在待决选择存在时直接打断旧事务并重建关卡。
+  if (move?.action === 'debug' && move.kind === 'scenario' && (state.pendingChoice || state.continuation)) {
+    state.pendingChoice = null
+    delete state.continuation
+  }
   // 事务会用"本次动作开始前"的快照重建整个 state（见 resolution.js），
   // 所以动作日志必须由这里持有，事务结束后再挂回去。
   const actionLog = state.actionLog || []

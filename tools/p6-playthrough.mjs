@@ -121,7 +121,10 @@ export function policy(s, branch = 'r1', mode = 'victory') {
   if (action('interruptRitual')) return moves.find(m => m.action === 'interruptRitual' && m.skill === (inv.agility > inv.willpower ? 'agility' : 'willpower'))
   const hunch = moves.find(m => m.action === 'play' && m.cardId === '01037')
   if (hunch) return hunch
-  if (action('investigate')) return moves.find(m => m.action === 'ability' && abilityEffect(m)?.type === 'investigate') || action('investigate')
+  // 2026-11-06 规则修正：零线索地点也能调查（成功不发现线索）。这个脚本玩家只在当前位置
+  // 还有线索时才调查，否则会一直调查空地点、推不进剧情（调查本身合法但没有收益）。
+  const hereClues = s.locations.find(l => l.id === inv.location)?.clues || 0
+  if (hereClues > 0 && action('investigate')) return moves.find(m => m.action === 'ability' && abilityEffect(m)?.type === 'investigate') || action('investigate')
   if (sc === 'theDevourerBelow' && s.actIndex === 2 && inv.location !== 'ritualSite') return moveTo('ritualSite') || action('endTurn')
   const candidates = s.locations.filter(l => l.id !== inv.location && (l.clues > 0 || (!l.revealed && ((l.cluesPerInvestigator || 0) > 0 || (l.clues || 0) > 0))) && !['parlor','ritualSite'].includes(l.id))
     .sort((a,b) => (a.shroud - inv[a.investigateSkill || 'intellect']) - (b.shroud - inv[b.investigateSkill || 'intellect']))

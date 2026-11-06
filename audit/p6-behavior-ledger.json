@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "strictModeRestored": false,
   "implementationHashes": {
-    "src/engine/engine.js": "1b97726ced5ab591d50096903708b7ae8a484b762e690a2c1f87cd4f684da782",
+    "src/engine/engine.js": "3844537a18ce73c16705c0c2b8f53b9f4ed50851932efeb2b430c0a94c975238",
     "src/engine/resolution.js": "96ee3053f15e8076087e28e95c1bd79b5c297c5a9aa72932f2fd77f114ac8536",
     "src/engine/rules-state.js": "991e76d68eb209dd4c1a5351f5ce64754a1f35e0dd0a83f41228f9d6d2c3fe38",
     "src/engine/effects.js": "179584febcb772e098fc5b8eed09794e76d8ae83a883185fe7b104a0b0b7079f",
@@ -11,7 +11,7 @@
     "src/deck/deckbuilding.js": "38a6dbe9e8be0e649337d3cc44fcd0dd4d273588a9f6e8a2243667c682f2e9ef",
     "src/deck/availability.js": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681",
     "web/deck-rules.js": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a",
-    "tools/p6-playthrough.mjs": "c989ee2cf59ef7436fb5b23ec194cd2b2872d2429ba506e56e19f11058f224b5"
+    "tools/p6-playthrough.mjs": "56d30e89ac37d1c8c52b8103d071394202465a0be4dbe43ba7378c6700cff449"
   },
   "policy": "逐卡保留原文条款、精确卡号和可复查证据；修复结论仅覆盖明确断言的行为，其余仍待审计。",
   "summary": {
@@ -118,7 +118,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/ai-enemy-visibility.test.mjs",
@@ -230,7 +230,7 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/card-rules.test.mjs",
@@ -266,7 +266,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -274,11 +274,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/decision-http.test.mjs",
@@ -290,7 +290,7 @@
         },
         {
           "path": "tests/deck-library.test.mjs",
-          "sha256": "7d66bdb7bfbe16d71ef284ce7ad8a64f4c87809c87865538d0667cda6f511122"
+          "sha256": "cdd68478e04e0d91aec79270cb1df275072f9e0c88e65db25f018c05dfcf9f2f"
         },
         {
           "path": "tests/dunwich-encounter-acceptance.test.mjs",
@@ -398,11 +398,11 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -418,7 +418,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/save-migration.test.mjs",
@@ -438,7 +438,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-black-throne.test.mjs",
@@ -466,7 +466,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-location-api.test.mjs",
@@ -482,7 +482,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -586,7 +586,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-p95-flow.test.mjs",
@@ -602,7 +602,7 @@
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -614,7 +614,7 @@
         },
         {
           "path": "tests/tde-player-m2-4.test.mjs",
-          "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+          "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
         },
         {
           "path": "tests/tde-primitives-veiled.test.mjs",
@@ -634,7 +634,7 @@
         },
         {
           "path": "tests/tde-scenario-interactions.test.mjs",
-          "sha256": "b3177bf41b70f35d78f44978b3901da4da90e34a912c013cce90424644ef1ae9"
+          "sha256": "23fe9e56636e516a3625a6bbd425e5e875d94fb47ac7e4efdec3b7c46961db69"
         },
         {
           "path": "tests/tde-scenario-pointOfNoReturn.test.mjs",
@@ -666,7 +666,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-engine-integration.test.mjs",
@@ -690,7 +690,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         },
         {
           "path": "tests/tfa-p2-hooks.test.mjs",
@@ -754,11 +754,11 @@
         },
         {
           "path": "tests/tic-interludes.test.mjs",
-          "sha256": "44da143b800492ba27600f250bac7d68d80c2764204b151fd15dd131ded924d9"
+          "sha256": "571f9f687637f63bb894b080b6d606ca05c42a0b361576f67b5f9cb105f5212a"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-player-primitives.test.mjs",
@@ -766,11 +766,11 @@
         },
         {
           "path": "tests/tic-player-rogue-mystic.test.mjs",
-          "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+          "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         },
         {
           "path": "tests/tic-primitives.test.mjs",
@@ -810,7 +810,7 @@
         },
         {
           "path": "tests/tic-scenarios-middle.test.mjs",
-          "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+          "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -856,7 +856,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/arkhamdb-import.test.mjs",
@@ -876,7 +876,7 @@
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/card-fidelity-core-p3.test.mjs",
@@ -892,7 +892,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -900,11 +900,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/decision-invariants.test.mjs",
@@ -1037,7 +1037,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/card-fidelity-core-p3.test.mjs",
@@ -1722,11 +1722,11 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -1863,7 +1863,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/attack-style.test.mjs",
@@ -1903,7 +1903,7 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/content-schema.test.mjs",
@@ -1915,7 +1915,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
+        },
+        {
+          "path": "tests/debug-engine.test.mjs",
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/decision-invariants.test.mjs",
@@ -1947,11 +1951,11 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -1959,7 +1963,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-completion.test.mjs",
@@ -1967,7 +1971,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -1975,7 +1979,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -1990,8 +1994,8 @@
           "sha256": "10773765e911e2e95876ca11274af4b0200218a7ba036071e3c602fac1739725"
         },
         {
-          "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "path": "tests/tde-player-m2-1.test.mjs",
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -2061,7 +2065,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -2127,7 +2131,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/dunwich-encounter-acceptance.test.mjs",
@@ -2151,7 +2155,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -2187,7 +2191,7 @@
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2225,7 +2229,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-shared-encounters.test.mjs",
@@ -2285,7 +2289,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/decision-invariants.test.mjs",
@@ -2297,7 +2301,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -2341,7 +2345,7 @@
         },
         {
           "path": "tests/tde-player-m2-4.test.mjs",
-          "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+          "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
         },
         {
           "path": "tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
@@ -2397,7 +2401,7 @@
         },
         {
           "path": "tests/tic-scenario-shared-encounters.test.mjs",
-          "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+          "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
         },
         {
           "path": "tests/tic-scenarios-a1.test.mjs",
@@ -2405,7 +2409,7 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         },
         {
           "path": "tests/view-privacy.test.mjs",
@@ -2446,7 +2450,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
@@ -2470,7 +2474,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-secret-name.test.mjs",
@@ -2514,7 +2518,7 @@
         },
         {
           "path": "tests/tic-scenario-shared-encounters.test.mjs",
-          "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+          "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
         },
         {
           "path": "tests/tic-scenarios-early.test.mjs",
@@ -2560,7 +2564,7 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -2568,7 +2572,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/phase6-implementation.test.mjs",
@@ -2592,7 +2596,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -2624,7 +2628,7 @@
         },
         {
           "path": "tests/tic-scenario-shared-encounters.test.mjs",
-          "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+          "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -2673,12 +2677,16 @@
           "sha256": "8e4341b9658873a01d2c56ece0d9f0c179051cb7f152d9946b95cc703d7f4f8b"
         },
         {
+          "path": "tests/debug-engine.test.mjs",
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
+        },
+        {
           "path": "tests/reaction-preferences.test.mjs",
           "sha256": "68882d006560ff358c7dcf10421922b09b2c0be6c4ab493643c1dc5f899b4493"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tcu-clutches-chaos.test.mjs",
@@ -2686,7 +2694,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-secret-name.test.mjs",
@@ -2698,11 +2706,11 @@
         },
         {
           "path": "tests/tic-scenario-shared-encounters.test.mjs",
-          "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+          "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
         },
         {
           "path": "tests/tic-scenarios-middle.test.mjs",
-          "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+          "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2739,7 +2747,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/dunwich-encounter-acceptance.test.mjs",
@@ -2755,7 +2763,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-secret-name.test.mjs",
@@ -2808,11 +2816,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/phase2-primitives.test.mjs",
@@ -2820,11 +2828,11 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -2873,7 +2881,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/p6-content.test.mjs",
@@ -2930,7 +2938,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/phase5-migration.test.mjs",
@@ -3030,7 +3038,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -3072,27 +3080,27 @@
         },
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/deck-library.test.mjs",
-          "sha256": "7d66bdb7bfbe16d71ef284ce7ad8a64f4c87809c87865538d0667cda6f511122"
+          "sha256": "cdd68478e04e0d91aec79270cb1df275072f9e0c88e65db25f018c05dfcf9f2f"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
@@ -3104,11 +3112,11 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -3124,11 +3132,11 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3173,7 +3181,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/phase2-primitives.test.mjs",
@@ -3181,7 +3189,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -3197,7 +3205,7 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3250,7 +3258,7 @@
         },
         {
           "path": "tests/tic-flooded-agendas.test.mjs",
-          "sha256": "56439b56300e296c5fe5637fee68078a2b63b724e18b97d7765e47058d49f699"
+          "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3284,7 +3292,7 @@
         },
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/card-rules.test.mjs",
@@ -3320,11 +3328,11 @@
         },
         {
           "path": "tests/tic-flooded-agendas.test.mjs",
-          "sha256": "56439b56300e296c5fe5637fee68078a2b63b724e18b97d7765e47058d49f699"
+          "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
         },
         {
           "path": "tests/tic-player-rogue-mystic.test.mjs",
-          "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+          "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
         },
         {
           "path": "tests/tic-scenario-zones-followup.test.mjs",
@@ -3358,7 +3366,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/flow-n5.test.mjs",
@@ -3370,7 +3378,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tic-dynamic-aloof.test.mjs",
@@ -3382,7 +3390,7 @@
         },
         {
           "path": "tests/tic-flooded-agendas.test.mjs",
-          "sha256": "56439b56300e296c5fe5637fee68078a2b63b724e18b97d7765e47058d49f699"
+          "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3431,7 +3439,7 @@
         },
         {
           "path": "tests/tde-player-m2-4.test.mjs",
-          "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+          "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
         },
         {
           "path": "tests/tfa-player-acceptance.test.mjs",
@@ -3443,7 +3451,7 @@
         },
         {
           "path": "tests/tic-flooded-agendas.test.mjs",
-          "sha256": "56439b56300e296c5fe5637fee68078a2b63b724e18b97d7765e47058d49f699"
+          "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3477,7 +3485,7 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/card-rules.test.mjs",
@@ -3489,11 +3497,15 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -3527,7 +3539,7 @@
       "testMentions": [
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/carcosa-investigators.test.mjs",
@@ -3539,11 +3551,11 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/play-channels.test.mjs",
@@ -3551,11 +3563,11 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -3564,6 +3576,10 @@
         {
           "path": "tests/tcu-wages-of-sin.test.mjs",
           "sha256": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712"
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -3602,7 +3618,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/game-settings.test.mjs",
@@ -3655,7 +3671,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3690,15 +3706,15 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -3780,7 +3796,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -3822,7 +3838,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3909,7 +3925,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/tfa-player-acceptance.test.mjs",
@@ -3950,7 +3966,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4021,11 +4037,11 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -4063,7 +4079,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -4171,11 +4187,11 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4250,7 +4266,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4296,7 +4312,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/slot-rules.test.mjs",
@@ -4375,11 +4391,11 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4409,15 +4425,15 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4492,7 +4508,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/attack-style.test.mjs",
@@ -4598,7 +4614,7 @@
         },
         {
           "path": "tests/tde-player-m2-4.test.mjs",
-          "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+          "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4628,7 +4644,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -4678,7 +4694,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4719,7 +4735,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -4727,7 +4743,7 @@
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4773,7 +4789,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-reset.test.mjs",
@@ -4843,7 +4859,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5041,15 +5057,15 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tic-player-primitives.test.mjs",
@@ -5201,7 +5217,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5231,7 +5247,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
@@ -5268,7 +5284,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5369,7 +5385,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5590,7 +5606,7 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5624,7 +5640,7 @@
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/carcosa-rules.test.mjs",
@@ -5644,7 +5660,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -5652,7 +5668,7 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/dunwich-player-gaps.test.mjs",
@@ -5680,11 +5696,11 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-prologue.test.mjs",
@@ -5745,7 +5761,7 @@
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/carcosa-rules.test.mjs",
@@ -5785,7 +5801,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -5853,7 +5869,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -5869,7 +5885,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -5877,7 +5893,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -5917,7 +5933,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-lane-runtime.test.mjs",
@@ -5925,7 +5941,7 @@
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -5937,7 +5953,7 @@
         },
         {
           "path": "tests/tde-player-m2-4.test.mjs",
-          "sha256": "6da7abde5e0638cb8982e46c30ec34008adf3bd58b059c761f4299cc3af74ee6"
+          "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
         },
         {
           "path": "tests/tfa-investigators.test.mjs",
@@ -5957,15 +5973,15 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         },
         {
           "path": "tests/tic-scenarios-a1.test.mjs",
@@ -5977,11 +5993,11 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         },
         {
           "path": "tests/tic-scenarios-middle.test.mjs",
-          "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+          "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
         },
         {
           "path": "tests/turn-end-window.test.mjs",
@@ -6027,7 +6043,7 @@
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -6063,11 +6079,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-4.test.mjs",
@@ -6079,11 +6095,11 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-3.test.mjs",
@@ -6099,11 +6115,11 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-scenario-primitives.test.mjs",
@@ -6141,7 +6157,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/carcosa-final.test.mjs",
@@ -6153,7 +6169,7 @@
         },
         {
           "path": "tests/carcosa-player-acceptance.test.mjs",
-          "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
+          "sha256": "1d10885c161d89f3bc51adb27486f49c5cf5e092fe1c269aaacf9dcd584761d9"
         },
         {
           "path": "tests/carcosa-rules.test.mjs",
@@ -6189,11 +6205,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -6201,7 +6217,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-4.test.mjs",
@@ -6209,7 +6225,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tic-agenda-revert.test.mjs",
@@ -6217,11 +6233,11 @@
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         },
         {
           "path": "tests/tic-scenario-primitives.test.mjs",
@@ -6233,7 +6249,7 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6287,11 +6303,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-player-m2-3.test.mjs",
@@ -6303,11 +6319,11 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-primitives.test.mjs",
@@ -6319,7 +6335,7 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6369,15 +6385,15 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -6422,7 +6438,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tic-discard-costs.test.mjs",
@@ -6430,11 +6446,11 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6593,7 +6609,7 @@
         },
         {
           "path": "tests/tic-investigators.test.mjs",
-          "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+          "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6677,11 +6693,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tic-player-rogue-mystic.test.mjs",
-          "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+          "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6822,7 +6838,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tic-effect-provenance.test.mjs",
@@ -7008,11 +7024,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/game-settings.test.mjs",
@@ -7036,7 +7052,7 @@
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/replay-golden.test.mjs",
@@ -7056,7 +7072,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tic-enemy-outcomes.test.mjs",
@@ -7206,7 +7222,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -7344,7 +7360,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -7621,7 +7637,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -7773,7 +7789,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -7861,7 +7877,7 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -7913,7 +7929,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-shattered-aeons.test.mjs",
@@ -7991,7 +8007,7 @@
         },
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/content-schema.test.mjs",
@@ -8011,7 +8027,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8019,7 +8035,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
+        },
+        {
+          "path": "tests/debug-engine.test.mjs",
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
@@ -8039,15 +8059,15 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -8063,7 +8083,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -8075,7 +8095,7 @@
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -8087,7 +8107,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8153,7 +8173,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/ai-location-visibility.test.mjs",
@@ -8162,6 +8182,10 @@
         {
           "path": "tests/card-identity.test.mjs",
           "sha256": "4ce269ed1dae5364ce2f4ec17ca909afb42d7415ba419ed8aaad9be747756699"
+        },
+        {
+          "path": "tests/card-interactions.test.mjs",
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/content-schema.test.mjs",
@@ -8177,7 +8201,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
@@ -8197,7 +8221,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/script-actions.test.mjs",
@@ -8205,11 +8229,11 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -8220,8 +8244,12 @@
           "sha256": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53"
         },
         {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
+        },
+        {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         },
         {
           "path": "tests/tfa-rules.test.mjs",
@@ -8249,7 +8277,7 @@
         },
         {
           "path": "tests/tic-scenarios-middle.test.mjs",
-          "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+          "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8322,7 +8350,7 @@
         },
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/ai-location-visibility.test.mjs",
@@ -8342,7 +8370,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/engagement-flow.test.mjs",
@@ -8354,11 +8382,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -8366,7 +8394,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -8377,8 +8405,12 @@
           "sha256": "d0808c3523ef4b04cc260ce9adcd6fb862131d10b1b1a8b5784dfb43a595ec53"
         },
         {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
+        },
+        {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -8390,7 +8422,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8459,7 +8491,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/ai-location-visibility.test.mjs",
@@ -8487,11 +8519,11 @@
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-reset.test.mjs",
@@ -8499,7 +8531,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -8507,7 +8539,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-player-m2-3.test.mjs",
@@ -8519,7 +8551,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         },
         {
           "path": "tests/tfa-rules.test.mjs",
@@ -8593,7 +8625,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/ai-location-visibility.test.mjs",
@@ -8609,7 +8641,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/notz-n4.test.mjs",
@@ -8617,7 +8649,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -8629,7 +8661,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
@@ -8637,7 +8669,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8730,7 +8762,7 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/p6-content.test.mjs",
@@ -8738,7 +8770,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -8746,11 +8778,11 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -8876,7 +8908,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -8888,7 +8920,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -9051,7 +9083,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9113,7 +9145,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/campaign-experience.test.mjs",
@@ -9157,11 +9189,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/notz-n4.test.mjs",
@@ -9177,7 +9209,7 @@
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/replay-golden.test.mjs",
@@ -9185,7 +9217,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-images.test.mjs",
@@ -9276,7 +9308,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/tcu-black-throne.test.mjs",
@@ -9336,7 +9368,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -9477,7 +9509,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -9594,7 +9626,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -9755,7 +9787,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -9948,7 +9980,7 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -10041,7 +10073,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/card-identity.test.mjs",
@@ -10150,7 +10182,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -10643,7 +10675,7 @@
       "testMentions": [
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tfa-threads-of-fate.test.mjs",
@@ -10733,7 +10765,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -10827,7 +10859,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "c94630fa70f631626c8efc2c4f17626e5c9b61dd182dc2da6a627796e385ae57"
+          "sha256": "d2eb6ee30e647b72cb2f19a8b00f56686c8356327da0d953b60dceedf3f1ced9"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -10996,7 +11028,7 @@
       "testMentions": [
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/core-final-acceptance.test.mjs",
@@ -11539,11 +11571,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/notz-n4.test.mjs",
@@ -11551,7 +11583,7 @@
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "cc8a40064a6547793696a8447acbce0cae6969ad486ea40573bcc1be0b6ecf00"
+          "sha256": "3303473494f691570127143c9a75906bdd2d99b0f1375b489af3aab80967661e"
         },
         {
           "path": "tests/script-actions.test.mjs",
@@ -11686,7 +11718,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -11830,7 +11862,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -11939,7 +11971,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/tcu-black-throne.test.mjs",
@@ -12110,7 +12142,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -12253,7 +12285,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
@@ -12389,7 +12421,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-shattered-aeons.test.mjs",
@@ -12485,7 +12517,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -12501,7 +12533,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -12862,7 +12894,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -13234,7 +13266,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/notz-n4.test.mjs",
@@ -13242,7 +13274,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/script-actions.test.mjs",
@@ -13329,11 +13361,11 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -13406,7 +13438,7 @@
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
@@ -13531,7 +13563,7 @@
         },
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/carcosa-investigators.test.mjs",
@@ -13539,7 +13571,7 @@
         },
         {
           "path": "tests/card-interactions.test.mjs",
-          "sha256": "d9f7828f7b84ed33725f90ea806fc6a47faaa6d6363bbf9e260ff09ae7882f87"
+          "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
         },
         {
           "path": "tests/card-lifecycle.test.mjs",
@@ -13567,11 +13599,11 @@
         },
         {
           "path": "tests/debug-console.test.mjs",
-          "sha256": "353afbd041f9ec3afc2c789fd3cdd066e8f04af73faeb9472de955a35e15080c"
+          "sha256": "753035704f6411a16d9bd619743e79bed84aef102657c323b7c39168efc2343f"
         },
         {
           "path": "tests/debug-engine.test.mjs",
-          "sha256": "2d1d6bb6e1ed390ad85a2215a3ede4321e2f998b7df8a2dd7ca9a1e4e4f8ba0f"
+          "sha256": "052a8a49d89d3de217b49935e562e8a46d36ec99304ef813eefc18736e55f024"
         },
         {
           "path": "tests/dunwich-player-acceptance.test.mjs",
@@ -13603,11 +13635,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         },
         {
           "path": "tests/tcu-completion.test.mjs",
@@ -13631,7 +13663,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         },
         {
           "path": "tests/tfa-player-acceptance.test.mjs",
@@ -13651,7 +13683,7 @@
         },
         {
           "path": "tests/tic-player-rogue-mystic.test.mjs",
-          "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+          "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
         },
         {
           "path": "tests/tic-scenario-atomic-spawn.test.mjs",
@@ -13667,7 +13699,7 @@
         },
         {
           "path": "tests/tic-scenario-shared-encounters.test.mjs",
-          "sha256": "9d861c81d013a293e5b86ea729e3f99fa791d4aabf3c3eac28ed9ed23d2721a6"
+          "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
         },
         {
           "path": "tests/tic-scenario-zones-followup.test.mjs",
@@ -13683,7 +13715,7 @@
         },
         {
           "path": "tests/tic-scenarios-middle.test.mjs",
-          "sha256": "f300830befc16e14c075de2739bb3d3e5c0bff3fdd885dc2e260139618b3b6d3"
+          "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -13979,11 +14011,11 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
+          "sha256": "d495e879011f31fbbd665ee707220c3242a8aaf360acb2cda74062c8b6b140d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tde-completion-primitives.test.mjs",
@@ -14007,11 +14039,11 @@
         },
         {
           "path": "tests/tic-player-guardian-seeker.test.mjs",
-          "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+          "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         },
         {
           "path": "tests/tic-scenario-cost-followup.test.mjs",
@@ -14125,7 +14157,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/tfa-city-of-archives.test.mjs",
@@ -14235,7 +14267,7 @@
       "testMentions": [
         {
           "path": "tests/carcosa-implementation-gaps.test.mjs",
-          "sha256": "598d5c1f03d0fc617a8f459a3453e6d5ec2bae3a02f224a631ae840901462a81"
+          "sha256": "387af999ccd62da781b5450aaa66a4bf9a4154b2e27eb796a23f1e2f7b71e976"
         },
         {
           "path": "tests/card-identity.test.mjs",
@@ -14283,7 +14315,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -14291,7 +14323,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         },
         {
           "path": "tests/tcu-player-m2-1.test.mjs",
@@ -14299,7 +14331,7 @@
         },
         {
           "path": "tests/tcu-player-m2-2.test.mjs",
-          "sha256": "a20fa5e69ec0f09ae3cef4ddb7000e23d7f55e233f83687b12cff047f4f66f01"
+          "sha256": "6e354e48cd8acc0987fa78c21974a7062e707886ef462293b306a46c32162c18"
         },
         {
           "path": "tests/tcu-primitives-spectral-deck.test.mjs",
@@ -14315,11 +14347,11 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d"
+          "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
         },
         {
           "path": "tests/tde-player-m2-1.test.mjs",
-          "sha256": "e585d085c341de1953d25ffb1ff64d393afe0994ca0a773e0fb20195b23b719b"
+          "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
         },
         {
           "path": "tests/tde-player-m2-2.test.mjs",
@@ -14335,7 +14367,7 @@
         },
         {
           "path": "tests/tfa-mechanics.test.mjs",
-          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+          "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
         },
         {
           "path": "tests/tfa-player-acceptance.test.mjs",
@@ -14359,7 +14391,7 @@
         },
         {
           "path": "tests/tic-player-survivor-neutral.test.mjs",
-          "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+          "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
         },
         {
           "path": "tests/tic-scenario-primitives.test.mjs",
@@ -14375,7 +14407,7 @@
         },
         {
           "path": "tests/tic-scenarios-late.test.mjs",
-          "sha256": "9b0a735d606d3ec0630179eef0458601248a346de93e84f5bd0f6d1f953d445d"
+          "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -14634,7 +14666,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-encounter-p1.test.mjs",
@@ -14766,7 +14798,7 @@
         },
         {
           "path": "tests/tfa-doom-of-eztli.test.mjs",
-          "sha256": "87d84400a73157036041f90771fc4c491d57fc11f823e44b3a1cf7c52e015bea"
+          "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
         },
         {
           "path": "tests/tfa-encounter-p1.test.mjs",
@@ -14905,7 +14937,7 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
+          "sha256": "f739a6e8a8f6ad4896dbaa36ea8f1fe92445559ffc3682232b577d69cc16d247"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -15419,7 +15451,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
@@ -15522,7 +15554,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "d0e4f10530f1342c103481a6a585922fbcb26d90caeead602010a1876c5e3d3e"
+          "sha256": "ff9729a09e9cbd61ce28de4618b880efa61cc71c7de0cf67205fe6a6f7d94bdd"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -16015,8 +16047,12 @@
           "sha256": "1cf654c095f6bea5539da729b4a16f0507fd533980403ac98aaadf13e2b97ac4"
         },
         {
+          "path": "tests/tic-innsmouth-look.test.mjs",
+          "sha256": "3b91f7f45bf739f9051fe7e4a61ce6f10ea83ec8c54a23154c856ca4157878de"
+        },
+        {
           "path": "tests/tic-scenario-inTooDeep.test.mjs",
-          "sha256": "3d61d02095daa0867c41542f359a5d75525a72b55d2c81cb3710ce213b79c518"
+          "sha256": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -16105,6 +16141,10 @@
         {
           "path": "tests/notz-n4.test.mjs",
           "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
+        },
+        {
+          "path": "tests/tic-innsmouth-look.test.mjs",
+          "sha256": "3b91f7f45bf739f9051fe7e4a61ce6f10ea83ec8c54a23154c856ca4157878de"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -16748,7 +16788,7 @@
         },
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         }
       ],
       "verdict": "catalog-only-not-enabled",
@@ -18759,7 +18799,7 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         }
       ],
       "verdict": "catalog-only-not-enabled",
@@ -18789,7 +18829,7 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "63d73553c08d5f6231fed8f45b46bf6c85c949b7994b7dfae59986b84b706a72"
+          "sha256": "84222f1a8566af3672e279485b050906a91cfeb89c0df17d7ed612a38468cb73"
         }
       ],
       "verdict": "catalog-only-not-enabled",
@@ -18893,7 +18933,7 @@
       "testMentions": [
         {
           "path": "tests/tcu-investigators.test.mjs",
-          "sha256": "8975cad5a3c2a472c71d67c89065b3a5b5a825c846d9fef76126cbbdc8c5e6d6"
+          "sha256": "9f6a934dbecfdff75259188fa3b3682b7eeeea32e63389afdbea1dfc6f171938"
         }
       ],
       "verdict": "catalog-only-not-enabled",

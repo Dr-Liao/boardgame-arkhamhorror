@@ -214,7 +214,7 @@ Swarming X 求值。四种 X 口径（固定 / [per_investigator] / 警报等级
 
 被查找到的牌自身的规则。神秘证据（揭示抽走 + 发现线索）与惊人的发现（弃掉 + 取消查找 + 抽遭遇卡）。
 
-接口：`条目标 `searchedCardRule`（读点 deck-ops.js 的 searchedCardsWindow）`。
+接口：条目级 `searchedCardRule`（读点 `src/engine/deck-ops.js#searchedCardsWindow`；`lookAt` / `searchDeck` 与 `card-ops.js#searchTop` 共用同一读点，两条「查找牌库」实现不得各自解释）。跨循环回归：05153「老千」先生的 `searchTop` 查找必须触发 06023 骇人真相（`tests/tcu-player-m2-2.test.mjs`、`tests/tde-player-m2-1.test.mjs`）。
 
 证据：`tests/tde-investigators.test.mjs`。
 
