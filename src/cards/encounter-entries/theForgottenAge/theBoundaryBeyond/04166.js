@@ -16,7 +16,7 @@ export default {
       // 过去与现在（背面）：所有特诺奇蒂特兰地点进胜利区 → 换图 → 失去线索 →
       // 在大神庙生成帕德玛 → 移除当前场景/密谋牌库，把场景 3a 与密谋 3a 放进场。
       hooks.sweep({ onlyCleared: false })
-      hooks.shiftPresentDay()
+      hooks.shiftPresentDay('04166')
       hooks.loseAllClues()
       hooks.spawnPadma()
       state.scenarioZones.removed = [...(state.scenarioZones.removed || []), '04162', '04163']

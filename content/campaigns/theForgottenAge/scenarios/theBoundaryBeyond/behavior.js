@@ -198,29 +198,36 @@ function sweepTenochtitlan(state, api, { onlyCleared = true } = {}) {
 
 // 2b / 2b 背面：对每个在场的现代地点，从探索牌库找一张同符号的古代地点覆盖上去。
 //
-// 同符号的古代地点各有两张（同名、同符号、同连线，只是卡面数值不同），2b 牌面只写
-// 「找出 1 张左上角带有对应地点符号的地点卡」，并没有指定由谁挑选；2026-11-06 实机
-// 反馈：「选择覆盖的那一张」让调查员队长二选一没有意义——两张选项同名，界面分不出
-// 卡面，队长也拿不到可决策的信息。改为不询问，按探索牌库顺序自动取「从牌库顶往下
-// 找到的第一张同符号古代地点」：变体和本章的探索行动一样由洗牌后的牌库顺序决定，
-// 而不是由玩家挑选。若以后要恢复玩家选择，必须同时给两个选项补 cardCode，
-// 否则界面仍只会显示两个同名的空占位选项。
-function shiftRemainingPresentDay(state, api) {
+// 同符号的古代地点各有两张（同名、同符号、同连线，卡面数值不同）。2b 是「搜索探索
+// 牌库」：搜索到的多张由调查员队长选择（规则书「多个合法选项由队长决定」；官方 FAQ
+// 也说明这类未指定结算者的剧本效果由调查员商定、谈不拢由队长结算）。选项必须带
+// cardCode：界面据此按普通卡牌显示卡面与「详情」，否则两张同名卡只会显示成两个
+// 一模一样的占位选项。
+function shiftRemainingPresentDay(state, api, source = '04163') {
   for (const slot of [...state.locations]) {
     if (!isPresentDay(slot)) continue
     const symbol = symbolOf(slot)
-    const deck = state.explorationDeck || []
-    let deckIndex = -1
-    for (let index = deck.length - 1; index >= 0; index--) {
-      const definition = definitionById(state, deck[index])
-      if (definition && symbolOf(definition) === symbol) { deckIndex = index; break }
-    }
-    if (deckIndex < 0) {
+    const matches = (state.explorationDeck || []).filter(entry => {
+      const definition = definitionById(state, entry)
+      return definition && symbolOf(definition) === symbol
+    })
+    if (!matches.length) {
       api.info?.(`🧭 探索牌库里已没有与「${slot.name}」同符号的古代地点。`)
       continue
     }
-    // 引擎约定探索牌库数组末尾是牌库顶（探索行动用 pop 抽牌），所以从末尾往前找。
-    const [picked] = deck.splice(deckIndex, 1)
+    const picked = matches.length === 1 ? matches[0] : (() => {
+      const answer = api.choose({
+        kind: 'location', source, seat: state.campaign.leadSeat,
+        prompt: `探索牌库中有 ${matches.length} 张与「${slot.name}」同符号的古代地点，选择覆盖的那一张。`,
+        options: matches.map(entry => {
+          const definition = definitionById(state, entry)
+          return { id: entry, cardCode: original(definition) || entry, label: definition?.name || entry }
+        }),
+      })
+      return matches.includes(answer) ? answer : matches[matches.length - 1]
+    })()
+    const deckIndex = state.explorationDeck.indexOf(picked)
+    if (deckIndex >= 0) state.explorationDeck.splice(deckIndex, 1)
     shiftSlot(state, api, slot.id, picked)
   }
 }
@@ -603,7 +610,7 @@ function useAncientAction(state, inv, api, location, code) {
 function boundaryHooks(state, api) {
   return {
     sweep: options => sweepTenochtitlan(state, api, options),
-    shiftPresentDay: () => shiftRemainingPresentDay(state, api),
+    shiftPresentDay: source => shiftRemainingPresentDay(state, api, source),
     loseAllClues: () => loseAllClues(state),
     spawnPadma: () => spawnPadma(state, api),
     spawnHarbinger: () => spawnHarbinger(state, api),

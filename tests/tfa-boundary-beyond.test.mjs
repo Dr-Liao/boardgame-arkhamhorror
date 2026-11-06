@@ -440,24 +440,31 @@ test('密谋 2 背面：只有没有线索的古代地点进胜利区，场景 3
   assert.ok(state.enemies.some(enemy => enemy.originalCode === '04186'))
 })
 
-test('2b 换图：同符号有两张时不再询问队长，按探索牌库顺序自动覆盖', () => {
-  // 回归 2026-11-06 实机反馈：2b「找出同符号的古代地点」曾弹「选择覆盖的那一张」，
-  // 两张古代地点同名、界面无法区分，队长没有可决策的信息。现在不询问，直接从探索
-  // 牌库顶（数组末尾）往下找第一张同符号的古代地点。
+test('2b 换图：同符号有多张时由队长选择，选项带卡号显示卡面与详情', () => {
+  // 2b 是「搜索探索牌库」：同符号有两张时按规则由调查员队长选择；选项必须带 cardCode，
+  // 界面才能像其他卡牌一样显示卡面 + 详情（否则两张同名卡会渲染成一模一样的空占位）。
   const state = chapterState()
   state.explorationDeck = ['canalsOfTenochtitlan180', 'canalsOfTenochtitlan181', '04190']
   state.agendaIndex = 1
-  const api = makeApi(state)
+  const api = makeApi(state, { choose: () => 'canalsOfTenochtitlan181' })
   behavior.agendaReveal(state, state.agendas[1], api)
-  assert.deepEqual(api.calls.choices, [], '同符号覆盖不再要求调查员队长二选一')
-  // 索卡洛广场是菱形：牌库顶最近的同符号地点是 181，覆盖 180 是旧实现「二选一」的可能结果。
-  assert.equal(locationOf(state, 'zocalo').originalCode, '04181', '取牌库顶最近的同符号古代地点')
+  const ask = api.calls.choices.find(request => request.kind === 'location')
+  assert.ok(ask, '同符号有两张时必须询问')
+  assert.equal(ask.seat, state.campaign.leadSeat, '由调查员队长回答')
+  assert.deepEqual(ask.options.map(option => option.id),
+    ['canalsOfTenochtitlan180', 'canalsOfTenochtitlan181'])
+  assert.deepEqual(ask.options.map(option => option.cardCode), ['04180', '04181'],
+    '每个选项带印刷卡号，界面据此显示卡面与详情')
+  assert.equal(locationOf(state, 'zocalo').originalCode, '04181', '按队长的选择覆盖')
   assert.deepEqual(state.explorationDeck, ['canalsOfTenochtitlan180', '04190'],
-    '只移走被覆盖的那一张，其余顺序不变')
-  // 其余格位没有同符号的古代地点时保持现代面，不产生待决选择。
-  for (const slot of ['templeRuins', 'metropolitanCathedral', 'chapultepecPark', 'xochimilco', 'coyoacan']) {
-    assert.equal(locationOf(state, slot).underneath, undefined, `${slot} 保持现代面`)
-  }
+    '只移走被选中的那一张，其余顺序不变')
+  // 队长选另一张时同样按所选结果覆盖。
+  const other = chapterState()
+  other.explorationDeck = ['canalsOfTenochtitlan180', 'canalsOfTenochtitlan181', '04190']
+  other.agendaIndex = 1
+  behavior.agendaReveal(other, other.agendas[1],
+    makeApi(other, { choose: () => 'canalsOfTenochtitlan180' }))
+  assert.equal(locationOf(other, 'zocalo').originalCode, '04180')
 })
 
 test('密谋 3 背面 → 结局 2', () => {
