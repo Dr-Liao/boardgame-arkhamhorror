@@ -1,0 +1,279 @@
+{
+ "area": "interactions",
+ "auditor": "lead",
+ "method": "静态链路核对（engine 事务 / integration 投影 / web 渲染 / locales）+ 浏览器账本与 spec 断言的证据存在性核验 + Node 交互测试阅读 + EOTE 动态文案语言统计 + 写后无读的 scenarioFlags 扫描",
+ "generatedAt": "2026-11-08T11:13:08.848Z",
+ "summary": {
+  "dynamicText": {
+   "filesWithLabelsAndPrompts": 232,
+   "labels": 491,
+   "cjkLabels": 488,
+   "prompts": 192,
+   "cjkPrompts": 192,
+   "infos": 286,
+   "cjkInfos": 286
+  },
+  "browserLedgers": {
+   "eote-interactions-browser": {
+    "status": "passed",
+    "screenshots": 16,
+    "screenshotsExisting": 16
+   },
+   "eote-investigators-browser": {
+    "status": "passed",
+    "screenshots": 20,
+    "screenshotsExisting": 20
+   },
+   "eote-player-browser": {
+    "status": "passed",
+    "screenshots": 10,
+    "screenshotsExisting": 10
+   },
+   "eote-scenarios-browser": {
+    "status": "passed",
+    "screenshots": 44,
+    "screenshotsExisting": 44
+   },
+   "eote-release-browser": {
+    "status": "passed",
+    "screenshots": 104,
+    "screenshotsExisting": 104
+   },
+   "eote-browser-acceptance": {
+    "status": "passed",
+    "screenshots": 6,
+    "screenshotsExisting": 6
+   }
+  },
+  "writeOnlyScenarioFlags": 0
+ },
+ "contractVerified": {
+  "choiceTransaction": "卡条目 api.choice 走服务端选择事务（src/engine/mechanic-choices.js / table-decisions.js / ability-exec.js），前端只提交 requestChoice；web/mechanic-ui.js 渲染选项 label/prompt（:85-113）。",
+  "actionLabels": "普通行动/反应候选由 legalMoves 生成，web/game-ui.js:1178、:1306、:2455 直接渲染 label/prompt，无可感知性缺口（但语言见 issues）。",
+  "privacy": "src/integration/mechanic-view.js eoteView 明确：deckTop 只投给本人或 public；crossSeat 只给被授权者；tekeli 只投数量；keys 仅公开持有者；supplies 只投携带数量/掉落地点；src/integration/observation.js:44 PUBLIC_SCENARIO_FLAGS 白名单（depthLevel/pillars/deepDark）不泄漏其他 scenarioFlags。",
+  "guides": "web/scenario-guides/*.json 含 chineseStatus/chineseGaps，中文缺口有结构化标记（已披露口径）。"
+ },
+ "issues": [
+  {
+   "severity": "medium",
+   "dimension": "perceivability",
+   "summary": "EOTE 卡牌动态文案全部中文硬编码：491 个 label 中 488 个、192 个 prompt 全部、281 条 api.info 全部为中文；EN locale 无对应键，英文玩家在英文界面会看到中文行动标签/选择提示/日志。",
+   "evidence": "src/cards/entries/08001.js:30-46（label/prompt 中文字面量）；web/i18n.js:49-56（缺 key 回退 zh-CN）；web/game-ui.js:1178、1306、2455（直接渲染 label/prompt）；web/locales/en.*.js 无动态文案键（enLocale 覆盖 CJK label 数 = 0）",
+   "suggestion": "在 i18n 层为动态 label/prompt 引入按条目 code+ability id 的英文字典（或条目提供 labelEn/promptEn），web 渲染时 t() 转换；至少在 EN locale 下用卡面英文文本替代动态文案。"
+  },
+  {
+   "severity": "medium",
+   "dimension": "perceivability",
+   "summary": "古者之城「石板+霜冻自动失败」原因只写入 state.scenarioFlags.lastAutoFailReason，但全仓无任何读取点：玩家看到自动失败却看不到原因（卡面规则要求解释）。",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:381、384（写 lastAutoFailReason）；src/**、web/**、content/** 无读取（grep lastAutoFailReason 仅此两处）；observation.js:44 allowlist 未含该键",
+   "suggestion": "把自动失败原因写入测试日志/牌桌提示（例如在 testAutoFail 时 api.info 或投影到 chaos 面板），或加入受控公开投影。"
+  },
+  {
+   "severity": "low",
+   "dimension": "perceivability",
+   "summary": "frostRevealedThisTest 写后无读（死状态），若用于 UI 提示则未生效；否则建议删除。",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:387；全仓无读取点",
+   "suggestion": "删除死写或接到 frost 面板提示。"
+  },
+  {
+   "severity": "low",
+   "dimension": "perceivability",
+   "summary": "浏览器验收账本（6 份，passed；截图 200 张路径全部存在）覆盖的是 8 类机制面板 + 代表性卡牌/章节，并非全部 403 卡的可感知性逐卡验证；账本中未见「英文 locale 下动态文案语言」断言。",
+   "evidence": "audit/eote-interactions-browser.json / eote-investigators-browser.json / eote-player-browser.json / eote-scenarios-browser.json / eote-release-browser.json / eote-browser-acceptance.json；tests/eote-*.browser.mjs 断言集中在真实 API/表格/选择存在性（如 eote-investigators.browser.mjs:107 横向溢出、eote-player.browser.mjs:65 pendingChoice）",
+   "suggestion": "补 EN locale 动态文案断言（至少 5 张代表性卡 + 1 章特殊规则），并把 D2 抽检纳入浏览器账本声明范围。"
+  },
+  {
+   "severity": "low",
+   "dimension": "perceivability",
+   "summary": "自动扫描出的 29 张「无 choice/info 的 ability」经人工核对为误报：这些是玩家主动行动，label 会出现在行动列表中（如 08002 扳手、08006 预示者、08120–08124 资源卡）；无需修复，但说明机械感知扫描需结合 UI 通路判定。",
+   "evidence": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/screen/perceivability.json；src/cards/entries/08002.js、08006.js、08120.js（label 均在 action 列表渲染路径）",
+   "suggestion": "无（记录为方法学结论）。"
+  }
+ ],
+ "browserCoverage": {
+  "eote-interactions-browser": {
+   "status": "passed",
+   "screenshots": 16,
+   "screenshotsExisting": 16,
+   "specs": [
+    "tests/eote-interactions.browser.mjs",
+    "tests/scenario-guides.browser.mjs",
+    "tests/script-actions-tfa.browser.mjs"
+   ],
+   "booleansTrue": 0,
+   "booleansFalse": 0
+  },
+  "eote-investigators-browser": {
+   "status": "passed",
+   "screenshots": 20,
+   "screenshotsExisting": 20,
+   "specs": [
+    "tests/eote-investigators.browser.mjs"
+   ],
+   "booleansTrue": 7,
+   "booleansFalse": 0
+  },
+  "eote-player-browser": {
+   "status": "passed",
+   "screenshots": 10,
+   "screenshotsExisting": 10,
+   "specs": [
+    "tests/eote-player.browser.mjs"
+   ],
+   "booleansTrue": 2,
+   "booleansFalse": 0
+  },
+  "eote-scenarios-browser": {
+   "status": "passed",
+   "screenshots": 44,
+   "screenshotsExisting": 44,
+   "specs": [
+    "tests/eote-scenarios.browser.mjs"
+   ],
+   "booleansTrue": 18,
+   "booleansFalse": 0
+  },
+  "eote-release-browser": {
+   "status": "passed",
+   "screenshots": 104,
+   "screenshotsExisting": 104,
+   "specs": [
+    "tests/eote-release.browser.mjs",
+    "tests/eote-progression.browser.mjs",
+    "tests/eote-online.browser.mjs"
+   ],
+   "booleansTrue": 119,
+   "booleansFalse": 0
+  },
+  "eote-browser-acceptance": {
+   "status": "passed",
+   "screenshots": 6,
+   "screenshotsExisting": 6,
+   "specs": [
+    "eote-rules.browser.mjs"
+   ],
+   "booleansTrue": 12,
+   "booleansFalse": 0
+  }
+ },
+ "writeOnlyScenarioFlags": [
+  {
+   "key": "scenarioFlags.hiddenTunnelRevealed",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 464
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 471
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 478
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.fatalMirageVersion",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 68
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.agendaCode",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 69
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/theSecretName/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.memoryAlive:${code}:dynamic",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 110
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.partnerSwitch",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 256
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.lookedAt",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+     "line": 124
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.spawnedFrom",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+     "line": 83
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.gateFlipped",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 170
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 182
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js"
+   ]
+  }
+ ]
+}

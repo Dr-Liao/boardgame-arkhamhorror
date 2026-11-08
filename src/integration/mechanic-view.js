@@ -3,9 +3,92 @@ import { mechanicState } from '../engine/mechanic-state.js'
 import { isPublicBeneath } from '../engine/commit-origins.js'
 import { effectiveFloodLevel } from '../engine/flood.js'
 import { vehicleAccessError, vehicleName } from '../engine/vehicles.js'
+import { FROST_POOL_LIMIT, frostPoolCount } from '../engine/frost.js'
+import { eoteCampaignState, eoteScenarioState } from '../engine/eote-state.js'
+
+// 七循环《地球边缘》交互投影：只暴露桌面公开信息与「本人可见」的私有信息。
+// 口径：
+//   · frost 余量总是可算（袋内 + 本次揭示区 + 封印区共用 8 枚实物池），因此没有 eote 扩展的
+//     纯寒霜场景也会得到 frost 计数器；
+//   · deckTop 是本人私有：只给 observer 自己的那一行，或内容层声明 public 的揭示；
+//   · crossSeat 授权只给被授权的调查员本人；maskMechanicSnapshot 会在动画快照里再次掩码；
+//   · partners / seals / disciplines 来自战役级扩展，属于桌面公开信息；
+//   · tekeli 只暴露牌库张数，永不暴露牌序或卡号；
+//   · supplies 只暴露每人携带件数与「掉落在地点」的汇总（掉落地点本身是公开的）。
+function eoteView(state, data, observer) {
+  const scenario = eoteScenarioState(state)
+  const campaign = eoteCampaignState(state)
+  const frostTotal = frostPoolCount(state)
+  if (!scenario && !campaign && !(frostTotal > 0)) return null
+  const eote = {
+    frost: { limit: FROST_POOL_LIMIT, remaining: Math.max(0, FROST_POOL_LIMIT - frostTotal) },
+  }
+  const roster = campaign?.partners?.roster
+  if (Array.isArray(roster) && roster.length) {
+    eote.partners = roster.map(({ code, damage, horror, status, resolute }) => ({
+      code, damage: damage || 0, horror: horror || 0, status,
+      ...(resolute ? { resolute } : {}),
+    }))
+  }
+  const seals = campaign?.seals?.entries
+  if (Array.isArray(seals) && seals.length) {
+    eote.seals = seals.map(({ kind, active, placedBySeat, locationId }) => ({
+      kind, active: active === true, placedBySeat: placedBySeat ?? null, locationId: locationId ?? null,
+    }))
+  }
+  const tekeliDeck = data?.scenarioDecks?.tekeli
+  if (tekeliDeck && Array.isArray(tekeliDeck.deck)) eote.tekeli = { count: tekeliDeck.deck.length }
+  const deckTopSeats = scenario?.deckTop?.seats
+  if (deckTopSeats && typeof deckTopSeats === 'object') {
+    const rows = Object.entries(deckTopSeats).flatMap(([key, record]) => {
+      const seat = Number(key)
+      if (!Number.isSafeInteger(seat) || !record || typeof record.code !== 'string') return []
+      const isPublic = record.public === true
+      if (seat !== observer && !isPublic) return []
+      return [{ seat, code: record.code, public: isPublic }]
+    })
+    if (rows.length) eote.deckTop = rows
+  }
+  const grants = scenario?.crossSeat?.grants
+  if (grants && typeof grants === 'object' && Number.isInteger(observer) && grants[observer]) {
+    const grant = grants[observer]
+    if (grant && Array.isArray(grant.codes) && grant.codes.length) {
+      eote.crossSeat = [{
+        seat: observer, fromSeat: grant.fromSeat, codes: [...grant.codes],
+        ...(grant.costSplit ? { costSplit: { ...grant.costSplit } } : {}),
+      }]
+    }
+  }
+  const disciplines = campaign?.disciplines
+  if (disciplines && Array.isArray(disciplines.sets) && disciplines.sets.length) {
+    const faces = disciplines.faces || {}
+    eote.disciplines = disciplines.sets.map(({ unbrokenCode, brokenCode, burdenCode }) => ({
+      unbrokenCode, brokenCode, burdenCode,
+      face: faces[unbrokenCode] === 'broken' ? 'broken' : 'unbroken',
+    }))
+  }
+  const supplies = campaign?.supplies
+  if (supplies && typeof supplies === 'object') {
+    const carried = Object.entries(supplies.carriers || {}).flatMap(([key, codes]) => {
+      const seat = Number(key)
+      if (!Number.isSafeInteger(seat) || !Array.isArray(codes) || !codes.length) return []
+      return [{ seat, count: codes.length }]
+    })
+    if (carried.length) eote.supplies = carried
+    const droppedByLocation = new Map()
+    for (const locationId of Object.values(supplies.dropped || {})) {
+      if (typeof locationId !== 'string' || !locationId) continue
+      droppedByLocation.set(locationId, (droppedByLocation.get(locationId) || 0) + 1)
+    }
+    if (droppedByLocation.size) eote.droppedSupplies = [...droppedByLocation].map(([locationId, count]) => ({ locationId, count }))
+  }
+  return eote
+}
+
 export function mechanicView(state, observer = null) {
   const data = mechanicState(state)
-  if (!data && !state.skillTest?.tokenResults?.length) return null
+  const eote = eoteView(state, data, observer)
+  if (!data && !state.skillTest?.tokenResults?.length && !eote) return null
   const revealed = state.skillTest && (state.skillTest.helpRequested || state.skillTest.seat === observer)
     ? (state.chaos?.revealed || []).flatMap((face, index) => {
       if (index < (state.chaos?.frames?.at(-1) || 0)) return []
@@ -46,16 +129,28 @@ export function mechanicView(state, observer = null) {
       ...(isPublicBeneath(state, Number(seat), host) ? { public: true } : {}),
       ...(Number(seat) === observer || isPublicBeneath(state, Number(seat), host) ? { codes: [...cards] } : {}) })))
   if (revealed?.length) view.tokens = revealed.map(({ index, face, as, modifier, cancelled }) => ({ index, face, as, modifier, cancelled: !!cancelled }))
+  if (eote) view.eote = eote
   return Object.keys(view).length ? view : null
 }
 
 // Animation snapshots may contain all owners' beneath cards, just like hands. Mask them again per recipient.
+// EotE: deckTop 只有本人或公开揭示可见；crossSeat 授权只发给被授权者；其余 eote 字段是公开桌面信息。
 export function maskMechanicSnapshot(model, observer) {
   if (!model) return model
   const copy = structuredClone(model)
   for (const item of copy.beneath || []) if (item.seat !== observer && !item.public) delete item.codes
   if (copy.tokenSeat != null && copy.tokenSeat !== observer) delete copy.tokens
   delete copy.tokenSeat
+  if (copy.eote) {
+    if (Array.isArray(copy.eote.deckTop)) {
+      copy.eote.deckTop = copy.eote.deckTop.filter(item => item.seat === observer || item.public === true)
+      if (!copy.eote.deckTop.length) delete copy.eote.deckTop
+    }
+    if (Array.isArray(copy.eote.crossSeat)) {
+      copy.eote.crossSeat = copy.eote.crossSeat.filter(item => item.seat === observer)
+      if (!copy.eote.crossSeat.length) delete copy.eote.crossSeat
+    }
+  }
   return copy
 }
 

@@ -1,0 +1,1383 @@
+{
+  "schemaVersion": 1,
+  "cycle": "eote",
+  "phase": "P2/P3",
+  "generatedBy": "node tools/verify-eote.mjs --node",
+  "status": "passed",
+  "sourceStableDuringRun": true,
+  "command": "node --test tests/eote-migration.test.mjs tests/eote-primitives-frost.test.mjs tests/eote-primitives-campaign.test.mjs tests/eote-primitives-flow.test.mjs tests/eote-primitives-geo.test.mjs tests/eote-primitives-travel.test.mjs tests/eote-primitives-investigator.test.mjs tests/eote-rules.test.mjs tests/eote-interactions.test.mjs tests/eote-investigator-daniela.test.mjs tests/eote-investigator-norman.test.mjs tests/eote-investigator-lily.test.mjs tests/eote-investigator-monterey.test.mjs tests/eote-investigator-bob.test.mjs tests/eote-player-m2-1.test.mjs tests/eote-player-m2-2.test.mjs tests/eote-player-m2-3.test.mjs tests/eote-player-m2-4.test.mjs tests/eote-player-primitives.test.mjs tests/eote-scenario-iceAndDeathPart1.test.mjs tests/eote-scenario-iceAndDeathPart2.test.mjs tests/eote-scenario-iceAndDeathPart3.test.mjs tests/eote-scenario-fatalMirage.test.mjs tests/eote-scenario-toTheForbiddenPeaks.test.mjs tests/eote-scenario-cityOfTheElderThings.test.mjs tests/eote-scenario-theHeartOfMadnessPart1.test.mjs tests/eote-scenario-theHeartOfMadnessPart2.test.mjs tests/eote-scenario-shared.test.mjs tests/eote-campaign-flow.test.mjs tests/eote-story.test.mjs tests/eote-all-cards.test.mjs tests/eote-p8-registration.test.mjs tests/eote-p8-campaign.test.mjs tests/eote-p8-multiplayer.test.mjs tests/replay-eote-p8.test.mjs tests/eote-migration-ledger.test.mjs",
+  "exitCode": 0,
+  "log": "artifacts/migration/eote/reports/eote-node-acceptance.log",
+  "logSha256": "80e7c9db68c2587073155867e63447dd3ef47015a09bd5692c0f62084c4b4353",
+  "summary": {
+    "tests": 506,
+    "pass": 506,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "testFiles": [
+    "tests/eote-migration.test.mjs",
+    "tests/eote-primitives-frost.test.mjs",
+    "tests/eote-primitives-campaign.test.mjs",
+    "tests/eote-primitives-flow.test.mjs",
+    "tests/eote-primitives-geo.test.mjs",
+    "tests/eote-primitives-travel.test.mjs",
+    "tests/eote-primitives-investigator.test.mjs",
+    "tests/eote-rules.test.mjs",
+    "tests/eote-interactions.test.mjs",
+    "tests/eote-investigator-daniela.test.mjs",
+    "tests/eote-investigator-norman.test.mjs",
+    "tests/eote-investigator-lily.test.mjs",
+    "tests/eote-investigator-monterey.test.mjs",
+    "tests/eote-investigator-bob.test.mjs",
+    "tests/eote-player-m2-1.test.mjs",
+    "tests/eote-player-m2-2.test.mjs",
+    "tests/eote-player-m2-3.test.mjs",
+    "tests/eote-player-m2-4.test.mjs",
+    "tests/eote-player-primitives.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+    "tests/eote-scenario-fatalMirage.test.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+    "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+    "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+    "tests/eote-scenario-shared.test.mjs",
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-story.test.mjs",
+    "tests/eote-all-cards.test.mjs",
+    "tests/eote-p8-registration.test.mjs",
+    "tests/eote-p8-campaign.test.mjs",
+    "tests/eote-p8-multiplayer.test.mjs",
+    "tests/replay-eote-p8.test.mjs",
+    "tests/eote-migration-ledger.test.mjs"
+  ],
+  "failures": [],
+  "tests": [
+    "JSON 往返 + 重复读：爬升/城市/牌库读点不因读档改变，未使用模块不新增字段",
+    "JSON 往返：城市分配/钥匙/布局读点与校验保持；重复读不补写字段",
+    "JSON 往返：寒霜只存在既有混乱区，无新状态容器",
+    "P0 原始基线：起始提交、既有失败与 golden replay 指纹可复算",
+    "P0 目录注册：P5 调查员包开放，战役/一般玩家卡包仍 catalog-only，全卡不可构筑",
+    "P0 真实 setup：13 地点、9 张（Mia 队员+剧情）压在未探索地点下、营地继承",
+    "P0 真实 setup：营地、已揭示地点带线索、每调查员 1 张渗出梦魇、8 张幻灵均分压底",
+    "P0 范围账本：403 条记录三包守恒、来源锁定、八章身份与混乱袋可复算",
+    "P0 遭遇组分片：8 章专属 + 16 跨章共享，无交集且覆盖 24 组",
+    "P0 配置：范围扫描脚本、校验命令与专项测试已登记",
+    "P0-1 [fast] 抽取地点底下遭遇卡：真实移动+applyMove，共同花费线索并结算底牌",
+    "P0-1 legalMoves 含营地撤退：[action] 真实提交后结算结局 1 并写伙伴记录",
+    "P0-1 legalMoves 含营地撤退：[action] 真实提交（共同花 4 线索）结算结局 2",
+    "P0-1 剧本行动进入 legalMoves：campResign 真实提交后结算结局 1 并写记录",
+    "P0-2 幕 3 背面：无幻灵敌人 → 真实 advanceAct 结算结局 1",
+    "P0-2 议程 4–6 背面经真实 advanceAgenda 结算：查看底牌 ×2，疯狂与死亡收束到结局 1",
+    "P0-2 议程 7 强制：底下有卡时阻止推进、移除 2 毁灭并真实生成 1 张底牌",
+    "P0-2 议程 7 背面（队长二选一 → frost）/ 议程 8 背面（剩余调查员被击败 → noResolution）",
+    "P0-2 议程 I–III 背面经真实 advanceAgenda 结算：生成疾行谬物/星之恐怖并收束到结局 1",
+    "P0-3 [tablet] 失败后果：真实 performTest 弃牌库顶",
+    "P0-3 afterTest 失败后果：真实 performTest 下 [cultist] 洗入 / [tablet] 弃牌库顶",
+    "P0-3 混乱标记纯数据口径：困难/专家 [skull] 全额、[tablet] -4、失败后果",
+    "P0-3 混乱标记：引擎 resolveSpecialToken 结算 [skull]/[cultist]/[tablet]",
+    "P0-3 混乱标记：引擎 resolveSpecialToken 结算 [skull]/[cultist]/[tablet] 数值",
+    "P0-4 地点数据：13 地点带印刷 shroud/shelter/线索；营地候选覆盖全部地点",
+    "P0-4 未探索地点入场费：线索不足不可进入；揭示前共同花费并揭示",
+    "P0-4 真实 setup：4 地点入场、帷幕为有限数值、调查难度不再是 NaN",
+    "P0-4 遭遇牌库：22 张 gather（排除幻灵/渗出梦魇/忒咳哩-哩弱点组）+ 远古恶魔 ×3，8 张幻灵压在渗出梦魇下",
+    "P0-5 真实引擎：致命幻景议程推进不再抛错，背面击败全员并按 noResolution 结算记录",
+    "P0-7 08672 无印刷毁灭阈值：doom=0/99 都不会让下一神话阶段推进并清场",
+    "P0-7 08716 成功躲避：引擎能力路径结算（不再 ReferenceError），花费秘密并可移动",
+    "P0-7 开场战役日志：无计划 → R2 门槛；肯斯勒存活且已明真相 → R1 门槛",
+    "P0-8 08607：cluesOnlyByInvestigation 位于 locationRule 顶层（引擎 locations.js 读点）",
+    "P0-8 Expedition 支援：按「Supplies Recovered」入场、其余放一边，且能力可被枚举",
+    "P0-8 真实移动语义：beforeMove→locationEntered 使「从下方进入」强制生效（无需 climb 原语标记）",
+    "P0-8 遭遇定义：专属诡计补齐 entryRevelation/surge 与 campaignRule 结算接线",
+    "P0-8 遭遇牌库：按 gather 组展开（本章 14 + 4 共享组 23 = 37 张），星之恐怖/忒咳哩-哩不入普通牌库",
+    "P1 指南与规则来源：8 章指南分段、战役剧情/记录键/伙伴/物资中文覆盖可复算",
+    "P1 机制扫描：403 条记录全部归类、六类机制与 8 项重点机制可复算，行为仍待实现",
+    "P2-B campaign.memorials：划去伙伴后按映射领取纪念遗物一次",
+    "P2-B campaign.memorials：存档校验、往返与非法初始化",
+    "P2-B campaign.partner：初始化名册、持久伤害/恐惧与存活读点",
+    "P2-B campaign.partner：存档校验与 structuredClone/JSON 往返",
+    "P2-B campaign.partner：检查点 I 按庇护值随机抽选失踪，注入 random 后确定",
+    "P2-B campaign.partner：状态机只允许合法转移，非法转移无部分写入",
+    "P2-B campaign.partner：非法初始化抛错且不创建容器/不留部分写入",
+    "P2-B campaign.seals：五枚封印的休眠/取回/激活/放置/取下生命周期",
+    "P2-B campaign.seals：存档校验与 structuredClone/JSON 往返",
+    "P2-B campaign.seals：非法初始化/放置/取回抛错或返回 false 且无部分写入",
+    "P2-B campaign.supplies：存档校验与 structuredClone/JSON 往返",
+    "P2-B campaign.supplies：控制/携带/掉落/回收记录与 SuppliesRecovered",
+    "P2-B campaign.supplies：非法操作抛错或返回 false 且无部分写入",
+    "P2-B 战役级容器：读点不创建，initialize 才建 eote，四模块共存可校验",
+    "P2-D 地点庇护值：印刷数据 0..SHELTER_MAX、缺省 0、非法值立即失败",
+    "P2-D 存档校验：structuredClone 往返后各模块 validateEoteXxx 认可，坏数据立即失败",
+    "P2-D 懒初始化：所有读点都不创建 eote/mechanics 容器",
+    "P2-D 数值钥匙存档校验：JSON 往返后通过，坏 identity/字段/持有者/彩色条目混淆立即失败",
+    "P2-D 数值钥匙建局：重复 id、与彩色同名、坏 identity/持有者/字段立即失败",
+    "P2-D 数值钥匙花费：多重集原子配对、不足/部分不产生写入",
+    "P2-D 数值钥匙：identity 白名单、id 唯一、与彩色钥匙互不串门",
+    "P2-D 检查点继承：已揭示地点记录幂等、数组先整体校验再写入",
+    "P2-D 营地：本关唯一营地、同值幂等、未知地点/换营地失败不产生写入",
+    "P2-D 设施建局：数据驱动、重复 id/编号、未知地点、坏字段一律拒绝",
+    "P2-D 设施激活/摧毁状态机：激活者、重复操作与已摧毁设施被拒绝",
+    "P2-D 高塔伤害：夹取到线索值生命、坍塌幂等、超额伤害不溢出",
+    "P2-D 高塔封印：封印 id 不透明、单塔单封印、跨塔唯一、可回收",
+    "P3 中英规则条目、拼音索引和相关跳转完整，正文不含实现状态或源码路径",
+    "P3 关键口径：寒霜 8 枚/追加揭示/自动失败、伙伴不占盟友槽、庇护 0–9、忒咳哩-哩 7 面 16 张、高度 0–5、钥匙花费、多职阶与演武",
+    "P3 关键词全集与扫描一致；全部代表卡都有有效的卡文直达",
+    "P3 关键词原语验收：P2 原语 done、P3 规则层交付、P4 交互排期显式记录",
+    "P4 伙伴选派：选择结果不写战役状态；取消返回 null；名册校验；选项 id 不可伪造",
+    "P4 参数校验：坏座位抛错、坏数量抛错、取消不产生任何写入",
+    "P4 城市钥匙：取得 / 放置 / 移动 / 交换；无城市容器时全部安全返回 false",
+    "P4 寒霜：有限池加入、封印优先支付、取消零写入、空候选不暂停",
+    "P4 封印：取回 → 激活 → 放置 → 取下；空候选直接 false 且无 pending choice",
+    "P4 忒咳哩-哩：不看内容洗入（去向选择）、受信任抽取、结算去向；不对观察者暴露牌序",
+    "P4 探险物资：交给队友 / 掉落 / 回收（两阶段选择）",
+    "P4 机制操作表：保留既有 10 个操作并追加 9 个 eote 事务且保持冻结",
+    "P4 演武：确定性随机选择、缺少 random 报错、翻面读点",
+    "P4 牌库顶：揭示 / 读数 / 折扣打出；隐藏卡号不进入观察投影",
+    "P4 跨座位代打：授权校验真实手牌、选择不泄露标签、取消零写入、清除授权后无候选",
+    "P4 选择凭据：错误座位 / 伪造 optionId / 过期 choiceId 被拒绝；JSON 往返结果一致",
+    "P5 08001 攻击历史：引擎结算记账、回合结束清空",
+    "P5 08001 旧印：+1；本轮被敌人攻击过则改为自动成功",
+    "P5 08001 自动构筑、专属依赖与注册身份",
+    "P5 08001 被攻击后反应：造成伤害或自动躲避；被取消的攻击仍触发；趁乱攻击不触发",
+    "P5 08002 机修工的扳手：fast 强制同地点敌人攻击；动作攻击限被攻击过的敌人 +2 战斗/+1 伤害",
+    "P5 08003 攻击不能被取消（引擎读点）：普通敌人可取消，黑帮暴徒不可",
+    "P5 08003 黑帮暴徒：弱点生成、猎手/仅丹妮拉猎物、攻击不可取消、伤害恐惧视为直接",
+    "P5 08004 强制：牌库顶揭示弱点后抽取它",
+    "P5 08004 旧印：+X（牌库顶费用）；可用手牌交换牌库顶",
+    "P5 08004 牌库顶常驻揭示、每轮一次 -1 费打出",
+    "P5 08004 牌库顶打出后立即重新揭示新的顶牌（P0-10 \\#4）",
+    "P5 08004 自动构筑、专属依赖与注册身份",
+    "P5 08004 非本人回合的旧印换牌落在本人座位（P0-10 \\#4）",
+    "P5 08005 伊波恩之书：[fast] 横置换顶；[fast] 横置把牌库顶投入当前检定",
+    "P5 08006 预示者封锁覆盖检索与搬运，不只抽牌（P0-10 \\#2）",
+    "P5 08006 预示者：揭示置于牌库顶、封锁抽牌、两行动弃置",
+    "P5 08007 回合结束：距离 0 不触发、距离 1 二选一、距离 ≥2 两项都做",
+    "P5 08007 旧印：本轮移动过则获得 1 资源或抽 1 张牌；未移动只有 +1",
+    "P5 08007 轮初记录起始地点并经 JSON 往返",
+    "P5 08007/08008/08009 专属条目注册与旧印 +1",
+    "P5 08008 长鞭：使用敏捷攻击；成功可横置自动躲避或 +1 伤害；已横置不再询问",
+    "P5 08009 被埋葬的秘密：威胁区、可调查地点移动锁、调查成功弃掉",
+    "P5 08009 调查失败：可选 2 恐惧洗回牌库；JSON 往返保留威胁区",
+    "P5 08010 Broken 面轮末反应：四组条件分别翻回或保持 Broken",
+    "P5 08010 存档往返：演武面与演武战役状态随 JSON 保存/读取",
+    "P5 08010 开局：演武以 Unbroken 面永久进场，命运重担作为专属弱点在牌组里",
+    "P5 08010 旧印：+2，且此次检定结束后翻回一张 Broken 演武",
+    "P5 08010 条目注册、双面演武卡面数据与旧印字段",
+    "P5 08010 构筑：默认起始演武、命运重担数量与 15 XP 门控",
+    "P5 08010 演武 08011a：伤害/恐惧二选一，治疗 3 点后翻至 Broken",
+    "P5 08010 演武 08012a：手牌少于 5 张时补到手牌 5 张并翻至 Broken",
+    "P5 08010 演武 08013a：+5/翻面只按本人检定结算，别人的检定不消耗（P0-10 \\#1）",
+    "P5 08010 演武 08013a：下一次技能检定 +5，检定结束后翻至 Broken",
+    "P5 08010 演武 08013a：用完但本回合没做检定 → 轮边界标记作废、不翻面（P0-10 \\#1 加强）",
+    "P5 08010 演武 08014a：fightEvade 额度在轮边界清理，不挤占下一轮普通行动（P0-10 \\#5）",
+    "P5 08010 演武 08014a：至多 3 次免费战斗/躲避行动，然后翻至 Broken",
+    "P5 08010 轮内事件追踪：受伤/手牌 2 张/技能检定/同地点敌人分别写入 roundEvents",
+    "P5 08015 命运重担：翻演武并锁定本轮，不能翻回；另一选项 1 伤害 1 恐惧",
+    "P5 08016 JSON 往返：跨座位授权与受限行动记录可恢复",
+    "P5 08016 受限额外行动：只能用于代打队友 [[道具]]，普通行动不能用它",
+    "P5 08016 揭示授权：同地点队友手牌中的 [[道具]] 支援进入合法行动",
+    "P5 08016 条目注册与旧印：每控制 1 张 [[道具]] 支援 +1",
+    "P5 08016 跨座位代打：资产归牌主控制，双方按分摊共同支付",
+    "P5 08017 精明的交易：道具费用 -1，且可置于同地点任意调查员控制下",
+    "P5 08018 贪婪：按资源阶梯受到 1–4 点恐惧",
+    "P6 08019 全副武装 第一回合开始：从手中打出任意张[[道具]]支援（每张 -1），本回合少 3 个行动",
+    "P6 08020 正面迎击 敌人先攻击你；本次攻击自动成功并造成 2 点伤害（approximation）",
+    "P6 08021 “到我身后！” 另一位调查员被攻击时改为攻击你并交战，取消 1 点恐惧（approximation）",
+    "P6 08022 成群结队 每控制一张不同职阶的卡牌：攻击 +1[combat] 且 +1 伤害",
+    "P6 08023 扫堂腿 攻击加入[agility]、+1 伤害，成功自动躲避该敌人",
+    "P6 08024 防御姿态 手中/投入时获得等于敏捷的战斗图标、等于战斗的敏捷图标（approximation）",
+    "P6 08025 蝴蝶对剑 攻击 +1[combat]；可横置再次攻击（加入[agility]，+1 伤害）",
+    "P6 08026 闪躲 取消敌人攻击；敏捷(1)成功后对该敌人造成 1 点伤害",
+    "P6 08027 战斗训练 沉稳：+1[combat] +1[agility]，伤害优先分配给本卡，每次检定可花 1 资源 +1",
+    "P6 08028 追猎行动 真实神话阶段：替代本次遭遇抽取；生成遭遇敌人并交战；击败后获得 3 资源",
+    "P6 08029 提尔斯哈之牙 攻击已揭示地点敌人：移动至其地点，加入[agility]，+3 伤害",
+    "P6 08030 蝴蝶对剑 第一次 +2[combat]；可再次攻击；两次都成功横置使第二次 +1 伤害",
+    "P6 08031 强制学习 牌库 +15；补给阶段抽 2 弃 1（approximation：重整末尾再抽 1 弃 1）",
+    "P6 08032 耶利米·科尔比 +1[intellect]；入场后揭示牌库顶 5 张，按费用奇偶抽牌并洗回其余",
+    "P6 08033 通路档案 额外费用在 4 地点放灵脉；调查带灵脉地点后移到本卡，满 4 弃卡得资源（approximation）",
+    "P6 08034 繁星密语 弃牌库顶：弱点洗回，非弱点本回合每次检定获得其图标（approximation）",
+    "P6 08035 登山靴 +1[agility]；最后一个线索被发现后横置移动到有线索/未揭示的连接地点",
+    "P6 08036 加入马队 每控制一张不同职阶的卡牌费用 -1；快速移动到任意已揭示地点",
+    "P6 08037 地区勘测 手中/投入时获得等于敏捷的智力图标、等于智力的敏捷图标（approximation）",
+    "P6 08038 医学教科书 行动：智力(2)成功治愈 1（超 2 点则 2）；失败必须横置或造成 1 伤害",
+    "P6 08039 发掘古物 选择至多 2 张[seeker]支援；难度=费用和；成功依次入场，遗物支援各抽 1 张",
+    "P6 08040 科学理论 沉稳：+1[intellect] +1[combat]，伤害优先分配给本卡，每次检定可花 1 资源 +1",
+    "P6 08041 通路档案 入场 4 灵脉；免费把 1 灵脉移到非精英敌人（approximation）",
+    "P6 08042 通路档案 入场 4 灵脉；免费把 1 灵脉移到已揭示地点（approximation）",
+    "P6 08043 通路档案 入场 4 灵脉；免费移灵脉到非精英敌人，行动不触发趁乱攻击（approximation）",
+    "P6 08044 通路档案 入场 4 灵脉；行动令调查员抽 1 并治愈 1 点伤害（approximation）",
+    "P6 08045 亵渎预言 入场指定坐标点；不在坐标点时 +1[智力] +1[敏捷] 且忽略趁乱攻击；可移动任意调查员至坐标点",
+    "P6 08046 地下支持 建造时牌库 -5（近似：同名限制待构筑层接线）",
+    "P6 08047 提前侦察 最多移动 3 次，移动期间不与敌交战（approximation：移动后立即解除交战）",
+    "P6 08048 21点 依次揭示直到停下，按总和（忽视 +/-）获得资源",
+    "P6 08049 反间谍活动：取消诡计显现并由「遭遇牌库→你的牌库」升级改抽自己牌库",
+    "P6 08050 欺骗制度：每控制一种不同职阶获得 1 资源；无卡牌时不获得",
+    "P6 08051 不当交易：揭示手牌道具，另一位调查员打出后你抽 1 并获得其印刷费用资源",
+    "P6 08052 行业专家：获得等于最低（未检定）技能值的万能图标",
+    "P6 08053 红色闹钟（2经验）：回合开始放充能/拿资源，1/2/3 充能分支；真实窗口移动按当前连接",
+    "P6 08054 金钱万能：把进行中的检定改为资源技能检定并抽 1 张",
+    "P6 08055 黑市：从任意调查员牌库顶揭示共 5 张放在一边（近似：置入弃牌堆）",
+    "P6 08056 刚毅果敢：+1 意志/+1 敏捷、沉稳先吃非直接恐惧、花 1 资源 +1 档位",
+    "P6 08057 黑色扇子：资源阈值 15/20 的每回合额外行动与技能修正（10+ 生命/神智待引擎读点）",
+    "P6 08058 红色闹钟（5经验）：先拿取再放充能，1/2/3 充能分支",
+    "P6 08059 掉进兔子洞：真实关间计价（前 2 次升级 -1 经验、新购 +1 经验、每关间重置）",
+    "P6 08060 咏春棍：额外法术槽；每个已填槽 +1 战斗，至少 2 个则 +1 伤害",
+    "P6 08061 冥想放空：每个已填法术槽治愈 1 点伤害或恐惧",
+    "P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一次基础行动",
+    "P6 08063 力量之风：打出时放置 2 充能；回合中抽到时自动打出",
+    "P6 08064 先见：指定卡牌与抽到的卡相同 → 取消/弃掉；遭遇牌可取消显现",
+    "P6 08065 密教理论：投入时获得等于[智慧]的[意志]图标与等于[意志]的[智慧]图标",
+    "P6 08066 平行命运：查看 6 张后放回且可抽取 1 张；洗回分支来自同一读点",
+    "P6 08067 天文地图集：横置看顶 1 张，非弱点则正面朝下附属（最多 5 张）",
+    "P6 08068 治愈真言：花费 1 充能治愈同地点调查员总计 2 点伤害",
+    "P6 08069 情绪稳定：沉稳先吃非直接恐惧；法术检定期间 +1 技能值",
+    "P6 08070 真法魔典：揭示手牌法术支援并结算其能力",
+    "P6 08071 补给匮乏：游戏第一个回合开始时弃掉牌库顶 10 张（每局一次）",
+    "P6 08072 沙夫纳的目录：花费秘密获得资源（近似秘密当资源）；秘密耗尽弃掉",
+    "P6 08073 绷带：同地点调查员/盟友受伤后花 1 补给治愈 1 点",
+    "P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2",
+    "P6 08075 厄运手镯：检定中花 1 充能 +2（每次检定一次）；被攻击后获得充能",
+    "P6 08076 阅后即焚：放逐一张 0-5 级手牌、发现 2 线索；等级≥2 时移除 1 毁灭",
+    "P6 08077 人多力量大：每有一种不同职阶获得 1 个万能图标",
+    "P6 08078 无畏精神：获得等于[战斗]的[意志]图标与等于[意志]的[战斗]图标",
+    "P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌",
+    "P6 08080 灭火器：攻击 +1 伤害，弃掉时自动躲避所有交战敌人",
+    "P6 08081 有胆有识：快速沉稳 +1 意志/+1 智力",
+    "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整",
+    "P6 08083 医学生：真实打出后治愈同地点调查员或盟友支援 1 伤害 1 恐惧",
+    "P6 08084 追踪：沿最短路径移动 2 次，或在无人地点发现线索",
+    "P6 08085 追踪（3 级）：移动 2 次并在每个进入地点发现 1 个线索",
+    "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害",
+    "P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）",
+    "P6 08087 狙击：添加「符号标记视为 0」的延迟效果",
+    "P6 08088 老旧的霰弹枪：事件后使用值 2；成功按超过难度造成 1~3 伤害",
+    "P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动",
+    "P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能",
+    "P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印",
+    "P6 08092 克图格亚的烙印（4 级）：+2 技能值，最多花 3 充能",
+    "P6 08093 巨石锤：加入意志，成功超过难度 3 点时 +2 伤害并击退",
+    "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害",
+    "P6 08095 防护服：危险诡计显现前自伤并取消显现",
+    "P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面",
+    "P6 08097 袖珍望远镜：调查相连的已揭示地点",
+    "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动",
+    "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点",
+    "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索",
+    "P6 08102 保护魂灵：真实 assetLeavesPlay 窗口（盟友离场后返回拥有者手牌或抽 3 张）",
+    "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索",
+    "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）",
+    "P6 08107 破冰锥（3 级）：真实窗口弃掉自身换取成功后 +1 伤害",
+    "P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索",
+    "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置",
+    "P6 08109 身形虚化 成功躲避：花 1 充能并获得 1 个额外行动",
+    "P6 08109 身形虚化 没有充能时能力不可用",
+    "P6 08110 虚影易位 与已揭示地点的非精英敌人交换位置",
+    "P6 08110 虚影易位 已揭示地点没有非精英敌人时不能打出",
+    "P6 08111 身形虚化 成功后可花 2 充能获得 2 个额外行动",
+    "P6 08112 再来一张！ 额外揭示 1 枚标记：负值取正结算；骷髅则自动失败",
+    "P6 08113 大肆借贷 打出后获得 10 资源；轮末资源 <10 时流放自身",
+    "P6 08114 珍贵记忆（来自前世）：失败且低于难度 2+ 后横置治愈自身 1 伤害",
+    "P6 08114 珍贵记忆（来自前世）：成功且超过难度 2+ 后横置治愈自身 1 恐惧",
+    "P6 08115 珍贵记忆（来自后世）：失败治愈恐惧、成功治愈伤害（与前世互换）",
+    "P6 08116 护身法宝 伤害不足以击败你时不提供反应",
+    "P6 08116 护身法宝 将被击败时弃掉并取消最多 2 点伤害",
+    "P6 08117 尘世宁静 成功且等于难度时失去 1 资源",
+    "P6 08117 尘世宁静 每超过难度 1 点可花 1 充能治愈 1 伤害",
+    "P6 08118 附魔弓 意志替代战斗：+1 技能值、+1 伤害并横置",
+    "P6 08118 附魔弓 花 1 充能攻击连接地点的非精英敌人",
+    "P6 08119 尘世宁静 意志(0) 成功且等于难度时失去 2 资源",
+    "P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费",
+    "P6 08121 一探究竟 轮初补满 + Tome 检定 +1",
+    "P6 08122 好勇斗狠 轮初补满 + Melee 检定 +1",
+    "P6 08123 技艺精湛 轮初补满 + Tool 检定 +1",
+    "P6 08124 古物藏家 轮初补满 + Favor 检定 +1",
+    "P6 08125 危险处境 setup：一次性 2 点创伤 + 3 经验",
+    "P6 08126 厚重皮衣 揭示符号标记后：自身受 1 伤害，取消并重抽",
+    "P6 08126 厚重皮衣 自动失败与数字标记不提供反应",
+    "P6 08127 雪橇犬 2 张共占 1 个盟友槽",
+    "P6 08127 雪橇犬 横置 X 张：攻击 +X 战斗并造成 X 点伤害",
+    "P6 08127 雪橇犬 横置 X 张：移动 X 次",
+    "P6 08128 驯兽之杖 2 个生物专用盟友槽 + 自己回合打出生物费用 -1",
+    "P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治疗",
+    "P6 08130 臂伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能攻击/启动",
+    "P6 08131 腿伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能移动/撤退/躲避",
+    "P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）",
+    "P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行动后不能谈判/抽取/调查",
+    "P6 M2-4 分片：已实现卡片全部注册且 code 与文件名一致",
+    "P6 原语 actionTaken：行动完成后开窗，context.actionKinds 带行动类型",
+    "P6 原语 addNextTestBonus：写 inv.testBonus，下一次技能检定消费并清零",
+    "P6 原语 attackDamageBonus 读点：testInitiated 窗口写入本次攻击伤害（08086）",
+    "P6 原语 composureDamage：非直接伤害必须先分配给声明 flags.composureDamage 的支援",
+    "P6 原语 exileHandCard：校验手牌与等级后走唯一放逐账本",
+    "P6 原语 giveHandCard/playCardForSeat：跨座位移手牌并按自己手牌代打",
+    "P6 原语 lookAt 排列 >4：6 张按逐张选择放回，顺序保留且不丢牌",
+    "P6 原语 lookAtLocation：只读返回相连未揭示地点的揭示面，不改变状态",
+    "P6 原语 onTestSuccess 注册读点：检定中登记后由成功结算消费",
+    "P6 原语 revealAdditionalTestToken：登记额外揭示并把负修正取反（08112）",
+    "P6 原语 takeBasicActionWithSubstitution：执行基础行动期间技能替代，行动后恢复",
+    "P6 原语 threatDamageSink：威胁区弱点承接伤害治疗，归零时弃卡",
+    "P6 原语咒印：符号标记记在支援上；tokenReveal 窗口可改为揭示咒印",
+    "P7 cityOfTheElderThings JSON 存档往返：网格/钥匙/幕记录可序列化复原",
+    "P7 cityOfTheElderThings setup：16 城市景观按版本上网格、相邻连接、隐秘隧道孤立",
+    "P7 cityOfTheElderThings 专属诡计已接线：entryRevelation + campaignRule 才有真实遭遇结算",
+    "P7 cityOfTheElderThings 代表遭遇卡：真相开端/崩塌废墟/冻伤/附身",
+    "P7 cityOfTheElderThings 幕 1 与背面：花费钥匙研究 → 目标达成 → 揭示隐秘隧道",
+    "P7 cityOfTheElderThings 幕 2 目标：所有未被击败调查员在隐秘隧道且隧道无线索",
+    "P7 cityOfTheElderThings 混乱标记：skull=-钥匙数、tablet+frost 自动失败",
+    "P7 cityOfTheElderThings 版本选择：记录/投票决定 v2/v3 并同步幕牌库与遭遇牌库",
+    "P7 cityOfTheElderThings 真实引擎：legalMoves 含 claim/give 且 applyMove 成功（P0-6 钥匙入口）",
+    "P7 cityOfTheElderThings 真实引擎：setup→legalMoves→石桥剧本行动无 TypeError（P0-12）",
+    "P7 cityOfTheElderThings 真实引擎：共享组并入遭遇牌库 + 专属诡计真实结算（P0-8）",
+    "P7 cityOfTheElderThings 真实引擎：幕 1 目标可达 → 真实推进并揭示隐秘隧道（P0-6）",
+    "P7 cityOfTheElderThings 真实引擎：议程 2 背面推进到结局 2 并写记录（P0-6 R2）",
+    "P7 cityOfTheElderThings 章节清单：development、17 地点/两幕两密谋/正文可读",
+    "P7 cityOfTheElderThings 议程自由行动：花线索查看/移动（每轮一次）",
+    "P7 cityOfTheElderThings 遭遇牌库按版本 gather：共享组并入、移除/放一边有读点",
+    "P7 cityOfTheElderThings 钥匙：16 把（skull×2…）×2、取得与交出",
+    "P7 fatalMirage Mirage 关键词：入场线索按已入场目标扣减，花线索翻面揭示下一层记忆",
+    "P7 fatalMirage 代表条目与混乱标记（catalog 契约）",
+    "P7 fatalMirage 伙伴与坚毅：地点剧情生成记忆敌人，击败后直面恶魔并切坚毅形态",
+    "P7 fatalMirage 伙伴能力在真实引擎内结算（曲奇：基础值 6 攻击）",
+    "P7 fatalMirage 混乱标记在真实 performTest 中生效（P0-13）",
+    "P7 fatalMirage 版本：首次/第二次/第三次重入选择不同密谋与幕（阈值 15/13/11、阶段 1a/2a/3a）",
+    "P7 fatalMirage 章节结构与 story-access 正文",
+    "P7 fatalMirage 结局记录与 JSON 存档往返",
+    "P7 fatalMirage 记忆放逐：伙伴被划掉时翻面放逐并把现场移回记忆囚笼",
+    "P7 flow：nextStep 与参考实现一致，致命幻景按已完成章节返回主线",
+    "P7 flow：主线全流程节点顺序（含检查点/幕间/尾声）与记录写入",
+    "P7 flow：伙伴状态/物资/封印/纪念逝者跨章延续，JSON 存档往返一致",
+    "P7 flow：尾声按存活伙伴讲述组合后续，不泄露未达分支",
+    "P7 flow：幕间查看伙伴的存活/划去正文并发放奖励 XP（逃进群山时查看 4 人）",
+    "P7 flow：幕间节点不满足条件时门分支不可用（主条件节点校验）",
+    "P7 flow：序幕 campaignStart 初始化 9 伙伴/7 物资/5 封印与状态镜像",
+    "P7 flow：序幕/检查点/幕间/尾声节点文本来自 story-access（生成物）",
+    "P7 flow：检查点 I 按营地庇护值随机分配失踪伙伴；搜救= MIA、放弃=划去",
+    "P7 flow：检查点 I 放弃 + 检查点 II 逃跑 → 跳过亡命冰原 II/III 并记录逃进群山",
+    "P7 flow：检查点不开放升级、幕间开放升级（与引擎读点一致）",
+    "P7 flow：流程图通过注册期校验，节点清单与 8 章/16 步骤一致",
+    "P7 flow：致命幻景在幕间 I 切入，完成后按 campaignCompletedSteps 返回失落之峰",
+    "P7 flow：致命幻景在幕间 II/III 再次进入，回场按已完成章节推进",
+    "P7 flow：记录 schema 覆盖 Key.hs 56 项与流程层 8 项，默认值/类型正确",
+    "P7 flow：记录标签来自 story-text.campaign.records，伙伴/物资/营地庇护值一致",
+    "P7 flow：记录默认值与 recordSchema 可直接由引擎初始化（boolean false / number 0 / string[] []）",
+    "P7 guides 中文不冒充：zh 段落含中文，缺译只留空正文 + missing 标记并列入 chineseGaps",
+    "P7 guides 幂等：buildScenarioGuides 两次一致、磁盘文件逐字节等于生成结果、工具 verify 退出 0",
+    "P7 guides 文件：8 章 json 存在、结构字段齐全（id/campaignId/locales 五段）",
+    "P7 iceAndDeathPart1 剧情正文：story-access 的 setup/resolution 可读且已接入 definition",
+    "P7 iceAndDeathPart1 单卡条目：theCrash 5 张均已注册并声明引擎读点数据",
+    "P7 iceAndDeathPart1 地点：庇护值/符号/线索/连接与印刷 shroud",
+    "P7 iceAndDeathPart1 章节清单：development、08501、13 地点、3 议程 + 1 幕、遭遇组",
+    "P7 iceAndDeathPart1 身份登记：13 地点 + 幕/议程均有印刷原卡",
+    "P7 iceAndDeathPart1 遭遇牌库构成：ENCOUNTER_DECK 与 definition 一致且不含剧情/议程卡",
+    "P7 iceAndDeathPart2 剧情正文：story-access 的 setup/resolution 可读且已接入 definition",
+    "P7 iceAndDeathPart2 地点：与第 I 部分同一张冰原地图（庇护值/线索/帷幕/连接）",
+    "P7 iceAndDeathPart2 混沌标记纯数据口径：数值表与第 I 部分一致",
+    "P7 iceAndDeathPart2 章节清单：development、08501、13 地点、3 议程 + 1 幕、lostInTheNight",
+    "P7 iceAndDeathPart2 身份登记：9 名被附身队员 + 8 张剧情卡均有印刷原卡",
+    "P7 iceAndDeathPart2 逐卡覆盖：lostInTheNight 组 21 张全部注册且声明引擎读点",
+    "P7 iceAndDeathPart3 代表条目 flags 已注册（数据声明保留）",
+    "P7 iceAndDeathPart3 混乱标记纯数据口径：[skull] 简易/困难、失败差值",
+    "P7 iceAndDeathPart3 渗出梦魇被击败：条目 enemyRule.removeBeneathOnDefeat 读点生效",
+    "P7 iceAndDeathPart3 章节结构与 story-access 正文（结局键 resolution1/2）",
+    "P7 iceAndDeathPart3 结局记录与 JSON 存档往返（真实撤退结算路径）",
+    "P7 shared agentsOfTheUnknown：原初恶魔受伤后洗入忒咳哩-哩；潜藏的疯狂失败按差值结算",
+    "P7 shared creaturesInTheIce：实体疯狂攻击后洗入 2 张；冰川幻影向人最多处移动；同源迷雾附属最近的合规地点",
+    "P7 shared deadlyWeather：南极寒风/雪盲危机/极地旋涡按显现条款附属并落数据",
+    "P7 shared elderThings：古老者守卫受伤弃牌；古老者崛起从遭遇弃牌堆生成并交战",
+    "P7 shared expeditionTeam：9 位伙伴数据与 P2 partner 原语、纪念逝者配对、坚毅面一致；治愈能力真实结算",
+    "P7 shared hazardsOfAntarctica：冰缝按揭示的 [frost] 与失败差值结算伤害；穿越冰雪附属最近地点",
+    "P7 shared iceAndDeath：坠机点搜寻记录「备用零件」；无限恐惧症难度取地点庇护值",
+    "P7 shared leftBehind：迷失的研究员入场带毁灭、谈判成功后毁灭翻线索",
+    "P7 shared memorialsOfTheLost：9 件遗物与伙伴划去配对；曲奇手枪攻击造成 2 点伤害",
+    "P7 shared miasma：瘴气折磨附属到伙伴支援；朦胧瘴气附属到当前地点",
+    "P7 shared namelessHorrors：噩梦烟气二选一（失去 2 行动）；渎神幻象进入威胁区并洗入 1 张忒咳哩-哩",
+    "P7 shared penguins：呜啊！呜啊！呜啊！把最远的巨型白化企鹅移动到调查员地点",
+    "P7 shared shoggoths：狂暴的修格斯按调查员数加生命，敌军阶段结束对本地调查员与敌人各造成 2 伤害",
+    "P7 shared silenceAndMystery：黑暗极光按揭示的 [frost] 结算恐惧；极地幻景附属有线索的地点",
+    "P7 shared tekelili：16 张物理牌库与弱点结算后回底（副本守恒）",
+    "P7 shared 地点庇护值：数据表与卡面「庇护 N」文本一致，P2 readShelter 读同一口径",
+    "P7 shared 战役级原语：伙伴名册 / 纪念逝者 / tekeli 16 / supplies 7 / seals A–E / 数值钥匙 / 寒霜 8",
+    "P7 shared 数据表：16 组 / 80 卡与卡表归属、章节 gather 组合一致",
+    "P7 shared 章节 gather 展开：单章组卡号来自卡表，共享组 80 张全部可归入章节池",
+    "P7 story P0 scope 对齐：guideSources 锁 / guideKeyCounts.en / part 映射（只读）",
+    "P7 story meta：来源诚实字段 + 12 个来源锁（en/zh 各 6 文件）",
+    "P7 story part 拆分边界：亡命冰原 I–III / 疯狂之心 I–II 共享键不串 part",
+    "P7 story story-access API：章节/战役/扁平化/段落读取",
+    "P7 story 中文覆盖三态：missing/untranslated/present-needs-review 显式标记且与统计一致",
+    "P7 story 战役正文：序幕/检查点/幕间/尾声/特别规则/记录与 P1 扫描逐组一致",
+    "P7 story 正文质量：生成物无 HTML 标签 / 无模板占位 / 无实体残留",
+    "P7 story 生成物确定性：--check 通过、assemble 两次逐字节一致、磁盘文件与之相等",
+    "P7 story 章节覆盖：8 章 sections=guideKeyCount=P0 scope(part 切片)，en 叶子逐路径全覆盖",
+    "P7 theHeartOfMadnessPart1 setup：十六个地点、随机槽位、封印放在一边",
+    "P7 theHeartOfMadnessPart1 story：正文结构可读且不写死",
+    "P7 theHeartOfMadnessPart1 取得封印：条目 actions + behavior 机械 + 团队线索",
+    "P7 theHeartOfMadnessPart1 地点揭示：Great Seal 地点放上对应休眠封印",
+    "P7 theHeartOfMadnessPart1 幕推进：激活封印放上伊夸之门 → 幕 1 推进",
+    "P7 theHeartOfMadnessPart1 混乱标记：骷髅动态值 / 石板抽牌 / 旧日支配者放毁灭",
+    "P7 theHeartOfMadnessPart1 结局：记录放上门/取回的封印与经验，JSON 往返保持",
+    "P7 theHeartOfMadnessPart2 setup：随机布置 10 设施 + 5 高塔，门翻面，内环不全是高塔",
+    "P7 theHeartOfMadnessPart2 坡道场景：幕 3 背面清场并铺设泰坦坡道 + 隐藏隧道",
+    "P7 theHeartOfMadnessPart2 幕 3 目标：全部高塔坍塌 → 推进到第 4 幕",
+    "P7 theHeartOfMadnessPart2 混乱标记与 story：共用 08648 参考卡、结构可读",
+    "P7 theHeartOfMadnessPart2 结局：全高塔坍塌 + 肯斯勒计划 → R1（+10 经验）与记录",
+    "P7 theHeartOfMadnessPart2 议程背面：封印渐弱 → 在最近迷雾高塔生成无名的疯狂",
+    "P7 theHeartOfMadnessPart2 高塔：幕 3 期间可被当作敌人攻击并坍塌",
+    "P7 toTheForbiddenPeaks JSON 存档往返：布置/攀登/线索状态可序列化复原",
+    "P7 toTheForbiddenPeaks setup：斜线地点 Level 0–5、连接、线索/胜利点与放一边",
+    "P7 toTheForbiddenPeaks 代表遭遇卡：降雪/雪崩/悬于边缘/低温症",
+    "P7 toTheForbiddenPeaks 山腰背面：下方地点有线索时不能进入（moveError）",
+    "P7 toTheForbiddenPeaks 山顶撤退行动：探险支援加入胜利区、线索归零",
+    "P7 toTheForbiddenPeaks 幕 1：目标为所有未被击败的调查员撤退；背面进入结局 1",
+    "P7 toTheForbiddenPeaks 攀登：Level ±1 校验、enterFromBelow 标记、从下方进入的地点强制效果",
+    "P7 toTheForbiddenPeaks 混乱标记：skull=-Level、困难 -Level-2、符号后果与轮末强制",
+    "P7 toTheForbiddenPeaks 章节清单：development、地点/幕/议程/结局与正文可读",
+    "P7 toTheForbiddenPeaks 议程 1：移动后归还线索（locationEntered 真实读点）；背面放置星之恐怖到最高地点",
+    "P7 toTheForbiddenPeaks 身份登记：地点/幕/议程/敌人/诡计都有原卡身份",
+    "P8 eote all-cards 403 全覆盖与分片 266/22/115",
+    "P8 eote all-cards 两次构建一致且与账本一致",
+    "P8 eote all-cards 参考卡与证据可追溯口径",
+    "P8 eote all-cards 如实登记 missing/blocked，summary 与 gate 自洽",
+    "P8 eote campaign replay：同 seed 两次同脚本的章节边界状态指纹一致",
+    "P8 eote campaign 伙伴记录：9 名伙伴都有状态记录（全存/全灭分支可解析）",
+    "P8 eote campaign 四档难度：开局混乱袋 = 基础袋 + 本章 setup 追加的 1 个 cultist",
+    "P8 eote campaign 失败/撤退结局：noResolution 结算被记录且战役可继续",
+    "P8 eote campaign 存档恢复：检查点/幕间后 JSON → migrateState 往返可继续",
+    "P8 eote campaign 完整主线：全部章节单元结算并抵达战役结束（含致命幻景 3 次进入）",
+    "P8 eote campaign 检查点 II「逃进群山」跳过亡命冰原 III 并记录逃跑",
+    "P8 eote campaign 检查点 I「放弃」跳过亡命冰原 II/III",
+    "P8 eote campaign 致命幻景：幕间进入后回场、忽略幕间门则该次不进入",
+    "P8 eote migration ledger · 403/266/22/115 与主卡/关联面事实从 cards-data 复算",
+    "P8 eote migration ledger · confirmations 三组全 verified 且符合迁移确认口径",
+    "P8 eote migration ledger · releaseAcceptance 无未披露 remaining（每项有证据路径）",
+    "P8 eote migration ledger · 两份账本存在且结构完整",
+    "P8 eote migration ledger · 发布浏览器账本缺失时显式记 missing 而不伪造",
+    "P8 eote migration ledger · 总账本 status 只由全 gates 与三组确认推导",
+    "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+    "P8 eote multiplayer 2 真人 + AI 席位：准备/开局/第一章",
+    "P8 eote multiplayer 撤退：一名真人撤退后其余玩家可继续",
+    "P8 eote multiplayer 断线恢复：序列化/migrateState 后可继续",
+    "P8 eote multiplayer 权限：越权 move 被拒且状态不变",
+    "P8 eote multiplayer 隐私：viewState 手牌互相不可见",
+    "P8 eote registration 八个指南 JSON 存在且正文可读（setup/结局），story-access 可读",
+    "P8 eote registration 八章 manifest：playable、referenceCode、遭遇组/卡包/机制/记录闭包",
+    "P8 eote registration 大厅与战役流程：八章枚举、解锁链、flow 图、recordSchema/defaults/labels",
+    "P8 eote registration 混乱袋：四档难度与 shared.js\\#CHAOS_BAGS 同一对象、组成正确",
+    "P8 eote registration 生产注册：战役与八章静态可见、assertLaunchable、bundle 镜像",
+    "P8 eote registration 真实 layout：地点坐标齐全、无重叠、edges 只镜像声明连接（assertUiLayout）",
+    "P8 eote replay 固定 seed 逐步骤指纹与基线一致",
+    "P8 eote replay 基线记录行为元数据（label/uiState/scenarioId）",
+    "ascend/descend：非法游戏状态返回 false 且不写标记（无部分写入）",
+    "ascend：返回 enterFromBelow 的 transition 并记录瞬时标记；不做实际位移",
+    "cityscapeOf：返回格坐标；未上网格/非城市景观/未知返回 null",
+    "climbDestinationError：连接 + Level 差恰为 ±1 才合法；跨级/不连接/同层/缺 Level 各有错误",
+    "climbState：从未使用返回 null 且不创建容器/字段",
+    "cluesLostOnMove：默认归还全部线索，clueCount 可限制上限；不改写 inv.clues",
+    "combat-odds 预览：寒霜按 -1 计入成功率且只读",
+    "configureCityscapes：返回归一布局，重复同布局幂等，不同布局抛错，非法参数抛错",
+    "crossSeat：validateEoteCrossSeat 拒绝坏存档与非法授权",
+    "crossSeat：代打行动走既有打出管线，牌主手牌移出且不残留上下文标记",
+    "crossSeat：同地点队友手牌 Item 可代打，事件/不同地点/无授权被拒绝",
+    "deckTop：每轮一次折扣，打出后门禁关闭，牌库顶回滚可还原",
+    "deckTop：牌库顶是弱点时强制抽取并清掉揭示",
+    "deckTop：非法参数/状态抛错，validateEoteDeckTop 拒绝坏存档",
+    "deckTop：默认私密揭示、牌库不移动、JSON 往返保持",
+    "descend：下行 transition direction=down、enterFromBelow=false；JSON 往返后校验与读点保持",
+    "disciplines：初始化两面状态、翻面与命运重担配对",
+    "disciplines：确定性选择、非法声明/状态抛错",
+    "drawFromScenarioDeck：从顶抽出且不写日志；张数不足返回 false 不抽",
+    "dropExpeditionAssets：返回掉落记录（含地点），不改动 assets；非法状态返回 false",
+    "epilogue：JSON 往返（structuredClone）后仍可校验并求值",
+    "epilogue：伙伴全灭只剩埃利亚沙时只播放他的段落（否定条件生效）",
+    "epilogue：分支表完整（唯一 id / 已声明记录 / 类型匹配）并可扁平展开",
+    "epilogue：四对伙伴同时生还时四段全播放，埃利亚沙不播放，未命中行给原因",
+    "epilogue：坏表失败关闭——重复 id / 未知记录 / 类型不符 / 非记录条件全部拒绝",
+    "epilogue：求值不修改战场状态与分支表（只读）",
+    "epilogue：求值需要战役状态，缺参直接报错",
+    "epilogue：研究/封印/计数行与伙伴行可以同时命中（多条并播，顺序稳定）",
+    "fallDamage：向下按层差换算、向上/同层为 0；非法 Level 抛错",
+    "flows：JSON 往返后流程图仍可校验并继续推进（structuredClone）",
+    "flows：completedCampaignSteps 投影合并 scenarioResults 与完成步骤记录（只读）",
+    "flows：completedSteps 记录驱动回场（campaignCompletedSteps 语义，不只靠 scenarioResults）",
+    "flows：stepReturn 注册期校验（规则形状/顺序 id/兜底出口/未知出口）",
+    "flows：从幕间 I 切入致命幻景后回到「当前主线下一章」（toTheForbiddenPeaks）",
+    "flows：幻景回场按已完成关卡有序链——未到峰顶 / 峰顶后 / 古城后（priority）",
+    "flows：检查点 I 无失踪伙伴时自动跳过第 II 部分（不询问、记录划掉）",
+    "flows：检查点 II 逃入山脉跳过第 III 部分；坚守才进第 III 部分",
+    "flows：检查点/幕间写 options 会被引擎忽略，注册期直接拒绝（失败关闭）",
+    "flows：正常主线（搜救 + 坚守 + 忽略三扇门）一次走完七场主线关卡",
+    "flows：注册期拒绝未知节点类型/未知出口/重复选项/缺选项/缺出口",
+    "flows：注册期校验效果形状与 recordSchema 类型（record / increment）",
+    "flows：注册期校验条件语法（未知字段/记录类型操作符/比较操作数/挂起效果/步骤）",
+    "flows：致命幻景可在三段幕间重复切入三次，回场点逐次正确且 visit 计数递增",
+    "flows：节点类型清单导出且冻结，EotE 流程图注册通过",
+    "initializeCity 可重放：相同注入洗牌得到相同分配；逆序洗牌得到相反分配",
+    "initializeCity：注入洗牌后随机分配 4 个城市景观并放上网格；返回受信任读点",
+    "initializeCity：重复初始化抛错；候选不足/钥匙过多/坏洗牌回调返回 false 且不写状态",
+    "initializeTekeliDeck：7 卡面 × 印刷份数 3+3+2+2+2+2+2 = 16 张，元数据与牌堆一致",
+    "initializeTekeliDeck：无条件洗牌走 randomValue；同一 rngState 可重放，负路径抛错不写状态",
+    "levelNeighbors：按既有 connections 分 above/below/sameLevel；未知/无 Level 返回空分组",
+    "levelsOrdered：按 Level 升序，未声明 Level 的排最后且保持输入顺序；接受数组或状态",
+    "locationLevel：接受地点对象或 (状态, 地点 id)，0 是合法 Level，未声明返回 null",
+    "mirage：JSON 往返（structuredClone）后快照仍可恢复",
+    "mirage：三次幻景切入与版本快照联动（flows + mirageVersions 集成）",
+    "mirage：三次进入按 I→II→III 递增，主线状态不变，读档校验通过",
+    "mirage：坏版本/坏快照/坏容器失败关闭，且不留部分写入",
+    "mirage：版本快照保存/恢复互不污染，重复保存覆盖且返回副本",
+    "mirage：读函数不创建容器，未进入过时全部是空值",
+    "mirage：读档校验拒绝未知字段/坏 visits/坏 snapshots/版本不符",
+    "mirage：重复记录当前版本幂等；顺序错误抛错且不写状态",
+    "moveAcrossGrid：默认只允许同行/同列，requireRevealed 收紧目标；非法游戏状态返回 false",
+    "physical.faces：支援双面翻面保留实例 id/横置/使用次数，敌人换面行为不变",
+    "returnToScenarioDeckBottom：放回底部（codes[0] 为最底）；非法 code 抛错",
+    "revealedGrid/lookRow/lookColumn：公开投影只含已揭示地点，不泄露隐藏身份",
+    "roundDistance：本轮起始地点到当前地点的连接距离与奖励",
+    "roundDistance：非法参数/状态抛错",
+    "scenarioDeckSize：张数只读；未初始化抛 RangeError；与既有 createScenarioDeckApi 兼容",
+    "setLocationLevel：写入非负整数，非法参数抛错且不写",
+    "shuffleTopIntoInvestigatorDeck：不看内容洗入、返回受信任 code、注入洗牌可重放",
+    "shuffleTopIntoInvestigatorDeck：坏洗牌回调增删卡牌被拒绝且不写状态",
+    "shuffleTopIntoInvestigatorDeck：非法座位/坏洗牌回调抛错；张数不足返回 false 且不写",
+    "tekeliDraw：从顶抽 1 张交给调用方；空牌库返回 false",
+    "tekeliReturn：默认回牌库底；deck/anyDeck/discard 按座位去；非法去向/缺座位抛错",
+    "tekeliShuffleIn：不看内容洗入、返回受信任 code；张数不足 false；未初始化 false",
+    "teleportGrid：目标必须已入场且在网格上；from/mode 关系校验；非法参数抛错",
+    "validateEoteCity：坏版本/未知字段/重复坐标/钥匙挂错地点/存储缺失抛错",
+    "validateEoteClimb：坏版本/未知字段/方向或 Level 不自洽抛错；空值合法",
+    "validateEoteDecks：形状校验通过；坏记录抛错；JSON 往返保持",
+    "validateEoteLevels：合法通过；非法 Level 抛错；未声明不算错误；TDE verticalIndex API 不受影响",
+    "validateEoteTekeli：坏版本/份数不一致/牌堆缺失/未知卡面抛错；JSON 往返保持",
+    "visibleOnRow/Column：公开模式只给已揭示；传 seat 才是私密窥视（含揭示面身份）",
+    "加入/支付：非法数量与未知标记名拒绝，不足支付保持原状",
+    "寒霜物理池：袋内＋已揭示＋封印区共用 8 枚上限，满池拒绝写入",
+    "揭示规则读点：frost 追加揭示，同检定第 2 枚自动失败",
+    "既有网格 API 保持兼容：gridPosition/gridLocations/connectGrid 行为不变（新导出只叠加）",
+    "有限池上限：寒霜 8 枚，祝福/诅咒各 10 枚且保持不变",
+    "真实检定：frost -1 并追加揭示；同检定第 2 枚 frost 立即自动失败",
+    "真实检定：把 skull 视为 frost 后按寒霜结算并追加揭示",
+    "视为 frost：setTokenTreatment 白名单放行，未知目标仍抛错",
+    "通道表：既有 7 个如同手牌通道顺序不变，deckTop/otherHand 追加在末尾",
+    "通道表：没有 EotE 状态时 legalMoves 不出现新通道（既有 8 通道行为零变化）",
+    "钥匙簿记：keyOnLocation/placeKey/takeKey/moveKey/swapKeys 独立于其它模块"
+  ],
+  "sourceFiles": [
+    {
+      "path": "audit/eote-scope.json",
+      "sha256": "d96ed9956d7d21cea978377d136ceba5bbe998a48a630994a3d14a765a7a4c5f"
+    },
+    {
+      "path": "audit/eote-baseline.json",
+      "sha256": "e7eb3a2b4ed251de83a50b9393665a4404b2f86b3d55f6e02160030358ed73e6"
+    },
+    {
+      "path": "audit/eote-mechanism-scan.json",
+      "sha256": "411ae966392fcd1590846e2e2cb7f348f64bd6a3dd319f3d5d77c0011993ed87"
+    },
+    {
+      "path": "audit/eote-primitive-plan.json",
+      "sha256": "7183ecce2e34db79f1a9d20f4da2020fb2c8fbc3393d799a97800c84fbb379ae"
+    },
+    {
+      "path": "audit/eote-primitive-catalog.json",
+      "sha256": "6adc2fd3371a181987c2c07824b3ebfa9b23fabe7f02116d84743b6182a3f97c"
+    },
+    {
+      "path": "tools/eote-migration-lib.mjs",
+      "sha256": "bc7fc78ffbaedc70e221e03f6e13624e12207f9ce7c12aea0ddc99e131df25ce"
+    },
+    {
+      "path": "tools/scan-eote-scope.mjs",
+      "sha256": "8b7de0acd3ed10034025e19ad0280d6bf7b75143fc73beb0f0eb6d191f9c5abb"
+    },
+    {
+      "path": "tools/scan-eote-baseline.mjs",
+      "sha256": "a4b5f74798782bcf8b6869ed29d105ed1e42d18b7434885a9c8127e935cd1454"
+    },
+    {
+      "path": "tools/scan-eote-mechanisms.mjs",
+      "sha256": "021c063c36d283143d13050989ee2183e03d2994e414c635f65124675808b27a"
+    },
+    {
+      "path": "tools/eote-mechanisms.mjs",
+      "sha256": "9270fd0939f4abb9868dcf7326c745fc21f08fc344b2cd1dbcedff5a1d6af8e6"
+    },
+    {
+      "path": "tools/eote-mechanism-primitives.mjs",
+      "sha256": "eb2d51139ac8e3dbc9e086695050e54b197a373f2abddf00e653463d7f84d9a0"
+    },
+    {
+      "path": "tools/eote-guide-scan.mjs",
+      "sha256": "60c53f04c65cf91fb71cf7ecd45399a6ec8bc4c906647349898ab9d41b77baf9"
+    },
+    {
+      "path": "tools/audit-eote-primitives.mjs",
+      "sha256": "c0657973ad401abdb02417cbf9a5d72193eb087223726c8c145b3f504e8f7065"
+    },
+    {
+      "path": "tools/eote-primitive-spec.mjs",
+      "sha256": "a6ee8d962898fabffd911e8d409dd5e374f42b092378adf890d982ad5794d766"
+    },
+    {
+      "path": "tools/verify-eote.mjs",
+      "sha256": "36c51ca1ff9741fc174efc1385239259a1994d25dacdfc7566ebdb97a135d75b"
+    },
+    {
+      "path": "src/engine/eote-state.js",
+      "sha256": "70463d454d1dc1c42e099a41fd17ec25ed4b888644e4b3219591776ac644b8cc"
+    },
+    {
+      "path": "src/engine/frost.js",
+      "sha256": "6c5c46474060b94d2d681502935639e8b3da52a35d929c1f8cd8acda31ff50a8"
+    },
+    {
+      "path": "src/engine/eote-shelter.js",
+      "sha256": "a5c71493bdda3514589160bcad137598ee227c6204e76fded0f0e4f3ecc653bc"
+    },
+    {
+      "path": "src/engine/eote-camp.js",
+      "sha256": "d669cf80b327576dae5c9c7df9cde360bb57021d7f6fe8e0b7584b579ae580ec"
+    },
+    {
+      "path": "src/engine/eote-facilities.js",
+      "sha256": "83c740cf376a314368b44bc27ea1c46e96f0ee79e40c4255a15d72dc35307ddd"
+    },
+    {
+      "path": "src/engine/eote-climb.js",
+      "sha256": "d11e205200ff439bc68cc039e049d1d069c17995b42887b2da2a0229cb0f79a0"
+    },
+    {
+      "path": "src/engine/eote-city.js",
+      "sha256": "62c78d9de75d5142c7b529276c7686afc5c583b4145a706570fcd0069aefcfc3"
+    },
+    {
+      "path": "src/engine/eote-tekeli.js",
+      "sha256": "14bfcea0c2ecfdba50dbe5bc2057be698de775900532ef74896ca7e4222df7dd"
+    },
+    {
+      "path": "src/engine/eote-deck-top.js",
+      "sha256": "f229aeab4ec0e9cd01644fc05f5b811a44a0b21655e67dc8c7ba03c90acf77ad"
+    },
+    {
+      "path": "src/engine/eote-round-distance.js",
+      "sha256": "1a3987102f55c9d3a00b7efbe514c5684b5aa4eb9a2476a1fb0a40b52644e3d2"
+    },
+    {
+      "path": "src/engine/eote-disciplines.js",
+      "sha256": "a8d65eeb604bdcc7b5eeb88210a6328085592f41903310579fe92097319dca3f"
+    },
+    {
+      "path": "src/engine/chaos-token-pool.js",
+      "sha256": "8a3fb8b375968b1d219f0d61fee20c7b279ac862185f572f563742d78c0d1d53"
+    },
+    {
+      "path": "src/engine/chaos-token-effects.js",
+      "sha256": "a41f7b3ceae40f67b51d8ed0eefc3844ccd3dfdc7b4b65cac15bce9f0d0b6828"
+    },
+    {
+      "path": "src/engine/scenario-keys.js",
+      "sha256": "1e5d18ec9e0a47ceb77ff280a1a1b8864b27ae07889182ac30942a0089f74712"
+    },
+    {
+      "path": "src/engine/vertical-chain.js",
+      "sha256": "96aac5ac7fa9086697a2f5b4b77137fe1745490dcd1a1ec24bc4e8b01bb346fa"
+    },
+    {
+      "path": "src/engine/grid-map.js",
+      "sha256": "30cbe797220b2cd583320738015cad0b7a56a96ea041799be324877746a32526"
+    },
+    {
+      "path": "src/engine/scenario-decks.js",
+      "sha256": "74c3553300bfff48e980f4d9176115623247ea026e23c54896dc66410fbd08b3"
+    },
+    {
+      "path": "src/engine/physical-faces.js",
+      "sha256": "5d316f43ab97aa2d8d99d95054f27b53a367b36f3a2f2750f245f2560c379db6"
+    },
+    {
+      "path": "src/engine/play-channels.js",
+      "sha256": "bba22574bc293a0540e4d0935fd13d41465d811a1b3d2a82ab963d33c63d981e"
+    },
+    {
+      "path": "src/engine/mechanic-state.js",
+      "sha256": "66ad0359d8443745013e18d4cc4ef06fe3d8f8cddca43016e8cd71ca0a69c4ef"
+    },
+    {
+      "path": "src/engine/api-mechanics.js",
+      "sha256": "8dd12c949bcad37c9e89f7234f962f807841d153cb55cd23441fb7b132971278"
+    },
+    {
+      "path": "src/engine/save-migration.js",
+      "sha256": "e8f68a374af061991db628aa3a2ae385b3bc0628f0a71701a73a4b74933caa05"
+    },
+    {
+      "path": "src/campaign/eote-partners.js",
+      "sha256": "bfd5830f3602c25a69cec8ce0c680f3118133e9e960a3447c2c2185406e77c11"
+    },
+    {
+      "path": "src/campaign/eote-seals.js",
+      "sha256": "00d597397e08499cd19582840ce3866d9b824b3958d34e4c1b58804fe445b905"
+    },
+    {
+      "path": "src/campaign/eote-memorials.js",
+      "sha256": "ac2310598eda0645534d8151fc701e33169c7dc15d9dad1357f196fdf65940b3"
+    },
+    {
+      "path": "src/campaign/eote-supplies.js",
+      "sha256": "5d6aaf52458a20253a3c960b83cf47c3eac8bf98bd8b6df13e1f81eae677d448"
+    },
+    {
+      "path": "src/campaign/record-sets.js",
+      "sha256": "d5668fd4d10a2c958efde5248c95966c93ce5d1d94e0352dded9808704456503"
+    },
+    {
+      "path": "src/campaign/campaign-flow.js",
+      "sha256": "8b9be2f043affcd863dd99ac83677aa0cb9bd3f19b825a6cf62c47945b83b794"
+    },
+    {
+      "path": "src/campaign/epilogue-matrix.js",
+      "sha256": "37c353cab4535c81e3e549552f1070d29dce883a72957c756eb74bbd608a59e9"
+    },
+    {
+      "path": "src/campaign/campaign-parts.js",
+      "sha256": "9dc52444f1794a05b63c1389ba252a9b5aae31a2a5773e0d77f437e615f992f6"
+    },
+    {
+      "path": "tests/eote-migration.test.mjs",
+      "sha256": "d8884e030d36450dc73a58bd001a102b1fe1e4554245e8608a66783aaac5b170"
+    },
+    {
+      "path": "tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "path": "tests/eote-primitives-campaign.test.mjs",
+      "sha256": "7182c4a750b5e3e56c17544ab4bd66bcb62324d03669c74b89792a162ddae8ea"
+    },
+    {
+      "path": "tests/eote-primitives-flow.test.mjs",
+      "sha256": "6cc05980d3bfc52493d4c06fe567a7ef6fa76d08b0ecbecc0b2c5bcc6b03980f"
+    },
+    {
+      "path": "tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "path": "tests/eote-primitives-travel.test.mjs",
+      "sha256": "0faec6c9ae96e6432ce3e0179fd0b24a93890f1f999a2579c1b62dd47f904d16"
+    },
+    {
+      "path": "tests/eote-primitives-investigator.test.mjs",
+      "sha256": "ffa1d6ea01c2435b4421d491b82069ef7400785081e4ed6f109660c49ffd6d60"
+    },
+    {
+      "path": "tests/fixtures/replay/eote-baseline.json",
+      "sha256": "fffb9daeb91d4c0a216f82540be06ba9770471e01d021c4e6faaf03a2440e32e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared.js",
+      "sha256": "d06ea62260ccf72ea040a7ba08841b751bcffa3b615283bbcc81f40f520a0a3d"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "sha256": "e1caf7f086fe20903bb4ec06e046caf33ad719ae929f08fcb189c8d9802394fd"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/keywords.js",
+      "sha256": "921a2d9a7f31756c9a59046561340497b2a164207ab774415bc25a790a8a7e15"
+    },
+    {
+      "path": "web/eote-rules.js",
+      "sha256": "b411ae907621d69512035b76459c724939a14dbc4437c80d04548224a644e68f"
+    },
+    {
+      "path": "web/rulebook-data.js",
+      "sha256": "5bc1e72d707b4ceb44496f7872fc508eec17f75cf53dc9200ea97aa3a5d93e8c"
+    },
+    {
+      "path": "tools/audit-eote-rules.mjs",
+      "sha256": "1577beec7f56bd740d6afc7a730f47bb08324332f47bfd4b2f61315cd7b1afec"
+    },
+    {
+      "path": "tools/run-eote-browser.mjs",
+      "sha256": "5f3f5761818161019a8f298b013e9c84bcfdcd84484e7397c1affa09c2323e05"
+    },
+    {
+      "path": "tools/playwright-eote-reporter.mjs",
+      "sha256": "0c1d050cad50f700c830721bff6ad2fe4c4420e1b28dcb57dbf33329251cb14c"
+    },
+    {
+      "path": "tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "path": "tests/eote-rules.browser.mjs",
+      "sha256": "06c6ee6f9cedfe5d375f57a80fd0dc8a4dd76c4b34992c2681ac19605c8e406e"
+    },
+    {
+      "path": "tests/playwright/playwright.eote.config.mjs",
+      "sha256": "ce6dc0ce188b09652099cf376ae0194389256628bfb7df4bf51f59f21c8b0046"
+    },
+    {
+      "path": "audit/eote-rules.json",
+      "sha256": "3e4f4929804a8a5d3c090c56f6f3358ef6134c0269daeaaff5360c2903a7a87e"
+    },
+    {
+      "path": "audit/eote-browser-acceptance.json",
+      "sha256": "0d15d3f2484b0c6189f446b4765d83b51deb5b839da0c1f51d77a8d448347c81"
+    },
+    {
+      "path": "src/engine/eote-interactions.js",
+      "sha256": "d29e5c8c0643dd16c6b53110e9ab498d11755a1bd5ec39ddfc6fa3e30d55f9e0"
+    },
+    {
+      "path": "src/engine/mechanic-choices.js",
+      "sha256": "36314461e291be3a3bb9653c998f80125b8f474114d8400e49aba9c764257981"
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "6560979ca31ad3e4c3c488f2cac74baf395ae0e404593e8a628751417e4cd9ea"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "d1c6a63ca0fdf5aa099e1b049010ea52c1da7870aba5f8819e773ac9bf7f1321"
+    },
+    {
+      "path": "web/chaos-token.js",
+      "sha256": "486526924ed5c8275d671b37f17a41026aa3ce225e81ea36819a54b3896167db"
+    },
+    {
+      "path": "web/mechanic-ui.css",
+      "sha256": "461511c52d200207e092c4937788153fd7a49251ac0e0c9dafd7cc507e1cabfe"
+    },
+    {
+      "path": "web/locales/zh-CN.misc.js",
+      "sha256": "4337243330ce904beee1939fc2b4d58f1380589943540af19b4b8adb15b09cf1"
+    },
+    {
+      "path": "web/locales/en.misc.js",
+      "sha256": "8632358e574047081a0ec868af9cff406bf54b79cf973624e6b7ea2e01f5cdd7"
+    },
+    {
+      "path": "tools/audit-eote-interactions.mjs",
+      "sha256": "974224f8aa7363693e4f82739bbab80361858448eadb0f24655e85cae2ce8625"
+    },
+    {
+      "path": "tools/run-eote-interactions-browser.mjs",
+      "sha256": "e282cf931a98ff8c8251035fa5c89d09c59ff4036847a8b5c52386c0937fd0ff"
+    },
+    {
+      "path": "tools/playwright-eote-p4-reporter.mjs",
+      "sha256": "fc35f6d77a8971dd271a2230723fece9963a43fbb1ff20c66d8e6a1254edf748"
+    },
+    {
+      "path": "tests/eote-interactions.test.mjs",
+      "sha256": "c335b641e4c3374881a8ffae9cca996c5c68c2675f08aec1fe07fc05ddb6181d"
+    },
+    {
+      "path": "tests/eote-interactions.browser.mjs",
+      "sha256": "68bd217697b69c998d03e4433053104c8d8c8d23f6342a8d3371413161dd0da0"
+    },
+    {
+      "path": "tests/eote-interaction-fixture.mjs",
+      "sha256": "0a0ef5d8bc5f4ddb9c892553bc1c22be6f07f34548dfa5e5c096b7d799654d91"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p4.config.mjs",
+      "sha256": "c3ae6b8900cd51c21e24de80dc8d00b51686a2c9db067e4d2b7d1f018f9fbd53"
+    },
+    {
+      "path": "audit/eote-interactions.json",
+      "sha256": "aa8cf88b64503e521eea0925c4c92fb73a6b5cef5c5c96cb8b068aa06d2c9b64"
+    },
+    {
+      "path": "audit/eote-interactions-browser.json",
+      "sha256": "6dffc721c09c5f873e304075f16a094dba84f3b2e6fe1ec8673c33809ee04478"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/interactions.md",
+      "sha256": "307bd81205eca7031bbfd687040aa9af4145827fc9a5d5f9c81f30f2e4db6fd9"
+    },
+    {
+      "path": "src/cards/entries/08001.js",
+      "sha256": "ab8c5dc4c7be561dc2d5bb9e7fb07d3d89fabab65a750be37069e3916b6af868"
+    },
+    {
+      "path": "src/cards/entries/08002.js",
+      "sha256": "7076302528ac7bfb14401a08c756c1cee433bec6900188c694bba984e712e1b1"
+    },
+    {
+      "path": "src/cards/entries/08003.js",
+      "sha256": "fbbefaad454e2ec67d4f5367b912a0a404665ef34390b2aabe188574930f8a91"
+    },
+    {
+      "path": "src/cards/entries/08004.js",
+      "sha256": "fb341a9187745ec1258ce087cd9d4ee76910972b6292adad55853c9722ca325b"
+    },
+    {
+      "path": "src/cards/entries/08005.js",
+      "sha256": "4257e8a02258b8f52a7b3eec7e193946056adba439a26a77367e7adcaf795ac4"
+    },
+    {
+      "path": "src/cards/entries/08006.js",
+      "sha256": "35544a67ca7edf6b8f38d49a8a6528902d1459072a0bb5962e9832e55b31eb68"
+    },
+    {
+      "path": "src/cards/entries/08007.js",
+      "sha256": "f296036f53e4e0c277b77b4b88c1bd9a7e42cf2d64b2863c70b4e259f207cdc3"
+    },
+    {
+      "path": "src/cards/entries/08008.js",
+      "sha256": "45620d6b5bb9a9c0d21b4a6ac20f86ed77f66dfb221228810c13412b9979b0c9"
+    },
+    {
+      "path": "src/cards/entries/08009.js",
+      "sha256": "093299f66f674a181a95d31c2807fcdd39aa681672990dae31d243a0862e7206"
+    },
+    {
+      "path": "src/cards/entries/08010.js",
+      "sha256": "ada89874d5035fe087cc98a14689614d99d859214e212e8d16ca1ac186aeb4ab"
+    },
+    {
+      "path": "src/cards/entries/08011a.js",
+      "sha256": "3515a00a0347fd09eaa56956357e76ee0c1c3b94f027a2ddc700f071ba56d42f"
+    },
+    {
+      "path": "src/cards/entries/08011b.js",
+      "sha256": "9ff879584bad71e7ab616579db597a52eebdc30f1c24c9f798243fc8657901fa"
+    },
+    {
+      "path": "src/cards/entries/08012a.js",
+      "sha256": "3bd9f4b9af7b4345d78974897111863829a2880624543b7f3f4a565f565cd2b8"
+    },
+    {
+      "path": "src/cards/entries/08012b.js",
+      "sha256": "6ed5e87fb7938a30523d7bd2591719bf73bb36df95bcab0e5559c0da90cc2e8a"
+    },
+    {
+      "path": "src/cards/entries/08013a.js",
+      "sha256": "46201d4a139890a72b662531c7b3b93b32b2e3fa5228b8f2c596c0f63d8dee2d"
+    },
+    {
+      "path": "src/cards/entries/08013b.js",
+      "sha256": "be34ffe60d6866ac0c22a0241d0c49fd187e809134d7ba97eee7de2fed45b481"
+    },
+    {
+      "path": "src/cards/entries/08014a.js",
+      "sha256": "921040af447d74a3998ced6c792e2e245f4cde7b6389970ee067d9cd6896c4be"
+    },
+    {
+      "path": "src/cards/entries/08014b.js",
+      "sha256": "3eb6eafe14acd6b5cfb42bb66b656b5b333837950fea7f351d1ea0b0c7e3d5b0"
+    },
+    {
+      "path": "src/cards/entries/08015.js",
+      "sha256": "2eac9249e5214e14f4ea3a8de744906b3a04cd6d520bb6209901e47cd8a3f19a"
+    },
+    {
+      "path": "src/cards/entries/08016.js",
+      "sha256": "2d150ce96b11628948ab2a103fe39f5d94fc6d7d53940d1027c0a3cc5b764b05"
+    },
+    {
+      "path": "src/cards/entries/08017.js",
+      "sha256": "0bfde144e7cb6b13183de7a1bd52dbcefeba6d3148f682ab27b8f03db248704d"
+    },
+    {
+      "path": "src/cards/entries/08018.js",
+      "sha256": "bea3151d8c2fc41f883f44ba33e2bc2aab0b1d079398da9310d7b4918d8a9412"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+      "sha256": "6b661722d69f81eb172022303893810ee5955b9e2d0d9a0fd728fe9716b502cd"
+    },
+    {
+      "path": "content/packs/eoteInvestigators/manifest.js",
+      "sha256": "112442a44692bfdc72d3cd0e2a4200a231267ccb155c4c5f5ff3036fb0c8c606"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
+    },
+    {
+      "path": "src/deck/deckbuilding.js",
+      "sha256": "3ab158776fa3d8d463507949ddc3ff59ff7f4210cb123b7c878eac650a9ff1ba"
+    },
+    {
+      "path": "web/deck-rules.js",
+      "sha256": "4b91f78bbb09797d92e76d1a9ec6225d5c282883c80c27a510d53dcdf46e0f07"
+    },
+    {
+      "path": "src/engine/eote-investigator-support.js",
+      "sha256": "85015b37dcbfba42ec688c2fddced0a86fce3d5b907d93c4cb5392b9ca939e62"
+    },
+    {
+      "path": "src/engine/restricted-actions.js",
+      "sha256": "52e43be723020a225bb2bec99ef1836ab342d11bceca0e6c1a036378399b636c"
+    },
+    {
+      "path": "tests/eote-player-m2-1.test.mjs",
+      "sha256": "6997bc787f0a7ccf662e8e5e4eee59613c2af8489e202bf53361ce6783b978e3"
+    },
+    {
+      "path": "tests/eote-player-m2-2.test.mjs",
+      "sha256": "9f46360ad34a6e9bdb6892e1ba885bb006e7554c21dc6dabaacca6f8a2519a36"
+    },
+    {
+      "path": "tests/eote-player-m2-3.test.mjs",
+      "sha256": "ddd3c2d6472a8d03cad3a3537bb4c653bf5106d05329dac33103edfe19e504ec"
+    },
+    {
+      "path": "tests/eote-player-m2-4.test.mjs",
+      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+    },
+    {
+      "path": "tests/eote-player-primitives.test.mjs",
+      "sha256": "86e44b2510d6a94c330334f20b25bc5c395f9f3b8a1588c61c8827ebf46530ed"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+      "sha256": "f68edb2e1c6ccade06eb9b87e62a7f50cf814c341cec4b4e173168168103725a"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+      "sha256": "e9a90ead7dd290572388e9203e290fbecff68bc03ed0ea1dcda90997bfc8a21f"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+      "sha256": "9195a3d38ff0f21a47325c978b01eefbb5e9b199547f8cb6425f1bde3c94829b"
+    },
+    {
+      "path": "tests/eote-scenario-fatalMirage.test.mjs",
+      "sha256": "9625cd3ace52514d9f8f71346f0d6093577677de52af8deea7fce400fe07f353"
+    },
+    {
+      "path": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+      "sha256": "9d2292caf82b6d174092726172fb1d3a19323fa648267a274f542ca693ebef5c"
+    },
+    {
+      "path": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+      "sha256": "e21fcc06f3fc7f57ea4748b63f22a2f47dfe8796ef8bd74a7668bc919acbac85"
+    },
+    {
+      "path": "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+      "sha256": "404931c887fa4840c19a67a3bf037e9c05eb3872ffe8562f61f1cda1f6bb4b6b"
+    },
+    {
+      "path": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+      "sha256": "dc5888921be7bfcad0467e3bf92b5fd19b6def7777d42b59cbffa2fb48c8c679"
+    },
+    {
+      "path": "tests/eote-scenario-shared.test.mjs",
+      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+    },
+    {
+      "path": "tests/eote-campaign-flow.test.mjs",
+      "sha256": "ea65382986ca764168cf759b77362446b778c882386a83375778b68f4cc54e49"
+    },
+    {
+      "path": "tests/eote-story.test.mjs",
+      "sha256": "e0e4a2b6b4708ee306d1057b1ed5feed542a440ec955fd8aa473d7bc7edbd496"
+    },
+    {
+      "path": "tests/eote-all-cards.test.mjs",
+      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+    },
+    {
+      "path": "tests/eote-p8-registration.test.mjs",
+      "sha256": "f6aab828f880ea92cdcccd4402d298c89eb28a30abc3897b17892b565f987fa6"
+    },
+    {
+      "path": "tests/eote-p8-campaign.test.mjs",
+      "sha256": "eed8cc8e93b21e913015c8095eaa90d1891b17dcdac10bf50c14434811c7a578"
+    },
+    {
+      "path": "tests/eote-p8-multiplayer.test.mjs",
+      "sha256": "101ae6d6735e331be2e417aa2350604362d9433df3815d0c4f98d0d41b363ee2"
+    },
+    {
+      "path": "tests/replay-eote-p8.test.mjs",
+      "sha256": "6ca82668c82ffebc6133584765887adead8a5b1b0ef6696c8b64f9d3150929ec"
+    },
+    {
+      "path": "tests/eote-migration-ledger.test.mjs",
+      "sha256": "ac5ca0501eb3aaa24552a594883930223e07c8a0e4470f5c9387054989b50fd6"
+    },
+    {
+      "path": "tests/eote-player-fixture.mjs",
+      "sha256": "7fb33b4bf91d51bbab6ccf3d50cbdd2184ace9a6e8105975fc39af6ac1695fc2"
+    },
+    {
+      "path": "tests/eote-player.browser.mjs",
+      "sha256": "56bd49b3184f745e59a1081b10418929ee0f139b8753a1827e559ad02a977e82"
+    },
+    {
+      "path": "tools/audit-eote-player.mjs",
+      "sha256": "ac361d7cd6f2d45f775a7c62f36b36af2acd50fdb35b9652aa273d15f3bbbb12"
+    },
+    {
+      "path": "tools/run-eote-player-browser.mjs",
+      "sha256": "2ac60fe8f45babe5c8c7dca85ff258677ab5cd88932ef8bc7a4cc17a036e86fe"
+    },
+    {
+      "path": "tools/playwright-eote-p6-reporter.mjs",
+      "sha256": "681776f5bccf9848898739688ef9ac1bb74a14eedfc26e37367398eb7e4235f7"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p6.config.mjs",
+      "sha256": "f8445e2afe17c0bb6203cf8313aaea8f8fffb8bc5dd4226b0bfe22de119ca18e"
+    },
+    {
+      "path": "audit/eote-player-shards.json",
+      "sha256": "7f73d79f37781c9d5bf234a1407f32eb15928b6543099deddc2db7c1e3e4bb33"
+    },
+    {
+      "path": "audit/eote-player-queue.json",
+      "sha256": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b"
+    },
+    {
+      "path": "audit/eote-player-acceptance.json",
+      "sha256": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac"
+    },
+    {
+      "path": "audit/eote-player-browser.json",
+      "sha256": "fe41b1d14e526fdf726525d29501b732c056e90d3d093f3d212e68ef14243b1e"
+    },
+    {
+      "path": "src/cards/eote-player-acceptance.js",
+      "sha256": "1e4dfa70c21dd6a7f2f8968f7e95101dacfc731f7524b5ca071368cfa7a816ff"
+    },
+    {
+      "path": "content/packs/eotePlayer/manifest.js",
+      "sha256": "d54753058412d8209e88d5e2052a25992cf9c70678fbb85d32dd6d7c09363622"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/player-cards.md",
+      "sha256": "483eece5456c0e563c76dea6e9efbf42a99f362598161083cc05729d6ffb839e"
+    },
+    {
+      "path": "tests/eote-investigator-daniela.test.mjs",
+      "sha256": "f836dde0c0eaeedf496fe307897b777c1cbb1b8597bb9b6f8cd83be233954113"
+    },
+    {
+      "path": "tests/eote-investigator-norman.test.mjs",
+      "sha256": "b276907cb9faec2aba7c763d7e1bdfc264e38cb3dc489844e2998f2ff5eb2211"
+    },
+    {
+      "path": "tests/eote-investigator-lily.test.mjs",
+      "sha256": "f620d1c27b8e3c21e3692a50541669de48ab161d89ab03c389fad65896e9bb91"
+    },
+    {
+      "path": "tests/eote-investigator-monterey.test.mjs",
+      "sha256": "e3120ed45e1b036051d1e52dfd0531499301c7b46f5abc1c445a9d359e00e1ba"
+    },
+    {
+      "path": "tests/eote-investigator-bob.test.mjs",
+      "sha256": "d98315326c1493702454e024be693110ed6372ab34882b9c23a4ed78a1ba710b"
+    },
+    {
+      "path": "tools/audit-eote-investigators.mjs",
+      "sha256": "fa957cd08f3f02b037ce6d7c72171f304a646611a6f79507c2e52991a9ede305"
+    },
+    {
+      "path": "tools/run-eote-investigators-browser.mjs",
+      "sha256": "0d4d0c9d7da436c4d619e8b97a19cbe3b453b2e7036e614704a14326836087b6"
+    },
+    {
+      "path": "tools/playwright-eote-p5-reporter.mjs",
+      "sha256": "7700b51145de543d5ed3780087555524e91ffeae71aa86b5f7fd2fba51ee8989"
+    },
+    {
+      "path": "tests/eote-investigators.browser.mjs",
+      "sha256": "ed1cc767e1b323a43957531807f4410e0b2e1329fd9af4a5345e58a2b32e82d3"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p5.config.mjs",
+      "sha256": "b40b61dc1eb583d34d9d34749f52dec7f008efc8b735cdf073b5fda198a2685d"
+    },
+    {
+      "path": "audit/eote-investigators.json",
+      "sha256": "b4f178d228a1bf37bd5fa5740637ed028e94216550a0684dc1263d8321c650b4"
+    },
+    {
+      "path": "audit/eote-investigators-browser.json",
+      "sha256": "dc296fe28a2b0e6e45ea396435321f8c016825004693ab25383d06c3875ecec8"
+    },
+    {
+      "path": "tools/audit-eote-scenarios.mjs",
+      "sha256": "1dbe4965c9e0595eee3c738a8b8d2d6877f6334647619bf54697e67108b69021"
+    },
+    {
+      "path": "tools/import-eote-story.mjs",
+      "sha256": "ac06980f725d92ad014d2f594857332b501be85e72af90146ed0803ce8f90509"
+    },
+    {
+      "path": "tools/audit-eote-all-cards.mjs",
+      "sha256": "8fa5c56566fd263c95a397061457261668fc23824de634ea412bffd6d9567d73"
+    },
+    {
+      "path": "tools/audit-eote-release.mjs",
+      "sha256": "b22e8b5499e01e3ec6be8dac524bd508fb776aab2116edd19371fc0955f23b64"
+    },
+    {
+      "path": "tools/audit-eote.mjs",
+      "sha256": "d884aaf8d240e4319e552e74a0f7e02e7bc9ccd54c4121b6fec0035aea20b52b"
+    },
+    {
+      "path": "tools/run-eote-release-browser.mjs",
+      "sha256": "5190370ac212ddc5fec775d00c16f74746312206f4f0e4994f0543f50865b983"
+    },
+    {
+      "path": "tools/playwright-eote-release-reporter.mjs",
+      "sha256": "b9ebb5bd0f0b922f102efdef94ce87ee6944ec60eaffa5cee9ca88361f85d7a2"
+    },
+    {
+      "path": "tests/eote-release.browser.mjs",
+      "sha256": "07cb4185d1ec68413ea521f96c7e963397f3a24a35ee72173a8990f1768cba97"
+    },
+    {
+      "path": "tests/eote-progression.browser.mjs",
+      "sha256": "a49c27b3e85d12f328bace1ab81791b1e21b3f46a86dada9c8239724445f0310"
+    },
+    {
+      "path": "tests/eote-online.browser.mjs",
+      "sha256": "28c59376120fa3c31e95cd10f4db9576db867ae08dc2fc49abeda35a22ad8761"
+    },
+    {
+      "path": "tests/eote-browser-helpers.mjs",
+      "sha256": "892e24ad4a5d29754a1cced501cb61a20bf84a335bb442cb47fbefb43fd8f44b"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p8.config.mjs",
+      "sha256": "3410f62d6e99bbf21ee80a334da36d5945ce7bebcb368c914bf7855dc6fc66f4"
+    },
+    {
+      "path": "audit/eote-all-card-acceptance.json",
+      "sha256": "eeb6924205792c18f9f2b53cd6988f5479ed3ca1b006ba44c0190eb1bee275ad"
+    },
+    {
+      "path": "audit/eote-release-browser.json",
+      "sha256": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3"
+    },
+    {
+      "path": "audit/eote-release-acceptance.json",
+      "sha256": "56f29ac768dad5e00a9659dcf08df1732eb08d1a0052cb9db64ba49fae07d2d7"
+    },
+    {
+      "path": "audit/eote-migration.json",
+      "sha256": "737238f7ff5b92c586040009b8d155059f5ef5a106d3bcb77837886201d2bb98"
+    },
+    {
+      "path": "tests/fixtures/replay/eote-p8-baseline.json",
+      "sha256": "290f56439cfbe79ff3de0394647ebb28b7bde3084fb5441696de4946896f1f33"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/p8-release.md",
+      "sha256": "939652908872c887dce302b6a059c11a157010f504cf58ff2384db7fbfec08fb"
+    },
+    {
+      "path": "tools/import-scenario-guides.mjs",
+      "sha256": "4756362bb2e62b6ee10ceb4d04a5299341222b699ef86e133a61da9d4a8b8297"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/story-text.js",
+      "sha256": "e474f514e0dfdb6d05d5b5eaef12c9b06b5020d98d265d6276d679119e6008a2"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/story-access.js",
+      "sha256": "6d7f36810f6225c94315cfd473369937f46ec0b031afda4e8bfa1e8d3d8a6645"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/flow.js",
+      "sha256": "3fb7263830e5fd201b27a64d3e09eacd2b1213f50a129bd14423eff68d613fe9"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/records.js",
+      "sha256": "55d2ef58c36cf3ff32b4004e7406887352ac49136acd9866c895eb02f454733a"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/parts.js",
+      "sha256": "fa17e10cc94db84988c653d3f9c8e8289c02290ace06063f3ac68435da740e6c"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+      "sha256": "29ea203ac372799609904cd95ecf7c8de945eac244208cdfc3be0abbfb292a99"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "sha256": "e1caf7f086fe20903bb4ec06e046caf33ad719ae929f08fcb189c8d9802394fd"
+    },
+    {
+      "path": "content/packs/eoteCampaign/manifest.js",
+      "sha256": "3538dcc9481c76263ba3e270b67baf2a7f08437a343edc21bdd52d1c05e0f1fa"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "sha256": "5b6d7d7b602fe95e98af1b8e0d86e3d51fe26b97af02661563bbd2797b57851e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+      "sha256": "917bbb90af18127852fb71e70f73bd1fd8e8f0b44809bf1716aa2748184db250"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "sha256": "b1e80c917e9f5edd4044790cfba113cc3e6289758a8866e3544d59a434da7f11"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+      "sha256": "b7667423760e5182d836a677a5189a34fa796d25fa15049bed47c40e91d6d13e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+      "sha256": "3afdb1158269f66c9f47a4b264765745b384d4a65400dbb912dd7680c7ad705e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+      "sha256": "d64e10a166dbd4008d14de72cf4d1297970c0929c1369fb28c610b2c6ec211f2"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "sha256": "950cafab7886f87cf0ceb567a8a8b82f2d841238a1c1b862f93df285d2c55759"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "sha256": "e0c711d3dfd6697296cc64c9dc48aa9de48564a22ed46662bee6fe49694ffb4d"
+    },
+    {
+      "path": "audit/eote-scenario-acceptance.json",
+      "sha256": "8556fb0f61b2df0850e202a225d581a0b1456709819060c743b3671d28932cbf"
+    },
+    {
+      "path": "audit/eote-scenarios-browser.json",
+      "sha256": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567"
+    },
+    {
+      "path": "audit/eote-scenario-shards.json",
+      "sha256": "bb89b7749d96672c737bf54cbffa0fc9dd38acf2085d74fac768e7e44d7ff629"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/scenarios.md",
+      "sha256": "699cb213aa1de5066686ffa627f7ff2e95b8eba30104cf72ae5a157c0829f43d"
+    },
+    {
+      "path": "web/scenario-guides/iceAndDeathPart1.json",
+      "sha256": "4ccadfb9a5342d7e3ca5d7fcd1fbd4d93e80613d1b725815d0370736a329f8be"
+    },
+    {
+      "path": "web/scenario-guides/theHeartOfMadnessPart2.json",
+      "sha256": "337405e6787aa20aa47bcc0c18033a345a23e80b5bf6d4770ca51bcf4c6c9f8c"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/investigators.md",
+      "sha256": "cd1a8438f9c0283bd83e719d265798d0b46d40037388d532ed72cfa1886a3391"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/primitives.md",
+      "sha256": "3cc14219b4871efd9c065deddf049e58957c967282a5f335b315c4b6d0149cb5"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/README.md",
+      "sha256": "6716e5426398e8ac5f108e41800c95917d9ae4f105e1d033f8cfdb4f9b280035"
+    }
+  ]
+}

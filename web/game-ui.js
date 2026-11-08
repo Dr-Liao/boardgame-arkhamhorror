@@ -665,7 +665,7 @@ function renderFullCard(def) {
 
   const statRows = []
   if (d.isInvestigator) {
-    statRows.push(h('div', { className: 'ah-card-full-stats' },
+    statRows.push(h('div', { className: 'ah-card-full-stats ah-card-full-stats-investigator' },
       h('span', null, cardSymbol(h, 'health'), ' ' + d.health),
       h('span', null, cardSymbol(h, 'sanity'), ' ' + d.sanity),
       h('span', null, cardSymbol(h, 'willpower'), ' ' + d.willpower),
@@ -675,7 +675,7 @@ function renderFullCard(def) {
     ))
   }
   if (d.type === 'asset' && (d.health != null || d.sanity != null)) {
-    statRows.push(h('div', { className: 'ah-card-full-stats' },
+    statRows.push(h('div', { className: 'ah-card-full-stats ah-card-full-stats-vitals' },
       d.health != null ? h('span', null, cardSymbol(h, 'health'), ' ' + t('game.card.healthValue', { value: d.health })) : null,
       d.sanity != null ? h('span', null, cardSymbol(h, 'sanity'), ' ' + t('game.card.sanityValue', { value: d.sanity })) : null
     ))

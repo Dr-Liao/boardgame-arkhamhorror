@@ -715,3 +715,38 @@ button:focus-visible, [role='button']:focus-visible, summary:focus-visible { out
 .ah-hub .ah-content-blocked { color: #e7b28a; }
 @media (max-width: 600px) { .ah-hub .ah-content-status { float: none; display: block; margin-top: 6px; } }
 
+
+/* Draft offers reuse office colors and action buttons. */
+.ah-draft-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:16px 0; }
+.ah-draft-option { min-width:0; padding:12px; border:1px solid var(--ah-border, #75634a); border-radius:8px; }
+.ah-draft-option h3 { overflow-wrap:anywhere; }
+.ah-draft-art { display:block; width:100%; max-width:220px; margin:auto; background:transparent; border:0; cursor:pointer; }
+.ah-draft-art .ah-table-art { width:100%; }
+.ah-draft-buy { display:grid; gap:8px; }
+.ah-draft-buy select { width:100%; max-width:100%; }
+.ah-draft-option .bg-btn { white-space:normal; max-width:100%; }
+.ah-draft-curve { display:flex; flex-wrap:wrap; gap:16px; }
+.ah-draft-curve>div { display:grid; gap:4px; text-align:center; }
+.ah-draft-curve meter { width:64px; }
+.ah-draft-distributions { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:20px; margin:16px 0 28px; }
+.ah-draft-distribution { min-width:0; padding:16px; border:1px solid var(--ah-border, #75634a); border-radius:8px; }
+.ah-draft-distribution h4 { margin:0 0 16px; }
+.ah-draft-types { display:flex; flex-wrap:wrap; gap:16px; }
+.ah-draft-type { display:grid; gap:6px; min-width:64px; }
+.ah-draft-type b { font-size:20px; }
+.ah-draft-type meter { width:72px; }
+.ah-draft-distribution small { display:block; margin-top:14px; opacity:.8; }
+.ah-draft-deck { margin-top:24px; }
+.ah-draft-deck-group { margin:20px 0; }
+.ah-draft-deck-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr)); align-items:start; gap:18px; }
+.ah-draft-deck-card { position:relative; display:grid; gap:10px; width:100%; min-width:0; max-width:260px; padding:8px; border:1px solid var(--ah-border, #75634a); border-radius:6px; background:transparent; color:inherit; font:inherit; text-align:center; cursor:pointer; }
+.ah-draft-deck-card .ah-table-art { width:100%; height:auto; aspect-ratio:5/7; }
+.ah-draft-deck-card .ah-table-art img { object-fit:contain; }
+.ah-draft-deck-card strong { font-size:13px; overflow-wrap:anywhere; }
+.ah-draft-copy-count { position:absolute; top:14px; right:14px; min-width:30px; padding:4px 8px; border:1px solid #bda468; border-radius:4px; background:#0b181ded; color:#f2dfb2; font-weight:bold; }
+.ah-draft-deck-card:hover { border-color:#bda468; background:#ffffff08; }
+.ah-draft-deck-card:focus-visible { outline:2px solid #d6bc7d; outline-offset:3px; }
+@media(max-width:600px) { .ah-draft-deck-gallery { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .ah-draft-deck-card { padding:5px; } .ah-draft-copy-count { top:9px; right:9px; font-size:12px; padding:2px 5px; } }
+.ah-draft-summary { margin-top:24px; }
+.ah-draft-notice { padding:12px; border:1px solid var(--ah-border, #75634a); }
+@media(max-width:600px) { .ah-draft-options { grid-template-columns:1fr; } }

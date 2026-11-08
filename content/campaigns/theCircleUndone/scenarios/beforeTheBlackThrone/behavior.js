@@ -85,7 +85,12 @@ export function addAzathothDoom(state, api, amount = 1) {
 export function azathothAttack(state, api, seat) {
   const inv = state.investigators?.[seat]
   if (!inv) return
-  api.info?.(`💀 阿撒托斯攻击 ${inv.name}：受到 3 点伤害与 3 点恐惧。`)
+  const text = `💀 阿撒托斯攻击 ${inv.name}：受到 3 点伤害与 3 点恐惧。`
+  if (api.presentAttack) return api.presentAttack({code:'05346',name:'阿撒托斯',seat,damage:3,horror:3,text}, harm => {
+    harm.damage(seat, 3)
+    harm.horror(seat, 3)
+  })
+  api.info?.(text)
   api.damage?.(seat, 3)
   api.horror?.(seat, 3)
 }

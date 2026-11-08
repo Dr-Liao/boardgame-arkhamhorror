@@ -3,8 +3,9 @@
 // default strike for any style it does not know.
 // 第 125 轮（第 8 批）：卡号 → 风格的覆盖表搬进内容层 `content/presentation/attack-styles.js`。
 import { ATTACK_STYLE_OVERRIDES } from '../../content/presentation/attack-styles.js'
+import { ATTACK_THEMES } from '../../web/attack-themes.js'
 
-export const ATTACK_STYLES = Object.freeze(['default', 'firearm', 'blade', 'lightning', 'spell', 'spiritStorm'])
+export const ATTACK_STYLES = Object.freeze(['default', 'firearm', 'blade', 'lightning', 'spell', 'spiritStorm', ...Object.keys(ATTACK_THEMES)])
 
 // Melee covers blunt tools too (bats, crowbars, hammers), so blades are the
 // Melee cards whose English name names an edged weapon.
@@ -20,7 +21,7 @@ const CATEGORIES = Object.freeze([
 
 export function attackStyle(card) {
   if (!card) return 'default'
-  for (const code of [card.code, card.originalCode]) {
+  for (const code of [card.code, card.originalCode, card.duplicateOfCode]) {
     if (code && Object.hasOwn(ATTACK_STYLE_OVERRIDES, code)) return ATTACK_STYLE_OVERRIDES[code]
   }
   return CATEGORIES.find(category => category.match(card))?.style || 'default'

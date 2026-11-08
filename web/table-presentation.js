@@ -2,6 +2,8 @@
 import { preloadChaosTokens, showChaosToken } from './chaos-token.js'
 import { createCombatSound } from './combat-sound.js'
 import { attackChoreography, blastChoreography } from './attack-fx.js'
+import { directDamageChoreography } from './direct-damage-fx.js'
+import { enemyAttackChoreography } from './enemy-attack-fx.js'
 import { setRulesText } from './card-text.js'
 import { skillSymbols } from './skill-presentation.js'
 import { t } from './i18n.js'
@@ -9,23 +11,46 @@ const ROOT = '/mods/arkhamhorror/'
 const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-reveal', play: 'drop_003', move: 'drop_001',
   clue: 'glass_001', damage: 'error_003', reveal: 'pluck_001', success: 'confirmation_002',
   failure: 'back_002', agenda: 'bong_001', gunshot: 'firearm-shot.wav', bladeSlash: 'blade-slash', bladeHit: 'blade-hit',
-  lightningZap: 'lightning-zap.wav', dynamiteBlast: 'dynamite-blast' }
-const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55 }
+  lightningZap: 'lightning-zap.wav', dynamiteBlast: 'dynamite-blast',
+  directImpact: 'direct-impact', directBite: 'direct-bite', directGlass: 'direct-glass', directArcane: 'direct-arcane',
+  p1Energy:'p1-energy',p1ArcaneSlash:'p1-arcane-slash',p1Flame:'p1-flame',p1ArrowHit:'p1-arrow-hit',
+  p1Bow:'p1-bow',p1Acid:'p1-acid',p1Flare:'p1-flare',p1Cord:'p1-cord',p1Resonance:'p1-resonance',p1Void:'p1-void',p1Book:'p1-book',
+  enemyGrowl:'enemy-growl',enemyClaw:'enemy-claw',enemyHeavy:'enemy-heavy',enemyFear:'enemy-fear',enemyGhost:'enemy-ghost',enemySwarm:'enemy-swarm',enemyWing:'enemy-wing' }
+const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55,
+  enemyGrowl:.3,enemyClaw:.3,enemyHeavy:.3,enemyFear:.25,enemyGhost:.25,enemySwarm:.3,enemyWing:.3,
+  directImpact: .35, directBite: .4, directGlass: .3, directArcane: .3,
+  p1Flame:.3,p1Energy:.25,p1Void:.25,p1Resonance:.25,p1Acid:.35,p1Flare:.3,p1ArrowHit:.35 }
 // 技能/阶段表只存词典 key，演出渲染时再 t()（模块顶层不调用 t()）。
 const PHASES = { enemy: ['table.phase.enemy', '[combat]', 'table.phase.enemy.cinematic'], upkeep: ['table.phase.upkeep', '[resource]', 'table.phase.upkeep.cinematic'], mythos: ['table.phase.mythos', '[doom]', 'table.phase.mythos.cinematic'], investigation: ['table.phase.investigation', '[intellect]', 'table.phase.investigation.cinematic'] }
 export function publicSequence(events) {
   const cues = []
   for (const event of events) {
     const cue = event.type === 'presentation' ? event : event.presentation
-    if (!cue || !['test', 'chaos', 'play', 'attack', 'blast', 'phase', 'automatic', 'story', 'location', 'checkpoint'].includes(cue.kind)) continue
+    if (!cue || !['test', 'chaos', 'play', 'attack', 'enemyHarm', 'blast', 'directDamage', 'phase', 'automatic', 'story', 'location', 'checkpoint'].includes(cue.kind)) continue
     const presented = event.seq == null ? cue : { ...cue, eventSeq: event.seq }
+    // Consecutive accepted area-damage placements form one explosion. A real
+    // checkpoint/other scene ends the group, so choice resumes never replay a
+    // target already shown. Keep the FIRST pre-damage snapshot and event seq.
+    if (cue.kind === 'directDamage' && ['blast','flamethrower'].includes(cue.style)) {
+      const previous = cues.at(-1)
+      if (previous?.kind === 'directDamage' && previous.style === cue.style
+        && previous.code === cue.code && previous.assetId === cue.assetId
+        && previous.location === cue.location && previous.seat === cue.seat) {
+        for(const target of cue.targets) {
+          const existing=cue.style==='flamethrower'&&previous.targets.find(t=>t.enemyId===target.enemyId)
+          if(existing)existing.damage+=target.damage
+          else previous.targets.push(structuredClone(target))
+        }
+        continue
+      }
+    }
     if (cue.kind === 'automatic') {
       let group = cues.at(-1)
       if (group?.kind !== 'phase' || group.phase !== cue.phase) {
         group = { kind: 'phase', phase: cue.phase, round: cue.round, steps: [] }; cues.push(group)
       }
       group.steps.push({ ...presented, text: cue.text || event.text })
-    } else cues.push({ ...presented, ...(cue.kind === 'phase' ? { steps: [{ ...presented }] } : {}) })
+    } else cues.push({ ...presented, ...(cue.targets ? { targets: structuredClone(cue.targets) } : {}), ...(cue.kind === 'phase' ? { steps: [{ ...presented }] } : {}) })
   }
   // Scenario setup may reveal its starting location before emitting its opening
   // cards. Keep rule events untouched, but present intro → agenda → location.
@@ -93,6 +118,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
   let last = null, sessionId = null, lastSeq = -1, frame = 0, epoch = 0, layer = null, running = false
   let anchors = new Map(), queue = [], unlocked = false
   let presentedPlays = []
+  let presentedHarm = []
   let blocking = false, cancelScene = null
   let latest = null, displayed = null
   let skipNextSync = false
@@ -125,6 +151,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
   }
   const applyStep = change => {
     if (!displayed || !latest) return
+    if (change.tableState) presentedHarm = []
     if (change.tableState) displayed = { ...displayed, state: { ...displayed.state, ...change.tableState,
       revision: latest.state.revision, pendingChoice: null, skillTest: null, legalMoves: [] } }
     if (change.eventSeq != null) displayed = { ...displayed, events: (latest.events || []).filter(e => e.seq <= change.eventSeq) }
@@ -177,6 +204,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     document.querySelectorAll('.ah-map-node').forEach(el => map.set('loc:' + el.dataset.locationId, rect(el)))
     document.querySelectorAll('.ah-map-investigator').forEach(el => map.set('inv:' + el.dataset.seat, rect(el)))
     document.querySelectorAll('.ah-hand-card').forEach(el => { if (!map.has('card:' + el.dataset.cardCode)) map.set('card:' + el.dataset.cardCode, rect(el)) })
+    document.querySelectorAll('[data-interaction^="asset:"]').forEach(el => map.set(el.dataset.interaction, rect(el)))
     for (const [key, selector] of [['hand', '.ah-hand-area'], ['deck', '.ah-dock-deck'], ['player', '.ah-dock-investigator'], ['equip', '.ah-dock-equipment'], ['choice', '.ah-choice']]) map.set(key, rect(document.querySelector(selector)))
     return map
   }
@@ -189,7 +217,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
   }
   const clear = () => {
     cancelScene?.(); cancelScene = null; block(false)
-    epoch++; queue = []; presentedPlays = []; running = false; stopAudio(); cancelAnimationFrame(frame)
+    epoch++; queue = []; presentedPlays = []; presentedHarm = []; running = false; stopAudio(); cancelAnimationFrame(frame)
     for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
     for(const transit of cardTransits) { const target=transitTarget(transit);if(target)target.style.visibility='' }
     maskedCards.clear();cardTransits=[]
@@ -212,9 +240,9 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const investigator=[...document.querySelectorAll('.ah-map-investigator')].find(el=>Number(el.dataset.seat)===c.seat)
       || interaction(`investigator:${c.seat}`)
     const source=incoming?enemy:interaction(`asset:${c.assetId}`)||investigator
-    const target=incoming?investigator:enemy
+    const target=incoming?(interaction(`asset:${c.targetAssetId}`)||investigator):enemy
     const fallback=[...document.querySelectorAll('.ah-map-node')].find(el=>el.dataset.locationId===c.location)
-    const a=rect(source)||rect(fallback),b=rect(target)||rect(fallback)
+    const a=c.sourceBounds||rect(source)||(incoming&&c.sourceKind==='global'?{x:innerWidth/2-40,y:90,width:80,height:80}:null)||rect(fallback)||(c.presentationStage==='harm'?rect(target):null),b=rect(target)||rect(fallback)
     if(!a||!b)return
     const start=center(a),end=center(b),dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy)||1
     const secondaryTargets=(c.enemyIds||[]).filter(id=>id!==c.enemyId).map(id=>{
@@ -222,14 +250,22 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       return nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]
     }).filter(Boolean).map(el=>center(rect(el)))
     const damageText=c.horror?t('table.combat.damageHorror',{damage:c.damage||0,horror:c.horror}):t('table.combat.damage',{damage:c.damage||0})
-    const label=miss?t('table.combat.miss'):incoming?damageText:(c.defeated?t('table.combat.hitDefeated',{damage:c.damage||0}):t('table.combat.hit',{damage:c.damage||0}))
+    const label=c.presentationStage==='threat'?t('table.combat.threat'):miss?t('table.combat.miss'):incoming?damageText:(c.defeated?t('table.combat.hitDefeated',{damage:c.damage||0}):t('table.combat.hit',{damage:c.damage||0}))
     const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
-    const fx=node('div','ah-combat-fx'+(incoming?' is-incoming':'')+(miss?' is-miss':''))
+    const direct=c.kind==='directDamage'
+    const fx=node('div','ah-combat-fx'+(incoming?' is-incoming':'')+(miss?' is-miss':'')+(direct?' ah-direct-fx is-direct-'+c.style:''))
     fx.dataset.direction=incoming?'incoming':'outgoing';fx.dataset.enemyId=c.enemyId;fx.setAttribute('role','status')
-    const caption=node('div','ah-combat-caption',incoming?t('table.combat.incomingCaption',{who,enemy:c.name||t('table.enemy'),label}):t('table.combat.outgoingCaption',{who,enemy:c.name||t('table.enemy'),label}))
+    const targetName=c.targetAssetId?displayed?.state.investigators.flatMap(inv=>inv.assets||[]).find(asset=>asset.id===c.targetAssetId)?.name||who:who
+    const caption=node('div','ah-combat-caption',c.presentationStage==='harm'?t('table.combat.harmCaption',{who:targetName,label}):direct?t('table.direct.caption',{source:c.sourceName||who,target:c.name||t('table.enemy'),damage:c.damage}):incoming?t('table.combat.incomingCaption',{who,enemy:c.name||t('table.enemy'),label}):t('table.combat.outgoingCaption',{who,enemy:c.name||t('table.enemy'),label}))
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,end.x))+'px',top:Math.max(85,Math.min(innerHeight-100,b.y-54))+'px'})
-    const plan=attackChoreography(incoming?'default':c.attackStyle,{node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss,secondaryTargets})
+    const geometry={node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss,secondaryTargets,damage:c.damage}
+    const plan=direct?directDamageChoreography(c.style,geometry):incoming&&c.presentationStage?enemyAttackChoreography(c,geometry):attackChoreography(incoming?'default':c.attackStyle,geometry)
+    if(c.presentationStage)fx.dataset.stage=c.presentationStage
+    if(c.enemyFamily)fx.dataset.enemyFamily=c.enemyFamily
+    if(c.enemyVariant)fx.dataset.enemyVariant=c.enemyVariant
+    if(plan.color)fx.style.setProperty('--strike',plan.color)
+    if(plan.family){fx.classList.add('ah-themed-fx');fx.dataset.family=plan.family}
     fx.dataset.style=plan.style
     fx.append(...plan.elements,caption);ensureLayer().append(fx)
     const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
@@ -250,7 +286,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       if(stopped||generation!==epoch)return
       fx.classList.add('is-impact')
       cue(miss?{synth:'miss'}:plan.impactSound)
-      if(!miss&&c.horror)cue({synth:'horror'})
+      if(!miss&&c.horror&&!c.presentationStage)cue({synth:'horror'})
       await Promise.all([...plan.impact(target).map(step=>motion(...step)),pause(reduced()?900:780)])
     } finally {
       stop();fx.remove();if(generation===epoch)cancelScene=null
@@ -268,10 +304,17 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
     const plan=blastChoreography({node,from:center(thrower),center:center(area),radius:Math.max(area.width,area.height)/2,targets})
     const fx=node('div','ah-combat-fx ah-blast-fx');fx.dataset.fx=c.fx||'blast';fx.setAttribute('role','status')
-    const caption=node('div','ah-combat-caption',t('table.blast.caption',{who,name:c.name||t('table.location'),damage:c.damage||0}))
+    const caption=node('div','ah-combat-caption',c.targets?t('table.direct.areaCaption',{source:c.sourceName,targets:c.targets.map(target=>`${target.name} −${target.damage}`).join(' / ')}):t('table.blast.caption',{who,name:c.name||t('table.location'),damage:c.damage||0}))
+    const numbers=(c.targets||[]).map(target=>{
+      const el=target.enemyId?enemyNode(target.enemyId):seatNode(target.seat),at=rect(el)
+      if(!at)return null
+      const number=node('div','ah-direct-number',`−${target.damage}`)
+      Object.assign(number.style,{left:center(at).x+'px',top:center(at).y+'px'})
+      return number
+    }).filter(Boolean)
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,center(area).x))+'px',top:Math.max(85,Math.min(innerHeight-100,area.y-54))+'px'})
-    fx.append(...plan.elements,caption);ensureLayer().append(fx)
+    fx.append(...plan.elements,...numbers,caption);ensureLayer().append(fx)
     const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
     const animations=[],timers=new Set(),resolvers=[]
     let stopped=false
@@ -291,6 +334,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       cue(plan.blastSound)
       const viewport=document.querySelector('.ah-map-viewport')
       await Promise.all([...plan.blast.map(step=>motion(...step)),
+        ...numbers.map(el=>motion(el,[{translate:'-50% -30%',opacity:0},{translate:'-50% -70%',opacity:1,offset:.2},{translate:'-50% -140%',opacity:0}],850)),
         motion(viewport,[{translate:'0 0'},{translate:'-6px 3px',offset:.1},{translate:'5px -4px',offset:.25},{translate:'-3px 2px',offset:.45},{translate:'0 0'}],480),
         pause(reduced()?1100:1150)])
     } finally {
@@ -659,6 +703,19 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
   const play = async item => {
     const { change: c, before, after } = item
     ensureLayer().dataset.lastKind = c.kind
+    if (c.kind === 'directDamage') {
+      applyStep(c)
+      if(c.style==='blast') await blast({...c,fx:'grenade',enemyIds:c.targets.filter(t=>t.enemyId).map(t=>t.enemyId),seats:c.targets.filter(t=>t.seat!=null).map(t=>t.seat)})
+      else for(const target of c.targets) await combat({...c,...target,name:target.name,damage:target.damage,
+        sourceBounds:before.get('asset:'+c.assetId)||before.get('card:'+c.code)})
+      return
+    }
+    if (c.kind === 'enemyHarm') {
+      applyStep(c)
+      presentedHarm = (c.targets||[]).filter(target=>!target.assetId)
+      for(const target of c.targets||[]) await combat({...c,...target,targetAssetId:target.assetId})
+      return
+    }
     if (c.kind === 'attack') { await combat(c);applyStep(c);return }
     if (c.kind === 'blast') { await blast(c);applyStep(c);return }
     if (c.kind === 'checkpoint') {
@@ -668,6 +725,11 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       // so playing another copy in a later transaction still animates.
       const shown = presentedPlays; presentedPlays = []
       const changes = presentationChanges(displayed?.state, c.tableState || latest?.state).filter(change => {
+        if (change.kind === 'damage' && change.delta > 0) {
+          const placed = presentedHarm.find(target=>target.seat===change.seat)
+          change.delta = Math.max(0,change.delta-(placed?.[change.field]||0))
+          return change.delta > 0
+        }
         if (change.kind !== 'play') return true
         const index = shown.findIndex(play => play.seat === change.seat && play.code === change.code)
         if (index < 0) return true

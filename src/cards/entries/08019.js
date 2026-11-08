@@ -1,0 +1,52 @@
+// 08019 全副武装
+// 卡面：永久。每套牌库仅限1张。当构建牌库时购买。
+// 强制 - 在你游戏的第一个回合开始时：从手中打出任意张数的[[道具]]支援，每张费用-1。
+//        你本回合期间少进行三次行动。
+//
+// 一张卡一个文件：这张卡的行为只在这里维护。
+// 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 口径：
+//   · 永久卡由引擎 setup 的 permanent 循环自动进场，本条目不写 setup 钩子；
+//   · 第一回合开始窗口 = turnBegins（criteria 用 round===1 锁定「你游戏的第一个回合」；
+//     多人时只有该调查员自己的回合开始才会拿到 context.seat 匹配）；
+//   · 打出道具支援走 api.playCardFromHandFree（noAction，避免再花行动；discount:1 等于费用 -1）；
+//   · 少进行三次行动 = api.loseActions(seat, 3)。
+const isItemAsset = (api, code) => api.cardType(code) === 'asset'
+  && api.cardTraits(code).some(trait => trait === 'item')
+
+export default {
+  code: '08019',
+  abilities: [
+    {
+      kind: 'forced',
+      trigger: 'turnBegins',
+      label: '第一回合开始：从手中打出任意张[[道具]]支援（每张费用-1），本回合少 3 个行动',
+      criteria: ({ state, inv, context }) => state.round === 1
+        && state.currentSeat === inv.seat
+        && (context?.seat == null || context.seat === inv.seat)
+        && (inv.assets || []).some(card => card.code === '08019'),
+      resolve: ({ inv, api }) => {
+        for (let guard = 0; guard < 10; guard++) {
+          const candidates = (inv.hand || []).filter(code => isItemAsset(api, code))
+          if (!candidates.length) break
+          const answer = api.choice({
+            kind: 'card', source: '08019', seat: inv.seat, canSkip: true,
+            prompt: '全副武装：从手中打出任意张数[[道具]]支援（每张费用-1）。',
+            options: [
+              { id: 'done', label: '完成打出' },
+              ...candidates.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) })),
+            ],
+          })
+          if (answer === 'done' || answer == null) break
+          const code = candidates[Number(answer)]
+          if (!code) break
+          api.playCardFromHandFree(inv.seat, code, { noAction: true, discount: 1 })
+        }
+        api.loseActions(inv.seat, 3)
+        api.info('全副武装：本回合少进行三次行动。')
+      },
+    },
+  ],
+  modifiers: [],
+}

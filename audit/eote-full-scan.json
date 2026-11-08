@@ -1,0 +1,101 @@
+{
+ "schemaVersion": 1,
+ "cycle": "eote",
+ "campaignId": "edgeOfTheEarth",
+ "generatedAt": "2026-11-08",
+ "status": "findings-recorded",
+ "scanner": "lead + 8 名分片审计员（调查员/玩家卡×2/战役卡×4/战役流程）+ 3 组对抗式复核子代理",
+ "method": "独立全量复核：以 cards-data 卡面（中英）为权威，逐子句对照单卡条目、章节 definition/behavior、引擎读点与测试断言，并用生产组合根上的真实引擎探针（setup/legalMoves/advanceAgenda/advanceAct/遭遇/移动）验证；另做机械筛查（范围提取、声明-读点、账本证据有效性、克隆/复用、死钩子）。完整逐卡逐子句数据、探针与日志见工作区 G:/boardgame-hall-ai/games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/（bundles/、screen/、各 area findings.json、verify/）。",
+ "scope": {
+  "records": 403,
+  "mainCards": 367,
+  "faces": 36,
+  "partitions": { "eoteInvestigators": 22, "eotePlayer": 115, "eoteCampaign": 266 },
+  "chapters": 8,
+  "sharedGroups": 16
+ },
+ "headline": {
+  "verdicts": { "match": 90, "approximation": 111, "gap": 202, "blocked": 0 },
+  "issues": { "total": 904, "high": 476, "medium": 312, "low": 116 },
+  "scenarioIssues": { "total": 90, "note": "8 章场景级 issue（setup/rules/flow/runthrough/guides）" },
+  "adversarialVerification": {
+   "playerCardsB": { "highFindings": 9, "confirmed": 9, "refuted": 0, "ledgerCorrection": "135 字面不可追溯；4 条 investigator 假阳性→131；稳健核心 129 条 scenario-ledger 系统性错配；110 条（96 verified+14 simplified）无任何测试提及；根因定位到 audit-eote-scenarios.mjs:88-90 与 audit-eote-all-cards.mjs:258-261,429,470" },
+   "fatalMirage": { "top5": "3 confirmed / 1 partial / 1 partially-refuted", "sampledHigh": "25 条抽样：22 confirmed / 3 partial / 0 refuted", "newFindings": ["08549 四个混乱标记真实检定 delta 全 0（chaos.js:6-11 vs treachery-tokens.js:352-364 vs tests.js:1120-1122）", "p7-08560/p7-08587 primitive 请求文件在工作区根 artifacts/ 存在（43 文件），审计员查错目录"], "corrections": ["「死锁」应为不可胜利（全灭 noResolution 可结束）", "XP 批评打在死代码 scenarioResolution 上", "14 file-only 计数错误（实际 61 none/12 file-only/2 strong）", "08549 rider 计数多算"] },
+   "investigators": { "highFindings": 5, "confirmed": 3, "severityCaveat": 1, "partial": 1, "newFindings": ["08014a fightEvade 额度从不清理（下一轮普通行动可用 0）", "08013a 翻面标记无过期点", "08006 可被 moveCardTo 绕过", "08005 图标双计"], "credibility": "7.5/10" }
+  },
+  "perPartitionVerdicts": {
+   "eoteInvestigators": { "total": 22, "match": 14, "approximation": 5, "gap": 3 },
+   "eotePlayer": { "total": 115, "match": 38, "approximation": 60, "gap": 17 },
+   "eoteCampaign": { "total": 266, "match": 38, "approximation": 46, "gap": 182 }
+  },
+  "chapterVerdicts": {
+   "sharedGroups(80)": { "match": 23, "approximation": 20, "gap": 37 },
+   "iceAndDeathPart1(5)": { "match": 0, "approximation": 0, "gap": 5 },
+   "iceAndDeathPart2(21)": { "match": 5, "approximation": 11, "gap": 5 },
+   "iceAndDeathPart3(5)": { "match": 0, "approximation": 0, "gap": 5 },
+   "fatalMirage(75)": { "match": 0, "approximation": 3, "gap": 72 },
+   "toTheForbiddenPeaks(25)": { "match": 1, "approximation": 1, "gap": 23 },
+   "cityOfTheElderThings(27)": { "match": 1, "approximation": 5, "gap": 21 },
+   "theHeartOfMadnessPart1(12)": { "match": 7, "approximation": 1, "gap": 4 },
+   "theHeartOfMadnessPart2(16)": { "match": 1, "approximation": 5, "gap": 10 }
+  }
+ },
+ "dimensionConclusions": {
+  "D1": "403 卡逐子句复核：match 90（22%）/approximation 111（28%）/gap 202（50%）；战役卡 68% gap，8 章每章均有 high。",
+  "D2": "选择/日志/隐私投影链路完整（deckTop/crossSeat/Tekeli-li/keys/supplies 逐观察者过滤、scenarioFlags 白名单）；缺口：动态 label/prompt/info 全中文硬编码（488/491、192/192、286/286，EN locale 无回退）、古者之城自动失败原因 lastAutoFailReason 写后无读。",
+  "D3": "8 个章节单元无一能在真实引擎路径完整跑通：Ice&Death I/II/III 与 FatalMirage 的 behavior 钩子名不符（scenarioActions/performScenarioAction/chaosTokenValue vs 引擎 actions/performAction/resolveChaosToken）且缺 agendaReveal/actReveal/resolution；古者之城钥匙无入口+地点动作 api.test 签名错导致 TypeError 卡死；Heart of Madness Part2 议程 08672 doomThreshold=0 提前清场、R1/R2 记录无写入。战役流程图本身可走通（flow-only run 抵达 campaign end、检查点/幕间/FM 回场/存档往返均验证），但章节内真实玩法不可跑通；P8 campaign/browser 验收用 finishScenario/调试 endScenario 跳过章节内游玩，不能作为可玩证据。",
+  "D4": "207 条声明（158 key + 49 规则调度值）在 src+content 无读点（171 条在账本 verified 卡上）；49 条调度值为「声明 handler 名但无实现」；引擎行为级卡号分支 0（100 处字面量均为注释/availability 表）；R1 直写 0 但工具对局部变量直写有假阴性（08008.js:30）；primitive-plan.escape=0 与 201 个 resolve 条目不符；≥21 处测试只断言声明数据不断言行为。",
+  "D5": "应复用未复用 4 簇：08535–08543 九张克隆（谈判状态机 0.82–0.89）、08120–08124 五张克隆（资源支付 0.926）、08693/08694、08117/08119；Ice&Death 三份地点/连接/chaos 数据漂移；重印 4 条（08004↔98007、08057↔60379、08058↔60384、08073↔12073）只实现一次，合规。"
+ },
+ "p0": [
+  { "id": "hook-names-ice-death", "summary": "Ice&Death I/II/III behavior 导出 scenarioActions/performScenarioAction，引擎只调 actions/performAction → 营地撤退/翻底牌等剧本行动不在 legalMoves，08521/08526/08546 目标不可达", "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart{1,2,3}/behavior.js:397-398/396-397/159-160; src/engine/moves.js:222; src/engine/dispatch.js:633", "verifiedBy": "Lead 运行 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/campaign/a/_probe2.mjs 实测 legalMoves 无 scenarioAction" },
+  { "id": "reveal-hooks-missing", "summary": "Part1 agendaReveal 空函数、Part2/3 无 agendaReveal；三章无 actReveal；FatalMirage 均无 → 引擎 throw「密谋/场景规则尚未迁移：08521/08523/08544/08526/08546/08550」", "evidence": "iceAndDeathPart1/behavior.js:399; src/engine/phases.js:268-283,276-278; src/engine/reveal.js:151-176; fatalMirage/definition.js:146-147", "verifiedBy": "campaign-a probe 实测 advanceAct/advanceAgenda THREW；campaign-b repro" },
+  { "id": "chaos-token-value-hook", "summary": "Ice&Death 导出 chaosTokenValue，引擎读 resolveChaosToken → 三章符号标记修正值按 0 结算；Part III 缺 afterTest 失败后果", "evidence": "iceAndDeathPart1/behavior.js:368-370,411; src/engine/treachery-tokens.js:349; 对照 toTheForbiddenPeaks/behavior.js:271", "verifiedBy": "campaign-a probe: resolveSpecialToken delta:0" },
+  { "id": "shroud-missing", "summary": "冰原 13 地点 shroud 未进入地点数据 → 调查难度 NaN 必失败；未探索地点入场费永不收取", "evidence": "content/campaigns/edgeOfTheEarth/card-data.js:23-41; iceAndDeathPart1/definition.js:98-104; src/engine/actions.js:593; src/engine/movement.js:235-249", "verifiedBy": "Lead probe: locations shroud=undefined" },
+  { "id": "fatal-mirage-broken", "summary": "FatalMirage 无法正常胜利/结算：议程推进 throw（agendaReveal 缺失，真实 checkAgenda 复现「密谋规则尚未迁移：08550」）、v2/v3 agendaIndex 越界（agendas 仅 1 张、doom 20 仍 no-op、doomThreshold 恒 15、actStage 恒 1a）、19 地点 clues=0、resolution 记录钩子缺失、28 关联面死数据；全灭 noResolution 仍可结束但不可胜利且记录缺失", "evidence": "fatalMirage/definition.js:66-69,146-147; behavior.js:69-74,141-142,201-265,276-296,302-323; src/engine/phases.js:268-283; src/engine/turn.js:131,140; src/engine/campaign-flow.js:241-243", "verifiedBy": "campaign-b 对抗复核（3 confirmed/1 partial）+ Lead 复核" },
+  { "id": "city-keys-deadlock", "summary": "古者之城数值钥匙 claimKey/giveKeys 未进入 actions → 幕 1 目标不可达；08629 actRule.forcedOnEnemyEnter 未实现；议程 2 背面 R2 缺失", "evidence": "cityOfTheElderThings/behavior.js:180-201,256-293,415-417; src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:30", "verifiedBy": "campaign-c + Lead 读码/grep" },
+  { "id": "heart2-agenda", "summary": "08672 无印刷 doom → doomThreshold=0，下一神话阶段立即推进清场；R1/R2 记录无写入 → 结局不可达；08716 成功躲避后引用未定义 here → ReferenceError", "evidence": "theHeartOfMadnessPart2/definition.js:53; src/engine/act-agenda.js:435; behavior.js:275-276; _shared/expedition_team/08716.js:35", "verifiedBy": "campaign-d 探针复现" },
+  { "id": "encounter-zero-resolution", "summary": "Peaks/City 8 张专属诡计 treacherous 定义缺 entryRevelation → 真实遭遇零结算；两章遭遇牌库仅 14/20 张本章卡（共享组未 gather）", "evidence": "toTheForbiddenPeaks/definition.js:110-117,133-139; cityOfTheElderThings/definition.js:121-127,130-137; src/engine/treachery-tokens.js:113-124", "verifiedBy": "campaign-c + Lead 复核" },
+  { "id": "player-card-real-path", "summary": "玩家卡真实路径失效：08105/08107 窗口不出现、08102 context 形状不符、08130/08131 威胁区治愈不可用、08091 第二子句缺失、08083 healAsset 参数错、08028/08074/08059 未接线或零实现、08053/08058 非法移动", "evidence": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/player-a|player-b/findings.json（逐条 file:line）；verify/_probe-verify.txt 独立复现", "verifiedBy": "player-a/player-b 探针 + 对抗复核" },
+  { "id": "investigator-bugs", "summary": "调查员：08013a 多人局延迟翻面被他人检定吞掉、08006 只封抽牌不封检索、08005 投入牌库顶绕过 commit 规则、08004 牌库顶 sync 缺口与非本人回合换牌座位错", "evidence": "src/cards/entries/08013a.js:22-33; src/engine/eote-investigator-support.js:111-135,229-253; src/engine/deck-ops.js:387-444,532-533; src/engine/play-channels.js:303-318; src/engine/api-test.js:199", "verifiedBy": "inv-auditor probes P1-P8（可复跑 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/investigators/probes.mjs）" },
+  { "id": "ledger-invalid", "summary": "P8 逐卡账本 135/403 条记录无有效证据：129 条 scenario-ledger 全部指向 tests/eote-scenario-theHeartOfMadnessPart2.test.mjs（该文件不含对应卡号，独立复核重算 codeInCitedHeartFile=0）；FatalMirage 60/75 同样无效；eote-investigators.json sha 漂移导致 all-cards --check 真实失败。另：17 张 simplified 引用的 p7-08560/p7-08587 primitive 请求文件在工作区根 artifacts/migration/eote/primitive-requests/（43 文件）存在，但 mod 内 artifacts/ 副本不一致且 deferred 索引未列入 → 披露索引缺口（非文件缺失，已按复核修正）", "evidence": "audit/eote-all-card-acceptance.json; audit/eote-investigators.json; tests/eote-all-cards.test.mjs:123; games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/screen/ledger-validity.json; games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/_ledger-recompute.json; artifacts/migration/eote/primitive-requests/", "verifiedBy": "Lead 复算 + 独立复核子代理重算（129/129 指向 Heart Part2、codeInCitedHeartFile=0；primitive 目录事实由 campaign-b 复核纠错）" },
+  { "id": "fatal-mirage-token-values", "summary": "FatalMirage 参考卡 08549 四个混乱标记在真实 performTest 中修正值全部为 0：chaos.js 用数字 schema，引擎 resolveChaosToken 只认 {kind,delta}，behavior.chaosTokenValue 无引擎读点（原审计员误判「数值已实现」）", "evidence": "fatalMirage/chaos.js:6-11; src/engine/treachery-tokens.js:352-364; src/engine/tests.js:1120-1122", "verifiedBy": "campaign-b 对抗复核真实 performTest 探针（delta 0，对照 Heart Part2 tablet delta -3）" },
+  { "id": "city-typeerror-deadlock", "summary": "古者之城地点动作把 options 对象当第 4 参传给 api.test（引擎签名第 4 参是 resolve 回调）→ 实机 scenarioAction 抛「options.resolve is not a function」，待决选择 commit 卡死、战役无法继续", "evidence": "cityOfTheElderThings/behavior.js:571（另 491/507/547）; src/engine/scenario-runtime.js:657", "verifiedBy": "scenario-auditor 真实引擎 run-through 复现堆栈；Lead 复核 api.test 签名" }
+ ],
+ "priorLedgerConflicts": [
+  "audit/eote-all-card-acceptance.json：status=verified，但按字面口径 135/403 不可追溯；稳健核心为 129 条 scenario-ledger 系统性错配（129/129 指向 tests/eote-scenario-theHeartOfMadnessPart2.test.mjs、0/129 含卡号，含 115 verified + 14 simplified；其中 110 条在任何 tests/*.test.mjs 都不出现=96 verified+14 simplified）；4 条 08011b/12b/13b/14b 为假阳性（lily 测试覆盖 b 面），修正后 131。根因：tools/audit-eote-scenarios.mjs:88-90（每章塞全部 264 张 CAMPAIGN_CODES）+ tools/audit-eote-all-cards.mjs:258-261（last-wins）、302-308、429,470（gate 只查 evidence 非空→假绿）。",
+  "audit/eote-migration.json：releaseAcceptance.status=passed、playable，但 Ice&Death I/II/III、FatalMirage、City、Heart2 真实路径不可通关；P8 campaign/browser 用 finishScenario/调试命令跳过章节内游玩。",
+  "audit/eote-all-card-acceptance.json#sources.ledgers[1].sha256 与当前 audit/eote-investigators.json 不一致（all-cards --check 失败）。",
+  "simplified 卡 pendingRequests 指向的 p7-08560.json / p7-08587.json 在模组内 artifacts/migration/eote/primitive-requests/ 不存在（该目录 25 文件）；但工作区根 artifacts/migration/eote/primitive-requests/ 有 43 文件、含这两项 → 目录副本不同步 + audit/eote-migration.json deferred 索引未列入的披露索引缺口（经对抗复核修正原「文件不存在」结论）。",
+  "audit/eote-player-acceptance.json：115 卡全 verified/noSimplified 为形式为真、实质空门禁——55/115 条目注释自述 approximation、11/115 有正式 note:'approximation'（08113/08120-08125/08130-08133）、0/115 设 simplified:true；tools/audit-eote-player.mjs:71-73,91 只看 flag 不看 note；queue 有 5 条 done 原语未接线（08081/08086/08091/08097/08107，audit/eote-player-queue.json:252-318）。",
+  "测试全绿不作章节可玩证据：章节测试 api stub 直调 behavior.*；P8 campaign finishScenario 跳关。",
+  "tools/audit-card-entry-compliance.mjs 对局部变量直写有假阴性（08008.js:30），R1=0 不能单独作合规证据。",
+  "至少 21 处 EOTE 测试只断言 registeredEntry(code).flags/*Rule 的声明数据（如 tests/eote-scenario-fatalMirage.test.mjs:142-144），未验证读点。"
+ ],
+ "gatesRerun": {
+  "eoteTestSuite": { "command": "node --experimental-test-isolation=none --test tests/eote-*.test.mjs tests/replay-eote-p8.test.mjs", "tests": 477, "pass": 474, "fail": 3, "failDetail": ["P8 all-cards 账本 hash 漂移（真实失败）", "eote-story 生成物 --check（沙箱 spawn EPERM 伪失败）", "eote-story guides 幂等（沙箱 spawn EPERM 伪失败）"] },
+  "auditChecks": { "audit-eote": 0, "scan-eote-mechanisms": 0, "scan-eote-scope": 0, "audit-eote-rules": 0, "audit-eote-interactions": 0, "audit-eote-primitives": 0, "audit-card-entry-compliance": 0, "audit-dead-primitives": 0, "build-card-index": 0, "build-encounter-index": 0, "check-doc-links": 1 },
+  "docLinksFailure": "README.md:9 -> docs/tcu-completion.md 缺失（工作区既有跨循环改动，非 EOTE 本体）"
+ },
+ "evidenceIndex": {
+  "workspace": "G:/boardgame-hall-ai/games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/",
+  "fullLedger": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/ledger/eote-full-scan.json（866 issues + 403 verdict + 场景级 issue + 账本有效性 + 死钩子）",
+  "report": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/全量扫描报告.md（完整报告）、games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/ledger/report-appendix.md（附录 A-D）",
+  "perCardBundles": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/bundles/<code>.md（403 份）、games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/chapter-bundles/<chapterId>.md（8 份）",
+  "mechanical": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/screen/{integrity,keyword-coverage,flags-readpoints,duplication,tests-coverage,perceivability,scenario-integrity,known-deviations,primitive-compliance,ledger-validity,ledger-evidence-check,dead-hooks-exact,scenario-flags-write-read}.json",
+  "areaFindings": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/{investigators,player-a,player-b,campaign/a,b,c,d,scenarios,interactions,primitives}/findings.json",
+  "adversarialVerify": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/（独立复核子代理的探针输出与账本重算）",
+  "testBaseline": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/ledger/test-baseline.md"
+ },
+ "limitations": [
+  "沙箱禁止管道 spawn：node --test 默认与 verify-eote/audit-eote-all-cards/player/investigators 等工具不可运行，以 --experimental-test-isolation=none 实跑与自写复算替代。",
+  "Playwright 无法运行；浏览器证据仅核验账本状态、200 张截图路径存在性与 spec 断言内容，未重跑。",
+  "工作区对 mod 目录只读，过程产物在 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/；mod 内仅落本账本与 docs 报告。",
+  "verdict 为规则等价性人工复核结论，非官方逐字等价声明；approximation/gap 边界存在主观成分，但全部 high/gap 均有 file:line 与探针/复现方式。"
+ ],
+ "remediationPriority": [
+  "P0：统一章节 behavior 钩子契约并补 agendaReveal/actReveal/resolution（Ice&Death I/II/III、FatalMirage）；修 shroud/入场费；修 FatalMirage 议程/线索/记录/关联面；修 City 钥匙入口与议程 2；修 Heart2 08672/R1R2/08716；补 Peaks/City treacherous entryRevelation 与 gather；修玩家卡/调查员 high；修审计流水线（证据映射、sha、simplified 请求、R1 漏检、章节测试真实引擎化）。",
+  "P1：207 条声明逐条接线或删除并降级账本；49 条调度值落地 handler；9+5 克隆上收原语；三份地点数据收敛；26 张 simplified 重新披露；动态文案 i18n；lastAutoFailReason 接 UI。",
+  "P2：浏览器补 EN 文案/感知断言；P8 campaign 验收禁止跳关；重印别名表；escape 登记；测试从声明断言提升为行为断言。"
+ ]
+}

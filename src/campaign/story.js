@@ -7,6 +7,7 @@ import { TFA_STORY_TEXT } from '../../content/campaigns/theForgottenAge/story-te
 import { TFA_STORY_ROLES } from '../../content/campaigns/theForgottenAge/story-roles.js'
 import { TCU_STORY_TEXT } from '../../content/campaigns/theCircleUndone/story-text.js'
 import { TDE_STORY_TEXT } from '../../content/campaigns/theDreamEaters/story-text.js'
+import { EOTE_STORY_TEXT } from '../../content/campaigns/edgeOfTheEarth/story-text.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignEnding } from './campaign.js'
 
@@ -14,6 +15,7 @@ const CARCOSA_IDS = new Set(Object.keys(CARCOSA_STORY_TEXT.introductions))
 const TFA_IDS = new Set(Object.keys(TFA_STORY_TEXT.introductions))
 const TCU_IDS = new Set(Object.keys(TCU_STORY_TEXT.introductions))
 const TDE_IDS = new Set(Object.keys(TDE_STORY_TEXT.chapters))
+const EOTE_IDS = new Set(Object.keys(EOTE_STORY_TEXT.chapters || {}))
 const TDE_FIRST_SCENARIOS = new Set(['beyondTheGatesOfSleep', 'wakingNightmare'])
 // 2-A《寻觅卡达斯》「if Luke Robinson is in this group」按调查员卡号判断（06004）。
 const TDE_LUKE_ROBINSON = '06004'
@@ -501,6 +503,29 @@ function dunwichFlowStory(nodeId, campaign) {
   return null
 }
 
+const splitParagraphs = text => String(text ?? '').split(/\n{2,}/).map(part => part.trim()).filter(Boolean)
+
+/** 《地球边缘》导入正文：按 story-text 章节叙事键生成带标题的分节，段落按空行切分，避免整段粘连。 */
+function eoteIntroduction(sc) {
+  const chapter = EOTE_STORY_TEXT.chapters?.[sc.id]
+  if (!chapter?.sections) return null
+  const keys = Object.keys(chapter.sections).filter(key => /^(?:investigatorSetup|intro\d*|flavorText|prologue\d*)$/.test(key))
+  const sections = []
+  let previousTitle = null
+  for (const key of keys) {
+    const value = chapter.sections[key]
+    const title = value && typeof value === 'object' && typeof value.title === 'string' && value.title.trim() ? value.title.trim() : null
+    const raw = value && typeof value === 'object' ? (value.body ?? value.text ?? value) : value
+    const paragraphs = splitParagraphs(raw)
+    if (!paragraphs.length) continue
+    const effectiveTitle = title && title !== previousTitle ? title : null
+    if (effectiveTitle) previousTitle = effectiveTitle
+    sections.push({ title: effectiveTitle, paragraphs })
+  }
+  if (!sections.length && sc.intro) sections.push({ title: sc.name, paragraphs: splitParagraphs(sc.intro) })
+  return sections.length ? sections : null
+}
+
 // Build a reader's journal from reached branches only. Never send a resolution map.
 export function introduction(sc, records = {}, context = null) {
   const introductionProvider = contentRegistry.listScenarios().some(scenario => scenario.id === sc.id) && contentRegistry.getBehavior(sc.id).introduction
@@ -512,11 +537,13 @@ export function introduction(sc, records = {}, context = null) {
   const tfa = tfaIntroduction(sc, records, context)
   const tcu = tcuIntroduction(sc, records, context)
   const tde = tdeIntroduction(sc, records, context)
+  const eote = eoteIntroduction(sc)
   if (dunwich) sections.push(...dunwich)
   else if (carcosa) sections.push(...carcosa)
   else if (tfa) sections.push(...tfa)
   else if (tcu) sections.push(...tcu)
   else if (tde) sections.push(...tde)
+  else if (eote) sections.push(...eote)
   else {
     const narrative = sc.id === 'theMidnightMasks'
       ? [...STORY_TEXT.theMidnightMasks[records.litaForcedOthers ? 'others' : 'survivors'], ...STORY_TEXT.theMidnightMasks.common]
@@ -635,7 +662,11 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
       paragraphs = [...(CARCOSA_STORY_TEXT.resolutions.theUnspeakableOath.noResolution || []), ...paragraphs]
     }
   }
-  return { version: 3, title, paragraphs: [...paragraphs] }
+  // 章节定义里的 resolution 是「标题 + 正文」整串（EOTE 等）；按空行拆成段落，避免日志里粘成一段。
+  const paragraphList = paragraphs
+    .flatMap(paragraph => (typeof paragraph === 'string' ? splitParagraphs(paragraph) : [paragraph]))
+    .filter(Boolean)
+  return { version: 3, title, paragraphs: paragraphList }
 }
 
 export function campaignStory(state, registry, observerSeat = null) {
@@ -674,7 +705,7 @@ export function campaignStory(state, registry, observerSeat = null) {
       || tfaFlowStory(visit, campaign) || tcuFlowStory(visit, campaign, campaignManifest)
     if (expanded || visit.storyText) entries.push({ _order:index*3-1, id: `flow:${index}`, kind: 'interlude',
       nodeId: visit.nodeId,
-      title: expanded?.title || visit.storyTitle || '调查纪事', paragraphs: expanded?.paragraphs || [visit.storyText] })
+      title: expanded?.title || visit.storyTitle || '调查纪事', paragraphs: expanded?.paragraphs || splitParagraphs(visit.storyText) })
   }
   const observerId = Number.isInteger(observerSeat)
     ? [...Object.values(campaign.investigators || {}), ...(campaign.retired || [])]

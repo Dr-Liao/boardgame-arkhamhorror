@@ -1,0 +1,144 @@
+﻿{
+ "toTheForbiddenPeaks": {
+  "reached": true,
+  "scenarioId": "toTheForbiddenPeaks",
+  "results": [
+   {
+    "code": "08611",
+    "ok": true,
+    "before": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    },
+    "after": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "code": "08612",
+    "ok": true,
+    "before": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    },
+    "after": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "code": "08613",
+    "ok": true,
+    "before": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    },
+    "after": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    }
+   }
+  ]
+ },
+ "cityOfTheElderThings": {
+  "reached": true,
+  "scenarioId": "cityOfTheElderThings",
+  "results": [
+   {
+    "code": "08644",
+    "ok": true,
+    "before": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    },
+    "after": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "code": "08645",
+    "ok": true,
+    "before": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    },
+    "after": {
+     "uiState": "inScenario",
+     "damage": [
+      0,
+      0
+     ],
+     "horror": [
+      0,
+      0
+     ]
+    }
+   }
+  ]
+ }
+}

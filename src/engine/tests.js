@@ -18,6 +18,7 @@ import { notePromiseEvent } from './turn-promises.js'
 import { nextInstanceId } from './rules-state.js'
 // 07185 的条目级标记读点（floodedAttackExtraTokenRule）是模块级函数，需要 ability.js 的注册表读法。
 import { registeredEntry } from './ability.js'
+import { applyPendingFlipAfterTests, noteRoundEvent, sampleRoundEvents } from './eote-investigator-support.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
@@ -151,7 +152,15 @@ function runLocationTestFail(state, inv, result, events) {
 }
 
 function performTest(state, seat, skill, difficulty, options = {}) {
+  // 本次检定开始时已经存在的 endOfTest 效果。其中属于**其他调查员**的「下一次技能检定 +N」
+  // 是留给对方下一次检定的：本次检定结束不能把它一起过期（扫描报告 P0-10 #1）。
+  const carriedEndOfTestEffects = new Set((state.effects || [])
+    .filter(effect => effect.duration === 'endOfTest').map(effect => effect.id))
   beginChaosTest(state)
+  // P5 地球边缘：本轮技能检定计数（陈丽丽 Broken 演武的轮末条件读点）；
+  // 检定发起也是一次「行动结算」，这里补采样手牌数/同地点敌人的粘性条件。
+  noteRoundEvent(state, state.investigators?.[seat], 'tests', 1)
+  sampleRoundEvents(state)
   // P2.5：多技能合成检定。单技能时 skillList=[skill]，所有求和退化为原值，行为逐字不变。
   let skillList = normalizeTestSkills(skill)
   let skillContext = skillList.length === 1 ? skillList[0] : [...skillList]
@@ -241,9 +250,26 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   state.skillTest.value = value
 
   // 「追忆未来」等：技能检定开始（投入之前）的反应窗口。
-  if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
-    row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testInitiated'))))) {
-    reactionWindow(state, 'testInitiated', { when: 'testInitiated', seat, location: inv.location }, events, { allowNested: true })
+  // P6 原语：context 带本次检定的行动类型（fight/investigate/evade…）与目标；
+  // 战斗/调查入口可传 `options.initiatedContext`，窗口内的卡面反应把本次攻击/调查的
+  // 加值写回这个对象（08086「你发动一次攻击时 +1 伤害」读点），调用方在结算时读取。
+  {
+    const actionKind = options.actionKind ? String(options.actionKind)
+      : (options.testTarget?.actionKind ? String(options.testTarget.actionKind) : null)
+    const initiatedContext = options.initiatedContext && typeof options.initiatedContext === 'object'
+      ? options.initiatedContext : null
+    Object.assign(initiatedContext || {}, {
+      when: 'testInitiated', seat, location: inv.location, skill: skillContext,
+      ...(actionKind ? { actionKind } : {}),
+      ...(options.testTarget ? { testTarget: options.testTarget } : {}),
+    })
+    const hasInitiatedListener = aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
+      row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testInitiated'))))
+    if (initiatedContext) {
+      if (hasInitiatedListener) reactionWindow(state, 'testInitiated', initiatedContext, events, { allowNested: true })
+    } else if (hasInitiatedListener) {
+      reactionWindow(state, 'testInitiated', { when: 'testInitiated', seat, location: inv.location }, events, { allowNested: true })
+    }
   }
   {
     const context = { when: 'testBegins', seat, location: inv.location, skill: skillContext, difficulty, baseValue: statReference,
@@ -573,6 +599,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds')))) {
       reactionWindow(state, 'testEnds', { when: 'testEnds', seat, result, source: options.source }, events, { allowNested: true })
     }
+    // P5 地球边缘：检定结束后的延迟翻面（08013a「那次技能检定结束后翻面」）。
+    // 只处理**本次检定执行者**自己的资产；配合 closeTest 之后的座位化效果过期，
+    // 别人的检定既不会消耗「下一次检定 +N」，也不会触发延迟翻面。
+    // 放在 testEnds 窗口与条件块之后：无论本局是否有 testEnds 监听者都必须执行。
+    applyPendingFlipAfterTests(state, seat)
     state.skillTest.stage = 'ST.8'
     for (const item of state.skillTest.committed) {
       const profile = commitProfile(item.code)
@@ -1042,7 +1073,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       break
     }
     if (token === 'frost') {
-      delta -= 1
+      // EotE：寒霜默认 -1；地点/卡牌可用 setTokenTreatment({ modifier })（含 -3 与「视为 frost」）
+      // 覆盖本次修正；同一检定第 2 枚 frost 立即自动失败（不再追加揭示）。
+      const frostTreatment = tokenEffect(state, token, physicalIndex)
+      delta += frostTreatment.modifier
       if (drawn.filter(t => t === 'frost').length > 1) { autoFail = true; break }
       continue
     }
@@ -1114,6 +1148,46 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (res.drawAnother) continue
     if (pendingTokens.length) continue
     break
+  }
+
+  // P6 原语（08112「额外揭示一枚混乱标记，把其负修正取反并计入本次检定」）：
+  // `api.playerTools.revealAdditionalTestToken({ flipSign, autoFailOn })` 在揭示循环期间登记，
+  // 这里在结算总修正前追加揭示（仍属于本次检定的物理揭示区，endChaosTest 正常归还）。
+  if (state.skillTest?.pendingExtraReveals?.length) {
+    const plans = state.skillTest.pendingExtraReveals
+    state.skillTest.pendingExtraReveals = []
+    for (const plan of plans) {
+      const extra = drawChaosToken(state)
+      drawn.push(extra)
+      let extraDelta = 0
+      let extraAutoFail = false
+      if (/^[+-]?\d+$/.test(extra)) {
+        const numeric = Number(extra)
+        extraDelta = plan.flipSign ? (numeric < 0 ? -numeric : numeric) : numeric
+      } else if (['skull', 'cultist', 'tablet', 'elderthing'].includes(extra)) {
+        if (plan.flipSign) {
+          // 取反口径只针对数值修正；符号标记无法取反，按卡面「若为骷髅则自动失败」处理。
+          if ((plan.autoFailOn || []).includes(extra)) extraAutoFail = true
+        } else if (!ignoreSymbolEffects) {
+          const res = resolveSpecialToken(state, seat, inv, extra, events)
+          extraDelta = investigatorRule(inv.code)?.tokenModifiers?.[extra] ?? res.delta
+          if (res.autoFail) extraAutoFail = true
+          for (const fx of res.onDraw) applyTokenFx(state, seat, inv, fx, events)
+          for (const fx of res.onFail) pendingOnFail.push(fx)
+        }
+      } else if (extra === 'autofail') {
+        extraAutoFail = true
+      }
+      if (((plan.autoFailOn || []).includes(extra)) || extraAutoFail) {
+        autoFail = true
+        info(state, events, `🎲 额外揭示了 ${tokenLabel(extra)}：本次检定自动失败。`)
+        break
+      }
+      delta += extraDelta
+      state.skillTest.tokenResults ||= []
+      state.skillTest.tokenResults.push({ index: state.chaos.revealed.length - 1, face: extra, modifier: extraDelta })
+      info(state, events, `🎲 额外揭示 ${tokenLabel(extra)}（修正 ${extraDelta >= 0 ? '+' : ''}${extraDelta}）。`)
+    }
   }
 
   if (state.skillTest.tokenResults?.length || (state.chaos.revealed.length > (state.chaos.frames.at(-1) || 0)
@@ -1311,6 +1385,27 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       resolveEffect(state, seat, fx, makeRuntime(state, events))
     }
   }
+  // P6 原语（08107 破冰锥）：「检定成功后（可选）弃掉来源支援，并让本次攻击 +N 伤害 /
+  // 发现额外 N 个线索」。条目在检定中调用 api.playerTools.onTestSuccess 登记；
+  // 这里先弃置来源（若声明），再并入本次结算：攻击加值走 result.damageBonus（combat.js
+  // 的伤害公式读它），线索立即发现。失败/代价不符时不登记，登记项只在这里结算一次。
+  if (success && state.skillTest?.customOnSuccess?.length) {
+    const entries = state.skillTest.customOnSuccess
+    state.skillTest.customOnSuccess = []
+    for (const entry of entries) {
+      if (!entry || (entry.seat != null && entry.seat !== seat)) continue
+      const owner = state.investigators[entry.seat ?? seat]
+      const source = owner?.assets.find(asset => asset.id === entry.sourceId)
+      const sourcePresent = Boolean(source)
+      if (entry.attackDamageBonus) skillFx.damageBonus += entry.attackDamageBonus
+      if (entry.extraClue) discoverClueAt(state, owner || inv, entry.extraClue, events)
+      if (entry.discardSelf && sourcePresent) {
+        leaveAsset(state, owner, source)
+        discardPlayerCards(state, owner, source.code)
+        info(state, events, `🗑️ 检定成功：弃掉「${cardName(source.code)}」以获得本次结算的额外收益。`)
+      }
+    }
+  }
   // 失落的时代旧印的后续结算（芬恩线索 / 厄休拉移动 / 马泰奥二选一）。
   if (success && elderClueOnSuccessBy && value - difficulty >= elderClueOnSuccessBy) {
     const answer = requestChoice(state, { kind: 'reaction', source: 'finnElderSign', seat, canSkip: true,
@@ -1441,9 +1536,23 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       peril: options.peril, resolve: options.resolve, failedBy: Math.max(0, difficulty - value) }, events, summarizeTestResult(null, { ...result, seat, skill: skillContext }))
   }
   // 检定结束：本次检定内的效果到期（A1）。
+  // 「下一次技能检定 +N」类效果（08013a「演武·战斗」、08053/08058「红色闹钟」等）只在
+  // **其控制者自己**的检定结束时过期；别人检定结束时把它们留到对方的检定/回合结束。
+  // 回合结束时仍由 turn-flow.js 的 expireEffects(state,'endOfTurn') 统一清理。
+  const carriedOverEffects = []
+  for (const effect of state.effects || []) {
+    if (effect.duration !== 'endOfTest') continue
+    if (!carriedEndOfTestEffects.has(effect.id)) continue
+    if (effect.controllerSeat === seat) continue
+    carriedOverEffects.push(effect)
+  }
+  if (carriedOverEffects.length) state.effects = state.effects.filter(effect => !carriedOverEffects.includes(effect))
   for (const effect of expireEffects(state, 'endOfTest')) {
     if (effect.label) info(state, events, `⌛ 「${effect.label}」到期（本次检定结束）。`)
   }
+  // 留给他人的「下一次技能检定」效果放回效果表；顺序变化只影响这批跨检定效果，
+  // 修正量求和与触发结算都不依赖效果表顺序。
+  for (const effect of carriedOverEffects) state.effects.push(effect)
   return {
     success, value, difficulty,
     token: drawn[drawn.length - 1],

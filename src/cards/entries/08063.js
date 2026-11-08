@@ -1,0 +1,51 @@
+// 08063 力量之风（Winds of Power）· 秘术师（Mystic）事件 · 1 经验。
+//
+// 卡面：在你控制的一张支援上放置 2 充能。
+//       [reaction] 在你回合期间抽取力量之风后：将其打出。
+//
+// 一卡一文件：这张卡的行为只在这里维护。
+// 读点：api.addUses 放置充能；正常打出走 played；抽到时打出走 fromHand + quickEvent 反应
+// （与 07020 同一快速事件通道，抽牌窗口是 cardDrawn）。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const canHoldCharges = asset => {
+  const def = ALL_CARDS[asset.code]
+  return Boolean(asset.uses != null || def?.uses != null || def?.usesType === 'charges' || asset.usesType === 'charges')
+}
+
+function placeTwoCharges ({ inv, api }) {
+  const candidates = (inv.assets || []).filter(canHoldCharges)
+  if (!candidates.length) {
+    api.info('「力量之风」：你没有可以放置充能的支援。')
+    return
+  }
+  const answer = candidates.length === 1 ? candidates[0].id
+    : api.choice({ kind: 'target', source: '08063', seat: inv.seat,
+      prompt: '选择一张支援，在其上放置 2 充能。',
+      options: candidates.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })) })
+  const asset = candidates.find(item => item.id === answer) || candidates[0]
+  api.addUses(asset, 2)
+  api.info(`💨 「力量之风」在「${api.cardName(asset.code)}」上放置 2 充能（当前 ${asset.uses || 0}）。`)
+}
+
+export default {
+  code: '08063',
+  abilities: [
+    {
+      kind: 'played',
+      label: '在你控制的一张支援上放置 2 充能',
+      resolve: placeTwoCharges,
+    },
+    {
+      kind: 'reaction',
+      fromHand: true,
+      quickEvent: true,
+      trigger: 'cardDrawn',
+      label: '在你回合期间抽到力量之风后：打出它',
+      criteria: [({ state, inv, context }) => context?.cardCode === '08063'
+        && state.currentSeat === inv.seat],
+      resolve: placeTwoCharges,
+    },
+  ],
+  modifiers: [],
+}

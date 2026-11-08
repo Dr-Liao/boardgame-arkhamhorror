@@ -1,0 +1,1060 @@
+{
+ "schemaVersion": 1,
+ "cycle": "eote",
+ "campaignId": "edgeOfTheEarth",
+ "generatedAt": "2026-11-08T11:31:10.437Z",
+ "scanner": "lead + 8 auditors + 3 verifiers (deepseek-flash Team)",
+ "method": "人工逐卡/逐章独立复核（cards-data 卡面 vs 条目/章节 behavior/引擎读点/测试）+ 机械筛查（范围提取、声明读点、账本有效性、克隆、死钩子）+ 3 组对抗式复核。完整数据见工作区 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/（bundles/、screen/、各 area findings.json、verify/）。",
+ "scope": {
+  "records": 403,
+  "partitions": {
+   "eoteInvestigators": 22,
+   "eotePlayer": 115,
+   "eoteCampaign": 266
+  },
+  "chapters": 8,
+  "sources": "games/arkhamhorror/audit/eote-*.json, src/cards/cards-data.js, content/campaigns/edgeOfTheEarth/**"
+ },
+ "areaSummaries": [
+  {
+   "area": "investigators",
+   "cards": 22,
+   "issues": 31,
+   "bySeverity": {
+    "high": 5,
+    "medium": 13,
+    "low": 13
+   }
+  },
+  {
+   "area": "player-a",
+   "cards": 60,
+   "issues": 77,
+   "bySeverity": {
+    "low": 23,
+    "medium": 47,
+    "high": 7
+   }
+  },
+  {
+   "area": "player-b",
+   "cards": 55,
+   "issues": 65,
+   "bySeverity": {
+    "high": 12,
+    "medium": 33,
+    "low": 20
+   }
+  },
+  {
+   "area": "campaign-a",
+   "cards": 48,
+   "issues": 132,
+   "bySeverity": {
+    "high": 61,
+    "medium": 63,
+    "low": 8
+   }
+  },
+  {
+   "area": "campaign-b",
+   "cards": 75,
+   "issues": 322,
+   "bySeverity": {
+    "high": 226,
+    "medium": 94,
+    "low": 2
+   }
+  },
+  {
+   "area": "campaign-c",
+   "cards": 52,
+   "issues": 91,
+   "bySeverity": {
+    "high": 65,
+    "medium": 20,
+    "low": 6
+   }
+  },
+  {
+   "area": "campaign-d",
+   "cards": 91,
+   "issues": 152,
+   "bySeverity": {
+    "low": 37,
+    "medium": 53,
+    "high": 62
+   }
+  },
+  {
+   "area": "scenarios",
+   "cards": 0,
+   "issues": 38,
+   "bySeverity": {
+    "high": 17,
+    "medium": 18,
+    "low": 3
+   }
+  },
+  {
+   "area": "interactions",
+   "cards": 0,
+   "issues": 5,
+   "bySeverity": {
+    "medium": 2,
+    "low": 3
+   }
+  },
+  {
+   "area": "primitives",
+   "cards": 0,
+   "issues": 39,
+   "bySeverity": {
+    "high": 33,
+    "medium": 5,
+    "low": 1
+   }
+  }
+ ],
+ "verdictBy": {
+  "eoteInvestigators|-": {
+   "total": 22,
+   "match": 14,
+   "approximation": 5,
+   "gap": 3,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eotePlayer|-": {
+   "total": 115,
+   "match": 38,
+   "approximation": 60,
+   "gap": 17,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|shared:_shared": {
+   "total": 80,
+   "match": 23,
+   "approximation": 20,
+   "gap": 37,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|iceAndDeathPart1": {
+   "total": 5,
+   "match": 0,
+   "approximation": 0,
+   "gap": 5,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|iceAndDeathPart2": {
+   "total": 21,
+   "match": 5,
+   "approximation": 11,
+   "gap": 5,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|iceAndDeathPart3": {
+   "total": 5,
+   "match": 0,
+   "approximation": 0,
+   "gap": 5,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|fatalMirage": {
+   "total": 75,
+   "match": 0,
+   "approximation": 3,
+   "gap": 72,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|toTheForbiddenPeaks": {
+   "total": 25,
+   "match": 1,
+   "approximation": 1,
+   "gap": 23,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|cityOfTheElderThings": {
+   "total": 27,
+   "match": 1,
+   "approximation": 5,
+   "gap": 21,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|theHeartOfMadnessPart1": {
+   "total": 12,
+   "match": 7,
+   "approximation": 1,
+   "gap": 4,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  },
+  "eoteCampaign|theHeartOfMadnessPart2": {
+   "total": 16,
+   "match": 1,
+   "approximation": 5,
+   "gap": 10,
+   "blocked": 0,
+   "not-applicable": 0,
+   "other": 0
+  }
+ },
+ "issueTotals": {
+  "bySeverity": {
+   "high": 476,
+   "medium": 312,
+   "low": 116
+  },
+  "byDimension": {
+   "impl-vs-text": 422,
+   "primitive": 226,
+   "runtime": 157,
+   "duplication": 54,
+   "perceivability": 17,
+   "docs": 24,
+   "tests": 1,
+   "code-quality": 3
+  },
+  "total": 904,
+  "scenarioIssues": 90
+ },
+ "topIssues": [
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08004",
+   "area": "investigators",
+   "summary": "打出牌库顶后不再重新揭示：常驻「top card revealed」在下次抽牌/轮初前失效，deckTop 打出通道也随之消失",
+   "evidence": "src/engine/play-channels.js:303-318（无 sync 调用）/ src/engine/eote-deck-top.js:109-118（markDeckTopPlayed 删除记录）/ src/engine/eote-investigator-support.js:196-220"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08004",
+   "area": "investigators",
+   "summary": "「揭示到弱点即强制抽取」被实现为 drawCards 尾部惰性抽取，非揭示时点触发；被揭示的弱点可长期停在牌库顶",
+   "evidence": "src/engine/deck-ops.js:629-640 / src/cards/entries/08004.js:6,12 注释也写「揭示到弱点时强制抽取」"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08005",
+   "area": "investigators",
+   "summary": "commitDeckTop 跳过投入合法性检查并按全部图标计数：可把不匹配的牌库顶投入检定并凭空加图标（如仅意志图标的牌投入战斗检定仍 +1）",
+   "evidence": "src/engine/eote-investigator-support.js:229-253（icons=Object.values(def.icons) 全量求和）/ src/engine/commit-rules.js:19-54（既有匹配逻辑未调用）/ src/engine/stats.js:327 / 探针 P3a"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08006",
+   "area": "investigators",
+   "summary": "预示者只封锁抽牌，不封锁检索/洗牌/牌库操纵：searchDeck 在锁定期仍能公开检索并取牌（弱点严重弱化）",
+   "evidence": "src/engine/eote-investigator-support.js:159-165 / src/engine/deck-ops.js:532-533（仅 drawCards）/ src/engine/deck-ops.js:387-444（searchDeck 无锁）/ 探针 P5"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08013a",
+   "area": "investigators",
+   "summary": "「你本回合下一次检定 +5 且该检定结束后翻面」被实现为全局 endOfTest 效果 + 全局延迟翻面：任意调查员的检定结束都会消耗掉 +5 并让演武提前翻面（多人局卡牌效果失效）",
+   "evidence": "src/engine/tests.js:1533（expireEffects(state,'endOfTest') 无座位过滤）/ src/engine/tests.js:596-600 / src/engine/eote-investigator-support.js:105-135 / 探针 P8（座位 1 检定后 effects=0、08013a→08013b）"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08028",
+   "area": "player-a",
+   "summary": "卡面“改为查找敌人生成”没有替代神话阶段遭遇抽取：打出后仍会照常抽遭遇卡（多抽 1 张）。",
+   "evidence": "src/cards/entries/08028.js:27-58（无 skip）；src/engine/turn.js:144-146；对照 src/cards/entries/07269.js:4"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08053",
+   "area": "player-a",
+   "summary": "2 充能分支“移动最多 2 次”用固定起始地点的连接枚举：第一次移动后第二次仍出现原地点邻居，且引擎位移不校验相邻 → 可实际移动到与当前位置不相连的地点（非法移动），同时漏掉当前位置的合法连接。",
+   "evidence": "src/cards/entries/08053.js:47-57; src/engine/movement.js:186-196; src/engine/hidden-rules.js:121-162"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08058",
+   "area": "player-a",
+   "summary": "“移动最多 3 次”分支用固定起始地点的连接枚举（第二次起目的地错误），且引擎位移不校验相邻 → 可移动到不相连地点（非法移动）。",
+   "evidence": "src/cards/entries/08058.js:42-52; src/engine/movement.js:186-196; src/engine/hidden-rules.js:121-162"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08059",
+   "area": "player-a",
+   "summary": "卡片全部效果（升级前 2 张 -1 经验、新购卡 +1 经验）未实现，只写了一个无人读取的 scenarioFlag：实战/战役升级层零效果。",
+   "evidence": "src/cards/entries/08059.js:8-10,14-26"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08062",
+   "area": "player-a",
+   "summary": "卡面核心“该行动期间每次技能检定可改用 willpower”完全未实现；引擎已实现专用原语 takeBasicActionWithSubstitution（m2-2-08062 implemented），条目仍走 beginImmediateAction → 功能缺失且注释过时。",
+   "evidence": "src/cards/entries/08062.js:9-10,45; src/engine/api-misc.js:1470-1489"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08070",
+   "area": "player-a",
+   "summary": "“Uses (1 charge) + 每轮开始补满”完全未实现：能力是 free、无 cost/exhaust/limit，可无限次代理结算手牌法术能力；费用/充能也未转移到 True Magick 上。",
+   "evidence": "src/cards/entries/08070.js:8-10,21-54"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08074",
+   "area": "player-a",
+   "summary": "真实打出路径下事件已离开手牌，moveCard from:\"hand\" 失败 → “附属到道具支援”永不发生，卡牌实际只是花 0 费进弃牌堆；能力2 也随之永不生效。",
+   "evidence": "src/cards/entries/08074.js:41; src/engine/actions.js:159; src/engine/card-ops.js:196-220; src/engine/actions.js:302-341"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08079",
+   "area": "player-b",
+   "summary": "「该攻击的伤害/恐惧不能分配给盟友支援」整句未实现，主效果（按受到点数抽牌）反而因此变强；prior 账本记 verified。",
+   "evidence": "src/cards/entries/08079.js:6-7,14-22；src/engine/harm-threat.js assignHarm 无「本次攻击不能分配给盟友」读点"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "code": "08081",
+   "area": "player-b",
+   "summary": "印刷「非直接伤害必须先分配给有胆有识」未实现：条目缺 flags.composureDamage。",
+   "evidence": "src/cards/entries/08081.js:17-19 vs src/engine/harm-threat.js:160-165"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08083",
+   "area": "player-b",
+   "summary": "盟友支援目标的「治愈 1 点伤害」不生效（api.healAsset 第二参传了数字而非 spec）。",
+   "evidence": "src/cards/entries/08083.js:38 vs src/engine/api-misc.js:759-769"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08088",
+   "area": "player-b",
+   "summary": "eventPlayed 反应把 uses 永久设为 2 且不限打牌者，等价于事件后永续 2 发弹药（未披露的规则偏差）。",
+   "evidence": "src/cards/entries/08088.js:22-24 vs src/engine/actions.js:520-523"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08091",
+   "area": "player-b",
+   "summary": "第二子句（符号揭示改为查找并揭示咒印）整条缺失，而引擎专用原语已实现并测试（queue 也标 done）。",
+   "evidence": "src/cards/entries/08091.js:14-16,25-45 vs src/engine/api-misc.js:1418-1442；tests/eote-player-primitives.test.mjs:197"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08102",
+   "area": "player-b",
+   "summary": "触发条件读了真实 context 不存在的字段（asset.location/asset.traits），真机上永远不触发。",
+   "evidence": "src/cards/entries/08102.js:14-16 vs src/engine/assets.js:397-401"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08105",
+   "area": "player-b",
+   "summary": "criteria 依赖真实引擎从不设置的 state.skillTest.actionKind，导致能力在真机永不出现（整卡失效）。",
+   "evidence": "src/cards/entries/08105.js:16 vs src/engine/tests.js:166-180,233(combat.js),610(actions.js)"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08107",
+   "area": "player-b",
+   "summary": "同 08105：actionKind 判据导致两条能力真机不可用。",
+   "evidence": "src/cards/entries/08107.js:21,25 vs src/engine/tests.js:166-180"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "code": "08130",
+   "area": "player-b",
+   "summary": "「如同 1 点伤害被治愈（治愈即弃卡）」未实现：引擎 threatDamageSink 已就绪（entry 应声明 flags.threatDamageSink）却仍用旧近似。",
+   "evidence": "src/cards/entries/08130.js:13-15,29-31 vs src/engine/harm-threat.js:702-740；tests/eote-player-primitives.test.mjs:85"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "code": "08130",
+   "area": "player-b",
+   "summary": "替代用的免费 discardSelf 能力无法把威胁区卡移除（ability-exec.js:178-189 无 threat 分支）：卡留在威胁区继续锁行动，同时卡号被塞进弃牌堆。",
+   "evidence": "src/cards/entries/08130.js:29-31 vs src/engine/ability-exec.js:178-189；real-path probe"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "code": "08131",
+   "area": "player-b",
+   "summary": "「如同 1 点伤害被治愈（治愈即弃卡）」未实现：同 08130，threatDamageSink 已就绪未接线。",
+   "evidence": "src/cards/entries/08131.js:12-13,26-28 vs src/engine/harm-threat.js:702-740"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "code": "08131",
+   "area": "player-b",
+   "summary": "免费 discardSelf 无法移除威胁区卡（同 08130）。",
+   "evidence": "src/cards/entries/08131.js:26-28 vs src/engine/ability-exec.js:178-189"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08501",
+   "area": "campaign-a",
+   "summary": "真实引擎路径下 [skull]/[cultist]/[tablet] 修正均为 0（hook 名应为 resolveChaosToken，不是 chaosTokenValue）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:368-370,411 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:349,402 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08501",
+   "area": "campaign-a",
+   "summary": "Part III 缺失 [cultist]/[tablet] 失败后果（洗入忒咳哩-哩/弃牌库顶+抽弱点）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:149-164"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08502",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08503",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08503",
+   "area": "campaign-a",
+   "summary": "「有遭遇卡牌附属时 +2 隐藏」未实现（声明 locationRule.shroudWhenAttached 无读点）",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js:7-11；读点 src/engine/actions.js:587-588（只支持 locationRule.shroudModifier）；known-deviations p7-shared-08503"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08504",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08505",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08506",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08506",
+   "area": "campaign-a",
+   "summary": "未探索地点入场费在真实引擎路径永远不收取（引擎先 reveal 再调用 locationEntered，且忽略其返回值）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166；src/engine/movement.js:235-249；src/engine/locations.js:251-287；参考 Location/Cards/.../BroadSnowdrifts.hs:16-18"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08507",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08507",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166；src/engine/movement.js:235-249"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08508",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08508",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08509",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08509",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08510",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08510",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08511",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08511",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08512",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08512",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08513",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08513",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "code": "08514",
+   "area": "campaign-a",
+   "summary": "地点卡印刷「隐藏值 shroud」未进入章节地点数据：LOCATION_TABLE/placeLocation 只带 shelter/clues，card-data.js#location 不复制 shroud；引擎调查难度 = loc.shroud + … 得到 NaN",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:28-61,98-104、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js:26-52,83-90、content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definit"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08514",
+   "area": "campaign-a",
+   "summary": "入场费同 08506（真实路径不收取）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:128-166"
+  },
+  {
+   "severity": "high",
+   "dimension": "duplication",
+   "code": "08515",
+   "area": "campaign-a",
+   "summary": "击败 08515 时强制效果结算两次（章节 behavior.enemyDefeated + 单卡 forced ability）",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08515.js:6-23 与 content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:301-313 同时生效；引擎读点 src/engine/enemies.js:701-708、src/engine/abilities 实体窗口（src/engine/ab"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08518",
+   "area": "campaign-a",
+   "summary": "议程背面效果在真实引擎路径永不结算（Part1 behavior.agendaReveal 是空函数；resolveAgendaBack 无引擎读点）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:373-380,399；引擎 src/engine/phases.js:268-283；probe：advanceAgenda(doom) 后 0 副作用"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08519",
+   "area": "campaign-a",
+   "summary": "议程背面在真实引擎路径永不结算（同 08518）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:197-203,399；src/engine/phases.js:268-283"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08520",
+   "area": "campaign-a",
+   "summary": "议程 III 背面在真实引擎路径永不结算（同 08518）：本应由它强制结束 Part I 并结算 R1",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:205-218,399；src/engine/phases.js:268-283"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08521",
+   "area": "campaign-a",
+   "summary": "引擎只调用 behavior.actions/performAction（moves.js:222、dispatch.js:633），本章 behavior 导出的是 scenarioActions/performScenarioAction → 真实引擎路径从不提供营地撤退/抽取地点底牌行动",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:397-398 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:396-397 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:159-"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08521",
+   "area": "campaign-a",
+   "summary": "幕 1a 背面在真实引擎路径缺失：behavior 无 actReveal，advanceAct 抛 \"场景规则尚未迁移：08521\"",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:382-412（无 actReveal）；src/engine/reveal.js:151-176；probe"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08521",
+   "area": "campaign-a",
+   "summary": "营地记录键与检查点读取口径不一致：Part1 只写 records.camp（自定义键）与 iceAndDeathPart1CampShelter，检查点读 Camp_* 记录/eoteShelterValue → 检查点庇护值=0、失踪伙伴=9",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:344,353,361；content/campaigns/edgeOfTheEarth/checkpoints.js:197-205；content/campaigns/edgeOfTheEarth/records.js:186-214,258-262；probe 实测 eoteShelterValue=0、eoteMissingC"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08523",
+   "area": "campaign-a",
+   "summary": "Part II behavior 无 agendaReveal：真实引擎议程推进抛 \"密谋规则尚未迁移：08523\"（probe 实测），关卡议程流程中断",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:382-405（无 agendaReveal）；src/engine/phases.js:268-283；probe"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08524",
+   "area": "campaign-a",
+   "summary": "Part II 无 agendaReveal，08524 推进同样抛错（同 08523 根因）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:382-405；src/engine/phases.js:268-283"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08525",
+   "area": "campaign-a",
+   "summary": "议程 VI 背面效果在真实引擎路径永不结算（同 08523 根因）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:132-147,382-405；src/engine/phases.js:268-283"
+  },
+  {
+   "severity": "high",
+   "dimension": "runtime",
+   "code": "08526",
+   "area": "campaign-a",
+   "summary": "引擎只调用 behavior.actions/performAction（moves.js:222、dispatch.js:633），本章 behavior 导出的是 scenarioActions/performScenarioAction → 真实引擎路径从不提供营地撤退/抽取地点底牌行动",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:397-398 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:396-397 / content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:159-"
+  }
+ ],
+ "scenarioIssues": [
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "行为钩子名不符（scenarioActions/performScenarioAction vs 引擎 actions/performAction）→ 营地撤退不可用，幕目标不可达",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:397-398；src/engine/moves.js:222；src/engine/dispatch.js:633；probe legalActions 无 scenarioAction"
+  },
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "agendaReveal 空实现 → 08518/08519/08520 背面全部不结算（probe：advanceAgenda 无敌人/牌库变化）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:399；src/engine/phases.js:268-283"
+  },
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "actReveal 缺失 → advanceAct 抛 \"场景规则尚未迁移：08521\"（probe）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:382-412；src/engine/reveal.js:151-176"
+  },
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "13 张地点 shroud 未接线；未探索地点入场费永不收取（reveal 先于 locationEntered，且返回值被忽略）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:98-104；src/engine/movement.js:235-249；probe（5 线索进入辽阔雪地后仍 5）"
+  },
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "营地记录口径不一致导致检查点庇护值/失踪伙伴错误",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js:344,353；content/campaigns/edgeOfTheEarth/checkpoints.js:197-205；probe eoteShelterValue=0"
+  },
+  {
+   "chapterId": "iceAndDeathPart1",
+   "severity": "medium",
+   "dimension": "primitive",
+   "summary": "测试全部直接调用 behavior 函数（tests/eote-scenario-iceAndDeathPart1.test.mjs:213-292），未覆盖引擎钩子名/议程推进/legalMoves → 上述缺陷对测试不可见",
+   "evidence": "tests/eote-scenario-iceAndDeathPart1.test.mjs:213-292"
+  },
+  {
+   "chapterId": "iceAndDeathPart2",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "无 agendaReveal → advanceAgenda 抛 \"密谋规则尚未迁移：08523\"（probe）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:382-405；src/engine/phases.js:268-283"
+  },
+  {
+   "chapterId": "iceAndDeathPart2",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "无 actReveal + actions/performAction 未接线 → advanceAct 抛 \"场景规则尚未迁移：08526\"，抽底牌/撤退不可用（probe）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:382-405,254-320"
+  },
+  {
+   "chapterId": "iceAndDeathPart2",
+   "severity": "medium",
+   "dimension": "runtime",
+   "summary": "setup 未按参考洗混 9 张（deterministic 顺序）、未加难度 frost、未按当前庇护值设置 BaseStartingResources",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:86-108；参考 IceAndDeathPart2.hs:112-113,241-274"
+  },
+  {
+   "chapterId": "iceAndDeathPart2",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "下游：08527–08543 在真实路径不可达（剧情/被附身队员）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js:254-320"
+  },
+  {
+   "chapterId": "iceAndDeathPart2",
+   "severity": "medium",
+   "dimension": "primitive",
+   "summary": "测试全部直接调用 behavior 函数（tests/eote-scenario-iceAndDeathPart2.test.mjs:242-304），未覆盖引擎钩子/advanceAgenda",
+   "evidence": "tests/eote-scenario-iceAndDeathPart2.test.mjs:242-304"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "议程无法推进：agendaWouldAdvance 语义/签名反了（probe doom=10 后 agendaIndex 仍 0）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:74-88；src/engine/act-agenda.js:328"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "幕无法推进/结算：无 checkObjectives、无 actReveal、objective {type:noEidolonEnemies} 引擎不识",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:149-164；src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart3/08546.js:12；src/engine/act-agenda.js:183-190"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "地点无线索且无 shelter：营地撤退费不可支付、[skull]=0、08516 难度 0、庇护值记录 0",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js:31-40,81-86；content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:39,48-60"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "08544/08545/08546/08547/08548 五张卡的规则大段缺失（见各卡 issues）",
+   "evidence": "见 cards 08544–08548"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "medium",
+   "dimension": "impl-vs-text",
+   "summary": "渗出梦魇生成地点未按参考「营地→候选地点」映射（Haskell IceAndDeathPart3.hs:168-188）；幻灵分配按唯一 code 而非印刷份数",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:48-60"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "medium",
+   "dimension": "impl-vs-text",
+   "summary": "setup 未按 LocationsRevealed 记录揭示已探索地点（参考 IceAndDeathPart3.hs:138,148）；营地只认 4 个候选（定义 CAMPS 少了 9 个）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js:27；content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:28-36"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "medium",
+   "dimension": "runtime",
+   "summary": "遭遇牌库构成错误：份数未展开、缺 ancientEvils、忒咳哩-哩弱点卡 08723–08729 混入遭遇牌库（应在独立忒咳哩-哩牌库）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js:116-136；参考 IceAndDeathPart3.hs:129-136,190-223"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "medium",
+   "dimension": "runtime",
+   "summary": "缺 afterTest（08501 [cultist]/[tablet] 失败后果）、未在 setup 追加难度 frost",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:149-164；参考 IceAndDeathPart3.hs:77"
+  },
+  {
+   "chapterId": "iceAndDeathPart3",
+   "severity": "medium",
+   "dimension": "primitive",
+   "summary": "测试以 agenda 对象手动调用 agendaWouldAdvance（tests/eote-scenario-iceAndDeathPart3.test.mjs:67-82）掩盖了引擎实际传参；locationRule.actions 亦只在测试里手动调用",
+   "evidence": "tests/eote-scenario-iceAndDeathPart3.test.mjs:67-104"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "真实遭遇抽牌不结算本章专属诡计：treacheryDefinition 无 entryRevelation、条目只有 resolveKind；引擎 resolveTreacheryBody 不读 resolveKind，behavior.resolveEncounter 唯一调用点是 effect.kind===\"campaignRule\"（无本章卡使用）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117；src/engine/treachery-tokens.js:113-124；EOTE 无 encounter-rules.js 分派者；逐卡见 08610–08613"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "遭遇牌库缺 5 个共享遭遇组（参考 gather 6 组）：ENCOUNTER_DECK 只含本章 14 张；manifest.requiredEncounterGroupIds 仅注册校验（content/schema.js:281-283），引擎只用 scenario.encounterDeck（src/engine/setup.js:807-815）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:133-139；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js:16-19；src/engine/setup.js:807-815；参考资源/ArkhamHorror-main/backend/arkham-api/library"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "攀登「从下方进入」机制未接权威移动：ascend 仅 API/测试调用，behavior.locationEntered 的 climbState 永不写入 → 08600–08606 全部 enterFromBelow 强制不触发",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199,226-241；src/engine/eote-climb.js:109-140；src/engine/api-mechanics.js:176-183；src/engine/movement.js:236-249"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "08597/08598 正面强制「移动后归还全部线索」未接线：behavior.afterMove 无引擎读点（全仓仅测试调用）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256；src/engine/movement.js:249；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:205"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "7 件 Expedition 剧情支援永不入场：setup 全部放一边，preScenarioSetup 不按 suppliesRecovered 放入场/移出，engine 也不自动生成 scenario.storyAssets；08599 的 [action] 与山顶撤退胜利区逻辑因而不可用",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:48,142-146；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:69-78,301-345；src/engine/setup.js:645；参考资源/ArkhamHorror-main/backend/arkham-a"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "结局记录与结算缺失：behavior.resolution 只写 theInvestigatorsScoutedTheMountainPass；R1 应写 TheTeamClimbedToTheSummit，R2 应写 TheTeamFoundAnotherWayThroughTheMountains；Supplies Recovered 划掉与胜利区支援转牌组/XP 奖励均未实现",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:348-350；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:225-226；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbid"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "Tekeli-li 牌库未初始化：参考 setup addTekeliliDeck；本章 08604（从下方进入洗入）、08617（取消弱点）、08723+（弱点抽取）都依赖它；content/.../iceAndDeathPart1/behavior.js:114 有初始化读点，本章无",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:1-30（import tekeliShuffleIn 但无 initializeTekeliDeck）；src/engine/eote-tekeli.js:63-99；grep initializeTekeliDeck 本章无"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "medium",
+   "dimension": "impl-vs-text",
+   "summary": "setup 缺：混乱袋 +1 [elder_thing]、Hard/Expert 初始毁灭、勘察过山口起始线索减半",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:69-103；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:208-231；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/def"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "medium",
+   "dimension": "docs",
+   "summary": "伙伴序幕分支（Eliyah/Claypool/Takada 存活 → frost/创伤）与「放一边的 2 个山腰地点固定为 08601/08606」已披露近似仅覆盖后者；前者未披露",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:54-56（scenarioApproximations 只有 1 条）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:90-159"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "medium",
+   "dimension": "docs",
+   "summary": "测试只测钩子：全部用手工 state/apiStub 直调 behavior（tests/eote-scenario-toTheForbiddenPeaks.test.mjs:35-104），无真实引擎 setup/移动/抽遭遇；断言多为 hook 返回值",
+   "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:112-316"
+  },
+  {
+   "chapterId": "toTheForbiddenPeaks",
+   "severity": "low",
+   "dimension": "docs",
+   "summary": "08596 参考卡 no-behavior 口径成立：token 表由 chaos.js 实现，无独立条目；账本 status=no-behavior 与实现一致",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js:16-59；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:196-227"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "真实遭遇抽牌不结算本章专属诡计（08644–08647）：treacheryDefinition 无 entryRevelation、条目只有 resolveKind；引擎不读 resolveKind；behavior.resolveEncounter 无调用点",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127；src/engine/treachery-tokens.js:113-124；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "遭遇牌库缺全部共享组且未按版本选用 gather/setAside：ENCOUNTER_DECK 只含本章 20 张；shared-encounters.js:117-136 的三套版本数据无运行时读点（chapterCardPool 无调用者）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:130-137；content/campaigns/edgeOfTheEarth/shared-encounters.js:117-136,160-178；src/engine/setup.js:807-815；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "数值钥匙无取得/转交入口：behavior.claimKey/giveKeys 只是纯函数，未进 actions/legalMoves；shared 的 scenarioReferenceEntry 用彩色钥匙原语（scenario-keys.js:104-140）且未挂到 08621 → 幕 1「花 2 把 elder_thing/tablet 钥匙」目标不可达，城市流程无法通过幕 1",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201,256-293；src/cards/encounter-entries/_shared.js:842-847；src/engine/scenario-keys.js:104-140；参考 locale specialRules.Keys（fast 取得 / action 转交 / 淘汰落地）"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "版本选择只做了「地图版本」：幕牌库永为 v1（actsForVersion 仅 definition.js:196 默认）、setup 文本固定 v1（definition.js:205-213、SCENARIO_TEXT）、setAside/removed 三套数据无读点 → 08625/08626/08628/08629 与 v2/v3 setup 在真实战役不可达；版本判定也未实现参考的伙伴票（CityOfTheElderThings.hs:242-277），theInvestigatorsScoutedTheCityOutskirts 无任何写点",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:185-196,205-234；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-88；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../Cit"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "议程 2 背面 (→R2) 未实现：08623 无 onReveal，behavior.finalResolution 无调用者；最后议程耗尽只走 checkOutcome（全灭才结束）→ R2 不可达且「被引导到隐秘隧道」记录不会写",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:220-226,415-417；src/engine/act-agenda.js:355-361；src/engine/harm-threat.js:354-361"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "城市地点未走 placeLocation：behavior.setupLocations 直接 cloneLocation 推入 state.locations（17 个）→ maxClues 缺失（revealLocation 以 maxClues 恢复线索，揭示后变 0）、初始线索未按「未揭示=0」处理、起始地点未揭示、胜利点/入场钩子未派发",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:83-140；src/engine/locations.js:143-178（placeLocation 计算 maxClues/revealed）,251-264（revealLocation 用 maxClues）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheEl"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "impl-vs-text",
+   "summary": "按版本移除的卡未移除：REMOVED_BY_VERSION/SET_ASIDE_BY_VERSION 无读点；ENCOUNTER_DECK 仍含 benign×3/frostbitten×4/possessed×4，frostbitten/possessed 会被当普通遭遇卡抽到（参考是移出游戏、仅由序幕加入牌组的弱点）",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:143-159；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:364-365,395-400,429-434"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "high",
+   "dimension": "runtime",
+   "summary": "Tekeli-li 牌库未初始化（参考 addTekeliliDeck）；本章 08628 幕 2 行动/08723+ 弱点依赖它",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:1-35；src/engine/eote-tekeli.js:63-99"
+  },
+  {
+   "chapterId": "cityOfTheElderThings",
+   "severity": "medium",
+   "dimension": "impl-vs-text",
+   "summary": "setup 缺：混乱袋 +1 [elder_thing]（v1/v2）、Hard/Expert 初始毁灭、勘察城郊起的初始线索发现（scoutedTheCityOutskirtsBonus）、伙伴死亡时把 frostbitten/possessed 加入调查员牌组",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-140；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:87-106,200-219,363-370,394-405"
+  }
+ ],
+ "ledgerValidity": {
+  "records": 403,
+  "withValid": 268,
+  "onlyBad": 135,
+  "noEvidence": 0,
+  "onlyBadByPartition": {
+   "eoteInvestigators": 4,
+   "eoteCampaign": 131
+  }
+ },
+ "deadHooks": {
+  "files": 8,
+  "hooks": 21
+ },
+ "gates": {
+  "eoteTestSuite": {
+   "tests": 477,
+   "pass": 474,
+   "fail": 3,
+   "failures": [
+    "P8 all-cards 账本 hash 漂移（真实）",
+    "eote-story story 生成物 --check（沙箱 spawn 伪失败）",
+    "eote-story guides 幂等 --check（沙箱 spawn 伪失败）"
+   ]
+  },
+  "auditChecks": {
+   "audit-eote.mjs": 0,
+   "scan-eote-mechanisms": 0,
+   "scan-eote-scope": 0,
+   "audit-card-entry-compliance": 0,
+   "audit-dead-primitives": 0,
+   "audit-eote-rules": 0,
+   "audit-eote-interactions": 0,
+   "audit-eote-primitives": 0
+  },
+  "nonEote": {
+   "buildCardIndex": 0,
+   "buildEncounterIndex": 0,
+   "checkDocLinks": 1
+  }
+ },
+ "limitations": [
+  "浏览器/Playwright 无法在本沙箱运行（spawn EPERM），浏览器证据只做账本+截图+spec 断言存在性核验，未重跑。",
+  "verify-eote / audit-eote-all-cards / audit-eote-player / audit-eote-investigators 等内部 spawn 的工具无法运行，以其账本+自写复算替代。",
+  "沙箱对 mod 目录只读、跨目录写入受限，工作区与原始日志存于 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/。",
+  "逐卡 verdict 来自 8 名审计员人工核对 cards-data 卡面中英文，非官方逐字等价声明。"
+ ],
+ "missingAreas": [],
+ "reproducibility": [
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/extract-scope.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/mechanical-screen.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/triage-unread.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/lead-analysis.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/ledger-evidence-check.mjs && node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/ledger-validity.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/dead-hooks-exact.mjs",
+  "node games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/merge-findings.mjs"
+ ]
+}

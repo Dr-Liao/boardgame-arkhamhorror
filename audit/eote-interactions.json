@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "cycle": "eote",
+  "campaignId": "edgeOfTheEarth",
+  "milestone": "P4",
+  "step": "P4 新增交互与界面",
+  "generatedBy": "tools/audit-eote-interactions.mjs",
+  "docs": "docs/edgeOfTheEarth/interactions.md",
+  "status": "verified",
+  "coverage": {
+    "desktop": {
+      "frost": true,
+      "partners": true,
+      "seals": true,
+      "tekeli": true,
+      "deckTop": true,
+      "crossSeat": true,
+      "supply": true,
+      "discipline": true
+    },
+    "mobile": {
+      "frost": true,
+      "partners": true,
+      "seals": true,
+      "tekeli": true,
+      "deckTop": true,
+      "crossSeat": true,
+      "supply": true,
+      "discipline": true
+    }
+  },
+  "checks": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "baselineUnchanged": true,
+    "fastNoNewFailures": true,
+    "replayExact": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "baselineUnchanged": true,
+    "fastNoNewFailures": true,
+    "replayExact": true
+  },
+  "frozenFailures": [
+    "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+    "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+    "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+    "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+    "已本地化的 UI 文件不再残留用户可见中文"
+  ],
+  "deliveredPrimitives": [
+    "interaction.frostReveal",
+    "interaction.partnerSetup",
+    "interaction.sealPlacement",
+    "interaction.tekeliShuffle",
+    "interaction.deckTopReveal"
+  ],
+  "extensions": {
+    "crossSeat": "investigator.crossSeatPlay",
+    "discipline": "investigator.discipline",
+    "supply": "campaign.supplies"
+  },
+  "browser": {
+    "present": true,
+    "status": "passed",
+    "specs": [
+      "tests/eote-interactions.browser.mjs",
+      "tests/scenario-guides.browser.mjs",
+      "tests/script-actions-tfa.browser.mjs"
+    ],
+    "tests": 20,
+    "passed": 20,
+    "screenshots": 16
+  },
+  "contract": {
+    "actions": "Only server legalMoves and requestChoice/selectMechanic; no browser-side rule checks or arbitrary client mechanics commands.",
+    "privacy": "Deck-top cards are projected to the owner only; cross-seat play only to the grantee; Tekeli-li is projected as a count only; unrevealed cityscape sites are omitted; camp missing-partner draws are not projected.",
+    "cancellation": "Optional choices can be cancelled before any mechanics write; mandatory choices have no cancel. Printed action/card costs remain governed by their descriptor.",
+    "guide": "The fixed setup/reference entry is reused. Full eight-chapter EotE scenario guides remain P7.",
+    "release": "The seed/fixture is test-only and confined to tools/tests. P4 opens no content: the campaign, investigators and player cards remain catalog-only.",
+    "fast": "The three pre-existing failures frozen in audit/eote-baseline.json#fastFailures are excluded from the P4 ledger; P4 only requires no new failures (additionsSinceInitialBaseline is empty and the failure count equals the frozen baseline)."
+  },
+  "evidence": [
+    "audit/eote-baseline.json",
+    "audit/eote-interactions-browser.json",
+    "audit/eote-node-acceptance.json",
+    "audit/eote-regression.json",
+    "src/engine/eote-interactions.js",
+    "src/integration/mechanic-view.js",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-interactions.browser.mjs",
+    "web/mechanic-ui.js"
+  ],
+  "sources": [
+    {
+      "path": "audit/eote-interactions-browser.json",
+      "sha256": "6dffc721c09c5f873e304075f16a094dba84f3b2e6fe1ec8673c33809ee04478"
+    },
+    {
+      "path": "audit/eote-node-acceptance.json",
+      "sha256": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc"
+    },
+    {
+      "path": "audit/eote-regression.json",
+      "sha256": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d"
+    },
+    {
+      "path": "src/engine/eote-interactions.js",
+      "sha256": "d29e5c8c0643dd16c6b53110e9ab498d11755a1bd5ec39ddfc6fa3e30d55f9e0"
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "6560979ca31ad3e4c3c488f2cac74baf395ae0e404593e8a628751417e4cd9ea"
+    },
+    {
+      "path": "tests/eote-interaction-fixture.mjs",
+      "sha256": "0a0ef5d8bc5f4ddb9c892553bc1c22be6f07f34548dfa5e5c096b7d799654d91"
+    },
+    {
+      "path": "tests/eote-interactions.browser.mjs",
+      "sha256": "68bd217697b69c998d03e4433053104c8d8c8d23f6342a8d3371413161dd0da0"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "d1c6a63ca0fdf5aa099e1b049010ea52c1da7870aba5f8819e773ac9bf7f1321"
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 //   runInterlude / addLitaToCampaign / registerCampaignScenarios / endCampaign —— 幕间与战役收尾
 // 与 campaign-flow.js 的分工：那边是「一关的结算」，这边是「关卡之间的台面」。
 
+import { isDraftMode, draftLegalMoves, draftDecksReady, draftDeckStatus } from '../deck/draft-mode.js'
 import { contentRegistry } from '../../content/registered.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 // P5 批次 2：四模式开局（纯策略在 src/campaign/campaign-modes.js）。
@@ -326,6 +327,10 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   }
   if (state.uiState === 'scenarioResult') return seat === 0
     ? [{ action: 'hubContinue', label: '查看结算并进入关间准备' }] : []
+  if (isDraftMode(state) && state.hubSeatDone?.[seat] && record?.draftMode && (record.draftMode.phase === 'upgrade' || draftDeckStatus(record).missing > 0) && ['interlude', 'scenarioSetup'].includes(state.uiState)) {
+    moves.push({ action: 'hubResumeDraft', label: '返回三选一升级' })
+    if (seat !== 0 || !state.hubReady) return moves
+  }
   if (state.uiState === 'scenarioSetup' && state.hubReady) {
     if (seat !== 0) {
       // 非房主：并行出发准备只开放自己座位的换线，没有开始/队长/重新准备。
@@ -336,6 +341,7 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
       return own
     }
     const moves = [
+      ...(isDraftMode(state) && record?.draftMode && (record.draftMode.phase === 'upgrade' || draftDeckStatus(record).missing > 0) ? [{ action: 'hubResumeDraft', label: '返回三选一升级' }] : []),
       ...leaderMoves,
       { action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[state.campaign.scenarioIndex], label: '选择当前关卡' },
       ...(!state.campaign.scenarioResults.length
@@ -372,6 +378,10 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
       : state.campaign.leadConfirmed && humans.includes(state.campaign.leadSeat)
     if (leaderReady) {
       const begin = { action: 'hubBeginScenario', label: '开始当前关卡' }
+      if (isDraftMode(state) && !draftDecksReady(state)) {
+        begin.disabled = true
+        begin.explanation = '请先补足所有调查员的牌组。'
+      }
       if (state.campaign.mode === 'parallel') {
         const balance = laneBalance(state.campaign.seatParts)
         if (!balance.balanced) {
@@ -388,6 +398,14 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   // 并行首次整备：每个座位可以改自己的线（房主在 hubReady 分支可改全部）。
   if (!state.campaign.scenarioResults.length && ['pick', 'parallel'].includes(state.campaign.mode)) {
     moves.push(...seatPartMoves(state).filter(move => move.seat === seat))
+  }
+  if (isDraftMode(state)) {
+    if (!record || record.status !== 'active' || (initialHubPreparation(state) && !record.draftMode)) {
+      moves.push(...hubInvestigatorChoices(state, seat).map(code => ({ action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}` })))
+    }
+    moves.push(...draftLegalMoves(state, record))
+    if (record?.status === 'active' && hubStartingDeckReady(record)) moves.push({ action: 'hubDoneSeat', label: state.uiState === 'interlude' ? '跳过／完成升级，准备下一关' : '确认准备' })
+    return moves
   }
   if (!record || record.status !== 'active' || initialHubPreparation(state)) {
     moves.push(...hubInvestigatorChoices(state, seat).map(code => ({

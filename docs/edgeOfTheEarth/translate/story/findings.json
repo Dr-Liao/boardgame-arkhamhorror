@@ -1,0 +1,580 @@
+{
+  "area": "story",
+  "auditor": "story-audit",
+  "generatedAt": "2026-11-09",
+  "method": "只读扫描 story-text.js（8 章 469 sections/258 localeKeys/chineseGaps）、10 个战役模块字面量，并复核展示链（story-access#chapterSection→章节 texts/definition→SCENARIO_TEXT、records.js#storyBody→flow.js 节点、src/campaign/story.js#introduction→web/story-reader）；脚本 docs/edgeOfTheEarth/translate/tools/story-scan.mjs 直接运行复算。",
+  "scope": {
+    "source": "content/campaigns/edgeOfTheEarth/story-text.js + {prologue,checkpoints,interludes,epilogue,records,keywords,parts,shared,shared-encounters,flow}.js",
+    "count": 469,
+    "notes": [
+      "章节 469 段：中文三态 present-needs-review 260 / untranslated 10 / missing 199（与 meta.chinese 及 P7 披露一致）",
+      "战役 base（localeKeys 258）：present-needs-review 189 / missing 68 / untranslated 1（checkpoint1.theDisappearance3.body），合计 69 条缺译",
+      "缺译清单本身是既有披露口径（chineseGaps），全部列入 coverage.json backlog；findings 只报「回退 en 进入展示路径」「应标记而未标记」及文本质量问题",
+      "非生成模块 10 个文件只报玩家可见字符串（日志/选项/记录标签/关键词名），模板字面量 ${...} 属实现细节不计"
+    ]
+  },
+  "summary": {
+    "findings": 14,
+    "byCategory": {
+      "missing-translation": 0,
+      "mixed-language": 5,
+      "symbol-format": 5,
+      "mistranslation": 1,
+      "marker-leak": 0,
+      "terminology": 3
+    },
+    "bySeverity": {
+      "high": 3,
+      "medium": 6,
+      "low": 5
+    }
+  },
+  "findings": [
+    {
+      "id": "story-0001",
+      "category": "mixed-language",
+      "severity": "high",
+      "title": "章节缺译叶子以英文回退拼进故事日志开场/设置/结局，且无「中文待补」标记",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections / intro / setup / resolutions",
+        "count": 126
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:1990",
+      "pointer": "chapters.iceAndDeathPart1.sections.heading",
+      "evidence": "\"heading\": \"Scenario I\"（zh 缺失，display 回退 en）。8 章共 126 个 intro/setup/resolutions 叶子回退英文：intro 8（各章 heading=Scenario I/II/III/IV、fatalMirage=Scenario ???）、setup 96（如 cityOfTheElderThings setup.v1–v3 三套全英文）、resolutions 22（如 toTheForbiddenPeaks resolutions.resolution1.body 全英文 \"Resolution 1: The view from the summit is breathtaking…\"）。",
+      "expected": "故事日志开场标题显示「冒险 I / 亡命冰原 第 I 部分」，缺失设置/结局段落显示「中文待补」，不得把 Scenario I、Gather all cards…、Resolution 1:… 等英文当正文。",
+      "suggestion": "生成物 sections 只给中文展示值（非 present 存空串），展示层（story-access.js#chapterSection→章节 definition.js 的 blocks/text→SCENARIO_TEXT.intro/setup/resolutions，以及 src/campaign/story.js#introduction）按 chineseGaps 过滤并插入「中文待补」；补译 backlog 见 coverage.json。旁证：import-eote-story.mjs:124 的 display 回退 en；story-access.js:44 直接返回 sections；definition.js:141 blocks(SECTIONS.heading, SECTIONS.investigatorSetup, SECTIONS.intro…)。",
+      "source": "generated",
+      "count": 126,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:1990",
+          "pointer": "chapters.iceAndDeathPart1.sections.heading",
+          "evidence": "\"heading\": \"Scenario I\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:3353",
+          "pointer": "chapters.cityOfTheElderThings.sections.setup.v1.gatherSets",
+          "evidence": "\"gatherSets\": \"Gather all cards from the following encounter sets: City of the Elder Things, Elder Things, Miasma…\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:3035",
+          "pointer": "chapters.toTheForbiddenPeaks.resolutions.resolution1.body",
+          "evidence": "\"body\": \"Resolution 1: The view from the summit is breathtaking, but you are in no mood to enjoy t…\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4131",
+          "pointer": "chapters.theHeartOfMadnessPart2.resolutions.noResolution.title",
+          "evidence": "\"title\": \"No Resolution\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4084",
+          "pointer": "chapters.theHeartOfMadnessPart2.sections.setup.gatherSets",
+          "evidence": "\"gatherSets\": \"Gather all cards from the following encounter sets:…\""
+        }
+      ]
+    },
+    {
+      "id": "story-0002",
+      "category": "mixed-language",
+      "severity": "high",
+      "title": "战役 flow 选项/节点正文命中缺译时显示英文，并覆盖模块里已写好的中文兜底",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/{flow,records,prologue,checkpoints,interludes,epilogue}.js",
+        "field": "flow.nodes.*.options[].label / text",
+        "count": 15
+      },
+      "location": "content/campaigns/edgeOfTheEarth/interludes.js:131",
+      "pointer": "flow.nodes.interlude1DoorChoice.options[0].label",
+      "evidence": "选项显示英文 \"Open the door and venture into the mirage.\"，而模块兜底写的是中文「打开门，进入幻景。」；同类 14 个选项英文（prologue 2、checkpoint2 2、幕间门 10），另有 checkpoint1SearchStory 正文/标题英文 \"The Disappearance 3: You've decided to go after your missing team members…\"。原因：records.js:85-86 storyBody 读 localeKeys[].body（非 present 时= en），flow.js:106 `if (body) node.text = body` 用英文覆盖模块兜底。",
+      "expected": "中文 UI 选项显示模块中文兜底（「打开门，进入幻景。」「各自逃命！」等），缺译段落走「中文待补」标记。",
+      "suggestion": "records.js#storyBody 仅在 localeKeys[...].status==='present-needs-review' 时返回正文，否则返回 '' 让模块兜底生效；或生成物额外输出 zh-only 正文树供 flow 使用。",
+      "source": "generated",
+      "count": 15,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/prologue.js:58",
+          "pointer": "flow.nodes.prologueChoice.options[0].label",
+          "evidence": "label.prologue1Believe missing → 选项显示 \"I believe you…but if what you say is true, should we not investigate these findings further?\"（兜底「我相信你，但如果这些都是真的，我们难道不该进一步调查吗？」）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/prologue.js:63",
+          "pointer": "flow.nodes.prologueChoice.options[1].label",
+          "evidence": "label.prologue1Wild missing → \"I'm sorry, but this seems too wild to be true.\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/checkpoints.js:87",
+          "pointer": "flow.nodes.checkpoint1SearchStory.text",
+          "evidence": "checkpoint1.theDisappearance3.body untranslated → \"The Disappearance 3: You've decided to go after your missing team members…\"（兜底「你决定去寻找失踪的队员，前往《亡命冰原》第 II 部分。」）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/checkpoints.js:119",
+          "pointer": "flow.nodes.checkpoint2Choice.options[0].label",
+          "evidence": "label.runForYourLives missing → \"Run for your lives!\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/interludes.js:191",
+          "pointer": "flow.nodes.interlude2Night3Choice.options[0].label",
+          "evidence": "label.openTheDoorAndVentureOnceMore missing → \"Open the door and venture once more into the mirage.\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/interludes.js:261",
+          "pointer": "flow.nodes.interlude3Night4Choice.options[0].label",
+          "evidence": "label.openTheDoorAndVenture missing → \"Open the door and venture into the mirage.\""
+        }
+      ]
+    },
+    {
+      "id": "story-0003",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "记录标签中英混杂（Camp - …）且 25 个记录键无中文标签时回退原始 camelCase 键名",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js + records.js",
+        "field": "campaign.records.recordLabels / recordSchema",
+        "count": 38
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:1139",
+      "pointer": "campaign.records.recordLabels.entries[key.camp_BarrierCamp].body",
+      "evidence": "13 个营地记录标签保留英文前缀与半角括号：\"Camp - 屏障营地 (7)\"、\"Camp - 水晶洞穴 (8)\"…；另 records.js#recordLabels 对 25 个 recordSchema 键（iceAndDeathPart1Resolution、eoteShelterValue、xp…）回退原始键名（records.js:292 `labels[key] = fromStory[key] || key`），会经 manifest.recordLabels→clientData 在战役记录面板（hub.js:1485 `manifest?.recordLabels?.[key] || key`）与故事日志「调查结果」（story-reader.js:32）显示英文键名。",
+      "expected": "「营地 - 屏障营地（7）」或「营地：屏障营地（7）」；无中文标签的 25 键补中文标签（如「庇护值」「检查点 I 结局」）。",
+      "suggestion": "补译 zh locale 的 Camp 前缀与全角括号；为 recordSchema 的章节/流程记录补 label（或在 recordLabels() 中对 eote*/chapter 记录提供中文兜底）；同时对齐 records.js#CAMP_SHELTER 的旧常量标签（见 story-0011）。",
+      "source": "reference-locale",
+      "count": 38,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:1139",
+          "pointer": "campaign.records.recordLabels.entries[key.camp_BarrierCamp].body",
+          "evidence": "\"body\": \"Camp - 屏障营地 (7)\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:1160",
+          "pointer": "campaign.records.recordLabels.entries[key.camp_CrystallineCavern].body",
+          "evidence": "\"body\": \"Camp - 水晶洞穴 (8)\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/records.js:292",
+          "pointer": "recordLabels()[key]",
+          "evidence": "labels[key] = fromStory[key] || key（无中文标签时回退 camelCase 键名；25 键命中：iceAndDeathPart1Resolution、eoteShelterValue、eoteMissingCount、xp、fatalMirageTimes…）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/flow.js:128",
+          "pointer": "campaignFlowExtras.recordLabels",
+          "evidence": "recordLabels: recordLabels() → manifest → clientData，未过滤无中文标签键"
+        }
+      ]
+    },
+    {
+      "id": "story-0004",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "中文正文残留英文小标题/条目名（Resolution 3: / Intro 3: / Shelter Value: / Experience:）",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections",
+        "count": 4
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:3814",
+      "pointer": "chapters.theHeartOfMadnessPart1.resolutions.resolution3.body",
+      "evidence": "\"Resolution 3: 由你们灾难性的错误引起的能量脉冲将会抹去地球表面所有的有机生命。…\"；theHeartOfMadnessPart2 intro3.body 以 \"Intro 3: 在这些古代壁画中…\" 开头；iceAndDeathPart1 resolutions.resolution1.body 条目名 \"• Shelter Value: [shelterValue]\"、\"• Experience: （按上述说明计算）\" 仍为英文。",
+      "expected": "「结局 3: …」「引言 3: …」「• 庇护值：…」「• 经验：…」",
+      "suggestion": "在参考 zh locale 上补齐这 3 类条目名；生成器不额外处理，但补译时按「Intro/Resolution/Shelter Value/Experience→引言/结局/庇护值/经验」统一。",
+      "source": "reference-locale",
+      "count": 4,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:3814",
+          "pointer": "chapters.theHeartOfMadnessPart1.resolutions.resolution3.body",
+          "evidence": "\"Resolution 3: 由你们灾难性的错误引起的能量脉冲将会抹去地球表面所有的有机生命。\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4120",
+          "pointer": "chapters.theHeartOfMadnessPart2.sections.intro3.body",
+          "evidence": "\"Intro 3: 在这些古代壁画中，你只能收集到隐于其中的一小部分真相…\""
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2065",
+          "pointer": "chapters.iceAndDeathPart1.sections.resolutions.resolution1.body",
+          "evidence": "• Shelter Value: [shelterValue] / • Experience: （按上述说明计算）"
+        }
+      ]
+    },
+    {
+      "id": "story-0005",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "参考 zh locale 成系列残留半角/重复标点：`。.` 67 处、CJK 后半角句号/冒号/问号/逗号、标点前空格、引号内侧空格",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections + campaign.localeKeys（present-needs-review）",
+        "count": 147
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2022",
+      "pointer": "chapters.iceAndDeathPart1.sections.setup.setSkitteringNonsenseOutOfPlay",
+      "evidence": "\"将所有疾行谬物敌人放在一边，位于场外。.\"；同章 setup.tekelili \"…将该牌堆放在密谋牌堆旁。.\"；setup.winifredPresent \"…进入 导言 2.\"；resolutions.noResolution \"• 进入 检查点I：失踪事件.\"；campaign interlude1.restfulNight2 \"查看冒险日志中的 “探险队 ”部分。\"（引号内侧空格）。机器计数（出现次数/字段数）：`。.` 67/34、CJK 后半角句号 31/24、CJK 后半角冒号 24/24、CJK 后半角问号 11/11、CJK 后半角逗号 6/6、CJK 后半角感叹号 2/2、标点前空格 3/3、引号内侧空格 3/3。",
+      "expected": "统一为中文全角标点：句末只用「。」，列表条目用「• …。」，引号内不留空格。",
+      "suggestion": "按规则批量替换（先 `。.`→`。`、`, `→`，`、`:`→`：`，再修 CJK 后半角句号/问号），并修引号内侧空格；改动源在参考 zh locale，翻译批次统一处理，避免逐条手改生成物。",
+      "source": "reference-locale",
+      "count": 147,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2022",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.setSkitteringNonsenseOutOfPlay",
+          "evidence": "将所有疾行谬物敌人放在一边，位于场外。."
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2027",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.tekelili",
+          "evidence": "将所有忒咳哩-哩！弱点卡牌混洗到一起,形成忒咳哩-哩牌堆。将该牌堆放在密谋牌堆旁。."
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2015",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.winifredPresent",
+          "evidence": "如果参与本剧本的调查员中有温妮弗雷德·哈巴默克，进入 导言 2."
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2061",
+          "pointer": "chapters.iceAndDeathPart1.sections.resolutions.noResolution.body",
+          "evidence": "…数值之和。\n\n• 进入 检查点I：失踪事件."
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4520",
+          "pointer": "campaign.interlude1.restfulNight2.body",
+          "evidence": "查看冒险日志中的 “探险队 ”部分。"
+        }
+      ]
+    },
+    {
+      "id": "story-0006",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "中文正文残留 ICU 转义记号 `{'{'}frost{'}'}`（32 处/16 段），加寒霜标记的规则句无法阅读",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections（present zh）",
+        "count": 32
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2288",
+      "pointer": "chapters.iceAndDeathPart2.sections.intro.body",
+      "evidence": "\"向混乱袋中添加1个 {'{'}frost{'}'} 标记。\"（应为「添加 1 个 [frost] 标记」；同类出现在 iceAndDeathPart3 intro、toTheForbiddenPeaks eliyah/claypool/takada.otherwise、cityOfTheElderThings cookie.otherwise、theHeartOfMadnessPart1 tokens.*、campaign interlude2.endlessNight3/finalNight3 等 16 段）。",
+      "expected": "向混乱袋中添加 1 个 [frost] 标记。（[frost] 已注册为寒霜图标 token）",
+      "suggestion": "参考 zh locale 里把 ICU 转义 `{'{'}…{'}'}` 还原为 {frost}/{agility}，再走生成器 localizePlaceholders 转 [frost]；翻译批次统一替换 16 处。",
+      "source": "reference-locale",
+      "count": 32,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2288",
+          "pointer": "chapters.iceAndDeathPart2.sections.intro.body",
+          "evidence": "向混乱袋中添加1个 {'{'}frost{'}'} 标记。"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2489",
+          "pointer": "chapters.iceAndDeathPart3.sections.intro.body",
+          "evidence": "添加一个 {'{'}frost{'}'} 标记到混乱袋."
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:3044",
+          "pointer": "chapters.toTheForbiddenPeaks.sections.eliyah.otherwise",
+          "evidence": "向混乱袋中添加一个 {'{'}frost{'}'} 标记。"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4636",
+          "pointer": "campaign.interlude2.endlessNight3.body",
+          "evidence": "在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。"
+        }
+      ]
+    },
+    {
+      "id": "story-0007",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "未注册占位符 [shelterValue] 会按字面渲染给玩家",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections",
+        "count": 2
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2065",
+      "pointer": "chapters.iceAndDeathPart1.sections.resolutions.resolution1.body",
+      "evidence": "\"• Shelter Value: [shelterValue]\"；iceAndDeathPart2 investigatorSetup.body 同句 \"• 庇护值: [shelterValue]\"。web/card-text.js#SYMBOLS 未注册 shelterValue，renderRulesText 会原样输出 \"[shelterValue]\"。",
+      "expected": "「• 庇护值：＿＿（把营地庇护值记在营地名称旁）」等可读中文，不向玩家显示变量 token。",
+      "suggestion": "生成器对非图标占位符（{shelterValue}/{count} 等）不转 [var]，改为中文占位或空槽；补译时把「Shelter Value: [shelterValue]」整句改为中文。",
+      "source": "generated",
+      "count": 2,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2065",
+          "pointer": "chapters.iceAndDeathPart1.sections.resolutions.resolution1.body",
+          "evidence": "• Shelter Value: [shelterValue]"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2272",
+          "pointer": "chapters.iceAndDeathPart2.sections.investigatorSetup.body",
+          "evidence": "• 庇护值: [shelterValue]"
+        }
+      ]
+    },
+    {
+      "id": "story-0008",
+      "category": "mistranslation",
+      "severity": "high",
+      "title": "iceAndDeathPart1 难度条件误译：Expert 写成「困难等级」；winifredNotPresent 的 skip to 译成「进入」",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.iceAndDeathPart1.sections.setup",
+        "count": 2
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2026",
+      "pointer": "chapters.iceAndDeathPart1.sections.setup.expert",
+      "evidence": "en: \"If you are playing on Expert difficulty, add 2 doom to agenda 1a.\" → zh: \"如果你在游玩困难等级，则在密谋1a上放置2个毁灭标记。\"（同级 setup.hard :2025 才是「困难等级」）；另一处 setup.winifredNotPresent :2015 en \"Otherwise, skip to Intro 3.\" → zh \"否则进入 导言 3.\"（丢失「跳过」，与 winifredPresent 的「进入 导言 2」无法区分）。",
+      "expected": "expert: 「如果你在游玩专家等级，则在密谋1a上放置2个毁灭标记。」；winifredNotPresent: 「否则跳过，进入 导言 3。」",
+      "suggestion": "在参考 zh locale 修正这两处：Expert→专家等级、skip to→跳过至；翻译批次按「easy/standard/hard/expert=简单/普通/困难/专家」词表统一。",
+      "source": "reference-locale",
+      "count": 2,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2026",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.expert",
+          "evidence": "如果你在游玩困难等级，则在密谋1a上放置2个毁灭标记。"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2025",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.hard",
+          "evidence": "如果你在游玩困难等级，则在密谋1a上放置1个毁灭标记。"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2015",
+          "pointer": "chapters.iceAndDeathPart1.sections.setup.winifredNotPresent",
+          "evidence": "否则进入 导言 3."
+        }
+      ]
+    },
+    {
+      "id": "story-0009",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "简中正文大量把「着」写成繁体「著」（451 处/168 路径；章节 211、战役 240）",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "sections/localeKeys (present zh)",
+        "count": 451
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2031",
+      "pointer": "chapters.iceAndDeathPart1.sections.intro.body",
+      "evidence": "\"首先沿著东海岸向南航行…随著天气持续变冷…标示著那里是罗斯岛…\"；按脚本统计：全量 451 次「著」分布在 168 个路径（8 章 211 次：44/10/3/16/17/33/56/32；campaign 240 次），几乎全部是「着」（沿著/随著/活著/带著/讨论著/挣扎著/放著/接著）的异体写法；简中合法用法（著作/著名/显著）极少。",
+      "expected": "沿著→沿着、随著→随着、活著→活着、带著→带着、讨论著→讨论着…",
+      "suggestion": "补译批次对 zh locale 统一做「著→着」替换（保留「著作/著名/显著/昭著」白名单），或由 terms 批次统一处理简繁/异体字表。",
+      "source": "reference-locale",
+      "count": 451,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2031",
+          "pointer": "chapters.iceAndDeathPart1.sections.intro.body",
+          "evidence": "首先沿著东海岸向南航行，穿过巴拿马运河…随著天气持续变冷…"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2035",
+          "pointer": "chapters.iceAndDeathPart1.sections.intro1.body",
+          "evidence": "旁边还放著可供几天用的露营装备"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2489",
+          "pointer": "chapters.iceAndDeathPart3.sections.intro.body",
+          "evidence": "…还有更多在从冰面下不断冒出来（见 campaign 240 处同型）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4536",
+          "pointer": "campaign.interlude1.williamDyerIsCrossedOut.body",
+          "evidence": "他把这些素描都带著，以防万一会用到。正如…"
+        }
+      ]
+    },
+    {
+      "id": "story-0010",
+      "category": "terminology",
+      "severity": "low",
+      "title": "章节 intro 小标题体例与章节标题/卡名不一致（「亡命冰原：第1部分」vs「亡命冰原 第 I 部分」）",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections.intro*.title",
+        "count": 6
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2034",
+      "pointer": "chapters.iceAndDeathPart1.sections.intro1.title",
+      "evidence": "\"title\": \"亡命冰原：第1部分\"（intro1–4 共 4 个叶子），而同一章节 chapter.title=「亡命冰原 第 I 部分」、parts.js:22 与 08501 卡名 nameZh=「亡命冰原」；toTheForbiddenPeaks intro 标题「冒险II：失落之峰」（:3013/:3017）与 chapter.title「失落之峰」、卡名「失落之峰」并存。",
+      "expected": "统一为「亡命冰原 第 I 部分」「失落之峰」（或统一「冒险 II：失落之峰」体例）。",
+      "suggestion": "补译时按 shared.js/parts.js 的章节名统一 intro*.title；同时确定「第 I 部分」与「第1部分」只保留一种写法。",
+      "source": "reference-locale",
+      "count": 6,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2034",
+          "pointer": "chapters.iceAndDeathPart1.sections.intro1.title",
+          "evidence": "亡命冰原：第1部分"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:3013",
+          "pointer": "chapters.toTheForbiddenPeaks.sections.intro1.title",
+          "evidence": "冒险II：失落之峰"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/parts.js:22",
+          "pointer": "EOTE_SCENARIO_UNITS[0].name",
+          "evidence": "亡命冰原 第 I 部分（对照 chapter.title「亡命冰原 第 I 部分」）"
+        },
+        {
+          "location": "src/cards/cards-data.js:293912",
+          "pointer": "08501.nameZh",
+          "evidence": "卡面 nameZh=「亡命冰原」（对照：章节标题「亡命冰原 第 I 部分」、intro 标题「亡命冰原：第1部分」三种写法）"
+        }
+      ]
+    },
+    {
+      "id": "story-0011",
+      "category": "terminology",
+      "severity": "low",
+      "title": "关键词/记录常量译名与卡面数据不一致（高度等级 vs 层级；水晶洞窟/莱克营地遗迹/木制雪橇）",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/{keywords,records}.js",
+        "field": "EOTE_KEYWORDS.level.zh / CAMP_SHELTER / SUPPLIES",
+        "count": 4
+      },
+      "location": "content/campaigns/edgeOfTheEarth/keywords.js:42",
+      "pointer": "EOTE_KEYWORDS.level.zh",
+      "evidence": "keywords.js:42 关键词 level 中文名「高度等级」，而 EOTE 卡文统一用「层级」（cards-data 08xxx textZh：\"X为本地点的层级\"）；records.js:201 CAMP_SHELTER campCrystallineCavern label「水晶洞窟」vs 08514 卡名「水晶洞穴」（cards-data.js:294661）；records.js:200「莱克营地遗迹」vs 08513 卡名「莱克营地遗址」（cards-data.js:294602）；records.js:174 SUPPLIES woodenSledge label「木制雪橇」vs 08615 卡名「木制雪撬」（cards-data.js:301887）。",
+      "expected": "与卡面/规则书统一：height 相关用「层级」；地点/物资名以卡面 nameZh 为准。",
+      "suggestion": "keywords.js 的 level 中文名改为「层级」或规则书正式译名；records.js 三个常量标签对齐卡面。跨区：terms-audit 统一关键词/地名表，cards-audit 核对卡面 08513/08514/08615。",
+      "source": "repo-authored",
+      "count": 4,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/keywords.js:42",
+          "pointer": "EOTE_KEYWORDS.level.zh",
+          "evidence": "\"level\", \"高度等级\"（卡文用「层级」）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/records.js:201",
+          "pointer": "CAMP_SHELTER.campCrystallineCavern.label",
+          "evidence": "水晶洞窟（卡面 08514 = 水晶洞穴）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/records.js:200",
+          "pointer": "CAMP_SHELTER.campRemnantsOfLakesCamp.label",
+          "evidence": "莱克营地遗迹（卡面 08513 = 莱克营地遗址）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/records.js:174",
+          "pointer": "SUPPLIES[woodenSledge].label",
+          "evidence": "木制雪橇（卡面 08615 = 木制雪撬）"
+        }
+      ],
+      "crossArea": "terms-audit、cards-audit"
+    },
+    {
+      "id": "story-0012",
+      "category": "mixed-language",
+      "severity": "low",
+      "title": "战役日志行内残留英文缩写 MIA/XP",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/{checkpoints,interludes}.js",
+        "field": "logLine 文本",
+        "count": 2
+      },
+      "location": "content/campaigns/edgeOfTheEarth/checkpoints.js:241",
+      "pointer": "checkpoint1.effectLog",
+      "evidence": "\"🔎 检查点 I：调查员决定去寻找失踪队员（N 名 MIA）。\"；interludes.js:343 \"✨ 幕间奖励经验：每名调查员 +N XP（「曲奇的建议」）。\"",
+      "expected": "「N 名失踪队员」「+N 经验」",
+      "suggestion": "checkpoints.js:241 用「失踪」、interludes.js:343 用「经验」；XP 若为全局统一术语则由 terms-audit 定口径。",
+      "source": "repo-authored",
+      "count": 2,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/checkpoints.js:241",
+          "pointer": "checkpoint1.effectLog",
+          "evidence": "调查员决定去寻找失踪队员（N 名 MIA）"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/interludes.js:343",
+          "pointer": "interlude.xpLog",
+          "evidence": "每名调查员 +N XP（「曲奇的建议」）"
+        }
+      ]
+    },
+    {
+      "id": "story-0013",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "中文引号不配对（20 段左“多于右”），需人工裁定是否多段引语惯例",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "chapters.*.sections",
+        "count": 20
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2051",
+      "pointer": "chapters.iceAndDeathPart1.sections.eliyahAshevakKilledInPlaneCrash",
+      "evidence": "该段中文引号计数 “×2 / ”×1；同类 20 段（campaign prologue2 “×15/”×14、theHeartOfMadnessPart2 intro2 “×8/”×7 等）。多段长引语按英文习惯每段只补开引号会造成这种计数差，故需人工确认是缺收引号还是跨段引语体例。",
+      "expected": "每段引语首尾成套（“…”），跨段引语在末段补收引号；或统一按中文小说体例每段自成对。",
+      "suggestion": "人工核对 20 段；如为跨段长引语，在末段补「”」并在 notes 注明体例；如为缺引号则补齐。",
+      "source": "reference-locale",
+      "count": 20,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2051",
+          "pointer": "chapters.iceAndDeathPart1.sections.eliyahAshevakKilledInPlaneCrash",
+          "evidence": "“×2 / ”×1"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2054",
+          "pointer": "chapters.iceAndDeathPart1.sections.averyClaypoolKilledInPlaneCrash",
+          "evidence": "“×6 / ”×5"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4116",
+          "pointer": "chapters.theHeartOfMadnessPart2.sections.intro2.body",
+          "evidence": "“×8 / ”×7"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4400",
+          "pointer": "campaign.prologue2.body",
+          "evidence": "“×15 / ”×14"
+        }
+      ]
+    },
+    {
+      "id": "story-0014",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "参考源占位「???（Scenario ???）」保留在中文标题/正文，需人工裁定",
+      "scope": {
+        "source": "content/campaigns/edgeOfTheEarth/story-text.js",
+        "field": "fatalMirage headings / interlude 正文",
+        "count": 8
+      },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2698",
+      "pointer": "chapters.fatalMirage.sections.intro1.title",
+      "evidence": "\"title\": \"冒险???：致命幻景\"（en 源同为 \"Scenario ???: Fatal Mirage\"）；campaign interlude1.restfulNight3 / interlude2.endlessNight2–4 / interlude3.finalNight2–4 正文共 7 处保留「冒险???：致命幻景」，玩家可见。",
+      "expected": "若原版就是动态章节号占位，可保留但建议中文写成「冒险 ?：致命幻景」并在 UI 说明；若可确定序号则替换。",
+      "suggestion": "需人工裁定（参考源即含 ???，非翻译新增）；如保留请在文案层注明占位含义，避免玩家以为是乱码。",
+      "source": "reference-locale",
+      "count": 8,
+      "samples": [
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:2698",
+          "pointer": "chapters.fatalMirage.sections.intro1.title",
+          "evidence": "冒险???：致命幻景"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4528",
+          "pointer": "campaign.interlude1.restfulNight3.body",
+          "evidence": "• 打开门，进入幻景. 进入 冒险???：致命幻景"
+        },
+        {
+          "location": "content/campaigns/edgeOfTheEarth/story-text.js:4628",
+          "pointer": "campaign.interlude2.endlessNight2.body",
+          "evidence": "你已经进行过冒险???：致命幻景： 推进至 无尽夜晚 3."
+        }
+      ]
+    }
+  ]
+}

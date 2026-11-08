@@ -1312,6 +1312,270 @@ import e07317 from './theInnsmouthConspiracy/intoTheMaelstrom/07317.js'
 import e07318 from './theInnsmouthConspiracy/intoTheMaelstrom/07318.js'
 import e01181 from './shared/agents_of_cthulhu/01181.js'
 import e01182 from './shared/agents_of_cthulhu/01182.js'
+import e08687 from './edgeOfTheEarth/_shared/agents_of_the_unknown/08687.js'
+import e08688 from './edgeOfTheEarth/_shared/agents_of_the_unknown/08688.js'
+import e08689 from './edgeOfTheEarth/_shared/creatures_in_the_ice/08689.js'
+import e08690 from './edgeOfTheEarth/_shared/creatures_in_the_ice/08690.js'
+import e08691 from './edgeOfTheEarth/_shared/creatures_in_the_ice/08691.js'
+import e08692 from './edgeOfTheEarth/_shared/deadly_weather/08692.js'
+import e08693 from './edgeOfTheEarth/_shared/deadly_weather/08693.js'
+import e08694 from './edgeOfTheEarth/_shared/deadly_weather/08694.js'
+import e08695 from './edgeOfTheEarth/_shared/elder_things/08695.js'
+import e08696 from './edgeOfTheEarth/_shared/elder_things/08696.js'
+import e08697 from './edgeOfTheEarth/_shared/elder_things/08697.js'
+import e08714 from './edgeOfTheEarth/_shared/expedition_team/08714.js'
+import e08715 from './edgeOfTheEarth/_shared/expedition_team/08715.js'
+import e08716 from './edgeOfTheEarth/_shared/expedition_team/08716.js'
+import e08717 from './edgeOfTheEarth/_shared/expedition_team/08717.js'
+import e08718 from './edgeOfTheEarth/_shared/expedition_team/08718.js'
+import e08719 from './edgeOfTheEarth/_shared/expedition_team/08719.js'
+import e08720 from './edgeOfTheEarth/_shared/expedition_team/08720.js'
+import e08721 from './edgeOfTheEarth/_shared/expedition_team/08721.js'
+import e08722 from './edgeOfTheEarth/_shared/expedition_team/08722.js'
+import e08698 from './edgeOfTheEarth/_shared/hazards_of_antarctica/08698.js'
+import e08699 from './edgeOfTheEarth/_shared/hazards_of_antarctica/08699.js'
+import e08501 from './edgeOfTheEarth/_shared/ice_and_death/08501.js'
+import e08502 from './edgeOfTheEarth/_shared/ice_and_death/08502.js'
+import e08503 from './edgeOfTheEarth/_shared/ice_and_death/08503.js'
+import e08504 from './edgeOfTheEarth/_shared/ice_and_death/08504.js'
+import e08505 from './edgeOfTheEarth/_shared/ice_and_death/08505.js'
+import e08506 from './edgeOfTheEarth/_shared/ice_and_death/08506.js'
+import e08507 from './edgeOfTheEarth/_shared/ice_and_death/08507.js'
+import e08508 from './edgeOfTheEarth/_shared/ice_and_death/08508.js'
+import e08509 from './edgeOfTheEarth/_shared/ice_and_death/08509.js'
+import e08510 from './edgeOfTheEarth/_shared/ice_and_death/08510.js'
+import e08511 from './edgeOfTheEarth/_shared/ice_and_death/08511.js'
+import e08512 from './edgeOfTheEarth/_shared/ice_and_death/08512.js'
+import e08513 from './edgeOfTheEarth/_shared/ice_and_death/08513.js'
+import e08514 from './edgeOfTheEarth/_shared/ice_and_death/08514.js'
+import e08515 from './edgeOfTheEarth/_shared/ice_and_death/08515.js'
+import e08516 from './edgeOfTheEarth/_shared/ice_and_death/08516.js'
+import e08517 from './edgeOfTheEarth/_shared/ice_and_death/08517.js'
+import e08700 from './edgeOfTheEarth/_shared/left_behind/08700.js'
+import e08701 from './edgeOfTheEarth/_shared/left_behind/08701.js'
+import e08702 from './edgeOfTheEarth/_shared/left_behind/08702.js'
+import e08730 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js'
+import e08731 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js'
+import e08732 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js'
+import e08733 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js'
+import e08734 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js'
+import e08735 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js'
+import e08736 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js'
+import e08737 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js'
+import e08738 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js'
+import e08706 from './edgeOfTheEarth/_shared/miasma/08706.js'
+import e08707 from './edgeOfTheEarth/_shared/miasma/08707.js'
+import e08703 from './edgeOfTheEarth/_shared/nameless_horrors/08703.js'
+import e08704 from './edgeOfTheEarth/_shared/nameless_horrors/08704.js'
+import e08705 from './edgeOfTheEarth/_shared/nameless_horrors/08705.js'
+import e08708 from './edgeOfTheEarth/_shared/penguins/08708.js'
+import e08709 from './edgeOfTheEarth/_shared/penguins/08709.js'
+import e08710 from './edgeOfTheEarth/_shared/shoggoths/08710.js'
+import e08711 from './edgeOfTheEarth/_shared/shoggoths/08711.js'
+import e08712 from './edgeOfTheEarth/_shared/silence_and_mystery/08712.js'
+import e08713 from './edgeOfTheEarth/_shared/silence_and_mystery/08713.js'
+import e08723 from './edgeOfTheEarth/_shared/tekelili/08723.js'
+import e08724 from './edgeOfTheEarth/_shared/tekelili/08724.js'
+import e08725 from './edgeOfTheEarth/_shared/tekelili/08725.js'
+import e08726 from './edgeOfTheEarth/_shared/tekelili/08726.js'
+import e08727 from './edgeOfTheEarth/_shared/tekelili/08727.js'
+import e08728 from './edgeOfTheEarth/_shared/tekelili/08728.js'
+import e08729 from './edgeOfTheEarth/_shared/tekelili/08729.js'
+import e08648 from './edgeOfTheEarth/_shared/the_heart_of_madness/08648.js'
+import e08649 from './edgeOfTheEarth/_shared/the_heart_of_madness/08649.js'
+import e08650 from './edgeOfTheEarth/_shared/the_heart_of_madness/08650.js'
+import e08651 from './edgeOfTheEarth/_shared/the_heart_of_madness/08651.js'
+import e08652 from './edgeOfTheEarth/_shared/the_heart_of_madness/08652.js'
+import e08653 from './edgeOfTheEarth/_shared/the_heart_of_madness/08653.js'
+import e08654 from './edgeOfTheEarth/_shared/the_heart_of_madness/08654.js'
+import e08655 from './edgeOfTheEarth/_shared/the_heart_of_madness/08655.js'
+import e08656 from './edgeOfTheEarth/_shared/the_heart_of_madness/08656.js'
+import e08657 from './edgeOfTheEarth/_shared/the_heart_of_madness/08657.js'
+import e08658 from './edgeOfTheEarth/_shared/the_heart_of_madness/08658.js'
+import e08622 from './edgeOfTheEarth/cityOfTheElderThings/08622.js'
+import e08623 from './edgeOfTheEarth/cityOfTheElderThings/08623.js'
+import e08624 from './edgeOfTheEarth/cityOfTheElderThings/08624.js'
+import e08625 from './edgeOfTheEarth/cityOfTheElderThings/08625.js'
+import e08626 from './edgeOfTheEarth/cityOfTheElderThings/08626.js'
+import e08627 from './edgeOfTheEarth/cityOfTheElderThings/08627.js'
+import e08628 from './edgeOfTheEarth/cityOfTheElderThings/08628.js'
+import e08629 from './edgeOfTheEarth/cityOfTheElderThings/08629.js'
+import e08630 from './edgeOfTheEarth/cityOfTheElderThings/08630.js'
+import e08631 from './edgeOfTheEarth/cityOfTheElderThings/08631.js'
+import e08632 from './edgeOfTheEarth/cityOfTheElderThings/08632.js'
+import e08633 from './edgeOfTheEarth/cityOfTheElderThings/08633.js'
+import e08634 from './edgeOfTheEarth/cityOfTheElderThings/08634.js'
+import e08635 from './edgeOfTheEarth/cityOfTheElderThings/08635.js'
+import e08636 from './edgeOfTheEarth/cityOfTheElderThings/08636.js'
+import e08637 from './edgeOfTheEarth/cityOfTheElderThings/08637.js'
+import e08638 from './edgeOfTheEarth/cityOfTheElderThings/08638.js'
+import e08639 from './edgeOfTheEarth/cityOfTheElderThings/08639.js'
+import e08640 from './edgeOfTheEarth/cityOfTheElderThings/08640.js'
+import e08641 from './edgeOfTheEarth/cityOfTheElderThings/08641.js'
+import e08642 from './edgeOfTheEarth/cityOfTheElderThings/08642.js'
+import e08643 from './edgeOfTheEarth/cityOfTheElderThings/08643.js'
+import e08644 from './edgeOfTheEarth/cityOfTheElderThings/08644.js'
+import e08645 from './edgeOfTheEarth/cityOfTheElderThings/08645.js'
+import e08646 from './edgeOfTheEarth/cityOfTheElderThings/08646.js'
+import e08647 from './edgeOfTheEarth/cityOfTheElderThings/08647.js'
+import e08549 from './edgeOfTheEarth/fatalMirage/08549.js'
+import e08550 from './edgeOfTheEarth/fatalMirage/08550.js'
+import e08551 from './edgeOfTheEarth/fatalMirage/08551.js'
+import e08552 from './edgeOfTheEarth/fatalMirage/08552.js'
+import e08553 from './edgeOfTheEarth/fatalMirage/08553.js'
+import e08554 from './edgeOfTheEarth/fatalMirage/08554.js'
+import e08555 from './edgeOfTheEarth/fatalMirage/08555.js'
+import e08556 from './edgeOfTheEarth/fatalMirage/08556.js'
+import e08556b from './edgeOfTheEarth/fatalMirage/08556b.js'
+import e08557 from './edgeOfTheEarth/fatalMirage/08557.js'
+import e08557b from './edgeOfTheEarth/fatalMirage/08557b.js'
+import e08558 from './edgeOfTheEarth/fatalMirage/08558.js'
+import e08558b from './edgeOfTheEarth/fatalMirage/08558b.js'
+import e08559 from './edgeOfTheEarth/fatalMirage/08559.js'
+import e08559b from './edgeOfTheEarth/fatalMirage/08559b.js'
+import e08560 from './edgeOfTheEarth/fatalMirage/08560.js'
+import e08560b from './edgeOfTheEarth/fatalMirage/08560b.js'
+import e08561 from './edgeOfTheEarth/fatalMirage/08561.js'
+import e08561b from './edgeOfTheEarth/fatalMirage/08561b.js'
+import e08562 from './edgeOfTheEarth/fatalMirage/08562.js'
+import e08562b from './edgeOfTheEarth/fatalMirage/08562b.js'
+import e08563 from './edgeOfTheEarth/fatalMirage/08563.js'
+import e08563b from './edgeOfTheEarth/fatalMirage/08563b.js'
+import e08564 from './edgeOfTheEarth/fatalMirage/08564.js'
+import e08564b from './edgeOfTheEarth/fatalMirage/08564b.js'
+import e08565 from './edgeOfTheEarth/fatalMirage/08565.js'
+import e08565b from './edgeOfTheEarth/fatalMirage/08565b.js'
+import e08566 from './edgeOfTheEarth/fatalMirage/08566.js'
+import e08566b from './edgeOfTheEarth/fatalMirage/08566b.js'
+import e08567 from './edgeOfTheEarth/fatalMirage/08567.js'
+import e08567b from './edgeOfTheEarth/fatalMirage/08567b.js'
+import e08568 from './edgeOfTheEarth/fatalMirage/08568.js'
+import e08568b from './edgeOfTheEarth/fatalMirage/08568b.js'
+import e08569 from './edgeOfTheEarth/fatalMirage/08569.js'
+import e08569b from './edgeOfTheEarth/fatalMirage/08569b.js'
+import e08570 from './edgeOfTheEarth/fatalMirage/08570.js'
+import e08570b from './edgeOfTheEarth/fatalMirage/08570b.js'
+import e08571 from './edgeOfTheEarth/fatalMirage/08571.js'
+import e08571b from './edgeOfTheEarth/fatalMirage/08571b.js'
+import e08572 from './edgeOfTheEarth/fatalMirage/08572.js'
+import e08572b from './edgeOfTheEarth/fatalMirage/08572b.js'
+import e08573 from './edgeOfTheEarth/fatalMirage/08573.js'
+import e08573b from './edgeOfTheEarth/fatalMirage/08573b.js'
+import e08574 from './edgeOfTheEarth/fatalMirage/08574.js'
+import e08574b from './edgeOfTheEarth/fatalMirage/08574b.js'
+import e08575 from './edgeOfTheEarth/fatalMirage/08575.js'
+import e08575b from './edgeOfTheEarth/fatalMirage/08575b.js'
+import e08576 from './edgeOfTheEarth/fatalMirage/08576.js'
+import e08576b from './edgeOfTheEarth/fatalMirage/08576b.js'
+import e08577 from './edgeOfTheEarth/fatalMirage/08577.js'
+import e08577b from './edgeOfTheEarth/fatalMirage/08577b.js'
+import e08578 from './edgeOfTheEarth/fatalMirage/08578.js'
+import e08578b from './edgeOfTheEarth/fatalMirage/08578b.js'
+import e08579 from './edgeOfTheEarth/fatalMirage/08579.js'
+import e08579b from './edgeOfTheEarth/fatalMirage/08579b.js'
+import e08580 from './edgeOfTheEarth/fatalMirage/08580.js'
+import e08580b from './edgeOfTheEarth/fatalMirage/08580b.js'
+import e08581 from './edgeOfTheEarth/fatalMirage/08581.js'
+import e08581b from './edgeOfTheEarth/fatalMirage/08581b.js'
+import e08582 from './edgeOfTheEarth/fatalMirage/08582.js'
+import e08582b from './edgeOfTheEarth/fatalMirage/08582b.js'
+import e08583 from './edgeOfTheEarth/fatalMirage/08583.js'
+import e08583b from './edgeOfTheEarth/fatalMirage/08583b.js'
+import e08584 from './edgeOfTheEarth/fatalMirage/08584.js'
+import e08585 from './edgeOfTheEarth/fatalMirage/08585.js'
+import e08586 from './edgeOfTheEarth/fatalMirage/08586.js'
+import e08587 from './edgeOfTheEarth/fatalMirage/08587.js'
+import e08588 from './edgeOfTheEarth/fatalMirage/08588.js'
+import e08589 from './edgeOfTheEarth/fatalMirage/08589.js'
+import e08590 from './edgeOfTheEarth/fatalMirage/08590.js'
+import e08591 from './edgeOfTheEarth/fatalMirage/08591.js'
+import e08592 from './edgeOfTheEarth/fatalMirage/08592.js'
+import e08593 from './edgeOfTheEarth/fatalMirage/08593.js'
+import e08594 from './edgeOfTheEarth/fatalMirage/08594.js'
+import e08595 from './edgeOfTheEarth/fatalMirage/08595.js'
+import e08518 from './edgeOfTheEarth/iceAndDeathPart1/08518.js'
+import e08519 from './edgeOfTheEarth/iceAndDeathPart1/08519.js'
+import e08520 from './edgeOfTheEarth/iceAndDeathPart1/08520.js'
+import e08521 from './edgeOfTheEarth/iceAndDeathPart1/08521.js'
+import e08522 from './edgeOfTheEarth/iceAndDeathPart1/08522.js'
+import e08523 from './edgeOfTheEarth/iceAndDeathPart2/08523.js'
+import e08524 from './edgeOfTheEarth/iceAndDeathPart2/08524.js'
+import e08525 from './edgeOfTheEarth/iceAndDeathPart2/08525.js'
+import e08526 from './edgeOfTheEarth/iceAndDeathPart2/08526.js'
+import e08527 from './edgeOfTheEarth/iceAndDeathPart2/08527.js'
+import e08528 from './edgeOfTheEarth/iceAndDeathPart2/08528.js'
+import e08529 from './edgeOfTheEarth/iceAndDeathPart2/08529.js'
+import e08530 from './edgeOfTheEarth/iceAndDeathPart2/08530.js'
+import e08531 from './edgeOfTheEarth/iceAndDeathPart2/08531.js'
+import e08532 from './edgeOfTheEarth/iceAndDeathPart2/08532.js'
+import e08533 from './edgeOfTheEarth/iceAndDeathPart2/08533.js'
+import e08534 from './edgeOfTheEarth/iceAndDeathPart2/08534.js'
+import e08535 from './edgeOfTheEarth/iceAndDeathPart2/08535.js'
+import e08536 from './edgeOfTheEarth/iceAndDeathPart2/08536.js'
+import e08537 from './edgeOfTheEarth/iceAndDeathPart2/08537.js'
+import e08538 from './edgeOfTheEarth/iceAndDeathPart2/08538.js'
+import e08539 from './edgeOfTheEarth/iceAndDeathPart2/08539.js'
+import e08540 from './edgeOfTheEarth/iceAndDeathPart2/08540.js'
+import e08541 from './edgeOfTheEarth/iceAndDeathPart2/08541.js'
+import e08542 from './edgeOfTheEarth/iceAndDeathPart2/08542.js'
+import e08543 from './edgeOfTheEarth/iceAndDeathPart2/08543.js'
+import e08544 from './edgeOfTheEarth/iceAndDeathPart3/08544.js'
+import e08545 from './edgeOfTheEarth/iceAndDeathPart3/08545.js'
+import e08546 from './edgeOfTheEarth/iceAndDeathPart3/08546.js'
+import e08547 from './edgeOfTheEarth/iceAndDeathPart3/08547.js'
+import e08548 from './edgeOfTheEarth/iceAndDeathPart3/08548.js'
+import e08659 from './edgeOfTheEarth/theHeartOfMadnessPart1/08659.js'
+import e08660 from './edgeOfTheEarth/theHeartOfMadnessPart1/08660.js'
+import e08661 from './edgeOfTheEarth/theHeartOfMadnessPart1/08661.js'
+import e08662 from './edgeOfTheEarth/theHeartOfMadnessPart1/08662.js'
+import e08663 from './edgeOfTheEarth/theHeartOfMadnessPart1/08663.js'
+import e08664 from './edgeOfTheEarth/theHeartOfMadnessPart1/08664.js'
+import e08665 from './edgeOfTheEarth/theHeartOfMadnessPart1/08665.js'
+import e08666 from './edgeOfTheEarth/theHeartOfMadnessPart1/08666.js'
+import e08667 from './edgeOfTheEarth/theHeartOfMadnessPart1/08667.js'
+import e08668 from './edgeOfTheEarth/theHeartOfMadnessPart1/08668.js'
+import e08669 from './edgeOfTheEarth/theHeartOfMadnessPart1/08669.js'
+import e08670 from './edgeOfTheEarth/theHeartOfMadnessPart1/08670.js'
+import e08671 from './edgeOfTheEarth/theHeartOfMadnessPart2/08671.js'
+import e08672 from './edgeOfTheEarth/theHeartOfMadnessPart2/08672.js'
+import e08673 from './edgeOfTheEarth/theHeartOfMadnessPart2/08673.js'
+import e08674 from './edgeOfTheEarth/theHeartOfMadnessPart2/08674.js'
+import e08675 from './edgeOfTheEarth/theHeartOfMadnessPart2/08675.js'
+import e08676 from './edgeOfTheEarth/theHeartOfMadnessPart2/08676.js'
+import e08677 from './edgeOfTheEarth/theHeartOfMadnessPart2/08677.js'
+import e08678 from './edgeOfTheEarth/theHeartOfMadnessPart2/08678.js'
+import e08679 from './edgeOfTheEarth/theHeartOfMadnessPart2/08679.js'
+import e08680 from './edgeOfTheEarth/theHeartOfMadnessPart2/08680.js'
+import e08681 from './edgeOfTheEarth/theHeartOfMadnessPart2/08681.js'
+import e08682 from './edgeOfTheEarth/theHeartOfMadnessPart2/08682.js'
+import e08683 from './edgeOfTheEarth/theHeartOfMadnessPart2/08683.js'
+import e08684 from './edgeOfTheEarth/theHeartOfMadnessPart2/08684.js'
+import e08685 from './edgeOfTheEarth/theHeartOfMadnessPart2/08685.js'
+import e08686 from './edgeOfTheEarth/theHeartOfMadnessPart2/08686.js'
+import e08597 from './edgeOfTheEarth/toTheForbiddenPeaks/08597.js'
+import e08598 from './edgeOfTheEarth/toTheForbiddenPeaks/08598.js'
+import e08599 from './edgeOfTheEarth/toTheForbiddenPeaks/08599.js'
+import e08600 from './edgeOfTheEarth/toTheForbiddenPeaks/08600.js'
+import e08601 from './edgeOfTheEarth/toTheForbiddenPeaks/08601.js'
+import e08602 from './edgeOfTheEarth/toTheForbiddenPeaks/08602.js'
+import e08603 from './edgeOfTheEarth/toTheForbiddenPeaks/08603.js'
+import e08604 from './edgeOfTheEarth/toTheForbiddenPeaks/08604.js'
+import e08605 from './edgeOfTheEarth/toTheForbiddenPeaks/08605.js'
+import e08606 from './edgeOfTheEarth/toTheForbiddenPeaks/08606.js'
+import e08607 from './edgeOfTheEarth/toTheForbiddenPeaks/08607.js'
+import e08608 from './edgeOfTheEarth/toTheForbiddenPeaks/08608.js'
+import e08609 from './edgeOfTheEarth/toTheForbiddenPeaks/08609.js'
+import e08610 from './edgeOfTheEarth/toTheForbiddenPeaks/08610.js'
+import e08611 from './edgeOfTheEarth/toTheForbiddenPeaks/08611.js'
+import e08612 from './edgeOfTheEarth/toTheForbiddenPeaks/08612.js'
+import e08613 from './edgeOfTheEarth/toTheForbiddenPeaks/08613.js'
+import e08614 from './edgeOfTheEarth/toTheForbiddenPeaks/08614.js'
+import e08615 from './edgeOfTheEarth/toTheForbiddenPeaks/08615.js'
+import e08616 from './edgeOfTheEarth/toTheForbiddenPeaks/08616.js'
+import e08617 from './edgeOfTheEarth/toTheForbiddenPeaks/08617.js'
+import e08618 from './edgeOfTheEarth/toTheForbiddenPeaks/08618.js'
+import e08619 from './edgeOfTheEarth/toTheForbiddenPeaks/08619.js'
+import e08620 from './edgeOfTheEarth/toTheForbiddenPeaks/08620.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2623,6 +2887,270 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07318,
   e01181,
   e01182,
+  e08687,
+  e08688,
+  e08689,
+  e08690,
+  e08691,
+  e08692,
+  e08693,
+  e08694,
+  e08695,
+  e08696,
+  e08697,
+  e08714,
+  e08715,
+  e08716,
+  e08717,
+  e08718,
+  e08719,
+  e08720,
+  e08721,
+  e08722,
+  e08698,
+  e08699,
+  e08501,
+  e08502,
+  e08503,
+  e08504,
+  e08505,
+  e08506,
+  e08507,
+  e08508,
+  e08509,
+  e08510,
+  e08511,
+  e08512,
+  e08513,
+  e08514,
+  e08515,
+  e08516,
+  e08517,
+  e08700,
+  e08701,
+  e08702,
+  e08730,
+  e08731,
+  e08732,
+  e08733,
+  e08734,
+  e08735,
+  e08736,
+  e08737,
+  e08738,
+  e08706,
+  e08707,
+  e08703,
+  e08704,
+  e08705,
+  e08708,
+  e08709,
+  e08710,
+  e08711,
+  e08712,
+  e08713,
+  e08723,
+  e08724,
+  e08725,
+  e08726,
+  e08727,
+  e08728,
+  e08729,
+  e08648,
+  e08649,
+  e08650,
+  e08651,
+  e08652,
+  e08653,
+  e08654,
+  e08655,
+  e08656,
+  e08657,
+  e08658,
+  e08622,
+  e08623,
+  e08624,
+  e08625,
+  e08626,
+  e08627,
+  e08628,
+  e08629,
+  e08630,
+  e08631,
+  e08632,
+  e08633,
+  e08634,
+  e08635,
+  e08636,
+  e08637,
+  e08638,
+  e08639,
+  e08640,
+  e08641,
+  e08642,
+  e08643,
+  e08644,
+  e08645,
+  e08646,
+  e08647,
+  e08549,
+  e08550,
+  e08551,
+  e08552,
+  e08553,
+  e08554,
+  e08555,
+  e08556,
+  e08556b,
+  e08557,
+  e08557b,
+  e08558,
+  e08558b,
+  e08559,
+  e08559b,
+  e08560,
+  e08560b,
+  e08561,
+  e08561b,
+  e08562,
+  e08562b,
+  e08563,
+  e08563b,
+  e08564,
+  e08564b,
+  e08565,
+  e08565b,
+  e08566,
+  e08566b,
+  e08567,
+  e08567b,
+  e08568,
+  e08568b,
+  e08569,
+  e08569b,
+  e08570,
+  e08570b,
+  e08571,
+  e08571b,
+  e08572,
+  e08572b,
+  e08573,
+  e08573b,
+  e08574,
+  e08574b,
+  e08575,
+  e08575b,
+  e08576,
+  e08576b,
+  e08577,
+  e08577b,
+  e08578,
+  e08578b,
+  e08579,
+  e08579b,
+  e08580,
+  e08580b,
+  e08581,
+  e08581b,
+  e08582,
+  e08582b,
+  e08583,
+  e08583b,
+  e08584,
+  e08585,
+  e08586,
+  e08587,
+  e08588,
+  e08589,
+  e08590,
+  e08591,
+  e08592,
+  e08593,
+  e08594,
+  e08595,
+  e08518,
+  e08519,
+  e08520,
+  e08521,
+  e08522,
+  e08523,
+  e08524,
+  e08525,
+  e08526,
+  e08527,
+  e08528,
+  e08529,
+  e08530,
+  e08531,
+  e08532,
+  e08533,
+  e08534,
+  e08535,
+  e08536,
+  e08537,
+  e08538,
+  e08539,
+  e08540,
+  e08541,
+  e08542,
+  e08543,
+  e08544,
+  e08545,
+  e08546,
+  e08547,
+  e08548,
+  e08659,
+  e08660,
+  e08661,
+  e08662,
+  e08663,
+  e08664,
+  e08665,
+  e08666,
+  e08667,
+  e08668,
+  e08669,
+  e08670,
+  e08671,
+  e08672,
+  e08673,
+  e08674,
+  e08675,
+  e08676,
+  e08677,
+  e08678,
+  e08679,
+  e08680,
+  e08681,
+  e08682,
+  e08683,
+  e08684,
+  e08685,
+  e08686,
+  e08597,
+  e08598,
+  e08599,
+  e08600,
+  e08601,
+  e08602,
+  e08603,
+  e08604,
+  e08605,
+  e08606,
+  e08607,
+  e08608,
+  e08609,
+  e08610,
+  e08611,
+  e08612,
+  e08613,
+  e08614,
+  e08615,
+  e08616,
+  e08617,
+  e08618,
+  e08619,
+  e08620,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

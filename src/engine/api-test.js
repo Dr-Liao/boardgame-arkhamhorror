@@ -195,8 +195,14 @@ export function createTestApi(state, events, deps) {
     searchDeck: (seat, options) => searchDeck(state, seat, options, events),
     describeLook,
     describeSearch,
-    // Phase 2（B6）：把一张牌搬到别处（默认按当前行动者）。
-    moveCard: spec => moveCardTo(state, state.investigators[state.currentSeat], spec, events),
+    // Phase 2（B6）：把一张牌搬到别处。
+    // 座位归属：显式 options.seat > 进行中检定的执行者 > 当前行动者。
+    // 修复 08004 旧印：非本人回合的检定（神话/遭遇强制检定）里 currentSeat 不是检定者，
+    // 旧实现固定按 currentSeat 取 inv，导致换的是别人的牌库/手牌（扫描报告 P0-10 #4）。
+    moveCard: (spec, options = {}) => {
+      const seat = options?.seat ?? state.skillTest?.seat ?? state.currentSeat
+      return moveCardTo(state, state.investigators[seat], spec, events)
+    },
     // Phase 2（C4）：上限的描述文案（AI 上下文/图鉴用）。
     describeLimit: descriptor => describeLimit(descriptor),
     // Phase 2 收尾：迁移逃生卡时需要的几个薄包装（都只是已有引擎入口的别名，

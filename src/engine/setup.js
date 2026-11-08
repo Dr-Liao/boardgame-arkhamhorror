@@ -1,3 +1,4 @@
+import { isDraftMode, draftDecksReady } from '../deck/draft-mode.js'
 import { putInHand } from './hand-entry.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { addPoolTokens } from './chaos-token-pool.js'
@@ -19,6 +20,7 @@ import {
 } from './story-investigators.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
+import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
 import { contentRegistry } from '../../content/registered.js'
 import {
   CARD_POOL_SCOPE_LABELS, allowsCard, cardPoolContext, normalizeCardPoolScope,
@@ -351,6 +353,9 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
       const setup = null
     }
   }
+  // P5 地球边缘：陈丽丽开局演武状态 / 诺曼牌库顶常驻揭示（只对声明者生效）。
+  initBeginGameDisciplines(state, inv)
+  syncPassiveDeckTop(state, inv.seat)
   // 开局就带在身上的支援（签名卡 / 永久卡）也计入额外行动；上一关的资产已在上面清空，
   // 因此这里只会读到本关真实在场的卡。
   inv.actionsLeft = 3 + extraActionBonus(inv)
@@ -483,6 +488,7 @@ function createGameState(settings, players) {
     investigators.push(makeInvestigator(ALL_INVESTIGATORS[code], p.seat))
   }
 
+  if (settings.deckMode === 'draft') settings = { ...settings, campaignHub: true, playerDeck: null }
   const difficulty = settings.difficulty || 'standard'
   const state = {
     schemaVersion: STATE_SCHEMA_VERSION,
@@ -539,6 +545,7 @@ function createGameState(settings, players) {
     aiStoryAwareness: settings.aiStoryAwareness === true || settings.aiStoryAwareness === 'on',
     // 游戏高级设置只在非默认值时写入状态：默认局（全部 / 允许回档）的状态形状
     // 与旧存档、旧重放基线保持一致；读取方一律按「缺省 = all / 允许」处理。
+    ...(settings.deckMode === 'draft' ? { deckMode: 'draft' } : {}),
     ...(cardPoolScope === 'progressive' ? { cardPoolScope } : {}),
     ...(allowRollback ? {} : { allowRollback: false }),
     resourceVersion: META.resourceVersion,
@@ -622,6 +629,7 @@ function pickAiInvestigator(player, order, used, allowed = PLAYABLE_INVESTIGATOR
 // 从战役进入指定剧本：设置剧本数据、铺地图/敌人/遭遇牌堆/混乱袋、恢复调查员。
 
 function startScenario(state, index, events) {
+  if (isDraftMode(state) && !draftDecksReady(state)) throw new Error('请先补足所有调查员的牌组。')
   const CAMPAIGN = campaignFor(state)
   const scenarioId = CAMPAIGN.scenarioOrder[index]
   const sc = structuredClone(SCENARIOS[scenarioId])

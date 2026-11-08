@@ -1,0 +1,27 @@
+﻿PASS 08105 real-fight-window :: test.beforeCommit options=["让过","破冰锥：横置：本次攻击/调查检定 +1 技能值"] actionKind=fight offered=true
+PASS 08105 fight-value+1 :: result.value=5 expected=5 exhausted=true
+PASS 08107 real-fight-window :: test.beforeCommit options=["让过","破冰锥：弃掉破冰锥：成功后本次攻击 +1 伤害/额外 1 线索"] actionKind=fight
+PASS 08107 discard-for-damage :: damageTaken=2 expected=2 value=5 exhaustedUsed=true discardUsed=true discarded=true
+PASS 08102 real-window-offered :: reaction options=["不打出","保护魂灵"]
+PASS 08102 return-to-hand :: hand=["01032"] discard=["08102"]
+PASS 08102 owner-draws-3 :: handSize=3 discard=["08102","01032"]
+PASS 08130 threatDamageSink-heal :: flags={"threatDamageSink":true} healed=1 stillInThreat=false discardHas=true invDamage=0->0
+PASS 08131 threatDamageSink-heal :: flags={"threatDamageSink":true} healed=1 stillInThreat=false discardHas=true invDamage=0->0
+PASS 08091 enters-play-sigil :: sigilChoice=skull sigilToken=skull
+PASS 08091 tokenReveal-replacement :: reactionOffered=true sigil=skull replaced={"drawn":["skull"],"exhausted":true}
+PASS 08083 heal-ally :: chosen=asset:c2 damage=0 horror=0
+PASS 08083 heal-ally-floor :: chosen=asset:c2 damage=0 horror=0（不得治成负数）
+PASS 08028 mythos-skip-encounter :: played=true deck=["dissonantVoices"]（修复前 deck 被抽空）
+PASS 08028 spawn-engaged :: spawned=ghoulMinion engagedSeat=0 effects=1
+PASS 08074 attach-on-real-play :: attachment={"id":"a1","code":"08074","ownerSeat":0,"attachedRound":1,"uses":3,"usesType":"durability"} discard=[]
+PASS 08074 attached-test-window :: test.beforeCommit options=["让过","应急装备：被附属支援的技能检定期间：花 1 耐久，本次检定 +2 技能值"]
+PASS 08074 spend-durability+2 :: picked=true uses=3->2 value=7->9
+PASS 08059 declarative-flags :: flags={"upgradeDiscount":{"first":2,"amount":1},"purchaseCostDelta":1}
+PASS 08059 first-two-upgrades-minus-1 :: p1=1 p2=3 used=2（01028=2xp/01029=4xp）
+PASS 08059 third-upgrade-no-discount :: third upgrade cost=2 discount=undefined
+PASS 08059 new-purchase-plus-1 :: new purchase option={"cost":3,"delta":1}
+PASS 08059 reset-per-interlude :: usedAfterRefresh=0 next upgrade cost=1
+PASS 08053 legal-chain-moves :: moveOptions=[["不移动","B"],["不移动","A","C"]] final=c（修复前第二次仍列 A 的邻居 B、可非法移动）
+PASS 08058 legal-chain-moves :: moveOptions=[["不移动","B"],["不移动","A","C"],["不移动","B","D"]] final=d（修复前每步都列 A 的邻居 B）
+
+=== P0-9 player cards probe: 25/25 PASS ===

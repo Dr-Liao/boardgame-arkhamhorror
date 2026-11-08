@@ -1,5 +1,7 @@
 // Shared by card text and table UI. Glyphs match the bundled reference's
-// styles/icons.css; health/sanity masks are its original heart/brain artwork.
+// styles/icons.css. Health/sanity are vector silhouettes traced from its original
+// heart/brain artwork (see tableIcon in table-components.js), not raster masks:
+// scaling the 2000px PNG down to 13–18px used to turn it into a grey smudge.
 export const TDC_RUNES = Array.from({ length: 26 }, (_, index) => `tdc_rune_${String.fromCharCode(97 + index)}`)
 export const CARD_GLYPHS = Object.freeze({
   action: 'I', reaction: 'y', free: 'u', fast: 'u',

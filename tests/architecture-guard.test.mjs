@@ -145,7 +145,16 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // B3 删掉 setup 期无牌堆可洗的单参 `helper.shuffle`，A2 加「布置期遭遇牌库未建时挂起蜂拥卡、
 // afterDeckSetup 补放」的时序修复；净 +10 行（A2 +8 / B3 +2），实测 29,296，按实测重锁；
 // 仍是流程修复、不是新章节逻辑，后续新增关卡流程继续走 scenario-declaration，只减不增。
-const BUDGET = 29296
+// 2026-11-08 P7（地球边缘 7 循环 8 章剧本接入）：8 章 behavior.js + 战役 flow 接线新增
+// behavior 行数（新循环内容，不是 Phase 3 旧债务）；P7/P8 内容修复（resolution/addTrauma 契约）
+// 后实测 32,330，按实测重锁，仍要求后续只减不增。
+// 2026-11-08 EOTE 全量扫描 P0 修复轮（真实引擎路径验收）：IDP I/II/III、Fatal Mirage、
+// City of the Elder Things、Heart of Madness Part II、To the Forbidden Peaks 的章节钩子
+// （actions/performAction/actReveal/agendaReveal/resolveChaosToken/resolution/checkObjectives）
+// 与真实引擎契约修复新增约 1,400 行 behavior.js；实测 33,734，按实测重锁。
+// 这是修复既有章节不可跑的 P0 阻断，不是新章节流程；后续新增关卡流程仍须走
+// content/scenario-declaration.js，只减不增。
+const BUDGET = 33734
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')
@@ -300,7 +309,12 @@ test('web 模块的导入不越出 web/ 挂载目录', () => {
 
 // 第 7 批长尾守卫：content/ 的章节脚本里写死的卡号只能减少，不能新增。
 // 基线是 2026-10-22 迁移到第 7 批时的实测值；每迁走一批就调低这个数字。
-const CONTENT_CARD_CODE_BASELINE = 1105
+// 2026-11-08 P7（地球边缘 7 循环）：8 章剧本 definition/behavior/card-data 的卡号数据新增
+// 27 处（新循环内容，按实测 1,132 重锁；旧循环仍只减不增）。
+// 2026-11-08 EOTE P0 修复轮：章节 behavior 补齐真实引擎契约时新增 10 处卡号字面量
+// （诡计/幕行动分派表与剧情键；未新增「按卡号分支」，CONTENT_BRANCH_BASELINE 仍为 0），
+// 实测 1,142，按实测重锁；新增内容仍优先放 definition.js 的 RAW_CODES 表。
+const CONTENT_CARD_CODE_BASELINE = 1142
 // 与上面的字面量口径分开统计「规则分支」：DoD 要求内容层 `code === '0xxxx'` 分支归零。
 // 口径包含 content/ 下全部 .js（此前只扫 behavior/encounter-rules/card-data，漏掉
 // later-behaviors.js 这类共享章节文件）。

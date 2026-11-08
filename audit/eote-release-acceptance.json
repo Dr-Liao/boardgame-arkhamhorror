@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "edgeOfTheEarth",
+  "milestone": "P8",
+  "generatedBy": "node tools/audit-eote-release.mjs --write",
+  "status": "failed",
+  "evidence": {
+    "command": "node tools/run-eote-release-browser.mjs",
+    "browserLedger": "audit/eote-release-browser.json",
+    "scenarioLedger": "audit/eote-scenario-acceptance.json",
+    "allCardLedger": "audit/eote-all-card-acceptance.json",
+    "scopeLedger": "audit/eote-scope.json",
+    "nodeLedger": "audit/eote-node-acceptance.json",
+    "regressionLedger": "audit/eote-regression.json",
+    "acceptanceLedger": "audit/eote-release-acceptance.json",
+    "screenshotRoot": "artifacts/migration/eote/p8/screenshots/",
+    "missingInputs": []
+  },
+  "campaign": {
+    "launchable": true,
+    "status": "playable",
+    "launchError": null,
+    "lobbyVisible": true,
+    "earlyAccess": false,
+    "scenarios": [
+      "iceAndDeathPart1",
+      "iceAndDeathPart2",
+      "iceAndDeathPart3",
+      "fatalMirage",
+      "toTheForbiddenPeaks",
+      "cityOfTheElderThings",
+      "theHeartOfMadnessPart1",
+      "theHeartOfMadnessPart2"
+    ],
+    "scenarioCount": 8,
+    "chapterCount": 8
+  },
+  "chapters": [
+    {
+      "id": "iceAndDeathPart1",
+      "code": "08501",
+      "name": "亡命冰原 第 I 部分",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "iceAndDeathPart2",
+      "code": "08501",
+      "name": "亡命冰原 第 II 部分",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "iceAndDeathPart3",
+      "code": "08501",
+      "name": "亡命冰原 第 III 部分",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "fatalMirage",
+      "code": "08549",
+      "name": "致命幻景",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "toTheForbiddenPeaks",
+      "code": "08596",
+      "name": "失落之峰",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "cityOfTheElderThings",
+      "code": "08621",
+      "name": "古老者之城",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "theHeartOfMadnessPart1",
+      "code": "08648",
+      "name": "疯狂之心 第 I 部分",
+      "status": "verified",
+      "verified": true
+    },
+    {
+      "id": "theHeartOfMadnessPart2",
+      "code": "08648",
+      "name": "疯狂之心 第 II 部分",
+      "status": "verified",
+      "verified": true
+    }
+  ],
+  "checks": {
+    "releaseDesktop": true,
+    "releaseMobile": true,
+    "progressionDesktop": true,
+    "progressionMobile": true,
+    "onlineDesktop": true,
+    "onlineMobile": true,
+    "privacyDesktop": true,
+    "privacyMobile": true,
+    "permissionDesktop": true,
+    "permissionMobile": true,
+    "disconnectDesktop": true,
+    "disconnectMobile": true
+  },
+  "missing": [
+    "allCards"
+  ],
+  "browser": {
+    "ledger": "audit/eote-release-browser.json",
+    "status": "passed",
+    "complete": true,
+    "sourceStableDuringRun": true,
+    "specs": [
+      "tests/eote-online.browser.mjs",
+      "tests/eote-progression.browser.mjs",
+      "tests/eote-release.browser.mjs"
+    ],
+    "expectedSpecs": [
+      "tests/eote-release.browser.mjs",
+      "tests/eote-progression.browser.mjs",
+      "tests/eote-online.browser.mjs"
+    ],
+    "tests": 6,
+    "expectedTests": 6,
+    "testsPassed": 6,
+    "blocked": [],
+    "checks": {
+      "desktopBrowser": true,
+      "mobileBrowser": true,
+      "releaseDesktop": true,
+      "releaseMobile": true,
+      "progressionDesktop": true,
+      "progressionMobile": true,
+      "onlineDesktop": true,
+      "onlineMobile": true,
+      "privacyDesktop": true,
+      "privacyMobile": true,
+      "permissionBoundary": true,
+      "disconnectRecovery": true
+    },
+    "sourceFiles": 7,
+    "sourceFilesSha256": "fe09c0a2ffa261bd7d32307e3d6ca65a000b77989afe5088e93b88957206957f"
+  },
+  "screenshots": {
+    "total": 104,
+    "verified": 104,
+    "base": "repo-root",
+    "minByPhase": {
+      "release": 4,
+      "progression": 4,
+      "online": 4
+    },
+    "byPhase": {
+      "online": {
+        "desktop": 4,
+        "mobile": 4
+      },
+      "progression": {
+        "desktop": 42,
+        "mobile": 42
+      },
+      "release": {
+        "desktop": 6,
+        "mobile": 6
+      }
+    },
+    "existing": 104,
+    "unclassified": [],
+    "missing": [],
+    "mismatched": []
+  },
+  "allCards": {
+    "path": "audit/eote-all-card-acceptance.json",
+    "hasLedger": true,
+    "sha256": "85e118b1472b8886dd34333ccd5014d5ea088f085c3ff03198306d1f9fa4bec7",
+    "generatedBy": "tools/audit-eote-all-cards.mjs",
+    "status": "pending",
+    "summary": {
+      "total": 403,
+      "verified": 248,
+      "missing": 127,
+      "blocked": 14,
+      "simplified": 12,
+      "campaign": 266,
+      "investigators": 22,
+      "player": 115
+    },
+    "checks": {
+      "ledger": true,
+      "gateComplete": false,
+      "missing": false,
+      "blocked": false,
+      "total": true,
+      "partitions": true
+    },
+    "pass": false
+  },
+  "cardImages": {
+    "path": "audit/eote-scope.json",
+    "sha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
+    "english": "web/img/cards/",
+    "chinese": "web/img/zh/cards/",
+    "remoteFallback": [
+      "imagesrc",
+      "backimagesrc"
+    ],
+    "cycleCopies": false,
+    "recordsWithRemoteImage": 375,
+    "recordsWithBackRemoteImage": 102,
+    "note": "本地卡图缓存（web/img/**）被忽略，不计入账本；运行时不依赖参考资源，继续走远程回退",
+    "checks": {
+      "scopeLedger": true,
+      "english": true,
+      "chinese": true,
+      "remoteFallback": true,
+      "cycleCopies": true,
+      "recordsWithRemoteImage": true,
+      "recordsWithBackRemoteImage": true,
+      "note": true
+    },
+    "pass": true
+  },
+  "guides": {
+    "storyStatus": "generated",
+    "chapters": 8,
+    "chapterIds": [
+      "cityOfTheElderThings",
+      "fatalMirage",
+      "iceAndDeathPart1",
+      "iceAndDeathPart2",
+      "iceAndDeathPart3",
+      "theHeartOfMadnessPart1",
+      "theHeartOfMadnessPart2",
+      "toTheForbiddenPeaks"
+    ],
+    "sectionCount": 469,
+    "guides": 8,
+    "missingGuides": [],
+    "chinese": {
+      "total": 469,
+      "presentNeedsReview": 469,
+      "untranslated": 0,
+      "missing": 0
+    },
+    "checks": {
+      "eightChapters": true,
+      "sections": true,
+      "guides": true,
+      "chineseMarked": true
+    },
+    "storyFile": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "storySha256": "1a057465f72e09110930adafa61fbe7a69d443c19729bcdeddfdb6d77c119b91",
+    "pass": true
+  },
+  "nodeRegression": {
+    "node": {
+      "path": "audit/eote-node-acceptance.json",
+      "status": "passed",
+      "sourceStableDuringRun": true,
+      "tests": 506,
+      "pass": 506,
+      "fail": 0,
+      "command": "node --test tests/eote-migration.test.mjs tests/eote-primitives-frost.test.mjs tests/eote-primitives-campaign.test.mjs tests/eote-primitives-flow.test.mjs tests/eote-primitives-geo.test.mjs tests/eote-primitives-travel.test.mjs tests/eote-primitives-investigator.test.mjs tests/eote-rules.test.mjs tests/eote-interactions.test.mjs tests/eote-investigator-daniela.test.mjs tests/eote-investigator-norman.test.mjs tests/eote-investigator-lily.test.mjs tests/eote-investigator-monterey.test.mjs tests/eote-investigator-bob.test.mjs tests/eote-player-m2-1.test.mjs tests/eote-player-m2-2.test.mjs tests/eote-player-m2-3.test.mjs tests/eote-player-m2-4.test.mjs tests/eote-player-primitives.test.mjs tests/eote-scenario-iceAndDeathPart1.test.mjs tests/eote-scenario-iceAndDeathPart2.test.mjs tests/eote-scenario-iceAndDeathPart3.test.mjs tests/eote-scenario-fatalMirage.test.mjs tests/eote-scenario-toTheForbiddenPeaks.test.mjs tests/eote-scenario-cityOfTheElderThings.test.mjs tests/eote-scenario-theHeartOfMadnessPart1.test.mjs tests/eote-scenario-theHeartOfMadnessPart2.test.mjs tests/eote-scenario-shared.test.mjs tests/eote-campaign-flow.test.mjs tests/eote-story.test.mjs tests/eote-all-cards.test.mjs tests/eote-p8-registration.test.mjs tests/eote-p8-campaign.test.mjs tests/eote-p8-multiplayer.test.mjs tests/replay-eote-p8.test.mjs tests/eote-migration-ledger.test.mjs"
+    },
+    "regression": {
+      "path": "audit/eote-regression.json",
+      "status": "passed",
+      "sourceStableDuringRun": true,
+      "replay": {
+        "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/eote-baseline.json",
+        "exitCode": 0,
+        "log": "artifacts/migration/eote/reports/eote-replay-final.log",
+        "logSha256": "4299d885e1f19cfb827d34b3a5fcca9c5754421600029a03c073b5164446e544",
+        "baseline": "tests/fixtures/replay/eote-baseline.json",
+        "matches": true
+      },
+      "fast": {
+        "exitCode": 1,
+        "summary": {
+          "tests": 6987,
+          "pass": 6979,
+          "fail": 5,
+          "cancelled": 0,
+          "skipped": 3
+        },
+        "failures": [
+          "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+          "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+          "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+          "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+          "已本地化的 UI 文件不再残留用户可见中文"
+        ],
+        "knownFailures": [
+          "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+          "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+          "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+          "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+          "已本地化的 UI 文件不再残留用户可见中文"
+        ],
+        "unknownFailures": []
+      }
+    },
+    "checks": {
+      "nodeLedger": true,
+      "nodeStatus": true,
+      "nodeSourceStable": true,
+      "nodeExitCode": true,
+      "nodeFailures": true,
+      "nodeTests": true,
+      "regressionLedger": true,
+      "regressionStatus": true,
+      "regressionSourceStable": true,
+      "replayMatches": true,
+      "fastKnownFailuresOnly": true
+    },
+    "pass": true
+  },
+  "runtimePaths": {
+    "scanned": [
+      "content",
+      "src",
+      "web"
+    ],
+    "mentionFiles": [
+      "content/campaigns/edgeOfTheEarth/card-text-fixes.js",
+      "content/campaigns/edgeOfTheEarth/locale-supplement/README.md",
+      "content/campaigns/edgeOfTheEarth/story-text.js",
+      "content/campaigns/theCircleUndone/interludes.js",
+      "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/story-text.js",
+      "content/campaigns/theCircleUndone/scenarios/theWitchingHour/definition.js",
+      "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/story-text.js",
+      "content/campaigns/theCircleUndone/story-text.js",
+      "content/campaigns/theDreamEaters/dual-story.js",
+      "content/campaigns/theDreamEaters/interludes.js",
+      "content/campaigns/theDreamEaters/record-labels.js",
+      "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "content/campaigns/theDreamEaters/story-text.js",
+      "content/campaigns/theDunwichLegacy/story-text.js",
+      "content/campaigns/theForgottenAge/story-text.js",
+      "content/campaigns/thePathToCarcosa/story-text.js",
+      "content/packs/tfaInvestigators/manifest.js",
+      "src/campaign/eote-partners.js",
+      "src/campaign/eote-seals.js",
+      "src/cards/carcosa-campaign-acceptance.js",
+      "src/cards/carcosa-player-acceptance.js",
+      "src/cards/cards-data.js",
+      "src/cards/core-acceptance.js",
+      "src/cards/dunwich-acceptance.js",
+      "src/cards/tcu-campaign-acceptance.js",
+      "src/cards/tcu-player-acceptance.js",
+      "src/cards/tde-campaign-acceptance.js",
+      "src/cards/tde-player-acceptance.js",
+      "src/engine/eote-climb.js",
+      "web/fonts/README.txt",
+      "web/img/chaos-tokens/SOURCE.txt"
+    ],
+    "runtimeReferences": [],
+    "provenanceMentions": [
+      "content/campaigns/edgeOfTheEarth/story-text.js",
+      "content/campaigns/theCircleUndone/story-text.js",
+      "content/campaigns/theDunwichLegacy/story-text.js",
+      "content/campaigns/theForgottenAge/story-text.js",
+      "content/campaigns/thePathToCarcosa/story-text.js",
+      "src/cards/carcosa-campaign-acceptance.js",
+      "src/cards/carcosa-player-acceptance.js",
+      "src/cards/cards-data.js",
+      "src/cards/core-acceptance.js",
+      "src/cards/dunwich-acceptance.js",
+      "src/cards/tcu-campaign-acceptance.js",
+      "src/cards/tcu-player-acceptance.js",
+      "src/cards/tde-campaign-acceptance.js",
+      "src/cards/tde-player-acceptance.js",
+      "web/fonts/README.txt",
+      "web/img/chaos-tokens/SOURCE.txt"
+    ],
+    "commentMentions": [
+      "content/campaigns/edgeOfTheEarth/card-text-fixes.js",
+      "content/campaigns/edgeOfTheEarth/locale-supplement/README.md",
+      "content/campaigns/theCircleUndone/interludes.js",
+      "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/story-text.js",
+      "content/campaigns/theCircleUndone/scenarios/theWitchingHour/definition.js",
+      "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/story-text.js",
+      "content/campaigns/theCircleUndone/story-text.js",
+      "content/campaigns/theDreamEaters/dual-story.js",
+      "content/campaigns/theDreamEaters/interludes.js",
+      "content/campaigns/theDreamEaters/record-labels.js",
+      "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "content/campaigns/theDreamEaters/story-text.js",
+      "content/campaigns/theDunwichLegacy/story-text.js",
+      "content/campaigns/theForgottenAge/story-text.js",
+      "content/campaigns/thePathToCarcosa/story-text.js",
+      "content/packs/tfaInvestigators/manifest.js",
+      "src/campaign/eote-partners.js",
+      "src/campaign/eote-seals.js",
+      "src/engine/eote-climb.js"
+    ],
+    "checks": {
+      "contentSrcWebScanned": true,
+      "noRuntimeReferences": true,
+      "provenanceMentionsAllowed": true
+    },
+    "pass": true
+  },
+  "deferred": [
+    {
+      "id": "victoryEpilogue",
+      "reason": "浏览器证据覆盖第一章→幕间升级→第二章→最终章失败结局（campaignResult）；胜利尾声逐段叙事由 Node 战役验收（tests/eote-campaign-flow.test.mjs）覆盖。",
+      "evidence": [
+        "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+        "tests/eote-campaign-flow.test.mjs"
+      ]
+    },
+    {
+      "id": "manualUpgradePurchase",
+      "reason": "关间升级窗验证了真实 hubAutoUpgrade；hubPurchase 手动选择由 Node 战役流验收与既有 TIC 浏览器证据覆盖。",
+      "evidence": [
+        "tests/eote-campaign-flow.test.mjs",
+        "audit/eote-scenario-acceptance.json"
+      ]
+    },
+    {
+      "id": "relayReconnect",
+      "reason": "联机断线恢复验证到页面重开 + 真实会话版本号/手牌隐私一致；中转服务级断线重连由大厅通用联机回归覆盖。",
+      "evidence": [
+        "tests/eote-scenarios.browser.mjs",
+        "audit/eote-release-browser.json"
+      ]
+    },
+    {
+      "id": "pendingPrimitiveRequests",
+      "reason": "P7 原语请求仍为 pending：卡片以已披露近似实现，逐条列在 audit/eote-migration.json 的 releaseAcceptance.deferred（P8 发布账本不把近似声明为等价）。",
+      "evidence": [
+        "artifacts/migration/eote/primitive-requests/",
+        "audit/eote-migration.json"
+      ]
+    }
+  ],
+  "sourceFiles": 7,
+  "featureChecks": {
+    "campaign": true,
+    "chapters": true,
+    "allCards": false,
+    "browserBanner": true,
+    "browserChecks": true,
+    "screenshots": true,
+    "cardImages": true,
+    "nodeRegression": true,
+    "guides": true,
+    "runtimePaths": true
+  },
+  "equivalence": {
+    "certified": false,
+    "basis": "行为等价认证以全卡账本逐卡可追溯证据为准；simplified 仅表示已披露近似，不宣称规则等价。",
+    "allCards": {
+      "total": 403,
+      "verified": 248,
+      "missing": 127,
+      "blocked": 14,
+      "simplified": 12,
+      "campaign": 266,
+      "investigators": 22,
+      "player": 115
+    },
+    "independentAudit": {
+      "report": "docs/edgeOfTheEarth/eote-scan/全量扫描报告.md",
+      "sections": [
+        "§3 P0-11",
+        "§5",
+        "§5.1"
+      ],
+      "priorLedgerClaim": "修复前本仓 P8 账本声称 all-cards verified（verified 375 / simplified 26、missing 0 / blocked 0、everyBehaviorCardHasEvidence=true）。",
+      "independentVerdict": "独立复核（player-b-verify §3）按字面口径复算 135/403 条证据不可追溯，其中 129 条 scenario-ledger 全部指向 theHeartOfMadnessPart2 且 0/129 含卡号，110 条卡号在任何 tests/*.test.mjs 中都不出现；该 verified 结论不成立。"
+    }
+  },
+  "gate": {
+    "pass": false
+  }
+}

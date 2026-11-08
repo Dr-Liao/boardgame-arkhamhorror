@@ -564,6 +564,8 @@ export function createTurnFlow(deps) {
       cost += (investigateLoc?.investigateExtraActions || 0) + attachmentInvestigateCost
     }
     if (move.action === 'searchIzzie') cost = 2
+  // 地球边缘 P5：08006 预示者的「2 行动弃掉牌库顶的它」与 validateMove/moves 同口径。
+  if (move.action === 'deckTopWeaknessDiscard') cost = 2
     // 步行额外行动费用（见 movementActionSurcharge）：只加在基础移动行动上。
     if (move.action === 'move') cost += movementActionSurcharge(state, inv, move)
     if (move.action === 'hiddenAction') cost = hiddenRule(state, move.cardId)?.discard?.actions ?? 1

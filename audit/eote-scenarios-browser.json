@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-eote-p7-reporter.mjs",
+  "milestone": "P7",
+  "campaignId": "edgeOfTheEarth",
+  "status": "passed",
+  "specs": [
+    "tests/eote-scenarios.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 生产大厅启动与关卡设置指南骨架",
+      "status": "passed",
+      "durationMs": 5282,
+      "viewport": "desktop"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "cityOfTheElderThings"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "fatalMirage"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "iceAndDeathPart1"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "iceAndDeathPart2"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "iceAndDeathPart3"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "theHeartOfMadnessPart1"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "theHeartOfMadnessPart2"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 101176,
+      "viewport": "desktop",
+      "scenario": "toTheForbiddenPeaks"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 生产大厅启动与关卡设置指南骨架",
+      "status": "passed",
+      "durationMs": 3690,
+      "viewport": "mobile"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "cityOfTheElderThings"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "fatalMirage"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "iceAndDeathPart1"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "iceAndDeathPart2"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "iceAndDeathPart3"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "theHeartOfMadnessPart1"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "theHeartOfMadnessPart2"
+    },
+    {
+      "file": "tests/eote-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动地球边缘战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 111435,
+      "viewport": "mobile",
+      "scenario": "toTheForbiddenPeaks"
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/eote/p7/screenshots/desktop-cityOfTheElderThings-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-cityOfTheElderThings-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-eote-chapters.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-eote-lobby.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-eote-scenario-result.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-eote-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-fatalMirage-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-fatalMirage-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-iceAndDeathPart1-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-iceAndDeathPart2-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-iceAndDeathPart2-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-iceAndDeathPart3-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-iceAndDeathPart3-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-lobby-skeleton.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-skeleton-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-theGathering-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-theHeartOfMadnessPart1-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-theHeartOfMadnessPart1-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-theHeartOfMadnessPart2-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-theHeartOfMadnessPart2-table.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-toTheForbiddenPeaks-guide.png",
+    "artifacts/migration/eote/p7/screenshots/desktop-toTheForbiddenPeaks-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-cityOfTheElderThings-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-cityOfTheElderThings-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-eote-chapters.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-eote-lobby.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-eote-scenario-result.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-eote-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-fatalMirage-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-fatalMirage-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-iceAndDeathPart1-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-iceAndDeathPart2-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-iceAndDeathPart2-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-iceAndDeathPart3-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-iceAndDeathPart3-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-lobby-skeleton.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-skeleton-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-theGathering-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-theHeartOfMadnessPart1-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-theHeartOfMadnessPart1-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-theHeartOfMadnessPart2-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-theHeartOfMadnessPart2-table.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-toTheForbiddenPeaks-guide.png",
+    "artifacts/migration/eote/p7/screenshots/mobile-toTheForbiddenPeaks-table.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "scenarios": {
+      "cityOfTheElderThings": {
+        "desktop": true,
+        "mobile": true
+      },
+      "fatalMirage": {
+        "desktop": true,
+        "mobile": true
+      },
+      "iceAndDeathPart1": {
+        "desktop": true,
+        "mobile": true
+      },
+      "iceAndDeathPart2": {
+        "desktop": true,
+        "mobile": true
+      },
+      "iceAndDeathPart3": {
+        "desktop": true,
+        "mobile": true
+      },
+      "theHeartOfMadnessPart1": {
+        "desktop": true,
+        "mobile": true
+      },
+      "theHeartOfMadnessPart2": {
+        "desktop": true,
+        "mobile": true
+      },
+      "toTheForbiddenPeaks": {
+        "desktop": true,
+        "mobile": true
+      }
+    }
+  }
+}

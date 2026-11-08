@@ -190,7 +190,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   if (!inv || inv.defeated || inv.resigned || inv.location === locationId || !locationExists(state, locationId)) return
   if (vehicleOf(state, seat) && options.reason !== 'vehicle') return
   if (inv.steamImmobileRound === state.round) return
-  const moveError = movementError(state, inv, locationId, { vehicle: options.reason === 'vehicle',ignoreBarriers:options.ignoreBarriers===true })
+  const moveError = movementError(state, inv, locationId, { vehicle: options.reason === 'vehicle',ignoreBarriers:options.ignoreBarriers===true, byScenarioEffect: options.byScenarioEffect === true })
   if (moveError) { info(state, events, moveError); return }
   const entryError = investigatorEntryError(state, locationId, seat)
   if (entryError) { info(state, events, entryError); return }

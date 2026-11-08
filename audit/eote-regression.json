@@ -1,0 +1,855 @@
+{
+  "schemaVersion": 1,
+  "cycle": "eote",
+  "phase": "P2/P3",
+  "generatedBy": "node tools/verify-eote.mjs --regression",
+  "status": "passed",
+  "sourceStableDuringRun": true,
+  "replay": {
+    "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/eote-baseline.json",
+    "exitCode": 0,
+    "log": "artifacts/migration/eote/reports/eote-replay-final.log",
+    "logSha256": "4299d885e1f19cfb827d34b3a5fcca9c5754421600029a03c073b5164446e544",
+    "baseline": "tests/fixtures/replay/eote-baseline.json",
+    "matches": true
+  },
+  "fast": {
+    "command": "node tools/run-tests.mjs fast --test-concurrency=6",
+    "exitCode": 1,
+    "log": "artifacts/migration/eote/reports/eote-fast-final.log",
+    "logSha256": "4e5769a1af110a61682deb060899d02bcb7bb7414acaa0d5c45462a14f42fd54",
+    "summary": {
+      "tests": 6987,
+      "pass": 6979,
+      "fail": 5,
+      "cancelled": 0,
+      "skipped": 3
+    },
+    "failures": [
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+      "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+      "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+      "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+      "已本地化的 UI 文件不再残留用户可见中文"
+    ],
+    "additionsSinceInitialBaseline": []
+  },
+  "sourceFiles": [
+    {
+      "path": "audit/eote-scope.json",
+      "sha256": "d96ed9956d7d21cea978377d136ceba5bbe998a48a630994a3d14a765a7a4c5f"
+    },
+    {
+      "path": "audit/eote-baseline.json",
+      "sha256": "e7eb3a2b4ed251de83a50b9393665a4404b2f86b3d55f6e02160030358ed73e6"
+    },
+    {
+      "path": "audit/eote-mechanism-scan.json",
+      "sha256": "411ae966392fcd1590846e2e2cb7f348f64bd6a3dd319f3d5d77c0011993ed87"
+    },
+    {
+      "path": "audit/eote-primitive-plan.json",
+      "sha256": "7183ecce2e34db79f1a9d20f4da2020fb2c8fbc3393d799a97800c84fbb379ae"
+    },
+    {
+      "path": "audit/eote-primitive-catalog.json",
+      "sha256": "6adc2fd3371a181987c2c07824b3ebfa9b23fabe7f02116d84743b6182a3f97c"
+    },
+    {
+      "path": "tools/eote-migration-lib.mjs",
+      "sha256": "bc7fc78ffbaedc70e221e03f6e13624e12207f9ce7c12aea0ddc99e131df25ce"
+    },
+    {
+      "path": "tools/scan-eote-scope.mjs",
+      "sha256": "8b7de0acd3ed10034025e19ad0280d6bf7b75143fc73beb0f0eb6d191f9c5abb"
+    },
+    {
+      "path": "tools/scan-eote-baseline.mjs",
+      "sha256": "a4b5f74798782bcf8b6869ed29d105ed1e42d18b7434885a9c8127e935cd1454"
+    },
+    {
+      "path": "tools/scan-eote-mechanisms.mjs",
+      "sha256": "021c063c36d283143d13050989ee2183e03d2994e414c635f65124675808b27a"
+    },
+    {
+      "path": "tools/eote-mechanisms.mjs",
+      "sha256": "9270fd0939f4abb9868dcf7326c745fc21f08fc344b2cd1dbcedff5a1d6af8e6"
+    },
+    {
+      "path": "tools/eote-mechanism-primitives.mjs",
+      "sha256": "eb2d51139ac8e3dbc9e086695050e54b197a373f2abddf00e653463d7f84d9a0"
+    },
+    {
+      "path": "tools/eote-guide-scan.mjs",
+      "sha256": "60c53f04c65cf91fb71cf7ecd45399a6ec8bc4c906647349898ab9d41b77baf9"
+    },
+    {
+      "path": "tools/audit-eote-primitives.mjs",
+      "sha256": "c0657973ad401abdb02417cbf9a5d72193eb087223726c8c145b3f504e8f7065"
+    },
+    {
+      "path": "tools/eote-primitive-spec.mjs",
+      "sha256": "a6ee8d962898fabffd911e8d409dd5e374f42b092378adf890d982ad5794d766"
+    },
+    {
+      "path": "tools/verify-eote.mjs",
+      "sha256": "36c51ca1ff9741fc174efc1385239259a1994d25dacdfc7566ebdb97a135d75b"
+    },
+    {
+      "path": "src/engine/eote-state.js",
+      "sha256": "70463d454d1dc1c42e099a41fd17ec25ed4b888644e4b3219591776ac644b8cc"
+    },
+    {
+      "path": "src/engine/frost.js",
+      "sha256": "6c5c46474060b94d2d681502935639e8b3da52a35d929c1f8cd8acda31ff50a8"
+    },
+    {
+      "path": "src/engine/eote-shelter.js",
+      "sha256": "a5c71493bdda3514589160bcad137598ee227c6204e76fded0f0e4f3ecc653bc"
+    },
+    {
+      "path": "src/engine/eote-camp.js",
+      "sha256": "d669cf80b327576dae5c9c7df9cde360bb57021d7f6fe8e0b7584b579ae580ec"
+    },
+    {
+      "path": "src/engine/eote-facilities.js",
+      "sha256": "83c740cf376a314368b44bc27ea1c46e96f0ee79e40c4255a15d72dc35307ddd"
+    },
+    {
+      "path": "src/engine/eote-climb.js",
+      "sha256": "d11e205200ff439bc68cc039e049d1d069c17995b42887b2da2a0229cb0f79a0"
+    },
+    {
+      "path": "src/engine/eote-city.js",
+      "sha256": "62c78d9de75d5142c7b529276c7686afc5c583b4145a706570fcd0069aefcfc3"
+    },
+    {
+      "path": "src/engine/eote-tekeli.js",
+      "sha256": "14bfcea0c2ecfdba50dbe5bc2057be698de775900532ef74896ca7e4222df7dd"
+    },
+    {
+      "path": "src/engine/eote-deck-top.js",
+      "sha256": "f229aeab4ec0e9cd01644fc05f5b811a44a0b21655e67dc8c7ba03c90acf77ad"
+    },
+    {
+      "path": "src/engine/eote-round-distance.js",
+      "sha256": "1a3987102f55c9d3a00b7efbe514c5684b5aa4eb9a2476a1fb0a40b52644e3d2"
+    },
+    {
+      "path": "src/engine/eote-disciplines.js",
+      "sha256": "a8d65eeb604bdcc7b5eeb88210a6328085592f41903310579fe92097319dca3f"
+    },
+    {
+      "path": "src/engine/chaos-token-pool.js",
+      "sha256": "8a3fb8b375968b1d219f0d61fee20c7b279ac862185f572f563742d78c0d1d53"
+    },
+    {
+      "path": "src/engine/chaos-token-effects.js",
+      "sha256": "a41f7b3ceae40f67b51d8ed0eefc3844ccd3dfdc7b4b65cac15bce9f0d0b6828"
+    },
+    {
+      "path": "src/engine/scenario-keys.js",
+      "sha256": "1e5d18ec9e0a47ceb77ff280a1a1b8864b27ae07889182ac30942a0089f74712"
+    },
+    {
+      "path": "src/engine/vertical-chain.js",
+      "sha256": "96aac5ac7fa9086697a2f5b4b77137fe1745490dcd1a1ec24bc4e8b01bb346fa"
+    },
+    {
+      "path": "src/engine/grid-map.js",
+      "sha256": "30cbe797220b2cd583320738015cad0b7a56a96ea041799be324877746a32526"
+    },
+    {
+      "path": "src/engine/scenario-decks.js",
+      "sha256": "74c3553300bfff48e980f4d9176115623247ea026e23c54896dc66410fbd08b3"
+    },
+    {
+      "path": "src/engine/physical-faces.js",
+      "sha256": "5d316f43ab97aa2d8d99d95054f27b53a367b36f3a2f2750f245f2560c379db6"
+    },
+    {
+      "path": "src/engine/play-channels.js",
+      "sha256": "bba22574bc293a0540e4d0935fd13d41465d811a1b3d2a82ab963d33c63d981e"
+    },
+    {
+      "path": "src/engine/mechanic-state.js",
+      "sha256": "66ad0359d8443745013e18d4cc4ef06fe3d8f8cddca43016e8cd71ca0a69c4ef"
+    },
+    {
+      "path": "src/engine/api-mechanics.js",
+      "sha256": "8dd12c949bcad37c9e89f7234f962f807841d153cb55cd23441fb7b132971278"
+    },
+    {
+      "path": "src/engine/save-migration.js",
+      "sha256": "e8f68a374af061991db628aa3a2ae385b3bc0628f0a71701a73a4b74933caa05"
+    },
+    {
+      "path": "src/campaign/eote-partners.js",
+      "sha256": "bfd5830f3602c25a69cec8ce0c680f3118133e9e960a3447c2c2185406e77c11"
+    },
+    {
+      "path": "src/campaign/eote-seals.js",
+      "sha256": "00d597397e08499cd19582840ce3866d9b824b3958d34e4c1b58804fe445b905"
+    },
+    {
+      "path": "src/campaign/eote-memorials.js",
+      "sha256": "ac2310598eda0645534d8151fc701e33169c7dc15d9dad1357f196fdf65940b3"
+    },
+    {
+      "path": "src/campaign/eote-supplies.js",
+      "sha256": "5d6aaf52458a20253a3c960b83cf47c3eac8bf98bd8b6df13e1f81eae677d448"
+    },
+    {
+      "path": "src/campaign/record-sets.js",
+      "sha256": "d5668fd4d10a2c958efde5248c95966c93ce5d1d94e0352dded9808704456503"
+    },
+    {
+      "path": "src/campaign/campaign-flow.js",
+      "sha256": "8b9be2f043affcd863dd99ac83677aa0cb9bd3f19b825a6cf62c47945b83b794"
+    },
+    {
+      "path": "src/campaign/epilogue-matrix.js",
+      "sha256": "37c353cab4535c81e3e549552f1070d29dce883a72957c756eb74bbd608a59e9"
+    },
+    {
+      "path": "src/campaign/campaign-parts.js",
+      "sha256": "9dc52444f1794a05b63c1389ba252a9b5aae31a2a5773e0d77f437e615f992f6"
+    },
+    {
+      "path": "tests/eote-migration.test.mjs",
+      "sha256": "d8884e030d36450dc73a58bd001a102b1fe1e4554245e8608a66783aaac5b170"
+    },
+    {
+      "path": "tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "path": "tests/eote-primitives-campaign.test.mjs",
+      "sha256": "7182c4a750b5e3e56c17544ab4bd66bcb62324d03669c74b89792a162ddae8ea"
+    },
+    {
+      "path": "tests/eote-primitives-flow.test.mjs",
+      "sha256": "6cc05980d3bfc52493d4c06fe567a7ef6fa76d08b0ecbecc0b2c5bcc6b03980f"
+    },
+    {
+      "path": "tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "path": "tests/eote-primitives-travel.test.mjs",
+      "sha256": "0faec6c9ae96e6432ce3e0179fd0b24a93890f1f999a2579c1b62dd47f904d16"
+    },
+    {
+      "path": "tests/eote-primitives-investigator.test.mjs",
+      "sha256": "ffa1d6ea01c2435b4421d491b82069ef7400785081e4ed6f109660c49ffd6d60"
+    },
+    {
+      "path": "tests/fixtures/replay/eote-baseline.json",
+      "sha256": "fffb9daeb91d4c0a216f82540be06ba9770471e01d021c4e6faaf03a2440e32e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared.js",
+      "sha256": "d06ea62260ccf72ea040a7ba08841b751bcffa3b615283bbcc81f40f520a0a3d"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "sha256": "e1caf7f086fe20903bb4ec06e046caf33ad719ae929f08fcb189c8d9802394fd"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/keywords.js",
+      "sha256": "921a2d9a7f31756c9a59046561340497b2a164207ab774415bc25a790a8a7e15"
+    },
+    {
+      "path": "web/eote-rules.js",
+      "sha256": "b411ae907621d69512035b76459c724939a14dbc4437c80d04548224a644e68f"
+    },
+    {
+      "path": "web/rulebook-data.js",
+      "sha256": "5bc1e72d707b4ceb44496f7872fc508eec17f75cf53dc9200ea97aa3a5d93e8c"
+    },
+    {
+      "path": "tools/audit-eote-rules.mjs",
+      "sha256": "1577beec7f56bd740d6afc7a730f47bb08324332f47bfd4b2f61315cd7b1afec"
+    },
+    {
+      "path": "tools/run-eote-browser.mjs",
+      "sha256": "5f3f5761818161019a8f298b013e9c84bcfdcd84484e7397c1affa09c2323e05"
+    },
+    {
+      "path": "tools/playwright-eote-reporter.mjs",
+      "sha256": "0c1d050cad50f700c830721bff6ad2fe4c4420e1b28dcb57dbf33329251cb14c"
+    },
+    {
+      "path": "tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "path": "tests/eote-rules.browser.mjs",
+      "sha256": "06c6ee6f9cedfe5d375f57a80fd0dc8a4dd76c4b34992c2681ac19605c8e406e"
+    },
+    {
+      "path": "tests/playwright/playwright.eote.config.mjs",
+      "sha256": "ce6dc0ce188b09652099cf376ae0194389256628bfb7df4bf51f59f21c8b0046"
+    },
+    {
+      "path": "audit/eote-rules.json",
+      "sha256": "3e4f4929804a8a5d3c090c56f6f3358ef6134c0269daeaaff5360c2903a7a87e"
+    },
+    {
+      "path": "audit/eote-browser-acceptance.json",
+      "sha256": "0d15d3f2484b0c6189f446b4765d83b51deb5b839da0c1f51d77a8d448347c81"
+    },
+    {
+      "path": "src/engine/eote-interactions.js",
+      "sha256": "d29e5c8c0643dd16c6b53110e9ab498d11755a1bd5ec39ddfc6fa3e30d55f9e0"
+    },
+    {
+      "path": "src/engine/mechanic-choices.js",
+      "sha256": "36314461e291be3a3bb9653c998f80125b8f474114d8400e49aba9c764257981"
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "6560979ca31ad3e4c3c488f2cac74baf395ae0e404593e8a628751417e4cd9ea"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "d1c6a63ca0fdf5aa099e1b049010ea52c1da7870aba5f8819e773ac9bf7f1321"
+    },
+    {
+      "path": "web/chaos-token.js",
+      "sha256": "486526924ed5c8275d671b37f17a41026aa3ce225e81ea36819a54b3896167db"
+    },
+    {
+      "path": "web/mechanic-ui.css",
+      "sha256": "461511c52d200207e092c4937788153fd7a49251ac0e0c9dafd7cc507e1cabfe"
+    },
+    {
+      "path": "web/locales/zh-CN.misc.js",
+      "sha256": "4337243330ce904beee1939fc2b4d58f1380589943540af19b4b8adb15b09cf1"
+    },
+    {
+      "path": "web/locales/en.misc.js",
+      "sha256": "8632358e574047081a0ec868af9cff406bf54b79cf973624e6b7ea2e01f5cdd7"
+    },
+    {
+      "path": "tools/audit-eote-interactions.mjs",
+      "sha256": "974224f8aa7363693e4f82739bbab80361858448eadb0f24655e85cae2ce8625"
+    },
+    {
+      "path": "tools/run-eote-interactions-browser.mjs",
+      "sha256": "e282cf931a98ff8c8251035fa5c89d09c59ff4036847a8b5c52386c0937fd0ff"
+    },
+    {
+      "path": "tools/playwright-eote-p4-reporter.mjs",
+      "sha256": "fc35f6d77a8971dd271a2230723fece9963a43fbb1ff20c66d8e6a1254edf748"
+    },
+    {
+      "path": "tests/eote-interactions.test.mjs",
+      "sha256": "c335b641e4c3374881a8ffae9cca996c5c68c2675f08aec1fe07fc05ddb6181d"
+    },
+    {
+      "path": "tests/eote-interactions.browser.mjs",
+      "sha256": "68bd217697b69c998d03e4433053104c8d8c8d23f6342a8d3371413161dd0da0"
+    },
+    {
+      "path": "tests/eote-interaction-fixture.mjs",
+      "sha256": "0a0ef5d8bc5f4ddb9c892553bc1c22be6f07f34548dfa5e5c096b7d799654d91"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p4.config.mjs",
+      "sha256": "c3ae6b8900cd51c21e24de80dc8d00b51686a2c9db067e4d2b7d1f018f9fbd53"
+    },
+    {
+      "path": "audit/eote-interactions.json",
+      "sha256": "aa8cf88b64503e521eea0925c4c92fb73a6b5cef5c5c96cb8b068aa06d2c9b64"
+    },
+    {
+      "path": "audit/eote-interactions-browser.json",
+      "sha256": "6dffc721c09c5f873e304075f16a094dba84f3b2e6fe1ec8673c33809ee04478"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/interactions.md",
+      "sha256": "307bd81205eca7031bbfd687040aa9af4145827fc9a5d5f9c81f30f2e4db6fd9"
+    },
+    {
+      "path": "src/cards/entries/08001.js",
+      "sha256": "ab8c5dc4c7be561dc2d5bb9e7fb07d3d89fabab65a750be37069e3916b6af868"
+    },
+    {
+      "path": "src/cards/entries/08002.js",
+      "sha256": "7076302528ac7bfb14401a08c756c1cee433bec6900188c694bba984e712e1b1"
+    },
+    {
+      "path": "src/cards/entries/08003.js",
+      "sha256": "fbbefaad454e2ec67d4f5367b912a0a404665ef34390b2aabe188574930f8a91"
+    },
+    {
+      "path": "src/cards/entries/08004.js",
+      "sha256": "fb341a9187745ec1258ce087cd9d4ee76910972b6292adad55853c9722ca325b"
+    },
+    {
+      "path": "src/cards/entries/08005.js",
+      "sha256": "4257e8a02258b8f52a7b3eec7e193946056adba439a26a77367e7adcaf795ac4"
+    },
+    {
+      "path": "src/cards/entries/08006.js",
+      "sha256": "35544a67ca7edf6b8f38d49a8a6528902d1459072a0bb5962e9832e55b31eb68"
+    },
+    {
+      "path": "src/cards/entries/08007.js",
+      "sha256": "f296036f53e4e0c277b77b4b88c1bd9a7e42cf2d64b2863c70b4e259f207cdc3"
+    },
+    {
+      "path": "src/cards/entries/08008.js",
+      "sha256": "45620d6b5bb9a9c0d21b4a6ac20f86ed77f66dfb221228810c13412b9979b0c9"
+    },
+    {
+      "path": "src/cards/entries/08009.js",
+      "sha256": "093299f66f674a181a95d31c2807fcdd39aa681672990dae31d243a0862e7206"
+    },
+    {
+      "path": "src/cards/entries/08010.js",
+      "sha256": "ada89874d5035fe087cc98a14689614d99d859214e212e8d16ca1ac186aeb4ab"
+    },
+    {
+      "path": "src/cards/entries/08011a.js",
+      "sha256": "3515a00a0347fd09eaa56956357e76ee0c1c3b94f027a2ddc700f071ba56d42f"
+    },
+    {
+      "path": "src/cards/entries/08011b.js",
+      "sha256": "9ff879584bad71e7ab616579db597a52eebdc30f1c24c9f798243fc8657901fa"
+    },
+    {
+      "path": "src/cards/entries/08012a.js",
+      "sha256": "3bd9f4b9af7b4345d78974897111863829a2880624543b7f3f4a565f565cd2b8"
+    },
+    {
+      "path": "src/cards/entries/08012b.js",
+      "sha256": "6ed5e87fb7938a30523d7bd2591719bf73bb36df95bcab0e5559c0da90cc2e8a"
+    },
+    {
+      "path": "src/cards/entries/08013a.js",
+      "sha256": "46201d4a139890a72b662531c7b3b93b32b2e3fa5228b8f2c596c0f63d8dee2d"
+    },
+    {
+      "path": "src/cards/entries/08013b.js",
+      "sha256": "be34ffe60d6866ac0c22a0241d0c49fd187e809134d7ba97eee7de2fed45b481"
+    },
+    {
+      "path": "src/cards/entries/08014a.js",
+      "sha256": "921040af447d74a3998ced6c792e2e245f4cde7b6389970ee067d9cd6896c4be"
+    },
+    {
+      "path": "src/cards/entries/08014b.js",
+      "sha256": "3eb6eafe14acd6b5cfb42bb66b656b5b333837950fea7f351d1ea0b0c7e3d5b0"
+    },
+    {
+      "path": "src/cards/entries/08015.js",
+      "sha256": "2eac9249e5214e14f4ea3a8de744906b3a04cd6d520bb6209901e47cd8a3f19a"
+    },
+    {
+      "path": "src/cards/entries/08016.js",
+      "sha256": "2d150ce96b11628948ab2a103fe39f5d94fc6d7d53940d1027c0a3cc5b764b05"
+    },
+    {
+      "path": "src/cards/entries/08017.js",
+      "sha256": "0bfde144e7cb6b13183de7a1bd52dbcefeba6d3148f682ab27b8f03db248704d"
+    },
+    {
+      "path": "src/cards/entries/08018.js",
+      "sha256": "bea3151d8c2fc41f883f44ba33e2bc2aab0b1d079398da9310d7b4918d8a9412"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+      "sha256": "6b661722d69f81eb172022303893810ee5955b9e2d0d9a0fd728fe9716b502cd"
+    },
+    {
+      "path": "content/packs/eoteInvestigators/manifest.js",
+      "sha256": "112442a44692bfdc72d3cd0e2a4200a231267ccb155c4c5f5ff3036fb0c8c606"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
+    },
+    {
+      "path": "src/deck/deckbuilding.js",
+      "sha256": "3ab158776fa3d8d463507949ddc3ff59ff7f4210cb123b7c878eac650a9ff1ba"
+    },
+    {
+      "path": "web/deck-rules.js",
+      "sha256": "4b91f78bbb09797d92e76d1a9ec6225d5c282883c80c27a510d53dcdf46e0f07"
+    },
+    {
+      "path": "src/engine/eote-investigator-support.js",
+      "sha256": "85015b37dcbfba42ec688c2fddced0a86fce3d5b907d93c4cb5392b9ca939e62"
+    },
+    {
+      "path": "src/engine/restricted-actions.js",
+      "sha256": "52e43be723020a225bb2bec99ef1836ab342d11bceca0e6c1a036378399b636c"
+    },
+    {
+      "path": "tests/eote-player-m2-1.test.mjs",
+      "sha256": "6997bc787f0a7ccf662e8e5e4eee59613c2af8489e202bf53361ce6783b978e3"
+    },
+    {
+      "path": "tests/eote-player-m2-2.test.mjs",
+      "sha256": "9f46360ad34a6e9bdb6892e1ba885bb006e7554c21dc6dabaacca6f8a2519a36"
+    },
+    {
+      "path": "tests/eote-player-m2-3.test.mjs",
+      "sha256": "ddd3c2d6472a8d03cad3a3537bb4c653bf5106d05329dac33103edfe19e504ec"
+    },
+    {
+      "path": "tests/eote-player-m2-4.test.mjs",
+      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+    },
+    {
+      "path": "tests/eote-player-primitives.test.mjs",
+      "sha256": "86e44b2510d6a94c330334f20b25bc5c395f9f3b8a1588c61c8827ebf46530ed"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+      "sha256": "f68edb2e1c6ccade06eb9b87e62a7f50cf814c341cec4b4e173168168103725a"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+      "sha256": "e9a90ead7dd290572388e9203e290fbecff68bc03ed0ea1dcda90997bfc8a21f"
+    },
+    {
+      "path": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+      "sha256": "9195a3d38ff0f21a47325c978b01eefbb5e9b199547f8cb6425f1bde3c94829b"
+    },
+    {
+      "path": "tests/eote-scenario-fatalMirage.test.mjs",
+      "sha256": "9625cd3ace52514d9f8f71346f0d6093577677de52af8deea7fce400fe07f353"
+    },
+    {
+      "path": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+      "sha256": "9d2292caf82b6d174092726172fb1d3a19323fa648267a274f542ca693ebef5c"
+    },
+    {
+      "path": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+      "sha256": "e21fcc06f3fc7f57ea4748b63f22a2f47dfe8796ef8bd74a7668bc919acbac85"
+    },
+    {
+      "path": "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+      "sha256": "404931c887fa4840c19a67a3bf037e9c05eb3872ffe8562f61f1cda1f6bb4b6b"
+    },
+    {
+      "path": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+      "sha256": "dc5888921be7bfcad0467e3bf92b5fd19b6def7777d42b59cbffa2fb48c8c679"
+    },
+    {
+      "path": "tests/eote-scenario-shared.test.mjs",
+      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+    },
+    {
+      "path": "tests/eote-campaign-flow.test.mjs",
+      "sha256": "ea65382986ca764168cf759b77362446b778c882386a83375778b68f4cc54e49"
+    },
+    {
+      "path": "tests/eote-story.test.mjs",
+      "sha256": "e0e4a2b6b4708ee306d1057b1ed5feed542a440ec955fd8aa473d7bc7edbd496"
+    },
+    {
+      "path": "tests/eote-all-cards.test.mjs",
+      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+    },
+    {
+      "path": "tests/eote-p8-registration.test.mjs",
+      "sha256": "f6aab828f880ea92cdcccd4402d298c89eb28a30abc3897b17892b565f987fa6"
+    },
+    {
+      "path": "tests/eote-p8-campaign.test.mjs",
+      "sha256": "eed8cc8e93b21e913015c8095eaa90d1891b17dcdac10bf50c14434811c7a578"
+    },
+    {
+      "path": "tests/eote-p8-multiplayer.test.mjs",
+      "sha256": "101ae6d6735e331be2e417aa2350604362d9433df3815d0c4f98d0d41b363ee2"
+    },
+    {
+      "path": "tests/replay-eote-p8.test.mjs",
+      "sha256": "6ca82668c82ffebc6133584765887adead8a5b1b0ef6696c8b64f9d3150929ec"
+    },
+    {
+      "path": "tests/eote-migration-ledger.test.mjs",
+      "sha256": "ac5ca0501eb3aaa24552a594883930223e07c8a0e4470f5c9387054989b50fd6"
+    },
+    {
+      "path": "tests/eote-player-fixture.mjs",
+      "sha256": "7fb33b4bf91d51bbab6ccf3d50cbdd2184ace9a6e8105975fc39af6ac1695fc2"
+    },
+    {
+      "path": "tests/eote-player.browser.mjs",
+      "sha256": "56bd49b3184f745e59a1081b10418929ee0f139b8753a1827e559ad02a977e82"
+    },
+    {
+      "path": "tools/audit-eote-player.mjs",
+      "sha256": "ac361d7cd6f2d45f775a7c62f36b36af2acd50fdb35b9652aa273d15f3bbbb12"
+    },
+    {
+      "path": "tools/run-eote-player-browser.mjs",
+      "sha256": "2ac60fe8f45babe5c8c7dca85ff258677ab5cd88932ef8bc7a4cc17a036e86fe"
+    },
+    {
+      "path": "tools/playwright-eote-p6-reporter.mjs",
+      "sha256": "681776f5bccf9848898739688ef9ac1bb74a14eedfc26e37367398eb7e4235f7"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p6.config.mjs",
+      "sha256": "f8445e2afe17c0bb6203cf8313aaea8f8fffb8bc5dd4226b0bfe22de119ca18e"
+    },
+    {
+      "path": "audit/eote-player-shards.json",
+      "sha256": "7f73d79f37781c9d5bf234a1407f32eb15928b6543099deddc2db7c1e3e4bb33"
+    },
+    {
+      "path": "audit/eote-player-queue.json",
+      "sha256": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b"
+    },
+    {
+      "path": "audit/eote-player-acceptance.json",
+      "sha256": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac"
+    },
+    {
+      "path": "audit/eote-player-browser.json",
+      "sha256": "fe41b1d14e526fdf726525d29501b732c056e90d3d093f3d212e68ef14243b1e"
+    },
+    {
+      "path": "src/cards/eote-player-acceptance.js",
+      "sha256": "1e4dfa70c21dd6a7f2f8968f7e95101dacfc731f7524b5ca071368cfa7a816ff"
+    },
+    {
+      "path": "content/packs/eotePlayer/manifest.js",
+      "sha256": "d54753058412d8209e88d5e2052a25992cf9c70678fbb85d32dd6d7c09363622"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/player-cards.md",
+      "sha256": "483eece5456c0e563c76dea6e9efbf42a99f362598161083cc05729d6ffb839e"
+    },
+    {
+      "path": "tests/eote-investigator-daniela.test.mjs",
+      "sha256": "f836dde0c0eaeedf496fe307897b777c1cbb1b8597bb9b6f8cd83be233954113"
+    },
+    {
+      "path": "tests/eote-investigator-norman.test.mjs",
+      "sha256": "b276907cb9faec2aba7c763d7e1bdfc264e38cb3dc489844e2998f2ff5eb2211"
+    },
+    {
+      "path": "tests/eote-investigator-lily.test.mjs",
+      "sha256": "f620d1c27b8e3c21e3692a50541669de48ab161d89ab03c389fad65896e9bb91"
+    },
+    {
+      "path": "tests/eote-investigator-monterey.test.mjs",
+      "sha256": "e3120ed45e1b036051d1e52dfd0531499301c7b46f5abc1c445a9d359e00e1ba"
+    },
+    {
+      "path": "tests/eote-investigator-bob.test.mjs",
+      "sha256": "d98315326c1493702454e024be693110ed6372ab34882b9c23a4ed78a1ba710b"
+    },
+    {
+      "path": "tools/audit-eote-investigators.mjs",
+      "sha256": "fa957cd08f3f02b037ce6d7c72171f304a646611a6f79507c2e52991a9ede305"
+    },
+    {
+      "path": "tools/run-eote-investigators-browser.mjs",
+      "sha256": "0d4d0c9d7da436c4d619e8b97a19cbe3b453b2e7036e614704a14326836087b6"
+    },
+    {
+      "path": "tools/playwright-eote-p5-reporter.mjs",
+      "sha256": "7700b51145de543d5ed3780087555524e91ffeae71aa86b5f7fd2fba51ee8989"
+    },
+    {
+      "path": "tests/eote-investigators.browser.mjs",
+      "sha256": "ed1cc767e1b323a43957531807f4410e0b2e1329fd9af4a5345e58a2b32e82d3"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p5.config.mjs",
+      "sha256": "b40b61dc1eb583d34d9d34749f52dec7f008efc8b735cdf073b5fda198a2685d"
+    },
+    {
+      "path": "audit/eote-investigators.json",
+      "sha256": "b4f178d228a1bf37bd5fa5740637ed028e94216550a0684dc1263d8321c650b4"
+    },
+    {
+      "path": "audit/eote-investigators-browser.json",
+      "sha256": "dc296fe28a2b0e6e45ea396435321f8c016825004693ab25383d06c3875ecec8"
+    },
+    {
+      "path": "tools/audit-eote-scenarios.mjs",
+      "sha256": "1dbe4965c9e0595eee3c738a8b8d2d6877f6334647619bf54697e67108b69021"
+    },
+    {
+      "path": "tools/import-eote-story.mjs",
+      "sha256": "ac06980f725d92ad014d2f594857332b501be85e72af90146ed0803ce8f90509"
+    },
+    {
+      "path": "tools/audit-eote-all-cards.mjs",
+      "sha256": "8fa5c56566fd263c95a397061457261668fc23824de634ea412bffd6d9567d73"
+    },
+    {
+      "path": "tools/audit-eote-release.mjs",
+      "sha256": "b22e8b5499e01e3ec6be8dac524bd508fb776aab2116edd19371fc0955f23b64"
+    },
+    {
+      "path": "tools/audit-eote.mjs",
+      "sha256": "d884aaf8d240e4319e552e74a0f7e02e7bc9ccd54c4121b6fec0035aea20b52b"
+    },
+    {
+      "path": "tools/run-eote-release-browser.mjs",
+      "sha256": "5190370ac212ddc5fec775d00c16f74746312206f4f0e4994f0543f50865b983"
+    },
+    {
+      "path": "tools/playwright-eote-release-reporter.mjs",
+      "sha256": "b9ebb5bd0f0b922f102efdef94ce87ee6944ec60eaffa5cee9ca88361f85d7a2"
+    },
+    {
+      "path": "tests/eote-release.browser.mjs",
+      "sha256": "07cb4185d1ec68413ea521f96c7e963397f3a24a35ee72173a8990f1768cba97"
+    },
+    {
+      "path": "tests/eote-progression.browser.mjs",
+      "sha256": "a49c27b3e85d12f328bace1ab81791b1e21b3f46a86dada9c8239724445f0310"
+    },
+    {
+      "path": "tests/eote-online.browser.mjs",
+      "sha256": "28c59376120fa3c31e95cd10f4db9576db867ae08dc2fc49abeda35a22ad8761"
+    },
+    {
+      "path": "tests/eote-browser-helpers.mjs",
+      "sha256": "892e24ad4a5d29754a1cced501cb61a20bf84a335bb442cb47fbefb43fd8f44b"
+    },
+    {
+      "path": "tests/playwright/playwright.eote-p8.config.mjs",
+      "sha256": "3410f62d6e99bbf21ee80a334da36d5945ce7bebcb368c914bf7855dc6fc66f4"
+    },
+    {
+      "path": "audit/eote-all-card-acceptance.json",
+      "sha256": "eeb6924205792c18f9f2b53cd6988f5479ed3ca1b006ba44c0190eb1bee275ad"
+    },
+    {
+      "path": "audit/eote-release-browser.json",
+      "sha256": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3"
+    },
+    {
+      "path": "audit/eote-release-acceptance.json",
+      "sha256": "56f29ac768dad5e00a9659dcf08df1732eb08d1a0052cb9db64ba49fae07d2d7"
+    },
+    {
+      "path": "audit/eote-migration.json",
+      "sha256": "e0f7c56f908f6a2b14bb781d6b4d49bfb0df328178cad82744f1eb37eafd4c56"
+    },
+    {
+      "path": "tests/fixtures/replay/eote-p8-baseline.json",
+      "sha256": "290f56439cfbe79ff3de0394647ebb28b7bde3084fb5441696de4946896f1f33"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/p8-release.md",
+      "sha256": "939652908872c887dce302b6a059c11a157010f504cf58ff2384db7fbfec08fb"
+    },
+    {
+      "path": "tools/import-scenario-guides.mjs",
+      "sha256": "4756362bb2e62b6ee10ceb4d04a5299341222b699ef86e133a61da9d4a8b8297"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/story-text.js",
+      "sha256": "e474f514e0dfdb6d05d5b5eaef12c9b06b5020d98d265d6276d679119e6008a2"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/story-access.js",
+      "sha256": "6d7f36810f6225c94315cfd473369937f46ec0b031afda4e8bfa1e8d3d8a6645"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/flow.js",
+      "sha256": "3fb7263830e5fd201b27a64d3e09eacd2b1213f50a129bd14423eff68d613fe9"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/records.js",
+      "sha256": "55d2ef58c36cf3ff32b4004e7406887352ac49136acd9866c895eb02f454733a"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/parts.js",
+      "sha256": "fa17e10cc94db84988c653d3f9c8e8289c02290ace06063f3ac68435da740e6c"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+      "sha256": "29ea203ac372799609904cd95ecf7c8de945eac244208cdfc3be0abbfb292a99"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "sha256": "e1caf7f086fe20903bb4ec06e046caf33ad719ae929f08fcb189c8d9802394fd"
+    },
+    {
+      "path": "content/packs/eoteCampaign/manifest.js",
+      "sha256": "3538dcc9481c76263ba3e270b67baf2a7f08437a343edc21bdd52d1c05e0f1fa"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "sha256": "5b6d7d7b602fe95e98af1b8e0d86e3d51fe26b97af02661563bbd2797b57851e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+      "sha256": "917bbb90af18127852fb71e70f73bd1fd8e8f0b44809bf1716aa2748184db250"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "sha256": "b1e80c917e9f5edd4044790cfba113cc3e6289758a8866e3544d59a434da7f11"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+      "sha256": "b7667423760e5182d836a677a5189a34fa796d25fa15049bed47c40e91d6d13e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+      "sha256": "3afdb1158269f66c9f47a4b264765745b384d4a65400dbb912dd7680c7ad705e"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+      "sha256": "d64e10a166dbd4008d14de72cf4d1297970c0929c1369fb28c610b2c6ec211f2"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "sha256": "950cafab7886f87cf0ceb567a8a8b82f2d841238a1c1b862f93df285d2c55759"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "sha256": "e0c711d3dfd6697296cc64c9dc48aa9de48564a22ed46662bee6fe49694ffb4d"
+    },
+    {
+      "path": "audit/eote-scenario-acceptance.json",
+      "sha256": "8556fb0f61b2df0850e202a225d581a0b1456709819060c743b3671d28932cbf"
+    },
+    {
+      "path": "audit/eote-scenarios-browser.json",
+      "sha256": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567"
+    },
+    {
+      "path": "audit/eote-scenario-shards.json",
+      "sha256": "bb89b7749d96672c737bf54cbffa0fc9dd38acf2085d74fac768e7e44d7ff629"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/scenarios.md",
+      "sha256": "699cb213aa1de5066686ffa627f7ff2e95b8eba30104cf72ae5a157c0829f43d"
+    },
+    {
+      "path": "web/scenario-guides/iceAndDeathPart1.json",
+      "sha256": "4ccadfb9a5342d7e3ca5d7fcd1fbd4d93e80613d1b725815d0370736a329f8be"
+    },
+    {
+      "path": "web/scenario-guides/theHeartOfMadnessPart2.json",
+      "sha256": "337405e6787aa20aa47bcc0c18033a345a23e80b5bf6d4770ca51bcf4c6c9f8c"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/investigators.md",
+      "sha256": "cd1a8438f9c0283bd83e719d265798d0b46d40037388d532ed72cfa1886a3391"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/primitives.md",
+      "sha256": "3cc14219b4871efd9c065deddf049e58957c967282a5f335b315c4b6d0149cb5"
+    },
+    {
+      "path": "docs/edgeOfTheEarth/README.md",
+      "sha256": "6716e5426398e8ac5f108e41800c95917d9ae4f105e1d033f8cfdb4f9b280035"
+    }
+  ]
+}

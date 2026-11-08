@@ -1,0 +1,625 @@
+{
+ "chapters": [
+  {
+   "id": "iceAndDeathPart1",
+   "name": "亡命冰原 第 I 部分",
+   "nameEn": "Ice and Death, Part I",
+   "referenceCode": "08501",
+   "part": "part1",
+   "encounterCode": "ice_and_death",
+   "ownGroup": "theCrash",
+   "gatherSets": [
+    {
+     "set": "AncientEvils",
+     "mode": "gather"
+    },
+    {
+     "set": "CreaturesInTheIce",
+     "mode": "gatherAndSetAside"
+    },
+    {
+     "set": "DeadlyWeather",
+     "mode": "gather"
+    },
+    {
+     "set": "HazardsOfAntarctica",
+     "mode": "gather"
+    },
+    {
+     "set": "IceAndDeath",
+     "mode": "gather"
+    },
+    {
+     "set": "SilenceAndMystery",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    },
+    {
+     "set": "TheCrash",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 41124,
+     "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 35883,
+     "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 44,
+    "zh": 39
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-iceAndDeathPart1.test.mjs"
+   ]
+  },
+  {
+   "id": "iceAndDeathPart2",
+   "name": "亡命冰原 第 II 部分",
+   "nameEn": "Ice and Death, Part II",
+   "referenceCode": "08501",
+   "part": "part2",
+   "encounterCode": "ice_and_death",
+   "ownGroup": "lostInTheNight",
+   "gatherSets": [
+    {
+     "set": "AncientEvils",
+     "mode": "gather"
+    },
+    {
+     "set": "DeadlyWeather",
+     "mode": "gather"
+    },
+    {
+     "set": "HazardsOfAntarctica",
+     "mode": "gather"
+    },
+    {
+     "set": "IceAndDeath",
+     "mode": "gather"
+    },
+    {
+     "set": "LeftBehind",
+     "mode": "gather"
+    },
+    {
+     "set": "LostInTheNight",
+     "mode": "gather"
+    },
+    {
+     "set": "SilenceAndMystery",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 41124,
+     "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 35883,
+     "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 27,
+    "zh": 26
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-iceAndDeathPart2.test.mjs"
+   ]
+  },
+  {
+   "id": "iceAndDeathPart3",
+   "name": "亡命冰原 第 III 部分",
+   "nameEn": "Ice and Death, Part III",
+   "referenceCode": "08501",
+   "part": "part3",
+   "encounterCode": "ice_and_death",
+   "ownGroup": "seepingNightmares",
+   "gatherSets": [
+    {
+     "set": "AncientEvils",
+     "mode": "gather"
+    },
+    {
+     "set": "CreaturesInTheIce",
+     "mode": "gather"
+    },
+    {
+     "set": "DeadlyWeather",
+     "mode": "gather"
+    },
+    {
+     "set": "HazardsOfAntarctica",
+     "mode": "gather"
+    },
+    {
+     "set": "IceAndDeath",
+     "mode": "gather"
+    },
+    {
+     "set": "SeepingNightmares",
+     "mode": "gather"
+    },
+    {
+     "set": "SilenceAndMystery",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 41124,
+     "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+     "bytes": 35883,
+     "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 20,
+    "zh": 11
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-iceAndDeathPart3.test.mjs"
+   ]
+  },
+  {
+   "id": "fatalMirage",
+   "name": "致命幻景",
+   "nameEn": "Fatal Mirage",
+   "referenceCode": "08549",
+   "part": null,
+   "encounterCode": "fatal_mirage",
+   "ownGroup": "fatalMirage",
+   "gatherSets": [
+    {
+     "set": "AgentsOfTheUnknown",
+     "mode": "gather"
+    },
+    {
+     "set": "ChillingCold",
+     "mode": "gather"
+    },
+    {
+     "set": "FatalMirage",
+     "mode": "gather"
+    },
+    {
+     "set": "LeftBehind",
+     "mode": "gather"
+    },
+    {
+     "set": "Miasma",
+     "mode": "gather"
+    },
+    {
+     "set": "NamelessHorrors",
+     "mode": "gather"
+    },
+    {
+     "set": "SilenceAndMystery",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/fatalMirage.json",
+     "bytes": 16394,
+     "sha256": "5f96084ff50ce6971079504f13072497cf97f302113dec0b923fac2bd3112e1a"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/fatalMirage.json",
+     "bytes": 9619,
+     "sha256": "fa5cb8935353e7a0eb15a1513723a4d980c7f9b53631dba67bf0ab4514d9686a"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 68,
+    "zh": 34
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-fatalMirage.test.mjs"
+   ]
+  },
+  {
+   "id": "toTheForbiddenPeaks",
+   "name": "失落之峰",
+   "nameEn": "To the Forbidden Peaks",
+   "referenceCode": "08596",
+   "part": null,
+   "encounterCode": "to_the_forbidden_peaks",
+   "ownGroup": "toTheForbiddenPeaks",
+   "gatherSets": [
+    {
+     "set": "DeadlyWeather",
+     "mode": "gather"
+    },
+    {
+     "set": "ElderThings",
+     "mode": "gather"
+    },
+    {
+     "set": "HazardsOfAntarctica",
+     "mode": "gather"
+    },
+    {
+     "set": "NamelessHorrors",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    },
+    {
+     "set": "ToTheForbiddenPeaks",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/toTheForbiddenPeaks.json",
+     "bytes": 16090,
+     "sha256": "a56254e0defa3dad6308bffa020cf8eb027f168de276c0fee0a858d7f5ad4c4c"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/toTheForbiddenPeaks.json",
+     "bytes": 12443,
+     "sha256": "902651d1dd7c8ec804344253461e2cc057fb947ac1e1104ce9e8f13152480784"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 51,
+    "zh": 32
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ]
+  },
+  {
+   "id": "cityOfTheElderThings",
+   "name": "古老者之城",
+   "nameEn": "City of the Elder Things",
+   "referenceCode": "08621",
+   "part": null,
+   "encounterCode": "city_of_the_elder_things",
+   "ownGroup": "cityOfTheElderThings",
+   "gatherSets": [
+    {
+     "set": "ChillingCold",
+     "mode": "gather"
+    },
+    {
+     "set": "CityOfTheElderThings",
+     "mode": "gather"
+    },
+    {
+     "set": "CreaturesInTheIce",
+     "mode": "gather"
+    },
+    {
+     "set": "CreaturesInTheIce",
+     "mode": "gatherAndSetAside"
+    },
+    {
+     "set": "ElderThings",
+     "mode": "gather"
+    },
+    {
+     "set": "LockedDoors",
+     "mode": "gather"
+    },
+    {
+     "set": "Miasma",
+     "mode": "gather"
+    },
+    {
+     "set": "NamelessHorrors",
+     "mode": "gather"
+    },
+    {
+     "set": "Penguins",
+     "mode": "gather"
+    },
+    {
+     "set": "Shoggoths",
+     "mode": "gatherAndSetAside"
+    },
+    {
+     "set": "SilenceAndMystery",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+     "bytes": 24683,
+     "sha256": "58388126ee7bae00ed5b82f2e322dd4fb67768a7f49a92bc6fe0105213ae4e0d"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+     "bytes": 14682,
+     "sha256": "64b5c5da7d2a0445f09d385eda3d714eb0a455d8005930c208d7239d39fe656c"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 94,
+    "zh": 40
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+   ]
+  },
+  {
+   "id": "theHeartOfMadnessPart1",
+   "name": "疯狂之心 第 I 部分",
+   "nameEn": "The Heart of Madness, Part I",
+   "referenceCode": "08648",
+   "part": "part1",
+   "encounterCode": "the_heart_of_madness",
+   "ownGroup": "theGreatSeal",
+   "gatherSets": [
+    {
+     "set": "AncientEvils",
+     "mode": "gather"
+    },
+    {
+     "set": "LockedDoors",
+     "mode": "gather"
+    },
+    {
+     "set": "Miasma",
+     "mode": "gather"
+    },
+    {
+     "set": "NamelessHorrors",
+     "mode": "gather"
+    },
+    {
+     "set": "Penguins",
+     "mode": "gather"
+    },
+    {
+     "set": "Shoggoths",
+     "mode": "gather"
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    },
+    {
+     "set": "TheGreatSeal",
+     "mode": "gather"
+    },
+    {
+     "set": "TheHeartOfMadness",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+     "bytes": 51410,
+     "sha256": "4042e6199844aeebd973c6eea76bb2ec557674ea7a66de1eeb32f1e7db5cd5b6"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+     "bytes": 39307,
+     "sha256": "7cdaeec7ce12bfbce1fc323f2a770769d46d0049f8f6b84c31605518975c66fd"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 64,
+    "zh": 53
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs"
+   ]
+  },
+  {
+   "id": "theHeartOfMadnessPart2",
+   "name": "疯狂之心 第 II 部分",
+   "nameEn": "The Heart of Madness, Part II",
+   "referenceCode": "08648",
+   "part": "part2",
+   "encounterCode": "the_heart_of_madness",
+   "ownGroup": "stirringInTheDeep",
+   "gatherSets": [
+    {
+     "set": "AgentsOfTheUnknown",
+     "mode": "gather"
+    },
+    {
+     "set": "AncientEvils",
+     "mode": "gather"
+    },
+    {
+     "set": "ChillingCold",
+     "mode": "gather"
+    },
+    {
+     "set": "Miasma",
+     "mode": "gather"
+    },
+    {
+     "set": "NamelessHorrors",
+     "mode": "gather"
+    },
+    {
+     "set": "Penguins",
+     "mode": "gather"
+    },
+    {
+     "set": "StirringInTheDeep",
+     "mode": "gather"
+    },
+    {
+     "set": "StrikingFear",
+     "mode": "gatherJust",
+     "subset": [
+      "Dissonant Voices",
+      "Frozen in Fear"
+     ],
+     "subsetCodes": [
+      "01164",
+      "01165"
+     ]
+    },
+    {
+     "set": "Tekelili",
+     "mode": "gather"
+    },
+    {
+     "set": "TheHeartOfMadness",
+     "mode": "gather"
+    }
+   ],
+   "guideSources": [
+    {
+     "lang": "en",
+     "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+     "bytes": 51410,
+     "sha256": "4042e6199844aeebd973c6eea76bb2ec557674ea7a66de1eeb32f1e7db5cd5b6"
+    },
+    {
+     "lang": "zh",
+     "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+     "bytes": 39307,
+     "sha256": "7cdaeec7ce12bfbce1fc323f2a770769d46d0049f8f6b84c31605518975c66fd"
+    }
+   ],
+   "guideKeyCounts": {
+    "en": 38,
+    "zh": 18
+   },
+   "files": {
+    "definition": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "behavior": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+    "chaos": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/chaos.js",
+    "index": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js",
+    "layout": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/layout.js",
+    "texts": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/texts.js"
+   },
+   "tests": [
+    "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
+   ]
+  }
+ ],
+ "campaignFlowFiles": [
+  "content/campaigns/edgeOfTheEarth/flow.js",
+  "content/campaigns/edgeOfTheEarth/prologue.js",
+  "content/campaigns/edgeOfTheEarth/interludes.js",
+  "content/campaigns/edgeOfTheEarth/checkpoints.js",
+  "content/campaigns/edgeOfTheEarth/epilogue.js",
+  "content/campaigns/edgeOfTheEarth/records.js",
+  "content/campaigns/edgeOfTheEarth/chapters.js",
+  "content/campaigns/edgeOfTheEarth/manifest.js",
+  "content/campaigns/edgeOfTheEarth/parts.js",
+  "content/campaigns/edgeOfTheEarth/shared.js",
+  "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+  "content/campaigns/edgeOfTheEarth/story-access.js",
+  "content/campaigns/edgeOfTheEarth/card-data.js",
+  "content/campaigns/edgeOfTheEarth/keywords.js",
+  "content/campaigns/edgeOfTheEarth/investigator-data.js"
+ ]
+}

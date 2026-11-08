@@ -26,6 +26,10 @@ export const RESTRICTED_ACTION_FIELDS = Object.freeze({
   spell: 'spellOnlyActions',
   bounty: 'bountyOnlyActions',
   engage: 'engageOnlyActions',
+  // 地球边缘 P5：08016 鲍勃「只能用于代打队友手牌 [[道具]] 支援的额外行动」。
+  itemPlay: 'itemPlayOnlyActions',
+  // 地球边缘 P5：08014a 陈丽丽的免费战斗/躲避行动。
+  fightEvade: 'fightEvadeOnlyActions',
 })
 
 export const RESTRICTED_ACTION_KINDS = Object.freeze(Object.keys(RESTRICTED_ACTION_FIELDS))

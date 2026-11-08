@@ -1,0 +1,1399 @@
+[
+ {
+  "code": "08079",
+  "name": "Blood Will Have Blood",
+  "nameZh": "血债血偿",
+  "type": "event",
+  "klass": "survivor",
+  "traits": [
+   "Pact",
+   "Cursed"
+  ],
+  "traitsZh": [
+   "契约",
+   "诅咒萦绕"
+  ],
+  "xp": 2,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Fast. Play after an enemy attacks you. Max 1 per attack.\nDamage/horror from this attack cannot be assigned to [[Ally]] assets. For each point of damage and/or horror you took from this attack, draw 1 card.",
+  "textZh": "快速。在一个敌人攻击你后打出。每次攻击最多1张。\n该攻击造成的伤害/恐惧不能分配给[[盟友]]支援。你从本次攻击中每受到1点伤害和/或恐惧，抽取1张卡牌。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Romain Leguay",
+  "entryRel": "src/cards/entries/08079.js"
+ },
+ {
+  "code": "08080",
+  "name": "Fire Extinguisher",
+  "nameZh": "灭火器",
+  "type": "asset",
+  "klass": "survivor",
+  "traits": [
+   "Item",
+   "Tool",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "近战"
+  ],
+  "xp": 3,
+  "cost": 2,
+  "slot": "Hand",
+  "quantity": 2,
+  "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.\n[action] Discard Fire Extinguisher: Evade. Automatically evade all enemies engaged with you. You may exile Fire Extinguisher instead of discarding it to discard each non-[[Elite]] enemy evaded by this effect.",
+  "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。\n[action]弃掉灭火器：躲避。自动躲避所有与你交战的敌人。你可以将弃掉灭火器改为放逐，来弃掉每一张被此效果躲避的非[[精英]]敌人。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Marcin Jakubowski",
+  "entryRel": "src/cards/entries/08080.js"
+ },
+ {
+  "code": "08081",
+  "name": "Plucky",
+  "nameZh": "有胆有识",
+  "type": "asset",
+  "klass": "survivor",
+  "traits": [
+   "Talent",
+   "Composure"
+  ],
+  "traitsZh": [
+   "才能",
+   "沉稳"
+  ],
+  "xp": 3,
+  "cost": 0,
+  "quantity": 2,
+  "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [intellect].\nNon-direct damage/horror must be assigned to Plucky before it can be assigned to your investigator card.\n[fast] Spend 1 resource: You get +1 [willpower] or +1 [intellect] for this skill test.",
+  "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你得到+1[willpower]和+1[intellect]。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给有胆有识。\n[free]花费1资源：你本次技能检定得到+1[willpower]或+1[intellect]。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Dani Hartel",
+  "entryRel": "src/cards/entries/08081.js"
+ },
+ {
+  "code": "08082",
+  "name": "Fend Off",
+  "nameZh": "抵挡",
+  "type": "event",
+  "klass": "survivor",
+  "traits": [
+   "Gambit",
+   "Trick"
+  ],
+  "traitsZh": [
+   "局势",
+   "技巧"
+  ],
+  "xp": 3,
+  "cost": 2,
+  "quantity": 2,
+  "text": "Fast. Play when a non-[[Elite]] enemy spawns at your location.\nThat enemy attacks you. Then, automatically evade that enemy and attach Fend Off to it.\nAttached enemy cannot ready.",
+  "textZh": "快速。在你所在地点生成一个非[[精英]]敌人时打出。\n该敌人攻击你。然后，自动躲避该敌人并将抵挡附属到该敌人。\n被附属的敌人不能重整。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Robert Laskey",
+  "entryRel": "src/cards/entries/08082.js"
+ },
+ {
+  "code": "08083",
+  "name": "Medical Student",
+  "nameZh": "医学生",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Ally",
+   "Miskatonic",
+   "Science"
+  ],
+  "traitsZh": [
+   "盟友",
+   "米斯卡塔尼克",
+   "科学"
+  ],
+  "xp": 0,
+  "cost": 2,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "[reaction] After Medical Student enters play: Heal 1 damage and 1 horror from an investigator or [[Ally]] asset at your location.",
+  "textZh": "[reaction]在医学生入场后：治愈你所在地点的一位调查员或一个[[盟友]]支援1点伤害和1点恐惧。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Jen Zee",
+  "entryRel": "src/cards/entries/08083.js"
+ },
+ {
+  "code": "08084",
+  "name": "On the Trail",
+  "nameZh": "追踪",
+  "type": "event",
+  "klass": "guardian",
+  "traits": [
+   "Insight",
+   "Tactic"
+  ],
+  "traitsZh": [
+   "洞察",
+   "策略"
+  ],
+  "xp": 1,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Choose an enemy at any location other than yours. Either move twice toward that enemy, or discover 1 clue at any empty location between you and the chosen enemy, along the shortest path to reach that enemy.",
+  "textZh": "选择你所在地点以外任意地点的一个敌人。沿着最短路径，朝着该敌人移动2次，或在你与选定敌人间最短路径上的任意无人地点发现1个线索。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Billy Norrby",
+  "entryRel": "src/cards/entries/08084.js"
+ },
+ {
+  "code": "08085",
+  "name": "On the Trail",
+  "nameZh": "追踪",
+  "type": "event",
+  "klass": "guardian",
+  "traits": [
+   "Insight",
+   "Tactic"
+  ],
+  "traitsZh": [
+   "洞察",
+   "策略"
+  ],
+  "xp": 3,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Choose an enemy at any location other than yours. Move twice toward that enemy. Discover 1 clue at each location you entered by this effect.",
+  "textZh": "选择你所在地点以外任意地点的一个敌人。朝着该敌人移动2次，发现你以此效果进入的每个地点的1个线索。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Billy Norrby",
+  "entryRel": "src/cards/entries/08085.js"
+ },
+ {
+  "code": "08086",
+  "name": "Michael Leigh",
+  "nameZh": "迈克尔·利",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Ally",
+   "Detective"
+  ],
+  "traitsZh": [
+   "盟友",
+   "侦探"
+  ],
+  "xp": 5,
+  "cost": 4,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "You get +1 [intellect] and +1 [combat].\n[reaction] After you successfully investigate: Place 1 resource (from the token pool) on Michael Leigh, as evidence (to a maximum of 3 evidence).\n[reaction] When you initiate an attack, exhaust Michael Leigh and spend 1 evidence: You deal +1 damage for this attack.",
+  "textZh": "你得到+1[intellect]和+1[combat]。\n[reaction]在你成功调查后：在迈克尔·利上放置1资源(从供应堆拿取)作为证据(最多3个证据)。\n[reaction]在你发动一次攻击时，横置迈克尔·利并花费1证据：你在本次攻击中造成+1伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Derek D. Edgell",
+  "entryRel": "src/cards/entries/08086.js"
+ },
+ {
+  "code": "08087",
+  "name": "Snipe",
+  "nameZh": "狙击",
+  "type": "event",
+  "klass": "guardian",
+  "traits": [
+   "Tactic"
+  ],
+  "traitsZh": [
+   "策略"
+  ],
+  "xp": 1,
+  "cost": 0,
+  "quantity": 2,
+  "text": "During the next fight action you perform this turn using a [[Ranged]] or [[Firearm]] asset, treat each [skull], [cultist], [tablet], [elder_thing], or [auto_fail] token you reveal as a \"0\" token. This action does not provoke attacks of opportunity.",
+  "textZh": "你本回合下一个使用了[[远程]]或[[枪械]]支援的攻击行动期间，将你揭示的每个[skull]、[cultist]、[tablet]、[elder_thing]或[auto_fail]标记视为“0”标记。本行动不会触发趁乱攻击。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Steve Ellis",
+  "entryRel": "src/cards/entries/08087.js"
+ },
+ {
+  "code": "08088",
+  "name": "Old Shotgun",
+  "nameZh": "老旧的霰弹枪",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Weapon",
+   "Firearm"
+  ],
+  "traitsZh": [
+   "道具",
+   "武器",
+   "枪械"
+  ],
+  "xp": 2,
+  "cost": 0,
+  "slot": "Hand x2",
+  "quantity": 2,
+  "text": "Uses (0 ammo). While playing an event, treat Old Shotgun's uses value as 2.\n[action] Spend 1 ammo: Fight. You get +3 [combat] for this attack. Instead of its standard damage, this attack's damage is equal to the amount you succeed by, or fail by if you fail and would damage another investigator (to a minimum of 1, to a maximum of 3).",
+  "textZh": "使用(0子弹)。打出一张事件卡牌时，将老旧的霰弹枪的使用值视为2。\n[action]花费1子弹：攻击。你本次攻击得到+3[combat]。本次攻击不造成标准伤害，改为：攻击成功时造成的伤害数量等于你超过难度的值；攻击失败且将对另一位调查员造成伤害时，对该调查员造成的伤害数量等于你低于难度的值。(伤害最小为1，最大为3)。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Duallbrush",
+  "entryRel": "src/cards/entries/08088.js"
+ },
+ {
+  "code": "08089",
+  "name": "Quickdraw Holster",
+  "nameZh": "快拔枪套",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Tool",
+   "Illicit"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "违法"
+  ],
+  "xp": 4,
+  "cost": 4,
+  "slot": "Body",
+  "quantity": 2,
+  "text": "[fast]: Choose a [[Firearm]] asset taking up only 1 hand slot in your play area. Attach it to Quickdraw Holster, or switch it with the attached asset. The attached asset takes up no hand slots. (Limit 1 attached asset.)\n[fast] Exhaust Quickdraw Holster: Perform a fight action on the attached asset without paying its [action] cost.",
+  "textZh": "[free]：选择一张在你游戏区域，只占据1个手部槽位的[[枪械]]支援，将其附属到快拔枪套，或与已附属的支援交换。附属的支援不占用手部槽位。(附属的支援仅限1张。)\n[free]横置快拔枪套：执行一次已附属支援的攻击行动且无需支付其[action]费用。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Drazenka Kimpel",
+  "entryRel": "src/cards/entries/08089.js"
+ },
+ {
+  "code": "08090",
+  "name": "Brand of Cthugha",
+  "nameZh": "克图格亚的烙印",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 1,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (6 charges).\n[action]: Fight. For this attack, you may use [willpower] instead of [combat], and you get +1 skill value. If you succeed, spend 1 or 2 charges. Instead of its standard damage, this attack deals 1 damage for each charge spent. If you succeed by 0, lose 1 action.",
+  "textZh": "使用(6充能)。\n[action]：攻击。你在本次攻击中得到+1技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1或2充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去1行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Michele Giorgi",
+  "entryRel": "src/cards/entries/08090.js"
+ },
+ {
+  "code": "08091",
+  "name": "Nkosi Mabati",
+  "nameZh": "恩科西·马巴蒂",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Ally",
+   "Sorcerer"
+  ],
+  "traitsZh": [
+   "盟友",
+   "法师"
+  ],
+  "xp": 3,
+  "cost": 4,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "[reaction] After Nkosi Mabati enters play: Name a non-[elder_sign] chaos token with a symbol. Until this card leaves play, the named symbol is your \"sigil.\"\n[reaction] When an investigator at your location reveals a [cultist], [tablet], or [elder_thing] symbol, exhaust Nkosi Mabati: Search the chaos bag for your sigil and reveal it, instead (returning the other token to the chaos bag).",
+  "textZh": "[reaction]在恩科西·马巴蒂入场后：指定一个非[elder_sign]的符号混乱标记。在本卡牌离场前，指定的标记为你的“咒印”。\n[reaction]在你所在地点的一位调查员揭示了一个[cultist]、[tablet]或[elder_thing]符号时，横置恩科西·马巴蒂：改为从混乱袋中查找你的咒印并揭示它(将其他标记放回混乱袋)",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tony Foti",
+  "entryRel": "src/cards/entries/08091.js"
+ },
+ {
+  "code": "08092",
+  "name": "Brand of Cthugha",
+  "nameZh": "克图格亚的烙印",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 4,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (9 charges).\n[action]: Fight. For this attack, you may use [willpower] instead of [combat], and you get +2 skill value. If you succeed, spend 1, 2, or 3 charges. Instead of its standard damage, this attack deals 1 damage for each charge spent. If you succeed by 0, lose 2 actions.",
+  "textZh": "使用(9充能)。\n[action]：攻击。你在本次攻击中得到+2技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1、2或3充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去2行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Michele Giorgi",
+  "entryRel": "src/cards/entries/08092.js"
+ },
+ {
+  "code": "08093",
+  "name": "Cyclopean Hammer",
+  "nameZh": "巨石锤",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Relic",
+   "Weapon",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "遗物",
+   "武器",
+   "近战"
+  ],
+  "xp": 5,
+  "cost": 5,
+  "slot": "Hand x2",
+  "quantity": 2,
+  "text": "[action]: Fight. Add your [willpower] to your skill value for this attack. You deal +1 damage for this attack. If you succeed and the enemy is non-[[Elite]], you may move it one location away from you. (If you succeed by 3 or more, you instead deal +2 damage and may move the enemy up to two locations away from you.)",
+  "textZh": "[action]：攻击。本次攻击将你的[willpower]加入你的技能值。你在本次攻击中造成+1伤害。如果你成功并且该敌人为非[[精英]]，你可以将其朝着远离你的方向移动一个地点。(如果你成功且超过难度3点或更多，改为造成+2伤害并可以将其朝着远离你的方向移动最多2个地点。)",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Robert Laskey",
+  "entryRel": "src/cards/entries/08093.js"
+ },
+ {
+  "code": "08094",
+  "name": "Sledgehammer",
+  "nameZh": "长柄大锤",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Tool",
+   "Weapon",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "武器",
+   "近战"
+  ],
+  "xp": 0,
+  "cost": 3,
+  "slot": "Hand x2",
+  "quantity": 2,
+  "text": "[action]: Fight. You get -1 [combat] and deal +1 damage for this attack.\n[action] [action]: Fight. You get +2 [combat] and deal +2 damage for this attack.",
+  "textZh": "[action]：攻击。你本次攻击得到-1[combat]并造成+1伤害。\n[action][action]：攻击。你本次攻击得到+2[combat]并造成+2伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tysen Johnson",
+  "entryRel": "src/cards/entries/08094.js"
+ },
+ {
+  "code": "08095",
+  "name": "Protective Gear",
+  "nameZh": "防护服",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Armor"
+  ],
+  "traitsZh": [
+   "道具",
+   "护甲"
+  ],
+  "xp": 2,
+  "cost": 4,
+  "slot": "Body",
+  "quantity": 2,
+  "text": "[reaction] When you draw a [[Hazard]] treachery, deal 1 damage and 1 horror to Protective Gear: Cancel that card's revelation effect.",
+  "textZh": "[reaction]在你抽取一张[[危险]]诡计时，对防护服造成1点伤害和1点恐惧：取消该卡牌的显现效果。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tony Foti",
+  "entryRel": "src/cards/entries/08095.js"
+ },
+ {
+  "code": "08096",
+  "name": "Sledgehammer",
+  "nameZh": "长柄大锤",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Item",
+   "Tool",
+   "Weapon",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "武器",
+   "近战"
+  ],
+  "xp": 4,
+  "cost": 3,
+  "slot": "Hand x2",
+  "quantity": 2,
+  "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.\n[action] [action] [action]: Fight. You get +5 [combat] and deal +5 damage for this attack.",
+  "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。\n[action][action][action]：攻击。你本次攻击得到+5[combat]并造成+5伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tysen Johnson",
+  "entryRel": "src/cards/entries/08096.js"
+ },
+ {
+  "code": "08097",
+  "name": "Pocket Telescope",
+  "nameZh": "袖珍望远镜",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Item",
+   "Tool"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具"
+  ],
+  "xp": 0,
+  "cost": 2,
+  "slot": "Hand",
+  "quantity": 2,
+  "text": "[fast] Exhaust Pocket Telescope: Look at the revealed side of a connecting unrevealed location.\n[action]: Investigate. Investigate a revealed connecting location as if you were there.",
+  "textZh": "[free]横置袖珍望远镜：查看一个连接的未揭示地点的揭示面。\n[action]：调查。调查一个连接的已揭示地点，如同你在该地点。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Felicia Cano",
+  "entryRel": "src/cards/entries/08097.js"
+ },
+ {
+  "code": "08098",
+  "name": "Eon Chart",
+  "nameZh": "远古海图",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Item",
+   "Relic"
+  ],
+  "traitsZh": [
+   "道具",
+   "遗物"
+  ],
+  "xp": 1,
+  "cost": 2,
+  "slot": "Accessory",
+  "quantity": 2,
+  "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take one of the following actions (move, evade, or investigate).",
+  "textZh": "使用(3秘密)。\n[free]在你回合期间，横置远古海图并花费1秘密：选择并执行以下一个行动(移动、躲避或调查)。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Ignacio Bazán Lazcano",
+  "entryRel": "src/cards/entries/08098.js"
+ },
+ {
+  "code": "08099",
+  "name": "Gené Beauregard",
+  "nameZh": "吉恩·波尔格",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Ally",
+   "Wayfarer"
+  ],
+  "traitsZh": [
+   "盟友",
+   "旅人"
+  ],
+  "xp": 3,
+  "cost": 5,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "You get +1 [intellect] and +1 [agility].\n[reaction] During your turn, after you move to a location, exhaust Gené Beauregard: Move a clue or a non-[[Elite]] enemy from a connecting location to your location, or vice versa.",
+  "textZh": "你得到+1[intellect]和+1[agility]。\n[reaction]在你回合期间，你移动到一个地点后，横置吉恩·波尔格：将1个线索或一个非[[精英]]敌人从一个连接地点移动到你的地点，或从你的地点移动到一个连接地点。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Vlad Ricean",
+  "entryRel": "src/cards/entries/08099.js"
+ },
+ {
+  "code": "08100",
+  "name": "Eon Chart",
+  "nameZh": "远古海图",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Item",
+   "Relic"
+  ],
+  "traitsZh": [
+   "道具",
+   "遗物"
+  ],
+  "xp": 4,
+  "cost": 2,
+  "slot": "Accessory",
+  "quantity": 2,
+  "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take two different actions of the following, in any order (move, evade, or investigate).",
+  "textZh": "使用(3秘密)。\n[free]在你回合期间，横置远古海图并花费1秘密：以任意顺序选择并执行以下两个行动(移动、躲避或调查)。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Ignacio Bazán Lazcano",
+  "entryRel": "src/cards/entries/08100.js"
+ },
+ {
+  "code": "08101",
+  "name": "Divination",
+  "nameZh": "占卜",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Spell",
+   "Augury"
+  ],
+  "traitsZh": [
+   "法术",
+   "预言"
+  ],
+  "xp": 1,
+  "cost": 3,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (4 charges).\n[action]: Investigate. For this investigation, you may use [willpower] instead of [intellect], and you get +1 skill value. If you succeed, spend 1 or 2 charges. Instead of discovering a clue at your location, discover 1 clue at your location for each charge spent. If you succeed by 0, choose and discard a card from your hand.",
+  "textZh": "使用(4充能)。\n[action]：调查。你在本次调查中得到+1技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1或2充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你一张手牌并将其弃掉。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Adam S. Doyle",
+  "entryRel": "src/cards/entries/08101.js"
+ },
+ {
+  "code": "08102",
+  "name": "Protecting the Anirniq",
+  "nameZh": "保护魂灵",
+  "type": "event",
+  "klass": "seeker",
+  "traits": [
+   "Ritual"
+  ],
+  "traitsZh": [
+   "仪式"
+  ],
+  "xp": 2,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Fast. Play after an [[Ally]] asset at your location is discarded by a card effect or is defeated.\nEither return that asset to its owner's hand, or its owner draws 3 cards.",
+  "textZh": "快速。你所在地点的一个[[盟友]]支援被击败或因卡牌效果弃掉后打出。\n将该支援返回其拥有者手中，或其拥有者抽取3张卡牌。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Chris Pritchard",
+  "entryRel": "src/cards/entries/08102.js"
+ },
+ {
+  "code": "08103",
+  "name": "Divination",
+  "nameZh": "占卜",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Spell",
+   "Augury"
+  ],
+  "traitsZh": [
+   "法术",
+   "预言"
+  ],
+  "xp": 4,
+  "cost": 3,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (6 charges).\n[action]: Investigate. For this investigation, you may use [willpower] instead of [intellect], and you get +2 skill value. If you succeed, spend 1, 2, or 3 charges. Instead of discovering a clue at your location, discover 1 clue at your location for each charge spent. If you succeed by 0, choose and discard 2 cards from your hand.",
+  "textZh": "使用(6充能)。\n[action]：调查。你在本次调查中得到+2技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1、2或3充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你2张手牌并将其弃掉。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Adam S. Doyle",
+  "entryRel": "src/cards/entries/08103.js"
+ },
+ {
+  "code": "08104",
+  "name": "Professor William Webb",
+  "nameZh": "威廉·韦伯教授",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Ally",
+   "Miskatonic"
+  ],
+  "traitsZh": [
+   "盟友",
+   "米斯卡塔尼克"
+  ],
+  "xp": 0,
+  "cost": 3,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "Uses (3 secrets).\n[reaction] When you successfully investigate, exhaust Professor William Webb and spend 1 secret: Instead of discovering a clue at your location, either choose an [[Item]] card in your discard pile and add it to your hand, or discover a clue at a connecting location.",
+  "textZh": "使用(3秘密)。\n[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：不发现你所在地点的1个线索，改为在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中，或在一个连接地点发现1个线索。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Romana Kendelic",
+  "entryRel": "src/cards/entries/08104.js"
+ },
+ {
+  "code": "08105",
+  "name": "Ice Pick",
+  "nameZh": "破冰锥",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Item",
+   "Tool",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "近战"
+  ],
+  "xp": 1,
+  "cost": 1,
+  "slot": "Hand",
+  "quantity": 2,
+  "text": "Fast.\n[fast] During a skill test while fighting or investigating, exhaust Ice Pick: You get +1 skill value for this test.",
+  "textZh": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tiziano Baracchi",
+  "entryRel": "src/cards/entries/08105.js"
+ },
+ {
+  "code": "08106",
+  "name": "Professor William Webb",
+  "nameZh": "威廉·韦伯教授",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Ally",
+   "Miskatonic"
+  ],
+  "traitsZh": [
+   "盟友",
+   "米斯卡塔尼克"
+  ],
+  "xp": 2,
+  "cost": 3,
+  "slot": "Ally",
+  "quantity": 2,
+  "text": "Uses (3 secrets).\n[reaction] When you successfully investigate, exhaust Professor William Webb and spend 1 secret: Choose an [[Item]] card in your discard pile and add it to your hand. Instead of discovering a clue at your location, you may discover a clue at a connecting location.",
+  "textZh": "使用(3秘密)。\n[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中。你可以不发现你所在地点的1个线索，改为在一个连接地点发现1个线索。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Romana Kendelic",
+  "entryRel": "src/cards/entries/08106.js"
+ },
+ {
+  "code": "08107",
+  "name": "Ice Pick",
+  "nameZh": "破冰锥",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Item",
+   "Tool",
+   "Melee"
+  ],
+  "traitsZh": [
+   "道具",
+   "工具",
+   "近战"
+  ],
+  "xp": 3,
+  "cost": 1,
+  "slot": "Hand",
+  "quantity": 2,
+  "text": "Fast.\n[fast] During a skill test while fighting or investigating, exhaust Ice Pick: You get +1 skill value for this test. If you succeed, you may discard Ice Pick to have this attack deal +1 damage (if you are fighting), or to discover 1 additional clue at your location (if you are investigating).",
+  "textZh": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。如果你成功，你可以弃掉破冰锥来使得本次攻击造成+1伤害(如果你攻击)，或发现你所在地点的额外1个线索(如果你调查)。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tiziano Baracchi",
+  "entryRel": "src/cards/entries/08107.js"
+ },
+ {
+  "code": "08108",
+  "name": "Ethereal Slip",
+  "nameZh": "虚影易位",
+  "type": "event",
+  "klass": "rogue",
+  "traits": [
+   "Spell",
+   "Trick"
+  ],
+  "traitsZh": [
+   "法术",
+   "技巧"
+  ],
+  "xp": 0,
+  "cost": 2,
+  "quantity": 2,
+  "text": "Choose a non-[[Elite]] enemy at a revealed location up to 2 connections away. Swap places with that enemy.",
+  "textZh": "选择一个位于已揭示地点的非[[精英]]敌人，且其所在地点与你的连接次数不超过2。与该敌人交换位置。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Lin Hsiang",
+  "entryRel": "src/cards/entries/08108.js"
+ },
+ {
+  "code": "08109",
+  "name": "Blur",
+  "nameZh": "身形虚化",
+  "type": "asset",
+  "klass": "rogue",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 1,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (3 charges).\n[action] If Blur has charges remaining: Evade. For this evasion attempt, you may use [willpower] instead of [agility], and you get +1 skill value. If you succeed, spend 1 charge and you may take an additional action this turn. If you succeed by 0, take 1 damage.",
+  "textZh": "使用(3充能)。\n[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+1技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1充能且本回合可以执行1次额外行动。如果你成功且等于难度，受到1点伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Andreas Zafiratos",
+  "entryRel": "src/cards/entries/08109.js"
+ },
+ {
+  "code": "08110",
+  "name": "Ethereal Slip",
+  "nameZh": "虚影易位",
+  "type": "event",
+  "klass": "rogue",
+  "traits": [
+   "Spell",
+   "Trick"
+  ],
+  "traitsZh": [
+   "法术",
+   "技巧"
+  ],
+  "xp": 2,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Choose a non-[[Elite]] enemy at any revealed location. Swap places with that enemy.",
+  "textZh": "选择位于任意一个已揭示地点的非[[精英]]敌人。与该敌人交换位置。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Lin Hsiang",
+  "entryRel": "src/cards/entries/08110.js"
+ },
+ {
+  "code": "08111",
+  "name": "Blur",
+  "nameZh": "身形虚化",
+  "type": "asset",
+  "klass": "rogue",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 4,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (4 charges).\n[action] If Blur has charges remaining: Evade. For this evasion attempt, you may use [willpower] instead of [agility] and get +2 skill value. If you succeed, spend 1 or 2 charges and you may take that many additional actions this turn. If you succeed by 0, take 2 damage.",
+  "textZh": "使用(4充能)。\n[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+2技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1或2充能且本回合可以执行对应数量次数的额外行动。如果你成功且等于难度，受到2点伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Andreas Zafiratos",
+  "entryRel": "src/cards/entries/08111.js"
+ },
+ {
+  "code": "08112",
+  "name": "\"Hit me!\"",
+  "nameZh": "\"再来一张！\"",
+  "type": "event",
+  "klass": "rogue",
+  "traits": [
+   "Fortune",
+   "Gambit"
+  ],
+  "traitsZh": [
+   "幸运",
+   "局势"
+  ],
+  "xp": 0,
+  "cost": 1,
+  "quantity": 2,
+  "text": "Fast. Play after you reveal a chaos token during a skill test.\nReveal an additional chaos token, switching its \"-\" to a \"+\". If that chaos token is a [skull] token, you automatically fail.",
+  "textZh": "快速。你在技能检定期间揭示混乱标记后打出。\n额外揭示一个混乱标记，并经其“-”变为“+”。如果该标记是[skull]，你自动失败。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Drazenka Kimpel",
+  "entryRel": "src/cards/entries/08112.js"
+ },
+ {
+  "code": "08113",
+  "name": "Unscrupulous Loan",
+  "nameZh": "大肆借贷",
+  "type": "asset",
+  "klass": "rogue",
+  "traits": [
+   "Pact"
+  ],
+  "traitsZh": [
+   "契约"
+  ],
+  "xp": 3,
+  "cost": 0,
+  "quantity": 2,
+  "text": "Limit 1 per investigator. Cannot leave play.\n[reaction] After you play Unscrupulous Loan: Gain 10 resources.\nForced - When the game ends or you are eliminated, if you have fewer than 10 resources in your resource pool: Exile Unscrupulous Loan.",
+  "textZh": "每位调查员仅限1张。不能离场。\n[reaction]在你打出大肆借贷后：获得10资源。\n强制 - 在游戏结束或你退场时，如果你资源池中的资源数量小于10：放逐大肆借贷。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Drazenka Kimpel",
+  "entryRel": "src/cards/entries/08113.js"
+ },
+ {
+  "code": "08114",
+  "name": "Precious Memento",
+  "nameZh": "珍贵记忆",
+  "type": "asset",
+  "klass": "rogue",
+  "traits": [
+   "Item",
+   "Charm",
+   "Blessed"
+  ],
+  "traitsZh": [
+   "道具",
+   "守护",
+   "祝福"
+  ],
+  "xp": 4,
+  "cost": 3,
+  "slot": "Accessory",
+  "quantity": 1,
+  "text": "Limit 1 Precious Memento (From a Former Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.\n[reaction] After you succeed at a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.",
+  "textZh": "每个牌库仅限1张珍贵记忆(来自前世)。\n[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点伤害。\n[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Greg Bobrowski",
+  "entryRel": "src/cards/entries/08114.js"
+ },
+ {
+  "code": "08115",
+  "name": "Precious Memento",
+  "nameZh": "珍贵记忆",
+  "type": "asset",
+  "klass": "rogue",
+  "traits": [
+   "Item",
+   "Charm",
+   "Cursed"
+  ],
+  "traitsZh": [
+   "道具",
+   "守护",
+   "诅咒萦绕"
+  ],
+  "xp": 4,
+  "cost": 3,
+  "slot": "Accessory",
+  "quantity": 1,
+  "text": "Limit 1 Precious Memento (From a Future Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.\n[reaction] After you succeed at a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.",
+  "textZh": "每个牌库仅限1张珍贵记忆(来自后世)。\n[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。\n[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Greg Bobrowski",
+  "entryRel": "src/cards/entries/08115.js"
+ },
+ {
+  "code": "08116",
+  "name": "Talisman of Protection",
+  "nameZh": "护身法宝",
+  "type": "asset",
+  "klass": "mystic",
+  "traits": [
+   "Item",
+   "Charm"
+  ],
+  "traitsZh": [
+   "道具",
+   "守护"
+  ],
+  "xp": 0,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Fast. Play only during your turn.\nPlay Talisman of Protection under the control of any investigator at your location.\n[reaction] When you assign damage and/or horror that would defeat you, discard Talisman of Protection: Cancel up to 2 of that damage and/or horror.",
+  "textZh": "快速。只可在你的回合期间打出。\n打出护身法宝，置于你所在地点任意一位调查员控制之下。\n[reaction]在你被分配伤害和/或恐惧，且其数量足够击败你时，弃掉护身法宝：取消该伤害和/或恐惧中的最多2点。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Alex Aguilar",
+  "entryRel": "src/cards/entries/08116.js"
+ },
+ {
+  "code": "08117",
+  "name": "Earthly Serenity",
+  "nameZh": "尘世宁静",
+  "type": "asset",
+  "klass": "mystic",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 1,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (4 charges).\n[action]: Test [willpower] (1). For each point you succeed by, you may spend 1 charge to heal 1 damage or 1 horror from an investigator at your location. If you succeed by 0, lose 1 resource.",
+  "textZh": "使用(4充能)。\n[action]：检定[willpower](1)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点一位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去1资源。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Drazenka Kimpel",
+  "entryRel": "src/cards/entries/08117.js"
+ },
+ {
+  "code": "08118",
+  "name": "Enchanted Bow",
+  "nameZh": "附魔弓",
+  "type": "asset",
+  "klass": "mystic",
+  "traits": [
+   "Spell",
+   "Blessed",
+   "Weapon",
+   "Ranged"
+  ],
+  "traitsZh": [
+   "法术",
+   "祝福",
+   "武器",
+   "远程"
+  ],
+  "xp": 2,
+  "cost": 3,
+  "slot": "Hand x2. Arcane",
+  "quantity": 2,
+  "text": "Uses (3 charges).\n[action] Exhaust Enchanted Bow: Fight. You must use either [willpower] or [agility] instead of [combat] and get +1 skill value for this attack. This attack deals +1 damage. As an additional cost to initiate this ability, you may spend 1 charge to have this attack target a non-[[Elite]] enemy at a connecting location; if you do, ignore the aloof and retaliate keywords for this attack.",
+  "textZh": "使用(3充能)。\n[action]横置附魔弓：攻击。你本次攻击得到+1技能值，并且必须改为使用[willpower]或[agility]，而不使用[combat]。本次攻击造成+1伤害。作为发动此能力的额外费用，你可以花费1充能来使本次攻击以一个连接地点的非[[精英]]敌人为目标；如果你这样做，在本次攻击中，忽略冷漠和反击关键词。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Kate Laird",
+  "entryRel": "src/cards/entries/08118.js"
+ },
+ {
+  "code": "08119",
+  "name": "Earthly Serenity",
+  "nameZh": "尘世宁静",
+  "type": "asset",
+  "klass": "mystic",
+  "traits": [
+   "Spell"
+  ],
+  "traitsZh": [
+   "法术"
+  ],
+  "xp": 4,
+  "cost": 2,
+  "slot": "Arcane",
+  "quantity": 2,
+  "text": "Uses (6 charges).\n[action]: Test [willpower] (0). For each point you succeed by, you may spend 1 charge to heal 1 damage or 1 horror from an investigator at your location. If you succeed by 0, lose 2 resources.",
+  "textZh": "使用(6充能)。\n[action]：检定[willpower](0)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点一位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去2资源。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Drazenka Kimpel",
+  "entryRel": "src/cards/entries/08119.js"
+ },
+ {
+  "code": "08120",
+  "name": "Prophetic",
+  "nameZh": "先知先觉",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Talent"
+  ],
+  "traitsZh": [
+   "才能"
+  ],
+  "xp": 3,
+  "cost": 3,
+  "quantity": 2,
+  "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Prophetic may be spent to pay for [[Fortune]], [[Spell]], or [[Spirit]] cards.\n[fast] During a skill test on a [[Fortune]], [[Spell]], or [[Spirit]] card, spend 1 resource from Prophetic: You get +1 skill value for this test.",
+  "textZh": "使用(2资源)。每轮开始时重新补满资源。\n先知先觉上的资源可以被花费来支付[[幸运]]、[[法术]]或[[勇气]]卡牌。\n[free]在[[幸运]]、[[法术]]或[[勇气]]卡牌上的技能检定期间，从先知先觉花费1资源：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Pavel Kolomeyets",
+  "entryRel": "src/cards/entries/08120.js"
+ },
+ {
+  "code": "08121",
+  "name": "Sleuth",
+  "nameZh": "一探究竟",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Talent"
+  ],
+  "traitsZh": [
+   "才能"
+  ],
+  "xp": 3,
+  "cost": 3,
+  "quantity": 2,
+  "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Sleuth may be spent to pay for [[Charm]], [[Tactic]], or [[Tome]] cards.\n[fast] During a skill test on a [[Charm]], [[Tactic]], or [[Tome]] card, spend 1 resource from Sleuth: You get +1 skill value for this test.",
+  "textZh": "使用(2资源)。每轮开始时重新补满资源。\n一探究竟上的资源可以被花费来支付[[守护]]、[[策略]]或[[书籍]]卡牌。\n[free]在[[守护]]、[[策略]]或[[书籍]]卡牌上的技能检定期间，从一探究竟花费1资源：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Daniel Masso",
+  "entryRel": "src/cards/entries/08121.js"
+ },
+ {
+  "code": "08122",
+  "name": "Bruiser",
+  "nameZh": "好勇斗狠",
+  "type": "asset",
+  "klass": "guardian",
+  "traits": [
+   "Talent"
+  ],
+  "traitsZh": [
+   "才能"
+  ],
+  "xp": 3,
+  "cost": 3,
+  "quantity": 2,
+  "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Bruiser may be spent to pay for [[Armor]], [[Firearm]], or [[Melee]] cards.\n[fast] During a skill test on a [[Armor]], [[Firearm]], or [[Melee]] card, spend 1 resource from Bruiser: You get +1 skill value for this test.",
+  "textZh": "使用(2资源)。每轮开始时重新补满资源。\n好勇斗狠上的资源可以被花费来支付[[护甲]]、[[枪械]]或[[近战]]卡牌。\n[free]在[[护甲]]、[[枪械]]或[[近战]]卡牌上的技能检定期间，从好勇斗狠花费1资源：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Rafał Hrynkiewicz",
+  "entryRel": "src/cards/entries/08122.js"
+ },
+ {
+  "code": "08123",
+  "name": "Crafty",
+  "nameZh": "技艺精湛",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Talent"
+  ],
+  "traitsZh": [
+   "才能"
+  ],
+  "xp": 3,
+  "cost": 3,
+  "quantity": 2,
+  "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Crafty may be spent to pay for [[Insight]], [[Tool]], or [[Trick]] cards.\n[fast] During a skill test on a [[Insight]], [[Tool]], or [[Trick]] card, spend 1 resource from Crafty: You get +1 skill value for this test.",
+  "textZh": "使用(2资源)。每轮开始时重新补满资源。\n技艺精湛上的资源可以被花费来支付[[洞察]]、[[工具]]或[[技巧]]卡牌。\n[free]在[[洞察]]、[[工具]]或[[技巧]]卡牌上的技能检定期间，从技艺精湛花费1资源：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Falk",
+  "entryRel": "src/cards/entries/08123.js"
+ },
+ {
+  "code": "08124",
+  "name": "Antiquary",
+  "nameZh": "古物藏家",
+  "type": "asset",
+  "klass": "seeker",
+  "traits": [
+   "Talent"
+  ],
+  "traitsZh": [
+   "才能"
+  ],
+  "xp": 3,
+  "cost": 3,
+  "quantity": 2,
+  "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Antiquary may be spent to pay for [[Favor]], [[Relic]] or [[Ritual]] cards.\n[fast] During a skill test on a [[Favor]], [[Relic]] or [[Ritual]] card, spend 1 resource from Antiquary: You get +1 skill value for this test.",
+  "textZh": "使用(2资源)。每轮开始时重新补满资源。\n古物藏家上的资源可以被花费来支付[[恩惠]]、[[遗物]]或[[仪式]]卡牌。\n[free]在[[恩惠]]、[[遗物]]或[[仪式]]卡牌上的技能检定期间，从古物藏家花费1资源：你本次检定得到技能值+1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Caravan Studio",
+  "entryRel": "src/cards/entries/08124.js"
+ },
+ {
+  "code": "08125",
+  "name": "In the Thick of It",
+  "nameZh": "危险处境",
+  "type": "asset",
+  "klass": "neutral",
+  "traits": [
+   "Curse"
+  ],
+  "traitsZh": [
+   "诅咒"
+  ],
+  "xp": 0,
+  "quantity": 1,
+  "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nWhen you purchase In the Thick of It, suffer 2 total physical and/or mental trauma. Then, earn 3 experience.",
+  "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n在你购买危险处境时，承受总共2点肉体和/或精神创伤。然后，取得3经验值。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Steve Ellis",
+  "entryRel": "src/cards/entries/08125.js"
+ },
+ {
+  "code": "08126",
+  "name": "Heavy Furs",
+  "nameZh": "厚重皮衣",
+  "type": "asset",
+  "klass": "neutral",
+  "traits": [
+   "Item",
+   "Armor"
+  ],
+  "traitsZh": [
+   "道具",
+   "护甲"
+  ],
+  "xp": 0,
+  "cost": 2,
+  "slot": "Body",
+  "quantity": 2,
+  "text": "[reaction] After you reveal a non-[auto_fail] symbol on a chaos token during a skill test you are perfoming, deal 1 damage to Heavy Furs: Cancel that chaos token and return it to the bag. Reveal a new chaos token.",
+  "textZh": "[reaction]在你执行的一次技能检定中你揭示一个非[auto_fail]的符号混乱标记后，对厚重皮衣造成1伤害：取消该混乱标记并将其返回混乱袋。揭示一个新的混乱标记。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tiziano Baracchi",
+  "entryRel": "src/cards/entries/08126.js"
+ },
+ {
+  "code": "08127",
+  "name": "Sled Dog",
+  "nameZh": "雪橇犬",
+  "type": "asset",
+  "klass": "neutral",
+  "traits": [
+   "Ally",
+   "Creature"
+  ],
+  "traitsZh": [
+   "盟友",
+   "生物"
+  ],
+  "xp": 0,
+  "cost": 3,
+  "slot": "Ally",
+  "quantity": 4,
+  "text": "You may include up to 4 copies of Sled Dog in your deck. Up to 2 Sled Dog cards take up a single ally slot.\n[action] Exhaust X Sled Dogs: Move. Move X times.\n[action] Exhaust X Sled Dogs: Fight. You get +X [combat] for this attack. Instead of its standard damage, this attack deals X damage.",
+  "textZh": "你的牌库中可以有至多4张雪橇犬。1个盟友槽位可以有至多2张雪橇犬。\n[action]横置X张雪橇犬：移动。移动X次。\n[action]横置X张雪橇犬：攻击。你本次攻击得到+X[combat]。本次攻击不造成基础伤害，改为造成X点伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Dleoblack",
+  "entryRel": "src/cards/entries/08127.js"
+ },
+ {
+  "code": "08128",
+  "name": "Rod of Animalism",
+  "nameZh": "驯兽之杖",
+  "type": "asset",
+  "klass": "neutral",
+  "traits": [
+   "Item",
+   "Relic"
+  ],
+  "traitsZh": [
+   "道具",
+   "遗物"
+  ],
+  "xp": 1,
+  "cost": 2,
+  "slot": "Accessory",
+  "quantity": 2,
+  "text": "You have 2 additional ally slots, which can only be used to hold [[Creature]] assets.\n[reaction] When you play a [[Creature]] asset during your turn: Reduce that asset's cost by 1.",
+  "textZh": "你拥有额外2个盟友槽位，只可以用来携带[[生物]]支援。\n[reaction]你在自己回合期间打出[[生物]]支援时：该支援的费用减1。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Robert Laskey",
+  "entryRel": "src/cards/entries/08128.js"
+ },
+ {
+  "code": "08129",
+  "name": "Call for Backup",
+  "nameZh": "请求支援",
+  "type": "event",
+  "klass": "neutral",
+  "traits": [
+   "Favor",
+   "Synergy"
+  ],
+  "traitsZh": [
+   "恩惠",
+   "协作"
+  ],
+  "xp": 2,
+  "cost": 1,
+  "quantity": 2,
+  "text": "One at a time, in any order, if you control a...\n- [rogue] card, you may move to a connecting location.\n- [guardian] card, deal 1 damage to an enemy at your location.\n- [seeker] card, discover 1 clue at your location.\n- [mystic] card, heal 1 horror from any card.\n- [survivor] card, heal 1 damage from any card.",
+  "textZh": "以任意顺序依次结算，如果你控制……\n- [rogue]卡牌，你可以移动到一个连接地点。\n- [guardian]卡牌，对你所在地点的一个敌人造成1点伤害。\n- [seeker]卡牌，发现你所在地点的1个线索。\n- [mystic]卡牌，治愈任意卡牌的1点恐惧。\n- [survivor]卡牌，治愈任意卡牌的1点伤害。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Adam Schumpert",
+  "entryRel": "src/cards/entries/08129.js"
+ },
+ {
+  "code": "08130",
+  "name": "Arm Injury",
+  "nameZh": "臂伤",
+  "type": "treachery",
+  "klass": "neutral",
+  "subtype": "basicweakness",
+  "traits": [
+   "Injury"
+  ],
+  "traitsZh": [
+   "损伤"
+  ],
+  "quantity": 1,
+  "text": "Revelation - Put Arm Injury into play in your threat area.\nArm Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a fight or activate action: You cannot take any of those types of actions for the remainder of the turn.",
+  "textZh": "显现 - 将臂伤放置入场，放到你的威胁区域。\n臂伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 - 在你执行攻击或启动行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Robert Laskey",
+  "entryRel": "src/cards/entries/08130.js"
+ },
+ {
+  "code": "08131",
+  "name": "Leg Injury",
+  "nameZh": "腿伤",
+  "type": "treachery",
+  "klass": "neutral",
+  "subtype": "basicweakness",
+  "traits": [
+   "Injury"
+  ],
+  "traitsZh": [
+   "损伤"
+  ],
+  "quantity": 1,
+  "text": "Revelation - Put Leg Injury into play in your threat area.\nLeg Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a move, resign, or evade action: You cannot take any of those types of actions for the remainder of the turn.",
+  "textZh": "显现 - 将腿伤放置入场，放到你的威胁区域。\n腿伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 - 在你执行移动、撤退或躲避行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Robert Laskey",
+  "entryRel": "src/cards/entries/08131.js"
+ },
+ {
+  "code": "08132",
+  "name": "Panic",
+  "nameZh": "惊慌",
+  "type": "treachery",
+  "klass": "neutral",
+  "subtype": "basicweakness",
+  "traits": [
+   "Madness"
+  ],
+  "traitsZh": [
+   "疯狂"
+  ],
+  "quantity": 1,
+  "text": "Revelation - Put Panic into play in your threat area.\nPanic can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a play, engage, or resource action: You cannot take any of those types of actions for the remainder of the turn.",
+  "textZh": "显现 - 将惊慌放置入场，放到你的威胁区域。\n惊慌可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 - 在你执行打出、资源或交战行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Felicia Cano",
+  "entryRel": "src/cards/entries/08132.js"
+ },
+ {
+  "code": "08133",
+  "name": "Stupor",
+  "nameZh": "麻木",
+  "type": "treachery",
+  "klass": "neutral",
+  "subtype": "basicweakness",
+  "traits": [
+   "Madness"
+  ],
+  "traitsZh": [
+   "疯狂"
+  ],
+  "quantity": 1,
+  "text": "Revelation - Put Stupor into play in your threat area.\nStupor can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a parley, draw, or investigate action: You cannot take any of those types of actions for the remainder of the turn.",
+  "textZh": "显现 - 将麻木放置入场，放到你的威胁区域。\n麻木可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 - 在你执行谈判、抽取或调查行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+  "backText": "",
+  "backTextZh": "",
+  "pack": "eoep",
+  "illustrator": "Tom Garden",
+  "entryRel": "src/cards/entries/08133.js"
+ }
+]

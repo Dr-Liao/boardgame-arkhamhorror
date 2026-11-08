@@ -156,8 +156,13 @@ export function createHarmThreat(deps) {
       let assets = direct ? directSoaks
         : inv.assets.filter(asset => assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
       // Phase 5（5b-7）：「沉静」与「redirectOneHorrorToSelf」也可以写在能力层条目上（读点走 assetEffect）。
-      const mandatory = kind === 'horror' && assets.filter(asset => (assetEffect(inv, asset)?.composure)
-        || ((assetEffect(inv, asset)?.redirectOneHorrorToSelf) && !(assignments.get(asset) > 0)))
+      // P6（08056/08081）：「非直接伤害/恐惧都必须先分配给该支援」——沉静从「仅恐惧」扩展到伤害。
+      // 声明放在条目 `flags.composureDamage: true`（flags 是注册表白名单里的通用透传字段，
+      // 不新造状态字段；命中后伤害与恐惧都进入 mandatory 分配，必须在该支援填满后才轮到调查员）。
+      const composureDamage = asset => registeredEntry(asset.code)?.flags?.composureDamage === true
+      const mandatory = assets.filter(asset => (kind === 'horror' && (assetEffect(inv, asset)?.composure
+        || (assetEffect(inv, asset)?.redirectOneHorrorToSelf && !(assignments.get(asset) > 0))))
+        || (kind === 'damage' && composureDamage(asset)))
       // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
         const availableSoaks = soaks.filter(({ asset }) => assetCapacityValue(asset, capacity)
@@ -444,7 +449,7 @@ export function createHarmThreat(deps) {
       options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })
     const enemy = candidates.find(item => item.id === id)
-    if (!damageEnemy(state, enemy, effect.amount || 2, seat, events)) return
+    if (!damageEnemy(state, enemy, effect.amount || 2, seat, events, null, { code: effect.code || effect.assetId })) return
     info(state, events, `💥 「${enemy.name}」受到 ${effect.amount || 2} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
   }
 
@@ -694,6 +699,46 @@ export function createHarmThreat(deps) {
   }
 
 
+  // 治疗伤害的统一入口（P6 原语 `threatDamageSink`，与 healHorrorFrom 对称）
+  //
+  // 印刷场景（08130 臂伤 / 08131 腿伤）：「这张卡可以如同你身上的 1 点伤害被治愈
+  // （如果你如此做，弃掉它）」。此前只有威胁区的 threatHorrorSink（05008）而没有伤害侧，
+  // api.healDamage 只扣 inv.damage。这里收敛伤害治疗：
+  //   · target 是调查员（有 seat）或支援（必须给 options.owner）；
+  //   · owner.threat 里声明 `flags.threatDamageSink` 的威胁卡承接本次治疗
+  //     （counters 归零时 removeThreat 并弃掉）；`options.ignoreSink` 可跳过承接；
+  //   · 没有承接时按原逻辑扣 target.damage。
+  // 说明：条目的 `threatDamageSink` 会在注册期被 ability.js 拒绝（白名单暂无该键），
+  // 所以本原语的声明口径是通用 `flags.threatDamageSink: true`（flags 本身已白名单透传），
+  // worker 只需把字段写进 flags。
+  function healDamageFrom(state, target, amount, events, options = {}) {
+    const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
+    if (!target || !healedAmount) return 0
+    const isInvestigator = target.seat != null && target.name != null
+    if (isInvestigator && !playerEffectCanAffect(state, target.seat)) return 0
+    const owner = isInvestigator ? target : options.owner
+    if (!owner) return 0
+    const sink = (owner.threat || []).find(card => registeredEntry(card.code)?.flags?.threatDamageSink === true)
+    if (sink && !options.ignoreSink && (sink.counters || 0) > 0) {
+      const healed = Math.min(sink.counters, healedAmount)
+      sink.counters -= healed
+      if (options.log !== false) info(state, events, `💚 ${owner.name} 治疗了「${cardName(sink.code)}」上的 ${healed} 点伤害（剩 ${sink.counters}）。`)
+      if (!sink.counters) {
+        removeThreat(state, owner, sink, events)
+        if (options.log !== false) info(state, events, `「${cardName(sink.code)}」上的伤害被治愈，弃掉它。`)
+      }
+      return healed
+    }
+    const before = target.damage || 0
+    const healed = Math.min(before, healedAmount)
+    if (!healed) return 0
+    target.damage = before - healed
+    if (options.log !== false) {
+      info(state, events, `💚 ${isInvestigator ? target.name : `${owner.name} 的「${cardName(target.code)}」`} 治疗了 ${healed} 点伤害。`)
+    }
+    return healed
+  }
+
   function dukeInvestigate(state, seat, events, code = null) {
     const inv = state.investigators[seat]
     const destinations = investigatorMoveDestinations(state, seat, {})
@@ -706,5 +751,5 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, dukeInvestigate }
 }

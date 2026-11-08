@@ -22,6 +22,7 @@ import { afterHandDiscard } from './hand-discard-window.js'
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
 import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
 import { flipOrPlaceDreamGate, placeDreamGate } from './dream-gate.js'
+import { attackedThisRound, blockedByDeckTopLock, commitDeckTop, grantFreeActions, markFlipAfterNextTest, roundEventsOf } from './eote-investigator-support.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { ignoreLimitForRound } from './limits.js'
 import { capabilityBlocked } from './modifiers.js'
@@ -107,6 +108,10 @@ export function createMiscApi(state, events, deps) {
     playCardFromOtherHandForced,
     // 第 5 步 P6：治疗恐惧的统一入口 / 资源寄存 / 取消记账（都要能开窗口）。
     healHorrorFrom,
+    // P6 原语：治疗伤害的统一入口（与 healHorrorFrom 对称；威胁区 threatDamageSink 从那里承接）。
+    healDamageFrom,
+    // P6 原语：放逐玩家手牌的引擎唯一账本写点（state.exiled / exiledBySeat）。
+    exilePlayerCard,
     resourceBank,
     hunchDeck,
     reactionWindow,
@@ -223,9 +228,15 @@ export function createMiscApi(state, events, deps) {
     horror: (seat, amount) => applyHorror(state, state.investigators[seat], amount, events),
     directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
     directHorror: (seat, amount) => applyHorror(state, state.investigators[seat], amount, events, true),
-    healDamage: (seat, amount) => {
+    healDamage: (seat, amount, options = {}) => {
       const inv = state.investigators[seat]
-      if (inv) inv.damage = Math.max(0, (inv.damage || 0) - amount)
+      if (!inv) return 0
+      // P6 原语：伤害治疗统一走 harm-threat#healDamageFrom，威胁区声明 threatDamageSink 的
+      // 条目（08130/08131）可以「如同调查员身上的 1 点伤害」先承接治疗，归零时自动弃卡。
+      // 旧 api.healDamage 不写日志，这里默认 log:false 保持既有对局/回放逐字不变；
+      // 威胁区承接（沉静/弱点类）仍按原语在 sink 分支给出自己的日志。
+      const healed = healDamageFrom(state, inv, amount, events, { log: false, ...options })
+      return healed
     },
     // 第 5 步 P6：治疗恐惧走统一入口（治疗支援时 owner 是控制者），
     // 这样「在你的卡牌效果治愈恐惧后」的反应有一个事后窗口，且「理性思考」的承接规则只有一处。
@@ -345,12 +356,14 @@ export function createMiscApi(state, events, deps) {
       if (!controller || !asset) return false
       // 2026-10-25 第六轮修复 05152：options 支持 onlyUpgrades（只返回 [[Upgrade]] 附属）、
       // byOwnerSeat（各归其所有者手牌，而不是全部给控制器）。
+      // 2026-11-08 08102：includeAttachments:false 只返回本体（印刷「将该支援返回其拥有者手中」，
+      // 升级附属仍按规则留在弃牌堆），与 onlyUpgrades 正交。
       const label = cardName(asset.code)
       const targets = []
       const mainOwner = options.byOwnerSeat && Number.isInteger(asset.ownerSeat)
         ? (state.investigators[asset.ownerSeat] || controller) : controller
       targets.push({ code: asset.code, owner: mainOwner })
-      for (const attachment of asset.attachments || []) {
+      for (const attachment of options.includeAttachments === false ? [] : asset.attachments || []) {
         if (!attachment?.code) continue
         const traits = cardDef(attachment.code)?.traits || []
         if (options.onlyUpgrades && !traits.some(trait => String(trait).toLowerCase() === 'upgrade')) continue
@@ -727,6 +740,13 @@ export function createMiscApi(state, events, deps) {
     // 载具正反面（07211a/b、07212a/b）等「把这张支援翻面」：走引擎的普通物理面入口，
     // 只换印刷特征，不动实例 id / 乘客 / 位置。正反面成对关系来自 cards-data 的 linkedToCode。
     flipAsset: (asset, nextCode) => applyPhysicalFace(state, asset, nextCode, { definitionFor: code => cardDef(code) }),
+    // P5 地球边缘：延迟翻面（08013a）、免费战斗/躲避行动（08014a）、牌库顶投入（08005）、回合事件读点。
+    flipAfterNextTest: (asset, nextCode) => markFlipAfterNextTest(asset, nextCode),
+    grantFreeActions: (seat, spec = {}) => grantFreeActions(state, seat, spec),
+    commitDeckTop: seat => commitDeckTop(state, seat),
+    eoteRoundEvents: seat => roundEventsOf(state.investigators?.[seat]),
+    eoteAttackedThisRound: seat => attackedThisRound(state, state.investigators?.[seat]),
+    eoteBlockedByDeckTopLock: seat => Boolean(blockedByDeckTopLock(state, state.investigators?.[seat])),
     // 调查员本人的有效特性（含威胁区卡授予的，例如 07106 的[[深潜者]]）：
     // 读点是 stats 的 investigatorTraits，卡文件不直接读 inv.traits。
     investigatorTraits: (seat = state.currentSeat) => investigatorTraits(state, state.investigators[seat]),
@@ -1341,5 +1361,178 @@ export function createMiscApi(state, events, deps) {
     // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
     skillName: skill => SKILL_NAMES[skill] || skill,
     // Phase 5（5a-15）：按 id 取地点（弱点附着用）。
+    // -------------------------------------------------------------------------
+    // P6 地球边缘玩家卡原语（群 E）：由 engine.js 合并进 api.playerTools。
+    // 这些方法只用既有状态/读点，不新造卡号分支；声明口径见各方法注释。
+    // -------------------------------------------------------------------------
+    playerToolsExtras: {
+      // 08053/08058「下一次技能检定 +N」：写既有的 inv.testBonus（tests.js#performTest 在检定开始时
+      // 读取并清零，随存档往返）。多次声明按加法叠加，调用方负责先检查充能/费用。
+      addNextTestBonus: (seat, amount) => {
+        const inv = state.investigators[seat]
+        if (!inv || !Number.isSafeInteger(amount) || amount < 1) throw new TypeError('下一次检定加值必须是正整数')
+        inv.testBonus = (inv.testBonus || 0) + amount
+        info(state, events, `⏱ ${inv.name} 的下一次技能检定 +${amount}。`)
+        return inv.testBonus
+      },
+      // 08051「揭示自己手中一张 Item 支援，同地点另一名调查员可以如同自己手牌打出」：
+      // 把 code 从 seat 的手牌移入 targetSeat 手牌，并登记（纯 JSON）ownerSeat 归属；
+      // 是否立刻打出由内容层调用 playCardForSeat（必要时再移回）。只允许同地点转移。
+      giveHandCard: (seat, targetSeat, code, options = {}) => {
+        const owner = state.investigators[seat]
+        const target = state.investigators[targetSeat]
+        if (!owner || !target || owner === target) return false
+        if (typeof code !== 'string' || !code) throw new TypeError('手牌 code 必须是非空字符串')
+        if (!(owner.hand || []).includes(code)) return false
+        if (!options.allowDifferentLocation && (owner.location == null || owner.location !== target.location)) return false
+        owner.hand.splice(owner.hand.lastIndexOf(code), 1)
+        target.hand.push(code)
+        state.handCardTransfers = [...(state.handCardTransfers || [])
+          .filter(item => !(item.holderSeat === targetSeat && item.code === code)),
+        { code, ownerSeat: seat, holderSeat: targetSeat, round: state.round, turnSerial: state.turnSerial ?? null }]
+        info(state, events, `🤝 ${owner.name} 把「${cardName(code)}」展示给 ${target.name}。`)
+        return true
+      },
+      // 08051「另一名调查员如同自己手牌打出」：以 targetSeat 为行动者，从 fromSeat 的手牌
+      // 走既有的 playCardFromOtherHandForced（费用/目标/入场/反应窗口与普通打出同一条管线）。
+      playCardForSeat: (targetSeat, fromSeat, code) => {
+        if (!Number.isSafeInteger(targetSeat) || !state.investigators[targetSeat]) throw new TypeError('代打座位无效')
+        const played = playCardFromOtherHandForced(state, targetSeat, fromSeat, code, events)
+        if (!played) return false
+        state.handCardTransfers = (state.handCardTransfers || [])
+          .filter(item => !(item.code === code && (item.ownerSeat === fromSeat || item.holderSeat === targetSeat)))
+        info(state, events, `🤝 ${state.investigators[targetSeat].name} 以自己的名义打出了「${cardName(code)}」。`)
+        return true
+      },
+      // 08076「放逐你手中一张等级 0-5 的卡牌」：手牌校验 + 等级（cards-data 的 xp 字段）校验后
+      // 走引擎唯一的 exilePlayerCard 记账（state.exiled / exiledBySeat），不新造账本。
+      exileHandCard: (seat, code, options = {}) => {
+        const inv = state.investigators[seat]
+        const maxLevel = options.maxLevel ?? 5
+        if (!inv || typeof code !== 'string' || !code) throw new TypeError('放逐需要调查员与卡牌 code')
+        if (!(inv.hand || []).includes(code)) return false
+        const level = Number(cardDef(code)?.xp ?? 0)
+        if (!Number.isSafeInteger(level) || level < 0 || level > maxLevel) return false
+        inv.hand.splice(inv.hand.lastIndexOf(code), 1)
+        exilePlayerCard(state, inv, code, events)
+        return true
+      },
+      // 08091「指定一个符号标记为你的咒印」：标记记在支援实例上（离开场上即随实例消失），
+      // 不写调查员/全局状态；非旧印/自动失败的符号标记合法。
+      setSigilToken: (seat, token, options = {}) => {
+        const inv = state.investigators[seat]
+        const source = options.asset
+          || inv?.assets.find(asset => asset.code === options.assetCode)
+          || null
+        if (!inv || !source || !inv.assets.includes(source)) return false
+        const symbol = ['skull', 'cultist', 'tablet', 'elderthing']
+        if (typeof token !== 'string' || !symbol.includes(token)) throw new TypeError('咒印必须是非旧印的符号标记')
+        source.sigilToken = token
+        info(state, events, `🔮 ${inv.name} 用「${cardName(source.code)}」把 ${tokenLabel(token)} 指定为咒印。`)
+        return token
+      },
+      // 08091「把刚揭示的符号标记改为从混乱袋查找咒印并揭示它」：在 `tokenReveal` 窗口里
+      // 设置 context.replacementToken = 咒印；混乱袋只读校验（不在袋中则失败）。
+      // 原标记由揭示管线按替换路径归还（与「马泰奥的旧印」同一 path），不做物理搬运。
+      replaceRevealedToken: (context, token) => {
+        if (!context || context.when !== 'tokenReveal' || context.replacementToken) return false
+        if (!state.skillTest) return false
+        if (typeof token !== 'string' || !token) throw new TypeError('替换标记必须是非空标记名')
+        if (!(state.chaosBag || []).includes(token)) return false
+        context.replacementToken = token
+        info(state, events, `🔮 改为从混乱袋查找并揭示咒印 ${tokenLabel(token)}。`)
+        return token
+      },
+      // 08097「查看相连未揭示地点的揭示面」：只读返回揭示面数据（名称/卡号/线索/帷幕/连接），
+      // 不改 revealed 状态、不写任何字段；调用方负责只把结果发给该座位。
+      lookAtLocation: (seat, locationId, options = {}) => {
+        const inv = state.investigators[seat]
+        const location = state.locations.find(item => item.id === locationId)
+        if (!inv || !location) return null
+        const here = state.locations.find(item => item.id === inv.location)
+        const connected = (here?.connections || []).some(id => String(id) === String(locationId))
+        if (!connected && !options.anyLocation) return null
+        if (location.revealed === true && options.allowRevealed !== true) return null
+        const code = location.originalCode || location.code
+        const def = cardDef(code) || {}
+        const face = {
+          locationId: location.id,
+          code,
+          name: location.unrevealedActualName || location.name || def.name || null,
+          nameEn: location.unrevealedActualNameEn || location.nameEn || def.nameEn || null,
+          shroud: Number.isFinite(location.shroud) ? location.shroud : (def.shroud ?? 0),
+          clues: Number.isFinite(location.maxClues) ? location.maxClues : (def.clues || 0),
+          connections: [...(location.connections || [])],
+          traits: [...(def.traits || location.traits || [])],
+          temporary: true,
+        }
+        info(state, events, `🔭 ${inv.name} 查看了相连未揭示地点的揭示面（不改变其状态）。`)
+        return face
+      },
+      // 08062「执行一次基础行动；该行动期间的每次检定可以用 willpower 代替原技能」：
+      // 借用既有 performImmediateAction(basicOnly) 与 stats.js 的 inv.skillSubstitute 读点，
+      // 在行动执行前后短暂挂/摘替代（行动结束即恢复，不污染本回合后续检定）。
+      takeBasicActionWithSubstitution: (seat, options = {}) => {
+        const inv = state.investigators[seat]
+        if (!inv || inv.defeated || inv.resigned) return false
+        const from = options.from || ['combat', 'intellect', 'agility']
+        const to = options.to || 'willpower'
+        if (!Array.isArray(from) || !from.length || typeof to !== 'string') throw new TypeError('技能替代声明无效')
+        const previous = inv.skillSubstitute
+        inv.skillSubstitute = { from: [...from], to, round: state.round }
+        try {
+          return performImmediateAction(state, seat, events, options.source || 'takeBasicAction', {
+            basicOnly: true, ...options,
+          })
+        } finally {
+          if (previous === undefined || previous === null) delete inv.skillSubstitute
+          else inv.skillSubstitute = previous
+        }
+      },
+      // 08086「你发动一次攻击时：本次攻击 +N 伤害」：在 testInitiated 窗口里调用；
+      // 写入 state.skillTest.attackDamageBonus，combat.js 在成功伤害公式里并入。
+      // （窗口 context 可能被选择事务 clone，因此持久读点放 skillTest，而不是只写 context。）
+      addAttackDamageBonus: (amount = 1) => {
+        if (!state.skillTest) return false
+        if (!Number.isSafeInteger(amount) || amount < 1) throw new TypeError('攻击伤害加值必须是正整数')
+        state.skillTest.attackDamageBonus = (state.skillTest.attackDamageBonus || 0) + amount
+        return state.skillTest.attackDamageBonus
+      },
+      // 08112「额外揭示 1 枚混乱标记，把其「-」修正变成「+」并计入本次检定；若为骷髅则自动失败」：
+      // 在揭示期间登记计划，由 tests.js#performTest 的揭示循环统一追加（同一物理帧，正常归还）。
+      revealAdditionalTestToken: (spec = {}) => {
+        if (!state.skillTest) return false
+        state.skillTest.pendingExtraReveals ||= []
+        state.skillTest.pendingExtraReveals.push({
+          flipSign: spec.flipSign === true,
+          autoFailOn: Array.isArray(spec.autoFailOn) ? spec.autoFailOn.map(String) : [],
+        })
+        return true
+      },
+      // 08107「成功后弃掉本卡，换取本次攻击 +1 伤害 / 额外 1 线索」：在检定中登记，
+      // 由 tests.js 的成功结算段统一消费（先弃置来源，再把加值并入本次攻击/线索结算）。
+      onTestSuccess: (seat, spec = {}) => {
+        if (!state.skillTest) return false
+        const attackDamageBonus = Number(spec.attackDamageBonus) || 0
+        const extraClue = Number(spec.extraClue) || 0
+        if (!attackDamageBonus && !extraClue) return false
+        state.skillTest.customOnSuccess ||= []
+        state.skillTest.customOnSuccess.push({
+          seat,
+          sourceId: spec.sourceId ?? spec.assetId ?? null,
+          attackDamageBonus,
+          extraClue,
+          discardSelf: spec.discardSelf === true,
+        })
+        return true
+      },
+      // 08074 能力 2 需要的「这次检定是否由某张支援发起」读点：支援能力发起的检定写
+      // `state.skillTest.assetSourceId`（actions.js/combat.js 同一读点），条目从这里读；
+      // 支援能力执行期间引擎也会设置 `state._resolvingAssetId`，作为兜底来源。
+      testAssetSource: () => state.skillTest?.assetSourceId
+        ?? state.skillTest?.source?.assetId
+        ?? state._resolvingAssetId
+        ?? null,
+    },
   }
 }

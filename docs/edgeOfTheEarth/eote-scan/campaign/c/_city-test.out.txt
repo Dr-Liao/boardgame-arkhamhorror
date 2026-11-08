@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: P7 cityOfTheElderThings 章节清单：development、17 地点/两幕两密谋/正文可读
+ok 1 - P7 cityOfTheElderThings 章节清单：development、17 地点/两幕两密谋/正文可读
+  ---
+  duration_ms: 1.0473
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings setup：16 城市景观按版本上网格、相邻连接、隐秘隧道孤立
+ok 2 - P7 cityOfTheElderThings setup：16 城市景观按版本上网格、相邻连接、隐秘隧道孤立
+  ---
+  duration_ms: 3.3701
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 钥匙：16 把（skull×2…）×2、取得与交出
+ok 3 - P7 cityOfTheElderThings 钥匙：16 把（skull×2…）×2、取得与交出
+  ---
+  duration_ms: 2.2464
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 议程自由行动：花线索查看/移动（每轮一次）
+ok 4 - P7 cityOfTheElderThings 议程自由行动：花线索查看/移动（每轮一次）
+  ---
+  duration_ms: 0.9689
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 幕 1 与背面：花费钥匙研究 → 目标达成 → 揭示隐秘隧道
+ok 5 - P7 cityOfTheElderThings 幕 1 与背面：花费钥匙研究 → 目标达成 → 揭示隐秘隧道
+  ---
+  duration_ms: 1.0518
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 代表遭遇卡：真相开端/崩塌废墟/冻伤/附身
+ok 6 - P7 cityOfTheElderThings 代表遭遇卡：真相开端/崩塌废墟/冻伤/附身
+  ---
+  duration_ms: 0.9865
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 专属诡计已接线：entryRevelation + campaignRule 才有真实遭遇结算
+ok 7 - P7 cityOfTheElderThings 专属诡计已接线：entryRevelation + campaignRule 才有真实遭遇结算
+  ---
+  duration_ms: 0.1182
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 版本选择：记录/投票决定 v2/v3 并同步幕牌库与遭遇牌库
+ok 8 - P7 cityOfTheElderThings 版本选择：记录/投票决定 v2/v3 并同步幕牌库与遭遇牌库
+  ---
+  duration_ms: 1.2314
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 遭遇牌库按版本 gather：共享组并入、移除/放一边有读点
+ok 9 - P7 cityOfTheElderThings 遭遇牌库按版本 gather：共享组并入、移除/放一边有读点
+  ---
+  duration_ms: 2.0247
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 混乱标记：skull=-钥匙数、tablet+frost 自动失败
+ok 10 - P7 cityOfTheElderThings 混乱标记：skull=-钥匙数、tablet+frost 自动失败
+  ---
+  duration_ms: 1.1688
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 幕 2 目标：所有未被击败调查员在隐秘隧道且隧道无线索
+ok 11 - P7 cityOfTheElderThings 幕 2 目标：所有未被击败调查员在隐秘隧道且隧道无线索
+  ---
+  duration_ms: 0.7639
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings JSON 存档往返：网格/钥匙/幕记录可序列化复原
+ok 12 - P7 cityOfTheElderThings JSON 存档往返：网格/钥匙/幕记录可序列化复原
+  ---
+  duration_ms: 1.0417
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 真实引擎：setup→legalMoves→石桥剧本行动无 TypeError（P0-12）
+ok 13 - P7 cityOfTheElderThings 真实引擎：setup→legalMoves→石桥剧本行动无 TypeError（P0-12）
+  ---
+  duration_ms: 3414.5173
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 真实引擎：legalMoves 含 claim/give 且 applyMove 成功（P0-6 钥匙入口）
+ok 14 - P7 cityOfTheElderThings 真实引擎：legalMoves 含 claim/give 且 applyMove 成功（P0-6 钥匙入口）
+  ---
+  duration_ms: 3223.5854
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 真实引擎：幕 1 目标可达 → 真实推进并揭示隐秘隧道（P0-6）
+ok 15 - P7 cityOfTheElderThings 真实引擎：幕 1 目标可达 → 真实推进并揭示隐秘隧道（P0-6）
+  ---
+  duration_ms: 3076.368
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 真实引擎：议程 2 背面推进到结局 2 并写记录（P0-6 R2）
+ok 16 - P7 cityOfTheElderThings 真实引擎：议程 2 背面推进到结局 2 并写记录（P0-6 R2）
+  ---
+  duration_ms: 3049.2456
+  type: 'test'
+  ...
+# Subtest: P7 cityOfTheElderThings 真实引擎：共享组并入遭遇牌库 + 专属诡计真实结算（P0-8）
+ok 17 - P7 cityOfTheElderThings 真实引擎：共享组并入遭遇牌库 + 专属诡计真实结算（P0-8）
+  ---
+  duration_ms: 3092.6758
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16884.6781

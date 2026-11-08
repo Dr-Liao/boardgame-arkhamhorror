@@ -81,3 +81,81 @@ export function moveAlongChain(state, locationId, delta) {
   const next = index + (Number(delta) || 0)
   return index >= 0 && next >= 0 && next < list.length ? String(list[next].id) : null
 }
+
+// ---------------------------------------------------------------------------
+// 印刷「Level」高度层（EotE `location.vertical` 扩展）。
+//
+// 与 TDE 的 `verticalIndex` 分开：`verticalIndex` 是链条内部序号（0 = 最上层，
+// 由 linkVerticalChain 写入）；`level` 是卡面印刷的 Level 数字（0 = 山脚，
+// 数字越大越高），失落之峰的提示卡/敌人/地点按它取 X，不能用序号替代。
+// 数据仍然只落在地点对象上（`location.level`），不新建循环专属布局；连接继续用
+// 既有的 `connections` 表达（失落之峰的地点由内容层连成斜线）。
+// ---------------------------------------------------------------------------
+
+/** Level 字段的权威读点：接受地点对象，或 (状态, 地点 id)；未声明返回 null。 */
+export function locationLevel(target, locationId = null) {
+  const location = locationId == null
+    ? (target && typeof target === 'object' && !Array.isArray(target.locations) ? target : null)
+    : (target?.locations || []).find(item => String(item.id) === String(locationId))
+  const value = location?.level
+  return Number.isSafeInteger(value) && value >= 0 ? value : null
+}
+
+/** 写入印刷 Level（注册/布置期一次性数据）；非法参数抛错，返回写入值。 */
+export function setLocationLevel(location, level) {
+  if (!location || typeof location !== 'object' || Array.isArray(location)) throw new TypeError('地点必须是对象')
+  if (!Number.isSafeInteger(level) || level < 0) throw new TypeError('Level 必须是非负整数')
+  location.level = level
+  return level
+}
+
+/** 按 Level 升序排列（未声明 Level 的排在最后，保持输入顺序稳定）——失落之峰从山脚到山顶。 */
+export function levelsOrdered(target) {
+  const locations = Array.isArray(target) ? target : (target?.locations || [])
+  return locations
+    .map((location, index) => ({ location, index, level: locationLevel(location) }))
+    .sort((a, b) => {
+      if (a.level == null && b.level == null) return a.index - b.index
+      if (a.level == null) return 1
+      if (b.level == null) return -1
+      return a.level - b.level || a.index - b.index
+    })
+    .map(item => item.location)
+}
+
+/**
+ * 按既有 `connections` 把邻居分成上层（Level + 1）、下层（Level − 1）与同层。
+ * 只读；地点不存在或没有 Level 时返回空分组（不抛错、不初始化状态）。
+ * 移动合法性不在这里裁决，见 eote-climb.js 的 `climbDestinationError`。
+ */
+export function levelNeighbors(state, locationId) {
+  const locations = state?.locations || []
+  const self = locations.find(location => String(location.id) === String(locationId))
+  const result = { above: [], below: [], sameLevel: [] }
+  if (!self) return result
+  const level = locationLevel(self)
+  if (level == null) return result
+  for (const toId of self.connections || []) {
+    const neighbor = locations.find(location => String(location.id) === String(toId))
+    const neighborLevel = locationLevel(neighbor)
+    if (neighborLevel == null) continue
+    if (neighborLevel === level + 1) result.above.push(String(neighbor.id))
+    else if (neighborLevel === level - 1) result.below.push(String(neighbor.id))
+    else if (neighborLevel === level) result.sameLevel.push(String(neighbor.id))
+  }
+  for (const key of ['above', 'below', 'sameLevel']) result[key].sort()
+  return result
+}
+
+/** 注册/读档校验：已声明 Level 的地点必须是 0.. 的安全整数；未声明的不算错误。 */
+export function validateEoteLevels(state, locations = state?.locations) {
+  if (!state || typeof state !== 'object' || Array.isArray(state)) throw new TypeError('状态必须是对象')
+  if (!Array.isArray(locations)) throw new TypeError('地点列表必须是数组')
+  for (const location of locations) {
+    if (!location || typeof location !== 'object' || Array.isArray(location)) throw new TypeError('地点必须是对象')
+    const value = location.level
+    if (value == null) continue
+    if (!Number.isSafeInteger(value) || value < 0) throw new TypeError(`地点 ${location.id ?? '?'} 的 Level 无效`)
+  }
+  return true
+}

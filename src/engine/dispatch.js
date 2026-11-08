@@ -1,3 +1,4 @@
+import { isDraftMode, startInitialDraft, applyDraftMove } from '../deck/draft-mode.js'
 // 行动分派（applyMove / executeCommand / executeAction / executeHubMove / applyMoveUnchecked）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-19）。
 //
@@ -15,6 +16,7 @@ import { isParleyDescriptor } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术在 spell-actions.js（纯函数，无依赖）。
 // P6（食梦者）：受限行动的算术与 kind 判定分别在 restricted-actions.js / table-decisions.js。
 import { spellOnlyActionsOf } from './spell-actions.js'
+import { discardRevealedDeckTopWeakness, sampleRoundEvents } from './eote-investigator-support.js'
 import {
   actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction, availableEngageCredit,
 } from './restricted-actions.js'
@@ -470,28 +472,51 @@ function executeHubMove(state, seat, move, events) {
       break
     }
     case 'hubSelectInvestigator': {
-      const previous = campaign.investigators[seat]
-      if (previous?.status === 'active' && !initialHubPreparation(state)) throw new Error('现役调查员不能更换；只有死亡或疯狂后才能挑选替补')
-      if (previous?.status === 'active' && previous.code !== move.code) {
-        // Before the first scenario the player may reconsider their investigator.
-        // Keep the already generated basic weakness, but require a new legal deck
-        // so repeatedly previewing investigators cannot reroll that weakness.
-        previous.code = move.code
-        previous.name = ALL_INVESTIGATORS[move.code].nameZh || ALL_INVESTIGATORS[move.code].name
-        previous.deck = previous.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
-        previous.startingDeckReady = false
-      } else if (previous && previous.status !== 'active') {
-        campaign.retired.push(structuredClone(previous))
-        delete campaign.investigators[seat]
-        // 关间替补：新调查员的 0 XP 起始牌组在确认席位前仍可反复调整（自动构筑/手动/
-        // 卡组库/ArkhamDB）。只标记本关间换人的席位，现役调查员仍不能在关间重建牌组。
-        if (state.uiState === 'interlude') state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
+      const select = () => {
+        const previous = campaign.investigators[seat]
+        if (previous?.status === 'active' && !initialHubPreparation(state)) throw new Error('现役调查员不能更换；只有死亡或疯狂后才能挑选替补')
+        if (previous?.status === 'active' && previous.code !== move.code) {
+          // Before the first scenario the player may reconsider their investigator.
+          // Keep the already generated basic weakness, but require a new legal deck
+          // so repeatedly previewing investigators cannot reroll that weakness.
+          previous.code = move.code
+          previous.name = ALL_INVESTIGATORS[move.code].nameZh || ALL_INVESTIGATORS[move.code].name
+          previous.deck = previous.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
+          previous.startingDeckReady = false
+        } else if (previous && previous.status !== 'active') {
+          campaign.retired.push(structuredClone(previous))
+          delete campaign.investigators[seat]
+          // 关间替补：新调查员的 0 XP 起始牌组在确认席位前仍可反复调整（自动构筑/手动/
+          // 卡组库/ArkhamDB）。只标记本关间换人的席位，现役调查员仍不能在关间重建牌组。
+          if (state.uiState === 'interlude') state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
+        }
+        state.investigators[seat] = makeInvestigator(ALL_INVESTIGATORS[move.code], seat)
+        if (campaign.investigators[seat]) state.investigators[seat].campaignId = campaign.investigators[seat].id
+        state.hubSeatSelected[seat] = true
+        if (isDraftMode(state)) startInitialDraft(state, seat)
       }
-      state.investigators[seat] = makeInvestigator(ALL_INVESTIGATORS[move.code], seat)
-      if (campaign.investigators[seat]) state.investigators[seat].campaignId = campaign.investigators[seat].id
-      state.hubSeatSelected[seat] = true
+      const part = campaign.seatParts?.[seat]
+      if (isDraftMode(state) && part && part !== campaign.currentPart) inPart(state, part, select)
+      else select()
       break
     }
+    case 'hubResumeDraft':
+      state.hubSeatDone[seat] = false
+      state.hubReady = false
+      state.uiState = state.phase = campaign.phase = 'interlude'
+      state.currentSeat = seat
+      break
+    case 'hubDraftRefill':
+    case 'hubDraftPick':
+    case 'hubDraftBuy':
+    case 'hubDraftRefresh':
+    case 'hubDraftLock':
+      {
+        const part = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
+        if (part && part !== campaign.currentPart) inPart(state, part, () => applyDraftMove(state, seat, move))
+        else applyDraftMove(state, seat, move)
+      }
+      break
     case 'hubAutoDeck':
     case 'hubSetDeck': {
       const inv = state.investigators[seat]
@@ -674,6 +699,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'fight': doFight(state, seat, { enemyId: m.enemyId, basicAction: 'fight' }, events); break
     case 'evade': doEvade(state, seat, { enemyId: m.enemyId, basicAction: 'evade' }, events); break
     case 'extraEvade': doEvade(state, seat, { enemyId: m.enemyId }, events, true); inv.extraEvadeUsed = state.turnSerial; break
+    case 'deckTopWeaknessDiscard': discardRevealedDeckTopWeakness(state, seat, events); break
     case 'parley': doParley(state, seat, m.enemyId, events); break
     case 'parleyCultist': doParleyCultist(state, seat, m.enemyId, events); break
     case 'parleyLita': doParleyLita(state, seat, events); break
@@ -722,6 +748,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     default: break
   }
 
+  sampleRoundEvents(state)
   abilityApi(state, events).resolveEmptyUses()
   checkAct(state, events)
   checkDefeated(state, seat, events)

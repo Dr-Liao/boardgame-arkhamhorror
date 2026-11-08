@@ -1,6 +1,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { cardSource, filterCards } from '../web/card-filters.js'
+import { packLabel } from '../web/pack-label.js'
+import { setLocale } from '../web/i18n.js'
 import { queryCatalogView } from '../src/cards/card-catalog.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 const cards=[
@@ -25,6 +27,28 @@ test('共用筛选取交集，支持中文特性、多职业、零费用及清�
   assert.deepEqual(filterCards(cards,{pack:'core',type:'skill'}),[])
   assert.deepEqual(filterCards(cards,{}),cards)
   assert.deepEqual(filterCards(cards.slice(0,3),{sort:'cost'}).map(c=>c.code),['a','c','b'])
+})
+
+test('调查员选择的扩展包署名不泄漏英文产品名（地球边缘调查员包回归）', () => {
+  const englishTitle = 'Edge of the Earth Investigator Expansion'
+  // 核心包走档案口径；其余循环复用卡牌筛选的系列表。
+  assert.equal(packLabel('core', 'Core Set'), '核心包')
+  assert.equal(packLabel('dwl', 'The Dunwich Legacy'), '敦威治遗产')
+  // 调查员包与战役包分开编号（eoep/eoec）时，卡牌数据只有英文产品名，署名必须回落到系列中文名。
+  assert.equal(packLabel('eoep', englishTitle), '地球边缘')
+  assert.equal(packLabel('eoec', 'Edge of the Earth Campaign Expansion'), '地球边缘')
+  // 未知扩展仍使用调用方给的名字；无名字时回退包代码。
+  assert.equal(packLabel('future', '未来扩展'), '未来扩展')
+  assert.equal(packLabel('future'), 'future')
+  assert.equal(packLabel(''), '调查员')
+  // 英文界面下同一扩展包显示英文系列名，不再是完整产品名（与其余循环的分组标题口径一致）。
+  try {
+    setLocale('en')
+    assert.equal(packLabel('eoep', englishTitle), 'Edge of the Earth')
+    assert.equal(packLabel('core', 'Core Set'), 'Core Set')
+  } finally {
+    setLocale('zh-CN')
+  }
 })
 
 test('经验等级筛选保留零级，排除无经验字段并支持五级以上',()=>{

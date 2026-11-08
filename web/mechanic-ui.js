@@ -8,6 +8,19 @@ const operations = {
   seal: 'mechanic.seal', release: 'mechanic.release', claimKey: 'mechanic.claimKey', giveKeys: 'mechanic.giveKeys',
   spendKey: 'mechanic.spendKey', enterVehicle: 'mechanic.enterVehicle', leaveVehicle: 'mechanic.leaveVehicle',
   driveVehicle: 'mechanic.driveVehicle', commitOrigin: 'mechanic.commitOrigin', returnCommitment: 'mechanic.returnCommitment',
+  // 七循环《地球边缘》交互操作（P4）：封印/伙伴/钥匙/忒咳哩-哩/牌库顶/跨座位/演武/物资。
+  eoteFrost: 'mechanic.eoteFrost', eotePartner: 'mechanic.eotePartner', eoteSeal: 'mechanic.eoteSeal',
+  eoteKey: 'mechanic.eoteKey', eoteTekeli: 'mechanic.eoteTekeli', eoteDeckTop: 'mechanic.eoteDeckTop',
+  eoteCrossSeat: 'mechanic.eoteCrossSeat', eoteDiscipline: 'mechanic.eoteDiscipline', eoteSupply: 'mechanic.eoteSupply',
+}
+// 寒霜标记没有打包卡图时退回 ❄ 字形；其它标记面保持原有 img 行为不变。
+const tokenChip = (h, token) => {
+  if (token == null) return null
+  const face = chaosTokenFace(token)
+  if (face.src) return h('img', { className: 'ah-choice-token', src: face.src, alt: '', draggable: false })
+  return face.key === 'frost'
+    ? h('span', { className: 'ah-choice-token ah-choice-token-fallback', 'data-token': 'frost', 'aria-hidden': 'true' }, '❄')
+    : null
 }
 const colors = { red: 'mechanic.key.red', yellow: 'mechanic.key.yellow', green: 'mechanic.key.green', blue: 'mechanic.key.blue',
   purple: 'mechanic.key.purple', white: 'mechanic.key.white', black: 'mechanic.key.black', unrevealed: 'mechanic.key.unrevealed' }
@@ -15,6 +28,53 @@ const stages = { items: 'mechanic.stage.items', recipient: 'mechanic.stage.recip
 export const keyLabel = color => t(colors[color] || colors.unrevealed)
 export const floodLabel = level => t(['mechanic.flood.dry', 'mechanic.flood.partial', 'mechanic.flood.full'][level] || 'mechanic.flood.dry')
 let focusKey = null
+
+// ── 取消选择后的焦点恢复（P4-C 验收口径）─────────────────────────────────────────
+// 机制选择的来源可能是「点击卡牌动作条」而非真实聚焦卡牌，面板关闭后焦点会掉到 body。
+// 这里记住最近的桌面交互实体（点击/聚焦均可），取消后按来源 key 重新查找渲染后的新实体；
+// 找不到时退回牌桌动作条，保证 Escape 取消后键盘焦点不丢失。
+let lastInteractionKey = null
+let interactionTrackingInstalled = false
+const restoreKeys = new Map()
+function ensureInteractionTracking() {
+  if (interactionTrackingInstalled || typeof document === 'undefined') return
+  interactionTrackingInstalled = true
+  const remember = event => {
+    const target = event.target instanceof Element ? event.target.closest('[data-interaction]') : null
+    if (target?.dataset?.interaction) lastInteractionKey = target.dataset.interaction
+  }
+  document.addEventListener('click', remember, true)
+  document.addEventListener('focusin', remember, true)
+}
+function rememberRestoreKey(sessionId, choice) {
+  const id = `${sessionId}:${choice.id}`
+  if (restoreKeys.has(id)) return restoreKeys.get(id)
+  const active = typeof document !== 'undefined' ? document.activeElement : null
+  const focusedKey = active?.closest?.('[data-interaction]')?.dataset?.interaction || null
+  const key = focusedKey || lastInteractionKey || null
+  restoreKeys.set(id, key)
+  if (restoreKeys.size > 32) restoreKeys.delete(restoreKeys.keys().next().value)
+  return key
+}
+function interactionElement(key) {
+  if (!key || typeof document === 'undefined') return null
+  return [...document.querySelectorAll('[data-interaction]')].find(element => element.dataset.interaction === key) || null
+}
+function restoreChoiceFocus(key) {
+  if (typeof document === 'undefined') return
+  // 多阶段选择会立刻渲染下一个面板：此时由新面板的自动聚焦接管，不抢焦点。
+  if (document.querySelector('.ah-mechanic-choice')) return
+  const target = interactionElement(key) || interactionElement(lastInteractionKey)
+    || document.querySelector('.ah-table-actions .ah-action') || document.querySelector('.ah-table-actions')
+  target?.focus?.({ preventScroll: true })
+}
+function restoreAfterChoice(result, key) {
+  const restore = () => queueMicrotask(() => restoreChoiceFocus(key))
+  if (result && typeof result.then === 'function') result.then(restore, restore)
+  else setTimeout(restore, 0)
+}
+// 尽早挂载：机制选择可能由「点击卡牌动作条」触发，安装监听必须早于那次点击。
+if (typeof document !== 'undefined') ensureInteractionTracking()
 
 export function renderTokenSequence(h, tokens = []) {
   if (!tokens.length) return null
@@ -34,7 +94,14 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
   const moves = (state.legalMoves || []).filter(move => move.action === 'choose' && move.choiceId === choice.id)
   const options = (choice.options || []).map(option => ({ ...option, move: moves.find(move => move.optionId === option.id) }))
   const enabled = !disabled && !busy
-  const submit = option => { if (enabled && option?.move) onSubmit(option.move) }
+  ensureInteractionTracking()
+  const restoreKey = rememberRestoreKey(session.sessionId, choice)
+  const submit = option => {
+    if (!enabled || !option?.move) return
+    const result = onSubmit(option.move)
+    // 取消（Escape 或取消按钮）：等 HTTP move 结算并重渲染后，把焦点还给来源实体。
+    if (option.id === 'cancel') restoreAfterChoice(result, restoreKey)
+  }
   const tokenLabel = option => option.token != null ? chaosTokenFace(option.token).label
     : option.keyColor ? keyLabel(option.keyColor)
       : option.cardCode ? cardDisplayName(state.cards?.[option.cardCode]) || option.cardCode : option.label
@@ -46,7 +113,7 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
       disabled: !enabled || !option.move, title: option.label,
       'aria-label': option.id.startsWith('pick:') ? t('mechanic.option', { label, index: Number(option.id.slice(5)) + 1 }) : label,
       onfocus: () => { focusKey = { sessionId: session.sessionId, optionId: option.id } }, onclick: () => submit(option),
-    }, option.token != null && chaosTokenFace(option.token).src ? h('img', { className: 'ah-choice-token', src: chaosTokenFace(option.token).src, alt: '', draggable: false }) : null,
+    }, tokenChip(h, option.token),
     option.selected ? '✓ ' : '', label,
     option.id.startsWith('pick:') ? h('small', {}, `#${Number(option.id.slice(5)) + 1}`) : null)
   }
@@ -86,7 +153,7 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
 
 export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
   const model = state.mechanics
-  if (!model || (!model.water && !model.keys && !model.vehicles)) return null
+  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote)) return null
   const water = model.water?.investigators.find(item => item.seat === seat)
   const holderName = holder => {
     const [kind, ...parts] = holder.split(':'), id = parts.join(':')
@@ -97,6 +164,22 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
       : kind === 'investigator' ? state.investigators.find(item => item.seat === Number(id))?.name || id
         : holder === 'reference' ? t('mechanic.reference') : id
   }
+  const cardName = code => cardDisplayName(state.cards?.[code]) || code
+  const seatName = value => state.investigators.find(item => item.seat === value)?.name || String(value)
+  const eote = model.eote
+  const partnerStatus = status => t({
+    safe: 'mechanic.eote.status.safe', mia: 'mechanic.eote.status.mia',
+    eliminated: 'mechanic.eote.status.eliminated', resolute: 'mechanic.eote.status.resolute',
+  }[status] || 'mechanic.eote.status.safe')
+  const sealKind = kind => t('mechanic.eote.sealKind', { kind })
+  const sealState = seal => {
+    if (seal.locationId != null) return t(seal.active ? 'mechanic.eote.seal.placed' : 'mechanic.eote.seal.dormant')
+    if (seal.placedBySeat != null) return t(seal.active ? 'mechanic.eote.seal.active' : 'mechanic.eote.seal.held')
+    return t('mechanic.eote.seal.dormant')
+  }
+  const sealPlacement = seal => seal.locationId != null
+    ? holderName(`location:${seal.locationId}`)
+    : seal.placedBySeat != null ? seatName(seal.placedBySeat) : t('mechanic.eote.seal.unheld')
   return h('details', { className: 'ah-mechanic-summary ah-tcu-panel' }, h('summary', {}, t('mechanic.summary'),
     water ? h('span', { className: 'ah-mechanic-air', 'data-air-required': String(water.airRequired) },
       floodLabel(water.level), ' · ', water.airRequired ? t('mechanic.airRisk', { damage: water.damage }) : t('mechanic.airSafe')) : null),
@@ -110,5 +193,39 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
       h('p', {}, t('mechanic.driver'), '：', vehicle.driver == null ? t('mechanic.noDriver') : holderName(`investigator:${vehicle.driver}`)),
       h('p', {}, t('mechanic.passenger'), '：', vehicle.passengers.map(seat => holderName(`investigator:${seat}`)).join(' · ') || t('mechanic.empty')),
       vehicle.enterReason ? h('p', { className: 'ah-tcu-note', 'data-vehicle-enter-reason': vehicle.id }, vehicle.enterReason) : null,
-      vehicle.leaveReason ? h('p', { className: 'ah-tcu-note' }, vehicle.leaveReason) : null)))
+      vehicle.leaveReason ? h('p', { className: 'ah-tcu-note' }, vehicle.leaveReason) : null)),
+    // ── 七循环《地球边缘》公开/私有交互摘要（P4-B）。既有条目以上保持不变，EotE 分组只追加在末尾。
+    eote ? h('div', { className: 'ah-eote-summary' },
+      eote.frost ? h('p', { className: 'ah-eote-frost', 'data-eote-frost': String(eote.frost.remaining), 'data-eote-frost-limit': String(eote.frost.limit) },
+        t('mechanic.eote.frostRemaining', { remaining: eote.frost.remaining, limit: eote.frost.limit })) : null,
+      eote.partners?.length ? h('section', { className: 'ah-eote-partners', 'aria-label': t('mechanic.eote.partners') }, h('h3', {}, t('mechanic.eote.partners')),
+        eote.partners.map(partner => h('p', { 'data-eote-partner': partner.code, 'data-partner-code': partner.code, 'data-partner-status': partner.status },
+          cardName(partner.code), ' · ', partnerStatus(partner.status),
+          partner.damage > 0 ? ` · ${t('mechanic.eote.damage', { damage: partner.damage })}` : '',
+          partner.horror > 0 ? ` · ${t('mechanic.eote.horror', { horror: partner.horror })}` : '',
+          partner.resolute ? ` · ${cardName(partner.resolute)}` : ''))) : null,
+      eote.seals?.length ? h('section', { className: 'ah-eote-seals', 'aria-label': t('mechanic.eote.seals') }, h('h3', {}, t('mechanic.eote.seals')),
+        eote.seals.map(seal => h('p', { 'data-eote-seal': seal.kind, 'data-seal-kind': seal.kind, 'data-seal-active': String(seal.active) },
+          sealKind(seal.kind), ' · ', sealState(seal), ' · ', sealPlacement(seal)))) : null,
+      eote.tekeli ? h('p', { className: 'ah-eote-tekeli', 'data-eote-tekeli': String(eote.tekeli.count) },
+        t('mechanic.eote.tekeli', { count: eote.tekeli.count })) : null,
+      eote.deckTop?.length ? h('section', { className: 'ah-eote-deck-top', 'aria-label': t('mechanic.eote.deckTop') }, h('h3', {}, t('mechanic.eote.deckTop')),
+        eote.deckTop.map(row => h('p', { 'data-eote-deck-top': String(row.seat), 'data-deck-top-code': row.code },
+          cardName(row.code), row.public ? ` · ${t('mechanic.eote.deckTopPublic')}` : ''))) : null,
+      eote.crossSeat?.length ? h('section', { className: 'ah-eote-cross-seat', 'aria-label': t('mechanic.eote.crossSeat') }, h('h3', {}, t('mechanic.eote.crossSeat')),
+        eote.crossSeat.map(row => h('p', { 'data-eote-cross-seat': String(row.fromSeat), 'data-from-seat': String(row.fromSeat) },
+          t('mechanic.eote.crossSeatLine', { name: seatName(row.fromSeat), count: row.codes.length }),
+          row.costSplit ? ` · ${t('mechanic.eote.crossSeatSplit', { self: row.costSplit.self ?? 0, owner: row.costSplit.owner ?? 0 })}` : ''))) : null,
+      eote.disciplines?.length ? h('section', { className: 'ah-eote-disciplines', 'aria-label': t('mechanic.eote.disciplines') }, h('h3', {}, t('mechanic.eote.disciplines')),
+        eote.disciplines.map(row => h('p', {
+          'data-eote-discipline': row.unbrokenCode, 'data-discipline-face': row.face,
+          'data-unbroken-code': row.unbrokenCode, 'data-broken-code': row.brokenCode,
+        }, row.face === 'broken' ? t('mechanic.eote.broken') : t('mechanic.eote.unbroken'), ' · ',
+        cardName(row.face === 'broken' ? row.brokenCode : row.unbrokenCode),
+        ` · ${t('mechanic.eote.burden', { name: cardName(row.burdenCode) })}`))) : null,
+      eote.supplies?.length || eote.droppedSupplies?.length ? h('section', { className: 'ah-eote-supplies', 'aria-label': t('mechanic.eote.supplies') }, h('h3', {}, t('mechanic.eote.supplies')),
+        (eote.supplies || []).map(row => h('p', { 'data-eote-supplies': String(row.seat), 'data-supply-count': String(row.count) },
+          t('mechanic.eote.suppliesLine', { name: seatName(row.seat), count: row.count }))),
+        (eote.droppedSupplies || []).map(row => h('p', { 'data-eote-dropped': row.locationId, 'data-dropped-count': String(row.count) },
+          t('mechanic.eote.droppedSupplies', { location: holderName(`location:${row.locationId}`), count: row.count })))) : null) : null)
 }

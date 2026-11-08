@@ -25,6 +25,106 @@ async function fixture(page) {
     await expect(page.locator('.ah-table')).toHaveAttribute('data-revision',String(session.state.revision))
   }}
 }
+
+for(const width of [1440,390])test(`P1 themed attacks use real table anchors and retain readable targets (${width})`,async({page})=>{
+  test.setTimeout(100_000)
+  await page.setViewportSize({width,height:960})
+  const f=await fixture(page)
+  await page.getByRole('button',{name:'跳过演出'}).click()
+  await f.update(s=>{
+    const inv=s.state.investigators[0]
+    inv.assets.push({id:'p1-source',code:'04204',uses:4,exhausted:false})
+    s.state.enemies=[{id:'p1-enemy',code:'ghoulMinion',originalCode:'01160',name:'食尸鬼爪牙',health:40,damageTaken:0,fight:2,evade:2,damage:1,horror:1,location:inv.location,engagedSeat:0}]
+    inv.engaged=['p1-enemy']
+  })
+  await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+  for(const [code,style] of [['04305','flamethrower'],['04204','bow'],['02263','acid'],['02014','hound'],['05190','bottle'],['04310','voidSpell'],['05118','enchantedBlade'],['07159','abyssalTome']]) {
+    // Freeze a visible impact frame inside the browser rather than sampling it
+    // after an arbitrary driver/screenshot delay. Resume after visual assertions.
+    await page.evaluate(style=>{
+      window.p1Frozen=null;window.p1Animations=[]
+      let frames=0
+      const observe=()=>{
+        const fx=document.querySelector('.ah-themed-fx.is-impact'),hit=fx?.querySelector('.ah-p1-hit')
+        if(fx?.dataset.style===style&&hit&&Number(getComputedStyle(hit).opacity)>.45) {
+          window.p1Animations=fx.getAnimations({subtree:true})
+          for(const animation of window.p1Animations)animation.pause()
+          window.p1Frozen=style
+        } else if(frames++<600)requestAnimationFrame(observe)
+      }
+      requestAnimationFrame(observe)
+    },style)
+    await f.update(s=>{
+      s.state.investigators[0].assets.find(a=>a.id==='p1-source').code=code
+      const before=structuredClone(s.state),seq=Math.max(-1,...s.events.map(e=>e.seq??-1))+1
+      s.state.enemies[0].damageTaken++
+      s.events.push({seq,type:'presentation',kind:'attack',direction:'outgoing',attackStyle:style,weaponCode:code,assetId:'p1-source',seat:0,enemyId:'p1-enemy',name:'食尸鬼爪牙',location:before.investigators[0].location,damage:1,success:true,tableState:before},
+        {seq:seq+1,type:'presentation',kind:'checkpoint',tableState:structuredClone(s.state)})
+    })
+    const scene=page.locator('.ah-themed-fx')
+    await expect(scene).toHaveAttribute('data-style',style)
+    const fx=page.locator('.ah-themed-fx.is-impact')
+    await expect(fx).toHaveAttribute('data-style',style)
+    await expect(fx.locator('.ah-combat-caption')).toContainText('食尸鬼爪牙')
+    await expect.poll(()=>page.evaluate(()=>window.p1Frozen)).toBe(style)
+    const anchors=await page.evaluate(()=>{
+      const marker=document.querySelector('.ah-p1-hit').getBoundingClientRect()
+      const nodes=[...document.querySelectorAll('.ah-table [data-interaction="enemy:p1-enemy"]')]
+      const target=(nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]).getBoundingClientRect()
+      const caption=document.querySelector('.ah-themed-fx .ah-combat-caption').getBoundingClientRect()
+      return {distance:Math.hypot(marker.x+marker.width/2-target.x-target.width/2,marker.y+marker.height/2-target.y-target.height/2),left:caption.x,right:caption.right,
+        opacity:Number(getComputedStyle(document.querySelector('.ah-p1-hit')).opacity)}
+    })
+    expect(anchors.distance).toBeLessThan(20)
+    expect(anchors.opacity).toBeGreaterThan(.2)
+    expect(anchors.left).toBeGreaterThanOrEqual(0);expect(anchors.right).toBeLessThanOrEqual(width)
+    await page.screenshot({path:`../../artifacts/arkham-attack-audit/p1/real-${style}-${width}.png`})
+    await page.evaluate(()=>{for(const animation of window.p1Animations)animation.play()})
+    await expect(page.locator('.ah-themed-fx')).toHaveCount(0)
+    await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+  }
+})
+
+for(const width of [1440,390])test(`P0 direct damage restores lethal targets and handles discarded sources on the real table (${width})`,async({page})=>{
+  await page.setViewportSize({width,height:960})
+  const f=await fixture(page)
+  await page.getByRole('button',{name:'跳过演出'}).click()
+  await f.update(s=>{
+    const inv=s.state.investigators[0]
+    inv.assets.push({id:'p0-cop',code:'01018',damage:0,horror:0,exhausted:false})
+    s.state.enemies=[{id:'p0-enemy',code:'ghoulMinion',originalCode:'01160',name:'食尸鬼爪牙',health:1,damageTaken:0,fight:2,evade:2,damage:1,horror:1,location:inv.location,engagedSeat:0}]
+    inv.engaged=['p0-enemy']
+  })
+  await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+  await f.update(s=>{
+    s.state.investigators[0].assets=s.state.investigators[0].assets.filter(a=>a.id!=='p0-cop')
+    const before=structuredClone(s.state),seq=Math.max(-1,...s.events.map(e=>e.seq??-1))+1
+    s.state.enemies=[];s.state.investigators[0].engaged=[]
+    s.events.push({seq,type:'presentation',kind:'directDamage',style:'impact',code:'01018',assetId:'p0-cop',sourceName:'巡警',seat:0,location:before.investigators[0].location,damage:1,
+      targets:[{enemyId:'p0-enemy',name:'食尸鬼爪牙',damage:1}],tableState:before},
+      {seq:seq+1,type:'presentation',kind:'checkpoint',tableState:structuredClone(s.state)})
+  })
+  const fx=page.locator('.ah-direct-fx.is-impact')
+  await expect(fx).toBeVisible()
+  await expect(fx.locator('.ah-combat-caption')).toContainText('巡警 → 食尸鬼爪牙 · 1 伤害')
+  const box=await fx.locator('.ah-combat-caption').boundingBox()
+  expect(box.x).toBeGreaterThanOrEqual(0)
+  expect(box.x+box.width).toBeLessThanOrEqual(width)
+  await expect(page.locator('.ah-table [data-interaction="enemy:p0-enemy"]').first()).toBeVisible()
+  await page.waitForTimeout(140)
+  const anchors=await page.evaluate(()=>{
+    const marker=document.querySelector('.ah-direct-mark').getBoundingClientRect()
+    const nodes=[...document.querySelectorAll('.ah-table [data-interaction="enemy:p0-enemy"]')]
+    const target=(nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]).getBoundingClientRect()
+    return {x:Math.abs(marker.x+marker.width/2-target.x-target.width/2),y:Math.abs(marker.y+marker.height/2-target.y-target.height/2)}
+  })
+  expect(anchors.x).toBeLessThan(20)
+  expect(anchors.y).toBeLessThan(20)
+  await page.screenshot({path:`../../artifacts/arkham-attack-audit/p0-real-table-${width}.png`})
+  await expect(page.locator('.ah-direct-fx')).toHaveCount(0)
+  await expect(page.locator('.ah-table [data-interaction="enemy:p0-enemy"]')).toHaveCount(0)
+  await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+})
 test('交战区真实卡牌播放攻击和受击动画，地图保持可见',async({page})=>{
   await page.setViewportSize({width:1440,height:960})
   const f=await fixture(page)
@@ -357,4 +457,54 @@ test('规则代号检定来源（呆若木鸡 frozenInFear）按原卡号加载�
   })
   await expect(source).toHaveAttribute('data-card-code','01171')
   await expect(sourceArt).toHaveAttribute('data-art-code','01171')
+})
+
+
+for(const width of [1440,390])test(`enemy attacks use actual table anchors (${width})`,async({page})=>{
+  test.setTimeout(90000)
+  await page.setViewportSize({width,height:960})
+  const f=await fixture(page)
+  await page.getByRole('button',{name:'跳过演出'}).click()
+  await f.update(s=>{
+    const inv=s.state.investigators[0]
+    s.state.enemies=[{id:'enemy-fx',code:'ghoulPriest',originalCode:'01116',name:'食尸鬼祭司',health:40,damageTaken:0,fight:4,evade:4,damage:2,horror:2,location:inv.location,engagedSeat:0}]
+    inv.engaged=['enemy-fx']
+  })
+  await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+  for(const [family,group,damage,horror,stage] of [['ghoulPriest','claw',1,0,'threat'],['hastur','psychic',0,2,'harm'],['azathoth','psychic',1,1,'threat']]) {
+    await page.evaluate(stage=>{
+      window.enemyFrozen=false;window.enemyAnimations=[];let frames=0
+      const observe=()=>{
+        const fx=document.querySelector('.ah-combat-fx[data-stage="'+stage+'"]')
+        const mark=fx?.querySelector(stage==='threat'?'.is-signature':'.is-contact')
+        if(mark&&Number(getComputedStyle(mark).opacity)>.45) {
+          window.enemyAnimations=fx.getAnimations({subtree:true});window.enemyAnimations.forEach(a=>a.pause());window.enemyFrozen=true
+        }else if(frames++<600)requestAnimationFrame(observe)
+      };requestAnimationFrame(observe)
+    },stage)
+    await f.update(s=>{
+      const before=structuredClone(s.state),inv=s.state.investigators[0]
+      if(family==='azathoth'){before.enemies=[];s.state.enemies=[];inv.engaged=[]}
+      const base={direction:'incoming',seat:0,name:family,location:inv.location,attackStyle:group,enemyFamily:family,damage,horror,...(family==='azathoth'?{sourceKind:'global'}:{enemyId:'enemy-fx'})}
+      s.events.push({seq:s.events.length,type:'presentation',kind:'attack',...base,presentationStage:'threat',tableState:before})
+      s.events.push({seq:s.events.length,type:'presentation',kind:'enemyHarm',...base,presentationStage:'harm',targets:[{seat:0,damage,horror}],tableState:before})
+      inv.damage+=damage;inv.horror+=horror
+      s.events.push({seq:s.events.length,type:'presentation',kind:'checkpoint',tableState:structuredClone(s.state)})
+    })
+    await expect.poll(()=>page.evaluate(()=>window.enemyFrozen)).toBe(true)
+    const fx=page.locator('.ah-combat-fx[data-stage="'+stage+'"]')
+    await expect(fx.locator('.ah-combat-caption')).toBeInViewport()
+    expect(await fx.locator('.ah-combat-caption').evaluate(el=>Number(getComputedStyle(el).opacity))).toBe(1)
+    const mark=fx.locator(stage==='threat'?'.is-signature':'.is-contact')
+    expect(await mark.evaluate(el=>Number(getComputedStyle(el).opacity))).toBeGreaterThan(.3)
+    if(stage==='harm') {
+      await expect(fx.locator('.ah-enemy-harm-number')).toHaveText('−2 ◉')
+      const position=await mark.evaluate(el=>({x:parseFloat(el.style.left),y:parseFloat(el.style.top)}))
+      const target=await page.locator('.ah-map-investigator[data-seat="0"]').first().boundingBox()
+      expect(Math.hypot(position.x-target.x-target.width/2,position.y-target.y-target.height/2)).toBeLessThan(20)
+    }
+    await page.screenshot({path:`../../artifacts/arkham-enemy-attack-audit/implementation/real-${family}-${width}.png`})
+    await page.evaluate(()=>window.enemyAnimations.forEach(a=>a.play()))
+    await expect.poll(()=>page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+  }
 })

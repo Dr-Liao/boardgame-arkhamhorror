@@ -6,6 +6,7 @@
 export default {
   // 关卡设置（scenario-setup-view.js）
   'setup.title': '关卡设置',
+  'setup.chineseMissing': '中文待补',
   'setup.aria': '关卡设置',
   'setup.closeAria': '关闭关卡设置',
   'setup.intro': '开场',

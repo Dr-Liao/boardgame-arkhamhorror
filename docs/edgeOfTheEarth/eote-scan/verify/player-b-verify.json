@@ -1,0 +1,648 @@
+{
+  "meta": {
+    "verifier": "independent adversarial verifier (player-b)",
+    "date": "2026-11-08",
+    "workspace": "G:/boardgame-hall-ai",
+    "scope": [
+      "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/player-b/findings.json 12 high (08079-08133, 55 cards)",
+      "audit/eote-all-card-acceptance.json (403 records)",
+      "audit/eote-player-acceptance.json (115 entries)",
+      "tests/eote-player-m2-3.test.mjs + tests/eote-player-m2-4.test.mjs"
+    ],
+    "method": [
+      "read every cited source line, not just the finding summary",
+      "independent in-process engine probes (real fight / assetLeavesPlay / threat / healAsset / eventPlayed / assignHarm)",
+      "independent ledger recomputation script (does not import games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/tools/ledger-*.mjs)",
+      "resolve strong evidence title -> test file via ledger.testRun.passRecords",
+      "run the requested two test files in-process"
+    ],
+    "writeScope": "only games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/** was written; no other directory or games/arkhamhorror file was modified"
+  },
+  "verdictSummary": {
+    "highIssueCountCovered": 9,
+    "highReviewRows": 8,
+    "noteOnRows": "c-3 groups the two 08131 highs into one row; the total covered is 9 high issues.",
+    "highReview": "9/9 high issues covered by the 5 requested items are substantively CONFIRMED; no item is rejected. 2 evidence-line inaccuracies, 1 universal overstatement, 1 severity borderline.",
+    "sample": "Only 3 of the 12 highs are outside the 5 requested items (08079/08081/08088). All 3 reviewed and confirmed; 3 randomly chosen medium issues also reviewed and confirmed (08084/08100/08117).",
+    "ledger": "135/403 is reproducible under the literal rule but semantically overstated: 4 are false positives covered by tests/eote-investigator-lily.test.mjs; the robust core is the 129 scenario-ledger records (all wrongly cite theHeartOfMadnessPart2, 0/129 codes in it). 110 of those 129 are not mentioned in ANY test file (96 verified + 14 simplified). Root cause is a generator bug.",
+    "playerLedger": "115 verified + 0 simplified is formally computed from a flag no entry sets; 55/115 entries carry explicit 'approximation' comments and 11/115 carry note:'approximation'. 10-card sample: 9 explicit contradictions + 1 behavioral contradiction.",
+    "tests": "63 pass / 0 fail (m2-3 + m2-4, in-process)."
+  },
+  "highReview": [
+    {
+      "item": "a-1",
+      "code": "08105",
+      "severity": "high",
+      "dimension": "impl-vs-text",
+      "findingSummary": "criteria reads state.skillTest.actionKind; no trackTestTarget in EotE, so the field is never written on the normal path; the only ability never appears in a real playerWindow.",
+      "verdict": "确认（限定 EotE/无 trackTestTarget）",
+      "overstated": "是（仅限表述）",
+      "overstatementDetail": "The issue text says the real engine NEVER sets actionKind. That is false: tests.js:176 writes it when options.actionKind is passed, and tests.js:166-175 writes it when a scenario/investigator asset declares trackTestTarget (TIC 07163.js:8, 07181.js:8 do). Also tests.js:253-259 copies testTarget.actionKind into the testInitiated context (the read point 08086 uses). The conclusion is still correct for 08105/08107 because they read state.skillTest, not context.",
+      "counterEvidence": "Only a different read point (context.actionKind in testInitiated) exists; 08105/08107 do not use it. No read point populates state.skillTest.actionKind for an EotE fight/investigate.",
+      "evidence": [
+        "src/cards/entries/08105.js:16",
+        "src/engine/tests.js:166-167 (typedTarget = trackTestTarget ? options.testTarget : null)",
+        "src/engine/tests.js:173-180 (skillTest object; actionKind only via typedTarget or options.actionKind)",
+        "src/engine/combat.js:229-236 (fight passes testTarget {actionKind:'fight'}, not options.actionKind)",
+        "src/engine/actions.js:610 (investigate passes testTarget, same gap)",
+        "src/engine/tests.js:253-259 (testInitiated context does carry actionKind; 08086 uses it)",
+        "tests/eote-player-m2-3.test.mjs:308-315 (test forges s.skillTest.actionKind='fight' at line 311)"
+      ],
+      "probe": [
+        "A1: real fight, control free ability keeps the test.beforeCommit window open; window labels = ['让过','probe-free-1：probe control free']; state.skillTest.actionKind = null/undefined; skillTest keys = seat,skill,difficulty,stage,committed,publicLog,basicAction,source,printedValue,baseValue,value (no actionKind, no target). 08105 NOT offered.",
+        "A2: same window with forged state.skillTest.actionKind='fight' -> 08105 option and both 08107 abilities appear.",
+        "Probe output: games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/_probe-verify.txt (A1/A2)."
+      ],
+      "testGap": "tests/eote-player-m2-3.test.mjs:311 forges the field; the test at 308-315 bypasses criteria entirely by firing the descriptor directly (fire() at m2-3:64-75)."
+    },
+    {
+      "item": "a-2",
+      "code": "08107",
+      "severity": "high",
+      "dimension": "impl-vs-text",
+      "findingSummary": "Same actionKind defect on both abilities; whole card unusable in real play. Additionally the second ability discards at test window instead of after success and does not use onTestSuccess.",
+      "verdict": "确认（限定 EotE/无 trackTestTarget）",
+      "overstated": "是（仅限表述，同 08105）",
+      "overstatementDetail": "Same universal wording issue as 08105; the high itself is correct. The second ability's separate approximation (discard timing) is a medium, correctly classified.",
+      "counterEvidence": "None for the high. The medium onTestSuccess primitive does exist (api-misc.js:1510-1526) but is unused by the entry (08107.js:27-28 uses addExtraOnSuccess).",
+      "evidence": [
+        "src/cards/entries/08107.js:21,25 (both criteria)",
+        "src/engine/tests.js:166-180",
+        "src/engine/combat.js:233",
+        "tests/eote-player-m2-3.test.mjs:420-427 (test forges skillTest.actionKind='investigate' at line 423)",
+        "src/engine/api-misc.js:1510-1526; tests/eote-player-primitives.test.mjs:272-283"
+      ],
+      "probe": [
+        "A1: in the real fight window neither 08107 ability is offered.",
+        "A2: after forging actionKind=fight, both abilities appear: '横置：本次攻击/调查检定 +1 技能值' and '弃掉破冰锥：成功时额外 +1 伤害/线索'."
+      ],
+      "testGap": "m2-3:420-427 fires the descriptor directly with a forged skillTest; no real window assertion."
+    },
+    {
+      "item": "b",
+      "code": "08102",
+      "severity": "high",
+      "dimension": "impl-vs-text",
+      "findingSummary": "criteria reads context.asset.location and context.asset.traits; the real assetLeavesPlay context.asset is a bare instance without those fields, so the reaction never appears.",
+      "verdict": "确认",
+      "overstated": "轻微（细节不精确，结论正确）",
+      "overstatementDetail": "The asset instance is not literally only {id,code,exhausted}: real instances also carry ruleId/originalCode/identityStatus/approximation/linkedOriginalCode/artId and enteredRound (probe B1). It still has no traits and no location. The window context itself carries assetCode/assetId/location/reason/upgrades (assets.js:397-402), so the finding's suggested alternative is valid.",
+      "counterEvidence": "None. cardIdentityFields() (src/cards/card-identity.js:4) does not copy traits/location; only vehicle/story code sets asset.location (vehicles.js:115, location-swap.js:98); no read point enriches assetLeavesPlay's asset.",
+      "evidence": [
+        "src/cards/entries/08102.js:14-16 (criteria: context.asset.location / context.asset.traits)",
+        "src/engine/card-defs.js:306-308 (newCardInstance = {id, code, identity fields, ...fields})",
+        "src/cards/card-identity.js:4 (identity fields list: no traits/location)",
+        "src/engine/assets.js:340-341 (leaveAsset guard) and 397-402 (real window context: asset = raw instance; context has assetCode/assetId/location/reason/upgrades)",
+        "tests/eote-player-m2-3.test.mjs:292-306 (hand-crafted context.asset with traits/location at lines 296,303)",
+        "tests/eote-player-m2-3.test.mjs:64-75 (fire() executes the descriptor directly; criteria are not evaluated)"
+      ],
+      "probe": [
+        "B1: real played ally instance keys = [id,code,ruleId,originalCode,identityStatus,approximation,linkedOriginalCode,artId,exhausted,enteredRound]; traits=undefined, location=undefined.",
+        "B2: real leaveAsset(reason:'effect') window opened (an unrelated researchLibrarian reaction was the only candidate); 08102 NOT offered.",
+        "B3: reactionWindow('assetLeavesPlay', hand-crafted {asset:{traits:['Ally'],location:...}}) -> options = ['不打出','保护魂灵']; 08102 offered."
+      ],
+      "testGap": "The test never exercises the trigger; it calls fire() (descriptor execution) with a hand-made context, so it would pass even if criteria were removed."
+    },
+    {
+      "item": "c-1",
+      "code": "08130",
+      "severity": "high",
+      "dimension": "primitive",
+      "findingSummary": "The healing clause is missing: the engine already implements threatDamageSink but the entry does not declare flags.threatDamageSink and instead ships a free discardSelf approximation.",
+      "verdict": "确认",
+      "overstated": "否",
+      "overstatementDetail": "The entry note 08130.js:13-14 says 'engine has no threatDamageSink'; that statement is wrong — harm-threat.js:702-740 implements it and the primitive test at tests/eote-player-primitives.test.mjs:85-102 passes. The finding is right.",
+      "counterEvidence": "None. No card in src/cards/entries declares flags.threatDamageSink (grep: only 08130/08131 notes and the primitive test). The horror-side analogue 08132 does declare threatHorrorSink (08132.js:17-18) and its test passes (m2-4:674-693), which highlights the asymmetry.",
+      "evidence": [
+        "src/cards/entries/08130.js:13-15,21,29-31 (note + free discardSelf + no flags)",
+        "src/engine/harm-threat.js:702-740 (healDamageFrom; read at 721 registeredEntry(card.code)?.flags?.threatDamageSink)",
+        "src/engine/api-misc.js:231-240 (api.healDamage -> healDamageFrom)",
+        "tests/eote-player-primitives.test.mjs:85-102 (threatDamageSink primitive works)",
+        "tests/eote-player-m2-4.test.mjs:652-661 (test only checks threat entry + lock, no heal/discard assertion)"
+      ],
+      "probe": [
+        "C1: real draw of 08130 puts a threat card with counters=1 into inv.threat.",
+        "C2: healDamageFrom(inv, 1) returns 0; threat card still in threat, counters still 1, investigator damage unchanged -> healing clause unusable without the flag.",
+        "C6: playerWindow('test.beforeCommit') offers '臂伤：近似-可治愈：弃掉臂伤…'."
+      ],
+      "testGap": "m2-4:652-661 never calls healDamage/healHorror on 08130."
+    },
+    {
+      "item": "c-2",
+      "code": "08130",
+      "severity": "high",
+      "dimension": "primitive",
+      "findingSummary": "The substitute free discardSelf ability cannot remove a card from the threat area: ability-exec.js:178-189 only handles inv.assets / inv.attachments.",
+      "verdict": "确认（结论成立；引用的证据行错误）",
+      "overstated": "否（结论）；证据行需要修正",
+      "overstatementDetail": "ability-exec.js:178-189 is the legacy doAbility path. 08130/08131 use descriptor abilities; the real path is executeDescriptor -> payAbilityCost (reveal.js:255) -> ability-rules.js:139-143 -> leaveAsset (assets.js:340-341 early-returns because the threat card is not in inv.assets) -> inv.discard.push at ability-rules.js:141. The outcome is exactly as the finding says, but the cited handler is not the one used.",
+      "counterEvidence": "None; probe shows the threat card stays and a duplicate code enters discard.",
+      "evidence": [
+        "src/cards/entries/08130.js:29-31",
+        "src/engine/reveal.js:213,255 (executeDescriptor -> payAbilityCost)",
+        "src/engine/ability-rules.js:139-143 (discardSelf -> leaveAsset + discard push)",
+        "src/engine/assets.js:340-341 (leaveAsset returns early if !inv.assets.includes(asset))",
+        "src/engine/ability-exec.js:178-189 (legacy path, not used by descriptor entries)"
+      ],
+      "probe": [
+        "C3: legalMoves for the threat card includes action 'ability' i=0 label '⚡免费 近似-可治愈：弃掉臂伤…'.",
+        "C4: after using it: stillInThreat=true, discard contains one '08130', threatCodes=['08130'].",
+        "C5: the ability is no longer offered in the same window after one use; the card remains in the threat area and continues to lock actions."
+      ],
+      "testGap": "m2-4:652-661 has no assertion about removal or discard; the auditor's saved _probe.mjs P1 is the only reproduction."
+    },
+    {
+      "item": "c-3",
+      "code": "08131",
+      "severity": "high",
+      "dimension": "primitive",
+      "findingSummary": "Same two defects as 08130 (threatDamageSink not wired; free discardSelf cannot remove the threat card).",
+      "verdict": "确认（两条 high 均成立；discardSelf 证据行同 08130 需修正）",
+      "overstated": "否（结论）",
+      "overstatementDetail": "Same evidence-line correction as 08130.",
+      "counterEvidence": "None.",
+      "evidence": [
+        "src/cards/entries/08131.js:12-13,18,26-28",
+        "src/engine/harm-threat.js:702-740",
+        "src/engine/api-misc.js:231-240",
+        "src/engine/ability-rules.js:139-143; src/engine/assets.js:340-341",
+        "tests/eote-player-primitives.test.mjs:85-102",
+        "tests/eote-player-m2-4.test.mjs:663-672"
+      ],
+      "probe": [
+        "Same code path as 08130; entry 08131 has the same free discardSelf descriptor and no flags. The real-path result is identical (card stays in threat; code pushed to discard)."
+      ],
+      "testGap": "m2-4:663-672 only checks threat entry + move/resign/evade lock; no heal/discard assertion."
+    },
+    {
+      "item": "d",
+      "code": "08091",
+      "severity": "high",
+      "dimension": "impl-vs-text",
+      "findingSummary": "The second clause (replace a revealed symbol with the sigil) is entirely missing, while setSigilToken/replaceRevealedToken primitives are implemented and tested.",
+      "verdict": "确认",
+      "overstated": "否",
+      "overstatementDetail": "The primitives are implemented and unit-tested, but no real card uses them; replaceRevealedToken's unit test constructs a tokenReveal context manually (tests/eote-player-primitives.test.mjs:206-214). The finding says 'implemented and tested', which is true at the primitive level; 'ready to wire' is a fair inference.",
+      "counterEvidence": "None. grep for setSigilToken/replaceRevealedToken shows only api-misc.js:1420/1435 and the primitive test; entry 08091 uses api.addEffect instead (08091.js:36-43).",
+      "evidence": [
+        "src/cards/entries/08091.js:14-16 (self-describes omitting the clause), 25-45 (only entersPlay ability; no tokenReveal)",
+        "src/engine/api-misc.js:1418-1442 (setSigilToken/replaceRevealedToken)",
+        "tests/eote-player-primitives.test.mjs:197-215",
+        "audit/eote-player-queue.json:277-282 (m2-3-08091 status done)",
+        "tests/eote-player-m2-3.test.mjs:372-381 (only first clause asserted)"
+      ],
+      "probe": [
+        "G1: registeredEntry('08091').abilities = [{kind:'entersPlay', triggers:[], label:'入场：指定…'}] only.",
+        "G2: no tokenReveal ability.",
+        "G3: entry source uses addEffect (true) and setSigilToken (false)."
+      ],
+      "testGap": "m2-3:372-381 asserts addEffect label/duration/sourceInstanceId only; second clause has no test."
+    },
+    {
+      "item": "e",
+      "code": "08083",
+      "severity": "high",
+      "dimension": "impl-vs-text",
+      "findingSummary": "api.healAsset(target, 1) passes a number where a spec object is required, so the ally branch heals 0 damage; addAssetHorror(target,-1) can push horror below 0.",
+      "verdict": "确认",
+      "overstated": "严重度可争议（high 偏高；medium 也合理）；机制与结论准确",
+      "overstatementDetail": "The bug is real and the test gap is real, but it affects half of a 1-damage/1-horror heal on an Ally target, not a whole card. A 'high' severity is defensible for a silent no-op printed effect but is on the boundary.",
+      "counterEvidence": "None. The healingApi wrapper (reveal.js:303-306) only adds owner/cardCode; it does not coerce a numeric spec. healAsset (api-misc.js:759-768) reads spec.damage; a number has no damage property. addAssetHorror (api-clue.js:67-71) has no lower bound.",
+      "evidence": [
+        "src/cards/entries/08083.js:38 (api.healAsset(target, 1); api.addAssetHorror(target, -1))",
+        "src/engine/api-misc.js:759-768 (healAsset signature (card, spec = {}), spec.damage)",
+        "src/engine/reveal.js:303-306 (healingApi.healAsset wrapper)",
+        "src/engine/api-clue.js:67-71 (addAssetHorror has no floor)",
+        "tests/eote-player-m2-3.test.mjs:106-114 (only investigator target asserted)"
+      ],
+      "probe": [
+        "D1: choose the real asset option; ally damage 1->1 (no heal), ally horror 1->0 (healed; correct side), investigator unchanged.",
+        "D2: ally damage 1->1, ally horror 0->-1 (negative floor bug).",
+        "Probe picked the exact 'asset:<id>' option, not the investigator option.",
+        "AUDITOR PROBE MISMATCH: games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/player-b/_probe2.mjs P5 prints 'damage after = 1, horror after = 1' because its auto-chooser selects the investigator option; it does not test the ally branch. The findings/notes claim 'probe: ally damage 1->1, horror 1->0'. The conclusion is still confirmed by this verifier's explicit asset-option probe, but the delivered probe output does not reproduce it."
+      ],
+      "testGap": "m2-3:106-114 never constructs an Ally candidate; the ally branch has no assertion."
+    }
+  ],
+  "sampleReview": {
+    "note": "The 12 highs contain 9 issues inside the 5 requested items (08105, 08107, 08102, 08130 x2, 08131 x2, 08091, 08083). Only 3 highs remain outside: 08079, 08081, 08088. A 'random sample of 6 highs excluding the 5' is therefore impossible; all 3 remaining highs were reviewed, plus 3 additionally chosen mediums (08084, 08100, 08117) to make the requested sample size of 6.",
+    "rows": [
+      {
+        "code": "08079",
+        "type": "high",
+        "dimension": "impl-vs-text",
+        "summary": "The printed restriction 'damage/horror from this attack cannot be assigned to Ally assets' is entirely unimplemented; the main effect (draw per damage/horror) is implemented and is stronger because of it.",
+        "verdict": "确认",
+        "evidenceSupported": "是",
+        "notes": "08079.js:6-7 self-describes the missing restriction; 08079.js:14-22 implements the draw. assignHarm (harm-threat.js:117-183) has no attack parameter/read point; applyHarm receives `attack` (enemies.js:859) but only forwards it to the post-assignment harmAssigned context (enemies.js:1020-1022), after the assignment already happened. No counter-read point found.",
+        "evidence": [
+          "src/cards/entries/08079.js:6-7,14-22",
+          "src/engine/harm-threat.js:117,140-181 (assignHarm; no attack-context filter)",
+          "src/engine/enemies.js:859,935-936 (applyHarm -> assignHarm without attack)",
+          "src/engine/enemies.js:1020-1022 (harmAssigned gets attack only after assignment)"
+        ]
+      },
+      {
+        "code": "08081",
+        "type": "high",
+        "dimension": "primitive",
+        "summary": "The damage side of composure (non-direct damage must be assigned to Plucky first) is not wired: the entry declares composure:true but not flags.composureDamage.",
+        "verdict": "确认",
+        "evidenceSupported": "是",
+        "notes": "harm-threat.js:162 reads flags.composureDamage for damage; harm-threat.js:163-164 reads assetEffect(...).composure for horror. Probe F: damage options include '由调查员承受'; horror options do not. Entry flags = null, composure = true.",
+        "evidence": [
+          "src/cards/entries/08081.js:16-24",
+          "src/engine/harm-threat.js:162-165",
+          "tests/eote-player-primitives.test.mjs:104-130",
+          "probe F1/F2/F3"
+        ]
+      },
+      {
+        "code": "08088",
+        "type": "high",
+        "dimension": "impl-vs-text",
+        "summary": "The eventPlayed reaction permanently sets uses to 2 (no restore) and is not limited to the controller.",
+        "verdict": "确认（小幅表述不精确）",
+        "evidenceSupported": "是",
+        "notes": "Probe E: seat1's event triggers seat0's Old Shotgun -> uses 0->2; seat0's own event again -> still 2. The cross-seat scope is limited to investigators at the same location by reactionWindow (encounter.js:326); the finding says 'cross-seat' without this qualifier. No reset path exists. The entry has no note field (08088.js:14-27). AUDITOR PROBE MISMATCH: games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/player-b/_probe.mjs P2 prints uses 0->0->0 (its auto-chooser never picks the reaction) while the notes claim 0->2->2; _probe2.mjs P7 does pick the reaction and prints 2->2, matching this verifier's probe.",
+        "evidence": [
+          "src/cards/entries/08088.js:22-24",
+          "src/engine/actions.js:519-523 (eventPlayed context: seat/cardId/cardCode/location)",
+          "src/engine/encounter.js:286,326 (all alive investigators; location gate)",
+          "src/engine/api-clue.js:72-76 (setAssetUses writes uses)",
+          "probe E2/E3/E4"
+        ]
+      },
+      {
+        "code": "08084",
+        "type": "medium",
+        "dimension": "impl-vs-text",
+        "summary": "Unprinted elite exclusion: the entry filters !enemy.elite; printed/reference allow any enemy.",
+        "verdict": "确认",
+        "evidenceSupported": "是（参考实现行号有 1 行漂移）",
+        "notes": "08084.js:34 has !enemy.elite. Reference OnTheTrail1.hs actual line is 25, not 26 (same statement); OnTheTrail3.hs actual line 22, not 34. No functional impact on the finding.",
+        "evidence": [
+          "src/cards/entries/08084.js:33-38 (line 34 filter)",
+          "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event/Events/OnTheTrail1.hs:25",
+          "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event/Events/OnTheTrail3.hs:22"
+        ]
+      },
+      {
+        "code": "08100",
+        "type": "medium",
+        "dimension": "impl-vs-text",
+        "summary": "Two different actions requirement is not implemented: the same action can be chosen twice; 'During your turn' is also missing.",
+        "verdict": "确认",
+        "evidenceSupported": "是",
+        "notes": "08100.js:38-39 calls performAction twice with no exclusion set; performAction (08100.js:9-29) has no memory of the first pick. The finding's medium is well supported.",
+        "evidence": [
+          "src/cards/entries/08100.js:9-29,36-40"
+        ]
+      },
+      {
+        "code": "08117",
+        "type": "medium",
+        "dimension": "impl-vs-text",
+        "summary": "When only one legal heal target exists, the ability auto-spends a charge instead of offering skip, violating 'may'.",
+        "verdict": "确认",
+        "evidenceSupported": "是",
+        "notes": "08117.js:43 breaks if options.length===1; 08117.js:44 auto-picks options[1] when options.length===2 && options[0].id==='skip'. This is exactly the reported behavior. The entry has no note/approximation disclosure, so the ledger's simplified:false is not contradicted by source text here, only by behavior.",
+        "evidence": [
+          "src/cards/entries/08117.js:38-49"
+        ]
+      }
+    ]
+  },
+  "ledgerRecompute": {
+    "ledger": "games/arkhamhorror/audit/eote-all-card-acceptance.json",
+    "independentScript": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/_ledger-recompute.mjs (output: games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/verify/_ledger-recompute.json)",
+    "method": "A record is valid if the cited test file contains the card code as a delimited token, or the strong-evidence title contains the code. I also scan every tests/*.test.mjs for the code, resolve strong titles to files via ledger.testRun.passRecords, and derive the expected scenario test from the entry path.",
+    "totals": {
+      "records": 403,
+      "literalValid": 268,
+      "literalInvalid": 135,
+      "literalInvalidByPartition": {
+        "eoteCampaign": 131,
+        "eoteInvestigators": 4
+      },
+      "literalInvalidByEvidenceKind": {
+        "strong": 4,
+        "file": 2,
+        "scenario-ledger": 129
+      },
+      "literalInvalidByStatus": {
+        "verified": 121,
+        "simplified": 14
+      },
+      "validByEvidenceKind": {
+        "strong": "138/142",
+        "file": "130/132",
+        "scenario-ledger": "0/129"
+      }
+    },
+    "correctionsToLead": {
+      "strongTitleResolvedToFile": {
+        "validAfterResolve": 272,
+        "invalidAfterResolve": 131,
+        "byKind": {
+          "scenario-ledger": 129,
+          "file": 2
+        },
+        "investigatorFalsePositives": [
+          "08011b -> tests/eote-investigator-lily.test.mjs imports 08011b (line 23) and asserts it (lines 205,213,267-270,309,314,333,336,349-352)",
+          "08012b -> same file imports at line 25 and asserts at 221,270-271,292",
+          "08013b -> same file imports at line 27 and asserts at 233,272-273,296",
+          "08014b -> same file imports at line 29 and asserts at 246,274-275,301"
+        ],
+        "conclusion": "The 4 eoteInvestigators records in the Lead's 135 are FALSE POSITIVES. Their strong-evidence title names the a-side (08011a-08014a), but the producing test file contains and asserts the b-side codes. The Lead's script only checked the title string."
+      },
+      "fatalMirageBSide": {
+        "codes": ["08575b", "08579b"],
+        "status": "verified",
+        "note": "The cited file tests/eote-scenario-fatalMirage.test.mjs imports 08575 (line 26) and uses it (lines 93-98,116,143); it does not contain 08575b/08579b. The a-side is tested; b-side coverage is plausible but not proven. Keep as a lower-confidence citation defect, not a confirmed no-evidence record."
+      },
+      "robustCore": "129 scenario-ledger records (115 verified + 14 simplified) are invalid under every reasonable standard.",
+      "trulyUntraceable": {
+        "count": 110,
+        "status": {
+          "verified": 96,
+          "simplified": 14
+        },
+        "definition": "Of the 129 scenario-ledger records, 110 have their exact code in NO tests/*.test.mjs file at all. The other 19 appear somewhere else (eote-migration.test.mjs, eote-primitives-travel.test.mjs, eote-campaign-flow.test.mjs, eote-interactions.test.mjs), i.e. wrong citation rather than no trace."
+      }
+    },
+    "scenarioLedger": {
+      "rows": 129,
+      "allCitedFile": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+      "allCitedChapter": "theHeartOfMadnessPart2",
+      "codesFoundInCitedFile": 0,
+      "status": {
+        "verified": 115,
+        "simplified": 14
+      },
+      "byExpectedEntryDir": {
+        "fatalMirage": 60,
+        "cityOfTheElderThings": 26,
+        "toTheForbiddenPeaks": 15,
+        "the_heart_of_madness": 10,
+        "memorials_of_the_lost": 6,
+        "tekelili": 5,
+        "ice_and_death": 3,
+        "left_behind": 2,
+        "nameless_horrors": 1,
+        "shoggoths": 1
+      },
+      "codesMentionedInOtherTests": 19,
+      "codesMentionedNowhere": 110,
+      "expectedScenarioTestHasCode": "0/129 (not even the correct chapter tests contain the codes)"
+    },
+    "invalidByEntryDir": {      "fatalMirage": 62,
+      "cityOfTheElderThings": 26,
+      "toTheForbiddenPeaks": 15,
+      "the_heart_of_madness": 10,
+      "memorials_of_the_lost": 6,
+      "tekelili": 5,
+      "ice_and_death": 3,
+      "left_behind": 2,
+      "nameless_horrors": 1,
+      "shoggoths": 1,
+      "player/entries (false positives)": 4
+    },
+    "rootCause": {
+      "bug1": {
+        "file": "games/arkhamhorror/tools/audit-eote-scenarios.mjs",
+        "lines": "88-90, 107",
+        "detail": "assignedCards = chapter.gatherSets.flatMap(set => scope.encounterGroups.filter(...).flatMap(group => CAMPAIGN_CODES.filter(code => entryCodes.has(code) && code.startsWith('08')))). The inner flatMap ignores `group` and returns ALL 264 campaign codes for every matching encounter group. Result: every chapter's cardCodes array contains the same full 264-code set, repeated 6-10x."
+      },
+      "bug2": {
+        "file": "games/arkhamhorror/tools/audit-eote-all-cards.mjs",
+        "lines": "258-261, 302-308",
+        "detail": "chapterByCode.set(code, {id,files}) is last-wins. Because every chapter lists every code, every code maps to the last chapter (theHeartOfMadnessPart2). The fallback at 302-308 then emits a scenario-ledger record pointing at that chapter's test, without checking that the file mentions the card."
+      },
+      "dataEvidence": {
+        "file": "games/arkhamhorror/audit/eote-scenario-acceptance.json",
+        "detail": "All 8 chapters[].cardCodes sets are equal (264 unique codes each; array lengths 1848/1584/2640 because the same full list is repeated a different number of times). 6 of the 8 serialized arrays are byte-identical; 2 differ only in repetition count. The HeartPart2 chapter is the last one (line 13750 id, line 13758 cardCodes)."
+      },
+      "gateTooWeak": {
+        "file": "games/arkhamhorror/tools/audit-eote-all-cards.mjs",
+        "lines": "429, 470",
+        "detail": "everyBehaviorCardHasEvidence/withoutEvidence only checks record.evidence.length > 0, never that the cited evidence is traceable. Hence 135 citation-invalid records still yield withoutEvidence:0 and everyBehaviorCardHasEvidence:true."
+      }
+    },
+    "accuracyVerdict": {
+      "lead135": "accurate under the literal rule the Lead used, but semantically overstated by 4 confirmed false positives (08011b-08014b) and 2 plausible b-side citations (08575b/08579b).",
+      "lead129": "exactly right: all 129 scenario-ledger records point to theHeartOfMadnessPart2 and 0/129 codes are in that file.",
+      "mostDefensibleNumbers": [
+        "135/403 fail the literal citation check",
+        "131/403 fail after resolving strong titles to their producing test file",
+        "129/403 are the scenario-ledger core (all wrong chapter)",
+        "110/403 are not mentioned in ANY test file (96 verified + 14 simplified)",
+        "19 of the 129 are wrong citations but traceable elsewhere"
+      ]
+    }
+  },
+  "playerLedgerAudit": {
+    "ledger": "games/arkhamhorror/audit/eote-player-acceptance.json",
+    "facts": {
+      "entries": 115,
+      "status": "verified x115",
+      "simplifiedFlag": "false x115",
+      "gatesNoSimplified": true,
+      "summarySimplified": 0,
+      "statusLine": "audit/eote-player-acceptance.json:10",
+      "gatesLines": "audit/eote-player-acceptance.json:11-18 (noSimplified at 14)",
+      "summaryLines": "audit/eote-player-acceptance.json:19-27"
+    },
+    "sourceSelfDescription": {
+      "entriesWithApproximationComment": 55,
+      "entriesWithNoteApproximation": 11,
+      "noteApproximationCodes": ["08113", "08120", "08121", "08122", "08123", "08124", "08125", "08130", "08131", "08132", "08133"],
+      "entriesWithSimplifiedTrue": 0,
+      "entriesWithAnyApproximationWord": 58
+    },
+    "mechanism": {
+      "file": "games/arkhamhorror/tools/audit-eote-player.mjs",
+      "statusAndSimplified": "lines 71-73: status = entry && !entry.simplified && tests.length ? 'verified' : 'missing'; simplified = entry?.simplified === true || any ability.simplified === true",
+      "gate": "line 91: noSimplified = entries.every(entry => !entry.simplified)",
+      "evidenceMatch": "lines 56-60: a passing test whose title contains the card code is enough; no semantic assertion check",
+      "conclusion": "The gate is vacuous for these 115 entries: they use note:'approximation'/comments, not simplified:true. The only entry in src/cards/entries with simplified:true is 04051.js:16 (not in the EotE 115)."
+    },
+    "sample10": [
+      {
+        "code": "08086",
+        "entryLine": "src/cards/entries/08086.js:11,13-14",
+        "selfDescription": "// approximation: attack bonus is a post-success +1 damage, not part of the attack",
+        "ledgerEntryLine": 2113,
+        "ledgerStatusLine": "2149 verified",
+        "ledgerSimplifiedLine": "2151 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08097",
+        "entryLine": "src/cards/entries/08097.js:11-12",
+        "selfDescription": "// approximation: logs the location fields, no reveal-face primitive",
+        "ledgerEntryLine": 2360,
+        "ledgerStatusLine": "2396 verified",
+        "ledgerSimplifiedLine": "2398 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08104",
+        "entryLine": "src/cards/entries/08104.js:9-10",
+        "selfDescription": "// approximation: 'instead of discovering a clue' is implemented as an addition",
+        "ledgerEntryLine": 2519,
+        "ledgerStatusLine": "2550 verified",
+        "ledgerSimplifiedLine": "2552 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08112",
+        "entryLine": "src/cards/entries/08112.js:8-11",
+        "selfDescription": "// approximation: replaces the current token instead of counting two tokens",
+        "ledgerEntryLine": 2710,
+        "ledgerStatusLine": "2741 verified",
+        "ledgerSimplifiedLine": "2743 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08113",
+        "entryLine": "src/cards/entries/08113.js:11-12,18",
+        "selfDescription": "note: 'approximation: game-end/elimination trigger approximated as round end'",
+        "ledgerEntryLine": 2732,
+        "ledgerStatusLine": "2763 verified",
+        "ledgerSimplifiedLine": "2765 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08117",
+        "entryLine": "src/cards/entries/08117.js:43-44",
+        "selfDescription": "no note; behavior auto-spends a charge when only one target exists (violates 'may')",
+        "ledgerEntryLine": 2830,
+        "ledgerStatusLine": "2866 verified",
+        "ledgerSimplifiedLine": "2868 false",
+        "verdict": "behavioral contradiction (not self-described)"
+      },
+      {
+        "code": "08120",
+        "entryLine": "src/cards/entries/08120.js:12-13,29",
+        "selfDescription": "note: 'approximation: ... beforePlayCost cost reduction ...'",
+        "ledgerEntryLine": 2906,
+        "ledgerStatusLine": "2937 verified",
+        "ledgerSimplifiedLine": "2939 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08124",
+        "entryLine": "src/cards/entries/08124.js:12,28",
+        "selfDescription": "note: 'approximation: ... beforePlayCost cost reduction ...'",
+        "ledgerEntryLine": 2994,
+        "ledgerStatusLine": "3025 verified",
+        "ledgerSimplifiedLine": "3027 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08130",
+        "entryLine": "src/cards/entries/08130.js:13-15,21",
+        "selfDescription": "note: 'approximation: damage-side healing via discardSelf; no threatDamageSink'",
+        "ledgerEntryLine": 3141,
+        "ledgerStatusLine": "3172 verified",
+        "ledgerSimplifiedLine": "3174 false",
+        "verdict": "contradiction"
+      },
+      {
+        "code": "08133",
+        "entryLine": "src/cards/entries/08133.js:12,19",
+        "selfDescription": "note: 'approximation: action lock scope'",
+        "ledgerEntryLine": 3207,
+        "ledgerStatusLine": "3216 verified",
+        "ledgerSimplifiedLine": "3218 false",
+        "verdict": "contradiction"
+      }
+    ],
+    "sampleConclusion": "10/10 sampled cards are marked verified + simplified:false while 9/10 explicitly self-describe an approximation and the 10th (08117) is behaviorally approximate. The 'noSimplified' claim is not supported in substance; it is only true under the flag-based definition no entry sets.",
+    "queueContradiction": {
+      "detail": "The primitive queue marks 5 cards done while the entries still use the old approximation/missing clause.",
+      "evidence": [
+        "audit/eote-player-queue.json:252-257 (m2-3-08081 done; entry lacks flags.composureDamage)",
+        "audit/eote-player-queue.json:260-265 (m2-3-08086 done; entry 08086.js:32 uses addExtraOnSuccess, not addAttackDamageBonus)",
+        "audit/eote-player-queue.json:277-282 (m2-3-08091 done; entry uses addEffect, not setSigilToken/replaceRevealedToken)",
+        "audit/eote-player-queue.json:285-290 (m2-3-08097 done; entry uses api.info, not lookAtLocation)",
+        "audit/eote-player-queue.json:313-318 (m2-3-08107 done; entry uses addExtraOnSuccess, not onTestSuccess)"
+      ]
+    }
+  },
+  "testRun": {
+    "command": "cd G:/boardgame-hall-ai/games/arkhamhorror && node --experimental-test-isolation=none --test tests/eote-player-m2-3.test.mjs tests/eote-player-m2-4.test.mjs",
+    "tests": 63,
+    "pass": 63,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 7285.8,
+    "caveat": "All green, but the tests for 08102/08105/08107 bypass the real trigger/criteria (fire() direct descriptor execution; forged skillTest.actionKind). Several approximation cards are asserted as approximations (e.g. 08113 round-end exile, 08120 cost-reduction), so green tests do not imply printed-text equivalence."
+  },
+  "trustAssessment": {
+    "playerFindings": {
+      "highConfidence": "9/9 confirmed; 0 rejected; 2 evidence-line corrections (08102 shape detail, 08130/08131 discardSelf path); 1 universal overstatement (08105/08107 'never' sets actionKind); 1 severity borderline (08083).",
+      "probeTraceability": "The delivered _probe.mjs / _probe2.mjs do not contain any 08102/08105/08107 probe, although findings/notes claim 'real-path probe' for all three. Two delivered outputs also contradict the notes: _probe2.mjs P5 (08083) prints damage=1,horror=1 (auto-chooses the investigator, never tests the ally branch) while the notes claim horror 1->0; _probe.mjs P2 (08088) prints uses 0->0->0 (never selects the reaction) while the notes claim 0->2->2. _probe2.mjs P7 does select the reaction and prints 2->2. The conclusions are independently confirmed by this verifier's probes, but the audit's reproduction trail is unreliable.",
+      "referenceDrift": "08084/08085 reference line numbers are stale by 1 and 12 lines (OnTheTrail1.hs 26 vs 25; OnTheTrail3.hs 34 vs 22); the substantive claim (no elite filter) is correct."
+    },
+    "allCardLedger": {
+      "evidenceIntegrity": "low for the 129 scenario-ledger class; 0/129 traceable; 110/129 not mentioned in any test.",
+      "mechanicalAccuracy": "the Lead's 135/403 and 129/129-HeartPart2 numbers are reproducible; the 135 label 'no valid evidence' overstates 4 definite false positives and 2 plausible b-side citations.",
+      "gateIntegrity": "the everyBehaviorCardHasEvidence gate is a non-empty-array check, not a traceability check; it should be tightened before the ledger is called released."
+    },
+    "playerLedger": {
+      "verifiedMeaning": "per tools/audit-eote-player.mjs:56-60 it only means 'a passing test title contains the code'.",
+      "noSimplifiedMeaning": "flag-based and vacuous: 0/115 entries set simplified:true, while 55/115 declare approximation in comments and 11/115 in note:.",
+      "verdict": "115/115 verified + noSimplified is not credible as a semantic claim; it should be treated as 'has at least one title-matching test' only."
+    },
+    "overall": "Player-b's 55-card findings are largely trustworthy (all 5 requested high groups confirmed). The two acceptance ledgers are not trustworthy as evidence of behavioral equivalence: the all-card ledger's scenario fallback is structurally broken, and the player ledger's noSimplified gate does not see the approximations the entries themselves declare."
+  },
+  "top3ForFinalReport": [
+    {
+      "rank": 1,
+      "title": "P8 all-card ledger: 129 scenario-ledger citations are structurally wrong; 110 cards have no test mention at all",
+      "evidence": [
+        "tools/audit-eote-scenarios.mjs:88-90 (all 264 campaign codes assigned to every chapter)",
+        "audit/eote-scenario-acceptance.json:42,1926,3810,5694,7578,9198,11874,13758 (8 identical cardCodes arrays; 264 unique codes each)",
+        "tools/audit-eote-all-cards.mjs:258-261 (last-wins chapter map), 302-308 (scenario fallback), 429/470 (gate only checks non-empty evidence)",
+        "audit/eote-all-card-acceptance.json:4337-4341 (08503 cites HeartPart2), 14409-14413 (129 ledger evidence, withoutEvidence:0)",
+        "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs:20-38,137-194 (contains 08648/08671-08686, none of the 129)"
+      ],
+      "action": "Fix the group->card mapping in audit-eote-scenarios.mjs, remove last-wins in audit-eote-all-cards.mjs (or require per-chapter discrimination), re-sign both ledgers, and downgrade the 96 verified + 14 simplified untraceable campaign records to unproven."
+    },
+    {
+      "rank": 2,
+      "title": "115 player-card ledger: noSimplified is vacuous; 55/115 entries declare an approximation",
+      "evidence": [
+        "audit/eote-player-acceptance.json:10-14 (status verified, noSimplified true), 19-27 (115 verified, 0 simplified)",
+        "tools/audit-eote-player.mjs:71-73 (simplified only from entry.simplified/ability.simplified), 91 (gate), 56-60 (title-only evidence match)",
+        "55/115 entries contain an 'approximation' comment; 11/115 have note:'approximation' (08113/08120-08125/08130-08133); 0/115 set simplified:true",
+        "10-card sample: 9 explicit contradictions + 08117 behavioral contradiction",
+        "audit/eote-player-queue.json:252-257,260-265,277-282,285-290,313-318 (5 primitive requests done, entries not wired)"
+      ],
+      "action": "Reclassify at least the 11 note-approximation cards as simplified/approximation, fix the gate to read notes, and re-open the 5 queue items whose entries were never rewired."
+    },
+    {
+      "rank": 3,
+      "title": "Player-b's 9 highs are real; fix 5 one-line primitive wirings + 3 real-path bugs, and correct 3 evidence lines",
+      "evidence": [
+        "08105.js:16 / 08107.js:21,25 vs tests.js:166-180 and combat.js:233 (actionKind never written in EotE fight; probe A)",
+        "08102.js:14-16 vs assets.js:397-402 and card-defs.js:306-308 (asset has no traits/location; probe B)",
+        "08130.js:29-31 / 08131.js:26-28 vs ability-rules.js:139-143 + assets.js:340-341 (discardSelf cannot leave threat; probe C)",
+        "08091.js:14-16,25-45 vs api-misc.js:1418-1442 (second clause missing; probe G)",
+        "08083.js:38 vs api-misc.js:759-768 (healAsset gets a number; probe D)",
+        "tests/eote-player-m2-3.test.mjs:311 (forged actionKind), 296/303 (crafted asset context), 106-114 (investigator only); tests/eote-player-m2-4.test.mjs:652-672 (no heal assertion)"
+      ],
+      "action": "Wire flags.composureDamage / addAttackDamageBonus / setSigilToken+replaceRevealedToken / lookAtLocation / onTestSuccess / flags.threatDamageSink; fix 08102 criteria, 08105/08107 actionKind read point, 08083 healAsset spec; correct the 08102/08130/08131 evidence lines; add real-window tests."
+    }
+  ],
+  "limitations": [
+    "I did not re-audit all 403 cards semantically; the ledger section checks evidence traceability only.",
+    "Probes use synthetic 'probe-free-1' control entries and synthetic contexts to force windows open; they do not modify the repo and do not claim to be part of the game.",
+    "The 2 fatalMirage b-side records (08575b/08579b) are left as 'plausible, not proven' because the a-side is tested but the b-side is not literally asserted.",
+    "The full test suite was not run; only the two requested files.",
+    "The 129 scenario-ledger codes were checked against all tests/*.test.mjs for exact delimited code tokens; other evidence forms (behavior names without codes) were not accepted."
+  ]
+}

@@ -1,6 +1,17 @@
 // Curated by setting and pacing. Track files remain shared; playlists never copy audio.
 const chapter = (name, mood, tracks) => Object.freeze({ name, mood, tracks: Object.freeze(tracks) })
 export const SCENARIO_MUSIC = Object.freeze({
+  // 七循环：16 首新曲 + 8 首旧曲（33.3%），24 个位置无循环内重复。
+  edgeOfTheEarth: Object.freeze({
+    iceAndDeathPart1: chapter("亡命冰原 I", "坠机冰原、寻找庇护、极地求生", ["eoteDespairAndTriumph","eoteMoorland","tdeFrozenStar"]),
+    iceAndDeathPart2: chapter("亡命冰原 II", "风雪寻人、失踪伙伴、冰隙低语", ["eoteSpacialWinds","eoteInexorable","ticIceDemon"]),
+    iceAndDeathPart3: chapter("亡命冰原 III", "营地遇袭、黑雾围困、守住庇护", ["eoteDayOfChaos","eoteDarkeningDevelopments","ticStormfront"]),
+    fatalMirage: chapter("致命幻景", "记忆迷宫、伙伴往事、幻景救赎", ["eoteEveningFallHarp","eoteLostTime","tdeDreamlike"]),
+    toTheForbiddenPeaks: chapter("失落之峰", "负重登山、险峻山道、远征不归", ["eoteCrossingTheChasm","eoteLongRoadAheadB","lostFrontier"]),
+    cityOfTheElderThings: chapter("古老者之城", "极地古城、异星遗迹、远古机关", ["eoteSpacialHarvest","eoteShadowlands3Machine","truthInTheStones"]),
+    theHeartOfMadnessPart1: chapter("疯狂之心 I", "冰下设施、探索封印、黑暗深处", ["eoteScpX2xUnseenPresence","eoteScpX4xMindLeech","orion300xb"]),
+    theHeartOfMadnessPart2: chapter("疯狂之心 II", "邪雾苏醒、封印中枢、最后逃离", ["eoteBlackVortex","eoteTheComplex","thunderDreams"]),
+  }),
   theCircleUndone: Object.freeze({
     disappearanceAtTheTwilightEstate: chapter("暮色庄园失踪事件", "庄园晚宴、失踪者、暮色疑云", ["tcuVanishing","tcuEveningFallPiano","tcuThisHouse"]),
     theWitchingHour: chapter("巫异时刻", "林间迷途、女巫集会、命运占卜", ["tcuBabaYaga","tcuMystOnTheMoor","tcuSpellbound"]),

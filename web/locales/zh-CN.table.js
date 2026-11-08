@@ -4,6 +4,8 @@
 // card-text.js（符号标签与目标句）、card-filters.js、supply-picker.js 的界面文案。
 // 值必须与抽取前的界面中文逐字一致；key 用「区域.用途」命名（docs/localization.md §6.1/§8.2）。
 export default {
+  'table.direct.caption': '{source} → {target} · {damage} 伤害',
+  'table.direct.areaCaption': '{source} · 爆破：{targets}',
   // ---- 卡面符号（card-text.js SYMBOLS；模块顶层只存 key，渲染期再 t()）----
   'symbol.action': '行动',
   'symbol.reaction': '反应',
@@ -183,6 +185,8 @@ export default {
   'table.combat.miss': '攻击落空',
   'table.combat.damage': '{damage} 伤害',
   'table.combat.damageHorror': '{damage} 伤害 / {horror} 恐惧',
+  'table.combat.threat': '发动攻击',
+  'table.combat.harmCaption': '{who} 承受 · {label}',
   'table.combat.hit': '命中 · {damage} 伤害',
   'table.combat.hitDefeated': '命中 · {damage} 伤害 · 击败',
   'table.combat.incomingCaption': '{who} 受到「{enemy}」攻击 · {label}',

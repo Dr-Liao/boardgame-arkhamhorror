@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "script": {
+    "seed": "eote-p8-replay-baseline",
+    "seats": 2,
+    "difficulty": "standard",
+    "upgrades": false,
+    "answer": {
+      "checkpoint2Choice": "stand",
+      "interlude1DoorChoice": "ignore"
+    }
+  },
+  "scenarios": [
+    "iceAndDeathPart1",
+    "iceAndDeathPart2",
+    "iceAndDeathPart3"
+  ],
+  "steps": [
+    {
+      "label": "create",
+      "hash": "1ff2459a2ee42537c11f41ad6380abffebc35cdc8bedbcf7a9c0013c47ac3d30",
+      "uiState": "campaignHub",
+      "scenarioId": null
+    },
+    {
+      "label": "chapter1:start",
+      "hash": "4560606a0ee94cb93fcddf4187b6657463c9372d7cbff5443f97906901b7c7e2",
+      "uiState": "inScenario",
+      "scenarioId": "iceAndDeathPart1"
+    },
+    {
+      "label": "chapter1:result",
+      "hash": "3f6337277593eaecaa0c57203a9a80038b01330ce0cc5541abd3e8a8e1af3701",
+      "uiState": "scenarioResult",
+      "scenarioId": "iceAndDeathPart1"
+    },
+    {
+      "label": "chapter1:continue",
+      "hash": "0466901bd16b7baec04f5cb14bf6da86b6c581b48ef3db810fdf6dce44921128",
+      "uiState": "scenarioSetup",
+      "scenarioId": "iceAndDeathPart1",
+      "nodes": [
+        "checkpoint1"
+      ]
+    },
+    {
+      "label": "chapter1:next",
+      "hash": "7cd8cfc45985fe1b9968f204acbb90d51b2c479fbab9de2678b6de9e8e266b5f",
+      "uiState": "inScenario",
+      "scenarioId": "iceAndDeathPart2"
+    },
+    {
+      "label": "chapter2:result",
+      "hash": "0fd9cb75d713e229e8e5055d786ca6836bc5912ad8d92e10f75e173d12f0ecac",
+      "uiState": "scenarioResult",
+      "scenarioId": "iceAndDeathPart2"
+    },
+    {
+      "label": "chapter2:continue",
+      "hash": "2023b19bc413a82cfec8afba4f41291730075d018dd1adb965933158cef22025",
+      "uiState": "scenarioSetup",
+      "scenarioId": "iceAndDeathPart2",
+      "nodes": [
+        "checkpoint2"
+      ]
+    },
+    {
+      "label": "chapter2:next",
+      "hash": "0441345061f2af864a70d3352ab3d940be0a0a34431216d4de0dc1a817e7c017",
+      "uiState": "inScenario",
+      "scenarioId": "iceAndDeathPart3"
+    },
+    {
+      "label": "chapter3:result",
+      "hash": "b63b070732141f9f0692601d43cbdedce2123abea6a04c27c91b0ad70c52e47e",
+      "uiState": "scenarioResult",
+      "scenarioId": "iceAndDeathPart3"
+    },
+    {
+      "label": "chapter3:continue",
+      "hash": "6fe040f0cd6aa8f8c4e5c6ae2429417f1b7a1540ad146d218b9147384bd144bb",
+      "uiState": "scenarioSetup",
+      "scenarioId": "iceAndDeathPart3",
+      "nodes": [
+        "interlude1"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 // Outgoing attack choreography keyed by the public `attackStyle` of an attack
 // cue. Each plan lists its overlay elements, the strike and impact motions as
 // [element, keyframes, duration], and the sound cue for each beat.
+import { ATTACK_THEMES } from './attack-themes.js'
+import { themedAttackChoreography } from './themed-attack-fx.js'
 const SVG = 'http://www.w3.org/2000/svg'
 const place = (el, style) => { Object.assign(el.style, style); return el }
 const zigzag = (from, to, jitter) => {
@@ -159,6 +161,7 @@ export function blastChoreography({ node, from, center, radius, targets }) {
 }
 
 export function attackChoreography(style, geometry) {
+  if (Object.hasOwn(ATTACK_THEMES, style)) return themedAttackChoreography(style, geometry, (base, g) => STYLES[base](g))
   const name = Object.hasOwn(STYLES, style) ? style : 'default'
   return { style: name, ...STYLES[name](geometry) }
 }

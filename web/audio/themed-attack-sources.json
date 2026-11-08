@@ -1,0 +1,138 @@
+{
+  "downloaded": "2026-11-07",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "samples": [
+    {
+      "file": "p1-energy.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/forceField_000.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 25672,
+      "sha256": "c2916f2a062c8ddd1aca2826d134fe90847037db31342726ffb0f9097afe339c",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-arcane-slash.ogg",
+      "author": "Kenney",
+      "pack": "rpg",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "original": "Audio/knifeSlice2.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-rpg.txt",
+      "bytes": 15099,
+      "sha256": "6c2064d0ef988d1ec3d56868e823ea8823a5cac00f2742560052633529407def",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-flame.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/thrusterFire_000.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 12360,
+      "sha256": "8a116f0304d91a0b551983e366a84a61ac25fed1c68e53b51bfd853149504988",
+      "changes": "First 0.85 s; mono 44.1 kHz Vorbis q4; 0.02 s fade-in and 0.18 s fade-out"
+    },
+    {
+      "file": "p1-arrow-hit.ogg",
+      "author": "Kenney",
+      "pack": "impact",
+      "source": "https://kenney.nl/assets/impact-sounds",
+      "original": "Audio/impactWood_medium_000.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-impact.txt",
+      "bytes": 6575,
+      "sha256": "1723a9fd25103ed41af06054814e84e65f4a772bac86ab2dc927da93d9592ff5",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-bow.ogg",
+      "author": "Kenney",
+      "pack": "rpg",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "original": "Audio/cloth2.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-rpg.txt",
+      "bytes": 11787,
+      "sha256": "8a7451193c38bc05483aec25dd193e163a15d44cf7fff04ac7912573231b0201",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-acid.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/slime_000.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 20870,
+      "sha256": "480ee82b690136ea9db6966a3c3033356b8274752795c4e37afd6b6defcfacff",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-flare.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/laserSmall_000.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 7286,
+      "sha256": "72b589eadd41781257ac859e4f4d030222e623390e4a1a83f6d05329a6e026f1",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-cord.ogg",
+      "author": "Kenney",
+      "pack": "rpg",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "original": "Audio/handleSmallLeather.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-rpg.txt",
+      "bytes": 10492,
+      "sha256": "ae3cbf695aa0a8b98b5a80a835be5a3ccbd5446a24db2235cd4c3cd6fc92ed96",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-resonance.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/forceField_002.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 27647,
+      "sha256": "051b0eafc479695af4ca3607d41fd4be41bae7c21f4f9508d004722b09f1bd63",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-void.ogg",
+      "author": "Kenney",
+      "pack": "scifi",
+      "source": "https://kenney.nl/assets/sci-fi-sounds",
+      "original": "Audio/forceField_004.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-scifi.txt",
+      "bytes": 26885,
+      "sha256": "05609bb296cbc287ae95ac8924c89809d69c89d7bb357cc6a117ec1b1ef65e09",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "p1-book.ogg",
+      "author": "Kenney",
+      "pack": "rpg",
+      "source": "https://kenney.nl/assets/rpg-audio",
+      "original": "Audio/bookOpen.ogg",
+      "license": "CC0 1.0",
+      "licenseFile": "LICENSE-Kenney-rpg.txt",
+      "bytes": 8273,
+      "sha256": "953390534377222bee89ac8cd9e60a58fdc037c71a4d7c18c43cd647c7f34ba8",
+      "changes": "Renamed only"
+    }
+  ]
+}

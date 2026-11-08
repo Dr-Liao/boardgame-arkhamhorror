@@ -6,7 +6,7 @@
 
 本目录是独立仓库 [boardgame-arkhamhorror](https://github.com/Dr-Liao/boardgame-arkhamhorror) 的 checkout，不是大厅仓库的 git submodule；父仓库会忽略其内容。源码开发和本仓库测试需将 checkout 放在大厅的 `games/arkhamhorror` 下；正式发行包可由游戏中心安装到大厅用户数据目录的 `mods/arkhamhorror/<版本>/`，无需放进 `games/`。
 
-当前可从大厅启动《夜之狂热》《敦威治遗产》《卡尔克萨之路》《失落的时代》《万象无终》和《食梦者》。《万象无终》已完成原战役九章、377 条卡面记录及双语完整指南的验收，移除提前体验标记，详见 [补完记录](docs/tcu-completion.md)。《食梦者》按 `playable + earlyAccess` 开放；并行共享幕间、尾声及真实双人联机验收的边界见 `audit/tde-migration.json`。`playable` 表示在本 Mod 明确声明的实现边界内可完成流程，不代表与桌游原版规则等价；提前开放但仍有已登记近似项的内容会同时标记 `earlyAccess`，差异以 `audit/` 账本为准。
+当前可从大厅启动《夜之狂热》《敦威治遗产》《卡尔克萨之路》《失落的时代》《万象无终》《食梦者》和《地球边缘》。《万象无终》已完成原战役九章、377 条卡面记录及双语完整指南的验收，移除提前体验标记，详见 [补完记录](docs/tcu-completion.md)。《食梦者》按 `playable + earlyAccess` 开放；并行共享幕间、尾声及真实双人联机验收的边界见 `audit/tde-migration.json`。《地球边缘》已于 P8 完成整体验收与发布（`earlyAccess:false`）：403 条记录逐卡账本无 missing/blocked、真实大厅发布/进度/联机浏览器验收与全量回归通过，已披露近似与维护项见 [P8 发布验收记录](docs/edgeOfTheEarth/p8-release.md)。`playable` 表示在本 Mod 明确声明的实现边界内可完成流程，不代表与桌游原版规则等价；提前开放但仍有已登记近似项的内容会同时标记 `earlyAccess`，差异以 `audit/` 账本为准。
 
 ## 安装
 

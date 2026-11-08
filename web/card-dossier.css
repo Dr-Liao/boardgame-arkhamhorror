@@ -19,7 +19,7 @@
 .ah-runtime-card-state{margin-top:18px;padding:16px;border:1px solid #af945858;border-radius:4px;background:#162a22;color:#e6d8b6}
 .ah-runtime-card-state h3,.ah-runtime-card-state h4{margin:0 0 10px;color:#d4b66d;font-size:13px;letter-spacing:2px}
 .ah-runtime-markers{display:flex;flex-wrap:wrap;gap:7px}.ah-runtime-marker{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid #bfa875;border-radius:4px;background:#13241d;color:#fff1ca}
-.ah-runtime-marker .ah-icon{width:15px;height:15px}.ah-runtime-marker small{color:inherit}.ah-runtime-marker-doom{background:#432343;border-color:#d5a4ce}.ah-runtime-marker-damage{background:#6c211b;border-color:#eaa48a}.ah-runtime-marker-horror{background:#253e68;border-color:#b1c6ef}
+.ah-runtime-marker .ah-icon{width:17px;height:17px}.ah-runtime-marker small{color:inherit}.ah-runtime-marker-doom{background:#432343;border-color:#d5a4ce}.ah-runtime-marker-damage{background:#6c211b;border-color:#eaa48a}.ah-runtime-marker-horror{background:#253e68;border-color:#b1c6ef}
 .ah-runtime-host{margin:10px 0 0;color:#c9bea3}.ah-runtime-card-state .ah-detail-attachments{margin-top:14px}
 /* 能力使用情况：上限（每回合 / 每场游戏…）与当前是否已用掉，逐条常驻显示。 */
 .ah-detail-usage{margin-top:14px}.ah-detail-usage-row{display:flex;align-items:center;gap:7px;margin:6px 0 0;padding:6px 9px;border:1px solid #9c8a5f66;border-radius:4px;background:#13241d;color:#e8d9b4}
@@ -41,19 +41,43 @@
 .ah-carddetail-modal .ah-detail-meta{margin-top:18px;border-top:1px solid var(--line);padding-top:13px;font-size:12px;color:#9eac96}.ah-carddetail-modal summary{cursor:pointer;color:#b5bc9f;font-size:12px}
 .ah-carddetail-modal .ah-resource-note,.ah-carddetail-modal .ah-art-caption{color:#a8b29b;font-size:11px;line-height:1.7}
 .ah-carddetail-modal .ah-presentation-settings{border-color:var(--line);border-radius:4px}.ah-carddetail-modal input,.ah-carddetail-modal select,.ah-catalog-modal input,.ah-catalog-modal select{color:#e5d8b9;background:#10231c;border-color:#af965955}
-.ah-rule-symbol{display:inline-flex;align-items:center;justify-content:center;vertical-align:-.16em;color:inherit;margin:0 .12em}.ah-rule-symbol .ah-icon{width:1.1em;height:1.1em}
+.ah-rule-symbol{display:inline-flex;align-items:center;justify-content:center;vertical-align:-.16em;color:inherit;margin:0 .12em}.ah-rule-symbol .ah-icon{width:1.2em;height:1.2em}
 .ah-card-glyph{font-family:'AHCardSymbols'!important;font-size:1.15em;font-weight:normal;font-style:normal;line-height:1;text-transform:none;letter-spacing:0;font-variant:normal}
+/* 意志/智力/战斗/敏捷：属性符号在任意卡文里都放大一档，避免图标比旁边的数字还小。 */
+.ah-rule-symbol[data-card-symbol="willpower"] .ah-card-glyph,
+.ah-rule-symbol[data-card-symbol="intellect"] .ah-card-glyph,
+.ah-rule-symbol[data-card-symbol="combat"] .ah-card-glyph,
+.ah-rule-symbol[data-card-symbol="agility"] .ah-card-glyph{font-size:1.25em}
 .ah-card-glyph-icons{font-family:'AHCardSymbolIcons'!important}
 .ah-card-glyph-slim{font-family:'AHCardSymbolSlim'!important}
 .ah-carddetail-modal .ah-card-full-stats .ah-rule-symbol,.ah-carddetail-modal .ah-card-full-stats .ah-card-glyph{padding:0;border:0;background:none;border-radius:0}
+/* 调查员四维与生命/理智：图标放大到 18px、数字 13px；1x 屏上也能一眼分清六个数值。
+   （生命/理智是矢量剪影，见 table-components.js；不再用会糊的位图蒙版。） */
+.ah-carddetail-modal .ah-card-full-stats{gap:7px;margin-top:12px}
+.ah-carddetail-modal .ah-card-full-stats-investigator > span,
+.ah-carddetail-modal .ah-card-full-stats-vitals > span{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;font-size:13px;line-height:1.3}
+.ah-carddetail-modal .ah-card-full-stats-investigator .ah-rule-symbol,
+.ah-carddetail-modal .ah-card-full-stats-vitals .ah-rule-symbol{margin:0}
+.ah-carddetail-modal .ah-card-full-stats-investigator .ah-rule-symbol .ah-icon,
+.ah-carddetail-modal .ah-card-full-stats-vitals .ah-rule-symbol .ah-icon{width:18px;height:18px}
+.ah-carddetail-modal .ah-card-full-stats-investigator .ah-rule-symbol .ah-card-glyph{font-size:17px}
 .ah-enemy-stat{display:inline-flex;align-items:baseline;gap:4px}.ah-enemy-stat strong{font-size:14px}.ah-enemy-stat small{font-size:11px}
 .ah-enemy-stat .is-positive{color:#a4d697}.ah-enemy-stat .is-negative{color:#f29c84}
 .ah-enemy-stat[data-enemy-stat=damage] .ah-rule-symbol{color:#e88a74}.ah-enemy-stat[data-enemy-stat=horror] .ah-rule-symbol{color:#9fc3e4}
 .ah-enemy-health{display:grid;grid-template-columns:16px auto auto 1fr;align-items:center;gap:6px;max-width:320px;margin-top:10px;padding:6px 10px;border:1px solid #ad78634d;border-radius:4px;background:#46261b40;color:#edb09a}
 .ah-enemy-health.has-hint{grid-template-columns:16px auto auto auto 1fr;max-width:360px}
 .ah-enemy-health-hint{font-size:11px;color:#c99a88;white-space:nowrap}
-.ah-enemy-health .ah-icon{width:16px;height:16px}.ah-enemy-health-label{font-size:12px}
+.ah-enemy-health .ah-icon{width:18px;height:18px}.ah-enemy-health-label{font-size:12px}
 .ah-enemy-health-value{display:inline-flex;align-items:baseline;gap:3px}.ah-enemy-health-value strong{font-size:17px;color:#ffd8c8}.ah-enemy-health-value small{font-size:12px;color:#c99a88}
 .ah-enemy-health-track{height:5px;border-radius:3px;background:#0005;overflow:hidden}.ah-enemy-health-track i{display:block;height:100%;background:linear-gradient(90deg,#b5452f,#e3836a)}
 .ah-log-line.is-enemy{border-left:2px solid #bb7051}.ah-log-line.is-mythos{border-left:2px solid #ad90ba}.ah-log-line.is-upkeep{border-left:2px solid #91a97c}
 @media(max-width:700px){.ah-carddetail-modal.bg-modal{padding:16px}.ah-carddetail-modal .ah-detail-layout{grid-template-columns:1fr;gap:16px}.ah-carddetail-modal .ah-card-full{padding:16px}.ah-carddetail-modal .ah-art img{max-height:45vh}.ah-carddetail-modal .ah-card-full-name{font-size:23px}}
+/* 390 宽时六枚数值胶囊要留在同一行：收紧间距与内边距，图标仍保持 17px 的清晰度。 */
+@media(max-width:700px){
+  .ah-carddetail-modal .ah-card-full-stats{gap:4px}
+  .ah-carddetail-modal .ah-card-full-stats-investigator > span,
+  .ah-carddetail-modal .ah-card-full-stats-vitals > span{padding:3px 7px;gap:5px}
+  .ah-carddetail-modal .ah-card-full-stats-investigator .ah-rule-symbol .ah-icon,
+  .ah-carddetail-modal .ah-card-full-stats-vitals .ah-rule-symbol .ah-icon{width:17px;height:17px}
+  .ah-carddetail-modal .ah-card-full-stats-investigator .ah-rule-symbol .ah-card-glyph{font-size:16px}
+}

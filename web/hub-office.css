@@ -101,6 +101,8 @@
 .ah-office-entry-title small { color: #ac9b6b; letter-spacing: 7px; font-size: 10px; }
 .ah-office-entry-title h2 { margin: 12px 0 22px; font-size: clamp(36px, 4vw, 56px); letter-spacing: 10px; color: #ebd6a0; }
 .ah-office-entry-title p { color: #bec2a8; font-family: SimSun, serif; letter-spacing: 3px; font-size: 13px; }
+.ah-office.ah-hub-setup { position: relative; }
+.ah-office .ah-hub-setup-cancel { position: absolute; top: 12px; right: 12px; z-index: 3; }
 .ah-office-entry-controls { padding: 42px 36px; min-width: 0; }
 .ah-office-entry-controls > h2 { margin: 16px 0 26px; font-size: 30px; color: #f2dfb2; }
 /* 开局弹窗的页签：两页等宽、紧凑，只占自身宽度。主题色把整行铺成一条底色时，右侧空白
@@ -132,7 +134,7 @@
 .ah-ai-dialogue-settings > span { display: grid; gap: 3px; color: #e2c98f; }
 .ah-ai-dialogue-settings .bg-btn { flex: none; min-height: 34px; padding: 7px 11px; font-size: 11px; }
 .ah-ai-dialogue-backdrop { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 24px; background: #020806d9; }
-.ah-ai-dialogue-modal { width: min(720px, 96vw); max-height: min(820px, 90vh); overflow: auto; border: 1px solid #806f48; background: #14241e; box-shadow: 0 22px 70px #000c; padding: 22px; color: #d4c7a0; }
+.ah-ai-dialogue-modal { box-sizing: border-box; width: min(720px, 100%); min-width: 0; max-height: min(820px, 90vh); overflow: auto; border: 1px solid #806f48; background: #14241e; box-shadow: 0 22px 70px #000c; padding: 22px; color: #d4c7a0; }
 .ah-ai-dialogue-modal > header { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--office-edge); padding-bottom: 14px; }
 .ah-ai-dialogue-modal h2 { margin: 3px 0 0; color: #f2dfb2; }
 .ah-ai-dialogue-modal h3 { margin: 0 0 5px; color: #e2c98f; font-size: 14px; }
@@ -141,6 +143,13 @@
 .ah-ai-dialogue-range { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
 .ah-game-settings-select { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
 .ah-game-settings-select select { width: 100%; min-height: 32px; border: 1px solid var(--office-edge); border-radius: 2px; background: #0e1c17; color: #e2c98f; padding: 5px 8px; font-size: 12px; }
+.ah-game-mode-settings { display: grid; gap: 12px; }
+.ah-game-mode-settings h3 { margin: 0; }
+.ah-game-mode-select { appearance: none; color-scheme: dark; width: min(100%, 360px); min-height: 44px; border: 1px solid #806f48; border-radius: 4px; background-color: #0e1c17; background-image: linear-gradient(45deg, transparent 50%, #e2c98f 50%), linear-gradient(135deg, #e2c98f 50%, transparent 50%); background-position: calc(100% - 20px) 19px, calc(100% - 14px) 19px; background-size: 6px 6px; background-repeat: no-repeat; color: #f2dfb2; padding: 10px 40px 10px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+.ah-game-mode-select:hover { border-color: #bda468; }
+.ah-game-mode-select:focus-visible { outline: 2px solid #d6bc7d; outline-offset: 3px; }
+.ah-game-mode-select option { background: #14241e; color: #f2dfb2; }
+.ah-ai-dialogue-modal .ah-game-mode-description { margin: 0; color: var(--office-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
 .ah-ai-dialogue-control { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 8px; }
 .ah-ai-dialogue-control input { width: 100%; accent-color: #bda468; }
 .ah-ai-dialogue-control output { color: #f2dfb2; text-align: right; font-variant-numeric: tabular-nums; }
@@ -165,7 +174,9 @@
 .ah-office-hero h1 { font-size: clamp(36px, 4.2vw, 62px); color: #efdeb0; letter-spacing: 7px; margin: 20px 0; line-height: 1.2; text-shadow: 0 4px 20px #0007; }
 .ah-office-hero-copy > p { color: #adbaa7; font-size: 14px; letter-spacing: 2px; }
 .ah-office-metrics { display: flex; flex-wrap: wrap; gap: 24px; margin: 25px 0; }
-.ah-office-metric { display: inline-grid; grid-template-columns: 22px auto; column-gap: 8px; color: #e3cca0; align-items: center; }
+.ah-office-metric { display: inline-grid; grid-template-columns: 26px auto; column-gap: 8px; color: #e3cca0; align-items: center; }
+/* 四维/生命/理智的图标比 22px 的数字再大一点，一眼能看出属性符号。 */
+.ah-office .ah-office-metric .ah-icon { width: 24px; height: 24px; }
 .ah-office-metric b { font-size: 22px; font-weight: 500; }
 .ah-office-metric small { grid-column: 1 / -1; font-size: 10px; color: #a9b7a1; text-align: center; margin-top: 4px; }
 .ah-office-primary { margin-top: 28px; }
@@ -419,7 +430,7 @@
   .ah-office-dossier-copy p, .ah-office-dossier-copy button { font-size: 10px; }
   .ah-office .ah-campaign-graph { grid-template-columns: 1fr 1fr; gap: 10px; }.ah-office .ah-flow-node { padding: 14px 10px; font-size: 10px; }.ah-office .ah-flow-node strong { font-size: 13px; }
   .ah-office-cases { grid-template-columns: 1fr; gap: 10px; }.ah-office .ah-office-case { min-height: 240px; }.ah-office-case > .ah-office-decor { height: 250px; }
-  .ah-office .ah-office-investigator { grid-template-columns: 80px minmax(0, 1fr); gap: 14px; padding-top: 10px; }.ah-office-investigator > .ah-office-portrait { width: 80px; height: 115px; }.ah-office-investigator-copy h2 { font-size: 24px !important; margin: 12px 0; }.ah-office-investigator-copy .ah-office-eyebrow { font-size: 9px; letter-spacing: 1px; }.ah-office-investigator-copy .ah-office-metrics { gap: 10px; }.ah-office-investigator-copy .ah-office-metric { column-gap: 4px; grid-template-columns: 16px auto; }.ah-office-investigator-copy .ah-office-metric .ah-icon { width: 16px; }.ah-office-investigator-copy .ah-office-metric b { font-size: 17px; }
+  .ah-office .ah-office-investigator { grid-template-columns: 80px minmax(0, 1fr); gap: 14px; padding-top: 10px; }.ah-office-investigator > .ah-office-portrait { width: 80px; height: 115px; }.ah-office-investigator-copy h2 { font-size: 24px !important; margin: 12px 0; }.ah-office-investigator-copy .ah-office-eyebrow { font-size: 9px; letter-spacing: 1px; }.ah-office-investigator-copy .ah-office-metrics { gap: 10px; }.ah-office-investigator-copy .ah-office-metric { column-gap: 4px; grid-template-columns: 20px auto; }.ah-office-investigator-copy .ah-office-metric .ah-icon { width: 20px; }.ah-office-investigator-copy .ah-office-metric b { font-size: 17px; }
   .ah-investigator-browser { margin-left: -94px; padding: 14px; }.ah-investigator-browser-head { align-items: stretch; flex-direction: column; }.ah-investigator-filter-bar { justify-content: flex-start; gap: 8px; }.ah-investigator-class-filters { justify-content: flex-start; }.ah-office-roster { gap: 8px; }.ah-office-candidate { width: 75px; }.ah-office-candidate-shell { width: 75px; }.ah-office-candidate .ah-office-portrait { width: 53px; height: 70px; }
   .ah-office .ah-hub-actions .bg-btn { padding: 10px 12px; font-size: 12px; }
   .ah-office.ah-db-modal { padding: 15px; }.ah-office.ah-db-modal > h2 { font-size: 18px; }.ah-office-builder { display: flex; flex-direction: column; }.ah-office .ah-hub-card-pool { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 44vh; gap: 10px; }.ah-office-deck-tray { padding: 14px; }.ah-office .ah-hub-deck-list { max-height: 180px; }.ah-office-cost-curve { height: 60px; }.ah-office-filters { gap: 5px; }.ah-office-filters button { flex: 1; padding: 7px; }.ah-office-filters input { flex-basis: 100%; }

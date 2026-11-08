@@ -1,0 +1,783 @@
+{
+  "kind": "chapter-translation",
+  "entries": [
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "heading",
+      "en": "Scenario III",
+      "zh": "冒险III",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "specialRules.0.title",
+      "en": "",
+      "zh": "钥匙",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "specialRules.0.body",
+      "en": "",
+      "zh": "本冒险的设置会指示玩家将随机的混乱标记作为钥匙，各放置一枚在16处城市景观地点上。这些钥匙永远不会被放入混乱袋，也不会像传统的混乱标记那样结算。它们代表调查员可以在整场冒险中取得并使用的钥匙。\n\n钥匙可以通过以下两种方式之一取得：\n\n• 如果一处放有钥匙的地点没有线索，调查员可以作为一个[fast]能力取得该钥匙的控制权。\n\n• 某些卡牌效果可能允许调查员以其他方式取得钥匙的控制权。\n\n当调查员取得一把钥匙的控制权时，该调查员将这把钥匙放在自己的调查员卡上。如果一名控制一把或更多钥匙的调查员被消除，将这些钥匙分别放置在其所在地点。作为一个[action]能力，调查员可以将任意数量的自己的钥匙交给同一地点的另一名调查员。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "label.v1",
+      "en": "Proceed to _Setup (v. I)_",
+      "zh": "进入设置（版本一）",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "label.v2",
+      "en": "Proceed to _Setup (v. II)_",
+      "zh": "进入设置（版本二）",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "label.v3",
+      "en": "Proceed to _Setup (v. III)_",
+      "zh": "进入设置（版本三）",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "resolutions.xp.bonus",
+      "en": "Each pair of chaos tokens spent during this scenario",
+      "zh": "本场冒险期间每花费的一对混乱标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "remembered.theTeamStudiedTheHistoryOfTheElderThings",
+      "en": "The team studied the history of the Elder Things.",
+      "zh": "队伍研究了古老者的历史。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "remembered.theTeamDiscernedTheOriginOfTheShoggoths",
+      "en": "The team discerned the origin of the Shoggoths.",
+      "zh": "队伍查明了修格斯的起源。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.easyStandard.skull",
+      "en": "–X. X is the number of keys you control.",
+      "zh": "–X。X为你控制的钥匙数量。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.easyStandard.cultist",
+      "en": "–2. If you fail, place a key you control on your location.",
+      "zh": "–2。如果你检定失败，将你控制的一把钥匙放置在你所在地点。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.easyStandard.tablet",
+      "en": "–3. If a {'{'}frost{'}'} token was revealed during this test, you automatically fail, instead.",
+      "zh": "–3。如果本次检定中揭示了[frost]标记，则改为你自动失败。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.easyStandard.elderThing",
+      "en": "–4. If you fail, the nearest enemy moves once toward you. If it is engaged with you, it attacks.",
+      "zh": "–4。如果你检定失败，最近的敌人朝你移动一次。如果它与你交战，它发动攻击。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.hardExpert.skull",
+      "en": "–X. X is 2 plus the number of keys you control.",
+      "zh": "–X。X为2加上你控制的钥匙数量。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.hardExpert.cultist",
+      "en": "–2. Place a key you control on your location.",
+      "zh": "–2。将你控制的一把钥匙放置在你所在地点。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.hardExpert.tablet",
+      "en": "–4. If a {'{'}frost{'}'} token was revealed during this test, take 1 damage and you automatically fail, instead.",
+      "zh": "–4。如果本次检定中揭示了[frost]标记，则改为受到1点伤害，并且你自动失败。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "tokens.hardExpert.elderThing",
+      "en": "–5. If you fail, the nearest enemy moves once toward you. If it is engaged with you, it attacks.",
+      "zh": "–5。如果你检定失败，最近的敌人朝你移动一次。如果它与你交战，它发动攻击。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *City of the Elder Things*, *Elder Things*, *Miasma*, *Nameless Horrors*, *Penguins*, *Shoggoths*, *Tekeli-li*, and *Locked Doors*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/city-of-the-elder-things.png' /><img src='{setImgPath}/elder-things.png' /><img src='{setImgPath}/miasma.png' /><img src='{setImgPath}/nameless-horrors.png' /><img src='{setImgPath}/penguins.png' /><img src='{setImgPath}/shoggoths.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/locked-doors.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：古老者之城、古老者、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、紧锁之门。这些遭遇组由以下图标标示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.setAside",
+      "en": "Set aside the *Shoggoths* encounter set.",
+      "zh": "将修格斯遭遇组放在一边，置于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.createActDeck",
+      "en": "Create the act deck using only Sprawling City (v. I) and Pursuit of the Unknown (v. I). Remove all other act cards from the game.",
+      "zh": "仅使用《错综复杂之城》（版本一）和《追寻未知》（版本一）创建幕牌堆。将其他所有幕卡移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.placeLocations",
+      "en": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.",
+      "zh": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.startAt",
+      "en": "The lead investigator chooses one of the eight outermost locations. Each investigator begins play at the chosen location.",
+      "zh": "调查员队长选择八处最外侧地点中的一处。每位调查员从所选地点开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.adjacency",
+      "en": "Locations in this scenario are connected to each adjacent location.",
+      "zh": "本冒险中的地点与每一处相邻地点相连接。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.keys",
+      "en": "Gather two copies of each of the following tokens from the collection (*not from the chaos bag*): {'{'}skull{'}'}, {'{'}cultist{'}'}, {'{'}tablet{'}'}, {'{'}elderThing{'}'}, 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”",
+      "zh": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.addElderThingToken",
+      "en": "Add 1 {'{'}elderThing{'}'} token to the chaos bag.",
+      "zh": "向混乱袋中加入1枚[elder_thing]标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v1.removals",
+      "en": "Remove all three copies of the Benign Elder Thing enemy from the game. Set the Terror of the Stars enemy aside, out of play.",
+      "zh": "将全部3张和蔼的古老者敌人移出游戏。将星之恐怖敌人放在一边，置于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *City of the Elder Things*, *Creatures in the Ice*, *Elder Things*, *Nameless Horrors*, *Penguins*, *Silence and Mystery*, *Tekeli-li*, and *Chilling Cold*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/city-of-the-elder-things.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/elder-things.png' /><img src='{setImgPath}/nameless-horrors.png' /><img src='{setImgPath}/penguins.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/chilling-cold.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、古老者、无名恐怖、企鹅、寂静与谜团、忒咳哩-哩、刺骨严寒。这些遭遇组由以下图标标示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.setAside",
+      "en": "Set aside the *Creatures in the Ice* encounter set.",
+      "zh": "将冰中生物遭遇组放在一边，置于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.createActDeck",
+      "en": "Create the act deck using only Sprawling City (v. II) and Pursuit of the Unknown (v. II). Remove all other act cards from the game.",
+      "zh": "仅使用《错综复杂之城》（版本二）和《追寻未知》（版本二）创建幕牌堆。将其他所有幕卡移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.placeLocations",
+      "en": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.",
+      "zh": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.startAt",
+      "en": "Each investigator begins play at the location on the bottom-right.",
+      "zh": "每位调查员从右下方的那处地点开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.adjacency",
+      "en": "Locations in this scenario are connected to each adjacent location.",
+      "zh": "本冒险中的地点与每一处相邻地点相连接。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.keys",
+      "en": "Gather two copies of each of the following tokens from the collection (*not from the chaos bag*): {'{'}skull{'}'}, {'{'}cultist{'}'}, {'{'}tablet{'}'}, {'{'}elderThing{'}'}, 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”",
+      "zh": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.addElderThingToken",
+      "en": "Add 1 {'{'}elderThing{'}'} token to the chaos bag.",
+      "zh": "向混乱袋中加入1枚[elder_thing]标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v2.removals",
+      "en": "Remove the Terror of the Stars enemy and all three copies of the Benign Elder Thing enemy from the game.",
+      "zh": "将星之恐怖敌人和全部3张和蔼的古老者敌人移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *City of the Elder Things*, *Creatures in the Ice*, *Miasma*, *Penguins*, *Shoggoths*, *Tekeli-li*, *Chilling Cold*, and *Locked Doors*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/city-of-the-elder-things.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/miasma.png' /><img src='{setImgPath}/penguins.png' /><img src='{setImgPath}/shoggoths.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/chilling-cold.png' /><img src='{setImgPath}/locked-doors.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、瘴气、企鹅、修格斯、忒咳哩-哩、刺骨严寒、紧锁之门。这些遭遇组由以下图标标示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.setAside",
+      "en": "Set aside the *Shoggoths* encounter set.",
+      "zh": "将修格斯遭遇组放在一边，置于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.createActDeck",
+      "en": "Create the act deck using only Sprawling City (v. III) and Pursuit of the Unknown (v. III). Remove all other act cards from the game.",
+      "zh": "仅使用《错综复杂之城》（版本三）和《追寻未知》（版本三）创建幕牌堆。将其他所有幕卡移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.placeLocations",
+      "en": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.",
+      "zh": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.startAt",
+      "en": "Each investigator begins play at the location on the top-left.",
+      "zh": "每位调查员从左上方的那处地点开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.adjacency",
+      "en": "Locations in this scenario are connected to each adjacent location.",
+      "zh": "本冒险中的地点与每一处相邻地点相连接。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.keys",
+      "en": "Gather two copies of each of the following tokens from the collection (*not from the chaos bag*): {'{'}skull{'}'}, {'{'}cultist{'}'}, {'{'}tablet{'}'}, {'{'}elderThing{'}'}, 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”",
+      "zh": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.v3.removals",
+      "en": "Remove the Terror of the Stars enemy and all three copies of the Reawakened Elder Thing enemy from the game.",
+      "zh": "将星之恐怖敌人和全部3张复苏的古老者敌人移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.removeUnearnedWeaknesses",
+      "en": "Remove from the game each copy of the Frostbitten and Possessed weaknesses that was not earned during the introduction.",
+      "zh": "将序幕期间未获得的所有冻伤弱点和附身弱点移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.checkDifficulty",
+      "en": "Check the difficulty level.",
+      "zh": "检查难度等级。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.hard",
+      "en": "If you are playing on Hard difficulty, add 1 doom to agenda 1a.",
+      "zh": "如果你在游玩困难难度，则在密谋1a上放置1个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.expert",
+      "en": "If you are playing on Expert difficulty, add 2 doom to agenda 1a.",
+      "zh": "如果你在游玩专家难度，则在密谋1a上放置2个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "setup.tekelili",
+      "en": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.",
+      "zh": "将所有尚未加入调查员牌库的忒咳哩-哩弱点卡牌洗混，组成忒咳哩-哩牌堆。将这个牌堆放在密谋牌堆旁。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "hiddenTunnelEntranceToTheDepths.label.spendSkullKey",
+      "en": "Spend Skull Key",
+      "zh": "花费骷髅钥匙",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "hiddenTunnelEntranceToTheDepths.label.doNotSpendSkullKey",
+      "en": "Do not Spend Skull Key",
+      "zh": "不花费骷髅钥匙",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "pursuitOfTheUnknown.label.doNotTakeHealing",
+      "en": "Do not take healing",
+      "zh": "不接受治疗",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "pursuitOfTheUnknown.label.healAll",
+      "en": "Heal 1 damage, 1 horror, and 1 trauma",
+      "zh": "治愈1点伤害、1点恐惧和1点创伤",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "pursuitOfTheUnknown.label.healPhysicalTrauma",
+      "en": "Heal 1 physical trauma",
+      "zh": "治愈1点肉体创伤",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/cityOfTheElderThings.json",
+      "guide": "cityOfTheElderThings",
+      "path": "pursuitOfTheUnknown.label.healMentalTrauma",
+      "en": "Heal 1 mental trauma",
+      "zh": "治愈1点精神创伤",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "heading",
+      "en": "Scenario IV",
+      "zh": "冒险IV",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.0.title",
+      "en": "",
+      "zh": "古代设施地点",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.0.body",
+      "en": "",
+      "zh": "古代设施地点存在于多个遭遇组中。（例如在本冒险中，《疯狂之心》遭遇组和《巨大封印》遭遇组都包含古代设施地点。）由于这些地点可能来自不同的遭遇组，它们的未揭示面没有遭遇组图标。要查看一处古代设施地点属于哪个遭遇组，请查看其已揭示面。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.1.title",
+      "en": "",
+      "zh": "封印",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.1.body",
+      "en": "",
+      "zh": "本冒险引入五枚封印标记，它们代表遏制伊夸之门内的疯狂所需的重要技术造物。每枚封印标记都有自己的符号，分别如下：[seal_a] [seal_b] [seal_c] [seal_d] [seal_e]\n\n这些封印标记每枚都有一面休眠面与一面激活面。激活面以符号周围发光的高亮标示。\n\n游戏会指示调查员何时将封印放入场，以及放入的封印是休眠还是激活。封印本身没有游戏效果。调查员必须设法弄清如何取得这些封印的控制权、将其激活并加以利用，以终结这场疯狂。\n\n当调查员取得一枚封印的控制权时，该调查员将它放在自己的调查员卡上。如果一名控制一枚或更多封印的调查员被消除（撤退除外），将这些封印移出游戏。这些封印将永久失去。\n\n作为一个[action]能力，调查员可以将一枚封印的控制权交给同一地点的另一名调查员，或取得同一地点的另一名调查员所控制的一枚封印的控制权。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.2.title",
+      "en": "",
+      "zh": "《疯狂之心》中的地点邻接",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "specialRules.2.body",
+      "en": "",
+      "zh": "本冒险中的地点按辐条和圆环的方式排列。共有三个圆环，每环五处地点；以及五条辐条，每条辐条三处地点。\n\n• 在本冒险中，每处地点都与其所在辐条上相邻的地点以及所在圆环上相邻的地点相连接。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "tokens.easyStandard.elderThing",
+      "en": "–4. If you fail by 3 or more, place 1 doom on the current agenda. This can cause the current agenda to advance.",
+      "zh": "–4。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。这可能导致当前密谋推进。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "tokens.hardExpert.elderThing",
+      "en": "–5. If you fail by 3 or more, place 1 doom on the current agenda. This can cause the current agenda to advance.",
+      "zh": "–5。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。这可能导致当前密谋推进。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *The Heart of Madness*, *The Great Seal*, *Miasma*, *Nameless Horrors*, *Penguins*, *Shoggoths*, *Tekeli-li*, *Ancient Evils*, and *Locked Doors*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/the-heart-of-madness.png' /><img src='{setImgPath}/the-great-seal.png' /><img src='{setImgPath}/miasma.png' /><img src='{setImgPath}/nameless-horrors.png' /><img src='{setImgPath}/penguins.png' /><img src='{setImgPath}/shoggoths.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/ancient-evils.png' /><img src='{setImgPath}/locked-doors.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：疯狂之心、巨大封印、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、远古恶魔、紧锁之门。这些遭遇组由以下图标标示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.gateOfYquaa",
+      "en": "Put The Gate of Y’quaa into play, revealed side faceup.",
+      "zh": "将伊夸之门放置入场，已揭示面朝上。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.startAt",
+      "en": "Each investigator begins play at The Gate of Y’quaa.",
+      "zh": "每位调查员从伊夸之门开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.unrevealedSideUnused",
+      "en": "*Note: The unrevealed side of The Gate of Y’quaa is not used in this part of the scenario.*",
+      "zh": "注：伊夸之门的未揭示面在本部分冒险中不使用。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.ancientFacility",
+      "en": "Shuffle all fifteen Ancient Facility locations (*five from The Great Seal encounter set and ten from The Heart of Madness encounter set*). Put locations into play in a pattern matching the map. Each location is placed randomly in one of the spaces indicated by the map.",
+      "zh": "将所有15处古代设施地点洗混（其中5处来自巨大封印遭遇组，10处来自疯狂之心遭遇组）。按照地图所示的图样将这些地点放置入场。每处地点随机放置在图上标示的其中一个位置。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.spokesAndRings",
+      "en": "The Ancient Facility locations in this scenario are organized into five spokes that branch out from The Gate of Y’quaa, and three rings that surround The Gate of Y’quaa.",
+      "zh": "本冒险中的古代设施地点分布为五条从伊夸之门向外延伸的辐条，以及三个环绕伊夸之门的圆环。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.setSealsAside",
+      "en": "Set the five seal tokens aside, out of play.",
+      "zh": "将五枚封印标记放在一边，置于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.checkDifficulty",
+      "en": "Check the difficulty level.",
+      "zh": "检查难度等级。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.hard",
+      "en": "If you are playing on Hard difficulty, add 1 doom to agenda 1a.",
+      "zh": "如果你在游玩困难难度，则在密谋1a上放置1个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.expert",
+      "en": "If you are playing on Expert difficulty, add 2 doom to agenda 1a.",
+      "zh": "如果你在游玩专家难度，则在密谋1a上放置2个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.setup.tekelili",
+      "en": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.",
+      "zh": "将所有尚未加入调查员牌库的忒咳哩-哩弱点卡牌洗混，组成忒咳哩-哩牌堆。将这个牌堆放在密谋牌堆旁。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart1",
+      "path": "part1.resolutions.resolution1.body",
+      "en": "<div class='resolution'><p>_Resolution 1_: With the massive door glowing and droning with some kind of alien electricity, you strain against it to open the way forward. Somewhere inside this place lie the answers to all of your questions. The reason you came here. You press onward not for the sake of your career, but for the sake of your very sanity. You must know the truth. Even if it breaks you.</p><ul><li>Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 1 bonus experience for each activated seal in play.<ul><li>_Experience_: {xp}</li></ul></li><li>In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.</li><li>Proceed to _Checkpoint III: The Other Side_.</li></ul></div>",
+      "zh": "结局 1：巨大的门闪着光，发出某种异星电流的嗡嗡声，你用力推门，想打开前进的道路。这个地方的某处藏着你所有问题的答案。你前来此地的原因。你继续向前，不是为了你的事业，而是为了你自己的理智。你必须知道真相。即使它会让你分崩离析。\n\n• 每位调查员取得的经验值等于胜利区中每张卡牌的胜利X数值。场上每有一枚已激活的封印，每位调查员获得1点奖励经验值。\n\n• 经验值：{xp}\n\n• 在剧本日志的“探险队”部分，记录场上每名伙伴支援上的伤害与恐惧数量。\n\n• 进入检查点III：彼端。",
+      "currentZh": "<div class='resolution'><p>_结局 1_: 巨大的门闪著光发出一种异星电流的嗡嗡声，你使劲推开它，打开了前进的路。你所有问题的答案就藏在这里某处。你前来这里的原因。你奋力向前，不是为了你的事业，而是为了让你自己理智。你必须要知道真相。即使它会让你分崩离析。</p><ul><li>每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。场上每有一个启动的封印，每位调查员取得1点奖励经验值。<ul><li>_经验_: {xp}</li></ul></li><li>在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。</li><li>进入 _检查点III：彼端_.</li></ul></div>",
+      "fixNote": "含英文标签「• Shelter Value: [shelterValue]」「• Experience: （按上述说明计算）」；应改为「• 庇护值：营地庇护值」「• 经验值：（按上述说明计算）」，其余正文保留。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *Stirring in the Deep*, *Agents of the Unknown*, *Chilling Cold*, and *Striking Fear*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/stirring-in-the-deep.png' /><img src='{setImgPath}/agents-of-the-unknown.png' /><img src='{setImgPath}/chilling-cold.png' /><img src='{setImgPath}/striking-fear.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：深海涌动、未知的使徒、刺骨严寒、惊骇袭击。这些遭遇组由以下图标标示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.strikingFear",
+      "en": "When gathering the *Striking Fear* encounter set, only gather 2x Dissonant Voices and 2x Frozen in Fear (*do not gather 3x Rotting Remains*).",
+      "zh": "收集惊骇袭击遭遇组时，只收集2张刺耳之声和2张呆若木鸡（不要收集3张腐烂的尸体）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.removeSets",
+      "en": "Search the encounter deck and all out-of-play areas for all cards from *The Great Seal*, *Shoggoths*, and *Locked Doors* encounter sets (*including the five “Ancient Facility” locations from The Great Seal encounter set*). Remove each card from those encounter sets from the game.",
+      "zh": "在遭遇牌库和所有场外区域中搜寻巨大封印、修格斯和紧锁之门遭遇组的所有卡牌（包括来自巨大封印遭遇组的5处“古代设施”地点）。将这些遭遇组中的每张卡牌移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.buildDecks",
+      "en": "Build the agenda deck using agendas 4–5 and the act deck using act 3. (These can be found in the *Stirring in the Deep* encounter set.)",
+      "zh": "使用密谋4–5构建密谋牌堆，并使用幕3构建幕牌堆。（这些卡牌可以在深海涌动遭遇组中找到。）",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.flipGate",
+      "en": "Flip The Gate of Y’quaa to its unrevealed side.",
+      "zh": "将伊夸之门翻至其未揭示面。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.placeLocations",
+      "en": "Take the five Mist-Pylon locations and the ten remaining Ancient Facility locations (*from The Heart of Madness encounter set*), shuffle them together, and put them into play at random using the same map as in Part I, except that five of the randomly placed Ancient Facility locations will instead be Mist-Pylon locations.",
+      "zh": "取出5处迷雾高塔地点和剩余10处古代设施地点（来自疯狂之心遭遇组），将它们洗混，并按照与第I部分相同的地图随机放置入场；不过，随机放置的古代设施地点中有5处会被改为迷雾高塔地点。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.innermostRing",
+      "en": "*Note: If all five locations in the innermost ring are Mist‑Pylons, start this process over.*",
+      "zh": "注：如果最内侧圆环上的五处地点全部是迷雾高塔，则重新开始此过程。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.startAt",
+      "en": "The lead investigator chooses an Ancient Facility location nearest to The Gate of Y’quaa. Each investigator begins play at the chosen location.",
+      "zh": "调查员队长选择一处最靠近伊夸之门的古代设施地点。每位调查员从所选地点开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.setAside",
+      "en": "Set the following cards aside, out of play: All fifteen copies of The Nameless Madness enemy, The Final Mirage act, the four Titanic Ramp locations, and the Hidden Tunnel location.",
+      "zh": "将以下卡牌放在一边，置于场外：全部15张“无名疯狂”敌人、最终幻景幕卡、4处巨大坡道地点，以及隐秘隧道地点。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.seals",
+      "en": "Place the seal tokens, as follows:",
+      "zh": "按以下方式放置封印标记：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.activated",
+      "en": "For each activated seal on The Gate of Y’quaa, choose an investigator to take control of it.",
+      "zh": "对于伊夸之门上的每枚已激活封印，选择一名调查员取得其控制权。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.dormant",
+      "en": "Each investigator with a dormant seal begins the game with it under their control.",
+      "zh": "每名拥有休眠封印的调查员在游戏开始时控制该封印。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.setup.removeOthers",
+      "en": "Remove each other seal from the game.",
+      "zh": "将其余每枚封印移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.label.chooseSealCount",
+      "en": "The investigators may choose how many seals they have:",
+      "zh": "调查员可以选择他们拥有多少枚封印：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.label.easierExperienceSeals",
+      "en": "For an easier experience, three random seals are “Placed” and the other two are “Recovered.”",
+      "zh": "若要较轻松的体验，随机3枚封印为“放置的封印”，其余2枚为“发现的封印”。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.label.averageExperienceSeals",
+      "en": "For an average experience, two random seals are “Placed,” one is “Recovered,” and the other two are not used.",
+      "zh": "若要有平均的体验，随机2枚封印为“放置的封印”，1枚为“发现的封印”，其余2枚不使用。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.label.harderExperienceSeals",
+      "en": "For a harder experience, one random seal is “Placed,” and the other four are not used.",
+      "zh": "若要较艰难的体验，随机1枚封印为“放置的封印”，其余4枚不使用。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.label.nightmarishExperienceSeals",
+      "en": "For a nightmarish experience, no seals are used.",
+      "zh": "若要噩梦般的体验，不使用任何封印。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.resolutions.noResolution.title",
+      "en": "No Resolution",
+      "zh": "未达成结局",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.resolutions.noResolution.body",
+      "en": "<div class='resolution'><p>_If no resolution was reached (each investigator was defeated)_: When you awaken, the facility is dark and quiet once more. You pull your companions to their feet and retreat back to the surface, wondering if you are too late to stop the entity beyond the gate from escaping. It is quiet. Peaceful. There are no more signs of icy phantasms, eerie mirages, or alien entities.</p><p>Back in the city nestled within the mountains, you take notes, photographs, and rubbings. The trip back to the ice shelf is swift and easy. Not even the cold weather fights you as you make your way back to the barrier camp. It is as if the entire continent of Antarctica has given itself over to you. You consider taking this time to continue studying the environment, but in the end, you decide to head back with your extensive findings. The sky is clear and beautiful as your ship departs from the ice shelf, heading north.</p><p>Still, you are troubled. The entity that was once sealed beyond the Elder Thing’s gateway was gone. There was almost no trace of it when you fled. Which can only mean it escaped, and could be anywhere. Or everywhere. Your thoughts turn dreadful. You remind yourself of the strange, vivid mirages the creature seemed to control. The lifelike hallucinations. You examine your palms and wonder if they are the same shape they always were, or a close facsimile. The air around you shimmers.</p><p>…Is any of this real?</p><ul><li>In your Campaign Log, record *the nameless madness escaped*.</li><li>In the “Expedition Team” section of the Campaign Log, cross off every name.</li><li>Each investigator is driven _insane_.</li><li>The investigators lose the campaign.</li></ul></div>",
+      "zh": "如果未能达成任何结局（每位调查员都被击败）：当你醒来时，设施已再度陷入黑暗与寂静。你把同伴们拉起来，撤回地表，心中想着自己是否已经太迟，没能阻止大门彼端的那个存在逃脱。四周安静、平和。再也没有冰霜幻影、诡异幻景或异星实体的迹象。\n\n回到群山之间的城市里，你记录笔记、拍摄照片、拓印图案。返回冰架的旅程迅速而轻松。就连寒冷的天气也没有阻碍你回到屏障营地。仿佛整个南极大陆都向你臣服了。你考虑过趁此机会继续研究这里的环境，但最终决定带着大量发现启程返回。当你的船离开冰架向北航行时，天空晴朗而美丽。\n\n然而，你仍然心神不宁。那个曾经被封在古老者大门彼端的实体不见了。你逃离时，几乎找不到它的任何痕迹。这只能意味着它已经逃脱，可能在任何地方。或者无处不在。你的念头变得可怖。你提醒自己，那生物似乎能控制那些奇怪而逼真的幻景。栩栩如生的幻觉。你端详自己的手掌，想知道它们是否还是原来那样的形状，还是某种近乎逼真的仿制品。你周围的空气闪烁着微光。\n\n……这一切是真的吗？\n\n• 在剧本日志中记录：无名疯狂逃脱了。\n\n• 在剧本日志的“探险队”部分，划掉每个名字。\n\n• 每位调查员发疯。\n\n• 调查员输掉这场战役。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.resolutions.resolution2.title",
+      "en": "Resolution 2",
+      "zh": "结局 2",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/theHeartOfMadness.json",
+      "guide": "theHeartOfMadnessPart2",
+      "path": "part2.resolutions.resolution3.title",
+      "en": "Resolution 3",
+      "zh": "结局 3",
+      "status": "untranslated"
+    }
+  ]
+}

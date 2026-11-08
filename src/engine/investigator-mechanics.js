@@ -2,6 +2,7 @@ import { beneathCards, storeBeneath, takeBeneath } from './commit-origins.js'
 import { eventWindowContext } from './event-window.js'
 import { registeredEntry } from './ability.js'
 import { cardDef } from './card-lookup.js'
+import { canCommitDeckTop, commitDeckTop, validateEoteInvestigatorFields } from './eote-investigator-support.js'
 
 export function canDiscardControlledAsset(state, inv, asset) {
   const entry = registeredEntry(asset?.code)
@@ -22,6 +23,7 @@ export function createInvestigatorApi(state, events, deps) {
 }
 
 export function validateInvestigatorMechanics(state) {
+  for (const inv of state.investigators || []) validateEoteInvestigatorFields(inv)
   const test = state.skillTest
   if (test) {
     if (test.target != null && (!['fight', 'evade', 'investigate'].includes(test.actionKind) || !['enemy', 'location'].includes(test.target.kind)
@@ -56,6 +58,8 @@ export function createInvestigatorMechanics(state, deps) {
   const { choice, draw, commit, canCommit, returnAsset, discardAsset, playAsset, cardName } = deps
   return {
     canDiscardAsset: (seat, asset) => canDiscardControlledAsset(state, state.investigators[seat], asset),
+    canCommitDeckTop: seat => canCommitDeckTop(state, seat),
+    commitDeckTop: seat => commitDeckTop(state, seat),
     canReturnAsset(seat, asset) {
       const inv = state.investigators[seat], entry = registeredEntry(asset?.code)
       return inv.assets.includes(asset) && !cardDef(asset.code)?.permanent && !asset.cannotLeavePlay

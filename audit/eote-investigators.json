@@ -1,0 +1,445 @@
+{
+  "schemaVersion": 1,
+  "cycle": "eote",
+  "phase": "P5",
+  "generatedBy": "tools/audit-eote-investigators.mjs",
+  "status": "verified",
+  "items": [
+    {
+      "code": "08001",
+      "name": "丹妮拉·雷耶丝",
+      "file": "src/cards/entries/08001.js",
+      "sha256": "ab8c5dc4c7be561dc2d5bb9e7fb07d3d89fabab65a750be37069e3916b6af868",
+      "signatures": [
+        {
+          "code": "08002",
+          "name": "机修工的扳手",
+          "file": "src/cards/entries/08002.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "7076302528ac7bfb14401a08c756c1cee433bec6900188c694bba984e712e1b1"
+        },
+        {
+          "code": "08003",
+          "name": "黑帮暴徒",
+          "file": "src/cards/entries/08003.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "fbbefaad454e2ec67d4f5367b912a0a404665ef34390b2aabe188574930f8a91"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/eote-investigator-*.test.mjs",
+        "audit/eote-node-acceptance.json",
+        "audit/eote-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "08004",
+      "name": "诺曼·威瑟斯",
+      "file": "src/cards/entries/08004.js",
+      "sha256": "fb341a9187745ec1258ce087cd9d4ee76910972b6292adad55853c9722ca325b",
+      "signatures": [
+        {
+          "code": "08005",
+          "name": "伊波恩之书",
+          "file": "src/cards/entries/08005.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "4257e8a02258b8f52a7b3eec7e193946056adba439a26a77367e7adcaf795ac4"
+        },
+        {
+          "code": "08006",
+          "name": "预示者",
+          "file": "src/cards/entries/08006.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "35544a67ca7edf6b8f38d49a8a6528902d1459072a0bb5962e9832e55b31eb68"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/eote-investigator-*.test.mjs",
+        "audit/eote-node-acceptance.json",
+        "audit/eote-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "08007",
+      "name": "蒙特雷·杰克",
+      "file": "src/cards/entries/08007.js",
+      "sha256": "f296036f53e4e0c277b77b4b88c1bd9a7e42cf2d64b2863c70b4e259f207cdc3",
+      "signatures": [
+        {
+          "code": "08008",
+          "name": "可靠的长鞭",
+          "file": "src/cards/entries/08008.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "45620d6b5bb9a9c0d21b4a6ac20f86ed77f66dfb221228810c13412b9979b0c9"
+        },
+        {
+          "code": "08009",
+          "name": "被埋葬的秘密",
+          "file": "src/cards/entries/08009.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "093299f66f674a181a95d31c2807fcdd39aa681672990dae31d243a0862e7206"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/eote-investigator-*.test.mjs",
+        "audit/eote-node-acceptance.json",
+        "audit/eote-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "08010",
+      "name": "陈丽丽",
+      "file": "src/cards/entries/08010.js",
+      "sha256": "ada89874d5035fe087cc98a14689614d99d859214e212e8d16ca1ac186aeb4ab",
+      "signatures": [
+        {
+          "code": "08015",
+          "name": "命运重担",
+          "file": "src/cards/entries/08015.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "2eac9249e5214e14f4ea3a8de744906b3a04cd6d520bb6209901e47cd8a3f19a"
+        },
+        {
+          "code": "08011a",
+          "name": "演武",
+          "file": "src/cards/entries/08011a.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "3515a00a0347fd09eaa56956357e76ee0c1c3b94f027a2ddc700f071ba56d42f"
+        },
+        {
+          "code": "08012a",
+          "name": "演武",
+          "file": "src/cards/entries/08012a.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "3bd9f4b9af7b4345d78974897111863829a2880624543b7f3f4a565f565cd2b8"
+        },
+        {
+          "code": "08013a",
+          "name": "演武",
+          "file": "src/cards/entries/08013a.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "46201d4a139890a72b662531c7b3b93b32b2e3fa5228b8f2c596c0f63d8dee2d"
+        },
+        {
+          "code": "08014a",
+          "name": "演武",
+          "file": "src/cards/entries/08014a.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "921040af447d74a3998ced6c792e2e245f4cde7b6389970ee067d9cd6896c4be"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/eote-investigator-*.test.mjs",
+        "audit/eote-node-acceptance.json",
+        "audit/eote-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "08016",
+      "name": "鲍勃·詹金斯",
+      "file": "src/cards/entries/08016.js",
+      "sha256": "2d150ce96b11628948ab2a103fe39f5d94fc6d7d53940d1027c0a3cc5b764b05",
+      "signatures": [
+        {
+          "code": "08017",
+          "name": "精明的交易",
+          "file": "src/cards/entries/08017.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "0bfde144e7cb6b13183de7a1bd52dbcefeba6d3148f682ab27b8f03db248704d"
+        },
+        {
+          "code": "08018",
+          "name": "贪婪",
+          "file": "src/cards/entries/08018.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "bea3151d8c2fc41f883f44ba33e2bc2aab0b1d079398da9310d7b4918d8a9412"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/eote-investigator-*.test.mjs",
+        "audit/eote-node-acceptance.json",
+        "audit/eote-investigators-browser.json"
+      ]
+    }
+  ],
+  "checks": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "parallelVersionsOutOfScope": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "parallelVersionsOutOfScope": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "deliveredInvestigators": [
+    "08001",
+    "08004",
+    "08007",
+    "08010",
+    "08016"
+  ],
+  "reprints": {
+    "parallelVersions": [
+      {
+        "code": "98007",
+        "name": "诺曼·威瑟斯（平行）",
+        "replacement": [
+          "98008",
+          "98009"
+        ],
+        "canonical": "08004",
+        "inScope": false,
+        "note": "平行调查员版本（iotv/rop）与替换专属卡不在本循环 403 条记录内，保持 catalog-only；本批只验收 08004/08007 及其专属卡。"
+      },
+      {
+        "code": "90062",
+        "name": "蒙特雷·杰克（平行）",
+        "replacement": [
+          "90063",
+          "90064"
+        ],
+        "canonical": "08007",
+        "inScope": false,
+        "note": "平行调查员版本（iotv/rop）与替换专属卡不在本循环 403 条记录内，保持 catalog-only；本批只验收 08004/08007 及其专属卡。"
+      }
+    ],
+    "signatureAlternates": [
+      {
+        "code": "98008",
+        "canonical": "08005",
+        "inScope": false,
+        "note": "deckRequirements.card 的替换映射用于数据核对；替换专属卡不随本批开放。"
+      },
+      {
+        "code": "98009",
+        "canonical": "08006",
+        "inScope": false,
+        "note": "deckRequirements.card 的替换映射用于数据核对；替换专属卡不随本批开放。"
+      },
+      {
+        "code": "90063",
+        "canonical": "08008",
+        "inScope": false,
+        "note": "deckRequirements.card 的替换映射用于数据核对；替换专属卡不随本批开放。"
+      },
+      {
+        "code": "90064",
+        "canonical": "08009",
+        "inScope": false,
+        "note": "deckRequirements.card 的替换映射用于数据核对；替换专属卡不随本批开放。"
+      }
+    ]
+  },
+  "boundary": "P5 只认证 5 位 EotE 调查员与 17 张专属依赖；一般玩家卡见 P6，八章与战役流程仍属 P7–P8。AI 随机选人池与既有 replay 基线不变。",
+  "sources": [
+    {
+      "path": "audit/eote-baseline.json",
+      "sha256": "e7eb3a2b4ed251de83a50b9393665a4404b2f86b3d55f6e02160030358ed73e6"
+    },
+    {
+      "path": "audit/eote-investigators-browser.json",
+      "sha256": "dc296fe28a2b0e6e45ea396435321f8c016825004693ab25383d06c3875ecec8"
+    },
+    {
+      "path": "audit/eote-node-acceptance.json",
+      "sha256": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc"
+    },
+    {
+      "path": "audit/eote-regression.json",
+      "sha256": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+      "sha256": "6b661722d69f81eb172022303893810ee5955b9e2d0d9a0fd728fe9716b502cd"
+    },
+    {
+      "path": "content/packs/eoteInvestigators/manifest.js",
+      "sha256": "112442a44692bfdc72d3cd0e2a4200a231267ccb155c4c5f5ff3036fb0c8c606"
+    },
+    {
+      "path": "src/cards/entries/08001.js",
+      "sha256": "ab8c5dc4c7be561dc2d5bb9e7fb07d3d89fabab65a750be37069e3916b6af868"
+    },
+    {
+      "path": "src/cards/entries/08002.js",
+      "sha256": "7076302528ac7bfb14401a08c756c1cee433bec6900188c694bba984e712e1b1"
+    },
+    {
+      "path": "src/cards/entries/08003.js",
+      "sha256": "fbbefaad454e2ec67d4f5367b912a0a404665ef34390b2aabe188574930f8a91"
+    },
+    {
+      "path": "src/cards/entries/08004.js",
+      "sha256": "fb341a9187745ec1258ce087cd9d4ee76910972b6292adad55853c9722ca325b"
+    },
+    {
+      "path": "src/cards/entries/08005.js",
+      "sha256": "4257e8a02258b8f52a7b3eec7e193946056adba439a26a77367e7adcaf795ac4"
+    },
+    {
+      "path": "src/cards/entries/08006.js",
+      "sha256": "35544a67ca7edf6b8f38d49a8a6528902d1459072a0bb5962e9832e55b31eb68"
+    },
+    {
+      "path": "src/cards/entries/08007.js",
+      "sha256": "f296036f53e4e0c277b77b4b88c1bd9a7e42cf2d64b2863c70b4e259f207cdc3"
+    },
+    {
+      "path": "src/cards/entries/08008.js",
+      "sha256": "45620d6b5bb9a9c0d21b4a6ac20f86ed77f66dfb221228810c13412b9979b0c9"
+    },
+    {
+      "path": "src/cards/entries/08009.js",
+      "sha256": "093299f66f674a181a95d31c2807fcdd39aa681672990dae31d243a0862e7206"
+    },
+    {
+      "path": "src/cards/entries/08010.js",
+      "sha256": "ada89874d5035fe087cc98a14689614d99d859214e212e8d16ca1ac186aeb4ab"
+    },
+    {
+      "path": "src/cards/entries/08011a.js",
+      "sha256": "3515a00a0347fd09eaa56956357e76ee0c1c3b94f027a2ddc700f071ba56d42f"
+    },
+    {
+      "path": "src/cards/entries/08012a.js",
+      "sha256": "3bd9f4b9af7b4345d78974897111863829a2880624543b7f3f4a565f565cd2b8"
+    },
+    {
+      "path": "src/cards/entries/08013a.js",
+      "sha256": "46201d4a139890a72b662531c7b3b93b32b2e3fa5228b8f2c596c0f63d8dee2d"
+    },
+    {
+      "path": "src/cards/entries/08014a.js",
+      "sha256": "921040af447d74a3998ced6c792e2e245f4cde7b6389970ee067d9cd6896c4be"
+    },
+    {
+      "path": "src/cards/entries/08015.js",
+      "sha256": "2eac9249e5214e14f4ea3a8de744906b3a04cd6d520bb6209901e47cd8a3f19a"
+    },
+    {
+      "path": "src/cards/entries/08016.js",
+      "sha256": "2d150ce96b11628948ab2a103fe39f5d94fc6d7d53940d1027c0a3cc5b764b05"
+    },
+    {
+      "path": "src/cards/entries/08017.js",
+      "sha256": "0bfde144e7cb6b13183de7a1bd52dbcefeba6d3148f682ab27b8f03db248704d"
+    },
+    {
+      "path": "src/cards/entries/08018.js",
+      "sha256": "bea3151d8c2fc41f883f44ba33e2bc2aab0b1d079398da9310d7b4918d8a9412"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
+    },
+    {
+      "path": "src/deck/deckbuilding.js",
+      "sha256": "654b99784b0bacef241d69d00fe5a6887a1b55bcad7abca99d6ad79316dbfeb8"
+    }
+  ],
+  "evidence": [
+    "audit/eote-node-acceptance.json",
+    "audit/eote-investigators-browser.json",
+    "audit/eote-regression.json",
+    "audit/eote-baseline.json"
+  ]
+}

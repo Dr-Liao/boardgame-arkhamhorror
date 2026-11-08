@@ -74,6 +74,11 @@ for (const width of [1440, 390]) {
     for (const name of ['combat', 'intellect', 'willpower', 'agility', 'health', 'sanity']) {
       await expect(metrics.locator(`[data-game-symbol="${name}"]`).first()).toBeVisible()
     }
+    // 四维图标尺寸回归：档案里的属性图标不能小于 18px（1x 屏可辨认下限；移动端 20px）。
+    for (const name of ['combat', 'intellect', 'willpower', 'agility']) {
+      const box = await metrics.locator(`.ah-office-metric [data-game-symbol="${name}"]`).first().boundingBox()
+      expect(box.width).toBeGreaterThanOrEqual(18)
+    }
     await page.evaluate(() => document.fonts.load('22px AHCardSymbols', 'ADFS'))
     await metrics.locator('.ah-office-metrics').evaluate(el => el.scrollIntoView({ block: 'center' }))
     await page.screenshot({ path: output + `investigator-game-symbols-${width}.png`, animations: 'disabled' })
@@ -86,10 +91,18 @@ for (const width of [1440, 390]) {
     for (const name of ['health', 'sanity']) {
       const icon = page.locator(`.ah-vital-${name} [data-game-symbol="${name}"]`)
       await expect(icon).toBeVisible()
-      const mask = await icon.evaluate(el => getComputedStyle(el).maskImage)
-      expect(mask).toContain(`/img/symbols/${name}.png`)
-      const response = await page.request.get(`/mods/arkhamhorror/img/symbols/${name}.png`)
-      expect(response.ok()).toBe(true)
+      // 生命/理智是矢量剪影：必须是内联 SVG 路径，不能退回会糊的 2000px 位图蒙版。
+      await expect(icon).toHaveClass(/ah-symbol-vector/)
+      const vector = await icon.evaluate(el => ({
+        mask: getComputedStyle(el).maskImage,
+        path: el.querySelector('path')?.getAttribute('d') || '',
+        fill: el.querySelector('path') ? getComputedStyle(el.querySelector('path')).fill : '',
+      }))
+      expect(vector.mask === 'none' || vector.mask === '').toBe(true)
+      expect(vector.path.length).toBeGreaterThan(40)
+      expect(vector.fill).not.toBe('none')
+      const box = await icon.boundingBox()
+      expect(box.width).toBeGreaterThanOrEqual(12)
     }
     const shared = await page.evaluate(async () => {
       const { tableIcon, classIcon } = await import('/mods/arkhamhorror/table-components.js')

@@ -778,6 +778,143 @@ import e07273 from './07273.js'
 import e07304 from './07304.js'
 import e07307 from './07307.js'
 import e07310 from './07310.js'
+import e08001 from './08001.js'
+import e08002 from './08002.js'
+import e08003 from './08003.js'
+import e08004 from './08004.js'
+import e08005 from './08005.js'
+import e08006 from './08006.js'
+import e08007 from './08007.js'
+import e08008 from './08008.js'
+import e08009 from './08009.js'
+import e08010 from './08010.js'
+import e08011a from './08011a.js'
+import e08011b from './08011b.js'
+import e08012a from './08012a.js'
+import e08012b from './08012b.js'
+import e08013a from './08013a.js'
+import e08013b from './08013b.js'
+import e08014a from './08014a.js'
+import e08014b from './08014b.js'
+import e08015 from './08015.js'
+import e08016 from './08016.js'
+import e08017 from './08017.js'
+import e08018 from './08018.js'
+import e08019 from './08019.js'
+import e08020 from './08020.js'
+import e08021 from './08021.js'
+import e08022 from './08022.js'
+import e08023 from './08023.js'
+import e08024 from './08024.js'
+import e08025 from './08025.js'
+import e08026 from './08026.js'
+import e08027 from './08027.js'
+import e08028 from './08028.js'
+import e08029 from './08029.js'
+import e08030 from './08030.js'
+import e08031 from './08031.js'
+import e08032 from './08032.js'
+import e08033 from './08033.js'
+import e08034 from './08034.js'
+import e08035 from './08035.js'
+import e08036 from './08036.js'
+import e08037 from './08037.js'
+import e08038 from './08038.js'
+import e08039 from './08039.js'
+import e08040 from './08040.js'
+import e08041 from './08041.js'
+import e08042 from './08042.js'
+import e08043 from './08043.js'
+import e08044 from './08044.js'
+import e08045 from './08045.js'
+import e08046 from './08046.js'
+import e08047 from './08047.js'
+import e08048 from './08048.js'
+import e08049 from './08049.js'
+import e08050 from './08050.js'
+import e08051 from './08051.js'
+import e08052 from './08052.js'
+import e08053 from './08053.js'
+import e08054 from './08054.js'
+import e08055 from './08055.js'
+import e08056 from './08056.js'
+import e08057 from './08057.js'
+import e08058 from './08058.js'
+import e08059 from './08059.js'
+import e08060 from './08060.js'
+import e08061 from './08061.js'
+import e08062 from './08062.js'
+import e08063 from './08063.js'
+import e08064 from './08064.js'
+import e08065 from './08065.js'
+import e08066 from './08066.js'
+import e08067 from './08067.js'
+import e08068 from './08068.js'
+import e08069 from './08069.js'
+import e08070 from './08070.js'
+import e08071 from './08071.js'
+import e08072 from './08072.js'
+import e08073 from './08073.js'
+import e08074 from './08074.js'
+import e08075 from './08075.js'
+import e08076 from './08076.js'
+import e08077 from './08077.js'
+import e08078 from './08078.js'
+import e08079 from './08079.js'
+import e08080 from './08080.js'
+import e08081 from './08081.js'
+import e08082 from './08082.js'
+import e08083 from './08083.js'
+import e08084 from './08084.js'
+import e08085 from './08085.js'
+import e08086 from './08086.js'
+import e08087 from './08087.js'
+import e08088 from './08088.js'
+import e08089 from './08089.js'
+import e08090 from './08090.js'
+import e08091 from './08091.js'
+import e08092 from './08092.js'
+import e08093 from './08093.js'
+import e08094 from './08094.js'
+import e08095 from './08095.js'
+import e08096 from './08096.js'
+import e08097 from './08097.js'
+import e08098 from './08098.js'
+import e08099 from './08099.js'
+import e08100 from './08100.js'
+import e08101 from './08101.js'
+import e08102 from './08102.js'
+import e08103 from './08103.js'
+import e08104 from './08104.js'
+import e08105 from './08105.js'
+import e08106 from './08106.js'
+import e08107 from './08107.js'
+import e08108 from './08108.js'
+import e08109 from './08109.js'
+import e08110 from './08110.js'
+import e08111 from './08111.js'
+import e08112 from './08112.js'
+import e08113 from './08113.js'
+import e08114 from './08114.js'
+import e08115 from './08115.js'
+import e08116 from './08116.js'
+import e08117 from './08117.js'
+import e08118 from './08118.js'
+import e08119 from './08119.js'
+import e08120 from './08120.js'
+import e08121 from './08121.js'
+import e08122 from './08122.js'
+import e08123 from './08123.js'
+import e08124 from './08124.js'
+import e08125 from './08125.js'
+import e08126 from './08126.js'
+import e08127 from './08127.js'
+import e08128 from './08128.js'
+import e08129 from './08129.js'
+import e08130 from './08130.js'
+import e08131 from './08131.js'
+import e08132 from './08132.js'
+import e08133 from './08133.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -1557,6 +1694,143 @@ export const CARD_ENTRY_LIST = [
   e07304,
   e07307,
   e07310,
+  e08001,
+  e08002,
+  e08003,
+  e08004,
+  e08005,
+  e08006,
+  e08007,
+  e08008,
+  e08009,
+  e08010,
+  e08011a,
+  e08011b,
+  e08012a,
+  e08012b,
+  e08013a,
+  e08013b,
+  e08014a,
+  e08014b,
+  e08015,
+  e08016,
+  e08017,
+  e08018,
+  e08019,
+  e08020,
+  e08021,
+  e08022,
+  e08023,
+  e08024,
+  e08025,
+  e08026,
+  e08027,
+  e08028,
+  e08029,
+  e08030,
+  e08031,
+  e08032,
+  e08033,
+  e08034,
+  e08035,
+  e08036,
+  e08037,
+  e08038,
+  e08039,
+  e08040,
+  e08041,
+  e08042,
+  e08043,
+  e08044,
+  e08045,
+  e08046,
+  e08047,
+  e08048,
+  e08049,
+  e08050,
+  e08051,
+  e08052,
+  e08053,
+  e08054,
+  e08055,
+  e08056,
+  e08057,
+  e08058,
+  e08059,
+  e08060,
+  e08061,
+  e08062,
+  e08063,
+  e08064,
+  e08065,
+  e08066,
+  e08067,
+  e08068,
+  e08069,
+  e08070,
+  e08071,
+  e08072,
+  e08073,
+  e08074,
+  e08075,
+  e08076,
+  e08077,
+  e08078,
+  e08079,
+  e08080,
+  e08081,
+  e08082,
+  e08083,
+  e08084,
+  e08085,
+  e08086,
+  e08087,
+  e08088,
+  e08089,
+  e08090,
+  e08091,
+  e08092,
+  e08093,
+  e08094,
+  e08095,
+  e08096,
+  e08097,
+  e08098,
+  e08099,
+  e08100,
+  e08101,
+  e08102,
+  e08103,
+  e08104,
+  e08105,
+  e08106,
+  e08107,
+  e08108,
+  e08109,
+  e08110,
+  e08111,
+  e08112,
+  e08113,
+  e08114,
+  e08115,
+  e08116,
+  e08117,
+  e08118,
+  e08119,
+  e08120,
+  e08121,
+  e08122,
+  e08123,
+  e08124,
+  e08125,
+  e08126,
+  e08127,
+  e08128,
+  e08129,
+  e08130,
+  e08131,
+  e08132,
+  e08133,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

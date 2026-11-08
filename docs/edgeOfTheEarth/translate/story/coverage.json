@@ -1,0 +1,2506 @@
+{
+  "area": "story",
+  "auditor": "story-audit",
+  "generatedAt": "2026-11-09",
+  "source": {
+    "path": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "sha256": "e474f514e0dfdb6d05d5b5eaef12c9b06b5020d98d265d6276d679119e6008a2",
+    "bytes": 831107,
+    "lines": 5679
+  },
+  "scope": {
+    "chapters": 8,
+    "chapterSections": 469,
+    "chapterGaps": 209,
+    "chapterGapsByStatus": {
+      "missing": 199,
+      "untranslated": 10
+    },
+    "campaignLocaleKeys": 258,
+    "campaignGaps": 69,
+    "campaignGapsByStatus": {
+      "missing": 68,
+      "untranslated": 1
+    }
+  },
+  "expectedMatches": {
+    "chapterTotal469": true,
+    "chapterMissing199": true,
+    "chapterUntranslated10": true,
+    "campaignMissing68": true,
+    "campaignUntranslated1": true
+  },
+  "checks": {
+    "chapterGapsEqualsMetaMissingPlusUntranslated": true,
+    "campaignGapsEqualsExpected68": false,
+    "allChapterGapsHaveDisplayFallback": true,
+    "allCampaignGapsDisplayEn": true,
+    "flowLeaks": 1,
+    "recordLabelKeyFallbacks": 25
+  },
+  "textIssues": {
+    "mixedByRule": {
+      "display-is-en-fallback": 209,
+      "latin-residue": 33
+    },
+    "latinResidueTop": [
+      {
+        "word": "frost",
+        "count": 16
+      },
+      {
+        "word": "Camp",
+        "count": 13
+      },
+      {
+        "word": "shelterValue",
+        "count": 2
+      },
+      {
+        "word": "Shelter",
+        "count": 1
+      },
+      {
+        "word": "Value",
+        "count": 1
+      },
+      {
+        "word": "Experience",
+        "count": 1
+      },
+      {
+        "word": "Setup",
+        "count": 1
+      },
+      {
+        "word": "Resolution",
+        "count": 1
+      },
+      {
+        "word": "Intro",
+        "count": 1
+      }
+    ],
+    "symbolsByRule": {
+      "dup-punct:。.": 67,
+      "halfwidth-comma-after-cjk": 6,
+      "quote-inner-space": 3,
+      "quote-mismatch-double": 20,
+      "halfwidth-period-after-cjk": 31,
+      "camp-title-en": 15,
+      "unknown-bracket-token": 2,
+      "halfwidth-colon-after-cjk": 24,
+      "icu-brace-residue": 32,
+      "halfwidth-question-after-cjk": 11,
+      "question-placeholder": 8,
+      "english-label-prefix": 2,
+      "halfwidth-exclaim-after-cjk": 2,
+      "space-before-fullwidth-punct": 3
+    },
+    "symbolsByRuleFields": {
+      "dup-punct:。.": 34,
+      "halfwidth-comma-after-cjk": 6,
+      "quote-inner-space": 3,
+      "quote-mismatch-double": 20,
+      "halfwidth-period-after-cjk": 24,
+      "camp-title-en": 14,
+      "unknown-bracket-token": 2,
+      "halfwidth-colon-after-cjk": 24,
+      "icu-brace-residue": 16,
+      "halfwidth-question-after-cjk": 11,
+      "question-placeholder": 8,
+      "english-label-prefix": 2,
+      "halfwidth-exclaim-after-cjk": 2,
+      "space-before-fullwidth-punct": 3
+    },
+    "tokenDiffs": 0,
+    "traditionalTotal": 451,
+    "traditionalByScope": {
+      "iceAndDeathPart1": 44,
+      "iceAndDeathPart2": 10,
+      "iceAndDeathPart3": 3,
+      "fatalMirage": 16,
+      "toTheForbiddenPeaks": 17,
+      "cityOfTheElderThings": 33,
+      "theHeartOfMadnessPart1": 56,
+      "theHeartOfMadnessPart2": 32,
+      "campaign": 240
+    },
+    "traditionalByChar": {
+      "著(着?)": 451
+    },
+    "mistranslationCandidates": {
+      "numberMismatch": 30,
+      "duplicateZh": 1,
+      "negationMismatch": 38,
+      "difficultyTerm": 9
+    }
+  },
+  "chapters": [
+    {
+      "id": "iceAndDeathPart1",
+      "status": "mixed",
+      "sectionCount": 55,
+      "declared": {
+        "total": 55,
+        "presentNeedsReview": 43,
+        "untranslated": 2,
+        "missing": 10
+      },
+      "gapCount": 12,
+      "gapByStatus": {
+        "missing": 10,
+        "untranslated": 2
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "setup": 2,
+        "other": 9
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.setAsideCreaturesInTheIce"
+      ],
+      "resolutionFallback": [],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            1990
+          ],
+          [
+            "label.proceedToIceAndDeathPart1",
+            2072
+          ],
+          [
+            "label.proceedToIntro2",
+            2073
+          ],
+          [
+            "label.skipToIntro3",
+            2074
+          ],
+          [
+            "label.skipToIntro4",
+            2075
+          ],
+          [
+            "label.proceedToIntro4",
+            2076
+          ],
+          [
+            "icebreakerLanding.label.removeFrost",
+            2092
+          ],
+          [
+            "icebreakerLanding.label.recordSmallRadio",
+            2093
+          ],
+          [
+            "manifestationsOfEvil.label.addFrost",
+            2098
+          ],
+          [
+            "manifestationsOfEvil.label.shuffleTekelili",
+            2099
+          ]
+        ],
+        "untranslated": [
+          [
+            "setup.gatherSets",
+            2017
+          ],
+          [
+            "setup.setAsideCreaturesInTheIce",
+            2018
+          ]
+        ]
+      }
+    },
+    {
+      "id": "iceAndDeathPart2",
+      "status": "mixed",
+      "sectionCount": 38,
+      "declared": {
+        "total": 38,
+        "presentNeedsReview": 30,
+        "untranslated": 2,
+        "missing": 6
+      },
+      "gapCount": 8,
+      "gapByStatus": {
+        "missing": 6,
+        "untranslated": 2
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "setup": 1,
+        "resolutions": 2,
+        "other": 4
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets"
+      ],
+      "resolutionFallback": [
+        "resolutions.label.proceedToResolution1",
+        "resolutions.noResolution.title"
+      ],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            2250
+          ],
+          [
+            "resolutions.label.proceedToResolution1",
+            2300
+          ],
+          [
+            "icebreakerLanding.label.removeFrost",
+            2325
+          ],
+          [
+            "icebreakerLanding.label.recordSmallRadio",
+            2326
+          ],
+          [
+            "manifestationsOfEvil.label.addFrost",
+            2331
+          ],
+          [
+            "manifestationsOfEvil.label.shuffleTekelili",
+            2332
+          ]
+        ],
+        "untranslated": [
+          [
+            "setup.gatherSets",
+            2275
+          ],
+          [
+            "resolutions.noResolution.title",
+            2303
+          ]
+        ]
+      }
+    },
+    {
+      "id": "iceAndDeathPart3",
+      "status": "mixed",
+      "sectionCount": 31,
+      "declared": {
+        "total": 31,
+        "presentNeedsReview": 15,
+        "untranslated": 2,
+        "missing": 14
+      },
+      "gapCount": 16,
+      "gapByStatus": {
+        "missing": 14,
+        "untranslated": 2
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "other": 6,
+        "setup": 9
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.buildAgendaDecks",
+        "setup.placeLocations",
+        "setup.unrevealed",
+        "setup.beginAtCamp",
+        "setup.removeClues",
+        "setup.seepingNightmares",
+        "setup.eidolons",
+        "setup.tekelili"
+      ],
+      "resolutionFallback": [],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            2452
+          ],
+          [
+            "setup.gatherSets",
+            2477
+          ],
+          [
+            "setup.buildAgendaDecks",
+            2478
+          ],
+          [
+            "setup.placeLocations",
+            2479
+          ],
+          [
+            "setup.unrevealed",
+            2480
+          ],
+          [
+            "setup.beginAtCamp",
+            2481
+          ],
+          [
+            "setup.removeClues",
+            2482
+          ],
+          [
+            "setup.seepingNightmares",
+            2483
+          ],
+          [
+            "setup.eidolons",
+            2484
+          ],
+          [
+            "setup.tekelili",
+            2485
+          ],
+          [
+            "icebreakerLanding.label.removeFrost",
+            2522
+          ],
+          [
+            "icebreakerLanding.label.recordSmallRadio",
+            2523
+          ],
+          [
+            "manifestationsOfEvil.label.addFrost",
+            2528
+          ],
+          [
+            "manifestationsOfEvil.label.shuffleTekelili",
+            2529
+          ]
+        ],
+        "untranslated": [
+          [
+            "investigatorSetup.title",
+            2473
+          ],
+          [
+            "investigatorSetup.body",
+            2474
+          ]
+        ]
+      }
+    },
+    {
+      "id": "fatalMirage",
+      "status": "mixed",
+      "sectionCount": 68,
+      "declared": {
+        "total": 68,
+        "presentNeedsReview": 21,
+        "untranslated": 1,
+        "missing": 46
+      },
+      "gapCount": 47,
+      "gapByStatus": {
+        "missing": 46,
+        "untranslated": 1
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "specialRules": 2,
+        "other": 11,
+        "resolutions": 14,
+        "setup": 19
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.firstTime.buildAgendaDeck",
+        "setup.firstTime.buildActDeck",
+        "setup.firstTime.placeLocations",
+        "setup.firstTime.startAt",
+        "setup.firstTime.setOtherLocationsAside",
+        "setup.firstTime.setOutOfPlay",
+        "setup.repeat.buildAgendaDeck",
+        "setup.repeat.buildActDeck",
+        "setup.repeat.memoriesBanished",
+        "setup.repeat.setRemainingMemoriesAside",
+        "setup.repeat.memoriesDiscovered",
+        "setup.repeat.startAt",
+        "setup.repeat.setOtherLocationsAside",
+        "setup.repeat.setResoluteAside",
+        "setup.checkDifficulty",
+        "setup.hard",
+        "setup.expert",
+        "setup.tekelili"
+      ],
+      "resolutionFallback": [
+        "resolutions.isThereADifference",
+        "resolutions.noSay",
+        "resolutions.victory",
+        "resolutions.memoriesDiscovered",
+        "resolutions.crossOutMemoriesDiscovered",
+        "resolutions.nonStoryVictory",
+        "resolutions.partnerDamage",
+        "resolutions.proceed",
+        "resolutions.proceedToTheForbiddenPeaks",
+        "resolutions.proceedToCityOfTheElderThings",
+        "resolutions.proceedToTheHeartOfMadness",
+        "resolutions.title",
+        "resolutions.noResolution",
+        "resolutions.resolution1"
+      ],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            2658
+          ],
+          [
+            "specialRules.0.title",
+            2680
+          ],
+          [
+            "specialRules.0.body",
+            2681
+          ],
+          [
+            "tooltips.mirage",
+            2685
+          ],
+          [
+            "label.keepPlaying",
+            2688
+          ],
+          [
+            "label.moveToPrisonOfMemories",
+            2689
+          ],
+          [
+            "label.shuffleTekeliliIntoYourDeck",
+            2690
+          ],
+          [
+            "label.averyClaypoolAntarcticGuideResolute.revealANewChaosToken",
+            2692
+          ],
+          [
+            "label.averyClaypoolAntarcticGuideResolute.spend1Supply",
+            2693
+          ],
+          [
+            "label.chooseAgenda",
+            2695
+          ],
+          [
+            "resolutions.isThereADifference",
+            2709
+          ],
+          [
+            "resolutions.noSay",
+            2710
+          ],
+          [
+            "resolutions.victory",
+            2711
+          ],
+          [
+            "resolutions.memoriesDiscovered",
+            2712
+          ],
+          [
+            "resolutions.crossOutMemoriesDiscovered",
+            2713
+          ],
+          [
+            "resolutions.nonStoryVictory",
+            2714
+          ],
+          [
+            "resolutions.partnerDamage",
+            2715
+          ],
+          [
+            "resolutions.proceed",
+            2716
+          ],
+          [
+            "resolutions.proceedToTheForbiddenPeaks",
+            2717
+          ],
+          [
+            "resolutions.proceedToCityOfTheElderThings",
+            2718
+          ],
+          [
+            "resolutions.proceedToTheHeartOfMadness",
+            2719
+          ],
+          [
+            "resolutions.title",
+            2720
+          ],
+          [
+            "resolutions.noResolution",
+            2721
+          ],
+          [
+            "resolutions.resolution1",
+            2722
+          ],
+          [
+            "setup.gatherSets",
+            2748
+          ],
+          [
+            "setup.firstTime.buildAgendaDeck",
+            2750
+          ],
+          [
+            "setup.firstTime.buildActDeck",
+            2751
+          ],
+          [
+            "setup.firstTime.placeLocations",
+            2752
+          ],
+          [
+            "setup.firstTime.startAt",
+            2753
+          ],
+          [
+            "setup.firstTime.setOtherLocationsAside",
+            2754
+          ],
+          [
+            "setup.firstTime.setOutOfPlay",
+            2755
+          ],
+          [
+            "setup.repeat.buildAgendaDeck",
+            2758
+          ],
+          [
+            "setup.repeat.buildActDeck",
+            2759
+          ],
+          [
+            "setup.repeat.memoriesBanished",
+            2760
+          ],
+          [
+            "setup.repeat.setRemainingMemoriesAside",
+            2761
+          ],
+          [
+            "setup.repeat.memoriesDiscovered",
+            2762
+          ],
+          [
+            "setup.repeat.startAt",
+            2753
+          ],
+          [
+            "setup.repeat.setOtherLocationsAside",
+            2754
+          ],
+          [
+            "setup.repeat.setResoluteAside",
+            2765
+          ],
+          [
+            "setup.checkDifficulty",
+            2767
+          ],
+          [
+            "setup.hard",
+            2768
+          ],
+          [
+            "setup.expert",
+            2769
+          ],
+          [
+            "setup.tekelili",
+            2770
+          ],
+          [
+            "deckOfTheTheodosia.label.addShroud",
+            2774
+          ],
+          [
+            "deckOfTheTheodosia.label.spendAdditionalAction",
+            2775
+          ],
+          [
+            "drKenslersOffice.label.removeSecret",
+            2780
+          ]
+        ],
+        "untranslated": [
+          [
+            "intro2.title",
+            2702
+          ]
+        ]
+      }
+    },
+    {
+      "id": "toTheForbiddenPeaks",
+      "status": "mixed",
+      "sectionCount": 51,
+      "declared": {
+        "total": 51,
+        "presentNeedsReview": 30,
+        "untranslated": 1,
+        "missing": 20
+      },
+      "gapCount": 21,
+      "gapByStatus": {
+        "missing": 20,
+        "untranslated": 1
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "setup": 10,
+        "other": 9,
+        "resolutions": 1
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.placeLocations",
+        "setup.revealLevel0",
+        "setup.addElderThingToken",
+        "setup.suppliesRecovered",
+        "setup.setTerrorOfTheStarsAside",
+        "setup.checkDifficulty",
+        "setup.hard",
+        "setup.expert",
+        "setup.tekelili"
+      ],
+      "resolutionFallback": [
+        "resolutions.resolution1.body"
+      ],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            2966
+          ],
+          [
+            "setup.gatherSets",
+            3001
+          ],
+          [
+            "setup.placeLocations",
+            3002
+          ],
+          [
+            "setup.revealLevel0",
+            3003
+          ],
+          [
+            "setup.addElderThingToken",
+            3004
+          ],
+          [
+            "setup.suppliesRecovered",
+            3005
+          ],
+          [
+            "setup.setTerrorOfTheStarsAside",
+            3006
+          ],
+          [
+            "setup.checkDifficulty",
+            3007
+          ],
+          [
+            "setup.hard",
+            3008
+          ],
+          [
+            "setup.expert",
+            3009
+          ],
+          [
+            "setup.tekelili",
+            3010
+          ],
+          [
+            "interlude.instructions2",
+            3026
+          ],
+          [
+            "hypothermia.label.addFrost",
+            3060
+          ],
+          [
+            "hypothermia.label.takeHorror",
+            3061
+          ],
+          [
+            "label.addFrostToken",
+            3065
+          ],
+          [
+            "label.eachInvestigatorSuffersPhysicalTrauma",
+            3066
+          ],
+          [
+            "label.eachInvestigatorSuffersMentalTrauma",
+            3067
+          ],
+          [
+            "rooflessRampart.label.removeDoom",
+            3071
+          ],
+          [
+            "rooflessRampart.label.discardEnemy",
+            3072
+          ],
+          [
+            "rooflessRampart.label.discardTreachery",
+            3073
+          ]
+        ],
+        "untranslated": [
+          [
+            "resolutions.resolution1.body",
+            3035
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cityOfTheElderThings",
+      "status": "mixed",
+      "sectionCount": 94,
+      "declared": {
+        "total": 94,
+        "presentNeedsReview": 40,
+        "untranslated": 0,
+        "missing": 54
+      },
+      "gapCount": 54,
+      "gapByStatus": {
+        "missing": 54
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "specialRules": 2,
+        "other": 19,
+        "resolutions": 1,
+        "setup": 31
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.v1.gatherSets",
+        "setup.v1.setAside",
+        "setup.v1.createActDeck",
+        "setup.v1.placeLocations",
+        "setup.v1.startAt",
+        "setup.v1.adjacency",
+        "setup.v1.keys",
+        "setup.v1.addElderThingToken",
+        "setup.v1.removals",
+        "setup.v2.gatherSets",
+        "setup.v2.setAside",
+        "setup.v2.createActDeck",
+        "setup.v2.placeLocations",
+        "setup.v2.startAt",
+        "setup.v2.adjacency",
+        "setup.v2.keys",
+        "setup.v2.addElderThingToken",
+        "setup.v2.removals",
+        "setup.v3.gatherSets",
+        "setup.v3.setAside",
+        "setup.v3.createActDeck",
+        "setup.v3.placeLocations",
+        "setup.v3.startAt",
+        "setup.v3.adjacency",
+        "setup.v3.keys",
+        "setup.v3.removals",
+        "setup.removeUnearnedWeaknesses",
+        "setup.checkDifficulty",
+        "setup.hard",
+        "setup.expert",
+        "setup.tekelili"
+      ],
+      "resolutionFallback": [
+        "resolutions.xp.bonus"
+      ],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            3237
+          ],
+          [
+            "specialRules.0.title",
+            3259
+          ],
+          [
+            "specialRules.0.body",
+            3260
+          ],
+          [
+            "label.v1",
+            3264
+          ],
+          [
+            "label.v2",
+            3265
+          ],
+          [
+            "label.v3",
+            3266
+          ],
+          [
+            "resolutions.xp.bonus",
+            3330
+          ],
+          [
+            "remembered.theTeamStudiedTheHistoryOfTheElderThings",
+            3334
+          ],
+          [
+            "remembered.theTeamDiscernedTheOriginOfTheShoggoths",
+            3335
+          ],
+          [
+            "tokens.easyStandard.skull",
+            3339
+          ],
+          [
+            "tokens.easyStandard.cultist",
+            3340
+          ],
+          [
+            "tokens.easyStandard.tablet",
+            3341
+          ],
+          [
+            "tokens.easyStandard.elderThing",
+            3342
+          ],
+          [
+            "tokens.hardExpert.skull",
+            3345
+          ],
+          [
+            "tokens.hardExpert.cultist",
+            3346
+          ],
+          [
+            "tokens.hardExpert.tablet",
+            3347
+          ],
+          [
+            "tokens.hardExpert.elderThing",
+            3348
+          ],
+          [
+            "setup.v1.gatherSets",
+            3353
+          ],
+          [
+            "setup.v1.setAside",
+            3354
+          ],
+          [
+            "setup.v1.createActDeck",
+            3355
+          ],
+          [
+            "setup.v1.placeLocations",
+            3356
+          ],
+          [
+            "setup.v1.startAt",
+            3357
+          ],
+          [
+            "setup.v1.adjacency",
+            3358
+          ],
+          [
+            "setup.v1.keys",
+            3359
+          ],
+          [
+            "setup.v1.addElderThingToken",
+            3360
+          ],
+          [
+            "setup.v1.removals",
+            3361
+          ],
+          [
+            "setup.v2.gatherSets",
+            3353
+          ],
+          [
+            "setup.v2.setAside",
+            3365
+          ],
+          [
+            "setup.v2.createActDeck",
+            3355
+          ],
+          [
+            "setup.v2.placeLocations",
+            3356
+          ],
+          [
+            "setup.v2.startAt",
+            3368
+          ],
+          [
+            "setup.v2.adjacency",
+            3358
+          ],
+          [
+            "setup.v2.keys",
+            3359
+          ],
+          [
+            "setup.v2.addElderThingToken",
+            3360
+          ],
+          [
+            "setup.v2.removals",
+            3372
+          ],
+          [
+            "setup.v3.gatherSets",
+            3353
+          ],
+          [
+            "setup.v3.setAside",
+            3354
+          ],
+          [
+            "setup.v3.createActDeck",
+            3355
+          ],
+          [
+            "setup.v3.placeLocations",
+            3356
+          ],
+          [
+            "setup.v3.startAt",
+            3368
+          ],
+          [
+            "setup.v3.adjacency",
+            3358
+          ],
+          [
+            "setup.v3.keys",
+            3359
+          ],
+          [
+            "setup.v3.removals",
+            3372
+          ],
+          [
+            "setup.removeUnearnedWeaknesses",
+            3384
+          ],
+          [
+            "setup.checkDifficulty",
+            3385
+          ],
+          [
+            "setup.hard",
+            3386
+          ],
+          [
+            "setup.expert",
+            3387
+          ],
+          [
+            "setup.tekelili",
+            3388
+          ],
+          [
+            "hiddenTunnelEntranceToTheDepths.label.spendSkullKey",
+            3392
+          ],
+          [
+            "hiddenTunnelEntranceToTheDepths.label.doNotSpendSkullKey",
+            3393
+          ],
+          [
+            "pursuitOfTheUnknown.label.doNotTakeHealing",
+            3398
+          ],
+          [
+            "pursuitOfTheUnknown.label.healAll",
+            3399
+          ],
+          [
+            "pursuitOfTheUnknown.label.healPhysicalTrauma",
+            3400
+          ],
+          [
+            "pursuitOfTheUnknown.label.healMentalTrauma",
+            3401
+          ]
+        ],
+        "untranslated": []
+      }
+    },
+    {
+      "id": "theHeartOfMadnessPart1",
+      "status": "mixed",
+      "sectionCount": 79,
+      "declared": {
+        "total": 79,
+        "presentNeedsReview": 59,
+        "untranslated": 0,
+        "missing": 20
+      },
+      "gapCount": 20,
+      "gapByStatus": {
+        "missing": 20
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "specialRules": 6,
+        "other": 2,
+        "setup": 11
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.gateOfYquaa",
+        "setup.startAt",
+        "setup.unrevealedSideUnused",
+        "setup.ancientFacility",
+        "setup.spokesAndRings",
+        "setup.setSealsAside",
+        "setup.checkDifficulty",
+        "setup.hard",
+        "setup.expert",
+        "setup.tekelili"
+      ],
+      "resolutionFallback": [],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            3655
+          ],
+          [
+            "specialRules.0.title",
+            3677
+          ],
+          [
+            "specialRules.0.body",
+            3678
+          ],
+          [
+            "specialRules.1.title",
+            3681
+          ],
+          [
+            "specialRules.1.body",
+            3682
+          ],
+          [
+            "specialRules.2.title",
+            3685
+          ],
+          [
+            "specialRules.2.body",
+            3686
+          ],
+          [
+            "tokens.easyStandard.elderThing",
+            3694
+          ],
+          [
+            "tokens.hardExpert.elderThing",
+            3700
+          ],
+          [
+            "setup.gatherSets",
+            3704
+          ],
+          [
+            "setup.gateOfYquaa",
+            3705
+          ],
+          [
+            "setup.startAt",
+            3706
+          ],
+          [
+            "setup.unrevealedSideUnused",
+            3707
+          ],
+          [
+            "setup.ancientFacility",
+            3708
+          ],
+          [
+            "setup.spokesAndRings",
+            3709
+          ],
+          [
+            "setup.setSealsAside",
+            3710
+          ],
+          [
+            "setup.checkDifficulty",
+            3711
+          ],
+          [
+            "setup.hard",
+            3712
+          ],
+          [
+            "setup.expert",
+            3713
+          ],
+          [
+            "setup.tekelili",
+            3714
+          ]
+        ],
+        "untranslated": []
+      }
+    },
+    {
+      "id": "theHeartOfMadnessPart2",
+      "status": "mixed",
+      "sectionCount": 53,
+      "declared": {
+        "total": 53,
+        "presentNeedsReview": 22,
+        "untranslated": 2,
+        "missing": 29
+      },
+      "gapCount": 31,
+      "gapByStatus": {
+        "missing": 29,
+        "untranslated": 2
+      },
+      "gapByLayer": {
+        "intro": 1,
+        "specialRules": 6,
+        "other": 7,
+        "setup": 13,
+        "resolutions": 4
+      },
+      "introFallback": [
+        "heading"
+      ],
+      "setupFallback": [
+        "setup.gatherSets",
+        "setup.strikingFear",
+        "setup.removeSets",
+        "setup.buildDecks",
+        "setup.flipGate",
+        "setup.placeLocations",
+        "setup.innermostRing",
+        "setup.startAt",
+        "setup.setAside",
+        "setup.seals",
+        "setup.activated",
+        "setup.dormant",
+        "setup.removeOthers"
+      ],
+      "resolutionFallback": [
+        "resolutions.noResolution.title",
+        "resolutions.noResolution.body",
+        "resolutions.resolution2.title",
+        "resolutions.resolution3.title"
+      ],
+      "gaps": {
+        "missing": [
+          [
+            "heading",
+            4035
+          ],
+          [
+            "specialRules.0.title",
+            4057
+          ],
+          [
+            "specialRules.0.body",
+            4058
+          ],
+          [
+            "specialRules.1.title",
+            4061
+          ],
+          [
+            "specialRules.1.body",
+            4062
+          ],
+          [
+            "specialRules.2.title",
+            4065
+          ],
+          [
+            "specialRules.2.body",
+            4066
+          ],
+          [
+            "tokens.easyStandard.elderThing",
+            4074
+          ],
+          [
+            "tokens.hardExpert.elderThing",
+            4080
+          ],
+          [
+            "setup.gatherSets",
+            4084
+          ],
+          [
+            "setup.strikingFear",
+            4085
+          ],
+          [
+            "setup.removeSets",
+            4086
+          ],
+          [
+            "setup.buildDecks",
+            4087
+          ],
+          [
+            "setup.flipGate",
+            4088
+          ],
+          [
+            "setup.placeLocations",
+            4089
+          ],
+          [
+            "setup.innermostRing",
+            4090
+          ],
+          [
+            "setup.startAt",
+            4091
+          ],
+          [
+            "setup.setAside",
+            4092
+          ],
+          [
+            "setup.seals",
+            4093
+          ],
+          [
+            "setup.activated",
+            4094
+          ],
+          [
+            "setup.dormant",
+            4095
+          ],
+          [
+            "setup.removeOthers",
+            4096
+          ],
+          [
+            "label.chooseSealCount",
+            4099
+          ],
+          [
+            "label.easierExperienceSeals",
+            4100
+          ],
+          [
+            "label.averageExperienceSeals",
+            4101
+          ],
+          [
+            "label.harderExperienceSeals",
+            4102
+          ],
+          [
+            "label.nightmarishExperienceSeals",
+            4103
+          ],
+          [
+            "resolutions.noResolution.title",
+            4131
+          ],
+          [
+            "resolutions.noResolution.body",
+            4132
+          ]
+        ],
+        "untranslated": [
+          [
+            "resolutions.resolution2.title",
+            4139
+          ],
+          [
+            "resolutions.resolution3.title",
+            4143
+          ]
+        ]
+      }
+    }
+  ],
+  "campaign": {
+    "localeKeys": 258,
+    "counts": {
+      "total": 258,
+      "presentNeedsReview": 189,
+      "untranslated": 1,
+      "missing": 68
+    },
+    "groups": {
+      "prologue": {
+        "id": "prologue",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 12,
+          "presentNeedsReview": 12,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 12,
+        "entries": 6,
+        "nonPresentEntries": []
+      },
+      "partnerIntros": {
+        "id": "partnerIntros",
+        "kind": "intros",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 8,
+          "presentNeedsReview": 8,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 8,
+        "entries": 8,
+        "nonPresentEntries": []
+      },
+      "checkpoints.checkpoint1": {
+        "id": "checkpoints.checkpoint1",
+        "kind": "group",
+        "status": "mixed",
+        "chinese": {
+          "total": 6,
+          "presentNeedsReview": 5,
+          "untranslated": 1,
+          "missing": 0
+        },
+        "sectionCount": 6,
+        "entries": 3,
+        "nonPresentEntries": [
+          {
+            "key": "checkpoint1.theDisappearance3",
+            "status": "untranslated",
+            "sample": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Pr"
+          }
+        ]
+      },
+      "checkpoints.checkpoint2": {
+        "id": "checkpoints.checkpoint2",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 6,
+          "presentNeedsReview": 6,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 6,
+        "entries": 3,
+        "nonPresentEntries": []
+      },
+      "checkpoints.checkpoint3": {
+        "id": "checkpoints.checkpoint3",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 6,
+          "presentNeedsReview": 6,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 6,
+        "entries": 3,
+        "nonPresentEntries": []
+      },
+      "interludes.openings": {
+        "id": "interludes.openings",
+        "kind": "group",
+        "status": "missing",
+        "chinese": {
+          "total": 3,
+          "presentNeedsReview": 0,
+          "untranslated": 0,
+          "missing": 3
+        },
+        "sectionCount": 3,
+        "entries": 3,
+        "nonPresentEntries": [
+          {
+            "key": "interludes.1",
+            "status": "missing",
+            "sample": "Restful Night"
+          },
+          {
+            "key": "interludes.2",
+            "status": "missing",
+            "sample": "Endless Night"
+          },
+          {
+            "key": "interludes.3",
+            "status": "missing",
+            "sample": "Final Night"
+          }
+        ]
+      },
+      "interludes.interlude1": {
+        "id": "interludes.interlude1",
+        "kind": "group",
+        "status": "mixed",
+        "chinese": {
+          "total": 27,
+          "presentNeedsReview": 26,
+          "untranslated": 0,
+          "missing": 1
+        },
+        "sectionCount": 27,
+        "entries": 24,
+        "nonPresentEntries": [
+          {
+            "key": "interlude1.label.doNotRemoveAnymore",
+            "status": "missing",
+            "sample": "Do not remove anymore"
+          }
+        ]
+      },
+      "interludes.interlude2": {
+        "id": "interludes.interlude2",
+        "kind": "group",
+        "status": "mixed",
+        "chinese": {
+          "total": 30,
+          "presentNeedsReview": 29,
+          "untranslated": 0,
+          "missing": 1
+        },
+        "sectionCount": 30,
+        "entries": 26,
+        "nonPresentEntries": [
+          {
+            "key": "interlude2.label.doNotRemoveAnymore",
+            "status": "missing",
+            "sample": "Do not remove anymore"
+          }
+        ]
+      },
+      "interludes.interlude3": {
+        "id": "interludes.interlude3",
+        "kind": "group",
+        "status": "mixed",
+        "chinese": {
+          "total": 29,
+          "presentNeedsReview": 27,
+          "untranslated": 0,
+          "missing": 2
+        },
+        "sectionCount": 29,
+        "entries": 25,
+        "nonPresentEntries": [
+          {
+            "key": "interlude3.xp.cookiesAdvice",
+            "status": "missing",
+            "sample": "Cookie's Advice"
+          },
+          {
+            "key": "interlude3.label.doNotRemoveAnymore",
+            "status": "missing",
+            "sample": "Do not remove anymore"
+          }
+        ]
+      },
+      "epilogue": {
+        "id": "epilogue",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 7,
+          "presentNeedsReview": 7,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 7,
+        "entries": 6,
+        "nonPresentEntries": []
+      },
+      "specialRules": {
+        "id": "specialRules",
+        "kind": "group",
+        "status": "missing",
+        "chinese": {
+          "total": 10,
+          "presentNeedsReview": 0,
+          "untranslated": 0,
+          "missing": 10
+        },
+        "sectionCount": 10,
+        "entries": 5,
+        "nonPresentEntries": [
+          {
+            "key": "specialRules.0",
+            "status": "missing",
+            "sample": "Some of the scenarios in the Edge of the Earth campaign are split into multiple "
+          },
+          {
+            "key": "specialRules.1",
+            "status": "missing",
+            "sample": "This expansion introduces a new type of chaos token: the frost ({'{'}frost{'}'})"
+          },
+          {
+            "key": "specialRules.2",
+            "status": "missing",
+            "sample": "This campaign includes an encounter set of 16 weaknesses, each with the title “T"
+          },
+          {
+            "key": "specialRules.3",
+            "status": "missing",
+            "sample": "Partner is a keyword ability that appears on the nine story assets in the Expedi"
+          },
+          {
+            "key": "specialRules.4",
+            "status": "missing",
+            "sample": "Each time an investigator fails a skill test while attempting to evade an enemy "
+          }
+        ]
+      },
+      "records.recordLabels": {
+        "id": "records.recordLabels",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 56,
+          "presentNeedsReview": 56,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 56,
+        "entries": 56,
+        "nonPresentEntries": []
+      },
+      "records.labels": {
+        "id": "records.labels",
+        "kind": "group",
+        "status": "missing",
+        "chinese": {
+          "total": 42,
+          "presentNeedsReview": 0,
+          "untranslated": 0,
+          "missing": 42
+        },
+        "sectionCount": 42,
+        "entries": 42,
+        "nonPresentEntries": [
+          {
+            "key": "label.anyuFaithfulCompanion.attemptToEvadeWithABaseAgilitySkillOf4",
+            "status": "missing",
+            "sample": "Evade. Attempt to evade with a base {'{'}agility{'}'} skill of 4"
+          },
+          {
+            "key": "label.anyuFaithfulCompanion.discardAnyuToChooseUpToThreeInAnyOrder",
+            "status": "missing",
+            "sample": "Discard Anyu to choose up to three, in any order"
+          },
+          {
+            "key": "label.anyuFaithfulCompanion.gain2SkillValue",
+            "status": "missing",
+            "sample": "You get +2 skill value for your next skill test this round"
+          },
+          {
+            "key": "label.prologue1Believe",
+            "status": "missing",
+            "sample": "\"I believe you…but if what you say is true, should we not investigate these find"
+          },
+          {
+            "key": "label.prologue1Wild",
+            "status": "missing",
+            "sample": "\"I'm sorry, but this seems too wild to be true.\" Skip to Prologue 3."
+          },
+          {
+            "key": "label.readPartnerIntros",
+            "status": "missing",
+            "sample": "Read Partner intros"
+          },
+          {
+            "key": "label.skipPartnerIntros",
+            "status": "missing",
+            "sample": "Skip Partner intros"
+          },
+          {
+            "key": "label.theyreOnTheirOwn",
+            "status": "missing",
+            "sample": "They're on their own."
+          },
+          {
+            "key": "label.goAfterMissingTeamMembers",
+            "status": "missing",
+            "sample": "Go after the missing team members."
+          },
+          {
+            "key": "label.runForYourLives",
+            "status": "missing",
+            "sample": "Run for your lives!"
+          },
+          {
+            "key": "label.standAndFight",
+            "status": "missing",
+            "sample": "Stand and fight!"
+          },
+          {
+            "key": "label.openTheDoorAndVenture",
+            "status": "missing",
+            "sample": "Open the door and venture into the mirage."
+          },
+          {
+            "key": "label.ignoreTheDoor",
+            "status": "missing",
+            "sample": "Ignore the door and allow it to vanish"
+          },
+          {
+            "key": "label.openTheDoorAndVentureOnceMore",
+            "status": "missing",
+            "sample": "Open the door and venture once more into the mirage."
+          },
+          {
+            "key": "label.youCanStillCheckTeamMembers",
+            "status": "missing",
+            "sample": "You can still check [count] team members"
+          },
+          {
+            "key": "label.williamDyer",
+            "status": "missing",
+            "sample": "William Dyer"
+          },
+          {
+            "key": "label.danforth",
+            "status": "missing",
+            "sample": "Danforth"
+          },
+          {
+            "key": "label.drAmyKensler",
+            "status": "missing",
+            "sample": "Dr. Amy Kensler"
+          },
+          {
+            "key": "label.drMalaSinha",
+            "status": "missing",
+            "sample": "Dr. Mala Sinha"
+          },
+          {
+            "key": "label.jamesCookieFredericks",
+            "status": "missing",
+            "sample": "James \"Cookie\" Fredericks"
+          },
+          {
+            "key": "label.averyClaypool",
+            "status": "missing",
+            "sample": "Avery Claypool"
+          },
+          {
+            "key": "label.roaldEllsworth",
+            "status": "missing",
+            "sample": "Roald Ellsworth"
+          },
+          {
+            "key": "label.takadaHiroko",
+            "status": "missing",
+            "sample": "Takada Hiroko"
+          },
+          {
+            "key": "label.eliyahAshevak",
+            "status": "missing",
+            "sample": "Eliyah Ashevak"
+          },
+          {
+            "key": "label.doNotPerformHealing",
+            "status": "missing",
+            "sample": "Do not perform healing"
+          },
+          {
+            "key": "label.doNotBeginWithExtraResources",
+            "status": "missing",
+            "sample": "Do not begin with extra resources"
+          },
+          {
+            "key": "label.doNotRemoveAnymore",
+            "status": "missing",
+            "sample": "Do not remove anymore"
+          },
+          {
+            "key": "label.removeTekeliliWeaknesses",
+            "status": "missing",
+            "sample": "Any one investigator may choose and remove up to five Tekeli-li! weaknesses from"
+          },
+          {
+            "key": "label.earnsBonusExperience",
+            "status": "missing",
+            "sample": "Any one investigator earns 1 bonus experience."
+          },
+          {
+            "key": "label.beginScenarioIIWithExtraCards",
+            "status": "missing",
+            "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with two addi"
+          },
+          {
+            "key": "label.beginScenarioIIIWithExtraCards",
+            "status": "missing",
+            "sample": "Any one investigator may begin Scenario III: City of the Elder Things with two a"
+          },
+          {
+            "key": "label.beginScenarioIVWithExtraCards",
+            "status": "missing",
+            "sample": "Any one investigator may begin Scenario IV: The Heart of Madness with two additi"
+          },
+          {
+            "key": "label.beginScenarioIIWithExtraResources",
+            "status": "missing",
+            "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with 3 additi"
+          },
+          {
+            "key": "label.beginScenarioIIIWithExtraResources",
+            "status": "missing",
+            "sample": "Any one investigator may begin Scenario III: City of the Elder Things with 3 add"
+          },
+          {
+            "key": "label.stayAndStudyTheGreatDoor",
+            "status": "missing",
+            "sample": "Stay here and study the great door to learn more. You will play both parts of th"
+          },
+          {
+            "key": "label.passThroughTheGate",
+            "status": "missing",
+            "sample": "There is no time to waste. Pass through the gate! You will skip the first part o"
+          },
+          {
+            "key": "label.skipToPrologue4",
+            "status": "missing",
+            "sample": "Skip to Prologue 4"
+          },
+          {
+            "key": "label.proceedToPrologue4",
+            "status": "missing",
+            "sample": "Proceed to Prologue 4"
+          },
+          {
+            "key": "nightmarishVapors.label.shuffleTekeliliIntoYourDeck",
+            "status": "missing",
+            "sample": "Shuffle the top [count] cards of the Tekeli-li deck into your deck without looki"
+          },
+          {
+            "key": "apeirophobia.label.addFrostToken",
+            "status": "missing",
+            "sample": "Add 1 {'{'}frost{'}'} token to the chaos bag."
+          },
+          {
+            "key": "wukWukWuk.label.moveToYou",
+            "status": "missing",
+            "sample": "Move it to your location"
+          },
+          {
+            "key": "wukWukWuk.label.placeDoom",
+            "status": "missing",
+            "sample": "Place 1 doom on it"
+          }
+        ]
+      },
+      "records.partnerNames": {
+        "id": "records.partnerNames",
+        "kind": "group",
+        "status": "missing",
+        "chinese": {
+          "total": 9,
+          "presentNeedsReview": 0,
+          "untranslated": 0,
+          "missing": 9
+        },
+        "sectionCount": 9,
+        "entries": 9,
+        "nonPresentEntries": [
+          {
+            "key": "partnerNames.08720",
+            "status": "missing",
+            "sample": "Dr. Amy Kensler"
+          },
+          {
+            "key": "partnerNames.08714",
+            "status": "missing",
+            "sample": "Prof. William Dyer"
+          },
+          {
+            "key": "partnerNames.08715",
+            "status": "missing",
+            "sample": "Danforth"
+          },
+          {
+            "key": "partnerNames.08721",
+            "status": "missing",
+            "sample": "Roald Ellsworth"
+          },
+          {
+            "key": "partnerNames.08722",
+            "status": "missing",
+            "sample": "Takada Hiroko"
+          },
+          {
+            "key": "partnerNames.08718",
+            "status": "missing",
+            "sample": "Avery Claypool"
+          },
+          {
+            "key": "partnerNames.08717",
+            "status": "missing",
+            "sample": "Dr. Mala Sinha"
+          },
+          {
+            "key": "partnerNames.08719",
+            "status": "missing",
+            "sample": "James \"Cookie\" Fredericks"
+          },
+          {
+            "key": "partnerNames.08716",
+            "status": "missing",
+            "sample": "Eliyah Ashevak"
+          }
+        ]
+      },
+      "records.suppliesRecovered": {
+        "id": "records.suppliesRecovered",
+        "kind": "group",
+        "status": "present-needs-review",
+        "chinese": {
+          "total": 7,
+          "presentNeedsReview": 7,
+          "untranslated": 0,
+          "missing": 0
+        },
+        "sectionCount": 7,
+        "entries": 7,
+        "nonPresentEntries": []
+      }
+    },
+    "gaps": {
+      "missing": [
+        [
+          "specialRules.0.title",
+          4320
+        ],
+        [
+          "specialRules.0.body",
+          4324
+        ],
+        [
+          "specialRules.1.title",
+          4328
+        ],
+        [
+          "specialRules.1.body",
+          4332
+        ],
+        [
+          "specialRules.2.title",
+          4336
+        ],
+        [
+          "specialRules.2.body",
+          4340
+        ],
+        [
+          "specialRules.3.title",
+          4344
+        ],
+        [
+          "specialRules.3.body",
+          4348
+        ],
+        [
+          "specialRules.4.title",
+          4352
+        ],
+        [
+          "specialRules.4.body",
+          4356
+        ],
+        [
+          "interludes.1",
+          4360
+        ],
+        [
+          "interludes.2",
+          4364
+        ],
+        [
+          "interludes.3",
+          4368
+        ],
+        [
+          "interlude1.label.doNotRemoveAnymore",
+          4504
+        ],
+        [
+          "interlude2.label.doNotRemoveAnymore",
+          4504
+        ],
+        [
+          "interlude3.xp.cookiesAdvice",
+          4728
+        ],
+        [
+          "interlude3.label.doNotRemoveAnymore",
+          4504
+        ],
+        [
+          "label.anyuFaithfulCompanion.attemptToEvadeWithABaseAgilitySkillOf4",
+          5148
+        ],
+        [
+          "label.anyuFaithfulCompanion.discardAnyuToChooseUpToThreeInAnyOrder",
+          5152
+        ],
+        [
+          "label.anyuFaithfulCompanion.gain2SkillValue",
+          5156
+        ],
+        [
+          "label.prologue1Believe",
+          5160
+        ],
+        [
+          "label.prologue1Wild",
+          5164
+        ],
+        [
+          "label.readPartnerIntros",
+          5168
+        ],
+        [
+          "label.skipPartnerIntros",
+          5172
+        ],
+        [
+          "label.theyreOnTheirOwn",
+          5176
+        ],
+        [
+          "label.goAfterMissingTeamMembers",
+          5180
+        ],
+        [
+          "label.runForYourLives",
+          5184
+        ],
+        [
+          "label.standAndFight",
+          5188
+        ],
+        [
+          "label.openTheDoorAndVenture",
+          5192
+        ],
+        [
+          "label.ignoreTheDoor",
+          5196
+        ],
+        [
+          "label.openTheDoorAndVentureOnceMore",
+          5200
+        ],
+        [
+          "label.youCanStillCheckTeamMembers",
+          5204
+        ],
+        [
+          "label.williamDyer",
+          5208
+        ],
+        [
+          "label.danforth",
+          4883
+        ],
+        [
+          "label.drAmyKensler",
+          5216
+        ],
+        [
+          "label.drMalaSinha",
+          5220
+        ],
+        [
+          "label.jamesCookieFredericks",
+          5224
+        ],
+        [
+          "label.averyClaypool",
+          5228
+        ],
+        [
+          "label.roaldEllsworth",
+          5232
+        ],
+        [
+          "label.takadaHiroko",
+          5236
+        ],
+        [
+          "label.eliyahAshevak",
+          5240
+        ],
+        [
+          "label.doNotPerformHealing",
+          5244
+        ],
+        [
+          "label.doNotBeginWithExtraResources",
+          5248
+        ],
+        [
+          "label.doNotRemoveAnymore",
+          4504
+        ],
+        [
+          "label.removeTekeliliWeaknesses",
+          5256
+        ],
+        [
+          "label.earnsBonusExperience",
+          5260
+        ],
+        [
+          "label.beginScenarioIIWithExtraCards",
+          5264
+        ],
+        [
+          "label.beginScenarioIIIWithExtraCards",
+          5268
+        ],
+        [
+          "label.beginScenarioIVWithExtraCards",
+          5272
+        ],
+        [
+          "label.beginScenarioIIWithExtraResources",
+          5264
+        ],
+        [
+          "label.beginScenarioIIIWithExtraResources",
+          5268
+        ],
+        [
+          "label.stayAndStudyTheGreatDoor",
+          5284
+        ],
+        [
+          "label.passThroughTheGate",
+          5288
+        ],
+        [
+          "label.skipToPrologue4",
+          5292
+        ],
+        [
+          "label.proceedToPrologue4",
+          5296
+        ],
+        [
+          "nightmarishVapors.label.shuffleTekeliliIntoYourDeck",
+          5300
+        ],
+        [
+          "apeirophobia.label.addFrostToken",
+          5304
+        ],
+        [
+          "wukWukWuk.label.moveToYou",
+          5308
+        ],
+        [
+          "wukWukWuk.label.placeDoom",
+          5312
+        ],
+        [
+          "partnerNames.08720",
+          5216
+        ],
+        [
+          "partnerNames.08714",
+          5320
+        ],
+        [
+          "partnerNames.08715",
+          4883
+        ],
+        [
+          "partnerNames.08721",
+          5232
+        ],
+        [
+          "partnerNames.08722",
+          5236
+        ],
+        [
+          "partnerNames.08718",
+          5228
+        ],
+        [
+          "partnerNames.08717",
+          5220
+        ],
+        [
+          "partnerNames.08719",
+          5224
+        ],
+        [
+          "partnerNames.08716",
+          5240
+        ]
+      ],
+      "untranslated": [
+        [
+          "checkpoint1.theDisappearance3.body",
+          4472
+        ]
+      ]
+    },
+    "recordLabels": {
+      "chinese": {
+        "total": 56,
+        "presentNeedsReview": 56,
+        "untranslated": 0,
+        "missing": 0
+      },
+      "entryCount": 56,
+      "nonPresent": [],
+      "keyFallbacks": [
+        "iceAndDeathPart1Resolution",
+        "iceAndDeathPart1CampShelter",
+        "iceAndDeathPart2Resolution",
+        "partnerResult08714",
+        "shelterValue",
+        "iceAndDeathPart3Resolution",
+        "eidolonsVanquished",
+        "seepingNightmaresEnded",
+        "partnersFacedInnerDemon",
+        "fatalMirageResolution",
+        "fatalMirageTimes",
+        "fatalMirageCompleted",
+        "resolutePartners",
+        "xp",
+        "theTeamStudiedTheHistoryOfTheElderThings",
+        "theTeamDiscernedTheOriginOfTheShoggoths",
+        "theTeamDiscoveredAHiddenPower",
+        "eoteShelterValue",
+        "eoteMissingCount",
+        "eoteMissingPartners",
+        "eoteEliminatedPartners",
+        "eoteCheckedPartners",
+        "eoteInterludeXp",
+        "eoteFatalMirageEntries",
+        "eotePartnerStatuses"
+      ],
+      "englishPrefixCount": 13
+    }
+  },
+  "displayChain": {
+    "chapterIntroFallbackByChapter": {
+      "iceAndDeathPart1": 1,
+      "iceAndDeathPart2": 1,
+      "iceAndDeathPart3": 1,
+      "fatalMirage": 1,
+      "toTheForbiddenPeaks": 1,
+      "cityOfTheElderThings": 1,
+      "theHeartOfMadnessPart1": 1,
+      "theHeartOfMadnessPart2": 1
+    },
+    "chapterSetupFallbackByChapter": {
+      "iceAndDeathPart1": 2,
+      "iceAndDeathPart2": 1,
+      "iceAndDeathPart3": 9,
+      "fatalMirage": 19,
+      "toTheForbiddenPeaks": 10,
+      "cityOfTheElderThings": 31,
+      "theHeartOfMadnessPart1": 11,
+      "theHeartOfMadnessPart2": 13
+    },
+    "chapterResolutionFallbackByChapter": {
+      "iceAndDeathPart2": 2,
+      "fatalMirage": 14,
+      "toTheForbiddenPeaks": 1,
+      "cityOfTheElderThings": 1,
+      "theHeartOfMadnessPart2": 4
+    },
+    "chapterIntroFallbackTotal": 8,
+    "chapterSetupFallbackTotal": 96,
+    "chapterResolutionFallbackTotal": 22,
+    "flowLeaks": [
+      {
+        "nodeId": "checkpoint1SearchStory",
+        "field": "text",
+        "textKey": "checkpoint1.theDisappearance3",
+        "status": "untranslated",
+        "displaySample": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Proceed to Ice and Death, Part II.",
+        "fallbackSample": "你决定去寻找失踪的队员，前往《亡命冰原》第 II 部分。"
+      }
+    ],
+    "flowNodeCount": 47,
+    "flowEnglishFields": {
+      "textCount": 1,
+      "titleCount": 0,
+      "optionLabelCount": 14,
+      "samples": [
+        {
+          "nodeId": "checkpoint1SearchStory",
+          "field": "text",
+          "value": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Proceed to Ice and Death, Part II."
+        },
+        {
+          "nodeId": "prologueChoice",
+          "field": "options[0].label",
+          "value": "\"I believe you…but if what you say is true, should we not investigate these findings further?\" Proceed to Prologue 2."
+        },
+        {
+          "nodeId": "prologueChoice",
+          "field": "options[1].label",
+          "value": "\"I'm sorry, but this seems too wild to be true.\" Skip to Prologue 3."
+        },
+        {
+          "nodeId": "checkpoint2Choice",
+          "field": "options[0].label",
+          "value": "Run for your lives!"
+        },
+        {
+          "nodeId": "checkpoint2Choice",
+          "field": "options[1].label",
+          "value": "Stand and fight!"
+        },
+        {
+          "nodeId": "interlude1DoorChoice",
+          "field": "options[0].label",
+          "value": "Open the door and venture into the mirage."
+        },
+        {
+          "nodeId": "interlude1DoorChoice",
+          "field": "options[1].label",
+          "value": "Ignore the door and allow it to vanish"
+        },
+        {
+          "nodeId": "interlude2Night3Choice",
+          "field": "options[0].label",
+          "value": "Open the door and venture once more into the mirage."
+        },
+        {
+          "nodeId": "interlude2Night3Choice",
+          "field": "options[1].label",
+          "value": "Ignore the door and allow it to vanish"
+        },
+        {
+          "nodeId": "interlude2Night4Choice",
+          "field": "options[0].label",
+          "value": "Open the door and venture into the mirage."
+        },
+        {
+          "nodeId": "interlude2Night4Choice",
+          "field": "options[1].label",
+          "value": "Ignore the door and allow it to vanish"
+        },
+        {
+          "nodeId": "interlude3Night3Choice",
+          "field": "options[0].label",
+          "value": "Open the door and venture once more into the mirage."
+        },
+        {
+          "nodeId": "interlude3Night3Choice",
+          "field": "options[1].label",
+          "value": "Ignore the door and allow it to vanish"
+        },
+        {
+          "nodeId": "interlude3Night4Choice",
+          "field": "options[0].label",
+          "value": "Open the door and venture into the mirage."
+        },
+        {
+          "nodeId": "interlude3Night4Choice",
+          "field": "options[1].label",
+          "value": "Ignore the door and allow it to vanish"
+        }
+      ]
+    },
+    "flowEnglishOverrideKeys": [
+      {
+        "file": "content/campaigns/edgeOfTheEarth/prologue.js",
+        "line": 58,
+        "fn": "text",
+        "key": "label.prologue1Believe",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/prologue.js",
+        "line": 63,
+        "fn": "text",
+        "key": "label.prologue1Wild",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+        "line": 85,
+        "fn": "heading",
+        "key": "checkpoint1.theDisappearance3",
+        "status": "untranslated"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+        "line": 87,
+        "fn": "text",
+        "key": "checkpoint1.theDisappearance3",
+        "status": "untranslated"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+        "line": 119,
+        "fn": "text",
+        "key": "label.runForYourLives",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+        "line": 124,
+        "fn": "text",
+        "key": "label.standAndFight",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 131,
+        "fn": "text",
+        "key": "label.openTheDoorAndVenture",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 132,
+        "fn": "text",
+        "key": "label.ignoreTheDoor",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 191,
+        "fn": "text",
+        "key": "label.openTheDoorAndVentureOnceMore",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 192,
+        "fn": "text",
+        "key": "label.ignoreTheDoor",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 202,
+        "fn": "text",
+        "key": "label.openTheDoorAndVenture",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 203,
+        "fn": "text",
+        "key": "label.ignoreTheDoor",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 250,
+        "fn": "text",
+        "key": "label.openTheDoorAndVentureOnceMore",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 251,
+        "fn": "text",
+        "key": "label.ignoreTheDoor",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 261,
+        "fn": "text",
+        "key": "label.openTheDoorAndVenture",
+        "status": "missing"
+      },
+      {
+        "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+        "line": 262,
+        "fn": "text",
+        "key": "label.ignoreTheDoor",
+        "status": "missing"
+      }
+    ],
+    "recordLabelKeyFallbacks": [
+      "iceAndDeathPart1Resolution",
+      "iceAndDeathPart1CampShelter",
+      "iceAndDeathPart2Resolution",
+      "partnerResult08714",
+      "shelterValue",
+      "iceAndDeathPart3Resolution",
+      "eidolonsVanquished",
+      "seepingNightmaresEnded",
+      "partnersFacedInnerDemon",
+      "fatalMirageResolution",
+      "fatalMirageTimes",
+      "fatalMirageCompleted",
+      "resolutePartners",
+      "xp",
+      "theTeamStudiedTheHistoryOfTheElderThings",
+      "theTeamDiscernedTheOriginOfTheShoggoths",
+      "theTeamDiscoveredAHiddenPower",
+      "eoteShelterValue",
+      "eoteMissingCount",
+      "eoteMissingPartners",
+      "eoteEliminatedPartners",
+      "eoteCheckedPartners",
+      "eoteInterludeXp",
+      "eoteFatalMirageEntries",
+      "eotePartnerStatuses"
+    ],
+    "note": "缺译本身按 chineseGaps 披露（既有口径）；但上述回退 en 的叶子会被 story-access#chapterSection（sections）→ 章节 texts.js/definition.js→SCENARIO_TEXT.intro/setup、records.js#storyBody→flow 节点正文、src/campaign/story.js#introduction→故事日志 直接当正文展示，且 web/story-reader.js 逐段直排、无「中文待补」标记。"
+  },
+  "note": "backlog 路径均可在 story-text.js 的 chapters.<id>.sections 或 localeKeys 里按路径定位；line 为源码真实行号（脚本搜索 JSON 转义片段得出）。缺译清单是补译 backlog；displayChain 才是 findings 依据。"
+}

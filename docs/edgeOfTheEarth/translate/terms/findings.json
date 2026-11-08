@@ -1,0 +1,484 @@
+{
+  "area": "terms",
+  "auditor": "terms-audit",
+  "generatedAt": "2026-11-09",
+  "method": "只读脚本 docs/edgeOfTheEarth/translate/tools/terms-scan.mjs 遍历 5 个中译语料层（cards 403 卡 / story 战役+8 章 / guides 8 份 / rules 23 条规则书 / modules 战役模块），按术语变体正则统计并把中文片段回定位到原始文件行；上游 cards_zh-cn.json、cards_zh.json、参考工程 zh locale 仅作推荐译法与继承判定对照。",
+  "scope": {
+    "source": "src/cards/cards-data.js（08 段）、content/campaigns/edgeOfTheEarth/story-text.js、web/scenario-guides/*.json（EOTE 8 份）、web/eote-rules.js、content/campaigns/edgeOfTheEarth/{keywords,records,shared-encounters,parts}.js、参考资源 ArkhamHorror-main（只读对照）",
+    "count": { "cards": 1521, "story": 429, "guides": 207, "rules": 94, "modules": 84, "docsTotal": 2335 },
+    "notes": [
+      "语料单位 doc：卡面按字段、剧情按段落、指南按叶子节点、规则书按条目段落。纯英文回退段落不计入中文语料（由 story/guides 审计负责），故条数小于文件条目总数。",
+      "story 层已去重：campaign.checkpoints/interludes 嵌套副本、chapter.intro/setup/resolutions、localeKeys 扁平副本均不计入，避免同一段正文重复计数。",
+      "所有 location 由脚本按中文片段回定位原始行得到，未定位成功的条目不输出（本次 unlocated=0）。"
+    ]
+  },
+  "summary": {
+    "findings": 22,
+    "byCategory": {
+      "missing-translation": 1,
+      "mixed-language": 2,
+      "symbol-format": 5,
+      "mistranslation": 0,
+      "marker-leak": 0,
+      "terminology": 14
+    },
+    "bySeverity": { "high": 3, "medium": 16, "low": 3 }
+  },
+  "findings": [
+    {
+      "id": "terms-0001",
+      "category": "symbol-format",
+      "severity": "high",
+      "title": "53 张 EOTE 卡面的 [fast] 图标被系统性替换成 [free]（58 处），渲染层把二者区分成「快速」与「免费触发」两个不同标签",
+      "scope": { "code": "08002 等 53 张", "field": "textZh/backTextZh", "key": "图标 token" },
+      "location": "src/cards/cards-data.js:285465",
+      "evidence": "EN: \"[fast] Exhaust Mechanic's Wrench: Choose an enemy…\" → ZH: \"[free]横置机修工的扳手：选择你所在地点的一个敌人。\"",
+      "expected": "zh 卡面保留 [fast]（仓库 web/card-text.js 的 SYMBOLS 中 free=「免费触发」、fast=「快速」是两个独立标签，见 web/locales/zh-CN.table.js:12-13）",
+      "suggestion": "在 cards-data 08 段把 zh 卡面正文里由上游带来的 [free] 与 EN [fast] 对齐后改回 [fast]；cards 审计统一处理，terms 不直接改卡",
+      "source": "upstream-zh-cn",
+      "count": 53,
+      "crossArea": ["cards"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:285465", "evidence": "08002 机修工的扳手：[free]横置机修工的扳手" },
+        { "location": "src/cards/cards-data.js:285741", "evidence": "08005 伊波恩之书：[free]横置伊波恩之书" },
+        { "location": "src/cards/cards-data.js:288342", "evidence": "08041 通路档案：[free]：从本支援上移动1灵脉" },
+        { "location": "src/cards/cards-data.js:291188", "evidence": "08089 快拔枪套：[free]…" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --icons（cardTokens.pairs: fast>free 53）"
+    },
+    {
+      "id": "terms-0002",
+      "category": "symbol-format",
+      "severity": "high",
+      "title": "剧情/指南中文正文泄漏参考工程 locale 的转义占位串 {'{'}frost{'}'} 共 23 处（应为 [frost] 图标）",
+      "scope": { "layer": "story/guides", "field": "sections.resolutions / interludes / tokens" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2288",
+      "evidence": "「向混乱袋中添加1个 {'{'}frost{'}'} 标记。」（玩家可见文本会原样出现 {'{'}frost{'}'} 而不是寒霜图标）",
+      "expected": "向混乱袋中添加1个[frost]标记。",
+      "suggestion": "由 story/guides 生成链修正参考 locale 的 {frost} 转义（源头把插值写成了 {'{'}frost{'}'}），或在生成时替换为 [frost]；terms 只登记跨层口径",
+      "source": "reference-locale",
+      "count": 23,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2288", "evidence": "向混乱袋中添加1个 {'{'}frost{'}'} 标记。" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2489", "evidence": "添加一个 {'{'}frost{'}'} 标记到混乱袋." },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:3044", "evidence": "向混乱袋中添加一个 {'{'}frost{'}'} 标记。" },
+        { "location": "web/scenario-guides/iceAndDeathPart2.json:44", "evidence": "向混乱袋中添加1个 {'{'}frost{'}'} 标记。" },
+        { "location": "web/scenario-guides/iceAndDeathPart3.json:52", "evidence": "添加一个 {'{'}frost{'}'} 标记到混乱袋." }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --markers（escaped-brace-leak）"
+    },
+    {
+      "id": "terms-0003",
+      "category": "mixed-language",
+      "severity": "high",
+      "title": "战役记录 13 个营地键的中文标签带英文前缀「Camp - 」并混用半角括号（Camp - 屏障营地 (7)）",
+      "scope": { "layer": "story", "field": "campaign.records.recordLabels", "key": "key.camp_*" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:1139",
+      "evidence": "body: \"Camp - 屏障营地 (7)\"（13 条 camp_* 记录键全部同格式；story 层共 13 条、原始生成物 body/text 双份共 39 处）",
+      "expected": "屏障营地（庇护 7）——与 records.js#CAMP_SHELTER 回退格式「{label}（庇护 {shelter}）」一致，全中文",
+      "suggestion": "在 story-text 生成源（参考 locale base.json 记录标签）把「Camp - X (N)」改为「X（庇护 N）」；若沿用英文前缀，至少不得进入中文战役日志。crossArea: story",
+      "source": "reference-locale",
+      "count": 13,
+      "crossArea": ["story"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1139", "evidence": "Camp - 屏障营地 (7)" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1160", "evidence": "Camp - 水晶洞穴 (8)" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1167", "evidence": "Camp - 严寒洞穴 (6)" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --english（topWords.Camp=13）"
+    },
+    {
+      "id": "terms-0004",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "keywords.js 的 Retaliate 译名「报复」与全部 11 张卡面实际用词「反击」冲突（且上游全库 37/37 为「反击」）",
+      "scope": { "file": "keywords.js", "key": "retaliate" },
+      "location": "content/campaigns/edgeOfTheEarth/keywords.js:20",
+      "evidence": "[\"retaliate\", \"报复\", \"retaliate\", …]",
+      "expected": "[\"retaliate\", \"反击\", …]",
+      "suggestion": "keywords.js:20 改为「反击」；EOTE_KEYWORDS 当前无渲染消费点（无写入风险），但审计/规则检索以它为口径，须与卡面一致。crossArea: cards",
+      "source": "repo-authored",
+      "count": 11,
+      "crossArea": ["cards"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:293014", "evidence": "08118 附魔弓：「忽略冷漠和反击关键词」" },
+        { "location": "src/cards/cards-data.js:296121", "evidence": "08540：「反击。」" },
+        { "location": "src/cards/cards-data.js:298841", "evidence": "08573 奥斯曼前线：「并失去反击」" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --keywords"
+    },
+    {
+      "id": "terms-0005",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "Tekeli-li 的卡名无感叹号（08723–08729「忒咳哩-哩」），keywords.js / 规则书 / 部分剧情写成「忒咳哩-哩！」",
+      "scope": { "file": "keywords.js / web/eote-rules.js", "key": "tekelili" },
+      "location": "content/campaigns/edgeOfTheEarth/keywords.js:44",
+      "evidence": "[\"tekelili\", \"忒咳哩-哩！\", …]；卡面 nameZh 为「忒咳哩-哩」（上游同）",
+      "expected": "统一为「忒咳哩-哩」（卡名/牌库名不带感叹号）；若保留感叹号只允许出现在台词/风味文本，不进入卡名、关键词名与牌库名",
+      "suggestion": "keywords.js:44 去掉「！」；web/eote-rules.js 的 eoteTekeli 正文与标题统一为「忒咳哩-哩牌库」；story 生成源的「忒咳哩-哩！弱点」按卡名调整",
+      "source": "repo-authored",
+      "count": 42,
+      "crossArea": ["cards", "story", "guides"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:308038", "evidence": "08723 nameZh: 忒咳哩-哩（无感叹号）" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2027", "evidence": "「将所有忒咳哩-哩！弱点卡牌混洗到一起」" },
+        { "location": "web/eote-rules.js:72", "evidence": "「忒咳哩-哩！弱点」/「忒咳哩-哩牌库」混写" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=tekelili"
+    },
+    {
+      "id": "terms-0006",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "campaign log 术语：卡面/剧情/指南统一「剧本日志」（132 次），规则书单独用「战役日志」（12 次）",
+      "scope": { "layer": "rules", "key": "eoteCampaign/eoteFrost/eotePartners…" },
+      "location": "web/eote-rules.js:24",
+      "evidence": "「只有实际到达的剧情与分支才会记入战役日志。」（rules 层共 12 处；cards 33 / story 60 / guides 39 全部为「剧本日志」）",
+      "expected": "剧本日志",
+      "suggestion": "web/eote-rules.js 全文「战役日志」→「剧本日志」，与卡面/剧情/指南一致；crossArea: story/guides",
+      "source": "repo-authored",
+      "count": 12,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "web/eote-rules.js:24", "evidence": "记入战役日志" },
+        { "location": "web/eote-rules.js:25", "evidence": "战役日志的探险队、已回收的补给品" },
+        { "location": "src/cards/cards-data.js:293975", "evidence": "08502 坠机点：在剧本日志“已回收的补给品”中" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=campaign-log"
+    },
+    {
+      "id": "terms-0007",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "规则书把 agenda 写成「议程」（5 处），与卡面/剧情/指南统一的「密谋」（33 次）不一致",
+      "scope": { "layer": "rules", "key": "eoteMirage/eoteObjective" },
+      "location": "web/eote-rules.js:109",
+      "evidence": "「第一次进入时使用 I 号议程与幕」；:237「目标（Objective）是幕、议程与其他剧本卡上的指示文本」；:238「议程的目标与毁灭阈值共同决定议程何时推进」",
+      "expected": "密谋（卡面 17 / story 7 / guides 6 均为「密谋」；上游 08 段 0 次「议程」）",
+      "suggestion": "规则书 3 行 5 处「议程」→「密谋」；尤其 eoteObjective 条目是规则解释，术语应跟卡面",
+      "source": "repo-authored",
+      "count": 5,
+      "crossArea": ["rules"],
+      "samples": [
+        { "location": "web/eote-rules.js:109", "evidence": "I 号议程与幕" },
+        { "location": "web/eote-rules.js:237", "evidence": "幕、议程与其他剧本卡" },
+        { "location": "web/eote-rules.js:238", "evidence": "议程的目标与毁灭阈值" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --contains=议程"
+    },
+    {
+      "id": "terms-0008",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "规则书 Broken/Unbroken 双面条目保留英文 trait 名并另译「未破/已破」，与卡面/关键词「运功/破功」三套写法并存",
+      "scope": { "layer": "rules", "key": "eoteBroken" },
+      "location": "web/eote-rules.js:196",
+      "evidence": "标题「演武的 Broken 与 Unbroken 双面」；:199「Unbroken（未破）面与 Broken（已破）面」；卡面 traitsZh 为「运功/破功」",
+      "expected": "运功面 / 破功面（保留英文即可写作「运功（Unbroken）/破功（Broken）」，但中文主称须用卡面译名）",
+      "suggestion": "规则书 eoteBroken 标题与正文统一为「运功/破功」；keywords.js 的 broken/unbroken 已是「破功/运功」，rules 与 cards 对齐。crossArea: cards, story",
+      "source": "repo-authored",
+      "count": 6,
+      "crossArea": ["cards", "story"],
+      "samples": [
+        { "location": "web/eote-rules.js:196", "evidence": "演武的 Broken 与 Unbroken 双面" },
+        { "location": "web/eote-rules.js:199", "evidence": "Unbroken（未破）面与 Broken（已破）面" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --contains=Broken"
+    },
+    {
+      "id": "terms-0009",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "Titanic Ramp 三套译名：卡面 08682–08685「巨大坡道」、规则书「泰坦坡道」、keywords.js trait「巨型」",
+      "scope": { "codes": "08682–08685", "keys": "web/eote-rules.js#eoteTitanic, keywords.js#titanic" },
+      "location": "src/cards/cards-data.js:305699",
+      "evidence": "08682 nameZh「巨大坡道」；web/eote-rules.js:181「泰坦坡道（Titanic Ramp）」；keywords.js:48 [\"titanic\", \"巨型\", …]",
+      "expected": "巨大坡道（卡面专名）；trait 若需中文名，按卡面 [[Titanic]] 实际呈现再定，不能与 Massive 的「庞大」混淆",
+      "suggestion": "规则书 :178–182 的「泰坦坡道」改「巨大坡道」；keywords.js:48 的「巨型」需 cards 审计核对 [[Titanic]] 在卡面的实际译法后统一；crossArea: cards",
+      "source": "repo-authored",
+      "count": 24,
+      "crossArea": ["cards"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:305699", "evidence": "08682 nameZh: 巨大坡道" },
+        { "location": "web/eote-rules.js:181", "evidence": "泰坦坡道（Titanic Ramp）" },
+        { "location": "content/campaigns/edgeOfTheEarth/keywords.js:48", "evidence": "[\"titanic\", \"巨型\", …]" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=titanic"
+    },
+    {
+      "id": "terms-0010",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "The Nameless Madness：卡面/剧情「无名疯狂」，规则书正文与标题用「无名狂魔」（2 处）",
+      "scope": { "code": "08679", "key": "web/eote-rules.js#eoteAncientOne" },
+      "location": "src/cards/cards-data.js:305522",
+      "evidence": "08679 nameZh「无名疯狂」；web/eote-rules.js:217/219「无名狂魔」",
+      "expected": "无名疯狂",
+      "suggestion": "web/eote-rules.js:217/219「无名狂魔」→「无名疯狂」；crossArea: cards",
+      "source": "repo-authored",
+      "count": 2,
+      "crossArea": ["cards"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:305522", "evidence": "08679 nameZh: 无名疯狂" },
+        { "location": "web/eote-rules.js:217", "evidence": "无名狂魔" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=nameless-madness"
+    },
+    {
+      "id": "terms-0011",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "7 件探险物资之一 Wooden Sledge 存在三种写法：卡名「木制雪撬」、records/剧情「木制雪橇」、规则书「木雪橇」，且 08615 卡内两行自相矛盾",
+      "scope": { "code": "08615", "files": "cards-data / records.js / shared-encounters.js / eote-rules.js" },
+      "location": "src/cards/cards-data.js:301887",
+      "evidence": "08615 nameZh「木制雪撬」；同卡 textZh:301897 第二段「附属在木制雪橇的卡牌」；records.js:174 与 08513 卡文 cards-data.js:294613 用「木制雪橇」；web/eote-rules.js:157 用「木雪橇」",
+      "expected": "木制雪橇（正确用字；records/剧情已是此写法）",
+      "suggestion": "卡名 08615 与 shared-encounters.js:219 的「雪撬」改「雪橇」（上游 typo 继承，cards 审计可标 upstream-zh-cn）；规则书「木雪橇」补齐为「木制雪橇」；crossArea: cards",
+      "source": "upstream-zh-cn",
+      "count": 5,
+      "crossArea": ["cards", "story"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:301887", "evidence": "08615 nameZh: 木制雪撬" },
+        { "location": "src/cards/cards-data.js:301897", "evidence": "正面朝下附属到木制雪撬。…附属在木制雪橇的卡牌" },
+        { "location": "content/campaigns/edgeOfTheEarth/records.js:174", "evidence": "label: '木制雪橇'" },
+        { "location": "src/cards/cards-data.js:294613", "evidence": "08513 莱克营地遗址：记录木制雪橇" },
+        { "location": "content/campaigns/edgeOfTheEarth/shared-encounters.js:219", "evidence": "'08615': '木制雪撬'" },
+        { "location": "web/eote-rules.js:157", "evidence": "绿皂石、木雪橇、炸药…" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --names"
+    },
+    {
+      "id": "terms-0012",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "两个营地名在 records.js 与卡面/剧情不一致：莱克营地遗址/遗迹、水晶洞穴/洞窟",
+      "scope": { "codes": "08513/08514", "key": "records.CAMP_SHELTER" },
+      "location": "content/campaigns/edgeOfTheEarth/records.js:200",
+      "evidence": "records.js:200「莱克营地遗迹」、:201「水晶洞窟」；卡面 08513「莱克营地遗址」、08514「水晶洞穴」；story 记录标签同卡面（story-text.js:1160「Camp - 水晶洞穴 (8)」）",
+      "expected": "莱克营地遗址、水晶洞穴（卡面+story 一致，records.js 是唯一偏差）",
+      "suggestion": "records.js:200/201 两处改回卡面写法；否则战役日志的营地标签与地图地名不一致",
+      "source": "repo-authored",
+      "count": 2,
+      "crossArea": ["cards", "story"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:294602", "evidence": "08513 nameZh: 莱克营地遗址" },
+        { "location": "src/cards/cards-data.js:294661", "evidence": "08514 nameZh: 水晶洞穴" },
+        { "location": "content/campaigns/edgeOfTheEarth/records.js:200", "evidence": "label: '莱克营地遗迹'" },
+        { "location": "content/campaigns/edgeOfTheEarth/records.js:201", "evidence": "label: '水晶洞窟'" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --names"
+    },
+    {
+      "id": "terms-0013",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "简繁混用：中文剧情/指南保留台湾译文的「著」（661 处），卡面/规则书用「着」（209 处）",
+      "scope": { "layer": "story/guides", "chars": "著→着" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2031",
+      "evidence": "「首先沿著东海岸向南航行…」；story 451 处 + guides 210 处「著」，story 仅 10 处/guides 5 处用「着」，cards 193 处全为「着」",
+      "expected": "简体「着」（沿著→沿着；做著→做着；指著→指着）",
+      "suggestion": "story/guides 生成链对参考 zh locale 做 著→着 的语境化转换（「著作/显著」等 zhù 音保留），或人工全量替换后抽查；属上游参考 locale 继承问题，crossArea: story/guides",
+      "source": "reference-locale",
+      "count": 661,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2031", "evidence": "首先沿著东海岸向南航行" },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:48", "evidence": "首先沿著东海岸向南航行" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --chars"
+    },
+    {
+      "id": "terms-0014",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "deck 的译法跨层分裂：卡面/规则书「牌库」，剧情/指南「牌组」，另有「牌堆」「弃牌堆」",
+      "scope": { "terms": "deck/discard" },
+      "location": "src/cards/cards-data.js:285415",
+      "evidence": "cards 牌库 206 / 牌组 0；story 牌组 62 / 牌库 0；rules 牌库 12 / 牌组 22；牌堆 story 37 / guides 8",
+      "expected": "规则文本统一「牌库」（卡面口径）；构筑界面可保留「牌组」；公共牌堆用「牌堆」；discard pile 用「弃牌堆」",
+      "suggestion": "story/guides 的「牌组」→「牌库」（尤其「调查员牌组」「牌组顶」应作「牌库/牌库顶」）；rules 层同样对齐；crossArea: story/guides/rules",
+      "source": "repo-authored",
+      "count": 89,
+      "crossArea": ["story", "guides", "rules"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2284", "evidence": "加入调查员牌组的忒咳哩-哩！弱点" },
+        { "location": "web/eote-rules.js:48", "evidence": "不能加入调查员的牌组" },
+        { "location": "src/cards/cards-data.js:285415", "evidence": "牌库卡牌张数：30" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=deck"
+    },
+    {
+      "id": "terms-0015",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "结局清单混入英文标签与未译占位符：Shelter Value: [shelterValue] / Experience:（另 4 处 [shelterValue] 未替换）",
+      "scope": { "layer": "story/guides", "field": "sections.resolutions" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2065",
+      "evidence": "「• Shelter Value: [shelterValue]」「• Experience: （按上述说明计算）」；story-text.js:2272 另有「• 庇护值: [shelterValue]」",
+      "expected": "「• 庇护值：{数值}」「• 经验：…」；占位符由运行时替换或直接写数值",
+      "suggestion": "story/guides 生成链把英文标签与 [shelterValue] 占位符翻译/替换（参考 locale 缺译），或至少改成中文标签「庇护值／经验」；crossArea: story/guides",
+      "source": "reference-locale",
+      "count": 4,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2065", "evidence": "• Shelter Value: [shelterValue]…• Experience: （按上述说明计算）" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2272", "evidence": "• 庇护值: [shelterValue]" },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:187", "evidence": "Shelter Value: [shelterValue]" },
+        { "location": "web/scenario-guides/iceAndDeathPart2.json:54", "evidence": "庇护值: [shelterValue]" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --markers"
+    },
+    {
+      "id": "terms-0016",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "剧情/指南重复标点「。.」「：:」等 138 处（尤以 setup/结局清单为多）",
+      "scope": { "layer": "story/guides", "pattern": "。. / ，, / ：:, dup punctuation" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2022",
+      "evidence": "「将所有疾行谬物敌人放在一边，位于场外。.」；story-text.js:2027「将该牌堆放在密谋牌堆旁。.」；dup-period 合计 133（story 68 / guides 65），dup-colon 5",
+      "expected": "删除句末多余的 ASCII 句点或冒号",
+      "suggestion": "生成链清洗「。.」「：:」「,,」等重复/中西混用标点；crossArea: story/guides",
+      "source": "reference-locale",
+      "count": 138,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2022", "evidence": "位于场外。." },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2027", "evidence": "将该牌堆放在密谋牌堆旁。." },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:122", "evidence": "位于场外。." },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:137", "evidence": "将该牌堆放在密谋牌堆旁。." }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --punct（dup-period/dup-colon）"
+    },
+    {
+      "id": "terms-0017",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "剧情/指南沿用英文式编号与半角标点：「引言 1:」「导言 2.」「进入 设置.」",
+      "scope": { "layer": "story/guides" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2035",
+      "evidence": "「引言 1:两周后…」；story-text.js:2015「进入 导言 2.」；guides/iceAndDeathPart1.json:56 同；halfwidth colon story 80 / guides 49，halfwidth period story 182 / guides 99",
+      "expected": "「引言 1：两周后…」「进入导言 2。」（中文全角标点；编号后可保留空格或统一去空格）",
+      "suggestion": "数值编号后的 ASCII : / . 统一改全角；句末 ASCII 句点改「。」；crossArea: story/guides",
+      "source": "reference-locale",
+      "count": 129,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2035", "evidence": "引言 1:两周后" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2015", "evidence": "进入 导言 2." },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:56", "evidence": "引言 1:两周后" },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:97", "evidence": "进入 导言 2." }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --punct（halfwidth-colon/halfwidth-period）"
+    },
+    {
+      "id": "terms-0018",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "庇护值在卡面印作「庇护N」（无「值」），剧情/规则书用「庇护值」",
+      "scope": { "codes": "08502–08514", "key": "shelter value" },
+      "location": "src/cards/cards-data.js:293975",
+      "evidence": "08502 坠机点 textZh「庇护0。」；08503「庇护2。」…（13 个营地地点卡同格式）；剧情/规则书「庇护值」35 处",
+      "expected": "庇护值 0。（或按印刷版面保留「庇护 0」时，规则书与卡面至少保持同一词形）",
+      "suggestion": "cards 审计裁定卡面是否补「值」；terms 侧统一推荐「庇护值」，卡面「庇护N」作为 variant 登记。crossArea: cards",
+      "source": "upstream-zh-cn",
+      "count": 15,
+      "crossArea": ["cards"],
+      "samples": [
+        { "location": "src/cards/cards-data.js:293975", "evidence": "08502 textZh: 庇护0。" },
+        { "location": "src/cards/cards-data.js:294029", "evidence": "08503 textZh: 庇护2。" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2272", "evidence": "营地的庇护值，而不是五个" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --term=shelter"
+    },
+    {
+      "id": "terms-0019",
+      "category": "missing-translation",
+      "severity": "medium",
+      "title": "story-text 战役记录层的 9 位伙伴名全部缺失中文（status=missing，值为英文名）",
+      "scope": { "layer": "story", "field": "campaign.records.partnerNames", "keys": "partnerNames.08714–08722" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:1851",
+      "evidence": "partnerNames.08720 body=\"Dr. Amy Kensler\"（status: missing）；9/9 全部为英文；而卡面/records.PARTNERS 有规范中文名",
+      "expected": "艾米·肯斯勒博士 / 威廉·戴尔教授 / 丹佛斯 / 罗尔德·埃尔斯沃思 / 高田弘子 / 艾弗里·克莱普尔 / 玛拉·辛哈医生 / 詹姆斯·“曲奇”·弗雷德里克斯 / 伊里亚·阿什瓦克",
+      "suggestion": "补 story-text campaign.records.partnerNames 的中文（来源可用 records.js#PARTNERS/卡面 08714–08722）；当前 records.js#partnerNameMap 无消费点，但任何接入战役日志的 UI 都会回退英文。crossArea: story",
+      "source": "reference-locale",
+      "count": 9,
+      "crossArea": ["story"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1851", "evidence": "partnerNames.08720 = Dr. Amy Kensler（missing）" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1858", "evidence": "partnerNames.08714 = Prof. William Dyer（missing）" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --names（storyPartnerNameRows）"
+    },
+    {
+      "id": "terms-0020",
+      "category": "terminology",
+      "severity": "low",
+      "title": "异体字「明瞭」3 处（应为「明了」）；「瞭望」4 处为正确用法",
+      "scope": { "layer": "story/guides", "key": "theTruthOfTheMirageEludesYou" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:1517",
+      "evidence": "记录标签「你尚未明瞭幻景的真相」（story 2 处、guides/theHeartOfMadnessPart2.json:96 1 处）；瞭望塔合计 4 处为正确用字",
+      "expected": "你尚未明了幻景的真相",
+      "suggestion": "仅替换「明瞭」→「明了」，不要误改「瞭望」；records.js/记录标签同步",
+      "source": "reference-locale",
+      "count": 3,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:1517", "evidence": "你尚未明瞭幻景的真相" },
+        { "location": "web/scenario-guides/theHeartOfMadnessPart2.json:96", "evidence": "你尚未明瞭幻景的真相" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --contains=明瞭"
+    },
+    {
+      "id": "terms-0021",
+      "category": "terminology",
+      "severity": "low",
+      "title": "Spare Parts 在规则书写「备件」，卡面/剧情写「备用零件」",
+      "scope": { "code": "08620", "key": "web/eote-rules.js#eoteSupplies" },
+      "location": "web/eote-rules.js:157",
+      "evidence": "「…小型收音机与备件。」；卡面 08620 nameZh「备用零件」、story 记录标签「备用零件」",
+      "expected": "备用零件",
+      "suggestion": "规则书「备件」→「备用零件」；crossArea: rules",
+      "source": "repo-authored",
+      "count": 1,
+      "crossArea": ["rules"],
+      "samples": [
+        { "location": "web/eote-rules.js:157", "evidence": "小型收音机与备件" },
+        { "location": "src/cards/cards-data.js:302192", "evidence": "08620 nameZh: 备用零件" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --names"
+    },
+    {
+      "id": "terms-0022",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "罗马数字章节号写法跨层不一致：「第 I 部分」（17 处）vs「第I部分」（19 处），并延伸到「冒险I：」",
+      "scope": { "layer": "story/guides/rules/modules" },
+      "location": "content/campaigns/edgeOfTheEarth/story-text.js:2450",
+      "evidence": "story-text.js:2450「亡命冰原 第 III 部分」vs story-text.js:365「亡命冰原 第III部分」；guides/iceAndDeathPart1.json:45「冒险I：亡命冰原 第I部分」；parts.js:22「亡命冰原 第 I 部分」",
+      "expected": "第 I 部分（带空格）作为统一写法；标题「冒险 I：…」",
+      "suggestion": "剧情/指南标题层统一为「第 I 部分」；若产品希望无空格，则 parts/rules 同步改，二选一并写入术语表",
+      "source": "reference-locale",
+      "count": 19,
+      "crossArea": ["story", "guides"],
+      "samples": [
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:2450", "evidence": "亡命冰原 第 III 部分" },
+        { "location": "content/campaigns/edgeOfTheEarth/story-text.js:365", "evidence": "亡命冰原 第III部分" },
+        { "location": "web/scenario-guides/iceAndDeathPart1.json:45", "evidence": "冒险I：亡命冰原 第I部分" },
+        { "location": "content/campaigns/edgeOfTheEarth/parts.js:22", "evidence": "亡命冰原 第 I 部分" }
+      ],
+      "script": "node docs/edgeOfTheEarth/translate/tools/terms-scan.mjs --punct（roman-no-space/roman-with-space）"
+    }
+  ],
+  "falsePositives": [
+    { "term": "敌人/敌军", "detail": "「敌军」6 次全部是固定流程名「敌军阶段」，与仓库 UI/规则书一致（web/locales/zh-CN.table.js:158），不是 enemy 的替换译法。" },
+    { "term": "损伤", "detail": "3 次只出现在 08130/08131/08646 的 traitsZh，是特性 Injury 的译名，不是 damage。" },
+    { "term": "技巧", "detail": "8 次均为特性 Trick 的译名或卡文，不是 skill。" },
+    { "term": "胜利点/胜利区", "detail": "EOTE 08 段没有印刷 Victory X 关键词实例；39 次「胜利区」是 victory display，属另一概念，不构成 victory 关键词冲突。" },
+    { "term": "Hidden", "detail": "EN 模式命中的 7 张均为地点名 Hidden Tunnel（隐秘隧道），本循环无印刷 Hidden 关键词实例。" },
+    { "term": "Level", "detail": "keywords.js 的 \\bLevel\\b 会误命中牌库构建的 level 0–5（卡牌等级），不是地点高度 Level 的译名冲突。" },
+    { "term": "Massive", "detail": "5 张 Massive 敌人卡面全部作「庞大」，与 keywords.js 一致；「巨大」多用于巨大坡道/巨大尖顶/巨型白化企鹅等专名或叙事，不是 Massive 的译法（上游全库 庞大 94 / 巨大 26）。" },
+    { "term": "冒险???：致命幻景", "detail": "9 处「???」对应 EN 标题「Scenario ???: Fatal Mirage」，是印刷故意留白（可选章节无编号），不是占位符泄漏。" }
+  ]
+}

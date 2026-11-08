@@ -1,0 +1,233 @@
+[
+ {
+  "code": "08130",
+  "name": "Arm Injury",
+  "nameZh": "臂伤",
+  "type": "treachery",
+  "klass": "neutral",
+  "xp": null,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Revelation - Put X into play in your threat area.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08130.js:22-27 kind:'weakness' weakness:{type:'threat',...}；读点 src/engine/weakness.js:278-301（inv.threat.push + counters）",
+    "note": ""
+   },
+   {
+    "text": "X can be healed as if it were a single point of damage on you (if it is healed, discard it).",
+    "status": "missing",
+    "evidence": "src/cards/entries/08130.js:29-31 用 free + discardSelf 近似（注释与 note 自述「无 threatDamageSink」）。但引擎 P6 已实现 threatDamageSink：src/engine/harm-threat.js:702-740（读点 721 读 flags.threatDamageSink）+ api-misc.js:231-240 healDamage 统一入口 + tests/eote-player-primitives.test.mjs:85 测试；条目未声明该 flag。real-path probe：开启该近似能力后卡仍留在威胁区（stillInThreat=true），只是把卡号塞进弃牌堆（ability-exec.js:178-189 的 discardSelf 只处理 assets/attachments，无 threat 分支）",
+    "note": "伤害侧「可如同 1 点伤害被治愈、治愈即弃卡」不可用：既没走已实现的 sink，替代的免费弃置也不移除威胁区卡（卡继续生效、且弃牌堆多一张同名卡）。"
+   },
+   {
+    "text": "Forced - After you take a fight or activate action: You cannot take any of those types of actions for the remainder of the turn.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08130.js:33-47 用 actionResolvedAtLocation 窗口 + api.addEffect({duration:'endOfTurn', modifiers:['capability:fight', 'capability:triggerAbilities']})；该窗口 context 不带行动类型（src/engine/dispatch.js:373-375），故「任意行动后」都锁。引擎另有 actionTaken 窗口带 actionKinds（src/engine/engine.js:2293-2307），可精确判定但不被使用",
+    "note": "作用域过宽（任意行动都触发锁定），已披露近似。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08130.js:33-47 api.info（「本回合不能再…」）；锁定通过 legalMoves 消失体现（capability 读点见 modifiers.js:625-630）",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-4.test.mjs:652-672",
+   "note": "只测「入威胁区+计数」与锁定效果；治愈/弃卡子句完全没有测试（且实现为不可用）。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "primitive",
+    "summary": "「如同 1 点伤害被治愈（治愈即弃卡）」未实现：引擎 threatDamageSink 已就绪（entry 应声明 flags.threatDamageSink）却仍用旧近似。",
+    "evidence": "src/cards/entries/08130.js:13-15,29-31 vs src/engine/harm-threat.js:702-740；tests/eote-player-primitives.test.mjs:85",
+    "suggestion": "加 flags: { threatDamageSink: true }，删除 free discardSelf 近似能力，并补「healDamage 治愈本卡→弃置」测试。"
+   },
+   {
+    "severity": "high",
+    "dimension": "primitive",
+    "summary": "替代用的免费 discardSelf 能力无法把威胁区卡移除（ability-exec.js:178-189 无 threat 分支）：卡留在威胁区继续锁行动，同时卡号被塞进弃牌堆。",
+    "evidence": "src/cards/entries/08130.js:29-31 vs src/engine/ability-exec.js:178-189；real-path probe",
+    "suggestion": "要么接 threatDamageSink（推荐），要么 discardSelf 费用补 threat 分支。"
+   },
+   {
+    "severity": "medium",
+    "dimension": "docs",
+    "summary": "prior 账本 verified/simplified=false 与条目自述「无 threatDamageSink」矛盾（引擎已有），queue 亦无该请求记录。",
+    "evidence": "audit/eote-player-acceptance.json；src/engine/harm-threat.js:702-713",
+    "suggestion": "账本记 approximation 并更新条目。"
+   },
+   {
+    "severity": "medium",
+    "dimension": "duplication",
+    "summary": "08130–08133 四张基础弱点是同一模板 4 份复制（锁定能力结构完全相同），应上收共享模板/原语。",
+    "evidence": "src/cards/entries/08130.js:33-47；08131.js:31-47；08132.js:29-45；08133.js:27-43",
+    "suggestion": "抽共享 weakness 模板。"
+   }
+  ]
+ },
+ {
+  "code": "08131",
+  "name": "Leg Injury",
+  "nameZh": "腿伤",
+  "type": "treachery",
+  "klass": "neutral",
+  "xp": null,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Revelation - Put X into play in your threat area.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08131.js:22-27 kind:'weakness' weakness:{type:'threat',...}；读点 src/engine/weakness.js:278-301（inv.threat.push + counters）",
+    "note": ""
+   },
+   {
+    "text": "X can be healed as if it were a single point of damage on you (if it is healed, discard it).",
+    "status": "missing",
+    "evidence": "src/cards/entries/08131.js:29-31 用 free + discardSelf 近似（注释与 note 自述「无 threatDamageSink」）。但引擎 P6 已实现 threatDamageSink：src/engine/harm-threat.js:702-740（读点 721 读 flags.threatDamageSink）+ api-misc.js:231-240 healDamage 统一入口 + tests/eote-player-primitives.test.mjs:85 测试；条目未声明该 flag。real-path probe：开启该近似能力后卡仍留在威胁区（stillInThreat=true），只是把卡号塞进弃牌堆（ability-exec.js:178-189 的 discardSelf 只处理 assets/attachments，无 threat 分支）",
+    "note": "伤害侧「可如同 1 点伤害被治愈、治愈即弃卡」不可用：既没走已实现的 sink，替代的免费弃置也不移除威胁区卡（卡继续生效、且弃牌堆多一张同名卡）。"
+   },
+   {
+    "text": "Forced - After you take a move, resign, or evade action: You cannot take any of those types of actions for the remainder of the turn.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08131.js:33-47 用 actionResolvedAtLocation 窗口 + api.addEffect({duration:'endOfTurn', modifiers:['capability:move', 'capability:resign', 'capability:evade']})；该窗口 context 不带行动类型（src/engine/dispatch.js:373-375），故「任意行动后」都锁。引擎另有 actionTaken 窗口带 actionKinds（src/engine/engine.js:2293-2307），可精确判定但不被使用",
+    "note": "作用域过宽（任意行动都触发锁定），已披露近似。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08131.js:33-47 api.info（「本回合不能再…」）；锁定通过 legalMoves 消失体现（capability 读点见 modifiers.js:625-630）",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-4.test.mjs:652-672",
+   "note": "只测「入威胁区+计数」与锁定效果；治愈/弃卡子句完全没有测试（且实现为不可用）。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "primitive",
+    "summary": "「如同 1 点伤害被治愈（治愈即弃卡）」未实现：同 08130，threatDamageSink 已就绪未接线。",
+    "evidence": "src/cards/entries/08131.js:12-13,26-28 vs src/engine/harm-threat.js:702-740",
+    "suggestion": "同 08130。"
+   },
+   {
+    "severity": "high",
+    "dimension": "primitive",
+    "summary": "免费 discardSelf 无法移除威胁区卡（同 08130）。",
+    "evidence": "src/cards/entries/08131.js:26-28 vs src/engine/ability-exec.js:178-189",
+    "suggestion": "同 08130。"
+   }
+  ]
+ },
+ {
+  "code": "08132",
+  "name": "Panic",
+  "nameZh": "惊慌",
+  "type": "treachery",
+  "klass": "neutral",
+  "xp": null,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Revelation - Put X into play in your threat area.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08132.js:22-27 kind:'weakness' weakness:{type:'threat',...}；读点 src/engine/weakness.js:278-301（inv.threat.push + counters）",
+    "note": ""
+   },
+   {
+    "text": "X can be healed as if it were a single point of horror on you (if it is healed, discard it).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08132.js:17-18 threatHorrorSink + redirectHeal{optional}；读点 src/engine/harm-threat.js:636-665（healHorrorFrom 可选改道），测试实测治疗可改道 1 点并弃卡",
+    "note": ""
+   },
+   {
+    "text": "Forced - After you take a play, engage, or resource action: You cannot take any of those types of actions for the remainder of the turn.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08132.js:33-47 用 actionResolvedAtLocation 窗口 + api.addEffect({duration:'endOfTurn', modifiers:['capability:play', 'capability:gainResources', 'capability:engage']})；该窗口 context 不带行动类型（src/engine/dispatch.js:373-375），故「任意行动后」都锁。引擎另有 actionTaken 窗口带 actionKinds（src/engine/engine.js:2293-2307），可精确判定但不被使用",
+    "note": "作用域过宽（任意行动都触发锁定），已披露近似。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08132.js:33-47 api.info（「本回合不能再…」）；锁定通过 legalMoves 消失体现（capability 读点见 modifiers.js:625-630）",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-4.test.mjs:674-704",
+   "note": "锁定用探针手开窗口，未从真实行动触发；恐惧 sink 走真实 healHorrorFrom。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "「After you take a play, engage, or resource action」被实现为任意行动后锁（actionResolvedAtLocation 无 actionKind）；引擎 actionTaken 窗口已带 actionKinds（engine.js:2293-2307）可精确实现。",
+    "evidence": "src/cards/entries/08132.js:29-45 vs src/engine/dispatch.js:373-375；src/engine/engine.js:2293-2307",
+    "suggestion": "改用 actionTaken 窗口 + context.actionKinds 过滤 play/engage/gainResources。"
+   },
+   {
+    "severity": "low",
+    "dimension": "docs",
+    "summary": "prior 账本 verified/simplified=false 与条目 note「approximation」矛盾。",
+    "evidence": "audit/eote-player-acceptance.json；src/cards/entries/08132.js:21",
+    "suggestion": "账本记 approximation。"
+   }
+  ]
+ },
+ {
+  "code": "08133",
+  "name": "Stupor",
+  "nameZh": "麻木",
+  "type": "treachery",
+  "klass": "neutral",
+  "xp": null,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Revelation - Put X into play in your threat area.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08133.js:22-27 kind:'weakness' weakness:{type:'threat',...}；读点 src/engine/weakness.js:278-301（inv.threat.push + counters）",
+    "note": ""
+   },
+   {
+    "text": "X can be healed as if it were a single point of horror on you (if it is healed, discard it).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08133.js:17-18 threatHorrorSink + redirectHeal{optional}；读点 src/engine/harm-threat.js:636-665（healHorrorFrom 可选改道），测试实测治疗可改道 1 点并弃卡",
+    "note": ""
+   },
+   {
+    "text": "Forced - After you take a parley, draw, or investigate action: You cannot take any of those types of actions for the remainder of the turn.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08133.js:33-47 用 actionResolvedAtLocation 窗口 + api.addEffect({duration:'endOfTurn', modifiers:['capability:parley', 'capability:draw', 'capability:investigate']})；该窗口 context 不带行动类型（src/engine/dispatch.js:373-375），故「任意行动后」都锁。引擎另有 actionTaken 窗口带 actionKinds（src/engine/engine.js:2293-2307），可精确判定但不被使用",
+    "note": "作用域过宽（任意行动都触发锁定），已披露近似。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08133.js:33-47 api.info（「本回合不能再…」）；锁定通过 legalMoves 消失体现（capability 读点见 modifiers.js:625-630）",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-4.test.mjs:674-704",
+   "note": "锁定用探针手开窗口，未从真实行动触发；恐惧 sink 走真实 healHorrorFrom。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "「After you take a parley, draw, or investigate action」被实现为任意行动后锁（同上）。",
+    "evidence": "src/cards/entries/08133.js:27-43 vs src/engine/dispatch.js:373-375；src/engine/engine.js:2293-2307",
+    "suggestion": "改用 actionTaken 窗口 + context.actionKinds。"
+   }
+  ]
+ }
+]

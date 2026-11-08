@@ -187,6 +187,11 @@ export function matchesCardRule(card, rule, investigator) {
     && !card.requiredInvestigatorTraits.some(trait => investigatorTraits(investigator).includes(lower(trait)))) return false
   return true
 }
+export function draftCardLimit(card) {
+  if (deckCardLimit(card) === 0) return 0
+  return card.exceptional || card.deckLimit === 1 || /Limit 1 per investigator/i.test(card.text || '') || /\u6bcf\u4f4d\u8c03\u67e5\u5458.*[\u4e001]\u5f20/.test(card.textZh || '') ? 1 : Infinity
+}
+
 export function deckCardLimit(card) {
   let limit = card.deckLimit ?? (card.myriad ? 3 : 2)
   // 卡面「每位调查员仅限 1 张」是构筑限制，卡表 deckLimit 未必同步。
@@ -219,9 +224,23 @@ export function myriadUsage(codes, cards) {
   }
   return [...byTitle.values()]
 }
-export function validateDeckRules(investigator, codes, cards, { partial = false } = {}) {
+// 地球边缘 P5：陈丽丽的演武选择在构筑校验里镜像（数据在 web/ui-cards.js#deckRules.eoteDisciplineSelection）。
+const EOTE_DISCIPLINE_SELECTION = UI_CARDS.deckRules.eoteDisciplineSelection || {}
+export function validateDeckRules(investigator, codes, cards, { partial = false, disciplines = undefined, xp = 0, draftMode = false } = {}) {
   const rules = deckRules(investigator, codes, cards)
   const errors = validateTraitLimits(codes, cards)
+  {
+    const selection = EOTE_DISCIPLINE_SELECTION[investigator?.code]
+    if (selection && disciplines !== undefined) {
+      const chosen = Array.isArray(disciplines) ? disciplines : []
+      if (!chosen.length || chosen.length > selection.codes.length) errors.push(t('misc.deck.eoteDisciplineCount', { max: selection.codes.length }))
+      if (new Set(chosen).size !== chosen.length) errors.push(t('misc.deck.eoteDisciplineDuplicate'))
+      if (chosen.some(code => !selection.codes.includes(code))) errors.push(t('misc.deck.eoteDisciplineIllegal'))
+      const earnedXp = Math.max(0, Number.isSafeInteger(xp) ? xp : 0)
+      const allowed = Math.min(selection.codes.length, 1 + Math.floor(earnedXp / selection.perXp))
+      if (chosen.length > allowed) errors.push(t('misc.deck.eoteDisciplineXp', { allowed }))
+    }
+  }
   if (!partial) for (const [type, minimum] of Object.entries(rules.minimumTypes || {})) {
     const label = { asset: t('misc.cardType.asset'), event: t('misc.cardType.event'), skill: t('misc.cardType.skill') }[type]
     if (codes.filter(code => cards[code]?.type === type && !cards[code]?.subtype).length < minimum) errors.push(t('misc.deck.minimumType', { minimum, type: label }))
@@ -240,7 +259,7 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   for (const card of ordinary) countsByCode.set(card.code, (countsByCode.get(card.code) || 0) + 1)
   for (const [code, count] of countsByCode) {
     const card = ordinary.find(item => item.code === code)
-    if (count > deckCardLimit(card)) errors.push(t('misc.deck.overLimit', { name: card.name || code, limit: deckCardLimit(card) }))
+    if (count > (draftMode ? draftCardLimit(card) : deckCardLimit(card))) errors.push(t('misc.deck.overLimit', { name: card.name || code, limit: deckCardLimit(card) }))
   }
   const names = new Map()
   for (const card of ordinary) {
@@ -250,7 +269,7 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   // 同名总张数：Myriad 卡按「同名至多 3 张」跨卡号共享额度；其余卡沿用组内最严 deck_limit。
   for (const [name, group] of names) {
     const myriad = group.some(card => card.myriad === true)
-    const limit = myriad ? MYRIAD_TITLE_LIMIT : Math.min(...group.map(deckCardLimit))
+    const limit = draftMode ? Math.min(...group.map(draftCardLimit)) : myriad ? MYRIAD_TITLE_LIMIT : Math.min(...group.map(deckCardLimit))
     if (group.length > limit) {
       errors.push(myriad
         ? t('misc.deck.myriadLimit', { name, limit })
@@ -321,6 +340,8 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theDreamEaters: 6,
   // P8（M5 发布）：印斯茅斯暗潮 07 段是第七循环，已注册进生产组合根并在大厅可启动。
   theInnsmouthConspiracy: 7,
+  // P7（战役层）：地球边缘 08 段是第八循环，已注册进生产组合根并在大厅可启动。
+  edgeOfTheEarth: 8,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

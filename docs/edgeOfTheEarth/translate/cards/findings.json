@@ -1,0 +1,802 @@
+{
+  "area": "cards",
+  "auditor": "cards-audit",
+  "generatedAt": "2026-11-09",
+  "method": "以本仓 tools/import-cards.mjs 的字段导入规则复算 403 张 EOTE 卡的 zh 期望值并与实际逐字段比对（判定继承/改写），再以脚本做 token/[[特性]]/数字/行数/标点/空格/简繁/术语变体全套机械扫描，最后对 eoep 137 张全量 + eoec 266 张全量逐卡中英对照人工复核与裁定；所有 location 由脚本源码块索引定位。",
+  "scope": {
+    "source": "src/cards/cards-data.js（pack=eoep/eoec） + 参考资源/ArkhamHorror-main/frontend/public/cards_{en,zh-cn,zh}.json",
+    "count": 403,
+    "notes": [
+      "pack 分布：eoep 137 张（调查员 5 + 玩家卡）+ eoec 266 张（战役卡，含 08501-08738 及 a/b 面）",
+      "检查字段：name/subname/text/traits/flavor/back_name/back_text/back_flavor（customization* 在 EOTE 全为空）",
+      "字段来源复算：translated 1588 / not-applicable 2442；英文回退 0、繁中回退 0、本仓改写差异 0",
+      "EOTE 卡中文 = 上游 ArkhamDB 简体数据去 HTML 标签后的产物（README §2 口径），故本轮所有 findings 均为上游继承（source=upstream-zh-cn），本仓导入/改写引入问题 0 处",
+      "[[Objective]] 丢失经核对为上游简中原文即写作 <b>目标</b>（cn 原文无 [[ ]] 标记），不是本仓 stripHtml 造成"
+    ]
+  },
+  "summary": {
+    "findings": 32,
+    "byCategory": {
+      "missing-translation": 0,
+      "mixed-language": 1,
+      "symbol-format": 11,
+      "mistranslation": 8,
+      "marker-leak": 0,
+      "terminology": 12
+    },
+    "bySeverity": {
+      "high": 2,
+      "medium": 6,
+      "low": 24
+    }
+  },
+  "findings": [
+    {
+      "id": "cards-0001",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "简中卡表把符号图标 [fast] 系统性写成 [free]（53 个字段、58 个 token）",
+      "scope": {
+        "code": "08002",
+        "field": "textZh",
+        "key": "icon-token:[fast]->[free]",
+        "cards": 53,
+        "fields": 53,
+        "occurrences": 58
+      },
+      "location": "src/cards/cards-data.js:285465",
+      "pointer": "08002.textZh",
+      "evidence": "08002 等 53 张卡共 58 处：en 用 [fast]，本仓 textZh/backTextZh 全部用 [free]",
+      "expected": "与英文一致地使用 [fast]（或按官方简中卡面确认的快速时间窗图标）",
+      "suggestion": "在上游简中数据修正前，可在渲染层把简中语境下的 [free] 映射回 [fast]，或逐条替换为 [fast]；需先确认简中官方卡面图标口径",
+      "source": "upstream-zh-cn",
+      "count": 58,
+      "samples": [
+        "08002 · textZh · src/cards/cards-data.js:285465",
+        "08005 · textZh · src/cards/cards-data.js:285741",
+        "08021 · textZh · src/cards/cards-data.js:287154",
+        "08027 · textZh · src/cards/cards-data.js:287510",
+        "08040 · textZh · src/cards/cards-data.js:288279",
+        "08041 · textZh · src/cards/cards-data.js:288342",
+        "08042 · textZh · src/cards/cards-data.js:288403",
+        "08043 · textZh · src/cards/cards-data.js:288464"
+      ]
+    },
+    {
+      "id": "cards-0002",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "[[特性]] 引用在简中文本中丢失（英文 [[Objective]] → 简中仅「目标」加粗，方括号标记消失）",
+      "scope": {
+        "code": "08520",
+        "field": "backTextZh",
+        "key": "double-bracket:[[Objective]]"
+      },
+      "location": "src/cards/cards-data.js:294969",
+      "pointer": "08520.backTextZh",
+      "evidence": "08520 backTextZh：「……结算场景1a上的目标」；en：「(Then, resolve the [[Objective]] on act 1a.)」",
+      "expected": "「（然后，结算场景1a上的[[目标]]。）」——保留 [[目标]] 加粗/特性样式标记",
+      "suggestion": "这是上游简中数据自身的问题（cn 原文写作 <b>目标</b>，本来就没有 [[ ]] 标记），不是本仓 stripHtml 去标签造成的；补 [[目标]] 即可，无需改导入逻辑",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08520 · backTextZh · src/cards/cards-data.js:294969（en [[Objective]]）"
+      ]
+    },
+    {
+      "id": "cards-0003",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "规则文本换行/分段与英文版不一致（内容一致，仅换行位置不同）",
+      "scope": {
+        "code": "08046",
+        "field": "textZh",
+        "key": "line-structure"
+      },
+      "location": "src/cards/cards-data.js:288641",
+      "pointer": "08046.textZh",
+      "evidence": "08046 en3行/zh2行；08570b en5行/zh6行；08571b en5行/zh6行；08574b en5行/zh6行；08737 en2行/zh3行",
+      "expected": "换行位置与英文版一致（或统一为中文排版口径）",
+      "suggestion": "【需逐条核对】08570b/08571b/08574b 是简中把「Flip this card back over.」拆成独立行；08737 把「Remove … from the game.」拆行；08046 把第二行并入第一行——均为上游简中排版，非内容缺失",
+      "source": "upstream-zh-cn",
+      "count": 5,
+      "samples": [
+        "08046 · textZh · src/cards/cards-data.js:288641（en3/zh2）",
+        "08570b · textZh · src/cards/cards-data.js:298572（en5/zh6）",
+        "08571b · textZh · src/cards/cards-data.js:298679（en5/zh6）",
+        "08574b · textZh · src/cards/cards-data.js:299000（en5/zh6）",
+        "08737 · textZh · src/cards/cards-data.js:308883（en2/zh3）"
+      ]
+    },
+    {
+      "id": "cards-0004",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "中文文本中混入多余半角空格（9 个字段；标点后 / 图标 token 后 / 半角括号前）",
+      "scope": {
+        "code": "08504",
+        "field": "backFlavorZh",
+        "key": "stray-space",
+        "byKind": {
+          "中文标点后空格": 7,
+          "半角括号前空格": 1,
+          "图标 token 后空格": 2
+        }
+      },
+      "location": "src/cards/cards-data.js:294044",
+      "pointer": "08504.backFlavorZh",
+      "evidence": "08504 中文标点后空格；08505 中文标点后空格；08514 中文标点后空格；08518 中文标点后空格；08522 中文标点后空格；08592 图标 token 后空格；08711 中文标点后空格；08719 图标 token 后空格；08732 中文标点后空格",
+      "expected": "中文标点与图标 token 前后不应有多余半角空格（如「快速。 使用」「猎手。 庞大。」「[free] 在你回合」「弃掉。 (团队…」）",
+      "suggestion": "按中文排版清理：删除标点后/token 后空格，半角括号统一紧贴前文；括号句末多出的「。」一并删除",
+      "source": "upstream-zh-cn",
+      "count": 9,
+      "samples": [
+        "08504 · backFlavorZh · src/cards/cards-data.js:294044（中文标点后空格）",
+        "08505 · textZh · src/cards/cards-data.js:294143（中文标点后空格）",
+        "08514 · textZh · src/cards/cards-data.js:294672（中文标点后空格）",
+        "08518 · backFlavorZh · src/cards/cards-data.js:294855（中文标点后空格）",
+        "08522 · textZh · src/cards/cards-data.js:295118（中文标点后空格）",
+        "08592 · textZh · src/cards/cards-data.js:300559（图标 token 后空格）",
+        "08711 · textZh · src/cards/cards-data.js:307337（中文标点后空格）",
+        "08719 · textZh · src/cards/cards-data.js:307807（图标 token 后空格）"
+      ]
+    },
+    {
+      "id": "cards-0005",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "句末标点冗余：中文句号后又用「(…)。」补句，出现「。 (…)。」",
+      "scope": {
+        "code": "08505",
+        "field": "textZh",
+        "key": "redundant-terminal-period"
+      },
+      "location": "src/cards/cards-data.js:294143",
+      "pointer": "08505.textZh",
+      "evidence": "[reaction]你在不稳定冰盖抽取一张[[危险]]诡计时，在混乱袋里加入1个[frost]标记：取消该卡牌的效果并将其弃掉。 (团队每轮仅限一次)。\n庇护2。",
+      "expected": "「取消该卡牌的效果并将其弃掉。(团队每轮仅限一次。)」",
+      "suggestion": "删除标点后的空格与句末多余句号；括号内英文句点已改为中文句号时，括号外不再保留句号",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08505 · textZh · src/cards/cards-data.js:294143"
+      ]
+    },
+    {
+      "id": "cards-0006",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "同一句内「-1[icon]」的空格不一致（08693）",
+      "scope": {
+        "code": "08693",
+        "field": "textZh",
+        "key": "spacing-before-icon"
+      },
+      "location": "src/cards/cards-data.js:306332",
+      "pointer": "08693.textZh",
+      "evidence": "显现 - 附属到你所在地点。\n位于附属地点的每位调查员得到-1[willpower]、-1 [intellect]、-1 [combat]、-1 [agility]。\n强制 - 当一轮结束时：弃掉雪盲危机。",
+      "expected": "「-1[willpower]、-1[intellect]、-1[combat]、-1[agility]」（token 前不加空格）",
+      "suggestion": "统一去掉「-1 」与「[intellect]」之间的半角空格",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08693 · textZh · src/cards/cards-data.js:306332"
+      ]
+    },
+    {
+      "id": "cards-0007",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "[frost] 图标后的「标记」名词漏译（「揭示一个[frost]后」，同模板其余卡为「[frost]标记」）",
+      "scope": {
+        "code": "08565",
+        "field": "textZh",
+        "key": "token-noun-missing"
+      },
+      "location": "src/cards/cards-data.js:297986",
+      "pointer": "08565.textZh",
+      "evidence": "08565：「在你揭示一个[frost]后」；en：「After you reveal a [frost] token …」；08562 同模板译作「揭示一个[frost]标记后」",
+      "expected": "「在你揭示一个[frost]标记后：受到1点伤害。」",
+      "suggestion": "补「标记」，与 08562/08698 等同一模板的译法一致",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08565 · textZh · src/cards/cards-data.js:297986",
+        "08562 · textZh · src/cards/cards-data.js:297668（同模板对照）"
+      ]
+    },
+    {
+      "id": "cards-0008",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "关键词行「目标 -」与正文之间漏空格（08672）",
+      "scope": {
+        "code": "08672",
+        "field": "textZh",
+        "key": "missing-space-after-dash"
+      },
+      "location": "src/cards/cards-data.js:305140",
+      "pointer": "08672.textZh",
+      "evidence": "目标 -当一轮结束时，如果所有15张无名疯狂都在场",
+      "expected": "「目标 - 当一轮结束时」",
+      "suggestion": "在「-」后补一个半角空格，与全库「目标 - / 强制 - / 显现 - 」体例一致",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08672 · textZh · src/cards/cards-data.js:305140"
+      ]
+    },
+    {
+      "id": "cards-0009",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "规则文本行缺句末标点（en 行以句号结束，中文行以汉字或括号收尾且无句号）",
+      "scope": {
+        "code": "08003",
+        "field": "textZh",
+        "key": "missing-terminal-punctuation"
+      },
+      "location": "src/cards/cards-data.js:285535",
+      "pointer": "08003.textZh",
+      "evidence": "08003「猎手」；08003「猎物 - 仅限丹妮拉·雷耶丝」；08007「ction]当你的回合结束时，如果你本轮开始时的地点与你现在地点的连接次数为1：获得1资源或抽取1张卡牌(连接次数至少为2时，改为执行两项)」；08091「ist]、[tablet]或[elder_thing]符号时，横置恩科西·马巴蒂：改为从混乱袋中查找你的咒印并揭示它(将其他标记放回混乱袋)」；08570「强制 - 在…",
+      "expected": "每句规则文本以「。」结尾（如「猎手。」「猎物 - 仅限丹妮拉·雷耶丝。」）",
+      "suggestion": "补齐句末「。」；其中 08570/08694 是整段规则文本最后一字后缺句号",
+      "source": "upstream-zh-cn",
+      "count": 8,
+      "samples": [
+        "08003 · textZh · src/cards/cards-data.js:285535（line 1）",
+        "08003 · textZh · src/cards/cards-data.js:285535（line 2）",
+        "08007 · textZh · src/cards/cards-data.js:285945（line 1）",
+        "08091 · textZh · src/cards/cards-data.js:291315（line 2）",
+        "08570 · textZh · src/cards/cards-data.js:298520（line 3）",
+        "08596 · textZh · src/cards/cards-data.js:300806（line 3）",
+        "08596 · backTextZh · src/cards/cards-data.js:300770（line 3）",
+        "08694 · textZh · src/cards/cards-data.js:306385（line 3）"
+      ]
+    },
+    {
+      "id": "cards-0010",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "难度标题「简单/ 普通」斜杠后多空格，且与 08501「简单/普通」不一致",
+      "scope": {
+        "code": "08549",
+        "field": "textZh",
+        "key": "easy-standard-slash-spacing"
+      },
+      "location": "src/cards/cards-data.js:296649",
+      "pointer": "08549.textZh",
+      "evidence": "08501「简单/普通」；08549「简单/ 普通」；08596「简单/ 普通」；08621「简单/ 普通」；08648「简单/ 普通」",
+      "expected": "统一为「简单/普通」「困难/专家」（或统一为「简单 / 普通」）",
+      "suggestion": "删除斜杠后的多余空格，与 08501 及「困难/专家」体例对齐",
+      "source": "upstream-zh-cn",
+      "count": 4,
+      "samples": [
+        "08501 · textZh · src/cards/cards-data.js:293922",
+        "08549 · textZh · src/cards/cards-data.js:296649",
+        "08596 · textZh · src/cards/cards-data.js:300806",
+        "08621 · textZh · src/cards/cards-data.js:302257",
+        "08648 · textZh · src/cards/cards-data.js:303783"
+      ]
+    },
+    {
+      "id": "cards-0011",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "阿拉伯数字与中文数字体例不统一（同一批卡中 1/2/3 有时写「一张/两张/三次」）",
+      "scope": {
+        "code": "08019",
+        "field": "textZh",
+        "key": "numeral-style"
+      },
+      "location": "src/cards/cards-data.js:287039",
+      "pointer": "08019.textZh",
+      "evidence": "08019：一个/三次；08031：一张/两张；08044：一位；08046：一张；08051：一张/一位；08062：一次；08101：一张；08117：一位；08119：一位；08504：一个；08681：一张；08691：一轮",
+      "expected": "数量一律用阿拉伯数字（如「抽取2张卡牌」「少进行3次行动」），与全库绝大多数卡一致",
+      "suggestion": "统一为阿拉伯数字；若保留中文数字，至少在同类卡（如 081xx 系列）内保持一致",
+      "source": "upstream-zh-cn",
+      "count": 12,
+      "samples": [
+        "08019 · textZh · src/cards/cards-data.js:287039（一个/三次）",
+        "08031 · textZh · src/cards/cards-data.js:287743（一张/两张）",
+        "08044 · textZh · src/cards/cards-data.js:288525（一位）",
+        "08046 · textZh · src/cards/cards-data.js:288641（一张）",
+        "08051 · textZh · src/cards/cards-data.js:288931（一张/一位）",
+        "08062 · textZh · src/cards/cards-data.js:289586（一次）",
+        "08101 · textZh · src/cards/cards-data.js:291960（一张）",
+        "08117 · textZh · src/cards/cards-data.js:292952（一位）"
+      ]
+    },
+    {
+      "id": "cards-0012",
+      "category": "mixed-language",
+      "severity": "low",
+      "title": "简中文本夹带英文「FAQ，v2.1」勘误注记，且 en 无对应内容（半角括号 + 全角逗号混用）",
+      "scope": {
+        "code": "08596",
+        "field": "textZh",
+        "key": "faq-errata-note"
+      },
+      "location": "src/cards/cards-data.js:300806",
+      "pointer": "08596.textZh",
+      "evidence": "08596.textZh「(FAQ，v2.1)」；08596.backTextZh「(FAQ，v2.1)」；08635.textZh「(FAQ，v2.1)」",
+      "expected": "若要保留勘误注记，用中文括注并统一全/半角：「（FAQ v2.1）」或「（常见问题，v2.1）」，且注明其非英文版内容",
+      "suggestion": "【需人工裁定】该注记来自上游简中（用于澄清移动时机）；保留与否属产品口径。若保留，建议本地化并统一括号/逗号；同时不与英文文本对照校验（en 无此句）",
+      "source": "upstream-zh-cn",
+      "count": 3,
+      "samples": [
+        "08596 · textZh · src/cards/cards-data.js:300806",
+        "08596 · backTextZh · src/cards/cards-data.js:300770",
+        "08635 · textZh · src/cards/cards-data.js:303037"
+      ]
+    },
+    {
+      "id": "cards-0013",
+      "category": "mistranslation",
+      "severity": "high",
+      "title": "伤害/恐惧混淆：en「Take 2 horror」误译为「受到2点伤害」（已知 08586，上游继承）",
+      "scope": {
+        "code": "08586",
+        "field": "textZh",
+        "key": "horror->damage"
+      },
+      "location": "src/cards/cards-data.js:300191",
+      "pointer": "08586.textZh",
+      "evidence": "en：「Revelation - You must either (choose one):\\n- Take 2 horror.」；zh：「显现 - 你必须(选择以下一项)：\\n- 受到2点伤害。」",
+      "expected": "「- 受到2点恐惧。」",
+      "suggestion": "把「伤害」改为「恐惧」；这是规则级误译（受伤 vs 恐惧影响不同的伤害/恐惧分配与治愈路径），须优先修正",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08586 · textZh · src/cards/cards-data.js:300191"
+      ]
+    },
+    {
+      "id": "cards-0014",
+      "category": "mistranslation",
+      "severity": "high",
+      "title": "「for each different class among cards you control」误译为「每控制一张不同职阶的卡牌」（按卡计数，改变规则效果）",
+      "scope": {
+        "code": "08022",
+        "field": "textZh",
+        "key": "per-class->per-card"
+      },
+      "location": "src/cards/cards-data.js:287213",
+      "pointer": "08022.textZh",
+      "evidence": "en：「For each different class among cards you control, you get +1 [combat] …」；zh：「你每控制一张不同职阶的卡牌，你本次攻击得到+1[combat]…」。同包 08077 与繁中均为「每有一个不同的职阶」的按职阶计数口径。",
+      "expected": "「你控制的卡牌中每有一个不同的职阶，……」",
+      "suggestion": "按职阶（不同 faction 数）计数，而非按卡牌张数计数；08036、08050 同样表述需一并修正",
+      "source": "upstream-zh-cn",
+      "count": 3,
+      "samples": [
+        "08022 · textZh · src/cards/cards-data.js:287213",
+        "08036 · textZh · src/cards/cards-data.js:288046",
+        "08050 · textZh · src/cards/cards-data.js:288873"
+      ]
+    },
+    {
+      "id": "cards-0015",
+      "category": "mistranslation",
+      "severity": "medium",
+      "title": "Campaign Log 误译为「剧本手册」（应为「剧本日志」，与 Campaign Guide「剧本手册」区分）",
+      "scope": {
+        "code": "08622",
+        "field": "backTextZh",
+        "key": "campaign-log->guide"
+      },
+      "location": "src/cards/cards-data.js:302272",
+      "pointer": "08622.backTextZh",
+      "evidence": "en：「Read Scenario Interlude: Gaze into Madness in the Campaign Log.」；zh：「阅读剧本手册中的冒险幕间故事：凝视疯狂。」（08597/08659 的 Campaign Guide 才译作「剧本手册」）",
+      "expected": "「阅读剧本日志中的冒险幕间故事：凝视疯狂。」",
+      "suggestion": "改为「剧本日志」；核对同批卡中 Campaign Log/Campaign Guide 的指向是否还有其他混用",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08622 · backTextZh · src/cards/cards-data.js:302272",
+        "08597 · backTextZh · src/cards/cards-data.js:300821（Campaign Guide→剧本手册（对照））",
+        "08659 · backTextZh · src/cards/cards-data.js:304370（Campaign Guide→剧本手册（对照））"
+      ]
+    },
+    {
+      "id": "cards-0016",
+      "category": "mistranslation",
+      "severity": "low",
+      "title": "「their bearer’s deck」误译为「承受者的牌库」（应为「持有者/其牌库」）",
+      "scope": {
+        "code": "08671",
+        "field": "backTextZh",
+        "key": "bearer->sufferer"
+      },
+      "location": "src/cards/cards-data.js:305046",
+      "pointer": "08671.backTextZh",
+      "evidence": "en：「…shuffle each of them back into their bearer's deck.」；zh：「……将它们各自混洗入承受者的牌库。」",
+      "expected": "「……将它们各自混洗入其持有者的牌库。」",
+      "suggestion": "「承受者」指受伤害/恐惧者，与「持有者」混淆会误导（此处指该忒咳哩-哩弱点所在牌库的拥有者）",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08671 · backTextZh · src/cards/cards-data.js:305046"
+      ]
+    },
+    {
+      "id": "cards-0017",
+      "category": "mistranslation",
+      "severity": "low",
+      "title": "封印地点能力：英文为强制「spend … to activate」，简中增译「可以」（可选化）",
+      "scope": {
+        "code": "08650",
+        "field": "textZh",
+        "key": "optionality-added"
+      },
+      "location": "src/cards/cards-data.js:303895",
+      "pointer": "08650.textZh",
+      "evidence": "en：「If you succeed, investigators at Geothermal Vent spend 1 [per_investigator] clues, as a group, to activate the [seal_a] seal.」；zh：「……位于地热口的调查员可以共同花费1[per_investigator]个线索，来激活[seal_a]封印。」",
+      "expected": "「……调查员共同花费1[per_investigator]个线索，来激活[seal_a]封印。」（与 en 一致，不增「可以」）",
+      "suggestion": "08650/08651/08652/08653 同句模板一并核对：若确认成功即必须支付，应删除「可以」；若设计上允许放弃激活，则保留并在 notes 标记为口径澄清",
+      "source": "upstream-zh-cn",
+      "count": 4,
+      "samples": [
+        "08650 · textZh · src/cards/cards-data.js:303895",
+        "08651 · textZh · src/cards/cards-data.js:303953",
+        "08652 · textZh · src/cards/cards-data.js:304011",
+        "08653 · textZh · src/cards/cards-data.js:304069"
+      ]
+    },
+    {
+      "id": "cards-0018",
+      "category": "mistranslation",
+      "severity": "low",
+      "title": "错字：「switching its “-” to a “+”」译为「经其“-”变为“+”」（「经」应为「将」）",
+      "scope": {
+        "code": "08112",
+        "field": "textZh",
+        "key": "typo-jing"
+      },
+      "location": "src/cards/cards-data.js:292640",
+      "pointer": "08112.textZh",
+      "evidence": "en：「Reveal an additional chaos token, switching its \"-\" to a \"+\".」；zh：「额外揭示一个混乱标记，并经其“-”变为“+”。」",
+      "expected": "「……并将其“-”变为“+”。」",
+      "suggestion": "「经」改「将」；繁中此处为「將其…變為」，可佐证",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08112 · textZh · src/cards/cards-data.js:292640"
+      ]
+    },
+    {
+      "id": "cards-0019",
+      "category": "mistranslation",
+      "severity": "low",
+      "title": "漏译限定词：en「the level of your location」→ 简中「X等于所在地点的高度」（缺「你」）",
+      "scope": {
+        "code": "08596",
+        "field": "textZh",
+        "key": "missing-your"
+      },
+      "location": "src/cards/cards-data.js:300806",
+      "pointer": "08596.textZh",
+      "evidence": "en：「[skull]: -X. X is the level of your location.」；zh：「[skull]：-X。X等于所在地点的高度。」（同卡背面为「你所在地点」，可对照）",
+      "expected": "「X等于你所在地点的高度。」",
+      "suggestion": "补「你」；影响不大但同一张卡正反面表述应一致",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08596 · textZh · src/cards/cards-data.js:300806"
+      ]
+    },
+    {
+      "id": "cards-0020",
+      "category": "mistranslation",
+      "severity": "low",
+      "title": "简中文本多出「险境」（Peril）关键词，而英文文本无 Peril（08706/08707，需人工裁定）",
+      "scope": {
+        "code": "08706",
+        "field": "textZh",
+        "key": "extra-peril"
+      },
+      "location": "src/cards/cards-data.js:307051",
+      "pointer": "08706.textZh",
+      "evidence": "en 08706 以「Revelation - If you control a partner asset…」开头无 Peril；zh 为「险境。\\n显现 - …」。繁中同为「禍害。」，说明很可能英文数据缺漏 Peril，而非简中误加。",
+      "expected": "若官方卡面确有 Peril：保留简中并补 en 数据；若无：删除简中「险境。」两处",
+      "suggestion": "【需人工裁定】对照官方卡图确认 08706/08707 是否印有 Peril；仅记录，不擅自删除",
+      "source": "upstream-zh-cn",
+      "count": 2,
+      "samples": [
+        "08706 · textZh · src/cards/cards-data.js:307051",
+        "08707 · textZh · src/cards/cards-data.js:307104"
+      ]
+    },
+    {
+      "id": "cards-0021",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "卡牌正文中的自名与卡名不一致（卡名「地区勘测」，正文写作「地区探测」）",
+      "scope": {
+        "code": "08037",
+        "field": "textZh",
+        "key": "name-consistency"
+      },
+      "location": "src/cards/cards-data.js:288101",
+      "pointer": "08037.textZh",
+      "evidence": "08037 nameZh=地区勘测；textZh=地区探测在你手中或投入到技能检定中时，其获得等于你[agility]的[intellect]图标，以及等于你[intellect]的[agility]图标。",
+      "expected": "正文改用卡名「地区勘测」",
+      "suggestion": "【上游简中内部不一致】繁中正文用「地區勘測」与卡名一致，可据此修正简中正文",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08037 · textZh · src/cards/cards-data.js:288101（正文自引用）",
+        "08037 · nameZh · src/cards/cards-data.js:288091（卡名）"
+      ]
+    },
+    {
+      "id": "cards-0022",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "调查员名前后不一致：08007/08008 同一人物分别译作「蒙特雷·杰克」与「雷蒙特·杰克」",
+      "scope": {
+        "code": "08008",
+        "field": "textZh",
+        "key": "name-consistency"
+      },
+      "location": "src/cards/cards-data.js:286013",
+      "pointer": "08008.textZh",
+      "evidence": "08007 nameZh=「蒙特雷·杰克」；08008 textZh=「快速。雷蒙特·杰克牌库专用。」（繁中 08008 为「蒙特雷·傑克」）",
+      "expected": "统一为「蒙特雷·杰克」",
+      "suggestion": "修正 08008 正文专名；可加一条术语表校验，防止调查员名在同一循环内变体",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08008 · textZh · src/cards/cards-data.js:286013（正文自引用）",
+        "08008 · nameZh · src/cards/cards-data.js:285991（卡名）"
+      ]
+    },
+    {
+      "id": "cards-0023",
+      "category": "terminology",
+      "severity": "low",
+      "title": "shroud（隐藏值）译法不统一：部分卡用「隐藏值」，部分仅用「隐藏」",
+      "scope": {
+        "code": "08503",
+        "field": "textZh",
+        "key": "shroud-term"
+      },
+      "location": "src/cards/cards-data.js:294029",
+      "pointer": "08503.textZh",
+      "evidence": "仅「隐藏」：08503,08556b,08566,08567,08568,08569,08570,08571,08572,08573,08574,08625,08626,08630；「隐藏值」：08558,08560,08561,08673,08675",
+      "expected": "统一为「隐藏值」（与规则书/多数卡一致）",
+      "suggestion": "把「得到+2隐藏」「得到-2隐藏」等补成「隐藏值」",
+      "source": "upstream-zh-cn",
+      "count": 19,
+      "samples": [
+        "08503 · textZh · src/cards/cards-data.js:294029",
+        "08556b · textZh · src/cards/cards-data.js:297084",
+        "08566 · textZh · src/cards/cards-data.js:298092",
+        "08567 · textZh · src/cards/cards-data.js:298199",
+        "08568 · textZh · src/cards/cards-data.js:298306",
+        "08569 · textZh · src/cards/cards-data.js:298413",
+        "08570 · textZh · src/cards/cards-data.js:298520",
+        "08571 · textZh · src/cards/cards-data.js:298627"
+      ]
+    },
+    {
+      "id": "cards-0024",
+      "category": "terminology",
+      "severity": "low",
+      "title": "「Limit 1 … per deck」译法不统一：「每套牌库仅限1张」与「每个牌库仅限1张」并存",
+      "scope": {
+        "code": "08114",
+        "field": "textZh",
+        "key": "per-deck-limit"
+      },
+      "location": "src/cards/cards-data.js:292759",
+      "pointer": "08114.textZh",
+      "evidence": "08114/08115 用「每个牌库仅限1张珍贵记忆」；08019 等 11 张卡用「每套牌库仅限1张」",
+      "expected": "统一为「每套牌库仅限1张」",
+      "suggestion": "改 08114/08115 的「每个牌库」为「每套牌库」",
+      "source": "upstream-zh-cn",
+      "count": 2,
+      "samples": [
+        "08114 · textZh · src/cards/cards-data.js:292759",
+        "08115 · textZh · src/cards/cards-data.js:292826"
+      ]
+    },
+    {
+      "id": "cards-0025",
+      "category": "terminology",
+      "severity": "low",
+      "title": "doom token 译法不统一：「毁灭标记」与「毁灭印记」并存",
+      "scope": {
+        "code": "08076",
+        "field": "textZh",
+        "key": "doom-token"
+      },
+      "location": "src/cards/cards-data.js:290401",
+      "pointer": "08076.textZh",
+      "evidence": "08076：「移除当前密谋上的1个毁灭印记」；其余卡（08534/08544/08642/08648/08672/08681 等）均用「毁灭标记」",
+      "expected": "统一为「毁灭标记」",
+      "suggestion": "改 08076「毁灭印记」为「毁灭标记」",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08076 · textZh · src/cards/cards-data.js:290401"
+      ]
+    },
+    {
+      "id": "cards-0026",
+      "category": "terminology",
+      "severity": "low",
+      "title": "ignore 译法不统一：「忽略」与「忽视」并存",
+      "scope": {
+        "code": "08048",
+        "field": "textZh",
+        "key": "ignore"
+      },
+      "location": "src/cards/cards-data.js:288757",
+      "pointer": "08048.textZh",
+      "evidence": "08048：「(忽视+/-)」；08004/08045/08118 用「忽略」",
+      "expected": "统一为「忽略」",
+      "suggestion": "改 08048「忽视+/-」为「忽略+/-」",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08048 · textZh · src/cards/cards-data.js:288757"
+      ]
+    },
+    {
+      "id": "cards-0027",
+      "category": "terminology",
+      "severity": "low",
+      "title": "standard damage 译法不统一：「标准伤害」与「基础伤害」并存",
+      "scope": {
+        "code": "08127",
+        "field": "textZh",
+        "key": "standard-damage"
+      },
+      "location": "src/cards/cards-data.js:293540",
+      "pointer": "08127.textZh",
+      "evidence": "08088/08090/08092：「不造成标准伤害」；08127：「本次攻击不造成基础伤害」",
+      "expected": "统一为「标准伤害」",
+      "suggestion": "改 08127「基础伤害」为「标准伤害」",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08127 · textZh · src/cards/cards-data.js:293540"
+      ]
+    },
+    {
+      "id": "cards-0028",
+      "category": "terminology",
+      "severity": "low",
+      "title": "fight value 误译为「战斗值」（全库 fight 统一译「攻击」，应为「攻击值」；繁中亦作「攻擊值」）",
+      "scope": {
+        "code": "08673",
+        "field": "textZh",
+        "key": "fight-value"
+      },
+      "location": "src/cards/cards-data.js:305194",
+      "pointer": "08673.textZh",
+      "evidence": "08673：「它的战斗值等于它的隐藏值」；en 为「Its fight value is equal to its shroud value」；繁中：「它的攻擊值等於它的隱藏值」",
+      "expected": "「它的攻击值等于它的隐藏值」",
+      "suggestion": "改「战斗值」为「攻击值」；同时核对 08027 卡名「Combat Training」→「战斗训练」属卡名，不受影响",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08673 · textZh · src/cards/cards-data.js:305194"
+      ]
+    },
+    {
+      "id": "cards-0029",
+      "category": "terminology",
+      "severity": "low",
+      "title": "campaign 译法不统一：多数译「剧本」，08509 用「战役」",
+      "scope": {
+        "code": "08509",
+        "field": "textZh",
+        "key": "campaign"
+      },
+      "location": "src/cards/cards-data.js:294377",
+      "pointer": "08509.textZh",
+      "evidence": "08509：「(团队每场战役限一次)」；08502/08511 等其余卡：「每个剧本最多一次成功」「团队每个剧本仅限一次」",
+      "expected": "统一为「剧本」（与「剧本日志/剧本手册」术语一致）",
+      "suggestion": "改 08509「每场战役限一次」为「每个剧本仅限一次」；注意不要误删「剧本日志」等复合词",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08509 · textZh · src/cards/cards-data.js:294377"
+      ]
+    },
+    {
+      "id": "cards-0030",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "「Wooden Sledge」译名错字：「木制雪撬」（08615 卡名/正文）与「木制雪橇」（08513 剧情奖励、08127 雪橇犬）不一致",
+      "scope": {
+        "code": "08615",
+        "field": "nameZh",
+        "key": "sledge-typo"
+      },
+      "location": "src/cards/cards-data.js:301887",
+      "pointer": "08615.nameZh",
+      "evidence": "08615 nameZh=「木制雪撬」，textZh 同卡内混用「木制雪撬」「木制雪橇」；08513 textZh：「记录木制雪橇」（Campaign Log 奖励同名物品）",
+      "expected": "统一为「木制雪橇」（撬≠橇）",
+      "suggestion": "修正 08615 卡名与正文（全卡 3 处「雪撬」），使剧本奖励记录可对上同一张卡",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08615 · nameZh · src/cards/cards-data.js:301887",
+        "08127 · textZh · src/cards/cards-data.js:293540（雪橇（对照））",
+        "08504 · textZh · src/cards/cards-data.js:294086（雪橇（对照））",
+        "08513 · textZh · src/cards/cards-data.js:294613（雪橇（对照））",
+        "08563b · textZh · src/cards/cards-data.js:297826（雪橇（对照））"
+      ]
+    },
+    {
+      "id": "cards-0031",
+      "category": "terminology",
+      "severity": "low",
+      "title": "错别字：「白雪复盖的峭壁」（覆盖 → 复盖）",
+      "scope": {
+        "code": "08605",
+        "field": "nameZh",
+        "key": "cover-typo"
+      },
+      "location": "src/cards/cards-data.js:301312",
+      "pointer": "08605.nameZh",
+      "evidence": "08605 nameZh=「白雪复盖的峭壁」，textZh 同用「复盖」；08533 等处用正确的「覆盖」",
+      "expected": "「白雪覆盖的峭壁」（正文同步）",
+      "suggestion": "「复」改「覆」；繁简转换常把「覆」误成「复」，建议全库扫「复盖/复写/复核」等",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08605 · nameZh · src/cards/cards-data.js:301312",
+        "08533 · textZh · src/cards/cards-data.js:295695（覆盖（对照））"
+      ]
+    },
+    {
+      "id": "cards-0032",
+      "category": "terminology",
+      "severity": "low",
+      "title": "引文署名格式不统一：80 处 Lovecraft 引文中仅 08047 用「H.P.洛夫克拉夫特，《无名之城》」，其余用「H. P. 洛夫克拉夫特《疯狂山脉》」",
+      "scope": {
+        "code": "08047",
+        "field": "flavorZh",
+        "key": "flavor-attribution-style"
+      },
+      "location": "src/cards/cards-data.js:288676",
+      "pointer": "08047.flavorZh",
+      "evidence": "古老而凶险的秘密，这些秘密不应为人所知，也未曾有人所知。”H.P.洛夫克拉夫特，《无名之城》",
+      "expected": "统一「H. P. 洛夫克拉夫特《作品名》」（有的用「，」有的不用，也建议统一）",
+      "suggestion": "统一缩写空格与署名—作品分隔符；优先以多数（79 处）体例为准",
+      "source": "upstream-zh-cn",
+      "count": 1,
+      "samples": [
+        "08047 · flavorZh · src/cards/cards-data.js:288676",
+        "08502 · backFlavorZh · src/cards/cards-data.js:293933（多数体例对照）",
+        "08503 · backFlavorZh · src/cards/cards-data.js:293986（多数体例对照）",
+        "08504 · backFlavorZh · src/cards/cards-data.js:294044（多数体例对照）",
+        "08505 · backFlavorZh · src/cards/cards-data.js:294101（多数体例对照）",
+        "08506 · backFlavorZh · src/cards/cards-data.js:294158（多数体例对照）",
+        "08507 · backFlavorZh · src/cards/cards-data.js:294217（多数体例对照）"
+      ]
+    }
+  ],
+  "reviewCandidates": [
+    "133 处「[[特性]]」写法检查：除 08520 外全部与 en 数量/内容对应（含中文特性名翻译），仅 08520 丢失 [[Objective]]。",
+    "403 卡 4030 个 zh 字段与上游 cards_zh-cn.json 去标签结果逐字节一致；localeStatus=complete 全部复算一致；无英文回退/繁中回退。",
+    "逐卡人工精读覆盖 eoep 全部 137 张 + eoec 全部 266 张的规则文本与背面（见 _dump.md）；风味文本按可疑清单抽查，未发现独立误译。",
+    "08553/08554/08555「if you are running out of time」等提示语、08624-08626「Remember that the team …」等 Campaign Log 记录语均按 en 译出，未发现语义偏差。",
+    "08048「[elder_sign] 可视作 1 或 11」与 en 一致；08057/08058 充能条件、08522/08608/08641/08679/08711 Massive 关键词均一致。",
+    "083xx/086xx 号码段中 08501-08738 按 a/b 面拆分正确，无字段错位；重印/别名卡（08553-08555 等）文本与 en 一致。"
+  ],
+  "reproduction": {
+    "command": "node docs/edgeOfTheEarth/translate/tools/cards-scan.mjs",
+    "write": "node docs/edgeOfTheEarth/translate/tools/cards-scan.mjs --write",
+    "dump": "node docs/edgeOfTheEarth/translate/tools/cards-scan.mjs --dump",
+    "inputs": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/frontend/public/cards_zh-cn.json",
+      "参考资源/ArkhamHorror-main/frontend/public/cards_zh.json",
+      "src/cards/cards-data.js"
+    ]
+  }
+}

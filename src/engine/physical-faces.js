@@ -71,3 +71,37 @@ export function normalizedFace(state,code,{printed,enemyDefinition}) {
  const health=def.health===null?null:def.healthPerInvestigator?def.healthPerInvestigator*state.numInvestigators:def.health+(def.healthPerPlayerBonus||0)*state.numInvestigators
  return {...raw,...def,type:'enemy',code,health}
 }
+
+// 支援双面翻面（P2，七循环）：同一张印刷卡的 Unbroken/Broken 两面在卡表里是两个卡号，
+// 可能没有 linkedToCode 元数据，因此调用方可以显式提供成对卡号（pairs）来声明这次翻面合法。
+// 所有印刷字段替换仍走 planPhysicalFace(...,{kind:'asset'})：实例 id / 横置 / 控制权 / 附属
+// 保持不动；本函数只负责「这一对卡号是否被声明为同一张卡的两面」与定义注入。
+const normalizeFacePairs = pairs => {
+  if(pairs==null)return []
+  if(!Array.isArray(pairs))throw new TypeError('Asset face pairs must be an array')
+  return pairs.map(pair=>{
+    const [a,b]=Array.isArray(pair)?pair:[pair?.a??pair?.unbrokenCode,pair?.b??pair?.brokenCode]
+    if(typeof a!=='string'||!a||typeof b!=='string'||!b||a===b)throw new TypeError('Invalid asset face pair')
+    return [a,b]
+  })
+}
+
+export function planAssetFaceFlip(entity,nextCode,{definitionFor,pairs=null}={}) {
+  if(!entity||typeof entity!=='object')throw new TypeError('Asset face flip requires an in-play entity')
+  if(typeof nextCode!=='string'||!nextCode)throw new TypeError('Asset face flip requires the next face code')
+  if(typeof definitionFor!=='function')throw new TypeError('Asset face flip requires definitionFor')
+  const pairList=normalizeFacePairs(pairs)
+  const from=entity.originalCode||entity.code
+  if(typeof from!=='string'||!from)throw new TypeError('Asset face flip requires a source card code')
+  const declaredPair=pairList.some(([a,b])=>(a===from&&b===nextCode)||(a===nextCode&&b===from))
+  if(pairList.length&&!declaredPair)throw new TypeError('Asset faces are not a declared pair')
+  // 显式成对声明时补上 linked 元数据，之后完全复用通用的同卡双面替换逻辑；
+  // 未提供 pairs 时按印刷 linkedToCode/linkedCardCode 判定（既有敌人换面同一口径）。
+  const definition=code=>{
+    const def=definitionFor(code)
+    if(!def||!declaredPair)return def
+    const other=code===from?nextCode:from
+    return {...def,linkedToCode:def.linkedToCode||other,linkedCardCode:def.linkedCardCode||other}
+  }
+  return planPhysicalFace(entity,nextCode,{kind:'asset',definitionFor:definition})
+}

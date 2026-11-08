@@ -44,6 +44,10 @@ const AUDITS = [
   { id: 'ticScope', script: 'tools/scan-tic-scope.mjs', args: ['--check'] },
   { id: 'ticMigration', script: 'tools/audit-tic.mjs', args: ['--check'] },
   { id: 'ticRelease', script: 'tools/audit-tic-release.mjs', args: ['--check'] },
+  // 注意：七循环 eote 的 P0 范围账本（node tools/scan-eote-scope.mjs --check）本轮先只注册为
+  // npm script 与 tests/eote-migration.test.mjs 门禁；audit/baseline.json 是整套发布门禁快照，
+  // 当前检出里已有 TDE/TIC/Carcosa 的既有漂移（见 artifacts/migration/eote/reports/baseline.md），
+  // 不属于 P0 修复范围。等这些既有漂移收口、重新生成发布基线时，再把 eoteScope 加进本清单。
 ]
 
 const run = (command, args, { timeout = 600_000 } = {}) => {

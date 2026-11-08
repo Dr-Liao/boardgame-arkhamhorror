@@ -1,0 +1,46 @@
+// 08097 袖珍望远镜
+// 卡面：[free]横置袖珍望远镜：查看一个连接的未揭示地点的揭示面。
+//       [action]：调查。调查一个连接的已揭示地点，如同你在该地点。
+//
+// 读点：
+//   · 调查走 api.investigate(seat,{ locationId, noClueDiscovery })，成功后 api.discoverClue(seat,1,locationId)
+//     在目标地点发现线索（doInvestigate 的 locationId 只改调查口径，线索默认按所在地点发现）。
+//   · 「查看未揭示地点的揭示面」用条目 resolve 读取地点实例并 api.info 输出；look.js 的 lookAt
+//     只支持牌库区，没有地点揭示面的只读原语。
+//
+// approximation: 横置查看以「日志展示该未揭示地点的揭示面信息」实现，不改变地点揭示状态
+//   （与印刷一致：查看不等于揭示）；已提交 primitive request m2-3-08097。
+//
+// 一张卡一个文件：这张卡的行为只在这里维护。
+
+export default {
+  code: '08097',
+  abilities: [
+    { kind: 'free', label: '横置：查看一个相连未揭示地点的揭示面', cost: { action: false, exhaust: true },
+      resolve: ({ inv, state, api }) => {
+        const here = state.locations.find(location => location.id === inv.location)
+        const candidates = (here?.connections || []).map(id => state.locations.find(location => location.id === id))
+          .filter(location => location && location.revealed !== true)
+        if (!candidates.length) { api.info('没有相连的未揭示地点。'); return }
+        const chosen = candidates.length === 1 ? candidates[0].id : api.choice({ kind: 'location', source: '08097', seat: inv.seat,
+          prompt: '选择要查看的连接地点。', options: candidates.map(location => ({ id: location.id, label: location.name })) })
+        const location = candidates.find(item => item.id === chosen) || candidates[0]
+        api.info(`🔭 查看「${location.name}」的揭示面：帷幕 ${location.shroud ?? '?'}，线索 ${location.clues ?? 0}。`)
+      } },
+    { kind: 'action', label: '调查一个相连的已揭示地点（如同你在该地点）', cost: { action: true },
+      resolve: ({ inv, state, api }) => {
+        const here = state.locations.find(location => location.id === inv.location)
+        const candidates = (here?.connections || []).map(id => state.locations.find(location => location.id === id))
+          .filter(location => location && location.revealed)
+        if (!candidates.length) { api.info('没有相连的已揭示地点。'); return }
+        const chosen = candidates.length === 1 ? candidates[0].id : api.choice({ kind: 'location', source: '08097', seat: inv.seat,
+          prompt: '选择要调查的相连地点。', options: candidates.map(location => ({ id: location.id, label: location.name })) })
+        // doInvestigate 的 locationId 只改调查地点口径，线索仍按调查员所在地点发现；
+        // 卡面要求「如同你在该地点」，因此抑制标准发现，成功后在该地点手动发现 1 个线索。
+        api.investigate(inv.seat, { locationId: chosen, noClueDiscovery: true })
+        const result = api.testResult()
+        if (result?.success) api.discoverClue(inv.seat, 1, chosen)
+      } },
+  ],
+  modifiers: [],
+}

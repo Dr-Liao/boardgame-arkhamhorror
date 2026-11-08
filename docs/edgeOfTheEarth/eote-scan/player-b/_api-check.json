@@ -1,0 +1,658 @@
+{
+ "08079": {
+  "api": [
+   "drawCards"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08080": {
+  "api": [
+   "autoEvadeEnemy",
+   "defeatEnemy"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08081": {
+  "api": [],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08082": {
+  "api": [
+   "autoEvadeEnemy",
+   "enemyAttackByCard",
+   "moveCard"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08083": {
+  "api": [
+   "addAssetHorror",
+   "cardName",
+   "cardTraits",
+   "choice",
+   "healAsset",
+   "healDamage",
+   "healHorror"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08084": {
+  "api": [
+   "canMoveTo",
+   "choice",
+   "discoverClue",
+   "info",
+   "locName",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08085": {
+  "api": [
+   "canMoveTo",
+   "choice",
+   "discoverClue",
+   "info",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08086": {
+  "api": [
+   "addExtraOnSuccess",
+   "addUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08087": {
+  "api": [
+   "addEffect"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08088": {
+  "api": [
+   "setAssetUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08089": {
+  "api": [
+   "attachOrSwapControlledAsset",
+   "cardAbilityOptions",
+   "cardName",
+   "cardTraits",
+   "cardType",
+   "choice",
+   "info",
+   "resolveCardAbility"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08090": {
+  "api": [
+   "choice",
+   "fight",
+   "loseActions",
+   "spendUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08091": {
+  "api": [
+   "addEffect",
+   "choice",
+   "info",
+   "tokenLabel"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08092": {
+  "api": [
+   "choice",
+   "fight",
+   "loseActions",
+   "spendUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08093": {
+  "api": [
+   "choice",
+   "fight",
+   "locName",
+   "moveEnemy"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08094": {
+  "api": [],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08095": {
+  "api": [
+   "addAssetHorror",
+   "cardTraits",
+   "cardType",
+   "playerTools"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "cancelRevelation"
+  ],
+  "missingTools": [
+   "cancelRevelation"
+  ]
+ },
+ "08096": {
+  "api": [],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08097": {
+  "api": [
+   "choice",
+   "discoverClue",
+   "info",
+   "investigate",
+   "testResult"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08098": {
+  "api": [
+   "choice",
+   "evade",
+   "investigate",
+   "locName",
+   "moveDestinations",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08099": {
+  "api": [
+   "choice",
+   "moveClueToLocation",
+   "moveEnemy"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08100": {
+  "api": [
+   "choice",
+   "evade",
+   "investigate",
+   "locName",
+   "moveDestinations",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08101": {
+  "api": [
+   "choice",
+   "discardChosen",
+   "discoverClue",
+   "investigate",
+   "spendUses",
+   "testResult"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08102": {
+  "api": [
+   "choice",
+   "drawCards",
+   "moveCard"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08103": {
+  "api": [
+   "choice",
+   "discardChosen",
+   "discoverClue",
+   "investigate",
+   "spendUses",
+   "testResult"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08104": {
+  "api": [
+   "canDiscoverClueAt",
+   "cardName",
+   "cardTraits",
+   "cardType",
+   "choice",
+   "discoverClue",
+   "info",
+   "locName",
+   "moveCard",
+   "moveDestinations"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08105": {
+  "api": [
+   "addTestPendingBonus"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08106": {
+  "api": [
+   "canDiscoverClueAt",
+   "cardName",
+   "cardTraits",
+   "cardType",
+   "choice",
+   "discoverClue",
+   "locName",
+   "moveCard",
+   "moveDestinations"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08107": {
+  "api": [
+   "addExtraOnSuccess",
+   "addTestPendingBonus"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08108": {
+  "api": [
+   "choice",
+   "info",
+   "locName",
+   "moveEnemy",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08109": {
+  "api": [
+   "choice",
+   "damage",
+   "evade",
+   "gainAction",
+   "info",
+   "spendUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08110": {
+  "api": [
+   "choice",
+   "info",
+   "locationName",
+   "moveEnemy",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08111": {
+  "api": [
+   "choice",
+   "damage",
+   "evade",
+   "gainAction",
+   "info",
+   "spendUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08112": {
+  "api": [
+   "info",
+   "revealChaosTokens",
+   "tokenLabel"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08113": {
+  "api": [
+   "gainResources",
+   "info",
+   "playerTools"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "removeAssetFromGame"
+  ],
+  "missingTools": [
+   "removeAssetFromGame"
+  ]
+ },
+ "08114": {
+  "api": [
+   "healAsset",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08115": {
+  "api": [
+   "healAsset",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08116": {
+  "api": [
+   "cancelHarm",
+   "choice",
+   "giveAsset",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08117": {
+  "api": [
+   "cardName",
+   "choice",
+   "healDamage",
+   "healHorror",
+   "info",
+   "loseResources",
+   "spendUses",
+   "test"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08118": {
+  "api": [
+   "choice",
+   "fight",
+   "info",
+   "locationName",
+   "spendUses"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08119": {
+  "api": [
+   "cardName",
+   "choice",
+   "healDamage",
+   "healHorror",
+   "info",
+   "loseResources",
+   "spendUses",
+   "test"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08120": {
+  "api": [
+   "addPendingTestBonus",
+   "choice",
+   "info",
+   "playerTools",
+   "spendUses"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "replenishResources"
+  ],
+  "missingTools": [
+   "replenishResources"
+  ]
+ },
+ "08121": {
+  "api": [
+   "addPendingTestBonus",
+   "choice",
+   "info",
+   "playerTools",
+   "spendUses"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "replenishResources"
+  ],
+  "missingTools": [
+   "replenishResources"
+  ]
+ },
+ "08122": {
+  "api": [
+   "addPendingTestBonus",
+   "choice",
+   "info",
+   "playerTools",
+   "spendUses"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "replenishResources"
+  ],
+  "missingTools": [
+   "replenishResources"
+  ]
+ },
+ "08123": {
+  "api": [
+   "addPendingTestBonus",
+   "choice",
+   "info",
+   "playerTools",
+   "spendUses"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "replenishResources"
+  ],
+  "missingTools": [
+   "replenishResources"
+  ]
+ },
+ "08124": {
+  "api": [
+   "addPendingTestBonus",
+   "choice",
+   "info",
+   "playerTools",
+   "spendUses"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "replenishResources"
+  ],
+  "missingTools": [
+   "replenishResources"
+  ]
+ },
+ "08125": {
+  "api": [
+   "addScenarioXpBonus",
+   "addTrauma",
+   "choice",
+   "info",
+   "recordSets"
+  ],
+  "missingApi": [
+   "recordSets"
+  ],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08126": {
+  "api": [
+   "info",
+   "placeAssetHarm",
+   "playerTools"
+  ],
+  "missingApi": [
+   "playerTools"
+  ],
+  "playerTools": [
+   "rerollToken"
+  ],
+  "missingTools": [
+   "rerollToken"
+  ]
+ },
+ "08127": {
+  "api": [
+   "choice",
+   "exhaust",
+   "fight",
+   "info",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08128": {
+  "api": [],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08129": {
+  "api": [
+   "cardFactions",
+   "choice",
+   "damageEnemy",
+   "discoverClue",
+   "healAsset",
+   "healDamage",
+   "healHorror",
+   "info",
+   "moveInvestigator"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08130": {
+  "api": [
+   "addEffect",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08131": {
+  "api": [
+   "addEffect",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08132": {
+  "api": [
+   "addEffect",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ },
+ "08133": {
+  "api": [
+   "addEffect",
+   "info"
+  ],
+  "missingApi": [],
+  "playerTools": [],
+  "missingTools": []
+ }
+}

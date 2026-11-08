@@ -14,6 +14,7 @@ import { carcosaCampaignCardVerified, CARCOSA_CAMPAIGN_ACCEPTANCE_PROFILE } from
 import { carcosaInvestigatorCardVerified, CARCOSA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/carcosaInvestigators/manifest.js'
 import { tfaInvestigatorCardVerified, TFA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/tfaInvestigators/manifest.js'
 import { tfaPlayerCardVerified, TFA_PLAYER_ACCEPTANCE_PROFILE } from '../content/packs/tfaPlayer/manifest.js'
+import { applyEoteTextFixes } from '../content/campaigns/edgeOfTheEarth/card-text-fixes.js'
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const GAME = 'games/arkhamhorror'
@@ -163,7 +164,8 @@ export function mergeCatalog(sources) {
     // Encoding/allowlisting is not behavioral acceptance. P6 keeps proof scopes
     // in the per-code ledger; no card is promoted by the existence of a key.
     const effectStatus = effect?.simplified ? 'simplified' : effect || descriptor || Object.hasOwn(INVESTIGATOR_ABILITIES, code) || available ? 'unverified' : 'unimplemented'
-    cards[code] = { ...normalizeCard(row, locale), dataStatus: reasons.length ? 'quarantined' : source === 'legacy' ? 'compatibility' : 'validated', availability: accepted ? 'strict' : available ? 'simplified' : 'catalog-only', effectStatus, provenanceId: code }
+    const normalized = applyEoteTextFixes(normalizeCard(row, locale))
+    cards[code] = { ...normalized, dataStatus: reasons.length ? 'quarantined' : source === 'legacy' ? 'compatibility' : 'validated', availability: accepted ? 'strict' : available ? 'simplified' : 'catalog-only', effectStatus, provenanceId: code }
     provenance[code] = { canonicalSource: source, rawSources: Object.keys(indexes).filter(id => indexes[id].has(code)), fields: fieldSources(row, source), locale, isolationReasons: reasons }
   }
   return { cards, provenance, quarantined }

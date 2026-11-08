@@ -1,0 +1,19 @@
+﻿// 08677 迷雾高塔（Mist-Pylon）· 深潜组地点
+// 卡面（背面）：进入迷雾高塔的额外费用：此地点的调查员团队花费 1×人数线索。
+// [fast] 如果控制激活的 seal_d：把 seal_d 放到此高塔；此后迷雾高塔上的调查员每次受到伤害/恐惧时取消 1 点。
+// 读点：locationRule.fastActions → behavior.performAction 的 heartOfMadnessUnleash 分支；
+// 高塔寿命/坍塌走 P2-D eote-facilities。
+export default {
+  code: '08677',
+  scope: 'location',
+  implemented: true,
+  locationRule: {
+    enterCostCluePerInvestigator: 1,
+    fastActions({ moves, state, inv, location }) {
+      if (!inv || inv.location !== location.id) return
+      moves.push({ action: 'scenarioAction', rule: 'heartOfMadnessUnleash:D', actions: 0,
+        label: '🔓 迷雾高塔：释放封印 D 的力量（fast）' })
+    },
+  },
+  flags: { pylonKind: 'D', mistPylon: true },
+}

@@ -5,6 +5,7 @@
 export default {
   // Scenario setup (scenario-setup-view.js)
   'setup.title': 'Scenario setup',
+  'setup.chineseMissing': 'Chinese text pending translation',
   'setup.aria': 'Scenario setup',
   'setup.closeAria': 'Close scenario setup',
   'setup.intro': 'Introduction',

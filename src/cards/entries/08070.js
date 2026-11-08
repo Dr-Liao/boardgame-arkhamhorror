@@ -1,0 +1,57 @@
+// 08070 真法魔典（True Magick）· 秘术师资产 · 手部+奥术 · 5 经验。
+//
+// 卡面：使用(1 充能)。当每轮开始时重新补满本充能。
+//       你可以通过揭示手牌中的 [[法术]] 支援来结算卡牌上的能力。如同真法魔典是已揭示的支援。
+//       (以支付费用、花费充能、执行效果等)。
+//
+// 一卡一文件：这张卡的行为只在这里维护。
+// approximation: 引擎没有「代理来源（把魔典当作被揭示法术卡来执行其能力）」的原语。这里用
+// 「揭示手牌中的一张法术支援 → api.resolveCardAbility 结算其能力」近似；费用/充能/效果由该
+// 法术卡实例承担，未真正转移到魔典上。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const isSpellAsset = code => {
+  const def = ALL_CARDS[code]
+  return Boolean(def) && def.type === 'asset'
+    && (def.traits || []).some(trait => String(trait).toLowerCase() === 'spell')
+}
+
+export default {
+  code: '08070',
+  uses: 1,
+  usesType: 'charges',
+  abilities: [
+    {
+      kind: 'free',
+      label: '揭示手牌中的一张[[法术]]支援，并结算它的一个能力',
+      criteria: [({ inv }) => [...new Set(inv.hand || [])].some(isSpellAsset)],
+      resolve: ({ inv, api }) => {
+        const spells = [...new Set(inv.hand || [])].filter(isSpellAsset)
+        if (!spells.length) {
+          api.info('「真法魔典」：你手中没有[[法术]]支援。')
+          return
+        }
+        const picked = spells.length === 1 ? spells[0]
+          : api.choice({ kind: 'card', source: '08070', seat: inv.seat,
+            prompt: '选择要揭示的手牌[[法术]]支援。',
+            options: spells.map(code => ({ id: code, cardCode: code, label: api.cardName(code) })) })
+        if (!spells.includes(picked)) return
+        api.info(`📖 「真法魔典」：揭示手牌中的「${api.cardName(picked)}」（近似代理其能力）。`)
+        const options = (api.cardAbilityOptions?.(inv.seat, picked) || []).filter(option => option.actionKind == null || option.actionKind === 'action')
+        if (!options.length) {
+          api.info('「真法魔典」：这张法术卡当前没有可结算的能力。')
+          return
+        }
+        const abilityIndex = options.length === 1 ? options[0].index
+          : Number(api.choice({ kind: 'effect', source: '08070', seat: inv.seat,
+            prompt: '选择要结算的能力。',
+            options: options.map((option, index) => ({ id: String(index), label: option.label || `能力 ${index + 1}` })) }))
+        const ability = options[Number.isInteger(abilityIndex) && abilityIndex >= 0 && abilityIndex < options.length
+          ? abilityIndex : 0]
+        api.resolveCardAbility(inv.seat, picked, { abilityIndex: ability.index, ignoreCosts: false })
+        api.info(`📖 「真法魔典」：结算「${api.cardName(picked)}」的能力。`)
+      },
+    },
+  ],
+  modifiers: [],
+}

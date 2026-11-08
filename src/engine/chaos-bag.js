@@ -3,11 +3,20 @@ import { randomValue } from './rules-state.js'
 // The array remains the public bag. Revealed tokens are physically removed until
 // the test ends; sealed/removed tokens and the campaign pool survive JSON saves.
 export function initializeChaosBag(state, tokens) {
+  const freshBag = !Array.isArray(state.campaign.chaosBag) || state.campaign.chaosBag.length === 0
   // P9 修复（并行/分选双线）：campaign-parts 的 setPart 会把非活动线快照载入顶层，
   // 新线首次初始化时 `campaign.chaosBag` 是 `[]`（truthy），旧判空让逐线袋永远保持空袋，
   // 并行启动后 AI 一揭示标记就报「混乱袋为空」。空数组合法与「未初始化」同义。
   if (!Array.isArray(state.campaign.chaosBag) || state.campaign.chaosBag.length === 0) {
     state.campaign.chaosBag = [...tokens]
+  }
+  if (state.deckMode === 'draft') {
+    const key = state.campaign.currentPart || 'main'
+    state.campaign.draftGiftBags ||= {}
+    if (freshBag || !state.campaign.draftGiftBags[key]) {
+      state.campaign.chaosBag.push('+1', '0')
+      state.campaign.draftGiftBags[key] = true
+    }
   }
   state.chaosBag = [...state.campaign.chaosBag]
   state.chaos = { revealed: [], sealed: [], removed: [], frames: [] }
@@ -20,10 +29,14 @@ function zones(state) {
 
 export function changeChaosBag(state, token, amount, { permanent = false } = {}) {
   if (typeof token !== 'string' || !Number.isSafeInteger(amount)) throw new Error('混乱袋变更无效')
+  const protectedCount = state.deckMode === 'draft' && ['+1', '0'].includes(token) ? 1 : 0
   const update = bag => {
     const copy = [...bag]
-    if (amount < 0 && copy.filter(t => t === token).length < -amount) throw new Error('混乱袋中没有足够标记')
-    for (let n = 0; n < Math.abs(amount); n++) amount > 0 ? copy.push(token) : copy.splice(copy.indexOf(token), 1)
+    if (amount < 0 && copy.filter(t => t === token).length < -amount && !protectedCount) throw new Error('混乱袋中没有足够标记')
+    for (let n = 0; n < Math.abs(amount); n++) {
+      if (amount > 0) copy.push(token)
+      else if (copy.filter(t => t === token).length > protectedCount) copy.splice(copy.indexOf(token), 1)
+    }
     return copy
   }
   const bag = update(state.chaosBag)

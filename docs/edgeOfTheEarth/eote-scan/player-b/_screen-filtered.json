@@ -1,0 +1,3104 @@
+{
+ "integrity.json": {
+  "cards": [
+   {
+    "code": "08079",
+    "name": "血债血偿",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08079.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08080",
+    "name": "灭火器",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08080.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08081",
+    "name": "有胆有识",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08081.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08082",
+    "name": "抵挡",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08082.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08083",
+    "name": "医学生",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08083.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08084",
+    "name": "追踪",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08084.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08085",
+    "name": "追踪",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08085.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08086",
+    "name": "迈克尔·利",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08086.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//     api.addExtraOnSuccess({type:'dealDamage',target:'engaged'}) 近似。"
+     }
+    ]
+   },
+   {
+    "code": "08087",
+    "name": "狙击",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08087.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08088",
+    "name": "老旧的霰弹枪",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08088.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08089",
+    "name": "快拔枪套",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08089.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08090",
+    "name": "克图格亚的烙印",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08090.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08091",
+    "name": "恩科西·马巴蒂",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08091.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08092",
+    "name": "克图格亚的烙印",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08092.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08093",
+    "name": "巨石锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08093.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08094",
+    "name": "长柄大锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08094.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08095",
+    "name": "防护服",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08095.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08096",
+    "name": "长柄大锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08096.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08097",
+    "name": "袖珍望远镜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08097.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08098",
+    "name": "远古海图",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08098.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08099",
+    "name": "吉恩·波尔格",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08099.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08100",
+    "name": "远古海图",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08100.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08101",
+    "name": "占卜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08101.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08102",
+    "name": "保护魂灵",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08102.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08103",
+    "name": "占卜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08103.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08104",
+    "name": "威廉·韦伯教授",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08104.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08105",
+    "name": "破冰锥",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08105.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08106",
+    "name": "威廉·韦伯教授",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08106.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08107",
+    "name": "破冰锥",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08107.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 7,
+      "text": "// 「成功后弃掉本卡换取收益」用第二条 free 能力（弃掉自身费用）+ api.addExtraOnSuccess 近似："
+     }
+    ]
+   },
+   {
+    "code": "08108",
+    "name": "虚影易位",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08108.js",
+    "issues": [
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08109",
+    "name": "身形虚化",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08109.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08110",
+    "name": "虚影易位",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08110.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08111",
+    "name": "身形虚化",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08111.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08112",
+    "name": "\"再来一张！\"",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08112.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 10,
+      "text": "//   的替代标记通道近似：额外揭示 1 枚标记，把负值取正后作为替代标记结算（骷髅 → 自动失败）。"
+     }
+    ]
+   },
+   {
+    "code": "08113",
+    "name": "大肆借贷",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08113.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 10,
+      "text": "//       移出游戏 api.playerTools.removeAssetFromGame（流放近似：进入 removedFromGame 而非战役 exiled）。"
+     },
+     {
+      "line": 11,
+      "text": "// approximation: 引擎没有「游戏结束/退场时」的通用条目强制窗口。这里近似为每轮结束时检查"
+     }
+    ]
+   },
+   {
+    "code": "08114",
+    "name": "珍贵记忆",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08114.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08115",
+    "name": "珍贵记忆",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08115.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08116",
+    "name": "护身法宝",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08116.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08117",
+    "name": "尘世宁静",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08117.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08118",
+    "name": "附魔弓",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08118.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08119",
+    "name": "尘世宁静",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08119.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08120",
+    "name": "先知先觉",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08120.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//       （与 07264 同模板）；「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+     },
+     {
+      "line": 13,
+      "text": "//   本卡在 beforePlayCost 窗口用「从本卡花费资源 → context.costReduction」近似："
+     }
+    ]
+   },
+   {
+    "code": "08121",
+    "name": "一探究竟",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08121.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+     },
+     {
+      "line": 12,
+      "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+     }
+    ]
+   },
+   {
+    "code": "08122",
+    "name": "好勇斗狠",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08122.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+     },
+     {
+      "line": 12,
+      "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+     }
+    ]
+   },
+   {
+    "code": "08123",
+    "name": "技艺精湛",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08123.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+     },
+     {
+      "line": 12,
+      "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+     }
+    ]
+   },
+   {
+    "code": "08124",
+    "name": "古物藏家",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08124.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 11,
+      "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+     },
+     {
+      "line": 12,
+      "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+     }
+    ]
+   },
+   {
+    "code": "08125",
+    "name": "危险处境",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08125.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08126",
+    "name": "厚重皮衣",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08126.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08127",
+    "name": "雪橇犬",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08127.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08128",
+    "name": "驯兽之杖",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08128.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08129",
+    "name": "请求支援",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08129.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": []
+   },
+   {
+    "code": "08130",
+    "name": "臂伤",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08130.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 14,
+      "text": "//     近似「本卡可被治愈移除」（不消耗实际治疗量）。"
+     },
+     {
+      "line": 15,
+      "text": "//   ② 「执行攻击或启动行动后」：actionResolvedAtLocation 窗口不带行动类型，近似为任意行动后立即锁住"
+     }
+    ]
+   },
+   {
+    "code": "08131",
+    "name": "腿伤",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08131.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 12,
+      "text": "//   ① 「如同 1 点伤害被治愈」：无 threatDamageSink，用 free + discardSelf 近似。"
+     },
+     {
+      "line": 13,
+      "text": "//   ② 「执行移动/撤退/躲避行动后」：窗口不带行动类型，近似为任意行动后锁住印刷三类行动至回合结束。"
+     }
+    ]
+   },
+   {
+    "code": "08132",
+    "name": "惊慌",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08132.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 13,
+      "text": "// approximation: 「资源行动」用 capability:gainResources 近似（会同时禁止卡牌效果获得资源，略偏严）；"
+     },
+     {
+      "line": 14,
+      "text": "//       动作后锁近似为任意行动后锁住印刷类型至回合结束。"
+     }
+    ]
+   },
+   {
+    "code": "08133",
+    "name": "麻木",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "entryPath": "src/cards/entries/08133.js",
+    "issues": [
+     {
+      "kind": "entry-no-code",
+      "detail": "条目无 code 字段",
+      "severity": "medium"
+     },
+     {
+      "kind": "no-implemented-flag",
+      "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+      "severity": "low"
+     }
+    ],
+    "markers": [
+     {
+      "line": 12,
+      "text": "// approximation: 动作后锁近似为任意行动后锁住印刷三类行动至回合结束。"
+     }
+    ]
+   }
+  ]
+ },
+ "keyword-coverage.json": {
+  "cards": [
+   {
+    "code": "08081",
+    "name": "有胆有识",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "检定",
+     "伤害",
+     "恐惧"
+    ],
+    "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [intellect].\nNon-direct damage/horror must be assigned to Plucky before it can be assigned to your investigator card.\n[fast] Spend 1 ",
+    "entry": "src/cards/entries/08081.js"
+   },
+   {
+    "code": "08083",
+    "name": "医学生",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "反应"
+    ],
+    "text": "[reaction] After Medical Student enters play: Heal 1 damage and 1 horror from an investigator or [[Ally]] asset at your location.",
+    "entry": "src/cards/entries/08083.js"
+   },
+   {
+    "code": "08084",
+    "name": "追踪",
+    "type": "event",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "检定"
+    ],
+    "text": "Choose an enemy at any location other than yours. Either move twice toward that enemy, or discover 1 clue at any empty location between you and the chosen enemy, along the shortest path to reach that ",
+    "entry": "src/cards/entries/08084.js"
+   },
+   {
+    "code": "08086",
+    "name": "迈克尔·利",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "资源"
+    ],
+    "text": "You get +1 [intellect] and +1 [combat].\n[reaction] After you successfully investigate: Place 1 resource (from the token pool) on Michael Leigh, as evidence (to a maximum of 3 evidence).\n[reaction] Whe",
+    "entry": "src/cards/entries/08086.js"
+   },
+   {
+    "code": "08087",
+    "name": "狙击",
+    "type": "event",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "攻击行动"
+    ],
+    "text": "During the next fight action you perform this turn using a [[Ranged]] or [[Firearm]] asset, treat each [skull], [cultist], [tablet], [elder_thing], or [auto_fail] token you reveal as a \"0\" token. This",
+    "entry": "src/cards/entries/08087.js"
+   },
+   {
+    "code": "08089",
+    "name": "快拔枪套",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "攻击行动"
+    ],
+    "text": "[fast]: Choose a [[Firearm]] asset taking up only 1 hand slot in your play area. Attach it to Quickdraw Holster, or switch it with the attached asset. The attached asset takes up no hand slots. (Limit",
+    "entry": "src/cards/entries/08089.js"
+   },
+   {
+    "code": "08091",
+    "name": "恩科西·马巴蒂",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "反应",
+     "搜索",
+     "消耗"
+    ],
+    "text": "[reaction] After Nkosi Mabati enters play: Name a non-[elder_sign] chaos token with a symbol. Until this card leaves play, the named symbol is your \"sigil.\"\n[reaction] When an investigator at your loc",
+    "entry": "src/cards/entries/08091.js"
+   },
+   {
+    "code": "08097",
+    "name": "袖珍望远镜",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速"
+    ],
+    "text": "[fast] Exhaust Pocket Telescope: Look at the revealed side of a connecting unrevealed location.\n[action]: Investigate. Investigate a revealed connecting location as if you were there.",
+    "entry": "src/cards/entries/08097.js"
+   },
+   {
+    "code": "08098",
+    "name": "远古海图",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速"
+    ],
+    "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take one of the following actions (move, evade, or investigate).",
+    "entry": "src/cards/entries/08098.js"
+   },
+   {
+    "code": "08100",
+    "name": "远古海图",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速"
+    ],
+    "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take two different actions of the following, in any order (move, evade, or investigate).",
+    "entry": "src/cards/entries/08100.js"
+   },
+   {
+    "code": "08114",
+    "name": "珍贵记忆",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "检定"
+    ],
+    "text": "Limit 1 Precious Memento (From a Former Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.\n[reaction] After you succeed at a skill te",
+    "entry": "src/cards/entries/08114.js"
+   },
+   {
+    "code": "08115",
+    "name": "珍贵记忆",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "检定"
+    ],
+    "text": "Limit 1 Precious Memento (From a Future Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.\n[reaction] After you succeed at a skill te",
+    "entry": "src/cards/entries/08115.js"
+   },
+   {
+    "code": "08120",
+    "name": "先知先觉",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "检定"
+    ],
+    "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Prophetic may be spent to pay for [[Fortune]], [[Spell]], or [[Spirit]] cards.\n[fast] During a skill test on a [[",
+    "entry": "src/cards/entries/08120.js"
+   },
+   {
+    "code": "08121",
+    "name": "一探究竟",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "检定"
+    ],
+    "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Sleuth may be spent to pay for [[Charm]], [[Tactic]], or [[Tome]] cards.\n[fast] During a skill test on a [[Charm]",
+    "entry": "src/cards/entries/08121.js"
+   },
+   {
+    "code": "08122",
+    "name": "好勇斗狠",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "检定"
+    ],
+    "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Bruiser may be spent to pay for [[Armor]], [[Firearm]], or [[Melee]] cards.\n[fast] During a skill test on a [[Arm",
+    "entry": "src/cards/entries/08122.js"
+   },
+   {
+    "code": "08123",
+    "name": "技艺精湛",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "检定"
+    ],
+    "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Crafty may be spent to pay for [[Insight]], [[Tool]], or [[Trick]] cards.\n[fast] During a skill test on a [[Insig",
+    "entry": "src/cards/entries/08123.js"
+   },
+   {
+    "code": "08124",
+    "name": "古物藏家",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "快速",
+     "检定"
+    ],
+    "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Antiquary may be spent to pay for [[Favor]], [[Relic]] or [[Ritual]] cards.\n[fast] During a skill test on a [[Fav",
+    "entry": "src/cards/entries/08124.js"
+   },
+   {
+    "code": "08126",
+    "name": "厚重皮衣",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "检定",
+     "取消"
+    ],
+    "text": "[reaction] After you reveal a non-[auto_fail] symbol on a chaos token during a skill test you are perfoming, deal 1 damage to Heavy Furs: Cancel that chaos token and return it to the bag. Reveal a new",
+    "entry": "src/cards/entries/08126.js"
+   },
+   {
+    "code": "08128",
+    "name": "驯兽之杖",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "反应"
+    ],
+    "text": "You have 2 additional ally slots, which can only be used to hold [[Creature]] assets.\n[reaction] When you play a [[Creature]] asset during your turn: Reduce that asset's cost by 1.",
+    "entry": "src/cards/entries/08128.js"
+   },
+   {
+    "code": "08130",
+    "name": "臂伤",
+    "type": "treachery",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "治疗"
+    ],
+    "text": "Revelation - Put Arm Injury into play in your threat area.\nArm Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a fight or acti",
+    "entry": "src/cards/entries/08130.js"
+   },
+   {
+    "code": "08131",
+    "name": "腿伤",
+    "type": "treachery",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "治疗"
+    ],
+    "text": "Revelation - Put Leg Injury into play in your threat area.\nLeg Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a move, resign,",
+    "entry": "src/cards/entries/08131.js"
+   },
+   {
+    "code": "08132",
+    "name": "惊慌",
+    "type": "treachery",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "弃牌"
+    ],
+    "text": "Revelation - Put Panic into play in your threat area.\nPanic can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a play, engage, or resour",
+    "entry": "src/cards/entries/08132.js"
+   },
+   {
+    "code": "08133",
+    "name": "麻木",
+    "type": "treachery",
+    "partition": "eotePlayer",
+    "missingFeatureTokens": [
+     "弃牌"
+    ],
+    "text": "Revelation - Put Stupor into play in your threat area.\nStupor can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a parley, draw, or inve",
+    "entry": "src/cards/entries/08133.js"
+   }
+  ]
+ },
+ "perceivability.json": {
+  "cards": [
+   {
+    "code": "08079",
+    "name": "血债血偿",
+    "type": "event",
+    "partition": "eotePlayer",
+    "abilityCount": 1,
+    "labelCount": 1,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 1,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08080",
+    "name": "灭火器",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 3,
+    "labelCount": 3,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 3,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08082",
+    "name": "抵挡",
+    "type": "event",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08086",
+    "name": "迈克尔·利",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08087",
+    "name": "狙击",
+    "type": "event",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 3,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 3,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08088",
+    "name": "老旧的霰弹枪",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08094",
+    "name": "长柄大锤",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08095",
+    "name": "防护服",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 1,
+    "labelCount": 1,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 1,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08096",
+    "name": "长柄大锤",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08105",
+    "name": "破冰锥",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 1,
+    "labelCount": 1,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 1,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   },
+   {
+    "code": "08107",
+    "name": "破冰锥",
+    "type": "asset",
+    "partition": "eotePlayer",
+    "abilityCount": 2,
+    "labelCount": 2,
+    "choiceCalls": 0,
+    "infoCalls": 0,
+    "cjkLabels": 2,
+    "flags": [
+     "silent-ability-no-choice-no-log"
+    ],
+    "choiceNoPromptLines": []
+   }
+  ]
+ },
+ "tests-coverage.json": {
+  "cards": [
+   {
+    "code": "08079",
+    "name": "血债血偿",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌",
+      "line": 326,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08080",
+    "name": "灭火器",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08080 灭火器：攻击 +1 伤害，弃掉时自动躲避所有交战敌人",
+      "line": 81,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08081",
+    "name": "有胆有识",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08081 有胆有识：快速沉稳 +1 意志/+1 智力",
+      "line": 94,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08082",
+    "name": "抵挡",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整",
+      "line": 334,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08083",
+    "name": "医学生",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08083 医学生：入场治愈同地点调查员 1 伤害 1 恐惧",
+      "line": 104,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08084",
+    "name": "追踪",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08084 追踪：沿最短路径移动 2 次，或在无人地点发现线索",
+      "line": 114,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08085",
+    "name": "追踪",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08085 追踪（3 级）：移动 2 次并在每个进入地点发现 1 个线索",
+      "line": 133,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08086",
+    "name": "迈克尔·利",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs",
+     "tests/eote-player-primitives.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）",
+      "line": 146,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     },
+     {
+      "title": "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害",
+      "line": 394,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     },
+     {
+      "title": "P6 原语 attackDamageBonus 读点：testInitiated 窗口写入本次攻击伤害（08086）",
+      "line": 236,
+      "file": "tests/eote-player-primitives.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 150
+   },
+   {
+    "code": "08087",
+    "name": "狙击",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08087 狙击：添加「符号标记视为 0」的延迟效果",
+      "line": 348,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08088",
+    "name": "老旧的霰弹枪",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08088 老旧的霰弹枪：事件后使用值 2；成功按超过难度造成 1~3 伤害",
+      "line": 158,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08089",
+    "name": "快拔枪套",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动",
+      "line": 358,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08090",
+    "name": "克图格亚的烙印",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能",
+      "line": 172,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08091",
+    "name": "恩科西·马巴蒂",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08091 恩科西·马巴蒂：入场指定符号标记为咒印",
+      "line": 370,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08092",
+    "name": "克图格亚的烙印",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08092 克图格亚的烙印（4 级）：+2 技能值，最多花 3 充能",
+      "line": 184,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08093",
+    "name": "巨石锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/attack-style.test.mjs",
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08093 巨石锤：加入意志，成功超过难度 3 点时 +2 伤害并击退",
+      "line": 196,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 118
+   },
+   {
+    "code": "08094",
+    "name": "长柄大锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害",
+      "line": 208,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08095",
+    "name": "防护服",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08095 防护服：危险诡计显现前自伤并取消显现",
+      "line": 220,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08096",
+    "name": "长柄大锤",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害",
+      "line": 208,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08097",
+    "name": "袖珍望远镜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08097 袖珍望远镜：调查相连的已揭示地点",
+      "line": 233,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     },
+     {
+      "title": "P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面",
+      "line": 405,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08098",
+    "name": "远古海图",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动",
+      "line": 245,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08099",
+    "name": "吉恩·波尔格",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点",
+      "line": 261,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08100",
+    "name": "远古海图",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动",
+      "line": 245,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08101",
+    "name": "占卜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索",
+      "line": 273,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08102",
+    "name": "保护魂灵",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08102 保护魂灵：盟友离场后返回拥有者手牌或抽 3 张",
+      "line": 290,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08103",
+    "name": "占卜",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索",
+      "line": 273,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08104",
+    "name": "威廉·韦伯教授",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索",
+      "line": 381,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08105",
+    "name": "破冰锥",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08105/08107 破冰锥：检定窗口 +1 技能值（横置）",
+      "line": 306,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08106",
+    "name": "威廉·韦伯教授",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索",
+      "line": 381,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08107",
+    "name": "破冰锥",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08105/08107 破冰锥：检定窗口 +1 技能值（横置）",
+      "line": 306,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     },
+     {
+      "title": "P6 08107 破冰锥（3 级）：弃掉自身换取成功后额外线索",
+      "line": 418,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08108",
+    "name": "虚影易位",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-3.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置",
+      "line": 315,
+      "file": "tests/eote-player-m2-3.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 86
+   },
+   {
+    "code": "08109",
+    "name": "身形虚化",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08109 身形虚化 成功躲避：花 1 充能并获得 1 个额外行动",
+      "line": 122,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08109 身形虚化 没有充能时能力不可用",
+      "line": 139,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08110",
+    "name": "虚影易位",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08110 虚影易位 与已揭示地点的非精英敌人交换位置",
+      "line": 175,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08110 虚影易位 已揭示地点没有非精英敌人时不能打出",
+      "line": 188,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08111",
+    "name": "身形虚化",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08111 身形虚化 成功后可花 2 充能获得 2 个额外行动",
+      "line": 155,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08112",
+    "name": "\"再来一张！\"",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs",
+     "tests/eote-player-primitives.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08112 再来一张！ 额外揭示 1 枚标记：负值取正结算；骷髅则自动失败",
+      "line": 494,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 原语 revealAdditionalTestToken：登记额外揭示并把负修正取反（08112）",
+      "line": 248,
+      "file": "tests/eote-player-primitives.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 172
+   },
+   {
+    "code": "08113",
+    "name": "大肆借贷",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08113 大肆借贷 打出后获得 10 资源；轮末资源 <10 时流放自身",
+      "line": 519,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08114",
+    "name": "珍贵记忆",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08114 珍贵记忆（来自前世）：失败且低于难度 2+ 后横置治愈自身 1 伤害",
+      "line": 206,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08114 珍贵记忆（来自前世）：成功且超过难度 2+ 后横置治愈自身 1 恐惧",
+      "line": 220,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08115",
+    "name": "珍贵记忆",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08115 珍贵记忆（来自后世）：失败治愈恐惧、成功治愈伤害（与前世互换）",
+      "line": 233,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08116",
+    "name": "护身法宝",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08116 护身法宝 将被击败时弃掉并取消最多 2 点伤害",
+      "line": 248,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08116 护身法宝 伤害不足以击败你时不提供反应",
+      "line": 261,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08117",
+    "name": "尘世宁静",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08117 尘世宁静 每超过难度 1 点可花 1 充能治愈 1 伤害",
+      "line": 280,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08117 尘世宁静 成功且等于难度时失去 1 资源",
+      "line": 293,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08118",
+    "name": "附魔弓",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08118 附魔弓 意志替代战斗：+1 技能值、+1 伤害并横置",
+      "line": 321,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08118 附魔弓 花 1 充能攻击连接地点的非精英敌人",
+      "line": 337,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08119",
+    "name": "尘世宁静",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08119 尘世宁静 意志(0) 成功且等于难度时失去 2 资源",
+      "line": 305,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08120",
+    "name": "先知先觉",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费",
+      "line": 571,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08121",
+    "name": "一探究竟",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08121 一探究竟 轮初补满 + Tome 检定 +1",
+      "line": 591,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08122",
+    "name": "好勇斗狠",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08122 好勇斗狠 轮初补满 + Melee 检定 +1",
+      "line": 595,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08123",
+    "name": "技艺精湛",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08123 技艺精湛 轮初补满 + Tool 检定 +1",
+      "line": 599,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08124",
+    "name": "古物藏家",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08124 古物藏家 轮初补满 + Favor 检定 +1",
+      "line": 603,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08125",
+    "name": "危险处境",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08125 危险处境 setup：一次性 2 点创伤 + 3 经验",
+      "line": 611,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08126",
+    "name": "厚重皮衣",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08126 厚重皮衣 揭示符号标记后：自身受 1 伤害，取消并重抽",
+      "line": 359,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08126 厚重皮衣 自动失败与数字标记不提供反应",
+      "line": 375,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08127",
+    "name": "雪橇犬",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08127 雪橇犬 2 张共占 1 个盟友槽",
+      "line": 395,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08127 雪橇犬 横置 X 张：移动 X 次",
+      "line": 406,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     },
+     {
+      "title": "P6 08127 雪橇犬 横置 X 张：攻击 +X 战斗并造成 X 点伤害",
+      "line": 424,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08128",
+    "name": "驯兽之杖",
+    "partition": "eotePlayer",
+    "type": "asset",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08128 驯兽之杖 2 个生物专用盟友槽 + 自己回合打出生物费用 -1",
+      "line": 442,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08129",
+    "name": "请求支援",
+    "partition": "eotePlayer",
+    "type": "event",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治疗",
+      "line": 468,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08130",
+    "name": "臂伤",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-fixture.mjs",
+     "tests/eote-player-m2-4.test.mjs",
+     "tests/eote-player.browser.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08130 臂伤 显现入威胁区；行动后本回合不能攻击/启动",
+      "line": 650,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08131",
+    "name": "腿伤",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08131 腿伤 显现入威胁区；行动后本回合不能移动/撤退/躲避",
+      "line": 661,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08132",
+    "name": "惊慌",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）",
+      "line": 672,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   },
+   {
+    "code": "08133",
+    "name": "麻木",
+    "partition": "eotePlayer",
+    "type": "treachery",
+    "status": "verified",
+    "level": "strong",
+    "files": [
+     "tests/eote-player-m2-4.test.mjs"
+    ],
+    "strongTitles": [
+     {
+      "title": "P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行动后不能谈判/抽取/调查",
+      "line": 693,
+      "file": "tests/eote-player-m2-4.test.mjs"
+     }
+    ],
+    "weakTitles": [],
+    "fileAssertCount": 108
+   }
+  ],
+  "suspiciousTitles": [
+   {
+    "file": "tests/eote-player-m2-4.test.mjs",
+    "title": "P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费"
+   }
+  ]
+ },
+ "duplication.json": {
+  "clonePairs": [
+   {
+    "a": "08120",
+    "b": "08121",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08120",
+    "b": "08122",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08120",
+    "b": "08123",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08120",
+    "b": "08124",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08121",
+    "b": "08122",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08121",
+    "b": "08123",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08121",
+    "b": "08124",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08122",
+    "b": "08123",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08122",
+    "b": "08124",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08123",
+    "b": "08124",
+    "jaccard": 0.926,
+    "aLen": 215,
+    "bLen": 215
+   },
+   {
+    "a": "08117",
+    "b": "08119",
+    "jaccard": 0.743,
+    "aLen": 226,
+    "bLen": 226
+   }
+  ]
+ },
+ "primitive-compliance.json": {
+  "engineLiterals": [
+   {
+    "file": "src/deck/availability.js",
+    "code": "08130"
+   },
+   {
+    "file": "src/deck/availability.js",
+    "code": "08133"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08130"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08131"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08091"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08091"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08097"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08086"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08112"
+   },
+   {
+    "file": "src/engine/api-misc.js",
+    "code": "08107"
+   },
+   {
+    "file": "src/engine/combat.js",
+    "code": "08086"
+   },
+   {
+    "file": "src/engine/combat.js",
+    "code": "08086"
+   },
+   {
+    "file": "src/engine/engine.js",
+    "code": "08130"
+   },
+   {
+    "file": "src/engine/engine.js",
+    "code": "08133"
+   },
+   {
+    "file": "src/engine/harm-threat.js",
+    "code": "08081"
+   },
+   {
+    "file": "src/engine/harm-threat.js",
+    "code": "08130"
+   },
+   {
+    "file": "src/engine/harm-threat.js",
+    "code": "08131"
+   },
+   {
+    "file": "src/engine/tests.js",
+    "code": "08086"
+   },
+   {
+    "file": "src/engine/tests.js",
+    "code": "08112"
+   },
+   {
+    "file": "src/engine/tests.js",
+    "code": "08107"
+   }
+  ],
+  "contentLiterals": [
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08133"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08133"
+   }
+  ],
+  "escapeCards": [
+   "08079",
+   "08080",
+   "08082",
+   "08083",
+   "08084",
+   "08085",
+   "08086",
+   "08087",
+   "08088",
+   "08089",
+   "08090",
+   "08091",
+   "08092",
+   "08093",
+   "08095",
+   "08097",
+   "08098",
+   "08099",
+   "08100",
+   "08101",
+   "08102",
+   "08103",
+   "08104",
+   "08105",
+   "08106",
+   "08107",
+   "08108",
+   "08109",
+   "08110",
+   "08111",
+   "08112",
+   "08113",
+   "08114",
+   "08115",
+   "08116",
+   "08117",
+   "08118",
+   "08119",
+   "08120",
+   "08121",
+   "08122",
+   "08123",
+   "08124",
+   "08125",
+   "08126",
+   "08127",
+   "08129",
+   "08130",
+   "08131",
+   "08132",
+   "08133"
+  ]
+ },
+ "known-deviations.json": {
+  "entryMarkers": [
+   {
+    "code": "08086",
+    "name": "迈克尔·利",
+    "line": 11,
+    "text": "//     api.addExtraOnSuccess({type:'dealDamage',target:'engaged'}) 近似。"
+   },
+   {
+    "code": "08107",
+    "name": "破冰锥",
+    "line": 7,
+    "text": "// 「成功后弃掉本卡换取收益」用第二条 free 能力（弃掉自身费用）+ api.addExtraOnSuccess 近似："
+   },
+   {
+    "code": "08112",
+    "name": "\"再来一张！\"",
+    "line": 10,
+    "text": "//   的替代标记通道近似：额外揭示 1 枚标记，把负值取正后作为替代标记结算（骷髅 → 自动失败）。"
+   },
+   {
+    "code": "08113",
+    "name": "大肆借贷",
+    "line": 10,
+    "text": "//       移出游戏 api.playerTools.removeAssetFromGame（流放近似：进入 removedFromGame 而非战役 exiled）。"
+   },
+   {
+    "code": "08113",
+    "name": "大肆借贷",
+    "line": 11,
+    "text": "// approximation: 引擎没有「游戏结束/退场时」的通用条目强制窗口。这里近似为每轮结束时检查"
+   },
+   {
+    "code": "08120",
+    "name": "先知先觉",
+    "line": 11,
+    "text": "//       （与 07264 同模板）；「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+   },
+   {
+    "code": "08120",
+    "name": "先知先觉",
+    "line": 13,
+    "text": "//   本卡在 beforePlayCost 窗口用「从本卡花费资源 → context.costReduction」近似："
+   },
+   {
+    "code": "08121",
+    "name": "一探究竟",
+    "line": 11,
+    "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+   },
+   {
+    "code": "08121",
+    "name": "一探究竟",
+    "line": 12,
+    "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+   },
+   {
+    "code": "08122",
+    "name": "好勇斗狠",
+    "line": 11,
+    "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+   },
+   {
+    "code": "08122",
+    "name": "好勇斗狠",
+    "line": 12,
+    "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+   },
+   {
+    "code": "08123",
+    "name": "技艺精湛",
+    "line": 11,
+    "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+   },
+   {
+    "code": "08123",
+    "name": "技艺精湛",
+    "line": 12,
+    "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+   },
+   {
+    "code": "08124",
+    "name": "古物藏家",
+    "line": 11,
+    "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+   },
+   {
+    "code": "08124",
+    "name": "古物藏家",
+    "line": 12,
+    "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+   },
+   {
+    "code": "08130",
+    "name": "臂伤",
+    "line": 14,
+    "text": "//     近似「本卡可被治愈移除」（不消耗实际治疗量）。"
+   },
+   {
+    "code": "08130",
+    "name": "臂伤",
+    "line": 15,
+    "text": "//   ② 「执行攻击或启动行动后」：actionResolvedAtLocation 窗口不带行动类型，近似为任意行动后立即锁住"
+   },
+   {
+    "code": "08131",
+    "name": "腿伤",
+    "line": 12,
+    "text": "//   ① 「如同 1 点伤害被治愈」：无 threatDamageSink，用 free + discardSelf 近似。"
+   },
+   {
+    "code": "08131",
+    "name": "腿伤",
+    "line": 13,
+    "text": "//   ② 「执行移动/撤退/躲避行动后」：窗口不带行动类型，近似为任意行动后锁住印刷三类行动至回合结束。"
+   },
+   {
+    "code": "08132",
+    "name": "惊慌",
+    "line": 13,
+    "text": "// approximation: 「资源行动」用 capability:gainResources 近似（会同时禁止卡牌效果获得资源，略偏严）；"
+   },
+   {
+    "code": "08132",
+    "name": "惊慌",
+    "line": 14,
+    "text": "//       动作后锁近似为任意行动后锁住印刷类型至回合结束。"
+   },
+   {
+    "code": "08133",
+    "name": "麻木",
+    "line": 12,
+    "text": "// approximation: 动作后锁近似为任意行动后锁住印刷三类行动至回合结束。"
+   }
+  ],
+  "suspiciousTestTitles": [
+   {
+    "file": "tests/eote-player-m2-4.test.mjs",
+    "title": "P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费"
+   }
+  ]
+ }
+}

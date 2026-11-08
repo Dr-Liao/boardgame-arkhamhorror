@@ -20,7 +20,9 @@ import { fileURLToPath } from 'node:url'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { contentRegistry } from '../content/registered.js'
 
-const SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'treachery', 'storyAsset', 'threat', 'scenario'])
+// 'card'：战役专属的「玩家侧弱点牌库」条目（如忒咳哩-哩 16 张弱点）需要玩家 scope 的
+// weakness 生命周期；它们仍按归属目录落盘，不进入常规非玩家实体枚举。
+const SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'treachery', 'storyAsset', 'threat', 'scenario', 'card'])
 export const ENTRY_SCOPES = SCOPES
 
 export const canonical = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -159,7 +161,15 @@ export function loadPlacementIndex({ registry = contentRegistry, cards = ALL_CAR
   // 未注册但已落地的章节（P8 development 态）：追加进归属索引（不参与运行时）。
   const registeredIds = new Set(scenarios.map(scenario => scenario.id))
   for (const scenario of DEV_SCENARIOS) if (!registeredIds.has(scenario.id)) scenarios.push(scenario)
-  const index = { cards, scenarios, campaigns, sharedGroups }
+  // 战役声明的「共用剧情资产」（不带 encounterCode 的伙伴支援/纪念逝者）：
+  // campaignId → (code → 组目录)。这些卡不属于任何单章，归属为战役 _shared/<组>/。
+  const sharedStoryAssets = new Map()
+  for (const campaign of campaigns.values()) {
+    const groups = campaign.sharedStoryAssetGroups
+    if (!groups || typeof groups !== 'object') continue
+    sharedStoryAssets.set(campaign.id, new Map(Object.entries(groups)))
+  }
+  const index = { cards, scenarios, campaigns, sharedGroups, sharedStoryAssets }
   if (registry === contentRegistry && cards === ALL_CARDS) cached = index
   return index
 }
@@ -197,6 +207,19 @@ function emptyPlacement(entry, reason) {
 // 单条目归属（不处理别名）。
 export function resolvePlacement(entry, index = loadPlacementIndex()) {
   const card = index.cards[entry.code] || null
+  // 战役声明的共用剧情资产（不带 encounterCode 的伙伴支援/纪念逝者）：不依赖章节 token，
+  // 直接落到该战役的 _shared/<组>/；找不到时才走章节/遭遇组匹配。
+  for (const [campaignId, groups] of index.sharedStoryAssets || []) {
+    const group = groups.get(entry.code)
+    if (!group) continue
+    return {
+      code: entry.code, scope: entry.scope || null, name: entry.name || null,
+      bucket: 'campaign', campaignId, scenarioId: null, scenarios: [], group,
+      campaignName: index.campaigns.get(campaignId)?.name || campaignId, scenarioName: null,
+      targetPath: targetPathFor({ bucket: 'campaign', campaignId, scenarioId: null, group, code: entry.code }),
+      unresolved: false, matchedBy: 'campaign-story-asset',
+    }
+  }
   const tokens = entryTokens(entry, card)
   let hits = index.scenarios.filter(scenario => [...tokens].some(token => scenario.tokens.has(token)))
   let matchedBy = 'tokens'

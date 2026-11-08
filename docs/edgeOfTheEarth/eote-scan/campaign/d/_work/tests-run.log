@@ -1,0 +1,231 @@
+﻿===== eote-scenario-theHeartOfMadnessPart1 =====
+TAP version 13
+# Subtest: P7 theHeartOfMadnessPart1 setup：十六个地点、随机槽位、封印放在一边
+ok 1 - P7 theHeartOfMadnessPart1 setup：十六个地点、随机槽位、封印放在一边
+  ---
+  duration_ms: 122.852
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 地点揭示：Great Seal 地点放上对应休眠封印
+ok 2 - P7 theHeartOfMadnessPart1 地点揭示：Great Seal 地点放上对应休眠封印
+  ---
+  duration_ms: 84.1544
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 取得封印：条目 actions + behavior 机械 + 团队线索
+ok 3 - P7 theHeartOfMadnessPart1 取得封印：条目 actions + behavior 机械 + 团队线索
+  ---
+  duration_ms: 81.5607
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 幕推进：激活封印放上伊夸之门 → 幕 1 推进
+ok 4 - P7 theHeartOfMadnessPart1 幕推进：激活封印放上伊夸之门 → 幕 1 推进
+  ---
+  duration_ms: 74.3117
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 结局：记录放上门/取回的封印与经验，JSON 往返保持
+ok 5 - P7 theHeartOfMadnessPart1 结局：记录放上门/取回的封印与经验，JSON 往返保持
+  ---
+  duration_ms: 84.3896
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 混乱标记：骷髅动态值 / 石板抽牌 / 旧日支配者放毁灭
+ok 6 - P7 theHeartOfMadnessPart1 混乱标记：骷髅动态值 / 石板抽牌 / 旧日支配者放毁灭
+  ---
+  duration_ms: 70.1899
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart1 story：正文结构可读且不写死
+ok 7 - P7 theHeartOfMadnessPart1 story：正文结构可读且不写死
+  ---
+  duration_ms: 0.2993
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 536.0955
+===== eote-scenario-theHeartOfMadnessPart2 =====
+TAP version 13
+# Subtest: P7 theHeartOfMadnessPart2 setup：随机布置 10 设施 + 5 高塔，门翻面，内环不全是高塔
+ok 1 - P7 theHeartOfMadnessPart2 setup：随机布置 10 设施 + 5 高塔，门翻面，内环不全是高塔
+  ---
+  duration_ms: 130.2821
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 高塔：幕 3 期间可被当作敌人攻击并坍塌
+ok 2 - P7 theHeartOfMadnessPart2 高塔：幕 3 期间可被当作敌人攻击并坍塌
+  ---
+  duration_ms: 81.8207
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 幕 3 目标：全部高塔坍塌 → 推进到第 4 幕
+ok 3 - P7 theHeartOfMadnessPart2 幕 3 目标：全部高塔坍塌 → 推进到第 4 幕
+  ---
+  duration_ms: 86.4488
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 坡道场景：幕 3 背面清场并铺设泰坦坡道 + 隐藏隧道
+ok 4 - P7 theHeartOfMadnessPart2 坡道场景：幕 3 背面清场并铺设泰坦坡道 + 隐藏隧道
+  ---
+  duration_ms: 78.5577
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 议程背面：封印渐弱 → 在最近迷雾高塔生成无名的疯狂
+ok 5 - P7 theHeartOfMadnessPart2 议程背面：封印渐弱 → 在最近迷雾高塔生成无名的疯狂
+  ---
+  duration_ms: 80.7379
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 结局：全高塔坍塌 + 肯斯勒计划 → R1（+10 经验）与记录
+ok 6 - P7 theHeartOfMadnessPart2 结局：全高塔坍塌 + 肯斯勒计划 → R1（+10 经验）与记录
+  ---
+  duration_ms: 71.3543
+  type: 'test'
+  ...
+# Subtest: P7 theHeartOfMadnessPart2 混乱标记与 story：共用 08648 参考卡、结构可读
+ok 7 - P7 theHeartOfMadnessPart2 混乱标记与 story：共用 08648 参考卡、结构可读
+  ---
+  duration_ms: 63.7207
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 613.6253
+===== eote-scenario-shared =====
+TAP version 13
+# Subtest: P7 shared 数据表：16 组 / 80 卡与卡表归属、章节 gather 组合一致
+ok 1 - P7 shared 数据表：16 组 / 80 卡与卡表归属、章节 gather 组合一致
+  ---
+  duration_ms: 1.1661
+  type: 'test'
+  ...
+# Subtest: P7 shared 地点庇护值：数据表与卡面「庇护 N」文本一致，P2 readShelter 读同一口径
+ok 2 - P7 shared 地点庇护值：数据表与卡面「庇护 N」文本一致，P2 readShelter 读同一口径
+  ---
+  duration_ms: 50.2913
+  type: 'test'
+  ...
+# Subtest: P7 shared agentsOfTheUnknown：原初恶魔受伤后洗入忒咳哩-哩；潜藏的疯狂失败按差值结算
+ok 3 - P7 shared agentsOfTheUnknown：原初恶魔受伤后洗入忒咳哩-哩；潜藏的疯狂失败按差值结算
+  ---
+  duration_ms: 186.4022
+  type: 'test'
+  ...
+# Subtest: P7 shared creaturesInTheIce：实体疯狂攻击后洗入 2 张；冰川幻影向人最多处移动；同源迷雾附属最近的合规地点
+ok 4 - P7 shared creaturesInTheIce：实体疯狂攻击后洗入 2 张；冰川幻影向人最多处移动；同源迷雾附属最近的合规地点
+  ---
+  duration_ms: 193.3664
+  type: 'test'
+  ...
+# Subtest: P7 shared deadlyWeather：南极寒风/雪盲危机/极地旋涡按显现条款附属并落数据
+ok 5 - P7 shared deadlyWeather：南极寒风/雪盲危机/极地旋涡按显现条款附属并落数据
+  ---
+  duration_ms: 129.7595
+  type: 'test'
+  ...
+# Subtest: P7 shared elderThings：古老者守卫受伤弃牌；古老者崛起从遭遇弃牌堆生成并交战
+ok 6 - P7 shared elderThings：古老者守卫受伤弃牌；古老者崛起从遭遇弃牌堆生成并交战
+  ---
+  duration_ms: 115.4923
+  type: 'test'
+  ...
+# Subtest: P7 shared expeditionTeam：9 位伙伴数据与 P2 partner 原语、纪念逝者配对、坚毅面一致；治愈能力真实结算
+ok 7 - P7 shared expeditionTeam：9 位伙伴数据与 P2 partner 原语、纪念逝者配对、坚毅面一致；治愈能力真实结算
+  ---
+  duration_ms: 67.7591
+  type: 'test'
+  ...
+# Subtest: P7 shared hazardsOfAntarctica：冰缝按揭示的 [frost] 与失败差值结算伤害；穿越冰雪附属最近地点
+ok 8 - P7 shared hazardsOfAntarctica：冰缝按揭示的 [frost] 与失败差值结算伤害；穿越冰雪附属最近地点
+  ---
+  duration_ms: 92.1542
+  type: 'test'
+  ...
+# Subtest: P7 shared iceAndDeath：坠机点搜寻记录「备用零件」；无限恐惧症难度取地点庇护值
+ok 9 - P7 shared iceAndDeath：坠机点搜寻记录「备用零件」；无限恐惧症难度取地点庇护值
+  ---
+  duration_ms: 122.3322
+  type: 'test'
+  ...
+# Subtest: P7 shared leftBehind：迷失的研究员入场带毁灭、谈判成功后毁灭翻线索
+ok 10 - P7 shared leftBehind：迷失的研究员入场带毁灭、谈判成功后毁灭翻线索
+  ---
+  duration_ms: 53.1274
+  type: 'test'
+  ...
+# Subtest: P7 shared memorialsOfTheLost：9 件遗物与伙伴划去配对；曲奇手枪攻击造成 2 点伤害
+ok 11 - P7 shared memorialsOfTheLost：9 件遗物与伙伴划去配对；曲奇手枪攻击造成 2 点伤害
+  ---
+  duration_ms: 95.148
+  type: 'test'
+  ...
+# Subtest: P7 shared miasma：瘴气折磨附属到伙伴支援；朦胧瘴气附属到当前地点
+ok 12 - P7 shared miasma：瘴气折磨附属到伙伴支援；朦胧瘴气附属到当前地点
+  ---
+  duration_ms: 142.2077
+  type: 'test'
+  ...
+# Subtest: P7 shared namelessHorrors：噩梦烟气二选一（失去 2 行动）；渎神幻象进入威胁区并洗入 1 张忒咳哩-哩
+ok 13 - P7 shared namelessHorrors：噩梦烟气二选一（失去 2 行动）；渎神幻象进入威胁区并洗入 1 张忒咳哩-哩
+  ---
+  duration_ms: 146.8378
+  type: 'test'
+  ...
+# Subtest: P7 shared penguins：呜啊！呜啊！呜啊！把最远的巨型白化企鹅移动到调查员地点
+ok 14 - P7 shared penguins：呜啊！呜啊！呜啊！把最远的巨型白化企鹅移动到调查员地点
+  ---
+  duration_ms: 119.5954
+  type: 'test'
+  ...
+# Subtest: P7 shared shoggoths：狂暴的修格斯按调查员数加生命，敌军阶段结束对本地调查员与敌人各造成 2 伤害
+ok 15 - P7 shared shoggoths：狂暴的修格斯按调查员数加生命，敌军阶段结束对本地调查员与敌人各造成 2 伤害
+  ---
+  duration_ms: 115.9853
+  type: 'test'
+  ...
+# Subtest: P7 shared silenceAndMystery：黑暗极光按揭示的 [frost] 结算恐惧；极地幻景附属有线索的地点
+ok 16 - P7 shared silenceAndMystery：黑暗极光按揭示的 [frost] 结算恐惧；极地幻景附属有线索的地点
+  ---
+  duration_ms: 158.9893
+  type: 'test'
+  ...
+# Subtest: P7 shared tekelili：16 张物理牌库与弱点结算后回底（副本守恒）
+ok 17 - P7 shared tekelili：16 张物理牌库与弱点结算后回底（副本守恒）
+  ---
+  duration_ms: 78.8864
+  type: 'test'
+  ...
+# Subtest: P7 shared 战役级原语：伙伴名册 / 纪念逝者 / tekeli 16 / supplies 7 / seals A–E / 数值钥匙 / 寒霜 8
+ok 18 - P7 shared 战役级原语：伙伴名册 / 纪念逝者 / tekeli 16 / supplies 7 / seals A–E / 数值钥匙 / 寒霜 8
+  ---
+  duration_ms: 114.1036
+  type: 'test'
+  ...
+# Subtest: P7 shared 章节 gather 展开：单章组卡号来自卡表，共享组 80 张全部可归入章节池
+ok 19 - P7 shared 章节 gather 展开：单章组卡号来自卡表，共享组 80 张全部可归入章节池
+  ---
+  duration_ms: 0.4188
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1996.8859

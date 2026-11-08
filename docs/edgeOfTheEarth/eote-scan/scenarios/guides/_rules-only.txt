@@ -1,0 +1,863 @@
+﻿
+########## iceAndDeathPart2 ##########
+## setup
+
+### setup.[0].title
+Investigator Setup
+
+### setup.[0].children[0].text
+• Each investigator’s base starting resources is equal to the shelter value of the camp, instead of five.
+
+• Shelter Value: [shelterValue]
+
+• Each investigator may choose one available member of the Expedition Team who is not crossed off or marked “MIA” to join them. Put the story asset for the chosen character into play in that investigator’s play area. Place damage and horror on that character as indicated in the “Expedition Team” section of the Campaign Log.
+
+### setup.[1].children[0].text
+Gather all cards from the following encounter sets: Ice and Death, Lost in the Night, Left Behind, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. These sets are indicated by the following icons:
+
+### setup.[1].children[1].text
+Build the agenda deck using agendas 4–6 and the act deck using act 2. (These can be found in the Lost in the Night encounter set.)
+
+### setup.[1].children[2].text
+In the “Ice and Death” section of the Campaign Log, find each location under Locations Revealed. Put each of those locations into play, revealed (with clues equal to its clue value).
+
+### setup.[1].children[3].text
+Put each other location into play, unrevealed.
+
+### setup.[1].children[4].text
+Several members of the expedition go missing in the night!
+
+### setup.[1].children[5].text
+Find each Possessed enemy from the Lost in the Night encounter set whose title matches one of the expedition team members marked “MIA” in your Campaign Log. Set each of these enemies aside, facedown. Remove the rest from the game.
+
+### setup.[1].children[6].text
+Find the story cards from the Lost in the Night encounter set and shuffle them. One at a time, add one of these cards facedown to the previously set-aside enemies, until there are a total of exactly nine enemy and story cards set aside in this way. Remove the unused story cards from the game.
+
+### setup.[1].children[7].text
+Shuffle these nine set-aside cards and place one facedown beneath each of the nine Uncharted locations in play.
+
+### setup.[1].children[8].text
+Each investigator begins play at the Camp.
+
+### setup.[1].children[9].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator was defeated): As the night ends, the storm arrives in its full ferocity. Raging, icy winds and dense snowfall make your task impossible. You’ll never find the remaining team members in these conditions, and even if you did…
+
+A hard lump of guilt and despair forms in your throat. There’s no way they would survive in this storm, not without supplies or shelter. That you are forced to choose between your life and theirs is a burden you will surely carry with you for the rest of your life. And you’ll be lucky if that’s more than a couple of days.
+
+• Proceed to Resolution 1
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: It is clear that something compelled your teammates to venture away from the safety of your camp. Something alien and mysterious. Something that defies your understanding of Antarctica. None of those who wandered off remember why they did so or what they were doing. It is almost as if their memories were wiped clean. Or perhaps their consciousness was supplanted by another…
+
+In any event, they seem to have recovered. You mourn those you’ve lost and prepare for the day ahead. Rest or no rest, you have only one chance if you are to survive.
+
+• Each investigator earns experience equal the Victory X value of each card in the victory display.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Find each enemy in the victory display whose title matches a character who is not crossed off in the “Expedition Team” section of the Campaign Log. These characters have been rescued! Cross off “MIA” next to each of those character’s names.
+
+• Each missing team member who was not found surely could not have survived the night. In the “Expedition Team” section of the Campaign Log, cross off the name of each character who is still marked “MIA.”
+
+• Proceed to Checkpoint II: The Attack.
+
+
+########## iceAndDeathPart3 ##########
+## setup
+
+### setup.[0].children[0].text
+Gather all cards from the following encounter sets: Ice and Death, Seeping Nightmares, Creatures in the Ice, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. These sets are indicated by the following icons:
+
+### setup.[0].children[1].text
+Build the agenda deck using agendas 7–8 and the act deck using act 3. (These can be found in the Seeping Nightmares encounter set.)
+
+### setup.[0].children[2].text
+In the “Ice and Death” section of the Campaign Log, find each location under Locations Revealed. Put each of those locations into play, revealed (with clues equal to its clue value).
+
+### setup.[0].children[3].text
+Put each other location into play, unrevealed.
+
+### setup.[0].children[4].text
+Each investigator begins play at the camp.
+
+### setup.[0].children[5].text
+Remove all clues from the camp. It begins the game with no clues on it.
+
+### setup.[0].children[6].text
+Find 1 {'{'}perPlayer{'}'} Seeping Nightmare enemies. These enemies can be found in the Seeping Nightmares encounter set. Spawn each at a different location according to the “Seeping Nightmares” sidebar. Remove all remaining Seeping Nightmare enemies from the game.
+
+### setup.[0].children[7].text
+Find the eight Eidolon enemies from the Ice and Death and Creatures in the Ice encounter sets. Shuffle them and place them facedown beneath each Seeping Nightmare enemy in play, divided as evenly as possible.
+
+### setup.[0].children[8].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator was defeated): Through a whirlwind of snow and ice, you barely manage to escape with your life. You traipse across the snowy plains for miles, exhausted, terrified, and unsure whether the phantasms hunting you are real or merely figments of your rattled imagination.
+
+In cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.
+
+Only when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?
+
+• In your Campaign Log, record the team barely escaped the ice shelf.
+
+• Each investigator earns experience equal the Victory X value of each card in the victory display. If there is at least one Seeping Nightmare in the victory display, each investigator earns 2 bonus experience as they have gained insight into the entities that dwell in Antarctica.
+
+• Gained Bonus Experience
+
+• Experience: (calculate as instructed above)
+
+• Clean up the game. You will not return to this scenario for the remainder of the campaign.
+
+• Proceed to Interlude I: Restful Night.
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: In cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.
+
+Only when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?
+
+• In your Campaign Log, record the team defeated the hunting creatures.
+
+• Each investigator earns experience equal the Victory X value of each card in the victory display. Each investigator earns 5 bonus experience as they have gained insight into the entities that dwell in Antarctica.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Clean up the game. You will not return to this scenario for the remainder of the campaign.
+
+• Proceed to Interlude I: Restful Night.
+
+### resolutions.[0].children[2].title
+Resolution 2
+
+### resolutions.[0].children[2].children[0].text
+Resolution 2: In cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.
+
+Only when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?
+
+• In your Campaign Log, record the the team fled to the mountains.
+
+• Each investigator earns experience equal the Victory X value of each card in the victory display. If there is at least one Seeping Nightmare in the victory display, each investigator earns 2 bonus experience as they have gained insight into the entities that dwell in Antarctica.
+
+• Gained Bonus Experience
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Clean up the game. You will not return to this scenario for the remainder of the campaign.
+
+• Proceed to Interlude I: Restful Night.
+
+
+########## fatalMirage ##########
+## setup
+
+### setup.[0].children[0].text
+Gather all cards from the following encounter sets: Fatal Mirage, Agents of the Unknown, Left Behind, Miasma, Nameless Horrors, Silence and Mystery, Tekeli-li, and Chilling Cold. These sets are indicated by the following icons:
+
+### setup.[0].children[1].children[0].text
+Build the agenda deck using only agenda 1. Remove the remaining agendas from the game.
+
+### setup.[0].children[1].children[1].text
+Build the act deck using only act 1. Remove the remaining acts from the game.
+
+### setup.[0].children[1].children[2].text
+Put the Prison of Memories location into play, revealed side faceup.
+
+### setup.[0].children[1].children[3].text
+Each investigator begins play at the Prison of Memories.
+
+### setup.[0].children[1].children[4].text
+Set each other location aside, out of play.
+
+### setup.[0].children[1].children[5].text
+Set each of the following cards aside, out of play: the nine “Memory of…” enemies, and the nine Resolute story assets.
+
+### setup.[0].children[2].children[0].text
+Build the agenda deck using only agenda 2 if this is the second time you are playing Fatal Mirage, or agenda 3 if this is the third time. Remove the remaining agendas from the game.
+
+### setup.[0].children[2].children[1].text
+Build the act deck using only act 2 if this is the second time you are playing Fatal Mirage, or act 3 if this is the third time. Remove the remaining acts from the game.
+
+### setup.[0].children[2].children[2].text
+Find each story card listed under “Memories Banished” in your Campaign Log. Put each of these cards in the victory display.
+
+### setup.[0].children[2].children[3].text
+Set each remaining “Memory of…” enemy aside, out of play.
+
+### setup.[0].children[2].children[4].text
+Find each location listed under “Memories Discovered” in your Campaign Log. Put each of those locations into play, revealed side faceup, along with the Prison of Memories (remember to adjust each location’s clue value according to the mirage keyword).
+
+### setup.[0].children[2].children[5].text
+Each investigator begins play at the Prison of Memories.
+
+### setup.[0].children[2].children[6].text
+Set each other location aside, out of play.
+
+### setup.[0].children[2].children[7].text
+Set aside each of the nine Resolute story assets that have not already been earned during a previous playthrough of Fatal Mirage.
+
+### setup.[0].children[3].text
+Check the difficulty level.
+
+### setup.[0].children[4].text
+If you are playing on Hard difficulty, add 1 doom to the agenda.
+
+### setup.[0].children[5].text
+If you are playing on Expert difficulty, add 2 doom to the agenda.
+
+### setup.[0].children[6].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+### specialRules.[0].children[0].title
+Mirage
+
+### specialRules.[0].children[0].children[0].text
+The mirage keyword represents locations that are manifestations of your memories and the memories of your companions. These locations have no unrevealed side and therefore enter play with their revealed side faceup. Instead of an unrevealed side, these locations have story cards on their reverse sides. These story cards allow investigators to travel deeper into the strange mirage and unlock new memories in the form of locations or encounter cards. The number indicated by the mirage keyword represents how many clues are required to flip it over, while the card titles in parentheses indicate what memories might appear as a result.
+
+• As a {'{'}action{'}'} ability, investigators at a mirage location may spend the indicated number of clues, as a group, to flip it over and resolve the story card on its other side.
+
+• When a location with the mirage keyword enters play (including during setup), for each card indicated by its mirage keyword that is already in play or in the victory display, reduce the location’s clue value by its mirage value.
+
+• Note: This is less likely to occur the first time you play Fatal Mirage, but is much more likely during subsequent playthroughs.
+
+• For example: Prison of Memories has a clue value of 3 {'{'}perPlayer{'}'} and has the following text: “Mirage 1 {'{'}perPlayer{'}'} (Base Camp, Deck of the Theodosia, University Halls).” When Prison of Memories enters play, the investigators check which of the three cards indicated by its mirage keyword are already in play or in the victory display. Both University Halls and Deck of the Theodosia are already in play, but Base Camp is still set aside. Therefore, the clue value of Prison of Memories is reduced by 2 {'{'}perPlayer{'}'}, meaning only 1 {'{'}perPlayer{'}'} clues are placed on it when it enters play.
+
+• A location is “cleared of mirages” if every card indicated by its mirage keyword is already either in play or in the victory display. A location that is cleared of mirages cannot be flipped over again.
+
+## resolutions
+
+### resolutions.[0].title
+Resolution 1
+
+### resolutions.[0].children[0].text
+Is there a difference?
+
+### resolutions.[0].children[1].text
+But you have no say in the matter.
+
+### resolutions.[0].children[2].text
+In the “Fatal Mirage” section of the Campaign Log, under “Memories Banished,” record each story card in the victory display. Each investigator earns experience equal to the Victory X value of each card recorded in this way. (Do not earn experience points for cards already recorded in this section).
+
+### resolutions.[0].children[3].text
+In the “Fatal Mirage” section of the Campaign Log, under “Memories Discovered,” record each non‑_Otherworld_ location in play.
+
+### resolutions.[0].children[4].text
+Cross off each location recorded under “Memories Discovered” for which the corresponding story card is also recorded under “Memories Banished.”
+
+### resolutions.[0].children[5].text
+If there are any other non-story cards in the victory display worth Victory X, each investigator earns experience equal to that amount.
+
+### resolutions.[0].children[6].text
+In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+### resolutions.[0].children[7].text
+Proceed to the next scenario of the campaign, in numerical order, as follows:
+
+### resolutions.[0].children[8].text
+If the last scenario you played before this one was Ice and Death, proceed to Scenario II: To the Forbidden Peaks.
+
+### resolutions.[0].children[9].text
+If the last scenario you played before this one was To the Forbidden Peaks, proceed to Scenario III: City of the Elder Things.
+
+### resolutions.[0].children[10].text
+If the last scenario you played before this one was City of the Elder Things, proceed to Scenario IV: The Heart of Madness.
+
+### resolutions.[0].children[11].text
+If no resolution was reached (each investigator was defeated): You stumble wearily to your feet. A dream? Your grip your temples, your mind aching. It feels as though a pneumatic drill has been taken to the inside of your skull. If this is what sleep is to be in this hellish place, you want no part of it.
+
+### resolutions.[0].children[12].text
+Resolution 1: You tumble through the doorway and onto your sleeping mat, flailing within your tangle of warm blankets. No door shuts behind you. Did you only imagine all of that? Or was it all real?
+
+
+########## toTheForbiddenPeaks ##########
+## setup
+
+### setup.[0].children[0].text
+Gather all cards from the following encounter sets: To the Forbidden Peaks, Deadly Weather, Elder Things, Hazards of Antarctica, Nameless Horrors, and Tekeli-li. These sets are indicated by the following icons:
+
+### setup.[0].children[1].text
+Shuffle the seven Mountainside locations and put five of them into play in a diagonal line. Set the remaining two locations aside, out of play. Put The Summit location into play at the top of the diagonal line. The position of each location has its own level from 0–5, beginning at the bottommost location at level 0 and ascending to The Summit at level 5.
+
+### setup.[0].children[2].text
+Reveal the level-0 location. Each investigator begins play at that location.
+
+### setup.[0].children[3].text
+Add 1 [elder_thing] token to the chaos bag.
+
+### setup.[0].children[4].text
+Check the “Supplies Recovered” section of the Campaign Log and put each Expedition story asset listed there into play at the level-0 location. Remove each other Expedition story asset from the game.
+
+### setup.[0].children[5].text
+Set the Terror of the Stars enemy aside, out of play.
+
+### setup.[0].children[6].text
+Check the difficulty level.
+
+### setup.[0].children[7].text
+If you are playing on Hard difficulty, add 1 doom to agenda 1a.
+
+### setup.[0].children[8].text
+If you are playing on Expert difficulty, add 2 doom to agenda 1a.
+
+### setup.[0].children[9].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator was defeated):
+
+The remainder of your journey across the peaks is a whirlwind of snow and fear. You climb higher and higher, pushing yourself to extremes you never thought possible. Still the summit remains ever out of reach. As night falls and the weather grows even deadlier, desperation forces you to look elsewhere to survive.
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: The view from the summit is breathtaking, but you are in no mood to enjoy the spectacle. Sprawled before you, on the other side of these accursed peaks, lies the city described in Dyer’s report. Its haunting visage is unmistakable. Dozens of conical and pyramidal buildings of dark slate and sandstone are honeycombed throughout the region like a labyrinth of perfect geometric shapes. Though weathered by the ages, the city still stands, hidden by the jagged peaks and the heavy snow.
+
+For a while, you stand in silence and take in the wondrous sight. If it weren’t for the many trials you faced along the way, it would be a moment of triumph. But after the sacrifices made to get here, the victory rings hollow.
+
+A freezing wind blows across the peaks. The air is too thin for you to linger here. After a moment’s rest, you begin the long trek down into the alien city. You will have to make camp before you reach the bottom. With any luck, you’ll be hidden from the dreadful creatures that dwell there…
+
+• In your Campaign Log, record the team climbed to the summit.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display.
+
+• Experience: (calculate as instructed above)
+
+• For each Expedition asset in the victory display, an investigator may choose to add that asset to their deck. It does not count toward their deck size. For each Expedition asset added to an investigator’s deck this way, that investigator earns 1 bonus experience.
+
+• For each Expedition asset that is not in the victory display, cross off its title in the “Supplies Recovered” section of the Campaign Log.
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Interlude II: Endless Night.
+
+### resolutions.[0].children[2].title
+Resolution 2
+
+### resolutions.[0].children[2].children[0].text
+Resolution 2: Just as you are beginning to lose hope, you find a dark cave embedded in the mountainside. The wind howls outside the cave entrance, bringing with it a sudden deluge of snow. You’re not sure what would be worse—a slow death trapped inside an icy cavern, or an equally slow one failing to reach the summit. But when one of your companions switches on their flashlight, you realize there may be a third option.
+
+The walls of this narrow tunnel are covered in strange hieroglyphs, the likes of which you’ve never seen. The ancient writings of an alien language, you presume. Possibly even that of the Elder Things who once called this region home. More importantly, the cavern continues deeper and deeper into the side of the mountain, far beyond the reach of your light.
+
+You take a vote and decide to press onward, hoping beyond hope that the tunnel might take you to another exit. To your surprise, the journey is smooth, although the ever-present darkness, the frightening echoes of uncanny groans, and the muffled voices of something deep below wear upon your sanity. For hours you continue on, until finally, mercifully, you see light in the distance.
+
+You emerge once more onto the side of the mountain, this time to a breathtaking vista. Sprawled before you lies the city described in Dyer’s report. Its haunting visage is unmistakable. Dozens of conical and pyramidal buildings of dark slate and sandstone are honeycombed throughout the region like a labyrinth of perfect geometric shapes. Though weathered by the ages, the city still stands, hidden by the jagged peaks and the heavy snow.
+
+For a while, you stand in silence and take in the wondrous sight. Somehow, you have managed to find a way through the mountain. If it weren’t for the many trials you faced along the way, it would be a moment of triumph. But after the sacrifices made to get here, the victory rings hollow. After a moment’s rest, you begin the long trek down into the alien city. You will have to make camp before you reach the bottom. With any luck, you’ll be hidden from the dreadful creatures that dwell there…
+
+• In your Campaign Log, record the team found another way through the mountains.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display.
+
+• Experience: (calculate as instructed above)
+
+• Cross off each card title in the “Supplies Recovered” section of the Campaign Log.
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Interlude II: Endless Night.
+
+
+########## cityOfTheElderThings ##########
+## setup
+
+### setup.[0].children[0].children[0].text
+Gather all cards from the following encounter sets: City of the Elder Things, Elder Things, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, and Locked Doors. These sets are indicated by the following icons:
+
+### setup.[0].children[0].children[1].text
+Set aside the Shoggoths encounter set.
+
+### setup.[0].children[0].children[2].text
+Create the act deck using only Sprawling City (v. I) and Pursuit of the Unknown (v. I). Remove all other act cards from the game.
+
+### setup.[0].children[0].children[3].text
+Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.
+
+### setup.[0].children[0].children[4].text
+The lead investigator chooses one of the eight outermost locations. Each investigator begins play at the chosen location.
+
+### setup.[0].children[0].children[5].text
+Locations in this scenario are connected to each adjacent location.
+
+### setup.[0].children[0].children[6].text
+Gather two copies of each of the following tokens from the collection (not from the chaos bag): {'{'}skull{'}'}, {'{'}cultist{'}'}, [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”
+
+### setup.[0].children[0].children[7].text
+Add 1 [elder_thing] token to the chaos bag.
+
+### setup.[0].children[0].children[8].text
+Remove all three copies of the Benign Elder Thing enemy from the game. Set the Terror of the Stars enemy aside, out of play.
+
+### setup.[0].children[1].children[0].text
+Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Elder Things, Nameless Horrors, Penguins, Silence and Mystery, Tekeli-li, and Chilling Cold. These sets are indicated by the following icons:
+
+### setup.[0].children[1].children[1].text
+Set aside the Creatures in the Ice encounter set.
+
+### setup.[0].children[1].children[2].text
+Create the act deck using only Sprawling City (v. II) and Pursuit of the Unknown (v. II). Remove all other act cards from the game.
+
+### setup.[0].children[1].children[3].text
+Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.
+
+### setup.[0].children[1].children[4].text
+Each investigator begins play at the location on the bottom-right.
+
+### setup.[0].children[1].children[5].text
+Locations in this scenario are connected to each adjacent location.
+
+### setup.[0].children[1].children[6].text
+Gather two copies of each of the following tokens from the collection (not from the chaos bag): {'{'}skull{'}'}, {'{'}cultist{'}'}, [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”
+
+### setup.[0].children[1].children[7].text
+Add 1 [elder_thing] token to the chaos bag.
+
+### setup.[0].children[1].children[8].text
+Remove the Terror of the Stars enemy and all three copies of the Benign Elder Thing enemy from the game.
+
+### setup.[0].children[2].children[0].text
+Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Miasma, Penguins, Shoggoths, Tekeli-li, Chilling Cold, and Locked Doors. These sets are indicated by the following icons:
+
+### setup.[0].children[2].children[1].text
+Set aside the Shoggoths encounter set.
+
+### setup.[0].children[2].children[2].text
+Create the act deck using only Sprawling City (v. III) and Pursuit of the Unknown (v. III). Remove all other act cards from the game.
+
+### setup.[0].children[2].children[3].text
+Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map.
+
+### setup.[0].children[2].children[4].text
+Each investigator begins play at the location on the top-left.
+
+### setup.[0].children[2].children[5].text
+Locations in this scenario are connected to each adjacent location.
+
+### setup.[0].children[2].children[6].text
+Gather two copies of each of the following tokens from the collection (not from the chaos bag): {'{'}skull{'}'}, {'{'}cultist{'}'}, [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”
+
+### setup.[0].children[2].children[7].text
+Remove the Terror of the Stars enemy and all three copies of the Reawakened Elder Thing enemy from the game.
+
+### setup.[0].children[3].text
+Remove from the game each copy of the Frostbitten and Possessed weaknesses that was not earned during the introduction.
+
+### setup.[0].children[4].text
+Check the difficulty level.
+
+### setup.[0].children[5].text
+If you are playing on Hard difficulty, add 1 doom to agenda 1a.
+
+### setup.[0].children[6].text
+If you are playing on Expert difficulty, add 2 doom to agenda 1a.
+
+### setup.[0].children[7].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+### specialRules.[0].children[0].title
+Keys
+
+### specialRules.[0].children[0].children[0].text
+The setup of this scenario instructs the players to place a random chaos token on each of the 16 City Landscape locations, as keys. These keys are never placed in the chaos bag and do not act as traditional chaos tokens. Instead, they represent keys which investigators can recover and use throughout the scenario.
+
+Keys can be acquired in one of two ways:
+
+• If a location with a key on it has no clues, an investigator can take control of its key as a [fast] ability.
+
+• Some card effects may allow investigators to take control of keys in other ways.
+
+When an investigator takes control of a key, they place that key on their investigator card. If an investigator who controls one or more keys is eliminated, place each of those keys on their location. As an {'{'}action{'}'} ability, an investigator may give any number of their keys to another investigator at the same location.
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator was defeated): Injured and weary, you hole up in the relative safety of one of the city’s towering structures. Your only hope is to take shelter within the alien city and hope your presence goes unnoticed by the denizens that still prowl its streets and ancient halls.
+
+• Proceed to Resolution 2.
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: A quiet, unearthly stillness welcomes you as your party delves into the secret passageway. You expected to be greeted by sound and fury, but this eerie silence is almost worse. Not a word is spoken as you slink deeper and deeper into the secret shaft, making note of the peculiar smoothness of the walls, the bizarre markings along the floor, the muted drip, drip, drip of water in the distance.
+
+For hours you continue into the deep dark, questioning your judgment with each step. What kind of people walk willingly into the jaws of such horror? You risked your reputation going on this expedition to begin with. Then you risked your life not turning back the moment things turned dire. Now you risk your very sanity unearthing secrets no human was ever meant to find.
+
+Is this bravery? Or the final mistake of a herd of fools, too stubborn to see that their own deaths lie at the end of this road? It matters not. You’ve come too far to turn back now. One way or another, you will get the answers you seek. The only question is whether you’ll live to tell the world what you found.
+
+• In your Campaign Log, record the team found the hidden tunnel.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator also earns 1 additional experience for each pair of chaos tokens spent during this scenario.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Interlude III: Final Night.
+
+### resolutions.[0].children[2].title
+Resolution 2
+
+### resolutions.[0].children[2].children[0].text
+Resolution 2: Hours pass. You dare not venture outside, but you explore every crevice of your sanctuary, hoping to find something to make this endeavor worthwhile. What you find instead is even harder to believe. In the icy sub-level of the structure, a sacred chamber houses a churning pool of kaleidoscopic miasma. Gray, swirling mist evaporates from its surface, familiar shapes and strange hallucinations materializing and vanishing within.
+
+As if sensing your approach, the pool stops whirling and rises on its own, almost as if in greeting. Then, it coalesces into a shimmering glob of prismatic color and crawls along the floor, stopping when you stop, continuing along as you follow. It beckons you closer, guiding you. You glance at one another with trepidation. Is it trying to show you something? To take you somewhere? And if so…is it truly wise to follow?
+
+Eventually, you come to an agreement. There is no use dawdling here, and the weather grows fouler with each passing minute. You decide to follow with caution, hoping perhaps it will lead you to answers. For hours you continue into the deep dark, questioning your judgment with each step. The ancient structure gives way to icy tunnels, walls smooth and slick with dark ichor, floor covered in bizarre markings of unknowable origin. Finally, the glob of miasma seeps back into the walls and disappears, leaving you alone with your doubts, your fears, and the impossibly long shaft breaching through the icy heart of Antarctica and into the depths beyond…
+
+• In your Campaign Log, record the team was guided to the hidden tunnel.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator also earns 1 additional experience for each pair of chaos tokens that were spent during this scenario.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Interlude III: Final Night.
+
+
+########## theHeartOfMadnessPart1 ##########
+## setup
+
+### setup.[0].children[0].text
+Gather all cards from the following encounter sets: The Heart of Madness, The Great Seal, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, Ancient Evils, and Locked Doors. These sets are indicated by the following icons:
+
+### setup.[0].children[1].text
+Put The Gate of Y’quaa into play, revealed side faceup.
+
+### setup.[0].children[2].text
+Each investigator begins play at The Gate of Y’quaa.
+
+### setup.[0].children[3].text
+Note: The unrevealed side of The Gate of Y’quaa is not used in this part of the scenario.
+
+### setup.[0].children[4].text
+Shuffle all fifteen Ancient Facility locations (five from The Great Seal encounter set and ten from The Heart of Madness encounter set). Put locations into play in a pattern matching the map. Each location is placed randomly in one of the spaces indicated by the map.
+
+### setup.[0].children[5].text
+The Ancient Facility locations in this scenario are organized into five spokes that branch out from The Gate of Y’quaa, and three rings that surround The Gate of Y’quaa.
+
+### setup.[0].children[6].text
+Set the five seal tokens aside, out of play.
+
+### setup.[0].children[7].text
+Check the difficulty level.
+
+### setup.[0].children[8].text
+If you are playing on Hard difficulty, add 1 doom to agenda 1a.
+
+### setup.[0].children[9].text
+If you are playing on Expert difficulty, add 2 doom to agenda 1a.
+
+### setup.[0].children[10].text
+Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.
+
+## specialRules
+
+### specialRules.[0].children[0].title
+Ancient Facility Locations
+
+### specialRules.[0].children[0].children[0].text
+Ancient Facility locations exist in multiple encounter sets. (For example, in this scenario, both The Heart of Madness encounter set and The Great Seal encounter set contain Ancient Facility locations.) Because these locations can come from different encounter sets, they have no encounter set icon on their unrevealed side. To see which encounter set an Ancient Facility location belongs to, check its revealed side.
+
+### specialRules.[0].children[1].title
+Seals
+
+### specialRules.[0].children[1].children[0].text
+This scenario introduces five seal tokens that represent important technological artifacts that are needed to contain the madness within The Gate of Y’quaa. Each seal token has its own symbol, as follows: {'{'}sealA{'}'} {'{'}sealB{'}'} {'{'}sealC{'}'} {'{'}sealD{'}'} {'{'}sealE{'}'}
+
+Each of these seal tokens has a dormant side and an activated side. The activated side is indicated by the glowing highlight around its symbol.
+
+Investigators will be instructed when to put seals into play, and whether they are dormant or activated. Seals have no inherent game effect. Investigators must discover how to take control of, activate, and utilize these seals to put an end to this madness.
+
+When an investigator takes control of a seal, they place it on their investigator card. If an investigator who controls one or more seals is eliminated (except by resignation), remove those seals from the game. Those seals are lost forever.
+
+As an {'{'}action{'}'} ability, an investigator may give control of a seal to another investigator at the same location or take control of a seal controlled by another investigator at the same location.
+
+### specialRules.[0].children[2].title
+Location Adjacency in The Heart of Madness
+
+### specialRules.[0].children[2].children[0].text
+During this scenario, locations are arranged in a pattern of spokes and rings. There are three rings with five locations on each ring, and five spokes with three locations on each spoke.
+
+• During this scenario, each location is connected to the locations next to it on its spoke as well as the locations next to it on its ring.
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator resigned or was defeated): Try as you might, you are unable to find and place all five seals. These dark, dormant halls are home to much more than just giant penguins. The creatures that dwell within are the same that Dyer and Danforth described from their journey—shapeless monstrosities composed of viscous, bubbling jelly and covered in lidless eyes. You flee back to the gateway to rest and lick your wounds, but before you can decide what to do next, something slams against the ancient, massive doorway, scaring you nearly to death. It reverberates through the facility. Then another, and another. You try to flee, but it’s too late.
+
+• Proceed to Resolution 2.
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: With the massive door glowing and droning with some kind of alien electricity, you strain against it to open the way forward. Somewhere inside this place lie the answers to all of your questions. The reason you came here. You press onward not for the sake of your career, but for the sake of your very sanity. You must know the truth. Even if it breaks you.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 1 bonus experience for each activated seal in play.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Checkpoint III: The Other Side.
+
+### resolutions.[0].children[2].title
+Resolution 2
+
+### resolutions.[0].children[2].children[0].text
+Resolution 2: With a final hiss of air and a primordial screech, the immense gateway bursts open. Tendrils of prismatic color reach forth, slithering along the floor and walls. The chaos is over in mere seconds. The miasma grips you with impossible strength, clawing and tugging at your limbs. Terrible shapes, familiar sights, and untold nightmares play out along the surface of the entity as it pulls you screaming through the gateway and into the other side.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 1 bonus experience for each activated seal in play.
+
+• Experience: (calculate as instructed above)
+
+• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.
+
+• Proceed to Checkpoint III: The Other Side.
+
+### resolutions.[0].children[3].title
+Resolution 3
+
+### resolutions.[0].children[3].children[0].text
+Resolution 3: The pulse of energy induced by your catastrophic mistake wipes all organic life from the face of the Earth.
+
+• Oops.
+
+• In your Campaign Log, record the seal was used… improperly.
+
+• Each investigator is killed.
+
+• The investigators lose the campaign.
+
+
+########## theHeartOfMadnessPart2 ##########
+## setup
+
+### setup.[0].children[0].text
+Gather all cards from the following encounter sets: Stirring in the Deep, Agents of the Unknown, Chilling Cold, and Striking Fear. These sets are indicated by the following icons:
+
+### setup.[0].children[1].text
+When gathering the Striking Fear encounter set, only gather 2x Dissonant Voices and 2x Frozen in Fear (do not gather 3x Rotting Remains).
+
+### setup.[0].children[2].text
+Search the encounter deck and all out-of-play areas for all cards from The Great Seal, Shoggoths, and Locked Doors encounter sets (including the five “Ancient Facility” locations from The Great Seal encounter set). Remove each card from those encounter sets from the game.
+
+### setup.[0].children[3].text
+Build the agenda deck using agendas 4–5 and the act deck using act 3. (These can be found in the Stirring in the Deep encounter set.)
+
+### setup.[0].children[4].text
+Flip The Gate of Y’quaa to its unrevealed side.
+
+### setup.[0].children[5].text
+Take the five Mist-Pylon locations and the ten remaining Ancient Facility locations (from The Heart of Madness encounter set), shuffle them together, and put them into play at random using the same map as in Part I, except that five of the randomly placed Ancient Facility locations will instead be Mist-Pylon locations.
+
+### setup.[0].children[6].text
+Note: If all five locations in the innermost ring are Mist‑Pylons, start this process over.
+
+### setup.[0].children[7].text
+The lead investigator chooses an Ancient Facility location nearest to The Gate of Y’quaa. Each investigator begins play at the chosen location.
+
+### setup.[0].children[8].text
+Set the following cards aside, out of play: All fifteen copies of The Nameless Madness enemy, The Final Mirage act, the four Titanic Ramp locations, and the Hidden Tunnel location.
+
+### setup.[0].children[9].text
+Place the seal tokens, as follows:
+
+### setup.[0].children[10].text
+For each activated seal on The Gate of Y’quaa, choose an investigator to take control of it.
+
+### setup.[0].children[11].text
+Each investigator with a dormant seal begins the game with it under their control.
+
+### setup.[0].children[12].text
+Remove each other seal from the game.
+
+## specialRules
+
+### specialRules.[0].children[0].title
+Ancient Facility Locations
+
+### specialRules.[0].children[0].children[0].text
+Ancient Facility locations exist in multiple encounter sets. (For example, in this scenario, both The Heart of Madness encounter set and The Great Seal encounter set contain Ancient Facility locations.) Because these locations can come from different encounter sets, they have no encounter set icon on their unrevealed side. To see which encounter set an Ancient Facility location belongs to, check its revealed side.
+
+### specialRules.[0].children[1].title
+Seals
+
+### specialRules.[0].children[1].children[0].text
+This scenario introduces five seal tokens that represent important technological artifacts that are needed to contain the madness within The Gate of Y’quaa. Each seal token has its own symbol, as follows: {'{'}sealA{'}'} {'{'}sealB{'}'} {'{'}sealC{'}'} {'{'}sealD{'}'} {'{'}sealE{'}'}
+
+Each of these seal tokens has a dormant side and an activated side. The activated side is indicated by the glowing highlight around its symbol.
+
+Investigators will be instructed when to put seals into play, and whether they are dormant or activated. Seals have no inherent game effect. Investigators must discover how to take control of, activate, and utilize these seals to put an end to this madness.
+
+When an investigator takes control of a seal, they place it on their investigator card. If an investigator who controls one or more seals is eliminated (except by resignation), remove those seals from the game. Those seals are lost forever.
+
+As an {'{'}action{'}'} ability, an investigator may give control of a seal to another investigator at the same location or take control of a seal controlled by another investigator at the same location.
+
+### specialRules.[0].children[2].title
+Location Adjacency in The Heart of Madness
+
+### specialRules.[0].children[2].children[0].text
+During this scenario, locations are arranged in a pattern of spokes and rings. There are three rings with five locations on each ring, and five spokes with three locations on each spoke.
+
+• During this scenario, each location is connected to the locations next to it on its spoke as well as the locations next to it on its ring.
+
+## resolutions
+
+### resolutions.[0].children[0].title
+No Resolution
+
+### resolutions.[0].children[0].children[0].text
+If no resolution was reached (each investigator was defeated): When you awaken, the facility is dark and quiet once more. You pull your companions to their feet and retreat back to the surface, wondering if you are too late to stop the entity beyond the gate from escaping. It is quiet. Peaceful. There are no more signs of icy phantasms, eerie mirages, or alien entities.
+
+Back in the city nestled within the mountains, you take notes, photographs, and rubbings. The trip back to the ice shelf is swift and easy. Not even the cold weather fights you as you make your way back to the barrier camp. It is as if the entire continent of Antarctica has given itself over to you. You consider taking this time to continue studying the environment, but in the end, you decide to head back with your extensive findings. The sky is clear and beautiful as your ship departs from the ice shelf, heading north.
+
+Still, you are troubled. The entity that was once sealed beyond the Elder Thing’s gateway was gone. There was almost no trace of it when you fled. Which can only mean it escaped, and could be anywhere. Or everywhere. Your thoughts turn dreadful. You remind yourself of the strange, vivid mirages the creature seemed to control. The lifelike hallucinations. You examine your palms and wonder if they are the same shape they always were, or a close facsimile. The air around you shimmers.
+
+…Is any of this real?
+
+• In your Campaign Log, record the nameless madness escaped.
+
+• In the “Expedition Team” section of the Campaign Log, cross off every name.
+
+• Each investigator is driven insane.
+
+• The investigators lose the campaign.
+
+### resolutions.[0].children[1].title
+Resolution 1
+
+### resolutions.[0].children[1].children[0].text
+Resolution 1: Suddenly, there is blast of warm air, and a sound like a tremendous exhalation. The air shimmers with the distortion of a mirage, and you watch in shock as the rushing miasma suddenly recoils. It collapses upon itself and retreats back into the mountainside just as the avalanche begins. Bright blue cracks spread rapidly along the walls. Without the pylons, the integrity of not just the facility within the mountain, but the entire city, is compromised. The icy floor cracks open. The cyclopean architecture of the alien city begins to sink into the snow.
+
+Then you hear it: the roaring engine of an aeroplane overhead. The last of Takada’s three planes soars over the city, and familiar shouts echo throughout the ancient, ruinous streets. “There they are! By that tunnel! Quickly!” Two sledges slide into view, pulled by the remainder of the dogs Eliyah left at the barrier camp, and manned by several members of the crew of the Theodosia. You cannot hold back your surprise or joy at the sight. They motion frantically for you to join them, their gazes fixed on the collapsing mountain.
+
+At the last possible second, you hear another voice emanating from within the tunnel. “Wait!” Dr. Kensler emerges from the darkness, waving and hollering. “Wait for me!” She hops onto the sledge, and together, you race off into the foothills as the city collapses into the ice behind you.
+
+One of the crewmates explains that they fixed up the last of the aeroplanes and decided to use it to look it for you, even knowing the risks. “When we spotted you entering that huge cavern without most of your gear, we thought you might need a rescue. Didn’t expect that to be quite this literal,” he says. You tell him his timing couldn’t be more perfect.
+
+The moment you make it back to the ice shelf, Dr. Kensler instructs the crew to prepare for departure. You barely even break down the barrier camp. It doesn’t matter anymore. All that matters is getting out of this place with your lives intact—and with all the evidence you have found, of course.
+
+But still, you have questions. Once safely aboard the Theodosia, you confront Dr. Kensler and ask her what she did back in the facility. The entity was chasing you, and then, suddenly… “I told you, it is not a living creature,” she explains. “As such, it cannot be killed. At least, not by our standards. But it has some semblance of sentience, yes? It knows our desires. Our hopes. Our fears.” You note aloud that Dr. Kensler is using the present tense. She clenches her jaw. The slightest hint of distortion wavers in the air around her. “I…I made a deal,” she whispers. “It was the only way.”
+
+• In your Campaign Log, record the nameless madness is contained safely within its host…for now.
+
+• In the “Expedition Team” section of the Campaign Log, cross off Dr. Amy Kensler’s name. In its place, write “The Entity.”
+
+• In your Campaign Log, record the survivors of the expedition were… and list the names of each member of the Expedition Team who is not crossed off, along with each surviving investigator’s name.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 10 bonus experience, as they have saved reality from an unspeakable fate.
+
+• Experience: (calculate as instructed above)
+
+• The investigators win the campaign!
+
+### resolutions.[0].children[2].title
+Resolution 2
+
+### resolutions.[0].children[2].children[0].text
+Resolution 2: Suddenly, a droning hum emerges from the tunnel, and hope renews in your heart. You take flight from beneath the archway as bright blue cracks spread rapidly along the walls. Without the pylons, the integrity of not just the facility within the mountain, but the entire city, is compromised. The icy floor cracks open. The cyclopean architecture of the alien city begins to sink into the snow. This might be your burial place, but at least you will take this entity and the rest of this damnable city with you.
+
+Then you hear it: the roaring engine of an aeroplane overhead. The last of Takada’s three planes soars over the city, and familiar shouts echo throughout the ancient, ruinous streets. “There they are! By that tunnel! Quickly!” Two sledges slide into view, pulled by the remainder of the dogs Eliyah left at the barrier camp, and manned by several members of the crew of the Theodosia. You cannot hold back your surprise or joy at the sight. They motion frantically for you to join them, their gazes fixed on the collapsing mountain.
+
+One of the crewmates explains that they fixed up the last of the aeroplanes and decided to use it to look it for you, even knowing the risks. “When we spotted you entering that huge cavern without most of your gear, we thought you might need a rescue. Didn’t expect that to be quite this literal,” he says. You tell him his timing couldn’t be more perfect. Together, you race off into the foothills as the city collapses into the ice behind you.
+
+The moment you make it back to the ice shelf, you tell the crew to prepare for departure. You barely even break down the barrier camp. It doesn’t matter anymore. All that matters is getting out of this place with your lives intact—and with all the evidence you have found, of course.
+
+The voyage home is quiet and peaceful, but your thoughts are anything but. To this day, you wonder about the true nature of the entity you encountered within the ancient Elder Thing facility. You have no idea what you are going to tell the greater academic community when you return. Your actions have ensured none can study or explore that nightmarish city ever again. But what of the Elder Things? Will those that survived remain in hiding? Or will they—like you—choose to learn more about this new age they find themselves in?
+
+Only time will tell. Until then, you can rest easy knowing that the creature that dwelled beneath the ice cannot possibly have survived. The air shimmers around your pen hand as you put the final touches on your notes regarding the expedition. Yes—it is finally over.
+
+…Right?
+
+• In your Campaign Log, record the facility was destroyed.
+
+• In your Campaign Log, record the survivors of the expedition were… and list the names of each member of the Expedition Team who is not crossed off, along with each surviving investigator’s name.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 10 bonus experience, as they have saved reality from an unspeakable fate.
+
+• Experience: (calculate as instructed above)
+
+• Each investigator suffers 1 physical trauma and 1 mental trauma as they never truly recover from their ordeal.
+
+• The investigators win the campaign!
+
+### resolutions.[0].children[3].title
+Resolution 3
+
+### resolutions.[0].children[3].children[0].text
+Resolution 3: You take flight from beneath the archway as the mountain begins to groan and rumble. You managed to collapse enough pylons to threaten the structural integrity of the facility deep beneath the city, but it is not enough. You are going to die here, and worse, you have only aided in the entity’s escape.
+
+Then you hear it: the roaring engine of an aeroplane overhead. The last of Takada’s three planes soars over the city, and familiar shouts echo throughout the ancient, ruinous streets. “There they are! By that tunnel! Quickly!” Two sledges slide into view, pulled by the remainder of the dogs Eliyah left at the barrier camp, and manned by several members of the crew of the Theodosia. You cannot hold back your relief at the sight. They motion frantically for you to join them, their gazes fixed on the encroaching miasmic horror. “What in the hell is that thing?” one of them shouts. But there is no time for explanations. The moment you are on board one of the sledges, you instruct him to flee.
+
+Your escape from the city is a frenzied blur. You have vague recollections of weaving through ancient snow-covered streets, dodging the creeping mist around buildings of smooth, slate gray, of narrowly avoiding a deluge of kaleidoscopic ooze as you make your way through the mountains.
+
+Once the creature is out of sight, one of the crewmates explains that they fixed up the last of the aeroplanes and decided to use it to look it for you, even knowing the risks. “When we spotted you entering that huge cavern without most of your gear, we thought you might need a rescue. Didn’t expect that to be quite this literal,” he says.
+
+You are relieved to see that the pilot has landed the last aeroplane just on the other side of the mountain range. With haste, you and your rescuers board the plane as soon as you reach it, along with the remaining dogs. In the distance, you can see the entity looming, climbing up the jagged peaks, reaching into the sky.
+
+You leave the sledge and all of your supplies behind. The engine roars to life, and together you leave the mountains of madness behind. You dare not turn and glimpse that which has haunted Danforth these many months, but still you hear it to this day: echoing shrieks and fathomless cries, winds too shrill and piercing to be natural, and whispers that beckon you to return.
+
+It has been years since that fateful day. You have not told the greater scientific community anything of your journey. And yet, still, there is no sign of the escaped entity. Is its reach limited to that cryptic, frozen continent? Is it simply biding its time?
+
+Or is it already here, in the very air you breathe? Inside your mind? Showing you a false reality? A mirage?
+
+• In your Campaign Log, record the team escaped the facility.
+
+• In your Campaign Log, record the survivors of the expedition were… and list the names of each member of the Expedition Team who is not crossed off, along with each surviving investigator’s name.
+
+• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 5 bonus experience, as they have survived ancient horrors and lived to tell the tale.
+
+• Experience: (calculate as instructed above)
+
+• Each investigator suffers 2 physical trauma and 2 mental trauma as they never truly recover from their ordeal.
+
+• The investigators win the campaign…?
+

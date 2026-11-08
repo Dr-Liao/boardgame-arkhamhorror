@@ -1,0 +1,200 @@
+{
+  "id": "iceAndDeathPart3",
+  "campaignId": "edgeOfTheEarth",
+  "sourceKind": "reference-project-zh-locale+local-supplement",
+  "officialChinese": false,
+  "chineseStatus": "present-needs-review",
+  "chinese": {
+    "total": 31,
+    "presentNeedsReview": 31,
+    "untranslated": 0,
+    "missing": 0
+  },
+  "chineseGaps": {},
+  "sectionCount": 31,
+  "guideKeyCount": 31,
+  "sources": {
+    "en": {
+      "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+      "bytes": 41124,
+      "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+    },
+    "zh": {
+      "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+      "bytes": 35883,
+      "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+    }
+  },
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "亡命冰原 第III部分",
+          "children": [
+            {
+              "text": "就在那儿，看见了吗？”一名队员递给你双筒望远镜，并指向远方。你们来到营地外，想寻找有利防守的地形，以便在那种生物接近时能尽早发现……但你的发现反而更糟。它们不仅如你所料正向营地袭来，甚至还有更多在从冰面下不断冒出来。\n\n你看到冰架裂开了，彩色的瘴气喷泉从裂缝中渗出。你的同伴抓住你的手臂，指引你看向另一个方向，在那里有另一道喷泉涌出。然后，又一道。“它们数量总得有个尽头吧？”\n\n你放下望远镜，告诉其他队员准备战斗。你不确定你们能否抵挡住这些奇怪的生物，不过确认的方法也只有一个。\n\n添加一个 [frost] 标记到混乱袋。 进入 设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "title": "调查员设置",
+          "children": [
+            {
+              "text": "• 每位调查员的起始基础资源数改为等于营地的庇护值，而不是5点。\n\n• 庇护值：营地庇护值\n\n• 每位调查员可以选择一名未被划掉、也未标记为“失踪”的可用探险队成员与自己同行。将所选角色的剧情支援放置入场，置于该调查员的游戏区域。按照剧本日志的“探险队”部分所记录的，在该角色身上放置伤害与恐惧。"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "收集以下遭遇组中的所有卡牌：亡命冰原、渗出梦魇、冰中生物、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示："
+            },
+            {
+              "text": "使用密谋7–8组建密谋牌库，并使用幕3组建幕牌库。（这些卡牌可以在渗出梦魇遭遇组中找到。）"
+            },
+            {
+              "text": "在剧本日志的“亡命冰原”部分，从“已揭示的地点”中找出每个地点。将这些地点放置入场，均为已揭示状态（拥有等同于其线索值的线索）。"
+            },
+            {
+              "text": "将其余每个地点放置入场，保持未揭示状态。"
+            },
+            {
+              "text": "每位调查员从营地开始游戏。"
+            },
+            {
+              "text": "从营地上移除所有线索。游戏开始时，营地上没有线索。"
+            },
+            {
+              "text": "找出1[per_investigator]个渗出梦魇敌人。这些敌人可以在渗出梦魇遭遇组中找到。按照“渗出梦魇”侧栏的说明，将每个敌人生成在不同的地点。将剩余所有渗出梦魇敌人移出游戏。"
+            },
+            {
+              "text": "找出亡命冰原和冰中生物遭遇组中的8个幻灵敌人。将它们洗混，并尽可能平均地正面朝下放置在场上的每个渗出梦魇敌人底下。"
+            },
+            {
+              "text": "将所有尚未加入调查员牌库的忒咳哩-哩！弱点卡牌混洗到一起，组成忒咳哩-哩牌库。将该牌库放在密谋牌库旁。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成结局",
+              "children": [
+                {
+                  "text": "如果未能达成任何结局（所有调查员都被击败） 在冰雪风暴中，你险些丧命。你在冰雪覆盖的平原上跋涉数英里，筋疲力竭、惊恐万分。你无法确定那些追逐你的幽灵是真实的，还是你慌乱的想象所虚构的。\n\n你和剩下的同伴在无言的痛苦中艰难地向前走着。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。到头来，这还能算是一次研究考察吗？\n\n• 在剧本日志中记录 队伍好不容易逃离冰架。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。如果胜利区至少有一个渗出梦魇，每位调查员取得2点奖励经验值，因为其洞悉了居住在南极的存在。\n\n• 获得额外经验\n\n• 经验：（按上述说明计算）\n\n• 收拾游戏。直到剧本结束，你都不会再返回本冒险。\n\n• 进入 幕间故事I：宁静夜晚。"
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "你和剩下的同伴在无言的痛苦中艰难地向前走着。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。到头来，这还能算是一次研究考察吗？\n\n• 在剧本日志中记录 队伍击败了追猎生物。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。 每位调查员取得5点奖励经验值，因为其洞悉了居住在南极的存在。\n\n• 经验：（按上述说明计算）\n\n• 在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。\n\n• 收拾游戏。直到剧本结束，你都不会再返回本冒险。\n\n• 进入幕间故事I：宁静夜晚。"
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "你和剩下的同伴在无言的痛苦中艰难地向前走着。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。到头来，这还能算是一次研究考察吗？\n\n• 在剧本日志中记录 队伍逃进山脉中。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。如果胜利区至少有一个渗出梦魇，每位调查员取得2点奖励经验值，因为其洞悉了居住在南极的存在。获得额外经验\n\n• 经验：（按上述说明计算）\n\n• 在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。\n\n• 收拾游戏。直到剧本结束，你都不会再返回本冒险。\n\n• 进入 幕间故事I：宁静夜晚。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Ice and Death, Part III",
+          "children": [
+            {
+              "text": "“There—see it?” one of the team members hands you their binoculars and points into the distance. You’ve ventured just outside camp to find a defensible position where you hope can see the creatures approaching…but what you find instead is even worse. Not only are they encroaching on the campsite as you expected, but more are emerging from the ice by the minute.\n\nYou watch the ice shelf split open, and a geyser of multicolored miasma seeps from the cracks. Your companion clutches your arm and points you in another direction, where you see another geyser spill forth. Then, another. “There has to be an end to them, right?”\n\nYou lower the binoculars and tell the rest of the team to prepare for a fight. You don’t know if you can hold off these strange creatures or not, but there’s only one way to find out.\n\nAdd 1 [frost] token to the chaos bag. Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "title": "Investigator Setup",
+          "children": [
+            {
+              "text": "• Each investigator’s base starting resources is equal to the shelter value of the camp, instead of five.\n\n• Shelter Value: [shelterValue]\n\n• Each investigator may choose one available member of the Expedition Team who is not crossed off or marked “MIA” to join them. Put the story asset for the chosen character into play in that investigator’s play area. Place damage and horror on that character as indicated in the “Expedition Team” section of the Campaign Log."
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Ice and Death, Seeping Nightmares, Creatures in the Ice, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. These sets are indicated by the following icons:"
+            },
+            {
+              "text": "Build the agenda deck using agendas 7–8 and the act deck using act 3. (These can be found in the Seeping Nightmares encounter set.)"
+            },
+            {
+              "text": "In the “Ice and Death” section of the Campaign Log, find each location under Locations Revealed. Put each of those locations into play, revealed (with clues equal to its clue value)."
+            },
+            {
+              "text": "Put each other location into play, unrevealed."
+            },
+            {
+              "text": "Each investigator begins play at the camp."
+            },
+            {
+              "text": "Remove all clues from the camp. It begins the game with no clues on it."
+            },
+            {
+              "text": "Find 1 [perPlayer] Seeping Nightmare enemies. These enemies can be found in the Seeping Nightmares encounter set. Spawn each at a different location according to the “Seeping Nightmares” sidebar. Remove all remaining Seeping Nightmare enemies from the game."
+            },
+            {
+              "text": "Find the eight Eidolon enemies from the Ice and Death and Creatures in the Ice encounter sets. Shuffle them and place them facedown beneath each Seeping Nightmare enemy in play, divided as evenly as possible."
+            },
+            {
+              "text": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator was defeated): Through a whirlwind of snow and ice, you barely manage to escape with your life. You traipse across the snowy plains for miles, exhausted, terrified, and unsure whether the phantasms hunting you are real or merely figments of your rattled imagination.\n\nIn cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.\n\nOnly when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?\n\n• In your Campaign Log, record the team barely escaped the ice shelf.\n\n• Each investigator earns experience equal the Victory X value of each card in the victory display. If there is at least one Seeping Nightmare in the victory display, each investigator earns 2 bonus experience as they have gained insight into the entities that dwell in Antarctica.\n\n• Gained Bonus Experience\n\n• Experience: (calculate as instructed above)\n\n• Clean up the game. You will not return to this scenario for the remainder of the campaign.\n\n• Proceed to Interlude I: Restful Night."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: In cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.\n\nOnly when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?\n\n• In your Campaign Log, record the team defeated the hunting creatures.\n\n• Each investigator earns experience equal the Victory X value of each card in the victory display. Each investigator earns 5 bonus experience as they have gained insight into the entities that dwell in Antarctica.\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Clean up the game. You will not return to this scenario for the remainder of the campaign.\n\n• Proceed to Interlude I: Restful Night."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: In cruel, bitter silence, you and your remaining companions trudge onward. The sun drifts to the horizon but never sets. You have seen no sign of danger for hours, and yet you dare not tarry. Dread compels you on.\n\nOnly when you are too tired to walk any longer do you finally stop to get your bearings and decide how to proceed. After all, is this even a research expedition any longer?\n\n• In your Campaign Log, record the the team fled to the mountains.\n\n• Each investigator earns experience equal the Victory X value of each card in the victory display. If there is at least one Seeping Nightmare in the victory display, each investigator earns 2 bonus experience as they have gained insight into the entities that dwell in Antarctica.\n\n• Gained Bonus Experience\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Clean up the game. You will not return to this scenario for the remainder of the campaign.\n\n• Proceed to Interlude I: Restful Night."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

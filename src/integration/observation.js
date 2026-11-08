@@ -1,3 +1,4 @@
+import { draftDeckStatus } from '../deck/draft-mode.js'
 import { agendaDoom, totalDoom } from '../engine/rules-state.js'
 import { registeredEntry } from '../engine/ability.js'
 import { effectiveTraits } from '../engine/engine.js'
@@ -36,7 +37,7 @@ const PUBLIC_STATE_FIELDS = [
   'turnsTaken', 'timingWindow', 'humanSeats', 'aiTurnOrder', 'aiTurnOrderRound',
   // 开局「游戏高级设置」：卡牌范围与回档开关是公开的对局规则，前端据此收窄卡池、
   // 在关卡纪要里隐藏/说明回档入口。
-  'cardPoolScope', 'allowRollback',
+  'cardPoolScope', 'allowRollback', 'deckMode',
 ]
 
 // 剧本标记里可以公开给所有座位的键（深度、石柱、漆黑）。其余标记属于剧本内部状态，
@@ -387,6 +388,10 @@ export function viewState(state, observerSeat = null, options = {}) {
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
     : observer === decisionSeat(state) ? structuredClone(state.legalMoves || []) : legalMoves(state, observer)
+  if (state.deckMode === 'draft' && observer != null) {
+    const own = view.campaign?.investigators?.[observer] || Object.values(view.campaign?.parts || {}).map(part => part.investigators?.[observer]).find(Boolean)
+    if (own?.draftMode) view.draftDeckStatus = draftDeckStatus(own)
+  }
   // 关间升级：牌组里换不掉的卡与原因，由服务端用同一套升级规则算好再投影给本人。
   // 升级界面据此把不可替换的卡置灰并显示原因；前端不复制升级判定（ARCHITECTURE §4 第 2 条）。
   const purchaseMoves = view.legalMoves.filter(move => move.action === 'hubPurchase')

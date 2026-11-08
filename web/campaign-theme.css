@@ -966,6 +966,10 @@
 .ah-theme.ah-theme .ah-carddetail-modal .ah-kw,
 .ah-theme.ah-theme .ah-carddetail-modal .ah-card-full-stats span,
 .ah-theme.ah-theme .ah-carddetail-modal .ah-cfcost { background: color-mix(in srgb,var(--ah-theme-accent) 12%,transparent); color: var(--ah-theme-accent-strong); border-color: var(--ah-theme-edge); }
+/* 上面这条会给胶囊里的符号/属性字形也套一层主题底色，看起来像图标外面又垫了个小方块。
+   胶囊本身仍然保留主题底色，内层（规则符号、属性字形）恢复透明。 */
+.ah-theme.ah-theme .ah-carddetail-modal .ah-card-full-stats .ah-rule-symbol,
+.ah-theme.ah-theme .ah-carddetail-modal .ah-card-full-stats .ah-card-glyph { background: none; border: 0; border-radius: 0; }
 
 /* Deck builder modal (game-ui puts the theme class on its backdrop wrapper). */
 .ah-theme.ah-theme .ah-db-modal.ah-office {

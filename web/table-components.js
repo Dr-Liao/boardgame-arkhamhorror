@@ -2,6 +2,13 @@
 // 标记文案在 cardMarkerData()/placedCardMarkers() 调用期取 t()（模块顶层不调用 t()）。
 import { t } from './i18n.js'
 import { CARD_GLYPHS, SYMBOL_ALIASES, symbolFont } from './game-symbols.js'
+// 生命/理智过去用参考项目的心形/脑部插画 PNG 做 CSS 蒙版：原图 2000px 宽，缩小到
+// 13–18px 后内部细节全糊成一团，还带着半透明的灰边。这里改成由同一张插画描摹出的
+// 单色矢量路径（32×32 网格、偶奇填充保留镂空），任意尺寸都清晰且保留卡面图形识别度。
+const FILLED_ICONS = {
+  health: 'M8.21 0 14.31 0.04 17.36 3.37 22.25 4.69 21.59 7.74 19.32 8.5 19.83 21.47 18.13 23.95 14.31 24 6.68 20.9 2.87 16.12 4.07 7.74 1.75 3.92 6.68 2.69 8.21 0Z M8.97 2.05 6.62 3.92 7.45 5.89 5.92 4.12 3.19 4.69 5.35 7.74 3.6 15.37 7.45 20.25 17.36 23.19 18.58 21.47 18.13 11.84 17.36 16.78 14.31 16.39 12.79 19.95 10.5 15.96 8.97 18.06 7.77 16.89 10.14 12.32 8.97 2.05Z M12.02 4.68 10.82 6.21 11.26 9.82 15.07 6.71 18.13 7.3 21.52 5.45 12.02 4.68Z M16.6 4.27 16.6 5.2 19.02 4.69 16.6 4.27Z M15.84 7.36 13.89 10.03 15.84 11.82 15.84 7.36Z M6.68 8.61 8.57 10.79 5.92 15.09 4.89 12.32 6.68 8.61Z',
+  sanity: 'M8.52 1.89 17.61 2.65 22.33 6.66 24 13.48 20.64 19.74 13.07 22.11 6.25 16.29 0.45 13.48 0 7.42 3.22 4.08 8.52 1.89Z M9.28 2.72 4.74 4.07 1.23 7.42 1.47 13.48 7.01 15.44 13.82 21.28 15.34 19.33 19.88 19.1 23.16 13.48 22.36 8.18 16.85 3.3 9.28 2.72Z M10.04 3.41 12.31 4.93 13.82 3.44 16.85 4.16 20.7 7.42 21.82 9.69 20.55 11.96 22.07 13.48 20.64 15.68 16.69 11.96 17.26 9.69 15.34 7.15 12.31 7.7 12.59 6.66 7.56 4.39 10.04 3.41Z M5.49 4.86 8.59 6.66 6.25 6.84 4.74 8.93 10.04 7.18 10.04 8.52 13.82 8.73 15.78 10.45 15.34 11.73 10.14 9.69 13.41 14.24 13.07 18.02 11.72 16.51 12.31 14.48 11.55 18.38 10.04 15.6 9.28 16.66 8.62 15.75 9.01 12.72 10.94 11.21 9.28 11.57 9.28 10.1 7.01 11.61 5.89 9.69 7.76 14.54 2.17 12.72 1.72 8.18 5.49 4.86Z M3.98 9.01 3.43 10.45 5.49 13.28 3.98 9.01Z M13.82 11.75 16.77 14.24 15.34 17.12 17.19 17.27 16.47 15.75 18.37 15.41 19.81 18.02 16.85 19.03 14.34 17.27 13.82 11.75Z',
+}
 const paths = {
   clue: 'M15.5 15.5 21 21M18 10.5a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',
   resource: 'M12 2 21 7v10l-9 5-9-5V7ZM3 7l9 5 9-5M12 12v10',
@@ -25,15 +32,19 @@ const paths = {
 }
 export function tableIcon(name) {
   name = SYMBOL_ALIASES[name] || name
-  if (name === 'health' || name === 'sanity') {
-    const mark = document.createElement('span')
-    mark.className = `ah-icon ah-symbol-mask ah-symbol-${name}`
-    mark.dataset.gameSymbol = name
-    mark.setAttribute('aria-hidden', 'true')
-    return mark
-  }
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('class', 'ah-icon')
+  if (Object.hasOwn(FILLED_ICONS, name)) {
+    // 生命/理智：实心矢量剪影（偶奇填充保留原插画的镂空），不再缩放位图蒙版。
+    svg.classList.add('ah-symbol-vector', 'ah-symbol-' + name)
+    svg.dataset.gameSymbol = name
+    const path = document.createElementNS(svg.namespaceURI, 'path')
+    path.setAttribute('d', FILLED_ICONS[name])
+    path.setAttribute('fill', 'currentColor')
+    path.setAttribute('fill-rule', 'evenodd')
+    svg.append(path)
+    return svg
+  }
   if (Object.hasOwn(CARD_GLYPHS, name)) {
     svg.classList.add('ah-game-symbol')
     svg.dataset.gameSymbol = name

@@ -1,0 +1,726 @@
+{
+ "generatedAt": "2026-11-08T11:04:18.351Z",
+ "note": "启发式候选：文本提到 X 但条目源码无 X 相关 token；可能是引擎统一原语/数据层实现，需人工核读点",
+ "summary": {
+  "取消": 2,
+  "快速": 19,
+  "伤害": 5,
+  "恐惧": 6,
+  "强制": 1,
+  "资源": 3,
+  "检定": 33,
+  "弃牌": 4,
+  "搜索": 7,
+  "充能/弹药/次数": 1,
+  "反应": 5,
+  "投入": 2,
+  "攻击行动": 2,
+  "消耗": 1,
+  "治疗": 2
+ },
+ "cards": [
+  {
+   "code": "08001",
+   "name": "丹妮拉·雷耶丝",
+   "type": "investigator",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "取消"
+   ],
+   "text": "[reaction] After an enemy attacks you (except an attack of opportunity you provoked), even if that attack was canceled: Either deal 1 damage to that enemy, or automatically evade it.\n[elder_sign] effe",
+   "entry": "src/cards/entries/08001.js"
+  },
+  {
+   "code": "08002",
+   "name": "机修工的扳手",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "快速"
+   ],
+   "text": "Daniela Reyes deck only.\n[fast] Exhaust Mechanic's Wrench: Choose an enemy at your location. That enemy attacks you.\n[action]: Fight. Use this ability only against an enemy that has attacked you since",
+   "entry": "src/cards/entries/08002.js"
+  },
+  {
+   "code": "08003",
+   "name": "黑帮暴徒",
+   "type": "enemy",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "伤害",
+    "恐惧"
+   ],
+   "text": "Hunter.\nPrey - Daniela Reyes only.\nThis enemy's attacks cannot be canceled.\nDamage/horror dealt by this enemy's attacks is treated as direct.",
+   "entry": "src/cards/entries/08003.js"
+  },
+  {
+   "code": "08004",
+   "name": "诺曼·威瑟斯",
+   "type": "investigator",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "强制",
+    "资源"
+   ],
+   "text": "Play with the top card of your deck revealed.\nOnce per round, you may play the top card of your deck as if it were in your hand, at -1 resource cost.\nForced - After a weakness is revealed while on top",
+   "entry": "src/cards/entries/08004.js"
+  },
+  {
+   "code": "08005",
+   "name": "伊波恩之书",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Norman Withers deck only.\n[fast] Exhaust Livre d'Eibon: Swap the top card of your deck with a card in your hand.\n[fast] Exhaust Livre d'Eibon: Commit the top card of your deck to an eligible skill tes",
+   "entry": "src/cards/entries/08005.js"
+  },
+  {
+   "code": "08006",
+   "name": "预示者",
+   "type": "treachery",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "弃牌",
+    "搜索"
+   ],
+   "text": "Revelation - Place this card on top of your deck.\nWhile The Harbinger is revealed and on top of your deck, cards in your deck cannot be searched, drawn, or manipulated in any way except by the below a",
+   "entry": "src/cards/entries/08006.js"
+  },
+  {
+   "code": "08008",
+   "name": "可靠的长鞭",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "充能/弹药/次数"
+   ],
+   "text": "Fast. Monterey Jack deck only.\n[action]: Fight. This attack uses [agility] instead of [combat]. If this attack succeeds, you may exhaust Trusty Bullwhip to either automatically evade the attacked enem",
+   "entry": "src/cards/entries/08008.js"
+  },
+  {
+   "code": "08009",
+   "name": "被埋葬的秘密",
+   "type": "treachery",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "弃牌"
+   ],
+   "text": "Revelation - Put Buried Secrets into play in your threat area.\nIf your location can be investigated, you cannot move except by scenario card effects.\n[action]: Investigate. If you succeed, instead of ",
+   "entry": "src/cards/entries/08009.js"
+  },
+  {
+   "code": "08013a",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Lily Chen deck only. Permanent.\nYou get +1 [combat].\n[action]: You get +5 skill value for the next skill test you perform this turn. After that skill test ends, flip this asset over. This action does ",
+   "entry": "src/cards/entries/08013a.js"
+  },
+  {
+   "code": "08013b",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Lily Chen deck only. Permanent.\n[reaction] After the round ends, if you performed no skill tests this round: Flip this asset over to its [[Unbroken]] side.",
+   "entry": "src/cards/entries/08013b.js"
+  },
+  {
+   "code": "08016",
+   "name": "鲍勃·詹金斯",
+   "type": "investigator",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "资源"
+   ],
+   "text": "At any time, an investigator at your location may reveal to you the [[Item]] assets in their hand.\nYou may take an additional action during your turn, which can only be used to play an [[Item]] asset ",
+   "entry": "src/cards/entries/08016.js"
+  },
+  {
+   "code": "08017",
+   "name": "精明的交易",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "missingFeatureTokens": [
+    "反应"
+   ],
+   "text": "Bob Jenkins deck only.\nReduce the cost of each [[Item]] asset you play by 1.\n[reaction] When you play an [[Item]] asset: Play it under the control of any investigator at your location.",
+   "entry": "src/cards/entries/08017.js"
+  },
+  {
+   "code": "08024",
+   "name": "防御姿态",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "While Defensive Stance is in your hand or committed to a skill test, it gains [combat] icons equal to your [agility], and [agility] icons equal to your [combat].",
+   "entry": "src/cards/entries/08024.js"
+  },
+  {
+   "code": "08026",
+   "name": "闪躲",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Fast. Play when an enemy attacks an investigator at your location.\nCancel that attack. Then, test [agility] (1). If you succeed, deal 1 damage to that enemy.",
+   "entry": "src/cards/entries/08026.js"
+  },
+  {
+   "code": "08027",
+   "name": "战斗训练",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "伤害",
+    "恐惧"
+   ],
+   "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [combat] and +1 [agility].\nNon-direct damage/horror must be assigned to Combat Training before it can be assigned to your investigator card.\n[fast] Spen",
+   "entry": "src/cards/entries/08027.js"
+  },
+  {
+   "code": "08028",
+   "name": "追猎行动",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "搜索"
+   ],
+   "text": "Fast. Play when you would draw an encounter card during the mythos phase.\nInstead, search the encounter deck for an enemy, spawn it engaged with you (instead of its normal spawn location), attach On t",
+   "entry": "src/cards/entries/08028.js"
+  },
+  {
+   "code": "08034",
+   "name": "繁星密语",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "投入"
+   ],
+   "text": "Fast. Play only during your turn.\nDiscard the top card of your deck. If that card is a weakness, shuffle it back into your deck. Otherwise, for the remainder of your turn, while that card is in your d",
+   "entry": "src/cards/entries/08034.js"
+  },
+  {
+   "code": "08037",
+   "name": "地区勘测",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "While Survey the Area is in your hand or committed to a skill test, it gains [intellect] icons equal to your [agility], and [agility] icons equal to your [intellect].",
+   "entry": "src/cards/entries/08037.js"
+  },
+  {
+   "code": "08038",
+   "name": "医学教科书",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "[action]: Choose an investigator at your location and test [intellect] (2). If you succeed, heal 1 damage from that investigator (2 damage instead if you succeed by 2 or more). If you fail, you must e",
+   "entry": "src/cards/entries/08038.js"
+  },
+  {
+   "code": "08039",
+   "name": "发掘古物",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Investigate. Choose up to 2 [seeker] assets in your hand. The difficulty of this skill test is equal to the combined cost of the chosen assets. If you succeed, put the chosen assets into play, one at ",
+   "entry": "src/cards/entries/08039.js"
+  },
+  {
+   "code": "08040",
+   "name": "科学理论",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "伤害",
+    "恐惧"
+   ],
+   "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [intellect] and +1 [combat].\nNon-direct damage/horror must be assigned to Scientific Theory before it can be assigned to your investigator card.\n[fast] ",
+   "entry": "src/cards/entries/08040.js"
+  },
+  {
+   "code": "08041",
+   "name": "通路档案",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "搜索"
+   ],
+   "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a non-[[Elite]] enemy.\n[action]: Choose an investigator, and an enemy with a leyline at a revealed location. ",
+   "entry": "src/cards/entries/08041.js"
+  },
+  {
+   "code": "08042",
+   "name": "通路档案",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "搜索"
+   ],
+   "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a revealed location.\n[action]: Choose an investigator and a revealed location with a leyline. That investigat",
+   "entry": "src/cards/entries/08042.js"
+  },
+  {
+   "code": "08043",
+   "name": "通路档案",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "搜索"
+   ],
+   "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a non-[[Elite]] enemy.\n[action]: Choose an investigator engaged with an enemy with a leyline. That investigat",
+   "entry": "src/cards/entries/08043.js"
+  },
+  {
+   "code": "08044",
+   "name": "通路档案",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "搜索"
+   ],
+   "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to an investigator.\n[action]: Choose an investigator with a leyline. That investigator draws 1 card and heals 1 ",
+   "entry": "src/cards/entries/08044.js"
+  },
+  {
+   "code": "08045",
+   "name": "亵渎预言",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "反应"
+   ],
+   "text": "While you are not at the locus, you get +1 [intellect], +1 [agility], and you may ignore attacks of opportunity.\n[reaction] After Prophesiae Profana enters play: Choose a revealed location. That locat",
+   "entry": "src/cards/entries/08045.js"
+  },
+  {
+   "code": "08052",
+   "name": "行业专家",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Savant gains [wild] icons equal to your lowest skill other than the skill being tested.",
+   "entry": "src/cards/entries/08052.js"
+  },
+  {
+   "code": "08053",
+   "name": "红色闹钟",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Exceptional. Uses (0 charges).\nForced - After your turn begins: Either place 1 charge here, or take all charges here, as resources. Then, if it has exactly...\n- 1 charge, you get +3 skill value for yo",
+   "entry": "src/cards/entries/08053.js"
+  },
+  {
+   "code": "08054",
+   "name": "金钱万能",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Fast. Play when an investigator at any location initiates a skill test.\nInstead of the skill type indicated for this test ([willpower], [intellect], [combat], or [agility]), this is a resource skill t",
+   "entry": "src/cards/entries/08054.js"
+  },
+  {
+   "code": "08056",
+   "name": "刚毅果敢",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "恐惧"
+   ],
+   "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [agility].\nNon-direct damage/horror must be assigned to Moxie before it can be assigned to your investigator card.\n[fast] Spend 1 res",
+   "entry": "src/cards/entries/08056.js"
+  },
+  {
+   "code": "08058",
+   "name": "红色闹钟",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Exceptional. Uses (0 charges).\nForced - After your turn begins: You may take all charges here, as resources. Place 1 charge here. If it has exactly...\n- 1 charge, you get +4 skill value for your next ",
+   "entry": "src/cards/entries/08058.js"
+  },
+  {
+   "code": "08062",
+   "name": "闭环",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (1 charge for each class among cards you control, including this one).\n[fast] Spend 1 charge and exhaust Close the Circle: Take a basic action. For each skill test performed during that action, y",
+   "entry": "src/cards/entries/08062.js"
+  },
+  {
+   "code": "08065",
+   "name": "密教理论",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "While Occult Theory is in your hand or committed to a skill test, it gains [willpower] icons equal to your [intellect], and [intellect] icons equal to your [willpower].",
+   "entry": "src/cards/entries/08065.js"
+  },
+  {
+   "code": "08067",
+   "name": "天文地图集",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定",
+    "投入"
+   ],
+   "text": "[fast] Exhaust Astronomical Atlas: Look at the top card of your deck. If it is not a weakness, attach it facedown to Astronomical Atlas (max 5 cards attached).\n[fast]: Commit a card attached to Astron",
+   "entry": "src/cards/entries/08067.js"
+  },
+  {
+   "code": "08069",
+   "name": "情绪稳定",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "伤害",
+    "恐惧"
+   ],
+   "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 skill value during skill tests on [[Spell]] cards.\nNon-direct damage/horror must be assigned to Grounded before it can be assigned to your investigator ",
+   "entry": "src/cards/entries/08069.js"
+  },
+  {
+   "code": "08074",
+   "name": "应急装备",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (3 durability).\nAttach to an [[Item]] asset controlled by an investigator at your location.\n[fast] During a skill test on attached asset, spend 1 durability: You get +2 skill value for this test.",
+   "entry": "src/cards/entries/08074.js"
+  },
+  {
+   "code": "08075",
+   "name": "厄运手镯",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (1 charge).\n[fast] Spend 1 charge: You get +2 skill value for this test. (Limit once per test.)\n[reaction] After an enemy attacks you: Place 1 charge on Bangle of Jinxes.",
+   "entry": "src/cards/entries/08075.js"
+  },
+  {
+   "code": "08078",
+   "name": "无畏精神",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "While Dauntless Spirit is in your hand or committed to a skill test, it gains [willpower] icons equal to your [combat], and [combat] icons equal to your [willpower].",
+   "entry": "src/cards/entries/08078.js"
+  },
+  {
+   "code": "08081",
+   "name": "有胆有识",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "伤害",
+    "恐惧"
+   ],
+   "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [intellect].\nNon-direct damage/horror must be assigned to Plucky before it can be assigned to your investigator card.\n[fast] Spend 1 ",
+   "entry": "src/cards/entries/08081.js"
+  },
+  {
+   "code": "08083",
+   "name": "医学生",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "反应"
+   ],
+   "text": "[reaction] After Medical Student enters play: Heal 1 damage and 1 horror from an investigator or [[Ally]] asset at your location.",
+   "entry": "src/cards/entries/08083.js"
+  },
+  {
+   "code": "08084",
+   "name": "追踪",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Choose an enemy at any location other than yours. Either move twice toward that enemy, or discover 1 clue at any empty location between you and the chosen enemy, along the shortest path to reach that ",
+   "entry": "src/cards/entries/08084.js"
+  },
+  {
+   "code": "08086",
+   "name": "迈克尔·利",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "资源"
+   ],
+   "text": "You get +1 [intellect] and +1 [combat].\n[reaction] After you successfully investigate: Place 1 resource (from the token pool) on Michael Leigh, as evidence (to a maximum of 3 evidence).\n[reaction] Whe",
+   "entry": "src/cards/entries/08086.js"
+  },
+  {
+   "code": "08087",
+   "name": "狙击",
+   "type": "event",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "攻击行动"
+   ],
+   "text": "During the next fight action you perform this turn using a [[Ranged]] or [[Firearm]] asset, treat each [skull], [cultist], [tablet], [elder_thing], or [auto_fail] token you reveal as a \"0\" token. This",
+   "entry": "src/cards/entries/08087.js"
+  },
+  {
+   "code": "08089",
+   "name": "快拔枪套",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "攻击行动"
+   ],
+   "text": "[fast]: Choose a [[Firearm]] asset taking up only 1 hand slot in your play area. Attach it to Quickdraw Holster, or switch it with the attached asset. The attached asset takes up no hand slots. (Limit",
+   "entry": "src/cards/entries/08089.js"
+  },
+  {
+   "code": "08091",
+   "name": "恩科西·马巴蒂",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "反应",
+    "搜索",
+    "消耗"
+   ],
+   "text": "[reaction] After Nkosi Mabati enters play: Name a non-[elder_sign] chaos token with a symbol. Until this card leaves play, the named symbol is your \"sigil.\"\n[reaction] When an investigator at your loc",
+   "entry": "src/cards/entries/08091.js"
+  },
+  {
+   "code": "08097",
+   "name": "袖珍望远镜",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速"
+   ],
+   "text": "[fast] Exhaust Pocket Telescope: Look at the revealed side of a connecting unrevealed location.\n[action]: Investigate. Investigate a revealed connecting location as if you were there.",
+   "entry": "src/cards/entries/08097.js"
+  },
+  {
+   "code": "08098",
+   "name": "远古海图",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速"
+   ],
+   "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take one of the following actions (move, evade, or investigate).",
+   "entry": "src/cards/entries/08098.js"
+  },
+  {
+   "code": "08100",
+   "name": "远古海图",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速"
+   ],
+   "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take two different actions of the following, in any order (move, evade, or investigate).",
+   "entry": "src/cards/entries/08100.js"
+  },
+  {
+   "code": "08114",
+   "name": "珍贵记忆",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Limit 1 Precious Memento (From a Former Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.\n[reaction] After you succeed at a skill te",
+   "entry": "src/cards/entries/08114.js"
+  },
+  {
+   "code": "08115",
+   "name": "珍贵记忆",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定"
+   ],
+   "text": "Limit 1 Precious Memento (From a Future Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.\n[reaction] After you succeed at a skill te",
+   "entry": "src/cards/entries/08115.js"
+  },
+  {
+   "code": "08120",
+   "name": "先知先觉",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Prophetic may be spent to pay for [[Fortune]], [[Spell]], or [[Spirit]] cards.\n[fast] During a skill test on a [[",
+   "entry": "src/cards/entries/08120.js"
+  },
+  {
+   "code": "08121",
+   "name": "一探究竟",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Sleuth may be spent to pay for [[Charm]], [[Tactic]], or [[Tome]] cards.\n[fast] During a skill test on a [[Charm]",
+   "entry": "src/cards/entries/08121.js"
+  },
+  {
+   "code": "08122",
+   "name": "好勇斗狠",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Bruiser may be spent to pay for [[Armor]], [[Firearm]], or [[Melee]] cards.\n[fast] During a skill test on a [[Arm",
+   "entry": "src/cards/entries/08122.js"
+  },
+  {
+   "code": "08123",
+   "name": "技艺精湛",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Crafty may be spent to pay for [[Insight]], [[Tool]], or [[Trick]] cards.\n[fast] During a skill test on a [[Insig",
+   "entry": "src/cards/entries/08123.js"
+  },
+  {
+   "code": "08124",
+   "name": "古物藏家",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "快速",
+    "检定"
+   ],
+   "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Antiquary may be spent to pay for [[Favor]], [[Relic]] or [[Ritual]] cards.\n[fast] During a skill test on a [[Fav",
+   "entry": "src/cards/entries/08124.js"
+  },
+  {
+   "code": "08126",
+   "name": "厚重皮衣",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "检定",
+    "取消"
+   ],
+   "text": "[reaction] After you reveal a non-[auto_fail] symbol on a chaos token during a skill test you are perfoming, deal 1 damage to Heavy Furs: Cancel that chaos token and return it to the bag. Reveal a new",
+   "entry": "src/cards/entries/08126.js"
+  },
+  {
+   "code": "08128",
+   "name": "驯兽之杖",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "反应"
+   ],
+   "text": "You have 2 additional ally slots, which can only be used to hold [[Creature]] assets.\n[reaction] When you play a [[Creature]] asset during your turn: Reduce that asset's cost by 1.",
+   "entry": "src/cards/entries/08128.js"
+  },
+  {
+   "code": "08130",
+   "name": "臂伤",
+   "type": "treachery",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "治疗"
+   ],
+   "text": "Revelation - Put Arm Injury into play in your threat area.\nArm Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a fight or acti",
+   "entry": "src/cards/entries/08130.js"
+  },
+  {
+   "code": "08131",
+   "name": "腿伤",
+   "type": "treachery",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "治疗"
+   ],
+   "text": "Revelation - Put Leg Injury into play in your threat area.\nLeg Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a move, resign,",
+   "entry": "src/cards/entries/08131.js"
+  },
+  {
+   "code": "08132",
+   "name": "惊慌",
+   "type": "treachery",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "弃牌"
+   ],
+   "text": "Revelation - Put Panic into play in your threat area.\nPanic can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a play, engage, or resour",
+   "entry": "src/cards/entries/08132.js"
+  },
+  {
+   "code": "08133",
+   "name": "麻木",
+   "type": "treachery",
+   "partition": "eotePlayer",
+   "missingFeatureTokens": [
+    "弃牌"
+   ],
+   "text": "Revelation - Put Stupor into play in your threat area.\nStupor can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a parley, draw, or inve",
+   "entry": "src/cards/entries/08133.js"
+  }
+ ]
+}

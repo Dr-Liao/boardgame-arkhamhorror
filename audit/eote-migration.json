@@ -1,0 +1,3923 @@
+{
+  "schemaVersion": 2,
+  "cycle": "eote",
+  "cycleName": "The Edge of the Earth",
+  "cycleNameZh": "地球边缘",
+  "campaignId": "edgeOfTheEarth",
+  "milestone": "P8",
+  "stage": "P8",
+  "generatedBy": "node tools/audit-eote.mjs --write",
+  "docs": "docs/arkham-content-migration.md",
+  "scope": {
+    "path": "audit/eote-scope.json",
+    "sha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9"
+  },
+  "baseline": {
+    "path": "audit/eote-baseline.json",
+    "fastFailures": [
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+      "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+      "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+      "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+      "已本地化的 UI 文件不再残留用户可见中文"
+    ],
+    "note": "P0 基线既有失败（TIC P8 replay、TDE P10 账本两条）；本账本只允许这些既有失败，不新增。"
+  },
+  "campaign": {
+    "id": "edgeOfTheEarth",
+    "status": "playable",
+    "launchable": true,
+    "launchError": null,
+    "lobbyVisible": true,
+    "earlyAccess": false,
+    "scenarioIds": [
+      "iceAndDeathPart1",
+      "iceAndDeathPart2",
+      "iceAndDeathPart3",
+      "fatalMirage",
+      "toTheForbiddenPeaks",
+      "cityOfTheElderThings",
+      "theHeartOfMadnessPart1",
+      "theHeartOfMadnessPart2"
+    ],
+    "productionScenarios": [
+      {
+        "id": "iceAndDeathPart1",
+        "status": "playable",
+        "referenceCode": "08501",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "iceAndDeathPart2",
+        "status": "playable",
+        "referenceCode": "08501",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "iceAndDeathPart3",
+        "status": "playable",
+        "referenceCode": "08501",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "fatalMirage",
+        "status": "playable",
+        "referenceCode": "08549",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "toTheForbiddenPeaks",
+        "status": "playable",
+        "referenceCode": "08596",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "cityOfTheElderThings",
+        "status": "playable",
+        "referenceCode": "08621",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "theHeartOfMadnessPart1",
+        "status": "playable",
+        "referenceCode": "08648",
+        "campaignId": "edgeOfTheEarth"
+      },
+      {
+        "id": "theHeartOfMadnessPart2",
+        "status": "playable",
+        "referenceCode": "08648",
+        "campaignId": "edgeOfTheEarth"
+      }
+    ],
+    "requiredPackIds": [
+      "eoteCampaign",
+      "eoteInvestigators",
+      "eotePlayer"
+    ]
+  },
+  "status": "pending",
+  "playable": true,
+  "launchEnabled": true,
+  "earlyAccess": false,
+  "counts": {
+    "records": 403,
+    "main": 367,
+    "faces": 36,
+    "packs": {
+      "eoteCampaign": 266,
+      "eoteInvestigators": 22,
+      "eotePlayer": 115
+    },
+    "chapters": 8,
+    "encounterGroups": 24,
+    "sharedGroups": 16,
+    "chapterGroups": 8,
+    "keywords": 38,
+    "storySections": 469,
+    "guideFiles": 8
+  },
+  "partitions": {
+    "eoteCampaign": 266,
+    "eoteInvestigators": 22,
+    "eotePlayer": 115
+  },
+  "sharedPartitions": {
+    "eoteCampaign": 266,
+    "eoteInvestigators": 22,
+    "eotePlayer": 115
+  },
+  "scopeChecks": {
+    "ledger": true,
+    "milestones": true,
+    "records": true,
+    "mainFaces": true,
+    "partitions": true,
+    "sharedPartitions": true,
+    "gates": true,
+    "cardImages": true
+  },
+  "packs": {
+    "eoteCampaign": {
+      "id": "eoteCampaign",
+      "status": "playable",
+      "cards": 266,
+      "encounterGroups": 24,
+      "buildable": 0
+    },
+    "eoteInvestigators": {
+      "id": "eoteInvestigators",
+      "status": "playable",
+      "cards": 22,
+      "encounterGroups": 0,
+      "buildable": 0
+    },
+    "eotePlayer": {
+      "id": "eotePlayer",
+      "status": "playable",
+      "cards": 115,
+      "encounterGroups": 0,
+      "buildable": 111
+    }
+  },
+  "packChecks": {
+    "eoteCampaign": true,
+    "eoteInvestigators": true,
+    "eotePlayer": true
+  },
+  "campaignChecks": {
+    "playable": true,
+    "lobbyVisible": true,
+    "earlyAccessFalse": true,
+    "eightChapters": true
+  },
+  "chapters": [
+    {
+      "id": "iceAndDeathPart1",
+      "code": "08501",
+      "name": "亡命冰原 第 I 部分",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 55,
+      "encounterCards": 8,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "iceAndDeathPart2",
+      "code": "08501",
+      "name": "亡命冰原 第 II 部分",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 38,
+      "encounterCards": 8,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "iceAndDeathPart3",
+      "code": "08501",
+      "name": "亡命冰原 第 III 部分",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 31,
+      "encounterCards": 8,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "fatalMirage",
+      "code": "08549",
+      "name": "致命幻景",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 68,
+      "encounterCards": 8,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "toTheForbiddenPeaks",
+      "code": "08596",
+      "name": "失落之峰",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 51,
+      "encounterCards": 6,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "cityOfTheElderThings",
+      "code": "08621",
+      "name": "古老者之城",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 94,
+      "encounterCards": 12,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "theHeartOfMadnessPart1",
+      "code": "08648",
+      "name": "疯狂之心 第 I 部分",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 79,
+      "encounterCards": 9,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    },
+    {
+      "id": "theHeartOfMadnessPart2",
+      "code": "08648",
+      "name": "疯狂之心 第 II 部分",
+      "status": "verified",
+      "verified": true,
+      "gaps": 0,
+      "approximations": 0,
+      "guideSections": 53,
+      "encounterCards": 10,
+      "browserDesktop": true,
+      "browserMobile": true,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideGapsDeclared": true,
+        "tests": true,
+        "cardEntries": true
+      }
+    }
+  ],
+  "scenarioLedger": {
+    "path": "audit/eote-scenario-acceptance.json",
+    "status": "verified",
+    "summary": {
+      "chapters": 8,
+      "verifiedChapters": 8,
+      "campaignCards": 266,
+      "entryFiles": 264,
+      "missingCardEntries": 0,
+      "sharedGroups": 16,
+      "guideSections": 469,
+      "scenarioTests": 146,
+      "browserTests": 18,
+      "cardCoverageAssigned": 401,
+      "uniqueChapterCards": 246
+    },
+    "gates": {
+      "scenarioTestsPassed": true,
+      "chaptersAllVerified": true,
+      "chapterCardsAssigned": true,
+      "guidesCoverage": true,
+      "guideChineseMarked": true,
+      "encounterCardsCovered": true,
+      "sharedGroupsRegistered": true,
+      "campaignRegisteredPlayable": true,
+      "campaignFlowDeclared": true,
+      "recordsDeclared": true,
+      "browserDesktopAndMobile": true,
+      "storyGenerationRecomputable": true
+    },
+    "remaining": null,
+    "checks": {
+      "ledger": true,
+      "chapters": true,
+      "gates": true,
+      "remaining": true,
+      "story": true,
+      "browser": true
+    }
+  },
+  "allCardLedger": {
+    "path": "audit/eote-all-card-acceptance.json",
+    "status": "pending",
+    "summary": {
+      "total": 403,
+      "verified": 248,
+      "missing": 127,
+      "blocked": 14,
+      "simplified": 12,
+      "campaign": 266,
+      "investigators": 22,
+      "player": 115
+    },
+    "checks": {
+      "ledger": false,
+      "missing": false,
+      "blocked": false,
+      "partitions": true
+    }
+  },
+  "investigatorLedger": {
+    "path": "audit/eote-investigators.json",
+    "status": "verified",
+    "delivered": [
+      "08001",
+      "08004",
+      "08007",
+      "08010",
+      "08016"
+    ],
+    "items": 5,
+    "checks": {
+      "ledger": true,
+      "items": true,
+      "checks": true,
+      "delivered": true
+    }
+  },
+  "playerLedger": {
+    "path": "audit/eote-player-acceptance.json",
+    "status": "verified",
+    "summary": {
+      "total": 115,
+      "verified": 115,
+      "missing": 0,
+      "simplified": 54,
+      "simplifiedDisclosed": 54,
+      "buildable": 111,
+      "dependencyOnly": 4,
+      "basicWeaknesses": 4,
+      "testsPassed": 124
+    },
+    "checks": {
+      "ledger": true,
+      "summary": true,
+      "gates": true,
+      "buildable": true
+    }
+  },
+  "rulesLedger": {
+    "path": "audit/eote-rules.json",
+    "status": null,
+    "gates": {
+      "scanPassed": true,
+      "planGatesPassed": true,
+      "allKeywordsVerified": true,
+      "allRulesVerified": true,
+      "cardLinksComplete": true,
+      "relatedResolved": true,
+      "noImplementationProse": true,
+      "nodeAcceptance": true,
+      "browserAcceptance": true,
+      "sourcesStable": true,
+      "p4ScheduledRecorded": true,
+      "deliveredPrimitivesRecorded": true
+    },
+    "deliveredPrimitives": [
+      "keyword.mirage",
+      "keyword.shelter",
+      "keyword.partner",
+      "keyword.resolute",
+      "keyword.expedition",
+      "keyword.level",
+      "keyword.key"
+    ],
+    "deferredPrimitives": {
+      "p3": [
+        "keyword.mirage",
+        "keyword.shelter",
+        "keyword.partner",
+        "keyword.resolute",
+        "keyword.expedition",
+        "keyword.level",
+        "keyword.key"
+      ],
+      "p4": [
+        "interaction.tekeliShuffle"
+      ]
+    }
+  },
+  "keywords": {
+    "total": 38,
+    "verified": 38,
+    "status": "verified",
+    "items": [
+      {
+        "id": "hunter",
+        "ruleId": "hunter",
+        "zh": "猎手",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "aloof",
+        "ruleId": "aloof",
+        "zh": "冷漠",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "massive",
+        "ruleId": "massive",
+        "zh": "庞大",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "retaliate",
+        "ruleId": "retaliate",
+        "zh": "反击",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "alert",
+        "ruleId": "alert",
+        "zh": "警戒",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "surge",
+        "ruleId": "surge",
+        "zh": "涌动",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "peril",
+        "ruleId": "peril",
+        "zh": "险境",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "hidden",
+        "ruleId": "hidden",
+        "zh": "隐藏",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "victory",
+        "ruleId": "victory",
+        "zh": "胜利点",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "objective",
+        "ruleId": "eoteObjective",
+        "zh": "目标",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "prey",
+        "ruleId": "prey",
+        "zh": "猎物",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "spawn",
+        "ruleId": "spawn",
+        "zh": "生成",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "parley",
+        "ruleId": "parley",
+        "zh": "谈判",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "resign",
+        "ruleId": "eoteResign",
+        "zh": "撤退",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "fast",
+        "ruleId": "fast",
+        "zh": "快速",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "permanent",
+        "ruleId": "permanent",
+        "zh": "永久",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "exceptional",
+        "ruleId": "upgrade",
+        "zh": "卓越",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "elite",
+        "ruleId": "elite",
+        "zh": "精英",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "revelation",
+        "ruleId": "revelation",
+        "zh": "显现",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "mirage",
+        "ruleId": "eoteMirage",
+        "zh": "幻景",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "shelter",
+        "ruleId": "eoteShelter",
+        "zh": "庇护值",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "partner",
+        "ruleId": "eotePartners",
+        "zh": "伙伴",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "resolute",
+        "ruleId": "eoteResolute",
+        "zh": "坚毅",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "seal",
+        "ruleId": "eoteSeals",
+        "zh": "封印",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "sealTokens",
+        "ruleId": "eoteSealTokens",
+        "zh": "封印标记",
+        "kind": "token",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "level",
+        "ruleId": "eoteLevel",
+        "zh": "高度",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "key",
+        "ruleId": "eoteKeys",
+        "zh": "钥匙",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "tekelili",
+        "ruleId": "eoteTekeli",
+        "zh": "忒咳哩-哩",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "expedition",
+        "ruleId": "eoteExpedition",
+        "zh": "探险",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "frost",
+        "ruleId": "eoteFrost",
+        "zh": "寒霜标记",
+        "kind": "token",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "supplies",
+        "ruleId": "eoteSupplies",
+        "zh": "物资",
+        "kind": "keyword",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "titanic",
+        "ruleId": "eoteTitanic",
+        "zh": "巨大",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "hazard",
+        "ruleId": "eoteHazard",
+        "zh": "危险",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "broken",
+        "ruleId": "eoteBroken",
+        "zh": "破功",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "unbroken",
+        "ruleId": "eoteBroken",
+        "zh": "运功",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "eidolon",
+        "ruleId": "eoteEidolon",
+        "zh": "幻灵",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "ancientOne",
+        "ruleId": "eoteAncientOne",
+        "zh": "古神",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      },
+      {
+        "id": "possessed",
+        "ruleId": "eotePossessed",
+        "zh": "附身",
+        "kind": "trait",
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "evidence": [
+          "audit/eote-mechanism-scan.json",
+          "audit/eote-primitive-plan.json",
+          "audit/eote-node-acceptance.json",
+          "content/campaigns/edgeOfTheEarth/keywords.js",
+          "web/eote-rules.js"
+        ]
+      }
+    ]
+  },
+  "rulebook": {
+    "entries": 23,
+    "requiredRuleIds": [
+      "eoteCampaign",
+      "eoteFrost",
+      "eotePartners",
+      "eoteResolute",
+      "eoteTekeli",
+      "eoteShelter",
+      "eoteLevel",
+      "eoteMirage",
+      "eoteSeals",
+      "eoteSealTokens",
+      "eoteKeys",
+      "eoteSupplies",
+      "eoteExpedition",
+      "eoteTitanic",
+      "eoteHazard",
+      "eoteBroken",
+      "eoteEidolon",
+      "eoteAncientOne",
+      "eotePossessed",
+      "eoteObjective",
+      "eoteResign",
+      "eoteMulticlass",
+      "eoteDiscipline"
+    ],
+    "status": "verified",
+    "checks": {
+      "campaignOverview": true,
+      "scenarioMechanics": true,
+      "keywordEntries": true,
+      "cardLinks": true,
+      "desktopBrowser": true,
+      "mobileBrowser": true
+    },
+    "details": {
+      "itemsVerified": 23,
+      "cardLinksComplete": true,
+      "noImplementationProse": true,
+      "browser": {
+        "desktop": true,
+        "mobile": true
+      }
+    }
+  },
+  "story": {
+    "path": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "meta": {
+      "status": "generated",
+      "sourceKind": "reference-project-zh-locale+local-supplement",
+      "officialChinese": false
+    },
+    "chapters": 8,
+    "sections": 469,
+    "chinese": {
+      "total": 469,
+      "presentNeedsReview": 469,
+      "untranslated": 0,
+      "missing": 0,
+      "note": "中文缺译逐路径标记在 story.chineseGaps；展示层回退 sectionsEn 并标注「中文待补」，不冒充官方中文。"
+    },
+    "guideFiles": [
+      {
+        "path": "web/scenario-guides/iceAndDeathPart1.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/iceAndDeathPart2.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/iceAndDeathPart3.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/fatalMirage.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/toTheForbiddenPeaks.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/cityOfTheElderThings.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/theHeartOfMadnessPart1.json",
+        "exists": true
+      },
+      {
+        "path": "web/scenario-guides/theHeartOfMadnessPart2.json",
+        "exists": true
+      }
+    ],
+    "checks": {
+      "generated": true,
+      "eightChapters": true,
+      "sections": true,
+      "chineseMarked": true,
+      "guides": true
+    }
+  },
+  "primitives": {
+    "plan": {
+      "path": "audit/eote-primitive-plan.json",
+      "sha256": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9"
+    },
+    "gates": {
+      "scanPassed": true,
+      "catalogCovered": true,
+      "exportsPresent": true,
+      "reuseLocatable": true,
+      "nodeAcceptance": true,
+      "regressionAcceptance": true,
+      "allNewDone": true,
+      "p3Delivered": true,
+      "p4Delivered": true,
+      "deferredPhasesRecorded": true,
+      "primitiveMechanismsPlanned": true,
+      "noEscape": true
+    },
+    "counts": {
+      "total": 60,
+      "reuse": 25,
+      "p2": 23,
+      "p2New": 23,
+      "p2Reused": 0,
+      "deferred": 12,
+      "p3Delivered": 7,
+      "p4Delivered": 5,
+      "byPhase": {
+        "reuse": 25,
+        "P2": 23,
+        "P3": 7,
+        "P4": 5
+      }
+    },
+    "new": 23,
+    "newDone": 23,
+    "deferred": 12,
+    "escape": 0,
+    "requests": {
+      "total": 33,
+      "pending": 33,
+      "done": 0,
+      "rejected": 0,
+      "byStatus": {
+        "pending": 33
+      },
+      "pendingItems": [
+        {
+          "id": "p7-shared-08503",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08503.json",
+          "primitive": "locationRule.shroudWhenAttached"
+        },
+        {
+          "id": "p7-shared-08506",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08506.json",
+          "primitive": "locationRule.entryGroupCluesSurcharge"
+        },
+        {
+          "id": "p7-shared-08508",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08508.json",
+          "primitive": "window.locationAttachmentEntered"
+        },
+        {
+          "id": "p7-shared-08515",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08515.json",
+          "primitive": "window.enemyDefeatedAttack"
+        },
+        {
+          "id": "p7-shared-08517",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08517.json",
+          "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation"
+        },
+        {
+          "id": "p7-08544",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08544.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08546",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08546.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08560",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08560.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08587",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08587.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-shared-08649",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08649.json",
+          "primitive": "locationRule.backFaceEntryBan"
+        },
+        {
+          "id": "p7-08673",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08673.json",
+          "primitive": "mistPylonAsEnemy"
+        },
+        {
+          "id": "p7-08679",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08679.json",
+          "primitive": "setAsideEnemyCopiesCounter"
+        },
+        {
+          "id": "p7-08681",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08681.json",
+          "primitive": "doomPlacementReplacement"
+        },
+        {
+          "id": "p7-08682",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08682.json",
+          "primitive": "locationLeaveTest"
+        },
+        {
+          "id": "p7-shared-08691",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08691.json",
+          "primitive": "treacheryRule.tekeliShuffleReplacement"
+        },
+        {
+          "id": "p7-shared-08692",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08692.json",
+          "primitive": "treacheryRule.locationAttachmentRestrictions"
+        },
+        {
+          "id": "p7-shared-08693",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08693.json",
+          "primitive": "treacheryRule.attachmentSkillPenalty"
+        },
+        {
+          "id": "p7-shared-08694",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08694.json",
+          "primitive": "treacheryRule.attachmentTurnEndDirectDamage"
+        },
+        {
+          "id": "p7-shared-08697",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08697.json",
+          "primitive": "api.buffEnemyUntilEndOfRound"
+        },
+        {
+          "id": "p7-shared-08699",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08699.json",
+          "primitive": "treacheryRule.attachmentMoveTest"
+        },
+        {
+          "id": "p7-shared-08702",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08702.json",
+          "primitive": "enemyAttachmentDifficultyBonus"
+        },
+        {
+          "id": "p7-shared-08703",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08703.json",
+          "primitive": "treacheryRule.tekeliliDoubleResolution"
+        },
+        {
+          "id": "p7-shared-08704",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08704.json",
+          "primitive": "api.resolveWeaknessByCode"
+        },
+        {
+          "id": "p7-shared-08706",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08706.json",
+          "primitive": "treacheryRule.supportAttachmentForced"
+        },
+        {
+          "id": "p7-shared-08707",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08707.json",
+          "primitive": "treacheryRule.attachmentTurnEndDirectHorror"
+        },
+        {
+          "id": "p7-shared-08708",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08708.json",
+          "primitive": "enemyRule.locationMoveSurcharge"
+        },
+        {
+          "id": "p7-shared-08710",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08710.json",
+          "primitive": "api.resolveWeaknessByCode"
+        },
+        {
+          "id": "p7-shared-08712",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08712.json",
+          "primitive": "treacheryRule.attachmentClueDiscoveryForced"
+        },
+        {
+          "id": "p7-shared-08715",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08715.json",
+          "primitive": "window.weaknessResolved"
+        },
+        {
+          "id": "p7-shared-08719",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08719.json",
+          "primitive": "enemyRule.cannotAttackThisRound"
+        },
+        {
+          "id": "p7-shared-08721",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08721.json",
+          "primitive": "treacheryRule.blankTextUntilEndOfTurn"
+        },
+        {
+          "id": "p7-shared-08727",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08727.json",
+          "primitive": "api.loseActionNextTurn"
+        },
+        {
+          "id": "p7-shared-08731",
+          "file": "artifacts/migration/eote/primitive-requests/p7-08731.json",
+          "primitive": "searchTopToScenarioDeckBottom"
+        }
+      ]
+    },
+    "playerQueue": {
+      "total": 35,
+      "pending": 0,
+      "done": 13,
+      "rejected": 22
+    },
+    "checks": {
+      "plan": true,
+      "newDone": true,
+      "requestsAccounted": true,
+      "playerQueueAccounted": true,
+      "pendingDisclosed": true
+    }
+  },
+  "node": {
+    "path": "audit/eote-node-acceptance.json",
+    "status": "passed",
+    "sourceStableDuringRun": true,
+    "command": "node --test tests/eote-migration.test.mjs tests/eote-primitives-frost.test.mjs tests/eote-primitives-campaign.test.mjs tests/eote-primitives-flow.test.mjs tests/eote-primitives-geo.test.mjs tests/eote-primitives-travel.test.mjs tests/eote-primitives-investigator.test.mjs tests/eote-rules.test.mjs tests/eote-interactions.test.mjs tests/eote-investigator-daniela.test.mjs tests/eote-investigator-norman.test.mjs tests/eote-investigator-lily.test.mjs tests/eote-investigator-monterey.test.mjs tests/eote-investigator-bob.test.mjs tests/eote-player-m2-1.test.mjs tests/eote-player-m2-2.test.mjs tests/eote-player-m2-3.test.mjs tests/eote-player-m2-4.test.mjs tests/eote-player-primitives.test.mjs tests/eote-scenario-iceAndDeathPart1.test.mjs tests/eote-scenario-iceAndDeathPart2.test.mjs tests/eote-scenario-iceAndDeathPart3.test.mjs tests/eote-scenario-fatalMirage.test.mjs tests/eote-scenario-toTheForbiddenPeaks.test.mjs tests/eote-scenario-cityOfTheElderThings.test.mjs tests/eote-scenario-theHeartOfMadnessPart1.test.mjs tests/eote-scenario-theHeartOfMadnessPart2.test.mjs tests/eote-scenario-shared.test.mjs tests/eote-campaign-flow.test.mjs tests/eote-story.test.mjs tests/eote-all-cards.test.mjs tests/eote-p8-registration.test.mjs tests/eote-p8-campaign.test.mjs tests/eote-p8-multiplayer.test.mjs tests/replay-eote-p8.test.mjs tests/eote-migration-ledger.test.mjs",
+    "summary": {
+      "tests": 506,
+      "pass": 506,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "testFiles": 36,
+    "sourceFiles": 204,
+    "checks": {
+      "ledger": true,
+      "status": true,
+      "sourceStable": true,
+      "failures": true
+    }
+  },
+  "regression": {
+    "path": "audit/eote-regression.json",
+    "status": "passed",
+    "sourceStableDuringRun": true,
+    "replay": {
+      "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/eote-baseline.json",
+      "exitCode": 0,
+      "log": "artifacts/migration/eote/reports/eote-replay-final.log",
+      "logSha256": "4299d885e1f19cfb827d34b3a5fcca9c5754421600029a03c073b5164446e544",
+      "baseline": "tests/fixtures/replay/eote-baseline.json",
+      "matches": true
+    },
+    "fast": {
+      "command": "node tools/run-tests.mjs fast --test-concurrency=6",
+      "exitCode": 1,
+      "log": "artifacts/migration/eote/reports/eote-fast-final.log",
+      "logSha256": "4e5769a1af110a61682deb060899d02bcb7bb7414acaa0d5c45462a14f42fd54",
+      "summary": {
+        "tests": 6987,
+        "pass": 6979,
+        "fail": 5,
+        "cancelled": 0,
+        "skipped": 3
+      },
+      "failures": [
+        "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+        "P10 账本 --check 逐字节复算（内容/证据变化即失败）",
+        "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+        "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+        "已本地化的 UI 文件不再残留用户可见中文"
+      ],
+      "additionsSinceInitialBaseline": []
+    },
+    "checks": {
+      "ledger": true,
+      "status": true,
+      "sourceStable": true,
+      "replay": true,
+      "fastKnownOnly": true
+    }
+  },
+  "interactions": {
+    "path": "audit/eote-interactions.json",
+    "status": "verified",
+    "checks": {
+      "ledger": true,
+      "gates": true
+    }
+  },
+  "browsers": {
+    "p7Scenarios": {
+      "path": "audit/eote-scenarios-browser.json",
+      "status": "passed",
+      "specs": [
+        "tests/eote-scenarios.browser.mjs"
+      ],
+      "tests": 18,
+      "screenshots": 44,
+      "byChapter": {
+        "iceAndDeathPart1": {
+          "desktop": true,
+          "mobile": true
+        },
+        "iceAndDeathPart2": {
+          "desktop": true,
+          "mobile": true
+        },
+        "iceAndDeathPart3": {
+          "desktop": true,
+          "mobile": true
+        },
+        "fatalMirage": {
+          "desktop": true,
+          "mobile": true
+        },
+        "toTheForbiddenPeaks": {
+          "desktop": true,
+          "mobile": true
+        },
+        "cityOfTheElderThings": {
+          "desktop": true,
+          "mobile": true
+        },
+        "theHeartOfMadnessPart1": {
+          "desktop": true,
+          "mobile": true
+        },
+        "theHeartOfMadnessPart2": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    "p8Release": {
+      "path": "audit/eote-release-browser.json",
+      "status": "passed",
+      "complete": true,
+      "sourceStableDuringRun": true,
+      "checks": {
+        "desktopBrowser": true,
+        "mobileBrowser": true,
+        "releaseDesktop": true,
+        "releaseMobile": true,
+        "progressionDesktop": true,
+        "progressionMobile": true,
+        "onlineDesktop": true,
+        "onlineMobile": true,
+        "privacyDesktop": true,
+        "privacyMobile": true,
+        "permissionBoundary": true,
+        "disconnectRecovery": true
+      },
+      "tests": 6,
+      "screenshots": 104
+    },
+    "releaseAcceptance": {
+      "path": "audit/eote-release-acceptance.json",
+      "status": "failed",
+      "gate": {
+        "pass": false
+      },
+      "checks": {
+        "releaseDesktop": true,
+        "releaseMobile": true,
+        "progressionDesktop": true,
+        "progressionMobile": true,
+        "onlineDesktop": true,
+        "onlineMobile": true,
+        "privacyDesktop": true,
+        "privacyMobile": true,
+        "permissionDesktop": true,
+        "permissionMobile": true,
+        "disconnectDesktop": true,
+        "disconnectMobile": true
+      },
+      "missing": [
+        "allCards"
+      ],
+      "screenshots": {
+        "total": 104,
+        "verified": 104
+      }
+    },
+    "checks": {
+      "browserLedger": true,
+      "browserStatus": true,
+      "browserComplete": true,
+      "browserSourceStable": true,
+      "acceptanceLedger": true,
+      "acceptanceStatus": false,
+      "acceptanceGate": false
+    }
+  },
+  "confirmations": {
+    "scenarios": {
+      "status": "verified",
+      "milestone": "M3",
+      "chapters": 8,
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "items": [
+        {
+          "id": "iceAndDeathPart1",
+          "code": "08501",
+          "name": "亡命冰原 第 I 部分",
+          "part": "part1",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "8e06e94201903bdb69c075f6cef461ec38fc03d9eaba3f3726897dce6c26ab5b",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "iceAndDeathPart2",
+          "code": "08501",
+          "name": "亡命冰原 第 II 部分",
+          "part": "part2",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "a7ea3ea0d4385e3839c9ebccabb68b82e936d0e530e8cb54e52beb85952f9c80",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "iceAndDeathPart3",
+          "code": "08501",
+          "name": "亡命冰原 第 III 部分",
+          "part": "part3",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "01d26960db24812564ff6a4ccdf5bdb2cf2c353434f8adfa22f9cea010ee5a45",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "368e27b51e7de64eb650130c2e1ad83f7b6273de2e0b437e0dd36b71d385f8b3"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/iceAndDeath.json",
+              "sha256": "0cd58a613abd67de329465f3259d14d60cdea598b571fa7099f424de969562d8"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "fatalMirage",
+          "code": "08549",
+          "name": "致命幻景",
+          "part": null,
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "06640958e711448e40378edd50590e3c2c3c8421df53bf214095cc6acf02a34f",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/fatalMirage.json",
+              "sha256": "5f96084ff50ce6971079504f13072497cf97f302113dec0b923fac2bd3112e1a"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/fatalMirage.json",
+              "sha256": "fa5cb8935353e7a0eb15a1513723a4d980c7f9b53631dba67bf0ab4514d9686a"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-fatalMirage.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "toTheForbiddenPeaks",
+          "code": "08596",
+          "name": "失落之峰",
+          "part": null,
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "0221f963770788919ee817c170214157e183a4078ca05273fb74f279b927a130",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/toTheForbiddenPeaks.json",
+              "sha256": "a56254e0defa3dad6308bffa020cf8eb027f168de276c0fee0a858d7f5ad4c4c"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/toTheForbiddenPeaks.json",
+              "sha256": "902651d1dd7c8ec804344253461e2cc057fb947ac1e1104ce9e8f13152480784"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "cityOfTheElderThings",
+          "code": "08621",
+          "name": "古老者之城",
+          "part": null,
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "7bb329fc5b4cdee275edbb56f3d05243d2390908b456512e735709ccd9b7b178",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+              "sha256": "58388126ee7bae00ed5b82f2e322dd4fb67768a7f49a92bc6fe0105213ae4e0d"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+              "sha256": "64b5c5da7d2a0445f09d385eda3d714eb0a455d8005930c208d7239d39fe656c"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "theHeartOfMadnessPart1",
+          "code": "08648",
+          "name": "疯狂之心 第 I 部分",
+          "part": "part1",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "572def2fd2d1b82cc549d9058f97d19bc39c67868c6892c5fed2e66a493349a6",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+              "sha256": "4042e6199844aeebd973c6eea76bb2ec557674ea7a66de1eeb32f1e7db5cd5b6"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+              "sha256": "7cdaeec7ce12bfbce1fc323f2a770769d46d0049f8f6b84c31605518975c66fd"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        },
+        {
+          "id": "theHeartOfMadnessPart2",
+          "code": "08648",
+          "name": "疯狂之心 第 II 部分",
+          "part": "part2",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
+          },
+          "moduleSha256": "bf454bca1688bbc87ac607c27d9930df3826ef3ab5dca2b21292f95413cf02eb",
+          "sources": [
+            {
+              "lang": "en",
+              "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+              "sha256": "4042e6199844aeebd973c6eea76bb2ec557674ea7a66de1eeb32f1e7db5cd5b6"
+            },
+            {
+              "lang": "zh",
+              "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/theHeartOfMadness.json",
+              "sha256": "7cdaeec7ce12bfbce1fc323f2a770769d46d0049f8f6b84c31605518975c66fd"
+            }
+          ],
+          "evidence": [
+            "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js",
+            "audit/eote-scenario-acceptance.json",
+            "audit/eote-scenarios-browser.json",
+            "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+            "audit/eote-regression.json"
+          ]
+        }
+      ],
+      "ledger": {
+        "path": "audit/eote-scenario-acceptance.json",
+        "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
+      },
+      "browser": {
+        "path": "audit/eote-scenarios-browser.json",
+        "sha256": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567"
+      },
+      "evidence": [
+        "audit/eote-scenario-acceptance.json",
+        "audit/eote-scenarios-browser.json",
+        "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+        "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+        "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+        "tests/eote-scenario-fatalMirage.test.mjs",
+        "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+        "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+        "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
+      ]
+    },
+    "keywords": {
+      "status": "verified",
+      "total": 38,
+      "verified": 38,
+      "checks": {
+        "sourceInventoried": true,
+        "engineBehavior": true,
+        "nodeAcceptance": true,
+        "rulebookEntry": true,
+        "cardLinks": true
+      },
+      "items": [
+        {
+          "id": "hunter",
+          "ruleId": "hunter",
+          "zh": "猎手",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "aloof",
+          "ruleId": "aloof",
+          "zh": "冷漠",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "massive",
+          "ruleId": "massive",
+          "zh": "庞大",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "retaliate",
+          "ruleId": "retaliate",
+          "zh": "反击",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "alert",
+          "ruleId": "alert",
+          "zh": "警戒",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "surge",
+          "ruleId": "surge",
+          "zh": "涌动",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "peril",
+          "ruleId": "peril",
+          "zh": "险境",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "hidden",
+          "ruleId": "hidden",
+          "zh": "隐藏",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "victory",
+          "ruleId": "victory",
+          "zh": "胜利点",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "objective",
+          "ruleId": "eoteObjective",
+          "zh": "目标",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "prey",
+          "ruleId": "prey",
+          "zh": "猎物",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "spawn",
+          "ruleId": "spawn",
+          "zh": "生成",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "parley",
+          "ruleId": "parley",
+          "zh": "谈判",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "resign",
+          "ruleId": "eoteResign",
+          "zh": "撤退",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "fast",
+          "ruleId": "fast",
+          "zh": "快速",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "permanent",
+          "ruleId": "permanent",
+          "zh": "永久",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "exceptional",
+          "ruleId": "upgrade",
+          "zh": "卓越",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "elite",
+          "ruleId": "elite",
+          "zh": "精英",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "revelation",
+          "ruleId": "revelation",
+          "zh": "显现",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "mirage",
+          "ruleId": "eoteMirage",
+          "zh": "幻景",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "shelter",
+          "ruleId": "eoteShelter",
+          "zh": "庇护值",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "partner",
+          "ruleId": "eotePartners",
+          "zh": "伙伴",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "resolute",
+          "ruleId": "eoteResolute",
+          "zh": "坚毅",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "seal",
+          "ruleId": "eoteSeals",
+          "zh": "封印",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "sealTokens",
+          "ruleId": "eoteSealTokens",
+          "zh": "封印标记",
+          "kind": "token",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "level",
+          "ruleId": "eoteLevel",
+          "zh": "高度",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "key",
+          "ruleId": "eoteKeys",
+          "zh": "钥匙",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "tekelili",
+          "ruleId": "eoteTekeli",
+          "zh": "忒咳哩-哩",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "expedition",
+          "ruleId": "eoteExpedition",
+          "zh": "探险",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "frost",
+          "ruleId": "eoteFrost",
+          "zh": "寒霜标记",
+          "kind": "token",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "supplies",
+          "ruleId": "eoteSupplies",
+          "zh": "物资",
+          "kind": "keyword",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "titanic",
+          "ruleId": "eoteTitanic",
+          "zh": "巨大",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "hazard",
+          "ruleId": "eoteHazard",
+          "zh": "危险",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "broken",
+          "ruleId": "eoteBroken",
+          "zh": "破功",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "unbroken",
+          "ruleId": "eoteBroken",
+          "zh": "运功",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "eidolon",
+          "ruleId": "eoteEidolon",
+          "zh": "幻灵",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "ancientOne",
+          "ruleId": "eoteAncientOne",
+          "zh": "古神",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        },
+        {
+          "id": "possessed",
+          "ruleId": "eotePossessed",
+          "zh": "附身",
+          "kind": "trait",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/eote-mechanism-scan.json",
+            "audit/eote-primitive-plan.json",
+            "audit/eote-node-acceptance.json",
+            "content/campaigns/edgeOfTheEarth/keywords.js",
+            "web/eote-rules.js"
+          ]
+        }
+      ],
+      "ledger": {
+        "path": "audit/eote-rules.json",
+        "sha256": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052"
+      },
+      "evidence": [
+        "content/campaigns/edgeOfTheEarth/keywords.js",
+        "audit/eote-rules.json",
+        "tests/eote-rules.test.mjs",
+        "audit/eote-mechanism-scan.json"
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "entries": 23,
+      "requiredRuleIds": [
+        "eoteCampaign",
+        "eoteFrost",
+        "eotePartners",
+        "eoteResolute",
+        "eoteTekeli",
+        "eoteShelter",
+        "eoteLevel",
+        "eoteMirage",
+        "eoteSeals",
+        "eoteSealTokens",
+        "eoteKeys",
+        "eoteSupplies",
+        "eoteExpedition",
+        "eoteTitanic",
+        "eoteHazard",
+        "eoteBroken",
+        "eoteEidolon",
+        "eoteAncientOne",
+        "eotePossessed",
+        "eoteObjective",
+        "eoteResign",
+        "eoteMulticlass",
+        "eoteDiscipline"
+      ],
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "details": {
+        "itemsVerified": 23,
+        "cardLinksComplete": true,
+        "noImplementationProse": true,
+        "browser": {
+          "desktop": true,
+          "mobile": true
+        }
+      },
+      "evidence": [
+        "audit/eote-rules.json",
+        "web/eote-rules.js",
+        "web/rulebook-data.js",
+        "tests/eote-rules.test.mjs",
+        "audit/eote-browser-acceptance.json"
+      ]
+    }
+  },
+  "releaseAcceptance": {
+    "status": "pending",
+    "equivalenceCertified": false,
+    "equivalenceNote": "行为等价未认证：全卡账本 248 verified / 12 simplified / 127 missing / 14 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
+    "independentAudit": {
+      "report": "docs/edgeOfTheEarth/eote-scan/全量扫描报告.md",
+      "sections": [
+        "§3 P0-11",
+        "§5",
+        "§5.1"
+      ],
+      "priorLedgerClaim": "修复前本仓 P8 账本（audit/eote-migration.json / eote-release-acceptance.json / eote-all-card-acceptance.json）均为 verified/passed，声称全卡逐卡验收完成、115 玩家卡 noSimplified。",
+      "independentVerdict": "独立复核推翻：all-cards 135/403 字面不可追溯（129 条 scenario-ledger 系统性错配、110 条卡号任何测试都不出现）；player-acceptance 的 noSimplified 只看 flag（55/115 条目自述 approximation）。修复后的账本按可追溯证据重建，不宣称等价。"
+    },
+    "earlyAccess": false,
+    "required": {
+      "launch": true,
+      "chapters": true,
+      "scenarios": true,
+      "allCards": false,
+      "investigators": true,
+      "playerCards": true,
+      "keywords": true,
+      "rulebook": true,
+      "storyGuides": true,
+      "node": true,
+      "regression": true,
+      "p7Browser": true,
+      "p8Browser": true,
+      "releaseLedger": false,
+      "primitivesDisclosed": true
+    },
+    "deferred": [
+      {
+        "id": "primitiveRequest:p7-shared-08503",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08503.json",
+        "status": "pending",
+        "primitive": "locationRule.shroudWhenAttached",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08503.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08506",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08506.json",
+        "status": "pending",
+        "primitive": "locationRule.entryGroupCluesSurcharge",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08506.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08508",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08508.json",
+        "status": "pending",
+        "primitive": "window.locationAttachmentEntered",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08508.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08515",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08515.json",
+        "status": "pending",
+        "primitive": "window.enemyDefeatedAttack",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08515.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08517",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08517.json",
+        "status": "pending",
+        "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08517.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08544",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08544.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "议程「将要推进时」的 scenarioBehavior 钩子（engine 议程推进读点）",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08544.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08546",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08546.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "幕目标/撤退行动的 scenarioBehavior 钩子（engine 幕推进与 scenarioAction 读点）",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08546.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08560",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08560.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "fatalMirage 地点「强制/额外费用」规则的通用 locationRule 读点",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08560.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08587",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08587.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "伙伴（storyAsset 遭遇卡）的 free/reaction 能力在叙事期的可用入口",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08587.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08649",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08649.json",
+        "status": "pending",
+        "primitive": "locationRule.backFaceEntryBan",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08649.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08673",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08673.json",
+        "status": "pending",
+        "primitive": "mistPylonAsEnemy",
+        "need": "「每座已揭示的迷雾高塔可被当作敌人攻击：fight=帷幕、health=线索值；生命为 0 即坍塌（留在场上）」。当前用 scenarioAction + 战斗检定 + P2-D damageTower 原语近似，战斗管线不生成敌人实体，因此敌人阶段/交战/攻击反应卡无法作用于高塔。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08673.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08679",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08679.json",
+        "status": "pending",
+        "primitive": "setAsideEnemyCopiesCounter",
+        "need": "「无名的疯狂」共 15 份：放一边数量、在场数量、以及「成功攻击/规避后按成功差值重整最近一份已重整副本」需要引擎提供「放一边的同名敌人副本计数」与「按成功差值消耗计数」的通用原语。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08679.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08681",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08681.json",
+        "status": "pending",
+        "primitive": "doomPlacementReplacement",
+        "need": "「当 1+ 毁灭将被放置时，如果还有放一边的无名的疯狂：改为生成 1 份」。需要引擎在放毁灭前调用 behavior 的替换钩子（类似 crisis 的 doomPlacementReplacement），当前只能放毁灭后提示。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08681.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08682",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08682.json",
+        "status": "pending",
+        "primitive": "locationLeaveTest",
+        "need": "泰坦坡道「离开的额外费用：检定 [agility] (X)，失败取消移动；连接地点任意调查员可花 1 线索自动成功」。engine 已有 scenarioBehavior.locationLeaveTest 读点，但需要确认返回契约（skill/difficulty/spendClueAutoSucceed）与「失败取消移动」的接线；当前条目声明数据、behavior 返回契约形状，未在真实移动管线验证。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08682.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08691",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08691.json",
+        "status": "pending",
+        "primitive": "treacheryRule.tekeliShuffleReplacement",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08691.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08692",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08692.json",
+        "status": "pending",
+        "primitive": "treacheryRule.locationAttachmentRestrictions",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08692.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08693",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08693.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentSkillPenalty",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08693.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08694",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08694.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentTurnEndDirectDamage",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08694.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08697",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08697.json",
+        "status": "pending",
+        "primitive": "api.buffEnemyUntilEndOfRound",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08697.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08699",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08699.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentMoveTest",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08699.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08702",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08702.json",
+        "status": "pending",
+        "primitive": "enemyAttachmentDifficultyBonus",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08702.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08703",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08703.json",
+        "status": "pending",
+        "primitive": "treacheryRule.tekeliliDoubleResolution",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08703.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08704",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08704.json",
+        "status": "pending",
+        "primitive": "api.resolveWeaknessByCode",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08704.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08706",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08706.json",
+        "status": "pending",
+        "primitive": "treacheryRule.supportAttachmentForced",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08706.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08707",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08707.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentTurnEndDirectHorror",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08707.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08708",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08708.json",
+        "status": "pending",
+        "primitive": "enemyRule.locationMoveSurcharge",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08708.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08710",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08710.json",
+        "status": "pending",
+        "primitive": "api.resolveWeaknessByCode",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08710.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08712",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08712.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentClueDiscoveryForced",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08712.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08715",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08715.json",
+        "status": "pending",
+        "primitive": "window.weaknessResolved",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08715.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08719",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08719.json",
+        "status": "pending",
+        "primitive": "enemyRule.cannotAttackThisRound",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08719.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08721",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08721.json",
+        "status": "pending",
+        "primitive": "treacheryRule.blankTextUntilEndOfTurn",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08721.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08727",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08727.json",
+        "status": "pending",
+        "primitive": "api.loseActionNextTurn",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08727.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08731",
+        "file": "artifacts/migration/eote/primitive-requests/p7-08731.json",
+        "status": "pending",
+        "primitive": "searchTopToScenarioDeckBottom",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "artifacts/migration/eote/primitive-requests/p7-08731.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "allCardSimplified",
+        "count": 12,
+        "status": "simplified",
+        "reason": "已披露近似：全卡账本有 12 条 simplified（行为按现有原语近似实现，逐条见全卡账本 entries），不宣称规则等价。",
+        "evidence": [
+          "audit/eote-all-card-acceptance.json"
+        ]
+      },
+      {
+        "id": "pendingBehaviorRequests",
+        "count": 8,
+        "status": "pending",
+        "reason": "已披露近似：全卡账本登记 8 张卡等待行为原语（p7-08544、p7-08546、p7-08560、p7-08587、p7-08673、p7-08679、p7-08681、p7-08682）——对应请求逐条列在本 deferred 的 primitiveRequest:* 中。",
+        "evidence": [
+          "audit/eote-all-card-acceptance.json"
+        ]
+      },
+      {
+        "id": "playerQueueRejected",
+        "count": 22,
+        "status": "rejected",
+        "reason": "已披露近似：P6 玩家卡原语队列有 22 条 rejected（每张卡在条目头注释与 P6 报告写明近似口径），不计入 P7/P8 新增原语欠账。",
+        "evidence": [
+          "audit/eote-player-queue.json"
+        ]
+      }
+    ],
+    "remaining": [
+      {
+        "id": "gate:allCards",
+        "reason": "发布门禁未通过：allCards",
+        "evidence": [
+          "tools/audit-eote.mjs"
+        ]
+      },
+      {
+        "id": "gate:releaseAcceptance",
+        "reason": "发布门禁未通过：releaseAcceptance",
+        "evidence": [
+          "tools/audit-eote.mjs"
+        ]
+      }
+    ]
+  },
+  "gates": {
+    "scope": true,
+    "records": true,
+    "packs": true,
+    "campaignLaunch": true,
+    "chapters": true,
+    "allCards": false,
+    "investigators": true,
+    "playerCards": true,
+    "interactions": true,
+    "keywords": true,
+    "rulebook": true,
+    "storyGuides": true,
+    "primitivesDisclosed": true,
+    "nodeAcceptance": true,
+    "regression": true,
+    "p7ScenarioBrowser": true,
+    "p8ReleaseBrowser": true,
+    "releaseAcceptance": false,
+    "confirmations": true,
+    "pass": false
+  },
+  "remaining": [
+    {
+      "id": "gate:allCards",
+      "reason": "发布门禁未通过：allCards",
+      "evidence": [
+        "tools/audit-eote.mjs"
+      ]
+    },
+    {
+      "id": "gate:releaseAcceptance",
+      "reason": "发布门禁未通过：releaseAcceptance",
+      "evidence": [
+        "tools/audit-eote.mjs"
+      ]
+    }
+  ],
+  "evidence": {
+    "files": {
+      "artifacts/migration/eote/primitive-requests/p7-08503.json": "a91c308657b41c0044d507bf85edf0fd449dda8fed8ae19a98e6063c79859e5a",
+      "artifacts/migration/eote/primitive-requests/p7-08506.json": "dcb60a361891ad9232e2bc2448329ab5bc043939863fe5e5f5aff52242e17345",
+      "artifacts/migration/eote/primitive-requests/p7-08508.json": "6f753b53286006c7f1788c24e29505db8b560f7568a8f1b233a5d546f71ef39b",
+      "artifacts/migration/eote/primitive-requests/p7-08515.json": "de39c34c77341db2abe01622910de4782ac8f5fa49e966c47c3853040ad66d21",
+      "artifacts/migration/eote/primitive-requests/p7-08517.json": "84128735d2b85b7ad39a61b9b69c5f54cf7100555b1359a6f89a807deb25ab6a",
+      "artifacts/migration/eote/primitive-requests/p7-08544.json": "f8621f863c465d0196a26823d06d15df99f2b5b02c1331af6773733c1152bab5",
+      "artifacts/migration/eote/primitive-requests/p7-08546.json": "8d054ede7e619787844bdb0ba669822591eb54226dd7ef2a7619df8444387363",
+      "artifacts/migration/eote/primitive-requests/p7-08560.json": "cf916a412398cbf621781f7e8c29931e509fd98ec10af853b89bc3d0f92569cb",
+      "artifacts/migration/eote/primitive-requests/p7-08587.json": "4f1d3ac00c8789bff827f11ac96b69928f478c963da26ef0f521c619a7f395c6",
+      "artifacts/migration/eote/primitive-requests/p7-08649.json": "2d11fc77f3bc0bf94b5ac0e4b5d2ab0905b2d9c095b70888ece2eb1e8320d3aa",
+      "artifacts/migration/eote/primitive-requests/p7-08673.json": "ab5768e713f8a91f41774057838b743b94c89664c9e24d931b1daae825b5509d",
+      "artifacts/migration/eote/primitive-requests/p7-08679.json": "1e97d2fe20fa1d03705e0677e8bba2b8c4b6e5507b8d54a79c7e87d4d6084a17",
+      "artifacts/migration/eote/primitive-requests/p7-08681.json": "be56ac1436ddb170660a5d8cf430549e272289eeb1ba5d8e1fd22c2c8cb2986f",
+      "artifacts/migration/eote/primitive-requests/p7-08682.json": "426bce5a197c742e4c5d4a7aa7b9f021d3ab1ed3201f977767f64b812a55d7de",
+      "artifacts/migration/eote/primitive-requests/p7-08691.json": "20c12d2f103cd03e779bbedd2122993ebd169935253be5f11a4f2ee7816042a5",
+      "artifacts/migration/eote/primitive-requests/p7-08692.json": "84604f1445e1c9125f1582533f4dac5d26061728966fcebf8c9b6228d042bae5",
+      "artifacts/migration/eote/primitive-requests/p7-08693.json": "67cb79339b64e3f673c5f653670ebda13bf703acb23a79bb42878a9629955749",
+      "artifacts/migration/eote/primitive-requests/p7-08694.json": "fdecbeb724a6b693954e28edc611efdeb02dcdef4adaad468a7855f2e270061f",
+      "artifacts/migration/eote/primitive-requests/p7-08697.json": "1f0ea56fb96cfa5c2055ff4ccc66591eba31d9336920db326b88cf96668bd5ed",
+      "artifacts/migration/eote/primitive-requests/p7-08699.json": "ec7c74c906887c91fd32f826cfe59c464db463bd072f932db7d70a949b2fcdf4",
+      "artifacts/migration/eote/primitive-requests/p7-08702.json": "3dac24de15e107ce174a5670c64bf9cd7cc7dba07ca161d962346aa6223c2ccc",
+      "artifacts/migration/eote/primitive-requests/p7-08703.json": "6a013e1011d8d4e3e4a4f974eb9688aa721d96e45a2a808f0110b7b7e7f190ca",
+      "artifacts/migration/eote/primitive-requests/p7-08704.json": "be3e98b7efe7ef818d1af1fd459fe118980a5a4179541a43ab058569f2f0589f",
+      "artifacts/migration/eote/primitive-requests/p7-08706.json": "b4c012b53ee8667ef258bce02964eb899de12fc2f336b36ba6ff9b8e1ddacf72",
+      "artifacts/migration/eote/primitive-requests/p7-08707.json": "98a864f65229097da1b9c0412c7fd06f77642ac9f6073108990e2fae8ac92bd4",
+      "artifacts/migration/eote/primitive-requests/p7-08708.json": "8aeb8091215ad060fb4e19c5c134241317d023e1a4ada844d5d676492faee814",
+      "artifacts/migration/eote/primitive-requests/p7-08710.json": "190ddbccfb2b14cdf9f01e47d50c9cbb9fa18792527780629dd8727ed6ed65b9",
+      "artifacts/migration/eote/primitive-requests/p7-08712.json": "0efefee271885552f4f3d57edf7c6891185bffabc32eed6d97ba61288058722e",
+      "artifacts/migration/eote/primitive-requests/p7-08715.json": "69bdc27e0838ad6da6650a7753dfb3f84eaa60ed3d92437addd9f3dd5b3b96a9",
+      "artifacts/migration/eote/primitive-requests/p7-08719.json": "75620fbe699fc3427038d8e9bbfd486c5085e217eb3a75be52d887111f4c4c0b",
+      "artifacts/migration/eote/primitive-requests/p7-08721.json": "29a8513d12d062c36289df606985e990639f1341a9a01afae0c4c3d614afb7df",
+      "artifacts/migration/eote/primitive-requests/p7-08727.json": "0e52132c158cebf75f54072b85d94cac0c771482e5b50a6faee0461e7a3df2ff",
+      "artifacts/migration/eote/primitive-requests/p7-08731.json": "fb9b40101dc8be31747deca13d5cd800b7795910e2a2192faec96e5dfc3825be",
+      "audit/eote-all-card-acceptance.json": "b31f587acdcc544774cc284d30ccfb21adfe0c9df6fd1e699f2a1157a1e1f2ed",
+      "audit/eote-interactions.json": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202",
+      "audit/eote-investigators.json": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6",
+      "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
+      "audit/eote-player-acceptance.json": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac",
+      "audit/eote-player-queue.json": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b",
+      "audit/eote-primitive-plan.json": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9",
+      "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
+      "audit/eote-release-acceptance.json": "ed38db6e9c9685b36539d091ada898e30cc2158aa6eae81d8c72577a04054eaa",
+      "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
+      "audit/eote-rules.json": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052",
+      "audit/eote-scenario-acceptance.json": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad",
+      "audit/eote-scenarios-browser.json": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567",
+      "audit/eote-scope.json": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
+      "content/campaigns/edgeOfTheEarth/story-text.js": "1a057465f72e09110930adafa61fbe7a69d443c19729bcdeddfdb6d77c119b91",
+      "web/scenario-guides/cityOfTheElderThings.json": "9bd8ea234d3348dc748493a6e39cf4f5ab891c175e899764ce60b10ab36a2867",
+      "web/scenario-guides/fatalMirage.json": "85e754d1529099ed7b5b176db55b8d43d658b32f172348e0dc84892ad96b3e54",
+      "web/scenario-guides/iceAndDeathPart1.json": "d5b1b6ba508bda49e4749001ad2c0dd404df18809268e3575b00607d20369963",
+      "web/scenario-guides/iceAndDeathPart2.json": "e2b9d6e530554b1b01377335587938252b3bb22cb69228715b05a0407f01881a",
+      "web/scenario-guides/iceAndDeathPart3.json": "d997736f9c864d60e908adcd5522262d949eea9578fa6f749927b9a91e8af286",
+      "web/scenario-guides/theHeartOfMadnessPart1.json": "97c3a268ecb89f565b51403662021cf326518d528a1502fb6ed48afb6e007401",
+      "web/scenario-guides/theHeartOfMadnessPart2.json": "bf4e4ca0d719de94daa433e1708a40d2dfc79f3960d2756138b25c1c32a5a115",
+      "web/scenario-guides/toTheForbiddenPeaks.json": "9a258a96befe001b2f4fd2082ebe9cd553edbf113908ce5a74c9551a12beda68"
+    },
+    "missingInputs": []
+  },
+  "sources": [
+    {
+      "path": "content/registered.js",
+      "sha256": "c2885ec31be3e2cf0458a23e6e7bbab6d4c92f756ffddff2b5f65c0010be6c8b"
+    },
+    {
+      "path": "content/registry.js",
+      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared.js",
+      "sha256": "d06ea62260ccf72ea040a7ba08841b751bcffa3b615283bbcc81f40f520a0a3d"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "sha256": "e1caf7f086fe20903bb4ec06e046caf33ad719ae929f08fcb189c8d9802394fd"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/keywords.js",
+      "sha256": "467823ea5d603fbb8618f9b2f59ce52ddbd9b00af025fb69d31a4da9dabbc6f7"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/story-text.js",
+      "sha256": "1a057465f72e09110930adafa61fbe7a69d443c19729bcdeddfdb6d77c119b91"
+    },
+    {
+      "path": "content/migration-confirmation.js",
+      "sha256": "77d41a7ea6ae703083a3691a1d293c103d1568748910f4a1447238d6c01cd18e"
+    },
+    {
+      "path": "audit/eote-scope.json",
+      "sha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9"
+    },
+    {
+      "path": "audit/eote-scenario-acceptance.json",
+      "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
+    },
+    {
+      "path": "audit/eote-all-card-acceptance.json",
+      "sha256": "b31f587acdcc544774cc284d30ccfb21adfe0c9df6fd1e699f2a1157a1e1f2ed"
+    },
+    {
+      "path": "audit/eote-investigators.json",
+      "sha256": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6"
+    },
+    {
+      "path": "audit/eote-player-acceptance.json",
+      "sha256": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac"
+    },
+    {
+      "path": "audit/eote-rules.json",
+      "sha256": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052"
+    },
+    {
+      "path": "audit/eote-interactions.json",
+      "sha256": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202"
+    },
+    {
+      "path": "audit/eote-node-acceptance.json",
+      "sha256": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc"
+    },
+    {
+      "path": "audit/eote-regression.json",
+      "sha256": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d"
+    },
+    {
+      "path": "audit/eote-player-queue.json",
+      "sha256": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b"
+    },
+    {
+      "path": "audit/eote-primitive-plan.json",
+      "sha256": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9"
+    },
+    {
+      "path": "audit/eote-scenarios-browser.json",
+      "sha256": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567"
+    },
+    {
+      "path": "audit/eote-release-browser.json",
+      "sha256": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3"
+    },
+    {
+      "path": "audit/eote-release-acceptance.json",
+      "sha256": "ed38db6e9c9685b36539d091ada898e30cc2158aa6eae81d8c72577a04054eaa"
+    },
+    {
+      "path": "content/packs/eoteCampaign/manifest.js",
+      "sha256": "3538dcc9481c76263ba3e270b67baf2a7f08437a343edc21bdd52d1c05e0f1fa"
+    },
+    {
+      "path": "content/packs/eoteInvestigators/manifest.js",
+      "sha256": "112442a44692bfdc72d3cd0e2a4200a231267ccb155c4c5f5ff3036fb0c8c606"
+    },
+    {
+      "path": "content/packs/eotePlayer/manifest.js",
+      "sha256": "d54753058412d8209e88d5e2052a25992cf9c70678fbb85d32dd6d7c09363622"
+    },
+    {
+      "path": "src/cards/cards-data.js",
+      "sha256": "72d0a4f36bee1e47220bafbe282540ebbd4ab9cdfa7ad5cc348cef49c1aa9d9e"
+    },
+    {
+      "path": "tools/audit-eote.mjs",
+      "sha256": "d884aaf8d240e4319e552e74a0f7e02e7bc9ccd54c4121b6fec0035aea20b52b"
+    },
+    {
+      "path": "tools/audit-eote-release.mjs",
+      "sha256": "b22e8b5499e01e3ec6be8dac524bd508fb776aab2116edd19371fc0955f23b64"
+    },
+    {
+      "path": "tests/eote-migration-ledger.test.mjs",
+      "sha256": "ac5ca0501eb3aaa24552a594883930223e07c8a0e4470f5c9387054989b50fd6"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08503.json",
+      "sha256": "a91c308657b41c0044d507bf85edf0fd449dda8fed8ae19a98e6063c79859e5a"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08506.json",
+      "sha256": "dcb60a361891ad9232e2bc2448329ab5bc043939863fe5e5f5aff52242e17345"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08508.json",
+      "sha256": "6f753b53286006c7f1788c24e29505db8b560f7568a8f1b233a5d546f71ef39b"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08515.json",
+      "sha256": "de39c34c77341db2abe01622910de4782ac8f5fa49e966c47c3853040ad66d21"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08517.json",
+      "sha256": "84128735d2b85b7ad39a61b9b69c5f54cf7100555b1359a6f89a807deb25ab6a"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08544.json",
+      "sha256": "f8621f863c465d0196a26823d06d15df99f2b5b02c1331af6773733c1152bab5"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08546.json",
+      "sha256": "8d054ede7e619787844bdb0ba669822591eb54226dd7ef2a7619df8444387363"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08560.json",
+      "sha256": "cf916a412398cbf621781f7e8c29931e509fd98ec10af853b89bc3d0f92569cb"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08587.json",
+      "sha256": "4f1d3ac00c8789bff827f11ac96b69928f478c963da26ef0f521c619a7f395c6"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08649.json",
+      "sha256": "2d11fc77f3bc0bf94b5ac0e4b5d2ab0905b2d9c095b70888ece2eb1e8320d3aa"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08673.json",
+      "sha256": "ab5768e713f8a91f41774057838b743b94c89664c9e24d931b1daae825b5509d"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08679.json",
+      "sha256": "1e97d2fe20fa1d03705e0677e8bba2b8c4b6e5507b8d54a79c7e87d4d6084a17"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08681.json",
+      "sha256": "be56ac1436ddb170660a5d8cf430549e272289eeb1ba5d8e1fd22c2c8cb2986f"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08682.json",
+      "sha256": "426bce5a197c742e4c5d4a7aa7b9f021d3ab1ed3201f977767f64b812a55d7de"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08691.json",
+      "sha256": "20c12d2f103cd03e779bbedd2122993ebd169935253be5f11a4f2ee7816042a5"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08692.json",
+      "sha256": "84604f1445e1c9125f1582533f4dac5d26061728966fcebf8c9b6228d042bae5"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08693.json",
+      "sha256": "67cb79339b64e3f673c5f653670ebda13bf703acb23a79bb42878a9629955749"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08694.json",
+      "sha256": "fdecbeb724a6b693954e28edc611efdeb02dcdef4adaad468a7855f2e270061f"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08697.json",
+      "sha256": "1f0ea56fb96cfa5c2055ff4ccc66591eba31d9336920db326b88cf96668bd5ed"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08699.json",
+      "sha256": "ec7c74c906887c91fd32f826cfe59c464db463bd072f932db7d70a949b2fcdf4"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08702.json",
+      "sha256": "3dac24de15e107ce174a5670c64bf9cd7cc7dba07ca161d962346aa6223c2ccc"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08703.json",
+      "sha256": "6a013e1011d8d4e3e4a4f974eb9688aa721d96e45a2a808f0110b7b7e7f190ca"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08704.json",
+      "sha256": "be3e98b7efe7ef818d1af1fd459fe118980a5a4179541a43ab058569f2f0589f"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08706.json",
+      "sha256": "b4c012b53ee8667ef258bce02964eb899de12fc2f336b36ba6ff9b8e1ddacf72"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08707.json",
+      "sha256": "98a864f65229097da1b9c0412c7fd06f77642ac9f6073108990e2fae8ac92bd4"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08708.json",
+      "sha256": "8aeb8091215ad060fb4e19c5c134241317d023e1a4ada844d5d676492faee814"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08710.json",
+      "sha256": "190ddbccfb2b14cdf9f01e47d50c9cbb9fa18792527780629dd8727ed6ed65b9"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08712.json",
+      "sha256": "0efefee271885552f4f3d57edf7c6891185bffabc32eed6d97ba61288058722e"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08715.json",
+      "sha256": "69bdc27e0838ad6da6650a7753dfb3f84eaa60ed3d92437addd9f3dd5b3b96a9"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08719.json",
+      "sha256": "75620fbe699fc3427038d8e9bbfd486c5085e217eb3a75be52d887111f4c4c0b"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08721.json",
+      "sha256": "29a8513d12d062c36289df606985e990639f1341a9a01afae0c4c3d614afb7df"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08727.json",
+      "sha256": "0e52132c158cebf75f54072b85d94cac0c771482e5b50a6faee0461e7a3df2ff"
+    },
+    {
+      "path": "artifacts/migration/eote/primitive-requests/p7-08731.json",
+      "sha256": "fb9b40101dc8be31747deca13d5cd800b7795910e2a2192faec96e5dfc3825be"
+    }
+  ],
+  "testFiles": [
+    "tests/eote-migration.test.mjs",
+    "tests/eote-primitives-frost.test.mjs",
+    "tests/eote-primitives-campaign.test.mjs",
+    "tests/eote-primitives-flow.test.mjs",
+    "tests/eote-primitives-geo.test.mjs",
+    "tests/eote-primitives-travel.test.mjs",
+    "tests/eote-primitives-investigator.test.mjs",
+    "tests/eote-rules.test.mjs",
+    "tests/eote-interactions.test.mjs",
+    "tests/eote-investigator-daniela.test.mjs",
+    "tests/eote-investigator-norman.test.mjs",
+    "tests/eote-investigator-lily.test.mjs",
+    "tests/eote-investigator-monterey.test.mjs",
+    "tests/eote-investigator-bob.test.mjs",
+    "tests/eote-player-m2-1.test.mjs",
+    "tests/eote-player-m2-2.test.mjs",
+    "tests/eote-player-m2-3.test.mjs",
+    "tests/eote-player-m2-4.test.mjs",
+    "tests/eote-player-primitives.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+    "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+    "tests/eote-scenario-fatalMirage.test.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+    "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+    "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+    "tests/eote-scenario-shared.test.mjs",
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-story.test.mjs",
+    "tests/eote-all-cards.test.mjs",
+    "tests/eote-p8-registration.test.mjs",
+    "tests/eote-p8-campaign.test.mjs",
+    "tests/eote-p8-multiplayer.test.mjs",
+    "tests/replay-eote-p8.test.mjs",
+    "tests/eote-migration-ledger.test.mjs"
+  ]
+}

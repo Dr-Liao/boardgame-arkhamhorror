@@ -1,0 +1,2831 @@
+{
+ "generatedAt": "2026-11-08T11:04:18.345Z",
+ "summary": {
+  "total": 403,
+  "withEntry": 401,
+  "withoutEntry": [
+   "08596",
+   "08621"
+  ],
+  "issueCards": 151,
+  "markerCards": 37,
+  "byKind": {
+   "no-implemented-flag": 144,
+   "entry-no-code": 32,
+   "empty-behavior": 7
+  }
+ },
+ "cards": [
+  {
+   "code": "08001",
+   "name": "丹妮拉·雷耶丝",
+   "partition": "eoteInvestigators",
+   "type": "investigator",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08001.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08002",
+   "name": "机修工的扳手",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08002.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08003",
+   "name": "黑帮暴徒",
+   "partition": "eoteInvestigators",
+   "type": "enemy",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08003.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08004",
+   "name": "诺曼·威瑟斯",
+   "partition": "eoteInvestigators",
+   "type": "investigator",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08004.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08005",
+   "name": "伊波恩之书",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08005.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08006",
+   "name": "预示者",
+   "partition": "eoteInvestigators",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08006.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08007",
+   "name": "蒙特雷·杰克",
+   "partition": "eoteInvestigators",
+   "type": "investigator",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08007.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08008",
+   "name": "可靠的长鞭",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08008.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08009",
+   "name": "被埋葬的秘密",
+   "partition": "eoteInvestigators",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08009.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08010",
+   "name": "陈丽丽",
+   "partition": "eoteInvestigators",
+   "type": "investigator",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08010.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08011a",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08011a.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08011b",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08011b.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08012a",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08012a.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08012b",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08012b.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08013a",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08013a.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08013b",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08013b.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08014a",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08014a.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08014b",
+   "name": "演武",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08014b.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08015",
+   "name": "命运重担",
+   "partition": "eoteInvestigators",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08015.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08016",
+   "name": "鲍勃·詹金斯",
+   "partition": "eoteInvestigators",
+   "type": "investigator",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08016.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08017",
+   "name": "精明的交易",
+   "partition": "eoteInvestigators",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08017.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08018",
+   "name": "贪婪",
+   "partition": "eoteInvestigators",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08018.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08019",
+   "name": "全副武装",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08019.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08020",
+   "name": "正面迎击",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08020.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08021",
+   "name": "“到我身后！”",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08021.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 40,
+     "text": "// 取消每次这种攻击造成的 1 点恐惧（近似：结算后治愈 1 点恐惧）。"
+    }
+   ]
+  },
+  {
+   "code": "08022",
+   "name": "成群结队",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08022.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08023",
+   "name": "扫堂腿",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08023.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08024",
+   "name": "防御姿态",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08024.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 23,
+     "text": "// 引擎在真实检定管线里传入 skillList 数组，这里同时兼容字符串（印刷基值近似仍保留）。"
+    }
+   ]
+  },
+  {
+   "code": "08025",
+   "name": "蝴蝶对剑",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08025.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08026",
+   "name": "闪躲",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08026.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08027",
+   "name": "战斗训练",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08027.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08028",
+   "name": "追猎行动",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08028.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 16,
+     "text": "//     敌人被击败都可触发一次（近似为「被附属敌人被击败」；duration endOfRound + oncePerGame 限制滥触发）。"
+    }
+   ]
+  },
+  {
+   "code": "08029",
+   "name": "提尔斯哈之牙",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08029.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08030",
+   "name": "蝴蝶对剑",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08030.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08031",
+   "name": "强制学习",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08031.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08032",
+   "name": "耶利米·科尔比",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08032.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08033",
+   "name": "通路档案",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08033.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 13,
+     "text": "// api.setScenarioFlag('eoteConfirmedPath',true) 近似（替代剧本日志文本）。"
+    }
+   ]
+  },
+  {
+   "code": "08034",
+   "name": "繁星密语",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08034.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08035",
+   "name": "登山靴",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08035.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08036",
+   "name": "加入马队",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08036.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08037",
+   "name": "地区勘测",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08037.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08038",
+   "name": "医学教科书",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08038.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08039",
+   "name": "发掘古物",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08039.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08040",
+   "name": "科学理论",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08040.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08041",
+   "name": "通路档案",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08041.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08042",
+   "name": "通路档案",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08042.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08043",
+   "name": "通路档案",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08043.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08044",
+   "name": "通路档案",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08044.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08045",
+   "name": "亵渎预言",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08045.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08046",
+   "name": "地下支持",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08046.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08047",
+   "name": "提前侦察",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08047.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 39,
+     "text": "// 该移动期间敌人不会与你交战（近似：移动后立即解除所有交战）。"
+    }
+   ]
+  },
+  {
+   "code": "08048",
+   "name": "21点",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08048.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08049",
+   "name": "反间谍活动",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08049.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08050",
+   "name": "欺骗制度",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08050.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08051",
+   "name": "不当交易",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08051.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 9,
+     "text": "// 该调查员」近似，且不代收打出费用（费用差额记在报告）。主效果（揭示/另一方决定/抽1/得费用资源）正确。"
+    }
+   ]
+  },
+  {
+   "code": "08052",
+   "name": "行业专家",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08052.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 因此这里读 cards-data 的印刷技能值（近似；已登记 primitive request 让主进程把修正后属性"
+    }
+   ]
+  },
+  {
+   "code": "08053",
+   "name": "红色闹钟",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08053.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 13,
+     "text": "//   · 「移动最多 2 次」用 api.moveInvestigator 近似（不经过移动行动/借机攻击结算）。"
+    }
+   ]
+  },
+  {
+   "code": "08054",
+   "name": "金钱万能",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08054.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08055",
+   "name": "黑市",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08055.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 10,
+     "text": "//   · 「放一边」用「移入原所有者弃牌堆 + api.playCardFromDiscard」近似（引擎没有 setAside 的"
+    },
+    {
+     "line": 43,
+     "text": "// 近似：把「放在一边期间可以打出」落成「其所有者现在可以立即从弃牌堆打出一次」。"
+    }
+   ]
+  },
+  {
+   "code": "08056",
+   "name": "刚毅果敢",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08056.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 23,
+     "text": "// assetRule.redirectOneDamageToSelf 近似（每次伤害结算把 1 点转移到本卡，而非全部）。"
+    }
+   ]
+  },
+  {
+   "code": "08057",
+   "name": "黑色扇子",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08057.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08058",
+   "name": "红色闹钟",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08058.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "// 移动用 api.moveInvestigator 近似；额外行动用 api.gainAction。注意升级版是「先可以拿取，再放置」。"
+    }
+   ]
+  },
+  {
+   "code": "08059",
+   "name": "掉进兔子洞",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08059.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08060",
+   "name": "咏春棍",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08060.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08061",
+   "name": "冥想放空",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08061.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08062",
+   "name": "闭环",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08062.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08063",
+   "name": "力量之风",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08063.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08064",
+   "name": "先见",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08064.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 10,
+     "text": "// 刚抽到的卡」近似；「打出且费用 -2」用 api.playCard({discount:2})，取消玩家牌=弃掉该卡，"
+    }
+   ]
+  },
+  {
+   "code": "08065",
+   "name": "密教理论",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08065.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 属性（近似；已写 primitive request，待主进程把修正值读点接进 iconBonus 后改一行即可）。"
+    }
+   ]
+  },
+  {
+   "code": "08066",
+   "name": "平行命运",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08066.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08067",
+   "name": "天文地图集",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08067.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08068",
+   "name": "治愈真言",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08068.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08069",
+   "name": "情绪稳定",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08069.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08070",
+   "name": "真法魔典",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08070.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 9,
+     "text": "// 「揭示手牌中的一张法术支援 → api.resolveCardAbility 结算其能力」近似；费用/充能/效果由该"
+    }
+   ]
+  },
+  {
+   "code": "08071",
+   "name": "补给匮乏",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08071.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08072",
+   "name": "沙夫纳的目录",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08072.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 「花费 1 秘密 → 获得 1 资源」近似（资源可用于后续支付[[道具]]支援），并把「仅限同地点"
+    }
+   ]
+  },
+  {
+   "code": "08073",
+   "name": "绷带",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08073.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08074",
+   "name": "应急装备",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08074.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08075",
+   "name": "厄运手镯",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08075.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08076",
+   "name": "阅后即焚",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08076.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08077",
+   "name": "人多力量大",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08077.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08078",
+   "name": "无畏精神",
+   "partition": "eotePlayer",
+   "type": "skill",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08078.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// （近似；primitive request 已登记，主进程把修正值读点接进 iconBonus 后改一行即可）。"
+    }
+   ]
+  },
+  {
+   "code": "08079",
+   "name": "血债血偿",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08079.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08080",
+   "name": "灭火器",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08080.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08081",
+   "name": "有胆有识",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08081.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08082",
+   "name": "抵挡",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08082.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08083",
+   "name": "医学生",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08083.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08084",
+   "name": "追踪",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08084.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08085",
+   "name": "追踪",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08085.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08086",
+   "name": "迈克尔·利",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08086.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//     api.addExtraOnSuccess({type:'dealDamage',target:'engaged'}) 近似。"
+    }
+   ]
+  },
+  {
+   "code": "08087",
+   "name": "狙击",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08087.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08088",
+   "name": "老旧的霰弹枪",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08088.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08089",
+   "name": "快拔枪套",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08089.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08090",
+   "name": "克图格亚的烙印",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08090.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08091",
+   "name": "恩科西·马巴蒂",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08091.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08092",
+   "name": "克图格亚的烙印",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08092.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08093",
+   "name": "巨石锤",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08093.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08094",
+   "name": "长柄大锤",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08094.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08095",
+   "name": "防护服",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08095.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08096",
+   "name": "长柄大锤",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08096.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08097",
+   "name": "袖珍望远镜",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08097.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08098",
+   "name": "远古海图",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08098.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08099",
+   "name": "吉恩·波尔格",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08099.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08100",
+   "name": "远古海图",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08100.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08101",
+   "name": "占卜",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08101.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08102",
+   "name": "保护魂灵",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08102.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08103",
+   "name": "占卜",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08103.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08104",
+   "name": "威廉·韦伯教授",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08104.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08105",
+   "name": "破冰锥",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08105.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08106",
+   "name": "威廉·韦伯教授",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08106.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08107",
+   "name": "破冰锥",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08107.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 7,
+     "text": "// 「成功后弃掉本卡换取收益」用第二条 free 能力（弃掉自身费用）+ api.addExtraOnSuccess 近似："
+    }
+   ]
+  },
+  {
+   "code": "08108",
+   "name": "虚影易位",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08108.js",
+   "issues": [
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08109",
+   "name": "身形虚化",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08109.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08110",
+   "name": "虚影易位",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08110.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08111",
+   "name": "身形虚化",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08111.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08112",
+   "name": "\"再来一张！\"",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08112.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 10,
+     "text": "//   的替代标记通道近似：额外揭示 1 枚标记，把负值取正后作为替代标记结算（骷髅 → 自动失败）。"
+    }
+   ]
+  },
+  {
+   "code": "08113",
+   "name": "大肆借贷",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08113.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 10,
+     "text": "//       移出游戏 api.playerTools.removeAssetFromGame（流放近似：进入 removedFromGame 而非战役 exiled）。"
+    },
+    {
+     "line": 11,
+     "text": "// approximation: 引擎没有「游戏结束/退场时」的通用条目强制窗口。这里近似为每轮结束时检查"
+    }
+   ]
+  },
+  {
+   "code": "08114",
+   "name": "珍贵记忆",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08114.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08115",
+   "name": "珍贵记忆",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08115.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08116",
+   "name": "护身法宝",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08116.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08117",
+   "name": "尘世宁静",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08117.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08118",
+   "name": "附魔弓",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08118.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08119",
+   "name": "尘世宁静",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08119.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08120",
+   "name": "先知先觉",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08120.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//       （与 07264 同模板）；「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+    },
+    {
+     "line": 13,
+     "text": "//   本卡在 beforePlayCost 窗口用「从本卡花费资源 → context.costReduction」近似："
+    }
+   ]
+  },
+  {
+   "code": "08121",
+   "name": "一探究竟",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08121.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+    },
+    {
+     "line": 12,
+     "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+    }
+   ]
+  },
+  {
+   "code": "08122",
+   "name": "好勇斗狠",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08122.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+    },
+    {
+     "line": 12,
+     "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+    }
+   ]
+  },
+  {
+   "code": "08123",
+   "name": "技艺精湛",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08123.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+    },
+    {
+     "line": 12,
+     "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+    }
+   ]
+  },
+  {
+   "code": "08124",
+   "name": "古物藏家",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08124.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 11,
+     "text": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
+    },
+    {
+     "line": 12,
+     "text": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
+    }
+   ]
+  },
+  {
+   "code": "08125",
+   "name": "危险处境",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08125.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08126",
+   "name": "厚重皮衣",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08126.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08127",
+   "name": "雪橇犬",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08127.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08128",
+   "name": "驯兽之杖",
+   "partition": "eotePlayer",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08128.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08129",
+   "name": "请求支援",
+   "partition": "eotePlayer",
+   "type": "event",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08129.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08130",
+   "name": "臂伤",
+   "partition": "eotePlayer",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08130.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 14,
+     "text": "//     近似「本卡可被治愈移除」（不消耗实际治疗量）。"
+    },
+    {
+     "line": 15,
+     "text": "//   ② 「执行攻击或启动行动后」：actionResolvedAtLocation 窗口不带行动类型，近似为任意行动后立即锁住"
+    }
+   ]
+  },
+  {
+   "code": "08131",
+   "name": "腿伤",
+   "partition": "eotePlayer",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08131.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 12,
+     "text": "//   ① 「如同 1 点伤害被治愈」：无 threatDamageSink，用 free + discardSelf 近似。"
+    },
+    {
+     "line": 13,
+     "text": "//   ② 「执行移动/撤退/躲避行动后」：窗口不带行动类型，近似为任意行动后锁住印刷三类行动至回合结束。"
+    }
+   ]
+  },
+  {
+   "code": "08132",
+   "name": "惊慌",
+   "partition": "eotePlayer",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08132.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 13,
+     "text": "// approximation: 「资源行动」用 capability:gainResources 近似（会同时禁止卡牌效果获得资源，略偏严）；"
+    },
+    {
+     "line": 14,
+     "text": "//       动作后锁近似为任意行动后锁住印刷类型至回合结束。"
+    }
+   ]
+  },
+  {
+   "code": "08133",
+   "name": "麻木",
+   "partition": "eotePlayer",
+   "type": "treachery",
+   "status": "verified",
+   "entryPath": "src/cards/entries/08133.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 12,
+     "text": "// approximation: 动作后锁近似为任意行动后锁住印刷三类行动至回合结束。"
+    }
+   ]
+  },
+  {
+   "code": "08515",
+   "name": "疾行谬物",
+   "partition": "eoteCampaign",
+   "type": "enemy",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08515.js",
+   "issues": [],
+   "markers": [
+    {
+     "line": 5,
+     "text": "//   以「按印刷攻击值直接结算伤害/恐惧」近似（注释见 primitive-requests/p7-08515.json）。"
+    }
+   ]
+  },
+  {
+   "code": "08587",
+   "name": "威廉·戴尔教授",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08588",
+   "name": "丹佛斯",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08590",
+   "name": "玛拉·辛哈医生",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08591",
+   "name": "艾弗里·克莱普尔",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08594",
+   "name": "罗尔德·埃尔斯沃思",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08595",
+   "name": "高田弘子",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "simplified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  },
+  {
+   "code": "08614",
+   "name": "绿皂石",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08615",
+   "name": "木制雪撬",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08616",
+   "name": "炸药",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08617",
+   "name": "瘴气水晶",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08618",
+   "name": "矿物标本",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08619",
+   "name": "小型收音机",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08620",
+   "name": "备用零件",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08721",
+   "name": "罗尔德·埃尔斯沃思",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08721.js",
+   "issues": [
+    {
+     "kind": "empty-behavior",
+     "detail": "abilities=[] 且无其它行为字段",
+     "severity": "high"
+    }
+   ],
+   "markers": []
+  }
+ ]
+}

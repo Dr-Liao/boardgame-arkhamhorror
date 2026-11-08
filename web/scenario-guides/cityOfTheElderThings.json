@@ -1,0 +1,608 @@
+{
+  "id": "cityOfTheElderThings",
+  "campaignId": "edgeOfTheEarth",
+  "sourceKind": "reference-project-zh-locale+local-supplement",
+  "officialChinese": false,
+  "chineseStatus": "present-needs-review",
+  "chinese": {
+    "total": 94,
+    "presentNeedsReview": 94,
+    "untranslated": 0,
+    "missing": 0
+  },
+  "chineseGaps": {},
+  "sectionCount": 94,
+  "guideKeyCount": 94,
+  "sources": {
+    "en": {
+      "path": "frontend/src/locales/en/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+      "bytes": 24683,
+      "sha256": "58388126ee7bae00ed5b82f2e322dd4fb67768a7f49a92bc6fe0105213ae4e0d"
+    },
+    "zh": {
+      "path": "frontend/src/locales/zh/edgeOfTheEarth/scenarios/cityOfTheElderThings.json",
+      "bytes": 14682,
+      "sha256": "64b5c5da7d2a0445f09d385eda3d714eb0a455d8005930c208d7239d39fe656c"
+    }
+  },
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "冒险III：古老者之城",
+          "children": [
+            {
+              "text": "导言：即使你从戴尔的报告中已经得知，你还是发现自己完全没有准备好面对南极中心的这座可怕而巨大的亵渎之城，以及它那属于异星的种种不可思议。巨大的塔楼、庙宇、桥梁和金字塔点缀着广阔的风景。在遍及四处的晨光中，这座由巨大结构和棱角分明的石块组成的无名迷宫向每个方向延伸数英里，无疑是真实的，但却让人难以置信。这毫无疑问是世间奇观。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、古老者、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、紧锁之门。这些遭遇组由以下图标标示："
+                },
+                {
+                  "text": "将修格斯遭遇组放在一边，置于场外。"
+                },
+                {
+                  "text": "仅使用《错综复杂之城》（版本一）和《追寻未知》（版本一）创建幕牌堆。将其他所有幕卡移出游戏。"
+                },
+                {
+                  "text": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。"
+                },
+                {
+                  "text": "调查员队长选择八处最外侧地点中的一处。每位调查员从所选地点开始游戏。"
+                },
+                {
+                  "text": "本冒险中的地点与每一处相邻地点相连接。"
+                },
+                {
+                  "text": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。"
+                },
+                {
+                  "text": "向混乱袋中加入1枚[elder_thing]标记。"
+                },
+                {
+                  "text": "将全部3张和蔼的古老者敌人移出游戏。将星之恐怖敌人放在一边，置于场外。"
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、古老者、无名恐怖、企鹅、寂静与谜团、忒咳哩-哩、刺骨严寒。这些遭遇组由以下图标标示："
+                },
+                {
+                  "text": "将冰中生物遭遇组放在一边，置于场外。"
+                },
+                {
+                  "text": "仅使用《错综复杂之城》（版本二）和《追寻未知》（版本二）创建幕牌堆。将其他所有幕卡移出游戏。"
+                },
+                {
+                  "text": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。"
+                },
+                {
+                  "text": "每位调查员从右下方的那处地点开始游戏。"
+                },
+                {
+                  "text": "本冒险中的地点与每一处相邻地点相连接。"
+                },
+                {
+                  "text": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。"
+                },
+                {
+                  "text": "向混乱袋中加入1枚[elder_thing]标记。"
+                },
+                {
+                  "text": "将星之恐怖敌人和全部3张和蔼的古老者敌人移出游戏。"
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、瘴气、企鹅、修格斯、忒咳哩-哩、刺骨严寒、紧锁之门。这些遭遇组由以下图标标示："
+                },
+                {
+                  "text": "将修格斯遭遇组放在一边，置于场外。"
+                },
+                {
+                  "text": "仅使用《错综复杂之城》（版本三）和《追寻未知》（版本三）创建幕牌堆。将其他所有幕卡移出游戏。"
+                },
+                {
+                  "text": "将16处城市景观地点洗混，连同隐秘隧道一起按地图放置入场。"
+                },
+                {
+                  "text": "每位调查员从左上方的那处地点开始游戏。"
+                },
+                {
+                  "text": "本冒险中的地点与每一处相邻地点相连接。"
+                },
+                {
+                  "text": "从收藏中（不是从混乱袋）取出以下每种标记各2枚：[skull]、[cultist]、[tablet]、[elder_thing]、0、–1、–2和–3。将这16枚标记随机各放置一枚在每处城市景观地点上。这些标记就是“钥匙”。"
+                },
+                {
+                  "text": "将星之恐怖敌人和全部3张复苏的古老者敌人移出游戏。"
+                }
+              ]
+            },
+            {
+              "text": "将序幕期间未获得的所有冻伤弱点和附身弱点移出游戏。"
+            },
+            {
+              "text": "检查难度等级。"
+            },
+            {
+              "text": "如果你在游玩困难难度，则在密谋1a上放置1个毁灭标记。"
+            },
+            {
+              "text": "如果你在游玩专家难度，则在密谋1a上放置2个毁灭标记。"
+            },
+            {
+              "text": "将所有尚未加入调查员牌库的忒咳哩-哩弱点卡牌洗混，组成忒咳哩-哩牌堆。将这个牌堆放在密谋牌堆旁。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "钥匙",
+              "children": [
+                {
+                  "text": "本冒险的设置会指示玩家将随机的混乱标记作为钥匙，各放置一枚在16处城市景观地点上。这些钥匙永远不会被放入混乱袋，也不会像传统的混乱标记那样结算。它们代表调查员可以在整场冒险中取得并使用的钥匙。\n\n钥匙可以通过以下两种方式之一取得：\n\n• 如果一处放有钥匙的地点没有线索，调查员可以作为一个[fast]能力取得该钥匙的控制权。\n\n• 某些卡牌效果可能允许调查员以其他方式取得钥匙的控制权。\n\n当调查员取得一把钥匙的控制权时，该调查员将这把钥匙放在自己的调查员卡上。如果一名控制一把或更多钥匙的调查员被消除，将这些钥匙分别放置在其所在地点。作为一个[action]能力，调查员可以将任意数量的自己的钥匙交给同一地点的另一名调查员。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "children": [
+            {
+              "text": "如果玛拉·辛哈医生活着：\n\n“记住，要始终保持隐蔽。在我们要去的地方，风几乎能在瞬间冻结你的皮肤。还有保持水分。”辛哈医生提醒你，“这里的空气比你想象的要干燥。”团队中的其余人都点头表示理解。你们都不想走了这么远却死于体温过低……但在这该死的地方，这和死于其他方式几乎没有分别。调查员没有承受任何不良效果。"
+            },
+            {
+              "text": "否则：你听过很多次南极环境的危险，但没有辛哈医生，你在恶劣的天气中非常不利。她用专业知识弥补了对病人态度的不足。你真希望自己当时能救下她，但现在只能咬紧牙关，继续艰难前行，观察着同伴是否有体温过低的迹象。\n\n每位调查员将一张冻伤弱点加入自己牌库。这张卡牌不计入该调查员的牌库卡牌张数。"
+            }
+          ]
+        },
+        {
+          "text": "当你沿着环绕城市的山峰往下走，偷偷地越过城墙，斜坡被平缓的、较浅的山麓所取代，山麓上点缀着黑色原始的石制建筑。这些也许是塔楼或前哨，将城市的自然外墙与市郊连接起来。“我们应该搜查其中一个瞭望塔。”一名队员指着最近的建筑建议道。你点头赞同。戴尔的报告中提到，他观察到在这座城市一些建筑的墙壁上雕刻了大量的资讯，毕竟——也许你会在探索中偶然发现一幅地图或城市的示意图。"
+        },
+        {
+          "children": [
+            {
+              "text": "如果调查员对城市市郊进行了侦查：\n\n你叫其他人跟着你，而不是前往瞭望塔。回想起你和埃尔斯沃思前一天晚上侦查的路线，你带着队伍走向你们发现的半埋的建筑。到那儿去比瞭望塔花了更多时间，但是它提供了一条进入城市的捷径。\n\n冒险设置期间，你揭示起始地点后，调查员队长发现该地点的线索，数量等于其线索值的一半（向上取整）。"
+            },
+            {
+              "text": "否则：\n\n调查员没有承受任何不良效果。"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "如果威廉·戴尔教授活着：\n\n“小心。”教授警告说。你渴望听从他的智慧，因为这是通过艰苦的经历得来的。“刻在这里的象形文字描述了许多这个地方的历史。它很古老。比我们人类建造的任何东西都要古老得多。”\n\n“你的意思是？”有人插话。\n\n“你知道那句老话吗，‘墙有耳，门有眼’？”戴尔回答，“我们不知道墙后藏着什么。冰雪和石头下住着什么。保持警惕……除了我们的声音，别让其他声音在你的脑袋里嗡嗡作响。明白了吗？”\n\n你点头赞同，强压住一阵恶心。你不禁从字面上理解戴尔的习语。\n\n调查员没有承受任何不良效果。"
+            },
+            {
+              "text": "否则：\n\n当你进入塔内，寒冷逐渐消失，但从远处观察这座城市时感受到的不安却更为强烈。没有戴尔的智慧引导，你觉得自己毫无准备。每一滴水、每一颗跳动的卵石、每一次屏住的呼吸，都让你的喉咙紧绷、心跳加速。过了不久你就听到墙里的窃窃私语——这声音不属于你，也不属于你的同伴。你越不想听，那些声音就越强烈。在你思想中响起的合唱。是警告吗？\n\n每位调查员将一张附身弱点加入自己牌库。这张卡牌不计入该调查员牌库的卡牌张数。"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "如果詹姆斯·“曲奇”·弗雷德里克斯活着，且“已回收的补给品”下记录着炸药：”\n\n不幸的是，当你试图离开建筑时，你发现通道被冰雪和碎石堵塞了。就在你正在考虑如何挖出一条路的时候，曲奇拿了几根捆在一起的炸药走过来。“噢，看在老天份上。闪开。”他一边抱怨，一边把炸药设置好，毫无征兆地就点燃了导火索。你和其他人连忙跑到拐角处，捂着耳朵低声咒骂。几秒钟后，一场巨大的爆炸震动了整个建筑。当一切尘埃落定，曲奇为团队开了一条捷径。“有时候，曲奇，我发誓……”有人说。\n\n调查员没有承受任何不良效果。"
+            },
+            {
+              "text": "否则：\n\n不幸的是，当你试图离开建筑时，你发现通道被冰雪和碎石堵塞了。找到另一条出路所花的时间比你想象的要长得多，当你最终逃脱时，你已经暴露在恶劣环境中有一段时间了。\n\n在混乱袋里加入1个 [frost] 标记。"
+            }
+          ]
+        },
+        {
+          "text": "这座黑曜石建筑那敞开的入口，就像凶猛的食肉动物对你张开了血盆大口。当你的眼睛适应了黑暗时，你的好奇心被深深的恐惧所取代。这座建筑那棱角分明的主厅就是个屠杀现场。血肉模糊的古老者尸体散落一地——成堆的灰色皮肉和黏糊糊的畸形器官，上面涂着厚厚的墨绿色液体。尸臭让你感到无比恶心。这些遗体并不久远。这次屠杀一定是最近发生的。\n\n“究竟是什么东西做了这样的事？”一名队员打破了寂静。墙上的壁画吸引了你的注意，上面描绘的是你所知道的古老者种族卷入战争，对方是某个古老而可怕的敌人——不，不止一种。是许多种。你们不敢在这个屠杀现场待太久。捂住鼻子挡住恶臭，你们赶紧离开。"
+        },
+        {
+          "text": "一条恶心的绿色血迹从山腰延伸出来，沿着一条平滑的小路滴落下来，这条小路仿佛是被一种酸性物质雕刻出来的。在相反的方向，山脊继续沿着城市的周边延续。在远处，你只能辨认出城市黑暗的、半被掩埋的部分，即使在仔细阅读了戴尔的笔记之后，它的结构布局对你来说还是完全陌生。最终，在城市的中心，一座巨大的金字塔和许多显眼的寺庙散布在各处，尽管历经千万年的风化，仍高耸入云。"
+        },
+        {
+          "text": "团队 1"
+        },
+        {
+          "text": "团队 2"
+        },
+        {
+          "text": "团队 3"
+        },
+        {
+          "text": "探险队投票决定他们想要前往的方向。比较以下三组，查看哪一列仍然活着的团队成员最多。"
+        },
+        {
+          "children": [
+            {
+              "text": "艾米·肯斯勒博士"
+            },
+            {
+              "text": "玛拉·辛哈医生"
+            },
+            {
+              "text": "高田弘子"
+            },
+            {
+              "text": "艾弗里·克莱普尔"
+            },
+            {
+              "text": "詹姆斯·“曲奇”·弗雷德里克斯"
+            },
+            {
+              "text": "丹佛斯"
+            },
+            {
+              "text": "伊里亚·阿什瓦克"
+            },
+            {
+              "text": "罗尔德·埃尔斯沃思"
+            },
+            {
+              "text": "威廉·戴尔教授"
+            },
+            {
+              "text": "因为第一组有最多队员仍然存活，这一组人投票选择冒险进入市中心，那里有最宏伟的建筑。该组中的所有伙伴在被调查员选择陪同的情况下，入场时拥有额外1使用。 进入 设置 (v. I)."
+            },
+            {
+              "text": "因为第二组有最多队员仍然存活，这一组人投票选择沿着山脊前往戴尔和丹佛斯从未探索过的地区。该组中的所有伙伴在被调查员选择陪同的情况下，入场时拥有额 1使用。 进入 设置 (v. II)."
+            },
+            {
+              "text": "因为第三组有最多队员仍然存活，这一组人投票选择跟随屠杀古老者的生物留下的足迹。该组中的所有伙伴在被调查员选择陪同的情况下，入场时拥有额外1使用。 进入 设置 (v. III)."
+            },
+            {
+              "text": "因为有2组以上平手，调查员队长投出打破平局的一票。 （解决上述问题的时候，视为选择的团队中有最多仍然生还的成员）"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "找出剧本日志中“探险队”部分，名字旁没有打勾的所有存活探险队成员（包括那些当前处于调查员控制下的），并随机选择其中一名。如果没有这样的探险队成员，则跳过本幕间故事的剩余部分。"
+            },
+            {
+              "text": "等你注意到那低语对团队的影响时，已经太迟了。你的同伴不单单只是看着墙壁，还靠在墙上，把耳朵贴在上面，眼睛因狂喜而呆滞。走到门口时，你的同伴要么没有注意到——要么故意忽视——从裂缝中渗出的可怕的瘴气；那浓密的灰雾眼看就要把他们全部吞没。门刚一打开，你就喊出了警告，并且非常明白地在瘴气涌出的那一刻移开了视线。而你的队友看到了什么，你永远不会真正明白。你只是瞥见了住在彼端那不可言说的，无底的痛苦。"
+            },
+            {
+              "text": "如果受害者是丹佛斯：\n\n学生睁大了眼睛，将噩梦般的景象一寸都不错过地收入眼帘。每一次隐伏的低语。每一块疯狂的残片。他手里的破冰锥掉到了地上。“这……太美了。”他最后宣告着，“黑色深坑……雕刻边框……登月梯……”他的声音越来越激动。“起源——永恒——不朽！”他咧嘴露出一个可怕的微笑。\n\n控制丹佛斯的调查员发现最近的有线索的地点的一个线索（如果没有调查员控制丹佛斯，改为调查员队长发现线索）。"
+            },
+            {
+              "text": "你的同伴僵立在门口，你说不清是因为纯粹的恐惧，还是受到某种未知力量的驱使。你和其他人朝着门口走去，移开了目光，确保自己不会遭受同样的命运。你将石门滑动关上，发出重重的砰的一声，将剩下的翻滚着的瘴气关在内部。门后的惊魂之景一被关上，你的同伴眼睛就翻白，瘫倒在地板上。\n\n同伴的心脏还在继续跳动，但眼睛再也没有睁开过。\n\n在剧本日志中“探险队”部分，将选中角色的名字划掉。如果其在场上，其被击败并从游戏中移除。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成结局",
+              "children": [
+                {
+                  "text": "如果没有完成结局 （每位调查员都被击败）: 你受伤且疲惫不堪，躲在这座城市高耸的建筑中一个相对安全的地方。你唯一的希望是在这个异星生物的城市中避难，祈祷你的存在不会被仍然徘徊在它的街道和古老大厅里的居民注意到。\n\n• 推进至 结局 2。"
+                }
+              ]
+            },
+            {
+              "title": "结局 1",
+              "children": [
+                {
+                  "text": "当你的团队潜入秘密通道时，怪异的寂静迎接着你。你以为迎接你的是喧嚣和愤怒，但这种诡异的寂静几乎更糟糕。当你越来越深入这个秘密竖井时，你们全都沉默不语。你注意着光滑的墙壁、地板上奇异的标记，以及远处柔和的滴答、滴答、滴答的滴水声。\n\n你在一片漆黑中持续走了几个小时，每一步都在质疑自己的判断。什么样的人才会心甘情愿地进入这样恐怖的鬼地方啊？你赌上名誉参加这次探险。然后你赌上性命在情况变糟的时候也不肯回头。现在你要赌上你全部的理智发现人类不该发现的秘密。\n\n这是勇敢吗？还是一群傻子犯下的致命错误，太固执以至于看不清这条路的尽头就是自己的死亡？但这些都不重要了。你已经走了太远，现在无法回头了。无论如何，你都会得到你想要的答案。唯一的问题是你能否活下去，来告诉全世界你的发现。\n\n• 在剧本日志中记录 队伍找到隐秘隧道。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。本场冒险期间每花费一对混乱标记，每位调查员获得额外1点经验值。\n\n• 经验：（按上述说明计算）\n\n• 在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。\n\n• 进入 幕间故事 III: 最后一夜"
+                }
+              ]
+            },
+            {
+              "title": "结局 2",
+              "children": [
+                {
+                  "text": "几个小时过去了。你不敢到外面去冒险，但你探索了避难所的每一个缝隙，希望能找到一些值得的东西。然而你的发现反而更让人难以置信。在这座建筑冰冷的底层，有一个神圣的房间，里面充满了千变万化的瘴气。旋转的灰雾从表面蒸发，熟悉的形状和奇怪的幻觉在里面出现和消失。\n\n仿佛感觉到了你的到来，那团瘴气停止了旋转，自己升了起来，仿佛是在打招呼。然后，它凝聚成闪烁的、五光十色的一团，沿着地板向前爬行，当你停止时它也停止，当你跟随时它又继续前进。它招呼你靠近，引导着你。你们惊恐地面面相觑。它是不是想告诉你什么？想带你去什么地方？如果是这样的话……跟着它真的明智吗？\n\n最终，你们达成了统一。在这儿磨蹭是没有用的，天气每分钟都在变得更坏。你决定谨慎地跟随，希望它能给你带来答案。你在一片漆黑中持续走了几个小时，每一步都在质疑自己的判断。这座古代建筑连通着冰冷隧道，墙壁被黑色脓水涂抹得平稳光滑，地板上覆盖着来历不明的奇异标记。最后，那一团瘴气又渗进了墙壁，消失了，只留下你一个人，带着你的疑惑，带着你的恐惧，向着那不可思议的长长的竖井走去，穿过南极的冰雪中心，进入深渊彼端……\n\n• 在剧本日志中记录 队伍被引导到隐秘隧道。\n\n• E每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。本场冒险期间每花费一对混乱标记，每位调查员获得额外1点经验值。\n\n• 经验：（按上述说明计算）\n\n• 在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。\n\n• 进入 幕间故事 III: 最后一夜"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario III: City of the Elder Things",
+          "children": [
+            {
+              "text": "Intro: Even with the knowledge afforded to you by Dyer’s report, you find yourself wholly unprepared for the terrible vastness of the blasphemous city at the heart of Antarctica, and its alien inscrutability. Massive towers, temples, bridges, and pyramids dot the broad landscape. In the ineluctable light of dawn, the nameless maze of cyclopean structures and angular blocks extends for miles in every direction, unmistakably real and yet impossible to believe. It is truly a wonder of the world."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Elder Things, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, and Locked Doors. These sets are indicated by the following icons:"
+                },
+                {
+                  "text": "Set aside the Shoggoths encounter set."
+                },
+                {
+                  "text": "Create the act deck using only Sprawling City (v. I) and Pursuit of the Unknown (v. I). Remove all other act cards from the game."
+                },
+                {
+                  "text": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map."
+                },
+                {
+                  "text": "The lead investigator chooses one of the eight outermost locations. Each investigator begins play at the chosen location."
+                },
+                {
+                  "text": "Locations in this scenario are connected to each adjacent location."
+                },
+                {
+                  "text": "Gather two copies of each of the following tokens from the collection (not from the chaos bag): [skull], [cultist], [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”"
+                },
+                {
+                  "text": "Add 1 [elder_thing] token to the chaos bag."
+                },
+                {
+                  "text": "Remove all three copies of the Benign Elder Thing enemy from the game. Set the Terror of the Stars enemy aside, out of play."
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Elder Things, Nameless Horrors, Penguins, Silence and Mystery, Tekeli-li, and Chilling Cold. These sets are indicated by the following icons:"
+                },
+                {
+                  "text": "Set aside the Creatures in the Ice encounter set."
+                },
+                {
+                  "text": "Create the act deck using only Sprawling City (v. II) and Pursuit of the Unknown (v. II). Remove all other act cards from the game."
+                },
+                {
+                  "text": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map."
+                },
+                {
+                  "text": "Each investigator begins play at the location on the bottom-right."
+                },
+                {
+                  "text": "Locations in this scenario are connected to each adjacent location."
+                },
+                {
+                  "text": "Gather two copies of each of the following tokens from the collection (not from the chaos bag): [skull], [cultist], [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”"
+                },
+                {
+                  "text": "Add 1 [elder_thing] token to the chaos bag."
+                },
+                {
+                  "text": "Remove the Terror of the Stars enemy and all three copies of the Benign Elder Thing enemy from the game."
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Miasma, Penguins, Shoggoths, Tekeli-li, Chilling Cold, and Locked Doors. These sets are indicated by the following icons:"
+                },
+                {
+                  "text": "Set aside the Shoggoths encounter set."
+                },
+                {
+                  "text": "Create the act deck using only Sprawling City (v. III) and Pursuit of the Unknown (v. III). Remove all other act cards from the game."
+                },
+                {
+                  "text": "Shuffle the sixteen City Landscape locations and put them into play, along with the Hidden Tunnel, according to the map."
+                },
+                {
+                  "text": "Each investigator begins play at the location on the top-left."
+                },
+                {
+                  "text": "Locations in this scenario are connected to each adjacent location."
+                },
+                {
+                  "text": "Gather two copies of each of the following tokens from the collection (not from the chaos bag): [skull], [cultist], [tablet], [elder_thing], 0, –1, –2, and –3. Randomly place one of these sixteen tokens on each City Landscape location. These are “keys.”"
+                },
+                {
+                  "text": "Remove the Terror of the Stars enemy and all three copies of the Reawakened Elder Thing enemy from the game."
+                }
+              ]
+            },
+            {
+              "text": "Remove from the game each copy of the Frostbitten and Possessed weaknesses that was not earned during the introduction."
+            },
+            {
+              "text": "Check the difficulty level."
+            },
+            {
+              "text": "If you are playing on Hard difficulty, add 1 doom to agenda 1a."
+            },
+            {
+              "text": "If you are playing on Expert difficulty, add 2 doom to agenda 1a."
+            },
+            {
+              "text": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Keys",
+              "children": [
+                {
+                  "text": "The setup of this scenario instructs the players to place a random chaos token on each of the 16 City Landscape locations, as keys. These keys are never placed in the chaos bag and do not act as traditional chaos tokens. Instead, they represent keys which investigators can recover and use throughout the scenario.\n\nKeys can be acquired in one of two ways:\n\n• If a location with a key on it has no clues, an investigator can take control of its key as a [fast] ability.\n\n• Some card effects may allow investigators to take control of keys in other ways.\n\nWhen an investigator takes control of a key, they place that key on their investigator card. If an investigator who controls one or more keys is eliminated, place each of those keys on their location. As an [action] ability, an investigator may give any number of their keys to another investigator at the same location."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "children": [
+            {
+              "text": "If Dr. Mala Sinha is alive:\n\n“Remember, stay covered at all times. Where we are headed, the wind can flash freeze your skin almost instantly. And stay hydrated,” Dr. Sinha reminds you. “The air here is dryer than you think.” The remainder of the party nods in understanding. None of you have come this far just to catch hypothermia…but it’s almost as likely as death by anything else in this damnable place.The investigators suffer no ill effects."
+            },
+            {
+              "text": "Otherwise:\n\nYou were briefed many times on the dangers of the Antarctic environment, but without Dr. Sinha, you’re at a disadvantage braving the harsh weather. What she lacked in bedside manner, she made up in expertise. Wishing you could have saved her, you grit your teeth and trudge on, watching your companions for any sign of hypothermia.\n\nEach investigator adds a Frostbitten weakness to their deck. It does not count toward that investigator’s deck size."
+            }
+          ]
+        },
+        {
+          "text": "As you descend the peaks surrounding the city, trespassing furtively over its walls, the slopes give way to gradual, shallower foothills peppered with structures of black, primordial stone. Towers or outposts, perhaps, linking the natural outer walls of the city to its outskirts. “We should search one of those watchtowers,” one of the team members suggests, pointing to the closest structure. You nod in agreement. Dyer’s report had observed a wealth of information carved into the walls of several structures within the city, after all—perhaps you’ll stumble upon a map or diagram of the city to aid in your exploration."
+        },
+        {
+          "children": [
+            {
+              "text": "If the investigators scouted the city outskirts:\n\nInstead of heading to the watchtower, you call out to the others to follow you. Recalling the route you and Ellsworth had scouted out the night before, you lead the group toward the half-buried structure you spotted. It takes a bit longer to get there than the watchtower, but provides an easy shortcut into the city proper.\n\nDuring setup, after you reveal the starting location, the lead investigator discovers clues from that location equal to half its clue value (rounded up)."
+            },
+            {
+              "text": "Otherwise:\n\nThe investigators suffer no ill effects."
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "If Professor William Dyer is alive:\n\n“Be careful,” the professor warns. You are keen to heed his wisdom, earned as it is through hard experience. “The glyphs inscribed here depict much about the history of this place. It is ancient. Far more ancient than anything our species has built.”\n\n“What is your point?” someone chimes in.\n\n“Do you know the old phrase, ‘the walls have ears and the doors have eyes?’” Dyer replies. “We have no idea what could be hiding within these walls. What dwells under the ice and stone. Be on alert…and do not let any voices but our own rattle in your skull. Do you understand?”\n\nYou nod in agreement, gulping down a wave of nausea. You cannot help but take the meaning of Dyer’s idiom literally.\n\nThe investigators suffer no ill effects."
+            },
+            {
+              "text": "Otherwise:\n\nAs you enter the tower, the cold dwindles, but the sense of unease you felt observing the city from a distance only grows. Without Dyer’s wisdom to guide you through this place, you feel completely unprepared. Every drop of water, every shifting pebble, every hushed breath causes your throat to clench and your heart to race. It’s not long before you hear whispering in the walls—voices that don’t belong to you, or anyone in your party. The more you try to deny it, the stronger the voices become. A choir in your mind. A warning?\n\nEach investigator adds a Possessed weakness to their deck. It does not count toward that investigator’s deck size."
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "If James “Cookie” Fredericks is alive and Dynamite is listed under “Supplies Recovered:”\n\nUnfortunately, as you attempt to leave the structure, you find the passage blocked by ice and rubble. Just as you are considering how to dig your way through, Cookie approachs with a few sticks of dynamite bundled together. “Oh, fer Chrissake. Move out of the way,” he grumbles, setting the sticks up and lighting the fuse without another warning. You and the others run around the corner, covering your ears and cursing under your breath. Seconds later, a tremendous explosion shakes the building to its foundations. When the dust settles, Cookie has made an easy exit for the party. “Sometimes, Cookie, I swear…” someone remarks.\n\nThe investigators suffer no ill effects."
+            },
+            {
+              "text": "Otherwise:\n\nUnfortunately, as you attempt to leave the structure, you find the passage blocked by ice and rubble.It takes much longer than you expected to find another way out, and when you finally escape, you’ve already been exposed to the elements for some time.\n\nAdd 1 [frost] token to the chaos bag."
+            }
+          ]
+        },
+        {
+          "text": "The open entrance to the obsidian structure greets you like the maw of a ferocious predator. As your eyes adjust to the darkness, your curiosity gives way to deep, profound dread. The structure’s sharp, angular main hall is the site of an absolute massacre. Mangled Elder Thing corpses litter the floor—piles of leathery gray flesh and sticky, misshapen organs, coated in thick, dark-green fluid. You reel at the awful stench of death. These dead are not ancient. This slaughter must have been recent.\n\n“What could have done this?” One of your party breaks the immense silence. Murals on the walls draw your attention, depicting what you have come to know as the race of Elder Things embroiled in battle with some ancient, terrifying foe—no, not one. Many. Your party dares not dwell in this slaughterhouse long. Covering your noses to block the awful stench, you take your leave."
+        },
+        {
+          "text": "The trail of sickly green blood leads out and dribbles down a smooth path sculpted, as if by an acidic substance, out of the mountainside. In the opposite direction, the mountain ridge continues along the perimeter of the city. In the distance, you can just make out a darkened, half-buried section of the city, the layout of its structures completely unfamiliar to you, even after going through Dyer’s notes extensively. Finally, in the heart of the city, a great pyramid and many prominent temples lie scattered, rising to amazing heights despite the weathering of many eons."
+        },
+        {
+          "text": "Group 1"
+        },
+        {
+          "text": "Group 2"
+        },
+        {
+          "text": "Group 3"
+        },
+        {
+          "text": "The expedition team casts votes on which direction they wish to go. Compare the following three columns to see which column has the most team members still alive."
+        },
+        {
+          "children": [
+            {
+              "text": "Dr. Amy Kensler"
+            },
+            {
+              "text": "Dr. Mala Sinha"
+            },
+            {
+              "text": "Takada Hiroko"
+            },
+            {
+              "text": "Avery Claypool"
+            },
+            {
+              "text": "James “Cookie” Fredericks"
+            },
+            {
+              "text": "Danforth"
+            },
+            {
+              "text": "Eliyah Ashevak"
+            },
+            {
+              "text": "Roald Ellsworth"
+            },
+            {
+              "text": "William Dyer"
+            },
+            {
+              "text": "If the left column (Group One) has the most team members still alive, the group votes to venture into the heart of the city where lie its greatest structures. Each partner from this group chosen to accompany an investigator enters play with one additional use. Proceed to Setup (v. I)."
+            },
+            {
+              "text": "If the middle column (Group Two) has the most team members still alive, the group votes to travel along the mountain ridge, toward the region Dyer and Danforth never explored. Each partner from this group chosen to accompany an investigator enters play with one additional use. Proceed to Setup (v. II)."
+            },
+            {
+              "text": "If the right column (Group Three) has the most team members still alive, the group votes to follow the trail left behind by whatever creatures massacred the Elder Things. Each partner from this group chosen to accompany an investigator enters play with one additional use. Proceed to Setup (v. III)."
+            },
+            {
+              "text": "If two or more columns are tied for the most, the lead investigator casts the tiebreaking vote and may decide between the tied options. (Resolve the above bullet as if that chosen group had the most team members still alive.)"
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "text": "Find each surviving expedition member (including those currently under an investigator’s control) who do not have a checkmark drawn next to their name in the “Expedition Team” section of the Campaign Log, and choose one of them at random. If there are no such expedition members, skip the rest of this interlude."
+            },
+            {
+              "text": "You don’t notice the effect the whispers have on your party until it’s too late. Your companion is not just studying the wall, they are leaning against it, placing their ear upon it, their eyes glazed over with rapturous stupor. When they reach the door, they either do not notice—or choose to pointedly ignore—the dribble of hideous miasma that seeps between its cracks; the thick, gray mist that threatens to engulf them whole. You shout a warning just as the door opens, and know enough to look away at just the moment the miasma reaches out. What it is that your teammate sees, you will never truly know. You catch only a glimpse of the unspeakable, bottomless misery that dwells on the other side."
+            },
+            {
+              "text": "If the victim is Danforth:\n\nThe student opens his eyes wide, letting in every inch of the nightmarish sight. Every insidiuous whisper. Every shred of madness. The ice pick in his hand drops to the floor. “It is…beautiful,” he proclaims at last. “The black pit…the carven rim…the moon-ladder…” His words grow more and more feverish. “The original—the eternal—the undying!” A terrible smile spreads across his lips.\n\nThe investigator who controls Danforth discovers one clue from the nearest location with one or more clues. (If no investigator controls Danforth, the lead investigator discovers it instead.)"
+            },
+            {
+              "text": "Your companion stands petrified in the doorway, whether by sheer terror or compelled by some unknown force, you cannot tell. You and the others work your way toward the door, averting your gaze to ensure you do not suffer the same fate. You slide the stone door shut with a heavy crash, trapping the remainder of the churning miasma within. The moment the horror within is obscured, your companion’s eyes roll back in their head and they collapse to the floor.\n\nTheir heart continues to beat…but their eyes never open again.\n\nIn the “Expedition Team” section of the Campaign Log, cross off the chosen character’s name. If they were in play, they are defeated and removed from the game."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator was defeated): Injured and weary, you hole up in the relative safety of one of the city’s towering structures. Your only hope is to take shelter within the alien city and hope your presence goes unnoticed by the denizens that still prowl its streets and ancient halls.\n\n• Proceed to Resolution 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: A quiet, unearthly stillness welcomes you as your party delves into the secret passageway. You expected to be greeted by sound and fury, but this eerie silence is almost worse. Not a word is spoken as you slink deeper and deeper into the secret shaft, making note of the peculiar smoothness of the walls, the bizarre markings along the floor, the muted drip, drip, drip of water in the distance.\n\nFor hours you continue into the deep dark, questioning your judgment with each step. What kind of people walk willingly into the jaws of such horror? You risked your reputation going on this expedition to begin with. Then you risked your life not turning back the moment things turned dire. Now you risk your very sanity unearthing secrets no human was ever meant to find.\n\nIs this bravery? Or the final mistake of a herd of fools, too stubborn to see that their own deaths lie at the end of this road? It matters not. You’ve come too far to turn back now. One way or another, you will get the answers you seek. The only question is whether you’ll live to tell the world what you found.\n\n• In your Campaign Log, record the team found the hidden tunnel.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator also earns 1 additional experience for each pair of chaos tokens spent during this scenario.\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Proceed to Interlude III: Final Night."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Hours pass. You dare not venture outside, but you explore every crevice of your sanctuary, hoping to find something to make this endeavor worthwhile. What you find instead is even harder to believe. In the icy sub-level of the structure, a sacred chamber houses a churning pool of kaleidoscopic miasma. Gray, swirling mist evaporates from its surface, familiar shapes and strange hallucinations materializing and vanishing within.\n\nAs if sensing your approach, the pool stops whirling and rises on its own, almost as if in greeting. Then, it coalesces into a shimmering glob of prismatic color and crawls along the floor, stopping when you stop, continuing along as you follow. It beckons you closer, guiding you. You glance at one another with trepidation. Is it trying to show you something? To take you somewhere? And if so…is it truly wise to follow?\n\nEventually, you come to an agreement. There is no use dawdling here, and the weather grows fouler with each passing minute. You decide to follow with caution, hoping perhaps it will lead you to answers. For hours you continue into the deep dark, questioning your judgment with each step. The ancient structure gives way to icy tunnels, walls smooth and slick with dark ichor, floor covered in bizarre markings of unknowable origin. Finally, the glob of miasma seeps back into the walls and disappears, leaving you alone with your doubts, your fears, and the impossibly long shaft breaching through the icy heart of Antarctica and into the depths beyond…\n\n• In your Campaign Log, record the team was guided to the hidden tunnel.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator also earns 1 additional experience for each pair of chaos tokens that were spent during this scenario.\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Proceed to Interlude III: Final Night."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

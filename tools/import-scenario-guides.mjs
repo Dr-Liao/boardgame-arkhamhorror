@@ -5,6 +5,8 @@ import { pathToFileURL } from 'node:url'
 import { contentRegistry } from '../content/registered.js'
 import { chapters as innsmouthChapters } from '../content/campaigns/theInnsmouthConspiracy/shared.js'
 import { STORY_TEXT as innsmouthStory } from '../content/campaigns/theInnsmouthConspiracy/story-text.js'
+import { chapters as eoteChapters } from '../content/campaigns/edgeOfTheEarth/shared.js'
+import { EOTE_STORY_META, EOTE_STORY_TEXT } from '../content/campaigns/edgeOfTheEarth/story-text.js'
 
 const source = new URL('../../../参考资源/ArkhamHorror-main/frontend/src/locales/', import.meta.url)
 const destination = new URL('../web/scenario-guides/', import.meta.url)
@@ -43,10 +45,107 @@ export function guideText(value, language) {
   return localizeSupplements(text, language)
 }
 
+// ---------------------------------------------------------------------------
+// P7《地球边缘》指南：正文来源统一用 `story-text.js` 生成物（与章节 / 幕间同一事实源）。
+// zh locale 只放已译叶子；缺译叶子用空正文 + `missing` 标记并在顶层 `chineseGaps` 列出，
+// 不允许用英文冒充中文（展示层可据此显示「中文待补」）。
+// ---------------------------------------------------------------------------
+function eoteCategoryOf(key) {
+  if (key === 'resolutions') return 'resolutions'
+  if (/intro/i.test(key) || ['dreamSelection', 'dreams'].includes(key)) return 'intro'
+  if (['setup', 'investigatorSetup', 'standalone', 'regionSetup'].includes(key)) return 'setup'
+  if (['specialRules', 'rules', 'theVoid', 'moving', 'hiddenChamber', 'choosingARandomLocation',
+    'locationsInTheEncounterDeck', 'threeActsThreeThreads', 'bodyOfAYithian', 'depthLevel', 'pursuit',
+    'storyCards', 'noWayOut', 'theSpectralEncounterDeck', 'keys', 'breachesAndIncursions', 'theCosmos',
+    'emptySpace', 'callOfMadness', 'seal', 'titanicRamp'].includes(key)) return 'specialRules'
+  return 'story'
+}
+
+/** story-text 的嵌套双语树 → 指南 blocks（与 TIC/TDE 产物同形状：{text} | {title, children}）。 */
+function eoteBlocks(enNode, displayNode, gaps, path, language) {
+  // 测试口径：中文指南里出现连续 3+ 个英文小写单词即视为「未译正文冒充中文」。
+  const untranslatedChinese = text => /\b[a-z]{4,}\s+[a-z]{3,}\s+[a-z]{3,}\b/i.test(text)
+  // 参考 locale 的 `@:` 键向引用（生成物里可能残留）：指南不展开跨节引用，直接去掉引用行，
+  // 保留同段其余正文；绝不能把 `@:...` 原样展示给玩家或让测试看到未展开格式。
+  const stripRefs = value => String(value ?? '')
+    .replace(/@:[A-Za-z0-9_.-]+/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+  if (typeof enNode === 'string') {
+    const english = stripRefs(enNode)
+    if (language === 'en') return english ? [{ text: english }] : []
+    const gap = gaps[path]
+    if (gap) return [{ text: '', missing: gap, path }]
+    const text = stripRefs(displayNode)
+    // 理论上 untranslated 叶子已在 story-text 的 chineseGaps 里（gap 分支会先返回）；
+    // 这里只做兜底，不新增/改写 chineseGaps，保持指南与 story-text 同一事实源。
+    if (text && untranslatedChinese(text)) return [{ text: '', missing: 'untranslated', path }]
+    return text ? [{ text }] : [{ text: '', missing: 'missing', path }]
+  }
+  if (!enNode || typeof enNode !== 'object' || Array.isArray(enNode)) return []
+  const rawTitle = typeof enNode.title === 'string' ? stripRefs(displayNode?.title) : ''
+  const title = typeof enNode.title === 'string'
+    ? (language === 'en' ? stripRefs(enNode.title)
+      : (gaps[`${path}.title`] || untranslatedChinese(rawTitle) ? '' : rawTitle))
+    : ''
+  if (language === 'zh' && title === '' && rawTitle && gaps[`${path}.title`] == null) gaps[`${path}.title`] = 'untranslated'
+  const children = []
+  for (const [key, child] of Object.entries(enNode)) {
+    if (key === 'title' || skipped.has(key)) continue
+    children.push(...eoteBlocks(child, displayNode?.[key], gaps, `${path}.${key}`, language))
+  }
+  if (children.length) return [{ ...(title ? { title } : {}), children }]
+  return title ? [{ title }] : []
+}
+
+export function buildEoteGuide(chapterId) {
+  const chapter = eoteChapters.find(entry => entry.id === chapterId)
+  if (!chapter) throw new RangeError(`未知《地球边缘》章节 ${chapterId}`)
+  const story = EOTE_STORY_TEXT.chapters[chapterId]
+  if (!story) throw new Error(`story-text 缺少章节 ${chapterId}（先运行 node tools/import-eote-story.mjs --write）`)
+  const guide = {
+    id: chapterId,
+    campaignId: 'edgeOfTheEarth',
+    sourceKind: EOTE_STORY_META?.sourceKind || 'reference-project-zh-locale',
+    officialChinese: false,
+    chineseStatus: story.status,
+    chinese: story.chinese,
+    chineseGaps: story.chineseGaps,
+    sectionCount: story.sectionCount,
+    guideKeyCount: story.guideKeyCount,
+    sources: story.sources,
+    locales: {},
+  }
+  for (const language of ['zh', 'en']) {
+    const sections = { intro: [], setup: [], specialRules: [], story: [], resolutions: [] }
+    // zh 分支可能遇到参考 zh locale「有中文但夹整句英文」的段落：这类段落不当作已译，
+    // 统一改写成 missing 标记并补进 chineseGaps（UI 显示「中文待补」，不用英文冒充）。
+    const gaps = language === 'zh' ? { ...story.chineseGaps } : story.chineseGaps
+    for (const key of Object.keys(story.sectionsEn)) {
+      if (skipped.has(key)) continue
+      sections[eoteCategoryOf(key)].push(...eoteBlocks(story.sectionsEn[key], story.sections[key], gaps, key, language))
+    }
+    if (language === 'zh') guide.chineseGaps = gaps
+    // 与 TIC/TDE 产物一致：特别规则去重（同一段被多处引用时只展示一次）。
+    sections.specialRules = sections.specialRules.filter((block, index, all) =>
+      all.findIndex(other => JSON.stringify(other) === JSON.stringify(block)) === index)
+    guide.locales[language] = sections
+  }
+  return guide
+}
+
 export async function buildScenarioGuides() {
   const registeredScenarios = contentRegistry.listScenarios()
+  // P7：《地球边缘》八章单元（catalog 阶段未进生产注册表，但指南 UI 依赖其 id 加载）。
+  const knownIds = new Set([
+    ...registeredScenarios.map(scenario => scenario.id),
+    ...innsmouthChapters.map(chapter => chapter.id),
+  ])
+  const eoteScenarioEntries = eoteChapters
+    .filter(chapter => !knownIds.has(chapter.id))
+    .map(chapter => ({ id: chapter.id, campaignId: 'edgeOfTheEarth', eoteChapter: chapter }))
   const scenarios = [...registeredScenarios, ...innsmouthChapters.filter(ch => !registeredScenarios.some(s => s.id === ch.id))
-    .map(ch => ({ ...ch, campaignId: 'theInnsmouthConspiracy' }))]
+    .map(ch => ({ ...ch, campaignId: 'theInnsmouthConspiracy' })), ...eoteScenarioEntries]
   const documents = {}
   const translations = await json(new URL('../content/scenario-guide-translations.json', import.meta.url))
   const dreamTranslations = {}
@@ -55,6 +154,7 @@ export async function buildScenarioGuides() {
     Object.assign(dreamTranslations, (await json(new URL(file, batches))).entries)
   }
   for (const scenario of scenarios) {
+    if (scenario.campaignId === 'edgeOfTheEarth') continue
     documents[scenario.id] = {}
     for (const language of ['en', 'zh']) {
       const sourceId = scenario.id.startsWith('heartOfTheEldersPart') ? 'heartOfTheElders' : scenario.id
@@ -78,6 +178,10 @@ export async function buildScenarioGuides() {
   const results = new Map()
   const missing = []
   for (const scenario of scenarios) {
+    if (scenario.campaignId === 'edgeOfTheEarth') {
+      results.set(`${scenario.id}.json`, `${JSON.stringify(buildEoteGuide(scenario.id), null, 2)}\n`)
+      continue
+    }
     const guide = { id: scenario.id, campaignId: scenario.campaignId, sourceKind: 'bundled-reference-with-self-translated-supplements', officialChinese: false, locales: {} }
     for (const language of ['zh', 'en']) {
       const root = documents[scenario.id].en

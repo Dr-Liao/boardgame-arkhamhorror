@@ -5,6 +5,8 @@ import { enemyHasLocationKeyword } from './enemy-entry.js'
 import { afterUsesSpent } from './uses.js'
 import { hasWindowListener } from './window-listeners.js'
 import { eventWindowContext } from './event-window.js'
+import { directDamageSource } from '../integration/direct-damage.js'
+import { currentEffectSource } from './effect-provenance.js'
 // 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
@@ -207,7 +209,8 @@ function doFight(state, seat, opts, events, noSpend) {
     && cardDef(weapon?.code)?.traits?.some(trait => ['Ranged', 'Firearm', 'Spell'].includes(trait))) difficulty = Math.max(0, difficulty - rangedReduction)
   // Events pass their printed code through effect.code/sourceCode rather than an asset instance.
   // Direct card API attacks may provide a presentation-only code without changing damage attribution.
-  const weaponCode = weapon?.code || [opts.presentationCardCode, opts.assetId, opts.sourceCode, opts.code].find(code => code && cardDef(code)) || null
+  const weaponCode = weapon?.code || [opts.presentationCardCode, opts.assetId, opts.sourceCode, opts.code,
+    currentEffectSource(state)?.code, state._resolvingCardCode].find(code => code && cardDef(code)) || null
   const attackFx = { weaponCode, attackStyle: attackStyle(weaponCode && cardDef(weaponCode)) }
   const affectedEnemyIds = opts.stormOfSpirits
     ? state.enemies.filter(item => item.location === enemy.location).map(item => item.id) : undefined
@@ -220,9 +223,13 @@ function doFight(state, seat, opts, events, noSpend) {
   const victoryBonus = enemy.victory > 0
     ? inv.assets.reduce((sum, item) => sum + (registeredEntry(item.code)?.bonusVsVictoryCombat || 0), 0)
     : 0
+  // P6 原语（08086「你发动一次攻击时，本次攻击 +1 伤害」）：给 testInitiated 窗口一个
+  // 可写的本次攻击上下文；卡面反应往 damageBonus 累加，成功结算时并入本次攻击伤害。
+  const initiatedContext = { damageBonus: 0 }
   return performTest(state, seat, skill, difficulty, { source: { label: '攻击', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code, ...(opts.damageIfCommittedSkill || opts.trackAssetSource ? { assetId: opts.assetId } : {}) }, baseValue: opts.baseValue,
     ...(opts.onToken ? { onToken: opts.onToken } : {}),
     basicAction: opts.basicAction,
+      initiatedContext,
       testTarget: { kind: 'enemy', id: enemy.id, actionKind: 'fight' },
       extraChaosChoices: opts.extraChaosChoices || 0,
     autoFailOnTokens: opts.autoFailOnTokens,
@@ -245,6 +252,9 @@ function doFight(state, seat, opts, events, noSpend) {
       for (const investigator of aliveInvestigators(state).filter(other => other.location === enemy.location)) applyDamage(state, investigator, 1, events)
     }
     if (r.success) {
+      // P5 地球边缘：攻击成功回调（08008 可靠的长鞭：成功后可改为自动躲避并横置）。
+      // 与 doEvade 的 opts.onSuccess 同形；既有调用方不传 onSuccess，行为零变化。
+      opts.onSuccess?.({ state, inv, enemy, result: r, events, opts })
       const movedDamage = Math.min(inv.damage, r.homeFrontDamage || 0)
       if (movedDamage > 0) {
         inv.damage -= movedDamage
@@ -263,6 +273,13 @@ function doFight(state, seat, opts, events, noSpend) {
         opts.damageBonus = (opts.damageBonus || 0) + (opts.damageBonusOnTokens.amount || 0)
       // 「枪法如神」：本次攻击的敌人未与你交战时，伤害 +1。
       if (opts.marksmanship && enemy.engagedSeat !== seat) opts.damageBonus = (opts.damageBonus || 0) + 1
+      // P6 原语（08086）：攻击发起窗口里登记的本次攻击伤害加值（与 weaponFightInitiated 的
+      // context.damageBonus 同形），在 weaponBonus 结算之前并入。
+      if (initiatedContext.damageBonus) opts.damageBonus = (opts.damageBonus || 0) + initiatedContext.damageBonus
+      if (state.skillTest?.attackDamageBonus) {
+        opts.damageBonus = (opts.damageBonus || 0) + state.skillTest.attackDamageBonus
+        info(state, events, `⚔️ 本次攻击伤害 +${state.skillTest.attackDamageBonus}。`)
+      }
       // 「成功且超过难度至少 N 点 → 本次攻击 +1 伤害」必须在结算 weaponBonus 之前并入，
       // 否则 damageBonus 已经算完，这次 +1 永远不会进入实际伤害（03234 .41 短口手枪）。
       if (opts.damageOnSuccessBy != null && r.value - difficulty >= opts.damageOnSuccessBy) opts.damageBonus = (opts.damageBonus || 0) + 1
@@ -313,11 +330,16 @@ function doFight(state, seat, opts, events, noSpend) {
         dmg = 0
         info(state, events, `⛔ 「${enemy.name}」免疫这次攻击造成的伤害。`)
       }
-      ;(state._resolution?.events || events).push({ type: 'presentation', kind: 'attack', direction: 'outgoing', seat, enemyId: enemy.id,
+      // A zero-standard-damage area attack is presented by its actual blast
+      // targets below. Keep misses and any separate bonus attack damage visible.
+      const deferredFlame = opts.flamethrowerSpread && attackFx.attackStyle === 'flamethrower'
+      const attackPresentation = { type: 'presentation', kind: 'attack', direction: 'outgoing', seat, enemyId: enemy.id,
         assetId: opts.assetId, ...attackFx, enemyIds: affectedEnemyIds, name: enemy.name, location: enemy.location, damage: dmg, success: true,
         defeated: enemyHealth(state, enemy) != null && enemy.damageTaken + dmg >= enemyHealth(state, enemy)
           && enemyCanBeDefeated(state, enemy, opts.assetId || null, seat),
-        tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
+        tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) }
+      if (!deferredFlame && !(dmg === 0 && directDamageSource(state, weaponCode)?.style === 'blast'))
+        (state._resolution?.events || events).push(attackPresentation)
       // 「特制弹药」：附属的枪械攻击怪物时 +1 伤害。
       // Phase 5（5a-29）：「特制弹药」这类附属给宿主的攻击加成由条目字段 monsterAttackDamageBonus 声明。
       const monsterBonus = (inv.assets.find(item => item.id === opts.assetId)?.attachments || [])
@@ -416,10 +438,15 @@ function doFight(state, seat, opts, events, noSpend) {
             })
             if (chosen === 'done') break
             const target = living.find(item => item.id === chosen) || living[0]
-            damageEnemy(state, target, 1, seat, events, opts.assetId || null)
+            damageEnemy(state, target, 1, seat, events, opts.assetId || null,
+              deferredFlame ? { code: weaponCode, assetId: opts.assetId, style: attackFx.attackStyle } : {})
             remaining -= 1
           }
-        } else if (state.enemies.includes(enemy)) enemy.damageTaken += dmg
+        } else if (state.enemies.includes(enemy)) {
+          if (deferredFlame) (state._resolution?.events || events).push({ ...attackPresentation, damage: dmg,
+            tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
+          enemy.damageTaken += dmg
+        }
       } else enemy.damageTaken += dmg
       if (!opts.stormOfSpirits) {
         // 2026-10-25 修复：把「伤害来源」传给 enemyDamaged（此前普通战斗路径不传，
@@ -649,7 +676,7 @@ function doEvade(state, seat, opts, events, noSpend) {
       }, events)
       if (opts.damageOnSuccess && state.enemies.includes(enemy)) {
         enemy.defeatedBy = seat
-        damageEnemy(state, enemy, opts.damageOnSuccess, seat, events)
+        damageEnemy(state, enemy, opts.damageOnSuccess, seat, events, null, { code: evadeSourceCode })
         info(state, events, `💥 「${enemy.name}」被躲避后受到 ${opts.damageOnSuccess} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
       }
       afterEvade(state, inv, enemy, events, r)

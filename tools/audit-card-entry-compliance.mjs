@@ -2,7 +2,9 @@
 //
 // 规则（阻断，基线只减不增）：
 //   R1 directStateWrite   条目文件直接写运行时状态（state / inv / location / enemy / act / agenda /
-//                         asset / target / card 的字段或数组）。
+//                         asset / target / card 的字段或数组），含经 context.<stateField> 表达式
+//                         或同文件局部变量别名（如 `const whip = inv.assets.find(...); whip.exhausted = true`）
+//                         的间接直写（P0-11 补漏：旧正则只认字面 STATE_ROOTS 前缀）。
 //   R2 reprintDuplicate   同一张印刷卡（cards-data 的 duplicateOfCode）两个卡号都写了条目。
 //   R3 playConditionGap   卡文要求「只能在你回合打出」，但条目没有 playCondition。
 //
@@ -48,10 +50,92 @@ function stripComments(source) {
 }
 
 const STATE_ROOTS = ['state', 'inv', 'location', 'enemy', 'act', 'agenda', 'asset', 'target', 'card']
+const CONTEXT_STATE_FIELDS = [...STATE_ROOTS, 'source']
+const IDENT = '[A-Za-z_$][\\w$]*'
+const WRITE_OPS = '=(?!=)|\\+=|-=|\\*=|\\|=|\\|\\|=|\\.push\\(|\\.splice\\('
 const WRITE_RE = new RegExp(
-  `(?:^|[^.\\w$])(${STATE_ROOTS.join('|')})\\.([A-Za-z_$][\\w$]*)\\s*(=(?!=)|\\+=|-=|\\*=|\\|=|\\|\\|=|\\.push\\(|\\.splice\\()`,
+  `(?:^|[^.\\w$])(${STATE_ROOTS.join('|')})\\.(${IDENT})\\s*(${WRITE_OPS})`,
   'g',
 )
+// context 直接成员写：`context.asset.exhausted = true` 这类（旧正则的 [^.\w$] 前缀会漏掉）。
+const CONTEXT_WRITE_RE = new RegExp(
+  `(?:^|[^.\\w$])((?:context|ctx)\\.(${CONTEXT_STATE_FIELDS.join('|')}))\\.(${IDENT})\\s*(${WRITE_OPS})`,
+  'g',
+)
+const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// R1 补漏（P0-11）：局部变量直写。例：08008.js 把 inv.assets.find(...) 的结果存进 whip，
+// 再 `whip.exhausted = true`；旧 STATE_ROOTS 正则只认 state/inv/... 字面前缀，漏检这类写法。
+// 做法：从直接状态根 / `context.<stateField>` 表达式出发做一次轻量污点传播（只跟同文件内
+// const/let/var 声明与 context 解构），再对「被污染的标识符.字段 = ...」计为 R1。
+function collectTaintedIdentifiers(source) {
+  const tainted = new Set(STATE_ROOTS)
+  const rhsLooksState = rhs => {
+    for (const name of tainted) {
+      const pattern = new RegExp(`(?:^|[^.\\w$])${escapeRe(name)}\\s*(?:\\.[A-Za-z_$]|\\[|\\?\\.)`)
+      if (pattern.test(rhs)) return true
+    }
+    const contextPattern = new RegExp(
+      `(?:^|[^.\\w$])(?:context|ctx)\\.(?:${CONTEXT_STATE_FIELDS.join('|')})\\b`)
+    return contextPattern.test(rhs)
+  }
+  // const { source: alias, asset } = context  // 解构别名也视作状态对象。
+  for (const match of source.matchAll(/(?:const|let|var)\s*\{([^}]*)\}\s*=\s*(?:context|ctx)\b/g)) {
+    for (const part of match[1].split(',')) {
+      const [rawKey, rawAlias] = part.split(':').map(piece => piece?.trim() ?? '')
+      const key = rawKey?.replace(/=.*$/, '').trim()
+      const name = (rawAlias || key)?.replace(/=.*$/, '').trim()
+      if (name && /^[A-Za-z_$][\w$]*$/.test(name) && CONTEXT_STATE_FIELDS.includes(key)) tainted.add(name)
+    }
+  }
+  const declRe = /(?:^|\n)\s*(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*([^\n]*)/g
+  for (let pass = 0; pass < 4; pass += 1) {
+    let changed = false
+    declRe.lastIndex = 0
+    let match
+    while ((match = declRe.exec(source))) {
+      const [, name, rhs] = match
+      if (tainted.has(name)) continue
+      if (rhsLooksState(rhs)) {
+        tainted.add(name)
+        changed = true
+      }
+    }
+    if (!changed) break
+  }
+  return tainted
+}
+function scanStateWrites(source) {
+  const writes = []
+  const lines = source.split('\n')
+  const push = (root, field, lineIndex, matchText) => {
+    writes.push({ root, field, line: lineIndex + 1, text: matchText.trim().slice(0, 140) })
+  }
+  lines.forEach((line, index) => {
+    WRITE_RE.lastIndex = 0
+    let match
+    while ((match = WRITE_RE.exec(line))) push(match[1], match[2], index, line)
+    CONTEXT_WRITE_RE.lastIndex = 0
+    while ((match = CONTEXT_WRITE_RE.exec(line))) push(match[1], match[3], index, line)
+  })
+  const tainted = collectTaintedIdentifiers(source)
+  const localWriteRe = new RegExp(
+    `(?:^|[^.\\w$])(${[...tainted].sort((left, right) => right.length - left.length).map(escapeRe).join('|')})`
+    + `\\.(${IDENT})\\s*(${WRITE_OPS})`, 'g')
+  lines.forEach((line, index) => {
+    localWriteRe.lastIndex = 0
+    let match
+    while ((match = localWriteRe.exec(line))) push(match[1], match[2], index, line)
+  })
+  // 同一行可能被多条规则命中（如 `inv.assets = ...`），按 root+field+line 去重。
+  const seen = new Set()
+  return writes.filter(write => {
+    const key = `${write.root}.${write.field}:${write.line}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
 
 // R6（观察项）：把「自身卡号」当成实例身份做集合查找。
 // 触发式: `... .find/filter/some/every/flatMap(... code === '<自身卡号>' / selfCode ...)`。
@@ -85,15 +169,8 @@ function scanEntry(file, area) {
   const code = entryCode(raw, file)
   const source = stripComments(raw)
   const rawLines = raw.split('\n')
-  const writes = []
   const lines = source.split('\n')
-  lines.forEach((line, index) => {
-    WRITE_RE.lastIndex = 0
-    let match
-    while ((match = WRITE_RE.exec(line))) {
-      writes.push({ root: match[1], field: match[2], line: index + 1, text: rawLines[index].trim().slice(0, 140) })
-    }
-  })
+  const writes = scanStateWrites(source)
   return {
     code,
     area,
@@ -167,9 +244,9 @@ const packageScope = entries.filter(entry => {
 const report = {
   schemaVersion: 1,
   generatedBy: 'tools/audit-card-entry-compliance.mjs',
-  note: '阻断项基线只减不增：baseline 里的卡号是 2026-10-28 扫描时的存量违规；修复后跑 --write 收紧。出现基线外的新违规，--check 失败。',
+  note: '阻断项基线只减不增：baseline 里的卡号是 2026-10-28 扫描时的存量违规；修复后跑 --write 收紧。出现基线外的新违规，--check 失败。2026-11-08 P0-11：R1 补检局部变量/context 直写后新识别 15 条存量违规（08008 等），属检测范围扩大而非新增债务，随 --write 记入基线。',
   rules: [
-    { id: 'R1', name: 'directStateWrite', blocking: true, description: '条目文件直接写运行时状态（state/inv/location/enemy/act/agenda/asset/target/card 的字段或数组）' },
+    { id: 'R1', name: 'directStateWrite', blocking: true, description: '条目文件直接写运行时状态（state/inv/location/enemy/act/agenda/asset/target/card 的字段或数组），含经 context.<stateField> 或同文件局部变量别名的间接直写' },
     { id: 'R2', name: 'reprintDuplicate', blocking: true, description: '同一张印刷卡（duplicateOfCode）两个卡号都写了条目' },
     { id: 'R3', name: 'playConditionGap', blocking: true, description: '卡文要求「只能在你回合打出」但条目没有 playCondition' },
     { id: 'R4', name: 'singleCardField', blocking: false, description: '只被 1 个条目写的状态字段（原语缺口信号）' },
@@ -211,47 +288,55 @@ const report = {
   fields: Object.fromEntries([...fieldWriters.entries()].map(([field, codes]) => [field, [...codes].sort()]).sort(([a], [b]) => a.localeCompare(b))),
 }
 
-const mode = process.argv.slice(2).find(arg => arg.startsWith('--')) || '--check'
+export { entries, report, scanStateWrites, collectTaintedIdentifiers }
 
-if (mode === '--write') {
-  writeFileSync(LEDGER, JSON.stringify(report, null, 1) + '\n', 'utf8')
-  console.log(`写入 ${path.relative(ROOT, LEDGER)}`)
+function main() {
+  const mode = process.argv.slice(2).find(arg => arg.startsWith('--')) || '--check'
+
+  if (mode === '--write') {
+    writeFileSync(LEDGER, JSON.stringify(report, null, 1) + '\n', 'utf8')
+    console.log(`写入 ${path.relative(ROOT, LEDGER)}`)
+    console.log(JSON.stringify(report.counts, null, 1))
+    return
+  }
+
+  if (!existsSync(LEDGER)) {
+    console.error('缺少 audit/card-entry-compliance.json：先运行 node tools/audit-card-entry-compliance.mjs --write')
+    process.exitCode = 1
+    return
+  }
+
+  const baseline = JSON.parse(readFileSync(LEDGER, 'utf8'))
+  const problems = []
+  const remaining = []
+
+  const compareSet = (rule, current, recorded) => {
+    const known = new Set(recorded || [])
+    const now = new Set(current)
+    for (const code of now) {
+      if (!known.has(code)) problems.push(`${rule} 新增违规：${code}`)
+    }
+    for (const code of known) {
+      if (!now.has(code)) remaining.push(`${rule} 已修复（可 --write 收紧基线）：${code}`)
+    }
+  }
+
+  compareSet('R1 directStateWrite', report.baseline.directStateWrite, baseline.baseline?.directStateWrite)
+  compareSet('R2 reprintDuplicate', report.baseline.reprintDuplicate, baseline.baseline?.reprintDuplicate)
+  compareSet('R3 playConditionGap', report.baseline.playConditionGap, baseline.baseline?.playConditionGap)
+
+  for (const line of remaining) console.log(`ℹ️  ${line}`)
+
+  if (problems.length) {
+    console.error('卡条目合规审计失败：')
+    for (const line of problems) console.error(`  ✗ ${line}`)
+    console.error('规则见 docs/arkham-content-migration.md §4.6.10 与 AGENTS.md「不可协商」。')
+    process.exitCode = 1
+    return
+  }
+
+  console.log('卡条目合规审计通过（无基线外新增违规）')
   console.log(JSON.stringify(report.counts, null, 1))
-  process.exit(0)
 }
 
-if (!existsSync(LEDGER)) {
-  console.error('缺少 audit/card-entry-compliance.json：先运行 node tools/audit-card-entry-compliance.mjs --write')
-  process.exit(1)
-}
-
-const baseline = JSON.parse(readFileSync(LEDGER, 'utf8'))
-const problems = []
-const remaining = []
-
-const compareSet = (rule, current, recorded) => {
-  const known = new Set(recorded || [])
-  const now = new Set(current)
-  for (const code of now) {
-    if (!known.has(code)) problems.push(`${rule} 新增违规：${code}`)
-  }
-  for (const code of known) {
-    if (!now.has(code)) remaining.push(`${rule} 已修复（可 --write 收紧基线）：${code}`)
-  }
-}
-
-compareSet('R1 directStateWrite', report.baseline.directStateWrite, baseline.baseline?.directStateWrite)
-compareSet('R2 reprintDuplicate', report.baseline.reprintDuplicate, baseline.baseline?.reprintDuplicate)
-compareSet('R3 playConditionGap', report.baseline.playConditionGap, baseline.baseline?.playConditionGap)
-
-for (const line of remaining) console.log(`ℹ️  ${line}`)
-
-if (problems.length) {
-  console.error('卡条目合规审计失败：')
-  for (const line of problems) console.error(`  ✗ ${line}`)
-  console.error('规则见 docs/arkham-content-migration.md §4.6.10 与 AGENTS.md「不可协商」。')
-  process.exit(1)
-}
-
-console.log('卡条目合规审计通过（无基线外新增违规）')
-console.log(JSON.stringify(report.counts, null, 1))
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main()

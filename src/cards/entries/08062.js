@@ -1,0 +1,55 @@
+// 08062 闭环（Close the Circle）· 秘术师资产 · 奥术 · 1 经验。
+//
+// 卡面：使用(充能数等于你控制卡牌的职阶数，包含本卡牌)。
+//       [fast] 花费 1 充能并横置闭环：执行一次基础行动。该行动期间执行的每次技能检定中，
+//       你可以不使用原本指示的技能，改为使用 [willpower]。
+//
+// 一卡一文件：这张卡的行为只在这里维护。
+// approximation: 「额外充能数 = 职阶数」用 entersPlay + api.setAssetUses 动态初值；
+// 「执行一次基础行动」用 api.beginImmediateAction({ basicOnly: true })。
+// 「技能检定改用 willpower」缺少 ctx.api 级的 substituteSkill 绑定时长，暂未接线（条目与报告标注）。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const classCount = inv => {
+  const classes = new Set()
+  for (const asset of inv.assets || []) {
+    const klass = ALL_CARDS[asset.code]?.klass
+    if (klass) classes.add(String(klass).toLowerCase())
+  }
+  return classes.size
+}
+
+export default {
+  code: '08062',
+  uses: 1,
+  usesType: 'charges',
+  abilities: [
+    {
+      kind: 'entersPlay',
+      label: '入场：充能数 = 你控制卡牌的职阶数（含本卡牌）',
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        // 入场时机较晚：按当前受控资产职阶数（含本卡）设置。
+        const count = Math.max(1, classCount(inv))
+        api.setAssetUses(source, count)
+        api.info(`⭕ 「闭环」：入场时拥有 ${count} 充能（控制的职阶数）。`)
+      },
+    },
+    {
+      kind: 'free',
+      cost: { exhaust: true, uses: 1 },
+      label: '花 1 充能并横置：执行一次基础行动',
+      criteria: [({ state, inv }) => state.currentSeat === inv.seat],
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        const started = api.beginImmediateAction(inv.seat, { source, basicOnly: true })
+        if (!started) {
+          api.info('「闭环」：当前没有可以执行的基础行动。')
+          return
+        }
+        api.info('⭕ 「闭环」：执行一次基础行动。')
+      },
+    },
+  ],
+  modifiers: [],
+}

@@ -1,0 +1,45 @@
+// 08020 正面迎击
+// 卡面：攻击。本次攻击造成 +1 伤害并自动成功。作为执行本次攻击的额外费用，所选敌人攻击你。
+//
+// 一张卡一个文件：这张卡的行为只在这里维护。
+// 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// approximation：doFight 只能走混乱标记检定，没有「自动成功」选项。这里用「跳过检定、直接按
+// 本次攻击的伤害（基础 1 +1）结算伤害」表达自动成功的核心结果；攻击检定窗口/失败触发不会发生。
+// 额外费用（敌人先攻击你）用 api.enemyAttackByCard 先结算，与卡面顺序一致。
+import { attackableEnemies } from './_shared.js'
+
+export default {
+  code: '08020',
+  abilities: [
+    {
+      kind: 'played',
+      countsAs: 'fight',
+      noOpportunityAttack: true,
+      label: '攻击：本次攻击自动成功并 +1 伤害；额外费用：所选敌人先攻击你',
+      resolve: ({ state, inv, api }) => {
+        const targets = attackableEnemies(state, inv)
+        if (!targets.length) {
+          api.info('正面迎击：没有可攻击的敌人。')
+          return
+        }
+        const chosen = targets.length === 1 ? targets[0].id : api.choice({
+          kind: 'target', source: '08020', seat: inv.seat,
+          prompt: '正面迎击：选择攻击目标（它会先攻击你）。',
+          options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        const enemy = targets.find(item => item.id === chosen) || targets[0]
+        // 额外费用：所选敌人攻击你。
+        api.info(`正面迎击：作为额外费用，「${enemy.name}」攻击 ${inv.name}。`)
+        api.enemyAttackByCard(enemy, `${api.cardName('08020')}：额外费用`, inv.seat)
+        // 自动成功的攻击：本次攻击造成 2 点伤害（基础 1 + 1）。
+        const current = (api.enemiesAt(inv.location) || []).find(item => item.id === enemy.id)
+        if (current) {
+          api.damageEnemy(current, 2, inv.seat)
+          api.info(`正面迎击：「${enemy.name}」自动被击中，受到 2 点伤害。`)
+        }
+      },
+    },
+  ],
+  modifiers: [],
+}

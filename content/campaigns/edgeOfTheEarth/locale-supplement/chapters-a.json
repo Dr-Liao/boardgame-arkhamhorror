@@ -1,0 +1,263 @@
+{
+  "kind": "chapter-translation",
+  "entries": [
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "heading",
+      "en": "Scenario I",
+      "zh": "剧本 I",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *Ice and Death*, *The Crash*, *Creatures in the Ice*, *Deadly Weather*, *Hazards of Antarctica*, *Silence and Mystery*, *Tekeli-li*, and *Ancient Evils*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/ice-and-death.png' /><img src='{setImgPath}/the-crash.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/deadly-weather.png' /><img src='{setImgPath}/hazards-of-antarctica.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/ancient-evils.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：*亡命冰原*、*坠机*、*冰中生物*、*致命天气*、*南极险境*、*寂静与谜团*、*忒咳哩-哩*以及*远古恶魔*。这些遭遇组以下列图标标示：<section class='encounter-sets'><img src='{setImgPath}/ice-and-death.png' /><img src='{setImgPath}/the-crash.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/deadly-weather.png' /><img src='{setImgPath}/hazards-of-antarctica.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/ancient-evils.png' /></section>",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.setup.setAsideCreaturesInTheIce",
+      "en": "Set aside the *Creatures in the Ice* encounter set.",
+      "zh": "将*冰中生物*遭遇组放在一边。",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.label.proceedToIceAndDeathPart1",
+      "en": "Proceed to _Ice and Death, Part 1._",
+      "zh": "进入《亡命冰原》第1部分。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.label.proceedToIntro2",
+      "en": "Proceed to _Intro 2_",
+      "zh": "进入导言 2",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.label.skipToIntro3",
+      "en": "Skip to _Intro 3_",
+      "zh": "跳到导言 3",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.label.skipToIntro4",
+      "en": "Skip to _Intro 4_",
+      "zh": "跳到导言 4",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.label.proceedToIntro4",
+      "en": "Proceed to _Intro 4_",
+      "zh": "进入导言 4",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "icebreakerLanding.label.removeFrost",
+      "en": "Remove 1 {'{'}frost{'}'} token from the chaos bag",
+      "zh": "从混乱袋里移除1个[frost]标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "icebreakerLanding.label.recordSmallRadio",
+      "en": "Record Small Radio in the \"Supplies Recovered\" section of the Campaign Log",
+      "zh": "在剧本日志的“已回收的补给品”部分记录小型收音机",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "manifestationsOfEvil.label.addFrost",
+      "en": "Add 1 {'{'}frost{'}'} token to the chaos bag",
+      "zh": "在混乱袋里加入1个[frost]标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "manifestationsOfEvil.label.shuffleTekelili",
+      "en": "In player order, each investigator shuffles the top 2 cards of the Tekeli-li deck into their deck (each investigator who cannot takes 1 damage and 1 horror instead).",
+      "zh": "按玩家顺序，每位调查员将忒咳哩-哩牌库顶的2张卡牌洗入自己的牌库（无法这样做的调查员改为受到1点伤害和1点恐惧）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.setup.expert",
+      "en": "If you are playing on Expert difficulty, add 2 doom to agenda 1a.",
+      "zh": "如果你在游玩专家等级，则在密谋1a上放置2个毁灭标记。",
+      "currentZh": "如果你在游玩困难等级，则在密谋1a上放置2个毁灭标记。",
+      "fixNote": "en Expert difficulty（放 2 doom）被误译成「困难等级」；应改为「专家等级」，与 part1.setup.hard 区分。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.setup.winifredNotPresent",
+      "en": "Otherwise, skip to _Intro 3_.",
+      "zh": "否则，跳到导言 3。",
+      "currentZh": "否则进入 _导言 3_.",
+      "fixNote": "en \"Otherwise, skip to Intro 3.\" 译成「否则进入 导言 3.」丢了「跳过」；应为「否则，跳到 导言 3」。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.resolutions.resolution1.body",
+      "en": "<div class='resolution'><p><strong>Resolution 1:</strong> As you make camp, you are haunted by memories of the creatures you encountered in the icy wilds. Such entities should not exist. Not even Dyer’s report mentions anything of the kind. Grim silence settles over the expedition team as you set up shelter. No one speaks of what they saw in the frozen wilderness. No one speaks of the awful sounds those monsters made. You can only hope that this camp is secluded enough to avoid the attention of those things—whatever they may be…</p><ul><li>In your Campaign Log, write “Camp –,” and next to it, record the name of the location the investigators resigned at. This location is referred to as the investigators’ camp for the remainder of Ice and Death. <ul><li>Record the camp’s shelter value in parentheses next to its name.</li><li>_Shelter Value_: {shelterValue}</li></ul></li><li>Each investigator earns experience equal to the camp’s shelter value (to a minimum of 3) plus the Victory X value of each card in the victory display. <ul><li>_Experience_: {xp}</li></ul></li><li>In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.</li><li>Proceed to _Checkpoint I: The Disappearance_.</li></ul></div>",
+      "zh": "结局 1：当你扎营时，冰冷荒野中遭遇的那些生物的记忆不断纠缠着你。这样的存在本不应存在。就连戴尔的报告中，也从未提到过任何类似的东西。当你们搭建庇护所时，阴沉的寂静笼罩了探险队。没有人谈起自己在冰封荒野中看到了什么。没有人谈起那些怪物发出的可怕声响。你只能指望这个营地足够偏僻，不会引起那些东西的注意——不管它们究竟是什么……\n\n• 在剧本日志中写下“营地”，并在旁边记录调查员撤退时所在地点的名称。在《亡命冰原》余下的时间里，该地点即被称为调查员的营地。\n\n• 在营地名称旁的括号中记录营地的庇护值。\n\n• 庇护值：营地庇护值\n\n• 每位调查员获得的经验值等于营地的庇护值（最低为3），加上胜利区中每张卡牌的胜利X数值。\n\n• 经验值：（按上述说明计算）\n\n• 在剧本日志的“探险队”部分，记录场上每名伙伴支援身上的伤害与恐惧数量。\n\n• 进入检查点 I：失踪事件。",
+      "currentZh": "<div class='resolution'><p><strong>结局 1:</strong> 当你扎营时，你被冰冷荒野中遇到的生物的记忆所困扰。这种东西不应该存在。就连丹佛斯的报告中，也没有任何地方提到过这种东西。当你搭建庇护所时，可怕的沉默笼罩著探险队。没人说起他们在冰冻荒野上看到了什么。没人说起那些怪物发出的可怕声音。你只能希望这个营地足够隐蔽，可以避免引起那些东西的注意——不管它们是什么……</p><ul><li>在剧本日志中，写下“营地”，然后在旁边记录该地点的名称。直到《亡命冰原》结束，该地点就指定为调查员的营地。<ul><li>在营地名称旁以括弧形式记录营地的庇护值。</li><li>_Shelter Value_: {shelterValue}</li></ul></li><li>每位调查员获得额外经验值，数量等于营地的庇护值(最小为3)，外加数量等于胜利区所有卡牌的胜利X数值之和。 <ul><li>_Experience_: {xp}</li></ul></li><li>在剧本日志中“探险队”部分，记录场上每名伙伴支援的当前生命值与神智值。</li><li>进入 _检查点I：失踪事件_.</li></ul></div>",
+      "fixNote": "含英文标签「• Shelter Value: [shelterValue]」「• Experience: （按上述说明计算）」；应改为「• 庇护值：营地庇护值」「• 经验值：（按上述说明计算）」，其余正文保留。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart2",
+      "path": "part2.resolutions.label.proceedToResolution1",
+      "en": "Proceed to _Resolution 1_",
+      "zh": "进入结局 1",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart2",
+      "path": "part2.resolutions.noResolution.title",
+      "en": "No Resolution",
+      "zh": "未达成结局",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart2",
+      "path": "part2.intro.title",
+      "en": "Ice and Death, Part II",
+      "zh": "亡命冰原 第II部分",
+      "currentZh": "亡命冰原 第I部分I",
+      "fixNote": "标题「亡命冰原 第I部分I」错写；en 为 \"Ice and Death, Part II\"，应为「亡命冰原 第II部分」。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart2",
+      "path": "part2.investigatorSetup.body",
+      "en": "<div class='iceAndDeath'><ul><li>Each investigator’s base starting resources is equal to the shelter value of the camp, instead of five.<ul><li>_Shelter Value_: {shelterValue}</li></ul></li><li>Each investigator may choose one available member of the Expedition Team who is not crossed off or marked “MIA” to join them. Put the story asset for the chosen character into play in that investigator’s play area. Place damage and horror on that character as indicated in the “Expedition Team” section of the Campaign Log.</li></ul></div>",
+      "zh": "• 每位调查员的起始基础资源数改为等于营地的庇护值，而不是5点。\n\n• 庇护值：营地庇护值\n\n• 每位调查员可以选择一名未被划掉、也未标记为“失踪”的可用探险队成员与自己同行。将所选角色的剧情支援放置入场，置于该调查员的游戏区域。按照剧本日志的“探险队”部分所记录的，在该角色身上放置伤害与恐惧。",
+      "currentZh": "<div class='iceAndDeath'><ul><li>每位调查员的基础起始资源数量改为等于营地的庇护值，而不是五个。<ul><li>_庇护值_: {shelterValue}</li></ul></li><li>每位调查员可以选择一名探险队的可用成员(即未被划掉或标记为“失踪”的成员)加入他们。将所选角色的剧情放置入场，位于该调查员的游戏区域，将该角色的生命值和神智值设为剧本日志中探险队部分记录的对应值。</li></ul></div>",
+      "fixNote": "「庇护值: [shelterValue]」占位符未替换；应为「庇护值：营地庇护值」（保留其余正文）。",
+      "status": "fix-present"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.investigatorSetup.title",
+      "en": "@:edgeOfTheEarth.iceAndDeath.part2.investigatorSetup.title",
+      "zh": "调查员设置",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.investigatorSetup.body",
+      "en": "@:edgeOfTheEarth.iceAndDeath.part2.investigatorSetup.body",
+      "zh": "• 每位调查员的起始基础资源数改为等于营地的庇护值，而不是5点。\n\n• 庇护值：营地庇护值\n\n• 每位调查员可以选择一名未被划掉、也未标记为“失踪”的可用探险队成员与自己同行。将所选角色的剧情支援放置入场，置于该调查员的游戏区域。按照剧本日志的“探险队”部分所记录的，在该角色身上放置伤害与恐惧。",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *Ice and Death*, *Seeping Nightmares*, *Creatures in the Ice*, *Deadly Weather*, *Hazards of Antarctica*, *Silence and Mystery*, *Tekeli-li*, and *Ancient Evils*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/ice-and-death.png' /><img src='{setImgPath}/seeping-nightmares.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/deadly-weather.png' /><img src='{setImgPath}/hazards-of-antarctica.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/ancient-evils.png' /></section>",
+      "zh": "收集以下遭遇组中的所有卡牌：*亡命冰原*、*渗出梦魇*、*冰中生物*、*致命天气*、*南极险境*、*寂静与谜团*、*忒咳哩-哩*以及*远古恶魔*。这些遭遇组以下列图标标示：<section class='encounter-sets'><img src='{setImgPath}/ice-and-death.png' /><img src='{setImgPath}/seeping-nightmares.png' /><img src='{setImgPath}/creatures-in-the-ice.png' /><img src='{setImgPath}/deadly-weather.png' /><img src='{setImgPath}/hazards-of-antarctica.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/ancient-evils.png' /></section>",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.buildAgendaDecks",
+      "en": "Build the agenda deck using agendas 7–8 and the act deck using act 3. (These can be found in the *Seeping Nightmares* encounter set.)",
+      "zh": "使用密谋7–8组建密谋牌库，并使用幕3组建幕牌库。（这些卡牌可以在*渗出梦魇*遭遇组中找到。）",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.placeLocations",
+      "en": "In the “Ice and Death” section of the Campaign Log, find each location under Locations Revealed. Put each of those locations into play, revealed (*with clues equal to its clue value*).",
+      "zh": "在剧本日志的“亡命冰原”部分，从“已揭示的地点”中找出每个地点。将这些地点放置入场，均为已揭示状态（拥有等同于其线索值的线索）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.unrevealed",
+      "en": "Put each other location into play, unrevealed.",
+      "zh": "将其余每个地点放置入场，保持未揭示状态。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.beginAtCamp",
+      "en": "Each investigator begins play at the camp.",
+      "zh": "每位调查员从营地开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.removeClues",
+      "en": "Remove all clues from the camp. It begins the game with no clues on it.",
+      "zh": "从营地上移除所有线索。游戏开始时，营地上没有线索。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.seepingNightmares",
+      "en": "Find 1 {'{'}perPlayer{'}'} Seeping Nightmare enemies. These enemies can be found in the *Seeping Nightmares* encounter set. Spawn each at a different location according to the “Seeping Nightmares” sidebar. Remove all remaining Seeping Nightmare enemies from the game.",
+      "zh": "找出1[per_investigator]个渗出梦魇敌人。这些敌人可以在*渗出梦魇*遭遇组中找到。按照“渗出梦魇”侧栏的说明，将每个敌人生成在不同的地点。将剩余所有渗出梦魇敌人移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.eidolons",
+      "en": "Find the eight Eidolon enemies from the *Ice and Death* and *Creatures in the Ice* encounter sets. Shuffle them and place them facedown beneath each Seeping Nightmare enemy in play, divided as evenly as possible.",
+      "zh": "找出*亡命冰原*和*冰中生物*遭遇组中的8个幻灵敌人。将它们洗混，并尽可能平均地正面朝下放置在场上的每个渗出梦魇敌人底下。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart3",
+      "path": "part3.setup.tekelili",
+      "en": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.",
+      "zh": "将所有尚未加入调查员牌库的忒咳哩-哩！弱点卡牌混洗到一起，组成忒咳哩-哩牌库。将该牌库放在密谋牌库旁。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart2",
+      "path": "part2.setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *Ice and Death*, *Lost in the Night*, *Left Behind*, *Deadly Weather*, *Hazards of Antarctica*, *Silence and Mystery*, *Tekeli-li*, and *Ancient Evils*. These sets are indicated by the following icons:",
+      "zh": "收集以下遭遇组中的所有卡牌：*亡命冰原*、*夜半失踪*、*被遗弃者*、*致命天气*、*南极险境*、*寂静与谜团*、*忒咳哩-哩*以及*远古恶魔*。这些遭遇组以下列图标标示：",
+      "status": "untranslated"
+    }
+  ]
+}

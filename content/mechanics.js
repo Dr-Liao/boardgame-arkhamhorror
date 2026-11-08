@@ -27,5 +27,7 @@ export const supportedMechanics = new Set([
   'tdeDreamGate', 'tdeInfestationBag', 'tdeAlarmLevel', 'tdeSignsOfTheGods', 'tdeStoryAssets',
   'tdeLocationDoom',
   'tdeCampaign', 'tdeDreamQuest', 'tdeWebOfDreams', 'tdeChaos', 'tdeRecords', 'tdeEpilogue',
+  // 地球边缘（七循环）P7：战役层能力随 8 章与战役 flow 接线；P2 原语提供引擎读点。
+  'eoteFrost', 'eotePartners', 'eoteTekeliDeck', 'eoteShelter', 'eoteSupplies', 'eoteSeals', 'eoteKeys', 'eoteValueKeys', 'eoteCityMap', 'eoteClimb', 'eoteFacilities', 'eoteExpeditionAssets', 'eoteMemorials', 'eoteCamp', 'eoteDiscipline', 'eoteStoryAssets', 'eoteRecords', 'eoteChaos',
 ])
 export const missingMechanics = ids => (ids || []).filter(id => !supportedMechanics.has(id))

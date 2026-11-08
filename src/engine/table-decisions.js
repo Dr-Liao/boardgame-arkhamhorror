@@ -1,3 +1,4 @@
+import { draftDeckStatus, draftDecksReady } from '../deck/draft-mode.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // table-decisions.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 台面决策层：谁在操作、能不能行动、行动代价与开局调度（mulligan / 起始调整）。
@@ -94,6 +95,9 @@ export function createTableDecisions(deps) {
     }
     const pending = hubPendingSeats(state), humans = state.humanSeats || [0]
     const humanPending = pending.filter(seat => humans.includes(seat))
+    if (state.deckMode === 'draft' && state.hubFlow && ['interlude', 'scenarioSetup'].includes(state.uiState)) {
+      return humanPending.length ? [...humanPending, ...humans.filter(seat => !humanPending.includes(seat))] : [...pending, ...humans.filter(seat => !pending.includes(seat))]
+    }
     return humanPending.length ? humanPending : pending
   }
 
@@ -142,7 +146,7 @@ export function createTableDecisions(deps) {
   }
 
   function hubStartingDeckReady(record) {
-    return !!record?.deck?.length && record.startingDeckReady !== false
+    return !!record?.deck?.length && record.startingDeckReady !== false && (!record.draftMode || draftDeckStatus(record).ready)
   }
 
   function validateHubMove(state, seat, move) {
@@ -151,6 +155,7 @@ export function createTableDecisions(deps) {
     if (move.action === 'hubSelectInvestigator' && state.campaign.investigators[seat]?.status === 'active' && !initialHubPreparation(state)) {
       return state.uiState === 'interlude' ? '关间只能为死亡或疯狂的调查员挑选替补，不能更换现役调查员' : '当前调查员仍在战役中，不能更换'
     }
+    if (move.action === 'hubBeginScenario' && state.deckMode === 'draft' && !draftDecksReady(state)) return '请先补足所有调查员的牌组。'
     if (move.action === 'hubSetDeck') {
       if (!hubLegalMoves(state, seat).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
       if (!Array.isArray(move.codes)) return '牌组必须是卡号数组'
@@ -175,6 +180,10 @@ export function createTableDecisions(deps) {
     for (const action of ['hubGoSetup', 'hubContinue', 'hubBeginScenario', 'hubSelectScenario']) {
       const move = moves.find(move => move.action === action)
       if (move) return move
+    }
+    if (state.deckMode === 'draft') {
+      const pick = moves.find(move => move.action === 'hubDraftRefill') || moves.find(move => move.action === 'hubDraftPick') || moves.find(move => move.action === 'hubDraftBuy')
+      if (pick) return pick
     }
     const priority = state.hubSeatSelected?.[seat] ? ['hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat', 'hubSelectInvestigator']
       : ['hubSelectInvestigator', 'hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat']
@@ -313,11 +322,15 @@ export function createTableDecisions(deps) {
   // 判定口径见 restricted-actions.js，条目层只声明 `investigator.restrictedAction`。
   function restrictedKindOfMove(state, inv, move) {
     if (!inv || !move) return null
-    if (actionKind(state, inv, move) === 'engage' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
-    if (isSpellAction(state, inv, move)) return 'spell'
-    const rule = investigatorRule(inv.code)?.restrictedAction
-    if (!rule || rule.kind !== 'bounty') return null
     const kind = actionKind(state, inv, move)
+    if (kind === 'engage' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
+    if (isSpellAction(state, inv, move)) return 'spell'
+    // 地球边缘 P5（08014a 陈丽丽）：免费战斗/躲避额度（grantFreeActions 发放）。
+    if ((inv.fightEvadeOnlyActions || 0) > 0 && ['fight', 'evade'].includes(kind)) return 'fightEvade'
+    const rule = investigatorRule(inv.code)?.restrictedAction
+    // 地球边缘 P5（08016 鲍勃）：受限额外行动只能用于代打同地点队友手牌中的 [[道具]] 支援。
+    if (rule?.kind === 'itemPlay' && move.action === 'play' && move.fromOtherHand === true) return 'itemPlay'
+    if (!rule || rule.kind !== 'bounty') return null
     if (kind !== 'fight' && kind !== 'engage') return null
     const enemyId = move.enemyId ?? move.targetId
     const enemy = state.enemies.find(item => item.id === enemyId)

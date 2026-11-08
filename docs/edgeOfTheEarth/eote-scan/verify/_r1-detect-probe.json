@@ -1,0 +1,218 @@
+{
+ "summary": {
+  "directStateWrite": 164,
+  "singleCardField": 30,
+  "reprintDuplicate": 0,
+  "playConditionGap": 0,
+  "testWrapper": 22,
+  "revelationTestCards": 81,
+  "selfCodeInstanceLookup": 20
+ },
+ "entriesWithWrites": 164,
+ "newlyDetected": [
+  {
+   "code": "08008",
+   "file": "src/cards/entries/08008.js",
+   "writes": [
+    {
+     "root": "whip",
+     "field": "exhausted",
+     "line": 30,
+     "text": "whip.exhausted = true"
+    }
+   ]
+  },
+  {
+   "code": "01174",
+   "file": "src/cards/encounter-entries/shared/locked_doors/01174.js",
+   "writes": [
+    {
+     "root": "chosen",
+     "field": "locked",
+     "line": 25,
+     "text": "chosen.locked = true"
+    },
+    {
+     "root": "chosen",
+     "field": "lockedDoorCode",
+     "line": 26,
+     "text": "chosen.lockedDoorCode = code"
+    }
+   ]
+  },
+  {
+   "code": "05045",
+   "file": "src/cards/encounter-entries/theCircleUndone/disappearanceAtTheTwilightEstate/05045.js",
+   "writes": [
+    {
+     "root": "records",
+     "field": "youAreBeingHunted",
+     "line": 24,
+     "text": "records.youAreBeingHunted = true"
+    }
+   ]
+  },
+  {
+   "code": "05097",
+   "file": "src/cards/encounter-entries/theCircleUndone/_shared/silver_twilight_lodge/05097.js",
+   "writes": [
+    {
+     "root": "chosen",
+     "field": "roundFightEvadeBonus",
+     "line": 57,
+     "text": "chosen.roundFightEvadeBonus = { round: state.round, amount: 2 }"
+    }
+   ]
+  },
+  {
+   "code": "02196",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/bloodOnTheAltar/02196.js",
+   "writes": [
+    {
+     "root": "zones",
+     "field": "sacrificed",
+     "line": 14,
+     "text": "zones.sacrificed.push(zones.sacrifices.splice(index, 1)[0])"
+    }
+   ]
+  },
+  {
+   "code": "02197",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/bloodOnTheAltar/02197.js",
+   "writes": [
+    {
+     "root": "zones",
+     "field": "sacrificed",
+     "line": 14,
+     "text": "zones.sacrificed.push(zones.sacrifices.splice(index, 1)[0])"
+    }
+   ]
+  },
+  {
+   "code": "02214",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/bloodOnTheAltar/02214.js",
+   "writes": [
+    {
+     "root": "chamber",
+     "field": "connections",
+     "line": 22,
+     "text": "if (sourceLocation && !chamber.connections.includes(sourceLocation.id)) chamber.connections.push(sourceLocation.id)"
+    }
+   ]
+  },
+  {
+   "code": "02142",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02142.js",
+   "writes": [
+    {
+     "root": "horror",
+     "field": "shadowSpawned",
+     "line": 16,
+     "text": "if (horror) horror.shadowSpawned = true"
+    }
+   ]
+  },
+  {
+   "code": "02143",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02143.js",
+   "writes": [
+    {
+     "root": "horror",
+     "field": "exhausted",
+     "line": 13,
+     "text": "horror.exhausted = false"
+    }
+   ]
+  },
+  {
+   "code": "02146",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02146.js",
+   "writes": [
+    {
+     "root": "horror",
+     "field": "doom",
+     "line": 14,
+     "text": "if (horror) horror.doom = (horror.doom || 0) + 1"
+    }
+   ]
+  },
+  {
+   "code": "02256",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/undimensionedAndUnseen/02256.js",
+   "writes": [
+    {
+     "root": "chosen",
+     "field": "toweringBeasts",
+     "line": 22,
+     "text": "chosen.toweringBeasts = (chosen.toweringBeasts || 0) + 1"
+    },
+    {
+     "root": "chosen",
+     "field": "health",
+     "line": 23,
+     "text": "chosen.health += 1"
+    },
+    {
+     "root": "chosen",
+     "field": "attachedTreacheries",
+     "line": 24,
+     "text": "chosen.attachedTreacheries = [...(chosen.attachedTreacheries || []), code]"
+    }
+   ]
+  },
+  {
+   "code": "02096",
+   "file": "src/cards/encounter-entries/theDunwichLegacy/_shared/beast_thralls/02096.js",
+   "writes": [
+    {
+     "root": "chosen",
+     "field": "damageTaken",
+     "line": 21,
+     "text": "chosen.damageTaken = 0"
+    },
+    {
+     "root": "chosen",
+     "field": "attachedTreacheries",
+     "line": 22,
+     "text": "chosen.attachedTreacheries = [...(chosen.attachedTreacheries || []), code]"
+    }
+   ]
+  },
+  {
+   "code": "04045",
+   "file": "src/cards/encounter-entries/theForgottenAge/theUntamedWilds/04045.js",
+   "writes": [
+    {
+     "root": "entry",
+     "field": "removedCards",
+     "line": 21,
+     "text": "entry.removedCards ||= []"
+    }
+   ]
+  },
+  {
+   "code": "03082",
+   "file": "src/cards/encounter-entries/thePathToCarcosa/theLastKing/03082.js",
+   "writes": [
+    {
+     "root": "guest",
+     "field": "clues",
+     "line": 34,
+     "text": "guest.clues = (guest.clues || 0) + 1"
+    }
+   ]
+  },
+  {
+   "code": "03097",
+   "file": "src/cards/encounter-entries/thePathToCarcosa/_shared/hasturs_gift/03097.js",
+   "writes": [
+    {
+     "root": "picked",
+     "field": "exhausted",
+     "line": 42,
+     "text": "picked.exhausted = false"
+    }
+   ]
+  }
+ ]
+}

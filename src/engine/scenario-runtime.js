@@ -1,4 +1,5 @@
 import { applyPhysicalFace } from './physical-faces.js'
+import { enemyAttackStyle } from '../integration/enemy-attack-presentation.js'
 import { requestCurrentAgendaRevert } from './agenda-advance-frame.js'
 import { nearestEnemies,isEnemyUnengaged } from './enemy-query.js'
 import { putInHand } from './hand-entry.js'
@@ -506,6 +507,19 @@ function scenarioRuntime(state, events, testSource = null) {
     // 从玩家牌/无目录数据生成的敌人（04331 飞天水螅：把牌库顶的牌视为敌人）。
     spawnStoryEnemy: (code, location, stats = {}, extra = {}) => spawnStoryEnemy(state, code, location, stats, extra, events),
     attack: (enemy, inv) => enemyAttack(state, enemy, inv, events, '剧本效果', { kind: 'effect' }),
+    // Presentation-only wrapper for attacks without an enemy entity. Resolution
+    // keeps the original separate damage/horror calls and reaction semantics.
+    presentAttack: (spec, resolve) => {
+      const inv = state.investigators[spec.seat]
+      if (!inv) return
+      const origin = { ...enemyAttackStyle({code:spec.code}), code:spec.code, name:spec.name, sourceKind:'global' }
+      info(state, events, spec.text, {kind:'attack',direction:'incoming',presentationStage:'threat',
+        ...origin,seat:inv.seat,location:inv.location,damage:spec.damage||0,horror:spec.horror||0})
+      return resolve({
+        damage: (seat,n) => applyHarm(state,state.investigators[seat],n,0,events,undefined,null,false,null,origin),
+        horror: (seat,n) => applyHarm(state,state.investigators[seat],0,n,events,undefined,null,false,null,origin),
+      })
+    },
     protectFromEnemyAttack: (enemy, seat) => {
       if (!enemy || !state.investigators[seat]) return false
       enemy.attackProtection ||= {}

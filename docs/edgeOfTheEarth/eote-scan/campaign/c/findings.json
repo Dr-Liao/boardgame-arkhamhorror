@@ -1,0 +1,2703 @@
+{
+ "area": "campaign/c",
+ "auditor": "campaign-auditor-c",
+ "method": "逐卡逐子句核对 cards-data 卡面（中英）vs 单卡条目 + 两章 definition/behavior/chaos 消费点 + src/engine 真实读点 + 两份剧本测试；D1/D3/D4/D5 证据均给「相对 mod 根路径:行号」；参考实现（Haskell/locale）只作对照。只读审计，未修改 games/arkhamhorror。",
+ "generatedAt": "2026-11-08",
+ "scope": {
+  "codes": [
+   "08596",
+   "08597",
+   "08598",
+   "08599",
+   "08600",
+   "08601",
+   "08602",
+   "08603",
+   "08604",
+   "08605",
+   "08606",
+   "08607",
+   "08608",
+   "08609",
+   "08610",
+   "08611",
+   "08612",
+   "08613",
+   "08614",
+   "08615",
+   "08616",
+   "08617",
+   "08618",
+   "08619",
+   "08620",
+   "08621",
+   "08622",
+   "08623",
+   "08624",
+   "08625",
+   "08626",
+   "08627",
+   "08628",
+   "08629",
+   "08630",
+   "08631",
+   "08632",
+   "08633",
+   "08634",
+   "08635",
+   "08636",
+   "08637",
+   "08638",
+   "08639",
+   "08640",
+   "08641",
+   "08642",
+   "08643",
+   "08644",
+   "08645",
+   "08646",
+   "08647"
+  ],
+  "count": 52,
+  "chapters": [
+   "toTheForbiddenPeaks (08596–08620)",
+   "cityOfTheElderThings (08621–08647)"
+  ],
+  "referenceCards": [
+   "08596",
+   "08621"
+  ]
+ },
+ "summary": {
+  "cards": 52,
+  "match": 2,
+  "approximation": 6,
+  "gap": 44,
+  "blocked": 0,
+  "accepted": 2,
+  "issuesBySeverity": {
+   "high": 65,
+   "medium": 23,
+   "low": 8
+  },
+  "issuesTotal": 96,
+  "highIssueCards": 44
+ },
+ "testsRun": {
+  "command": "cd games/arkhamhorror && node --experimental-test-isolation=none --test tests/eote-scenario-toTheForbiddenPeaks.test.mjs tests/eote-scenario-cityOfTheElderThings.test.mjs",
+  "result": "20 tests / 20 pass / 0 fail（约 1.0s）",
+  "note": "两份测试均通过，但都是手工 state+apiStub 直调 behavior 钩子；未跑真实引擎 setup/移动/遭遇抽取/幕-议程推进，因此无法覆盖本报告多数 high issue（断言强度：hooks-only）。"
+ },
+ "cards": [
+  {
+   "code": "08596",
+   "verdict": "match",
+   "clauses": [
+    {
+     "text": "简单/普通：skull=-X（X=所在地点高度）；cultist=-1 失败后移到下方；tablet=-3 失败失去[[探险]]支援；elder_thing=-4 失败最近古老者向/攻击",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js:16-30,32-40",
+     "note": "两档取值表 + 函数读点齐全"
+    },
+    {
+     "text": "困难/专家：skull=-(X+2)；cultist=-1 检定后必下移；tablet=-4；elder_thing=-5",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js:16-30,32-40",
+     "note": ""
+    },
+    {
+     "text": "（场景 setup，非卡面）混乱袋 +1 [elder_thing] 标记",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:196-227（scenario 数据无 setup token）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:81-103（setupLocations 不加 token）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:225",
+     "note": "属章节 setup 缺口，记入 scenarios[0].issues"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:271-295（resolveChaosToken/afterTest 输出 api.info）",
+    "note": "符号后果有日志"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:281-301（直调 chaos 函数）",
+    "note": "无真实袋/真实抽取"
+   },
+   "issues": [],
+   "name": "To the Forbidden Peaks",
+   "nameZh": "失落之峰",
+   "accepted": true
+  },
+  {
+   "code": "08597",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-你移动到一个地点后：将所有线索放回供应堆",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08597.js:13-16（onMove:'returnClues'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256（afterMove 实现）",
+     "note": "实现存在，但引擎不调用 afterMove → 真实路径不触发（high）"
+    },
+    {
+     "text": "背面：把放一边的星之恐怖放到最高且有调查员的地点；该地点调查员失去全部[[探险]]支援并放回地点",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:158-176（spawnTerrorOfTheStars+dropExpeditionAssetsOf）",
+     "note": "支援入场链路本身缺失见场景 issue"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:158-176（api.info 有“最高处入场”提示）",
+    "note": "强制归还线索无任何界面提示"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:201-220（直调 afterMove/agendaReveal）",
+    "note": "断言的是直调钩子，不能证明引擎接线"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "08597 正面强制「移动后归还全部线索」只写在 behavior.afterMove，引擎没有任何 afterMove 读点（全仓仅测试调用）→ 真实对局永不触发",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08597.js:13-16；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256；src/engine/movement.js:249（移动后只派发 locationEntered）；grep afterMove 仅 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:205",
+     "suggestion": "把归还线索并入 behavior.locationEntered，或向引擎提出 afterMove 钩子读点；补真实移动集成测试"
+    }
+   ],
+   "name": "Forbidden Peaks",
+   "nameZh": "失落山峰",
+   "accepted": false
+  },
+  {
+   "code": "08598",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-你移动到一个地点后：将所有线索放回供应堆",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08598.js:13-16；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256",
+     "note": "同 08597：afterMove 无引擎读点"
+    },
+    {
+     "text": "背面：有调查员撤退 → (→R1)；否则 (→R2)",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:116-124（agendaReveal→finalResolution→api.finish）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:355-359",
+     "note": "议程推进确实走 phases.js:274 runAgendaReveal"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:116-124",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:201-220",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "08598 正面强制「移动后归还全部线索」无引擎读点（同 08597）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08598.js:13-16；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256；src/engine/movement.js:249",
+     "suggestion": "同上：并入 locationEntered 或补引擎钩子"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "R1 未写「the team climbed to the summit」战役记录；R2 未写 theTeamFoundAnotherWayThroughTheMountains（后续幕间 II 读取该键）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:348-350（只写 theInvestigatorsScoutedTheMountainPass）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:275,294；content/campaigns/edgeOfTheEarth/interludes.js:52",
+     "suggestion": "按 resolution key 写两条记录并处理 Supplies Recovered 划掉"
+    }
+   ],
+   "name": "Terror Descends",
+   "nameZh": "恐怖降临",
+   "accepted": false
+  },
+  {
+   "code": "08599",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action]：控制你所在地点的一个[[探险]]支援",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08599.js:14-19；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:307-345（actions/performAction takeExpeditionAsset）",
+     "note": "实现存在，但 7 件支援从不入场（场景 issue）→ 行动在真实对局不可用"
+    },
+    {
+     "text": "目标：所有未被击败的调查员都撤退后推进",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:177-187（checkObjectives allResigned）；src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08599.js:15-18",
+     "note": ""
+    },
+    {
+     "text": "背面 (→R1)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08599.js:19（onReveal resolution1）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:105-114（actReveal）；src/engine/reveal.js:151-162",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:320-345（api.info 控制支援提示）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:222-247",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "medium",
+     "dimension": "runtime",
+     "summary": "08599 的 [action] 依赖探险支援在 state.storyAssets，但 setup 把 7 件支援全部放一边且无入场代码 → 行动永不出现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08599.js:14-19；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:142-146；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:339-345",
+     "suggestion": "先修 Expedition 支援入场（preScenarioSetup 读 suppliesRecovered），再补能力"
+    }
+   ],
+   "name": "Ascend the Mountain",
+   "nameZh": "登上高峰",
+   "accepted": false
+  },
+  {
+   "code": "08600",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：弃掉牌库顶 3 张并抽取其中弱点",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08600.js:13-19（enterFromBelow.effect='discardTop3ThenDrawWeaknesses'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08600.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08600.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "Deep Drifts",
+   "nameZh": "深厚积雪",
+   "accepted": false
+  },
+  {
+   "code": "08601",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：敏捷(X=高度+1)，失败失去一个[[探险]]支援",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08601.js:13-19（enterFromBelow.effect='agilityTestLevelPlus1OnFailDropExpedition'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08601.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08601.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "White Bluff",
+   "nameZh": "白色断崖",
+   "accepted": false
+  },
+  {
+   "code": "08602",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：受到 1 点伤害",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08602.js:13-19（enterFromBelow.effect='damage1'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08602.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08602.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "Steep Incline",
+   "nameZh": "陡峭斜坡",
+   "accepted": false
+  },
+  {
+   "code": "08603",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：受到 1 点恐惧",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08603.js:13-19（enterFromBelow.effect='horror1'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08603.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08603.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "Narrow Ridge",
+   "nameZh": "狭窄山脊",
+   "accepted": false
+  },
+  {
+   "code": "08604",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：忒咳哩-哩牌库顶 1 张洗入你的牌库",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08604.js:13-19（enterFromBelow.effect='tekeliShuffleIntoDeck'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08604.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08604.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "Rocky Ledge",
+   "nameZh": "岩架",
+   "accepted": false
+  },
+  {
+   "code": "08605",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-从下方移动到本地点后：横置你控制的所有支援",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08605.js:13-19（enterFromBelow.effect='exhaustAllAssets'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（applyEnterFromBelow 实现），:189-199（locationEntered）",
+     "note": "效果代码存在，但真实移动从不写 climbState → 不触发（high）"
+    },
+    {
+     "text": "背面：下方紧邻地点的线索未全部发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08605.js:14-19（blocksUntilBelowClear）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222（moveError 读点，引擎 engine.js:210 调用）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437（各 api.info 提示）",
+    "note": "触发链路缺失时玩家永远看不到"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-196",
+    "note": "只测 behavior.ascend/直调 locationEntered"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08605.js:13-19（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    }
+   ],
+   "name": "Snow-Covered Crag",
+   "nameZh": "白雪复盖的峭壁",
+   "accepted": false
+  },
+  {
+   "code": "08606",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制-被揭示后：若高度为 0，放置 1[per_investigator] 线索",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08606.js:14-25（onReveal placeCluesPerInvestigator）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:142-155",
+     "note": "实现按人数放线索但缺「高度为 0」条件（当前确定性 setup 把 08606 放一边，永不在场）"
+    },
+    {
+     "text": "强制-从下方移动到此后：放置 1 个线索",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08606.js:15-18；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437",
+     "note": "同山地 enterFromBelow 接线缺口（high）"
+    },
+    {
+     "text": "背面：下方线索未发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08606.js:23；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:142-155",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-primitives-travel.test.mjs",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "卡面「从下方进入」强制效果在真实引擎路径永不触发：behavior.locationEntered 只读 climbState.enterFromBelow，而权威移动管线（movement.js#moveInvestigator）不会调用 eote-climb.ascend 写该标记；ascend 只经 api.mechanics.climb 暴露（无内容层调用者）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08606.js:15-18（声明 enterFromBelow）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199（读 climbState）；src/engine/eote-climb.js:109-123（ascend 只写标记）；src/engine/api-mechanics.js:176-183（仅 API）；src/engine/movement.js:236-249（移动只 reveal+locationEntered）；全仓 ascend 调用点仅测试 tests/eote-scenario-toTheForbiddenPeaks.test.mjs:169-188",
+     "suggestion": "在权威移动的 Level+1 上行前调用 eote-climb.ascend，或让 behavior.locationEntered 以 from/to Level 差判定（不依赖瞬时标记），并补真实移动集成测试"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08606 揭示效果缺少「若高度为 0」条件，且该地点在确定性 setup 里被放一边、没有入场路径",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08606.js:19-22；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:142-155；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:40-43",
+     "suggestion": "补条件判断；随机 setup 或给出 set-aside 地点的入场途径"
+    }
+   ],
+   "name": "Windswept Path",
+   "nameZh": "迎风通路",
+   "accepted": false
+  },
+  {
+   "code": "08607",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "山顶的线索只能通过调查发现",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08607.js:16-19（嵌套在 locationRule.flags）；src/engine/locations.js:377-380（引擎读 locationRule.cluesOnlyByInvestigation 顶层）",
+     "note": "嵌套错位 → 限制不生效（high）"
+    },
+    {
+     "text": "强制-山顶被揭示时：混乱袋加入 1 个 [frost]",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08607.js:20；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:142-155,127-139；src/engine/locations.js:272（locationRevealed 读点）",
+     "note": ""
+    },
+    {
+     "text": "[action]：撤退；所有[[探险]]支援加入胜利区；线索放回供应堆",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:307-317（actions 按 summit id 硬编码提供）,320-338（performAction）",
+     "note": "行为已实现，但未读条目的 summitResign 声明（声明未接线 low）"
+    },
+    {
+     "text": "背面：下方线索未发现时不能进入",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08607.js:21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:322-338（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:234-247",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08607「线索只能通过调查发现」声明在 locationRule.flags 内，而引擎读点是 locationRule.cluesOnlyByInvestigation（顶层）→ 规则完全未生效",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08607.js:16-19；src/engine/locations.js:377-380；src/engine/ability.js:791（注册期校验的也是顶层）",
+     "suggestion": "把 cluesOnlyByInvestigation 移到 locationRule 顶层"
+    },
+    {
+     "severity": "low",
+     "dimension": "primitive",
+     "summary": "summitResign 声明无字面读点（实际行为在 behavior 里按 summit id 硬编码）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08607.js:17；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:307-317",
+     "suggestion": "behavior 改为读 locationRuleFor(code).flags.summitResign，或删除孤儿声明"
+    }
+   ],
+   "name": "The Summit",
+   "nameZh": "山顶",
+   "accepted": false
+  },
+  {
+   "code": "08608",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "猎手。庞大。",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08608.js:15-21（hunter/massive；definition enemyDefinition 亦解出）",
+     "note": ""
+    },
+    {
+     "text": "星之恐怖得到 +3[per_investigator] 生命",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294（enemyStatModifier health=3×人数）；src/engine/rules-state.js:9-13（health 读点）",
+     "note": ""
+    },
+    {
+     "text": "X = 你所在地点的高度（至少 1）",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08608.js:19（levelStats:'level'）；src/cards/cards-data.js（08608 fight/evade=-2 的 X sentinel）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294；src/engine/enemies.js:136,154（+=）",
+     "note": "实际 fight/evade = -2+Level，应为 Level（min1）→ 数值错误（high）"
+    },
+    {
+     "text": "强制-一轮结束时：将星之恐怖所在地点的所有调查员移动到下方地点",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:296-305（roundEnded）；src/engine/phases.js:226（轮末读点）",
+     "note": "按卡号字面量分支实现，声明的 roundEnd: moveDownToBelow 无读点（medium）"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:296-305、286-294",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:281-301",
+    "note": "断言 hook 返回值 3，未断言最终 fight/evade"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08608 的 X 数值错误：fight/evade 印刷值在 cards-data 里以 -2 表示 X，但 behavior.enemyStatModifier 返回 +Level 被引擎相加 → 实际为 -2+Level（Level1 时 -1），应为 Level（最少 1）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08608.js:19；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294；src/engine/enemies.js:136,154；正确口径参照 content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/behavior.js:539-543（value += X - enemy[stat]）",
+     "suggestion": "改为返回 X - (enemy.fight/evade 印刷值)（或让数据读点支持 replace 语义），并补最终数值断言"
+    },
+    {
+     "severity": "medium",
+     "dimension": "primitive",
+     "summary": "enemyRule.roundEnd:\"moveDownToBelow\" 声明无读点；轮末强制改为 behavior 内按卡号字面量实现（D4 声明即接线）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08608.js:20；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:296-305",
+     "suggestion": "behavior.roundEnded 读 enemyRuleFor(code).roundEnd 分派，去掉卡号字面量"
+    }
+   ],
+   "name": "Terror of the Stars",
+   "nameZh": "星之恐怖",
+   "accepted": false
+  },
+  {
+   "code": "08609",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "猎手。",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08609.js:14-19",
+     "note": ""
+    },
+    {
+     "text": "X = 你所在地点的高度（至少 1）",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08609.js:16；src/cards/cards-data.js（08609 health=-2 的 X sentinel）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294；src/engine/rules-state.js:9-13（+=）",
+     "note": "health 实际 = -2+Level（Level<=2 时被夹到 0/1），应为 Level（min1）"
+    },
+    {
+     "text": "与本敌人交战时，你不能移动到上方地点",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08609.js:17（blocksAscendWhileEngaged:true）；全仓仅此一处（grep）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222 moveError 未检查",
+     "note": "完全未实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "tests 仅名称命中（tests/eote-scenario-toTheForbiddenPeaks.test.mjs:298-300 断言 hook 值）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08609「与你交战时不能移动到上方地点」声明 enemyRule.blocksAscendWhileEngaged 但全仓无读点，moveError 未实现该限制",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08609.js:14-19；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:201-222；全仓 grep 仅条目本身",
+     "suggestion": "在 behavior.moveError 读 enemyRuleFor(code).blocksAscendWhileEngaged 并检查交战敌人"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08609 的生命值 X 数值错误（-2 sentinel + Level 相加）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08609.js:16；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:286-294；src/engine/rules-state.js:9-13；对比 darkSideOfTheMoon/behavior.js:539-543",
+     "suggestion": "X 数值应替换 sentinel 而非相加"
+    }
+   ],
+   "name": "Constricting Elder Thing",
+   "nameZh": "拘束型古老者",
+   "accepted": false
+  },
+  {
+   "code": "08610",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08610.js:12（resolveKind:'snowfall'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（TREACHERY_HANDLERS.snowfall 实现）",
+     "note": "handler 逻辑存在且单元直调通过，但真实遭遇路径不调用（high，见 issue）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（api.info/choice）",
+    "note": "真实抽到时甚至看不到结算"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:252-276（直调 behavior.resolveEncounter）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（失落之峰 behavior.resolveEncounter 未被任何引擎读点调用），且 失落之峰 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08610.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    }
+   ],
+   "name": "Snowfall",
+   "nameZh": "降雪",
+   "accepted": false
+  },
+  {
+   "code": "08611",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08611.js:12（resolveKind:'avalanche'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（TREACHERY_HANDLERS.avalanche 实现）",
+     "note": "handler 逻辑存在且单元直调通过，但真实遭遇路径不调用（high，见 issue）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（api.info/choice）",
+    "note": "真实抽到时甚至看不到结算"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:252-276（直调 behavior.resolveEncounter）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（失落之峰 behavior.resolveEncounter 未被任何引擎读点调用），且 失落之峰 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08611.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    }
+   ],
+   "name": "Avalanche",
+   "nameZh": "雪崩",
+   "accepted": false
+  },
+  {
+   "code": "08612",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08612.js:12（resolveKind:'hangingOnTheEdge'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（TREACHERY_HANDLERS.hangingOnTheEdge 实现）",
+     "note": "handler 逻辑存在且单元直调通过，但真实遭遇路径不调用（high，见 issue）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（api.info/choice）",
+    "note": "真实抽到时甚至看不到结算"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:252-276（直调 behavior.resolveEncounter）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（失落之峰 behavior.resolveEncounter 未被任何引擎读点调用），且 失落之峰 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08612.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    }
+   ],
+   "name": "Hanging on the Edge",
+   "nameZh": "悬于边缘",
+   "accepted": false
+  },
+  {
+   "code": "08613",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08613.js:12（resolveKind:'hypothermia'）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（TREACHERY_HANDLERS.hypothermia 实现）",
+     "note": "handler 逻辑存在且单元直调通过，但真实遭遇路径不调用（high，见 issue）"
+    },
+    {
+     "text": "高度 4/5 时额外揭示 1 枚混乱标记",
+     "status": "approximation",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:534-562（近似为难度 +2，仅代码注释披露）",
+     "note": "近似未登记到 scenarioApproximations / known-deviations（medium）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562（api.info/choice）",
+    "note": "真实抽到时甚至看不到结算"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:252-276（直调 behavior.resolveEncounter）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（失落之峰 behavior.resolveEncounter 未被任何引擎读点调用），且 失落之峰 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08613.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    },
+    {
+     "severity": "medium",
+     "dimension": "docs",
+     "summary": "08613「额外揭示 1 枚」近似（难度+2）只在源码注释披露，未进 behavior.scenarioApproximations / known-deviations",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:534-562；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:54-56（scenarioApproximations 只有确定性 setup 一条）",
+     "suggestion": "登记近似到 scenarioApproximations 与账本"
+    }
+   ],
+   "name": "Hypothermia",
+   "nameZh": "低温症",
+   "accepted": false
+  },
+  {
+   "code": "08614",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(4充能)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[reaction]成功攻击时花 1 充能+横置：该攻击 +1 伤害",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08614 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Green Soapstone",
+   "nameZh": "绿皂石",
+   "accepted": false
+  },
+  {
+   "code": "08615",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "（本卡无 uses，仅 flags）",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js:12-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[action]横置：本地点调查员查看牌库顶 6 张，找最多 3 张非弱点道具/供给正面朝下附属；附属牌如同手牌可打出",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08615 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Wooden Sledge",
+   "nameZh": "木制雪撬",
+   "accepted": false
+  },
+  {
+   "code": "08616",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(2补给)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[action]花 1 补给+横置：选本地点或连接地点，对每个敌人与调查员各造成 3 伤害",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08616 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Dynamite",
+   "nameZh": "炸药",
+   "accepted": false
+  },
+  {
+   "code": "08617",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(3充能)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[reaction]同地点调查员抽到忒咳哩-哩弱点时花 1 充能：取消效果、放回忒咳哩-哩牌库底并抽 1 张",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08617 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Miasmic Crystal",
+   "nameZh": "瘴气水晶",
+   "accepted": false
+  },
+  {
+   "code": "08618",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(3充能)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[action]花 1 充能：以基础智力 5 调查；取消本次 frost 标记；成功额外发现 1 线索",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08618 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Mineral Specimen",
+   "nameZh": "矿物标本",
+   "accepted": false
+  },
+  {
+   "code": "08619",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(3补给)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "可触发不在场的 Expedition 支援能力（未划掉者），以横置+1 补给代替非行动费用",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08619 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Small Radio",
+   "nameZh": "小型收音机",
+   "accepted": false
+  },
+  {
+   "code": "08620",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "使用(3补给)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js:15-19（uses/usesType/flags 数据）",
+     "note": "数据存在；08615 无 uses 属于卡面事实"
+    },
+    {
+     "text": "[fast]花 1 补给+横置：本地点另一支援 +1 补给，或本地点调查员 +1 资源",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js:11-20（条目只有 code/uses/flags，无 abilities/描述子）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:47-56（isExpeditionAsset）,301-345（只做取得/撤退，无能力结算）；全仓 grep 相关 flags 仅条目自身",
+     "note": "卡片能力零实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js",
+    "note": "无能力可感知"
+   },
+   "tests": {
+    "status": "data-only",
+    "evidence": "tests/eote-interaction-fixture.mjs / tests/eote-migrations 仅登记身份与 uses",
+    "note": "无行为断言"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08620 卡面能力完全未实现：条目只声明 uses/flags，behavior 无对应读点；账本 status=verified 与实际不符（虚假 verified）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js:1-21；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:301-345；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:216-227（仅入场，能力在 Asset CardDefs）",
+     "suggestion": "先补齐 Expedition 资产入场，再按共享原语实现能力（+1 伤害/搜索附属/爆炸/取消弱点/调查/借能力/补给）或提交 primitive request 并降账本状态"
+    }
+   ],
+   "name": "Spare Parts",
+   "nameZh": "备用零件",
+   "accepted": false
+  },
+  {
+   "code": "08621",
+   "verdict": "match",
+   "clauses": [
+    {
+     "text": "简单/普通：skull=-X（X=你控制的钥匙数）；cultist=-2 失败放 1 钥匙到地点；tablet=-3 若本检定揭示 frost 改为自动失败；elder_thing=-4 失败最近敌人移动/攻击",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:11-25,27-38；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:371-397",
+     "note": "skull 用 valueKeysAt 计数"
+    },
+    {
+     "text": "困难/专家：skull=-(X+2)；cultist=-2 必放钥匙；tablet=-4 +1 伤害 + 自动失败；elder_thing=-5",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:11-25,27-38；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397,380-393（testAutoFail）",
+     "note": ""
+    },
+    {
+     "text": "（场景 setup，非卡面）混乱袋 +1 [elder_thing] 标记（v1/v2）",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:83-140；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/CityOfTheElderThings.hs:363,394（v3 不加）",
+     "note": "属章节 setup 缺口，记入 scenarios[1].issues"
+    },
+    {
+     "text": "（场景特别规则 Keys）无线索地点的钥匙可 [fast] 取得；[action] 转交；被击败时钥匙落地",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201（只有导出函数），:256-293（actions 无数值钥匙取得/转交）；shared _shared.js:842-847 是彩色钥匙版且未挂到 08621",
+     "note": "玩家在真实界面无法取得钥匙 → 幕 1 目标不可达（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:371-397；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:27-38",
+    "note": "token 值可感知；钥匙取得无入口"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:144-158（直调 behavior.claimKey）,222-240",
+    "note": ""
+   },
+   "issues": [],
+   "name": "City of the Elder Things",
+   "nameZh": "古老者之城",
+   "accepted": true
+  },
+  {
+   "code": "08622",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[fast] 本回合花 1 线索：查看所在行/列一个城市景观的已揭示面（每轮一次）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08622.js:14-29（freeActions）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:261-265,274-276",
+     "note": "可扣线索并记录每轮一次，但 api.chooseRowOrColumn 不存在（scenarioRuntime 无该 API），且从未调用 behavior.lookAtRow/visibleOnRow → 无任何信息展示"
+    },
+    {
+     "text": "[fast] 本回合花 3 线索：移动到所在行/列任意地点（每轮一次）",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:277-279,311-317",
+     "note": "只扣线索+日志，从未改变 inv.location（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:303-317",
+    "note": "查看行动无输出，移动行动无效"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:163-176（只断言线索扣减/去重）",
+    "note": "未断言移动结果/查看输出"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08622 议程自由行动两处不等价：查看未展示城市景观（api.chooseRowOrColumn 不存在）；移动行/列只扣 3 线索而不移动（performAction 无位移）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08622.js:14-29；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:274-279,303-317；grep 全仓无 chooseRowOrColumn 实现",
+     "suggestion": "移动改走权威移动管线（或 api.mechanics.city 移动校验）；查看看牌改为把 visibleOnRow/visibleOnColumn 结果作为私密信息发给该座位；补断言"
+    },
+    {
+     "severity": "medium",
+     "dimension": "duplication",
+     "summary": "同一自由行动在 agendaRule.freeActions 与 behavior.actions 硬编码各声明一次 → 合法行动列表重复",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08622.js:14-29；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:261-265,274-279；tests/eote-scenario-cityOfTheElderThings.test.mjs:168-175（用 some() 未发现重复）",
+     "suggestion": "删除 behavior 内硬编码，仅保留条目数据"
+    }
+   ],
+   "name": "Lurking Horrors",
+   "nameZh": "恐惧潜伏",
+   "accepted": false
+  },
+  {
+   "code": "08623",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[fast] 本回合花 1 线索：查看所在行/列一个城市景观的已揭示面（每轮一次）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08623.js:14-29（freeActions）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:261-265,274-276",
+     "note": "可扣线索并记录每轮一次，但 api.chooseRowOrColumn 不存在（scenarioRuntime 无该 API），且从未调用 behavior.lookAtRow/visibleOnRow → 无任何信息展示"
+    },
+    {
+     "text": "[fast] 本回合花 3 线索：移动到所在行/列任意地点（每轮一次）",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:277-279,311-317",
+     "note": "只扣线索+日志，从未改变 inv.location（high）"
+    },
+    {
+     "text": "背面 (→R2)",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08623.js:14-30（agendaRule 无 onReveal）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:220-226,415-417",
+     "note": "最后议程推进无结算（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:303-317",
+    "note": "查看行动无输出，移动行动无效"
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:163-176（只断言线索扣减/去重）",
+    "note": "未断言移动结果/查看输出"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08623 议程自由行动两处不等价：查看未展示城市景观（api.chooseRowOrColumn 不存在）；移动行/列只扣 3 线索而不移动（performAction 无位移）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08623.js:14-29；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:274-279,303-317；grep 全仓无 chooseRowOrColumn 实现",
+     "suggestion": "移动改走权威移动管线（或 api.mechanics.city 移动校验）；查看看牌改为把 visibleOnRow/visibleOnColumn 结果作为私密信息发给该座位；补断言"
+    },
+    {
+     "severity": "medium",
+     "dimension": "duplication",
+     "summary": "同一自由行动在 agendaRule.freeActions 与 behavior.actions 硬编码各声明一次 → 合法行动列表重复",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08623.js:14-29；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:261-265,274-279；tests/eote-scenario-cityOfTheElderThings.test.mjs:168-175（用 some() 未发现重复）",
+     "suggestion": "删除 behavior 内硬编码，仅保留条目数据"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "08623 背面 (→R2) 未实现：finalResolution 无调用者，探索完最后一个议程只做 checkOutcome（仅全灭才结束）→ 毁灭耗尽无法结束/记录 R2",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08623.js:14-30；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:220-226,415-417；src/engine/act-agenda.js:355-361；src/engine/harm-threat.js:354-361",
+     "suggestion": "08623 声明 onReveal:\"finalResolution\"，behavior.agendaReveal 处理 finalResolution 并写 R2 记录；补超时测试"
+    }
+   ],
+   "name": "Doom from Below",
+   "nameZh": "自下而来的毁灭",
+   "accepted": false
+  },
+  {
+   "code": "08624",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个符号钥匙：记录对应战役条目",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js:15-47（objective/keyActions）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:282-286,332-341（actions/performAction actKey）",
+     "note": "通用 actKey 分派；钥匙取得入口缺失（场景 issue）"
+    },
+    {
+     "text": "目标：两条记录都完成时推进",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:227-243（checkObjectives cityKeys）；src/engine/act-agenda.js:183",
+     "note": ""
+    },
+    {
+     "text": "背面：将放一边的修格斯组与遭遇弃牌堆混洗入遭遇牌库；揭示隐秘隧道；把放一边的星之恐怖放到隐秘隧道（横置）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js:48（onReveal）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:462-467（act1BackV1 只设 hiddenTunnelRevealed + 日志）；src/engine/reveal.js:151-162",
+     "note": "缺少：洗混修格斯组+遭遇弃牌堆；星之恐怖入场（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:332-341,460-488（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（只测 v1 正面；背面仅断言 hiddenTunnelRevealed）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08624（v1）背面效果不完整：洗混修格斯组+遭遇弃牌堆；星之恐怖入场 均未实现，只设置 hiddenTunnelRevealed（）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:462-467（act1BackV1 只设 hiddenTunnelRevealed + 日志）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/CityOfTheElderThings.hs:342-371（v1）/383-406（v2）/418-440（v3）",
+     "suggestion": "用 state.scenario.encounterDeck/state.encounterDiscard 合并共享组与弃牌堆，按版本 spawn Terror（v1），并补测试"
+    }
+   ],
+   "name": "Sprawling City (v. I)",
+   "nameZh": "错综复杂之城(版本一)",
+   "accepted": false
+  },
+  {
+   "code": "08625",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个符号钥匙：记录对应战役条目",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js:15-47（objective/keyActions）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:282-286,332-341（actions/performAction actKey）",
+     "note": "通用 actKey 分派；钥匙取得入口缺失（场景 issue）"
+    },
+    {
+     "text": "目标：两条记录都完成时推进",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:227-243（checkObjectives cityKeys）；src/engine/act-agenda.js:183",
+     "note": ""
+    },
+    {
+     "text": "背面：将放一边的冰中生物组与遭遇弃牌堆混洗入遭遇牌库；揭示隐秘隧道；混乱袋 +1 [frost]",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js:48（onReveal）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:469-475（act1BackV2 只设 flag + frost）；src/engine/reveal.js:151-162",
+     "note": "缺少：洗混冰中生物组+遭遇弃牌堆（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:332-341,460-488（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（只测 v1 正面；背面仅断言 hiddenTunnelRevealed）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08625（v2）背面效果不完整：洗混冰中生物组+遭遇弃牌堆 均未实现，只设置 hiddenTunnelRevealed（）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:469-475（act1BackV2 只设 flag + frost）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/CityOfTheElderThings.hs:342-371（v1）/383-406（v2）/418-440（v3）",
+     "suggestion": "用 state.scenario.encounterDeck/state.encounterDiscard 合并共享组与弃牌堆，按版本 spawn Terror（v1），并补测试"
+    }
+   ],
+   "name": "Sprawling City (v. II)",
+   "nameZh": "错综复杂之城(版本二)",
+   "accepted": false
+  },
+  {
+   "code": "08626",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个符号钥匙：记录对应战役条目",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js:15-47（objective/keyActions）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:282-286,332-341（actions/performAction actKey）",
+     "note": "通用 actKey 分派；钥匙取得入口缺失（场景 issue）"
+    },
+    {
+     "text": "目标：两条记录都完成时推进",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:227-243（checkObjectives cityKeys）；src/engine/act-agenda.js:183",
+     "note": ""
+    },
+    {
+     "text": "背面：将放一边的修格斯组与遭遇弃牌堆混洗入遭遇牌库；揭示隐秘隧道；按玩家顺序每位调查员抽 1 张遭遇牌",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js:48（onReveal）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:476-483（act1BackV3 只设 flag + drawEncounter）；src/engine/reveal.js:151-162",
+     "note": "缺少：洗混修格斯组+遭遇弃牌堆（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:332-341,460-488（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（只测 v1 正面；背面仅断言 hiddenTunnelRevealed）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08626（v3）背面效果不完整：洗混修格斯组+遭遇弃牌堆 均未实现，只设置 hiddenTunnelRevealed（抽遭遇牌已实现）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:476-483（act1BackV3 只设 flag + drawEncounter）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/CityOfTheElderThings.hs:342-371（v1）/383-406（v2）/418-440（v3）",
+     "suggestion": "用 state.scenario.encounterDeck/state.encounterDiscard 合并共享组与弃牌堆，按版本 spawn Terror（v1），并补测试"
+    }
+   ],
+   "name": "Sprawling City (v. III)",
+   "nameZh": "错综复杂之城(版本三)",
+   "accepted": false
+  },
+  {
+   "code": "08627",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个 cultist 钥匙：每位调查员可治愈 1 伤害/1 恐惧/1 创伤",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08627.js:19-28（actTwoActions healAll）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（actTwo: 只花钥匙+日志，无治愈）",
+     "note": "效果未实现（high）"
+    },
+    {
+     "text": "目标：所有未被击败调查员在隐秘隧道且隧道无线索时推进",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08627.js:16-18；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:245-253（checkObjectives hiddenTunnel）",
+     "note": ""
+    },
+    {
+     "text": "背面 (→R1)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08627.js:29（onReveal resolution1）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:204-218（actReveal 字符串 resolution 分支）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（仅 v1 幕1）；无 act2 行动测试",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08627（v1）的 [action] 效果未实现：通用 actTwo 分派只花钥匙并写日志",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08627.js:19-31；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（actTwo: 只花钥匙+日志，无治愈）",
+     "suggestion": "在 behavior 为 actTwo action 增加按 action 名的效果分派（治愈/洗回弱点/移除 token），或改用通用原语"
+    }
+   ],
+   "name": "Pursuit of the Unknown (v. I)",
+   "nameZh": "追寻未知(版本一)",
+   "accepted": false
+  },
+  {
+   "code": "08628",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个 tablet 钥匙：每位调查员查找牌库中所有忒咳哩-哩弱点并洗回忒咳哩-哩牌库，然后洗牌",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08628.js:19-28（actTwoActions returnTekeliWeaknesses）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（只花钥匙+日志）",
+     "note": "效果未实现（high）"
+    },
+    {
+     "text": "目标：所有未被击败调查员在隐秘隧道且隧道无线索时推进",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08628.js:16-18；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:245-253（checkObjectives hiddenTunnel）",
+     "note": ""
+    },
+    {
+     "text": "背面 (→R1)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08628.js:29（onReveal resolution1）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:204-218（actReveal 字符串 resolution 分支）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（仅 v1 幕1）；无 act2 行动测试",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08628（v2）的 [action] 效果未实现：通用 actTwo 分派只花钥匙并写日志",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08628.js:19-31；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（只花钥匙+日志）",
+     "suggestion": "在 behavior 为 actTwo action 增加按 action 名的效果分派（治愈/洗回弱点/移除 token），或改用通用原语"
+    }
+   ],
+   "name": "Pursuit of the Unknown (v. II)",
+   "nameZh": "追寻未知(版本二)",
+   "accepted": false
+  },
+  {
+   "code": "08629",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个 elder_thing 钥匙：从混乱袋移除所有 elder_thing 标记",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:20-29（actTwoActions removeElderThingTokens）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（只花钥匙+日志）；行为无 onEnemyEnter/forcedOnEnemyEnter 读点",
+     "note": "效果未实现（high）"
+    },
+    {
+     "text": "目标：所有未被击败调查员在隐秘隧道且隧道无线索时推进",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:16-18；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:245-253（checkObjectives hiddenTunnel）",
+     "note": ""
+    },
+    {
+     "text": "背面 (→R1)",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:31（onReveal resolution1）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:204-218（actReveal 字符串 resolution 分支）",
+     "note": ""
+    },
+    {
+     "text": "强制-修格斯或精英敌人进入地点时：击败该地点的所有古老者敌人",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:30（forcedOnEnemyEnter:'defeatElderThingsAtLocation'）；全仓 grep 该键仅条目本身；src/engine/movement.js:390 只开 enemyEnteredLocation 窗口、无章节读点",
+     "note": "声明未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:178-196（仅 v1 幕1）；无 act2 行动测试",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08629（v3）的 [action] 效果未实现：通用 actTwo 分派只花钥匙并写日志",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:19-31；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:343-351（只花钥匙+日志）；行为无 onEnemyEnter/forcedOnEnemyEnter 读点",
+     "suggestion": "在 behavior 为 actTwo action 增加按 action 名的效果分派（治愈/洗回弱点/移除 token），或改用通用原语"
+    },
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08629 forcedOnEnemyEnter:\"defeatElderThingsAtLocation\" 在 src+content 无任何读点（已全仓 grep 确认），强制能力未实现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js:30；全仓仅此一处",
+     "suggestion": "在章节 behavior 或引擎 enemyEnteredLocation 窗口接读 actRule.forcedOnEnemyEnter；补入场地测试"
+    }
+   ],
+   "name": "Pursuit of the Unknown (v. III)",
+   "nameZh": "追寻未知(版本三)",
+   "accepted": false
+  },
+  {
+   "code": "08630",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "隐秘隧道上的线索不能被（非调查）发现或移动到其他地点",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08630.js:14-22（blocksClueDiscovery:true）；全仓无该键读点（grep）",
+     "note": "规则未生效（high）"
+    },
+    {
+     "text": "[action] 任选技能检定(4)；可花 1 个 skull 钥匙使本次技能值 +5；成功把隧道 1 线索放回供应堆（花 skull 则 2）",
+     "status": "approximation",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:544-558（tunnelInvestigate 固定 willpower 4；成功后花 skull 才变 2）",
+     "note": "缺「任选技能」与「+5 技能值」；花费时机/效果不等价"
+    },
+    {
+     "text": "背面：隐秘隧道未揭示时不能进入",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:245-253（moveError）",
+     "note": ""
+    },
+    {
+     "text": "胜利 1 点",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08630.js:22；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:111-118（hasVictory）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:544-560（api.test/api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:124-139（只测不能进入）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08630 blocksClueDiscovery 声明无读点：隧道线索可被非调查效果发现/移动",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08630.js:21；全仓 grep 仅条目本身；src/engine/locations.js:368-381（只有 cluesOnlyByInvestigation/canDiscoverClues）",
+     "suggestion": "在引擎 clue discovery/move 读点接 locationRule.blocksClueDiscovery，或 behavior.canDiscoverClues 读条目"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08630 隧道行动近似：固定意志(4)、+5 技能值未实现、skull 钥匙在成功后而非检定前花费",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08630.js:14-22；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:544-560",
+     "suggestion": "改为任选技能 + 检定前可选花 skull(+5)；补测试"
+    }
+   ],
+   "name": "Hidden Tunnel",
+   "nameZh": "隐秘隧道",
+   "accepted": false
+  },
+  {
+   "code": "08631",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个「0」钥匙：把花费的一个「0」钥匙作为混乱标记加入混乱袋（直到战役结束）；记录「队伍拍摄了天文图照片」",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08631.js:12-25（values ['0','0']，remember:'theTeamStudiedTheHistoryOfTheElderThings'）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:560-566（planetariumStudy：addFrostToken + 写错键）",
+     "note": "两处错误：加入 frost 而非「0」钥匙 token；记录键错（应为 theTeamPhotographedTheAstronomicalCharts）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:562-573（api.info）",
+    "note": "提示文字也与卡面不符"
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无针对 planetariumStudy 的断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08631 实现与卡面不符：把「花费的 0 钥匙作为混乱标记」实现成「加入 1 个 frost」，且记录错战役键（写入幕1目标记录 theTeamStudiedTheHistoryOfTheElderThings）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08631.js:12-25；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:453-457（addFrostToken）,562-573；content/campaigns/edgeOfTheEarth/records.js:237（正确键 theTeamPhotographedTheAstronomicalCharts）",
+     "suggestion": "按卡面加「0」值 chaos token（持久），remember 改为 theTeamPhotographedTheAstronomicalCharts"
+    }
+   ],
+   "name": "Ancient Planetarium",
+   "nameZh": "古代天文馆",
+   "accepted": false
+  },
+  {
+   "code": "08632",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action] 检定 [combat](4) 或 [agility](4)：成功发现石桥 1 个线索",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08632.js:13-24；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:568-581（固定 combat 4；成功后直接搬 1 线索到 inv.clues）",
+     "note": "缺技能选择；发现线索绕过引擎发现管线（不计发现窗口/加成）"
+    },
+    {
+     "text": "[action] 移动到另一个石桥地点",
+     "status": "approximation",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:582-590（取第一个其他石桥，无选择/无移动管线）",
+     "note": ""
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:575-607（api.test/api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无 city 石桥断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08632 少技能选择、发现线索绕过引擎管线、石桥传送无选择",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08632.js:13-24；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:575-607",
+     "suggestion": "用 api.test 的 skillChoice / 走引擎 discover 入口；移动改走移动管线"
+    }
+   ],
+   "name": "Stone Bridge",
+   "nameZh": "石桥",
+   "accepted": false
+  },
+  {
+   "code": "08633",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个「-2」钥匙：抽 2 张牌、获得 2 资源、从混乱袋移除 2 个 [frost]；记录「队伍研究了壁画雕刻」",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08633.js:12-25；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:592-601（towerStudy）",
+     "note": "效果主体实现；记录键错写 theTeamStudiedTheHistoryOfTheElderThings（应为 theTeamStudiedTheMuralCarvings）；抽牌用 inv.deck.pop() 绕过抽牌管线"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:608-623（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无 towerStudy 断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08633 记录键错误（写入幕1目标记录，而不是 theTeamStudiedTheMuralCarvings）；抽牌绕过引擎抽牌管线",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08633.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:608-623；content/campaigns/edgeOfTheEarth/records.js:238",
+     "suggestion": "改用正确战役记录键；抽牌走 api.drawCards"
+    }
+   ],
+   "name": "Cylindrical Tower",
+   "nameZh": "圆柱塔",
+   "accepted": false
+  },
+  {
+   "code": "08634",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "在本地点的技能检定期间，每次揭示混乱标记：若本地点/本地点调查员有同面钥匙，其修正值翻倍",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08634.js:12-17（locationRule.flags.doubleKeyTokenModifier）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:371-397（afterTest 无该分支）；全仓无读点",
+     "note": "声明未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08634.js",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08634 的 flags.doubleKeyTokenModifier 无任何读点：钥匙同面时混乱标记修正翻倍完全未实现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08634.js:13-15；全仓 grep 仅条目本身；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:27-38（token delta 计算无该修正）",
+     "suggestion": "在章节 chaos/resolveChaosToken 或 afterTest 读双倍标记（需访问地点/钥匙）"
+    }
+   ],
+   "name": "Labyrinthine Chamber",
+   "nameZh": "迷宫房间",
+   "accepted": false
+  },
+  {
+   "code": "08635",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个「-3」钥匙：选择并揭示 3 个隐秘隧道以外的地点；从中各发现 1 个线索；记录「队伍查看了地图」",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08635.js:12-25；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:603-610（mapRoomStudy）",
+     "note": "无选择（取前 3 个未揭示）；「发现 1 线索」只把地点线索减 1，未给调查员记线索（不等于发现）；记录键错（应为 theTeamReadTheMap）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:624-637",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08635 三项不等价：无地点选择、发现线索未记给调查员（线索蒸发）、记录键写入幕1目标键",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08635.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:624-637；records.js:237",
+     "suggestion": "选择地点 + 走发现管线记给调查员 + 正确记录键"
+    }
+   ],
+   "name": "Map Room",
+   "nameZh": "地图资料室",
+   "accepted": false
+  },
+  {
+   "code": "08636",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action] 花费 2 个「-1」钥匙：移除密谋 1 毁灭，或弃掉场上 1 个非精英敌人或 1 张诡计；记录「队伍发现了一个古代墓穴」",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08636.js:12-25；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:612-622（rampartStudy）",
+     "note": "无选择；只处理「密谋毁灭（state.doom）/非精英敌人」，未实现「弃掉场上诡计」；记录键错（应为 theTeamDiscoveredAnAncientVault）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:638-653",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08636 缺少诡计弃掉选项且无选择交互；记录键错误",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08636.js:48；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:638-653；records.js:235",
+     "suggestion": "补选择（毁灭/敌人/诡计）与正确的记录键"
+    }
+   ],
+   "name": "Roofless Rampart",
+   "nameZh": "无顶堡垒",
+   "accepted": false
+  },
+  {
+   "code": "08637",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制：在本地点技能检定揭示 ≥1 个 [frost] 后，受到 1 点伤害",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08637.js:13-16（flags.frostForcedDamage:1）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397（afterTest 无该分支）；全仓无读点",
+     "note": "声明未接线（high）"
+    },
+    {
+     "text": "[reaction] 发现本地点最后一个线索后：发现连接地点的 1 个线索",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08637.js:17-23；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:624-632（streetsReactionClue 被做成 [action] 地点行动，非 reaction）",
+     "note": "触发时机由 reaction 变为主动行动"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:654-665",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08637 的 flags.frostForcedDamage 无读点：揭示 frost 后的强制伤害未实现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08637.js:14-15；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397；全仓 grep 仅条目本身",
+     "suggestion": "在章节 afterTest（或引擎 frost 读点）结算地点强制"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08637 的 reaction（发现最后线索后）被实现为 [action] 地点行动，时机不等价",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08637.js:17-23；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:654-665",
+     "suggestion": "改为线索发现后的 reaction/触发窗口"
+    }
+   ],
+   "name": "Ruinous Streets",
+   "nameZh": "破败街道",
+   "accepted": false
+  },
+  {
+   "code": "08638",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action]：将本行另一个地点的 1 个钥匙移到巨大尖顶（团队每场一次）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08638.js:12-20；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:634-648（moveKeyToSpires）",
+     "note": "取第一个有钥匙的同行地点，无选择；teamOnce 已实现"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:666-681（api.info）",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "low",
+     "dimension": "impl-vs-text",
+     "summary": "08638 缺「选择哪个地点/哪把钥匙」交互（自动取第一个）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08638.js:12-20；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:666-681",
+     "suggestion": "补目标选择"
+    }
+   ],
+   "name": "Cyclopean Spires",
+   "nameZh": "巨大尖顶",
+   "accepted": false
+  },
+  {
+   "code": "08639",
+   "verdict": "approximation",
+   "clauses": [
+    {
+     "text": "[action]：将本地点 1 个线索移到本行/本列一个未揭示地点",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08639.js:12-19；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:650-663（moveClueToHidden）",
+     "note": "取第一个匹配目标，无选择；效果成立"
+    }
+   ],
+   "perceivability": {
+    "status": "perceivable",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:682-698",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "low",
+     "dimension": "impl-vs-text",
+     "summary": "08639 缺目标地点选择（自动取第一个未揭示同行/列地点）",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08639.js:12-19；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:682-698",
+     "suggestion": "补选择"
+    }
+   ],
+   "name": "Submerged Passageway",
+   "nameZh": "埋没通路",
+   "accepted": false
+  },
+  {
+   "code": "08640",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "强制：在本地点技能检定揭示 ≥1 个 [frost] 后，受到 1 点恐惧",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08640.js:13-16（flags.frostForcedHorror:1）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397；全仓无读点",
+     "note": "声明未接线（high）"
+    },
+    {
+     "text": "[action] 若本地点无线索：选择 2 个有钥匙的地点，交换这些地点的所有钥匙（团队每场一次）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08640.js:17-24；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:665-678（swapKeys）",
+     "note": "自动取前两个「≥2 把钥匙」地点（限制错误：卡面只要求有钥匙）；无选择"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:699-712",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08640 的 flags.frostForcedHorror 无读点：强制恐惧未实现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08640.js:14-15；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397",
+     "suggestion": "在 afterTest 结算地点强制"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08640 交换钥匙实现错误：要求两地点各 ≥2 把钥匙（卡面只需有钥匙）、无玩家选择",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08640.js:17-24；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:699-712",
+     "suggestion": "放宽条件并补选择"
+    }
+   ],
+   "name": "Temple of the Elder Things",
+   "nameZh": "古老者之庙",
+   "accepted": false
+  },
+  {
+   "code": "08641",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "猎手。庞大。",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08641.js:14-20",
+     "note": ""
+    },
+    {
+     "text": "星之恐怖得到 +3[per_investigator] 生命",
+     "status": "implemented",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:399-405（enemyStatModifier health=3×人数）",
+     "note": ""
+    },
+    {
+     "text": "星之恐怖处于重整状态时，其所在地点调查员不能花费或控制钥匙",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08641.js:18（blocksKeysWhileReady:true）；全仓无读点",
+     "note": "声明未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08641.js",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08641 blocksKeysWhileReady 无任何读点：重整时封锁钥匙花费/取得的限制未实现",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08641.js:14-19；全仓 grep 仅条目本身；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201（claimKey/giveKeys 不检查该限制）",
+     "suggestion": "在章节钥匙取得/花费入口或引擎 key-cost 读点检查该 enemyRule"
+    }
+   ],
+   "name": "Terror of the Stars",
+   "nameZh": "星之恐怖",
+   "accepted": false
+  },
+  {
+   "code": "08642",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "生成 - 任意无人地点",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js:16（spawn:\"anyEmpty\"）；src/engine/encounter.js:217（引擎读 spawnAnyEmpty 布尔）；src/engine/enemies.js:409,507（spawnLocation/spawnOverrides 钩子）",
+     "note": "键名/形状不符 → 不生效（high）"
+    },
+    {
+     "text": "入场带有 1 个毁灭标记",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js:17（onSpawnDoom:1）；src/engine/enemies.js:553（只读剧本 def.onSpawnDoom）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:109-118（enemyDefinition 未合并条目字段）",
+     "note": "未接线（high）"
+    },
+    {
+     "text": "强制-被击败时：在当前密谋放 1 个毁灭",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js:18（onDefeatDoom:1）；全仓无读点",
+     "note": "未接线（high）"
+    },
+    {
+     "text": "[action]：谈判。意志(3)，成功将其移出游戏",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js:19-24（enemyRule.parley 对象）；全仓无读点（parley 需条目 abilities 描述子或 def.parley：src/engine/parley.js:105）",
+     "note": "未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js",
+    "note": "只有数值可感知"
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言（city 测试仅注释提及名称）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08642 四个条款（生成任意无人地点/入场毁灭/被击败毁灭/谈判）全部未接线：spawn 形状错误、onSpawnDoom 数据源未合并、onDefeatDoom 与 parley 无读点",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js:15-25；src/engine/encounter.js:217；src/engine/enemies.js:553；src/engine/parley.js:105；全仓 grep 仅条目本身",
+     "suggestion": "按引擎既有键（spawnAnyEmpty/def.onSpawnDoom/abilities 谈判描述子）重写条目声明并接线"
+    }
+   ],
+   "name": "Benign Elder Thing",
+   "nameZh": "和蔼的古老者",
+   "accepted": false
+  },
+  {
+   "code": "08643",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "猎手。",
+     "status": "implemented",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08643.js:14-20",
+     "note": ""
+    },
+    {
+     "text": "强制-与本敌人交战时：把你控制的一个钥匙放到它上面；它离场时把该钥匙放到它的地点",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08643.js:16,18（takesKeyOnEngage/placesKeyOnLeave）；全仓无读点",
+     "note": "未接线（high）"
+    },
+    {
+     "text": "强制-其地点调查员取得钥匙时：本敌人重整、与其交战并攻击",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08643.js:17（readiesOnKeyControlled）；全仓无读点",
+     "note": "未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "unverifiable",
+    "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08643.js",
+    "note": ""
+   },
+   "tests": {
+    "status": "none",
+    "evidence": "无断言",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08643 三条强制（交战取钥匙/离场放钥匙/取得钥匙时重整交战攻击）均无读点",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08643.js:14-19；全仓 grep 仅条目本身；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201（钥匙取得入口未接该限制）",
+     "suggestion": "在章节钥匙取得/敌人交战/离场钩子读 enemyRule 三键"
+    }
+   ],
+   "name": "Reawakened Elder Thing",
+   "nameZh": "复苏的古老者",
+   "accepted": false
+  },
+  {
+   "code": "08644",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08644.js:12（resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-540（TREACHERY_HANDLERS 实现）",
+     "note": "handler 逻辑存在，但真实遭遇路径不结算（high）"
+    },
+    {
+     "text": "难度按「你所在地点 + 你控制」的钥匙数增加",
+     "status": "approximation",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:487-502（只计控制钥匙 behavior.keyCount，未计地点上的钥匙；难度公式还多加 level——city 地点无 level 故无害）",
+     "note": "少算地点上的钥匙（medium）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-563（api.test/api.info/api.choice）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:201-220,222-240（直调 behavior.resolveEncounter/chaos 函数）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（古老者之城 behavior.resolveEncounter 未被任何引擎读点调用），且 古老者之城 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08644.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "08644 难度未计入「你所在地点上的钥匙」",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-500；卡面 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/bundles/08644.md:10",
+     "suggestion": "难度 = 2 + 所在地点钥匙数 + 控制钥匙数"
+    }
+   ],
+   "name": "Dawning of the Truth",
+   "nameZh": "真相开端",
+   "accepted": false
+  },
+  {
+   "code": "08645",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08645.js:12（resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-540（TREACHERY_HANDLERS 实现）",
+     "note": "handler 逻辑存在，但真实遭遇路径不结算（high）"
+    },
+    {
+     "text": "检定期间若揭示与地点/控制钥匙同面的混乱标记则自动失败",
+     "status": "missing",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:504-518（只设置 flags.crumblingRuinsKeys，未接 chaosTokenRevealed/testAutoFail）",
+     "note": "自动失败条款未实现（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-563（api.test/api.info/api.choice）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:201-220,222-240（直调 behavior.resolveEncounter/chaos 函数）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（古老者之城 behavior.resolveEncounter 未被任何引擎读点调用），且 古老者之城 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08645.js:12（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "08645「揭示与钥匙同面的混乱标记→自动失败」完全未实现（仅记录 flags.crumblingRuinsKeys）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:501-514；src/engine/treachery-tokens.js:113-124（无该路径）",
+     "suggestion": "在测试/afterTest 或 chaosTokenRevealed 读点实现同面自动失败"
+    }
+   ],
+   "name": "Crumbling Ruins",
+   "nameZh": "崩塌废墟",
+   "accepted": false
+  },
+  {
+   "code": "08646",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08646.js:14（resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-540（TREACHERY_HANDLERS 实现）",
+     "note": "handler 逻辑存在，但真实遭遇路径不结算（high）"
+    },
+    {
+     "text": "强制：技能检定揭示 [frost] 时，受到 1 伤害/恐惧 或 自动失败（每检定一次）",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08646.js:18-23（flags.frostWeakness:true）；全仓无读点；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397（afterTest 无）",
+     "note": "声明未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-563（api.test/api.info/api.choice）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:201-220,222-240（直调 behavior.resolveEncounter/chaos 函数）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（古老者之城 behavior.resolveEncounter 未被任何引擎读点调用），且 古老者之城 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08646.js:14（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08646 强制条款（揭示 frost → 1 伤害/恐惧或自动失败，每检定一次）无读点；且「如 1 点伤害被治愈」仅在代码注释披露近似",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08646.js:18-23；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397,520-540；全仓 grep frostWeakness 仅条目本身",
+     "suggestion": "接 frost 揭示的威胁区强制读点；近似登记到 known-deviations"
+    }
+   ],
+   "name": "Frostbitten",
+   "nameZh": "冻伤",
+   "accepted": false
+  },
+  {
+   "code": "08647",
+   "verdict": "gap",
+   "clauses": [
+    {
+     "text": "显现效果（见卡面）",
+     "status": "approximation",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js:14（resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-540（TREACHERY_HANDLERS 实现）",
+     "note": "handler 逻辑存在，但真实遭遇路径不结算（high）"
+    },
+    {
+     "text": "强制：技能检定揭示 [frost] 时，受到 1 伤害/恐惧 或 自动失败（每检定一次）",
+     "status": "missing",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js:18-23（flags.frostWeakness:true）；全仓无读点；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397（afterTest 无）",
+     "note": "声明未接线（high）"
+    }
+   ],
+   "perceivability": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-563（api.test/api.info/api.choice）",
+    "note": ""
+   },
+   "tests": {
+    "status": "hook-only",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:201-220,222-240（直调 behavior.resolveEncounter/chaos 函数）",
+    "note": ""
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "章节遭遇卡在真实引擎路径不结算：条目只声明 treacheryRule.resolveKind（古老者之城 behavior.resolveEncounter 未被任何引擎读点调用），且 古老者之城 的 treacheryDefinition 未设 entryRevelation、条目也无 encounterResolve/treacheryRule.test → 抽到时只记日志、无任何效果",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js:14（仅 resolveKind）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127（treacheryDefinition 无 entryRevelation）；src/engine/treachery-tokens.js:113-124（只认 entry.encounterResolve / treacheryRule.test / effect.kind==='campaignRule'）；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151（其它 EOTE 章补 entryRevelation:true）",
+     "suggestion": "按其它 EOTE 章节模式：章节 definition 的 treacheryDefinition 补 entryRevelation:true，并在每个条目声明 encounterResolve 转发章节 TREACHERY_HANDLERS；补真实遭遇抽牌测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "primitive",
+     "summary": "08647 强制条款（揭示 frost → 1 伤害/恐惧或自动失败，每检定一次）无读点；",
+     "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js:18-23；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:375-397,520-540；全仓 grep frostWeakness 仅条目本身",
+     "suggestion": "接 frost 揭示的威胁区强制读点；近似登记到 known-deviations"
+    }
+   ],
+   "name": "Possessed",
+   "nameZh": "附身",
+   "accepted": false
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "toTheForbiddenPeaks",
+   "name": "失落之峰",
+   "nameEn": "To the Forbidden Peaks",
+   "referenceCode": "08596",
+   "setup": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:60-146（8 地点数据/斜线/放一边）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:69-103（preScenarioSetup/setupLocations）；src/engine/setup.js:795-799（引擎布置读点）",
+    "implemented": [
+     "5 个山腰地点 level 0–4 + 山顶 level 5，斜线连接由 definition 数据提供（behavior.js:60-105）",
+     "2 个未入场山腰地点 + 星之恐怖 + 7 件探险支援放一边（definition.js:142-146；behavior.js:81-103）",
+     "level-0 揭示 + 调查员起始地点（placeLocation 依据 investigator 位置揭示；behavior.js:96）",
+     "遭遇牌库本章 14 张（definition.js:133-139）"
+    ],
+    "missing": [
+     "混乱袋 +1 [elder_thing] 标记（参考 .hs:225）",
+     "Hard +1 / Expert +2 初始毁灭放议程 1a（参考 .hs:228-231）",
+     "「已勘察山口」时 level-0 起始线索减半（setupModifier ReduceStartingCluesByHalf，参考 .hs:208-210）",
+     "按 Supplies Recovered 把已回收 Expedition 支援放到 level-0、其余移出游戏（参考 .hs:216-227）",
+     "Tekeli-li 牌库初始化（addTekeliliDeck，参考 .hs:233）",
+     "伙伴存活分支（Eliyah/Claypool/Takada）的 frost/trauma 选择（参考 .hs:90-159）"
+    ]
+   },
+   "rules": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js:16-59；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:271-305,488-562",
+    "notes": [
+     "混乱标记两档取值与符号后果已实现并有测试（chaos.js:32-59；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:281-301）",
+     "议题/议程正面强制（移动后归还线索）只写在 behavior.afterMove（:244-256），引擎无 afterMove 读点 → 未接线",
+     "层级 X 修正读点水平不一致：behavior.locationEntered 依赖 climbState，权威移动不写 → 见 issue"
+    ]
+   },
+   "flow": {
+    "status": "partial",
+    "evidence": "src/engine/phases.js:268-282（议程推进读点）；src/engine/reveal.js:151-162（幕背面读点）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:105-124,177-187,355-359",
+    "notes": [
+     "幕 1 allResigned 目标 + 背面 R1 已接线（checkObjectives/actReveal）",
+     "议程 1 背面（放星之恐怖）已接线；议程 2 背面 R1/R2 分支已接线",
+     "结局记录写入错误（见 issues）；「撤退/失败」分支仅 noResolution 由 checkOutcome 兜底（harm-threat.js:354-361）"
+    ]
+   },
+   "runthrough": {
+    "status": "partial",
+    "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:112-316",
+    "notes": [
+     "测试全部用手工 state+apiStub 直调 behavior 钩子，没有一次真实 setup/移动/遭遇抽取；因此无法发现：攀登不接线、afterMove 不接线、Traverly 卡不结算、探险支援不入场、共享遭遇组缺失。"
+    ]
+   },
+   "guides": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:180-194（resolutions/SCENARIO_TEXT）；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/texts.js",
+    "notes": [
+     "指南正文由 story-text 生成，入口存在（guideSources sha 匹配 audit/eote-scope.json）；但 setup 面板文案与实际实现不一致（见 setup.missing）"
+    ]
+   },
+   "gatherSetsCheck": {
+    "evidence": "audit/eote-scope.json（chapters[toTheForbiddenPeaks].gatherSets：DeadlyWeather/ElderThings/HazardsOfAntarctica/NamelessHorrors/Tekelili/ToTheForbiddenPeaks 全部 mode=gather）",
+    "result": "definition.js:32-33（GATHER_GROUPS/SHARED_GROUPS）与 shared-encounters.js:112-116 均为同一 6 组，数据一致（✓）；但 definition.js:133-139 的 ENCOUNTER_DECK 只展开本章组（14 张），共享 5 组未进牌库（✗，见 issues）"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "真实遭遇抽牌不结算本章专属诡计：treacheryDefinition 无 entryRevelation、条目只有 resolveKind；引擎 resolveTreacheryBody 不读 resolveKind，behavior.resolveEncounter 唯一调用点是 effect.kind===\"campaignRule\"（无本章卡使用）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:110-117；src/engine/treachery-tokens.js:113-124；EOTE 无 encounter-rules.js 分派者；逐卡见 08610–08613",
+     "suggestion": "补 entryRevelation + encounterResolve 转发；补真实遭遇抽取测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "遭遇牌库缺 5 个共享遭遇组（参考 gather 6 组）：ENCOUNTER_DECK 只含本章 14 张；manifest.requiredEncounterGroupIds 仅注册校验（content/schema.js:281-283），引擎只用 scenario.encounterDeck（src/engine/setup.js:807-815）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:133-139；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js:16-19；src/engine/setup.js:807-815；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/EdgeOfTheEarth/ToTheForbiddenPeaks.hs:187-192；对照 content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js:107-120（按 GATHER_GROUPS 展开）",
+     "suggestion": "按 iceAndDeathPart1 模式用 GATHER_GROUPS 展开 ENCOUNTER_DECK（或 setup 时合并）"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "攀登「从下方进入」机制未接权威移动：ascend 仅 API/测试调用，behavior.locationEntered 的 climbState 永不写入 → 08600–08606 全部 enterFromBelow 强制不触发",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:189-199,226-241；src/engine/eote-climb.js:109-140；src/engine/api-mechanics.js:176-183；src/engine/movement.js:236-249",
+     "suggestion": "移动管线在 Level+1 时先记录 enterFromBelow（或 behavior 用 Level 差判定）；补真实移动测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "08597/08598 正面强制「移动后归还全部线索」未接线：behavior.afterMove 无引擎读点（全仓仅测试调用）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:244-256；src/engine/movement.js:249；tests/eote-scenario-toTheForbiddenPeaks.test.mjs:205",
+     "suggestion": "并入 locationEntered 或补引擎 afterMove 钩子"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "7 件 Expedition 剧情支援永不入场：setup 全部放一边，preScenarioSetup 不按 suppliesRecovered 放入场/移出，engine 也不自动生成 scenario.storyAssets；08599 的 [action] 与山顶撤退胜利区逻辑因而不可用",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:48,142-146；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:69-78,301-345；src/engine/setup.js:645；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:216-227",
+     "suggestion": "按记录把已回收支援放到 level-0、其余移出游戏；补能力实现"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "结局记录与结算缺失：behavior.resolution 只写 theInvestigatorsScoutedTheMountainPass；R1 应写 TheTeamClimbedToTheSummit，R2 应写 TheTeamFoundAnotherWayThroughTheMountains；Supplies Recovered 划掉与胜利区支援转牌组/XP 奖励均未实现",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:348-350；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:225-226；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:265-296；content/campaigns/edgeOfTheEarth/interludes.js:52（读 theTeamFoundAnotherWayThroughTheMountains）",
+     "suggestion": "按 resolution key 写正确记录并处理物资划掉/资产去向；补结局测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "Tekeli-li 牌库未初始化：参考 setup addTekeliliDeck；本章 08604（从下方进入洗入）、08617（取消弱点）、08723+（弱点抽取）都依赖它；content/.../iceAndDeathPart1/behavior.js:114 有初始化读点，本章无",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:1-30（import tekeliShuffleIn 但无 initializeTekeliDeck）；src/engine/eote-tekeli.js:63-99；grep initializeTekeliDeck 本章无",
+     "suggestion": "在 setup/preScenarioSetup 调用 initializeTekeliDeck（使用 shared-encounters.js:230 tekeliDeckSpec）"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "setup 缺：混乱袋 +1 [elder_thing]、Hard/Expert 初始毁灭、勘察过山口起始线索减半",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:69-103；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:208-231；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:196-227",
+     "suggestion": "在 preScenarioSetup 读记录/难度补齐这些 setup 步骤"
+    },
+    {
+     "severity": "medium",
+     "dimension": "docs",
+     "summary": "伙伴序幕分支（Eliyah/Claypool/Takada 存活 → frost/创伤）与「放一边的 2 个山腰地点固定为 08601/08606」已披露近似仅覆盖后者；前者未披露",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:54-56（scenarioApproximations 只有 1 条）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../ToTheForbiddenPeaks.hs:90-159",
+     "suggestion": "扩写 scenarioApproximations 或在 preScenarioSetup 实现伙伴分支"
+    },
+    {
+     "severity": "medium",
+     "dimension": "docs",
+     "summary": "测试只测钩子：全部用手工 state/apiStub 直调 behavior（tests/eote-scenario-toTheForbiddenPeaks.test.mjs:35-104），无真实引擎 setup/移动/抽遭遇；断言多为 hook 返回值",
+     "evidence": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs:112-316",
+     "suggestion": "补真实引擎链路测试（startScenario→placeLocation→move→drawEncounter→act/agenda 推进）"
+    },
+    {
+     "severity": "low",
+     "dimension": "docs",
+     "summary": "08596 参考卡 no-behavior 口径成立：token 表由 chaos.js 实现，无独立条目；账本 status=no-behavior 与实现一致",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js:16-59；content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js:196-227",
+     "suggestion": "无"
+    }
+   ]
+  },
+  {
+   "id": "cityOfTheElderThings",
+   "name": "古老者之城",
+   "nameEn": "City of the Elder Things",
+   "referenceCode": "08621",
+   "setup": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:37-153；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-140；src/engine/setup.js:795-799",
+    "implemented": [
+     "16 张城市景观 + 隐秘隧道，三套坐标（CITY_LAYOUTS）与 16 把数值钥匙（CITY_KEY_VALUES）",
+     "城市网格与相邻连接（initializeCity/connectGrid/placeGridLocation，behavior.js:92-140）",
+     "三套版本的 gather/setAside 数据在 shared-encounters.js:117-136 与参考一致"
+    ],
+    "missing": [
+     "按版本替换幕牌库（actsForVersion 只用于 v1 默认值）与 setup 文本（固定 v1）",
+     "按版本使用 setAside/removed（SET_ASIDE_BY_VERSION/REMOVED_BY_VERSION 无运行时读点）",
+     "移除集：benignElderThing/frostbitten/possessed/reawakened/terror 未按版本移除",
+     "混乱袋 +1 [elder_thing]（v1/v2）、Hard/Expert 初始毁灭、勘察城郊的初始线索发现、伙伴死亡加弱点、Tekeli-li 牌库初始化",
+     "17 个地点未经 placeLocation：起始地点未揭示、maxClues 缺失、初始线索值错误"
+    ]
+   },
+   "rules": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:11-64；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201,220-226,245-253,256-355,371-417",
+    "notes": [
+     "混乱标记两档取值/tablet+frost 自动失败已实现（chaos.js:27-64；tests:222-240）",
+     "特别规则 Keys：取得/转交/淘汰落地三句只有未接线的导出函数，玩家无入口（high）",
+     "议程自由行动（查看/移动行列）实现不等价（移动不移动、查看无输出）"
+    ]
+   },
+   "flow": {
+    "status": "gapped",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:204-243,460-483；src/engine/act-agenda.js:326-372；src/engine/harm-threat.js:354-361",
+    "notes": [
+     "幕 1 钥匙记录目标/幕背面揭示隧道已接线；幕 2 目标 + R1 已接线",
+     "议程 2 背面 (→R2) 未实现：最后议程耗尽除全灭外不终结 → R2 不可达",
+     "幕背面缺洗混共享组/刷恐怖等子句（08624–08626）"
+    ]
+   },
+   "runthrough": {
+    "status": "gapped",
+    "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:105-273",
+    "notes": [
+     "真实链路不可通：钥匙无法取得 → 幕 1 目标不可达 → 隐秘隧道不揭示 → 幕 2 无法完成；议程耗尽也不结束（R2 缺失）。测试全部直调 behavior（claimKey/performAction/resolveEncounter），未覆盖该链路。"
+    ]
+   },
+   "guides": {
+    "status": "partial",
+    "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:205-234；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/texts.js",
+    "notes": [
+     "指南正文/设置文本由 story-text 生成；setup 面板固定 v1，与版本选择逻辑不符"
+    ]
+   },
+   "gatherSetsCheck": {
+    "evidence": "audit/eote-scope.json（chapters[cityOfTheElderThings].gatherSets 11 组，CreaturesInTheIce/Shoggoths 为 gatherAndSetAside）+ shared-encounters.js:117-136",
+    "result": "shared-encounters.js 的 v1/v2/v3 gather/setAside 与参考 Haskell .hs:334-341/375-382/410-417 逐组一致（✓）；definition.js:130-137 的 ENCOUNTER_DECK 只含本章 20 张，三套 gather 无运行时读点（✗）"
+   },
+   "issues": [
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "真实遭遇抽牌不结算本章专属诡计（08644–08647）：treacheryDefinition 无 entryRevelation、条目只有 resolveKind；引擎不读 resolveKind；behavior.resolveEncounter 无调用点",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:121-127；src/engine/treachery-tokens.js:113-124；对比 content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/../theHeartOfMadnessPart1/definition.js:151",
+     "suggestion": "补 entryRevelation + encounterResolve 转发；补真实抽取测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "遭遇牌库缺全部共享组且未按版本选用 gather/setAside：ENCOUNTER_DECK 只含本章 20 张；shared-encounters.js:117-136 的三套版本数据无运行时读点（chapterCardPool 无调用者）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:130-137；content/campaigns/edgeOfTheEarth/shared-encounters.js:117-136,160-178；src/engine/setup.js:807-815；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:334-341,375-382,410-417",
+     "suggestion": "setup 时按版本调 chapterCardPool 合并 gather/setAside 入牌库"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "数值钥匙无取得/转交入口：behavior.claimKey/giveKeys 只是纯函数，未进 actions/legalMoves；shared 的 scenarioReferenceEntry 用彩色钥匙原语（scenario-keys.js:104-140）且未挂到 08621 → 幕 1「花 2 把 elder_thing/tablet 钥匙」目标不可达，城市流程无法通过幕 1",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:180-201,256-293；src/cards/encounter-entries/_shared.js:842-847；src/engine/scenario-keys.js:104-140；参考 locale specialRules.Keys（fast 取得 / action 转交 / 淘汰落地）",
+     "suggestion": "在 behavior.actions 增加 fast 取得钥匙（地点无线索）与 action 转交，并在淘汰时把钥匙放回地点；补真实链路测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "版本选择只做了「地图版本」：幕牌库永为 v1（actsForVersion 仅 definition.js:196 默认）、setup 文本固定 v1（definition.js:205-213、SCENARIO_TEXT）、setAside/removed 三套数据无读点 → 08625/08626/08628/08629 与 v2/v3 setup 在真实战役不可达；版本判定也未实现参考的伙伴票（CityOfTheElderThings.hs:242-277），theInvestigatorsScoutedTheCityOutskirts 无任何写点",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:185-196,205-234；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-88；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:108-440",
+     "suggestion": "preScenarioSetup 按记录/伙伴票选版本并替换 acts、setup 文本、gather/setAside/removed"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "议程 2 背面 (→R2) 未实现：08623 无 onReveal，behavior.finalResolution 无调用者；最后议程耗尽只走 checkOutcome（全灭才结束）→ R2 不可达且「被引导到隐秘隧道」记录不会写",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:220-226,415-417；src/engine/act-agenda.js:355-361；src/engine/harm-threat.js:354-361",
+     "suggestion": "08623 声明 onReveal:\"finalResolution\"，behavior.agendaReveal 处理并写 R2 记录；补超时测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "城市地点未走 placeLocation：behavior.setupLocations 直接 cloneLocation 推入 state.locations（17 个）→ maxClues 缺失（revealLocation 以 maxClues 恢复线索，揭示后变 0）、初始线索未按「未揭示=0」处理、起始地点未揭示、胜利点/入场钩子未派发",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:83-140；src/engine/locations.js:143-178（placeLocation 计算 maxClues/revealed）,251-264（revealLocation 用 maxClues）；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:85-118",
+     "suggestion": "通过 placeLocation 放置或补齐 maxClues/revealed 并揭示起始地点；补地点揭示测试"
+    },
+    {
+     "severity": "high",
+     "dimension": "impl-vs-text",
+     "summary": "按版本移除的卡未移除：REMOVED_BY_VERSION/SET_ASIDE_BY_VERSION 无读点；ENCOUNTER_DECK 仍含 benign×3/frostbitten×4/possessed×4，frostbitten/possessed 会被当普通遭遇卡抽到（参考是移出游戏、仅由序幕加入牌组的弱点）",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:143-159；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:364-365,395-400,429-434",
+     "suggestion": "setup 按版本 apply removed/setAside，并补序幕伙伴弱卡分支"
+    },
+    {
+     "severity": "high",
+     "dimension": "runtime",
+     "summary": "Tekeli-li 牌库未初始化（参考 addTekeliliDeck）；本章 08628 幕 2 行动/08723+ 弱点依赖它",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:1-35；src/engine/eote-tekeli.js:63-99",
+     "suggestion": "setup 调 initializeTekeliDeck（shared-encounters.js:230）"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "setup 缺：混乱袋 +1 [elder_thing]（v1/v2）、Hard/Expert 初始毁灭、勘察城郊起的初始线索发现（scoutedTheCityOutskirtsBonus）、伙伴死亡时把 frostbitten/possessed 加入调查员牌组",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-140；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:87-106,200-219,363-370,394-405",
+     "suggestion": "按参考补 setup 步骤"
+    },
+    {
+     "severity": "medium",
+     "dimension": "impl-vs-text",
+     "summary": "结局记录语义混淆：finalResolution 用 hiddenTunnelRevealed 决定 R1/R2（但该 flag 在幕 1 背面就置真），resolution 用 found 同时写 Found/Guided 两键；R2 应写 theTeamWasGuidedToTheHiddenTunnel",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:407-417；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:474-502",
+     "suggestion": "按 resolution key 分别写 Found（R1）/Guided（R2）"
+    },
+    {
+     "severity": "medium",
+     "dimension": "docs",
+     "summary": "测试只测钩子：全部手工 state+apiStub 直调 behavior（tests/eote-scenario-cityOfTheElderThings.test.mjs:35-100），未跑真实 setup/移动/遭遇抽取/幕推进",
+     "evidence": "tests/eote-scenario-cityOfTheElderThings.test.mjs:105-273",
+     "suggestion": "补真实引擎链路测试"
+    },
+    {
+     "severity": "low",
+     "dimension": "docs",
+     "summary": "08596/08621 参考卡 no-behavior 口径成立：08621 token 表由 chaos.js 实现（skull=-钥匙数 等），账本一致；但章节 setup 的 +1 elder_thing token 属章节缺口",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js:11-64；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:73-140",
+     "suggestion": "无"
+    },
+    {
+     "severity": "low",
+     "dimension": "duplication",
+     "summary": "hiddenTunnel 用孤立格 (6,6) 放地图外，参考放在网格 Pos 0,0（背面不可进入）；近似未在 scenarioApproximations 披露",
+     "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:92-140（placeGridLocation(HIDDEN_TUNNEL,6,6,{isolated:true})）；参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/.../CityOfTheElderThings.hs:345,386,421",
+     "suggestion": "补披露或改为同格占位"
+    }
+   ]
+  }
+ ],
+ "duplicationIssues": [
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "两章 behavior 各自重复实现同类工具：peaks 的 moveBelow/dropExpeditionAssetsOf/isExpeditionAsset/nearestElderThingMovesAndAttacks 与 city 的 nearestEnemyMovesAndAttacks/record helper 结构相同；「最近敌人向你移动并攻击」在两章各写一遍，应上收 eote-primitives/shared",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:378-437,428-475；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:422-448,485-540；参考 primitives.md 的 eote 通用原语清单",
+   "suggestion": "把「下移一层」「掉落 Expedition 支援」「最近敌人移动/攻击」上收共享原语并在两章复用"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "数值钥匙存在两套容器/API：eote-city.js 的 city.keys（keyOnLocation/placeKey/takeKey/moveKey/swapKeys，api-mechanics.js:184-191）与 scenario-keys.js 的 kind:\"value\" 实体；本章只用后者，eote-city 的钥匙 API 在本章零使用点（死 API / 双实现）",
+   "evidence": "src/engine/eote-city.js:1-20,120-180；src/engine/api-mechanics.js:184-191；src/engine/scenario-keys.js:1-20,143-243；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:31-56",
+   "suggestion": "收敛到 scenario-keys 数值钥匙一套 API（或明确 eote-city.keys 仅为其它用途并删除未用导出）"
+  },
+  {
+   "severity": "low",
+   "dimension": "duplication",
+   "summary": "城市地图「看行/列」有两套读点：grid-map.js 的 lookRow/lookColumn/revealedGrid 与 eote-city.js 的 visibleOnRow/visibleOnColumn；本章两者都未真正接到自由行动上",
+   "evidence": "src/engine/grid-map.js:76-100,200-318；src/engine/eote-city.js:199-220；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:274-279",
+   "suggestion": "明确私密窥视的唯一入口并让行动接它"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "两章 TREACHERY_HANDLERS 模式与其它 EOTE 章的 behavior.resolveEncounter 同形复制，且“frost 弱点/最近敌人/下移”等句在多章各写一遍；同句规则（AGENTS「三张卡就上收」）已在 EOTE 内部重复",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js:488-562；content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:485-540；content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js:172",
+   "suggestion": "抽共享 EOTE 结算助手（applyFrostWeakness/nearestEnemyMovesAndAttacks/moveDown）并登记原语"
+  },
+  {
+   "severity": "low",
+   "dimension": "duplication",
+   "summary": "版本化幕/议程已数据化（city actsForVersion、fatalMirage 版本卡）但两处各写一套版本选择；版本选择原语可共享",
+   "evidence": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js:185-196,201-213；content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js:146-147",
+   "suggestion": "上收「版本选择」为共享常量/助手"
+  }
+ ],
+ "crossShardNotes": [
+  {
+   "subject": "simplified 卡（08560/08561/08562/08565/08566/08567/08571/08572，fatalMirage，属 campaign-auditor-b 分片）现状复核（D5 口径，仅披露核对）",
+   "finding": "known-deviations.json 8 条 simplified（pending primitive p7-08560）+ audit/eote-all-card-acceptance.json 已披露；条目仅声明 flags（如 08560.js:15 forcedAfterInvestigate），对应行为读点不存在（grep shroudPlus1AndCannotLeave 仅条目+测试 flags 断言 tests/eote-scenario-fatalMirage.test.mjs:142）→ 披露存在、实现仍缺失；建议 Lead 让 B 分片按「声明未接线」记 medium。"
+  },
+  {
+   "subject": "同源问题提示",
+   "finding": "theHeartOfMadnessPart1/behavior.js:172 也定义了 behavior.resolveEncounter，与 peaks/city 同样无引擎调用点（treachery-tokens.js 只对 effect.kind===\"campaignRule\" 调用）→ 若该章专属诡计也只用 resolveKind，则存在同类 high 问题，建议 Lead 交叉核对（D 分片）。"
+  },
+  {
+   "subject": "共享遭遇组展开（D5/跨章不一致）",
+   "finding": "iceAndDeathPart1/definition.js:107-120 用 GATHER_GROUPS 扫描 ALL_CARDS.encounterCode 展开 ENCOUNTER_DECK；peaks/city 未采用该模式 → 建议上收为共享助手（gatherDeckFor(groups)）供 8 章复用。"
+  }
+ ]
+}

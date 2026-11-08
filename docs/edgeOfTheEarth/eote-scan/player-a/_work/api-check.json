@@ -1,0 +1,1104 @@
+{
+ "api": {
+  "addEffect": {
+   "codes": [
+    "08028",
+    "08034",
+    "08053",
+    "08058"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js:18: if (enemy && !enemy.elite) api.addEffect({ duration: 'endOfRound', label: '曲奇：该敌人本轮不能攻击', sourceCode: '08592', controllerSeat: inv.seat, modifiers: []",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03155.js:22: api.addEffect({",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05157.js:27: api.addEffect({",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05158.js:39: api.addEffect({ duration: 'endOfTest', sourceCode: '05158', label: '第六感：本次调查', modifiers: [] })"
+   ]
+  },
+  "addLocationTrait": {
+   "codes": [
+    "08033",
+    "08042",
+    "08045"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08033.js:11: // api.addLocationTrait(location,'LeyLine',{source:'08033'}) 记地点上的灵脉、用 api.addUses(asset,1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08033.js:41: api.addLocationTrait(target, LEY_TRAIT, { source: SOURCE })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08042.js:40: api.addLocationTrait(target, LEY_TRAIT, { source: SOURCE })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08045.js:53: if (!api.addLocationTrait(target, COORDINATE_TRAIT, { source: SOURCE })) return"
+   ]
+  },
+  "addPendingTestBonus": {
+   "codes": [
+    "08067",
+    "08074",
+    "08075"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04035.js:21: api.addPendingTestBonus(icons)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04151.js:30: api.addPendingTestBonus(icons)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04154.js:17: api.addPendingTestBonus(3)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04160.js:16: resolve: ({ api }) => api.addPendingTestBonus(2),"
+   ]
+  },
+  "addUses": {
+   "codes": [
+    "08033",
+    "08053",
+    "08058",
+    "08063",
+    "08067",
+    "08075"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03004.js:22: if (asset) api.addUses(asset, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03015.js:34: api.addUses(card, -1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03015.js:35: api.addUses(source, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03025.js:19: api.addUses(source, 1)"
+   ]
+  },
+  "autoEvadeEnemy": {
+   "codes": [
+    "08043"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/_shared.js:792: for (const enemy of [...state.enemies]) if (enemy.traits?.includes(trait)) api.autoEvadeEnemy(enemy)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/_shared.js:1044: api.autoEvadeEnemy(pickBrood(state, list, api, context.seat ?? state.currentSeat))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/07003.js:25: else api.autoEvadeEnemy(id)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/07114.js:10: if (target) api.autoEvadeEnemy(target)"
+   ]
+  },
+  "beginImmediateAction": {
+   "codes": [
+    "08062"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07179.js:16: resolve: ({ inv, source, api }) => api.beginImmediateAction(inv.seat, { source: source.id }),",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05156.js:17: api.beginImmediateAction(inv.seat, { source: '05156' })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06028.js:32: if (answer === 'act') api.beginImmediateAction(target.seat, { source: '06028' })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06239.js:24: api.beginImmediateAction(inv.seat, { source: '06239', actionKinds: context.actionKinds })"
+   ]
+  },
+  "cancelCurrentAttack": {
+   "codes": [
+    "08021",
+    "08026"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02153.js:21: api.cancelCurrentAttack()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03267.js:18: api.cancelCurrentAttack()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/07020.js:6: api.cancelCurrentAttack(context)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/07027.js:4: resolve: ({ context, api }) => { api.cancelCurrentAttack(context); api.noteCancelled('enemyAttack') },"
+   ]
+  },
+  "cardAbilityOptions": {
+   "codes": [
+    "08070"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05231.js:29: const optionsFor = source => api.cardAbilityOptions(inv.seat, source, { ignoreCosts: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08089.js:37: const options = api.cardAbilityOptions(inv.seat, attached, { ignoreCosts: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-card.js:116: cardAbilityOptions: (seat, source, options = {}) => abilityOptions(seat, source, options)"
+   ]
+  },
+  "cardCost": {
+   "codes": [
+    "08032",
+    "08039"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03158.js:22: const discount = api.cardCost(ally.code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04024.js:26: skill: 'intellect', difficulty: api.cardCost(chosen), seat: inv.seat,",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05037.js:63: printedCost = api.cardCost(code) || 0",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05037.js:67: printedCost = api.cardCost(asset.code) || 0"
+   ]
+  },
+  "cardFactions": {
+   "codes": [
+    "08022",
+    "08039"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04024.js:20: && api.cardFactions(code).includes('seeker')))]",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04234.js:15: const spells = inv.assets.filter(card => api.cardFactions(card.code).includes('mystic'))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08022.js:33: .flatMap(card => api.cardFactions(card.code))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08039.js:11: && (api.cardFactions(code) || []).includes('seeker')"
+   ]
+  },
+  "cardName": {
+   "codes": [
+    "08019",
+    "08020",
+    "08021",
+    "08028",
+    "08031",
+    "08034",
+    "08039",
+    "08049",
+    "08051",
+    "08055",
+    "08063",
+    "08064",
+    "08067",
+    "08070",
+    "08073",
+    "08074",
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:132: info(state, events, `🧪 ${inv.name} 中毒了（「${cardName(poisonCode)}」永久加入牌库，本关进入威胁区域）。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:282: prompt: `抽取了 ${count} 张牌，是否花费 ${count} 秘密使用「${cardName(code)}」？`,",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:292: info(state, events, `「${cardName(code)}」对「${enemy.name}」造成 ${count} 点伤害。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:297: .map(asset => ({ id: `asset:${asset.id}`, label: `${cardName(asset.code)}（恐惧 ${asset.horror}）` }))])"
+   ]
+  },
+  "cardTraits": {
+   "codes": [
+    "08019",
+    "08039"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02018.js:19: api.cardTraits(item.code).some(trait => TRADE_TRAITS.includes(String(trait).toLowerCase())))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02265.js:16: .filter(item => api.cardTraits(item.code).some(trait => String(trait).toLowerCase() === 'item'))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03015.js:25: && (card.uses || 0) > 0 && api.cardTraits(card.code).includes('spell'))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03029.js:22: && api.cardTraits(code).includes('item')))]"
+   ]
+  },
+  "cardType": {
+   "codes": [
+    "08019",
+    "08028",
+    "08039"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03023.js:16: const candidates = [...new Set(inv.hand.filter(code => api.cardType(code) === 'asset'",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03029.js:21: const candidates = [...new Set(inv.hand.filter(code => api.cardType(code) === 'asset'",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03264.js:25: .filter(item => api.cardType(item.code) === 'event'",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03273.js:15: const candidates = inv.discard.filter(code => api.cardType(code) === 'skill'"
+   ]
+  },
+  "choice": {
+   "codes": [
+    "08019",
+    "08020",
+    "08022",
+    "08023",
+    "08025",
+    "08028",
+    "08029",
+    "08030",
+    "08031",
+    "08032",
+    "08033",
+    "08035",
+    "08036",
+    "08038",
+    "08039",
+    "08041",
+    "08042",
+    "08043",
+    "08044",
+    "08045",
+    "08047",
+    "08048",
+    "08051",
+    "08053",
+    "08055",
+    "08058",
+    "08061",
+    "08063",
+    "08064",
+    "08066",
+    "08067",
+    "08068",
+    "08070",
+    "08074",
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:302743: \"text\": \"Clues on Hidden Tunnel cannot be discovered or moved to other locations.\\n[action]: Test a skill of your choice (4). You may spend a [skull] ",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:344659: \"text\": \"The drowned spirit lunges for you, croaking with the garbled sounds of torment. Sodden weeds are tangled through its hair.\\nKeep this card in",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js:22: const destination = destinations.length === 1 ? destinations[0] : api.choice({ kind: 'location', source: '08589', seat: inv.seat,",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js:46: const count = max > 0 ? api.choice({ kind: 'effect', source: source.id, seat: inv.seat,"
+   ]
+  },
+  "convertTestToResourceSkill": {
+   "codes": [
+    "08054"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05029.js:24: const converted = api.convertTestToResourceSkill(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08054.js:8: // 读点：api.convertTestToResourceSkill(seat)（testBegins 窗口，与 05029 同一原语；传自己座位",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08054.js:21: const converted = api.convertTestToResourceSkill(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-test.js:169: convertTestToResourceSkill: (seat) => {"
+   ]
+  },
+  "damage": {
+   "codes": [
+    "08038"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:2350: \"text\": \"Play only as your first action.\\nHeal 2 damage (3 damage instead if you drew a treachery this round). Draw 1 card.\",",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:6672: \"text\": \"Fight. Add your [willpower] value to your skill value for this attack. Immediately before this attack, you may engage the attacked enemy. Thi",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:78536: \"text\": \"If this skill test is successful during an attack, that attack deals +1 damage (+2 damage instead if it succeeds by 2 or more).\",",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:84713: \"text\": \"Uses (4 ammo).\\n[action] Exhaust Beretta M1918 and spend 1 ammo: Fight. You get +4 [combat] and deal +1 damage for this attack. If you succee"
+   ]
+  },
+  "damageEnemy": {
+   "codes": [
+    "08020",
+    "08026",
+    "08030",
+    "08041"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:291: damageEnemy(state, enemy, count, inv.seat, events, null, { code, assetId: stone.id })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08719.js:28: api.damageEnemy(enemy.id, 1, inv.seat, CODE)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js:26: api.damageEnemy(enemy.id, 2, inv.seat, CODE)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/shoggoths/08711.js:24: api.scenario.damageEnemy(enemy.id, 2, null, '08711')"
+   ]
+  },
+  "discardAsset": {
+   "codes": [
+    "08033"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js:25: api.discardAsset(inv.seat, source)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js:20: api.discardAsset(inv.seat, pick)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/chilling_cold/01167.js:20: api.discardAsset(inv.seat, (assets.find(asset => asset.id === answer) || assets[0]).id)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/theEssexCountyExpress/02181.js:21: api.discardAsset(target.seat, choice)"
+   ]
+  },
+  "discardFromHand": {
+   "codes": [
+    "08031",
+    "08064"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02040.js:23: if (!api.discardFromHand(inv.seat, context.cardCode)) return",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05231.js:66: api.discardFromHand(inv.seat, picked.code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05317.js:31: api.discardFromHand(inv.seat, code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06116.js:37: api.discardFromHand(seat, picked)"
+   ]
+  },
+  "discardTopOfDeck": {
+   "codes": [
+    "08034",
+    "08071"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08695.js:8: const discarded = api.discardTopOfDeck(seat, count) || []",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08696.js:16: const discarded = api.discardTopOfDeck(context.seat, count) || []",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02178.js:14: api.discardTopOfDeck(inv.seat, 3)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04035.js:30: api.discardTopOfDeck(inv.seat, 1)"
+   ]
+  },
+  "discoverClue": {
+   "codes": [
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08720.js:29: api.discoverClue(inv.seat, 1, location.id)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js:25: api.discoverClue(inv.seat, 3, locationId)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js:27: api.discoverClue(inv.seat, 1, location.id)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js:28: api.discoverClue(inv.seat, 1, location.id)"
+   ]
+  },
+  "disengageAll": {
+   "codes": [
+    "08047"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03310.js:20: api.disengageAll(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06013.js:19: api.disengageAll(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06014.js:17: api.disengageAll(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06164.js:41: api.disengageAll(inv.seat)"
+   ]
+  },
+  "drawCards": {
+   "codes": [
+    "08031",
+    "08039",
+    "08044",
+    "08049",
+    "08051",
+    "08054",
+    "08066"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08695.js:11: if (weaknesses.length) api.drawCards(seat, weaknesses.length)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08696.js:19: if (weaknesses.length) api.drawCards(context.seat, weaknesses.length)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/agents_of_yog/01178.js:19: if (answer === 'power') { api.drawCards(inv.seat, 2); api.addDoom(2) }",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDreamEaters/beyondTheGatesOfSleep/06059.js:20: api.drawCards(inv.seat, 2)"
+   ]
+  },
+  "drawEncounter": {
+   "codes": [
+    "08049"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:264: drawEncounter(state, inv, events)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/arkham/01136.js:13: if ((inv.clues || 0) === 0) { api.drawEncounter(inv.seat); return false }",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/pentagram/01170.js:19: if (!empty.length) { api.drawEncounter(inv.seat); return false }",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/striking_fear/01164.js:15: if ((inv.threat || []).some(item => originalOf(item) === '01164')) { api.drawEncounter(inv.seat); return false }"
+   ]
+  },
+  "enemiesAt": {
+   "codes": [
+    "08020",
+    "08026",
+    "08030",
+    "08041"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03268.js:28: const engaged = api.enemiesAt(inv.location).filter(item => item.engagedSeat === inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04310.js:22: const targets = api.enemiesAt(inv.location)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05016.js:24: const enemies = api.enemiesAt(inv.location)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08020.js:36: const current = (api.enemiesAt(inv.location) || []).find(item => item.id === enemy.id)"
+   ]
+  },
+  "enemyAttackByCard": {
+   "codes": [
+    "08020",
+    "08021"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07213.js:17: //   · 额外攻击 = 已登记原语 `api.enemyAttackByCard(enemy, label, seat)`（api-card.js，按 kind:'effect' 结算）。",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07213.js:62: api.enemyAttackByCard(source, `「${source.name}」也攻击同一载具上的 ${other.name}`, seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03106.js:23: api.enemyAttackByCard(enemy, api.cardName('03106'), inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05017.js:25: api.enemyAttackByCard(context.enemy, '兜帽人的攻击', context.seat)"
+   ]
+  },
+  "engage": {
+   "codes": [
+    "08021"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/_shared/the_watcher/05087.js:63: api.engage(watcher, targetSeat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02143.js:16: api.engage(horror, inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02146.js:17: if (spawned) api.engage(spawned, inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/theDepthsOfYoth/04302.js:36: if (typeof api.engage === 'function') api.engage(enemy, inv.seat)"
+   ]
+  },
+  "exhaust": {
+   "codes": [
+    "08025",
+    "08030",
+    "08038"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js:28: api.exhaust(source)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/miasma/08706.js:27: if (typeof api.exhaust === 'function') api.exhaust(target)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/forTheGreaterGood/05228.js:47: if (chosen.id === 'exhaust') api.exhaust(watcher)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165b.js:24: //   · 「横置、本轮剩余时间不能重整(包括补给阶段)」= `api.exhaust(source)` +"
+   ]
+  },
+  "exileFromDiscard": {
+   "codes": [
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03306.js:32: api.exileFromDiscard(picked.seat, picked.code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08076.js:39: api.exileFromDiscard(inv.seat, picked)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-card.js:227: exileFromDiscard: (seat, code) => {"
+   ]
+  },
+  "fight": {
+   "codes": [
+    "08022",
+    "08023",
+    "08025",
+    "08029",
+    "08030",
+    "08060"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js:17: api.fight(inv.seat, target?.id, { baseValue: 6, onSuccess: ({ enemy }) => {",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02115.js:39: if (enemy) api.fight(inv.seat, enemy.id, { combatBonus: 3, damageBonus: 2, noSpend: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03147.js:24: api.fight(inv.seat, enemy.id, { combatBonus: engaged })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03153.js:43: api.fight(inv.seat, target.id, { skill: 'willpower', stormOfSpirits: true, presentationCardCode: '03153' })"
+   ]
+  },
+  "gainAction": {
+   "codes": [
+    "08053",
+    "08057",
+    "08058"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03265.js:20: api.gainAction(seatId, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05040.js:28: api.gainAction(inv.seat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05280.js:40: api.gainAction(inv.seat, amount)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06030.js:42: if ((inv.actionsLeft || 0) < actionsBefore) api.gainAction(inv.seat, 1)"
+   ]
+  },
+  "gainResources": {
+   "codes": [
+    "08033",
+    "08048",
+    "08050",
+    "08051",
+    "08053",
+    "08058",
+    "08072"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08722.js:24: api.gainResources(inv.seat, n)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDreamEaters/darkSideOfTheMoon/06224.js:29: else if (answer === 'resource') api.gainResources(inv.seat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07174b.js:19: resolve: ({ inv, api }) => api.gainResources(inv.seat, 5),",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07287.js:30: else if (id === 'resources') api.gainResources(inv.seat, 3)"
+   ]
+  },
+  "giveAsset": {
+   "codes": [
+    "08051"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/theSecretName/05125.js:38: api.giveAsset(chosen.seat, BLACK_BOOK)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/bloodOnTheAltar/02215.js:12: onFound(state, inv, api) { api.giveAsset(inv.seat, '02215') },",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02122.js:25: api.giveAsset(Number(seat), '02139')",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/undimensionedAndUnseen/02240.js:14: for (const inv of activeInvestigators(state)) api.giveAsset(inv.seat, '02254')"
+   ]
+  },
+  "healAsset": {
+   "codes": [
+    "08073"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js:32: if (found) api.healAsset(found.asset, { horror: 2, ownerSeat: found.owner.seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08717.js:32: if (found) api.healAsset(found.asset, { damage: 2, ownerSeat: found.owner.seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js:31: if (target.card) api.healAsset(target.card, kind === 'damage' ? { damage: 1, ownerSeat: target.ownerSeat } : { horror: 1, ownerSeat: target.ownerSeat ",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDreamEaters/darkSideOfTheMoon/06224.js:30: else if (answer === 'heal') api.healAsset(source, { horror: 1, owner: inv })"
+   ]
+  },
+  "healDamage": {
+   "codes": [
+    "08038",
+    "08044",
+    "08061",
+    "08068",
+    "08073"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08717.js:30: if (String(pick).startsWith('inv:')) return api.healDamage(Number(String(pick).slice(4)), 2)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js:32: else if (kind === 'damage') api.healDamage(target.ownerSeat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/rainforest/04070.js:29: api.healDamage(healed.seat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/rainforest/04070.js:30: if (api.checkSupplies(inv.seat, 'canteen')) api.healDamage(healed.seat, 2)"
+   ]
+  },
+  "healHorror": {
+   "codes": [
+    "08021",
+    "08044",
+    "08061"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js:30: if (String(pick).startsWith('inv:')) return api.healHorror(Number(String(pick).slice(4)), 2)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js:33: else api.healHorror(target.ownerSeat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07064.js:19: else if (chosen === 'horror') api.healHorror(inv.seat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02012.js:29: api.healHorror(target.seat, 1)"
+   ]
+  },
+  "info": {
+   "codes": [
+    "08019",
+    "08020",
+    "08021",
+    "08022",
+    "08023",
+    "08025",
+    "08026",
+    "08028",
+    "08029",
+    "08030",
+    "08031",
+    "08032",
+    "08033",
+    "08034",
+    "08035",
+    "08036",
+    "08038",
+    "08039",
+    "08041",
+    "08042",
+    "08043",
+    "08044",
+    "08045",
+    "08047",
+    "08048",
+    "08049",
+    "08050",
+    "08051",
+    "08053",
+    "08054",
+    "08055",
+    "08057",
+    "08058",
+    "08059",
+    "08060",
+    "08061",
+    "08062",
+    "08063",
+    "08064",
+    "08066",
+    "08067",
+    "08068",
+    "08070",
+    "08071",
+    "08072",
+    "08073",
+    "08074",
+    "08075",
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:74: info(state, events, `🎒 ${state.investigators[seat]?.name || seat} 得到补给：${added.join('、')}。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:84: info(state, events, `✂️ ${state.investigators[seat]?.name || seat} 划掉了补给「${name}」。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:132: info(state, events, `🧪 ${inv.name} 中毒了（「${cardName(poisonCode)}」永久加入牌库，本关进入威胁区域）。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:144: if (events) info(state, events, `🐍 伊格之怒变为 ${next}。`)"
+   ]
+  },
+  "investigate": {
+   "codes": [
+    "08042"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js:17: api.investigate(inv.seat, { skill: 'intellect', baseValue: 6 })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02014.js:34: api.investigate(inv.seat, { baseValue: 4 })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03027.js:26: api.investigate(inv.seat, { locationId })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03031.js:18: resolve: ({ inv, source, api }) => api.investigate(inv.seat, { addSkill: 'agility', lockpicksAssetId: source?.id }),"
+   ]
+  },
+  "investigatorsAt": {
+   "codes": [
+    "08038",
+    "08068"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/shared/agents_of_shub/goatSpawn.js:20: for (const inv of api.investigatorsAt(source.location)) {",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02225.js:22: for (const target of api.investigatorsAt(inv.location)) api.healHorror(target.seat, enemy.horror || 0)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03191.js:19: const candidates = api.investigatorsAt(inv.location)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03197.js:17: const candidates = api.investigatorsAt(inv.location)"
+   ]
+  },
+  "isNonWeakness": {
+   "codes": [
+    "08067"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04021.js:20: && api.cardTraits(code).includes('relic') && api.isNonWeakness(code)))]",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04037.js:20: const remaining = top.filter(code => api.cardType(code) && api.isNonWeakness(code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04313.js:24: .filter(entry => api.isNonWeakness(entry.code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05196.js:86: if (!api.isNonWeakness(code)) continue"
+   ]
+  },
+  "locName": {
+   "codes": [
+    "08029",
+    "08033",
+    "08035",
+    "08036",
+    "08041",
+    "08042",
+    "08043",
+    "08045",
+    "08047"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:165: info(state, events, `🏺 古代遗物位于${holder ? `${holder} 身上` : locName(state, state.relicOfAges.location) || '一边'}。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js:23: prompt: '选择移动目的地。', options: destinations.map(id => ({ id, label: api.locName(id) })) })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02007.js:22: options: farthest.map(id => ({ id, label: api.locName(id) })) })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02011.js:21: options: farthest.map(id => ({ id, label: api.locName(id) })) })"
+   ]
+  },
+  "locationName": {
+   "codes": [
+    "08053",
+    "08058"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03201.js:23: options: [{ id: 'skip', label: '留在原地' }, ...choices.map(id => ({ id, label: api.locationName(id) }))],",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03202.js:23: options: [{ id: 'skip', label: '留在原地' }, ...choices.map(id => ({ id, label: api.locationName(id) }))],",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03204.js:29: options: farthest.map(item => ({ id: item.id, label: api.locationName(item.id) })),",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03205.js:27: options: farthest.map(item => ({ id: item.id, label: api.locationName(item.id) })),"
+   ]
+  },
+  "lookAt": {
+   "codes": [
+    "08066"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js:18: if (api.testResult()?.success) api.lookAt(inv.seat, { zone: 'deck', count: 1 })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08720.js:50: api.lookAt(inv.seat, { zone: 'deck', count: 1, targetSeat: seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js:9: api.lookAt(inv.seat, { zone: 'investigatorDeck', count: 6, choose: 1,",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03236.js:33: api.lookAt(inv.seat, {"
+   ]
+  },
+  "loseActions": {
+   "codes": [
+    "08019"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/nameless_horrors/08705.js:12: api.loseActions(inv.seat, 2)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js:17: if (state.currentSeat === inv.seat) api.loseActions(inv.seat, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDunwichLegacy/theMiskatonicMuseum/02145.js:14: if (!result.success) api.loseActions(inv.seat, failedBy(result, 3))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/heartOfTheEldersPart1/04218.js:20: if ((inv.actionsLeft || 0) > 0) api.loseActions(inv.seat, 1)"
+   ]
+  },
+  "moveCard": {
+   "codes": [
+    "08032",
+    "08034",
+    "08055",
+    "08067",
+    "08074",
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08695.js:10: for (const code of weaknesses) api.moveCard({ code, from: 'discard', to: 'deckTop', ownerSeat: seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08696.js:18: for (const code of weaknesses) api.moveCard({ code, from: 'discard', to: 'deckTop', ownerSeat: context.seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08720.js:53: api.moveCard({ code: top, from: 'deck', to: 'discard', ownerSeat: seat })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03273.js:23: api.moveCard({ code: picked, from: 'discard', to: 'hand' })"
+   ]
+  },
+  "moveInvestigator": {
+   "codes": [
+    "08029",
+    "08035",
+    "08036",
+    "08041",
+    "08042",
+    "08043",
+    "08045",
+    "08047",
+    "08053",
+    "08058"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js:24: api.moveInvestigator(inv.seat, destination)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08716.js:40: if (destinations.includes(pick)) api.moveInvestigator(inv.seat, pick)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js:23: if (String(pick).startsWith('move:')) api.moveInvestigator(inv.seat, String(pick).slice(5))",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js:26: api.moveInvestigator(inv.seat, String(pick).slice(8))"
+   ]
+  },
+  "playCard": {
+   "codes": [
+    "08064"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02265.js:22: if (chosen) api.playCard(inv.seat, chosen.code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03023.js:24: api.playCard(inv.seat, answer, { discount: 1, noAction: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03033.js:23: api.playCard(inv.seat, chosen, { discount: 3, noAction: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03158.js:27: api.playCard(inv.seat, inv.hand.at(-1), { discount, noAction: true })"
+   ]
+  },
+  "playCardFromDiscard": {
+   "codes": [
+    "08055"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05235.js:67: const played = api.playCardFromDiscard(inv.seat, code, { discount: 1, exileAfter: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08055.js:51: api.playCardFromDiscard(item.seat, item.code, { noAction: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:414: playCardFromDiscard: (seat, code, options = {}) =>"
+   ]
+  },
+  "playCardFromHandFree": {
+   "codes": [
+    "08019"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06011.js:55: api.playCardFromHandFree(inv.seat, '06011')",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06026.js:32: if (api.playCardFromHandFree(inv.seat, '06026')) {",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/06030.js:40: if (api.playCardFromHandFree(inv.seat, pick)) {",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/07194.js:14: resolve: ({ inv, api }) => api.playCardFromHandFree(inv.seat, '07194', { noAction: true }) },"
+   ]
+  },
+  "playerTools": {
+   "codes": [
+    "08049"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/engine.js:1401: const playerTools = { ...playerApi.playerTools, ...(miscApi.playerToolsExtras || {}) }",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/player-mechanics.js:34: return { playerTools: {"
+   ]
+  },
+  "putIntoPlay": {
+   "codes": [
+    "08039",
+    "08051"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03029.js:28: api.putIntoPlay(inv.seat, code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04024.js:30: const asset = api.putIntoPlay(inv.seat, chosen)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05023.js:30: api.putIntoPlay(inv.seat, '05023')",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05027.js:27: api.putIntoPlay(inv.seat, '05027')"
+   ]
+  },
+  "reactionContext": {
+   "codes": [
+    "08021",
+    "08026"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02113.js:23: const reaction = api.reactionContext()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02153.js:19: const reaction = api.reactionContext()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02225.js:19: const reaction = api.reactionContext()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03016.js:19: const enemy = api.reactionContext()?.enemy"
+   ]
+  },
+  "removeDoom": {
+   "codes": [
+    "08076"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03223.js:25: if (choice === 'doom') api.removeDoom(1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04191.js:31: if (api.removeDoom(1) > 0) {",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04303.js:49: if (id === 'agenda') api.removeDoom(1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05237.js:35: : (context?.agenda ? api.removeDoom(1) : 0)"
+   ]
+  },
+  "removeLocationTrait": {
+   "codes": [
+    "08033",
+    "08042",
+    "08045"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08033.js:63: api.removeLocationTrait(location, LEY_TRAIT, { source: SOURCE })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08042.js:74: api.removeLocationTrait(location, LEY_TRAIT, { source: SOURCE })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08045.js:63: api.removeLocationTrait(location, COORDINATE_TRAIT, { source: SOURCE })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:669: removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),"
+   ]
+  },
+  "resolveCardAbility": {
+   "codes": [
+    "08070"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05231.js:58: api.resolveCardAbility(inv.seat, source, { abilityIndex: ability.index, ignoreCosts: true })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08070.js:51: api.resolveCardAbility(inv.seat, picked, { abilityIndex: ability.index, ignoreCosts: false })",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08089.js:7: // api.cardAbilityOptions + api.resolveCardAbility(...,{ignoreCosts:true}) 执行附属支援的攻击能力。",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08089.js:40: api.resolveCardAbility(inv.seat, attached, { abilityIndex: attack.index, ignoreCosts: true })"
+   ]
+  },
+  "revealChaosTokens": {
+   "codes": [
+    "08048"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08718.js:20: const revealed = api.revealChaosTokens(1)[0]",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js:20: const revealed = api.revealChaosTokens(1)[0]",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02013.js:14: const tokens = api.revealChaosTokens(5)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02153.js:22: const token = api.revealChaosTokens(1)[0]"
+   ]
+  },
+  "setAssetUses": {
+   "codes": [
+    "08041",
+    "08042",
+    "08043",
+    "08044",
+    "08062",
+    "08074"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02109.js:23: if (asset) api.setAssetUses(asset, (asset.uses || 0) * 2)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04204.js:24: api.setAssetUses(source, 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05118.js:33: api.setAssetUses(source, (source.uses || 0) - 1)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05196.js:60: api.setAssetUses(source, Math.max(0, (source.uses || 0) - 1))"
+   ]
+  },
+  "setScenarioFlag": {
+   "codes": [
+    "08033",
+    "08059"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/theSecretName/05125.js:39: api.setScenarioFlag('blackBookSeat', chosen.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDreamEaters/beyondTheGatesOfSleep/06056.js:5: //   标记写入 api.setScenarioFlag('lostWoodsPending', [...])，章节 behavior.roundEnded 结算",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theDreamEaters/wakingNightmare/06065.js:10: //   由章节 behavior 在 onReveal 之后按 api.setScenarioFlag('needsOrderlyReplacement') 处理（见 behavior.js）。",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07249.js:24: api.setScenarioFlag('resignedInMoonRoom', seats)"
+   ]
+  },
+  "shuffleDeck": {
+   "codes": [
+    "08032",
+    "08034"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/turnBackTime/04345.js:17: hooks.shuffleDeck()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07067.js:11: api.shuffleDeck(inv.seat)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/aPhantomOfTruth/03211.js:28: // 地点揭示钩子拿到的是 scenarioRuntime，它没有玩家卡 API 的 `shuffleDeck(seat)`；",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03264.js:39: api.shuffleDeck(inv.seat)"
+   ]
+  },
+  "spawnEncounterEnemy": {
+   "codes": [
+    "08028"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03263.js:27: api.spawnEncounterEnemy(inv.seat, picked)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08028.js:39: const spawned = api.spawnEncounterEnemy(inv.seat, code)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-enemy.js:77: spawnEncounterEnemy: (seat, code) => {"
+   ]
+  },
+  "spendResources": {
+   "codes": [
+    "08033"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03306.js:31: api.spendResources(inv.seat, copyCost)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05003.js:38: if (typeof api.spendResources === 'function') api.spendResources(inv.seat, cost)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05021.js:53: api.spendResources(inv.seat, 2)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/05317.js:43: api.spendResources(inv.seat, 1)"
+   ]
+  },
+  "startTest": {
+   "codes": [
+    "08026",
+    "08038",
+    "08039"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/03032.js:18: api.startTest({",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04024.js:25: api.startTest({",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04191.js:26: api.startTest({",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04267.js:18: api.startTest({"
+   ]
+  },
+  "tokenLabel": {
+   "codes": [
+    "08048"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/campaign-plugin.js:440: info(state, events, `「${cardName(premonition.code)}」改为结算封印的 ${tokenLabel(token)}，随后被弃掉。`)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08718.js:26: api.info('「艾弗里·克莱普尔」：取消 [frost]，改为揭示「' + api.tokenLabel(revealed) + '」。')",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js:26: api.info('🧥 「克莱普尔的皮草」：取消 [frost]，改为揭示「' + api.tokenLabel(revealed) + '」。')",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/02013.js:17: api.info('最终狂想曲揭示 ' + tokens.map(token => api.tokenLabel(token)).join('、')"
+   ]
+  },
+  "topDeckCodes": {
+   "codes": [
+    "08032"
+   ],
+   "defs": [
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04021.js:18: const top = api.topDeckCodes(inv.seat, 9)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/04037.js:19: const top = api.topDeckCodes(inv.seat, 6).reverse()",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/entries/08032.js:37: const top = api.topDeckCodes(inv.seat, 5)",
+    "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:887: topDeckCodes: (seat, count = 1) => {"
+   ]
+  }
+ },
+ "triggers": {
+  "assetEnteredPlay": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:455: triggerReaction(state, seat, 'assetEnteredPlay', events, eventWindowContext(state, { seat, assetCode: cardId, assetId: asset.id, l",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:1327: triggerReaction(state, seat, 'assetEnteredPlay', events,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/investigator-mechanics.js:16: registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('assetEnteredPlay'))))) return",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/investigator-mechanics.js:17: reactionWindow(state, 'assetEnteredPlay', eventWindowContext(state, { when: 'assetEnteredPlay', seat,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/skill-effects.js:235: triggerReaction(state, inv.seat, 'assetEnteredPlay', [], eventWindowContext(state, { assetCode: code, assetId: asset.id, location:",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:97: ['assetEnteredPlay', '支援入场后'],"
+  ],
+  "assetHarmPlaced": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:984: if (source === inv || !registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger.includes('assetHarmPlaced'))",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:987: reactionWindow(state, 'assetHarmPlaced', { when: 'assetHarmPlaced', seat: controller.seat, assetId: source.id,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/player-mechanics.js:72: if (context.when !== 'assetHarmPlaced' || context.assetId !== source.id) return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:83: define('assetHarmPlaced', '伤害或恐惧放置到支援后', 'reaction')"
+  ],
+  "beforePlayCost": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/theSecretName/05150.js:32: trigger: 'beforePlayCost',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-exec.js:331: if (windowId === 'beforePlayCost' && context?.cardCode && inv.seat === context.seat) {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:199: const playCostContext = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:204: const descriptor = registeredEntry(timingSource.source.code).abilities.find(descriptor => descriptor.trigger.includes('beforePlayC",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:205: if (!descriptor || !executeDescriptor(state, { inv, source: timingSource.source, descriptor, context: playCostContext, events, win",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:207: triggerReaction(state, inv.seat, 'beforePlayCost', events, playCostContext)"
+  ],
+  "cardDrawn": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/deck-ops.js:606: const drawContext = { when: 'cardDrawn', seat: inv.seat, location: inv.location, cardCode: code,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/deck-ops.js:608: triggerReaction(state, inv.seat, 'cardDrawn', events, drawContext)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/deck-ops.js:609: reactionWindow(state, 'cardDrawn', drawContext, events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/engine.js:1393: reactionWindow(state, 'cardDrawn', { when: 'cardDrawn', seat, location: inv.location, cardCode: code, weakness: false, from: 'bene",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:117: define('cardDrawn', '抽取卡牌后', 'reaction', 60)"
+  ],
+  "clueDiscovered": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js:14: kind: 'reaction', trigger: 'clueDiscovered',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js:11: kind: 'reaction', trigger: 'clueDiscovered',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07319.js:9: kind: 'forced', trigger: 'clueDiscovered', label: '黑暗深渊：完全淹没并提升相邻地点的淹没等级',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07070.js:7: kind: 'forced', trigger: 'clueDiscovered', label: '达贡密教：不查看并移除迹象顶牌',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:16: //   trigger: 'clueDiscovered' | ['a','b'],   // reaction/forced 必填，见 windows.js",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/locations.js:436: const clueContext = { when: 'clueDiscovered', seat: inv.seat,"
+  ],
+  "defeatEnemy": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/card-effects.js:28: //   reactions: [{ when:'defeatEnemy'|'horrorPlaced', limit:'round'|'phase', effect }]",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07255.js:24: kind: 'forced', trigger: 'defeatEnemy', label: '深潜者幼体被击败后：最近的另一名未交战且准备就绪的深潜者向你移动1步',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/_shared.js:203: // 关键点是 `defeatEnemy` / `discardEnemyCard` 已经先把敌人移出 state.enemies：",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-rules.js:370: // 窗口上下文里带的实体也算来源：`defeatEnemy` 打开时敌人已经从 state 移除，",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/act-agenda.js:164: if (obj.type === 'defeatEnemy') return { type: obj.type, enemyCode: obj.enemy,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/act-agenda.js:193: if (obj.type === 'defeatEnemy') {"
+  ],
+  "encounterDrawn": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js:15: kind: 'reaction', trigger: 'encounterDrawn',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05259.js:32: trigger: 'encounterDrawn',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:1142: if (!context || !owner || context.when !== 'encounterDrawn') return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:1240: if (!context || !owner || context.when !== 'encounterDrawn' || context.seat === seat) return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:1283: if (!context || when !== 'encounterDrawn') return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/effects.js:351: if (state._reaction && ['encounterDrawn', 'treachery'].includes(state._reaction.when)) {"
+  ],
+  "enemyAttack": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/nightOfTheZealot/theMidnightMasks/wolfManDrew.js:18: kind: 'forced', trigger: 'enemyAttack', silent: true,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:308: source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/deck-ops.js:655: source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/effects.js:344: rt.cancelPending('enemyAttack')",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:229: const context = reactionWindow(state, 'enemyAttack',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:230: { when: 'enemyAttack', seat: inv.seat, location: inv.location, enemy, attackKind: attack.kind,"
+  ],
+  "enemyAttacked": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/creatures_in_the_ice/08689.js:4: // 读点：forced + trigger 'enemyAttacked'（enemies.js#enemyAttack 在攻击结算后开窗）。",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/creatures_in_the_ice/08689.js:8: kind: 'forced', trigger: 'enemyAttacked',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08695.js:3: // 读点：forced + trigger 'enemyAttacked'；弃牌走 api.discardTopOfDeck，弱点经 api.moveCard 放回",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/elder_things/08695.js:18: kind: 'forced', trigger: 'enemyAttacked',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05258.js:18: trigger: 'enemyAttacked',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07253.js:28: //   · 「敌军阶段攻击后俘获」= forced + trigger 'enemyAttacked'（enemies.js#enemyAttack 开窗，"
+  ],
+  "harmAssigned": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:1020: if (actualDamage > 0 || actualHorror > 0) reactionWindow(state, 'harmAssigned', {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/enemies.js:1021: when: 'harmAssigned', seat: inv.seat, location: inv.location,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:43: ['harmAssigned', '实际受到伤害或恐惧后', 'reaction'],"
+  ],
+  "investigateSuccess": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js:13: kind: 'reaction', trigger: 'investigateSuccess',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07066.js:5: kind: 'forced', trigger: 'investigateSuccess', label: '印斯茅斯港口：查看迹象顶牌并混洗',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07073.js:7: kind: 'forced', trigger: 'investigateSuccess', label: '水街老屋：抽遭遇牌或洗入迹象牌堆',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/act-agenda.js:399: triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:645: triggerReaction(state, seat, 'investigateSuccess', events, { seat, location: loc.id, successBy: r.value - difficulty })",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/harm-threat.js:407: triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })"
+  ],
+  "investigationPhaseStarts": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/table-decisions.js:438: reactionWindow(state, 'investigationPhaseStarts', { when: 'investigationPhaseStarts', phase: 'investigation', initial: true }, eve",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/turn.js:573: reactionWindow(state, 'investigationPhaseStarts', { when: 'investigationPhaseStarts', phase: 'investigation' }, events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:73: define('investigationPhaseStarts', '调查阶段开始时', 'reaction')"
+  ],
+  "mythosEncounterStep": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/player-mechanics.js:107: if (context.when !== 'mythosEncounterStep') return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/turn.js:144: const encounterStep = reactionWindow(state, 'mythosEncounterStep', { when: 'mythosEncounterStep',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:121: define('mythosEncounterStep', '神话阶段抽取遭遇卡步骤开始前', 'reaction', 60)"
+  ],
+  "testBegins": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05261.js:16: trigger: 'testBegins',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/tests.js:271: const context = { when: 'testBegins', seat, location: inv.location, skill: skillContext, difficulty, baseValue: statReference,",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/tests.js:273: triggerReaction(state, seat, 'testBegins', events, context)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/tests.js:274: reactionWindow(state, 'testBegins', { ...context, prompt: `${inv.name} 的${skillLabel}检定开始` }, events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:29: ['testBegins', '技能检定开始时', 'reaction'],"
+  ],
+  "testEnds": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292a.js:23: kind: 'forced', trigger: 'testEnds',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292b.js:24: kind: 'forced', trigger: 'testEnds',",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-exec.js:267: const testListener = windowId === 'testEnds'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-exec.js:268: && sources.some(({ entry }) => (entry.abilities || []).some(descriptor => descriptor.trigger?.includes('testEnds')))",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/tests.js:592: row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds'))))",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/tests.js:595: row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('testEnds')))) {"
+  ],
+  "treachery": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:136: \"treachery\": 753",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:389: \"type\": \"treachery\",",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:775: \"type\": \"treachery\",",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:1535: \"type\": \"treachery\",",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:9838: \"type\": \"treachery\",",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/cards-data.js:9891: \"type\": \"treachery\","
+  ],
+  "turnBegins": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/turn.js:532: triggerReaction(state, inv.seat, 'turnBegins', events, { seat: inv.seat, location: inv.location })",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/turn.js:533: reactionWindow(state, 'turnBegins', { when: 'turnBegins', seat: inv.seat, location: inv.location, prompt: `${inv.name} 的回合开始` }, e",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:56: ['turnBegins', '回合开始时', 'reaction'],"
+  ],
+  "upkeepEnd": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/investigator-mechanics.js:40: || Object.entries(state.playerWindowOccurrences).some(([key, value]) => !['enemyPhaseEnds', 'upkeepEnd'].includes(key) || !Number.",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/phases.js:222: if (hasPlayerWindow(state, 'upkeepEnd')) openAbilityWindow(state, 'upkeepEnd', playerWindowContext(state, 'upkeepEnd'), events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/windows.js:82: define('upkeepEnd', '重整阶段结束时', 'reaction')"
+  ]
+ },
+ "kinds": {
+  "action": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-exec.js:121: if (descriptor.kind === 'action') reactionWindow(state, 'assetActionResolved', {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:1276: return entry.abilities.filter(descriptor => descriptor.kind === 'action' || descriptor.kind === 'free')",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/dispatch.js:303: state._resolvingAction = totalCost > 0 || ability?.descriptor?.kind === 'action'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/parley.js:127: if (descriptor.kind === 'action' && hostActionsSuppressed(state, entity)) return",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/reveal.js:259: if (!alreadyPaid && !ignoreCosts && descriptor.kind === 'action' && cost.action !== false) spendAction(state, inv)"
+  ],
+  "card": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/debug.js:133: case 'card': {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/debug.js:572: case 'card': return executeCard(state, move, events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/integration/debug-console.js:1325: case 'card':"
+  ],
+  "commit": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/ai/ai-context.js:228: const commitWindow = state.pendingChoice?.kind === 'commit' && state.pendingChoice.seat === seat",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:498: if (kind === 'commit' && raw.skill?.conditionalIcons != null) {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/stats.js:269: const profile = (entry?.abilities || []).find(ability => ability.kind === 'commit')?.skill",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/integration/choice-batch.js:61: const helperCommit = batch.kind === 'commit' && batch.finish === 'done'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/integration/choice-batch.js:121: const helperCommit = batch.kind === 'commit' && batch.finish === 'done'"
+  ],
+  "deck": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/deck-ops.js:88: case 'deck':"
+  ],
+  "effect": [],
+  "encounter": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/debug.js:223: case 'encounter': {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/debug.js:566: case 'encounter': return executeEncounter(state, move, events)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/integration/debug-console.js:1304: case 'encounter':"
+  ],
+  "enemy": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07181.js:16: else if (['fight', 'evade'].includes(test.actionKind) && test.target?.kind === 'enemy') {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions-extra.js:136: if (spec.kind === 'enemy') {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/physical-faces.js:14: if(kind==='enemy')for(const key of ['fight','evade','health']){",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/physical-faces.js:17: const fields=kind==='enemy'?ENEMY_FIELDS:ASSET_FIELDS",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/physical-faces.js:23: if(kind==='enemy')for(const key of ENEMY_FLAGS)set[key]=next[key]===true"
+  ],
+  "entersPlay": [],
+  "forced": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:482: if (kind === 'reaction' || kind === 'forced') {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:573: if (descriptor.kind === 'reaction' || descriptor.kind === 'forced') return kind !== 'player'"
+  ],
+  "free": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-rules.js:153: return descriptor.kind === 'free' ? { ...descriptor.cost, action: false } : descriptor.cost",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-rules.js:161: if (descriptor.kind === 'free' && state.locations?.includes(source)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability-rules.js:169: if (descriptor.kind === 'free' && descriptor.trigger.length && !descriptor.trigger.includes(timing)) return false",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:572: if (descriptor.kind === 'free') return kind === 'player'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:1276: return entry.abilities.filter(descriptor => descriptor.kind === 'action' || descriptor.kind === 'free')"
+  ],
+  "investigator": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/thePathToCarcosa/thePallidMask/03260.js:36: if (recipient.kind === 'investigator') api.horror(inv.seat, recipient.assigned)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions-extra.js:123: if (spec.kind === 'investigator') {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:303: if (attachSpec && (attachSpec.kind === 'asset' || attachSpec.kind === 'investigator')) {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions.js:325: const isInvestigatorTarget = attachSpec.kind === 'investigator'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/api-misc.js:817: if (source.kind === 'investigator' && applied.damage) checkDefeated(state, source.owner.seat, events)"
+  ],
+  "leavesPlay": [],
+  "location": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07181.js:15: if (test.actionKind === 'investigate' && test.target?.kind === 'location') location = test.target.id",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/actions-extra.js:135: if (spec.kind === 'location') return state.locations.filter(location => location.inPlay !== false)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/scenario-keys.js:29: else if (kind === 'location') locationAt(state, id)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/targets.js:86: case 'location': {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/targets.js:127: const candidates = (target.kind === 'location' && target.range === 'anywhere'"
+  ],
+  "move": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/describe-ai.js:115: case 'move': return '移动'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/dispatch.js:670: case 'move': doMove(state, seat, m.locationId, events); break",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/harm-threat.js:222: info(state, events, `⏳ ${inv.name} 受「${cardName(threat.code)}」影响，本次${kind === 'move' ? '移动' : kind === 'fight' ? '攻击' : '躲避'}额外消耗 ",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/moves.js:826: case 'move': {"
+  ],
+  "played": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/cards/card-rules.js:186: || (entry.abilities || []).some(ability => ability.kind === 'played' && ability.fast === true)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:503: const fastPlayed = kind === 'played' && raw.fast === true",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/encounter.js:530: || registeredEntry(move.cardId)?.abilities.some(descriptor => descriptor.kind === 'played' && descriptor.fast))))",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/table-decisions.js:295: .find(descriptor => descriptor.kind === 'played' && descriptor.countsAs)"
+  ],
+  "reaction": [
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:482: if (kind === 'reaction' || kind === 'forced') {",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:573: if (descriptor.kind === 'reaction' || descriptor.kind === 'forced') return kind !== 'player'",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:1349: descriptor.kind === 'reaction' && descriptor.fromHand && descriptor.quickEvent)",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/card-defs.js:67: descriptor.kind === 'reaction' && (descriptor.legacyReaction === true",
+   "G:/boardgame-hall-ai/games/arkhamhorror/src/engine/card-defs.js:92: return (descriptorEntry?.abilities || []).some(descriptor => descriptor.kind === 'reaction'"
+  ],
+  "setup": [],
+  "target": []
+ },
+ "fields": {}
+}

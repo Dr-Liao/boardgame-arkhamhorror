@@ -1,0 +1,4132 @@
+{
+ "generatedAt": "2026-11-08T11:04:19.884Z",
+ "note": "R1 直写为启发式（参数命名 card 等可能误报）；权威口径是 tools/audit-card-entry-compliance.mjs --check（本次运行 exit 0）",
+ "summary": {
+  "directWrites": 0,
+  "forbiddenImports": 0,
+  "engineLiterals": 100,
+  "escapeCards": 182,
+  "eoteCompliance": {
+   "baselineCount": 0,
+   "fields": 37
+  }
+ },
+ "directWrites": [],
+ "forbiddenImports": [],
+ "engineLiterals": [
+  {
+   "file": "src/deck/availability.js",
+   "code": "08001"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08002"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08003"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08004"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08005"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08007"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08008"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08009"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08010"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08015"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08017"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08018"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08130"
+  },
+  {
+   "file": "src/deck/availability.js",
+   "code": "08133"
+  },
+  {
+   "file": "src/deck/deckbuilding.js",
+   "code": "08015"
+  },
+  {
+   "file": "src/engine/actions.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/actions.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/actions.js",
+   "code": "08074"
+  },
+  {
+   "file": "src/engine/actions.js",
+   "code": "08017"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08130"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08131"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08013a"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08014a"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08005"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08053"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08058"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08051"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08051"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08076"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08091"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08091"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08097"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08062"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08086"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08112"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08107"
+  },
+  {
+   "file": "src/engine/api-misc.js",
+   "code": "08074"
+  },
+  {
+   "file": "src/engine/combat.js",
+   "code": "08086"
+  },
+  {
+   "file": "src/engine/combat.js",
+   "code": "08008"
+  },
+  {
+   "file": "src/engine/combat.js",
+   "code": "08086"
+  },
+  {
+   "file": "src/engine/deck-ops.js",
+   "code": "08066"
+  },
+  {
+   "file": "src/engine/deck-ops.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/deck-ops.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/effect-state.js",
+   "code": "08051"
+  },
+  {
+   "file": "src/engine/enemies.js",
+   "code": "08003"
+  },
+  {
+   "file": "src/engine/engine.js",
+   "code": "08130"
+  },
+  {
+   "file": "src/engine/engine.js",
+   "code": "08133"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08622"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08623"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08622"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08623"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08638"
+  },
+  {
+   "file": "src/engine/eote-city.js",
+   "code": "08640"
+  },
+  {
+   "file": "src/engine/eote-climb.js",
+   "code": "08597"
+  },
+  {
+   "file": "src/engine/eote-climb.js",
+   "code": "08598"
+  },
+  {
+   "file": "src/engine/eote-deck-top.js",
+   "code": "08004"
+  },
+  {
+   "file": "src/engine/eote-deck-top.js",
+   "code": "08005"
+  },
+  {
+   "file": "src/engine/eote-deck-top.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08010"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08011a"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08014a"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08015"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08015"
+  },
+  {
+   "file": "src/engine/eote-disciplines.js",
+   "code": "08015"
+  },
+  {
+   "file": "src/engine/eote-facilities.js",
+   "code": "08673"
+  },
+  {
+   "file": "src/engine/eote-interactions.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/eote-investigator-support.js",
+   "code": "08013a"
+  },
+  {
+   "file": "src/engine/eote-investigator-support.js",
+   "code": "08014a"
+  },
+  {
+   "file": "src/engine/eote-investigator-support.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/eote-round-distance.js",
+   "code": "08007"
+  },
+  {
+   "file": "src/engine/eote-tekeli.js",
+   "code": "08604"
+  },
+  {
+   "file": "src/engine/grid-map.js",
+   "code": "08622"
+  },
+  {
+   "file": "src/engine/grid-map.js",
+   "code": "08623"
+  },
+  {
+   "file": "src/engine/grid-map.js",
+   "code": "08622"
+  },
+  {
+   "file": "src/engine/grid-map.js",
+   "code": "08623"
+  },
+  {
+   "file": "src/engine/harm-threat.js",
+   "code": "08056"
+  },
+  {
+   "file": "src/engine/harm-threat.js",
+   "code": "08081"
+  },
+  {
+   "file": "src/engine/harm-threat.js",
+   "code": "08130"
+  },
+  {
+   "file": "src/engine/harm-threat.js",
+   "code": "08131"
+  },
+  {
+   "file": "src/engine/hidden-rules.js",
+   "code": "08009"
+  },
+  {
+   "file": "src/engine/moves.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/moves.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/moves.js",
+   "code": "08006"
+  },
+  {
+   "file": "src/engine/play-channels.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/play-channels.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/play-channels.js",
+   "code": "08004"
+  },
+  {
+   "file": "src/engine/play-channels.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/play-channels.js",
+   "code": "08074"
+  },
+  {
+   "file": "src/engine/restricted-actions.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/restricted-actions.js",
+   "code": "08014a"
+  },
+  {
+   "file": "src/engine/scenario-decks.js",
+   "code": "08604"
+  },
+  {
+   "file": "src/engine/table-decisions.js",
+   "code": "08014a"
+  },
+  {
+   "file": "src/engine/table-decisions.js",
+   "code": "08016"
+  },
+  {
+   "file": "src/engine/tests.js",
+   "code": "08086"
+  },
+  {
+   "file": "src/engine/tests.js",
+   "code": "08013a"
+  },
+  {
+   "file": "src/engine/tests.js",
+   "code": "08112"
+  },
+  {
+   "file": "src/engine/tests.js",
+   "code": "08107"
+  },
+  {
+   "file": "src/engine/turn-flow.js",
+   "code": "08006"
+  }
+ ],
+ "contentLiterals": [
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08010"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08011a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08014a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08011b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08014b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08011a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08011b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08012a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08012b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08013a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08013b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08014a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08014b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08010"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08011a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "code": "08015"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/keywords.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/keywords.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/keywords.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/parts.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08614"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08620"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08593"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08588"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08594"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08591"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08590"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08592"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08589"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08614"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08615"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08616"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08617"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08618"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08619"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08620"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08503"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08504"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08505"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08506"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08507"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08508"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08509"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08510"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08511"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08512"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08513"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08624"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08625"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08626"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08644"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08644"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08645"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08645"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08630"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08630"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08631"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08632"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08632"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08632"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08632"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08633"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08635"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08636"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08637"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08638"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08639"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "code": "08640"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08631"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08640"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08630"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08622"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08623"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08624"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08625"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08626"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08627"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08628"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08629"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08630"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08631"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08632"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08633"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08634"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08635"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08636"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08637"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08638"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08639"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08640"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08641"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08642"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08643"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08644"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08645"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08646"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "code": "08647"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/layout.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/texts.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/chaos.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08550"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08551"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08552"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08553"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08554"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08555"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08556"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08574"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08556"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08557"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08558"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08559"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08560"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08561"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08562"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08563"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08564"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08565"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08566"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08567"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08568"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08569"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08570"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08571"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08572"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08573"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08574"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08575"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08576"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08577"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08578"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08579"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08580"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08581"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08582"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08583"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08584"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08585"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08586"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08588"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08589"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08590"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08591"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08592"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08593"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08594"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08556b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08556b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08575"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08589"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08576"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08590"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08577"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08578"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08592"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08579"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08580"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08588"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08581"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08591"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08582"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08594"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08583"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "code": "08593"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08550"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08551"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08552"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08553"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08554"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08555"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08584"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08585"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08586"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08519"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08520"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08519"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08520"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08521"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/chaos.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08521"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08519"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08520"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08503"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08504"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08505"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08506"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08507"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08508"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08509"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08510"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08511"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08512"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08513"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08515"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08515"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08521"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08519"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08520"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08518"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08519"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08520"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08521"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08522"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08515"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08723"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08724"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08725"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08726"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08727"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08728"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "code": "08729"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/index.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08527"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08534"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08527"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08528"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08529"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08530"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08531"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08532"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08533"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08534"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08535"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08536"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08537"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08538"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08539"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08540"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08541"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08542"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+   "code": "08543"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/chaos.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08543"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08503"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08504"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08505"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08506"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08507"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08508"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08509"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08510"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08511"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08512"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08513"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08535"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08536"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08537"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08538"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08539"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08540"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08541"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08542"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08543"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08527"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08528"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08529"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08530"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08531"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08532"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08533"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08534"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08723"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08724"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08725"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08726"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08727"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08728"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+   "code": "08729"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/index.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+   "code": "08548"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/chaos.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08548"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08545"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08503"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08504"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08505"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08506"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08507"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08508"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08509"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08510"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08511"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08512"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08513"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08545"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08545"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08547"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08548"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08545"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08547"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "code": "08548"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08544"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08545"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08546"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08547"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08548"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08655"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08659"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08660"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08661"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08662"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08664"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08665"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08666"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08667"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08668"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08669"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "code": "08670"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08664"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08665"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08666"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08667"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08668"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08650"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08651"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08652"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08653"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08654"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08655"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08655"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08664"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08665"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08666"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08667"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08668"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08650"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08652"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08651"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08653"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08654"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08649"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08662"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08659"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08660"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08661"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08662"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08662"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08659"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08659"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08660"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08660"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08661"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08661"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08649"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08659"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08660"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08661"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08662"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08663"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08669"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08670"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08657"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "code": "08658"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08672"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08674"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08675"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08676"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08677"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08678"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08679"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08680"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08682"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08683"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08684"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08685"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "code": "08686"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/chaos.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08650"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08651"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08652"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08653"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08654"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08655"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08655"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08656"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08674"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08675"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08676"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08677"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08678"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08682"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08683"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08684"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08685"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08649"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08682"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08683"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08684"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08685"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08686"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08679"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08682"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08683"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08684"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08685"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08686"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08679"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08672"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08672"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08672"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08649"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08673"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08671"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08672"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08679"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08680"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08681"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "code": "08686"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js",
+   "code": "08648b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08600"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08602"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08603"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08604"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08605"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08601"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08606"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08597"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08609"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08608"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08610"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08611"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08611"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08612"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08612"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08613"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08613"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "code": "08613"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08597"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08598"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08599"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08600"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08601"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08602"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08603"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08604"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08605"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08606"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08607"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08608"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08609"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08610"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08611"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08612"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08613"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08614"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08615"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08616"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08617"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08618"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08619"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08620"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08600"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08602"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08603"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08604"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08605"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08601"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08606"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/layout.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/texts.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08502"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08503"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08504"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08505"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08506"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08507"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08508"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08509"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08510"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08511"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08512"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08513"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08514"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08587"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08588"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08589"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08590"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08591"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08592"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08593"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08594"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08595"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08730"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08730"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08731"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08732"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08733"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08734"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08735"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08736"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08737"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08730"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08731"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08732"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08733"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08734"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08735"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08736"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08737"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08723"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08724"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08725"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08726"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08727"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08728"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08729"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08614"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08615"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08616"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08617"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08618"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08619"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08620"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08614"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08615"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08616"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08617"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08618"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08619"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "code": "08620"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08001"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08133"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08001"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08133"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08738"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08648b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08001"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08004"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08007"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08010"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08016"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08011a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08014a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08011a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08011b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08012a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08012b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08013a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08013b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08014a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "code": "08014b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08501a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08501b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08501"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08549"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08596"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08621"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08648a"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08648"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08648b"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08523.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08523.js",
+   "code": "08523"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08524.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08524.js",
+   "code": "08524"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08525.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08525.js",
+   "code": "08525"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08526.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08526.js",
+   "code": "08526"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08527.js",
+   "code": "08527"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08527.js",
+   "code": "08527"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08528.js",
+   "code": "08528"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08528.js",
+   "code": "08528"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08529.js",
+   "code": "08529"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08529.js",
+   "code": "08529"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08530.js",
+   "code": "08530"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08530.js",
+   "code": "08530"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08531.js",
+   "code": "08531"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08531.js",
+   "code": "08531"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08532.js",
+   "code": "08532"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08532.js",
+   "code": "08532"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08533.js",
+   "code": "08533"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08533.js",
+   "code": "08533"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08534.js",
+   "code": "08534"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08534.js",
+   "code": "08534"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js",
+   "code": "08535"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js",
+   "code": "08714"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js",
+   "code": "08535"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js",
+   "code": "08535"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08536.js",
+   "code": "08536"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08536.js",
+   "code": "08715"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08536.js",
+   "code": "08536"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08536.js",
+   "code": "08536"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08537.js",
+   "code": "08537"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08537.js",
+   "code": "08716"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08537.js",
+   "code": "08537"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08537.js",
+   "code": "08537"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08538.js",
+   "code": "08538"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08538.js",
+   "code": "08717"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08538.js",
+   "code": "08538"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08538.js",
+   "code": "08538"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08539.js",
+   "code": "08539"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08539.js",
+   "code": "08718"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08539.js",
+   "code": "08539"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08539.js",
+   "code": "08539"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08540.js",
+   "code": "08540"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08540.js",
+   "code": "08719"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08540.js",
+   "code": "08540"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08540.js",
+   "code": "08540"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08541.js",
+   "code": "08541"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08541.js",
+   "code": "08720"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08541.js",
+   "code": "08541"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08541.js",
+   "code": "08541"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08542.js",
+   "code": "08542"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08542.js",
+   "code": "08721"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08542.js",
+   "code": "08542"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08542.js",
+   "code": "08542"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08543.js",
+   "code": "08543"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08543.js",
+   "code": "08722"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08543.js",
+   "code": "08543"
+  },
+  {
+   "file": "content/src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08543.js",
+   "code": "08543"
+  }
+ ],
+ "escapeCards": [
+  "08001",
+  "08002",
+  "08004",
+  "08005",
+  "08006",
+  "08007",
+  "08008",
+  "08009",
+  "08010",
+  "08011a",
+  "08011b",
+  "08012a",
+  "08012b",
+  "08013a",
+  "08013b",
+  "08014a",
+  "08014b",
+  "08015",
+  "08016",
+  "08018",
+  "08019",
+  "08020",
+  "08021",
+  "08022",
+  "08023",
+  "08025",
+  "08026",
+  "08028",
+  "08029",
+  "08030",
+  "08031",
+  "08032",
+  "08033",
+  "08034",
+  "08035",
+  "08036",
+  "08038",
+  "08039",
+  "08041",
+  "08042",
+  "08043",
+  "08044",
+  "08045",
+  "08047",
+  "08048",
+  "08049",
+  "08050",
+  "08051",
+  "08053",
+  "08054",
+  "08055",
+  "08057",
+  "08058",
+  "08059",
+  "08060",
+  "08061",
+  "08062",
+  "08064",
+  "08066",
+  "08067",
+  "08068",
+  "08070",
+  "08071",
+  "08072",
+  "08073",
+  "08074",
+  "08075",
+  "08076",
+  "08079",
+  "08080",
+  "08082",
+  "08083",
+  "08084",
+  "08085",
+  "08086",
+  "08087",
+  "08088",
+  "08089",
+  "08090",
+  "08091",
+  "08092",
+  "08093",
+  "08095",
+  "08097",
+  "08098",
+  "08099",
+  "08100",
+  "08101",
+  "08102",
+  "08103",
+  "08104",
+  "08105",
+  "08106",
+  "08107",
+  "08108",
+  "08109",
+  "08110",
+  "08111",
+  "08112",
+  "08113",
+  "08114",
+  "08115",
+  "08116",
+  "08117",
+  "08118",
+  "08119",
+  "08120",
+  "08121",
+  "08122",
+  "08123",
+  "08124",
+  "08125",
+  "08126",
+  "08127",
+  "08129",
+  "08130",
+  "08131",
+  "08132",
+  "08133",
+  "08589",
+  "08592",
+  "08593",
+  "08535",
+  "08536",
+  "08537",
+  "08538",
+  "08539",
+  "08540",
+  "08541",
+  "08542",
+  "08543",
+  "08687",
+  "08689",
+  "08690",
+  "08695",
+  "08696",
+  "08714",
+  "08716",
+  "08717",
+  "08718",
+  "08719",
+  "08720",
+  "08722",
+  "08502",
+  "08504",
+  "08505",
+  "08506",
+  "08507",
+  "08509",
+  "08510",
+  "08511",
+  "08512",
+  "08513",
+  "08514",
+  "08515",
+  "08517",
+  "08700",
+  "08701",
+  "08730",
+  "08732",
+  "08734",
+  "08735",
+  "08736",
+  "08738",
+  "08703",
+  "08710",
+  "08711",
+  "08723",
+  "08724",
+  "08725",
+  "08726",
+  "08727",
+  "08728",
+  "08729",
+  "08649",
+  "08650",
+  "08651",
+  "08652",
+  "08653",
+  "08654",
+  "08655",
+  "08656"
+ ]
+}

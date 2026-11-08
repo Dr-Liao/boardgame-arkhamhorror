@@ -140,7 +140,7 @@
 .ah-situ-meters { display: grid; gap: 6px; }
 .ah-situ-meter { display: grid; grid-template-columns: 54px minmax(0,1fr) 40px; align-items: center; gap: 8px; font-size: 11px; }
 .ah-situ-meter-label { display: flex; align-items: center; gap: 4px; color: #cfc6a8; }
-.ah-situ-meter-label .ah-icon { width: 14px; height: 14px; }
+.ah-situ-meter-label .ah-icon { width: 16px; height: 16px; }
 .ah-situ-meter.is-health .ah-icon { color: #efa895; }
 .ah-situ-meter.is-sanity .ah-icon { color: #b6d6e3; }
 .ah-situ-meter-track { display: flex; gap: 2px; }

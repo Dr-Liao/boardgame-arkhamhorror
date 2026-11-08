@@ -103,7 +103,9 @@ test('P0 能力 API 覆盖条目里所有 api.* 调用（locName 回归）', asy
     get: (target, key) => key === 'then' ? undefined : proxy,
     apply: () => proxy,
   })
-  const api = Object.assign({}, ...factories.map(create => create(proxy, proxy, proxy)))
+  // abilityApi（engine.js）在 8 个工厂之外还挂 `mechanics` 域（P2/P4 原语面，api.mechanics.*），
+  // 这里按同一装配口径补上，避免把合法读点误报为缺失方法。
+  const api = Object.assign({ mechanics: {} }, ...factories.map(create => create(proxy, proxy, proxy)))
   const entries = fileURLToPath(new URL('../src/cards/entries/', import.meta.url))
   const missing = new Map()
   for (const name of readdirSync(entries).filter(file => file.endsWith('.js') && !['index.js', '_shared.js'].includes(file))) {

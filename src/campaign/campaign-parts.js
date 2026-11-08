@@ -1,8 +1,9 @@
 // 《食梦者》双 part 数据模型（P3 骨架批次 1，D1-A 口径）。
 //
 // 口径：docs/tde-migration-roadmap.md §7.2.2 与 §5.5；账本：artifacts/migration/tde/primitive-plan.json。
-// 本模块只做**纯数据**：
-//   · 不 import 任何 engine 模块，不按卡号/战役名分支；
+// 本模块以**纯数据**为主：
+//   · 除末尾「致命幻景版本快照」只 import engine/eote-state.js 的容器访问器外，不依赖 engine；
+//   · 不按卡号/战役名分支；
 //   · 不改变 `state.investigators` 的座位语义（运行时座位在 P5 由 lane adapter 重建）；
 //   · 所有导出函数都是确定性纯函数（除显式接收可变 state 的 setPart/inPart/mutateBothBags）。
 //
@@ -15,6 +16,11 @@
 //
 // 两条线的**共享**字段（不切片）：`scenarioResults`、`flow`/`flowStage`、`result`、`phase`、
 // `scenarioIndex`、`scenarioCount`、`leadSeat`、`leadConfirmed` 等。逐线字段见 PART_SCOPED_FIELDS。
+//
+// P2-C（EotE）扩展：本文件末尾新增「致命幻景版本快照」一节——它同样挂在 campaign 上的可选容器
+// （`campaign.eote.mirage`），与 A/B 双线的 part 快照互不相干；容器形状/版本由 engine/eote-state.js
+// 定义（这里只 import，不重复声明状态版本）。
+import { EOTE_STATE_VERSION, eoteCampaignState } from '../engine/eote-state.js'
 
 export const PARTS = Object.freeze(['A', 'B'])
 export const MODES = Object.freeze(['singleA', 'singleB', 'pick', 'parallel'])
@@ -394,6 +400,7 @@ function projectedInvestigator(record, observerSeat) {
     deck: Array.isArray(record.deck) ? [...record.deck] : [],
     purchases: clone(record.purchases || []),
     removedCards: clone(record.removedCards || []),
+    ...(record.draftMode ? { draftMode: clone(record.draftMode) } : {}),
     ...(record.upgradeDraft ? { upgradeDraft: clone(record.upgradeDraft) } : {}),
     ...(record.upgradeAdvice ? { upgradeAdvice: clone(record.upgradeAdvice) } : {}),
   }
@@ -457,4 +464,196 @@ export function partScopedView(view, observerSeat = null) {
   view.parts = parts
   view.partsRedacted = true
   return view
+}
+
+// ---------------------------------------------------------------------------
+// EotE P2-C：致命幻景（Fatal Mirage）I–III 版本快照与重复进入
+// ---------------------------------------------------------------------------
+//
+// 《地球边缘》的《致命幻景》会被幕间 I/II/III 可选切入，每次使用下一版本（I → II → III）。
+// 这里只维护**版本簿记 + 版本作用域的场景局部快照**，不碰主线数据：
+//   campaign.eote.mirage = {
+//     version: 1,                     // 最近一次进入的版本（没进入过时整个 mirage 不存在）
+//     visits: { '1': 1, '2': 1 },     // 每版本进入次数（字符串键；纯 JSON）
+//     snapshots: { '1': { … } },      // 每版本一份场景局部快照（调用方给的纯 JSON 对象）
+//   }
+// 口径：
+//   · 读函数从不创建容器——旧存档/旧战役不会因为调用本模块多出字段；
+//   · 写函数只在显式调用时创建（`eoteCampaignState(state, true)`），并保持其他 EotE 子状态不变；
+//   · `noteMirageVisit` 幂等：重复记录「当前版本」的一次进入不会重复计数；版本顺序错或超过 I–III
+//     三次上限时抛错（未知/坏配置失败关闭）；
+//   · `saveMirageVersion` / `restoreMirageVersion` 只搬调用方给的场景局部快照，主线 `records` /
+//     `parts` / 经验 / 创伤等字段一律不参与，快照是深拷贝，修改返回值不影响已保存内容。
+export const MIRAGE_VERSIONS = Object.freeze([1, 2, 3])
+const MIRAGE_VERSION_KEYS = Object.freeze(MIRAGE_VERSIONS.map(String))
+const MIRAGE_STATE_FIELDS = Object.freeze(['version', 'visits', 'snapshots'])
+
+function assertMirageVersion(version, label = '致命幻景版本') {
+  if (!Number.isSafeInteger(version) || !MIRAGE_VERSIONS.includes(version)) {
+    throw new TypeError(`${label}必须是 1–3 的整数：${String(version)}`)
+  }
+  return version
+}
+
+function mirageCampaign(state) {
+  const campaign = state?.campaign
+  if (!campaign || typeof campaign !== 'object' || Array.isArray(campaign)) throw new TypeError('致命幻景需要带 campaign 的状态')
+  return campaign
+}
+
+/** 纯 JSON 值校验：拒绝 undefined/函数/NaN/Map/Date 等会在存档里静默丢数据的值。 */
+function assertJsonValue(value, label) {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) throw new TypeError(`${label}含非有限数值`)
+    return
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) assertJsonValue(item, label)
+    return
+  }
+  if (typeof value === 'object') {
+    const proto = Object.getPrototypeOf(value)
+    if (proto !== Object.prototype && proto !== null) throw new TypeError(`${label}必须是纯 JSON 对象`)
+    for (const item of Object.values(value)) assertJsonValue(item, label)
+    return
+  }
+  throw new TypeError(`${label}含无法序列化的值`)
+}
+
+/** `campaign.eote.mirage` 的形状错误消息；合法返回 null（save-migration 读档校验的共用判据）。 */
+function mirageShapeError(mirage) {
+  if (!mirage || typeof mirage !== 'object' || Array.isArray(mirage)) return '幻景状态必须是对象'
+  const extra = Object.keys(mirage).filter(key => !MIRAGE_STATE_FIELDS.includes(key))
+  if (extra.length) return `幻景状态含未知字段 ${extra.join('、')}`
+  if (mirage.version != null && (!Number.isSafeInteger(mirage.version) || !MIRAGE_VERSIONS.includes(mirage.version))) {
+    return `幻景版本必须是 1–3 的整数：${String(mirage.version)}`
+  }
+  if (mirage.visits != null) {
+    if (typeof mirage.visits !== 'object' || Array.isArray(mirage.visits)) return '幻景 visits 必须是对象'
+    for (const [key, value] of Object.entries(mirage.visits)) {
+      if (!MIRAGE_VERSION_KEYS.includes(key)) return `幻景 visits 含未知版本键 ${key}`
+      if (!Number.isSafeInteger(value) || value < 0) return `幻景版本 ${key} 的进入次数必须是非负整数`
+    }
+  }
+  if (mirage.snapshots != null) {
+    if (typeof mirage.snapshots !== 'object' || Array.isArray(mirage.snapshots)) return '幻景 snapshots 必须是对象'
+    for (const [key, value] of Object.entries(mirage.snapshots)) {
+      if (!MIRAGE_VERSION_KEYS.includes(key)) return `幻景 snapshots 含未知版本键 ${key}`
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return `幻景版本 ${key} 的快照必须是对象`
+      try { assertJsonValue(value, `幻景版本 ${key} 的快照`) } catch (error) { return error.message }
+    }
+  }
+  return null
+}
+
+function readMirage(state) {
+  const campaign = mirageCampaign(state)
+  const eote = campaign.eote ?? null
+  if (eote && eote.version !== EOTE_STATE_VERSION) throw new TypeError(`不支持的 EotE 战役扩展版本 ${eote.version}`)
+  const mirage = eote?.mirage ?? null
+  if (mirage != null) {
+    const error = mirageShapeError(mirage)
+    if (error) throw new TypeError(error)
+  }
+  return mirage
+}
+
+function ensureMirage(state) {
+  const campaign = mirageCampaign(state)
+  const eote = eoteCampaignState(state, true)
+  if (eote.version !== EOTE_STATE_VERSION) throw new TypeError(`不支持的 EotE 战役扩展版本 ${eote.version}`)
+  eote.mirage ||= {}
+  const error = mirageShapeError(eote.mirage)
+  if (error) throw new TypeError(error)
+  return eote.mirage
+}
+
+/** 读幻景状态的只读投影（深拷贝；不初始化，未进入过返回 null）。 */
+export function mirageState(state) {
+  const mirage = readMirage(state)
+  return mirage == null ? null : structuredClone(mirage)
+}
+
+/** 当前幻景版本（未进入过返回 null）。 */
+export function mirageVersion(state) {
+  return readMirage(state)?.version ?? null
+}
+
+/** 某版本的进入次数（未进入过为 0）。 */
+export function mirageVisitCount(state, version) {
+  assertMirageVersion(version)
+  return Number(readMirage(state)?.visits?.[String(version)] || 0)
+}
+
+/** 已进入幻景的总次数（0–3）。 */
+export function mirageTotalVisits(state) {
+  const mirage = readMirage(state)
+  if (!mirage) return 0
+  return MIRAGE_VERSIONS.reduce((total, version) => total + Number(mirage.visits?.[String(version)] || 0), 0)
+}
+
+/** 下一次进入应使用的版本（I → II → III）；三次用尽后返回 null。 */
+export function nextMirageVersion(state) {
+  const total = mirageTotalVisits(state)
+  return total >= MIRAGE_VERSIONS.length ? null : total + 1
+}
+
+/**
+ * 记录一次幻景进入：`version` 必须是下一次应使用的版本（或当前已进入的版本——重复记录幂等）。
+ * 返回 `{ version, visits, total, repeated }`；顺序错/超过三次上限/坏版本抛错且不写状态。
+ */
+export function noteMirageVisit(state, version) {
+  assertMirageVersion(version)
+  const mirage = ensureMirage(state)
+  const visits = mirage.visits ||= {}
+  const current = Number(visits[String(version)] || 0)
+  // 幂等：同一版本重复记录（例如重放/重试）不重复计数。
+  if (mirage.version === version && current > 0) {
+    return { version, visits: current, total: mirageTotalVisits(state), repeated: true }
+  }
+  const total = mirageTotalVisits(state)
+  if (total >= MIRAGE_VERSIONS.length) throw new Error(`致命幻景最多进入 ${MIRAGE_VERSIONS.length} 次（I–III）`)
+  const expected = total + 1
+  if (version !== expected) throw new Error(`致命幻景版本顺序错误：第 ${expected} 次进入应使用版本 ${expected}`)
+  visits[String(version)] = current + 1
+  mirage.version = version
+  return { version, visits: current + 1, total: total + 1, repeated: false }
+}
+
+/**
+ * 保存某版本的场景局部快照（深拷贝，纯 JSON）。调用方决定快照内容（地点/幕/议程/幻景进度等）；
+ * 主线战役字段不参与。重复保存同版本会覆盖（重试幂等）。返回已保存快照的副本。
+ */
+export function saveMirageVersion(state, version, snapshot) {
+  assertMirageVersion(version)
+  if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+    throw new TypeError('幻景版本快照必须是对象')
+  }
+  assertJsonValue(snapshot, '幻景版本快照')
+  const mirage = ensureMirage(state)
+  mirage.snapshots ||= {}
+  mirage.snapshots[String(version)] = structuredClone(snapshot)
+  mirage.version = version
+  return clone(mirage.snapshots[String(version)])
+}
+
+/** 读某版本的场景局部快照副本；从未保存过返回 null（不创建容器、不写状态）。 */
+export function restoreMirageVersion(state, version) {
+  assertMirageVersion(version)
+  const mirage = readMirage(state)
+  const snapshot = mirage?.snapshots?.[String(version)]
+  return snapshot == null ? null : structuredClone(snapshot)
+}
+
+/** 读档/迁移校验入口：EotE 战役扩展存在时校验幻景子状态形状（不存在则原样通过）。 */
+export function validateEoteMirage(state) {
+  const campaign = state?.campaign
+  if (!campaign || typeof campaign !== 'object') return
+  const eote = campaign.eote ?? null
+  if (!eote) return
+  if (eote.version !== EOTE_STATE_VERSION) throw new TypeError(`不支持的 EotE 战役扩展版本 ${eote.version}`)
+  if (eote.mirage == null) return
+  const error = mirageShapeError(eote.mirage)
+  if (error) throw new TypeError(error)
 }

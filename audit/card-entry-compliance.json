@@ -1,13 +1,13 @@
 {
  "schemaVersion": 1,
  "generatedBy": "tools/audit-card-entry-compliance.mjs",
- "note": "阻断项基线只减不增：baseline 里的卡号是 2026-10-28 扫描时的存量违规；修复后跑 --write 收紧。出现基线外的新违规，--check 失败。",
+ "note": "阻断项基线只减不增：baseline 里的卡号是 2026-10-28 扫描时的存量违规；修复后跑 --write 收紧。出现基线外的新违规，--check 失败。2026-11-08 P0-11：R1 补检局部变量/context 直写后新识别 15 条存量违规（08008 等），属检测范围扩大而非新增债务，随 --write 记入基线。",
  "rules": [
   {
    "id": "R1",
    "name": "directStateWrite",
    "blocking": true,
-   "description": "条目文件直接写运行时状态（state/inv/location/enemy/act/agenda/asset/target/card 的字段或数组）"
+   "description": "条目文件直接写运行时状态（state/inv/location/enemy/act/agenda/asset/target/card 的字段或数组），含经 context.<stateField> 或同文件局部变量别名的间接直写"
   },
   {
    "id": "R2",
@@ -41,19 +41,19 @@
   }
  ],
  "scope": {
-  "entries": 2086,
-  "player": 777,
-  "encounter": 1309,
+  "entries": 2487,
+  "player": 914,
+  "encounter": 1573,
   "cycles01to05": 1341
  },
  "counts": {
-  "directStateWrite": 149,
-  "singleCardField": 0,
+  "directStateWrite": 164,
+  "singleCardField": 30,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
-  "testWrapper": 19,
-  "revelationTestCards": 71,
-  "selfCodeInstanceLookup": 16
+  "testWrapper": 22,
+  "revelationTestCards": 81,
+  "selfCodeInstanceLookup": 20
  },
  "baseline": {
   "directStateWrite": [
@@ -61,14 +61,19 @@
    "01136",
    "01171",
    "01173",
+   "01174",
    "02045",
    "02058",
    "02064",
    "02067",
    "02081",
    "02082",
+   "02096",
    "02098",
    "02135",
+   "02142",
+   "02143",
+   "02146",
    "02160",
    "02161",
    "02162",
@@ -77,11 +82,15 @@
    "02176",
    "02181",
    "02183",
+   "02196",
+   "02197",
    "02199",
+   "02214",
    "02220",
    "02222",
    "02237",
    "02238",
+   "02256",
    "02259",
    "02280",
    "02289",
@@ -96,9 +105,11 @@
    "03055",
    "03056",
    "03075",
+   "03082",
    "03085",
    "03087",
    "03091",
+   "03097",
    "03101",
    "03102",
    "03124",
@@ -125,6 +136,7 @@
    "03338",
    "04005",
    "04044",
+   "04045",
    "04046",
    "04047",
    "04050",
@@ -162,6 +174,7 @@
    "05012",
    "05015",
    "05037",
+   "05045",
    "05047",
    "05051",
    "05054",
@@ -175,6 +188,7 @@
    "05089",
    "05090",
    "05091",
+   "05097",
    "05099",
    "05102",
    "05103",
@@ -205,13 +219,135 @@
    "05275",
    "05336",
    "05339",
-   "05340"
+   "05340",
+   "08008"
   ],
   "reprintDuplicate": [],
   "playConditionGap": []
  },
  "watch": {
-  "singleCardField": [],
+  "singleCardField": [
+   {
+    "field": "chamber.clues",
+    "code": "02199"
+   },
+   {
+    "field": "chamber.connections",
+    "code": "02214"
+   },
+   {
+    "field": "chosen.damageTaken",
+    "code": "02096"
+   },
+   {
+    "field": "chosen.health",
+    "code": "02256"
+   },
+   {
+    "field": "chosen.locked",
+    "code": "01174"
+   },
+   {
+    "field": "chosen.lockedDoorCode",
+    "code": "01174"
+   },
+   {
+    "field": "chosen.roundFightEvadeBonus",
+    "code": "05097"
+   },
+   {
+    "field": "chosen.toweringBeasts",
+    "code": "02256"
+   },
+   {
+    "field": "committed.extraIcons",
+    "code": "05195"
+   },
+   {
+    "field": "entry.hauntGrantId",
+    "code": "05102"
+   },
+   {
+    "field": "entry.removedCards",
+    "code": "04045"
+   },
+   {
+    "field": "flags.collectedAStrangeLiquid",
+    "code": "04279"
+   },
+   {
+    "field": "flags.furyDoomPlaced",
+    "code": "04282"
+   },
+   {
+    "field": "flags.furyDoomThird",
+    "code": "04282"
+   },
+   {
+    "field": "flags.ichtacasPrey",
+    "code": "04137b"
+   },
+   {
+    "field": "flags.referenceResources",
+    "code": "05336"
+   },
+   {
+    "field": "guest.clues",
+    "code": "03082"
+   },
+   {
+    "field": "here.connections",
+    "code": "05133"
+   },
+   {
+    "field": "holder.engaged",
+    "code": "05086"
+   },
+   {
+    "field": "horror.doom",
+    "code": "02146"
+   },
+   {
+    "field": "horror.exhausted",
+    "code": "02143"
+   },
+   {
+    "field": "horror.shadowSpawned",
+    "code": "02142"
+   },
+   {
+    "field": "nahab.exhausted",
+    "code": "05144"
+   },
+   {
+    "field": "picked.doom",
+    "code": "04092"
+   },
+   {
+    "field": "picked.exhausted",
+    "code": "03097"
+   },
+   {
+    "field": "piles.deck",
+    "code": "05090"
+   },
+   {
+    "field": "placed.connections",
+    "code": "05133"
+   },
+   {
+    "field": "records.youAreBeingHunted",
+    "code": "05045"
+   },
+   {
+    "field": "whip.exhausted",
+    "code": "08008"
+   },
+   {
+    "field": "zones.pursuit",
+    "code": "04281"
+   }
+  ],
   "testWrapperCodes": [
    "01167",
    "01173",
@@ -231,7 +367,10 @@
    "07054",
    "07148",
    "07218",
-   "07297"
+   "07297",
+   "08688",
+   "08698",
+   "08713"
   ],
   "revelationTestWrappers": [
    "01167",
@@ -277,7 +416,13 @@
    "07260",
    "07297",
    "07298",
-   "07336"
+   "07336",
+   "08516",
+   "08657",
+   "08658",
+   "08688",
+   "08698",
+   "08713"
   ],
   "revelationTestStubs": [
    "01162",
@@ -306,7 +451,11 @@
    "06322",
    "07096",
    "07097",
-   "07098"
+   "07098",
+   "08612",
+   "08613",
+   "08644",
+   "08645"
   ],
   "selfCodeInstanceLookup": [
    {
@@ -588,10 +737,105 @@
       "text": "playCondition: [{ when: ({ state, inv }) => !(state.playerLocationAttachments || []).some(card => card.code === '07157' && card.location ==="
      }
     ]
+   },
+   {
+    "code": "08019",
+    "file": "src/cards/entries/08019.js",
+    "hits": [
+     {
+      "line": 27,
+      "text": "&& (context?.seat == null || context.seat === inv.seat)"
+     },
+     {
+      "line": 28,
+      "text": "&& (inv.assets || []).some(card => card.code === '08019'),"
+     }
+    ]
+   },
+   {
+    "code": "08031",
+    "file": "src/cards/entries/08031.js",
+    "hits": [
+     {
+      "line": 23,
+      "text": "label: '补给阶段：抽 2 弃 1（近似：重整结束再抽 1 弃 1；牌库 +15 由构筑层结算）',"
+     },
+     {
+      "line": 24,
+      "text": "criteria: ({ inv }) => (inv.assets || []).some(card => card.code === '08031'),"
+     }
+    ]
+   },
+   {
+    "code": "08076",
+    "file": "src/cards/entries/08076.js",
+    "hits": [
+     {
+      "line": 26,
+      "text": "resolve: ({ inv, api }) => {"
+     },
+     {
+      "line": 27,
+      "text": "const candidates = [...new Set(inv.hand || [])].filter(code => levelOf(code) != null && code !== '08076')"
+     }
+    ]
+   },
+   {
+    "code": "08082",
+    "file": "src/cards/entries/08082.js",
+    "hits": [
+     {
+      "line": 34,
+      "text": "!enemy.elite && !enemy.defeated && enemy.location === inv.location && enemy.exhausted"
+     },
+     {
+      "line": 35,
+      "text": "&& !(enemy.attachments || []).some(card => card.code === '08082'))),"
+     },
+     {
+      "line": 38,
+      "text": "&& item.location === inv.location && item.exhausted"
+     },
+     {
+      "line": 39,
+      "text": "&& !(item.attachments || []).some(card => card.code === '08082'))"
+     }
+    ]
    }
   ]
  },
  "fields": {
+  "chamber.clues": [
+   "02199"
+  ],
+  "chamber.connections": [
+   "02214"
+  ],
+  "chosen.attachedTreacheries": [
+   "02096",
+   "02256"
+  ],
+  "chosen.damageTaken": [
+   "02096"
+  ],
+  "chosen.health": [
+   "02256"
+  ],
+  "chosen.locked": [
+   "01174"
+  ],
+  "chosen.lockedDoorCode": [
+   "01174"
+  ],
+  "chosen.roundFightEvadeBonus": [
+   "05097"
+  ],
+  "chosen.toweringBeasts": [
+   "02256"
+  ],
+  "committed.extraIcons": [
+   "05195"
+  ],
   "enemy.damageTaken": [
    "02280",
    "03140",
@@ -629,6 +873,45 @@
   "enemy.preventReady": [
    "05086",
    "05113"
+  ],
+  "entry.hauntGrantId": [
+   "05102"
+  ],
+  "entry.removedCards": [
+   "04045"
+  ],
+  "flags.collectedAStrangeLiquid": [
+   "04279"
+  ],
+  "flags.furyDoomPlaced": [
+   "04282"
+  ],
+  "flags.furyDoomThird": [
+   "04282"
+  ],
+  "flags.ichtacasPrey": [
+   "04137b"
+  ],
+  "flags.referenceResources": [
+   "05336"
+  ],
+  "guest.clues": [
+   "03082"
+  ],
+  "here.connections": [
+   "05133"
+  ],
+  "holder.engaged": [
+   "05086"
+  ],
+  "horror.doom": [
+   "02146"
+  ],
+  "horror.exhausted": [
+   "02143"
+  ],
+  "horror.shadowSpawned": [
+   "02142"
   ],
   "inv.actionsLeft": [
    "02135",
@@ -733,6 +1016,33 @@
    "04093",
    "04225",
    "04293"
+  ],
+  "nahab.doom": [
+   "05123",
+   "05141",
+   "05144"
+  ],
+  "nahab.exhausted": [
+   "05144"
+  ],
+  "picked.doom": [
+   "04092"
+  ],
+  "picked.exhausted": [
+   "03097"
+  ],
+  "piles.deck": [
+   "05090"
+  ],
+  "piles.discard": [
+   "05090",
+   "05107"
+  ],
+  "placed.connections": [
+   "05133"
+  ],
+  "records.youAreBeingHunted": [
+   "05045"
   ],
   "state.acts": [
    "02067",
@@ -894,6 +1204,26 @@
   "target.doom": [
    "01171",
    "04096"
+  ],
+  "whip.exhausted": [
+   "08008"
+  ],
+  "zones.agendaAside": [
+   "05089",
+   "05102",
+   "05107"
+  ],
+  "zones.pursuit": [
+   "04281"
+  ],
+  "zones.sacrificed": [
+   "02196",
+   "02197"
+  ],
+  "zones.setAside": [
+   "02237",
+   "02238",
+   "04282"
   ]
  }
 }

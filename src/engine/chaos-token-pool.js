@@ -1,7 +1,9 @@
 import { beginChaosTest, drawChaosToken, endChaosTest, sealChaosToken } from './chaos-bag.js'
 import { integer, mechanicState } from './mechanic-state.js'
 
-export const POOL_LIMITS = Object.freeze({ bless: 10, curse: 10 })
+// 有限物理标记池上限：祝福／诅咒各 10 枚（TIC），寒霜 8 枚（EotE）。
+// 三种标记共用同一套「袋内＋已揭示＋封印区」计数：上限是实物总数，不是袋内数量。
+export const POOL_LIMITS = Object.freeze({ bless: 10, curse: 10, frost: 8 })
 function tokenName(token) {
   if (!Object.hasOwn(POOL_LIMITS, token)) throw new TypeError(`无效有限池标记 ${token}`)
 }
@@ -90,8 +92,13 @@ export function inspectChaosTokens(state, count) {
   finally { endChaosTest(state, []) }
   return tokens
 }
+// 轮末替换表（祝福/诅咒的延迟替换）只登记这两类；寒霜虽然也有物理池上限，
+// 但不参与轮末替换（存档校验 mechanic-state.js#validateMechanicState 同口径）。
+const SCHEDULED_POOL_TOKENS = ['bless', 'curse']
 export function schedulePoolReplacement(state, from, to) {
   tokenName(from); tokenName(to)
+  const invalid = [from, to].find(token => !SCHEDULED_POOL_TOKENS.includes(token))
+  if (invalid) throw new TypeError(`无效轮末替换标记 ${invalid}`)
   if (from === to) throw new TypeError('替换标记必须不同')
   const data = mechanicState(state, true); data.tokenSchedules ||= []
   data.tokenSchedules.push({ from, to, round: state.round })

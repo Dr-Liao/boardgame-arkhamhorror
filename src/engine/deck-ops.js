@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { blockedByDeckTopLock, deckTopWeaknessShown, passiveDeckTopConfig, sampleRoundEvents, syncPassiveDeckTop } from './eote-investigator-support.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
@@ -269,20 +270,39 @@ function lookAt(state, seat, rawOptions, events) {
     if (zone.owner) putInHand(state, zone.owner, chosen)
     info(state, events, `${inv?.name || '调查员'} 取走「${cardName(chosen)}」。`)
   }
-  // 排列：只对「看过但没拿走」的牌有意义（≤4 张时用全排列询问，避免组合爆炸）。
+  // 排列：只对「看过但没拿走」的牌有意义。
+  //   · ≤4 张沿用旧的全排列枚举（候选顺序与旧对局/回放逐字一致）；
+  //   · >4 张（08066 平行命运看 6 张）改成「逐张选择下一张」的线性询问，避免 6! 候选爆炸；
+  //     两种路径都返回同一个 ordered 数组，放回逻辑不变。
   let ordered = pile
-  if (options.arrange && pile.length > 1 && pile.length <= 4) {
-    const permutations = []
-    const permute = (arr, prefix = []) => {
-      if (!arr.length) { permutations.push(prefix); return }
-      for (let i = 0; i < arr.length; i++) permute(arr.slice(0, i).concat(arr.slice(i + 1)), prefix.concat([arr[i]]))
+  if (options.arrange && pile.length > 1) {
+    if (pile.length <= 4) {
+      const permutations = []
+      const permute = (arr, prefix = []) => {
+        if (!arr.length) { permutations.push(prefix); return }
+        for (let i = 0; i < arr.length; i++) permute(arr.slice(0, i).concat(arr.slice(i + 1)), prefix.concat([arr[i]]))
+      }
+      permute(pile)
+      const answer = requestChoice(state, {
+        kind: 'look', source: options.source || 'lookAt', seat, prompt: '选择放回的顺序（从上到下）。',
+        options: permutations.map((order, index) => ({ id: String(index), cardCodes: order, label: order.map(code => cardName(code)).join(' → ') })),
+      })
+      ordered = permutations[Number(answer)] || pile
+    } else {
+      const remaining = [...pile]
+      const picked = []
+      while (remaining.length > 1) {
+        const answer = requestChoice(state, {
+          kind: 'look', source: options.source || 'lookAt', seat,
+          prompt: `选择放回牌库顶的第 ${picked.length + 1} 张（共 ${pile.length} 张，从上到下）。`,
+          options: remaining.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })),
+        })
+        const index = Number(answer)
+        if (!Number.isInteger(index) || index < 0 || index >= remaining.length) throw new Error('Invalid look ordering selection')
+        picked.push(remaining.splice(index, 1)[0])
+      }
+      ordered = [...picked, ...remaining]
     }
-    permute(pile)
-    const answer = requestChoice(state, {
-      kind: 'look', source: options.source || 'lookAt', seat, prompt: '选择放回的顺序（从上到下）。',
-      options: permutations.map((order, index) => ({ id: String(index), cardCodes: order, label: order.map(code => cardName(code)).join(' → ') })),
-    })
-    ordered = permutations[Number(answer)] || pile
   }
   const returned = [...ordered]
   if (returned.length) {
@@ -317,7 +337,11 @@ function lookAt(state, seat, rawOptions, events) {
 function scryDeck(state, seat, effect, events) {
   const inv = state.investigators[seat]
   const choices = []
-  for (const target of aliveInvestigators(state)) choices.push({ id: 'deck:' + target.seat, label: target.name + ' 的牌库' })
+  // 08006 预示者：被封锁的牌库不能被查看/重排（牌库里的卡牌「不能被以任何方式操纵」）。
+  for (const target of aliveInvestigators(state)) {
+    if (blockedByDeckTopLock(state, target)) continue
+    choices.push({ id: 'deck:' + target.seat, label: target.name + ' 的牌库' })
+  }
   choices.push({ id: 'encounter', label: '遭遇牌库' })
   const source = choices.length === 1 ? choices[0].id : requestChoice(state, {
     kind: 'scry', source: effect.source || 'scry', seat, prompt: '选择要查看的牌库顶 3 张。',
@@ -368,6 +392,13 @@ function searchDeck(state, seat, rawOptions, events) {
   const inv = state.investigators[seat]
   const options = rawOptions?.choose ? rawOptions : normalizeSearchOptions(rawOptions)
   if (!inv) return []
+  // 08006 预示者：「牌库顶揭示「预示者」时，你牌库里的卡牌不能被查找、抽取，或以任何
+  // 方式操纵」。此前封锁只在 drawCards 生效，检索/搬运都能绕过（扫描报告 P0-10 #2）。
+  const searchLock = blockedByDeckTopLock(state, inv)
+  if (searchLock) {
+    info(state, events, `🚫 ${inv.name} 的牌库顶被「${cardName(searchLock.code)}」封锁，无法检索牌库。`)
+    return []
+  }
   const matches = inv.deck.filter(code => {
     const def = cardDef(code)
     if (!def) return false
@@ -436,6 +467,18 @@ function moveCardTo(state, inv, rawSpec, events) {
   const found = findZoneCard(state, inv, spec)
   if (!found) {
     info(state, events, `没有找到要移动的牌（${spec.code || spec.id}）。`)
+    return null
+  }
+  // 08006 预示者：牌库顶揭示预示者期间，牌库里的卡牌不能被「以任何方式操纵」。
+  // 封锁点是「被封锁调查员的牌库」：从该牌库取牌、或把牌放到该牌库顶/底都算操纵
+  // （此前 moveCardTo 无读点，可直接把顶牌移入弃牌堆，绕过 2 行动弃置的代价）。
+  const destinationOwner = state.investigators[spec.ownerSeat ?? seat] || inv
+  if (found.zone === 'deck' && blockedByDeckTopLock(state, found.owner)) {
+    info(state, events, `🚫 ${found.owner.name} 的牌库顶被「${cardName(blockedByDeckTopLock(state, found.owner).code)}」封锁，无法操纵牌库。`)
+    return null
+  }
+  if ((spec.to === 'deckTop' || spec.to === 'deckBottom') && blockedByDeckTopLock(state, destinationOwner)) {
+    info(state, events, `🚫 ${destinationOwner.name} 的牌库顶被「${cardName(blockedByDeckTopLock(state, destinationOwner).code)}」封锁，无法操纵牌库。`)
     return null
   }
   // 先摘出来：共享区域是 state 上的数组，场上卡要触发离场钩子。
@@ -508,6 +551,11 @@ function moveCardTo(state, inv, rawSpec, events) {
 function drawCards(state, inv, n, events) {
   inv = effectRecipient(state, inv)
   if (!inv || !playerEffectCanAffect(state, inv.seat)) return []
+  // 08006 预示者：牌库顶被揭示的弱点封锁时不能抽牌。
+  if (blockedByDeckTopLock(state, inv)) {
+    info(state, events, `🚫 ${inv.name} 的牌库顶被「${cardName(blockedByDeckTopLock(state, inv).code)}」封锁，无法抽牌。`)
+    return []
+  }
     if (capabilityBlocked(state, inv, 'drawCards')) return []
   // 第 2 步 P2.6：无牌组故事调查员不能抽牌（也不进入重洗/弃牌逻辑）。
   if (inv?.storyInvestigator) {
@@ -555,6 +603,11 @@ function drawCards(state, inv, n, events) {
         putInHand(state, inv, code)
         const note = registeredEntry(def.code)?.weaknessHandNote
         texts.push(note || cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
+      } else if (registeredEntry(def.code)?.flags?.weaknessStaysOnDeckTop === true) {
+        // 08006 预示者：弱点揭示后放回牌库顶（不结算、不进弃牌堆），保持揭示；弃置走 2 行动能力。
+        inv.deck.push(code)
+        texts.push(`${inv.name} 将「${cardName(code)}」放在牌库顶。`)
+        syncPassiveDeckTop(state, inv.seat)
       } else {
         resolveWeakness(state, inv, def, events, texts)
         if (inv.shuffleWeaknessAfterResolution === code) {
@@ -595,6 +648,18 @@ function drawCards(state, inv, n, events) {
       when: 'cardsDrawn', seat: inv.seat, location: inv.location, drawnCodes,
       windowInstance: `draw:${state.drawBatchSerial}`,
     }, events, { allowNested: true })
+  }
+  // P5 地球边缘：牌库顶常驻揭示同步；诺曼的强制效果把被揭示的牌库顶弱点抽掉（预示者自身除外）。
+  syncPassiveDeckTop(state, inv.seat)
+  sampleRoundEvents(state)
+  for (let guard = 0; guard < 20; guard++) {
+    const config = passiveDeckTopConfig(inv.code)
+    if (!config?.drawWeakness) break
+    const top = deckTopWeaknessShown(state, inv)
+    if (!top || registeredEntry(top.code)?.flags?.weaknessStaysOnDeckTop === true) break
+    inv.deck.pop()
+    resolveWeakness(state, inv, cardDef(top.code), events, texts)
+    syncPassiveDeckTop(state, inv.seat)
   }
   return texts
 }

@@ -3,6 +3,22 @@ import { SCENARIO_MUSIC, SCENARIO_PLAYLISTS } from './scenario-music.js'
 import { subscribeLocaleChange, t } from './i18n.js'
 
 export const MUSIC_TRACKS = [
+  {"id":"eoteDespairAndTriumph","title":"Despair and Triumph","mood":"坠机冰原、寻找庇护、极地求生","file":"common/despair-and-triumph.mp3","isrc":"USUAN1400012"},
+  {"id":"eoteMoorland","title":"Moorland","mood":"坠机冰原、寻找庇护、极地求生","file":"common/moorland.mp3","isrc":"USUAN1200106"},
+  {"id":"eoteSpacialWinds","title":"Spacial Winds","mood":"风雪寻人、失踪伙伴、冰隙低语","file":"common/spacial-winds.mp3","isrc":"USUAN1100203"},
+  {"id":"eoteInexorable","title":"Inexorable","mood":"风雪寻人、失踪伙伴、冰隙低语","file":"common/inexorable.mp3","isrc":"USUAN1200097"},
+  {"id":"eoteDayOfChaos","title":"Day of Chaos","mood":"营地遇袭、黑雾围困、守住庇护","file":"common/day-of-chaos.mp3","isrc":"USUAN1300040"},
+  {"id":"eoteDarkeningDevelopments","title":"Darkening Developments","mood":"营地遇袭、黑雾围困、守住庇护","file":"common/darkening-developments.mp3","isrc":"USUAN1100267"},
+  {"id":"eoteEveningFallHarp","title":"Evening Fall (Harp)","mood":"记忆迷宫、伙伴往事、幻景救赎","file":"common/evening-fall-harp.mp3","isrc":"USUAN1100236"},
+  {"id":"eoteLostTime","title":"Lost Time","mood":"记忆迷宫、伙伴往事、幻景救赎","file":"common/lost-time.mp3","isrc":"USUAN1500032"},
+  {"id":"eoteCrossingTheChasm","title":"Crossing the Chasm","mood":"负重登山、险峻山道、远征不归","file":"common/crossing-the-chasm.mp3","isrc":"USUAN1700026"},
+  {"id":"eoteLongRoadAheadB","title":"Long Road Ahead B","mood":"负重登山、险峻山道、远征不归","file":"common/long-road-ahead-b.mp3","isrc":"USUAN1100589"},
+  {"id":"eoteSpacialHarvest","title":"Spacial Harvest","mood":"极地古城、异星遗迹、远古机关","file":"common/spacial-harvest.mp3","isrc":"USUAN1100653"},
+  {"id":"eoteShadowlands3Machine","title":"Shadowlands 3 - Machine","mood":"极地古城、异星遗迹、远古机关","file":"common/shadowlands-3-machine.mp3","isrc":"USUAN1700036"},
+  {"id":"eoteScpX2xUnseenPresence","title":"SCP-x2x (Unseen Presence)","mood":"冰下设施、探索封印、黑暗深处","file":"common/scp-x2x-unseen-presence.mp3","isrc":"USUAN2000008"},
+  {"id":"eoteScpX4xMindLeech","title":"SCP-x4x (Mind Leech)","mood":"冰下设施、探索封印、黑暗深处","file":"common/scp-x4x-mind-leech.mp3","isrc":"USUAN2000010"},
+  {"id":"eoteBlackVortex","title":"Black Vortex","mood":"邪雾苏醒、封印中枢、最后逃离","file":"common/black-vortex.mp3","isrc":"USUAN1300037"},
+  {"id":"eoteTheComplex","title":"The Complex","mood":"邪雾苏醒、封印中枢、最后逃离","file":"common/the-complex.mp3","isrc":"USUAN1300025"},
   {id: "ticIceDemon",title: "Ice Demon",mood: "潮水洞穴中的空洞低鸣",file: "common/ice-demon.mp3",isrc: "USUAN1200061"},
   {id: "ticBentAndBroken",title: "Bent and Broken",mood: "失忆与水下追猎",file: "common/bent-and-broken.mp3",isrc: "USUAN1200087"},
   {id: "ticAwkwardMeeting",title: "Awkward Meeting",mood: "失踪案中的疑点与不安",file: "common/awkward-meeting.mp3",isrc: "USUAN1100574"},
@@ -114,6 +130,7 @@ export const MUSIC_PLAYLISTS = Object.freeze({
   // P10：食梦者（五循环）营地/关间播放整条循环的曲目并集；章节内再按 scenarioPlaylistId 细分。
   theDreamEaters: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDreamEaters).flatMap(chapter => chapter.tracks))]),
   theInnsmouthConspiracy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theInnsmouthConspiracy).flatMap(chapter => chapter.tracks))]),
+  edgeOfTheEarth: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.edgeOfTheEarth).flatMap(chapter => chapter.tracks))]),
   ...SCENARIO_PLAYLISTS,
 })
 export function musicTracksForPlaylist(id) {

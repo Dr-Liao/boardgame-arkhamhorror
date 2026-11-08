@@ -59,7 +59,8 @@ function validateCaptured(state, captured) {
 export function validateMechanicState(state) {
   const data = mechanicState(state)
   if (!data) return // Old saves stay byte-for-byte unchanged.
-  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards','captured'])
+  // 'eote' 是 P2 新增的七循环可选扩展（容器形状/版本见 eote-state.js）；旧存档没有该键时保持原状。
+  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards','captured','eote'])
   validateEnemyZones(state,data.enemyZones)
   validateCaptured(state, data.captured)
   if (data.version !== 1) throw new TypeError('不支持的可选机制存档版本')

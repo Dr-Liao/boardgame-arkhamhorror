@@ -20,11 +20,14 @@ import { clearSpellCredit, grantSpellCredit } from './spell-actions.js'
 import { beginAirTurn, floodLevel } from './flood.js'
 // P6（食梦者）：受限额外行动（托尼·摩尔根的赏金行动）的授权与清理。
 import {
-  clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
+  RESTRICTED_ACTION_KINDS, clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
 } from './restricted-actions.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { dreamGateEntryError, setDreamGatesAside } from './dream-gate.js'
 import { swarmGroup } from './swarm.js'
+import {
+  clearAttackHistory, clearExpiredFlipAfterTestMarkers, resetRoundEvents, syncAllPassiveDeckTops,
+} from './eote-investigator-support.js'
 
 export function createTurn(deps) {
   const {
@@ -95,6 +98,8 @@ function runMythos(state, repeated = false) {
   state.phase = 'mythos'
   state.phaseActionCount = 0
   if (!repeated) state.round += 1
+  if (!repeated) resetRoundEvents(state)
+  if (!repeated) syncAllPassiveDeckTops(state)
   if (!repeated && hasPlayerWindow(state, 'roundStarts')) reactionWindow(state, 'roundStarts', { when: 'roundStarts' }, events)
   // 「轮末弃置」的支援（如柯尔特袖珍手枪）在新一轮开始时弃掉。
   if (!repeated) {
@@ -556,11 +561,17 @@ function beginInvestigationPhase(state, events, repeated = false) {
       delete inv.extraActionNextTurn
     }
     clearSpellCredit(inv)
-    // P6（食梦者）：上一轮的受限额外行动额度一并清掉（回合开始会重新授予）。
-    const rule = investigatorRule(inv.code)?.restrictedAction
-    if (rule?.kind) clearRestrictedAction(inv, rule.kind)
+    // P6（食梦者）+ P0-10：上一轮的受限额外行动额度一并清掉（回合开始会重新授予）。
+    // 修复前只清「声明了 investigator.restrictedAction 的调查员」，08010 陈丽丽的
+    // fightEvade 额度（08014a 发放）没有声明，跨轮残留：新回合 actionsLeft=3 被 3 点
+    // 受限额度抵掉 → 普通行动可用 0。这里对所有 kind 统一按轮清理（额度本身就是
+    // actionsLeft 的最后 N 个行动，actionsLeft 已被重置，残留计数只会污染可用行动数）。
+    for (const kind of RESTRICTED_ACTION_KINDS) clearRestrictedAction(inv, kind)
     if (inv.pendingActionLoss) delete inv.pendingActionLoss[state.round]
   }
+  // 延迟翻面标记的轮边界过期点：08013a 用过但本回合没做检定时，+5 效果随回合结束清除，
+  // 标记必须同步作废，不能在之后任意一次检定中翻面（P0-10 #1）。
+  clearExpiredFlipAfterTestMarkers(state)
   // Phase 1（A1）：阶段级临时修正改由 state.effects 承载，上面的 expireEffects 已经清掉，
   // 这里保留旧的 phaseStatBonus 兼容清理（外部存档/测试可能仍有该字段）。
   for (const inv of aliveInvestigators(state)) inv.phaseStatBonus = null
@@ -622,6 +633,7 @@ function runBetweenInvestigationPhases(state, events) {
 
 function doEndTurn(state, seat, events) {
   const inv = state.investigators[seat]
+  clearAttackHistory(inv)
   for (const asset of inv.assets.filter(item => item.sleightOfHand?.round === state.round
     && item.sleightOfHand.turnSeat === state.currentSeat).slice()) {
     leaveAsset(state, inv, asset, events)

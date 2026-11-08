@@ -18,6 +18,8 @@ import { actionEntityById, entityActionDescriptors, entityAbilityInRange, parley
 // P6（食梦者）：受限行动的 kind 由 table-decisions 的 restrictedKindOfMove 统一判定。
 import { spellOnlyActionsOf } from './spell-actions.js'
 import { actionsAvailable } from './restricted-actions.js'
+// 地球边缘 P5：牌库顶常驻揭示弱点（08006 预示者）的普通行动枚举。
+import { deckTopWeaknessShown } from './eote-investigator-support.js'
 // 2026-10-28 调试控制台（CONTRACT §3）：纯函数直接 import，不新增工厂依赖。
 import { debugMoveError, isDebugMove } from './debug.js'
 import { isVeiledLocation, veiledFlipBlockedReason } from './veiled.js'
@@ -382,6 +384,17 @@ export function createMoves(deps) {
   if (loc && loc.ability && locationAbilityAvailable(state, loc, inv)
     && !activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotTriggerLocationAbilities)) {
     moves.push({ action: 'locationAbility', locationId: loc.id, label: `📍 ${loc.ability.label}` })
+  }
+
+  // 地球边缘 P5（08006 预示者）：牌库顶常驻揭示的弱点可在普通行动里花 2 行动弃掉。
+  // 只有条目声明 flags.activatableWhileOnDeckTop、且仍有 2 个普通行动额度时出现。
+  {
+    const topWeakness = deckTopWeaknessShown(state, inv)
+    if (topWeakness && registeredEntry(topWeakness.code)?.flags?.activatableWhileOnDeckTop === true
+      && actionsAvailable(inv, null) >= 2) {
+      moves.push({ action: 'deckTopWeaknessDiscard', cardId: topWeakness.code,
+        label: `弃掉牌库顶的「${cardName(topWeakness.code)}」（2 行动）` })
+    }
   }
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
@@ -792,6 +805,14 @@ export function createMoves(deps) {
       if (!locationAbilityAvailable(state, loc, inv)) return '该地点能力当前不可用'
       const abilityError = effectError(state, inv, loc.ability.effect)
       if (abilityError) return abilityError
+      return null
+    }
+    case 'deckTopWeaknessDiscard': {
+      // 地球边缘 P5（08006 预示者）：牌库顶常驻揭示的弱点，花 2 行动弃掉。
+      const top = deckTopWeaknessShown(state, inv)
+      if (!top || top.code !== move.cardId) return '牌库顶没有可弃掉的揭示弱点'
+      if (registeredEntry(top.code)?.flags?.activatableWhileOnDeckTop !== true) return '这张牌不能在牌库顶弃掉'
+      if (actionsAvailable(inv, null) < 2) return '行动点不足（弃掉牌库顶弱点需要 2 行动）'
       return null
     }
     case 'shortcutMove': {

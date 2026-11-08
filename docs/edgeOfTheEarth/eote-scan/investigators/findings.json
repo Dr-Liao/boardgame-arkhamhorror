@@ -1,0 +1,1052 @@
+{
+  "area": "investigators",
+  "auditor": "inv-auditor",
+  "method": "独立复核（不复算账本）：逐卡以 cards-data 卡面（text/textZh/backText/backTextZh）对照单卡条目 + 引擎读点；D2 查 api.choice/api.info/界面投影；D4 用 grep 核对声明字段读点、直写状态、引擎卡号分支；D5 比对同机制重复实现；另审 availability/deckbuilding/web-deck-rules/investigator-data 构筑接入与平行版本边界。运行 in-process 测试（5 个 eote-investigator-*.test.mjs，39/39 通过）并逐条核对测试断言强度；用 games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/investigators/probes.mjs 做 8 个只读运行时探针复现可疑点。",
+  "generatedAt": "2026-11-08",
+  "scope": {
+    "codes": ["08001", "08002", "08003", "08004", "08005", "08006", "08007", "08008", "08009", "08010", "08011a", "08011b", "08012a", "08012b", "08013a", "08013b", "08014a", "08014b", "08015", "08016", "08017", "08018"],
+    "count": 22,
+    "partition": "eoteInvestigators",
+    "testRuns": [
+      "node tests/eote-investigator-daniela.test.mjs -> 7/7 pass",
+      "node tests/eote-investigator-norman.test.mjs -> 6/6 pass",
+      "node tests/eote-investigator-monterey.test.mjs -> 7/7 pass",
+      "node tests/eote-investigator-lily.test.mjs -> 12/12 pass",
+      "node tests/eote-investigator-bob.test.mjs -> 7/7 pass"
+    ],
+    "ledgerUnderReview": "audit/eote-investigators.json (status=verified, gates 全 true)",
+    "notVerifiable": "浏览器账本 audit/eote-investigators-browser.json / tools/run-eote-investigators-browser.mjs 需真实大厅 HTTP，本沙箱禁 spawn，未复跑；nodeAcceptance 侧已复跑。"
+  },
+  "summary": {
+    "cards": 22,
+    "match": 14,
+    "approximation": 5,
+    "gap": 3,
+    "blocked": 0,
+    "accepted": 14,
+    "issuesBySeverity": { "high": 5, "medium": 13, "low": 13 }
+  },
+  "priorLedgerConflicts": [
+    {
+      "target": "audit/eote-investigators.json#items[08006].status=verified",
+      "claim": "08006 三个 flag 全部 verified；docs/edgeOfTheEarth/investigators.md:12 写「置于牌库顶后封锁抽牌与操纵」",
+      "reality": "blockedByDeckTopLock 只在 deck-ops.js#drawCards:532 被读；searchDeck（deck-ops.js:387-444）与洗牌/弃顶等操纵路径无读点。运行时探针 P5 在预示者揭示于牌库顶时 searchDeck 仍取走 01031。",
+      "evidence": "src/engine/eote-investigator-support.js:159-165 / src/engine/deck-ops.js:387-444,532-533 / games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/investigators/probes.mjs"
+    },
+    {
+      "target": "audit/eote-investigators.json#items[08005].status=verified",
+      "claim": "伊波恩之书第二条 [fast]「把牌库顶投入同地点调查员执行的符合条件的检定」verified；docs/edgeOfTheEarth/investigators.md:26 称 commitDeckTop 经 ctx.api 暴露",
+      "reality": "commitDeckTop 未走 commit-rules.js#canCommitToTest（无图标匹配/额外费用检查）、不校验检定执行者是否与书主同地点、不把全部图标按检定技能过滤；投入后也不重新 sync 牌库顶。运行时探针 P3a/P3b 复现。",
+      "evidence": "src/engine/eote-investigator-support.js:229-253 / src/engine/commit-rules.js:19-54 / src/engine/stats.js:327 / src/cards/entries/08005.js:38-47"
+    },
+    {
+      "target": "audit/eote-investigators.json#items[08013a]",
+      "claim": "08013a「下一次技能检定 +5，检定结束后翻面」verified",
+      "reality": "效果过期点 expireEffects(endOfTest) 与 applyPendingFlipAfterTests 都是全局的：任意调查员的检定结束都会清掉陈丽丽的 +5 并翻面。运行时探针 P8 复现。测试只覆盖单人 happy path。",
+      "evidence": "src/engine/tests.js:1533,596-600 / src/engine/eote-investigator-support.js:111-135 / src/cards/entries/08013a.js:22-33"
+    },
+    {
+      "target": "audit/eote-investigators.json#items[08004]",
+      "claim": "牌库顶常驻揭示、强制抽弱点、旧印换牌 verified",
+      "reality": "①打出牌库顶后没有人重新 sync（play-channels 无 sync 读点），顶牌在抽牌/轮初前不再揭示；②强制抽弱点只在 drawCards 尾部执行，不是「揭示到弱点即抽」；③public:false 且 web 文案「牌库顶（仅本人可见）」与印刷 revealed（公开）不一致；④旧印换牌用 api.moveCard（固定 state.currentSeat）在多人局会换错座位。探针 P1/P2/P6 复现。",
+      "evidence": "src/engine/deck-ops.js:630-640 / src/engine/api-test.js:199 / src/cards/entries/08004.js:21,37-42 / web/locales/zh-CN.misc.js:141"
+    },
+    {
+      "target": "audit/eote-investigators.json#items[08014a] + tests/eote-investigator-lily.test.mjs:238-262",
+      "claim": "08014a「至多 3 次免费战斗/躲避行动，然后翻至 Broken」verified",
+      "reality": "测试第 246 行直接断言「使用后立即是 08014b」——把与卡面顺序相反的行为固化进断言：翻面发生在获得额度之前，随后 3 次战斗/躲避失去 +1 敏捷（探针 P4：4→3）；且卡面「one at a time / different」未建模，额度可留到本回合之后使用。",
+      "evidence": "src/cards/entries/08014a.js:26-31 / tests/eote-investigator-lily.test.mjs:246"
+    },
+    {
+      "target": "audit/card-entry-compliance.json / games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/screen/primitive-compliance.json",
+      "claim": "R1 directStateWrite 0 条新增；primitive-compliance.directWrites=0",
+      "reality": "审计工具正则只匹配 state./inv./location./enemy./act./agenda./asset./target./card. 前缀，08008 用局部变量 `whip.exhausted = true` 直写运行时状态，未被检出（引擎已有 api.exhaust，src/engine/api-misc.js:520-527）。",
+      "evidence": "src/cards/entries/08008.js:30 / tools/audit-card-entry-compliance.mjs:39-47"
+    }
+  ],
+  "cards": [
+    {
+      "code": "08001",
+      "name": "Daniela Reyes",
+      "nameZh": "丹妮拉·雷耶丝",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "[reaction] After an enemy attacks you (except an attack of opportunity you provoked), even if that attack was canceled: Either deal 1 damage to that enemy, or automatically evade it.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08001.js:27-50（reaction/enemyAttacked；criteria 排除 attack.kind==='opportunity'；api.choice 二选一）；src/engine/enemies.js:233-251（被取消攻击也开 enemyAttacked 窗口）:329-335（结算后开窗）",
+          "note": "双选项均有中文 label/prompt；单选项时不询问直接结算。"
+        },
+        {
+          "text": "[elder_sign] effect: +1. If you were attacked by an enemy this round, you automatically succeed, instead.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08001.js:19,20-26（autoSuccess）；src/engine/tests.js:714-715,1078-1092（elderAutoSuccess 读取）；src/engine/eote-investigator-support.js:44-64（攻击历史按 round 过滤）",
+          "note": "攻击历史由引擎写（含取消攻击），条目只读；回合结束清空在 src/engine/turn.js:626-628。"
+        },
+        {
+          "text": "Back: Deck Size 30；Guardian 0 / Survivor 1-5 / Neutral 0-5 / 至多 5 张其他 0 级 Survivor；专属依赖 Mechanic's Wrench、Mob Goons、1 随机基础弱点。",
+          "status": "implemented",
+          "evidence": "src/cards/cards-data.js（INVESTIGATORS['08001'].deckOptions/deckRequirements）；src/deck/deckbuilding.js:333-372（专属依赖自动加入）；src/deck/availability.js:134（dependencyOnly）；tests/eote-investigator-daniela.test.mjs:85-106（30 张、validateDeckRules 0 错误）",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08001.js:41-46（选择带 prompt/中文 label）；src/engine/enemies.js:238,295-299（攻击/取消日志）；旧印自动成功由 tests.js:1501 结果结算呈现",
+        "note": "被取消攻击仍触发反应的行为在测试里直接构造窗口（daniela.test.mjs:144-149），真实 enemyAttack 取消路径只有 08003 测试覆盖到窗口开启。"
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-daniela.test.mjs:108-129（旧印/自动成功）、129-155（反应/取消/趁乱）、189-198（攻击历史清空）",
+        "note": "「被取消攻击仍触发」用的是直接 reactionWindow 注入而非真实取消链路，证据强度中等。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08002",
+      "name": "Mechanic's Wrench",
+      "nameZh": "机修工的扳手",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "[fast] Exhaust Mechanic's Wrench: Choose an enemy at your location. That enemy attacks you.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08002.js:14-24（kind free + cost.exhaust + target 同地点）；src/engine/api-card.js:374-378（api.enemyAttackByCard，kind='effect'）；tests/eote-investigator-daniela.test.mjs:162-168",
+          "note": "target 选择器由引擎枚举，玩家可感知。"
+        },
+        {
+          "text": "[action]: Fight. Use this ability only against an enemy that has attacked you since the end of your last turn. You get +2 [combat] for this attack and deal +1 damage for this attack.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08002.js:25-35（target.query 读 inv.attackedSinceTurnEnd；api.fight combatBonus:2 damageBonus:1）；src/engine/eote-investigator-support.js:44-64；tests/eote-investigator-daniela.test.mjs:170-187",
+          "note": "攻击历史只对声明 tracksAttacks 的调查员写入（08001），08002 与 08001 同属丹妮拉牌组，依赖关系成立但隐含（见 D5 备注）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08002.js:17,28（中文 label）；target.kind='enemy' 由引擎弹出目标选择；api.fight 走标准攻击日志",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-daniela.test.mjs:157-187",
+        "note": "+2 战斗未直接断言数值（用 chaosBag +5 保证成功）；+1 伤害用 damageTaken>=2 间接断言。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08003",
+      "name": "Mob Goons",
+      "nameZh": "黑帮暴徒",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Hunter. Prey - Daniela Reyes only.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08003.js:15（enemyWeakness {hunter, prey}）；src/engine/card-lookup.js:76-101（prey->bearer、hunter 合并）；src/engine/enemies.js:531（bearerSeat=抽到它的座位）；tests/eote-investigator-daniela.test.mjs:221-237",
+          "note": ""
+        },
+        {
+          "text": "This enemy's attacks cannot be canceled.",
+          "status": "implemented",
+          "evidence": "src/engine/enemies.js:232-236（enemyAttack 取消窗口后按 enemyRuleFlags.attacksCannotBeCancelled 复位）；tests/eote-investigator-daniela.test.mjs:200-219",
+          "note": "读点通用（03068b 同字段），无卡号分支。"
+        },
+        {
+          "text": "Damage/horror dealt by this enemy's attacks is treated as direct.",
+          "status": "implemented",
+          "evidence": "src/engine/enemies.js:311-315（applyHarm 第 6 参 direct=enemyRuleFlags.attackHarmDirect）；tests/eote-investigator-daniela.test.mjs:239-248（支援不能分担）",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/engine/enemies.js:234,295（不可取消日志+攻击呈现）；直接伤害落在调查员而非支援，牌桌可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-daniela.test.mjs:200-249",
+        "note": "取消/直接伤害都走真实 enemyAttack 路径，断言强度高。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08004",
+      "name": "Norman Withers",
+      "nameZh": "诺曼·威瑟斯",
+      "verdict": "gap",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "Play with the top card of your deck revealed.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08004.js:21（deckTop public:false）；src/engine/eote-investigator-support.js:196-220（syncPassiveDeckTop）；src/engine/setup.js:357、src/engine/turn.js:100、src/engine/deck-ops.js:630（只有这三处同步）",
+          "note": "①打出牌库顶后 play-channels 只 consume/markPlayed，无人再 sync → 顶牌直到下次抽牌/轮初才重新揭示（探针 P1）；②public:false 与印刷 revealed 不符（web 文案直接写「仅本人可见」）。"
+        },
+        {
+          "text": "Once per round, you may play the top card of your deck as if it were in your hand, at -1 resource cost.",
+          "status": "implemented",
+          "evidence": "src/engine/play-channels.js:303-318（deckTop 通道，discount 来自揭示记录）；src/engine/eote-deck-top.js:120-136（每轮一次 played 记录）；tests/eote-investigator-norman.test.mjs:138-164",
+          "note": "折扣/每轮一次/行动消耗均有测试；但依赖上一条的揭示记录，sync 缺口会让该通道短暂消失。"
+        },
+        {
+          "text": "Forced - After a weakness is revealed while on top of your deck: Draw it.",
+          "status": "approximation",
+          "evidence": "src/engine/deck-ops.js:629-640（强制抽取写死在 drawCards 尾部循环）；src/engine/eote-investigator-support.js:167-173（deckTopWeaknessShown 仅判定）",
+          "note": "「揭示瞬间」不触发；只有下一次 drawCards 调用（哪怕 n=0）才抽。测试正是用 drawCards(0) 触发的（norman.test.mjs:174）。"
+        },
+        {
+          "text": "[elder_sign] effect: +X. You may swap the top card of your deck with a card in your hand. X is the resource cost of the top card of your deck.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08004.js:23-47（api.cardCost 取 X；api.choice 可选跳过）；tests/eote-investigator-norman.test.mjs:80-104",
+          "note": "X 与换牌单人可复现；多人时 api.moveCard 固定用 state.currentSeat（src/engine/api-test.js:199），非本人回合执行检定时会换错座位的牌（探针 P6）。"
+        }
+      ],
+      "perceivability": {
+        "status": "partial",
+        "evidence": "web/mechanic-ui.js:212-214 + web/locales/zh-CN.misc.js:141（牌库顶只显示给本人，且文案「仅本人可见」）；integration/mechanic-view.js:64-67 同类投影",
+        "note": "印刷 revealed 是公开信息；当前实现把它当私有信息隐藏，其他玩家无法看到诺曼牌库顶。"
+      },
+      "tests": {
+        "status": "partial",
+        "evidence": "tests/eote-investigator-norman.test.mjs:60-104,138-179",
+        "note": "构筑/旧印/常驻揭示/强制抽都有断言，但：①强制抽用 drawCards(0) 触发；②没有「打出顶牌后重新揭示」断言；③没有可见性（public）断言；④没有多人座位断言。"
+      },
+      "issues": [
+        {
+          "severity": "high",
+          "dimension": "impl-vs-text",
+          "summary": "打出牌库顶后不再重新揭示：常驻「top card revealed」在下次抽牌/轮初前失效，deckTop 打出通道也随之消失",
+          "evidence": "src/engine/play-channels.js:303-318（无 sync 调用）/ src/engine/eote-deck-top.js:109-118（markDeckTopPlayed 删除记录）/ src/engine/eote-investigator-support.js:196-220",
+          "suggestion": "在 deckTop 通道结算成功（consumeDeckTop）与所有牌库顶变化点统一调用 syncPassiveDeckTop；或把同步挂到 reveal 状态读取处，保证不变量「声明 deckTop 的调查员只要有牌就有揭示记录」。"
+        },
+        {
+          "severity": "high",
+          "dimension": "impl-vs-text",
+          "summary": "「揭示到弱点即强制抽取」被实现为 drawCards 尾部惰性抽取，非揭示时点触发；被揭示的弱点可长期停在牌库顶",
+          "evidence": "src/engine/deck-ops.js:629-640 / src/cards/entries/08004.js:6,12 注释也写「揭示到弱点时强制抽取」",
+          "suggestion": "把弱点强制抽取并入 syncPassiveDeckTop（reveal 之后立即 drawWeakness），drawCards 尾部只作为兜底。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "perceivability",
+          "summary": "牌库顶揭示被做成私有信息（public:false，UI 文案「仅本人可见」），与印刷 revealed（公开）不一致；多人局信息不对称",
+          "evidence": "src/cards/entries/08004.js:21 / web/locales/zh-CN.misc.js:141 / web/mechanic-ui.js:212-214",
+          "suggestion": "改为 public:true 并更新界面文案；若坚持私密口径，应在 audit/known-deviations 与卡条目注释里明示近似。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "旧印换牌调用 api.moveCard，后者固定按 state.currentSeat 操作；非本人回合（如神话阶段被迫检定）会换错调查员的牌并留下错位的牌库顶记录",
+          "evidence": "src/cards/entries/08004.js:37-42 / src/engine/api-test.js:199 / src/engine/turn.js:87-147（神话阶段逐座位 drawEncounter 不改 currentSeat）+ 探针 P6",
+          "suggestion": "给 swap 提供显式 seat 参数（api.moveCard 增加 ownerSeat/spec.seat 透传），或新增 api.investigatorTools.swapDeckTop(seat, handCode)。"
+        },
+        {
+          "severity": "low",
+          "dimension": "primitive",
+          "summary": "eote-investigator-support 里 deckTopConfig(seat) 调 passiveDeckTopConfig() 丢参数恒返回 null，且 deckTopConfig/passiveDeckTopSeat 无任何调用点（死代码）",
+          "evidence": "src/engine/eote-investigator-support.js:150-157",
+          "suggestion": "删除死导出，或在函数内传 inv.code 并接入调用方。"
+        },
+        {
+          "severity": "low",
+          "dimension": "docs",
+          "summary": "强制抽弱点测试用 drawCards(0) 触发引擎尾部逻辑，未覆盖真实触发时点；旧印换牌未覆盖多人座位",
+          "evidence": "tests/eote-investigator-norman.test.mjs:166-179 / 同上:80-104",
+          "suggestion": "补「打出顶牌后立即抽取新顶弱点」「2 人局非本人回合旧印换牌」用例。"
+        }
+      ]
+    },
+    {
+      "code": "08005",
+      "name": "Livre d'Eibon",
+      "nameZh": "伊波恩之书",
+      "verdict": "gap",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "[fast] Exhaust Livre d'Eibon: Swap the top card of your deck with a card in your hand.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08005.js:16-37；src/engine/api-test.js:199（api.moveCard）；src/engine/api-mechanics.js:207-212（api.deckTop）",
+          "note": "换牌后可复现；同样受 api.moveCard 的 currentSeat 隐含作用域影响（行动只能在自己回合做，因此实际风险低于旧印）。"
+        },
+        {
+          "text": "[fast] Exhaust Livre d'Eibon: Commit the top card of your deck to an eligible skill test performed by an investigator at your location.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08005.js:38-47；src/engine/eote-investigator-support.js:229-253（canCommitDeckTop/commitDeckTop）；src/engine/investigator-mechanics.js:61-62；src/engine/commit-rules.js:19-54（未使用）",
+          "note": "缺三项：①「eligible」= 未走 canCommitToTest（图标匹配、额外费用、投入限制均不检查），且 icons 取全部图标之和（stats.js:327 commitIcons 才是按技能过滤）；②「at your location」完全不校验，任何调查员的检定都能投入；③投入后不重新 reveal 新顶牌。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08005.js:19,28,41（中文 label/prompt）；api.choice 选择手牌；检定投入区可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "partial",
+        "evidence": "tests/eote-investigator-norman.test.mjs:106-136",
+        "note": "只测 happy path（同座位/意志检定/匹配图标）；无图标不匹配、跨地点、投入后重新揭示的负面用例。"
+      },
+      "issues": [
+        {
+          "severity": "high",
+          "dimension": "impl-vs-text",
+          "summary": "commitDeckTop 跳过投入合法性检查并按全部图标计数：可把不匹配的牌库顶投入检定并凭空加图标（如仅意志图标的牌投入战斗检定仍 +1）",
+          "evidence": "src/engine/eote-investigator-support.js:229-253（icons=Object.values(def.icons) 全量求和）/ src/engine/commit-rules.js:19-54（既有匹配逻辑未调用）/ src/engine/stats.js:327 / 探针 P3a",
+          "suggestion": "commitDeckTop 复用 canCommitToTest 与 commitIcons(state, inv, code, test.skill)；不合法返回 false 且不移动。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "未校验「performed by an investigator at your location」：任意其它地点调查员的检定都能投入牌库顶",
+          "evidence": "src/engine/eote-investigator-support.js:229-237（只读 state.skillTest，无 location/seat 比对）/ src/cards/entries/08005.js:42 / 探针 P3b",
+          "suggestion": "检查 state.investigators[state.skillTest.seat].location === inv.location。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "投入后牌库顶不再揭示：clearDeckTop 后没有 syncPassiveDeckTop，诺曼的常驻揭示又要等下次抽牌/轮初",
+          "evidence": "src/engine/eote-investigator-support.js:239-253 / src/engine/deck-ops.js:630（sync 只在 drawCards 内）",
+          "suggestion": "commitDeckTop 清除揭示后调用 syncPassiveDeckTop(state, seat)。"
+        },
+        {
+          "severity": "low",
+          "dimension": "duplication",
+          "summary": "换顶序列（moveCard 两次 + deckTop.clear/reveal）在 08004 与 08005 各写一遍，且 08005 的换成可被 08004 的旧印换牌复用",
+          "evidence": "src/cards/entries/08004.js:37-42 / src/cards/entries/08005.js:30-34",
+          "suggestion": "抽成 api.investigatorTools.swapDeckTop(seat, handCode)（内部处理座位/记录/重新揭示）。"
+        }
+      ]
+    },
+    {
+      "code": "08006",
+      "name": "The Harbinger",
+      "nameZh": "预示者",
+      "verdict": "gap",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "Revelation - Place this card on top of your deck.",
+          "status": "implemented",
+          "evidence": "src/engine/deck-ops.js:583-587（flags.weaknessStaysOnDeckTop 分支：push 回牌库顶 + sync）；tests/eote-investigator-norman.test.mjs:207-215",
+          "note": ""
+        },
+        {
+          "text": "While The Harbinger is revealed and on top of your deck, cards in your deck cannot be searched, drawn, or manipulated in any way except by the below ability.",
+          "status": "approximation",
+          "evidence": "src/engine/eote-investigator-support.js:159-165（blockedByDeckTopLock）；src/engine/deck-ops.js:532-533（唯一读点：drawCards）；src/engine/deck-ops.js:387-444（searchDeck 无读点）",
+          "note": "只封锁抽牌；搜索（探针 P5：searchDeck 仍取走牌）、洗牌、弃牌库顶等「操纵」全部不受限。条目注释 08006.js:10 与 docs 声称封锁查找/洗牌，与实现不符。"
+        },
+        {
+          "text": "[action][action]: Discard The Harbinger. This ability may be activated while The Harbinger is on top of your deck, as if it were in your threat area.",
+          "status": "implemented",
+          "evidence": "src/engine/moves.js:389-398（枚举 2 行动弃置动作）；src/engine/turn-flow.js:568（cost=2）；src/engine/dispatch.js:678；src/engine/eote-investigator-support.js:176-187（discardRevealedDeckTopWeakness）；tests/eote-investigator-norman.test.mjs:197-205",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/engine/deck-ops.js:532-533（封锁抽牌日志）；src/engine/moves.js:395-396（弃置动作 label「2 行动」）",
+        "note": "牌库顶弱点每轮揭示的卡名由 mechanic-view/UI 投影（私有）。"
+      },
+      "tests": {
+        "status": "partial",
+        "evidence": "tests/eote-investigator-norman.test.mjs:181-215",
+        "note": "揭示置顶/封锁抽牌/2 行动弃置都有断言；「不能搜索/操纵」无任何用例。"
+      },
+      "issues": [
+        {
+          "severity": "high",
+          "dimension": "impl-vs-text",
+          "summary": "预示者只封锁抽牌，不封锁检索/洗牌/牌库操纵：searchDeck 在锁定期仍能公开检索并取牌（弱点严重弱化）",
+          "evidence": "src/engine/eote-investigator-support.js:159-165 / src/engine/deck-ops.js:532-533（仅 drawCards）/ src/engine/deck-ops.js:387-444（searchDeck 无锁）/ 探针 P5",
+          "suggestion": "在 searchDeck/shuffle/弃顶/看牌等统一牌库操作入口读取 blockedByDeckTopLock 并短路（返回空/非法并给日志），或提供 api 层统一牌库操作守卫。"
+        },
+        {
+          "severity": "low",
+          "dimension": "primitive",
+          "summary": "weakness.type 'threat' 只是数据；条目注释宣称锁定「抽牌/查找/洗牌」与实际单一读点不一致（docs 同步失实）",
+          "evidence": "src/cards/entries/08006.js:8-14 / docs/edgeOfTheEarth/investigators.md:12,26",
+          "suggestion": "按实现修正注释与 doc，或按上一条补齐读点后保留文案。"
+        }
+      ]
+    },
+    {
+      "code": "08007",
+      "name": "Monterey Jack",
+      "nameZh": "蒙特雷·杰克",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "[reaction] At the end of your turn, if you started this round 1 location away from your current location: Either gain 1 resource or draw 1 card (if you started this round 2 or more locations away, do both instead).",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08007.js:37-48（turnEnded 反应；distance 1 二选一，>=2 两项都做）；src/engine/eote-round-distance.js:63-72（travelDistance=roadDistance，现算不存派生值）；src/engine/turn.js:87-101（轮初记录与 roundStarts 窗口在起始地点记录之前同步）；src/engine/turn-flow.js:394-397（turnEnded 窗口带 seat）",
+          "note": "距离 0/不连通返回 null，按 0 处理不触发；与卡面「1 location away/2 or more」的最短路语义一致。"
+        },
+        {
+          "text": "[elder_sign] effect: +1. If you started this round 1 or more locations away from your current location, gain 1 resource or draw 1 card.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08007.js:27-31（+1；distance>=1 时 rewardOnce）；tests/eote-investigator-monterey.test.mjs:111-133",
+          "note": ""
+        },
+        {
+          "text": "Back: Rogue 0 / Seeker 1-5 / Neutral 0-5 / 至多 5 张其他 0 级 Seeker；专属依赖 Trusty Bullwhip、Buried Secrets、1 随机基础弱点。",
+          "status": "implemented",
+          "evidence": "src/cards/cards-data.js（INVESTIGATORS['08007'].deckOptions/deckRequirements）；src/deck/deckbuilding.js:333-372；tests/eote-investigator-monterey.test.mjs:63-73",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08007.js:15（api.choice prompt/中文 label）；资源/抽牌结果牌桌可见",
+        "note": "距离 0 时反应仍会被询问（resolve 直接 return），选完没有效果（见 low issue）。"
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-monterey.test.mjs:75-109（距离 0/1/≥2）、111-133（旧印）、135-142（轮初记录 + JSON 往返）",
+        "note": "断言强度高；未覆盖「起始地点已不存在/不连通」等异常距离分支。"
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "dimension": "perceivability",
+          "summary": "距离 0（或未记录）时 turnEnded 反应仍进入反应窗口（criteria 只查回合归属），触发后不产生任何效果——玩家会看到一个空反应",
+          "evidence": "src/cards/entries/08007.js:37-41（criteria 无距离判断；resolve 第 41 行提前 return）",
+          "suggestion": "把 distance>=1 放进 criteria（触发前读取 eote-round-distance.distance），conditions 不满足就不提问。"
+        }
+      ]
+    },
+    {
+      "code": "08008",
+      "name": "Trusty Bullwhip",
+      "nameZh": "可靠的长鞭",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Fast. Monterey Jack deck only.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08008.js:13（entry.fast）；src/engine/ability.js:883（注册 fast）；src/engine/lifecycle.js:64（playFlag 读点）；src/engine/turn-flow.js:588-592（actionCost 读 fast）",
+          "note": "cards-data 无 fast 字段，以条目级 fast 为唯一事实源，引擎 playFlag 读取。"
+        },
+        {
+          "text": "[action]: Fight. This attack uses [agility] instead of [combat]. If this attack succeeds, you may exhaust Trusty Bullwhip to either automatically evade the attacked enemy or deal +1 damage for this attack.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08008.js:15-37（api.fight skill:'agility' + onSuccess 询问 evade/+1 damage/skip）；src/engine/api-misc.js:1356（fight 透传 onSuccess）；tests/eote-investigator-monterey.test.mjs:144-180",
+          "note": "已横置时不询问且可继续用普通战斗能力（符合「消耗只影响该可选代价」）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08008.js:24-28（prompt + 3 个中文 label）；攻击/伤害/躲避结果牌桌可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-monterey.test.mjs:144-180",
+        "note": "覆盖敏捷替代战斗、+1 伤害、自动躲避、已横置不再询问；断言强度高。"
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "dimension": "primitive",
+          "summary": "条目直接写运行时状态 `whip.exhausted = true`，违反「卡条目只读状态，写入只走 ctx.api」；引擎已有 api.exhaust",
+          "evidence": "src/cards/entries/08008.js:30 / src/engine/api-misc.js:520-527（api.exhaust 读点）/ 现有合规审计正则漏检局部变量直写（tools/audit-card-entry-compliance.mjs:39-47）",
+          "suggestion": "改为 api.exhaust(whip)；给合规审计补「局部变量.x = ...」启发式或在 code review 清单标注。"
+        }
+      ]
+    },
+    {
+      "code": "08009",
+      "name": "Buried Secrets",
+      "nameZh": "被埋葬的秘密",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Revelation - Put Buried Secrets into play in your threat area.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08009.js:23（kind weakness, weakness.type='threat'）；src/engine/weakness.js:285-301（threat 分支 push threat 区）；tests/eote-investigator-monterey.test.mjs:182-188",
+          "note": ""
+        },
+        {
+          "text": "If your location can be investigated, you cannot move except by scenario card effects.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08009.js:21（threatEffect.blocksMovementWhileInvestigable）；src/engine/hidden-rules.js:135-140（movementError 唯一读点；currentLocation.locked!==true 即「可被调查」；byScenarioEffect 放行剧本位移）；src/engine/movement.js:193 透传",
+          "note": "与引擎调查合法性（moves.js:373 `loc && !loc.locked`）同口径。"
+        },
+        {
+          "text": "[action]: Investigate. If you succeed, instead of discovering clues, discard Buried Secrets. If you fail, you may take 2 horror to shuffle it into your deck.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08009.js:24-40（api.investigate noClueDiscovery:true -> actions.js:657 跳过发现线索；成功 api.removeThreat；失败 api.choice 2 恐惧 + moveCard/shuffleDeck）；tests/eote-investigator-monterey.test.mjs:193-205,207-223",
+          "note": "api.investigate 以 noSpend=true 调用（api-clue.js:123 第 5 参），不会与能力自身的行动费重复扣。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08009.js:32-34（中文 prompt/选项）；移动锁在 legalMoves 里直接消失（moves 枚举走 movementError）；调查成功/弃卡日志由引擎写",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-monterey.test.mjs:180-223",
+        "note": "覆盖威胁区、移动锁、成功弃卡、失败可选恐惧洗回、JSON 往返；断言强度高。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08010",
+      "name": "Lily Chen",
+      "nameZh": "陈丽丽",
+      "verdict": "approximation",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "You begin the game with each Discipline in your deck in play, [[Unbroken]] side faceup.",
+          "status": "approximation",
+          "evidence": "src/engine/setup.js:339-357（永久卡进场的通用规则 + initBeginGameDisciplines）；src/engine/eote-investigator-support.js:256-264（已有 sets 时直接 return false，不复位 faces）；src/engine/eote-disciplines.js:76-86；tests/eote-investigator-lily.test.mjs:182-196（仅单人单关卡）",
+          "note": "单关卡内正确（默认 1 张演武、Unbroken 进场、命运重担在牌组）；但跨关卡时 campaign.eote.disciplines.faces 不会被重置为 unbroken，上一关结束时留在 Broken 面的演武在下一关开局仍报告 broken（physical 卡是新的 Unbroken 实例），界面/读点状态不一致。"
+        },
+        {
+          "text": "[elder_sign] effect: +2. After this test ends, flip a [[Broken]] Discipline you control to its [[Unbroken]] side.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08010.js:29-32（+2）；:34-55（testEnds forced；result.drawn 含 eldersign 且有 Broken 演武时翻回；多张时 api.choice）；src/engine/tests.js:596-600；tests/eote-investigator-lily.test.mjs:313-321",
+          "note": "未检查 08015「本轮不能翻回」锁：同一轮先被命运重担锁定、再抽到旧印时仍可强行翻回（见 issue）。"
+        },
+        {
+          "text": "Back: Mystic 0 / Guardian 1-5 / Neutral 0-5 / 至多 5 张其他 0 级 Guardian；禁 [[Firearm]]；起始选 1 张演武，每 15 总经验可再加 1 张不同演武；每张演武配 1 张命运重担。",
+          "status": "implemented",
+          "evidence": "src/cards/cards-data.js（INVESTIGATORS['08010'].deckOptions 含 not/trait firearm + 4 档 faction/level）；src/deck/deckbuilding.js:333-358（options.disciplines + XP 门控 + 每张配额）；content/campaigns/edgeOfTheEarth/investigator-data.js:8-37；web/deck-rules.js:222-236（同口径镜像）；tests/eote-investigator-lily.test.mjs:136-180",
+          "note": "15 XP 门控用「已获得总 XP」，与卡面一致；禁枪/等级选项均来自 cards-data 数据。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08010.js:46-50（多张 Broken 时 prompt/中文 label）；旧印翻面结果由演武物理换面 + 面板投影（integration/mechanic-view.js:64-67）可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:110-196（注册/构筑/开局）、198-262（四张 Unbroken）、264-310（Broken 轮末 + 事件记账）、313-321（旧印）、348-355（存档）",
+        "note": "四张 Broken 面在 lily.test.mjs:264-285 用 08010 标题覆盖（tests-coverage.json 把它们标为 file-only 是标题归因问题）；未覆盖命运重担锁 + 旧印翻面交互、未覆盖跨关卡 faces 复位。"
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "旧印翻回演武时不检查 08015「本轮不能翻回」锁：同一轮先被命运重担翻 Broken 的演武仍会被旧印翻回",
+          "evidence": "src/cards/entries/08010.js:34-55（无 lockedThisRound 检查）对比 src/cards/entries/08011b.js:10-12（四张 Broken 面都检查同一把锁）",
+          "suggestion": "在 08010 的 forced resolve/候选过滤里复用同一「08015 锁」判定（最好抽共享 helper/api），把锁从四张 Broken 面上收。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "跨关卡不重置 campaign.eote.disciplines.faces：上一关结束时的 Broken 面会带进下一关开局（卡面要求每局开局 Unbroken）",
+          "evidence": "src/engine/setup.js:356 / src/engine/eote-investigator-support.js:256-264 / src/engine/eote-disciplines.js:76-86（initializeDisciplines 只在首次 sets 为空时执行；全仓无第二处 faces 复位）",
+          "suggestion": "在每关 setup 时按牌组里仍持有的演武集合把 faces 复位为 unbroken（或提供 resetDisciplineFaces(state) 原语由 setup 调用）。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "duplication",
+          "summary": "「翻面 = api.flipAsset + 战役层 disciplines.flip」在 9 个条目文件里各写一遍（08010/08011a/08011b/08012a/08012b/08013b/08014a/08014b/08015），引擎 applyPendingFlipAfterTests 还有第 4 种写法",
+          "evidence": "src/cards/entries/08010.js:14-18 / 08011a.js:12-15 / 08011b.js:26-29 / 08012a.js:10-13 / 08012b.js:25-28 / 08014a.js:10-13 / 08014b.js:25-28 / 08015.js:12-16 / src/engine/eote-investigator-support.js:111-135",
+          "suggestion": "上收为 api.mechanics.disciplines.flipAsset(asset, to)（内部同时处理物理面 + 战役面 + 存档校验），8 个 a/b 条目只留调用。"
+        }
+      ]
+    },
+    {
+      "code": "08011a",
+      "name": "Discipline",
+      "nameZh": "演武（心神合一·运功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent. You get +1 [willpower].",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08011a.js:19-21（modifiers skill:willpower）；cards-data 08011a permanent:true/signatureFor:['08010']；tests/eote-investigator-lily.test.mjs:128-134",
+          "note": ""
+        },
+        {
+          "text": "[action]: Take 1 direct damage to heal 3 horror, or take 1 direct horror to heal 3 damage. Flip this asset over.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08011a.js:23-45（api.choice 二选一；api.directDamage/directHorror + healHorror/healDamage；flip 在治疗后）；tests/eote-investigator-lily.test.mjs:198-214",
+          "note": "翻面顺序与卡面一致（先代价/治疗、后翻面）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08011a.js:28-35（中文 prompt/选项）；伤害/治疗/换面在牌桌可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:198-214",
+        "note": "两种代价分支 + 治疗 + 翻面断言。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08011b",
+      "name": "Discipline",
+      "nameZh": "演武（心神合一·破功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08011b.js:15；cards-data 08011b permanent:true",
+          "note": ""
+        },
+        {
+          "text": "[reaction] After the round ends, if you took no damage or horror this round: Flip this asset over to its [[Unbroken]] side.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08011b.js:17-31（roundEnds reaction；读 roundEvents.damage/horror；08015 锁检查）；src/engine/eote-investigator-support.js:95-102（采样）:78-85（记账）；src/engine/enemies.js:859-866（applyHarm 记账）；src/engine/phases.js:260-262（roundEnds 窗口）；src/engine/turn.js:90（endOfRound 过期晚于窗口）；tests/eote-investigator-lily.test.mjs:264-285",
+          "note": "记账口径：伤害/恐惧在 applyHarm 入口（分配/取消前）计，因此被完全防止的伤害也会算「受过伤」（见 08011b/12b 组 low issue）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "反应窗口可跳过；翻面后物理面变化牌桌可见；轮末反应标题见 tests/eote-investigator-lily.test.mjs:102-108",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:264-285（四组条件）:287-310（记账写入）",
+        "note": "tests-coverage.json 标 file-only 是标题归因（测试标题以 08010 开头），实际有断言。"
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "dimension": "duplication",
+          "summary": "lockedThisRound 判定与翻回序列在 08011b/08012b/08013b/08014b 复制 4 份，且 roundEvents 读取字段名/默认值也重复",
+          "evidence": "src/cards/entries/08011b.js:10-12 / 08012b.js:10-11 / 08013b.js:10-11 / 08014b.js:10-11",
+          "suggestion": "与 08010 的翻面问题一并上收共享 helper（api.mechanics.disciplines.lockedThisRound + flipAsset）。"
+        },
+        {
+          "severity": "low",
+          "dimension": "impl-vs-text",
+          "summary": "伤害/恐惧记账发生在 applyHarm 入口、分配/取消之前：被取消/防止的伤害也会算「本轮受过伤」，Broken 面因此不翻回（近似保守）",
+          "evidence": "src/engine/enemies.js:859-866（noteRoundEvent 在 beforeHarm/harmDealt 窗口之前）",
+          "suggestion": "改为在伤害/恐惧实际落到调查员身上之后记账（net 口径），或拆 planned/applied 两个计数。"
+        }
+      ]
+    },
+    {
+      "code": "08012a",
+      "name": "Discipline",
+      "nameZh": "演武（凝神静气·运功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent. You get +1 [intellect].",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08012a.js:17-19；cards-data permanent:true；tests/eote-investigator-lily.test.mjs:128-134",
+          "note": ""
+        },
+        {
+          "text": "[action]: If you have fewer than 5 cards in your hand: Draw cards until there are 5 cards in your hand. Flip this asset over.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08012a.js:20-32（api.drawCards 补到 5 张后 flipToBroken）；tests/eote-investigator-lily.test.mjs:214-223",
+          "note": "手牌 >=5 时仍可使用并翻面（卡面字面如此，但与「if fewer than 5」的条件语义有争议；属低风险口径）。"
+        }
+      ],
+      "perceivability": {
+        "status": "partial",
+        "evidence": "src/cards/entries/08012a.js:23（label）；api.drawCards 不写抽牌日志（src/engine/api-misc.js:329 直接返回 drawCards 的 texts 数组，无人消费）",
+        "note": "抽到手牌 5 张牌桌可见，但行动日志只有「使用能力」，没有抽牌明细。"
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:214-223",
+        "note": ""
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "dimension": "perceivability",
+          "summary": "自动抽牌不产生任何日志（api.drawCards 返回 texts 但调用方丢弃），玩家只能从手牌数量推断",
+          "evidence": "src/cards/entries/08012a.js:27 / src/engine/api-misc.js:329（drawCards 包装无 info）",
+          "suggestion": "条目用 api.info 补一行「抽到 5 张」，或让 api.drawCards 默认写公开日志。"
+        }
+      ]
+    },
+    {
+      "code": "08012b",
+      "name": "Discipline",
+      "nameZh": "演武（凝神静气·破功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08012b.js:14；cards-data permanent:true",
+          "note": ""
+        },
+        {
+          "text": "[reaction] After the round ends, if your hand did not have 2 or more cards in it at any point this round: Flip this asset over to its [[Unbroken]] side.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08012b.js:17-31（读 roundEvents.handTwoPlus + 08015 锁）；src/engine/eote-investigator-support.js:95-102（sampling：抽牌后/行动后/检定后采样 hand.length>=2）；tests/eote-investigator-lily.test.mjs:264-285,287-294",
+          "note": "采样点非连续（见 low issue）：单次结算内部瞬时的 2 张手牌可能漏记。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "轮末反应窗口；翻面可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:264-285,287-294",
+        "note": "直接构造 roundEvents 验证条件分支 + 真实抽牌验证采样；未覆盖瞬时手牌漏采。"
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "dimension": "impl-vs-text",
+          "summary": "「本轮任一时刻手牌≥2」按离散采样点记录（drawCards 尾、dispatch 行动后、performTest 后），单次效果内部先抽后弃的瞬时 2 张会漏记（08014b 的 enemyAtLocation 同理）",
+          "evidence": "src/engine/eote-investigator-support.js:95-102 / src/engine/dispatch.js:727 / src/engine/deck-ops.js:631 / src/engine/tests.js:159",
+          "suggestion": "在 drawCards/putInHand/弃牌等手牌变更的唯一入口做事件式标记；敌人进入同地点用 relocate/spawn 钩子标记。"
+        }
+      ]
+    },
+    {
+      "code": "08013a",
+      "name": "Discipline",
+      "nameZh": "演武（扭转乾坤·运功面）",
+      "verdict": "approximation",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent. You get +1 [combat].",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08013a.js:13-15；tests/eote-investigator-lily.test.mjs:128-134",
+          "note": ""
+        },
+        {
+          "text": "[action]: You get +5 skill value for the next skill test you perform this turn. After that skill test ends, flip this asset over. This action does not provoke attacks of opportunity.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08013a.js:17-34（api.addEffect duration 'endOfTest' + api.flipAfterNextTest）；src/engine/tests.js:1533（任意检定结束 expireEffects('endOfTest')）:596-600（任意检定后 applyPendingFlipAfterTests）；src/engine/eote-investigator-support.js:111-135",
+          "note": "+5/翻面都不校验「检定由陈丽丽本人执行」：别的调查员检定结束会同时清掉 +5 并提前翻面。noOpportunityAttack:true 有 dispatch.js:316 读点，且测试只覆盖单人。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08013a.js:19（label）；src/engine/tests.js:1533（到期日志「⌛ …到期（本次检定结束）」）",
+        "note": ""
+      },
+      "tests": {
+        "status": "partial",
+        "evidence": "tests/eote-investigator-lily.test.mjs:223-236",
+        "note": "只覆盖单人（自己下一次检定 +5 后翻面）；多人/他人检定先结束的负面路径未覆盖。"
+      },
+      "issues": [
+        {
+          "severity": "high",
+          "dimension": "impl-vs-text",
+          "summary": "「你本回合下一次检定 +5 且该检定结束后翻面」被实现为全局 endOfTest 效果 + 全局延迟翻面：任意调查员的检定结束都会消耗掉 +5 并让演武提前翻面（多人局卡牌效果失效）",
+          "evidence": "src/engine/tests.js:1533（expireEffects(state,'endOfTest') 无座位过滤）/ src/engine/tests.js:596-600 / src/engine/eote-investigator-support.js:105-135 / 探针 P8（座位 1 检定后 effects=0、08013a→08013b）",
+          "suggestion": "effect 记录带 triggerSeat 语义（仅该座位检定结束时过期），applyPendingFlipAfterTests 增加 seat 条件（只在该检定的执行者/该资产控制者做检定时翻面）。"
+        }
+      ]
+    },
+    {
+      "code": "08013b",
+      "name": "Discipline",
+      "nameZh": "演武（扭转乾坤·破功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08013b.js:14",
+          "note": ""
+        },
+        {
+          "text": "[reaction] After the round ends, if you performed no skill tests this round: Flip this asset over to its [[Unbroken]] side.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08013b.js:17-31（读 roundEvents.tests + 08015 锁）；src/engine/tests.js:158-159（performTest 记 tests++）；src/engine/eote-investigator-support.js:78-85；tests/eote-investigator-lily.test.mjs:264-285,296-299",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "轮末反应窗口；翻面可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:264-285（tests:0/2 两分支）:296-299（真实检定写入）",
+        "note": "tests-coverage.json 标 file-only 为标题归因问题。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08014a",
+      "name": "Discipline",
+      "nameZh": "演武（稳如泰山·运功面）",
+      "verdict": "approximation",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent. You get +1 [agility].",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08014a.js:17-19；tests/eote-investigator-lily.test.mjs:128-134",
+          "note": "但在本卡自己的行动结算期间失效（见 issue）。"
+        },
+        {
+          "text": "[action]: One at a time, take up to 3 different fight or evade actions. Flip this asset over. This action does not provoke attacks of opportunity.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08014a.js:20-33（api.grantFreeActions count:3 kinds:['fight','evade'] 后立刻 flipToBroken）；src/engine/eote-investigator-support.js:138-147；src/engine/restricted-actions.js:25-33（fightEvade 额度）；src/engine/table-decisions.js:319-320；src/engine/dispatch.js:316（noOpportunityAttack 读点）",
+          "note": "①翻面先于 3 次行动 → 失去 +1 敏捷（探针 P4：敏捷 4→3）；②「one at a time / different」未建模：额度是「本回合最后 3 个行动」，不强制连续、也不阻止对同一敌人重复；③测试反而断言了先翻面（lily.test.mjs:246）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08014a.js:23（label）；actionsLeft 增加 3 但无 api.info 提示（见 low issue）",
+        "note": ""
+      },
+      "tests": {
+        "status": "partial",
+        "evidence": "tests/eote-investigator-lily.test.mjs:238-262",
+        "note": "覆盖 3 次免费战斗额度与额度耗尽；把「使用后立即翻面」写进断言，与卡面顺序相反。"
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "翻面发生在获得 3 次免费战斗/躲避之前：3 次行动按 Broken 面结算，全部失去 +1 敏捷（卡面是先执行行动、最后翻面）",
+          "evidence": "src/cards/entries/08014a.js:29-30（grant 后立即 flipToBroken）/ 探针 P4：agility 4→3，assetCode=08014b，fightEvadeCredits=3",
+          "suggestion": "把翻面挂到额度耗尽或回合结束（延迟翻面原语，与 08013a 的 flipAfterNextTest 同族），保证额度内仍按 Unbroken 面 +1 敏捷结算。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "「one at a time, up to 3 different fight or evade actions」被降级为「本回合最后 3 个行动点只能用于战斗/躲避」：不要求连续执行、不区分 different、可留到本回合之后（额度随 actionsLeft 保留到回合结束）",
+          "evidence": "src/engine/eote-investigator-support.js:138-147 / src/engine/restricted-actions.js:66-99 / src/engine/table-decisions.js:319-320",
+          "suggestion": "在授额时记录「必须立即连续结算」的标记与已用次数，或提供 api.freeActionSequence(count, kinds) 原语；若接受近似，应写入 known-deviations 并在条目注释/resolve 里明示。"
+        },
+        {
+          "severity": "low",
+          "dimension": "perceivability",
+          "summary": "grantFreeActions 无 api.info / 牌桌提示，玩家只能从行动点数字推断获得了 3 个受限行动",
+          "evidence": "src/engine/eote-investigator-support.js:138-147（无 info）/ src/cards/entries/08014a.js:29",
+          "suggestion": "resolve 里补 api.info「获得 3 次免费战斗/躲避行动（不引发借机攻击）」。"
+        }
+      ]
+    },
+    {
+      "code": "08014b",
+      "name": "Discipline",
+      "nameZh": "演武（稳如泰山·破功面）",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Lily Chen deck only. Permanent.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08014b.js:14",
+          "note": ""
+        },
+        {
+          "text": "[reaction] After the round ends, if no enemies were at the same location as you at any point this round: Flip this asset over to its [[Unbroken]] side.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08014b.js:17-31（读 roundEvents.enemyAtLocation + 08015 锁）；src/engine/eote-investigator-support.js:95-102（sampleRoundEvents 检查 state.enemies 与 inv.location）；tests/eote-investigator-lily.test.mjs:264-285,301-305",
+          "note": "采样点离散（行动/检定/抽牌后），瞬时共处可能漏记（与 08012b 同 low issue）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "轮末反应窗口；翻面可见",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:264-285,301-305",
+        "note": "tests-coverage.json 标 file-only 为标题归因问题。"
+      },
+      "issues": []
+    },
+    {
+      "code": "08015",
+      "name": "Burden of Destiny",
+      "nameZh": "命运重担",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Revelation - You must either (choose one): Flip a Discipline you control to its [[Broken]] side. It cannot be flipped back this round.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08015.js:21-51（api.choice 二选一；flipToBroken + api.addEffect duration:'endOfRound' 锁）；src/engine/weakness.js:64-70（weakness descriptor resolve 优先）；四张 Broken 面读同一锁（08011b.js:10-12 等）；tests/eote-investigator-lily.test.mjs:324-339",
+          "note": "锁的到期点 endOfRound 在下一轮神话阶段清理（src/engine/turn.js:90-92），晚于 roundEnds 窗口，因此轮末翻回被正确阻止；但 08010 旧印翻面不读锁（见 08010 issue）。"
+        },
+        {
+          "text": "Take 1 damage and 1 horror.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08015.js:52-54（api.damage + api.horror -> applyHarm）；tests/eote-investigator-lily.test.mjs:340-346",
+          "note": ""
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08015.js:32-35（prompt + 两个中文选项；多演武时二次选择）",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-lily.test.mjs:324-346",
+        "note": "锁阻止轮末翻回有断言；旧印同轮翻回未测（属于 08010 缺口）。"
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "dimension": "primitive",
+          "summary": "weakness.type 'burdenOfDestiny' / 08018 的 'custom' 是无人读取的元数据串；行为完全靠 descriptor.resolve，注册期也不校验 type 白名单",
+          "evidence": "src/cards/entries/08015.js:24 / src/engine/weakness.js:64-70（先看 resolve，type 不参与）/ src/engine/ability.js 未见 weakness.type 校验",
+          "suggestion": "统一 weakness.type 的词表并在 ability.js 注册期校验；或对纯自定义弱点使用统一的 'custom' 值。"
+        }
+      ]
+    },
+    {
+      "code": "08016",
+      "name": "Bob Jenkins",
+      "nameZh": "鲍勃·詹金斯",
+      "verdict": "approximation",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "At any time, an investigator at your location may reveal to you the [[Item]] assets in their hand.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08016.js:34-51（Bob 主动的 free 能力，criteria 限定 state.phase==='investigation' && state.currentSeat===inv.seat && !inv.turnEnded）",
+          "note": "卡面是「任何时刻、由该调查员决定揭示」；实现变成「Bob 自己回合的行动阶段里主动询问」。功能上可达（授权后 otherHand 通道出现），但时点/发起方都不等价，且队友无法主动揭示。"
+        },
+        {
+          "text": "You may take an additional action during your turn, which can only be used to play an [[Item]] asset from the hand of an investigator at your location, under their control. (Both investigators may spend resources to pay its cost).",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08016.js:29（investigator.restrictedAction={kind:'itemPlay'}）；src/engine/restricted-actions.js:25-33,91-99；src/engine/turn.js:520-525（回合开始发放）；src/engine/table-decisions.js:321-323；src/engine/play-channels.js:65-83,322-347；src/engine/actions.js:96-109,222-243（控制者=牌主；默认先扣代打者再扣牌主）；tests/eote-investigator-bob.test.mjs:90-125",
+          "note": "额外行动与归牌主控制已实现且有测试；但（a）授权后 otherHand 通道用**普通行动**也能打出（未强制只能花 itemPlay 额度），等于每回合可无限代打；（b）crossSeat 授权无到期/清理（play-channels.js:65-83 只写不删），揭示一次永久有效；（c）费用分摊是自动先扣代打者再扣牌主，未提供玩家选择（卡面「都可以」）。"
+        },
+        {
+          "text": "[elder_sign] effect: +1 for each [[Item]] asset you control.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08016.js:30-32；src/engine/turn-flow.js:125-144（旧印描述子）；tests/eote-investigator-bob.test.mjs:62-75",
+          "note": "isItemAsset 只认 type=asset + trait Item，与卡面一致。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08016.js:43-45（api.choice 选队友，中文 label）；src/engine/play-channels.js:336-345（otherHand 候选 label 标出队友手牌来源）；src/engine/actions.js:282-283（共同支付日志）",
+        "note": "授权本身没有单独的可视提示（只有「使用能力」日志），队友不知道 Bob 已获得其手牌道具的授权。"
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-bob.test.mjs:62-75（旧印）、77-90（授权枚举）、92-109（受限行动）、111-125（跨座位控制/付费）、151-159（JSON 往返）",
+        "note": "测试用 API 直接 grant 并传 costSplit，未覆盖「用普通行动代打」与「授权永久化」的越权路径。"
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "otherHand 通道在授权后可用普通行动打出（只有 itemPlay 额度为 0 时仍可花正常行动），等于绕过「每回合 1 个额外行动只能用于代打」的限制，可无限代打队友道具",
+          "evidence": "src/engine/play-channels.js:322-347（授权即枚举候选）/ src/engine/table-decisions.js:323 / src/engine/engine.js:907-928（restricted 额度不足时仍可花普通行动）",
+          "suggestion": "在 validateMove 里要求 fromOtherHand 的 play 必须由 itemPlay 受限额度支付（或标记 move.requiresRestricted='itemPlay'），无额度时非法。"
+        },
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "「At any time ... may reveal」被降级为 Bob 自己回合/行动阶段的 free 能力；队友无法在任意时刻主动揭示，且实现为一次性授权后长期有效（没有与「本回合」绑定的语义）",
+          "evidence": "src/cards/entries/08016.js:35（phase/currentSeat/turnEnded 限制）/ src/engine/play-channels.js:65-83（grant 无到期字段/无清除调用）",
+          "suggestion": "按卡面在该调查员回合亦可触发（其余座位声明 free/reaction 能力或由引擎在回合开始自动揭示），并把授权寿命限定到本回合结束（或按印刷「任何时刻」语义在揭示后立即清理）。"
+        },
+        {
+          "severity": "low",
+          "dimension": "perceivability",
+          "summary": "「双方都可以为支付费用花费资源」实现为自动分摊（先扣代打者、不足再扣牌主），没有让玩家选择分摊方式；共付日志有写，但分摊比例不可调",
+          "evidence": "src/engine/actions.js:224-243（无 costSplit 时 selfAmount=min(cost, 代打者资源)）",
+          "suggestion": "照 08016 卡面提供「双方分摊」选择（costSplit 已存在，可由能力先询问），或把自动口径写入近似清单。"
+        }
+      ]
+    },
+    {
+      "code": "08017",
+      "name": "Shrewd Dealings",
+      "nameZh": "精明的交易",
+      "verdict": "approximation",
+      "accepted": false,
+      "clauses": [
+        {
+          "text": "Bob Jenkins deck only. Reduce the cost of each [[Item]] asset you play by 1.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08017.js:25-28（modifiers target:'playCost', amount 按 cardCode 的 Item 特质 -1）；src/engine/modifiers.js:575（playCostDelta 唯一读点）；tests/eote-investigator-bob.test.mjs:127-139",
+          "note": "只对控制者自己打出的牌生效（其 modifiers 按 inv 归属），与卡面一致。"
+        },
+        {
+          "text": "[reaction] When you play an [[Item]] asset: Play it under the control of any investigator at your location.",
+          "status": "approximation",
+          "evidence": "src/cards/entries/08017.js:24（assetRule.playUnderAnyAtLocation）；src/engine/actions.js:384-401（打出任意 asset 时询问控制者）",
+          "note": "①[reaction]（可选、仅 Item 资产、打出时触发）被建模为常驻自动询问：只要控制者场上有本支援，打出**任何** asset 都会问「由谁控制」，不限于 Item；②选择是强制的（>1 候选人一定弹窗），没有「不触发」选项；③若通过 08016 代打队友道具，控制者判定走牌主，本支援不会弹出（与卡面「you play」的时点归属不一致）。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/engine/actions.js:394-397（「由谁控制？」prompt + 调查员选项/self 选项）",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-bob.test.mjs:127-139",
+        "note": "覆盖费用 -1 与交给队友控制；未覆盖「非 Item 也被询问」「无 Item 时不应触发」。"
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "dimension": "impl-vs-text",
+          "summary": "打出任意资产都会弹「由谁控制」，不限于 [[Item]] 资产；且没有不触发的选项（卡面是可选 [reaction]）",
+          "evidence": "src/cards/entries/08017.js:24 / src/engine/actions.js:384-401（未过滤 def.traits 含 Item，也没有 canSkip）",
+          "suggestion": "在 assetRule 增加 traits 过滤（如 playUnderAnyAtLocation:{traits:['Item']}）与 optional/canSkip 语义，或改为真正的 reaction 窗口。"
+        },
+        {
+          "severity": "low",
+          "dimension": "duplication",
+          "summary": "isItemAsset 在 08016/08017 各写一份完全相同实现（连 import ALL_CARDS 的注释也一样）；两卡同属 Bob 牌组，应共享",
+          "evidence": "src/cards/entries/08016.js:19-24 / src/cards/entries/08017.js:16-20",
+          "suggestion": "抽到 entries/_shared.js 或 api.cardHasTrait(code,'item') 原语；08003 等同类 trait 判定已有通用 api.cardHasTrait。"
+        }
+      ]
+    },
+    {
+      "code": "08018",
+      "name": "Greed",
+      "nameZh": "贪婪",
+      "verdict": "match",
+      "accepted": true,
+      "clauses": [
+        {
+          "text": "Revelation - Take 1 horror. If you have... 10 or fewer resources, take 1 additional horror. ...5 or fewer resources, take 1 additional horror. ...0 resources, take 1 additional horror.",
+          "status": "implemented",
+          "evidence": "src/cards/entries/08018.js:14-23（阶梯判断 11/10/5/0 对应 1/2/3/4 点恐惧；api.horror -> applyHarm）；src/engine/weakness.js:64-70（descriptor.resolve 接管）；tests/eote-investigator-bob.test.mjs:141-149",
+          "note": "四档边界（11/10/5/0）都有断言；<=10、<=5、<=0 三档叠加，与卡面三个独立条件一致。"
+        }
+      ],
+      "perceivability": {
+        "status": "perceivable",
+        "evidence": "src/cards/entries/08018.js:15（label）；applyHarm 的恐惧结算/日志由引擎写",
+        "note": ""
+      },
+      "tests": {
+        "status": "covered",
+        "evidence": "tests/eote-investigator-bob.test.mjs:141-149",
+        "note": "用真实弱点抽取链路 + 四档资源边界，断言强度高。"
+      },
+      "issues": []
+    }
+  ]
+}

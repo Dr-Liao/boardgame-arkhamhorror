@@ -1,0 +1,118 @@
+{
+  "campaignId": "edgeOfTheEarth",
+  "created": "2026-11-08",
+  "source": "Original AI-generated artwork using OpenAI built-in image_gen; not official game art.",
+  "palette": "midnight navy, glacial cyan, old silver, restrained amber and iridescent violet",
+  "assets": [
+    {
+      "id": "hub",
+      "file": "hub/antarctic-expedition.webp",
+      "title": "南极远征",
+      "prompt": "Use case: stylized-concept. Asset: original Arkham Horror Edge of the Earth campaign hub hero, 1536x1024 landscape, full bleed. A tiny 1920s Antarctic expedition and canvas camp below colossal jagged forbidden mountains; fractured glacial ice leads toward impossibly ancient angular black ruins in distance; immense scale, drifting polar mist, subtle eerie aurora. Premium painterly realistic cosmic horror illustration, detailed brushwork, midnight navy, glacial cyan, old silver, tiny warm lantern amber. Lower center sufficiently quiet for interface overlay. No text, letters, logos, watermark, cards, interface. Original art, not reproduction of existing card art.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 317192,
+      "sha256": "a6a55fbf7fe165b03a6890a9eda0bbc4c8ae8e5d33de836b1751c1e5fc1150a4",
+      "original": "artifacts/eote-media/originals/hub.png"
+    },
+    {
+      "id": "iceAndDeathPart1",
+      "title": "亡命冰原 I",
+      "file": "scenarios/iceAndDeathPart1/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth illustration: Ice and Death Part I. Full bleed 1536x1024 landscape. A crashed 1920s expedition propeller plane torn open on a vast Antarctic glacier; tiny bundled survivors salvage crates and carry a lantern toward a sheltered ice ridge, fresh tracks, dark towering peaks behind whiteout. Painterly realistic premium cosmic horror, glacial cyan, midnight navy, old silver, tiny amber lanterns. Harsh desolate survival, environment dominant, no close portraits. No text, lettering, logos, watermarks, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 354704,
+      "sha256": "569471996d43e2bfe4004dd38e09a978130e142ac30e9b4ae26eee45798a1220",
+      "original": "artifacts/eote-media/originals/iceAndDeathPart1.png"
+    },
+    {
+      "id": "iceAndDeathPart2",
+      "title": "亡命冰原 II",
+      "file": "scenarios/iceAndDeathPart2/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth scenario Ice and Death Part II. 1536x1024 full bleed landscape. Night search for missing expedition companions across Antarctic ice: two tiny 1920s explorers with storm lanterns follow a dropped mitten and footprints into a towering blue ice canyon, abandoned tent just visible through distant blizzard, uncanny green mist seeping from crevasse. Emphasize searching and isolation. Painterly realistic premium cosmic horror, midnight navy, ice cyan, old silver, small amber lights. No text, lettering, numbers, logos, watermarks, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 339586,
+      "sha256": "c41f03ea3dac66d960f8ad9cbe6450c436339987294312bd1b1854984f204f27",
+      "original": "artifacts/eote-media/originals/iceAndDeathPart2.png"
+    },
+    {
+      "id": "iceAndDeathPart3",
+      "title": "亡命冰原 III",
+      "file": "scenarios/iceAndDeathPart3/scene.webp",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Edge of the Earth Ice and Death Part III. Full bleed 1536x1024 landscape. Antarctic camp under siege at night: torn canvas tents and sleds in foreground, tiny 1920s expedition silhouettes defending lantern-lit rocky shelter while vast amorphous black iridescent vapor with faint clustered eyes rolls through a frozen pass. Snow and wind cut diagonally, menace stays partly obscured. Premium painterly realistic cosmic horror. Midnight navy, glacial cyan, old silver, tiny amber fire. No text, logos, letters, watermarks, cards, UI.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 393010,
+      "sha256": "20927c1c2e6f00c26e50850bc403566645ae7da71a3f694a335e7a09355323dd",
+      "original": "artifacts/eote-media/originals/iceAndDeathPart3.png"
+    },
+    {
+      "id": "fatalMirage",
+      "title": "致命幻景",
+      "file": "scenarios/fatalMirage/scene.webp",
+      "prompt": "Use case: stylized-concept. Original scenario illustration Arkham Horror Edge of the Earth Fatal Mirage. Full bleed 1536x1024 landscape. A dreamlike labyrinth of expedition companions' memories suspended within polar mist: an empty warm 1920s study doorway and hospital corridor fragments floating beyond a fractured ice arch, translucent indistinct human silhouettes receding into impossible overlapping rooms, tiny explorer at threshold, snow drifting indoors. Memory and grief, unsettling surreal cosmic horror, premium painterly realistic illustration, midnight navy and ice cyan with faded amber memories and restrained violet mist. No text, letters, numbers, logos, watermark, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 374582,
+      "sha256": "db7f6dc4d069f68a013f3efc7eb1150cc26e98500a5cf1a827b4450f2b7fb685",
+      "original": "artifacts/eote-media/originals/fatalMirage.png"
+    },
+    {
+      "id": "toTheForbiddenPeaks",
+      "title": "失落之峰",
+      "file": "scenarios/toTheForbiddenPeaks/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth To the Forbidden Peaks scenario illustration. Full bleed 1536x1024 landscape. Vertiginous Antarctic mountain ascent, a roped line of tiny 1920s expedition climbers hauling heavy canvas packs and a sled across a narrow ledge above an immense abyss, monumental black needle peaks and frozen steps rising toward a distant alien gateway. Sweeping diagonal composition, immense scale, icy wind and dramatic silver dawn. Premium painterly realistic cosmic horror, midnight navy, glacial cyan, old silver, tiny amber lantern. No text, letters, numbers, logos, watermark, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 415302,
+      "sha256": "4c89a60e5b91197520dbb1998ffd35ee631e6ee12a4426d834f7a54f97d1ce4f",
+      "original": "artifacts/eote-media/originals/toTheForbiddenPeaks.png"
+    },
+    {
+      "id": "cityOfTheElderThings",
+      "title": "古老者之城",
+      "file": "scenarios/cityOfTheElderThings/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth City of the Elder Things scenario illustration. Full bleed 1536x1024 landscape. Discovery of a vast prehistoric alien city behind Antarctic mountains: terraces of weathered basalt, radial fivefold towers, geometric bridges, strange relief carvings without readable symbols, ice choking streets, deep green-blue abyssal shafts. Tiny 1920s expedition with lantern at foreground overlook emphasizes inhuman scale. Premium painterly realistic cosmic horror archaeology, midnight navy, glacial cyan, old silver, subtle sickly green and amber. No text, letters, numbers, logos, watermark, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 498846,
+      "sha256": "5dcf891701f0bd8c9d592bafb3c7f1b0e3c5d3c14fe336315b978261ea0b6351",
+      "original": "artifacts/eote-media/originals/cityOfTheElderThings.png"
+    },
+    {
+      "id": "theHeartOfMadnessPart1",
+      "title": "疯狂之心 I",
+      "file": "scenarios/theHeartOfMadnessPart1/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth The Heart of Madness Part I scenario illustration. Full bleed 1536x1024 landscape. Inside a gigantic underground alien installation beneath Antarctic ice, a circular central vault surrounded by five radial corridors, weathered basalt mechanisms and five unlettered polygonal seal sockets glowing faint cyan, tiny 1920s explorers examine a stone device by lantern while deep black iridescent mist pools behind a sealed portal. Exploration, silence, immense architecture, premium painterly realistic cosmic horror. Midnight navy, glacial cyan, old silver, tiny amber. No text, letters, numbers, readable symbols, logos, watermark, UI, cards.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 300246,
+      "sha256": "7130dae8c3a2cd26e703e50b876724fb8a3b6b6ec6c3db2d276f995744830bd5",
+      "original": "artifacts/eote-media/originals/theHeartOfMadnessPart1.png"
+    },
+    {
+      "id": "theHeartOfMadnessPart2",
+      "title": "疯狂之心 II",
+      "file": "scenarios/theHeartOfMadnessPart2/scene.webp",
+      "prompt": "Use case: stylized-concept. Original Arkham Horror Edge of the Earth The Heart of Madness Part II scenario illustration. Full bleed 1536x1024 landscape. Climactic rupture in an Antarctic subterranean alien vault: an enormous formless iridescent black entity erupts through a circular basalt gateway, cold cyan seal stones blaze around a fractured central platform, tiny 1920s explorers flee toward foreground across collapsing ice bridges carrying a lantern, ancient machinery breaking under churning mist. Dynamic urgent finale, premium painterly realistic cosmic horror, midnight navy, icy cyan, old silver, restrained violet iridescence and amber. No text, letters, numbers, logos, watermark, cards, UI.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 466488,
+      "sha256": "0d654e35f307502239a9c580f6c7abc9a49148e9814d8a6f77da01aa71d15cdb",
+      "original": "artifacts/eote-media/originals/theHeartOfMadnessPart2.png"
+    },
+    {
+      "id": "table",
+      "title": "南极远征调查桌布",
+      "file": "table/expedition-desk.webp",
+      "prompt": "Use case: stylized-concept. Asset: original Arkham Horror Edge of the Earth investigation playmat. Landscape 1536x1024, strict directly overhead flat lay, full bleed. A dark navy expedition desk surface covered with faded Antarctic contour charts and frost scuffed canvas. Keep central 70 percent very quiet, low contrast, dark and mostly empty for game cards. Only along outer margins: worn brass compass, rolled blank polar chart, climbing rope, ice pick edge, small pale blue crystal, blank field notebook, faint radial archaeological sketch without letters. Premium painterly realistic tactile production texture. Midnight navy, desaturated glacial cyan, old silver, tiny tarnished brass. Soft diffuse light, no dramatic perspective. No text, letters, numbers, readable map labels, logos, watermark, people, cards or UI.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 312620,
+      "sha256": "6d929a319be8819a3188334d79be5751e5728d7b92491d89163da1a622281e88",
+      "original": "artifacts/eote-media/originals/table.png"
+    }
+  ]
+}

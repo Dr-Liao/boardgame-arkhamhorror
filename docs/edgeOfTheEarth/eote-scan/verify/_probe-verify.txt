@@ -1,0 +1,28 @@
+A1 real fight test.beforeCommit window: {"labels":["让过","probe-free-1：probe control free"],"skillTestActionKind":null,"skillTestSkill":"combat","skillTestKeys":["seat","skill","difficulty","stage","committed","publicLog","basicAction","source","printedValue","baseValue","value"]}
+A1 08105 offered in real fight: false
+A2 forged skillTest.actionKind=fight window options: ["让过","破冰锥：横置：本次攻击/调查检定 +1 技能值","破冰锥：横置：本次攻击/调查检定 +1 技能值","破冰锥：弃掉破冰锥：成功时额外 +1 伤害/线索","probe-free-1：probe control free"]
+A2 08105 offered when forged: true
+A2 08107 abilities offered when forged: ["破冰锥：横置：本次攻击/调查检定 +1 技能值","破冰锥：横置：本次攻击/调查检定 +1 技能值","破冰锥：弃掉破冰锥：成功时额外 +1 伤害/线索"]
+B1 real ally instance keys: ["id","code","ruleId","originalCode","identityStatus","approximation","linkedOriginalCode","artId","exhausted","enteredRound"] traits?  location? 
+B2 real assetLeavesPlay window: {"source":"researchLibrarian","cardCode":null,"options":["跳过反应","触发反应"],"prompt":"是否触发 研究馆员 的反应？"}
+B2 08102 offered on real window: false
+B3 hand-crafted context options: ["不打出","保护魂灵"]
+B3 08102 offered with crafted context: true
+C1 weakness in threat: true keys= ["id","code","ruleId","originalCode","identityStatus","approximation","linkedOriginalCode","artId","counters"] counters= 1
+C2 healDamageFrom 1 -> 0 | before {"invDamage":0,"counters":1} | after invDamage= 0 stillInThreat= true counters= 1
+C3 legalMoves for threat: [{"a":"ability","i":0,"l":"⚡免费 近似-可治愈：弃掉臂伤（视为其 1 点伤害被治愈）"}]
+C4 after free discardSelf: stillInThreat= true discardHas08130= 1 threatCodes= ["08130"]
+C5 ability still offered after use: false
+C6 playerWindow options with threat 08130: ["让过","probe-free-1：probe control free","臂伤：近似-可治愈：弃掉臂伤（视为其 1 点伤害被治愈）"]
+D1 08083 ally target (damage1/horror1): {"picked":"asset:c1","damage":1,"horror":0,"invDamage":0,"invHorror":0} printed: heal 1 damage + 1 horror
+D2 08083 ally target (damage1/horror0): {"picked":"asset:c1","damage":1,"horror":-1,"invDamage":0,"invHorror":0} horror floor check
+E1 initial uses= 0
+E2 other seat (seat1) eventPlayed -> {"opened":true,"options":["不触发","【能力】老旧的霰弹枪：打出一张事件后：使用值视为 2"],"chose":"【能力】老旧的霰弹枪：打出一张事件后：使用值视为 2","uses":2}
+E3 own seat (seat0) eventPlayed again -> {"opened":true,"options":["不触发","【能力】老旧的霰弹枪：打出一张事件后：使用值视为 2"],"chose":"【能力】老旧的霰弹枪：打出一张事件后：使用值视为 2","uses":2}
+E4 uses after own event again (no reset to 0): 2
+F1 08081 damage assign options: ["由调查员承受","有胆有识"] | self offered= true
+F2 08081 horror assign options: ["有胆有识"] | self offered= false
+F3 08081 entry.flags= null | composure= true
+G1 08091 ability kinds/triggers: [{"kind":"entersPlay","trigger":[],"label":"入场：指定一个非旧印符号标记作为咒印"}]
+G2 08091 has tokenReveal ability: false
+G3 08091 entry source uses addEffect: true | uses setSigilToken: false

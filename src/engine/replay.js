@@ -112,6 +112,7 @@ export function captureReplayLog(state) {
       aiStoryAwareness: state.aiStoryAwareness === true,
       // 游戏高级设置：卡牌范围会影响 AI/自定义牌组与可选调查员，必须随建局参数重放；
       // 回档开关只影响关卡检查点分支，同样记进日志，重放后的状态才和存档一致。
+      ...(state.deckMode === 'draft' ? { deckMode: 'draft' } : {}),
       cardPoolScope: state.cardPoolScope === 'progressive' ? 'progressive' : 'all',
       allowRollback: state.allowRollback !== false,
       playerInvestigator: openingCodes[0] ?? 'auto',

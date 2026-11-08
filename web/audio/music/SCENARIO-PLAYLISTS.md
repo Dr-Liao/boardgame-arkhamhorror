@@ -89,3 +89,19 @@
 | 雾中之光 | 灯塔迷雾、停尸房与地下室、多线终局 | ★ Dark Fog → ★ Hush → Lost Frontier |
 | 达贡巢穴 | 深海祭坛、誓约仪式、诅咒与祝福 | ★ Oppressive Gloom → ★ Anxiety → Ancient Rite |
 | 暗潮之下 | 伊哈·恩斯雷门扉、深海之城、终局抉择 | ★ The Descent → ★ Stormfront → Thunder Dreams |
+
+
+## 地球边缘（七循环）
+
+八关各三首，共 24 首不同曲目。新增 16 首、复用 8 首，按播放位置和独立曲目数计算的复用率均为 **33.3%**，循环内重复率为 0%。音频统一放 common/，按此前 44.1 kHz、128 kbps MP3 规范转码；官方来源、ISRC、原始和转码 SHA-256 见 sources.json，CC BY 4.0 署名见 CREDITS.txt。
+
+| 关卡 | 场景风格 | 播放顺序（★为新增） |
+| --- | --- | --- |
+| 亡命冰原 I | 坠机冰原、寻找庇护、极地求生 | ★ Despair and Triumph → ★ Moorland → Frozen Star |
+| 亡命冰原 II | 风雪寻人、失踪伙伴、冰隙低语 | ★ Spacial Winds → ★ Inexorable → Ice Demon |
+| 亡命冰原 III | 营地遇袭、黑雾围困、守住庇护 | ★ Day of Chaos → ★ Darkening Developments → Stormfront |
+| 致命幻景 | 记忆迷宫、伙伴往事、幻景救赎 | ★ Evening Fall (Harp) → ★ Lost Time → Dreamlike |
+| 失落之峰 | 负重登山、险峻山道、远征不归 | ★ Crossing the Chasm → ★ Long Road Ahead B → Lost Frontier |
+| 古老者之城 | 极地古城、异星遗迹、远古机关 | ★ Spacial Harvest → ★ Shadowlands 3 - Machine → Truth in the Stones |
+| 疯狂之心 I | 冰下设施、探索封印、黑暗深处 | ★ SCP-x2x (Unseen Presence) → ★ SCP-x4x (Mind Leech) → Orion 300XB |
+| 疯狂之心 II | 邪雾苏醒、封印中枢、最后逃离 | ★ Black Vortex → ★ The Complex → Thunder Dreams |

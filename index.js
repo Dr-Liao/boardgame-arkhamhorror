@@ -389,6 +389,11 @@ export default {
       options: [{ value: 'all', label: '全部' }, { value: 'progressive', label: '渐进式' }],
     },
     {
+      key: 'deckMode', type: 'select', label: '游戏模式', default: 'standard',
+      description: '选择普通模式自由构筑，或选择选牌模式通过三选一组建与升级卡组。',
+      options: [{ value: 'standard', label: '普通模式' }, { value: 'draft', label: '选牌模式' }],
+    },
+    {
       key: 'allowRollback', type: 'toggle', label: '允许回档', default: 'on',
       description: '允许从关卡检查点「从此关重新开始」（创建分支存档）。关闭后本局不能回档；普通读档不受影响。',
     },
@@ -444,7 +449,7 @@ export default {
   ] },
   defaults: {
     playerCount: 2, campaignId: 'nightOfTheZealot', aiStoryAwareness: 'on',
-    cardPoolScope: 'all', allowRollback: 'on',
+    cardPoolScope: 'all', allowRollback: 'on', deckMode: 'standard',
     aiRoutineSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.routineFrequency,
     aiSelfTestSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.selfTestFrequency,
     aiOtherTestSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.otherTestFrequency,

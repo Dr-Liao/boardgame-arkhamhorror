@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "bbdc0876d177a4e9c48190c1015664e639f46ba21be78ec75df3483aa979d899",
+  "resourceVersion": "50e72a667c1b573f766405e201832ba6df08481196e4c1d348bb76bf7c37f930",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -118,7 +118,7 @@ export const META = {
       "status": "valid"
     }
   ],
-  "strictAccepted": 932,
+  "strictAccepted": 1444,
   "total": 5930,
   "types": {
     "act": 374,
@@ -264015,7 +264015,7 @@ export const ALL_CARDS = {
   },
   "07001": {
     "agility": 3,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The more Sister Mary learns of the strange and arcane forces that sometimes manifest in this world, the more certain she is that she has been set upon a path to ward off these forces and protect the innocent wherever possible. Armed only with the trappings of her church and an unshakable faith, Sister Mary seeks out every supernatural threat she hears of through her fellow priests and nuns. Other members of her church may dismiss such things as medieval nonsense, but Sister Mary knows the real evils that exist in the shadows - and she knows that if such evils are left unchecked, they will bring ruin and horror to all of creation.",
     "backFlavorZh": "玛丽修女坚信，越是有诡奇奥义的力量在世上作怪，自己就越要在这条道路上抵御那些力量，只要有可能，无论有多远，都要保护无辜之人。尽管除了教会的罩袍和坚定的信仰之外别无他物，但玛丽修女只要一从同侪那里听闻超自然的威胁作祟，必然挺身前往一探究竟。教会中其他成员对此不屑一顾，以为这些都是中世纪的无知妄言。但玛丽修女知道，这些阴影中潜藏着真实的邪恶——她还知道这些邪恶如果听之任之，会给主创造的一切都带来毁灭和恐怖。",
     "backNameZh": "",
@@ -264126,7 +264126,7 @@ export const ALL_CARDS = {
   },
   "07002": {
     "agility": 2,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Amanda Sharpe was on track to become one of Miskatonic University's most accomplished graduates. However, ever since she saw a strange painting of an enormous creature's emergence from the depths of the ocean, her classwork has suffered. Her dreams are overwhelmed by images of a vast submerged city and whispers in a language she does not understand. She remains dedicated to her studies, but her goal is no longer to graduate at the top of her class; rather, she seeks to discover the meaning behind the occult secrets concealed between the lines of reality.",
     "backFlavorZh": "阿曼达·夏普眼看就要成为米大最杰出的毕业生。但自从她看见一幅诡奇的绘画之后，课业就受到了影响。画上是一个庞然巨物从深海涌起。她的梦境中全是一座巨大的沉没之城，还有不明言语的低语。她继续埋头研究，但目标已不是以尖子生的身份毕业，而是她定要找到现实之间潜藏的异教秘密究竟有何含义。",
     "backNameZh": "",
@@ -264237,7 +264237,7 @@ export const ALL_CARDS = {
   },
   "07003": {
     "agility": 4,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Trish had always excelled in both body and mind, her unwavering focus on excellence and her fearless disposition a winning combination. Given her stellar academic and athletic records, everyone expected to see her become something great. Instead, Trish took a job at a commercial code company. The initial shock of her humble work eventually wore off, and the exceptional Trish Scarborough faded into obscurity. This suited Trish just fine, as it made it harder for anyone to realize the truth: her job was a cover for her true work as a spy with the Black Chamber, the Bureau's code-breaking agency.",
     "backFlavorZh": "特里希向来文武双全，她坚定不移，追求卓越，无所畏惧，敢打敢拼，让她屡屡马到成功。鉴于她智体皆优的毕业记录，人人都指望她再干一番大事业。但特里希却去了一家商业密码公司。她的工作实在平平，旁人最初的惊讶也都消磨，一度被寄予重望的特里希·斯卡波罗已经泯然众人。但这却很适合特里希，也让旁人更难发现真相：她日常的工作不过是一种伪装，真实身份却是黑室这一官方译码特工组织的间谍。",
     "backNameZh": "",
@@ -264347,7 +264347,7 @@ export const ALL_CARDS = {
   },
   "07004": {
     "agility": 2,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Dexter Drake returned from the Great War to become a successful magician, enthralling audiences with his elaborate illusions and cunning stage tricks. Despite his meteoric success, Dexter longed to discover true magic. He was intrigued by the burnt and torn scraps of occult writing he had found during the war - fragments of the infamous <i>Necronomicon</i>. Dexter used his wealth to search for the truth about this ancient lore, and what he found horrified him. He knows that he may well be the only person with the ability to stop evil from swallowing the entire world.",
     "backFlavorZh": "戴克斯特·德雷克从大战退役后成了一名优秀的魔术师，总能用精巧的幻象和别出心裁的舞台技巧迷惑观众。尽管他声名鹊起，戴克斯特还是想发现真正的魔法。他为自己在战争中找到的密教文本着了魔，尽管这是一截火烧过的断章，但它也却是臭名昭著的《死灵之书》中的一节。戴克斯特用自己的财富寻找古代典籍之后的真相，但他的发现却叫人毛骨悚然。他知道，除了自己，可能再没人能阻止邪恶吞噬整个世界。",
     "backNameZh": "",
@@ -264463,7 +264463,7 @@ export const ALL_CARDS = {
   },
   "07005": {
     "agility": 4,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Silas Marsh has loved the sea ever since he was old enough to toddle through its briny shallows. Becoming a sailor was the easiest decision he ever made, and his sturdy frame and excellent sense for the weather have given him a good reputation aboard any vessel. There is only one thing troubling Silas: over and over again, he dreams of unsettling cities hidden beneath the waves and inhabited by bizarre creatures. These dreams call to him, stirring something deep within him that he thought he had left behind in his hometown of Innsmouth.",
     "backFlavorZh": "自打在海岸滩涂上蹒跚学步，塞拉斯·马什就深深爱上了大海。他不假思索就决定要做一名水手。他体格健壮、对天气有着超凡的感知，这让他名声在外，出海的每条船都认得。只有一件事困扰着塞拉斯：他一次次地梦到浪涛之下恼人的城市，还有栖息其中的古怪生物。这些梦境在召唤他，扰动他内心深处的一些东西，那些他以为已经留在家乡印斯茅斯的东西。",
     "backNameZh": "",
@@ -264576,7 +264576,7 @@ export const ALL_CARDS = {
     "willpower": 2
   },
   "07006": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264643,7 +264643,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07006"
   },
   "07007": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264703,7 +264703,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07007"
   },
   "07008": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264765,7 +264765,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07008"
   },
   "07009": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264827,7 +264827,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07009"
   },
   "07010": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264890,7 +264890,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07010"
   },
   "07011": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -264957,7 +264957,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07011"
   },
   "07012": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265021,7 +265021,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07012"
   },
   "07013": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265082,7 +265082,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07013"
   },
   "07014": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265155,7 +265155,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07014"
   },
   "07015": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265226,7 +265226,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07015"
   },
   "07016": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265288,7 +265288,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07016"
   },
   "07017": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265351,7 +265351,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07018": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265416,7 +265416,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07019": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265477,7 +265477,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07020": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265535,7 +265535,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07021": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265596,7 +265596,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07022": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265660,7 +265660,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07023": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265718,7 +265718,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07024": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265772,7 +265772,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07025": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265837,7 +265837,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07026": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265898,7 +265898,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07027": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -265958,7 +265958,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07028": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266016,7 +266016,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07029": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266081,7 +266081,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07030": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266138,7 +266138,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07031": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266196,7 +266196,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07032": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266252,7 +266252,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07033": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266313,7 +266313,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07034": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266370,7 +266370,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07035": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266424,7 +266424,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07036": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266483,7 +266483,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07037": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266542,7 +266542,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07038": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266603,7 +266603,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07038"
   },
   "07039": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -266656,7 +266656,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07039"
   },
   "07040": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270611,7 +270611,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07107"
   },
   "07108": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270673,7 +270673,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07109": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270732,7 +270732,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07110": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270786,7 +270786,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07111": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270850,7 +270850,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07112": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270909,7 +270909,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07113": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -270963,7 +270963,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07114": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271023,7 +271023,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07115": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271078,7 +271078,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07116": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271132,7 +271132,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07117": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271193,7 +271193,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07118": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271254,7 +271254,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07119": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271315,7 +271315,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07120": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271371,7 +271371,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07121": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -271432,7 +271432,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07122": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273163,7 +273163,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07151"
   },
   "07152": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273219,7 +273219,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07153": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273279,7 +273279,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07154": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273335,7 +273335,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07155": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273393,7 +273393,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07156": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273458,7 +273458,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07157": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273516,7 +273516,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07158": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273574,7 +273574,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "07159": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273636,7 +273636,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07160": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273695,7 +273695,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07161": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -273752,7 +273752,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07162": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275665,7 +275665,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07188"
   },
   "07189": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275730,7 +275730,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07190": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275787,7 +275787,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07191": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275852,7 +275852,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07192": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275917,7 +275917,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07193": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -275976,7 +275976,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07194": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -276043,7 +276043,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07195": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -276100,7 +276100,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07196": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -276154,7 +276154,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07197": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278096,7 +278096,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07219"
   },
   "07220": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278161,7 +278161,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07221": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278222,7 +278222,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07222": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278280,7 +278280,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07223": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278340,7 +278340,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07224": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278405,7 +278405,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07225": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278471,7 +278471,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07226": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278533,7 +278533,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07227": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278595,7 +278595,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07228": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278657,7 +278657,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07229": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -278720,7 +278720,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07230": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280529,7 +280529,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07260"
   },
   "07261": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280587,7 +280587,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07262": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280652,7 +280652,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07263": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280709,7 +280709,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07264": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280765,7 +280765,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07265": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280818,7 +280818,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07266": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280874,7 +280874,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07267": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -280939,7 +280939,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07268": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -281006,7 +281006,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07269": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -281063,7 +281063,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07270": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -281119,7 +281119,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07271": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -281177,7 +281177,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07272": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -281235,7 +281235,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07273": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -282942,7 +282942,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07300b"
   },
   "07301": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283001,7 +283001,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07302": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283067,7 +283067,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "07303": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283119,7 +283119,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07304": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283178,7 +283178,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07305": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283244,7 +283244,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "07306": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283298,7 +283298,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07307": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283361,7 +283361,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07308": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283420,7 +283420,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "07309": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -283484,7 +283484,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "07310": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -285276,12 +285276,12 @@ export const ALL_CARDS = {
   },
   "08001": {
     "agility": 2,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Daniela always figured she had a good life. She had a loving, boisterous family. She had a steady job that used her brains and her hands. She had enough money to spend on fast cars, pretty girls, and her motorcycle, Gabriel. Then her brother, Ramon, got caught up in some trouble. Her mother warned her to be careful, that darkness lay ahead. Daniela set a glass of water behind the door for her mother's sake, to catch evil spirits - just as she'd been taught as a child. When Daniela awoke to find it shattered, she was determined to figure out what happened and fix it. Just like she always did.",
     "backFlavorZh": "丹妮拉一直认为她拥有美好的生活。她有一个可爱的、热闹的家庭。她有一份自力更生的稳定工作。她有足够的钱花在跑车、漂亮女孩儿和自己的摩托车加百列上。但之后她的哥哥拉蒙遇上了一些麻烦。母亲警告过她要小心，黑暗将会接踵而至。丹妮拉在门后放了一杯水——母亲小时候教导她，说这样能抓住恶灵。当丹妮拉醒来，发现瓶子碎了，她便决定去找到毛病的源头，然后将其修正，一如既往。",
     "backNameZh": "",
     "backText": "Deck Size: 30.\nDeckbuilding Options: Guardian cards ([guardian]) level 0, Survivor cards ([survivor]) level 1-5, Neutral cards level 0-5, up to 5 other Survivor cards ([survivor]) level 0.\nDeckbuilding Requirements (do not count toward deck size): Mechanic's Wrench, Mob Goons, 1 random basic weakness.",
-    "backTextZh": "牌库卡牌张数：30。\n牌库构建选项：守卫者卡牌([guardian])等级0，求生者卡牌([survivor])等级1-5，中立卡牌等级0-5，其他求生者卡牌([survivor])等级0最多5张。\n牌库构建需求(不计入卡牌张数)：机修工的扳手、黑帮暴徒、1张随机基础弱点。",
+    "backTextZh": "牌库卡牌张数：30。牌库构建选项：守卫者卡牌([guardian])等级0，求生者卡牌([survivor])等级1-5，中立卡牌等级0-5，其他求生者卡牌([survivor])等级0最多5张。牌库构建需求(不计入卡牌张数)：机修工的扳手、黑帮暴徒、1张随机基础弱点。",
     "backimagesrc": "/bundles/cards/08001b.png",
     "code": "08001",
     "combat": 5,
@@ -285394,7 +285394,7 @@ export const ALL_CARDS = {
     "subname": "The Mechanic",
     "subnameZh": "机修工",
     "text": "[reaction] After an enemy attacks you (except an attack of opportunity you provoked), even if that attack was canceled: Either deal 1 damage to that enemy, or automatically evade it.\n[elder_sign] effect: +1. If you were attacked by an enemy this round, you automatically succeed, instead.",
-    "textZh": "[reaction]敌人攻击你后(你触发的趁乱攻击除外)，即便该攻击被取消：对该敌人造成1点伤害，或自动躲避它。\n[elder_sign]效果：+1。如果你本轮被敌人攻击过，改为自动成功。",
+    "textZh": "[reaction]敌人攻击你后(你触发的趁乱攻击除外)，即便该攻击被取消：对该敌人造成1点伤害，或自动躲避它。[elder_sign]效果：+1。如果你本轮被敌人攻击过，改为自动成功。",
     "traits": [
       "Entrepreneur"
     ],
@@ -285408,7 +285408,7 @@ export const ALL_CARDS = {
     "willpower": 4
   },
   "08002": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -285462,7 +285462,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Daniela Reyes deck only.\n[fast] Exhaust Mechanic's Wrench: Choose an enemy at your location. That enemy attacks you.\n[action]: Fight. Use this ability only against an enemy that has attacked you since the end of your last turn. You get +2 [combat] for this attack and deal +1 damage for this attack.",
-    "textZh": "丹妮拉·雷耶丝牌库专用。\n[free]横置机修工的扳手：选择你所在地点的一个敌人。该敌人攻击你。\n[action]：攻击。本能力只能用于在你上一回合结束后，攻击过你的敌人。本次攻击你得到+2[combat]并且造成+1伤害。",
+    "textZh": "丹妮拉·雷耶丝牌库专用。[fast]横置机修工的扳手：选择你所在地点的一个敌人。该敌人攻击你。[action]：攻击。本能力只能用于在你上一回合结束后，攻击过你的敌人。本次攻击你得到+2[combat]并且造成+1伤害。",
     "traits": [
       "Item",
       "Tool",
@@ -285479,7 +285479,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08002"
   },
   "08003": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -285532,7 +285532,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Hunter.\nPrey - Daniela Reyes only.\nThis enemy's attacks cannot be canceled.\nDamage/horror dealt by this enemy's attacks is treated as direct.",
-    "textZh": "猎手\n猎物 - 仅限丹妮拉·雷耶丝\n本敌人的攻击不能被取消。\n本敌人攻击造成的伤害/恐惧将视为直接伤害/恐惧。",
+    "textZh": "猎手。\n猎物 - 仅限丹妮拉·雷耶丝。\n本敌人的攻击不能被取消。本敌人攻击造成的伤害/恐惧将视为直接伤害/恐惧。",
     "traits": [
       "Humanoid",
       "Criminal"
@@ -285548,12 +285548,12 @@ export const ALL_CARDS = {
   },
   "08004": {
     "agility": 1,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The stars hold many secrets, and Norman was never one to ignore a mystery. So when six stars vanished from the sky, he simply couldn't let it go - not even when his colleagues told him he was just imaginging things. It took him years, and the near-death of his career, but he eventually found his answers in an ancient tome. It described the stars, and the sequence in which they would vanish, down to the very date and time. It was a sign, the book said, of the end of everything. It was the harbinger of a great beast that would tear asunder all that man had wrought. Norman isn't sure what he can do to stop the beast from destroying the world, but if the stars hold the answer, then he will find it.",
     "backFlavorZh": "星星里藏有很多秘密，诺曼从不会忽略秘密。当六颗星星从天上消失时，诺曼简直无法接受——尽管他的同事告诉他那一切都是他的想象。他为此花费了好几年，还差点葬送职业生涯，但终于从一本古籍里找到了答案。它描述了星星以及它们消失的顺序，包括确切的日期和时间。书中说这是万物终结的一个信号。它预示了一只庞大的野兽将会撕碎人类所创造的一切。诺曼不知道该怎么做来阻止野兽摧毁世界，但如果星星知道答案，他将会找到答案。",
     "backNameZh": "",
     "backText": "Deck Size: 30.\nDeckbuilding Options: Seeker cards ([seeker]) level 0, Mystic cards ([mystic]) level 1-5, Neutral cards level 0-5, up to 5 other Mystic cards ([mystic]) level 0.\nDeckbuilding Requirements (do not count toward deck size): Livre d'Eibon, The Harbinger, 1 random basic weakness.",
-    "backTextZh": "牌库卡牌张数：30。\n牌库构建选项：探求者卡牌([seeker])等级0，潜修者卡牌([mystic])等级1-5，中立卡牌等级0-5，其他潜修者卡牌([mystic])等级0最多5张。\n牌库构建需求(不计入卡牌张数)：伊波恩之书、预示者、1张随机基础弱点。",
+    "backTextZh": "牌库卡牌张数：30。牌库构建选项：探求者卡牌([seeker])等级0，潜修者卡牌([mystic])等级1-5，中立卡牌等级0-5，其他潜修者卡牌([mystic])等级0最多5张。牌库构建需求(不计入卡牌张数)：伊波恩之书、预示者、1张随机基础弱点。",
     "backimagesrc": "/bundles/cards/08004b.png",
     "code": "08004",
     "combat": 2,
@@ -285667,7 +285667,7 @@ export const ALL_CARDS = {
     "subname": "The Astronomer",
     "subnameZh": "天文学家",
     "text": "Play with the top card of your deck revealed.\nOnce per round, you may play the top card of your deck as if it were in your hand, at -1 resource cost.\nForced - After a weakness is revealed while on top of your deck: Draw it.\n[elder_sign] effect: +X. You may swap the top card of your deck with a card in your hand. X is the resource cost of the top card of your deck.",
-    "textZh": "你牌库顶的卡牌始终揭示。\n每轮一次，你可以打出你牌库顶的卡牌(如同其是你的手牌)且其资源费用-1。\n强制 - 在你的牌库顶揭示一张弱点后：将其抽取。\n[elder_sign]效果：+X。你可以用一张手牌交换你牌库顶的卡牌。X为你牌库顶卡牌的资源费用。",
+    "textZh": "你牌库顶的卡牌始终揭示。每轮一次，你可以打出你牌库顶的卡牌(如同其是你的手牌)且其资源费用-1。强制 - 在你的牌库顶揭示一张弱点后：将其抽取。[elder_sign]效果：+X。你可以用一张手牌交换你牌库顶的卡牌。X为你牌库顶卡牌的资源费用。",
     "traits": [
       "Miskatonic"
     ],
@@ -285681,7 +285681,7 @@ export const ALL_CARDS = {
     "willpower": 4
   },
   "08005": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -285738,7 +285738,7 @@ export const ALL_CARDS = {
     "subname": "Hyperborean Grimoire",
     "subnameZh": "北方乐土的魔法书",
     "text": "Norman Withers deck only.\n[fast] Exhaust Livre d'Eibon: Swap the top card of your deck with a card in your hand.\n[fast] Exhaust Livre d'Eibon: Commit the top card of your deck to an eligible skill test performed by an investigator at your location.",
-    "textZh": "诺曼·威瑟斯牌库专用。\n[free]横置伊波恩之书：用你一张手牌交换你牌库顶的卡牌。\n[free]横置伊波恩之书：将你牌库顶的卡牌投入到你所在地点一位调查员执行的符合条件的技能检定中。",
+    "textZh": "诺曼·威瑟斯牌库专用。[fast]横置伊波恩之书：用你一张手牌交换你牌库顶的卡牌。[fast]横置伊波恩之书：将你牌库顶的卡牌投入到你所在地点一位调查员执行的符合条件的技能检定中。",
     "traits": [
       "Item",
       "Relic",
@@ -285755,7 +285755,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08005"
   },
   "08006": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -285804,7 +285804,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - Place this card on top of your deck.\nWhile The Harbinger is revealed and on top of your deck, cards in your deck cannot be searched, drawn, or manipulated in any way except by the below ability.\n[action] [action]: Discard The Harbinger. This ability may be activated while The Harbinger is on top of your deck, as if it were in your threat area.",
-    "textZh": "显现 - 将本卡牌置于你牌库顶。\n你的牌库顶揭示了预示者时，除下方能力外，你牌库里的卡牌不能被查找、抽取，或以任何方式操纵。\n[action][action]：弃掉预示者。预示者在你牌库顶时可以激活本能力，如同其在你的威胁区。",
+    "textZh": "显现 - 将本卡牌置于你牌库顶。你的牌库顶揭示了预示者时，除下方能力外，你牌库里的卡牌不能被查找、抽取，或以任何方式操纵。[action][action]：弃掉预示者。预示者在你牌库顶时可以激活本能力，如同其在你的威胁区。",
     "traits": [
       "Omen",
       "Endtimes"
@@ -285823,12 +285823,12 @@ export const ALL_CARDS = {
     "alternatedBy": [
       "90062"
     ],
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Young Jack traveled the world with his father's archaeological expeditions. Now a globe-trotting treasure hunter and an accomplished archaeologist in his own right, \"Monterey\" follows in his father's footsteps, securing the treasures of ancient civilizations and lost cultures. But after discovering a silver pendant with a familiar symbol on it, Monterey must explore his own past. Years ago, his father was found murdered with the very same sigil carved in his forehead. The image has haunted Monterey's dreams ever since. But he's getting close. He won't stop until he solves the mystery of his father's murder... no matter what it takes.",
     "backFlavorZh": "年轻的杰克跟随他父亲一起考古探险，环游世界。而如今他已是遍历全球的寻宝猎人，同时也是一个出色的考古学家，“蒙特雷”跟随他父亲的脚步，保护着古代文明和失落文化的宝藏。但当蒙特雷发现了一个带有熟悉符号的银色吊坠后，他决定去探索自己的过去。很多年前，他的父亲被杀害了，额头带有同样的符号。自此之后，那个画面一直出现在蒙特雷的梦境里。他已经快接近真相了。在找出杀害他父亲的凶手前，他是不会停下脚步的……无论付出多少代价。",
     "backNameZh": "",
     "backText": "Deck Size: 30.\nDeckbuilding Options: Rogue cards ([rogue]) level 0, Seeker cards ([seeker]) level 1-5, Neutral cards level 0-5, up to 5 other Seeker cards ([seeker]) level 0.\nDeckbuilding Requirements (do not count toward deck size): Trusty Bullwhip, Buried Secrets, 1 random basic weakness.",
-    "backTextZh": "牌库卡牌张数：30。\n牌库构建选项：流浪者卡牌([rogue])等级0，探求者卡牌([seeker])等级1-5，中立卡牌等级0-5，其他探求者卡牌([seeker])等级0最多5张。\n牌库构建需求(不计入卡牌张数)：可靠的长鞭、被埋葬的秘密、1张随机基础弱点。",
+    "backTextZh": "牌库卡牌张数：30。牌库构建选项：流浪者卡牌([rogue])等级0，探求者卡牌([seeker])等级1-5，中立卡牌等级0-5，其他探求者卡牌([seeker])等级0最多5张。牌库构建需求(不计入卡牌张数)：可靠的长鞭、被埋葬的秘密、1张随机基础弱点。",
     "backimagesrc": "/bundles/cards/08007b.png",
     "code": "08007",
     "combat": 2,
@@ -285956,7 +285956,7 @@ export const ALL_CARDS = {
     "willpower": 1
   },
   "08008": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286010,7 +286010,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast. Monterey Jack deck only.\n[action]: Fight. This attack uses [agility] instead of [combat]. If this attack succeeds, you may exhaust Trusty Bullwhip to either automatically evade the attacked enemy or deal +1 damage for this attack.",
-    "textZh": "快速。雷蒙特·杰克牌库专用。\n[action]：攻击。本次攻击不使用[combat]，改为使用[agility]。如果本次攻击成功，你可以横置可靠的长鞭，以自动躲避受到攻击的敌人或使本次攻击+1伤害。",
+    "textZh": "快速。蒙特雷·杰克牌库专用。[action]：攻击。本次攻击不使用[combat]，改为使用[agility]。如果本次攻击成功，你可以横置可靠的长鞭，以自动躲避受到攻击的敌人或使本次攻击+1伤害。",
     "traits": [
       "Item",
       "Weapon",
@@ -286027,7 +286027,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08008"
   },
   "08009": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286074,7 +286074,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - Put Buried Secrets into play in your threat area.\nIf your location can be investigated, you cannot move except by scenario card effects.\n[action]: Investigate. If you succeed, instead of discovering clues, discard Buried Secrets. If you fail, you may take 2 horror to shuffle it into your deck.",
-    "textZh": "显现 - 将被埋葬的秘密放置入场，放到你的威胁区域中。\n如果你所在的地点能被调查，除冒险卡牌效果外，你不能移动。\n[action]：调查。如果你成功，不发现线索，改为弃掉被埋葬的秘密。如果你失败，你可以受到2点恐惧以将被埋葬的秘密洗回你的牌库。",
+    "textZh": "显现 - 将被埋葬的秘密放置入场，放到你的威胁区域中。如果你所在的地点能被调查，除冒险卡牌效果外，你不能移动。[action]：调查。如果你成功，不发现线索，改为弃掉被埋葬的秘密。如果你失败，你可以受到2点恐惧以将被埋葬的秘密洗回你的牌库。",
     "traits": [
       "Mystery"
     ],
@@ -286088,12 +286088,12 @@ export const ALL_CARDS = {
   },
   "08010": {
     "agility": 3,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Chen Li speaks rarely. When she does, her words are measured and wise. After a lifetime of disciplined training, every gesture is graceful, uncluttered by hesitation. The monks who raised her said that she was born for a special purpose, to face a great evil. Now, they believe that evil is at hand, and she is the only one who can stop it.",
     "backFlavorZh": "陈丽丽话不多。一旦开口，必是倍加思量的金玉良言。经过一生的严格训练，她的每个动作都优雅而果断。养育她的高僧曾经说过，她的出生是为了对抗一个强大的恶魔。现在，他们相信恶魔即将到来，而她是唯一一个能够阻止恶魔的人。",
     "backNameZh": "",
     "backText": "Deck Size: 30.\nDeckbuilding Options: Mystic cards ([mystic]) level 0, Guardian cards ([guardian]) level 1-5, Neutral cards level 0-5, up to 5 other Guardian cards ([guardian]) level 0.\nDeckbuilding Requirements (do not count toward deck size): 1 Burden of Destiny for each Discipline asset (see below), 1 random basic weakness.\nDeckbuilding Restrictions: No [[Firearm]] assets.\nAdditional Requirements: At deck creation, choose a Discipline asset to add to your deck. It is considered part of your Deckbuilding Requirements. For every 15 experience you've earned in total, you may choose and add a different Discipline asset to your deck.",
-    "backTextZh": "牌库卡牌张数：30。\n牌库构建选项：潜修者卡牌([mystic])等级0，守卫者卡牌([guardian])等级1-5，中立卡牌等级0-5，其他守卫者卡牌([guardian])等级0最多5张。\n牌库构建需求(不计入卡牌张数)：每张演武支援配1张命运重担(见下方)、1张随机基础弱点。\n牌库构建限制：无[[枪械]]支援。\n附加需求：当构建牌库时，选择一张演武支援加入到你的牌库。这也视作你牌库构建需求的一部分。每总计取得15点经验值，你可以选择一张不同的演武支援加入你的牌库。",
+    "backTextZh": "牌库卡牌张数：30。牌库构建选项：潜修者卡牌([mystic])等级0，守卫者卡牌([guardian])等级1-5，中立卡牌等级0-5，其他守卫者卡牌([guardian])等级0最多5张。牌库构建需求(不计入卡牌张数)：每张演武支援配1张命运重担(见下方)、1张随机基础弱点。牌库构建限制：无[[枪械]]支援。附加需求：当构建牌库时，选择一张演武支援加入到你的牌库。这也视作你牌库构建需求的一部分。每总计取得15点经验值，你可以选择一张不同的演武支援加入你的牌库。",
     "backimagesrc": "/bundles/cards/08010b.png",
     "code": "08010",
     "combat": 4,
@@ -286209,7 +286209,7 @@ export const ALL_CARDS = {
     "subname": "The Martial Artist",
     "subnameZh": "武术家",
     "text": "You begin the game with each Discipline in your deck in play, [[Unbroken]] side faceup.\n[elder_sign] effect: +2. After this test ends, flip a [[Broken]] Discipline you control to its [[Unbroken]] side.",
-    "textZh": "游戏开始时，你牌库中的每张演武卡牌位于场上，[[运功]]面朝上。\n[elder_sign]效果：+2。本次检定结束后，将一张你控制的[[破功]]演武翻至[[运功]]面。",
+    "textZh": "游戏开始时，你牌库中的每张演武卡牌位于场上，[[运功]]面朝上。[elder_sign]效果：+2。本次检定结束后，将一张你控制的[[破功]]演武翻至[[运功]]面。",
     "traits": [
       "Chosen",
       "Warden"
@@ -286225,7 +286225,7 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "08011a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286275,7 +286275,7 @@ export const ALL_CARDS = {
     "subname": "Alignment of Spirit",
     "subnameZh": "心神合一",
     "text": "Lily Chen deck only. Permanent.\nYou get +1 [willpower].\n[action]: Take 1 direct damage to heal 3 horror, or take 1 direct horror to heal 3 damage. Flip this asset over.",
-    "textZh": "陈丽丽牌库专用。永久。\n你得到+1[willpower]。\n[action]：受到1点直接伤害，以治愈3点恐惧；或受到1点直接恐惧，以治愈3点伤害。将本支援翻面。",
+    "textZh": "陈丽丽牌库专用。永久。你得到+1[willpower]。[action]：受到1点直接伤害，以治愈3点恐惧；或受到1点直接恐惧，以治愈3点伤害。将本支援翻面。",
     "traits": [
       "Unbroken"
     ],
@@ -286288,7 +286288,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08011a"
   },
   "08011b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286326,7 +286326,7 @@ export const ALL_CARDS = {
     "subname": "Alignment of Spirit",
     "subnameZh": "心神合一",
     "text": "Lily Chen deck only. Permanent.\n[reaction] After the round ends, if you took no damage or horror this round: Flip this asset over to its [[Unbroken]] side.",
-    "textZh": "陈丽丽牌库专用。永久。\n[reaction]一轮结束后，如果你在本轮未受到伤害或恐惧：将本支援翻至[[运功]]面。",
+    "textZh": "陈丽丽牌库专用。永久。[reaction]一轮结束后，如果你在本轮未受到伤害或恐惧：将本支援翻至[[运功]]面。",
     "traits": [
       "Broken"
     ],
@@ -286339,7 +286339,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08011b"
   },
   "08012a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286389,7 +286389,7 @@ export const ALL_CARDS = {
     "subname": "Quiescence of Thought",
     "subnameZh": "凝神静气",
     "text": "Lily Chen deck only. Permanent.\nYou get +1 [intellect].\n[action]: If you have fewer than 5 cards in your hand: Draw cards until there are 5 cards in your hand. Flip this asset over.",
-    "textZh": "陈丽丽牌库专用。永久。\n你得到+1[intellect]。\n[action]如果你的手牌少于5张：抽取卡牌，直到你有5张手牌。将本支援翻面。",
+    "textZh": "陈丽丽牌库专用。永久。你得到+1[intellect]。[action]如果你的手牌少于5张：抽取卡牌，直到你有5张手牌。将本支援翻面。",
     "traits": [
       "Unbroken"
     ],
@@ -286402,7 +286402,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08012a"
   },
   "08012b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286440,7 +286440,7 @@ export const ALL_CARDS = {
     "subname": "Quiescence of Thought",
     "subnameZh": "凝神静气",
     "text": "Lily Chen deck only. Permanent.\n[reaction] After the round ends, if your hand did not have 2 or more cards in it at any point this round: Flip this asset over to its [[Unbroken]] side.",
-    "textZh": "陈丽丽牌库专用。永久。\n[reaction]一轮结束后，如果本轮你的手牌从未有过2张或以上：将本支援翻至[[运功]]面。",
+    "textZh": "陈丽丽牌库专用。永久。[reaction]一轮结束后，如果本轮你的手牌从未有过2张或以上：将本支援翻至[[运功]]面。",
     "traits": [
       "Broken"
     ],
@@ -286453,7 +286453,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08012b"
   },
   "08013a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286503,7 +286503,7 @@ export const ALL_CARDS = {
     "subname": "Prescience of Fate",
     "subnameZh": "扭转乾坤",
     "text": "Lily Chen deck only. Permanent.\nYou get +1 [combat].\n[action]: You get +5 skill value for the next skill test you perform this turn. After that skill test ends, flip this asset over. This action does not provoke attacks of opportunity.",
-    "textZh": "陈丽丽牌库专用。永久。\n你得到+1[combat]。\n[action]：本回合你下次执行的技能检定得到技能值+5。该技能检定结束后，将本支援翻面。本行动不会触发趁乱攻击。",
+    "textZh": "陈丽丽牌库专用。永久。你得到+1[combat]。[action]：本回合你下次执行的技能检定得到技能值+5。该技能检定结束后，将本支援翻面。本行动不会触发趁乱攻击。",
     "traits": [
       "Unbroken"
     ],
@@ -286516,7 +286516,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08013a"
   },
   "08013b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286554,7 +286554,7 @@ export const ALL_CARDS = {
     "subname": "Prescience of Fate",
     "subnameZh": "扭转乾坤",
     "text": "Lily Chen deck only. Permanent.\n[reaction] After the round ends, if you performed no skill tests this round: Flip this asset over to its [[Unbroken]] side.",
-    "textZh": "陈丽丽牌库专用。永久。\n[reaction]一轮结束后，如果你本轮没有执行技能检定：将本支援翻至[[运功]]面。",
+    "textZh": "陈丽丽牌库专用。永久。[reaction]一轮结束后，如果你本轮没有执行技能检定：将本支援翻至[[运功]]面。",
     "traits": [
       "Broken"
     ],
@@ -286567,7 +286567,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08013b"
   },
   "08014a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286617,7 +286617,7 @@ export const ALL_CARDS = {
     "subname": "Balance of Body",
     "subnameZh": "稳如泰山",
     "text": "Lily Chen deck only. Permanent.\nYou get +1 [agility].\n[action]: One at a time, take up to 3 different fight or evade actions. Flip this asset over. This action does not provoke attacks of opportunity.",
-    "textZh": "陈丽丽牌库专用。永久。\n你得到+1[agility]。\n[action]：依次执行最多3次不同的攻击或躲避行动。将本支援翻面。本行动不会触发趁乱攻击。",
+    "textZh": "陈丽丽牌库专用。永久。你得到+1[agility]。[action]：依次执行最多3次不同的攻击或躲避行动。将本支援翻面。本行动不会触发趁乱攻击。",
     "traits": [
       "Unbroken"
     ],
@@ -286630,7 +286630,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08014a"
   },
   "08014b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286668,7 +286668,7 @@ export const ALL_CARDS = {
     "subname": "Balance of Body",
     "subnameZh": "稳如泰山",
     "text": "Lily Chen deck only. Permanent.\n[reaction] After the round ends, if no enemies were at the same location as you at any point this round: Flip this asset over to its [[Unbroken]] side.",
-    "textZh": "陈丽丽牌库专用。永久。\n[reaction]一轮结束后，如果本轮中从未有敌人与你处于同一地点：将本支援翻至[[运功]]面。",
+    "textZh": "陈丽丽牌库专用。永久。[reaction]一轮结束后，如果本轮中从未有敌人与你处于同一地点：将本支援翻至[[运功]]面。",
     "traits": [
       "Broken"
     ],
@@ -286681,7 +286681,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08014b"
   },
   "08015": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286728,7 +286728,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - You must either (choose one):\n- Flip a Discipline you control to its [[Broken]] side. It cannot be flipped back this round.\n- Take 1 damage and 1 horror.",
-    "textZh": "显现 - 你必须作出决定(选择以下一项)：\n- 将一张你控制的演武翻至[[破功]]面。该卡牌本轮不能翻面。\n- 受到1点伤害和1点恐惧。",
+    "textZh": "显现 - 你必须作出决定(选择以下一项)：- 将一张你控制的演武翻至[[破功]]面。该卡牌本轮不能翻面。- 受到1点伤害和1点恐惧。",
     "traits": [
       "Flaw"
     ],
@@ -286742,12 +286742,12 @@ export const ALL_CARDS = {
   },
   "08016": {
     "agility": 3,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "According to Bob, the secret to success as a salesman is persistence. People just need to be told what it is that they want. Repeatedly. Recently, Bob came into possession of a handful of \"cursed\" golden coins, and he hopes the same persistence he so famously advocates will help him to uncover their origin and purpose. If he plays his cards right, maybe this will be his big score. Maybe he'll finally be able to retire and buy that boat he's had his eye on and spend the rest of his days fishing in a tropical paradise. Or maybe Bob will finally come to see all that glitters is not gold.",
     "backFlavorZh": "鲍勃认为，推销员的成功取决于坚持不懈。你只需要一遍又一遍地告知别人他们想要的是什么。最近，鲍勃拥有了几枚“被诅咒”的金币，他希望自己一向声名在外的坚持能够发现金币的起源与出现的原因。如果他不出差错的话，这将是一大成就。也许干完这票，他终于能退休，买下自己一直想要的那艘船，在热带天堂钓鱼度过余生。也许到最后，鲍勃会发现那些闪闪发光的其实并不是黄金。",
     "backNameZh": "",
     "backText": "Deck Size: 30.\nDeckbuilding Options: Survivor cards ([survivor]) level 0, Rogue cards ([rogue]) level 1-5, Neutral cards level 0-5, up to 5 other Rogue cards ([rogue]) level 0.\nDeckbuilding Requirements (do not count toward deck size): Shrewd Dealings, Greed, 1 random basic weakness.",
-    "backTextZh": "牌库卡牌张数：30。\n牌库构建选项：求生者卡牌([survivor])等级0，流浪者卡牌([rogue])等级1-5，中立卡牌等级0-5，其他流浪者卡牌([rogue])等级0最多5张。\n牌库构建需求(不计入卡牌张数)：精明的交易、贪婪、1张随机基础弱点。",
+    "backTextZh": "牌库卡牌张数：30。牌库构建选项：求生者卡牌([survivor])等级0，流浪者卡牌([rogue])等级1-5，中立卡牌等级0-5，其他流浪者卡牌([rogue])等级0最多5张。牌库构建需求(不计入卡牌张数)：精明的交易、贪婪、1张随机基础弱点。",
     "backimagesrc": "/bundles/cards/08016b.png",
     "code": "08016",
     "combat": 3,
@@ -286859,7 +286859,7 @@ export const ALL_CARDS = {
     "subname": "The Salesman",
     "subnameZh": "推销员",
     "text": "At any time, an investigator at your location may reveal to you the [[Item]] assets in their hand.\nYou may take an additional action during your turn, which can only be used to play an [[Item]] asset from the hand of an investigator at your location, under their control. (Both investigators may spend resources to pay its cost).\n[elder_sign] effect: +1 for each [[Item]] asset you control.",
-    "textZh": "在任何时候，你所在地点的调查员可以向你揭示其手中的[[道具]]支援。\n你可以在自己回合期间执行额外一个行动，该行动只能用于打出你所在地点一位调查员手中的一个[[道具]]支援，打出后置于该调查员控制之下。(你和该调查员都可以为支付该支援的费用花费资源。)\n[elder_sign]效果：你每控制一张[[道具]]支援，+1。",
+    "textZh": "在任何时候，你所在地点的调查员可以向你揭示其手中的[[道具]]支援。你可以在自己回合期间执行额外一个行动，该行动只能用于打出你所在地点一位调查员手中的一个[[道具]]支援，打出后置于该调查员控制之下。(你和该调查员都可以为支付该支援的费用花费资源。)\n[elder_sign]效果：你每控制一张[[道具]]支援，+1。",
     "traits": [
       "Entrepreneur"
     ],
@@ -286873,7 +286873,7 @@ export const ALL_CARDS = {
     "willpower": 2
   },
   "08017": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286924,7 +286924,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Bob Jenkins deck only.\nReduce the cost of each [[Item]] asset you play by 1.\n[reaction] When you play an [[Item]] asset: Play it under the control of any investigator at your location.",
-    "textZh": "鲍勃·詹金斯牌库专用。\n你打出的每张[[道具]]支援费用-1。\n[reaction]在你打出一张[[道具]]支援时：将其置于你所在地点的任意调查员控制下。",
+    "textZh": "鲍勃·詹金斯牌库专用。你打出的每张[[道具]]支援费用-1。[reaction]在你打出一张[[道具]]支援时：将其置于你所在地点的任意调查员控制下。",
     "traits": [
       "Talent"
     ],
@@ -286937,7 +286937,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08017"
   },
   "08018": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -286985,7 +286985,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - Take 1 horror. If you have...\n- ...10 or fewer resources, take 1 additional horror.\n- ...5 or fewer resources, take 1 additional horror.\n- ...0 resources, take 1 additional horror.",
-    "textZh": "显现 - 受到1点恐惧。如果你有……\n- ……10资源或更少，额外受到1点恐惧。\n- ……5资源或更少，额外受到1点恐惧。\n- ……0资源，额外受到1点恐惧。",
+    "textZh": "显现 - 受到1点恐惧。如果你有……。\n- ……10资源或更少，额外受到1点恐惧。- ……5资源或更少，额外受到1点恐惧。- ……0资源，额外受到1点恐惧。",
     "traits": [
       "Flaw"
     ],
@@ -286998,7 +286998,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08018"
   },
   "08019": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287036,7 +287036,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nForced - When your first turn of the game begins: One at a time, play any number of [[Item]] assets from your hand, reducing the cost of each by 1. During this turn, you have 3 fewer actions to take.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n强制 - 在你游戏的第一个回合开始时：从手中打出任意张数的[[道具]]支援，每张费用-1。你本回合期间少进行三次行动。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。强制 - 在你游戏的第1个回合开始时：从手中打出任意张数的[[道具]]支援，每张费用-1。你本回合期间少进行3次行动。",
     "traits": [
       "Talent"
     ],
@@ -287050,7 +287050,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08020": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287109,7 +287109,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08021": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287151,7 +287151,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play during any [fast] window.\nUntil the end of the phase, whenever an enemy would attack another investigator at your location, it attacks you instead, then engages you. Cancel 1 horror dealt by each attack made in this way.",
-    "textZh": "快速。可在任何[free]时间段期间打出。\n直到本阶段结束，每次敌人攻击你所在地点的另一位调查员时，改为攻击你，然后与你交战。取消每次这种攻击造成的1点恐惧。",
+    "textZh": "快速。可在任何[fast]时间段期间打出。直到本阶段结束，每次敌人攻击你所在地点的另一位调查员时，改为攻击你，然后与你交战。取消每次这种攻击造成的1点恐惧。",
     "traits": [
       "Spirit",
       "Tactic"
@@ -287167,7 +287167,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08022": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287210,7 +287210,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fight. For each different class among cards you control, you get +1 [combat] and deal +1 damage for this attack.",
-    "textZh": "攻击。你每控制一张不同职阶的卡牌，你本次攻击得到+1[combat]，造成+1伤害。",
+    "textZh": "攻击。你控制的卡牌中每有一个不同的职阶，你本次攻击得到+1[combat]，造成+1伤害。",
     "traits": [
       "Spirit",
       "Synergy"
@@ -287226,7 +287226,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08023": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287287,7 +287287,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08024": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287342,7 +287342,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08025": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287407,7 +287407,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08026": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287449,7 +287449,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when an enemy attacks an investigator at your location.\nCancel that attack. Then, test [agility] (1). If you succeed, deal 1 damage to that enemy.",
-    "textZh": "快速。在一个敌人攻击你所在地点的一位调查员时打出。\n取消该次攻击。然后，检定[agility](1)。如果你成功，对该敌人造成1点伤害。",
+    "textZh": "快速。在一个敌人攻击你所在地点的一位调查员时打出。取消该次攻击。然后，检定[agility](1)。如果你成功，对该敌人造成1点伤害。",
     "traits": [
       "Tactic"
     ],
@@ -287463,7 +287463,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08027": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287507,7 +287507,7 @@ export const ALL_CARDS = {
     "sanity": 1,
     "subnameZh": "",
     "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [combat] and +1 [agility].\nNon-direct damage/horror must be assigned to Combat Training before it can be assigned to your investigator card.\n[fast] Spend 1 resource: You get +1 [combat] or +1 [agility] for this skill test.",
-    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你得到+1[combat]和+1[agility]。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给战斗训练。\n[free]花费1资源：你本次技能检定得到+1[combat]或+1[agility]。",
+    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。你得到+1[combat]和+1[agility]。非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给战斗训练。[fast]花费1资源：你本次技能检定得到+1[combat]或+1[agility]。",
     "traits": [
       "Talent",
       "Composure"
@@ -287523,7 +287523,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08028": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287566,7 +287566,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when you would draw an encounter card during the mythos phase.\nInstead, search the encounter deck for an enemy, spawn it engaged with you (instead of its normal spawn location), attach On the Hunt to it, and shuffle the encounter deck.\n[reaction] When you defeat attached enemy: Gain 3 resources.",
-    "textZh": "快速。在神话阶段期间你将抽取遭遇卡牌时打出。\n改为从遭遇牌库中查找一个敌人，将其生成并与你交战(而非在本来的位置生成它)，将追猎行动附属到该敌人上，并混洗遭遇牌库。\n[reaction]在你击败被附属的敌人时：获得3资源。",
+    "textZh": "快速。在神话阶段期间你将抽取遭遇卡牌时打出。改为从遭遇牌库中查找一个敌人，将其生成并与你交战(而非在本来的位置生成它)，将追猎行动附属到该敌人上，并混洗遭遇牌库。[reaction]在你击败被附属的敌人时：获得3资源。",
     "traits": [
       "Tactic"
     ],
@@ -287580,7 +287580,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08029": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287637,7 +287637,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08030": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287702,7 +287702,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08031": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287740,7 +287740,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nIncrease your deck size by 15.\nDuring each upkeep phase, instead of drawing 1 card, draw 2 cards and discard 1 of them.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n你的牌库卡牌张数+15。\n补给阶段期间，不抽取一张卡牌，改为抽取两张并弃掉其中一张。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。你的牌库卡牌张数+15。补给阶段期间，不抽取1张卡牌，改为抽取2张并弃掉其中1张。",
     "traits": [
       "Talent",
       "Ritual"
@@ -287756,7 +287756,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08032": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287804,7 +287804,7 @@ export const ALL_CARDS = {
     "subname": "Arctic Archaeologist",
     "subnameZh": "北极考古专家",
     "text": "You get +1 [intellect].\n[reaction] After Jeremiah Kirby enters play, choose \"even\" or \"odd:\" Reveal the top 5 cards of your deck. Draw each card with a cost that matches the chosen option. Shuffle the remaining cards into your deck.",
-    "textZh": "你得到+1[intellect]。\n[reaction]在耶利米·科尔比入场后，选择“偶数”或“奇数”：揭示你牌库顶的5张卡牌。抽取每张费用符合你选择的卡牌。将剩下的卡牌洗入你的牌库。",
+    "textZh": "你得到+1[intellect]。[reaction]在耶利米·科尔比入场后，选择“偶数”或“奇数”：揭示你牌库顶的5张卡牌。抽取每张费用符合你选择的卡牌。将剩下的卡牌洗入你的牌库。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -287822,7 +287822,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08033": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287868,7 +287868,7 @@ export const ALL_CARDS = {
     "subname": "Unidentified",
     "subnameZh": "前路未知",
     "text": "Limit 1 per deck. As an additional cost to play this asset, place 1 resource on 4 different locations, as leylines.\n[reaction] After you successfully investigate a location with a leyline, exhaust this asset: Move that leyline onto this asset. Then, if there are 4 leylines on it, discard it, take its leylines as resources, and record in your Campaign Log that \"you have identified the gateway.\"",
-    "textZh": "每套牌库仅限1张。作为打出本支援的额外费用，在4个不同地点放置1个资源，作为灵脉。\n[reaction]在你成功调查了一个带有灵脉的地点后，横置本支援：将该灵脉移动至本支援上。然后，如果本卡牌上有4个灵脉，将其弃掉，拿取本卡牌的灵脉作为资源，并在剧本日志里记录“你已经确认了前行道路”。",
+    "textZh": "每套牌库仅限1张。作为打出本支援的额外费用，在4个不同地点放置1个资源，作为灵脉。[reaction]在你成功调查了一个带有灵脉的地点后，横置本支援：将该灵脉移动至本支援上。然后，如果本卡牌上有4个灵脉，将其弃掉，拿取本卡牌的灵脉作为资源，并在剧本日志里记录“你已经确认了前行道路”。",
     "traits": [
       "Item",
       "Tome",
@@ -287886,7 +287886,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08034": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287927,7 +287927,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play only during your turn.\nDiscard the top card of your deck. If that card is a weakness, shuffle it back into your deck. Otherwise, for the remainder of your turn, while that card is in your discard pile, commit it to each eligible skill test you perform.",
-    "textZh": "快速。只可在你的回合期间打出。\n弃掉你牌库顶的1张卡牌。如果该卡牌是一张弱点，将它重新洗回你的牌库。否则在你回合剩余时间内，该卡牌在你的弃牌堆时，将它投入到你执行的每个符合条件的技能检定中。",
+    "textZh": "快速。只可在你的回合期间打出。弃掉你牌库顶的1张卡牌。如果该卡牌是一张弱点，将它重新洗回你的牌库。否则在你回合剩余时间内，该卡牌在你的弃牌堆时，将它投入到你执行的每个符合条件的技能检定中。",
     "traits": [
       "Insight"
     ],
@@ -287941,7 +287941,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08035": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -287982,7 +287982,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Limit 1 [[Footwear]] per investigator.\nYou get +1 [agility].\n[reaction] After the last clue is discovered from your location, exhaust Hiking Boots: Move to a connecting location with at least 1 clue, or to a connecting unrevealed location.",
-    "textZh": "每位调查员仅限1张[[鞋子]]。\n你得到+1[agility]。\n[reaction]你所在地点的最后一个线索被发现后，横置登山靴：移动到一个至少有1个线索，或未揭示的连接地点。",
+    "textZh": "每位调查员仅限1张[[鞋子]]。你得到+1[agility]。[reaction]你所在地点的最后一个线索被发现后，横置登山靴：移动到一个至少有1个线索，或未揭示的连接地点。",
     "traits": [
       "Item",
       "Clothing",
@@ -288000,7 +288000,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08036": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288043,7 +288043,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play only during your turn. Reduce the cost of this card by 1 for each different class among cards you control.\nMove to any revealed location.",
-    "textZh": "快速。只可在你的回合期间打出。你每控制一张不同职阶的卡牌，本卡牌的费用减1。\n移动到任意一个已揭示的地点。",
+    "textZh": "快速。只可在你的回合期间打出。你控制的卡牌中每有一个不同的职阶，本卡牌的费用减1。移动到任意一个已揭示的地点。",
     "traits": [
       "Insight",
       "Synergy"
@@ -288059,7 +288059,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08037": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288098,7 +288098,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "While Survey the Area is in your hand or committed to a skill test, it gains [intellect] icons equal to your [agility], and [agility] icons equal to your [intellect].",
-    "textZh": "地区探测在你手中或投入到技能检定中时，其获得等于你[agility]的[intellect]图标，以及等于你[intellect]的[agility]图标。",
+    "textZh": "地区勘测在你手中或投入到技能检定中时，其获得等于你[agility]的[intellect]图标，以及等于你[intellect]的[agility]图标。",
     "traits": [
       "Practiced",
       "Expert"
@@ -288114,7 +288114,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08038": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288176,7 +288176,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08039": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288232,7 +288232,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08040": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288276,7 +288276,7 @@ export const ALL_CARDS = {
     "sanity": 3,
     "subnameZh": "",
     "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [intellect] and +1 [combat].\nNon-direct damage/horror must be assigned to Scientific Theory before it can be assigned to your investigator card.\n[fast] Spend 1 resource: You get +1 [intellect] or +1 [combat] for this skill test.",
-    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你得到+1[intellect]和+1[combat]。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给科学理论。\n[free]花费1资源：你本次技能检定得到+1[intellect]或+1[combat]。",
+    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。你得到+1[intellect]和+1[combat]。非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给科学理论。[fast]花费1资源：你本次技能检定得到+1[intellect]或+1[combat]。",
     "traits": [
       "Talent",
       "Composure"
@@ -288292,7 +288292,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08041": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288339,7 +288339,7 @@ export const ALL_CARDS = {
     "subname": "Gateway to Tindalos",
     "subnameZh": "通向廷达洛斯",
     "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a non-[[Elite]] enemy.\n[action]: Choose an investigator, and an enemy with a leyline at a revealed location. That investigator moves to that location. You may remove the leyline to deal 1 damage to that enemy.",
-    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。\n[free]：从本支援上移动1灵脉到一个非[[精英]]敌人。\n[action]：选择一位调查员和一个在已揭示地点且带有灵脉的敌人。该调查员移动到该地点。你可以移除该灵脉来对该敌人造成1点伤害。",
+    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。[fast]：从本支援上移动1灵脉到一个非[[精英]]敌人。[action]：选择一位调查员和一个在已揭示地点且带有灵脉的敌人。该调查员移动到该地点。你可以移除该灵脉来对该敌人造成1点伤害。",
     "traits": [
       "Ritual"
     ],
@@ -288353,7 +288353,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08042": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288400,7 +288400,7 @@ export const ALL_CARDS = {
     "subname": "Gateway to Acheron",
     "subnameZh": "通向冥河",
     "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a revealed location.\n[action]: Choose an investigator and a revealed location with a leyline. That investigator moves to that location. You may remove the leyline to have them take an investigate action.",
-    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。\n[free]：从本支援上移动1灵脉到一个已揭示地点。\n[action]：选择一位调查员和一个带有灵脉的已揭示地点。该调查员移动到该地点。你可以移除该灵脉来让该调查员执行一次调查行动。",
+    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。[fast]：从本支援上移动1灵脉到一个已揭示地点。[action]：选择一位调查员和一个带有灵脉的已揭示地点。该调查员移动到该地点。你可以移除该灵脉来让该调查员执行一次调查行动。",
     "traits": [
       "Ritual"
     ],
@@ -288414,7 +288414,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08043": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288461,7 +288461,7 @@ export const ALL_CARDS = {
     "subname": "Gateway to Aldebaran",
     "subnameZh": "通往毕宿五",
     "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to a non-[[Elite]] enemy.\n[action]: Choose an investigator engaged with an enemy with a leyline. That investigator disengages from that enemy and moves to a connecting location. You may remove the leyline to automatically evade that enemy. This action does not provoke attacks of opportunity.",
-    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。\n[free]：从本支援上移动1灵脉到一个非[[精英]]敌人。\n[action]：选择一位与带有灵脉的敌人交战的调查员。该调查员与带有灵脉的一个敌人解除交战，并移动至一个连接地点。你可以移除该灵脉来自动躲避该敌人。本行动不会触发趁乱攻击。",
+    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。[fast]：从本支援上移动1灵脉到一个非[[精英]]敌人。[action]：选择一位与带有灵脉的敌人交战的调查员。该调查员与带有灵脉的一个敌人解除交战，并移动至一个连接地点。你可以移除该灵脉来自动躲避该敌人。本行动不会触发趁乱攻击。",
     "traits": [
       "Ritual"
     ],
@@ -288475,7 +288475,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08044": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288522,7 +288522,7 @@ export const ALL_CARDS = {
     "subname": "Gateway to Paradise",
     "subnameZh": "通往天堂",
     "text": "Researched. Uses (4 leylines). Limit 1 per deck.\n[fast]: Move 1 leyline from this asset to an investigator.\n[action]: Choose an investigator with a leyline. That investigator draws 1 card and heals 1 damage or 1 horror. You may remove the leyline to have them instead draw 2 cards and heal 2 damage or 2 horror.",
-    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。\n[free]：从本支援上移动1灵脉到一位调查员上。\n[action]：选择一位带有灵脉的调查员。该调查员抽取1张卡牌并治愈1点伤害或恐惧。你可以移除该灵脉来使该调查员改为抽取2张卡牌并治愈2点伤害或恐惧。",
+    "textZh": "研究完成。使用(4灵脉)。每套牌库仅限1张。[fast]：从本支援上移动1灵脉到1位调查员上。[action]：选择1位带有灵脉的调查员。该调查员抽取1张卡牌并治愈1点伤害或恐惧。你可以移除该灵脉来使该调查员改为抽取2张卡牌并治愈2点伤害或恐惧。",
     "traits": [
       "Ritual"
     ],
@@ -288536,7 +288536,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08045": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288582,7 +288582,7 @@ export const ALL_CARDS = {
     "subname": "Atlas of the Unknowable",
     "subnameZh": "未知地图集",
     "text": "While you are not at the locus, you get +1 [intellect], +1 [agility], and you may ignore attacks of opportunity.\n[reaction] After Prophesiae Profana enters play: Choose a revealed location. That location is \"the locus\" until Prophesiae Profana leaves play.\n[action]: Move any investigator to the locus.",
-    "textZh": "你不在坐标点时，你得到+1[intellect]和+1[agility]，并且你可以忽略趁乱攻击。\n[reaction]在亵渎预言入场后：选择一个已揭示地点。该地点是“坐标点”，直到亵渎预言离场。\n[action]：移动任意一位调查员至坐标点。",
+    "textZh": "你不在坐标点时，你得到+1[intellect]和+1[agility]，并且你可以忽略趁乱攻击。[reaction]在亵渎预言入场后：选择一个已揭示地点。该地点是“坐标点”，直到亵渎预言离场。[action]：移动任意一位调查员至坐标点。",
     "traits": [
       "Item",
       "Relic",
@@ -288600,7 +288600,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08046": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288638,7 +288638,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nYour deck cannot include more than 1 copy of each non-weakness, non-signature card (by title).\nReduce your deck size by 5.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。你的牌库中每张非弱点、非署名卡牌最多只能有一张(以卡牌名称区别)。\n你的牌库卡牌张数减5。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。你的牌库中每张非弱点、非署名卡牌最多只能有1张(以卡牌名称区别)。你的牌库卡牌张数减5。",
     "traits": [
       "Favor",
       "Illicit"
@@ -288654,7 +288654,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08047": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288673,7 +288673,7 @@ export const ALL_CARDS = {
     "exile": false,
     "factionName": "Rogue",
     "flavor": "\"... a viewless aura repelled me and bade me retreat from antique and sinister secrets that no man should see, and no man else had ever dared to see.\" - H. P. Lovecraft, \"The Nameless City\"",
-    "flavorZh": "“……一种无形的气息抗拒着我，并让我远离这些古老而凶险的秘密，这些秘密不应为人所知，也未曾有人所知。”H.P.洛夫克拉夫特，《无名之城》",
+    "flavorZh": "“……一种无形的气息抗拒着我，并让我远离这些古老而凶险的秘密，这些秘密不应为人所知，也未曾有人所知。”H. P. 洛夫克拉夫特《无名之城》",
     "healthPerInvestigator": false,
     "hidden": false,
     "icons": {
@@ -288712,7 +288712,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08048": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288754,7 +288754,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "One at a time, reveal random tokens from the chaos bag until you choose to stop. Treat each [skull], [cultist], [tablet], or [elder_thing] as a 5; the [auto_fail] as a 10; and the [elder_sign] as either a 1 or an 11. If the combined value of those tokens (ignoring +/-) is...\n- ...18 or less, gain 4 resources.\n- ...19, gain 5 resources.\n- ...20, gain 6 resources.\n- ...21, gain 9 resources.",
-    "textZh": "依次随机揭示任意个混乱标记，直到你自己选择停下。[skull]、[cultist]、[tablet]或[elder_thing]视作5；[auto_fail]视作10；[elder_sign]可视作1或11。如果这些标记的总和(忽视+/-)是……\n- ……18或更少，获得4资源。\n- ……19，获得5资源。\n- ……20，获得6资源。\n- ……21，获得9资源。",
+    "textZh": "依次随机揭示任意个混乱标记，直到你自己选择停下。[skull]、[cultist]、[tablet]或[elder_thing]视作5；[auto_fail]视作10；[elder_sign]可视作1或11。如果这些标记的总和(忽略+/-)是……。\n- ……18或更少，获得4资源。- ……19，获得5资源。- ……20，获得6资源。- ……21，获得9资源。",
     "traits": [
       "Fortune",
       "Gambit"
@@ -288770,7 +288770,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08049": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288811,7 +288811,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when you draw a non-weakness treachery.\nCancel that card's revelation effect and draw the top card of the encounter deck.\n[reaction] When you play Counterespionage, increase its cost by 2: Change \"the encounter deck\" to \"your deck\".\n[reaction] When you play Counterespionage, increase its cost by 2: Change \"you\" to \"any investigator\".",
-    "textZh": "快速。在你抽取一张非弱点的诡计时打出。\n取消该卡牌的显现效果并抽取遭遇牌库顶的卡牌。\n[reaction]在你打出反间谍活动时，提升其费用2点：将“遭遇牌库”换成“你的牌库”。\n[reaction]在你打出反间谍活动时，提升其费用2点：将“你”换成“任意调查员”。",
+    "textZh": "快速。在你抽取一张非弱点的诡计时打出。取消该卡牌的显现效果并抽取遭遇牌库顶的卡牌。[reaction]在你打出反间谍活动时，提升其费用2点：将“遭遇牌库”换成“你的牌库”。[reaction]在你打出反间谍活动时，提升其费用2点：将“你”换成“任意调查员”。",
     "traits": [
       "Favor",
       "Service"
@@ -288827,7 +288827,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08050": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288870,7 +288870,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play during any [fast] window.\nGain 1 resource for each different class among cards you control.",
-    "textZh": "快速。可在任意[free]时间段期间打出。\n你每控制一张不同职阶的卡牌，获得1资源。",
+    "textZh": "快速。可在任意[fast]时间段期间打出。你控制的卡牌中每有一个不同的职阶，获得1资源。",
     "traits": [
       "Trick",
       "Synergy"
@@ -288886,7 +288886,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08051": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288928,7 +288928,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Reveal an [[Item]] asset in your hand. Another investigator at your location may play that asset as if it were in their hand. If they do, draw 1 card and gain resources equal to that asset's printed cost.",
-    "textZh": "揭示你手中的一张[[道具]]支援。你所在地点的另一位调查员可以打出该支援，如同其是自己手牌。如果该调查员选择打出，你抽取一张卡牌并获得该支援印刷费用的资源。",
+    "textZh": "揭示你手中的1张[[道具]]支援。你所在地点的另1位调查员可以打出该支援，如同其是自己手牌。如果该调查员选择打出，你抽取1张卡牌并获得该支援印刷费用的资源。",
     "traits": [
       "Favor"
     ],
@@ -288942,7 +288942,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08052": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -288999,7 +288999,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08053": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289045,7 +289045,7 @@ export const ALL_CARDS = {
     "subname": "Broken but Reliable",
     "subnameZh": "损坏却可靠",
     "text": "Exceptional. Uses (0 charges).\nForced - After your turn begins: Either place 1 charge here, or take all charges here, as resources. Then, if it has exactly...\n- 1 charge, you get +3 skill value for your next skill test.\n- 2 charges, you may move up to 2 times.\n- 3 charges, you may take an additional action this turn.",
-    "textZh": "卓越。使用(0充能)。\n强制 - 在你的回合开始后：在此放置1充能，或拿取此处所有充能作为资源。然后，如果它恰好拥有……\n- 1充能，下次技能检定中你得到技能值+3。\n- 2充能，你可以移动最多2次。\n- 3充能，你本回合可以进行1次额外行动。",
+    "textZh": "卓越。使用(0充能)。强制 - 在你的回合开始后：在此放置1充能，或拿取此处所有充能作为资源。然后，如果它恰好拥有……\n- 1充能，下次技能检定中你得到技能值+3。- 2充能，你可以移动最多2次。- 3充能，你本回合可以进行1次额外行动。",
     "traits": [
       "Item",
       "Relic"
@@ -289061,7 +289061,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08054": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289102,7 +289102,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when an investigator at any location initiates a skill test.\nInstead of the skill type indicated for this test ([willpower], [intellect], [combat], or [agility]), this is a resource skill test. The performing investigator's base skill value for this test is equal to half the number of resources in your resource pool (rounded down). Draw 1 card.",
-    "textZh": "快速。在任意地点一位调查员发动技能检定时打出。\n本次检定不是其标识的技能类型([willpower]、[intellect]、[combat]或[agility])，而是改为资源技能检定。执行检定的调查员的基础技能值等于你资源池内资源数的一半(向下取整)。抽取1张卡牌。",
+    "textZh": "快速。在任意地点一位调查员发动技能检定时打出。本次检定不是其标识的技能类型([willpower]、[intellect]、[combat]或[agility])，而是改为资源技能检定。执行检定的调查员的基础技能值等于你资源池内资源数的一半(向下取整)。抽取1张卡牌。",
     "traits": [
       "Favor",
       "Gambit"
@@ -289118,7 +289118,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08055": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289157,7 +289157,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play at the start of the investigation phase.\nOne at a time, reveal cards from the top of any investigator deck(s) until exactly 5 cards have been revealed. Set those cards aside, out of play. While set aside, any investigator may play any of those cards as if they were in their hand. At the start of the next investigation phase, shuffle each of those cards still set aside into its owner's deck.",
-    "textZh": "快速。当调查阶段开始时打出。\n从任意位调查员的牌库顶依次揭示卡牌，直到正好揭示5张卡牌。将这些卡牌放在一边，位于场外。这些卡牌放在一边时，任意调查员可以将其打出，如同是自己手牌。当下个调查阶段开始时，将这些卡牌中仍放在一边的洗回其所有者的牌库。",
+    "textZh": "快速。当调查阶段开始时打出。从任意位调查员的牌库顶依次揭示卡牌，直到正好揭示5张卡牌。将这些卡牌放在一边，位于场外。这些卡牌放在一边时，任意调查员可以将其打出，如同是自己手牌。当下个调查阶段开始时，将这些卡牌中仍放在一边的洗回其所有者的牌库。",
     "traits": [
       "Favor"
     ],
@@ -289171,7 +289171,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08056": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289215,7 +289215,7 @@ export const ALL_CARDS = {
     "sanity": 1,
     "subnameZh": "",
     "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [agility].\nNon-direct damage/horror must be assigned to Moxie before it can be assigned to your investigator card.\n[fast] Spend 1 resource: You get +1 [willpower] or +1 [agility] for this skill test.",
-    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你得到+1[willpower]和+1[agility]。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给刚毅果敢。\n[free]花费1资源：你本次技能检定得到+1[willpower]或+1[agility]。",
+    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。你得到+1[willpower]和+1[agility]。非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给刚毅果敢。[fast]花费1资源：你本次技能检定得到+1[willpower]或+1[agility]。",
     "traits": [
       "Talent",
       "Composure"
@@ -289231,7 +289231,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08057": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289282,7 +289282,7 @@ export const ALL_CARDS = {
     "subname": "Symbol of Power",
     "subnameZh": "力量的象征",
     "text": "Exceptional.\nWhile you have...\n- ...10+ resources, you get +1 health and +1 sanity.\n- ...15+ resources, you may take one additional action during your turn.\n- ...20+ resources, you get +1 to each of your skills.",
-    "textZh": "卓越。\n你拥有……(时)\n- ……10+资源，你得到+1生命和+1神智。\n- ……15+资源，在你回合期间你可以额外执行一次行动。\n- ……20+资源，你得到每项技能值+1。",
+    "textZh": "卓越。你拥有……(时)\n- ……10+资源，你得到+1生命和+1神智。- ……15+资源，在你回合期间你可以额外执行一次行动。- ……20+资源，你得到每项技能值+1。",
     "traits": [
       "Item",
       "Relic"
@@ -289298,7 +289298,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08058": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289347,7 +289347,7 @@ export const ALL_CARDS = {
     "subname": "Broken but Reliable",
     "subnameZh": "损坏却可靠",
     "text": "Exceptional. Uses (0 charges).\nForced - After your turn begins: You may take all charges here, as resources. Place 1 charge here. If it has exactly...\n- 1 charge, you get +4 skill value for your next skill test.\n- 2 charges, you may move up to 3 times.\n- 3 charges, you may take 2 additional actions this turn.",
-    "textZh": "卓越。使用(0充能)。\n强制 - 在你的回合开始后：你可以拿取此处所有充能，作为资源。在此放置1充能。如果它恰好拥有……\n- 1充能，下次技能检定中你得到技能值+4。\n- 2充能，你可以移动最多3次。\n- 3充能，你本回合可以进行2次额外行动。",
+    "textZh": "卓越。使用(0充能)。强制 - 在你的回合开始后：你可以拿取此处所有充能，作为资源。在此放置1充能。如果它恰好拥有……\n- 1充能，下次技能检定中你得到技能值+4。- 2充能，你可以移动最多3次。- 3充能，你本回合可以进行2次额外行动。",
     "traits": [
       "Item",
       "Relic"
@@ -289363,7 +289363,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08059": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289401,7 +289401,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nAfter each scenario of a campaign, reduce the experience cost of the first 2 cards you upgrade before the next scenario by 1.\nIncrease the experience cost for you to purchase new cards by 1.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n在一个剧本的每个冒险结束后，在下一场冒险之前，你升级的前2张卡牌经验值费用-1。\n你购买新卡牌所需要的经验值加1。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。在一个剧本的每个冒险结束后，在下一场冒险之前，你升级的前2张卡牌经验值费用-1。你购买新卡牌所需要的经验值加1。",
     "traits": [
       "Talent"
     ],
@@ -289415,7 +289415,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08060": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289460,7 +289460,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "You have 1 additional arcane slot.\n[action]: Fight. You get +1 [combat] for this attack for each of your arcane slots that is filled. If at least 2 of your arcane slots are filled, this attack deals +1 damage.",
-    "textZh": "你拥有1个额外的法术槽位。\n[action]：攻击。你每有一个法术槽位有支援，你本次攻击得到+1[combat]。如果至少有2个法术槽位有支援，本次攻击+1伤害。",
+    "textZh": "你拥有1个额外的法术槽位。[action]：攻击。你每有一个法术槽位有支援，你本次攻击得到+1[combat]。如果至少有2个法术槽位有支援，本次攻击+1伤害。",
     "traits": [
       "Item",
       "Weapon",
@@ -289478,7 +289478,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08061": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289537,7 +289537,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08062": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289583,7 +289583,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (1 charge for each class among cards you control, including this one).\n[fast] Spend 1 charge and exhaust Close the Circle: Take a basic action. For each skill test performed during that action, you may use your [willpower] instead of the skill indicated for that action.",
-    "textZh": "使用(充能数等于你控制卡牌的职阶数，包含本卡牌)。\n[free]花费1充能并横置闭环：执行一次基础行动。该行动期间执行的每次技能检定中，你可以不使用原本指示的技能，改为使用[willpower]。",
+    "textZh": "使用(充能数等于你控制卡牌的职阶数，包含本卡牌)。[fast]花费1充能并横置闭环：执行1次基础行动。该行动期间执行的每次技能检定中，你可以不使用原本指示的技能，改为使用[willpower]。",
     "traits": [
       "Ritual",
       "Synergy"
@@ -289599,7 +289599,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08063": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289641,7 +289641,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Place 2 charges on an asset you control.\n[reaction] After you draw Winds of Power during your turn: Play it.",
-    "textZh": "在你控制的一张支援上放置2充能。\n[reaction]在你回合期间抽取力量之风后：将其打出。",
+    "textZh": "在你控制的一张支援上放置2充能。[reaction]在你回合期间抽取力量之风后：将其打出。",
     "traits": [
       "Spirit"
     ],
@@ -289655,7 +289655,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08064": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289696,7 +289696,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when an investigator at your location would draw a card from their deck or from the encounter deck.\nName a card. If the drawn card is the named card, that investigator may either (choose one):\n- Cancel that card's effects and discard it.\n- Immediately play that card at -2 cost.",
-    "textZh": "快速。在你所在地点的调查员将要从其牌库或遭遇牌库抽取卡牌时打出。\n指定一张卡牌。如果抽取的卡牌是指定的卡牌，该调查员可以(选择一项)：\n- 取消该卡牌的效果并将其弃掉。\n- 立刻打出该卡牌且其费用-2。",
+    "textZh": "快速。在你所在地点的调查员将要从其牌库或遭遇牌库抽取卡牌时打出。指定一张卡牌。如果抽取的卡牌是指定的卡牌，该调查员可以(选择一项)：- 取消该卡牌的效果并将其弃掉。- 立刻打出该卡牌且其费用-2。",
     "traits": [
       "Augury"
     ],
@@ -289710,7 +289710,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08065": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289765,7 +289765,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08066": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289822,7 +289822,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08067": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289868,7 +289868,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[fast] Exhaust Astronomical Atlas: Look at the top card of your deck. If it is not a weakness, attach it facedown to Astronomical Atlas (max 5 cards attached).\n[fast]: Commit a card attached to Astronomical Atlas to an eligible skill test. If that test succeeds, add that card to your hand instead of discarding it. (Limit once per test.)",
-    "textZh": "[free]横置天文地图集：查看你牌库顶1张卡牌。如果它不是弱点，将它正面朝下附属到天文地图集上(最多附属5张)。\n[free]：将一张附属在天文地图集上的卡牌投入到一个符合条件的技能检定中。如果该检定成功，不弃掉该卡牌，改为将其加入你的手牌。(每次检定仅限一次。)",
+    "textZh": "[fast]横置天文地图集：查看你牌库顶1张卡牌。如果它不是弱点，将它正面朝下附属到天文地图集上(最多附属5张)。[fast]：将一张附属在天文地图集上的卡牌投入到一个符合条件的技能检定中。如果该检定成功，不弃掉该卡牌，改为将其加入你的手牌。(每次检定仅限一次。)",
     "traits": [
       "Item",
       "Tome"
@@ -289884,7 +289884,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08068": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289930,7 +289930,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (4 charges).\n[action] Spend 1 charge: Heal 2 damage from among investigators at your location.",
-    "textZh": "使用(4充能)。\n[action]花费1充能：治愈你所在地点调查员总计2点伤害。",
+    "textZh": "使用(4充能)。[action]花费1充能：治愈你所在地点调查员总计2点伤害。",
     "traits": [
       "Spell"
     ],
@@ -289944,7 +289944,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08069": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -289987,7 +289987,7 @@ export const ALL_CARDS = {
     "sanity": 2,
     "subnameZh": "",
     "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 skill value during skill tests on [[Spell]] cards.\nNon-direct damage/horror must be assigned to Grounded before it can be assigned to your investigator card.\n[fast] During a skill test on a [[Spell]] card, spend 1 resource: You get +1 skill value for this test.",
-    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你在[[法术]]卡牌的技能检定期间得到+1技能值。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给情绪稳定。\n[free]在[[法术]]卡牌的技能检定期间，花费1资源：你本次检定得到技能值+1。",
+    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。你在[[法术]]卡牌的技能检定期间得到+1技能值。非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给情绪稳定。[fast]在[[法术]]卡牌的技能检定期间，花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent",
       "Composure"
@@ -290003,7 +290003,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08070": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290051,7 +290051,7 @@ export const ALL_CARDS = {
     "subname": "Reworking Reality",
     "subnameZh": "重塑现实",
     "text": "Uses (1 charge). Replenish this charge at the start of each round.\nYou may resolve abilities on [[Spell]] assets in your hand by revealing them from your hand. Treat True Magick as if it were the revealed asset (to pay its costs, spend charges, perfom its effect, etc).",
-    "textZh": "使用(1充能)。当每轮开始时重新补满本充能。\n你可以通过揭示手牌中的[[法术]]支援来结算卡牌上的能力。如同真法魔典是已揭示的支援。(以支付费用、花费充能、执行效果等)。",
+    "textZh": "使用(1充能)。当每轮开始时重新补满本充能。你可以通过揭示手牌中的[[法术]]支援来结算卡牌上的能力。如同真法魔典是已揭示的支援。(以支付费用、花费充能、执行效果等)",
     "traits": [
       "Item",
       "Relic",
@@ -290069,7 +290069,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08071": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290108,7 +290108,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nForced - When your first turn of the game begins: Discard the top 10 cards of your deck.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n强制 - 在你游戏的第一个回合开始时：弃掉你牌库顶10张卡牌。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。强制 - 在你游戏的第一个回合开始时：弃掉你牌库顶10张卡牌。",
     "traits": [
       "Talent"
     ],
@@ -290122,7 +290122,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08072": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290163,7 +290163,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (5 secrets). If Schoffner's Catalogue has no secrets, discard it.\nYou may spend secrets on Schoffner's Catalogue as resources to pay for [[Item]] assets played by any investigator at your location.",
-    "textZh": "使用(5秘密)。如果沙夫纳的目录没有秘密，将其弃掉。\n你可以将沙夫纳的目录的秘密作为资源花费，来支付你所在地点任意调查员打出的[[道具]]支援。",
+    "textZh": "使用(5秘密)。如果沙夫纳的目录没有秘密，将其弃掉。你可以将沙夫纳的目录的秘密作为资源花费，来支付你所在地点任意调查员打出的[[道具]]支援。",
     "traits": [
       "Item",
       "Tome"
@@ -290179,7 +290179,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08073": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290223,7 +290223,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (3 supplies). If Bandages has no supplies, discard it.\n[reaction] After an investigator or [[Ally]] asset at your location takes 1 or more damage, spend 1 supply: Heal 1 damage from that card.",
-    "textZh": "使用(3补给)。如果绷带没有补给，将其弃掉。\n[reaction]在你所在地点的调查员或[[盟友]]支援受到1点或更多伤害后，花费1补给：治愈该卡牌1点伤害。",
+    "textZh": "使用(3补给)。如果绷带没有补给，将其弃掉。[reaction]在你所在地点的调查员或[[盟友]]支援受到1点或更多伤害后，花费1补给：治愈该卡牌1点伤害。",
     "traits": [
       "Item"
     ],
@@ -290237,7 +290237,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08074": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290280,7 +290280,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (3 durability).\nAttach to an [[Item]] asset controlled by an investigator at your location.\n[fast] During a skill test on attached asset, spend 1 durability: You get +2 skill value for this test.",
-    "textZh": "使用(3耐久)。\n附属到你所在地点的一位调查员控制的[[道具]]支援上。\n[free]被附属支援的技能检定期间，花费1耐久：你本次检定得到+2技能值。",
+    "textZh": "使用(3耐久)。附属到你所在地点的一位调查员控制的[[道具]]支援上。[fast]被附属支援的技能检定期间，花费1耐久：你本次检定得到+2技能值。",
     "traits": [
       "Upgrade"
     ],
@@ -290294,7 +290294,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08075": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290339,7 +290339,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (1 charge).\n[fast] Spend 1 charge: You get +2 skill value for this test. (Limit once per test.)\n[reaction] After an enemy attacks you: Place 1 charge on Bangle of Jinxes.",
-    "textZh": "使用(1充能)。\n[free]花费1充能：你本次技能检定得到技能值+2。(每次检定仅限一次。)\n[reaction]一个敌人攻击你后：在厄运手镯上放置1充能。",
+    "textZh": "使用(1充能)。[fast]花费1充能：你本次技能检定得到技能值+2。(每次检定仅限一次。)\n[reaction]一个敌人攻击你后：在厄运手镯上放置1充能。",
     "traits": [
       "Item",
       "Charm",
@@ -290357,7 +290357,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08076": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290398,7 +290398,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Exile a level 0-5 card in your hand. Discover 2 clues at your location. If the exiled card was level 2 or higher, remove 1 doom from the current agenda. Exile Burn After Reading.\nCard designed by the Council-in-Exile at Gen Con 2020",
-    "textZh": "放逐你手中一张等级0-5的卡牌。发现你所在地点的2个线索。如果被放逐的卡牌为等级2或更高，移除当前密谋上的1个毁灭印记。放逐阅后即焚。\n本卡牌由2020年Gen Con的流亡议会设计。",
+    "textZh": "放逐你手中一张等级0-5的卡牌。发现你所在地点的2个线索。如果被放逐的卡牌为等级2或更高，移除当前密谋上的1个毁灭标记。放逐阅后即焚。本卡牌由2020年Gen Con的流亡议会设计。",
     "traits": [
       "Insight"
     ],
@@ -290412,7 +290412,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08077": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290469,7 +290469,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08078": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290524,7 +290524,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08079": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290566,7 +290566,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play after an enemy attacks you. Max 1 per attack.\nDamage/horror from this attack cannot be assigned to [[Ally]] assets. For each point of damage and/or horror you took from this attack, draw 1 card.",
-    "textZh": "快速。在一个敌人攻击你后打出。每次攻击最多1张。\n该攻击造成的伤害/恐惧不能分配给[[盟友]]支援。你从本次攻击中每受到1点伤害和/或恐惧，抽取1张卡牌。",
+    "textZh": "快速。在一个敌人攻击你后打出。每次攻击最多1张。该攻击造成的伤害/恐惧不能分配给[[盟友]]支援。你从本次攻击中每受到1点伤害和/或恐惧，抽取1张卡牌。",
     "traits": [
       "Pact",
       "Cursed"
@@ -290582,7 +290582,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08080": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290627,7 +290627,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.\n[action] Discard Fire Extinguisher: Evade. Automatically evade all enemies engaged with you. You may exile Fire Extinguisher instead of discarding it to discard each non-[[Elite]] enemy evaded by this effect.",
-    "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。\n[action]弃掉灭火器：躲避。自动躲避所有与你交战的敌人。你可以将弃掉灭火器改为放逐，来弃掉每一张被此效果躲避的非[[精英]]敌人。",
+    "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。[action]弃掉灭火器：躲避。自动躲避所有与你交战的敌人。你可以将弃掉灭火器改为放逐，来弃掉每一张被此效果躲避的非[[精英]]敌人。",
     "traits": [
       "Item",
       "Tool",
@@ -290645,7 +290645,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08081": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290689,7 +290689,7 @@ export const ALL_CARDS = {
     "sanity": 3,
     "subnameZh": "",
     "text": "Fast. Limit 1 [[Composure]] in play.\nYou get +1 [willpower] and +1 [intellect].\nNon-direct damage/horror must be assigned to Plucky before it can be assigned to your investigator card.\n[fast] Spend 1 resource: You get +1 [willpower] or +1 [intellect] for this skill test.",
-    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。\n你得到+1[willpower]和+1[intellect]。\n非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给有胆有识。\n[free]花费1资源：你本次技能检定得到+1[willpower]或+1[intellect]。",
+    "textZh": "快速。[[沉稳]]卡牌场上仅限1张。你得到+1[willpower]和+1[intellect]。非直接伤害/恐惧在分配到你的调查员卡牌之前，必须先分配给有胆有识。[fast]花费1资源：你本次技能检定得到+1[willpower]或+1[intellect]。",
     "traits": [
       "Talent",
       "Composure"
@@ -290705,7 +290705,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08082": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290746,7 +290746,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play when a non-[[Elite]] enemy spawns at your location.\nThat enemy attacks you. Then, automatically evade that enemy and attach Fend Off to it.\nAttached enemy cannot ready.",
-    "textZh": "快速。在你所在地点生成一个非[[精英]]敌人时打出。\n该敌人攻击你。然后，自动躲避该敌人并将抵挡附属到该敌人。\n被附属的敌人不能重整。",
+    "textZh": "快速。在你所在地点生成一个非[[精英]]敌人时打出。该敌人攻击你。然后，自动躲避该敌人并将抵挡附属到该敌人。被附属的敌人不能重整。",
     "traits": [
       "Gambit",
       "Trick"
@@ -290762,7 +290762,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08083": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290829,7 +290829,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08084": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290889,7 +290889,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08085": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -290950,7 +290950,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08086": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291001,7 +291001,7 @@ export const ALL_CARDS = {
     "subname": "Experienced Hunter",
     "subnameZh": "资深猎手",
     "text": "You get +1 [intellect] and +1 [combat].\n[reaction] After you successfully investigate: Place 1 resource (from the token pool) on Michael Leigh, as evidence (to a maximum of 3 evidence).\n[reaction] When you initiate an attack, exhaust Michael Leigh and spend 1 evidence: You deal +1 damage for this attack.",
-    "textZh": "你得到+1[intellect]和+1[combat]。\n[reaction]在你成功调查后：在迈克尔·利上放置1资源(从供应堆拿取)作为证据(最多3个证据)。\n[reaction]在你发动一次攻击时，横置迈克尔·利并花费1证据：你在本次攻击中造成+1伤害。",
+    "textZh": "你得到+1[intellect]和+1[combat]。[reaction]在你成功调查后：在迈克尔·利上放置1资源(从供应堆拿取)作为证据(最多3个证据)。[reaction]在你发动一次攻击时，横置迈克尔·利并花费1证据：你在本次攻击中造成+1伤害。",
     "traits": [
       "Ally",
       "Detective"
@@ -291017,7 +291017,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08087": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291074,7 +291074,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08088": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291120,7 +291120,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (0 ammo). While playing an event, treat Old Shotgun's uses value as 2.\n[action] Spend 1 ammo: Fight. You get +3 [combat] for this attack. Instead of its standard damage, this attack's damage is equal to the amount you succeed by, or fail by if you fail and would damage another investigator (to a minimum of 1, to a maximum of 3).",
-    "textZh": "使用(0子弹)。打出一张事件卡牌时，将老旧的霰弹枪的使用值视为2。\n[action]花费1子弹：攻击。你本次攻击得到+3[combat]。本次攻击不造成标准伤害，改为：攻击成功时造成的伤害数量等于你超过难度的值；攻击失败且将对另一位调查员造成伤害时，对该调查员造成的伤害数量等于你低于难度的值。(伤害最小为1，最大为3)。",
+    "textZh": "使用(0子弹)。打出一张事件卡牌时，将老旧的霰弹枪的使用值视为2。[action]花费1子弹：攻击。你本次攻击得到+3[combat]。本次攻击不造成标准伤害，改为：攻击成功时造成的伤害数量等于你超过难度的值；攻击失败且将对另一位调查员造成伤害时，对该调查员造成的伤害数量等于你低于难度的值。(伤害最小为1，最大为3)",
     "traits": [
       "Item",
       "Weapon",
@@ -291138,7 +291138,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08089": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291185,7 +291185,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[fast]: Choose a [[Firearm]] asset taking up only 1 hand slot in your play area. Attach it to Quickdraw Holster, or switch it with the attached asset. The attached asset takes up no hand slots. (Limit 1 attached asset.)\n[fast] Exhaust Quickdraw Holster: Perform a fight action on the attached asset without paying its [action] cost.",
-    "textZh": "[free]：选择一张在你游戏区域，只占据1个手部槽位的[[枪械]]支援，将其附属到快拔枪套，或与已附属的支援交换。附属的支援不占用手部槽位。(附属的支援仅限1张。)\n[free]横置快拔枪套：执行一次已附属支援的攻击行动且无需支付其[action]费用。",
+    "textZh": "[fast]：选择一张在你游戏区域，只占据1个手部槽位的[[枪械]]支援，将其附属到快拔枪套，或与已附属的支援交换。附属的支援不占用手部槽位。(附属的支援仅限1张。)\n[fast]横置快拔枪套：执行一次已附属支援的攻击行动且无需支付其[action]费用。",
     "traits": [
       "Item",
       "Tool",
@@ -291203,7 +291203,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08090": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291249,7 +291249,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (6 charges).\n[action]: Fight. For this attack, you may use [willpower] instead of [combat], and you get +1 skill value. If you succeed, spend 1 or 2 charges. Instead of its standard damage, this attack deals 1 damage for each charge spent. If you succeed by 0, lose 1 action.",
-    "textZh": "使用(6充能)。\n[action]：攻击。你在本次攻击中得到+1技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1或2充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去1行动。",
+    "textZh": "使用(6充能)。[action]：攻击。你在本次攻击中得到+1技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1或2充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去1行动。",
     "traits": [
       "Spell"
     ],
@@ -291263,7 +291263,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08091": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291312,7 +291312,7 @@ export const ALL_CARDS = {
     "subname": "Enigmatic Warlock",
     "subnameZh": "谜一般的术士",
     "text": "[reaction] After Nkosi Mabati enters play: Name a non-[elder_sign] chaos token with a symbol. Until this card leaves play, the named symbol is your \"sigil.\"\n[reaction] When an investigator at your location reveals a [cultist], [tablet], or [elder_thing] symbol, exhaust Nkosi Mabati: Search the chaos bag for your sigil and reveal it, instead (returning the other token to the chaos bag).",
-    "textZh": "[reaction]在恩科西·马巴蒂入场后：指定一个非[elder_sign]的符号混乱标记。在本卡牌离场前，指定的标记为你的“咒印”。\n[reaction]在你所在地点的一位调查员揭示了一个[cultist]、[tablet]或[elder_thing]符号时，横置恩科西·马巴蒂：改为从混乱袋中查找你的咒印并揭示它(将其他标记放回混乱袋)",
+    "textZh": "[reaction]在恩科西·马巴蒂入场后：指定一个非[elder_sign]的符号混乱标记。在本卡牌离场前，指定的标记为你的“咒印”。[reaction]在你所在地点的一位调查员揭示了一个[cultist]、[tablet]或[elder_thing]符号时，横置恩科西·马巴蒂：改为从混乱袋中查找你的咒印并揭示它(将其他标记放回混乱袋)",
     "traits": [
       "Ally",
       "Sorcerer"
@@ -291328,7 +291328,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08092": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291375,7 +291375,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (9 charges).\n[action]: Fight. For this attack, you may use [willpower] instead of [combat], and you get +2 skill value. If you succeed, spend 1, 2, or 3 charges. Instead of its standard damage, this attack deals 1 damage for each charge spent. If you succeed by 0, lose 2 actions.",
-    "textZh": "使用(9充能)。\n[action]：攻击。你在本次攻击中得到+2技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1、2或3充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去2行动。",
+    "textZh": "使用(9充能)。[action]：攻击。你在本次攻击中得到+2技能值，并且可以不使用[combat]，改为使用[willpower]。如果你成功，花费1、2或3充能。本次攻击不造成标准伤害，改为每花费1充能，造成1点伤害。如果你成功且等于难度，失去2行动。",
     "traits": [
       "Spell"
     ],
@@ -291389,7 +291389,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08093": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291456,7 +291456,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08094": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291503,7 +291503,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[action]: Fight. You get -1 [combat] and deal +1 damage for this attack.\n[action] [action]: Fight. You get +2 [combat] and deal +2 damage for this attack.",
-    "textZh": "[action]：攻击。你本次攻击得到-1[combat]并造成+1伤害。\n[action][action]：攻击。你本次攻击得到+2[combat]并造成+2伤害。",
+    "textZh": "[action]：攻击。你本次攻击得到-1[combat]并造成+1伤害。[action][action]：攻击。你本次攻击得到+2[combat]并造成+2伤害。",
     "traits": [
       "Item",
       "Tool",
@@ -291523,7 +291523,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08095": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291589,7 +291589,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08096": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291636,7 +291636,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.\n[action] [action] [action]: Fight. You get +5 [combat] and deal +5 damage for this attack.",
-    "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。\n[action][action][action]：攻击。你本次攻击得到+5[combat]并造成+5伤害。",
+    "textZh": "[action]：攻击。你本次攻击得到+1[combat]并造成+1伤害。[action][action][action]：攻击。你本次攻击得到+5[combat]并造成+5伤害。",
     "traits": [
       "Item",
       "Tool",
@@ -291656,7 +291656,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08097": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291702,7 +291702,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "[fast] Exhaust Pocket Telescope: Look at the revealed side of a connecting unrevealed location.\n[action]: Investigate. Investigate a revealed connecting location as if you were there.",
-    "textZh": "[free]横置袖珍望远镜：查看一个连接的未揭示地点的揭示面。\n[action]：调查。调查一个连接的已揭示地点，如同你在该地点。",
+    "textZh": "[fast]横置袖珍望远镜：查看一个连接的未揭示地点的揭示面。[action]：调查。调查一个连接的已揭示地点，如同你在该地点。",
     "traits": [
       "Item",
       "Tool"
@@ -291718,7 +291718,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08098": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291765,7 +291765,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take one of the following actions (move, evade, or investigate).",
-    "textZh": "使用(3秘密)。\n[free]在你回合期间，横置远古海图并花费1秘密：选择并执行以下一个行动(移动、躲避或调查)。",
+    "textZh": "使用(3秘密)。[fast]在你回合期间，横置远古海图并花费1秘密：选择并执行以下一个行动(移动、躲避或调查)。",
     "traits": [
       "Item",
       "Relic"
@@ -291781,7 +291781,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08099": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291831,7 +291831,7 @@ export const ALL_CARDS = {
     "subname": "Intrepid Explorer",
     "subnameZh": "英勇的探险家",
     "text": "You get +1 [intellect] and +1 [agility].\n[reaction] During your turn, after you move to a location, exhaust Gené Beauregard: Move a clue or a non-[[Elite]] enemy from a connecting location to your location, or vice versa.",
-    "textZh": "你得到+1[intellect]和+1[agility]。\n[reaction]在你回合期间，你移动到一个地点后，横置吉恩·波尔格：将1个线索或一个非[[精英]]敌人从一个连接地点移动到你的地点，或从你的地点移动到一个连接地点。",
+    "textZh": "你得到+1[intellect]和+1[agility]。[reaction]在你回合期间，你移动到一个地点后，横置吉恩·波尔格：将1个线索或一个非[[精英]]敌人从一个连接地点移动到你的地点，或从你的地点移动到一个连接地点。",
     "traits": [
       "Ally",
       "Wayfarer"
@@ -291847,7 +291847,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08100": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291895,7 +291895,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (3 secrets).\n[fast] During your turn, exhaust Eon Chart and spend 1 secret: Choose and take two different actions of the following, in any order (move, evade, or investigate).",
-    "textZh": "使用(3秘密)。\n[free]在你回合期间，横置远古海图并花费1秘密：以任意顺序选择并执行以下两个行动(移动、躲避或调查)。",
+    "textZh": "使用(3秘密)。[fast]在你回合期间，横置远古海图并花费1秘密：以任意顺序选择并执行以下两个行动(移动、躲避或调查)。",
     "traits": [
       "Item",
       "Relic"
@@ -291911,7 +291911,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08101": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -291957,7 +291957,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (4 charges).\n[action]: Investigate. For this investigation, you may use [willpower] instead of [intellect], and you get +1 skill value. If you succeed, spend 1 or 2 charges. Instead of discovering a clue at your location, discover 1 clue at your location for each charge spent. If you succeed by 0, choose and discard a card from your hand.",
-    "textZh": "使用(4充能)。\n[action]：调查。你在本次调查中得到+1技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1或2充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你一张手牌并将其弃掉。",
+    "textZh": "使用(4充能)。[action]：调查。你在本次调查中得到+1技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1或2充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你1张手牌并将其弃掉。",
     "traits": [
       "Spell",
       "Augury"
@@ -291973,7 +291973,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08102": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292017,7 +292017,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play after an [[Ally]] asset at your location is discarded by a card effect or is defeated.\nEither return that asset to its owner's hand, or its owner draws 3 cards.",
-    "textZh": "快速。你所在地点的一个[[盟友]]支援被击败或因卡牌效果弃掉后打出。\n将该支援返回其拥有者手中，或其拥有者抽取3张卡牌。",
+    "textZh": "快速。你所在地点的一个[[盟友]]支援被击败或因卡牌效果弃掉后打出。将该支援返回其拥有者手中，或其拥有者抽取3张卡牌。",
     "traits": [
       "Ritual"
     ],
@@ -292031,7 +292031,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08103": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292078,7 +292078,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (6 charges).\n[action]: Investigate. For this investigation, you may use [willpower] instead of [intellect], and you get +2 skill value. If you succeed, spend 1, 2, or 3 charges. Instead of discovering a clue at your location, discover 1 clue at your location for each charge spent. If you succeed by 0, choose and discard 2 cards from your hand.",
-    "textZh": "使用(6充能)。\n[action]：调查。你在本次调查中得到+2技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1、2或3充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你2张手牌并将其弃掉。",
+    "textZh": "使用(6充能)。[action]：调查。你在本次调查中得到+2技能值，并且可以不使用[intellect]，改为使用[willpower]。如果你成功，花费1、2或3充能。不发现你所在地点的1个线索，改为你每花费1充能，发现你所在地点的1个线索。如果你成功且等于难度，选择你2张手牌并将其弃掉。",
     "traits": [
       "Spell",
       "Augury"
@@ -292094,7 +292094,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08104": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292143,7 +292143,7 @@ export const ALL_CARDS = {
     "subname": "Finder of Hidden Connections",
     "subnameZh": "内情发现者",
     "text": "Uses (3 secrets).\n[reaction] When you successfully investigate, exhaust Professor William Webb and spend 1 secret: Instead of discovering a clue at your location, either choose an [[Item]] card in your discard pile and add it to your hand, or discover a clue at a connecting location.",
-    "textZh": "使用(3秘密)。\n[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：不发现你所在地点的1个线索，改为在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中，或在一个连接地点发现1个线索。",
+    "textZh": "使用(3秘密)。[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：不发现你所在地点的1个线索，改为在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中，或在一个连接地点发现1个线索。",
     "traits": [
       "Ally",
       "Miskatonic"
@@ -292159,7 +292159,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08105": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292205,7 +292205,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast.\n[fast] During a skill test while fighting or investigating, exhaust Ice Pick: You get +1 skill value for this test.",
-    "textZh": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。",
+    "textZh": "快速。[fast]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。",
     "traits": [
       "Item",
       "Tool",
@@ -292223,7 +292223,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08106": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292273,7 +292273,7 @@ export const ALL_CARDS = {
     "subname": "Finder of Hidden Connections",
     "subnameZh": "内情发现者",
     "text": "Uses (3 secrets).\n[reaction] When you successfully investigate, exhaust Professor William Webb and spend 1 secret: Choose an [[Item]] card in your discard pile and add it to your hand. Instead of discovering a clue at your location, you may discover a clue at a connecting location.",
-    "textZh": "使用(3秘密)。\n[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中。你可以不发现你所在地点的1个线索，改为在一个连接地点发现1个线索。",
+    "textZh": "使用(3秘密)。[reaction]在你调查成功时，横置威廉·韦伯教授并花费1秘密：在你的弃牌堆中选择一张[[道具]]卡牌，将其加入你的手中。你可以不发现你所在地点的1个线索，改为在一个连接地点发现1个线索。",
     "traits": [
       "Ally",
       "Miskatonic"
@@ -292289,7 +292289,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08107": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292336,7 +292336,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast.\n[fast] During a skill test while fighting or investigating, exhaust Ice Pick: You get +1 skill value for this test. If you succeed, you may discard Ice Pick to have this attack deal +1 damage (if you are fighting), or to discover 1 additional clue at your location (if you are investigating).",
-    "textZh": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。如果你成功，你可以弃掉破冰锥来使得本次攻击造成+1伤害(如果你攻击)，或发现你所在地点的额外1个线索(如果你调查)。",
+    "textZh": "快速。[fast]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。如果你成功，你可以弃掉破冰锥来使得本次攻击造成+1伤害(如果你攻击)，或发现你所在地点的额外1个线索(如果你调查)。",
     "traits": [
       "Item",
       "Tool",
@@ -292354,7 +292354,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08108": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292414,7 +292414,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08109": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292460,7 +292460,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (3 charges).\n[action] If Blur has charges remaining: Evade. For this evasion attempt, you may use [willpower] instead of [agility], and you get +1 skill value. If you succeed, spend 1 charge and you may take an additional action this turn. If you succeed by 0, take 1 damage.",
-    "textZh": "使用(3充能)。\n[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+1技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1充能且本回合可以执行1次额外行动。如果你成功且等于难度，受到1点伤害。",
+    "textZh": "使用(3充能)。[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+1技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1充能且本回合可以执行1次额外行动。如果你成功且等于难度，受到1点伤害。",
     "traits": [
       "Spell"
     ],
@@ -292474,7 +292474,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08110": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292534,7 +292534,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08111": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292581,7 +292581,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (4 charges).\n[action] If Blur has charges remaining: Evade. For this evasion attempt, you may use [willpower] instead of [agility] and get +2 skill value. If you succeed, spend 1 or 2 charges and you may take that many additional actions this turn. If you succeed by 0, take 2 damage.",
-    "textZh": "使用(4充能)。\n[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+2技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1或2充能且本回合可以执行对应数量次数的额外行动。如果你成功且等于难度，受到2点伤害。",
+    "textZh": "使用(4充能)。[action]如果身形虚化还有剩余充能：躲避。你在本次躲避尝试中得到+2技能值，并且可以不使用[agility]，改为使用[willpower]。如果你成功，花费1或2充能且本回合可以执行对应数量次数的额外行动。如果你成功且等于难度，受到2点伤害。",
     "traits": [
       "Spell"
     ],
@@ -292595,7 +292595,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08112": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292637,7 +292637,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Fast. Play after you reveal a chaos token during a skill test.\nReveal an additional chaos token, switching its \"-\" to a \"+\". If that chaos token is a [skull] token, you automatically fail.",
-    "textZh": "快速。你在技能检定期间揭示混乱标记后打出。\n额外揭示一个混乱标记，并经其“-”变为“+”。如果该标记是[skull]，你自动失败。",
+    "textZh": "快速。你在技能检定期间揭示混乱标记后打出。额外揭示一个混乱标记，并将其“-”变为“+”。如果该标记是[skull]，你自动失败。",
     "traits": [
       "Fortune",
       "Gambit"
@@ -292653,7 +292653,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08113": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292693,7 +292693,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Limit 1 per investigator. Cannot leave play.\n[reaction] After you play Unscrupulous Loan: Gain 10 resources.\nForced - When the game ends or you are eliminated, if you have fewer than 10 resources in your resource pool: Exile Unscrupulous Loan.",
-    "textZh": "每位调查员仅限1张。不能离场。\n[reaction]在你打出大肆借贷后：获得10资源。\n强制 - 在游戏结束或你退场时，如果你资源池中的资源数量小于10：放逐大肆借贷。",
+    "textZh": "每位调查员仅限1张。不能离场。[reaction]在你打出大肆借贷后：获得10资源。强制 - 在游戏结束或你退场时，如果你资源池中的资源数量小于10：放逐大肆借贷。",
     "traits": [
       "Pact"
     ],
@@ -292707,7 +292707,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08114": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292756,7 +292756,7 @@ export const ALL_CARDS = {
     "subname": "From a Former Life",
     "subnameZh": "来自前世",
     "text": "Limit 1 Precious Memento (From a Former Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.\n[reaction] After you succeed at a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.",
-    "textZh": "每个牌库仅限1张珍贵记忆(来自前世)。\n[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点伤害。\n[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。",
+    "textZh": "每套牌库仅限1张珍贵记忆(来自前世)。[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点伤害。[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。",
     "traits": [
       "Item",
       "Charm",
@@ -292774,7 +292774,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08115": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292823,7 +292823,7 @@ export const ALL_CARDS = {
     "subname": "From a Future Life",
     "subnameZh": "来自后世",
     "text": "Limit 1 Precious Memento (From a Future Life) per deck.\n[reaction] After you fail a skill test by 2 or more, exhaust Precious Memento: Heal 1 horror from it.\n[reaction] After you succeed at a skill test by 2 or more, exhaust Precious Memento: Heal 1 damage from it.",
-    "textZh": "每个牌库仅限1张珍贵记忆(来自后世)。\n[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。\n[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点伤害。",
+    "textZh": "每套牌库仅限1张珍贵记忆(来自后世)。[reaction]你在一次技能检定中失败且低于难度2点或更多后，横置珍贵记忆：治愈其1点恐惧。[reaction]你在一次技能检定中成功且超过难度2点或更多后，横置珍贵记忆：治愈其1点伤害。",
     "traits": [
       "Item",
       "Charm",
@@ -292841,7 +292841,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08116": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292887,7 +292887,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast. Play only during your turn.\nPlay Talisman of Protection under the control of any investigator at your location.\n[reaction] When you assign damage and/or horror that would defeat you, discard Talisman of Protection: Cancel up to 2 of that damage and/or horror.",
-    "textZh": "快速。只可在你的回合期间打出。\n打出护身法宝，置于你所在地点任意一位调查员控制之下。\n[reaction]在你被分配伤害和/或恐惧，且其数量足够击败你时，弃掉护身法宝：取消该伤害和/或恐惧中的最多2点。",
+    "textZh": "快速。只可在你的回合期间打出。打出护身法宝，置于你所在地点任意一位调查员控制之下。[reaction]在你被分配伤害和/或恐惧，且其数量足够击败你时，弃掉护身法宝：取消该伤害和/或恐惧中的最多2点。",
     "traits": [
       "Item",
       "Charm"
@@ -292903,7 +292903,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08117": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -292949,7 +292949,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (4 charges).\n[action]: Test [willpower] (1). For each point you succeed by, you may spend 1 charge to heal 1 damage or 1 horror from an investigator at your location. If you succeed by 0, lose 1 resource.",
-    "textZh": "使用(4充能)。\n[action]：检定[willpower](1)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点一位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去1资源。",
+    "textZh": "使用(4充能)。[action]：检定[willpower](1)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点1位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去1资源。",
     "traits": [
       "Spell"
     ],
@@ -292963,7 +292963,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08118": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293011,7 +293011,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (3 charges).\n[action] Exhaust Enchanted Bow: Fight. You must use either [willpower] or [agility] instead of [combat] and get +1 skill value for this attack. This attack deals +1 damage. As an additional cost to initiate this ability, you may spend 1 charge to have this attack target a non-[[Elite]] enemy at a connecting location; if you do, ignore the aloof and retaliate keywords for this attack.",
-    "textZh": "使用(3充能)。\n[action]横置附魔弓：攻击。你本次攻击得到+1技能值，并且必须改为使用[willpower]或[agility]，而不使用[combat]。本次攻击造成+1伤害。作为发动此能力的额外费用，你可以花费1充能来使本次攻击以一个连接地点的非[[精英]]敌人为目标；如果你这样做，在本次攻击中，忽略冷漠和反击关键词。",
+    "textZh": "使用(3充能)。[action]横置附魔弓：攻击。你本次攻击得到+1技能值，并且必须改为使用[willpower]或[agility]，而不使用[combat]。本次攻击造成+1伤害。作为发动此能力的额外费用，你可以花费1充能来使本次攻击以一个连接地点的非[[精英]]敌人为目标；如果你这样做，在本次攻击中，忽略冷漠和反击关键词。",
     "traits": [
       "Spell",
       "Blessed",
@@ -293031,7 +293031,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08119": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293077,7 +293077,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (6 charges).\n[action]: Test [willpower] (0). For each point you succeed by, you may spend 1 charge to heal 1 damage or 1 horror from an investigator at your location. If you succeed by 0, lose 2 resources.",
-    "textZh": "使用(6充能)。\n[action]：检定[willpower](0)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点一位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去2资源。",
+    "textZh": "使用(6充能)。[action]：检定[willpower](0)。你每成功且超过难度1点，你可以花费1充能来治愈你所在地点1位调查员1点伤害或1点恐惧。如果你成功且等于难度，失去2资源。",
     "traits": [
       "Spell"
     ],
@@ -293091,7 +293091,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08120": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293134,7 +293134,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Prophetic may be spent to pay for [[Fortune]], [[Spell]], or [[Spirit]] cards.\n[fast] During a skill test on a [[Fortune]], [[Spell]], or [[Spirit]] card, spend 1 resource from Prophetic: You get +1 skill value for this test.",
-    "textZh": "使用(2资源)。每轮开始时重新补满资源。\n先知先觉上的资源可以被花费来支付[[幸运]]、[[法术]]或[[勇气]]卡牌。\n[free]在[[幸运]]、[[法术]]或[[勇气]]卡牌上的技能检定期间，从先知先觉花费1资源：你本次检定得到技能值+1。",
+    "textZh": "使用(2资源)。每轮开始时重新补满资源。先知先觉上的资源可以被花费来支付[[幸运]]、[[法术]]或[[勇气]]卡牌。[fast]在[[幸运]]、[[法术]]或[[勇气]]卡牌上的技能检定期间，从先知先觉花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent"
     ],
@@ -293148,7 +293148,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08121": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293191,7 +293191,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Sleuth may be spent to pay for [[Charm]], [[Tactic]], or [[Tome]] cards.\n[fast] During a skill test on a [[Charm]], [[Tactic]], or [[Tome]] card, spend 1 resource from Sleuth: You get +1 skill value for this test.",
-    "textZh": "使用(2资源)。每轮开始时重新补满资源。\n一探究竟上的资源可以被花费来支付[[守护]]、[[策略]]或[[书籍]]卡牌。\n[free]在[[守护]]、[[策略]]或[[书籍]]卡牌上的技能检定期间，从一探究竟花费1资源：你本次检定得到技能值+1。",
+    "textZh": "使用(2资源)。每轮开始时重新补满资源。一探究竟上的资源可以被花费来支付[[守护]]、[[策略]]或[[书籍]]卡牌。[fast]在[[守护]]、[[策略]]或[[书籍]]卡牌上的技能检定期间，从一探究竟花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent"
     ],
@@ -293205,7 +293205,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08122": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293248,7 +293248,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Bruiser may be spent to pay for [[Armor]], [[Firearm]], or [[Melee]] cards.\n[fast] During a skill test on a [[Armor]], [[Firearm]], or [[Melee]] card, spend 1 resource from Bruiser: You get +1 skill value for this test.",
-    "textZh": "使用(2资源)。每轮开始时重新补满资源。\n好勇斗狠上的资源可以被花费来支付[[护甲]]、[[枪械]]或[[近战]]卡牌。\n[free]在[[护甲]]、[[枪械]]或[[近战]]卡牌上的技能检定期间，从好勇斗狠花费1资源：你本次检定得到技能值+1。",
+    "textZh": "使用(2资源)。每轮开始时重新补满资源。好勇斗狠上的资源可以被花费来支付[[护甲]]、[[枪械]]或[[近战]]卡牌。[fast]在[[护甲]]、[[枪械]]或[[近战]]卡牌上的技能检定期间，从好勇斗狠花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent"
     ],
@@ -293262,7 +293262,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08123": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293305,7 +293305,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Crafty may be spent to pay for [[Insight]], [[Tool]], or [[Trick]] cards.\n[fast] During a skill test on a [[Insight]], [[Tool]], or [[Trick]] card, spend 1 resource from Crafty: You get +1 skill value for this test.",
-    "textZh": "使用(2资源)。每轮开始时重新补满资源。\n技艺精湛上的资源可以被花费来支付[[洞察]]、[[工具]]或[[技巧]]卡牌。\n[free]在[[洞察]]、[[工具]]或[[技巧]]卡牌上的技能检定期间，从技艺精湛花费1资源：你本次检定得到技能值+1。",
+    "textZh": "使用(2资源)。每轮开始时重新补满资源。技艺精湛上的资源可以被花费来支付[[洞察]]、[[工具]]或[[技巧]]卡牌。[fast]在[[洞察]]、[[工具]]或[[技巧]]卡牌上的技能检定期间，从技艺精湛花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent"
     ],
@@ -293319,7 +293319,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08124": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293362,7 +293362,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Uses (2 resources). Replenish these resources at the start of each round.\nResources on Antiquary may be spent to pay for [[Favor]], [[Relic]] or [[Ritual]] cards.\n[fast] During a skill test on a [[Favor]], [[Relic]] or [[Ritual]] card, spend 1 resource from Antiquary: You get +1 skill value for this test.",
-    "textZh": "使用(2资源)。每轮开始时重新补满资源。\n古物藏家上的资源可以被花费来支付[[恩惠]]、[[遗物]]或[[仪式]]卡牌。\n[free]在[[恩惠]]、[[遗物]]或[[仪式]]卡牌上的技能检定期间，从古物藏家花费1资源：你本次检定得到技能值+1。",
+    "textZh": "使用(2资源)。每轮开始时重新补满资源。古物藏家上的资源可以被花费来支付[[恩惠]]、[[遗物]]或[[仪式]]卡牌。[fast]在[[恩惠]]、[[遗物]]或[[仪式]]卡牌上的技能检定期间，从古物藏家花费1资源：你本次检定得到技能值+1。",
     "traits": [
       "Talent"
     ],
@@ -293376,7 +293376,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08125": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293414,7 +293414,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Permanent. Limit 1 per deck. Purchase at deck creation.\nWhen you purchase In the Thick of It, suffer 2 total physical and/or mental trauma. Then, earn 3 experience.",
-    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。\n在你购买危险处境时，承受总共2点肉体和/或精神创伤。然后，取得3经验值。",
+    "textZh": "永久。每套牌库仅限1张。当构建牌库时购买。在你购买危险处境时，承受总共2点肉体和/或精神创伤。然后，取得3经验值。",
     "traits": [
       "Curse"
     ],
@@ -293428,7 +293428,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08126": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293490,7 +293490,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08127": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293537,7 +293537,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "You may include up to 4 copies of Sled Dog in your deck. Up to 2 Sled Dog cards take up a single ally slot.\n[action] Exhaust X Sled Dogs: Move. Move X times.\n[action] Exhaust X Sled Dogs: Fight. You get +X [combat] for this attack. Instead of its standard damage, this attack deals X damage.",
-    "textZh": "你的牌库中可以有至多4张雪橇犬。1个盟友槽位可以有至多2张雪橇犬。\n[action]横置X张雪橇犬：移动。移动X次。\n[action]横置X张雪橇犬：攻击。你本次攻击得到+X[combat]。本次攻击不造成基础伤害，改为造成X点伤害。",
+    "textZh": "你的牌库中可以有至多4张雪橇犬。1个盟友槽位可以有至多2张雪橇犬。[action]横置X张雪橇犬：移动。移动X次。[action]横置X张雪橇犬：攻击。你本次攻击得到+X[combat]。本次攻击不造成标准伤害，改为造成X点伤害。",
     "traits": [
       "Ally",
       "Creature"
@@ -293553,7 +293553,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08128": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293598,7 +293598,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "You have 2 additional ally slots, which can only be used to hold [[Creature]] assets.\n[reaction] When you play a [[Creature]] asset during your turn: Reduce that asset's cost by 1.",
-    "textZh": "你拥有额外2个盟友槽位，只可以用来携带[[生物]]支援。\n[reaction]你在自己回合期间打出[[生物]]支援时：该支援的费用减1。",
+    "textZh": "你拥有额外2个盟友槽位，只可以用来携带[[生物]]支援。[reaction]你在自己回合期间打出[[生物]]支援时：该支援的费用减1。",
     "traits": [
       "Item",
       "Relic"
@@ -293614,7 +293614,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08129": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293655,7 +293655,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "One at a time, in any order, if you control a...\n- [rogue] card, you may move to a connecting location.\n- [guardian] card, deal 1 damage to an enemy at your location.\n- [seeker] card, discover 1 clue at your location.\n- [mystic] card, heal 1 horror from any card.\n- [survivor] card, heal 1 damage from any card.",
-    "textZh": "以任意顺序依次结算，如果你控制……\n- [rogue]卡牌，你可以移动到一个连接地点。\n- [guardian]卡牌，对你所在地点的一个敌人造成1点伤害。\n- [seeker]卡牌，发现你所在地点的1个线索。\n- [mystic]卡牌，治愈任意卡牌的1点恐惧。\n- [survivor]卡牌，治愈任意卡牌的1点伤害。",
+    "textZh": "以任意顺序依次结算，如果你控制……。\n- [rogue]卡牌，你可以移动到一个连接地点。- [guardian]卡牌，对你所在地点的一个敌人造成1点伤害。- [seeker]卡牌，发现你所在地点的1个线索。- [mystic]卡牌，治愈任意卡牌的1点恐惧。- [survivor]卡牌，治愈任意卡牌的1点伤害。",
     "traits": [
       "Favor",
       "Synergy"
@@ -293671,7 +293671,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08130": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293710,7 +293710,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "basicweakness",
     "text": "Revelation - Put Arm Injury into play in your threat area.\nArm Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a fight or activate action: You cannot take any of those types of actions for the remainder of the turn.",
-    "textZh": "显现 - 将臂伤放置入场，放到你的威胁区域。\n臂伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 - 在你执行攻击或启动行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+    "textZh": "显现 - 将臂伤放置入场，放到你的威胁区域。臂伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。强制 - 在你执行攻击或启动行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
     "traits": [
       "Injury"
     ],
@@ -293723,7 +293723,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08130"
   },
   "08131": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293762,7 +293762,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "basicweakness",
     "text": "Revelation - Put Leg Injury into play in your threat area.\nLeg Injury can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - After you take a move, resign, or evade action: You cannot take any of those types of actions for the remainder of the turn.",
-    "textZh": "显现 - 将腿伤放置入场，放到你的威胁区域。\n腿伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 - 在你执行移动、撤退或躲避行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+    "textZh": "显现 - 将腿伤放置入场，放到你的威胁区域。腿伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。强制 - 在你执行移动、撤退或躲避行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
     "traits": [
       "Injury"
     ],
@@ -293775,7 +293775,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08131"
   },
   "08132": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293814,7 +293814,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "basicweakness",
     "text": "Revelation - Put Panic into play in your threat area.\nPanic can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a play, engage, or resource action: You cannot take any of those types of actions for the remainder of the turn.",
-    "textZh": "显现 - 将惊慌放置入场，放到你的威胁区域。\n惊慌可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 - 在你执行打出、资源或交战行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+    "textZh": "显现 - 将惊慌放置入场，放到你的威胁区域。惊慌可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。强制 - 在你执行打出、资源或交战行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
     "traits": [
       "Madness"
     ],
@@ -293827,7 +293827,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08132"
   },
   "08133": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -293866,7 +293866,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "basicweakness",
     "text": "Revelation - Put Stupor into play in your threat area.\nStupor can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - After you take a parley, draw, or investigate action: You cannot take any of those types of actions for the remainder of the turn.",
-    "textZh": "显现 - 将麻木放置入场，放到你的威胁区域。\n麻木可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 - 在你执行谈判、抽取或调查行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
+    "textZh": "显现 - 将麻木放置入场，放到你的威胁区域。麻木可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。强制 - 在你执行谈判、抽取或调查行动后：本回合剩余时间内，你不能再进行任何这些类型的行动。",
     "traits": [
       "Madness"
     ],
@@ -293879,11 +293879,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08133"
   },
   "08501": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the shelter value of your location.\n[cultist]: -2. For each point you fail by, shuffle the top card of the Tekeli-li deck into your deck without looking at it (for each card you cannot shuffle, take 1 horror).\n[tablet]: -4. For each point you fail by, discard the top card of your deck. Draw each weakness discarded by this effect.",
-    "backTextZh": "困难/专家\n[skull]：-X。X等于你所在地点的庇护值。\n[cultist]：-2。你检定失败且每低于难度1点，将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(每有1张卡牌不能混洗入你的牌库，受到1点恐惧)。\n[tablet]：-4。你检定失败且每低于难度1点，弃掉你牌库顶的1张卡牌。抽取所有以此效果弃掉的弱点。",
+    "backTextZh": "困难/专家\n[skull]：-X。X等于你所在地点的庇护值。[cultist]：-2。你检定失败且每低于难度1点，将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(每有1张卡牌不能混洗入你的牌库，受到1点恐惧)。[tablet]：-4。你检定失败且每低于难度1点，弃掉你牌库顶的1张卡牌。抽取所有以此效果弃掉的弱点。",
     "backimagesrc": "/bundles/cards/08501b.png",
     "code": "08501",
     "customizationChange": "",
@@ -293919,7 +293919,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Easy / Standard\n[skull]: -X. X is half the shelter value of your location (rounded up).\n[cultist]: -2. If you fail, shuffle the top card of the Tekeli-li deck into your deck without looking at it (if you cannot, take 1 horror).\n[tablet]: -3. For each point you fail by, discard the top card of your deck. Draw each weakness discarded by this effect.",
-    "textZh": "简单/普通\n[skull]：-X。X等于你所在地点的庇护值的一半(向上取整)。\n[cultist]：-2。如果你检定失败，将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，受到1点恐惧)。\n[tablet]：-3。你检定失败且每低于难度1点，弃掉你牌库顶的1张卡牌。抽取所有以此效果弃掉的弱点。",
+    "textZh": "简单/普通\n[skull]：-X。X等于你所在地点的庇护值的一半(向上取整)。[cultist]：-2。如果你检定失败，将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，受到1点恐惧)。[tablet]：-3。你检定失败且每低于难度1点，弃掉你牌库顶的1张卡牌。抽取所有以此效果弃掉的弱点。",
     "traits": [],
     "traitsZh": [],
     "type": "scenario",
@@ -293928,7 +293928,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08501"
   },
   "08502": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"It was risky business sailing over the antarctic in a single aëroplane without any line of bases...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“靠一架飞机穿越南极，沿途没有任何营地，这风险非常大……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -293972,7 +293972,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "[action]: Test [intellect] or [agility] (3) to scavenge from the wreckage. If you succeed, in the \"Supplies Recovered\" section of the Campaign Log, record Spare Parts. (Max one success per campaign.)\nShelter 0.",
-    "textZh": "[action]：检定[intellect]或[agility](3)以在残骸中搜寻。如果你检定成功，在剧本日志“已回收的补给品”中，记录备用零件(每个剧本最多一次成功)。\n庇护0。",
+    "textZh": "[action]：检定[intellect]或[agility](3)以在残骸中搜寻。如果你检定成功，在剧本日志“已回收的补给品”中，记录备用零件(每个剧本最多一次成功)。庇护0。",
     "traits": [],
     "traitsZh": [],
     "type": "location",
@@ -293981,7 +293981,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08502"
   },
   "08503": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"There now stretched off to the east the low, white line of the great ice barrier...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“巨大冰障那低矮的白线现在向东延伸开去……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294026,7 +294026,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Frozen Shores gets +2 shroud if an encounter card is attached to it.\nShelter 2.",
-    "textZh": "如果有遭遇卡牌附属到冰冻海岸，冰冻海岸得到+2隐藏。\n庇护2。",
+    "textZh": "如果有遭遇卡牌附属到冰冻海岸，冰冻海岸得到+2隐藏值。庇护2。",
     "traits": [
       "Mainland"
     ],
@@ -294039,7 +294039,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08503"
   },
   "08504": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...in order to recover the Archaean slate vein in which he had found the odd markings, he would have to make a long sledge trip from these foothills to the steep slopes of the gigantic mountains themselves.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“…… 为了找到他曾发现过的有奇怪标记的太古代岩脉，他得坐着雪橇从这些山丘长途跋涉，到达那巍峨山脉的陡坡。 ”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294083,7 +294083,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Forced - After you reveal 1 or more [frost] tokens during a skill test at Treacherous Path: Take 1 damage or horror for each [frost] token revealed.\nShelter 1.",
-    "textZh": "强制 - 你在危险道路的技能检定期间揭示[frost]混乱标记后：每揭示一个[frost]标记，受到1点伤害或恐惧。\n庇护1。",
+    "textZh": "强制 - 你在危险道路的技能检定期间揭示[frost]混乱标记后：每揭示1个[frost]标记，受到1点伤害或恐惧。庇护1。",
     "traits": [
       "Mountains"
     ],
@@ -294096,7 +294096,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08504"
   },
   "08505": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The ice-sheet was very thin, with dark ground here and there visible...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“冰盖非常薄，到处可以看到黑色的地面……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294140,7 +294140,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "[reaction] When you draw a [[Hazard]] treachery while at Precarious Ice Sheet, add 1 [frost] token to the chaos bag: Cancel that card's effects and discard it. (Group limit once per round.)\nShelter 2.",
-    "textZh": "[reaction]你在不稳定冰盖抽取一张[[危险]]诡计时，在混乱袋里加入1个[frost]标记：取消该卡牌的效果并将其弃掉。 (团队每轮仅限一次)。\n庇护2。",
+    "textZh": "[reaction]你在不稳定冰盖抽取一张[[危险]]诡计时，在混乱袋里加入1个[frost]标记：取消该卡牌的效果并将其弃掉。(团队每轮仅限一次。)\n庇护2。",
     "traits": [
       "Glacier"
     ],
@@ -294153,7 +294153,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08505"
   },
   "08506": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...on the lofty ice barrier in the background, myriads of grotesque penguins squawked and flapped their fins...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……在后面高高的冰障上，无数奇奇怪怪的企鹅尖叫着拍打着它们的鳍……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294212,7 +294212,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08506"
   },
   "08507": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...in ten more miles we came to an unbroken waste virtually without signs of sentient artifice.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……又过了十英里，我们来到了一片连绵不断的荒地，完全没有任何人工造物的痕迹。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294256,7 +294256,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Treat the modifier of the first [frost] token revealed during each skill test at Icy Wastes as -3, instead of -1.\nShelter 4.",
-    "textZh": "在冰封荒原的每次技能检定期间，改为将揭示的第一个[frost]标记的修正值视为-3，而不是-1。\n庇护4。",
+    "textZh": "在冰封荒原的每次技能检定期间，改为将揭示的第一个[frost]标记的修正值视为-3，而不是-1。庇护4。",
     "traits": [
       "Glacier",
       "Uncharted"
@@ -294271,7 +294271,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08507"
   },
   "08508": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...rising perpendicularly to a height of 200 feet like the rocky cliffs of Quebec, and marking the end of southward navigation.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……垂直升到200英尺的高度，就像魁北克的岩石峭壁一样，而这也标志着这次向南航行的终点。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294315,7 +294315,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Forced - When a treachery is attached to Rocky Crags: That treachery gains surge. (Max once per phase.)\nShelter 3.",
-    "textZh": "强制 - 在一张诡计附属到岩石峭壁时：该诡计获得涌动(每阶段仅限一次)。\n庇护3。",
+    "textZh": "强制 - 在一张诡计附属到岩石峭壁时：该诡计获得涌动(每阶段仅限一次)。庇护3。",
     "traits": [
       "Mountains",
       "Uncharted"
@@ -294330,7 +294330,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08508"
   },
   "08509": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...it surely looked like madness to find six imperfect monstrosities carefully buried upright in nine-foot snow graves under five-pointed mounds...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……发现六个残缺不全的怪物被小心地竖着埋在九英尺深的雪坑中，而上面还堆成了五角形，这看起来确实很疯狂……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294374,7 +294374,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "[reaction] After you discover the last clue from Snow Graves, shuffle the top 3 cards of the Tekeli-li deck into your deck without looking at them: In the \"Supplies Recovered\" section of the Campaign Log, record Green Soapstone. (Group limit once per campaign.)\nShelter 5.",
-    "textZh": "[reaction]你发现雪冢的最后一个线索后，将忒咳哩-哩牌库顶的3张卡牌混洗入你的牌库，不要查看内容：在剧本日志“已回收的补给品”中，记录绿皂石。(团队每场战役限一次)\n庇护5。",
+    "textZh": "[reaction]你发现雪冢的最后一个线索后，将忒咳哩-哩牌库顶的3张卡牌混洗入你的牌库，不要查看内容：在剧本日志“已回收的补给品”中，记录绿皂石。(团队每个剧本仅限一次)\n庇护5。",
     "traits": [
       "Mainland",
       "Uncharted"
@@ -294389,7 +294389,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08509"
   },
   "08510": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...we effected a difficult landing on Ross Island shortly after midnight on the morning of the 9th...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……9日凌晨，刚过午夜不久，我们艰难地登上了罗斯岛……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294448,7 +294448,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08510"
   },
   "08511": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Close flying shews many cave-mouths, some unusually regular in outline, square or semicircular. You must come and investigate.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“飞近后看到许多岩洞口，有的轮廓非常规则，呈正方形或半圆形。你一定要来调查一下。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294507,7 +294507,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08511"
   },
   "08512": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Our camp on the frozen shore below the volcano's slope was only a provisional one; headquarters being kept aboard the <i>Arkham</i>.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“我们在火山脚下冰冻的海岸上的营地只是临时的；总部依然在阿卡姆号上。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294566,7 +294566,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08512"
   },
   "08513": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"It is only with vast hesitancy and repugnance that I let my mind go back to Lake's camp and what we really found there...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“让我重新回忆起莱克营地以及在那儿发现的东西，令我极为犹豫、抵触万分……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294625,7 +294625,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08513"
   },
   "08514": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Parts, especially upper parts, seem to be of lighter-coloured rock than any visible strata on slopes proper, hence an evidently crystalline origin.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“有些部分，尤其是靠上的部分，似乎是由颜色较浅的岩石构成的，比斜坡本身更浅一些，因此很明显它原先是晶状的。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -294669,7 +294669,7 @@ export const ALL_CARDS = {
     "shroud": 5,
     "subnameZh": "",
     "text": "[action]: Test [agility] (5) to climb up one of the crystalline walls in search of evidence. If you succeed, in the \"Supplies Recovered\" section of the Campaign Log, record Miasmic Crystal. (Max one success per campaign.)\nShelter 8.",
-    "textZh": "[action]：检定[agility](5)来爬上其中一面水晶墙以寻找证据。 如果你检定成功，在剧本日志中“已回收的补给品”中，记录瘴气水晶。(每个剧本最多一次成功)\n庇护8。",
+    "textZh": "[action]：检定[agility](5)来爬上其中一面水晶墙以寻找证据。如果你检定成功，在剧本日志中“已回收的补给品”中，记录瘴气水晶。(每个剧本最多一次成功)\n庇护8。",
     "traits": [
       "Mountains",
       "Uncharted"
@@ -294684,7 +294684,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08514"
   },
   "08515": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -294729,7 +294729,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Hunter.\nForced - When you defeat Skittering Nonsense: Shuffle the top card of the Tekeli-li deck into your deck without looking at it (if you cannot, Skittering Nonsense attacks you).",
-    "textZh": "猎手。\n强制 - 在你击败疾行谬物时：将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，疾行谬物攻击你)。",
+    "textZh": "猎手。强制 - 在你击败疾行谬物时：将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，疾行谬物攻击你)。",
     "traits": [
       "Monster",
       "Eidolon"
@@ -294744,7 +294744,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08515"
   },
   "08516": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -294784,7 +294784,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Test [willpower] (X), where X is your location's shelter value. If you fail, you must decide (choose one):\n- Take 1 horror for each point you failed by.\n- Place 2 of your clues on your location.\n- Add 1 [frost] token to the chaos bag.",
-    "textZh": "显现 - 检定[willpower](X)，X为你所在地点的庇护值。如果你检定失败，你必须决定(选择一项)：\n- 每低于难度1点，受到1点恐惧。\n- 将你的2个线索放到你所在地点。\n- 在混乱袋里加入1个[frost]标记。",
+    "textZh": "显现 - 检定[willpower](X)，X为你所在地点的庇护值。如果你检定失败，你必须决定(选择一项)：- 每低于难度1点，受到1点恐惧。- 将你的2个线索放到你所在地点。- 在混乱袋里加入1个[frost]标记。",
     "traits": [
       "Terror"
     ],
@@ -294797,7 +294797,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08516"
   },
   "08517": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -294837,7 +294837,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Put Zero Visibility into play in your threat area.\nAs an additional cost for you to leave a location with a treachery attached to it, you must spend 1 action.\nForced - At the end of your turn: Test [agility] (2). If you succeed, discard Zero Visibility.",
-    "textZh": "显现 - 将零能见度放置入场，放到你的威胁区域。\n作为离开有诡计附属的地点的额外费用，你必须花费1个行动。\n强制 - 当你的回合结束时：检定[agility](2)。如果你检定成功，弃掉零能见度。",
+    "textZh": "显现 - 将零能见度放置入场，放到你的威胁区域。作为离开有诡计附属的地点的额外费用，你必须花费1个行动。强制 - 当你的回合结束时：检定[agility](2)。如果你检定成功，弃掉零能见度。",
     "traits": [
       "Hazard"
     ],
@@ -294850,7 +294850,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08517"
   },
   "08518": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Hold on! Come see this!\" one of the other team members shouts as you trudge ahead through the snow. You turn back and examine what they have found - a second set of tracks in the snow, but smaller, misshapen. Almost impossibly so.\n\"What in the hell could have made these tracks?\" one of your party asks. You stand dumbfounded. Very little wildlife exists out here in the frozen wastes. And these tracks match nothing you've ever seen before. Nothing you can even imagine.\nYou don't have to question what could make such tracks for long. A shape emerges from the erupting snow, twisted and deformed, like a splotch of ink spilled upon the canvas of reality. It makes a strange, almost familiar cry that is eaten by the howling wind: \"-li! -li!\" Then, with terrifying speed, it rushes toward you.",
     "backFlavorZh": "“等一下！来看下这个！”当你在雪地中艰难前行时，另一名队员喊道。你返回看看他们发现了什么——雪地上有另一组脚印，但是更小，而且是畸形的。这几乎不可能。\n“到底是什么鬼东西留下了这些脚印？”团队中的一人问道。你目瞪口呆地站着。在这片冰冻荒原上，几乎没有野生动物存在。而且你从没见过有什么动物是这种脚印。你甚至无法想像这是什么生物。\n但很快你就不用纠结这是什么东西的脚印了。 一道身影从喷发的雪中出现，扭曲变形，就像泼洒在现实画布上的墨点。 它发出一种奇怪的、有些熟悉的叫声，但被呼啸的狂风吞没了：“——哩！——哩！”然后，它以惊人的速度向你冲来。",
     "backName": "Under the Ice",
@@ -294896,7 +294896,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "Forced - After a location is entered by an investigator for the first time: Put into play each set-aside location connected to that location. (Use the map in the Campaign Guide for reference.)",
-    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)。",
+    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -294905,7 +294905,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08518"
   },
   "08519": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "These things, these manifestations, they're not beasts or even alien creatures like those Dyer and Danforth encountered in their last expedition. You're not even sure they are entities at all. They have no shape, consisting of an almost proto-plasmic substance that seeps back into the ice when harmed or whenever you escape their clutches. Given the persistence of these entities and the inclement, deadly conditions of Antarctica, you know you won't survive the night without finding shelter.\nJust as you are pondering what your next move should be, the ice beneath you rumbles with tremendous force, letting out a terrifying groan. \"An earthquake?\" one of your party asks over the raucous noise.\n\"No, that's impossible,\" another replies. You share a dreadful glance. Could it be one of those...things?",
     "backFlavorZh": "这些东西，这些存在，它们不是野兽，甚至也不像戴尔和丹佛斯上次探险中遭遇的外星生物。你甚至不确定它们是不是实体。它们没有形状，由几乎像原生质一样的物质组成，当受到伤害或你逃脱它们的控制时，就会重新渗入冰雪之中。考虑到这些实体的存在，以及南极严酷致命的环境，你明白，如果找不到庇护所，你将无法熬过夜晚。\n就在你思考下一步该怎么做的时候，你脚下的冰面开始剧烈震动，轰隆隆的巨响，发出可怕的呻吟。“地震？”团队中有人沙哑着嗓子问。\n“不，这不可能。”另一人回答。你的眼神也充满畏惧。会不会也是那种……东西？",
     "backName": "It Dwells Inside",
@@ -294951,7 +294951,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "Forced - After a location is entered by an investigator for the first time: Put into play each set-aside location connected to that location. (Use the map in the Campaign Guide for reference.)",
-    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)。",
+    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -294960,13 +294960,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08519"
   },
   "08520": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You can go on no longer. It's not ideal, but you'll have to make do with the shelter you've found. You only hope that it's enough to keep your party from freezing... or worse.",
     "backFlavorZh": "你无法再继续了。虽然不是很理想，但你只能将就着使用你找到的庇护地了。你只希望这里足够让你的团队避免冻死……或更糟的情况。",
     "backName": "Forced into Shelter",
     "backNameZh": "被迫避难",
     "backText": "Each investigator, including those who are eliminated, shuffles the top card of the Tekeli-li deck into their deck.\nChoose a location in play with no clues on it. Each undefeated investigator moves to that location and immediately resigns. The higher that location's shelter value, the better. If the investigators cannot choose such a location, they must move to the Crash Site and immediately resign, even if they otherwise could not. (Then, resolve the [[Objective]] on act 1a.)",
-    "backTextZh": "每位调查员(包括已退场的)将忒咳哩-哩牌库顶的1张卡牌混洗入自己的牌库。\n选择场上一个没有线索的地点。每位没有被击败的调查员移动到该地点并立即撤退。该地点的庇护值越高越好。如果调查员无法选择此类地点，则必须无视任何条件移动至坠机点并立即撤退(然后，结算场景1a上的目标)。",
+    "backTextZh": "每位调查员(包括已退场的)将忒咳哩-哩牌库顶的1张卡牌混洗入自己的牌库。选择场上一个没有线索的地点。每位没有被击败的调查员移动到该地点并立即撤退。该地点的庇护值越高越好。如果调查员无法选择此类地点，则必须无视任何条件移动至坠机点并立即撤退(然后，结算场景1a上的[[目标]])。",
     "backimagesrc": "/bundles/cards/08520b.png",
     "code": "08520",
     "customizationChange": "",
@@ -295006,7 +295006,7 @@ export const ALL_CARDS = {
     "stage": 3,
     "subnameZh": "",
     "text": "Forced - After a location is entered by an investigator for the first time: Put into play each set-aside location connected to that location. (Use the map in the Campaign Guide for reference.)",
-    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)。",
+    "textZh": "强制 - 调查员第一次进入一个地点后：将放在一边的地点中，所有与该地点相连的地点放置入场。(参考剧本手册中的地图摆放)",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -295015,7 +295015,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08520"
   },
   "08521": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Exhausted and terrified by your ordeal, you decide this is as good a place as any to make camp for the night. Perhaps tomorrow you can salvage some kind of academic value out of this hellish journey, but for now such things seem trivial. Survival is the only thing on your mind.",
     "backFlavorZh": "你经历苦难，现在筋疲力尽、惊恐不已。你决定这里是扎营过夜的好地方。也许明天你能从这地狱般的旅程中挖掘一些学术价值，但现在这些事情根本微不足道。你满脑子只想着活下去。",
     "backName": "Under the Stars",
@@ -295060,7 +295060,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[action] If each investigator is at the same location and that location has no clues on it: Resign. You set up camp. Each investigator resigns.\nObjective - Find somewhere safe to set up camp. If each undefeated investigator has resigned, advance. The higher the shelter value of the location they resigned at, the better.",
-    "textZh": "[action]如果所有调查员都在同一地点，且该地点上没有线索：撤退。你扎起了营。所有调查员撤退。\n目标 - 找到安全的地方扎营。如果所有未被击败的调查员都撤退了，推进场景。他们撤退的地点的庇护值越高越好。",
+    "textZh": "[action]如果所有调查员都在同一地点，且该地点上没有线索：撤退。你扎起了营。所有调查员撤退。目标 - 找到安全的地方扎营。如果所有未被击败的调查员都撤退了，推进场景。他们撤退的地点的庇护值越高越好。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -295069,7 +295069,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08521"
   },
   "08522": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295115,7 +295115,7 @@ export const ALL_CARDS = {
     "subname": "Bringer of Ice and Death",
     "subnameZh": "带来寒冰与死亡",
     "text": "Hunter. Massive.\nTerror of the Stars gets +3 [per_investigator] health.\nWhile Terror of the Stars is ready, investigators cannot resign at its location or discover clues at its location.",
-    "textZh": "猎手。 庞大。\n星之恐怖得到+3[per_investigator]生命值。\n星之恐怖处于重整状态时，调查员不能在星之恐怖所在地点撤退，或发现星之恐怖所在地点的线索。",
+    "textZh": "猎手。庞大。星之恐怖得到+3[per_investigator]生命值。星之恐怖处于重整状态时，调查员不能在星之恐怖所在地点撤退，或发现星之恐怖所在地点的线索。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -295133,7 +295133,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08523": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As you journey through the glacial wilds, you stumble across a set of tracks in the snow leading farther from camp. You pause and investigate further. Were these tracks made by one of your missing team members? Or by something more...monstrous?",
     "backFlavorZh": "当你穿越冰川荒野时，你偶然发现一组脚印，朝着远离营地的方向延伸。你停下来作进一步调查。这些足迹是你失踪的一名队员留下的吗？还是什么……更可怕的东西？",
     "backName": "Tracks in the Snow",
@@ -295188,7 +295188,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08523"
   },
   "08524": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As you journey through the glacial wilds, you stumble across a set of tracks in the snow leading farther from camp. You pause and investigate further. Were these tracks made by one of your missing team members? Or by something more...monstrous?",
     "backFlavorZh": "当你穿越冰川荒野时，你偶然发现一组脚印，朝着远离营地的方向延伸。你停下来作进一步调查。这些足迹是你失踪的一名队员留下的吗？还是什么……更可怕的东西？",
     "backName": "Tracks in the Snow",
@@ -295243,13 +295243,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08524"
   },
   "08525": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As the night ends, the storm arrives in its full ferocity. Raging, icy winds and dense snowfall make your task impossible. You'll never find the remaining team members in these conditions, and even if you did...\nA hard lump of guilt and despair forms in your throat. There's no way they would survive in this storm, not without supplies or shelter. That you are forced to choose between your life and theirs is a burden you will surely carry with you for the rest of your life. And you'll be lucky if that's more than a couple of days.",
     "backFlavorZh": "夜幕退散，风暴肆虐。凛冽的寒风和密集的大雪让你的任务失去了成功的可能。在这种情况下你永远也找不到剩下的团队成员，而即使你找到了……\n一股强烈的内疚和绝望涌上你的喉咙。在这场风暴中，没有补给和庇护所，活下来是不可能的。你只能在双方的性命之间做取舍，这项决定会成为你一辈子的心理负担。当然，前提是你这辈子不会过几天就到头。",
     "backName": "Forced to Retreat",
     "backNameZh": "被迫撤退",
     "backText": "Each remaining investigator is defeated and suffers 1 mental trauma.\n(→R1)",
-    "backTextZh": "剩下的每位调查员被击败并承受1点精神创伤。\n(→结局1)",
+    "backTextZh": "剩下的每位调查员被击败并承受1点精神创伤。(→结局1)",
     "backimagesrc": "/bundles/cards/08525b.png",
     "code": "08525",
     "customizationChange": "",
@@ -295298,7 +295298,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08525"
   },
   "08526": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "With night coming to a close, the storm approaches faster and faster. Soon, the weather will be too deadly for your search to continue. If anyone is still out there, you doubt they'll survive - and neither will you if you remain unsheltered any longer. You return to your camp, your heart heavy with guilt and and your mind addled by that foul noise that festers within.",
     "backFlavorZh": "随着夜晚临近结束，风暴接近得越来越迅速了。很快，天气就会变得非常恶劣，你们将无法继续搜寻。如果还有人在外面，你怀疑他们是否还能活下来——当然，如果你也继续待在庇护所外面，那你也是一样的下场。你返回营地，你的心被沉重的罪恶感压迫着，而你的思想被你身体里那不断滋长的污秽声音所腐化。",
     "backName": "Turning In",
@@ -295343,7 +295343,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "[fast] Investigators at your location spend 1 [per_investigator] clues, as a group: Draw the encounter card beneath your location.\n[action] If you are at camp: Resign. You turn in for the night.\nObjective - Find as many missing expedition members as you can by adding them to the victory display, then head back to camp before daybreak. If each undefeated investigator has resigned, advance.",
-    "textZh": "[free]你所在地点的调查员共同花费1[per_investigator]个线索：抽取你所在地点底下的遭遇卡牌。\n[action]如果你位于营地：撤退。你回来渡过夜晚。\n目标 - 找到尽可能多的失踪探险队成员(将其加入胜利区)，然后在黎明到来前回到营地。如果所有未被击败的调查员都撤退了，推进场景。",
+    "textZh": "[fast]你所在地点的调查员共同花费1[per_investigator]个线索：抽取你所在地点底下的遭遇卡牌。[action]如果你位于营地：撤退。你回来渡过夜晚。目标 - 找到尽可能多的失踪探险队成员(将其加入胜利区)，然后在黎明到来前回到营地。如果所有未被击败的调查员都撤退了，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -295352,7 +295352,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08526"
   },
   "08527": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295392,7 +295392,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Remove 1 [frost] token from the chaos bag.\nAdd this story card to the victory display.",
-    "textZh": "从混乱袋里移除1个[frost]标记。\n将本剧情卡牌加入胜利区。",
+    "textZh": "从混乱袋里移除1个[frost]标记。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295402,7 +295402,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08528": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295442,7 +295442,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Search your deck for a copy of Tekeli-li and place it on the bottom of the Tekeli-li deck without resolving it. Shuffle your deck.\nAdd this story card to the victory display.",
-    "textZh": "查找你的牌库，找出一张忒咳哩-哩并将其放到忒咳哩-哩牌库底，不要结算它。混洗你的牌库。\n将本剧情卡牌加入胜利区。",
+    "textZh": "查找你的牌库，找出一张忒咳哩-哩并将其放到忒咳哩-哩牌库底，不要结算它。混洗你的牌库。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295452,7 +295452,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08529": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295492,7 +295492,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Search the top 9 cards of your deck for each copy of Tekeli-li and place each one you find on the bottom of the Tekeli-li deck without resolving it. Shuffle your deck.\nAdd this story card to the victory display.",
-    "textZh": "查找你牌库顶的9张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底，不要结算它们。混洗你的牌库。\n将本剧情卡牌加入胜利区。",
+    "textZh": "查找你牌库顶的9张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底，不要结算它们。混洗你的牌库。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295502,7 +295502,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08530": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295542,7 +295542,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Remove 1 [frost] token from the chaos bag.\nAdd this story card to the victory display.",
-    "textZh": "从混乱袋里移除1个[frost]标记。\n将本剧情卡牌加入胜利区。",
+    "textZh": "从混乱袋里移除1个[frost]标记。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295552,7 +295552,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08531": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295592,7 +295592,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Search your deck for a copy of Tekeli-li and place it on the bottom of the Tekeli-li deck without resolving it. Shuffle your deck.\nAdd this story card to the victory display.",
-    "textZh": "查找你的牌库，找出一张忒咳哩-哩并将其放到忒咳哩-哩牌库底，不要结算它。混洗你的牌库。\n将本剧情卡牌加入胜利区。",
+    "textZh": "查找你的牌库，找出一张忒咳哩-哩并将其放到忒咳哩-哩牌库底，不要结算它。混洗你的牌库。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295602,7 +295602,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08532": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295642,7 +295642,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Discard an [[Eidolon]] enemy that does not have the [[Elite]] trait from play.\nAdd this story card to the victory display.",
-    "textZh": "从场上弃掉一个没有[[精英]]特性的[[幻灵]]敌人。\n将本剧情卡牌加入胜利区。",
+    "textZh": "从场上弃掉一个没有[[精英]]特性的[[幻灵]]敌人。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295652,7 +295652,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08533": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295692,7 +295692,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Search the top 9 cards of your deck for each copy of Tekeli-li and place each one you find on the bottom of the Tekeli-li deck without resolving it. Shuffle your deck.\nAdd this story card to the victory display.",
-    "textZh": "查找你牌库顶的9张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底，不要结算它们。混洗你的牌库。\n将本剧情卡牌加入胜利区。",
+    "textZh": "查找你牌库顶的9张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底，不要结算它们。混洗你的牌库。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295702,7 +295702,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08534": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295742,7 +295742,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose a [[Possessed]] enemy in play that does not have the [[Elite]] trait. Take control of each doom on that enemy, flipping them to their clue sides. Discard the chosen enemy.\nAdd this story card to the victory display.",
-    "textZh": "选择场上一个没有[[精英]]特性的[[附身]]敌人。控制该敌人上所有毁灭标记，并将其翻到线索面。弃掉选择的敌人。\n将本剧情卡牌加入胜利区。",
+    "textZh": "选择场上一个没有[[精英]]特性的[[附身]]敌人。控制该敌人上所有毁灭标记，并将其翻到线索面。弃掉选择的敌人。将本剧情卡牌加入胜利区。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -295752,7 +295752,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08535": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295798,7 +295798,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Geology",
     "subnameZh": "地质学教授",
     "text": "[action] Choose and discard up to 2 cards from your hand: Parley. Place that many resources on Professor William Dyer (from the token bank). If there are 3 [per_investigator] resources on him, add him to the victory display.\nForced - If Professor William Dyer is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "[action]从你的手中选择并弃掉最多2张卡牌：谈判。将相等数量的资源(从供应堆拿取)放在威廉·戴尔教授上。如果其上有3[per_investigator]资源，将其加入胜利区。\n强制 - 如果威廉·戴尔教授被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]从你的手中选择并弃掉最多2张卡牌：谈判。将相等数量的资源(从供应堆拿取)放在威廉·戴尔教授上。如果其上有3[per_investigator]资源，将其加入胜利区。强制 - 如果威廉·戴尔教授被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -295816,7 +295816,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08536": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295862,7 +295862,7 @@ export const ALL_CARDS = {
     "subname": "Brilliant Student",
     "subnameZh": "杰出学生",
     "text": "[action]: Parley. You listen closely to Danforth's rambling. Draw up to 2 cards from the top of the Tekeli-li deck. Then, place that many resources on Danforth (from the token pool). If there are 3 [per_investigator] resources on him, add him to the victory display.\nForced - If Danforth is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "[action]：谈判。你仔细听丹佛斯的胡言乱语。抽取忒咳哩-哩牌库顶最多2张卡牌。然后，将相等数量的资源(从供应堆拿取)放在丹佛斯上。如果其上有3[per_investigator]资源，将其加入胜利区。\n强制 - 如果丹佛斯被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。你仔细听丹佛斯的胡言乱语。抽取忒咳哩-哩牌库顶最多2张卡牌。然后，将相等数量的资源(从供应堆拿取)放在丹佛斯上。如果其上有3[per_investigator]资源，将其加入胜利区。强制 - 如果丹佛斯被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -295880,7 +295880,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08537": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295926,7 +295926,7 @@ export const ALL_CARDS = {
     "subname": "Dog Handler",
     "subnameZh": "驯犬师",
     "text": "[action]: Parley. Test [agility] (2) to sneak by Anyu and speak with Eliyah. For each point you succeed by, place 1 resource on him (from the token pool). If you fail, he attacks you. If there are 2 [per_investigator] resources on him, add him to the victory display.\nForced - If Eliyah Ashevak is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "[action]：谈判。检定[agility](2)以偷偷溜过安雨，并与伊里亚交谈。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。\n强制 - 如果伊里亚·阿什瓦克被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。检定[agility](2)以偷偷溜过安雨，并与伊里亚交谈。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。强制 - 如果伊里亚·阿什瓦克被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -295944,7 +295944,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08538": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -295990,7 +295990,7 @@ export const ALL_CARDS = {
     "subname": "Daring Physician",
     "subnameZh": "无畏医师",
     "text": "[action]: Parley. Test [willpower] (2) to attempt to calm Dr. Sinha down. For each point you succeed by, place 1 resource on her (from the token pool). If you fail, she attacks you. If there are 2 [per_investigator] resources on her, add her to the victory display.\nForced - If Dr. Mala Sinha is defeated: Cross her name off in the Campaign Log.",
-    "textZh": "[action]：谈判。检定[willpower](2)以试图让辛哈医生冷静下来。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。\n强制 - 如果玛拉·辛哈医生被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。检定[willpower](2)以试图让辛哈医生冷静下来。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。强制 - 如果玛拉·辛哈医生被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296008,7 +296008,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08539": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296054,7 +296054,7 @@ export const ALL_CARDS = {
     "subname": "Antarctic Guide",
     "subnameZh": "南极向导",
     "text": "[action]: Parley. Test [willpower] or [intellect] (5) to get Claypool to stop babbling nonsense. If you succeed, place 1 resource on him (from the token pool). If you fail, he attacks you. If there are 1 [per_investigator] resources on him, add him to the victory display.\nForced - If Avery Claypool is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "[action]：谈判。检定[willpower]或[intellect](5)以使克莱普尔停止胡言乱语。如果你检定成功，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有1[per_investigator]资源，将其加入胜利区。\n强制 - 如果艾弗里·克莱普尔被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。检定[willpower]或[intellect](5)以使克莱普尔停止胡言乱语。如果你检定成功，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有1[per_investigator]资源，将其加入胜利区。强制 - 如果艾弗里·克莱普尔被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296072,7 +296072,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08540": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296118,7 +296118,7 @@ export const ALL_CARDS = {
     "subname": "Dubious Choice",
     "subnameZh": "不可靠人选",
     "text": "Retaliate.\n[action]: Parley. Test [combat] (2) to wrestle the gun away from Cookie. For each point you succeed by, place 1 resource on him (from the token pool). If you fail, he attacks you. If there are 2 [per_investigator] resources on him, add him to the victory display.\nForced - If James \"Cookie\" Fredericks is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "反击。\n[action]：谈判。检定[combat](2)以夺走曲奇的枪。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。\n强制 - 如果詹姆斯·“曲奇”·弗雷德里克斯被击败：在剧本日志上划掉其名字。",
+    "textZh": "反击。[action]：谈判。检定[combat](2)以夺走曲奇的枪。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。强制 - 如果詹姆斯·“曲奇”·弗雷德里克斯被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296136,7 +296136,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08541": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296182,7 +296182,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Biology",
     "subnameZh": "生物学教授",
     "text": "[action]: Parley. Test [intellect] (2) to convince Dr. Kensler to tell you what she has seen. For each point you succeed by, place 1 resource on her (from the token pool). If you fail, she attacks you. If there are 2 [per_investigator] resources on her, add her to the victory display.\nForced - If Dr. Amy Kensler is defeated: Cross her name off in the Campaign Log.",
-    "textZh": "[action]：谈判。检定[intellect](2)以说服肯斯勒博士将她看到的东西都告诉你。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。\n强制 - 如果艾米·肯斯勒博士被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。检定[intellect](2)以说服肯斯勒博士将她看到的东西都告诉你。你检定成功且每超过难度1点，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有2[per_investigator]资源，将其加入胜利区。强制 - 如果艾米·肯斯勒博士被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296200,7 +296200,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08542": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296246,7 +296246,7 @@ export const ALL_CARDS = {
     "subname": "Intrepid Explorer",
     "subnameZh": "英勇的探险家",
     "text": "[action]: Parley. Test [combat] or [agility] (5) to get Ellsworth to let go of the strange rock he is clutching. If you succeed, place 1 resource on him (from the token pool). If you fail, he attacks you. If there are 1 [per_investigator] resources on him, add him to the victory display.\nForced - If Roald Ellsworth is defeated: Cross his name off in the Campaign Log.",
-    "textZh": "[action]：谈判。检定[combat]或[agility](5)以使埃尔斯沃思放下手里的奇怪石头。如果你检定成功，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有1[per_investigator]资源，将其加入胜利区。\n强制 - 如果罗尔德·埃尔斯沃思被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]：谈判。检定[combat]或[agility](5)以使埃尔斯沃思放下手里的奇怪石头。如果你检定成功，在其上放置1资源(从供应堆拿取)。如果你检定失败，其攻击你。如果其上有1[per_investigator]资源，将其加入胜利区。强制 - 如果罗尔德·埃尔斯沃思被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296264,7 +296264,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08543": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296310,7 +296310,7 @@ export const ALL_CARDS = {
     "subname": "Aeroplane Mechanic",
     "subnameZh": "飞机技师",
     "text": "[action] Spend up to 3 resources: Parley. Place each of these resources on Takada Hiroko. If there are 5 [per_investigator] resources on her, add her to the victory display.\nForced - If Takada Hiroko is defeated: Cross her name off in the Campaign Log.",
-    "textZh": "[action]花费最多3资源：谈判。将花费的所有资源放到高田弘子上。如果其上有5[per_investigator]资源，将其加入胜利区。\n强制 - 如果高田弘子被击败：在剧本日志上划掉其名字。",
+    "textZh": "[action]花费最多3资源：谈判。将花费的所有资源放到高田弘子上。如果其上有5[per_investigator]资源，将其加入胜利区。强制 - 如果高田弘子被击败：在剧本日志上划掉其名字。",
     "traits": [
       "Humanoid",
       "Possessed",
@@ -296328,13 +296328,13 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08544": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "This place is not what it seems. You feel as though you have trespassed somewhere ancient and terrible, and now its wrath is erupting all around you.",
     "backFlavorZh": "这地方并非表里如一。你感觉好像你侵入了一个古老而可怕的地方，现在它的愤怒正在你周围爆发。",
     "backName": "A Foul Air",
     "backNameZh": "污浊空气",
     "backText": "The lead investigator must decide (choose one):\n- Add 1 [frost] token to the chaos bag.\n- In player order, each investigator shuffles the top 2 cards of the Tekeli-li deck into their deck (each investigator who cannot takes 1 damage and 1 horror instead).",
-    "backTextZh": "调查员队长必须决定(选择一项)：\n- 在混乱袋里加入1个[frost]标记。\n- 以玩家顺序，每位调查员将忒咳哩-哩牌库顶的2张卡牌混洗入自己的牌库(每位不能这么做的调查员改为受到1点伤害和1点恐惧)。",
+    "backTextZh": "调查员队长必须决定(选择一项)：- 在混乱袋里加入1个[frost]标记。- 以玩家顺序，每位调查员将忒咳哩-哩牌库顶的2张卡牌混洗入自己的牌库(每位不能这么做的调查员改为受到1点伤害和1点恐惧)。",
     "backimagesrc": "/bundles/cards/08544b.png",
     "code": "08544",
     "customizationChange": "",
@@ -296383,7 +296383,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08544"
   },
   "08545": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Your only warning is a thin web of cracks that tears through the ice before your feet, and then a sudden explosion of mist and ink-like miasma erupts around you. The force slams you to the ground. You crawl desperately along the freezing-cold ice as the miasma reaches for you. An incomprehensible sound, like the rushing of a furious whirlwind, fills your ears. Then a thunderous crack, and you are falling - no, sliding - down along the ice toward the freezing cold waters below.\nIt is a wonder you are even still conscious. You summon all of your strength and cling to the ice shelf just before you plummet below. You finally haul yourself back over the edge, casting a panicked glance at the horizon, but there is no sign of any miasma or mist. The crack in the ice shelf extends for hundreds of feet in front of you, separating you from your pursuers. Somehow, you've unwittingly escaped...although you won't be forgetting that near-death experience anytime soon.",
     "backFlavorZh": "你唯一的警告就是你脚前的冰面上出现了薄薄一层裂缝，然后你周围突然爆发出雾气和墨般的瘴气。这股力量将你击倒在地。你绝望地在冰冷的冰面上爬行，瘴气向你袭来。一种难以理解的声音像一阵狂暴的旋风一样，震耳欲聋。然后是一声雷鸣般的巨响，你就掉下去了——不，是沿着冰面滑向下面冰冷的海水。\n你还有意识简直是个奇迹。就在你掉下去之前，你鼓起所有的力量抓住了冰架。你终于爬上边缘，惊慌失措地瞥了一眼地平线，但没有任何瘴气或薄雾的迹象。冰架上的裂缝在你面前延伸数百英尺，将你与追捕者分开。你不知不觉地就逃了出来……尽管那次濒死体验你很长时间都忘不了。",
     "backName": "Ice Shelf Collapse",
@@ -296438,12 +296438,12 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08545"
   },
   "08546": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Last Breath",
     "backNameZh": "最后一口气",
     "backText": "If there are no [[Eidolon]] enemies in play:\nThe last of the nightmarish creatures falls, its miasmatic body at once dissolving into inky, prismatic liquid and dissipating into wisps of gray mist filled with screaming shapes. Then, silence.\n(→R1)\nIf the investigators advanced by resigning:\nYou follow a makeshift path through a jagged split in the ice shelf, making your way deeper into the mainland, toward the mountains. You don't know if these creatures can follow human tracks - or indeed if they need tracks at all in order to pursue you - but you take the time to cover them, regardless. Hopefully, with this shortcut you've found, you'll be safe...\n(→R2)",
-    "backTextZh": "如果场上没有[[幻灵]]敌人：\n最后的可怕生物倒下了，它瘴气似的身体立刻融化成墨状的五彩液体，然后消散成一缕缕形状诡异的灰色雾气。然后，一切归于沉寂。\n(→结局1)\n如果调查员通过撤退来推进场景：\n你沿着一条简易小路穿过冰架的锯齿状裂缝，进入大陆深处，走向山脉。你不知道这些生物是否会跟随人类的足迹——或者它们是否需要人类的足迹来追赶你——但无论如何，你都要花时间来掩盖它们。希望有了这条你找到的捷径，你会变安全些……\n(→结局2)",
+    "backTextZh": "如果场上没有[[幻灵]]敌人：最后的可怕生物倒下了，它瘴气似的身体立刻融化成墨状的五彩液体，然后消散成一缕缕形状诡异的灰色雾气。然后，一切归于沉寂。(→结局1)\n如果调查员通过撤退来推进场景：你沿着一条简易小路穿过冰架的锯齿状裂缝，进入大陆深处，走向山脉。你不知道这些生物是否会跟随人类的足迹——或者它们是否需要人类的足迹来追赶你——但无论如何，你都要花时间来掩盖它们。希望有了这条你找到的捷径，你会变安全些……\n(→结局2)",
     "backimagesrc": "/bundles/cards/08546b.png",
     "code": "08546",
     "customizationChange": "",
@@ -296482,7 +296482,7 @@ export const ALL_CARDS = {
     "stage": 3,
     "subnameZh": "",
     "text": "Each [[Eidolon]] enemy gains Victory 0.\nThe camp gains: \"[action] Investigators at your location spend 4 clues, as a group: Resign.\"\nObjective - If there are no [[Eidolon]] enemies in play, advance.\nObjective - If each undefeated investigator has resigned, advance.",
-    "textZh": "每个[[幻灵]]敌人获得胜利0。\n营地获得：“[action]你所在地点的调查员共同花费4个线索：撤退。”\n目标 - 如果场上没有[[幻灵]]敌人，推进场景。\n目标 - 如果所有未被击败的调查员都撤退了，推进场景。",
+    "textZh": "每个[[幻灵]]敌人获得胜利0。营地获得：“[action]你所在地点的调查员共同花费4个线索：撤退。”\n目标 - 如果场上没有[[幻灵]]敌人，推进场景。目标 - 如果所有未被击败的调查员都撤退了，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -296491,7 +296491,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08546"
   },
   "08547": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296536,7 +296536,7 @@ export const ALL_CARDS = {
     "quantity": 4,
     "subnameZh": "",
     "text": "While an [[Eidolon]] enemy at Seeping Nightmare's location is moving, its location is considered connected to the camp.\nWhile there are no facedown cards beneath Seeping Nightmare, it gains hunter.\nForced - When Seeping Nightmare is defeated: Remove each facedown card beneath it from the game.",
-    "textZh": "位于渗出梦魇所在地点的[[幻灵]]敌人移动时，其所在地点视为与营地相连。\n渗出梦魇底下没有正面朝下的卡牌时，其获得猎手。\n强制 - 在渗出梦魇被击败时：将其底下的所有正面朝下的卡牌从游戏中移除。",
+    "textZh": "位于渗出梦魇所在地点的[[幻灵]]敌人移动时，其所在地点视为与营地相连。渗出梦魇底下没有正面朝下的卡牌时，其获得猎手。强制 - 在渗出梦魇被击败时：将其底下的所有正面朝下的卡牌从游戏中移除。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -296553,7 +296553,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08547"
   },
   "08548": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -296606,11 +296606,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08548"
   },
   "08549": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the current agenda number plus the number of story cards in the victory display.\n[cultist]: -2. If you do not succeed by at least 2, place 1 of your clues on your location.\n[tablet]: -4. If you fail, you must either move to the Prison of Memories, or shuffle the top card of the Tekeli-li deck into your deck without looking at it. (If you fail by 2 or more, do both instead.)\n[elder_thing]: -5. If you fail, place 1 doom on an [[Eidolon]] enemy in play.",
-    "backTextZh": "困难/专家\n[skull]：-X。X为当前密谋编号加上胜利区中剧情卡牌的数量。\n[cultist]：-2。如果你检定失败，或成功但没有超过难度至少2点，将你的1个线索放到你所在地点。\n[tablet]：-4。如果你检定失败，你必须移动到记忆囚笼，或者将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。(如果你检定失败且低于难度至少2点，改为两项都执行)。\n[elder_thing]：-5。如果你检定失败，在场上一个[[幻灵]]敌人上放置1个毁灭标记。",
+    "backTextZh": "困难/专家\n[skull]：-X。X为当前密谋编号加上胜利区中剧情卡牌的数量。[cultist]：-2。如果你检定失败，或成功但没有超过难度至少2点，将你的1个线索放到你所在地点。[tablet]：-4。如果你检定失败，你必须移动到记忆囚笼，或者将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。(如果你检定失败且低于难度至少2点，改为两项都执行)。[elder_thing]：-5。如果你检定失败，在场上一个[[幻灵]]敌人上放置1个毁灭标记。",
     "backimagesrc": "/bundles/cards/08549b.png",
     "code": "08549",
     "customizationChange": "",
@@ -296646,7 +296646,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Easy / Standard\n[skull]: -X. X is the number of story cards in the victory display.\n[cultist]: -2. If you fail, place 1 of your clues on your location.\n[tablet]: -3. If you fail, you must either move to the Prison of Memories, or shuffle the top card of the Tekeli-li deck into your deck without looking at it.\n[elder_thing]: -4. If you fail, place 1 doom on an [[Eidolon]] enemy in play.",
-    "textZh": "简单/ 普通\n[skull]：-X。X为胜利区中剧情卡牌的数量。\n[cultist]：-2。如果你检定失败，将你的1个线索放到你所在地点。\n[tablet]：-3。如果你检定失败，你必须移动到记忆囚笼，或者将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。\n[elder_thing]：-4。如果你检定失败，在场上一个[[幻灵]]敌人上放置1个毁灭标记。",
+    "textZh": "简单/普通\n[skull]：-X。X为胜利区中剧情卡牌的数量。[cultist]：-2。如果你检定失败，将你的1个线索放到你所在地点。[tablet]：-3。如果你检定失败，你必须移动到记忆囚笼，或者将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。[elder_thing]：-4。如果你检定失败，在场上一个[[幻灵]]敌人上放置1个毁灭标记。",
     "traits": [],
     "traitsZh": [],
     "type": "scenario",
@@ -296655,7 +296655,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08549"
   },
   "08550": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Bit by bit, your consciousness fades. You are lost in the ever-expanding weave of memories, your senses drowning in a deluge of thought and emotion. A jumbled cage of fear, doubt, and horror.\nWhen you finally awaken, only seconds have passed.",
     "backFlavorZh": "你的意识正在一点一点地消失。你迷失在不断膨胀的记忆交织之中，你的感官淹没在思想和情感的洪流之中。一个混杂着恐惧、怀疑和恐怖的囚笼。\n当你最终醒来时，时间却只过了几秒钟。",
     "backName": "Fade Away",
@@ -296701,7 +296701,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[fast] Take 1 horror: Move to the Prison of Memories.",
-    "textZh": "[free]受到1点恐惧：移动到记忆囚笼。",
+    "textZh": "[fast]受到1点恐惧：移动到记忆囚笼。",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -296710,7 +296710,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08550"
   },
   "08551": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Again, your consciousness fades. You tumble through everlasting moments, empathy tugging your emotions in every direction at once. It is an ocean of bottomless thought, deep and dark and tenebrous.\nWhen you finally awaken, once again only seconds have passed.",
     "backFlavorZh": "你的意识又一次开始消失。你在接连不断的场景之间辗转翻腾，情感与它们共鸣，被同时扯向四面八方。这里是有着无底思想的海洋，深邃、黑暗、阴沉。\n当你最终醒来时，时间还是只过了几秒钟。",
     "backName": "Emotional Pull",
@@ -296756,7 +296756,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "[fast] Take 1 horror: Move to the Prison of Memories.",
-    "textZh": "[free]受到1点恐惧：移动到记忆囚笼。",
+    "textZh": "[fast]受到1点恐惧：移动到记忆囚笼。",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -296765,7 +296765,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08551"
   },
   "08552": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Your consciousness is dismantled, this time violently. It is as though your capacity to feel, to think, has been ripped to shreds by the incomprehensible depth of this awful prison. Infinite leagues apart, your every molecule struggles to remain you as your mind is usurped.\nWhen you finally awaken, a full day has passed.",
     "backFlavorZh": "你的意识被摧毁了，这次非常粗暴。就好像你的感觉和思考能力，已经被这可怕的监狱那不可理解的深度撕成了碎片。你的思想被篡夺时，你的每一个分子即便各自相隔千里，却仍在努力保持着你自己。\n当你终于醒来时，已经过去了整整一天。",
     "backName": "Deconstruction",
@@ -296811,7 +296811,7 @@ export const ALL_CARDS = {
     "stage": 3,
     "subnameZh": "",
     "text": "[fast] Take 1 horror: Move to the Prison of Memories.",
-    "textZh": "[free]受到1点恐惧：移动到记忆囚笼。",
+    "textZh": "[fast]受到1点恐惧：移动到记忆囚笼。",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -296820,7 +296820,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08552"
   },
   "08553": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Understanding sets in. Dream though it may be, this place is like a nexus of minds - a place within the miasma where thought is material. Where madness is embodied.\nAs you ponder the deeper truths that might have taken shape in this maze of horrors, a door appears just in the periphery of your sight: the same door you once used to trap yourself in this hellish place.\nPerhaps there are more mysteries to discover here, but for now, you've seen enough. You open the door...",
     "backFlavorZh": "你开始理解了。尽管可能是梦，但这个地方就像思想的中枢——笼罩于瘴气之中，思想是实体的地方。在这里，疯狂也会具象化。\n当你在思考，这恐怖迷宫中可能存在的深层真相时，一扇门恰好出现在你视线的边缘：正是通过那扇门你才被关在这鬼地方。\n也许这里还有更多的谜团有待探索，但现在，你已经看得够多了。你打开了门……",
     "backName": "Deeper Mysteries",
@@ -296874,7 +296874,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08553"
   },
   "08554": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Once again, as you wonder about the deeper significance this place holds, the exit appears before you, a door of solid oak that stands out within the mirage. Hallucination or not, it is your only way out of this strange place. Maybe the truth is out there, somewhere, but for now, it's safer to leave and return to reality. You open the door...",
     "backFlavorZh": "再一次，当你想知道这个地方拥有的更深层次的意义时，出口出现在你面前，一扇坚实的橡木门在幻景中突兀显现。无论是不是妄想，这是你离开这个奇怪地方的唯一途径。也许真相就在某处，但现在，离开回到现实中更安全。你打开了门……",
     "backName": "Willing Victim",
@@ -296928,7 +296928,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08554"
   },
   "08555": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As you confront yet another memory locked inside this strange hallucination, you spot another door - not a wooden one or indeed any door made by human hands, but rather a colossal circular gate of rock with an elaborately carved slab of slate-gray stone blocking your way. Enigmatic glyphs wind around its frame, their meaning inscrutable. You step forward, place your hand upon the stone, and to your surprise, the door cracks open with an immense rumble.\nA layer of thick, prismatic miasma drips from the doorway as you peer inside. <i>Thum-thum. Thum-thum. Thum-thum.</i> The beating is tremendous. Something quivers and throbs on the other side, something hideous and enormous, like a beating heart. <i>Thum-thum. Thum-thum. Thum-thum.</i> The heart of the mountain. The heart of the mirage. Then the door slams open, tendrils of ichor slap around your wrists, and you are dragged, screaming, through the door-",
     "backFlavorZh": "当你在这个奇怪的幻觉中面对另一段记忆时，你发现了另一扇门——不是木制的，也不是经由人类之手做出的门，而是一扇巨大的，精心雕刻着灰色石板的圆形石门挡住了你的路。高深莫测的象形文字缠绕在它的门框上，其含义难以理解。你走上前，把你的手放在石头上，令你吃惊的是，随着一声巨大的隆隆声，门开了。\n当你往里面看的时候，一层厚厚的五光十色的瘴气从门口溢出。咚-咚。咚-咚。咚-咚。节拍声震耳欲聋。另一边有什么东西在颤抖抽搐，一种可怕而巨大的东西，就像一颗跳动的心脏。咚-咚。咚-咚。咚-咚。山脉之心。幻景之心。然后门砰的一声开了，脓肿的卷须拍打在你的手腕上，你被拖着，尖叫着穿过了门——",
     "backName": "Return to Reality",
@@ -296982,7 +296982,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08555"
   },
   "08556": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297027,7 +297027,7 @@ export const ALL_CARDS = {
     "shroud": -2,
     "subnameZh": "",
     "text": "Mirage 1 [per_investigator] (Base Camp, Deck of the Theodosia, University Halls).\nX is the current agenda number.",
-    "textZh": "幻景1[per_investigator](大本营、菲奥多西亚号甲板、大学礼堂)。\nX为当前密谋编号。",
+    "textZh": "幻景1[per_investigator](大本营、菲奥多西亚号甲板、大学礼堂)。X为当前密谋编号。",
     "traits": [
       "Otherworld",
       "Mirage"
@@ -297042,7 +297042,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08556"
   },
   "08556b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297081,7 +297081,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Put the set-aside Base Camp location into play.\n- Put the set-aside Deck of the Theodosia location into play.\n- Put the set-aside University Halls location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 将放在一边的大本营地点放置入场。\n- 将放在一边的菲奥多西亚号甲板地点放置入场。\n- 将放在一边的大学礼堂地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 将放在一边的大本营地点放置入场。- 将放在一边的菲奥多西亚号甲板地点放置入场。- 将放在一边的大学礼堂地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297090,11 +297090,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08556b"
   },
   "08557": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "伊里亚和他的同伴安雨沿着营地的外围走来，进入了你的视线。“你去哪儿了？”高田说着，也出现在你眼前。“独自一人外出是相当愚蠢的。”辛哈医生也加入了责备的行列。\n“放松。我可不是独自一人。”伊里亚回答道，他戴着手套的手轻轻地抚摸着安雨的脖子。\n医师翻了个白眼离开了，但高田抱着双臂，依然留在那里。“在我们出发之前还有很多事情要做，你知道的吧。”她说。\n伊里亚叹了口气，点了点头。“我知道。只是……有点焦虑。这地方有点……”他声音越来越小。\n高田点头。“是的。我也感觉到了。”",
     "backNameZh": "",
     "backText": "",
-    "backTextZh": "选择一项：\n- 跟随高田的记忆。将放在一边的沿海水域地点放置入场。\n- 跟随伊里亚的记忆。将放在一边的荒废车站地点放置入场。\n- 跟随辛哈医生的记忆。将放在一边的河景剧院地点放置入场。\n将本卡牌翻面。",
+    "backTextZh": "选择一项：- 跟随高田的记忆。将放在一边的沿海水域地点放置入场。- 跟随伊里亚的记忆。将放在一边的荒废车站地点放置入场。- 跟随辛哈医生的记忆。将放在一边的河景剧院地点放置入场。将本卡牌翻面。",
     "clues": 3,
     "code": "08557",
     "customizationChange": "",
@@ -297135,7 +297135,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 1 [per_investigator] (Coastal Waters, Deserted Station, Riverview Theatre).\n[reaction] When you would you fail a skill test by exactly 1 while investigating Base Camp, take 1 horror: You get +1 skill value for this test.",
-    "textZh": "幻景1[per_investigator](沿海水域、荒废车站、河景剧院)。\n[reaction]你调查大本营时，在技能检定将要失败且正好低于难度1点时，受到1点恐惧：你本次检定得到技能值+1。",
+    "textZh": "幻景1[per_investigator](沿海水域、荒废车站、河景剧院)。[reaction]你调查大本营时，在技能检定将要失败且正好低于难度1点时，受到1点恐惧：你本次检定得到技能值+1。",
     "traits": [
       "Mirage"
     ],
@@ -297148,7 +297148,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08557"
   },
   "08557b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297187,7 +297187,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Takada's memories. Put the set-aside Coastal Waters location into play.\n- Follow Eliyah's memories. Put the set-aside Deserted Station location into play.\n- Follow Dr. Sinha's memories. Put the set-aside Riverview Theatre location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随高田的记忆。将放在一边的沿海水域地点放置入场。\n- 跟随伊里亚的记忆。将放在一边的荒废车站地点放置入场。\n- 跟随辛哈医生的记忆。将放在一边的河景剧院地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随高田的记忆。将放在一边的沿海水域地点放置入场。- 跟随伊里亚的记忆。将放在一边的荒废车站地点放置入场。- 跟随辛哈医生的记忆。将放在一边的河景剧院地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297196,7 +297196,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08557b"
   },
   "08558": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297241,7 +297241,7 @@ export const ALL_CARDS = {
     "shroud": 1,
     "subnameZh": "",
     "text": "Mirage 1 [per_investigator] (Coastal Waters, Hedge Maze, Standing Stones).\nForced - When you investigate Deck of the Theodosia: You must either give it +2 shroud for this investigation, or spend 1 additional action to investigate it.",
-    "textZh": "幻景1[per_investigator](沿海水域、树篱迷宫、耸立岩石)。\n强制 - 在你调查菲奥多西亚号甲板时：你必须使其在本次调查中得到+2隐藏值，或者额外花费1个行动来调查。",
+    "textZh": "幻景1[per_investigator](沿海水域、树篱迷宫、耸立岩石)。强制 - 在你调查菲奥多西亚号甲板时：你必须使其在本次调查中得到+2隐藏值，或者额外花费1个行动来调查。",
     "traits": [
       "Mirage"
     ],
@@ -297254,7 +297254,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08558"
   },
   "08558b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297293,7 +297293,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Cookie's memories. Put the set-aside Coastal Waters location into play.\n- Follow Ellsworth's memories. Put the set-aside Hedge Maze location into play.\n- Follow Claypool's memories. Put the set-aside Standing Stones location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随曲奇的记忆。将放在一边的沿海水域地点放置入场。\n- 跟随埃尔斯沃思的记忆。将放在一边的树篱迷宫地点放置入场。\n- 跟随克莱普尔的记忆。将放在一边的耸立岩石地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随曲奇的记忆。将放在一边的沿海水域地点放置入场。- 跟随埃尔斯沃思的记忆。将放在一边的树篱迷宫地点放置入场。- 跟随克莱普尔的记忆。将放在一边的耸立岩石地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297302,7 +297302,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08558b"
   },
   "08559": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297347,7 +297347,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Mirage 1 [per_investigator] (Elder Chamber, Riverview Theatre, Standing Stones).\nForced - When University Halls is flipped over: Each investigator discards the top 3 cards of their deck for each clue they spent. Each investigator draws each Tekeli-li weakness they discarded in this way. Shuffle each other weakness discarded in this way back into its owner's deck.",
-    "textZh": "幻景1[per_investigator](古老者厅室、河景剧院、耸立岩石)。\n强制 - 在大学礼堂翻面时：每位调查员每花费一个线索，弃掉自己牌库顶3张卡牌。每位调查员抽取自己以此方式弃掉的所有忒咳哩-哩弱点。将其他所有以此方式弃掉的弱点混洗回所有者牌库。",
+    "textZh": "幻景1[per_investigator](古老者厅室、河景剧院、耸立岩石)。强制 - 在大学礼堂翻面时：每位调查员每花费一个线索，弃掉自己牌库顶3张卡牌。每位调查员抽取自己以此方式弃掉的所有忒咳哩-哩弱点。将其他所有以此方式弃掉的弱点混洗回所有者牌库。",
     "traits": [
       "Mirage"
     ],
@@ -297360,7 +297360,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08559"
   },
   "08559b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297399,7 +297399,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Danforth's memories. Put the set-aside Elder Chamber location into play.\n- Follow Dr. Kensler's memories. Put the set-aside Riverview Theatre location into play.\n- Follow Dyer's memories. Put the set-aside Standing Stones location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随丹佛斯的记忆。将放在一边的古老者厅室地点放置入场。\n- 跟随肯斯勒博士的记忆。将放在一边的河景剧院地点放置入场。\n- 跟随戴尔的记忆。将放在一边的耸立岩石地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随丹佛斯的记忆。将放在一边的古老者厅室地点放置入场。- 跟随肯斯勒博士的记忆。将放在一边的河景剧院地点放置入场。- 跟随戴尔的记忆。将放在一边的耸立岩石地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297408,7 +297408,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08559b"
   },
   "08560": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297453,7 +297453,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Mo'ai Statues).\nForced - After you investigate Hedge Maze during your turn: Increase its shroud value by 1 until the end of your turn. You cannot leave Hedge Maze this turn.",
-    "textZh": "幻景2[per_investigator](摩艾石像)。\n强制 - 你回合期间，在你调查树篱迷宫后：直到你的回合结束，其隐藏值增加1点。本回合你不能离开树篱迷宫。",
+    "textZh": "幻景2[per_investigator](摩艾石像)。强制 - 你回合期间，在你调查树篱迷宫后：直到你的回合结束，其隐藏值增加1点。本回合你不能离开树篱迷宫。",
     "traits": [
       "Mirage"
     ],
@@ -297466,7 +297466,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08560"
   },
   "08560b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297505,7 +297505,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Put the set-aside Mo'ai Statues location into play.\nFlip this card back over.",
-    "textZh": "将放在一边的摩艾石像地点放置入场。\n将本卡牌翻面。",
+    "textZh": "将放在一边的摩艾石像地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297514,7 +297514,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08560b"
   },
   "08561": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297559,7 +297559,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Alaskan Wilds).\nDeserted Station gets +3 shroud while there is at least one treachery attached to it.",
-    "textZh": "幻景2[per_investigator](阿拉斯加荒野)。\n荒废车站有诡计附属时，得到+3隐藏值。",
+    "textZh": "幻景2[per_investigator](阿拉斯加荒野)。荒废车站有诡计附属时，得到+3隐藏值。",
     "traits": [
       "Mirage"
     ],
@@ -297572,7 +297572,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08561"
   },
   "08561b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297611,7 +297611,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Put the set-aside Alaskan Wilds location into play.\nFlip this card back over.",
-    "textZh": "将放在一边的阿拉斯加荒野地点放置入场。\n将本卡牌翻面。",
+    "textZh": "将放在一边的阿拉斯加荒野地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297620,7 +297620,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08561b"
   },
   "08562": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297665,7 +297665,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Airfield, Ottoman Front).\nForced - After you reveal a [frost] token while investigating Coastal Waters: Take 1 horror. If this investigation is successful, discover 1 additional clue at Coastal Waters. (Limit once per test.)",
-    "textZh": "幻景2[per_investigator](飞机场、奥斯曼前线)。\n强制 - 你调查沿海水域时，在你揭示一个[frost]标记后：受到1点恐惧。如果本次调查成功，发现沿海水域额外1个线索。(每次检定仅限一次。)",
+    "textZh": "幻景2[per_investigator](飞机场、奥斯曼前线)。强制 - 你调查沿海水域时，在你揭示一个[frost]标记后：受到1点恐惧。如果本次调查成功，发现沿海水域额外1个线索。(每次检定仅限一次。)",
     "traits": [
       "Mirage"
     ],
@@ -297678,7 +297678,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08562"
   },
   "08562b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297717,7 +297717,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Takada's memories. Put the set-aside Airfield location into play.\n- Follow Cookie's memories. Put the set-aside Ottoman Front location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随高田的记忆。将放在一边的飞机场地点放置入场。\n- 跟随曲奇的记忆。将放在一边的奥斯曼前线地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随高田的记忆。将放在一边的飞机场地点放置入场。- 跟随曲奇的记忆。将放在一边的奥斯曼前线地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297726,7 +297726,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08562b"
   },
   "08563": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297771,7 +297771,7 @@ export const ALL_CARDS = {
     "shroud": 1,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Cluttered Dormitory).\nForced - After you discover 2 or more clues from Elder Chamber during a single investigation or card effect: Shuffle the top card of the Tekeli-li deck into your deck.",
-    "textZh": "幻景2[per_investigator](凌乱宿舍)。\n强制 - 单独一次调查或卡牌效果期间，在你从古老者厅室发现至少2个线索后：将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库。",
+    "textZh": "幻景2[per_investigator](凌乱宿舍)。强制 - 单独一次调查或卡牌效果期间，在你从古老者厅室发现至少2个线索后：将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库。",
     "traits": [
       "Mirage"
     ],
@@ -297784,7 +297784,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08563"
   },
   "08563b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297823,7 +297823,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Put the set-aside Cluttered Dormitory location into play.\nFlip this card back over.",
-    "textZh": "将放在一边的凌乱宿舍地点放置入场。\n将本卡牌翻面。",
+    "textZh": "将放在一边的凌乱宿舍地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297832,7 +297832,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08563b"
   },
   "08564": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297877,7 +297877,7 @@ export const ALL_CARDS = {
     "shroud": 1,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Dr. Kensler's Office, Infirmary).\nForced - When you draw a Tekeli-li card while at Riverview Theatre: Resolve its effects an additional time. Then, discover 1 clue at Riverview Theatre.",
-    "textZh": "幻景2[per_investigator](肯斯勒博士的办公室、医务室)。\n强制 - 你在河景剧院抽取1张忒咳哩-哩卡牌时：额外结算一次其效果。然后，发现河景剧院的1个线索。",
+    "textZh": "幻景2[per_investigator](肯斯勒博士的办公室、医务室)。强制 - 你在河景剧院抽取1张忒咳哩-哩卡牌时：额外结算一次其效果。然后，发现河景剧院的1个线索。",
     "traits": [
       "Mirage"
     ],
@@ -297890,7 +297890,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08564"
   },
   "08564b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297929,7 +297929,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Dr. Kensler's memories. Put the set-aside Dr. Kensler's Office location into play.\n- Follow Dr. Sinha's memories. Put the set-aside Infirmary location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随肯斯勒博士的记忆。将放在一边的肯斯勒博士的办公室地点放置入场。\n- 跟随辛哈医生的记忆。将放在一边的医务室地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随肯斯勒博士的记忆。将放在一边的肯斯勒博士的办公室地点放置入场。- 跟随辛哈医生的记忆。将放在一边的医务室地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -297938,7 +297938,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08564b"
   },
   "08565": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -297983,7 +297983,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (The Black Stone, Dyer's Classroom).\nForced - After you reveal a [frost] token while investigating Standing Stones: Take 1 damage. If this investigation is successful, discover 1 additional clue at Standing Stones. (Limit once per test.)",
-    "textZh": "幻景2[per_investigator](黑色岩石、戴尔的教室)。\n强制 - 你调查耸立岩石时，在你揭示一个[frost]后：受到1点伤害。如果本次调查成功，发现耸立岩石额外1个线索。(每次检定仅限一次。)",
+    "textZh": "幻景2[per_investigator](黑色岩石、戴尔的教室)。强制 - 你调查耸立岩石时，在你揭示一个[frost]标记后：受到1点伤害。如果本次调查成功，发现耸立岩石额外1个线索。(每次检定仅限一次。)",
     "traits": [
       "Mirage"
     ],
@@ -297996,7 +297996,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08565"
   },
   "08565b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298035,7 +298035,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Choose one:\n- Follow Claypool's memories. Put the set-aside The Black Stone location into play.\n- Follow Dyer's memories. Put the set-aside Dyer's Classroom location into play.\nFlip this card back over.",
-    "textZh": "选择一项：\n- 跟随克莱普尔的记忆。将放在一边的黑色岩石地点放置入场。\n- 跟随戴尔的记忆。将放在一边的戴尔的教室地点放置入场。\n将本卡牌翻面。",
+    "textZh": "选择一项：- 跟随克莱普尔的记忆。将放在一边的黑色岩石地点放置入场。- 跟随戴尔的记忆。将放在一边的戴尔的教室地点放置入场。将本卡牌翻面。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298044,7 +298044,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08565b"
   },
   "08566": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298089,7 +298089,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Missing Father).\nWhile Takada Hiroko is at this location, it gets -2 shroud.\nAs an additional cost for you to investigate Airfield, you must spend 1 resource.",
-    "textZh": "幻景2[per_investigator](失踪父亲之记忆)。\n高田弘子在本地点时，本地点得到-2隐藏。\n作为调查飞机场的额外费用，你必须花费1资源。",
+    "textZh": "幻景2[per_investigator](失踪父亲之记忆)。高田弘子在本地点时，本地点得到-2隐藏值。作为调查飞机场的额外费用，你必须花费1资源。",
     "traits": [
       "Mirage"
     ],
@@ -298102,7 +298102,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08566"
   },
   "08566b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298141,7 +298141,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Takada Hiroko is alive:\nSpawn the set-aside Memory of a Missing Father enemy at this location.\nFlip this card back over.\nIf Takada Hiroko is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果高田弘子活着：\n在本地点生成放在一边的失踪父亲之记忆敌人。\n将本卡牌翻面。\n如果高田弘子被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果高田弘子活着：在本地点生成放在一边的失踪父亲之记忆敌人。将本卡牌翻面。如果高田弘子被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298151,7 +298151,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08567": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298196,7 +298196,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Hunt Gone Awry).\nWhile Eliyah Ashevak is at this location, it gets -2 shroud.\nAs an additional cost for you to enter Alaskan Wilds, you must either shuffle the top card of the Tekeli-li deck into your deck, or spend 1 action.",
-    "textZh": "幻景2[per_investigator](狩猎失败之记忆)。\n伊里亚·阿什瓦克在本地点时，本地点得到-2隐藏。\n作为你进入阿拉斯加荒野的额外费用，你必须将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库，或者花费1个行动。",
+    "textZh": "幻景2[per_investigator](狩猎失败之记忆)。伊里亚·阿什瓦克在本地点时，本地点得到-2隐藏值。作为你进入阿拉斯加荒野的额外费用，你必须将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库，或者花费1个行动。",
     "traits": [
       "Mirage"
     ],
@@ -298209,7 +298209,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08567"
   },
   "08567b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298248,7 +298248,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Eliyah Ashevak is alive:\nSpawn the set-aside Memory of a Hunt Gone Awry enemy at this location.\nFlip this card back over.\nIf Eliyah Ashevak is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果伊里亚·阿什瓦克活着：\n在本地点生成放在一边的狩猎失败之记忆敌人。\n将本卡牌翻面。\n如果伊里亚·阿什瓦克被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果伊里亚·阿什瓦克活着：在本地点生成放在一边的狩猎失败之记忆敌人。将本卡牌翻面。如果伊里亚·阿什瓦克被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298258,7 +298258,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08568": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298303,7 +298303,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of an Unspeakable Evil).\nWhile Danforth is at this location, it gets -2 shroud.\nForced - When you resolve the revelation ability on a Tekeli-li card while at Cluttered Dormitory: Shuffle it back into your deck instead of placing it on the bottom of the Tekeli-li deck.",
-    "textZh": "幻景2[per_investigator](无法述说的恶魔之记忆)。\n丹佛斯在本地点时，本地点得到-2隐藏。\n强制 - 在你位于凌乱宿舍结算忒咳哩-哩卡牌上的显现能力时：不要将其放到忒咳哩-哩牌库底，改为混洗回你的牌库。",
+    "textZh": "幻景2[per_investigator](无法述说的恶魔之记忆)。丹佛斯在本地点时，本地点得到-2隐藏值。强制 - 在你位于凌乱宿舍结算忒咳哩-哩卡牌上的显现能力时：不要将其放到忒咳哩-哩牌库底，改为混洗回你的牌库。",
     "traits": [
       "Mirage"
     ],
@@ -298316,7 +298316,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08568"
   },
   "08568b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298355,7 +298355,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Danforth is alive:\nSpawn the set-aside Memory of an Unspeakable Evil enemy at this location.\nFlip this card back over.\nIf Danforth is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果丹佛斯活着：\n在本地点生成放在一边的无法述说的恶魔之记忆敌人。\n将本卡牌翻面。\n如果丹佛斯被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果丹佛斯活着：在本地点生成放在一边的无法述说的恶魔之记忆敌人。将本卡牌翻面。如果丹佛斯被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298365,7 +298365,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08569": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298410,7 +298410,7 @@ export const ALL_CARDS = {
     "shroud": 5,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Regretful Voyage).\nWhile Professor William Dyer is at this location, it gets -2 shroud.\n[action] Shuffle the top card of the Tekeli-li deck into your deck: Heal 1 horror from an investigator or [[Ally]] asset at this location.",
-    "textZh": "幻景2[per_investigator](悔恨航程之记忆)。\n威廉·戴尔教授在本地点时，本地点得到-2隐藏。\n[action]将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库：治愈本地点的一位调查员或一个[[盟友]]支援1点恐惧。",
+    "textZh": "幻景2[per_investigator](悔恨航程之记忆)。威廉·戴尔教授在本地点时，本地点得到-2隐藏值。[action]将忒咳哩-哩牌库顶的一张卡牌混洗入你的牌库：治愈本地点的一位调查员或一个[[盟友]]支援1点恐惧。",
     "traits": [
       "Mirage"
     ],
@@ -298423,7 +298423,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08569"
   },
   "08569b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298462,7 +298462,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Professor William Dyer is alive:\nSpawn the set-aside Memory of a Regretful Voyage enemy at this location.\nFlip this card back over.\nIf Professor William Dyer is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果威廉·戴尔教授活着：\n在本地点生成放在一边的悔恨航程之记忆敌人。\n将本卡牌翻面。\n如果威廉·戴尔教授被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果威廉·戴尔教授活着：在本地点生成放在一边的悔恨航程之记忆敌人。将本卡牌翻面。如果威廉·戴尔教授被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298472,7 +298472,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08570": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298517,7 +298517,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Lost Patient).\nWhile Dr. Mala Sinha is at this location, it gets -2 shroud.\nForced - After you enter Infirmary for the first time this game, if you have more than 6 remaining health: Take damage until you have exactly 6 remaining health. Otherwise, take 1 damage.",
-    "textZh": "幻景2[per_investigator](去世病人之记忆)。\n玛拉·辛哈医生在本地点时，本地点得到-2隐藏。\n强制 - 在本场游戏你第一次进入医务室后，如果你的剩余生命值超过6点：受到伤害直到你有正好6点剩余生命值。否则，受到1点伤害",
+    "textZh": "幻景2[per_investigator](去世病人之记忆)。玛拉·辛哈医生在本地点时，本地点得到-2隐藏值。强制 - 在本场游戏你第一次进入医务室后，如果你的剩余生命值超过6点：受到伤害直到你有正好6点剩余生命值。否则，受到1点伤害",
     "traits": [
       "Mirage"
     ],
@@ -298530,7 +298530,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08570"
   },
   "08570b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298569,7 +298569,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Dr. Mala Sinha is alive:\nSpawn the set-aside Memory of a Lost Patient enemy at this location. Flip this card back over.\nIf Dr. Mala Sinha is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果玛拉·辛哈医生活着：\n在本地点生成放在一边的去世病人之记忆敌人。\n将本卡牌翻面。\n如果玛拉·辛哈医生被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果玛拉·辛哈医生活着：在本地点生成放在一边的去世病人之记忆敌人。将本卡牌翻面。如果玛拉·辛哈医生被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298579,7 +298579,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08571": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298624,7 +298624,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of an Unrequited Love).\nWhile Dr. Amy Kensler is at this location, it gets -2 shroud.\nForced - After you successfully investigate Dr. Kensler's Office: You must either take 1 horror, or remove 1 secret from an asset you control.",
-    "textZh": "幻景2[per_investigator](单恋之记忆)。\n艾米·肯斯勒博士在本地点时，本地点得到-2隐藏。\n强制 - 你成功调查肯斯勒博士的办公室后：你必须受到1点恐惧，或移除你控制的一个支援的1秘密。",
+    "textZh": "幻景2[per_investigator](单恋之记忆)。艾米·肯斯勒博士在本地点时，本地点得到-2隐藏值。强制 - 你成功调查肯斯勒博士的办公室后：你必须受到1点恐惧，或移除你控制的一个支援的1秘密。",
     "traits": [
       "Mirage"
     ],
@@ -298637,7 +298637,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08571"
   },
   "08571b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298676,7 +298676,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Dr. Amy Kensler is alive:\nSpawn the set-aside Memory of an Unrequited Love enemy at this location. Flip this card back over.\nIf Dr. Amy Kensler is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果艾米·肯斯勒博士活着：\n在本地点生成放在一边的单恋之记忆敌人。\n将本卡牌翻面。\n如果艾米·肯斯勒博士被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果艾米·肯斯勒博士活着：在本地点生成放在一边的单恋之记忆敌人。将本卡牌翻面。如果艾米·肯斯勒博士被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298686,7 +298686,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08572": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298731,7 +298731,7 @@ export const ALL_CARDS = {
     "shroud": 5,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of an Alien Translation).\nWhile Roald Ellsworth is at this location, it gets -2 shroud.\nForced - When the revelation effect of a treachery attaches it to Mo'ai Statues: That treachery gains surge. (Limit once per phase.)",
-    "textZh": "幻景2[per_investigator](翻译异星文字之记忆)。\n罗尔德·埃尔斯沃思在本地点时，本地点得到-2隐藏。\n强制 - 在诡计卡牌的显现效果将其附属到摩艾石像时：该诡计获得涌动(每阶段仅限一次)。",
+    "textZh": "幻景2[per_investigator](翻译异星文字之记忆)。罗尔德·埃尔斯沃思在本地点时，本地点得到-2隐藏值。强制 - 在诡计卡牌的显现效果将其附属到摩艾石像时：该诡计获得涌动(每阶段仅限一次)。",
     "traits": [
       "Mirage"
     ],
@@ -298744,7 +298744,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08572"
   },
   "08572b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298783,7 +298783,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Roald Ellsworth is alive:\nSpawn the set-aside Memory of an Alien Translation enemy at this location.\nFlip this card back over.\nIf Roald Ellsworth is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果罗尔德·埃尔斯沃思活着：\n在本地点生成放在一边的翻译异星文字之记忆敌人。\n将本卡牌翻面。\n如果罗尔德·埃尔斯沃思被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果罗尔德·埃尔斯沃思活着：在本地点生成放在一边的翻译异星文字之记忆敌人。将本卡牌翻面。如果罗尔德·埃尔斯沃思被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298793,7 +298793,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08573": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298838,7 +298838,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Ravaged Country).\nWhile James \"Cookie\" Fredericks is at this location, it gets -2 shroud.\nEach non-[[Elite]] enemy at Ottoman Front gets +2 fight and loses retaliate.",
-    "textZh": "幻景2[per_investigator](饱经战乱的国家之记忆)。\n詹姆斯·“曲奇”·弗雷德里克斯在本地点时，本地点得到-2隐藏。\n位于奥斯曼前线的每个非[[精英]]敌人得到+2攻击，并失去反击。",
+    "textZh": "幻景2[per_investigator](饱经战乱的国家之记忆)。詹姆斯·“曲奇”·弗雷德里克斯在本地点时，本地点得到-2隐藏值。位于奥斯曼前线的每个非[[精英]]敌人得到+2攻击，并失去反击。",
     "traits": [
       "Mirage"
     ],
@@ -298851,7 +298851,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08573"
   },
   "08573b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298890,7 +298890,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If James \"Cookie\" Fredericks is alive:\nSpawn the set-aside Memory of a Ravaged Country enemy at this location.\nFlip this card back over.\nIf James \"Cookie\" Fredericks is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果詹姆斯·“曲奇”·弗雷德里克斯活着：\n在本地点生成放在一边的饱经战乱的国家之记忆敌人。\n将本卡牌翻面。\n如果詹姆斯·“曲奇”·弗雷德里克斯被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果詹姆斯·“曲奇”·弗雷德里克斯活着：在本地点生成放在一边的饱经战乱的国家之记忆敌人。将本卡牌翻面。如果詹姆斯·“曲奇”·弗雷德里克斯被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -298900,7 +298900,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08574": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298945,7 +298945,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Mirage 2 [per_investigator] (Memory of a Terrible Discovery).\nWhile Avery Claypool is at this location, it gets -2 shroud.\n[fast] Add 1 [frost] token to the chaos bag: Discover 2 clues at The Black Stone. (Group limit once per game.)",
-    "textZh": "幻景2[per_investigator](可怕发现之记忆)。\n艾弗里·克莱普尔在本地点时，本地点得到-2隐藏。\n[free]在混乱袋里加入1个[frost]标记：发现黑色岩石的2个线索(团队每场游戏仅限一次)。",
+    "textZh": "幻景2[per_investigator](可怕发现之记忆)。艾弗里·克莱普尔在本地点时，本地点得到-2隐藏值。[fast]在混乱袋里加入1个[frost]标记：发现黑色岩石的2个线索(团队每场游戏仅限一次)。",
     "traits": [
       "Mirage"
     ],
@@ -298958,7 +298958,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08574"
   },
   "08574b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -298997,7 +298997,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "If Avery Claypool is alive:\nSpawn the set-aside Memory of a Terrible Discovery enemy at this location. Flip this card back over.\nIf Avery Claypool is crossed out:\nMove each investigator and enemy at this location to Prison of Memories. Discard each card attached to this location. Add this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "如果艾弗里·克莱普尔活着：\n在本地点生成放在一边的可怕发现之记忆敌人。\n将本卡牌翻面。\n如果艾弗里·克莱普尔被划掉了：\n将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "如果艾弗里·克莱普尔活着：在本地点生成放在一边的可怕发现之记忆敌人。将本卡牌翻面。如果艾弗里·克莱普尔被划掉了：将位于本地点的所有调查员和敌人移动到记忆囚笼。弃掉附属到本地点的所有卡牌。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299007,7 +299007,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08575": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299055,7 +299055,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Alert. Retaliate.\nPrey - Investigator with Eliyah Ashevak.\n[reaction] After you successfully evade this enemy by 3 or more: Deal it 3 damage.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "警戒。反击。\n猎物 - 拥有伊里亚·阿什瓦克的调查员。\n[reaction]在你成功躲避本敌人，且超过难度至少3点后：对其造成3点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "警戒。反击。猎物 - 拥有伊里亚·阿什瓦克的调查员。[reaction]在你成功躲避本敌人，且超过难度至少3点后：对其造成3点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299072,7 +299072,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08575"
   },
   "08575b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299111,7 +299111,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Eliyah has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever Eliyah Ashevak is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下伊里亚直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括伊里亚·阿什瓦克或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下伊里亚直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括伊里亚·阿什瓦克或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299121,7 +299121,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08576": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299169,7 +299169,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Retaliate.\nPrey - Investigator with Dr. Mala Sinha.\n[reaction] After you heal 1 or more damage while this enemy is exhausted: Deal that much damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "反击。\n猎物 - 拥有玛拉·辛哈医生的调查员。\n[reaction]本敌人处于横置状态时，在你治愈1点或更多伤害后：对本敌人造成该数量的伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "反击。猎物 - 拥有玛拉·辛哈医生的调查员。[reaction]本敌人处于横置状态时，在你治愈1点或更多伤害后：对本敌人造成该数量的伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299186,7 +299186,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08576"
   },
   "08576b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299225,7 +299225,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Dr. Sinha has confronted her demons. Draw a checkmark next to her name in the Expedition Team section.\nFrom now on, whenever Dr. Mala Sinha is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If she is currently in play, switch her with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下辛哈医生直面她内心的恶魔。在探险队部分她的名字旁画一个勾。\n从现在起，每当玛拉·辛哈医生在一场冒险中被加入或使用时，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下辛哈医生直面她内心的恶魔。在探险队部分她的名字旁画一个勾。从现在起，每当玛拉·辛哈医生在一场冒险中被加入或使用时，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299235,7 +299235,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08577": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299283,7 +299283,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Retaliate.\nPrey - Investigator with Takada Hiroko.\n[reaction] After you gain 1 or more resources while this enemy is exhausted: Deal 1 damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "反击。\n猎物 - 拥有高田弘子的调查员。\n[reaction]本敌人处于横置状态时，在你获得资源后：对本敌人造成1点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "反击。猎物 - 拥有高田弘子的调查员。[reaction]本敌人处于横置状态时，在你获得资源后：对本敌人造成1点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299300,7 +299300,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08577"
   },
   "08577b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299339,7 +299339,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Takada has confronted her demons. Draw a checkmark next to her name in the Expedition Team section.\nFrom now on, whenever Takada Hiroko is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If she is currently in play, switch her with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下高田直面她内心的恶魔。在探险队部分她的名字旁画一个勾。\n从现在起，每当一场冒险期间包括高田弘子或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下高田直面她内心的恶魔。在探险队部分她的名字旁画一个勾。从现在起，每当一场冒险期间包括高田弘子或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299349,7 +299349,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08578": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299397,7 +299397,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Retaliate.\nPrey - Investigator with James \"Cookie\" Fredericks.\n[reaction] After this enemy attacks you: Deal it 1 damage.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "反击。\n猎物 - 拥有詹姆斯·“曲奇”·弗雷德里克斯的调查员。\n[reaction]本敌人攻击你后：对其造成1点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "反击。猎物 - 拥有詹姆斯·“曲奇”·弗雷德里克斯的调查员。[reaction]本敌人攻击你后：对其造成1点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299414,7 +299414,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08578"
   },
   "08578b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299453,7 +299453,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Cookie has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever James \"Cookie\" Fredericks is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下曲奇直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括詹姆斯·“曲奇”·弗雷德里克斯或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下曲奇直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括詹姆斯·“曲奇”·弗雷德里克斯或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299463,7 +299463,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08579": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299511,7 +299511,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Retaliate.\nPrey - Investigator with Dr. William Dyer.\n[reaction] After you draw 1 or more cards while this enemy is exhausted: Deal that much damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "反击。\n猎物 - 拥有威廉·戴尔博士的调查员。\n[reaction]本敌人处于横置状态时，在你抽取1张或更多卡牌后：对本敌人造成该数量的伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "反击。猎物 - 拥有威廉·戴尔博士的调查员。[reaction]本敌人处于横置状态时，在你抽取1张或更多卡牌后：对本敌人造成该数量的伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299528,7 +299528,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08579"
   },
   "08579b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299567,7 +299567,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Dyer has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever Professor William Dyer is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下戴尔直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括威廉·戴尔教授或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下戴尔直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括威廉·戴尔教授或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299577,7 +299577,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08580": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299625,7 +299625,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Alert. Retaliate.\nPrey - Investigator with Danforth.\n[action][action] Shuffle the top 3 cards of the Tekeli-li deck into your deck: Parley. Deal 3 damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "警戒。反击。\n猎物 - 拥有丹佛斯的调查员。\n[action][action]将忒咳哩-哩牌库顶的3张卡牌混洗入你的牌库：谈判。对本敌人造成3点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "警戒。反击。猎物 - 拥有丹佛斯的调查员。[action][action]将忒咳哩-哩牌库顶的3张卡牌混洗入你的牌库：谈判。对本敌人造成3点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299642,7 +299642,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08580"
   },
   "08580b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299681,7 +299681,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Danforth has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever Danforth is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下丹佛斯直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括丹佛斯或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下丹佛斯直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括丹佛斯或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299691,7 +299691,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08581": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299739,7 +299739,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Alert.\nPrey - Investigator with Avery Claypool.\n[action] Add 1 [frost] token to the chaos bag: Parley. Deal 4 damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "警戒。\n猎物 - 拥有艾弗里·克莱普尔的调查员。\n[action]在混乱袋里加入1个[frost]标记：谈判。对本敌人造成4点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "警戒。猎物 - 拥有艾弗里·克莱普尔的调查员。[action]在混乱袋里加入1个[frost]标记：谈判。对本敌人造成4点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299756,7 +299756,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08581"
   },
   "08581b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299795,7 +299795,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Claypool has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever Avery Claypool is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下克莱普尔直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括艾弗里·克莱普尔或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下克莱普尔直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括艾弗里·克莱普尔或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299805,7 +299805,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08582": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299853,7 +299853,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Alert.\nPrey - Investigator with Roald Ellsworth.\n[reaction] After this enemy is exhausted, if there is an attachment on its location: Deal 4 damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "警戒。\n猎物 - 拥有罗尔德·埃尔斯沃思的调查员。\n[reaction]在本敌人被横置后，如果在其所在地点有附属：对本敌人造成4点伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "警戒。猎物 - 拥有罗尔德·埃尔斯沃思的调查员。[reaction]在本敌人被横置后，如果在其所在地点有附属：对本敌人造成4点伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299870,7 +299870,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08582"
   },
   "08582b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299909,7 +299909,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Ellsworth has confronted his demons. Draw a checkmark next to his name in the Expedition Team section.\nFrom now on, whenever Roald Ellsworth is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If he is currently in play, switch him with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下埃尔斯沃思直面他内心的恶魔。在探险队部分他的名字旁画一个勾。\n从现在起，每当一场冒险期间包括罗尔德·埃尔斯沃思或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下埃尔斯沃思直面他内心的恶魔。在探险队部分他的名字旁画一个勾。从现在起，每当一场冒险期间包括罗尔德·埃尔斯沃思或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果他当前在场上，现在就将他切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -299919,7 +299919,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08583": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -299967,7 +299967,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Alert.\nPrey - Investigator with Dr. Amy Kensler.\n[reaction] After you discover 1 or more clues at this enemy's location: Deal that much damage to this enemy.\nForced - When this enemy is defeated: Flip it over and resolve the text on its other side.",
-    "textZh": "警戒。\n猎物 - 拥有艾米·肯斯勒博士的调查员。\n[reaction]在你发现本敌人所在地点的1个或更多线索后：对本敌人造成该数量的伤害。\n强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
+    "textZh": "警戒。猎物 - 拥有艾米·肯斯勒博士的调查员。[reaction]在你发现本敌人所在地点的1个或更多线索后：对本敌人造成该数量的伤害。强制 - 在本敌人被击败时：将其翻面并结算另一面的文本。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -299984,7 +299984,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08583"
   },
   "08583b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300023,7 +300023,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "In your Campaign Log, record Dr. Kensler has confronted her demons. Draw a checkmark next to her name in the Expedition Team section.\nFrom now on, whenever Dr. Amy Kensler is included or used during a scenario, use the set-aside [[Resolute]] version instead of the version from the Expedition Team encounter set. If she is currently in play, switch her with that version now.\nAdd this card to the victory display.\nThe investigators may advance the current act or continue playing.",
-    "textZh": "在剧本日志中，记录下肯斯勒博士直面她内心的恶魔。在探险队部分她的名字旁画一个勾。\n从现在起，每当一场冒险期间包括艾米·肯斯勒博士或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。\n将本卡牌加入胜利区。\n调查员可以推进当前场景或继续游戏。",
+    "textZh": "在剧本日志中，记录下肯斯勒博士直面她内心的恶魔。在探险队部分她的名字旁画一个勾。从现在起，每当一场冒险期间包括艾米·肯斯勒博士或其被使用，不使用探险队遭遇组中的版本，改为使用放在一边的[[坚毅]]版本。如果她当前在场上，现在就将她切换为该版本。将本卡牌加入胜利区。调查员可以推进当前场景或继续游戏。",
     "traits": [],
     "traitsZh": [],
     "type": "story",
@@ -300033,7 +300033,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08584": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300078,7 +300078,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Aloof. Hunter.\nWhile Horrifying Shade is at a location that is cleared of mirages, it loses aloof.\nForced - After you discover or take control of 1 or more clues at Horrifying Shade's location: Place an equal amount of doom on Horrifying Shade.",
-    "textZh": "冷漠。猎手。\n恐怖阴影位于破除幻景的地点时，其失去冷漠。\n强制 - 在你发现或控制恐怖阴影所在地点的至少1个线索后：在恐怖阴影上放置与该线索数量相等的毁灭标记。",
+    "textZh": "冷漠。猎手。恐怖阴影位于破除幻景的地点时，其失去冷漠。强制 - 在你发现或控制恐怖阴影所在地点的至少1个线索后：在恐怖阴影上放置与该线索数量相等的毁灭标记。",
     "traits": [
       "Monster",
       "Eidolon"
@@ -300093,7 +300093,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08584"
   },
   "08585": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300133,7 +300133,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Revelation - Attach Evanescent Mist to the nearest location that is not cleared of mirages. Place 2 clues on attached location.\nIn order to flip attached location over, investigators at attached location must either spend 2 additional clues as a group, or each take 2 damage.\nForced - If attached location is cleared of mirages: Discard Evanescent Mist.",
-    "textZh": "显现 - 将易散之雾附属到尚未破除幻景的最近地点。在附属地点上放置2个线索。\n若要将附属地点翻面，位于附属地点的调查员必须共同花费额外2个线索，或者各自受到2点伤害。\n强制 - 如果附属地点已破除幻景：弃掉易散之雾。",
+    "textZh": "显现 - 将易散之雾附属到尚未破除幻景的最近地点。在附属地点上放置2个线索。若要将附属地点翻面，位于附属地点的调查员必须共同花费额外2个线索，或者各自受到2点伤害。强制 - 如果附属地点已破除幻景：弃掉易散之雾。",
     "traits": [
       "Curse",
       "Hazard"
@@ -300148,7 +300148,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08585"
   },
   "08586": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300188,7 +300188,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Peril.\nRevelation - You must either (choose one):\n- Take 2 horror.\n- Place 1 doom on the current agenda. This effect can cause the current agenda to advance.",
-    "textZh": "险境。\n显现 - 你必须(选择以下一项)：\n- 受到2点伤害。\n- 在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
+    "textZh": "险境。显现 - 你必须(选择以下一项)：- 受到2点恐惧。- 在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
     "traits": [
       "Terror"
     ],
@@ -300201,7 +300201,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08586"
   },
   "08587": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300246,7 +300246,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Geology",
     "subnameZh": "地质学教授",
     "text": "Partner. Uses (3 secrets).\n[fast] Spend 1 secret and exhaust Professor William Dyer: Heal 2 horror from an investigator or another [[Ally]] asset at your location.",
-    "textZh": "伙伴。使用(3秘密)。\n[free]花费1秘密并横置威廉·戴尔教授：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点恐惧。",
+    "textZh": "伙伴。使用(3秘密)。[fast]花费1秘密并横置威廉·戴尔教授：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点恐惧。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -300263,7 +300263,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08587"
   },
   "08588": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300308,7 +300308,7 @@ export const ALL_CARDS = {
     "subname": "Brilliant Student",
     "subnameZh": "杰出学生",
     "text": "Partner. Uses (5 secrets).\n[reaction] After an investigator at your location resolves a Tekeli-li weakness, exhaust Danforth and spend 1 secret: That investigator draws 3 cards. Discard each Tekeli-li weakness drawn by this effect without resolving its effects.",
-    "textZh": "伙伴。使用(5秘密)。\n[reaction]你所在地点的调查员结算忒咳哩-哩弱点后，横置丹佛斯并花费1秘密：该调查员抽取3张卡牌。弃掉由此效果抽取的所有忒咳哩-哩弱点，不要结算其效果。",
+    "textZh": "伙伴。使用(5秘密)。[reaction]你所在地点的调查员结算忒咳哩-哩弱点后，横置丹佛斯并花费1秘密：该调查员抽取3张卡牌。弃掉由此效果抽取的所有忒咳哩-哩弱点，不要结算其效果。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -300325,7 +300325,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08588"
   },
   "08589": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300370,7 +300370,7 @@ export const ALL_CARDS = {
     "subname": "Dog Handler",
     "subnameZh": "驯犬师",
     "text": "Partner. Uses (3 secrets).\n[fast] During your turn, spend 1 secret and exhaust Eliyah Ashevak: Evade. Attempt to evade with a base [agility] skill of 6. If you succeed, you may move to a connecting location.",
-    "textZh": "伙伴。使用(3秘密)。\n[free]在你回合期间，花费1秘密并横置伊里亚·阿什瓦克：躲避。以基础值为6的[agility]尝试躲避。如果你检定成功，你可以移动到一个连接地点。",
+    "textZh": "伙伴。使用(3秘密)。[fast]在你回合期间，花费1秘密并横置伊里亚·阿什瓦克：躲避。以基础值为6的[agility]尝试躲避。如果你检定成功，你可以移动到一个连接地点。",
     "traits": [
       "Ally",
       "Wayfarer",
@@ -300387,7 +300387,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08589"
   },
   "08590": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300432,7 +300432,7 @@ export const ALL_CARDS = {
     "subname": "Daring Physician",
     "subnameZh": "无畏医师",
     "text": "Partner. Uses (3 supplies).\n[fast] Spend 1 supply and exhaust Dr. Mala Sinha: Heal 2 damage from an investigator or another [[Ally]] asset at your location.",
-    "textZh": "伙伴。使用(3补给)。\n[free]花费1补给并横置玛拉·辛哈医生：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点伤害。",
+    "textZh": "伙伴。使用(3补给)。[fast]花费1补给并横置玛拉·辛哈医生：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点伤害。",
     "traits": [
       "Ally",
       "Wayfarer",
@@ -300449,7 +300449,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08590"
   },
   "08591": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300494,7 +300494,7 @@ export const ALL_CARDS = {
     "subname": "Antarctic Guide",
     "subnameZh": "南极向导",
     "text": "Partner. Uses (3 supplies).\n[reaction] When an investigator at your location reveals a [frost] token during a skill test, exhaust Avery Claypool: Cancel that token. Then, you must either reveal a new chaos token, or spend 1 supply.",
-    "textZh": "伙伴。使用(3补给)。\n[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗里·克莱普尔：取消该标记。然后，你必须揭示一个新的混乱标记，或者花费1补给。",
+    "textZh": "伙伴。使用(3补给)。[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗里·克莱普尔：取消该标记。然后，你必须揭示一个新的混乱标记，或者花费1补给。",
     "traits": [
       "Ally",
       "Wayfarer",
@@ -300511,7 +300511,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08591"
   },
   "08592": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300556,7 +300556,7 @@ export const ALL_CARDS = {
     "subname": "Dubious Choice",
     "subnameZh": "不可靠人选",
     "text": "Partner. Uses (3 ammo).\n[fast] During your turn, spend 1 ammo and exhaust James \"Cookie\" Fredericks: Fight. Fight with a base [combat] skill of 6. If you succeed and the attacked enemy is non-[[Elite]], it cannot attack for the remainder of the round.",
-    "textZh": "伙伴。使用(3子弹)。\n[free] 在你回合期间，花费1子弹并横置詹姆斯·“曲奇”·弗雷德里克斯：攻击。以基础值为6的[combat]攻击。如果你检定成功，且被攻击敌人非[[精英]]，则直到本轮结束其不能攻击。",
+    "textZh": "伙伴。使用(3子弹)。[fast]在你回合期间，花费1子弹并横置詹姆斯·“曲奇”·弗雷德里克斯：攻击。以基础值为6的[combat]攻击。如果你检定成功，且被攻击敌人非[[精英]]，则直到本轮结束其不能攻击。",
     "traits": [
       "Ally",
       "Veteran",
@@ -300575,7 +300575,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08592"
   },
   "08593": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300620,7 +300620,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Biology",
     "subnameZh": "生物学教授",
     "text": "Partner. Uses (3 secrets).\n[fast] During your turn, spend 1 secret and exhaust Dr. Amy Kensler: Investigate. Investigate with a base [intellect] skill of 6. If you succeed, look at the top card of any investigator's deck or the encounter deck. You may discard that card.",
-    "textZh": "伙伴。使用(3秘密)。\n[free]在你回合期间，花费1秘密并横置艾米·肯斯勒博士：调查。以基础值为6的[intellect]调查。如果你检定成功，查看任意一位调查员牌库顶的1张卡牌或遭遇牌库顶的1张卡牌。你可以弃掉该卡牌。",
+    "textZh": "伙伴。使用(3秘密)。[fast]在你回合期间，花费1秘密并横置艾米·肯斯勒博士：调查。以基础值为6的[intellect]调查。如果你检定成功，查看任意一位调查员牌库顶的1张卡牌或遭遇牌库顶的1张卡牌。你可以弃掉该卡牌。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -300637,7 +300637,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08593"
   },
   "08594": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300682,7 +300682,7 @@ export const ALL_CARDS = {
     "subname": "Intrepid Explorer",
     "subnameZh": "英勇的探险家",
     "text": "Partner. Uses (3 supplies).\n[fast] During an investigator's turn, either exhaust Roald Ellsworth or spend 1 supply: Choose a non-weakness treachery in play. Treat that treachery's text box as if it were blank until the end of this turn.",
-    "textZh": "伙伴。使用(3补给)。\n[free]一位调查员的回合期间，横置罗尔德·埃尔斯沃思，或者花费1补给：选择场上一张非弱点诡计。将该诡计的印刷文本框视为如同空白，直到本回合结束。",
+    "textZh": "伙伴。使用(3补给)。[fast]一位调查员的回合期间，横置罗尔德·埃尔斯沃思，或者花费1补给：选择场上一张非弱点诡计。将该诡计的印刷文本框视为如同空白，直到本回合结束。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -300701,7 +300701,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08594"
   },
   "08595": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -300746,7 +300746,7 @@ export const ALL_CARDS = {
     "subname": "Aeroplane Mechanic",
     "subnameZh": "飞机技师",
     "text": "Partner. Uses (9 resources).\n[action] Exhaust Takada Hiroko: Gain 1 resource. Move up to 3 resources from Takada Hiroko to your resource pool.",
-    "textZh": "伙伴。使用(9资源)。\n[action]横置高田弘子：获得1资源。将高田弘子上的最多3资源移动到你的资源池。",
+    "textZh": "伙伴。使用(9资源)。[action]横置高田弘子：获得1资源。将高田弘子上的最多3资源移动到你的资源池。",
     "traits": [
       "Ally",
       "Wayfarer",
@@ -300763,11 +300763,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08595"
   },
   "08596": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is 2 plus the level of your location.\n[cultist]: -1. After this test ends move to the location directly below you.\n[tablet]: -4. If you fail, lose control of an [[Expedition]] asset and place it at your location.\n[elder_thing]: -5. If you fail, the nearest [[Elder Thing]] enemy moves once toward you. If it is engaged with you, it attacks.",
-    "backTextZh": "困难/专家\n[skull]：-X。X等于你所在地点的高度加2。\n[cultist]：-1。在本次检定结束后，移动到你下方紧挨着的地点。(FAQ，v2.1)\n[tablet]：-4。如果你检定失败，失去你对一个[[探险]]支援的控制权，并将其放在你所在地点。\n[elder_thing]：-5。如果你检定失败，最近的[[古老者]]敌人向你移动一次。如果其与你交战，其攻击。",
+    "backTextZh": "困难/专家\n[skull]：-X。X等于你所在地点的高度加2。[cultist]：-1。在本次检定结束后，移动到你下方紧挨着的地点。\n[tablet]：-4。如果你检定失败，失去你对一个[[探险]]支援的控制权，并将其放在你所在地点。[elder_thing]：-5。如果你检定失败，最近的[[古老者]]敌人向你移动一次。如果其与你交战，其攻击。",
     "backimagesrc": "/bundles/cards/08596b.png",
     "code": "08596",
     "customizationChange": "",
@@ -300803,7 +300803,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Easy / Standard\n[skull]: -X. X is the level of your location.\n[cultist]: -1. If you fail, after this test ends move to the location directly below you.\n[tablet]: -3. If you fail, lose control of an [[Expedition]] asset and place it at your location.\n[elder_thing]: -4. If you fail, the nearest [[Elder Thing]] enemy moves once toward you. If it is engaged with you, it attacks.",
-    "textZh": "简单/ 普通\n[skull]：-X。X等于所在地点的高度。\n[cultist]：-1。如果你检定失败，在本次检定结束后，移动到你下方紧挨着的地点。(FAQ，v2.1)\n[tablet]：-3。如果你检定失败，失去你对一个[[探险]]支援的控制权，并将其放在你所在地点。\n[elder_thing]：-4。如果你检定失败，最近的[[古老者]]敌人向你移动一次。如果其与你交战，其攻击。",
+    "textZh": "简单/普通\n[skull]：-X。X等于你所在地点的高度。[cultist]：-1。如果你检定失败，在本次检定结束后，移动到你下方紧挨着的地点。\n[tablet]：-3。如果你检定失败，失去你对一个[[探险]]支援的控制权，并将其放在你所在地点。[elder_thing]：-4。如果你检定失败，最近的[[古老者]]敌人向你移动一次。如果其与你交战，其攻击。",
     "traits": [],
     "traitsZh": [],
     "type": "scenario",
@@ -300812,13 +300812,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08596"
   },
   "08597": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The mountainside splits and erupts with snow. A storm of jagged ice shards bursts forth from the womb of the mountain. Behind it, the beast emerges: a whirlwind of mist; haunting, alien shapes; hideous effluvia. It sets its terrible gaze on your party and reaches for you with a tendril of miasma.",
     "backFlavorZh": "山腰裂开，雪花喷了出来。一股凌乱的冰屑风暴从山腹中爆发。在其之后，野兽出现了：一团迷雾旋风；令人难忘的异形身影；可怕的臭气。它惊悚的眼神死死盯着你们，带着一缕瘴气向你袭来。",
     "backName": "Re-Emergence",
     "backNameZh": "再度出现",
     "backText": "Put the set-aside Terror of the Stars enemy into play at the highest level location with one or more investigators. Each investigator at that location loses control of all [[Expedition]] assets and places them at their location.\nRead Scenario Interlude: Tragedy Strikes in the Campaign Guide.",
-    "backTextZh": "将放在一边的星之恐怖敌人放置入场，位于高度最高的，有调查员的地点。所有位于该地点的调查员各自失去其对所有[[探险]]支援的控制权，并将那些支援放在自己所处的地点。\n阅读剧本手册中的冒险幕间故事：悲剧袭来。",
+    "backTextZh": "将放在一边的星之恐怖敌人放置入场，位于高度最高的，有调查员的地点。所有位于该地点的调查员各自失去其对所有[[探险]]支援的控制权，并将那些支援放在自己所处的地点。阅读剧本手册中的冒险幕间故事：悲剧袭来。",
     "backimagesrc": "/bundles/cards/08597b.png",
     "code": "08597",
     "customizationChange": "",
@@ -300867,13 +300867,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08597"
   },
   "08598": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The snowfall is so thick now that you can no longer see your destination, nor can you hear your companions' shouts over the howling wind. Every step takes the breath out of you. The air is so thin up here, it is a wonder you even have any breath to spare. You glance up at the blanket of white cast in an endless net overhead. Perhaps you were never close to the summit - just another trick of the eye, like everything else in this godforsaken place.",
     "backFlavorZh": "雪下得如此之大，目的地已从你的视野中消失，你同伴的呼喊也无法越过咆哮的狂风传入你耳中。你走的每一步都让你喘不过气来。这里的空气太稀薄了，你还能呼吸已经是个奇迹。你抬头望着头顶上投下的白茫茫的无尽之网。也许你从来没有接近过山顶——就像这个鬼地方的一切，不过是另一种障眼法。",
     "backName": "Terror Prevails",
     "backNameZh": "恐怖盛行",
     "backText": "If one or more investigators have resigned, proceed to (→R1).\nOtherwise, proceed to (→R2).",
-    "backTextZh": "如果有调查员已经撤退，进入(→结局1)。\n否则，进入(→结局2)。",
+    "backTextZh": "如果有调查员已经撤退，进入(→结局1)。否则，进入(→结局2)。",
     "backimagesrc": "/bundles/cards/08598b.png",
     "code": "08598",
     "customizationChange": "",
@@ -300922,7 +300922,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08598"
   },
   "08599": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "After a long and arduous journey up the mountainside, you've reached the forbidden peaks. You hope the pain and horror you've suffered along the way is behind you, but you fear that it will persist...and become relentless.",
     "backFlavorZh": "经过漫长艰难的登山之旅，你已到达失落山峰。你希望一路承受的痛苦与恐惧都已抛诸脑后，却担心它会继续折磨你……永不停歇。",
     "backName": "A City of Wonder",
@@ -300967,7 +300967,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[action]: Take control of an [[Expedition]] asset at your location.\nObjective - Get to the top of the mountain. If each undefeated investigator has resigned, advance.",
-    "textZh": "[action]：控制你所在地点的一个[[探险]]支援。\n目标 - 到达山顶。如果所有未被击败的调查员都撤退了，推进场景。",
+    "textZh": "[action]：控制你所在地点的一个[[探险]]支援。目标 - 到达山顶。如果所有未被击败的调查员都撤退了，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -300976,7 +300976,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08599"
   },
   "08600": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301035,7 +301035,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08601": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301094,7 +301094,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08602": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301154,7 +301154,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08603": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301214,7 +301214,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08604": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301274,7 +301274,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08605": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301309,7 +301309,7 @@ export const ALL_CARDS = {
     "localeStatus": "complete",
     "myriad": false,
     "name": "Snow-Covered Crag",
-    "nameZh": "白雪复盖的峭壁",
+    "nameZh": "白雪覆盖的峭壁",
     "originalCode": "08605",
     "pack": "eoec",
     "packName": "Edge of the Earth Campaign Expansion",
@@ -301320,7 +301320,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Forced - After you move to Snow-Covered Crag from a location below it: Exhaust each asset you control.",
-    "textZh": "强制 - 你从下方的地点移动到白雪复盖的峭壁后：横置所有你控制的支援。",
+    "textZh": "强制 - 你从下方的地点移动到白雪覆盖的峭壁后：横置所有你控制的支援。",
     "traits": [
       "Mountain"
     ],
@@ -301334,7 +301334,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08606": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Mountainside",
@@ -301379,7 +301379,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Forced - After Windswept Path is revealed: If it is at level 0, place 1 [per_investigator] clues on it (from the token pool).\nForced - After you move to Windswept Path from a location below it: Place 1 clue on it (from the token pool).",
-    "textZh": "强制 - 迎风通路被揭示后：如果其高度为0，在其上放置1[per_investigator]个线索(从供应堆拿取)。\n强制 - 你从下方的地点移动到迎风通路后：在其上放置1个线索(从供应堆拿取)。",
+    "textZh": "强制 - 迎风通路被揭示后：如果其高度为0，在其上放置1[per_investigator]个线索(从供应堆拿取)。强制 - 你从下方的地点移动到迎风通路后：在其上放置1个线索(从供应堆拿取)。",
     "traits": [
       "Mountain"
     ],
@@ -301393,7 +301393,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08607": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"As we drew near the forbidding peaks, dark and sinister above the line of crevasse-riven snow and interstitial glaciers, we noticed more and more the curiously regular formations...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“当我们接近那些耸立在满是裂隙的冰雪和冰川上，黑暗而不详的禁忌山峰时，我们越来越注意到这座山的构造竟有些规则，颇为奇特……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "山顶",
@@ -301437,7 +301437,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Clues on The Summit can only be discovered by investigating.\nForced - When The Summit is revealed: Add 1 [frost] token to the chaos bag.\n[action]: Resign. Add each [[Expedition]] asset you control to the victory display. Return all of your clues to the token pool.",
-    "textZh": "山顶的线索只能通过调查发现。\n强制 - 在山顶被揭示时：在混乱袋里加入1个[frost]标记。\n[action]：撤退。将所有你控制的[[探险]]支援加入胜利区。将你所有的线索放回供应堆。",
+    "textZh": "山顶的线索只能通过调查发现。强制 - 在山顶被揭示时：在混乱袋里加入1个[frost]标记。[action]：撤退。将所有你控制的[[探险]]支援加入胜利区。将你所有的线索放回供应堆。",
     "traits": [
       "Mountain"
     ],
@@ -301451,7 +301451,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08608": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301497,7 +301497,7 @@ export const ALL_CARDS = {
     "subname": "Guardian of Forbidden Peaks",
     "subnameZh": "失落之峰守护者",
     "text": "Hunter. Massive.\nTerror of the Stars gets +3 [per_investigator] health.\nX is the level of your location (to a minimum of 1).\nForced - At the end of the round: Move all investigators at Terror of the Stars's location to the location directly below it.",
-    "textZh": "猎手。庞大。\n星之恐怖得到+3[per_investigator]生命值。\nX等于你所在地点的高度(至少为1)。\n强制 - 当一轮结束时：将星之恐怖所在地点的所有调查员移动到下方紧挨着的地点。",
+    "textZh": "猎手。庞大。星之恐怖得到+3[per_investigator]生命值。X等于你所在地点的高度(至少为1)。强制 - 当一轮结束时：将星之恐怖所在地点的所有调查员移动到下方紧挨着的地点。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -301515,7 +301515,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08609": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301560,7 +301560,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Hunter.\nX is the level of your location (to a minimum of 1).\nWhile Constricting Elder Thing is engaged with you, you cannot move to locations above your location.",
-    "textZh": "猎手。\nX等于你所在地点的高度(至少为1)。\n拘束型古老者与你交战时，你不能移动到你所在地点上方的地点。",
+    "textZh": "猎手。X等于你所在地点的高度(至少为1)。拘束型古老者与你交战时，你不能移动到你所在地点上方的地点。",
     "traits": [
       "Monster",
       "Elder Thing"
@@ -301575,7 +301575,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08609"
   },
   "08610": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301629,7 +301629,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08610"
   },
   "08611": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301682,7 +301682,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08611"
   },
   "08612": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301735,7 +301735,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08612"
   },
   "08613": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301788,7 +301788,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08613"
   },
   "08614": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301834,7 +301834,7 @@ export const ALL_CARDS = {
     "subname": "Jinxed Idol",
     "subnameZh": "不详象征",
     "text": "Uses (4 charges).\n[reaction] When you perform a successful attack, spend 1 charge and exhaust Green Soapstone: Deal +1 damage for that attack.",
-    "textZh": "使用(4充能)。\n[reaction]在你执行一次成功的攻击时，花费1充能并横置绿皂石：这次攻击造成+1伤害。",
+    "textZh": "使用(4充能)。[reaction]在你执行一次成功的攻击时，花费1充能并横置绿皂石：这次攻击造成+1伤害。",
     "traits": [
       "Item",
       "Expedition"
@@ -301849,7 +301849,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08614"
   },
   "08615": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301884,7 +301884,7 @@ export const ALL_CARDS = {
     "localeStatus": "complete",
     "myriad": false,
     "name": "Wooden Sledge",
-    "nameZh": "木制雪撬",
+    "nameZh": "木制雪橇",
     "originalCode": "08615",
     "pack": "eoec",
     "packName": "Edge of the Earth Campaign Expansion",
@@ -301894,7 +301894,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "[action] Exhaust Wooden Sledge: An investigator at this location searches the top 6 cards of their deck for up to 3 non-weakness [[Item]] or [[Supply]] cards and attaches them facedown to Wooden Sledge. Shuffle their deck.\nWhile Wooden Sledge is under an investigator's control, facedown cards attached to it may be played as if they were in the hand of any investigator at its location.",
-    "textZh": "[action]横置木制雪撬：位于本地点的一位调查员查找其牌库顶的6张卡牌，找出最多3张非弱点[[道具]]或[[供给]]卡牌，正面朝下附属到木制雪撬。混洗其牌库。\n木制雪撬在调查员控制下时，正面朝下附属在木制雪橇的卡牌可以被打出，如同该卡牌在该地点任意一位调查员手中。",
+    "textZh": "[action]横置木制雪橇：位于本地点的一位调查员查找其牌库顶的6张卡牌，找出最多3张非弱点[[道具]]或[[供给]]卡牌，正面朝下附属到木制雪橇。混洗其牌库。木制雪橇在调查员控制下时，正面朝下附属在木制雪橇的卡牌可以被打出，如同该卡牌在该地点任意一位调查员手中。",
     "traits": [
       "Item",
       "Expedition"
@@ -301909,7 +301909,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08615"
   },
   "08616": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -301954,7 +301954,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Uses (2 supplies).\n[action] Spend 1 supply and exhaust Dynamite: Choose either your location or a connecting location. Deal 3 damage to each enemy and investigator at the chosen location.",
-    "textZh": "使用(2补给)。\n[action]花费1补给并横置炸药：选择你所在地点或一个连接地点。对所选地点的每个敌人和每位调查员各造成3点伤害。",
+    "textZh": "使用(2补给)。[action]花费1补给并横置炸药：选择你所在地点或一个连接地点。对所选地点的每个敌人和每位调查员各造成3点伤害。",
     "traits": [
       "Item",
       "Expedition"
@@ -301969,7 +301969,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08616"
   },
   "08617": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -302015,7 +302015,7 @@ export const ALL_CARDS = {
     "subname": "Strange Evidence",
     "subnameZh": "奇怪证据",
     "text": "Uses (3 charges).\n[reaction] When an investigator at your location draws a Tekeli-li weakness, spend 1 charge: That investigator cancels the effects of that weakness, places it on the bottom of the Tekeli-li deck, and draws 1 card.",
-    "textZh": "使用(3充能)。\n[reaction]在一位你所在地点的调查员抽取到一张忒咳哩-哩弱点时，花费1充能：该调查员取消该弱点的效果，将其放到忒咳哩-哩牌库底，并抽取1张卡牌。",
+    "textZh": "使用(3充能)。[reaction]在一位你所在地点的调查员抽取到一张忒咳哩-哩弱点时，花费1充能：该调查员取消该弱点的效果，将其放到忒咳哩-哩牌库底，并抽取1张卡牌。",
     "traits": [
       "Item",
       "Relic",
@@ -302032,7 +302032,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08617"
   },
   "08618": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -302077,7 +302077,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Uses (3 charges).\n[action] Spend 1 charge: Investigate. Investigate with a base [intellect] skill of 5. Cancel each [frost] token revealed during this test. If you succeed, discover 1 additional clue at your location.",
-    "textZh": "使用(3充能)。\n[action]花费1充能：调查。以基础值为5的[intellect]调查。取消本次检定期间揭示的所有[frost]标记。如果你检定成功，发现你所在地点额外1个线索。",
+    "textZh": "使用(3充能)。[action]花费1充能：调查。以基础值为5的[intellect]调查。取消本次检定期间揭示的所有[frost]标记。如果你检定成功，发现你所在地点额外1个线索。",
     "traits": [
       "Item",
       "Relic",
@@ -302094,7 +302094,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08618"
   },
   "08619": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -302139,7 +302139,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Uses (3 supplies).\nYou may trigger abilities on assets from the Expedition Team encounter set that are not in play, but whose names are not crossed off in the Campaign Log. Instead of paying that ability's non-[action] costs, exhaust Small Radio and spend 1 supply.",
-    "textZh": "使用(3补给)。\n你可以触发不在场上的探险队遭遇组的支援上的能力(仅限在剧本日志中没有划掉名字的支援)。不支付该能力的非[action]费用，改为横置小型收音机并花费1补给。",
+    "textZh": "使用(3补给)。你可以触发不在场上的探险队遭遇组的支援上的能力(仅限在剧本日志中没有划掉名字的支援)。不支付该能力的非[action]费用，改为横置小型收音机并花费1补给。",
     "traits": [
       "Item",
       "Expedition"
@@ -302154,7 +302154,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08619"
   },
   "08620": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -302199,7 +302199,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Uses (3 supplies).\n[fast] Spend 1 supply and exhaust Spare Parts: Add 1 supply to another asset at your location, or choose an investigator at your location to gain 1 resource.",
-    "textZh": "使用(3补给)。\n[free]花费1补给并横置备用零件：在你所在地点的另一个支援上放置1补给，或者选择你所在地点的一位调查员获得1资源。",
+    "textZh": "使用(3补给)。[fast]花费1补给并横置备用零件：在你所在地点的另一个支援上放置1补给，或者选择你所在地点的一位调查员获得1资源。",
     "traits": [
       "Item",
       "Expedition"
@@ -302214,11 +302214,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08620"
   },
   "08621": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is 2 plus the number of keys you control.\n[cultist]: -2. Place a key you control on your location.\n[tablet]: -4. If a [frost] token was revealed during this test, take 1 damage and you automatically fail, instead.\n[elder_thing]: -5. If you fail, the nearest enemy moves once toward you. If it is engaged with you, it attacks.",
-    "backTextZh": "困难/专家\n[skull]：-X。X为你控制的钥匙的数量加2。\n[cultist]：-2。将你控制的一个钥匙放到你所在地点。\n[tablet]：-4。如果本次检定期间揭示了[frost]标记，改为你受到1点伤害且自动失败。\n[elder_thing]：-5。如果你检定失败，最近的敌人向你移动一次。如果其与你交战，其攻击。",
+    "backTextZh": "困难/专家\n[skull]：-X。X为你控制的钥匙的数量加2。[cultist]：-2。将你控制的一个钥匙放到你所在地点。[tablet]：-4。如果本次检定期间揭示了[frost]标记，改为你受到1点伤害且自动失败。[elder_thing]：-5。如果你检定失败，最近的敌人向你移动一次。如果其与你交战，其攻击。",
     "backimagesrc": "/bundles/cards/08621b.png",
     "code": "08621",
     "customizationChange": "",
@@ -302254,7 +302254,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Easy / Standard\n[skull]: -X. X is the number of keys you control.\n[cultist]: -2. If you fail, place a key you control on your location.\n[tablet]: -3. If a [frost] token was revealed during this test, you automatically fail, instead.\n[elder_thing]: -4. If you fail, the nearest enemy moves once toward you. If it is engaged with you, it attacks.",
-    "textZh": "简单/ 普通\n[skull]：-X。X为你控制的钥匙的数量。\n[cultist]：-2。如果你检定失败，将你控制的一个钥匙放到你所在地点。\n[tablet]：-3。如果本次检定期间揭示了[frost]标记，改为你自动失败。\n[elder_thing]：-4。如果你检定失败，最近的敌人向你移动一次。如果其与你交战，其攻击。",
+    "textZh": "简单/普通\n[skull]：-X。X为你控制的钥匙的数量。[cultist]：-2。如果你检定失败，将你控制的一个钥匙放到你所在地点。[tablet]：-3。如果本次检定期间揭示了[frost]标记，改为你自动失败。[elder_thing]：-4。如果你检定失败，最近的敌人向你移动一次。如果其与你交战，其攻击。",
     "traits": [],
     "traitsZh": [],
     "type": "scenario",
@@ -302263,13 +302263,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08621"
   },
   "08622": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The walls of the city call to you in surreptitious whispers, ethereal songs indecipherable to human ears, and yet somehow familiar all the same. You try your best to shut them out, to make believe it is just your imagination, but not all of your companions are as successful...",
     "backFlavorZh": "城市的城墙偷偷呼唤着你，这是人类耳朵听不懂的空灵歌曲，但不知怎么的，却还是那么熟悉。你尽全力让声音不进入脑海，假装这只是你的想像，但你的所有同伴并非都能成功……",
     "backName": "Awakened Monstrosities",
     "backNameZh": "怪物苏醒",
     "backText": "Read Scenario Interlude: Gaze into Madness in the Campaign Log.",
-    "backTextZh": "阅读剧本手册中的冒险幕间故事：凝视疯狂。",
+    "backTextZh": "阅读剧本日志中的冒险幕间故事：凝视疯狂。",
     "backimagesrc": "/bundles/cards/08622b.png",
     "code": "08622",
     "customizationChange": "",
@@ -302309,7 +302309,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[fast] During your turn, spend 1 clue: Look at the revealed side of a City Landscape in your column or row. (Limit once per round.)\n[fast] During your turn, spend 3 clues: Move to any location in your column or row. (Limit once per round.)",
-    "textZh": "[free]在你回合期间，花费1个线索：查看你所在行或列的一个城市景观的已揭示面。(每轮仅限一次。)\n[free]在你回合期间，花费3个线索：移动到你所在行或列的任意地点。(每轮仅限一次。)",
+    "textZh": "[fast]在你回合期间，花费1个线索：查看你所在行或列的一个城市景观的已揭示面。(每轮仅限一次。)\n[fast]在你回合期间，花费3个线索：移动到你所在行或列的任意地点。(每轮仅限一次。)",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -302318,7 +302318,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08622"
   },
   "08623": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Your thoughts become convoluted, a tangle of fear, worry, and doubt. Danger lurks around every corner of this abominable place, but most dangerous of all is the growing feeling that you should not be here - that you should flee from this place and never return.\nAs the weather outside turns foul, you hole up in the relative safety of one of the city's towering structures. It is too late to return to camp. Your only hope is to take shelter within the alien city, hoping your presence goes unnoticed by the denizens that still prowl through its streets and ancient halls.",
     "backFlavorZh": "你的想法变得错综复杂，恐惧、担心和怀疑交织在一起。危险潜伏在这个令人厌恶的地方每一个角落，但最危险的是，你越来越觉得你不应该呆在这里——你应该逃离这个地方，永远不要回来。\n当外面的天气变坏时，你躲在这座城市高楼中相对安全的一个地方。现在已经太迟了，没法回营地了。你唯一的希望是在这个城市中避难，祈祷你的存在不会被仍然徘徊在它的街道和古老大厅里的居民注意到。",
     "backName": "Digging Too Deep",
@@ -302364,7 +302364,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "[fast] During your turn, spend 1 clue: Look at the revealed side of a City Landscape in your column or row. (Limit once per round.)\n[fast] During your turn, spend 3 clues: Move to any location in your column or row. (Limit once per round.)",
-    "textZh": "[free]在你回合期间，花费1个线索：查看你所在行或列的一个城市景观的已揭示面。(每轮仅限一次。)\n[free]在你回合期间，花费3个线索：移动到你所在行或列的任意地点。(每轮仅限一次。)",
+    "textZh": "[fast]在你回合期间，花费1个线索：查看你所在行或列的一个城市景观的已揭示面。(每轮仅限一次。)\n[fast]在你回合期间，花费3个线索：移动到你所在行或列的任意地点。(每轮仅限一次。)",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -302373,13 +302373,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08623"
   },
   "08624": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "What you have found is almost too wild to believe. According to the murals and records within the city, the \"Elder Things\" were travelers from the stars. They colonized the Earth long before the time of humanity, settling far and wide. And deep in the undercity beneath the tallest mountain, they created monstrous creatures - \"Shoggoths\" - to be their servants. But the Shoggoths rebelled against them and soon their civilization collapsed...\nSuddenly, a distant noise stops you and the other explorers in their tracks: a deep, bellowing roar that seems to come from somewhere far below. You dare not ponder what kind of monstrosity could have made such a hideous sound.",
     "backFlavorZh": "你的发现简直太疯狂了，让人难以置信。根据城里的壁画和记录，“古老者”是来自繁星的旅者。早在人类出现之前，它们就在地球上殖民，定居范围非常宽广。在最高山脉下的地下城市深处，它们创造了怪异生物——“修格斯”——作为它们的仆人。但修格斯反抗了它们，它们的文明很快就崩溃了……\n突然，远处传来声音阻止了你和其他探险者的脚步：一种低沉的咆哮声，似乎来自下面远处的某个地方。你不敢想像是什么样的怪物会发出如此可怕的声音。",
     "backName": "Aeons-Long History",
     "backNameZh": "亘古历史",
     "backText": "Shuffle the set-aside Shoggoths encounter set and the encounter discard pile into the encounter deck.\nYou know the route into the undercity. Reveal the Hidden Tunnel.\nPut the set-aside Terror of the Stars enemy into play at the Hidden Tunnel, exhausted.",
-    "backTextZh": "将放在一边的修格斯遭遇组和遭遇弃牌库混洗入遭遇牌库。\n你知道去地下城市的通路。揭示隐秘隧道。\n将放在一边的星之恐怖敌人放置入场，位于隐秘隧道，处于横置状态。",
+    "backTextZh": "将放在一边的修格斯遭遇组和遭遇弃牌库混洗入遭遇牌库。你知道去地下城市的通路。揭示隐秘隧道。将放在一边的星之恐怖敌人放置入场，位于隐秘隧道，处于横置状态。",
     "backimagesrc": "/bundles/cards/08624b.png",
     "code": "08624",
     "customizationChange": "",
@@ -302418,7 +302418,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[action] Spend two [elder_thing] keys: Remember that the team \"studied the history of the Elder Things.\"\n[action] Spend two [tablet] keys: Remember that the team \"discerned the origin of the Shoggoths.\"\nObjective - If the team has \"studied the history of the Elder Things\" and \"discerned the origin of the Shoggoths,\" advance.",
-    "textZh": "[action]花费2个[elder_thing]钥匙：请记住队伍“研究了古老者的历史”。\n[action]花费2个[tablet]钥匙：请记住队伍“了解了修格斯的起源”。\n目标 - 如果队伍“研究了古老者的历史”且“了解了修格斯的起源”，推进场景。",
+    "textZh": "[action]花费2个[elder_thing]钥匙：请记住队伍“研究了古老者的历史”。[action]花费2个[tablet]钥匙：请记住队伍“了解了修格斯的起源”。目标 - 如果队伍“研究了古老者的历史”且“了解了修格斯的起源”，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302427,13 +302427,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08624"
   },
   "08625": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "What you have found is almost too wild to believe. According to the murals and records within the city, the \"Elder Things\" were travelers from the stars. They colonized the Earth long before the time of humanity, settling far and wide. And deep in the undercity beneath the tallest mountain, they found a dormant, primordial power - something so terrifying, they built a gateway to seal it within. But eventually, it began to escape, and their civilization collapsed...\nThere must be even more preposterous secrets buried deep below. You have to learn the truth of this ancient power, and in order to do so, you must find the secret passageway that will lead you deeper into the heart of the mountain.",
     "backFlavorZh": "你的发现简直太疯狂了，让人难以置信。根据城里的壁画和记录，“古老者”是来自繁星的旅者。早在人类出现之前，它们就在地球上殖民，定居范围非常宽广。在最高山脉下的地下城市深处，它们发现了一种蛰伏中的远古力量——这种力量如此可怕，它们建造了一个大门，将其封印在里面。但最终，它开始逃脱，它们的文明崩溃了……\n一定还有更荒谬的秘密埋藏在地下深处。你打算一定要了解这种古老力量的真相，而为此，你必须找到能把你引导到大山深处的秘密通道。",
     "backName": "Aeons-Long History",
     "backNameZh": "亘古历史",
     "backText": "Shuffle the set-aside Creatures in the Ice encounter set and the encounter discard pile into the encounter deck.\nYou know the route into the undercity. Reveal the Hidden Tunnel.\nAdd 1 [frost] token to the chaos bag.",
-    "backTextZh": "将放在一边的冰中生物遭遇组和遭遇弃牌库混洗入遭遇牌库。\n你知道去地下城市的通路。揭示隐秘隧道。\n在混乱袋里加入1个[frost]标记。",
+    "backTextZh": "将放在一边的冰中生物遭遇组和遭遇弃牌库混洗入遭遇牌库。你知道去地下城市的通路。揭示隐秘隧道。在混乱袋里加入1个[frost]标记。",
     "backimagesrc": "/bundles/cards/08625b.png",
     "code": "08625",
     "customizationChange": "",
@@ -302472,7 +302472,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[action] Spend two [elder_thing] keys: Remember that the team \"studied the history of the Elder Things.\"\n[action] Spend two [cultist] keys: Remember that the team \"discovered a hidden power.\"\nObjective - If the team has \"studied the history of the Elder Things\" and \"discovered a hidden power,\" advance.",
-    "textZh": "[action]花费2个[elder_thing]钥匙：请记住队伍“研究了古老者的历史”。\n[action]花费2个[cultist]钥匙：请记住队伍“发现了隐藏的力量”。\n目标 - 如果队伍“研究了古老者的历史”且“发现了隐藏的力量”，推进场景。",
+    "textZh": "[action]花费2个[elder_thing]钥匙：请记住队伍“研究了古老者的历史”。[action]花费2个[cultist]钥匙：请记住队伍“发现了隐藏值的力量”。目标 - 如果队伍“研究了古老者的历史”且“发现了隐藏值的力量”，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302481,13 +302481,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08625"
   },
   "08626": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "What you have found is almost too wild to believe. According to the murals and records within the city, a race of monstrous creatures known as \"Shoggoths\" were created to serve the masters of this city. The Shoggoths were sent deep into the undercity beneath the tallest mountain, where they would construct a gateway to seal some dormant, primordial power, something so terrifying even the Shoggoths' masters feared it. But the Shoggoths rebelled against them and let the seal decay, leading to the collapse of this ancient civilization...\nSuddenly, a distant noise stops you and the other explorers in their tracks: a deep, bellowing roar that seems to come from somewhere far below. You dare not ponder what kind of monstrosity could have made such a hideous sound.",
     "backFlavorZh": "你的发现简直太疯狂了，让人难以置信。根据这座城市的壁画和记录，一个被称为“修格斯”的怪物种族被创造出来为这座城市的主人服务。修格斯被派遣到最高山脉下的地下城深处，在那里它们将建造一个大门来封印某种蛰伏中的远古力量，这种力量是如此可怕，以至于修格斯的主人都害怕它。但修格斯反抗了主人，让封印衰弱，导致了这个古老文明的崩溃……\n突然，远处传来声音阻止了你和其他探险者的脚步：一种低沉的咆哮声，似乎来自下面远处的某个地方。你不敢想像是什么样的怪物会发出如此可怕的声音。",
     "backName": "Aeons-Long History",
     "backNameZh": "亘古历史",
     "backText": "Shuffle the set-aside Shoggoths encounter set and the encounter discard pile into the encounter deck.\nYou know the route into the undercity. Reveal the Hidden Tunnel.\nIn player order, each investigator draws 1 card from the top of the encounter deck.",
-    "backTextZh": "将放在一边的修格斯遭遇组和遭遇弃牌库混洗入遭遇牌库。\n你知道去地下城市的通路。揭示隐秘隧道。\n按玩家顺序，每位调查员抽取遭遇牌库顶的1张卡牌。",
+    "backTextZh": "将放在一边的修格斯遭遇组和遭遇弃牌库混洗入遭遇牌库。你知道去地下城市的通路。揭示隐秘隧道。按玩家顺序，每位调查员抽取遭遇牌库顶的1张卡牌。",
     "backimagesrc": "/bundles/cards/08626b.png",
     "code": "08626",
     "customizationChange": "",
@@ -302526,7 +302526,7 @@ export const ALL_CARDS = {
     "stage": 1,
     "subnameZh": "",
     "text": "[action] Spend two [tablet] keys: Remember that the team \"discerned the origin of the Shoggoths.\"\n[action] Spend two [cultist] keys: Remember that the team \"discovered a hidden power.\"\nObjective - If the team has \"discerned the origin of the Shoggoths\" and \"discovered a hidden power,\" advance.",
-    "textZh": "[action]花费2个[tablet]钥匙：请记住队伍“了解了修格斯的起源”。\n[action]花费2个[cultist]钥匙：请记住队伍“发现了隐藏的力量”。\n目标 - 如果队伍“了解了修格斯的起源”且“发现了隐藏的力量”，推进场景。",
+    "textZh": "[action]花费2个[tablet]钥匙：请记住队伍“了解了修格斯的起源”。[action]花费2个[cultist]钥匙：请记住队伍“发现了隐藏值的力量”。目标 - 如果队伍“了解了修格斯的起源”且“发现了隐藏值的力量”，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302535,7 +302535,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08626"
   },
   "08627": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
     "backName": "To the Undercity",
@@ -302580,7 +302580,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "[action] Spend two [cultist] keys: Each investigator may heal 1 damage, 1 horror, and 1 trauma.\nObjective - If each undefeated investigator is at the Hidden Tunnel and it has no clues, advance.",
-    "textZh": "[action]花费2个[cultist]钥匙：每位调查员可以治愈1点伤害、1点恐惧和1点创伤。\n目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
+    "textZh": "[action]花费2个[cultist]钥匙：每位调查员可以治愈1点伤害、1点恐惧和1点创伤。目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302589,7 +302589,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08627"
   },
   "08628": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
     "backName": "To the Undercity",
@@ -302634,7 +302634,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "[action] Spend two [tablet] keys: Each investigator searches their deck for each Tekeli-li weakness, shuffles each of them into the Tekeli-li deck, then shuffles their deck.\nObjective - If each undefeated investigator is at the Hidden Tunnel and it has no clues, advance.",
-    "textZh": "[action]花费2个[tablet]钥匙：每位调查员查找各自牌库，找出所有忒咳哩-哩弱点，将这些弱点混洗入忒咳哩-哩牌库，然后混洗各自牌库。\n目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
+    "textZh": "[action]花费2个[tablet]钥匙：每位调查员查找各自牌库，找出所有忒咳哩-哩弱点，将这些弱点混洗入忒咳哩-哩牌库，然后混洗各自牌库。目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302643,7 +302643,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08628"
   },
   "08629": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
     "backName": "To the Undercity",
@@ -302688,7 +302688,7 @@ export const ALL_CARDS = {
     "stage": 2,
     "subnameZh": "",
     "text": "Forced - When a [[Shoggoth]] or [[Elite]] enemy enters a location: Defeat each [[Elder Thing]] enemy at that location.\n[action] Spend two [elder_thing] keys: Remove each [elder_thing] token from the chaos bag.\nObjective - If each undefeated investigator is at the Hidden Tunnel and it has no clues, advance.",
-    "textZh": "强制 - 在一个[[修格斯]]或[[精英]]敌人进入一个地点时：击败该地点的所有[[古老者]]敌人。\n[action]花费2个[elder_thing]钥匙：从混乱袋里移除所有[elder_thing]标记。\n目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
+    "textZh": "强制 - 在一个[[修格斯]]或[[精英]]敌人进入一个地点时：击败该地点的所有[[古老者]]敌人。[action]花费2个[elder_thing]钥匙：从混乱袋里移除所有[elder_thing]标记。目标 - 如果每位没有被击败的调查员都在隐秘隧道，且隐秘隧道没有线索，推进场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -302697,12 +302697,12 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08629"
   },
   "08630": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...our study of the decadent sculptures brought about a change in our immediate objective. This of course had to do with the chiselled avenues to the black inner world, of whose existence we had not known before....\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……我们对堕落雕画的研究使我们的当前目标发生了变化。这当然与开凿的通往黑暗内部世界的通道有关，而我们以前并不知道它的存在……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
     "backText": "The passageway into the undercity is hidden. You cannot enter the Hidden Tunnel.",
-    "backTextZh": "进入地下城市的通道被隐藏了。你不能进入隐秘隧道。",
+    "backTextZh": "进入地下城市的通道被隐藏值了。你不能进入隐秘隧道。",
     "backimagesrc": "/bundles/cards/08630b.png",
     "clues": 2,
     "code": "08630",
@@ -302741,7 +302741,7 @@ export const ALL_CARDS = {
     "subname": "Entrance to the Depths",
     "subnameZh": "深渊入口",
     "text": "Clues on Hidden Tunnel cannot be discovered or moved to other locations.\n[action]: Test a skill of your choice (4). You may spend a [skull] key to get +5 skill value for this test. If you succeed, return 1 clue on Hidden Tunnel to the token pool (2 clues instead if you spent a [skull] key).",
-    "textZh": "隐秘隧道上的线索不能被发现或移动到其他地点。\n[action]：任选一项技能检定(4)。你可以花费一个[skull]钥匙来使你本次检定得到技能值+5。如果你检定成功，将隐秘隧道上的1个线索返回到供应堆(如果你花费了一个[skull]钥匙，改为2个线索)。",
+    "textZh": "隐秘隧道上的线索不能被发现或移动到其他地点。[action]：任选一项技能检定(4)。你可以花费一个[skull]钥匙来使你本次检定得到技能值+5。如果你检定成功，将隐秘隧道上的1个线索返回到供应堆(如果你花费了一个[skull]钥匙，改为2个线索)。",
     "traits": [
       "City"
     ],
@@ -302755,7 +302755,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08631": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -302813,7 +302813,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08631"
   },
   "08632": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -302859,7 +302859,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "[action]: Test [combat] (4) or [agility] (4). If you succeed, discover 1 clue from Stone Bridge.\n[action]: Move to another Stone Bridge location.",
-    "textZh": "[action]：检定[combat](4)或[agility](4)。如果你检定成功，发现石桥的1个线索。\n[action]：移动到另一个石桥地点。",
+    "textZh": "[action]：检定[combat](4)或[agility](4)。如果你检定成功，发现石桥的1个线索。[action]：移动到另一个石桥地点。",
     "traits": [
       "City"
     ],
@@ -302872,7 +302872,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08632"
   },
   "08633": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -302930,7 +302930,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08633"
   },
   "08634": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -302989,7 +302989,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08635": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303034,7 +303034,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "[action] Spend two \"-3\" keys: Choose 3 locations other than Hidden Tunnel and reveal them. Discover 1 clue from each of these locations. Record in the Campaign Log the team read the map.",
-    "textZh": "[action]花费2个“-3”钥匙：选择并揭示3个隐秘隧道以外的地点。(FAQ，v2.1)在这些地点中每个地点各发现1个线索。在剧本日志中记录队伍查看了地图。",
+    "textZh": "[action]花费2个“-3”钥匙：选择并揭示3个隐秘隧道以外的地点。在这些地点中每个地点各发现1个线索。在剧本日志中记录队伍查看了地图。",
     "traits": [
       "City"
     ],
@@ -303047,7 +303047,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08635"
   },
   "08636": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303106,7 +303106,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08636"
   },
   "08637": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303151,7 +303151,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Forced - After you reveal 1 or more [frost] tokens during a skill test at Ruinous Streets: Take 1 damage.\n[reaction] After you discover the last clue from Ruinous Streets: Discover 1 clue on a connecting location.",
-    "textZh": "强制 - 当你在破败街道的技能检定期间揭示1个或更多[frost]混乱标记后：受到1点伤害。\n[reaction]你发现破败街道上最后的线索后：发现一个连接地点的1个线索。",
+    "textZh": "强制 - 当你在破败街道的技能检定期间揭示1个或更多[frost]混乱标记后：受到1点伤害。[reaction]你发现破败街道上最后的线索后：发现一个连接地点的1个线索。",
     "traits": [
       "City"
     ],
@@ -303164,7 +303164,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08637"
   },
   "08638": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303223,7 +303223,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08638"
   },
   "08639": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303282,7 +303282,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08639"
   },
   "08640": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "City Landscape",
@@ -303327,7 +303327,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Forced - After you reveal 1 or more [frost] tokens during a skill test at this location: Take 1 horror.\n[action] If there are no clues on Temple of the Elder Things: Choose 2 locations with keys on them. Swap each key on those locations. (Group limit once per game.)",
-    "textZh": "强制 - 当你在本地点的一次技能检定期间揭示1个或更多[frost]混乱标记后：受到1点恐惧。\n[action]如果古老者之庙没有线索：选择2个有钥匙的地点。交换这些地点的所有钥匙。(团队每场游戏仅限一次)",
+    "textZh": "强制 - 当你在本地点的一次技能检定期间揭示1个或更多[frost]混乱标记后：受到1点恐惧。[action]如果古老者之庙没有线索：选择2个有钥匙的地点。交换这些地点的所有钥匙。(团队每场游戏仅限一次)",
     "traits": [
       "City"
     ],
@@ -303340,7 +303340,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08640"
   },
   "08641": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303386,7 +303386,7 @@ export const ALL_CARDS = {
     "subname": "Bane of the Elder Things",
     "subnameZh": "古老者之祸",
     "text": "Hunter. Massive.\nTerror of the Stars gets +3 [per_investigator] health.\nWhile Terror of the Stars is ready, investigators at its location cannot spend or take control of keys.",
-    "textZh": "猎手。庞大。\n星之恐怖得到+3[per_investigator]生命值。\n星之恐怖处于重整状态时，位于星之恐怖所在地点的调查员不能花费或控制钥匙。",
+    "textZh": "猎手。庞大。星之恐怖得到+3[per_investigator]生命值。星之恐怖处于重整状态时，位于星之恐怖所在地点的调查员不能花费或控制钥匙。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -303404,7 +303404,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08642": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303449,7 +303449,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Spawn - Any empty location.\nBenign Elder Thing enters play with 1 doom on it.\nForced - When Benign Elder Thing is defeated: Place 1 doom on the agenda.\n[action]: Parley. Test [willpower] (3). If you succeed, remove Benign Elder Thing from the game.",
-    "textZh": "生成 - 任意无人地点。\n和蔼的古老者入场带有1个毁灭标记。\n强制 - 在和蔼的古老者被击败时：在当前密谋上放置1个毁灭标记。\n[action]：谈判。检定[willpower](3)。如果你检定成功，将和蔼的古老者从游戏中移除。",
+    "textZh": "生成 - 任意无人地点。和蔼的古老者入场带有1个毁灭标记。强制 - 在和蔼的古老者被击败时：在当前密谋上放置1个毁灭标记。[action]：谈判。检定[willpower](3)。如果你检定成功，将和蔼的古老者从游戏中移除。",
     "traits": [
       "Monster",
       "Elder Thing"
@@ -303464,7 +303464,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08642"
   },
   "08643": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303509,7 +303509,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Hunter.\nForced - When this enemy engages you: Place a key you control on it. When it leaves play, place that key on its location.\nForced - When an investigator at this enemy's location takes control of a key: This enemy readies, engages, and attacks them.",
-    "textZh": "猎手。\n强制 - 在本敌人与你交战时：将你控制的一个钥匙放到本敌人上。在本敌人离场时，将该钥匙放在本敌人所在地点。\n强制 - 在本敌人所在地点的一位调查员控制一个钥匙时：本敌人重整，与该调查员交战，并攻击该调查员。",
+    "textZh": "猎手。强制 - 在本敌人与你交战时：将你控制的一个钥匙放到本敌人上。在本敌人离场时，将该钥匙放在本敌人所在地点。强制 - 在本敌人所在地点的一位调查员控制一个钥匙时：本敌人重整，与该调查员交战，并攻击该调查员。",
     "traits": [
       "Monster",
       "Elder Thing"
@@ -303524,7 +303524,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08643"
   },
   "08644": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303577,7 +303577,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08644"
   },
   "08645": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303630,7 +303630,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08645"
   },
   "08646": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303672,7 +303672,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - Put Frostbitten into play in your threat area.\nFrostbitten can be healed as if it were a single point of damage on you (if it is healed, discard it).\nForced - When you reveal a [frost] token during a skill test: You must either take 1 damage or you automatically fail this test. (Limit once per test.)",
-    "textZh": "显现 - 将冻伤放置入场，放到你的威胁区域。\n冻伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 - 你在技能检定期间揭示[frost]混乱标记时：你必须受到1点伤害或本次检定自动失败。(每次检定仅限一次。)",
+    "textZh": "显现 - 将冻伤放置入场，放到你的威胁区域。冻伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。强制 - 你在技能检定期间揭示[frost]混乱标记时：你必须受到1点伤害或本次检定自动失败。(每次检定仅限一次。)",
     "traits": [
       "Injury"
     ],
@@ -303685,7 +303685,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08646"
   },
   "08647": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -303727,7 +303727,7 @@ export const ALL_CARDS = {
     "subnameZh": "",
     "subtype": "weakness",
     "text": "Revelation - Put Possessed into play in your threat area.\nPossessed can be healed as if it were a single point of horror on you (if it is healed, discard it).\nForced - When you reveal a [frost] token during a skill test: You must either take 1 horror or you automatically fail this test. (Limit once per test.)",
-    "textZh": "显现 - 将附身放置入场，放到你的威胁区域。\n附身可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 - 你在技能检定期间揭示[frost]混乱标记时：你必须受到1点恐惧或本次检定自动失败。(每次检定仅限一次。)",
+    "textZh": "显现 - 将附身放置入场，放到你的威胁区域。附身可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。强制 - 你在技能检定期间揭示[frost]混乱标记时：你必须受到1点恐惧或本次检定自动失败。(每次检定仅限一次。)",
     "traits": [
       "Madness"
     ],
@@ -303740,11 +303740,11 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08647"
   },
   "08648": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -2 (-4 instead if there is an [[Ancient One]] enemy at your location).\n[cultist]: -1. If there is a seal at your location, or if your location is a Mist-Pylon, treat this token as a [frost] token in addition to its modifier.\n[tablet]: -3. Draw the top card of the Tekeli-li deck.\n[elder_thing]: -5. If you fail by 3 or more, place 1 doom on the current agenda. This can cause the current agenda to advance.",
-    "backTextZh": "困难/专家\n[skull]：-2(如果你所在地点有[[古神]]敌人，改为-4)。\n[cultist]：-1。如果你所在地点有封印，或者你所在地点是迷雾高塔，将本标记视为[frost]标记，再-1。\n[tablet]：-3。抽取忒咳哩-哩牌库顶的1张卡牌。\n[elder_thing]：-5。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
+    "backTextZh": "困难/专家\n[skull]：-2(如果你所在地点有[[古神]]敌人，改为-4)。[cultist]：-1。如果你所在地点有封印，或者你所在地点是迷雾高塔，将本标记视为[frost]标记，再-1。[tablet]：-3。抽取忒咳哩-哩牌库顶的1张卡牌。[elder_thing]：-5。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
     "backimagesrc": "/bundles/cards/08648b.png",
     "code": "08648",
     "customizationChange": "",
@@ -303780,7 +303780,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Easy / Standard\n[skull]: -1 (-3 instead if there is an [[Ancient One]] enemy at your location).\n[cultist]: -1. If there is a seal at your location, or if your location is a Mist-Pylon, treat this token as a [frost] token, instead.\n[tablet]: -3. If you fail, draw the top card of the Tekeli-li deck.\n[elder_thing]: -4. If you fail by 3 or more, place 1 doom on the current agenda. This can cause the current agenda to advance.",
-    "textZh": "简单/ 普通\n[skull]：-1(如果你所在地点有[[古神]]敌人，改为-3)。\n[cultist]：-1。如果你所在地点有封印，或者你所在地点是迷雾高塔，改为将本标记视为[frost]标记。\n[tablet]：-3。如果你检定失败，抽取忒咳哩-哩牌库顶的1张卡牌。\n[elder_thing]：-4。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
+    "textZh": "简单/普通\n[skull]：-1(如果你所在地点有[[古神]]敌人，改为-3)。[cultist]：-1。如果你所在地点有封印，或者你所在地点是迷雾高塔，改为将本标记视为[frost]标记。[tablet]：-3。如果你检定失败，抽取忒咳哩-哩牌库顶的1张卡牌。[elder_thing]：-4。如果你检定失败且低于难度至少3点，在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。",
     "traits": [],
     "traitsZh": [],
     "type": "scenario",
@@ -303789,7 +303789,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08648"
   },
   "08649": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "-the black pit - the carven rim - the proto-shoggoths - the windowless solids with five dimensions - the nameless cylinder - the elder pharos - the primal white jelly - the wings - the eyes in darkness - the moon-ladder - the original - the eternal - the undying-",
     "backFlavorZh": "——黑色深坑——洞穴边——原初修格斯——没有窗户的五维实体——无名圆柱——古老灯塔——原始白色胶状物——翅膀——黑暗中的眼睛——登月梯——起源——永恒——不朽——",
     "backNameZh": "",
@@ -303834,7 +303834,7 @@ export const ALL_CARDS = {
     "subname": "Primordial Seal",
     "subnameZh": "远古封印",
     "text": "[action]: Place an activated seal you control on The Gate of Y'quaa.\n[action]: Resign. You retreat, hoping you've done enough to seal away whatever lies beyond the gate. (If you control 1 or more seals, you retain control of them.)",
-    "textZh": "[action]：将你控制的一个激活的封印放在伊夸之门上。\n[action]：撤退。你撤退了，希望你已经做了足够的工作，能够把大门彼端的东西封印起来(如果你控制着1个或更多封印，你保留它们的控制权)。",
+    "textZh": "[action]：将你控制的一个激活的封印放在伊夸之门上。[action]：撤退。你撤退了，希望你已经做了足够的工作，能够把大门彼端的东西封印起来(如果你控制着1个或更多封印，你保留它们的控制权)。",
     "traits": [
       "Ruins"
     ],
@@ -303847,7 +303847,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08649"
   },
   "08650": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -303892,7 +303892,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "[action] If you control the [seal_a] seal: Test [combat] (3). If you succeed, investigators at Geothermal Vent spend 1 [per_investigator] clues, as a group, to activate the [seal_a] seal. Then, remove 1 [frost] token from the chaos bag.",
-    "textZh": "[action]如果你控制[seal_a]封印：检定[combat](3)。如果你检定成功，位于地热口的调查员可以共同花费1[per_investigator]个线索，来激活[seal_a]封印。然后，从混乱袋里移除1个[frost]标记。",
+    "textZh": "[action]如果你控制[seal_a]封印：检定[combat](3)。如果你检定成功，位于地热口的调查员共同花费1[per_investigator]个线索，来激活[seal_a]封印。然后，从混乱袋里移除1个[frost]标记。",
     "traits": [
       "Ruins"
     ],
@@ -303905,7 +303905,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08650"
   },
   "08651": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -303950,7 +303950,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "[action] If you control the [seal_c] seal: Test [willpower] (3). If you succeed, investigators at Forsaken Temple spend 1 [per_investigator] clues, as a group, to activate the [seal_c] seal. Then, look at the revealed side of each unrevealed location on the same spoke as Forsaken Temple.",
-    "textZh": "[action]如果你控制[seal_c]封印：检定[willpower](3)。如果你检定成功，位于被遗忘的神庙的调查员可以共同花费1[per_investigator]个线索，来激活[seal_c]封印。然后，查看与被遗忘的神庙在同一辐条上的，所有未揭示地点的已揭示面。",
+    "textZh": "[action]如果你控制[seal_c]封印：检定[willpower](3)。如果你检定成功，位于被遗忘的神庙的调查员共同花费1[per_investigator]个线索，来激活[seal_c]封印。然后，查看与被遗忘的神庙在同一辐条上的，所有未揭示地点的已揭示面。",
     "traits": [
       "Ruins"
     ],
@@ -303963,7 +303963,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08651"
   },
   "08652": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304008,7 +304008,7 @@ export const ALL_CARDS = {
     "shroud": 5,
     "subnameZh": "",
     "text": "[action] If you control the [seal_b] seal: Test [intellect] (3). If you succeed, investigators at Library of Kós spend 1 [per_investigator] clues, as a group, to activate the [seal_b] seal. Then, look at the revealed side of each unrevealed location on the same ring as Library of Kós.",
-    "textZh": "[action]如果你控制[seal_b]封印：检定[intellect](3)。如果你检定成功，位于寇斯图书馆的调查员可以共同花费1[per_investigator]个线索，来激活[seal_b]封印。然后，查看与寇斯图书馆在同一环形上的，所有未揭示地点的已揭示面。",
+    "textZh": "[action]如果你控制[seal_b]封印：检定[intellect](3)。如果你检定成功，位于寇斯图书馆的调查员共同花费1[per_investigator]个线索，来激活[seal_b]封印。然后，查看与寇斯图书馆在同一环形上的，所有未揭示地点的已揭示面。",
     "traits": [
       "Ruins"
     ],
@@ -304021,7 +304021,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08652"
   },
   "08653": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304066,7 +304066,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "[action] If you control the [seal_d] seal: Test [agility] (3). If you succeed, investigators at Protoplasmic Pool spend 1 [per_investigator] clues, as a group, to activate the [seal_d] seal. Then, deal 2 damage to each enemy in play.",
-    "textZh": "[action]如果你控制[seal_d]封印：检定[agility](3)。如果你检定成功，位于原生质池的调查员可以共同花费1[per_investigator]个线索，来激活[seal_d]封印。然后，对场上所有敌人各造成2点伤害。",
+    "textZh": "[action]如果你控制[seal_d]封印：检定[agility](3)。如果你检定成功，位于原生质池的调查员共同花费1[per_investigator]个线索，来激活[seal_d]封印。然后，对场上所有敌人各造成2点伤害。",
     "traits": [
       "Ruins"
     ],
@@ -304079,7 +304079,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08653"
   },
   "08654": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304137,7 +304137,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08654"
   },
   "08655": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304195,7 +304195,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08655"
   },
   "08656": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304240,7 +304240,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "[fast]: Choose another Vaulted Corridor and test [agility] (X). X is the number of locations away that Vaulted Corridor is from this one. If you succeed, move there. (Limit once per round.)",
-    "textZh": "[free]：选择另一个拱形走廊并检定[agility](X)。X为本地点到该拱形走廊所需移动次数。如果你检定成功，移动到该地点。(每轮仅限一次。)",
+    "textZh": "[fast]：选择另一个拱形走廊并检定[agility](X)。X为本地点到该拱形走廊所需移动次数。如果你检定成功，移动到该地点。(每轮仅限一次。)",
     "traits": [
       "Ruins"
     ],
@@ -304253,7 +304253,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08656"
   },
   "08657": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -304307,7 +304307,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08657"
   },
   "08658": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -304361,7 +304361,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08658"
   },
   "08659": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A dark, primordial energy seeps forth from the walls, the very same miasma that has haunted your every step throughout this doomed journey. You freeze in your tracks and back away. You've seen the kinds of hideous shapes it can take. The kinds of memories it conjures- foul and fair alike. But not everyone sees the mirage for what it truly is...",
     "backFlavorZh": "一种黑暗、原始的能量从墙壁中渗出，正是在这末日之旅中缠绕着你前进路程上每一步的瘴气。你停下脚步，开始后退。你已经见识过它会变成什么样的可怕形状，它所能唤起的那些记忆——不论肮脏还是美好的。但并不是每个人都能看到幻景的真实面目……",
     "backName": "Unknowable End",
@@ -304416,13 +304416,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08659"
   },
   "08660": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The seals pulse with dangerous electrostatic energy, filling the icy chambers with bright blue light. You struggle to contain the power within each seal as you move quickly to put them in their proper place.",
     "backFlavorZh": "封印中跳动着危险的静电能量，明亮的蓝色光芒照亮了整个冰冷的房间。你尽力控制所有封印的力量，同时快速移动，想要把它们放在正确的地方。",
     "backName": "Uncontrollable Power",
     "backNameZh": "无法控制的力量",
     "backText": "Check the seals controlled by each investigator (if a seal is not controlled by an investigator, skip it).\nThe investigator who controls the [seal_a] seal takes 1 damage (2 instead if the seal is activated).\nThe investigator who controls the [seal_b] seal discards 2 random cards from their hand (4 instead if the seal is activated).\nThe investigator who controls the [seal_c] seal takes 1 horror (2 instead if the seal is activated).\nThe investigator who controls the [seal_d] seal loses 1 action (2 instead if the seal is activated).\nThe investigator who controls the [seal_e] seal loses 3 resources (6 instead if the seal is activated).",
-    "backTextZh": "检查由每位调查员控制的封印(如果有封印不是由调查员控制的，跳过它)。\n控制[seal_a]封印的调查员受到1点伤害(如果封印是激活的，改为2点)。\n控制[seal_b]封印的调查员随机弃掉2张手牌(如果封印是激活的，改为4张)。\n控制[seal_c]封印的调查员受到1点恐惧(如果封印是激活的，改为2点)。\n控制[seal_d]封印的调查员失去1个行动(如果封印是激活的，改为2个)。\n控制[seal_e]封印的调查员失去3资源(如果封印是激活的，改为6资源)。",
+    "backTextZh": "检查由每位调查员控制的封印(如果有封印不是由调查员控制的，跳过它)。控制[seal_a]封印的调查员受到1点伤害(如果封印是激活的，改为2点)。控制[seal_b]封印的调查员随机弃掉2张手牌(如果封印是激活的，改为4张)。控制[seal_c]封印的调查员受到1点恐惧(如果封印是激活的，改为2点)。控制[seal_d]封印的调查员失去1个行动(如果封印是激活的，改为2个)。控制[seal_e]封印的调查员失去3资源(如果封印是激活的，改为6资源)。",
     "backimagesrc": "/bundles/cards/08660b.png",
     "code": "08660",
     "customizationChange": "",
@@ -304471,7 +304471,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08660"
   },
   "08661": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Before you can find and place all five seals, a tremendous noise fills the cavernous halls of the facility, and inky, prismatic miasma begins to seep from every inch of the walls and ceiling. Waves of creeping ichor and wafting black mist block every route but the one from which you came. You flee back to the gateway to escape or find another path forward, but by the time you reach the massive door, it is too late.",
     "backFlavorZh": "在你成功找到并放置所有五个封印之前，巨大的噪音响彻洞穴般的大厅，五彩的墨状瘴气开始从墙壁和天花板的每一寸渗透出来。大量蠕动的脓水和飘来的黑雾挡住了每一条路，除了你来的那条。你向大门口逃去，试图逃跑或找到另一条路前进，但当你到达大门时，已经太迟了。",
     "backName": "Impure Expanse",
@@ -304526,13 +304526,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08661"
   },
   "08662": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As soon as you set the seal into place, it locks into the door with an audible click. The energy stored within the seal reaches out, coursing through channels and grooves along the doorway, and lighting the entire chamber with an eerie glow. Perhaps if you can activate and place the remaining four seals, you can put a stop to this madness.",
     "backFlavorZh": "一旦你将封印放对位置，随着咔嗒一声，它就锁在了门上。储存在封印内的能量顺着管道和凹槽延伸，照亮了整个房间，发出一种怪异的光芒。也许如果你能激活并放置剩下的四个封印，你就能阻止这场疯狂。",
     "backName": "The First of Five",
     "backNameZh": "五分之一",
     "backText": "Check which seal was just placed (do not remove it).\nIf it was the [seal_a] seal, the investigator who placed it heals 1 damage.\nIf it was the [seal_b] seal, the investigator who placed it draws 2 cards.\nIf it was the [seal_c] seal, the investigator who placed it heals 1 horror.\nIf it was the [seal_d] seal, the investigator who placed it may take an additional action this turn.\nIf it was the [seal_e] seal, the investigator who placed it gains 3 resources.",
-    "backTextZh": "检查刚刚放置的是哪个封印(不要移除它)。\n如果是[seal_a]封印，放置该封印的调查员治愈1点伤害。\n如果是[seal_b]封印，放置该封印的调查员抽取2张卡牌。\n如果是[seal_c]封印，放置该封印的调查员治愈1点恐惧。\n如果是[seal_d]封印，放置该封印的调查员本回合可以执行额外一个行动。\n如果是[seal_e]封印，放置该封印的调查员获得3资源。",
+    "backTextZh": "检查刚刚放置的是哪个封印(不要移除它)。如果是[seal_a]封印，放置该封印的调查员治愈1点伤害。如果是[seal_b]封印，放置该封印的调查员抽取2张卡牌。如果是[seal_c]封印，放置该封印的调查员治愈1点恐惧。如果是[seal_d]封印，放置该封印的调查员本回合可以执行额外一个行动。如果是[seal_e]封印，放置该封印的调查员获得3资源。",
     "backimagesrc": "/bundles/cards/08662b.png",
     "code": "08662",
     "customizationChange": "",
@@ -304580,7 +304580,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08662"
   },
   "08663": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The final seal locks into place. With a hum, power flows through the facility. Small orbs embedded in the ceiling begin to light, one by one. The realization dawns on you that this sanctuary is far more advanced than you could have ever imagined.",
     "backFlavorZh": "最后的封印归位。随着一阵嗡嗡声，能量流过整个设施。嵌在天花板上的小球体开始一个接一个地亮起来。你意识到这个圣所比你想像的要先进得多。",
     "backName": "The Final Seal",
@@ -304634,7 +304634,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08663"
   },
   "08664": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304679,7 +304679,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Forced - After Glacial Grotto is revealed: Place the dormant [seal_a] seal on it.\n[action]: Test [combat] (2) to shatter the ice. If you succeed, investigators at Glacial Grotto may spend 1 [per_investigator] clues, as a group, for you to take control of the seal on it.",
-    "textZh": "强制 - 在冰川岩洞被揭示后：将休眠的[seal_a]封印放在它上面。\n[action]：检定[combat](2)来打碎冰块。如果你检定成功，位于冰川岩洞的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
+    "textZh": "强制 - 在冰川岩洞被揭示后：将休眠的[seal_a]封印放在它上面。[action]：检定[combat](2)来打碎冰块。如果你检定成功，位于冰川岩洞的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
     "traits": [
       "Ruins"
     ],
@@ -304692,7 +304692,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08664"
   },
   "08665": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304737,7 +304737,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Forced - After Sculptured Crypt is revealed: Place the dormant [seal_b] seal on it.\n[action]: Test [intellect] (2) to decipher the alien script. If you succeed, investigators at Sculptured Crypt may spend 1 [per_investigator] clues, as a group, for you to take control of the seal on it.",
-    "textZh": "强制 - 在雕画密室被揭示后：将休眠的[seal_b]封印放在它上面。\n[action]：检定[intellect](2)来破译异星文字。如果你检定成功，位于雕画密室的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
+    "textZh": "强制 - 在雕画密室被揭示后：将休眠的[seal_b]封印放在它上面。[action]：检定[intellect](2)来破译异星文字。如果你检定成功，位于雕画密室的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
     "traits": [
       "Ruins"
     ],
@@ -304750,7 +304750,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08665"
   },
   "08666": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304795,7 +304795,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Forced - After Undercity Altar is revealed: Place the dormant [seal_c] seal on it.\n[action]: Test [willpower] (2) to break the ancient ward. If you succeed, investigators at Undercity Altar may spend 1 [per_investigator] clues, as a group, for you to take control of the seal on it.",
-    "textZh": "强制 - 在地城祭坛被揭示后：将休眠的[seal_c]封印放在它上面。\n[action]：检定[willpower](2)来打破古代结界。如果你检定成功，位于地城祭坛的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
+    "textZh": "强制 - 在地城祭坛被揭示后：将休眠的[seal_c]封印放在它上面。[action]：检定[willpower](2)来打破古代结界。如果你检定成功，位于地城祭坛的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
     "traits": [
       "Ruins"
     ],
@@ -304808,7 +304808,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08666"
   },
   "08667": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304853,7 +304853,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Forced - After Ichor-Laden Tunnels is revealed: Place the dormant [seal_d] seal on it.\n[action]: Test [agility] (2) to traverse the ichor. If you succeed, investigators at Ichor-Laden Tunnels may spend 1 [per_investigator] clues, as a group, for you to take control of the seal on it.",
-    "textZh": "强制 - 在脓水隧道被揭示后：将休眠的[seal_d]封印放在它上面。\n[action]：检定[agility](2)来穿过脓水。如果你检定成功，位于脓水隧道的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
+    "textZh": "强制 - 在脓水隧道被揭示后：将休眠的[seal_d]封印放在它上面。[action]：检定[agility](2)来穿过脓水。如果你检定成功，位于脓水隧道的调查员可以共同花费1[per_investigator]个线索，来使你控制其上的封印。",
     "traits": [
       "Ruins"
     ],
@@ -304866,7 +304866,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08667"
   },
   "08668": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backName": "Ancient Facility",
@@ -304911,7 +304911,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Forced - After Limestone Caverns is revealed: Place the dormant [seal_e] seal on it.\n[action] Investigators at Limestone Caverns spend 1 [per_investigator] clues and 3 [per_investigator] resources, as a group: Take control of the seal on Limestone Caverns.",
-    "textZh": "强制 - 在灰岩洞穴被揭示后：将休眠的[seal_e]封印放在它上面。\n[action]位于灰岩洞穴的调查员共同花费1[per_investigator]个线索和3[per_investigator]资源：控制灰岩洞穴上的封印。",
+    "textZh": "强制 - 在灰岩洞穴被揭示后：将休眠的[seal_e]封印放在它上面。[action]位于灰岩洞穴的调查员共同花费1[per_investigator]个线索和3[per_investigator]资源：控制灰岩洞穴上的封印。",
     "traits": [
       "Ruins"
     ],
@@ -304924,7 +304924,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08668"
   },
   "08669": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -304969,7 +304969,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Hunter.\nSpawn - Location farthest from you on the outer ring.\nPrey - Nearest investigator with a seal only.\nForced - When the enemy phase ends, if an investigator controls an activated seal: Protoplasmic Mass readies and resolves the enemy phase again (it resolves its hunter keyword and attacks a second time). (Limit once per phase.)",
-    "textZh": "猎手。\n生成 - 最外的环形上距离你最远的地点。\n猎物 - 仅对拥有封印的最近调查员。\n强制 - 在敌军阶段结束时，如果一位调查员控制着激活的封印：重整原生质团并再结算一次敌军阶段(其结算其猎手关键词并再次攻击)。(每个阶段限一次。)",
+    "textZh": "猎手。生成 - 最外的环形上距离你最远的地点。猎物 - 仅对拥有封印的最近调查员。强制 - 在敌军阶段结束时，如果一位调查员控制着激活的封印：重整原生质团并再结算一次敌军阶段(其结算其猎手关键词并再次攻击)。(每个阶段限一次。)",
     "traits": [
       "Monster",
       "Shoggoth"
@@ -304984,7 +304984,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08669"
   },
   "08670": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -305024,7 +305024,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Surge.\nRevelation - Each investigator at the same location as a seal takes 1 horror, and 1 damage if that seal is activated",
-    "textZh": "涌动。\n显现 - 每位与一个封印在同一地点的调查员受到1点恐惧，如果该封印是激活的，再受到1点伤害。",
+    "textZh": "涌动。显现 - 每位与一个封印在同一地点的调查员受到1点恐惧，如果该封印是激活的，再受到1点伤害。",
     "traits": [
       "Hazard"
     ],
@@ -305037,13 +305037,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08670"
   },
   "08671": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "From the nameless depths at the very core of the Earth, the miasma's true form emerges. It is a shapeless thing, a creature of whirling mist and putrid ichor that screams and whispers and crawls and flies. It seeps through the walls and up from the ice; it is everywhere; it is everything.",
     "backFlavorZh": "从地球最核心的无名深渊中，瘴气的真实形态出现了。那是一种无形，由旋转的雾和腐烂脓液构成的生物，它在尖叫、低语、爬行、飞舞。它穿过墙壁，从冰中渗出；它无处不在；它就是一切。",
     "backName": "It Emerges...",
     "backNameZh": "它出现了……",
     "backText": "Spawn 1 set-aside copy of The Nameless Madness enemy at the Mist-Pylon nearest to an investigator.\nCheck the Campaign Log. If the truth of the mirage eludes you:\nYou stare, dumbstruck, at the hideous phantasmagoria. The air shimmers with a dreamlike quality about its damnable form, an endless weave of intermingled nightmare and memory. The very sight of it drives you to your knees. It is the final truth. Reality was the mirage.\nEach investigator searches their deck for each copy of Tekeli-li and draws them one at a time in a random order, without placing them on the bottom of the Tekeli-li deck. After resolving all of them, shuffle each of them back into their bearer's deck.",
-    "backTextZh": "在离一位调查员最近的迷雾高塔生成1张放在一边的无名疯狂敌人。\n检查剧本日志。如果你尚未明了幻景的真相：\n你呆呆地望着这千变万化的可怕幻景。空气中闪烁着梦幻般的光芒，噩梦和记忆在无尽地交织着。一看到它你就不由自主跪了下来。这是终极真相。现实曾是幻景。\n每位调查员查找自己牌库，找出其中所有忒咳哩-哩，并依次按随机顺序抽取这些卡牌，且不要将它们放在忒咳哩-哩牌库底。在结算完所有这些卡牌后，将它们各自混洗入承受者的牌库。",
+    "backTextZh": "在离一位调查员最近的迷雾高塔生成1张放在一边的无名疯狂敌人。检查剧本日志。如果你尚未明了幻景的真相：你呆呆地望着这千变万化的可怕幻景。空气中闪烁着梦幻般的光芒，噩梦和记忆在无尽地交织着。一看到它你就不由自主跪了下来。这是终极真相。现实曾是幻景。每位调查员查找自己牌库，找出其中所有忒咳哩-哩，并依次按随机顺序抽取这些卡牌，且不要将它们放在忒咳哩-哩牌库底。在结算完所有这些卡牌后，将它们各自混洗入其持有者的牌库。",
     "backimagesrc": "/bundles/cards/08671b.png",
     "code": "08671",
     "customizationChange": "",
@@ -305092,13 +305092,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08671"
   },
   "08672": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "It is too late. You cannot contain the creature that dwells beneath the mountain. All you can hope to do now is escape with your lives.",
     "backFlavorZh": "已经太迟了。你没能控制住在山脉底下的生物。你现在唯一能做事情的就是逃命。",
     "backName": "The Mountain Falls",
     "backNameZh": "山脉垮塌",
     "backText": "For each Mist-Pylon that is collapsed, set 3 copies of The Nameless Madness aside.\nEach investigator loses all of their clues.\nRemove each location except The Gate of Y'quaa from the game. Investigators and copies of The Nameless Madness are not defeated by this effect. All other cards at these locations are discarded.\nPut the 4 set-aside Titanic Ramp locations into play in a straight line to the right of The Gate of Y'quaa. Put the set-aside Hidden Tunnel location into play to the right of the rightmost Titanic Ramp. Place each investigator and each remaining copy of The Nameless Madness in play at the leftmost Titanic Ramp.\nRemove the act deck from the game and advance to the set-aside The Final Mirage. It is both the current act and the current agenda.",
-    "backTextZh": "每有一个被摧毁的迷雾高塔，将3张无名疯狂放在一边。\n每位调查员失去其所有线索。\n将除了伊夸之门外的所有地点从游戏中移除。调查员和无名疯狂不会被本效果击败。弃掉这些地点上的所有其他卡牌。\n将4张放在一边的巨大坡道地点放置入场，在伊夸之门右边排成一条直线。将放在一边的隐秘隧道地点放置入场，位于最右边的巨大坡道右边。将所有调查员和剩余的所有无名疯狂放置入场，位于最左边的巨大坡道。\n将场景牌库从游戏中移除，并推进至放在一边的最终幻景。它既是当前场景也是当前密谋。",
+    "backTextZh": "每有一个被摧毁的迷雾高塔，将3张无名疯狂放在一边。每位调查员失去其所有线索。将除了伊夸之门外的所有地点从游戏中移除。调查员和无名疯狂不会被本效果击败。弃掉这些地点上的所有其他卡牌。将4张放在一边的巨大坡道地点放置入场，在伊夸之门右边排成一条直线。将放在一边的隐秘隧道地点放置入场，位于最右边的巨大坡道右边。将所有调查员和剩余的所有无名疯狂放置入场，位于最左边的巨大坡道。将场景牌库从游戏中移除，并推进至放在一边的最终幻景。它既是当前场景也是当前密谋。",
     "backimagesrc": "/bundles/cards/08672b.png",
     "code": "08672",
     "customizationChange": "",
@@ -305137,7 +305137,7 @@ export const ALL_CARDS = {
     "stage": 5,
     "subnameZh": "",
     "text": "Forced - When 1 or more doom would be put into play, if there are any copies of The Nameless Madness still set aside: Instead, spawn 1 set-aside copy of The Nameless Madness at the location nearest to an investigator without a copy of that enemy that is connected to a location with a copy of that enemy.\nObjective - At the end of the round, if all 15 copies of The Nameless Madness are in play and not every Mist-Pylon is collapsed, advance this agenda.",
-    "textZh": "强制 - 在至少1个毁灭标记将要被放置入场时，如果仍然有放在一边的无名疯狂：改为在一个没有无名疯狂敌人，但连接地点有该敌人的，离调查员最近的地点生成1张放在一边的无名疯狂。\n目标 -当一轮结束时，如果所有15张无名疯狂都在场上，且并非所有迷雾高塔都被摧毁，推进本密谋。",
+    "textZh": "强制 - 在至少1个毁灭标记将要被放置入场时，如果仍然有放在一边的无名疯狂：改为在一个没有无名疯狂敌人，但连接地点有该敌人的，离调查员最近的地点生成1张放在一边的无名疯狂。目标 - 当一轮结束时，如果所有15张无名疯狂都在场上，且并非所有迷雾高塔都被摧毁，推进本密谋。",
     "traits": [],
     "traitsZh": [],
     "type": "agenda",
@@ -305146,13 +305146,13 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08672"
   },
   "08673": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The facility shakes to its very core. Without the Mist-Pylons powering the structure, the nameless entity that resides within is free - and its days are numbered, as are yours. The mountain groans and trembles, threatening to collapse all around you.",
     "backFlavorZh": "整座设施都在摇晃。没有高塔为建筑供能，居住在里面的无名存在重获自由——但它时日无多，当然你也一样。山脉呻吟着，颤抖着，好像要在你周围倒塌。",
     "backName": "Self-Destructions",
     "backNameZh": "自毁",
     "backText": "Set all but 3 copies of The Nameless Madness aside.\nEach investigator loses all of their clues.\nRemove each location except The Gate of Y'quaa from the game. Investigators and copies of The Nameless Madness are not defeated by this effect. All other cards at those locations are discarded.\nPut the 4 set-aside Titanic Ramp locations into play in a straight line to the right of The Gate of Y'quaa. Put the set-aside Hidden Tunnel location into play to the right of the rightmost Titanic Ramp. Place each investigator and each remaining copy of The Nameless Madness in play at the leftmost Titanic Ramp.\nRemove the agenda deck from the game and advance to the set-aside The Final Mirage. It is both the current act and the current agenda.",
-    "backTextZh": "将除了3张以外的其他所有无名疯狂放在一边。\n每位调查员失去其所有线索。\n将除了伊夸之门外的所有地点从游戏中移除。调查员和无名疯狂不会被本效果击败。弃掉这些地点上的所有其他卡牌。\n将4张放在一边的巨大坡道地点放置入场，在伊夸之门右边排成一条直线。将放在一边的隐秘隧道地点放置入场，位于最右边的巨大坡道右边。将所有调查员和剩余的所有无名疯狂放置入场，位于最左边的巨大坡道。\n将密谋牌库从游戏中移除，并推进至放在一边的最终幻景。它既是当前场景也是当前密谋。",
+    "backTextZh": "将除了3张以外的其他所有无名疯狂放在一边。每位调查员失去其所有线索。将除了伊夸之门外的所有地点从游戏中移除。调查员和无名疯狂不会被本效果击败。弃掉这些地点上的所有其他卡牌。将4张放在一边的巨大坡道地点放置入场，在伊夸之门右边排成一条直线。将放在一边的隐秘隧道地点放置入场，位于最右边的巨大坡道右边。将所有调查员和剩余的所有无名疯狂放置入场，位于最左边的巨大坡道。将密谋牌库从游戏中移除，并推进至放在一边的最终幻景。它既是当前场景也是当前密谋。",
     "backimagesrc": "/bundles/cards/08673b.png",
     "code": "08673",
     "customizationChange": "",
@@ -305191,7 +305191,7 @@ export const ALL_CARDS = {
     "stage": 3,
     "subnameZh": "",
     "text": "Each revealed Mist-Pylon can be attacked as if it were an enemy. Its fight value is equal to its shroud value and its health is equal to its clue value. While it has no health remaining, it is collapsed (it remains in play).\n[reaction] When you discover 1 or more clues at a Mist-Pylon, spend those clues: Deal that much damage to that Mist-Pylon.\nObjective - At the end of the round, if each Mist-Pylon is collapsed, advance this act.",
-    "textZh": "每个已揭示的迷雾高塔可以被攻击，如同它是敌人。它的战斗值等于它的隐藏值，它的生命值等于它的线索值。它没有剩余生命值时，它被摧毁(它依然保持在场上)。\n[reaction]在你发现迷雾高塔上的1个或更多线索时，花费那些线索：对该迷雾高塔造成该数量的伤害。\n目标 - 当一轮结束时，如果所有迷雾高塔都被摧毁，推进本场景。",
+    "textZh": "每个已揭示的迷雾高塔可以被攻击，如同它是敌人。它的攻击值等于它的隐藏值，它的生命值等于它的线索值。它没有剩余生命值时，它被摧毁(它依然保持在场上)。[reaction]在你发现迷雾高塔上的1个或更多线索时，花费那些线索：对该迷雾高塔造成该数量的伤害。目标 - 当一轮结束时，如果所有迷雾高塔都被摧毁，推进本场景。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -305200,7 +305200,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08673"
   },
   "08674": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305244,7 +305244,7 @@ export const ALL_CARDS = {
     "shroud": 1,
     "subnameZh": "",
     "text": "[fast] If you control the [seal_a] seal, and it is activated: You unleash the seal's power. Place the [seal_a] seal on this Mist-Pylon. For the remainder of the game, each time you deal damage to a Mist-Pylon, deal 1 additional damage.",
-    "textZh": "[free]如果你控制[seal_a]封印，且其是激活的：你释放了封印的力量。将[seal_a]封印放在本迷雾高塔上。直到本场游戏结束，每当你对迷雾高塔造成伤害，额外造成1点伤害。",
+    "textZh": "[fast]如果你控制[seal_a]封印，且其是激活的：你释放了封印的力量。将[seal_a]封印放在本迷雾高塔上。直到本场游戏结束，每当你对迷雾高塔造成伤害，额外造成1点伤害。",
     "traits": [
       "Ruins"
     ],
@@ -305257,7 +305257,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08674"
   },
   "08675": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305301,7 +305301,7 @@ export const ALL_CARDS = {
     "shroud": 5,
     "subnameZh": "",
     "text": "[fast] If you control the [seal_b] seal, and it is activated: You unleash the seal's power. Place the [seal_b] seal on this Mist-Pylon. For the remainder of the game, reduce the shroud value of each Mist-Pylon by 2.",
-    "textZh": "[free]如果你控制[seal_b]封印，且其是激活的：你释放了封印的力量。将[seal_b]封印放在本迷雾高塔上。直到本场游戏结束，每个迷雾高塔的隐藏值减少2。",
+    "textZh": "[fast]如果你控制[seal_b]封印，且其是激活的：你释放了封印的力量。将[seal_b]封印放在本迷雾高塔上。直到本场游戏结束，每个迷雾高塔的隐藏值减少2。",
     "traits": [
       "Ruins"
     ],
@@ -305314,7 +305314,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08675"
   },
   "08676": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305358,7 +305358,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "[fast] If you control the [seal_c] seal, and it is activated: You unleash the seal's power. Place the [seal_c] seal on this Mist-Pylon. For the remainder of the game, each investigator gets +1 to each of their skills while they are at a Mist-Pylon.",
-    "textZh": "[free]如果你控制[seal_c]封印，且其是激活的：你释放了封印的力量。将[seal_c]封印放在本迷雾高塔上。直到本场游戏结束，位于迷雾高塔地点的每位调查员得到每项技能值+1。",
+    "textZh": "[fast]如果你控制[seal_c]封印，且其是激活的：你释放了封印的力量。将[seal_c]封印放在本迷雾高塔上。直到本场游戏结束，位于迷雾高塔地点的每位调查员得到每项技能值+1。",
     "traits": [
       "Ruins"
     ],
@@ -305371,7 +305371,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08676"
   },
   "08677": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305415,7 +305415,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "[fast] If you control the [seal_d] seal, and it is activated: You unleash the seal's power. Place the [seal_d] seal on this Mist-Pylon. For the remainder of the game, whenever an investigator at a Mist-Pylon would be dealt 1 or more damage and/or horror, cancel 1 of that damage or horror.",
-    "textZh": "[free]如果你控制[seal_d]封印，且其是激活的：你释放了封印的力量。将[seal_d]封印放在本迷雾高塔上。直到本场游戏结束，每当位于迷雾高塔地点的调查员将要受到伤害和/或恐惧时，取消1点该伤害或恐惧。",
+    "textZh": "[fast]如果你控制[seal_d]封印，且其是激活的：你释放了封印的力量。将[seal_d]封印放在本迷雾高塔上。直到本场游戏结束，每当位于迷雾高塔地点的调查员将要受到伤害和/或恐惧时，取消1点该伤害或恐惧。",
     "traits": [
       "Ruins"
     ],
@@ -305428,7 +305428,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08677"
   },
   "08678": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305472,7 +305472,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "[fast] If you control the [seal_e] seal, and it is activated: You unleash the seal's power. Place the [seal_e] seal on this Mist-Pylon. For the remainder of the game, each enemy gets -2 fight and -2 evade while it is at a Mist-Pylon.",
-    "textZh": "[free]如果你控制[seal_e]封印，且其是激活的：你释放了封印的力量。将[seal_e]封印放在本迷雾高塔上。直到本场游戏结束，每个位于迷雾高塔地点的敌人得到-2攻击和-2躲避。",
+    "textZh": "[fast]如果你控制[seal_e]封印，且其是激活的：你释放了封印的力量。将[seal_e]封印放在本迷雾高塔上。直到本场游戏结束，每个位于迷雾高塔地点的敌人得到-2攻击和-2躲避。",
     "traits": [
       "Ruins"
     ],
@@ -305485,7 +305485,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08678"
   },
   "08679": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -305530,7 +305530,7 @@ export const ALL_CARDS = {
     "subname": "The Entity in the Mirage",
     "subnameZh": "幻景中的存在",
     "text": "Alert. Massive. Retaliate.\nThe Nameless Madness cannot take damage.\nForced - After you successfully evade or attack The Nameless Madness: For each point you succeeded by, exhaust the nearest ready copy of The Nameless Madness.",
-    "textZh": "警戒。庞大。反击。\n无名疯狂不能受到伤害。\n强制 - 你成功躲避或攻击无名疯狂后：你每超过难度1点，横置最近的一个重整状态的无名疯狂。",
+    "textZh": "警戒。庞大。反击。无名疯狂不能受到伤害。强制 - 你成功躲避或攻击无名疯狂后：你每超过难度1点，横置最近的一个重整状态的无名疯狂。",
     "traits": [
       "Ancient One",
       "Eidolon",
@@ -305547,7 +305547,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08679"
   },
   "08680": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -305592,7 +305592,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Spawn - The nearest Mist-Pylon that is not collapsed (or your location, if there are none in play).\nWhile Unsealed Phantasm is ready and at a Mist-Pylon, damage cannot be dealt to that Mist-Pylon.\nForced - At the end of the enemy phase, if Unsealed Phantasm is ready: Move it once toward the Mist-Pylon nearest to it that is not collapsed.",
-    "textZh": "生成 - 最近的未被摧毁的迷雾高塔(如果场上没有，则为你所在地点)。\n解开封印的幻影处于重整状态且位于一个迷雾高塔时，不能对该迷雾高塔造成伤害。\n强制 - 当敌军阶段结束时，如果解开封印的幻影处于重整状态：将其朝最近的未被摧毁的迷雾高塔移动一次。",
+    "textZh": "生成 - 最近的未被摧毁的迷雾高塔(如果场上没有，则为你所在地点)。解开封印的幻影处于重整状态且位于一个迷雾高塔时，不能对该迷雾高塔造成伤害。强制 - 当敌军阶段结束时，如果解开封印的幻影处于重整状态：将其朝最近的未被摧毁的迷雾高塔移动一次。",
     "traits": [
       "Monster",
       "Eidolon",
@@ -305610,13 +305610,13 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08681": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You emerge from the tunnel, daylight blinding you as the sun peeks out from behind the jagged mountaintops in the distance. Behind you, the entity rushes toward the exit. You prepare yourself for the end, the wall of mist, miasma, and madness feeling much like an oncoming train.",
     "backFlavorZh": "你从隧道里出来，阳光从远处锯齿状的山顶后面探出头，使你目眩。在你身后，那存在也猛冲向出口。你做好面对终结的准备，雾墙、瘴气和疯狂感觉就像一列火车迎面而来。",
     "backName": "Nameless Reckoning",
     "backNameZh": "无名代价",
     "backText": "Check the Campaign Log.\n- If all 5 Mist-Pylons were collapsed and Dr. Kensler has a plan, proceed to (→R1).\n- If all 5 Mist-Pylons were collapsed and the truth of the mirage eludes you, proceed to (→R2).\n- Otherwise, proceed to (→R3).",
-    "backTextZh": "检查剧本日志。\n- 如果所有5个迷雾高塔都被摧毁，且肯斯勒博士有一个计划，进入(→结局1)。\n- 如果所有5个迷雾高塔都被摧毁，且你尚未明了幻景的真相，进入(→结局2)。\n- 否则，进入(→结局3)。",
+    "backTextZh": "检查剧本日志。- 如果所有5个迷雾高塔都被摧毁，且肯斯勒博士有1个计划，进入(→结局1)。- 如果所有5个迷雾高塔都被摧毁，且你尚未明了幻景的真相，进入(→结局2)。- 否则，进入(→结局3)。",
     "backimagesrc": "/bundles/cards/08681b.png",
     "code": "08681",
     "customizationChange": "",
@@ -305654,7 +305654,7 @@ export const ALL_CARDS = {
     "stage": 4,
     "subnameZh": "",
     "text": "The Nameless Madness gains hunter.\nForced - When 1 or more doom would be put into play: Instead, spawn 1 set-aside copy of The Nameless Madness at the leftmost investigator's location.\nObjective - Run.",
-    "textZh": "无名疯狂获得猎手。\n强制 - 在至少1个毁灭标记将要被放置入场时：改为在最左边的调查员所在地点生成一张放在一边的无名疯狂敌人。\n目标 - 跑。",
+    "textZh": "无名疯狂获得猎手。强制 - 在至少1个毁灭标记将要被放置入场时：改为在最左边的调查员所在地点生成1张放在一边的无名疯狂敌人。目标 - 跑。",
     "traits": [],
     "traitsZh": [],
     "type": "act",
@@ -305663,7 +305663,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08681"
   },
   "08682": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305707,7 +305707,7 @@ export const ALL_CARDS = {
     "shroud": 1,
     "subnameZh": "",
     "text": "Titanic Ramp is connected to the locations to its left and right.\nAs an additional cost for you to leave Titanic Ramp, test [agility] (4). If you fail, cancel the effects of the move. Any investigator at your location or a connecting location may spend 1 clue to have you automatically succeed at this test.",
-    "textZh": "巨大坡道与其左边和右边的地点连接。\n作为离开巨大坡道的额外费用，检定[agility](4)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
+    "textZh": "巨大坡道与其左边和右边的地点连接。作为离开巨大坡道的额外费用，检定[agility](4)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
     "traits": [
       "Ruins"
     ],
@@ -305720,7 +305720,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08682"
   },
   "08683": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305764,7 +305764,7 @@ export const ALL_CARDS = {
     "shroud": 2,
     "subnameZh": "",
     "text": "Titanic Ramp is connected to the locations to its left and right.\nAs an additional cost for you to leave Titanic Ramp, test [agility] (3). If you fail, cancel the effects of the move. Any investigator at your location or a connecting location may spend 1 clue to have you automatically succeed at this test.",
-    "textZh": "巨大坡道与其左边和右边的地点连接。\n作为离开巨大坡道的额外费用，检定[agility](3)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
+    "textZh": "巨大坡道与其左边和右边的地点连接。作为离开巨大坡道的额外费用，检定[agility](3)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
     "traits": [
       "Ruins"
     ],
@@ -305777,7 +305777,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08683"
   },
   "08684": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305821,7 +305821,7 @@ export const ALL_CARDS = {
     "shroud": 3,
     "subnameZh": "",
     "text": "Titanic Ramp is connected to the locations to its left and right.\nAs an additional cost for you to leave Titanic Ramp, test [agility] (2). If you fail, cancel the effects of the move. Any investigator at your location or a connecting location may spend 1 clue to have you automatically succeed at this test.",
-    "textZh": "巨大坡道与其左边和右边的地点连接。\n作为离开巨大坡道的额外费用，检定[agility](2)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
+    "textZh": "巨大坡道与其左边和右边的地点连接。作为离开巨大坡道的额外费用，检定[agility](2)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
     "traits": [
       "Ruins"
     ],
@@ -305834,7 +305834,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08684"
   },
   "08685": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305878,7 +305878,7 @@ export const ALL_CARDS = {
     "shroud": 4,
     "subnameZh": "",
     "text": "Titanic Ramp is connected to the locations to its left and right.\nAs an additional cost for you to leave Titanic Ramp, test [agility] (1). If you fail, cancel the effects of the move. Any investigator at your location or a connecting location may spend 1 clue to have you automatically succeed at this test.",
-    "textZh": "巨大坡道与其左边和右边的地点连接。\n作为离开巨大坡道的额外费用，检定[agility](1)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
+    "textZh": "巨大坡道与其左边和右边的地点连接。作为离开巨大坡道的额外费用，检定[agility](1)。如果你检定失败，取消本次移动的效果。位于你所在地点或相邻地点的任意调查员，可以花费1个线索来使你本次检定自动成功。",
     "traits": [
       "Ruins"
     ],
@@ -305891,7 +305891,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08685"
   },
   "08686": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"Thank heaven we did not slacken our run. The curling mist had thickened again, and was driving ahead with increased speed; whilst the straying penguins in our rear were squawking and screaming...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“谢天谢地，我们没有放慢脚步。卷曲的雾又浓了起来，正加速向我们涌来；而在我们后面的那些迷路的企鹅开始尖叫……”H. P. 洛夫克拉夫特《疯狂山脉》",
     "backNameZh": "",
@@ -305937,7 +305937,7 @@ export const ALL_CARDS = {
     "subname": "A Way Out",
     "subnameZh": "出逃之路",
     "text": "Hidden Tunnel is connected to the location to its left.\nObjective - If each undefeated investigator is at the Hidden Tunnel, advance the act.",
-    "textZh": "隐秘隧道与其左边的地点连接。\n目标 - 如果每位没有被击败的调查员都在隐秘隧道，推进场景。",
+    "textZh": "隐秘隧道与其左边的地点连接。目标 - 如果每位没有被击败的调查员都在隐秘隧道，推进场景。",
     "traits": [
       "Ruins"
     ],
@@ -305950,7 +305950,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08686"
   },
   "08687": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -305995,7 +305995,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Hunter. Retaliate.\nForced - When you deal any amount of damage to Primordial Evil: Shuffle the top card of the Tekeli-li deck into your deck without looking at it (if you cannot, Primordial Evil attacks you).",
-    "textZh": "猎手。反击。\n强制 - 在你对原初恶魔造成任意数量的伤害时：将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，原初恶魔攻击你)。",
+    "textZh": "猎手。反击。强制 - 在你对原初恶魔造成任意数量的伤害时：将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容(如果你不能这么做，原初恶魔攻击你)。",
     "traits": [
       "Monster",
       "Eidolon"
@@ -306010,7 +306010,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08687"
   },
   "08688": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306063,7 +306063,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08688"
   },
   "08689": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306108,7 +306108,7 @@ export const ALL_CARDS = {
     "quantity": 3,
     "subnameZh": "",
     "text": "Hunter.\nForced - When Manifestation of Madness attacks you: Shuffle the top 2 cards of the Tekeli-li deck into your deck without looking at them (for each card you cannot shuffle, Manifestation of Madness deals +1 damage and +1 horror for this attack).",
-    "textZh": "猎手。\n强制 - 在实体疯狂攻击你时：将忒咳哩-哩牌库顶的2张卡牌混洗入你的牌库，不要查看内容(每有1张卡牌不能混洗入你的牌库，实体疯狂该次攻击造成+1伤害和+1恐惧)。",
+    "textZh": "猎手。强制 - 在实体疯狂攻击你时：将忒咳哩-哩牌库顶的2张卡牌混洗入你的牌库，不要查看内容(每有1张卡牌不能混洗入你的牌库，实体疯狂该次攻击造成+1伤害和+1恐惧)。",
     "traits": [
       "Monster",
       "Eidolon"
@@ -306123,7 +306123,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08689"
   },
   "08690": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306183,7 +306183,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08690"
   },
   "08691": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306223,7 +306223,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to the nearest location without a copy of Kindred Mist attached.\nForced - When 1 or more cards from the Tekeli-li deck would be shuffled into your deck while you are at attached location: Draw them instead, placing them on the bottom of your deck instead of the bottom of the Tekeli-li deck. Discard Kindred Mist at the end of this round.",
-    "textZh": "显现 - 附属到最近且没有附属同源迷雾的地点。\n强制 - 你在附属地点时，在忒咳哩-哩牌库的卡牌将要混洗入你的牌库时：改为抽取那些卡牌，不要将它们放在忒咳哩-哩牌库底，改为放在你的牌库底。当一轮结束时弃掉同源迷雾。",
+    "textZh": "显现 - 附属到最近且没有附属同源迷雾的地点。强制 - 你在附属地点时，在忒咳哩-哩牌库的卡牌将要混洗入你的牌库时：改为抽取那些卡牌，不要将它们放在忒咳哩-哩牌库底，改为放在你的牌库底。当1轮结束时弃掉同源迷雾。",
     "traits": [
       "Curse"
     ],
@@ -306236,7 +306236,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08691"
   },
   "08692": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306276,7 +306276,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to the nearest location without a copy of Antarctic Wind attached.\nInvestigators at attached location cannot play cards or draw cards from their deck.\nForced - At the end of the round: Discard Antarctic Wind.",
-    "textZh": "显现 - 附属到最近且没有附属南极寒风的地点。\n位于附属地点的调查员不能打出卡牌，或从自己的牌库抽取卡牌。\n强制 - 当一轮结束时：弃掉南极寒风。",
+    "textZh": "显现 - 附属到最近且没有附属南极寒风的地点。位于附属地点的调查员不能打出卡牌，或从自己的牌库抽取卡牌。强制 - 当一轮结束时：弃掉南极寒风。",
     "traits": [
       "Hazard"
     ],
@@ -306289,7 +306289,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08692"
   },
   "08693": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306329,7 +306329,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to your location.\nEach investigator at attached location gets -1 [willpower], -1 [intellect], -1 [combat], and -1 [agility].\nForced - At the end of the round: Discard Whiteout.",
-    "textZh": "显现 - 附属到你所在地点。\n位于附属地点的每位调查员得到-1[willpower]、-1 [intellect]、-1 [combat]、-1 [agility]。\n强制 - 当一轮结束时：弃掉雪盲危机。",
+    "textZh": "显现 - 附属到你所在地点。位于附属地点的每位调查员得到-1[willpower]、-1[intellect]、-1[combat]、-1[agility]。强制 - 当一轮结束时：弃掉雪盲危机。",
     "traits": [
       "Hazard"
     ],
@@ -306342,7 +306342,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08693"
   },
   "08694": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306382,7 +306382,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to your location.\nForced - When you end your turn at attached location: Each card you control with health (including your investigator) takes 1 direct damage.\nForced - At the end of the round: Discard Polar Vortex.",
-    "textZh": "显现 - 附属到你所在地点。\n强制 - 你在附属地点结束你的回合时：你控制的每张有生命值的卡牌(包括你的调查员)受到1点直接伤害。\n强制 - 当一轮结束时：弃掉极地旋涡",
+    "textZh": "显现 - 附属到你所在地点。强制 - 你在附属地点结束你的回合时：你控制的每张有生命值的卡牌(包括你的调查员)受到1点直接伤害。强制 - 当一轮结束时：弃掉极地旋涡。",
     "traits": [
       "Hazard"
     ],
@@ -306395,7 +306395,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08694"
   },
   "08695": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306441,7 +306441,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Hunter.\nForced - After Elder Thing Scavenger attacks you: Discard the top 3 cards of your deck. Draw each weakness discarded this way.",
-    "textZh": "猎手。\n强制 - 在古老者清道夫攻击你后：弃掉你牌库顶3张卡牌。抽取所有以此方式弃掉的弱点。",
+    "textZh": "猎手。强制 - 在古老者清道夫攻击你后：弃掉你牌库顶3张卡牌。抽取所有以此方式弃掉的弱点。",
     "traits": [
       "Monster",
       "Elder Thing"
@@ -306456,7 +306456,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08695"
   },
   "08696": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306501,7 +306501,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Hunter.\nForced - When you deal damage to Guardian Elder Thing: For each point of damage dealt, discard the top card of your deck. Draw each weakness discarded this way.",
-    "textZh": "猎手。\n强制 - 在你对古老者守卫造成伤害时：每造成1点伤害，弃掉你牌库顶的1张卡牌。抽取所有以此方式弃掉的弱点。",
+    "textZh": "猎手。强制 - 在你对古老者守卫造成伤害时：每造成1点伤害，弃掉你牌库顶的1张卡牌。抽取所有以此方式弃掉的弱点。",
     "traits": [
       "Monster",
       "Elder Thing"
@@ -306516,7 +306516,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08696"
   },
   "08697": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306569,7 +306569,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08697"
   },
   "08698": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306623,7 +306623,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08698"
   },
   "08699": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306663,7 +306663,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to the nearest location without a copy of Through the Ice attached.\nAs an additional cost for you to enter or leave attached location (except by a scenario card effect), test [agility] (2). If you fail, cancel the effects of the move, take 1 damage and 1 horror, and discard Through the Ice.",
-    "textZh": "显现 - 附属到最近且没有附属穿越冰雪的地点。\n作为进入或离开附属地点(除因冒险卡牌效果外)的额外费用，检定[agility](2)。如果你检定失败，取消本次移动的效果，受到1点伤害和1点恐惧，并弃掉穿越冰雪。",
+    "textZh": "显现 - 附属到最近且没有附属穿越冰雪的地点。作为进入或离开附属地点(除因冒险卡牌效果外)的额外费用，检定[agility](2)。如果你检定失败，取消本次移动的效果，受到1点伤害和1点恐惧，并弃掉穿越冰雪。",
     "traits": [
       "Hazard"
     ],
@@ -306676,7 +306676,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08699"
   },
   "08700": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306721,7 +306721,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Spawn - Any location (empty, if able).\nLost Researcher enters play with 1 doom on it.\nForced - When Lost Researcher is defeated: Move each doom on it to its location.\n[action]: Parley. Test [willpower] or [intellect] (3). If you succeed, take control of 1 doom on Lost Researcher and flip it to its clue side. Then, if there is no doom on Lost Researcher, discard it.",
-    "textZh": "生成 - 任意地点(如可能，则生成在无人地点)。\n迷失的研究员入场时，带有1个毁灭标记。\n强制 - 在迷失的研究员被击败时：将其上的所有毁灭标记移动到其所在地点。\n[action]：谈判。检定[willpower]或[intellect](3)。如果你检定成功，控制迷失的研究员上的1个毁灭标记并将其翻至线索面。然后，如果迷失的研究员上没有毁灭标记，将其弃掉。",
+    "textZh": "生成 - 任意地点(如可能，则生成在无人地点)。迷失的研究员入场时，带有1个毁灭标记。强制 - 在迷失的研究员被击败时：将其上的所有毁灭标记移动到其所在地点。[action]：谈判。检定[willpower]或[intellect](3)。如果你检定成功，控制迷失的研究员上的1个毁灭标记并将其翻至线索面。然后，如果迷失的研究员上没有毁灭标记，将其弃掉。",
     "traits": [
       "Humanoid",
       "Possessed"
@@ -306736,7 +306736,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08700"
   },
   "08701": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306781,7 +306781,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Frenzied Explorer enters play with 1 doom on it.\nForced - When Frenzied Explorer is defeated: Move each doom on it to its location.\n[reaction] After you successfully evade Frenzied Explorer by 2 or more: Take control of 1 doom on Frenzied Explorer and flip it to its clue side. Then, if there is no doom on Frenzied Explorer, discard it.",
-    "textZh": "狂乱的探险家入场时，带有1个毁灭标记。\n强制 - 在狂乱的探险家被击败时：将其上的所有毁灭标记移动到其所在地点。\n[reaction]在你成功躲避狂乱的探险家，且超过难度至少2点后：控制狂乱的探险家上的1个毁灭标记并将其翻至线索面。然后，如果狂乱的探险家上没有毁灭标记，将其弃掉。",
+    "textZh": "狂乱的探险家入场时，带有1个毁灭标记。强制 - 在狂乱的探险家被击败时：将其上的所有毁灭标记移动到其所在地点。[reaction]在你成功躲避狂乱的探险家，且超过难度至少2点后：控制狂乱的探险家上的1个毁灭标记并将其翻至线索面。然后，如果狂乱的探险家上没有毁灭标记，将其弃掉。",
     "traits": [
       "Humanoid",
       "Possessed"
@@ -306796,7 +306796,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08701"
   },
   "08702": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306836,7 +306836,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to the nearest [[Possessed]] enemy and place 1 doom on that enemy. If there are no [[Possessed]] enemies in play, search the encounter deck and discard pile for a [[Possessed]] enemy, draw it, and attach Abandoned to Madness to it (shuffle the encounter deck).\nIncrease the difficulty to fight, evade, or parley with attached enemy by 1.",
-    "textZh": "显现 - 附属到最近的[[附身]]敌人，并在该敌人上放置1个毁灭标记。如果场上没有[[附身]]敌人，查找遭遇牌库及弃牌堆，从中找出并抽取一个[[附身]]敌人，并将身陷疯狂附属到该敌人(混洗遭遇牌库)。\n与该敌人进行的攻击、躲避或谈判的难度增加1。",
+    "textZh": "显现 - 附属到最近的[[附身]]敌人，并在该敌人上放置1个毁灭标记。如果场上没有[[附身]]敌人，查找遭遇牌库及弃牌堆，从中找出并抽取一个[[附身]]敌人，并将身陷疯狂附属到该敌人(混洗遭遇牌库)。与该敌人进行的攻击、躲避或谈判的难度增加1。",
     "traits": [
       "Curse"
     ],
@@ -306849,7 +306849,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08702"
   },
   "08703": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306889,7 +306889,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Shuffle the top card of the Tekeli-li deck into your deck without looking at it. Then, put Blasphemous Visions into play in your threat area.\nResolve the effects of each Tekeli-li weakness you draw an additional time.\n[action]: Test [willpower] (3). If you succeed, discard Blasphemous Visions.",
-    "textZh": "显现 - 将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。然后，将渎神幻象放置入场，放到你的威胁区域。\n你抽取的每张忒咳哩-哩弱点的效果额外结算一次。\n[action]：检定[willpower](3)。如果你检定成功，弃掉渎神幻象。",
+    "textZh": "显现 - 将忒咳哩-哩牌库顶的1张卡牌混洗入你的牌库，不要查看内容。然后，将渎神幻象放置入场，放到你的威胁区域。你抽取的每张忒咳哩-哩弱点的效果额外结算一次。[action]：检定[willpower](3)。如果你检定成功，弃掉渎神幻象。",
     "traits": [
       "Terror"
     ],
@@ -306902,7 +306902,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08703"
   },
   "08704": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306942,7 +306942,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Peril.\nRevelation - Draw the top card of the Tekeli-li deck (and resolve its effects). Shuffle it into any investigator's deck instead of placing it on the bottom of the Tekeli-li deck. If no Tekeli-li weakness is drawn by this effect, Glimpse the Unspeakable gains surge.",
-    "textZh": "险境。\n显现 - 抽取忒咳哩-哩牌库顶的1张卡牌(并结算其效果)。不要将其放到忒咳哩-哩牌库底，改为混洗入任意一位调查员的牌库。如果没有以此效果抽取忒咳哩-哩弱点，窥看不可说之事获得涌动。",
+    "textZh": "险境。显现 - 抽取忒咳哩-哩牌库顶的1张卡牌(并结算其效果)。不要将其放到忒咳哩-哩牌库底，改为混洗入任意一位调查员的牌库。如果没有以此效果抽取忒咳哩-哩弱点，窥看不可说之事获得涌动。",
     "traits": [
       "Terror"
     ],
@@ -306955,7 +306955,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08704"
   },
   "08705": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -306995,7 +306995,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Peril.\nRevelation - You must either (choose one):\n- Lose 2 actions.\n- Shuffle the top 2 cards of the Tekeli-li deck into your deck without looking at them.",
-    "textZh": "险境。\n显现 - 你必须(选择以下一项)：\n- 失去2个行动。\n- 将忒咳哩-哩牌库顶的2张卡牌混洗入你的牌库，不要查看内容。",
+    "textZh": "险境。显现 - 你必须(选择以下一项)：- 失去2个行动。- 将忒咳哩-哩牌库顶的2张卡牌混洗入你的牌库，不要查看内容。",
     "traits": [
       "Terror"
     ],
@@ -307008,7 +307008,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08705"
   },
   "08706": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307048,7 +307048,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - If you control a partner asset, exhaust them and attach Miasmatic Torment to them. Otherwise, Miasmatic Torment gains surge.\nAttached asset cannot ready.\nForced - At the end of your turn: Attached asset takes 1 damage or 1 horror.\n[action]: Test [willpower] or [intellect] (3). If you succeed, discard Miasmatic Torment.",
-    "textZh": "险境。\n显现 - 如果你控制伙伴支援，将其横置，并将瘴气折磨附属到该支援。否则，瘴气折磨获得涌动。\n被附属的支援不能重整。\n强制 - 当你的回合结束时：被附属的支援受到1点伤害或1点恐惧。\n[action]：检定[willpower]或[intellect](3)。如果你检定成功，弃掉瘴气折磨。",
+    "textZh": "险境。显现 - 如果你控制伙伴支援，将其横置，并将瘴气折磨附属到该支援。否则，瘴气折磨获得涌动。被附属的支援不能重整。强制 - 当你的回合结束时：被附属的支援受到1点伤害或1点恐惧。[action]：检定[willpower]或[intellect](3)。如果你检定成功，弃掉瘴气折磨。",
     "traits": [
       "Curse"
     ],
@@ -307061,7 +307061,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08706"
   },
   "08707": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307101,7 +307101,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to your location.\nForced - When you end your turn at attached location: Each card you control with sanity (including your investigator) takes 1 direct horror.\nForced - At the end of the round: Discard Nebulous Miasma.",
-    "textZh": "险境。\n显现 - 附属到你所在地点。\n强制 - 你在附属地点结束你的回合时：你控制的每张有神智值的卡牌(包括你的调查员)受到1点直接恐惧。\n强制 - 当一轮结束时：弃掉朦胧瘴气。",
+    "textZh": "险境。显现 - 附属到你所在地点。强制 - 你在附属地点结束你的回合时：你控制的每张有神智值的卡牌(包括你的调查员)受到1点直接恐惧。强制 - 当一轮结束时：弃掉朦胧瘴气。",
     "traits": [
       "Curse",
       "Hazard"
@@ -307116,7 +307116,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08707"
   },
   "08708": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307162,7 +307162,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Aloof.\nAs an additional cost for you to enter or leave this enemy's location, you must spend 1 action.",
-    "textZh": "冷漠。\n作为进入或离开本敌人所在地点的额外费用，你必须花费1个行动。",
+    "textZh": "冷漠。作为进入或离开本敌人所在地点的额外费用，你必须花费1个行动。",
     "traits": [
       "Creature"
     ],
@@ -307175,7 +307175,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08708"
   },
   "08709": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307228,7 +307228,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08709"
   },
   "08710": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307274,7 +307274,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Hunter.\nForced - After Forgotten Shoggoth engages you: Draw the top card of the Tekeli-li deck (if you cannot, Forgotten Shoggoth attacks you).",
-    "textZh": "猎手。\n强制 - 失落的修格斯与你交战后：抽取忒咳哩-哩牌库顶的1张卡牌(如果你不能这么做，失落的修格斯攻击你)。",
+    "textZh": "猎手。强制 - 失落的修格斯与你交战后：抽取忒咳哩-哩牌库顶的1张卡牌(如果你不能这么做，失落的修格斯攻击你)。",
     "traits": [
       "Monster",
       "Shoggoth"
@@ -307289,7 +307289,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08710"
   },
   "08711": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307334,7 +307334,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Hunter. Massive.\nRampaging Shoggoth gets +2 [per_investigator] health.\nForced - At the end of the enemy phase: Deal 2 damage to each investigator and non-[[Shoggoth]] enemy at Rampaging Shoggoth's location. Each of those investigators draws the top card of the Tekeli-li deck.",
-    "textZh": "猎手。 庞大。\n狂暴的修格斯得到+2[per_investigator]生命值。\n强制 - 当敌军阶段结束时：对狂暴的修格斯所在地点的每位调查员和每个非[[修格斯]]敌人造成2点伤害。这些调查员各自抽取忒咳哩-哩牌库顶的1张卡牌。",
+    "textZh": "猎手。庞大。狂暴的修格斯得到+2[per_investigator]生命值。强制 - 当敌军阶段结束时：对狂暴的修格斯所在地点的每位调查员和每个非[[修格斯]]敌人造成2点伤害。这些调查员各自抽取忒咳哩-哩牌库顶的1张卡牌。",
     "traits": [
       "Monster",
       "Shoggoth",
@@ -307352,7 +307352,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08712": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307392,7 +307392,7 @@ export const ALL_CARDS = {
     "quantity": 2,
     "subnameZh": "",
     "text": "Revelation - Attach to the nearest location with at least 1 clue, and without a copy of Polar Mirage attached.\nForced - After you discover or take control of 1 or more clues at attached location: Discard each non-weakness card in your hand. Discard Polar Mirage.",
-    "textZh": "显现 - 附属到最近的有线索且没有附属极地幻景的地点。\n强制 - 你发现附属地点的线索，或控制附属地点的线索后：弃掉你手中所有非弱点卡牌。弃掉极地幻景。",
+    "textZh": "显现 - 附属到最近的有线索且没有附属极地幻景的地点。强制 - 你发现附属地点的线索，或控制附属地点的线索后：弃掉你手中所有非弱点卡牌。弃掉极地幻景。",
     "traits": [
       "Terror"
     ],
@@ -307405,7 +307405,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08712"
   },
   "08713": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307459,7 +307459,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08713"
   },
   "08714": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307504,7 +307504,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Geology",
     "subnameZh": "地质学教授",
     "text": "Partner. Uses (3 secrets).\n[action] Spend 1 secret and exhaust Professor William Dyer: Heal 2 horror from an investigator or another [[Ally]] asset at your location.",
-    "textZh": "伙伴。使用(3秘密)。\n[action]花费1秘密并横置威廉·戴尔教授：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点恐惧。",
+    "textZh": "伙伴。使用(3秘密)。[action]花费1秘密并横置威廉·戴尔教授：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点恐惧。",
     "traits": [
       "Ally",
       "Miskatonic"
@@ -307519,7 +307519,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08714"
   },
   "08715": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307564,7 +307564,7 @@ export const ALL_CARDS = {
     "subname": "Brilliant Student",
     "subnameZh": "杰出学生",
     "text": "Partner. Uses (5 secrets).\n[reaction] After an investigator at your location resolves a Tekeli-li weakness, exhaust Danforth and spend 1 secret: That investigator draws 2 cards.",
-    "textZh": "伙伴。使用(5秘密)。\n[reaction]你所在地点的调查员结算忒咳哩-哩弱点后，横置丹佛斯并花费1秘密：该调查员抽取2张卡牌。",
+    "textZh": "伙伴。使用(5秘密)。[reaction]你所在地点的调查员结算忒咳哩-哩弱点后，横置丹佛斯并花费1秘密：该调查员抽取2张卡牌。",
     "traits": [
       "Ally",
       "Miskatonic"
@@ -307579,7 +307579,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08715"
   },
   "08716": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307624,7 +307624,7 @@ export const ALL_CARDS = {
     "subname": "Dog Handler",
     "subnameZh": "驯犬师",
     "text": "Partner. Uses (3 secrets).\n[action] Spend 1 secret and exhaust Eliyah Ashevak: Evade. Attempt to evade with a base [agility] skill of 5. If you succeed, you may move to a connecting location.",
-    "textZh": "伙伴。使用(3秘密)。\n[action]花费1秘密并横置伊里亚·阿什瓦克：躲避。以基础值为5的[agility]尝试躲避。如果你检定成功，你可以移动到一个连接地点。",
+    "textZh": "伙伴。使用(3秘密)。[action]花费1秘密并横置伊里亚·阿什瓦克：躲避。以基础值为5的[agility]尝试躲避。如果你检定成功，你可以移动到一个连接地点。",
     "traits": [
       "Ally",
       "Wayfarer"
@@ -307639,7 +307639,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08716"
   },
   "08717": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307684,7 +307684,7 @@ export const ALL_CARDS = {
     "subname": "Daring Physician",
     "subnameZh": "无畏医师",
     "text": "Partner. Uses (3 supplies).\n[action] Spend 1 supply and exhaust Dr. Mala Sinha: Heal 2 damage from an investigator or another [[Ally]] asset at your location.",
-    "textZh": "伙伴。使用(3补给)。\n[action]花费1补给并横置玛拉·辛哈医生：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点伤害。",
+    "textZh": "伙伴。使用(3补给)。[action]花费1补给并横置玛拉·辛哈医生：治愈你所在地点的一位调查员或另一个[[盟友]]支援2点伤害。",
     "traits": [
       "Ally",
       "Wayfarer"
@@ -307699,7 +307699,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08717"
   },
   "08718": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307744,7 +307744,7 @@ export const ALL_CARDS = {
     "subname": "Antarctic Guide",
     "subnameZh": "南极向导",
     "text": "Partner. Uses (5 supplies).\n[reaction] When an investigator at your location reveals a [frost] token during a skill test, exhaust Avery Claypool and spend 1 supply: Cancel that token and reveal a new one.",
-    "textZh": "伙伴。使用(5补给)。\n[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗里·克莱普尔并花费1补给：取消该标记并揭示一个新的标记。",
+    "textZh": "伙伴。使用(5补给)。[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗里·克莱普尔并花费1补给：取消该标记并揭示一个新的标记。",
     "traits": [
       "Ally",
       "Wayfarer"
@@ -307759,7 +307759,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08718"
   },
   "08719": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307804,7 +307804,7 @@ export const ALL_CARDS = {
     "subname": "Dubious Choice",
     "subnameZh": "不可靠人选",
     "text": "Partner. Uses (3 ammo).\n[action] Spend 1 ammo and exhaust James \"Cookie\" Fredericks: Fight. Fight with a base [combat] skill of 5. If you succeed and the attacked enemy is non-[[Elite]], it cannot attack for the remainder of the round.",
-    "textZh": "伙伴。使用(3子弹)。\n[action] 花费1子弹并横置詹姆斯·“曲奇”·弗雷德里克斯：攻击。以基础值为5的[combat]攻击。如果你检定成功，且被攻击的敌人非[[精英]]，则直到本轮结束其不能攻击。",
+    "textZh": "伙伴。使用(3子弹)。[action]花费1子弹并横置詹姆斯·“曲奇”·弗雷德里克斯：攻击。以基础值为5的[combat]攻击。如果你检定成功，且被攻击的敌人非[[精英]]，则直到本轮结束其不能攻击。",
     "traits": [
       "Ally",
       "Veteran",
@@ -307821,7 +307821,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08719"
   },
   "08720": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307866,7 +307866,7 @@ export const ALL_CARDS = {
     "subname": "Professor of Biology",
     "subnameZh": "生物学教授",
     "text": "Partner. Uses (3 secrets).\n[action] Spend 1 secret and exhaust Dr. Amy Kensler: Investigate. Investigate with a base [intellect] skill of 5. If you succeed, look at the top card of any investigator's deck or the encounter deck. You may discard that card.",
-    "textZh": "伙伴。使用(3秘密)。\n[action]花费1秘密并横置艾米·肯斯勒博士：调查。以基础值为5的[intellect]调查。如果你检定成功，查看任意一位调查员牌库顶的1张卡牌或遭遇牌库顶的1张卡牌。你可以弃掉该卡牌。",
+    "textZh": "伙伴。使用(3秘密)。[action]花费1秘密并横置艾米·肯斯勒博士：调查。以基础值为5的[intellect]调查。如果你检定成功，查看任意一位调查员牌库顶的1张卡牌或遭遇牌库顶的1张卡牌。你可以弃掉该卡牌。",
     "traits": [
       "Ally",
       "Miskatonic"
@@ -307881,7 +307881,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08720"
   },
   "08721": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307926,7 +307926,7 @@ export const ALL_CARDS = {
     "subname": "Intrepid Explorer",
     "subnameZh": "英勇的探险家",
     "text": "Partner. Uses (5 supplies).\n[fast] During an investigator's turn, exhaust Roald Ellsworth and spend 1 supply: Choose a treachery attached to any location. Treat that treachery's text box as if it were blank until the end of this turn.",
-    "textZh": "伙伴。使用(5补给)。\n[free]任意调查员回合期间，横置罗尔德·埃尔斯沃思并花费1补给：选择一张附属到任意地点的诡计。将所选诡计的印刷文本框视为如同空白，直到本回合结束。",
+    "textZh": "伙伴。使用(5补给)。[fast]任意调查员回合期间，横置罗尔德·埃尔斯沃思并花费1补给：选择一张附属到任意地点的诡计。将所选诡计的印刷文本框视为如同空白，直到本回合结束。",
     "traits": [
       "Ally",
       "Miskatonic",
@@ -307943,7 +307943,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08721"
   },
   "08722": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -307988,7 +307988,7 @@ export const ALL_CARDS = {
     "subname": "Aeroplane Mechanic",
     "subnameZh": "飞机技师",
     "text": "Partner. Uses (9 resources).\n[action] Exhaust Takada Hiroko: Move up to 3 resources from Takada Hiroko to your resource pool.",
-    "textZh": "伙伴。使用(9资源)。\n[action]横置高田弘子：将高田弘子上的最多3资源移动到你的资源池。",
+    "textZh": "伙伴。使用(9资源)。[action]横置高田弘子：将高田弘子上的最多3资源移动到你的资源池。",
     "traits": [
       "Ally",
       "Wayfarer"
@@ -308003,7 +308003,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08722"
   },
   "08723": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308059,7 +308059,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08723"
   },
   "08724": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308115,7 +308115,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08724"
   },
   "08725": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308171,7 +308171,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08725"
   },
   "08726": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308227,7 +308227,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08726"
   },
   "08727": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308283,7 +308283,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08727"
   },
   "08728": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308339,7 +308339,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08728"
   },
   "08729": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308395,7 +308395,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08729"
   },
   "08730": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308445,7 +308445,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast.\n[reaction] When you reveal a [frost] token during a skill test you are performing, deal 1 damage to Claypool's Furs: Cancel that chaos token and return it to the bag. Reveal a new chaos token.",
-    "textZh": "快速。\n[reaction]你执行的技能检定期间，在你揭示一个[frost]标记时，对克莱普尔的皮草造成1点伤害：取消该混乱标记并将其放回混乱袋。揭示一个新的混乱标记。",
+    "textZh": "快速。[reaction]你执行的技能检定期间，在你揭示一个[frost]标记时，对克莱普尔的皮草造成1点伤害：取消该混乱标记并将其放回混乱袋。揭示一个新的混乱标记。",
     "traits": [
       "Item",
       "Clothing"
@@ -308460,7 +308460,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08730"
   },
   "08731": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308509,7 +308509,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Uses (3 charges).\n[action] Spend 1 charge: Choose an investigator at your location to search the top 6 cards of their deck for each copy of Tekeli-li and place each of them on the bottom of the Tekeli-li deck. Shuffle that investigator's deck. That investigator draws 1 card.",
-    "textZh": "使用(3充能)。\n[action]花费1充能：选择你所在地点的一位调查员，其查找自己牌库顶的6张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底。混洗该调查员的牌库。该调查员抽取1张卡牌。",
+    "textZh": "使用(3充能)。[action]花费1充能：选择你所在地点的一位调查员，其查找自己牌库顶的6张卡牌，找出其中所有忒咳哩-哩，并将这些卡牌都放在忒咳哩-哩牌库底。混洗该调查员的牌库。该调查员抽取1张卡牌。",
     "traits": [
       "Item",
       "Tome"
@@ -308524,7 +308524,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08731"
   },
   "08732": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308573,7 +308573,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast. Uses (2 ammo).\n[action] Spend 1 ammo: Fight. Either fight with a base [combat] skill of 5, or get +2 [combat] for this attack. This attack deals +1 damage.",
-    "textZh": "快速。 使用(2子弹)。\n[action]花费1子弹：攻击。以基础值为5的[combat]攻击，或者本次攻击得到+2[combat]。本次攻击造成+1伤害。",
+    "textZh": "快速。使用(2子弹)。[action]花费1子弹：攻击。以基础值为5的[combat]攻击，或者本次攻击得到+2[combat]。本次攻击造成+1伤害。",
     "traits": [
       "Item",
       "Weapon",
@@ -308590,7 +308590,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08732"
   },
   "08733": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308636,7 +308636,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Fast. Play during any [fast] window.\nDraw 3 cards.",
-    "textZh": "快速。可在任何[free]时间段期间打出。\n抽取3张卡牌。",
+    "textZh": "快速。可在任何[fast]时间段期间打出。抽取3张卡牌。",
     "traits": [
       "Insight"
     ],
@@ -308649,7 +308649,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08733"
   },
   "08734": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308694,7 +308694,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Limit 1 [[Footwear]] per investigator.\n[reaction] After the last clue is discovered from your location, exhaust Ellsworth's Boots: Move to a connecting location, or discard Ellsworth's Boots to move to any revealed location.",
-    "textZh": "每位调查员仅限1张[[鞋子]]。\n[reaction]你所在地点的最后一个线索被发现后，横置埃尔斯沃思的靴子：移动到一个连接地点，或者弃掉埃尔斯沃思的靴子来移动到任意一个已揭示地点。",
+    "textZh": "每位调查员仅限1张[[鞋子]]。[reaction]你所在地点的最后一个线索被发现后，横置埃尔斯沃思的靴子：移动到一个连接地点，或者弃掉埃尔斯沃思的靴子来移动到任意一个已揭示地点。",
     "traits": [
       "Item",
       "Clothing",
@@ -308711,7 +308711,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08734"
   },
   "08735": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308760,7 +308760,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Fast. Uses (2 secrets).\n[action] Spend 1 secret: Investigate. Either investigate with a base [intellect] skill of 5, or get +2 [intellect] for this investigation. If you succeed, you discover 1 additional clue at your location.",
-    "textZh": "快速。使用(2秘密)。\n[action]花费1秘密：调查。以基础值为5的[intellect]调查，或者本次调查得到+2[intellect]。如果你检定成功，发现你所在地点额外1个线索。",
+    "textZh": "快速。使用(2秘密)。[action]花费1秘密：调查。以基础值为5的[intellect]调查，或者本次调查得到+2[intellect]。如果你检定成功，发现你所在地点额外1个线索。",
     "traits": [
       "Item",
       "Tome"
@@ -308775,7 +308775,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08735"
   },
   "08736": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308820,7 +308820,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Uses (3 supplies).\n[fast] Exhaust Sinha's Medical Kit and spend 1 supply: Heal 1 damage or 1 horror from an investigator or [[Ally]] asset at your location.",
-    "textZh": "使用(3补给)。\n[free]横置辛哈的医药箱并花费1补给：治愈你所在地点的一位调查员或一个[[盟友]]支援1点伤害或1点恐惧。",
+    "textZh": "使用(3补给)。[fast]横置辛哈的医药箱并花费1补给：治愈你所在地点的一位调查员或一个[[盟友]]支援1点伤害或1点恐惧。",
     "traits": [
       "Item",
       "Science"
@@ -308835,7 +308835,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08736"
   },
   "08737": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308880,7 +308880,7 @@ export const ALL_CARDS = {
     "quantity": 1,
     "subnameZh": "",
     "text": "Fast. Play during any [fast] window.\nGain 3 resources and draw 1 card. Remove Takada's Cache from the game.",
-    "textZh": "快速。可在任何[free]时间段期间打出。\n获得3资源并抽取1张卡牌。\n将高田的物品从游戏中移除。",
+    "textZh": "快速。可在任何[fast]时间段期间打出。获得3资源并抽取1张卡牌。将高田的物品从游戏中移除。",
     "traits": [
       "Supply"
     ],
@@ -308893,7 +308893,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08737"
   },
   "08738": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -308945,7 +308945,7 @@ export const ALL_CARDS = {
     "subname": "Faithful Companion",
     "subnameZh": "忠诚伴侣",
     "text": "[fast] Exhaust Anyu: Choose one, or discard Anyu to choose up to three, in any order -\n - Move to a connecting location.\n - You get +2 skill value for your next skill test this round.\n - Evade. Attempt to evade with a base [agility] skill of 4.",
-    "textZh": "[free]横置安雨：选择一项，或弃掉安雨来选择最多三项(以任意顺序)——\n- 移动到一个连接地点。\n- 你本轮下次技能检定中得到技能值+2。\n- 躲避。以基础值为4的[agility]尝试躲避。",
+    "textZh": "[fast]横置安雨：选择一项，或弃掉安雨来选择最多三项(以任意顺序)——\n- 移动到一个连接地点。- 你本轮下次技能检定中得到技能值+2。- 躲避。以基础值为4的[agility]尝试躲避。",
     "traits": [
       "Ally",
       "Creature"

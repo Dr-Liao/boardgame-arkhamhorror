@@ -49,7 +49,7 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
+      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "816ca60cad2bd0bc5a785b6feba9135d4009b21168204805b52449e5a5fbe41a"
+      "sha256": "f6772508c350de815d2f6b9e00483552c585255814b852d6f77cd80a8b3cc455"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",

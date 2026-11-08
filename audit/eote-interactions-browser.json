@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-eote-p4-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/eote-interactions.browser.mjs",
+    "tests/scenario-guides.browser.mjs",
+    "tests/script-actions-tfa.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 伙伴选派",
+      "status": "passed",
+      "durationMs": 1705
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 寒霜连续揭示与池余量",
+      "status": "passed",
+      "durationMs": 7303
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 封印放置",
+      "status": "passed",
+      "durationMs": 2052
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 忒咳哩-哩洗入",
+      "status": "passed",
+      "durationMs": 1224
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 演武选择",
+      "status": "passed",
+      "durationMs": 1334
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 牌库顶揭示",
+      "status": "passed",
+      "durationMs": 953
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 物资指派",
+      "status": "passed",
+      "durationMs": 1485
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 desktop 跨座位代打",
+      "status": "passed",
+      "durationMs": 1565
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 伙伴选派",
+      "status": "passed",
+      "durationMs": 1452
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 寒霜连续揭示与池余量",
+      "status": "passed",
+      "durationMs": 6373
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 封印放置",
+      "status": "passed",
+      "durationMs": 1848
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 忒咳哩-哩洗入",
+      "status": "passed",
+      "durationMs": 1153
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 演武选择",
+      "status": "passed",
+      "durationMs": 1178
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 牌库顶揭示",
+      "status": "passed",
+      "durationMs": 862
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 物资指派",
+      "status": "passed",
+      "durationMs": 1316
+    },
+    {
+      "file": "tests/eote-interactions.browser.mjs",
+      "title": "P4 mobile 跨座位代打",
+      "status": "passed",
+      "durationMs": 1383
+    },
+    {
+      "file": "tests/scenario-guides.browser.mjs",
+      "title": "完整指南按需加载，入口位于剧本右侧提示卡下方；桌面与手机可阅读",
+      "status": "passed",
+      "durationMs": 1588
+    },
+    {
+      "file": "tests/scenario-guides.browser.mjs",
+      "title": "指南加载失败可重试，键盘可进入折叠的结局说明",
+      "status": "passed",
+      "durationMs": 867
+    },
+    {
+      "file": "tests/script-actions-tfa.browser.mjs",
+      "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（desktop）",
+      "status": "passed",
+      "durationMs": 3990
+    },
+    {
+      "file": "tests/script-actions-tfa.browser.mjs",
+      "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（mobile）",
+      "status": "passed",
+      "durationMs": 3609
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/eote/p4/screenshots/desktop-cross-seat.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-deck-top.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-discipline.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-frost.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-partners.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-seals.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-supply.png",
+    "artifacts/migration/eote/p4/screenshots/desktop-tekeli.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-cross-seat.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-deck-top.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-discipline.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-frost.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-partners.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-seals.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-supply.png",
+    "artifacts/migration/eote/p4/screenshots/mobile-tekeli.png"
+  ]
+}

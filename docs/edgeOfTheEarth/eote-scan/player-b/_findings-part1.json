@@ -1,0 +1,879 @@
+[
+ {
+  "code": "08079",
+  "name": "Blood Will Have Blood",
+  "nameZh": "血债血偿",
+  "type": "event",
+  "klass": "survivor",
+  "xp": 2,
+  "verdict": "gap",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Fast. Play after an enemy attacks you.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08079.js:14-17；窗口 harmAssigned 由 src/engine/enemies.js:1020-1022 开",
+    "note": ""
+   },
+   {
+    "text": "Max 1 per attack.",
+    "status": "missing",
+    "evidence": "src/cards/entries/08079.js:14-22 无 per-attack 上限声明；引擎 limit 读点 ability.js:187 未用",
+    "note": "同一攻击可重复打出多张（牌组 2 张）→ 抽牌翻倍。"
+   },
+   {
+    "text": "Damage/horror from this attack cannot be assigned to [[Ally]] assets.",
+    "status": "missing",
+    "evidence": "src/cards/entries/08079.js:6-7 自述缺读点；同批 08130 已有 threatDamageSink 但本卡攻击分配限制仍无原语（audit/eote-player-queue.json: m2-3-08079 rejected）",
+    "note": "整句未实现：玩家仍可把该攻击伤害分配给盟友，且因此多抽牌。"
+   },
+   {
+    "text": "For each point of damage and/or horror you took from this attack, draw 1 card.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08079.js:18-22",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "partial",
+   "evidence": "src/cards/entries/08079.js:18-22；仅 api.drawCards，无 api.info 日志/选择；打出横幅由 executeDescriptor 统一写日志",
+   "note": "自动效果无显式日志，抽牌数量只能靠手牌数推断（screen perceivability 命中 silent-ability-no-choice-no-log）。"
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:328-334",
+   "note": "真实 executeDescriptor + 合成 harmAssigned context；未测「每攻击上限」与「不能分配给盟友」两条缺失子句。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "impl-vs-text",
+    "summary": "「该攻击的伤害/恐惧不能分配给盟友支援」整句未实现，主效果（按受到点数抽牌）反而因此变强；prior 账本记 verified。",
+    "evidence": "src/cards/entries/08079.js:6-7,14-22；src/engine/harm-threat.js assignHarm 无「本次攻击不能分配给盟友」读点",
+    "suggestion": "补 harm 分配限制原语（按 attack 上下文禁止 Ally 槽），或至少在条目声明并写成 gap/approximation 账本。"
+   },
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "「Max 1 per attack」未实现。",
+    "evidence": "src/cards/entries/08079.js:14-22",
+    "suggestion": "用描述子 limit.perAttack 或 context.attack 去重。"
+   },
+   {
+    "severity": "low",
+    "dimension": "perceivability",
+    "summary": "自动效果无 api.info，D2 只能靠手牌变化感知。",
+    "evidence": "src/cards/entries/08079.js:18-22",
+    "suggestion": "抽牌后补 api.info（含张数）。"
+   }
+  ]
+ },
+ {
+  "code": "08080",
+  "name": "Fire Extinguisher",
+  "nameZh": "灭火器",
+  "type": "asset",
+  "klass": "survivor",
+  "xp": 3,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08080.js:11-12",
+    "note": ""
+   },
+   {
+    "text": "[action] Discard Fire Extinguisher: Evade. Automatically evade all enemies engaged with you.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08080.js:13-20；api.autoEvadeEnemy 见 api-misc.js:503-504",
+    "note": ""
+   },
+   {
+    "text": "You may exile Fire Extinguisher instead of discarding it to discard each non-[[Elite]] enemy evaded by this effect.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08080.js:22-32（exileSelf 费用 + defeatEnemy 仅非精英）",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08080.js:11-32 label 齐全；三条能力在 legalMoves 中各为独立选项（moves.js:472-542），引擎日志写「使用「灭火器」…」",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:83-95",
+   "note": "真实 move 驱动攻击与弃牌躲避。"
+  },
+  "issues": []
+ },
+ {
+  "code": "08081",
+  "name": "Plucky",
+  "nameZh": "有胆有识",
+  "type": "asset",
+  "klass": "survivor",
+  "xp": 3,
+  "verdict": "gap",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Fast. Limit 1 [[Composure]] in play.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08081.js:18-19；composure 关键字读点 src/engine/moves.js:148, src/engine/ability.js:889",
+    "note": ""
+   },
+   {
+    "text": "You get +1 [willpower] and +1 [intellect].",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08081.js:25-28",
+    "note": ""
+   },
+   {
+    "text": "Non-direct damage/horror must be assigned to Plucky before it can be assigned to your investigator card.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08081.js:17-19；恐惧侧读点 src/engine/harm-threat.js:163-165（assetEffect.composure）**已生效**，但伤害侧读点是 flags.composureDamage（harm-threat.js:160-162,165，primitives test:104），本卡未声明该 flag（probe：分配选项仍含「由调查员承受」）",
+    "note": "伤害侧未强制：玩家仍可直接把非直接伤害分给调查员；引擎 P6 原语已就绪（audit/eote-player-queue.json m2-3-08081 = done），条目未接线。"
+   },
+   {
+    "text": "[fast] Spend 1 resource: You get +1 [willpower] or +1 [intellect] for this skill test.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08081.js:20-23（freeTriggers）",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08081.js:20-23 freeTriggers 由引擎询问档位；资源/属性在 UI 可见",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:96-104",
+   "note": "只测 composure 字段与属性；伤害强制分配无测试。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "primitive",
+    "summary": "印刷「非直接伤害必须先分配给有胆有识」未实现：条目缺 flags.composureDamage。",
+    "evidence": "src/cards/entries/08081.js:17-19 vs src/engine/harm-threat.js:160-165",
+    "suggestion": "在条目加 flags: { composureDamage: true }（并补伤害侧测试），或明确降级为 approximation 并从 verified 账本移除。"
+   },
+   {
+    "severity": "low",
+    "dimension": "docs",
+    "summary": "prior 账本 simplified=false/verified 与原语队列 done 均未反映该缺口。",
+    "evidence": "audit/eote-player-acceptance.json status=verified；audit/eote-player-queue.json m2-3-08081 done",
+    "suggestion": "账本应记录本卡伤害侧近似。"
+   }
+  ]
+ },
+ {
+  "code": "08082",
+  "name": "Fend Off",
+  "nameZh": "抵挡",
+  "type": "event",
+  "klass": "survivor",
+  "xp": 3,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Fast. Play when a non-[[Elite]] enemy spawns at your location.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08082.js:19-24；窗口 enemySpawn 见 src/engine/enemies.js:583-584",
+    "note": ""
+   },
+   {
+    "text": "That enemy attacks you. Then, automatically evade that enemy and attach Fend Off to it.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08082.js:25-42；附属改在 eventPlayed 窗口用「刚被自动躲避、未附属的非精英敌人」定位（条目注释 10-11 已披露）",
+    "note": "打出的瞬间事件卡不在弃牌堆，附属目标靠启发式选择；多个同类敌人时可能附属错目标。"
+   },
+   {
+    "text": "Attached enemy cannot ready.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08082.js:17 restrainsReady；读点 src/engine/phases.js 敌人重整段（grep restrainsReady）",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08082.js:19-42；打出为快速事件窗口选择、附属写入敌人 attachments，牌桌可见",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:336-348",
+   "note": "真实窗口探针 + 附属断言。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "附属目标用启发式（横置未附属非精英）而非 context.enemy 直接定位，属已披露近似。",
+    "evidence": "src/cards/entries/08082.js:31-42",
+    "suggestion": "改用 window context.enemy 或附属窗口原语，减少多敌人误差。"
+   }
+  ]
+ },
+ {
+  "code": "08083",
+  "name": "Medical Student",
+  "nameZh": "医学生",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 0,
+  "verdict": "gap",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "[reaction] After Medical Student enters play: Heal 1 damage and 1 horror from an investigator or [[Ally]] asset at your location.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08083.js:12-40。调查员目标：api.healDamage/api.healHorror 正确；盟友支援目标：src/cards/entries/08083.js:38 调 api.healAsset(target, 1)（第二参应是 spec 对象，api-misc.js:759-768），**伤害治疗 0 点**，仅 addAssetHorror(target,-1) 治恐惧（且可把 horror 减成负数）。real-path probe：ally damage 1→1、horror 1→0",
+    "note": "印刷的一半效果（治愈盟友支援 1 点伤害）在真实引擎路径无效；只有调查员目标完全正确。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08083.js:26-30 api.choice + prompt（同地点调查员/盟友支援选项）",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:106-114",
+   "note": "只测调查员目标；盟友支援分支（含 healAsset 签名）无断言。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "impl-vs-text",
+    "summary": "盟友支援目标的「治愈 1 点伤害」不生效（api.healAsset 第二参传了数字而非 spec）。",
+    "evidence": "src/cards/entries/08083.js:38 vs src/engine/api-misc.js:759-769",
+    "suggestion": "改成 api.healAsset(target, { damage: 1, owner: ownerOfTarget }) 或 api.healAsset(target, { horror: 1, owner })，并补盟友目标测试。"
+   },
+   {
+    "severity": "medium",
+    "dimension": "primitive",
+    "summary": "addAssetHorror(target, -1) 可把支援 horror 写成 -1（目标本来 0 恐惧时）。",
+    "evidence": "src/cards/entries/08083.js:38；src/engine/api-clue.js:67-71 无下限",
+    "suggestion": "改用 api.healAsset(target,{horror:1,owner}) 走统一治疗入口。"
+   }
+  ]
+ },
+ {
+  "code": "08084",
+  "name": "On the Trail",
+  "nameZh": "追踪",
+  "type": "event",
+  "klass": "guardian",
+  "xp": 1,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Choose an enemy at any location other than yours.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08084.js:33-38 过滤 `!enemy.elite`：印刷与参考实现无精英排除（参考资源 Event/Events/OnTheTrail1.hs:26 `EnemyAt (not_ locationWithInvestigator)`）；probe：只有精英敌人时打出后日志「没有可选的其他地点敌人」",
+    "note": "未印的精英限制：场上有精英敌人时该卡无法选它。"
+   },
+   {
+    "text": "Either move twice toward that enemy, or discover 1 clue at any empty location between you and the chosen enemy, along the shortest path to reach that enemy.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08084.js:39-58；BFS 最短路径 + api.canMoveTo/api.moveInvestigator；「empty = 无调查员且无敌人」与参考实现 EmptyLocation 一致（参考 Game.hs `EmptyLocation -> investigatorAt/enemyAt 均为空`）",
+    "note": "路径/线索语义与参考一致；仅 enemy 过滤不等价。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08084.js:36-45,56-57 api.choice + prompt；移动结果牌桌可见",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:116-133",
+   "note": "测移动与线索分支；未测精英敌人（被错误排除的路径）。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "未印的「非精英」过滤：印刷为 any enemy。",
+    "evidence": "src/cards/entries/08084.js:33-34",
+    "suggestion": "删除 `!enemy.elite`（参考实现无此限制），并补精英目标测试。"
+   }
+  ]
+ },
+ {
+  "code": "08085",
+  "name": "On the Trail",
+  "nameZh": "追踪",
+  "type": "event",
+  "klass": "guardian",
+  "xp": 3,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Choose an enemy at any location other than yours.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08085.js:32-38 同样过滤 `!enemy.elite`；参考 OnTheTrail3.hs:34 无精英排除",
+    "note": "未印的精英限制，同 08084。"
+   },
+   {
+    "text": "Move twice toward that enemy. Discover 1 clue at each location you entered by this effect.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08085.js:39-44（逐次移动后 api.discoverClue）",
+    "note": "未先判 canDiscoverClueAt，无可发现线索时静默不发现（可接受）。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08085.js:35-43 api.choice/prompt + 移动日志",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:135-146",
+   "note": "未测精英敌人排除路径。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "同 08084：未印的精英排除。",
+    "evidence": "src/cards/entries/08085.js:32-34",
+    "suggestion": "与 08084 同步修正。"
+   },
+   {
+    "severity": "low",
+    "dimension": "duplication",
+    "summary": "08084/08085 各自复制一份 pathTo BFS（src/cards/entries/08084.js:10-26 与 08085.js:9-25），应上收为共享原语。",
+    "evidence": "src/cards/entries/08084.js:10-26；src/cards/entries/08085.js:9-25",
+    "suggestion": "抽到 entries/_shared 或引擎 map-graph 原语。"
+   }
+  ]
+ },
+ {
+  "code": "08086",
+  "name": "Michael Leigh",
+  "nameZh": "迈克尔·利",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 5,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "You get +1 [intellect] and +1 [combat].",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08086.js:34-37",
+    "note": ""
+   },
+   {
+    "text": "[reaction] After you successfully investigate: Place 1 resource (from the token pool) on Michael Leigh, as evidence (to a maximum of 3 evidence).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08086.js:23-27（uses 当证据，上限 3）",
+    "note": "用 uses 表示 evidence，未新造字段。"
+   },
+   {
+    "text": "[reaction] When you initiate an attack, exhaust Michael Leigh and spend 1 evidence: You deal +1 damage for this attack.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08086.js:28-32 用 api.addExtraOnSuccess({type:'dealDamage'})，成功后追加 1 伤害而不是并入本次攻击伤害；引擎 P6 原语 api.playerTools.addAttackDamageBonus（src/engine/api-misc.js:1490-1497，消费点 combat.js:276-281，primitives test:238；queue m2-3-08086=done）未被使用",
+    "note": "与「本次攻击 +1 伤害」不等价（攻击伤害被别的效果放大/引用时不同），且现成读点未接线。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08086.js:23-32 label/成本；额外伤害无 api.info，靠战斗日志",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:148-158,396-406",
+   "note": "两条测试都只断言 extraOnSuccess 登记、未在真实战斗里验证追加伤害；且未使用已就绪原语。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "primitive",
+    "summary": "P6 原语 addAttackDamageBonus 已实现并测试，但条目仍用 addExtraOnSuccess 近似（账本 verified/simplified=false 与 queue done 未反映）。",
+    "evidence": "src/cards/entries/08086.js:32 vs src/engine/api-misc.js:1490-1497；src/engine/combat.js:276-281；tests/eote-player-primitives.test.mjs:238",
+    "suggestion": "改为 api.playerTools.addAttackDamageBonus(1)，并把近似从注释/账本移除。"
+   },
+   {
+    "severity": "low",
+    "dimension": "perceivability",
+    "summary": "D2：额外伤害无 api.info 日志。",
+    "evidence": "src/cards/entries/08086.js:32",
+    "suggestion": "追加 api.info（+1 伤害）。"
+   }
+  ]
+ },
+ {
+  "code": "08087",
+  "name": "Snipe",
+  "nameZh": "狙击",
+  "type": "event",
+  "klass": "guardian",
+  "xp": 1,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "During the next fight action you perform this turn using a [[Ranged]] or [[Firearm]] asset, treat each [skull], [cultist], [tablet], [elder_thing], or [auto_fail] token you reveal as a \"0\" token.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08087.js:19-30（addEffect tokenEffectWouldResolve + cancelSymbolToken）；probe：本回合任意检定揭示 skull 都会被取消符号效果（值按 0 计入），不限于「下一个远程/枪械攻击行动」",
+    "note": "作用域过宽（本条注释 9-11 已披露）；另外仅取消符号修正、[auto_fail] 不在 cancelSymbolToken 覆盖内。"
+   },
+   {
+    "text": "This action does not provoke attacks of opportunity.",
+    "status": "missing",
+    "evidence": "src/cards/entries/08087.js:12 自述无延迟 noOpportunityAttack 读点（queue m2-3-08087 rejected）",
+    "note": "整句未实现。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08087.js:24 效果 label；无 choice/info",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:350-358",
+   "note": "只断言 effect 数据结构，未跑真实检定验证「视为 0」；未测不引发借机攻击（未实现）。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "「本行动不引发借机攻击」未实现，且作用域是「本回合所有检定」而非「下一个远程/枪械攻击」。",
+    "evidence": "src/cards/entries/08087.js:9-12,19-30",
+    "suggestion": "补延迟 noOpportunityAttack 读点；用「下一次匹配攻击」的效果作用域。"
+   }
+  ]
+ },
+ {
+  "code": "08088",
+  "name": "Old Shotgun",
+  "nameZh": "老旧的霰弹枪",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 2,
+  "verdict": "gap",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "Uses (0 ammo).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08088.js:16-17",
+    "note": ""
+   },
+   {
+    "text": "While playing an event, treat Old Shotgun's uses value as 2.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08088.js:22-24：eventPlayed 窗口把 uses 永久 setAssetUses(2)，且 criteria 未限定打牌者/同地点。probe：其他座位打出事件也触发；触发后 uses 停在 2、不恢复（0→2→2）",
+    "note": "与印刷「打出事件期间视为 2」不等价：变为事件后永久 2 发可花弹药（可反复触发事件刷新），且跨座位触发。条目无 note 披露。"
+   },
+   {
+    "text": "[action] Spend 1 ammo: Fight. You get +3 [combat] for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08088.js:19-21（combatBonus:3）",
+    "note": ""
+   },
+   {
+    "text": "Instead of its standard damage, this attack's damage is equal to the amount you succeed by, or fail by if you fail and would damage another investigator (to a minimum of 1, to a maximum of 3).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08088.js:20-21 successDamage/minDamage/maxDamage/failByAmountToEngaged；读点 src/engine/combat.js:292-296,518-519",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08088.js:19-24 legalMoves 标签显示 uses/费用；攻击结果走战斗日志",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:160-172",
+   "note": "断言事件后 uses=2 与伤害上限；未覆盖「不该永久 2」「其他座位事件」的反向断言。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "impl-vs-text",
+    "summary": "eventPlayed 反应把 uses 永久设为 2 且不限打牌者，等价于事件后永续 2 发弹药（未披露的规则偏差）。",
+    "evidence": "src/cards/entries/08088.js:22-24 vs src/engine/actions.js:520-523",
+    "suggestion": "改为「打出事件的费用/结算窗口内视为 2」的作用域（或用 modifiers playCost 无关字段），至少加 criteria 限自身且结算后恢复 0；并补 note。"
+   }
+  ]
+ },
+ {
+  "code": "08089",
+  "name": "Quickdraw Holster",
+  "nameZh": "快拔枪套",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 4,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "[fast]: Choose a [[Firearm]] asset taking up only 1 hand slot in your play area. Attach it to Quickdraw Holster, or switch it with the attached asset.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08089.js:19-31；`api.attachOrSwapControlledAsset`（src/engine/api-card.js:75-91）；条目注释 10-11 披露未校验「只占 1 手槽」",
+    "note": "双手枪械也能被附属。"
+   },
+   {
+    "text": "The attached asset takes up no hand slots. (Limit 1 attached asset.)",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08089.js:30；槽位豁免读点 src/engine/assets.js（attachedToAsset 不占槽）",
+    "note": ""
+   },
+   {
+    "text": "[fast] Exhaust Quickdraw Holster: Perform a fight action on the attached asset without paying its [action] cost.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08089.js:32-41：固定取「第一条含攻击/开火/射击的 action」；注释 12 已披露",
+    "note": "多攻击能力枪械可能取错。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08089.js:27-30 api.choice+prompt；执行能力走 resolveCardAbility 原生流程",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:360-370",
+   "note": "真实 move 驱动附属+免费攻击。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "未校验「只占 1 个手部槽位」，双手武器也可附属（已披露近似）。",
+    "evidence": "src/cards/entries/08089.js:22-25",
+    "suggestion": "用槽位查询原语（normalizedSlots/slotUsage）过滤 handx2。"
+   }
+  ]
+ },
+ {
+  "code": "08090",
+  "name": "Brand of Cthugha",
+  "nameZh": "克图格亚的烙印",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 1,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "Uses (6 charges).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08090.js:15-16",
+    "note": ""
+   },
+   {
+    "text": "[action]: Fight. For this attack, you may use [willpower] instead of [combat], and you get +1 skill value.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08090.js:22-26 api.choice 技能 + combatBonus:1",
+    "note": ""
+   },
+   {
+    "text": "If you succeed, spend 1 or 2 charges. Instead of its standard damage, this attack deals 1 damage for each charge spent.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08090.js:27-35 onSuccess api.choice/ spendUses / damageOverride",
+    "note": ""
+   },
+   {
+    "text": "If you succeed by 0, lose 1 action.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08090.js:36；api.loseActions 见 api-misc.js:303-317",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08090.js:22-35 两个 api.choice+prompt；花费/伤害日志",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:174-184",
+   "note": "真实能力 move + 充能/伤害断言。"
+  },
+  "issues": [
+   {
+    "severity": "low",
+    "dimension": "impl-vs-text",
+    "summary": "0 充能时仍可发起攻击并在成功后 0 伤害（印刷需成功时花 1/2 充能，应不能发起）。",
+    "evidence": "src/cards/entries/08090.js:18-28",
+    "suggestion": "加 criteria (source.uses||0)>0。"
+   }
+  ]
+ },
+ {
+  "code": "08091",
+  "name": "Nkosi Mabati",
+  "nameZh": "恩科西·马巴蒂",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 3,
+  "verdict": "gap",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "[reaction] After Nkosi Mabati enters play: Name a non-[elder_sign] chaos token with a symbol. Until this card leaves play, the named symbol is your \"sigil.\"",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08091.js:25-45 用 api.addEffect({duration:'untilLeavesPlay'}) 记录，未写支援实例；引擎已有专用原语 api.playerTools.setSigilToken（src/engine/api-misc.js:1418-1431，primitives test:197）",
+    "note": "记录方式可用但与既有原语不同（D5），且未接线。"
+   },
+   {
+    "text": "[reaction] When an investigator at your location reveals a [cultist], [tablet], or [elder_thing] symbol, exhaust Nkosi Mabati: Search the chaos bag for your sigil and reveal it, instead.",
+    "status": "missing",
+    "evidence": "src/cards/entries/08091.js:14-16 自述省略该子句（queue m2-3-08091=done）；引擎原语 api.playerTools.replaceRevealedToken（src/engine/api-misc.js:1432-1442，tokenReveal 窗口）与 setSigilToken 均已实现并有测试（tests/eote-player-primitives.test.mjs:197-216）",
+    "note": "整条能力缺失。"
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08091.js:31-34 api.choice+prompt、44 api.info",
+   "note": ""
+  },
+  "tests": {
+   "status": "partial",
+   "evidence": "tests/eote-player-m2-3.test.mjs:372-382",
+   "note": "只测第一子句（addEffect 记录），第二子句无测试（未实现）。"
+  },
+  "issues": [
+   {
+    "severity": "high",
+    "dimension": "impl-vs-text",
+    "summary": "第二子句（符号揭示改为查找并揭示咒印）整条缺失，而引擎专用原语已实现并测试（queue 也标 done）。",
+    "evidence": "src/cards/entries/08091.js:14-16,25-45 vs src/engine/api-misc.js:1418-1442；tests/eote-player-primitives.test.mjs:197",
+    "suggestion": "把两条子句改接 setSigilToken + replaceRevealedToken（tokenReveal 窗口），删掉 primitive request 说法并更新账本。"
+   },
+   {
+    "severity": "medium",
+    "dimension": "docs",
+    "summary": "prior 账本 verified/simplified=false，与条目自述「省略该子句」矛盾。",
+    "evidence": "audit/eote-player-acceptance.json（08091 verified）；audit/eote-player-queue.json m2-3-08091 done",
+    "suggestion": "账本改记 gap/approximation。"
+   }
+  ]
+ },
+ {
+  "code": "08092",
+  "name": "Brand of Cthugha",
+  "nameZh": "克图格亚的烙印",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 4,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "Uses (9 charges).",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08092.js:13-14",
+    "note": ""
+   },
+   {
+    "text": "[action]: Fight ... +2 skill value ... may use [willpower] instead of [combat].",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08092.js:20-24",
+    "note": ""
+   },
+   {
+    "text": "If you succeed, spend 1, 2, or 3 charges; 1 damage per charge spent.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08092.js:25-33",
+    "note": ""
+   },
+   {
+    "text": "If you succeed by 0, lose 2 actions.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08092.js:34",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08092.js:20-33 api.choice+prompt",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:186-196",
+   "note": ""
+  },
+  "issues": [
+   {
+    "severity": "low",
+    "dimension": "impl-vs-text",
+    "summary": "同 08090：0 充能时仍可发起（成功后 0 伤害）。",
+    "evidence": "src/cards/entries/08092.js:16-26",
+    "suggestion": "加 criteria。"
+   }
+  ]
+ },
+ {
+  "code": "08093",
+  "name": "Cyclopean Hammer",
+  "nameZh": "巨石锤",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 5,
+  "verdict": "approximation",
+  "accepted": false,
+  "clauses": [
+   {
+    "text": "[action]: Fight. Add your [willpower] to your skill value for this attack. You deal +1 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08093.js:22（addSkill:willpower, damageBonus:1）",
+    "note": ""
+   },
+   {
+    "text": "If you succeed and the enemy is non-[[Elite]], you may move it one location away from you.",
+    "status": "approximation",
+    "evidence": "src/cards/entries/08093.js:26-36：非精英才可移动 ✓，但「may」被强制（只有一个目的地时直接移动，无 skip 选项）；且每一步只排除 inv.location，第二次移动可能横向/回调近你",
+    "note": "可选被强制 + 连移两格时「away」判定不严格。"
+   },
+   {
+    "text": "(If you succeed by 3 or more, you instead deal +2 damage and may move the enemy up to two locations away from you.)",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08093.js:24-27",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08093.js:31-34 api.choice+prompt",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:198-208",
+   "note": "伤害+击退断言。"
+  },
+  "issues": [
+   {
+    "severity": "medium",
+    "dimension": "impl-vs-text",
+    "summary": "卡面「你可以」被实现为必移（单目的地时不经询问），且两格击退的「away」每步只排除原地点。",
+    "evidence": "src/cards/entries/08093.js:26-36",
+    "suggestion": "加 canSkip/先问，并按「距离你不减」过滤后续目的地。"
+   }
+  ]
+ },
+ {
+  "code": "08094",
+  "name": "Sledgehammer",
+  "nameZh": "长柄大锤",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 0,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "[action]: Fight. You get -1 [combat] and deal +1 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08094.js:10-11",
+    "note": ""
+   },
+   {
+    "text": "[action] [action]: Fight. You get +2 [combat] and deal +2 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08094.js:12-13（cost.action:2）",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08094.js:10-13 legalMoves 两条标签",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:210-221",
+   "note": ""
+  },
+  "issues": [
+   {
+    "severity": "low",
+    "dimension": "duplication",
+    "summary": "与 08096 同模板复制（仅数值不同），可抽共享模板。",
+    "evidence": "src/cards/entries/08094.js:10-13；src/cards/entries/08096.js:10-13",
+    "suggestion": "低优先。"
+   }
+  ]
+ },
+ {
+  "code": "08095",
+  "name": "Protective Gear",
+  "nameZh": "防护服",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 2,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "[reaction] When you draw a [[Hazard]] treachery, deal 1 damage and 1 horror to Protective Gear: Cancel that card's revelation effect.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08095.js:12-21：费用 cost.assetDamage:1（ability-exec.js:159-167）+ api.addAssetHorror + api.playerTools.cancelRevelation（player-mechanics.js:101-105）；real-path probe：真实 treachery 窗口提供该反应，gear damage/horror 各 1",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08095.js:12-21 反应窗口选项 label；受伤害在支援上可见",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:222-234",
+   "note": "危险/非危险 + 取消分支。"
+  },
+  "issues": []
+ },
+ {
+  "code": "08096",
+  "name": "Sledgehammer",
+  "nameZh": "长柄大锤",
+  "type": "asset",
+  "klass": "guardian",
+  "xp": 4,
+  "verdict": "match",
+  "accepted": true,
+  "clauses": [
+   {
+    "text": "[action]: Fight. You get +1 [combat] and deal +1 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08096.js:10-11",
+    "note": ""
+   },
+   {
+    "text": "[action] [action] [action]: Fight. You get +5 [combat] and deal +5 damage for this attack.",
+    "status": "implemented",
+    "evidence": "src/cards/entries/08096.js:12-13（cost.action:3）",
+    "note": ""
+   }
+  ],
+  "perceivability": {
+   "status": "perceivable",
+   "evidence": "src/cards/entries/08096.js:10-13 legalMoves 两条标签",
+   "note": ""
+  },
+  "tests": {
+   "status": "covered",
+   "evidence": "tests/eote-player-m2-3.test.mjs:210-221",
+   "note": ""
+  },
+  "issues": []
+ }
+]

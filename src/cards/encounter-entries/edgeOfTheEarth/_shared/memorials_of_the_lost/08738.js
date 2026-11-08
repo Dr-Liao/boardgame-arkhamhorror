@@ -1,0 +1,44 @@
+// 08738 安雨（An Yu）· 剧情资产（盟友）· memorials_of_the_lost
+// 卡面：[free]横置安雨：选择一项；或弃掉安雨来选择最多三项（以任意顺序）——
+//   · 移动到一个连接地点；· 你本轮下一次技能检定 +2；· 躲避。以基础值 4 的[agility]躲避。
+// 读点：方案选择走 api.choice；移动 api.moveInvestigator；技能加成 api.phaseTestBonus；
+//   躲避 api.test(baseValue:4) + api.autoEvade；弃掉自己 api.discardAsset。
+const CODE = '08738'
+
+export default {
+  code: CODE, scope: 'storyAsset', implemented: true,
+  flags: { memorial: true, ally: true, health: 2 },
+  abilities: [{
+    kind: 'free', actionKind: 'activate', label: '横置安雨：移动 / 本轮下次检定 +2 / 基础值 4 的敏捷躲避',
+    cost: { exhaust: true },
+    resolve: ({ state, inv, source, api }) => {
+      const options = [
+        { id: 'move', label: '移动到一个连接地点' },
+        { id: 'bonus', label: '本轮下一次技能检定 +2' },
+        { id: 'evade', label: '以基础值 4 的敏捷躲避' },
+      ]
+      const mode = api.choice({ kind: 'effect', source: CODE, seat: inv.seat, prompt: '选择安雨提供的一项。', options })
+      if (mode === 'move') {
+        const here = state.locations.find(loc => loc.id === inv.location)
+        const destinations = (here?.connections || []).filter(id => state.locations.some(loc => loc.id === id))
+        if (!destinations.length) return
+        const pick = destinations.length === 1 ? destinations[0] : api.choice({ kind: 'location', source: CODE, seat: inv.seat,
+          prompt: '选择移动到的连接地点。', options: destinations.map(id => ({ id, label: state.locations.find(loc => loc.id === id)?.name || id })) })
+        if (destinations.includes(pick)) api.moveInvestigator(inv.seat, pick)
+      } else if (mode === 'bonus') {
+        api.phaseTestBonus(inv.seat, 2)
+      } else {
+        const enemies = state.enemies.filter(enemy => !enemy.defeated && enemy.location === inv.location)
+        if (!enemies.length) return
+        const enemy = enemies.length === 1 ? enemies[0] : enemies.find(item => item.id === api.choice({
+          kind: 'enemy', source: CODE, seat: inv.seat, prompt: '选择要躲避的敌人。',
+          options: enemies.map(item => ({ id: item.id, label: item.name || item.id })),
+        })) || enemies[0]
+        api.test(inv.seat, 'agility', Number(enemy.evade ?? 0), { baseValue: 4,
+          source: { type: 'asset', code: CODE, ability: true },
+          resolve: result => { if (result.success) api.autoEvade(enemy) } })
+      }
+    },
+  }],
+}
+

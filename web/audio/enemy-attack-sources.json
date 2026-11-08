@@ -1,0 +1,86 @@
+[
+  {
+    "file": "enemy-growl.ogg",
+    "author": "Ogrebane",
+    "license": "CC0-1.0",
+    "source": "https://opengameart.org/content/monster-sound-pack-volume-1",
+    "original": "Monster-1.wav",
+    "duration": 0.75,
+    "transform": "volume=0.65; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "227f17a1f78900c84cf380e62d376199dc140a3842dafeb154c288ea1b5db6c8",
+    "bytes": 10646,
+    "originalSha256": "ac042cd669d74d5fa92187f17f7ef0ab024f89f8fd9be9e854ccf248270f921a"
+  },
+  {
+    "file": "enemy-claw.ogg",
+    "author": "Ogrebane",
+    "license": "CC0-1.0",
+    "source": "https://opengameart.org/content/monster-sound-pack-volume-1",
+    "original": "Monster-2.wav",
+    "duration": 0.55,
+    "transform": "volume=0.6; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "d039ddf5c8caf4d30adaa9672036af34d76aecbbc0f4339d81faddcf3e15263e",
+    "bytes": 9230,
+    "originalSha256": "fd0c97cd0a5be99ed21617eab2373e2180825bb1329664080a7b7a095da3337b"
+  },
+  {
+    "file": "enemy-heavy.ogg",
+    "author": "Ogrebane",
+    "license": "CC0-1.0",
+    "source": "https://opengameart.org/content/monster-sound-pack-volume-1",
+    "original": "Monster-3.wav",
+    "duration": 0.85,
+    "transform": "asetrate=35280,aresample=44100,volume=0.65; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "64945cb2e0d9c833432c19a1a3dffeef70abc874b2576990415f73dc908fb7d9",
+    "bytes": 10600,
+    "originalSha256": "29aed55a2b146098fc00d88d273c7958d42d9f873c15226dac4b9522b0b0b772"
+  },
+  {
+    "file": "enemy-ghost.ogg",
+    "author": "Ogrebane",
+    "license": "CC0-1.0",
+    "source": "https://opengameart.org/content/monster-sound-pack-volume-1",
+    "original": "monster-10.wav",
+    "duration": 0.37,
+    "transform": "aecho=0.7:0.5:60:0.3,volume=0.5; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "9bf74ce5b58a3178b4669892f076ec4a6fc567160aaa6d86fdf20b3d0dddc788",
+    "bytes": 7548,
+    "originalSha256": "9f8967357f20dc564bbe3fd5d80e81e80bbe7c9b7dc9645a49678d2bdeaa50df"
+  },
+  {
+    "file": "enemy-fear.ogg",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/sci-fi-sounds",
+    "original": "forceField_004.ogg",
+    "duration": 0.8,
+    "transform": "asetrate=35280,aresample=44100,volume=0.5; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "658e99b1094078bf13b3a79ce5f8c09227b9500bf96d268a4689fe179a891a98",
+    "bytes": 10118,
+    "originalSha256": "05609bb296cbc287ae95ac8924c89809d69c89d7bb357cc6a117ec1b1ef65e09"
+  },
+  {
+    "file": "enemy-swarm.ogg",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/sci-fi-sounds",
+    "original": "slime_000.ogg",
+    "duration": 0.5,
+    "transform": "volume=0.65; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "cf78184ac13d858432ac2e3f12f954d4437882c6094aa275b7e30fbcdaeca41f",
+    "bytes": 10621,
+    "originalSha256": "480ee82b690136ea9db6966a3c3033356b8274752795c4e37afd6b6defcfacff"
+  },
+  {
+    "file": "enemy-wing.ogg",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/sci-fi-sounds",
+    "original": "forceField_000.ogg",
+    "duration": 0.6,
+    "transform": "highpass=f=650,volume=0.5; trim; fades; mono 44100Hz Vorbis q4",
+    "sha256": "780a460abc7b53206a1397111812ae09af106f9ea42e666c0fb129c67dc5bbe2",
+    "bytes": 9213,
+    "originalSha256": "c2916f2a062c8ddd1aca2826d134fe90847037db31342726ffb0f9097afe339c"
+  }
+]

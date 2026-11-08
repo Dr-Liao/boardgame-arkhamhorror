@@ -33,3 +33,21 @@
 @media(max-width:600px) { .ah-mechanic-options { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 .ah-map-edges line.ah-map-barrier { stroke: #e69b51; stroke-width: 6; stroke-dasharray: 6 5; }
 .ah-map-barrier-count { fill: #ffd08a; stroke: #171a17; stroke-width: 4; paint-order: stroke; font-size: 18px; font-weight: 700; text-anchor: middle; }
+
+/* 七循环《地球边缘》交互摘要（P4-B）：复用既有面板主题变量与可换行布局，移动端 390 不横向滚动。 */
+.ah-eote-summary { display: grid; gap: .5em; margin-top: .75em; min-width: 0; }
+.ah-eote-summary h3 { margin: 0; font-size: .95em; color: var(--ah-theme-accent-strong); }
+.ah-eote-summary p { margin: 0; overflow-wrap: anywhere; min-width: 0; }
+.ah-eote-frost { color: var(--ah-theme-accent); font-weight: bold; }
+.ah-eote-partners p[data-partner-status='eliminated'] { color: var(--ah-theme-muted); text-decoration: line-through; }
+.ah-eote-partners p[data-partner-status='mia'] { color: var(--ah-theme-muted); }
+.ah-eote-seals p[data-seal-active='true'] { color: var(--ah-theme-accent-strong); }
+.ah-eote-deck-top p { color: var(--ah-theme-muted); }
+.ah-eote-cross-seat p { border-left: 2px solid var(--ah-theme-edge); padding-left: .5em; }
+.ah-eote-disciplines p[data-discipline-face='broken'] { color: var(--ah-theme-muted); }
+.ah-choice-token-fallback {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3em; height: 3em; flex: 0 0 auto; box-sizing: border-box; line-height: 1;
+  font-size: 1.25em; border: 1px solid var(--ah-theme-edge); border-radius: inherit;
+  color: var(--ah-theme-accent);
+}

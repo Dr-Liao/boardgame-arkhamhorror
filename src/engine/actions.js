@@ -90,6 +90,23 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   const def = cardDef(cardId)
   const copiedDef = copyCode && registeredEntry(cardId)?.copiesBeneathEvents ? cardDef(copyCode) : null
   const playedDef = copiedDef || def
+  // 地球边缘 P5（08016 鲍勃）：跨座位代打。play-channels 的 otherHand 通道把队友手牌里的
+  // [[道具]] 支援取进本调查员手牌，并在 state._playedFromOtherHand 留下来源座位与费用分账元数据。
+  // 结算口径：资产归牌主（fromSeat）控制；费用由代打者与牌主共同支付。
+  const otherHandContext = state._playedFromOtherHand && state._playedFromOtherHand.seat === seat
+    && state._playedFromOtherHand.fromSeat != null
+    && (state._playedFromOtherHand.code == null || state._playedFromOtherHand.code === cardId)
+    ? state._playedFromOtherHand : null
+  const otherHandOwner = otherHandContext ? state.investigators[otherHandContext.fromSeat] : null
+  const controller = otherHandOwner && otherHandOwner.seat !== seat ? otherHandOwner : inv
+  // 失败时把已经取进本调查员手牌的代打卡放回牌主手中（不能凭空消失/复制）。
+  const restoreOtherHandCard = () => {
+    if (!otherHandOwner || otherHandOwner === inv) return false
+    const index = inv.hand.lastIndexOf(cardId)
+    if (index >= 0) inv.hand.splice(index, 1)
+    if (!(otherHandOwner.hand || []).includes(cardId)) (otherHandOwner.hand ||= []).push(cardId)
+    return true
+  }
   // 2026-10-27：从威胁区打出的那张实体（05010 悬案的 playableFromThreat 通道）。
   // 支付失败/没有合法宿主/唯一冲突时原样放回威胁区。
   let removedThreatCard = null
@@ -202,8 +219,30 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     campaignState.clearPlayDiscount(inv)
     delete inv.playDiscount
+    // 地球边缘 P5（08016 鲍勃）：跨座位代打由代打者与牌主共同支付（印刷「双方都可以为支付
+    // 其费用花费资源」）。有分账元数据时按元数据分摊；否则先扣代打者余额、余额不足部分由牌主支付。
+    let crossPay = null
+    if (otherHandOwner && otherHandOwner !== inv) {
+      const split = otherHandContext.costSplit || null
+      let selfAmount, ownerAmount
+      if (split && Number.isSafeInteger(split.self) && Number.isSafeInteger(split.owner)) {
+        selfAmount = Math.max(0, split.self)
+        ownerAmount = Math.max(0, split.owner)
+      } else {
+        selfAmount = Math.min(cost, availableResources(inv))
+        ownerAmount = cost - selfAmount
+      }
+      if (selfAmount + ownerAmount !== cost
+        || availableResources(inv) < selfAmount || availableResources(otherHandOwner) < ownerAmount) {
+        info(state, events, `${inv.name} 与 ${otherHandOwner.name} 的资源不足以支付「${cardName(cardId)}」。`)
+        if (fromDiscard) inv.discard.push(cardId)
+        else restoreOtherHandCard()
+        return { ok: false, cost }
+      }
+      crossPay = { selfAmount, ownerAmount, owner: otherHandOwner }
+    }
     let payer = inv
-    if (availableResources(inv) < cost) {
+    if (!crossPay && availableResources(inv) < cost) {
       const charles = charlesPayCandidate(state, inv, cost, playedDef)
       if (charles && requestChoice(state, {
         kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
@@ -237,7 +276,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       else putInHand(state, inv, cardId)
       return { ok: false, cost }
     }
-    resourceBank.spendFromPool(payer, cost, state)
+    if (crossPay) {
+      if (crossPay.selfAmount > 0) resourceBank.spendFromPool(inv, crossPay.selfAmount, state)
+      if (crossPay.ownerAmount > 0) resourceBank.spendFromPool(crossPay.owner, crossPay.ownerAmount, state)
+      info(state, events, `🤝 ${inv.name} 与 ${crossPay.owner.name} 共同支付「${cardName(cardId)}」的费用：`
+        + `${inv.name} ${crossPay.selfAmount} / ${crossPay.owner.name} ${crossPay.ownerAmount}。`)
+    } else {
+      resourceBank.spendFromPool(payer, cost, state)
+    }
     if (!payTokenCost(state, inv, registeredEntry(cardId)?.additionalTokenCost)) throw new Error('额外混乱标记费用已失效')
     recordPlayedCard(state, inv, playedDef, registeredEntry)
     notePromiseEvent(state, inv.seat, 'play', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
@@ -286,7 +332,13 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const target = isInvestigatorTarget
       ? (candidate.investigator || state.investigators[candidate.seat] || candidate)
       : candidate
-    attachCardTo(state, seat, cardId, target)
+    const attachment = attachCardTo(state, seat, cardId, target)
+    // P6 原语（08074 应急装备）：附属事件按条目 uses/usesType 初始化耐久/充能，
+    // 否则「使用(3 耐久)」的附属事件没有可花费的资源。只在条目声明了 uses 时写入。
+    if (attachment && registeredEntry(cardId)?.uses != null) {
+      attachment.uses = registeredEntry(cardId).uses
+      if (registeredEntry(cardId).usesType) attachment.usesType = registeredEntry(cardId).usesType
+    }
     if (registeredEntry(cardId)?.assetRule?.hostExtraSlot) {
       const owner = state.investigators.find(owner => owner.assets.includes(target))
       if (owner) deps.enforceAssetSlotCapacity(state, owner, target, events)
@@ -309,7 +361,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
   }
 
-  if (def.type === 'asset' && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation) replaceAssets(state, inv, def, events)
+  // 跨座位代打：槽位替换按控制者（牌主）判定，而不是代打者。
+  if (def.type === 'asset' && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation) replaceAssets(state, controller, def, events)
 
   const paid = payPlayCost()
   if (!paid.ok) return
@@ -328,18 +381,36 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       // Phase 6（6e-14）：「入场放毁灭」搬到条目级字段（旧 DSL 条目由上面的 spread 回落）。
       ...(entryFlags.onPlayDoom != null ? { onPlayDoom: entryFlags.onPlayDoom } : {}),
     }
-    const asset = newPlayerAssetInstance(state, inv, cardId)
+    // 地球边缘 P5（08017 精明的交易）：控制者控制着带 `playUnderAnyAtLocation` 的支援时，
+    // 本次打出的资产可以置于同地点任一调查员控制下（可选；只有 1 位候选时不询问）。
+    let placedController = controller
+    if (def.type === 'asset') {
+      const anyControlProvider = (controller.assets || []).some(item =>
+        registeredEntry(item.code)?.assetRule?.playUnderAnyAtLocation)
+      if (anyControlProvider) {
+        const candidates = (state.investigators || []).filter(other => other && !other.defeated && !other.resigned
+          && other.location === controller.location)
+        if (candidates.length > 1) {
+          const chosen = requestChoice(state, { kind: 'investigator', source: cardId, seat,
+            prompt: `「${cardName(cardId)}」由谁控制？`,
+            options: [...candidates.map(other => ({ id: String(other.seat), label: other.name })),
+              { id: 'self', label: `留在${controller.name}处` }] })
+          if (chosen !== 'self') placedController = candidates.find(other => String(other.seat) === chosen) || controller
+        }
+      }
+    }
+    const asset = newPlayerAssetInstance(state, placedController, cardId)
     // Phase 5（5a-18）：「打出时自选花费并转成弹药」也由条目级 chooseResourceCostOnPlay 声明。
     if (chosenVariableCost != null) asset.paidX = chosenVariableCost
     else if (registeredEntry(cardId)?.chooseResourceCostOnPlay) { asset.uses = cost; asset.usesType = 'ammo' }
     if (eff.onPlayDoom) asset.doom = eff.onPlayDoom
-    if (eff.passive && eff.passive.extraAction && state.currentSeat === seat) inv.actionsLeft += eff.passive.extraAction
-    inv.assets.push(asset)
+    if (eff.passive && eff.passive.extraAction && state.currentSeat === seat) placedController.actionsLeft += eff.passive.extraAction
+    placedController.assets.push(asset)
     // 2026-10-25 第七轮修复 05006：入场即带毁灭的卡也应触发「毁灭→法术专用额度」。
     if ((asset.doom || 0) > 0) {
-      grantSpellCredit(state, inv, { info: text => info(state, events, text) })
+      grantSpellCredit(state, placedController, { info: text => info(state, events, text) })
     }
-    scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
+    scenarioBehavior(state).assetEntered?.(state, placedController, asset, scenarioRuntime(state, events))
     if (eff.sealOnEnter && state.chaosBag.includes(eff.sealOnEnter)) {
       sealChaosToken(state, eff.sealOnEnter, asset.id)
       info(state, events, `🔒 「${cardName(cardId)}」封印了 ${tokenLabel(eff.sealOnEnter)}。`)

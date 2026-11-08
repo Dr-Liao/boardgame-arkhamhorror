@@ -76,6 +76,18 @@ test('调查员详情使用卡面反应、旧印与技能符号，规则链接�
   for(const [skill,glyph] of Object.entries({willpower:'A',intellect:'F',combat:'D',agility:'S'})) {
     await expect(modal.locator(`.ah-card-full-stats [data-card-symbol="${skill}"] .ah-card-glyph`)).toHaveText(glyph)
   }
+  // 图标尺寸回归：四维字形 ≥ 16px；生命/理智是 18px 矢量剪影（不再是会糊的位图蒙版）。
+  for(const skill of ['willpower','intellect','combat','agility']) {
+    const fontSize=await modal.locator(`.ah-card-full-stats-investigator [data-card-symbol="${skill}"] .ah-card-glyph`).first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))
+    expect(fontSize).toBeGreaterThanOrEqual(16)
+  }
+  for(const name of ['health','sanity']) {
+    const icon=modal.locator(`.ah-card-full-stats-investigator [data-card-symbol="${name}"] .ah-symbol-vector`).first()
+    await expect(icon).toBeVisible()
+    const box=await icon.boundingBox()
+    expect(box.width).toBeGreaterThanOrEqual(17)
+    expect(await icon.evaluate(el=>{const cs=getComputedStyle(el);return cs.maskImage==='none'||cs.maskImage===''})).toBe(true)
+  }
   expect(await page.evaluate(async()=>{
     await document.fonts.load('20px AHCardSymbols','yXAFDS')
     return document.fonts.check('20px AHCardSymbols','yXAFDS')

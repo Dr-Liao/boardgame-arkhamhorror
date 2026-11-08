@@ -1,0 +1,259 @@
+{
+  "date": "2026-11-08",
+  "campaignId": "edgeOfTheEarth",
+  "bucket": "boardgame",
+  "newTracks": 16,
+  "reusedTracks": 8,
+  "reuseRate": 0.3333333333333333,
+  "status": "passed",
+  "tracks": [
+    {
+      "id": "eoteDespairAndTriumph",
+      "url": "https://drliao1.com/arkhamhorror/music/common/despair-and-triumph.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 4572979,
+      "sha256": "a7b63ae2b663720e08f7f003a609d949a135ab27c68590ddd020bd923f3392c7",
+      "passed": true
+    },
+    {
+      "id": "eoteMoorland",
+      "url": "https://drliao1.com/arkhamhorror/music/common/moorland.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 5426432,
+      "sha256": "517b90f9800feca08c03699f3299a02cb023d5e85755d17b4ba8e1a9fc34f4f3",
+      "passed": true
+    },
+    {
+      "id": "tdeFrozenStar",
+      "url": "https://drliao1.com/arkhamhorror/music/common/frozen-star.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3684509,
+      "sha256": "0d0d5f55b7cd9e6bf445b632f1d6c97d4dc2361803fcb9bdcac0aa01b9aa8327",
+      "passed": true
+    },
+    {
+      "id": "eoteSpacialWinds",
+      "url": "https://drliao1.com/arkhamhorror/music/common/spacial-winds.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 2344812,
+      "sha256": "32d49cb662abe398ae3b6dd7894161df17c74f343a469a00cd60359bf2fdad8f",
+      "passed": true
+    },
+    {
+      "id": "eoteInexorable",
+      "url": "https://drliao1.com/arkhamhorror/music/common/inexorable.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 6231860,
+      "sha256": "26576c41da381d04a5e152401e378820d39e9ca8dc11edf3c872ea61a22a86ed",
+      "passed": true
+    },
+    {
+      "id": "ticIceDemon",
+      "url": "https://drliao1.com/arkhamhorror/music/common/ice-demon.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 4234820,
+      "sha256": "3d55279ea424cf3ba222ab9167c904340a1dab58ac72ec14fb57b8690ed588aa",
+      "passed": true
+    },
+    {
+      "id": "eoteDayOfChaos",
+      "url": "https://drliao1.com/arkhamhorror/music/common/day-of-chaos.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3996162,
+      "sha256": "cfdf88703b6cf1faf5e2e99a8e5833c3f6bb2e17c877b9ef7689a5c738a0fef4",
+      "passed": true
+    },
+    {
+      "id": "eoteDarkeningDevelopments",
+      "url": "https://drliao1.com/arkhamhorror/music/common/darkening-developments.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 2121285,
+      "sha256": "532becfb48d5f88122ef43302aacce3b36bbbedaf402b956361a9c0fa6b83c5d",
+      "passed": true
+    },
+    {
+      "id": "ticStormfront",
+      "url": "https://drliao1.com/arkhamhorror/music/common/stormfront.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 5346165,
+      "sha256": "ac541a24b6b9dffa4889ce2bfb074cef3a146a0bc8080f1a613614c96d1a6587",
+      "passed": true
+    },
+    {
+      "id": "eoteEveningFallHarp",
+      "url": "https://drliao1.com/arkhamhorror/music/common/evening-fall-harp.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 2324504,
+      "sha256": "8d3acd1a61fcbacbf05326bef28a1f299531d915726b76ea3f7259b004af31bd",
+      "passed": true
+    },
+    {
+      "id": "eoteLostTime",
+      "url": "https://drliao1.com/arkhamhorror/music/common/lost-time.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3639702,
+      "sha256": "20994f00888c69be8f3dace4aa397c8224d7fbab38a968187f7ebbf98a884443",
+      "passed": true
+    },
+    {
+      "id": "tdeDreamlike",
+      "url": "https://drliao1.com/arkhamhorror/music/common/dreamlike.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 1788498,
+      "sha256": "a5b5c35f2be5de63b67b54b96136566d17dfe266a1ed8b2ff4f9cef82d7ff385",
+      "passed": true
+    },
+    {
+      "id": "eoteCrossingTheChasm",
+      "url": "https://drliao1.com/arkhamhorror/music/common/crossing-the-chasm.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3151096,
+      "sha256": "6d42eb86f4503c596a96f41e8a1f2d6194c711122a74cfa87c49237596a9640d",
+      "passed": true
+    },
+    {
+      "id": "eoteLongRoadAheadB",
+      "url": "https://drliao1.com/arkhamhorror/music/common/long-road-ahead-b.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 1664802,
+      "sha256": "84a79500891a91b824b8bbe9d8519a666f211849dfd53180c0f6d735cb2820af",
+      "passed": true
+    },
+    {
+      "id": "lostFrontier",
+      "url": "https://drliao1.com/arkhamhorror/music/common/lost-frontier.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 4240256,
+      "sha256": "c99dea940c64508bdfbff25de472ebb1401be92d44e2cdaec5904fdc337ef6c9",
+      "passed": true
+    },
+    {
+      "id": "eoteSpacialHarvest",
+      "url": "https://drliao1.com/arkhamhorror/music/common/spacial-harvest.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 10466209,
+      "sha256": "cd3522997d1628538aaa05253854cef520aa1c8bde85e4856d95b314624708cd",
+      "passed": true
+    },
+    {
+      "id": "eoteShadowlands3Machine",
+      "url": "https://drliao1.com/arkhamhorror/music/common/shadowlands-3-machine.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3682309,
+      "sha256": "cb3be381287daf02dbdfe0e51a3e38670b8a0b0843ed4e7ea11499bffcdb3efa",
+      "passed": true
+    },
+    {
+      "id": "truthInTheStones",
+      "url": "https://drliao1.com/arkhamhorror/music/common/truth-in-the-stones.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 5975695,
+      "sha256": "b87034a595af07301055101c9857232c541a8558aafa7c483d1c898c61343fe7",
+      "passed": true
+    },
+    {
+      "id": "eoteScpX2xUnseenPresence",
+      "url": "https://drliao1.com/arkhamhorror/music/common/scp-x2x-unseen-presence.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 4694180,
+      "sha256": "56b05dba9a6821d2c4acb1907066efb09b34c93e8ef9a850a8ac589efc488d5e",
+      "passed": true
+    },
+    {
+      "id": "eoteScpX4xMindLeech",
+      "url": "https://drliao1.com/arkhamhorror/music/common/scp-x4x-mind-leech.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 5378379,
+      "sha256": "cd0adb8579313254d19bffed2206dd10135b3231ed1ef40818fd8eaaeebf4aa4",
+      "passed": true
+    },
+    {
+      "id": "orion300xb",
+      "url": "https://drliao1.com/arkhamhorror/music/common/orion-300xb.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3568191,
+      "sha256": "024a91acc498fc0f9109c817938224ebce04ae18a022e70ed4a3f5bf62ec8ddc",
+      "passed": true
+    },
+    {
+      "id": "eoteBlackVortex",
+      "url": "https://drliao1.com/arkhamhorror/music/common/black-vortex.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 2716814,
+      "sha256": "72b79050dd74b5e2469324643d35bbc2f0c20abd33ef6dcdee9f322c09ebb135",
+      "passed": true
+    },
+    {
+      "id": "eoteTheComplex",
+      "url": "https://drliao1.com/arkhamhorror/music/common/the-complex.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 4285414,
+      "sha256": "5faaf2afc0824aa6b0210c655f83e82a79ed3991c77a7f0c15242271922b8a15",
+      "passed": true
+    },
+    {
+      "id": "thunderDreams",
+      "url": "https://drliao1.com/arkhamhorror/music/common/thunder-dreams.mp3",
+      "status": 200,
+      "contentType": "audio/mpeg",
+      "bytes": 3687716,
+      "sha256": "eff9f379f74ef95b05ed733a2ffdd81e0d4d2565349c732001e3b0cee4972d28",
+      "passed": true
+    }
+  ],
+  "artwork": {
+    "count": 10,
+    "width": 1536,
+    "height": 1024,
+    "format": "webp",
+    "manifest": "web/img/campaigns/edgeOfTheEarth/assets.json",
+    "tool": "OpenAI built-in image_gen"
+  },
+  "validation": {
+    "musicNodeTests": {
+      "passed": 18,
+      "failed": 0
+    },
+    "browser": {
+      "passed": 2,
+      "failed": 0,
+      "viewports": [
+        "1440x950",
+        "390x844"
+      ],
+      "imageDecodesPerViewport": 10,
+      "audioPlaybackPerViewport": 24
+    },
+    "additionalChecks": {
+      "passed": 43,
+      "failed": 2,
+      "failures": [
+        "Existing games/arkhamhorror/artifacts/arkham-polish/attack-impact.png outside allowed media directory",
+        "Existing audit/presentation-report.json drift from card presentation generator"
+      ]
+    }
+  }
+}

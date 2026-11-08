@@ -1,3 +1,4 @@
+import { validateDraftState } from '../deck/draft-mode.js'
 import { contentRegistry } from '../../content/registered.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
@@ -5,6 +6,8 @@ import { bondedPoolMain, bondedCardList } from './bonded.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { validateMechanicState } from './mechanic-state.js'
 import { validateInvestigatorMechanics } from './investigator-mechanics.js'
+import { validateEoteState } from './eote-primitives.js'
+import { validateEotePlayerPrimitives } from './effect-state.js'
 // 存档向下兼容与修复。
 //
 // 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
@@ -413,10 +416,16 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
 export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
   // Optional extension v1 is inside the existing scenarioFlags schema; absent old saves stay untouched.
+  validateDraftState(state)
   validateMechanicState(state)
   validateInvestigatorMechanics(state)
+  // 七循环 P2：EotE 可选扩展（scenarioFlags.mechanics.eote / campaign.eote / 既有 mechanicState 的
+  // 数值钥匙与隐藏剧本牌库）。旧存档没有这些键时各校验直接跳过，字节不变。
+  validateEoteState(state)
+  // P6：玩家卡原语的纯 JSON 归属记录（跨座位手牌转移等）。
+  validateEotePlayerPrimitives(state)
   for (const saved of [state.continuation?.base, ...parallelLaneEntries(state).map(([, lane]) => lane)].filter(Boolean)) {
-    validateMechanicState(saved); validateInvestigatorMechanics(saved)
+    validateDraftState(saved); validateMechanicState(saved); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved)
   }
   const lanes = parallelLaneEntries(state)
   const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))

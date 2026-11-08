@@ -1,5 +1,85 @@
 [
   {
+    "id": "eoteDespairAndTriumph",
+    "title": "Despair and Triumph",
+    "file": "common/despair-and-triumph.mp3"
+  },
+  {
+    "id": "eoteMoorland",
+    "title": "Moorland",
+    "file": "common/moorland.mp3"
+  },
+  {
+    "id": "eoteSpacialWinds",
+    "title": "Spacial Winds",
+    "file": "common/spacial-winds.mp3"
+  },
+  {
+    "id": "eoteInexorable",
+    "title": "Inexorable",
+    "file": "common/inexorable.mp3"
+  },
+  {
+    "id": "eoteDayOfChaos",
+    "title": "Day of Chaos",
+    "file": "common/day-of-chaos.mp3"
+  },
+  {
+    "id": "eoteDarkeningDevelopments",
+    "title": "Darkening Developments",
+    "file": "common/darkening-developments.mp3"
+  },
+  {
+    "id": "eoteEveningFallHarp",
+    "title": "Evening Fall (Harp)",
+    "file": "common/evening-fall-harp.mp3"
+  },
+  {
+    "id": "eoteLostTime",
+    "title": "Lost Time",
+    "file": "common/lost-time.mp3"
+  },
+  {
+    "id": "eoteCrossingTheChasm",
+    "title": "Crossing the Chasm",
+    "file": "common/crossing-the-chasm.mp3"
+  },
+  {
+    "id": "eoteLongRoadAheadB",
+    "title": "Long Road Ahead B",
+    "file": "common/long-road-ahead-b.mp3"
+  },
+  {
+    "id": "eoteSpacialHarvest",
+    "title": "Spacial Harvest",
+    "file": "common/spacial-harvest.mp3"
+  },
+  {
+    "id": "eoteShadowlands3Machine",
+    "title": "Shadowlands 3 - Machine",
+    "file": "common/shadowlands-3-machine.mp3"
+  },
+  {
+    "id": "eoteScpX2xUnseenPresence",
+    "title": "SCP-x2x (Unseen Presence)",
+    "file": "common/scp-x2x-unseen-presence.mp3"
+  },
+  {
+    "id": "eoteScpX4xMindLeech",
+    "title": "SCP-x4x (Mind Leech)",
+    "file": "common/scp-x4x-mind-leech.mp3"
+  },
+  {
+    "id": "eoteBlackVortex",
+    "title": "Black Vortex",
+    "file": "common/black-vortex.mp3"
+  },
+  {
+    "id": "eoteTheComplex",
+    "title": "The Complex",
+    "file": "common/the-complex.mp3"
+  },
+  {
     "id": "ticIceDemon",
     "title": "Ice Demon",
     "file": "common/ice-demon.mp3"

@@ -90,6 +90,17 @@ export const UI_CARDS = Object.freeze({
     aLightInTheFog: '07231',
     theLairOfDagon: '07274',
     intoTheMaelstrom: '07311',
+    // 地球边缘（七循环，P7 注册时补）：id / 卡号与
+    // content/campaigns/edgeOfTheEarth/shared.js 的 chapters 一致；
+    // 双面部分章共用 08501/08648 正面提示卡。
+    iceAndDeathPart1: '08501',
+    iceAndDeathPart2: '08501',
+    iceAndDeathPart3: '08501',
+    fatalMirage: '08549',
+    toTheForbiddenPeaks: '08596',
+    cityOfTheElderThings: '08621',
+    theHeartOfMadnessPart1: '08648',
+    theHeartOfMadnessPart2: '08648',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',
@@ -108,6 +119,10 @@ export const UI_CARDS = Object.freeze({
   deckRules: Object.freeze({
     dunwichInvestigators: Object.freeze(['02001', '02002', '02003', '02004', '02005']),
     noFortuneInvestigator: '02002',
+    // 地球边缘 P5：陈丽丽的演武选择（P5 契约；web 卡号字面量只允许出现在本文件）。
+    eoteDisciplineSelection: Object.freeze({
+      '08010': Object.freeze({ codes: Object.freeze(['08011a', '08012a', '08013a', '08014a']), perXp: 15 }),
+    }),
   }),
   rulebookActAgenda: Object.freeze(['02085', '02220']),
   // 万象无终（P4）：这些卡的「身份」写在卡名而不是卡文里（序章调查员、专属设置卡、战役资产），

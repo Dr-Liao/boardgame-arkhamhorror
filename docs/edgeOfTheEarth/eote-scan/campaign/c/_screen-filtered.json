@@ -1,0 +1,3937 @@
+{
+ "generatedAt": "2026-11-08T11:07:41.021Z",
+ "integrity": [
+  {
+   "code": "08614",
+   "name": "绿皂石",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08614.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08615",
+   "name": "木制雪撬",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08615.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08616",
+   "name": "炸药",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08616.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08617",
+   "name": "瘴气水晶",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08617.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08618",
+   "name": "矿物标本",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08618.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08619",
+   "name": "小型收音机",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08619.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  },
+  {
+   "code": "08620",
+   "name": "备用零件",
+   "partition": "eoteCampaign",
+   "type": "asset",
+   "status": "verified",
+   "entryPath": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08620.js",
+   "issues": [
+    {
+     "kind": "entry-no-code",
+     "detail": "条目无 code 字段",
+     "severity": "medium"
+    },
+    {
+     "kind": "no-implemented-flag",
+     "detail": "条目无 implemented 标记（部分玩家卡口径如此）",
+     "severity": "low"
+    }
+   ],
+   "markers": [
+    {
+     "line": 8,
+     "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+    }
+   ]
+  }
+ ],
+ "keywordCoverage": [],
+ "flagsUnread": [
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "studyHistory",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "discernShoggoths",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "studyHistory",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "hiddenPower",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "discernShoggoths",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "hiddenPower",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "returnTekeliWeaknesses",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "forcedOnEnemyEnter",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "removeElderThingTokens",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "defeatElderThingsAtLocation",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "block": "locationRule",
+   "key": "blocksClueDiscovery",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08634",
+   "name": "迷宫房间",
+   "block": "flags",
+   "key": "doubleKeyTokenModifier",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "block": "flags",
+   "key": "frostForcedDamage",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "block": "flags",
+   "key": "frostForcedHorror",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "blocksKeysWhileReady",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "onDefeatDoom",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "anyEmpty",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "takesKeyOnEngage",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "readiesOnKeyControlled",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "placesKeyOnLeave",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "flags",
+   "key": "frostWeakness",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "flags",
+   "key": "healAsOneDamageApproximation",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "flags",
+   "key": "frostWeakness",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "moveDownToBelow",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08609",
+   "name": "拘束型古老者",
+   "block": "enemyRule",
+   "key": "blocksAscendWhileEngaged",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "block": "flags",
+   "key": "sealAwareToken",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "block": "flags",
+   "key": "towerAwareToken",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08649",
+   "name": "伊夸之门",
+   "block": "flags",
+   "key": "claimedSealsKeptOnResign",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  }
+ ],
+ "flagsAll": [
+  {
+   "code": "08622",
+   "name": "恐惧潜伏",
+   "block": "agendaRule",
+   "key": "freeActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08622",
+   "name": "恐惧潜伏",
+   "block": "agendaRule",
+   "key": "cityLookRowOrColumn",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08622",
+   "name": "恐惧潜伏",
+   "block": "agendaRule",
+   "key": "cityMoveAlongRowOrColumn",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08623",
+   "name": "自下而来的毁灭",
+   "block": "agendaRule",
+   "key": "freeActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08623",
+   "name": "自下而来的毁灭",
+   "block": "agendaRule",
+   "key": "cityLookRowOrColumn",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08623",
+   "name": "自下而来的毁灭",
+   "block": "agendaRule",
+   "key": "cityMoveAlongRowOrColumn",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "keyActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "cityKeys",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/eote-interactions.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "studyHistory",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "discernShoggoths",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "block": "actRule",
+   "key": "act1BackV1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "keyActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "cityKeys",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/eote-interactions.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "studyHistory",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "hiddenPower",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "block": "actRule",
+   "key": "act1BackV2",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "keyActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "cityKeys",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/eote-interactions.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "discernShoggoths",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "hiddenPower",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "block": "actRule",
+   "key": "act1BackV3",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "actTwoActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "hiddenTunnel",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js"
+   ],
+   "engineReadpointCount": 4
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "healAll",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/tests.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "block": "actRule",
+   "key": "resolution1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/parallel-acts.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "actTwoActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "hiddenTunnel",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js"
+   ],
+   "engineReadpointCount": 4
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "returnTekeliWeaknesses",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "block": "actRule",
+   "key": "resolution1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/parallel-acts.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "version",
+   "engineReadpoints": [
+    "src/campaign/campaign-parts.js",
+    "src/campaign/eote-partners.js",
+    "src/campaign/story.js",
+    "src/engine/capture.js",
+    "src/engine/eote-city.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "actTwoActions",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "forcedOnEnemyEnter",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "hiddenTunnel",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js"
+   ],
+   "engineReadpointCount": 4
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "removeElderThingTokens",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "defeatElderThingsAtLocation",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "block": "actRule",
+   "key": "resolution1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/parallel-acts.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "block": "locationRule",
+   "key": "blocksClueDiscovery",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "block": "locationRule",
+   "key": "victory",
+   "engineReadpoints": [
+    "src/ai/ai-context.js",
+    "src/campaign/campaign-parts.js",
+    "src/campaign/story.js",
+    "src/cards/campaign-plugin.js",
+    "src/cards/card-catalog.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "block": "locationRule",
+   "key": "tunnelInvestigate",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08631",
+   "name": "古代天文馆",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08631",
+   "name": "古代天文馆",
+   "block": "locationRule",
+   "key": "planetariumStudy",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08631",
+   "name": "古代天文馆",
+   "block": "locationRule",
+   "key": "theTeamStudiedTheHistoryOfTheElderThings",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/records.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08632",
+   "name": "石桥",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08632",
+   "name": "石桥",
+   "block": "locationRule",
+   "key": "bridgeDiscover",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08632",
+   "name": "石桥",
+   "block": "locationRule",
+   "key": "bridgeTravel",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08633",
+   "name": "圆柱塔",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08633",
+   "name": "圆柱塔",
+   "block": "locationRule",
+   "key": "towerStudy",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08633",
+   "name": "圆柱塔",
+   "block": "locationRule",
+   "key": "theTeamStudiedTheHistoryOfTheElderThings",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/records.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08634",
+   "name": "迷宫房间",
+   "block": "flags",
+   "key": "doubleKeyTokenModifier",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08634",
+   "name": "迷宫房间",
+   "block": "locationRule",
+   "key": "flags",
+   "engineReadpoints": [
+    "src/ai/ai-participation.js",
+    "src/campaign/story.js",
+    "src/cards/campaign-view.js",
+    "src/cards/card-rules.js",
+    "src/engine/ability.js"
+   ],
+   "engineReadpointCount": 17
+  },
+  {
+   "code": "08635",
+   "name": "地图资料室",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08635",
+   "name": "地图资料室",
+   "block": "locationRule",
+   "key": "mapRoomStudy",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08635",
+   "name": "地图资料室",
+   "block": "locationRule",
+   "key": "theTeamStudiedTheHistoryOfTheElderThings",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/records.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08636",
+   "name": "无顶堡垒",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08636",
+   "name": "无顶堡垒",
+   "block": "locationRule",
+   "key": "rampartStudy",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08636",
+   "name": "无顶堡垒",
+   "block": "locationRule",
+   "key": "theTeamStudiedTheHistoryOfTheElderThings",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/records.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "block": "flags",
+   "key": "frostForcedDamage",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "block": "locationRule",
+   "key": "flags",
+   "engineReadpoints": [
+    "src/ai/ai-participation.js",
+    "src/campaign/story.js",
+    "src/cards/campaign-view.js",
+    "src/cards/card-rules.js",
+    "src/engine/ability.js"
+   ],
+   "engineReadpointCount": 17
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "block": "locationRule",
+   "key": "streetsReactionClue",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08638",
+   "name": "巨大尖顶",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08638",
+   "name": "巨大尖顶",
+   "block": "locationRule",
+   "key": "moveKeyToSpires",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08639",
+   "name": "埋没通路",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08639",
+   "name": "埋没通路",
+   "block": "locationRule",
+   "key": "moveClueToHidden",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "block": "flags",
+   "key": "frostForcedHorror",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "block": "locationRule",
+   "key": "flags",
+   "engineReadpoints": [
+    "src/ai/ai-participation.js",
+    "src/campaign/story.js",
+    "src/cards/campaign-view.js",
+    "src/cards/card-rules.js",
+    "src/engine/ability.js"
+   ],
+   "engineReadpointCount": 17
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "block": "locationRule",
+   "key": "actions",
+   "engineReadpoints": [
+    "src/engine/ability-exec.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/actions-extra.js",
+    "src/engine/actions.js"
+   ],
+   "engineReadpointCount": 29
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "block": "locationRule",
+   "key": "swapKeys",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/api-mechanics.js",
+    "src/engine/eote-city.js",
+    "src/engine/eote-interactions.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "hunter",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/card-lookup.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/hidden-enemy.js"
+   ],
+   "engineReadpointCount": 12
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "massive",
+   "engineReadpoints": [
+    "src/engine/combat.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/engine.js",
+    "src/engine/hidden-rules.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "perInvestigatorHealth",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "blocksKeysWhileReady",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "spawn",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/actions-extra.js",
+    "src/engine/debug.js",
+    "src/engine/encounter.js",
+    "src/engine/enemies.js"
+   ],
+   "engineReadpointCount": 10
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "onSpawnDoom",
+   "engineReadpoints": [
+    "src/engine/enemies.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "onDefeatDoom",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "parley",
+   "engineReadpoints": [
+    "src/ai/ai-context.js",
+    "src/engine/ability-exec.js",
+    "src/engine/ability-rules.js",
+    "src/engine/ability.js",
+    "src/engine/actions-extra.js"
+   ],
+   "engineReadpointCount": 12
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "anyEmpty",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "willpower",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/ai/ai-context.js",
+    "src/ai/ai-dialogue.js",
+    "src/cards/card-catalog.js",
+    "src/deck/deckbuilding.js",
+    "src/engine/ability.js"
+   ],
+   "engineReadpointCount": 23
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "block": "enemyRule",
+   "key": "removeFromGame",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/zones.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "hunter",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/card-lookup.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/hidden-enemy.js"
+   ],
+   "engineReadpointCount": 12
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "takesKeyOnEngage",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "readiesOnKeyControlled",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "block": "enemyRule",
+   "key": "placesKeyOnLeave",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08644",
+   "name": "真相开端",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08644",
+   "name": "真相开端",
+   "block": "treacheryRule",
+   "key": "dawningOfTheTruth",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08645",
+   "name": "崩塌废墟",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08645",
+   "name": "崩塌废墟",
+   "block": "treacheryRule",
+   "key": "crumblingRuins",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "flags",
+   "key": "frostWeakness",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "flags",
+   "key": "healAsOneDamageApproximation",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "treacheryRule",
+   "key": "threatArea",
+   "engineReadpoints": [
+    "content/campaigns/thePathToCarcosa/card-data.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "block": "treacheryRule",
+   "key": "frostbitten",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "flags",
+   "key": "frostWeakness",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "flags",
+   "key": "threatHorrorSink",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/harm-threat.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "flags",
+   "key": "redirectHeal",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/harm-threat.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "treacheryRule",
+   "key": "threatArea",
+   "engineReadpoints": [
+    "content/campaigns/thePathToCarcosa/card-data.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "block": "treacheryRule",
+   "key": "possessed",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/campaign/campaign.js",
+    "src/campaign/story.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08597",
+   "name": "失落山峰",
+   "block": "agendaRule",
+   "key": "onMove",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/theDunwichLegacy/encounter-rules.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08597",
+   "name": "失落山峰",
+   "block": "agendaRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08597",
+   "name": "失落山峰",
+   "block": "agendaRule",
+   "key": "returnClues",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08597",
+   "name": "失落山峰",
+   "block": "agendaRule",
+   "key": "spawnTerrorOfTheStars",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08598",
+   "name": "恐怖降临",
+   "block": "agendaRule",
+   "key": "onMove",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/theDunwichLegacy/encounter-rules.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08598",
+   "name": "恐怖降临",
+   "block": "agendaRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08598",
+   "name": "恐怖降临",
+   "block": "agendaRule",
+   "key": "returnClues",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08598",
+   "name": "恐怖降临",
+   "block": "agendaRule",
+   "key": "finalResolution",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "objective",
+   "engineReadpoints": [
+    "src/ai/agent-plans.js",
+    "src/engine/ability.js",
+    "src/engine/act-agenda.js",
+    "src/engine/describe.js",
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 9
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "chapterFlow",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js"
+   ],
+   "engineReadpointCount": 22
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "allResigned",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/engine.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "ascendTheMountain",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "block": "actRule",
+   "key": "resolution1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/parallel-acts.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08600",
+   "name": "深厚积雪",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08600",
+   "name": "深厚积雪",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08600",
+   "name": "深厚积雪",
+   "block": "locationRule",
+   "key": "discardTop3ThenDrawWeaknesses",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08601",
+   "name": "白色断崖",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08601",
+   "name": "白色断崖",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08601",
+   "name": "白色断崖",
+   "block": "locationRule",
+   "key": "agilityTestLevelPlus1OnFailDropExpedition",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08602",
+   "name": "陡峭斜坡",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08602",
+   "name": "陡峭斜坡",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08602",
+   "name": "陡峭斜坡",
+   "block": "locationRule",
+   "key": "damage1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08603",
+   "name": "狭窄山脊",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08603",
+   "name": "狭窄山脊",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08603",
+   "name": "狭窄山脊",
+   "block": "locationRule",
+   "key": "horror1",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08604",
+   "name": "岩架",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08604",
+   "name": "岩架",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08604",
+   "name": "岩架",
+   "block": "locationRule",
+   "key": "tekeliShuffleIntoDeck",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08605",
+   "name": "白雪复盖的峭壁",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08605",
+   "name": "白雪复盖的峭壁",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08605",
+   "name": "白雪复盖的峭壁",
+   "block": "locationRule",
+   "key": "exhaustAllAssets",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "block": "locationRule",
+   "key": "enterFromBelow",
+   "engineReadpoints": [
+    "src/engine/eote-climb.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "block": "locationRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "block": "locationRule",
+   "key": "placeClues",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "src/engine/api-misc.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "block": "locationRule",
+   "key": "placeCluesPerInvestigator",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "flags",
+   "key": "summitResign",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "flags",
+   "key": "cluesOnlyByInvestigation",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/locations.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "locationRule",
+   "key": "flags",
+   "engineReadpoints": [
+    "src/ai/ai-participation.js",
+    "src/campaign/story.js",
+    "src/cards/campaign-view.js",
+    "src/cards/card-rules.js",
+    "src/engine/ability.js"
+   ],
+   "engineReadpointCount": 17
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "locationRule",
+   "key": "onReveal",
+   "engineReadpoints": [
+    "src/cards/card-rules.js",
+    "src/engine/locations.js",
+    "src/engine/setup.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "locationRule",
+   "key": "blocksUntilBelowClear",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "block": "locationRule",
+   "key": "addFrostToken",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "hunter",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/card-lookup.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/hidden-enemy.js"
+   ],
+   "engineReadpointCount": 12
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "massive",
+   "engineReadpoints": [
+    "src/engine/combat.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/engine.js",
+    "src/engine/hidden-rules.js"
+   ],
+   "engineReadpointCount": 11
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "perInvestigatorHealth",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "levelStats",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "roundEnd",
+   "engineReadpoints": [
+    "src/engine/act-agenda.js",
+    "src/engine/phases.js",
+    "src/engine/turn.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "block": "enemyRule",
+   "key": "moveDownToBelow",
+   "kind": "rule-value",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08609",
+   "name": "拘束型古老者",
+   "block": "enemyRule",
+   "key": "hunter",
+   "engineReadpoints": [
+    "src/engine/ability.js",
+    "src/engine/card-lookup.js",
+    "src/engine/describe.js",
+    "src/engine/enemies.js",
+    "src/engine/hidden-enemy.js"
+   ],
+   "engineReadpointCount": 12
+  },
+  {
+   "code": "08609",
+   "name": "拘束型古老者",
+   "block": "enemyRule",
+   "key": "levelStats",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 1
+  },
+  {
+   "code": "08609",
+   "name": "拘束型古老者",
+   "block": "enemyRule",
+   "key": "blocksAscendWhileEngaged",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08610",
+   "name": "降雪",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08610",
+   "name": "降雪",
+   "block": "treacheryRule",
+   "key": "snowfall",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08611",
+   "name": "雪崩",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08611",
+   "name": "雪崩",
+   "block": "treacheryRule",
+   "key": "avalanche",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08612",
+   "name": "悬于边缘",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08612",
+   "name": "悬于边缘",
+   "block": "treacheryRule",
+   "key": "hangingOnTheEdge",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08613",
+   "name": "低温症",
+   "block": "treacheryRule",
+   "key": "resolveKind",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js"
+   ],
+   "engineReadpointCount": 2
+  },
+  {
+   "code": "08613",
+   "name": "低温症",
+   "block": "treacheryRule",
+   "key": "hypothermia",
+   "kind": "rule-value",
+   "engineReadpoints": [
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "block": "flags",
+   "key": "tokenMeanings",
+   "engineReadpoints": [
+    "src/ai/ai-context.js",
+    "src/engine/combat-odds.js",
+    "src/engine/treachery-tokens.js"
+   ],
+   "engineReadpointCount": 3
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "block": "flags",
+   "key": "sealAwareToken",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "block": "flags",
+   "key": "towerAwareToken",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  },
+  {
+   "code": "08649",
+   "name": "伊夸之门",
+   "block": "flags",
+   "key": "gate",
+   "engineReadpoints": [
+    "src/campaign/part-flow.js",
+    "src/engine/actions.js",
+    "src/engine/api-misc.js",
+    "src/engine/dream-gate.js",
+    "src/engine/hub.js"
+   ],
+   "engineReadpointCount": 8
+  },
+  {
+   "code": "08649",
+   "name": "伊夸之门",
+   "block": "flags",
+   "key": "claimedSealsKeptOnResign",
+   "engineReadpoints": [],
+   "engineReadpointCount": 0
+  }
+ ],
+ "testsCoverage": [
+  {
+   "code": "08596",
+   "name": "失落之峰",
+   "level": "file-only",
+   "files": [
+    "tests/eote-all-cards.test.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/eote-p8-fixture.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08597",
+   "name": "失落山峰",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08598",
+   "name": "恐怖降临",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08599",
+   "name": "登上高峰",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08600",
+   "name": "深厚积雪",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08601",
+   "name": "白色断崖",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08602",
+   "name": "陡峭斜坡",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08603",
+   "name": "狭窄山脊",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08604",
+   "name": "岩架",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08605",
+   "name": "白雪复盖的峭壁",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08606",
+   "name": "迎风通路",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08607",
+   "name": "山顶",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08608",
+   "name": "星之恐怖",
+   "level": "file-only",
+   "files": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08609",
+   "name": "拘束型古老者",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08610",
+   "name": "降雪",
+   "level": "file-only",
+   "files": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08611",
+   "name": "雪崩",
+   "level": "file-only",
+   "files": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08612",
+   "name": "悬于边缘",
+   "level": "file-only",
+   "files": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08613",
+   "name": "低温症",
+   "level": "file-only",
+   "files": [
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08614",
+   "name": "绿皂石",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-interactions.test.mjs",
+    "tests/eote-migration.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08615",
+   "name": "木制雪撬",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-interactions.test.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/eote-rules.browser.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08616",
+   "name": "炸药",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08617",
+   "name": "瘴气水晶",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-migration.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08618",
+   "name": "矿物标本",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-migration.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08619",
+   "name": "小型收音机",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-migration.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08620",
+   "name": "备用零件",
+   "level": "file-only",
+   "files": [
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-interaction-fixture.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08621",
+   "name": "古老者之城",
+   "level": "file-only",
+   "files": [
+    "tests/eote-all-cards.test.mjs",
+    "tests/eote-campaign-flow.test.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/eote-p8-fixture.mjs",
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08622",
+   "name": "恐惧潜伏",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08623",
+   "name": "自下而来的毁灭",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08624",
+   "name": "错综复杂之城(版本一)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08625",
+   "name": "错综复杂之城(版本二)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08626",
+   "name": "错综复杂之城(版本三)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08627",
+   "name": "追寻未知(版本一)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08628",
+   "name": "追寻未知(版本二)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08629",
+   "name": "追寻未知(版本三)",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08630",
+   "name": "隐秘隧道",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08631",
+   "name": "古代天文馆",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08632",
+   "name": "石桥",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08633",
+   "name": "圆柱塔",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08634",
+   "name": "迷宫房间",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08635",
+   "name": "地图资料室",
+   "level": "file-only",
+   "files": [
+    "tests/eote-primitives-travel.test.mjs"
+   ],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08636",
+   "name": "无顶堡垒",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08637",
+   "name": "破败街道",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08638",
+   "name": "巨大尖顶",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08639",
+   "name": "埋没通路",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08640",
+   "name": "古老者之庙",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08641",
+   "name": "星之恐怖",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08642",
+   "name": "和蔼的古老者",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08643",
+   "name": "复苏的古老者",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08644",
+   "name": "真相开端",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08645",
+   "name": "崩塌废墟",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08646",
+   "name": "冻伤",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08647",
+   "name": "附身",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  },
+  {
+   "code": "08648",
+   "name": "疯狂之心",
+   "level": "strong",
+   "files": [
+    "tests/eote-p8-fixture.mjs",
+    "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
+   ],
+   "strongTitles": [
+    {
+     "title": "P7 theHeartOfMadnessPart2 混乱标记与 story：共用 08648 参考卡、结构可读",
+     "line": 192,
+     "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
+    }
+   ],
+   "weakTitles": []
+  },
+  {
+   "code": "08649",
+   "name": "伊夸之门",
+   "level": "none",
+   "files": [],
+   "strongTitles": [],
+   "weakTitles": []
+  }
+ ],
+ "knownDeviationsKeys": [
+  "generatedAt",
+  "summary",
+  "simplified",
+  "deferred",
+  "primitiveRequests",
+  "scenarioApproximations",
+  "entryMarkers",
+  "suspiciousTestTitles"
+ ],
+ "knownDeviations": {
+  "generatedAt": "2026-11-08T11:04:19.877Z",
+  "summary": {
+   "simplified": 26,
+   "deferred": 28,
+   "primitiveRequests": 25,
+   "scenarioApproximations": 0,
+   "entryMarkers": 51
+  },
+  "simplified": [],
+  "deferred": [],
+  "primitiveRequests": [],
+  "scenarioApproximations": [],
+  "entryMarkers": [
+   {
+    "code": "08614",
+    "name": "绿皂石",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08615",
+    "name": "木制雪撬",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08616",
+    "name": "炸药",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08617",
+    "name": "瘴气水晶",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08618",
+    "name": "矿物标本",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08619",
+    "name": "小型收音机",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   },
+   {
+    "code": "08620",
+    "name": "备用零件",
+    "line": 8,
+    "text": "// 剧情支援：本条目声明 uses/flags（expedition）与可玩能力；复杂多选/查找类结算按注释近似，章节 behavior 读 flags 分派。"
+   }
+  ],
+  "suspiciousTestTitles": []
+ },
+ "primitiveComplianceKeys": [
+  "generatedAt",
+  "note",
+  "summary",
+  "directWrites",
+  "forbiddenImports",
+  "engineLiterals",
+  "contentLiterals",
+  "escapeCards"
+ ],
+ "primitiveCompliance": {
+  "generatedAt": "2026-11-08T11:04:19.884Z",
+  "note": "R1 直写为启发式（参数命名 card 等可能误报）；权威口径是 tools/audit-card-entry-compliance.mjs --check（本次运行 exit 0）",
+  "summary": {
+   "directWrites": 0,
+   "forbiddenImports": 0,
+   "engineLiterals": 100,
+   "escapeCards": 182,
+   "eoteCompliance": {
+    "baselineCount": 0,
+    "fields": 37
+   }
+  },
+  "directWrites": [],
+  "forbiddenImports": [],
+  "engineLiterals": [
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08622"
+   },
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08623"
+   },
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08622"
+   },
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08623"
+   },
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08638"
+   },
+   {
+    "file": "src/engine/eote-city.js",
+    "code": "08640"
+   },
+   {
+    "file": "src/engine/eote-climb.js",
+    "code": "08597"
+   },
+   {
+    "file": "src/engine/eote-climb.js",
+    "code": "08598"
+   },
+   {
+    "file": "src/engine/eote-tekeli.js",
+    "code": "08604"
+   },
+   {
+    "file": "src/engine/grid-map.js",
+    "code": "08622"
+   },
+   {
+    "file": "src/engine/grid-map.js",
+    "code": "08623"
+   },
+   {
+    "file": "src/engine/grid-map.js",
+    "code": "08622"
+   },
+   {
+    "file": "src/engine/grid-map.js",
+    "code": "08623"
+   },
+   {
+    "file": "src/engine/scenario-decks.js",
+    "code": "08604"
+   }
+  ],
+  "contentLiterals": [
+   {
+    "file": "content/campaigns/edgeOfTheEarth/parts.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/parts.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/parts.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/parts.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/parts.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08614"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08620"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08614"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08615"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08616"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08617"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08618"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08619"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/records.js",
+    "code": "08620"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08624"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08625"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08626"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08644"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08644"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08645"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08645"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08630"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08630"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08631"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08632"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08632"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08632"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08632"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08633"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08635"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08636"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08637"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08638"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08639"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+    "code": "08640"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/chaos.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08631"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08640"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08630"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08622"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08623"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08624"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08625"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08626"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08627"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08628"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08629"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08630"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08631"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08632"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08633"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08634"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08635"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08636"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08637"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08638"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08639"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08640"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08641"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08642"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08643"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08644"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08645"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08646"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+    "code": "08647"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/layout.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/texts.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08649"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+    "code": "08649"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/chaos.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08649"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+    "code": "08649"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08600"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08602"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08603"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08604"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08605"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08601"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08606"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08597"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08609"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08608"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08610"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08611"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08611"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08612"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08612"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08613"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08613"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+    "code": "08613"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/chaos.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08597"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08598"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08599"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08600"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08601"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08602"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08603"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08604"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08605"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08606"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08607"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08608"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08609"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08610"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08611"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08612"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08613"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08614"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08615"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08616"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08617"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08618"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08619"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08620"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08600"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08602"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08603"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08604"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08605"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08601"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08606"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/layout.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/texts.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08614"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08615"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08616"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08617"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08618"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08619"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08620"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08614"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08615"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08616"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08617"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08618"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08619"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+    "code": "08620"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/shared.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08596"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08621"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08648"
+   },
+   {
+    "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+    "code": "08648"
+   }
+  ],
+  "escapeCards": []
+ },
+ "duplicationKeys": [
+  "generatedAt",
+  "summary",
+  "textDuplicateGroups",
+  "clonePairs",
+  "reprint",
+  "crossCycleSameText"
+ ],
+ "duplication": {
+  "generatedAt": "2026-11-08T11:04:19.684Z",
+  "summary": {
+   "textDuplicateGroups": 9,
+   "clonePairs": 48,
+   "reprintRecords": 3,
+   "crossCycleSameText": 4
+  },
+  "textDuplicateGroups": [],
+  "clonePairs": [],
+  "reprint": [],
+  "crossCycleSameText": []
+ },
+ "perceivability": []
+}

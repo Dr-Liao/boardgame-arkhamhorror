@@ -6,6 +6,8 @@
 //
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
+import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
+
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
   const {
@@ -86,6 +88,7 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
       state.hubSelectedScenarioId = next.scenarioId
     }
     campaign.upgradesAllowed = node.type === 'interlude' && node.upgrades !== false
+    if (campaign.upgradesAllowed) openDraftUpgrades(state)
     state.hubReady = false; state.hubSeatDone = {}; state.currentSeat = 0
     if (launch && !state.hubFlow) runInterlude(state, campaign.scenarioIndex, events)
   }
@@ -202,6 +205,13 @@ function finishScenario(state, resolutionKey, events) {
       code: pallidMaskCode(),
       bearerRecord: weaknessTransferRecord,
     }, text => info(state, events, text))
+  }
+  if (isDraftMode(state)) for (const inv of state.investigators) {
+    const record = campaign.investigators[inv.seat]
+    const finalXp = Math.max(0, record.earnedXp - before[inv.seat].earnedXp)
+    const extra = finalXp + 2
+    awardExperience(campaign, inv.seat, extra)
+    info(state, events, `${inv.name} 三选一模式：(${finalXp} + 1) × 2 = ${(finalXp + 1) * 2} XP。`)
   }
   campaign.victory += state.victory
   campaign.scenarioResults.push({

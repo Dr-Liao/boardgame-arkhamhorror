@@ -7,7 +7,9 @@ import { vehicleAccessError, enterVehicle, leaveVehicle, moveVehicle, vehicleNam
 import { beneathCards, commitFromOrigin, withdrawCommitment } from './commit-origins.js'
 import { cardDef } from './card-lookup.js'
 
-export const MECHANIC_OPERATIONS = Object.freeze(['seal', 'release', 'claimKey', 'giveKeys', 'spendKey', 'enterVehicle', 'leaveVehicle', 'driveVehicle', 'commitOrigin', 'returnCommitment'])
+export const MECHANIC_OPERATIONS = Object.freeze(['seal', 'release', 'claimKey', 'giveKeys', 'spendKey', 'enterVehicle', 'leaveVehicle', 'driveVehicle', 'commitOrigin', 'returnCommitment',
+  // P4 七循环《地球边缘》交互事务：寒霜 / 伙伴 / 封印 / 城市钥匙 / 忒咳哩-哩 / 牌库顶 / 跨座位代打 / 演武 / 物资。
+  'eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply'])
 export function selectMechanic(state, seat, { operation, prompt, candidates, min = 1, max = 1, optional = true, source = null, stage = 'items' }) {
   investigatorAt(state, seat)
   if (!MECHANIC_OPERATIONS.includes(operation) || !Array.isArray(candidates)

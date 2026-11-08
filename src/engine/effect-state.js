@@ -263,6 +263,32 @@ export function clearEffects(state) {
   return removed
 }
 
+// P6 地球边缘原语新增的纯 JSON 状态（Lead 在 save-migration 里调用；旧存档没有该字段保持原状）：
+//   · state.handCardTransfers：08051「揭示手牌并让另一位调查员如同自己手牌打出」的归属记录。
+//     数组元素 { code, ownerSeat, holderSeat, round, turnSerial }，座位必须对应在场调查员。
+// 其余原语状态都寄存在既有容器（inv.testBonus / skillTest.* / 威胁区卡 counters / 支援实例字段），
+// 由各自条目的 validate 读点覆盖，不在这里重复校验。
+export function validateEotePlayerPrimitives(state) {
+  if (!state || typeof state !== 'object' || Array.isArray(state)) throw new TypeError('状态必须是对象')
+  const transfers = state.handCardTransfers
+  if (transfers == null) return true
+  if (!Array.isArray(transfers)) throw new TypeError('手牌转移记录必须是数组')
+  for (const entry of transfers) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new TypeError('手牌转移记录必须是对象')
+    for (const key of Object.keys(entry)) {
+      if (!['code', 'ownerSeat', 'holderSeat', 'round', 'turnSerial'].includes(key)) throw new TypeError(`手牌转移记录未知字段 ${key}`)
+    }
+    if (typeof entry.code !== 'string' || !entry.code) throw new TypeError('手牌转移记录卡号无效')
+    for (const seatKey of ['ownerSeat', 'holderSeat']) {
+      if (!Number.isSafeInteger(entry[seatKey]) || !state.investigators?.[entry[seatKey]]) throw new TypeError('手牌转移记录座位无效')
+    }
+    for (const key of ['round', 'turnSerial']) {
+      if (entry[key] != null && !Number.isSafeInteger(entry[key])) throw new TypeError(`手牌转移记录 ${key} 无效`)
+    }
+  }
+  return true
+}
+
 // 审计/测试：当前效果的稳定摘要（不含函数）。
 export function describeEffects(state) {
   return activeEffects(state).map(effect => ({

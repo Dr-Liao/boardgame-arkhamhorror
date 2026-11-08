@@ -1,0 +1,39 @@
+{
+  "author": "Kenney",
+  "pack": "Impact Sounds (1.0)",
+  "source": "https://kenney.nl/assets/impact-sounds",
+  "license": "CC0 1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "licenseFile": "LICENSE-Kenney-impact.txt",
+  "downloaded": "2026-11-07",
+  "samples": [
+    {
+      "file": "direct-impact.ogg",
+      "original": "Audio/impactPunch_heavy_000.ogg",
+      "bytes": 11617,
+      "sha256": "b33a8f14068aec24ec69ba85e5e87fdc41228975f6a1a3e44a6e7d6fc3d9f8d8",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "direct-bite.ogg",
+      "original": "Audio/impactSoft_heavy_000.ogg",
+      "bytes": 6570,
+      "sha256": "49e7ca88743fca974bb8676ea138b751cfd8f9033b5e7af8736c2a215d6edbc1",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "direct-glass.ogg",
+      "original": "Audio/impactGlass_heavy_000.ogg",
+      "bytes": 7403,
+      "sha256": "b44b39a940e8948e74b9bd3776bff980df43cf220abdaf0d467dc4c43c0244a5",
+      "changes": "Renamed only"
+    },
+    {
+      "file": "direct-arcane.ogg",
+      "original": "Audio/impactPlate_light_000.ogg",
+      "bytes": 10474,
+      "sha256": "6e797cf8a5bfc52d7ed5eb47c227974c1cf2a674954fec5b539cea7d62c7282c",
+      "changes": "Renamed only"
+    }
+  ]
+}

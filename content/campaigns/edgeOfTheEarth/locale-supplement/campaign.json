@@ -1,0 +1,789 @@
+{
+  "kind": "campaign-translation",
+  "entries": [
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.0.title",
+      "en": "Checkpoints",
+      "zh": "检查点",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.0.body",
+      "en": "<p class='basic'>Some of the scenarios in the Edge of the Earth campaign are split into multiple parts. Players may choose to play these parts one at a time (with breaks between each part), or they may play multiple parts one after another as part of a longer session. Each part is its own game with its own setup and resolution.</p><p class='basic'>After completing one part of a scenario, the campaign guide directs the investigators to a Checkpoint that instructs them how to proceed. If the investigators wish to proceed directly to the next part of the scenario, the Checkpoint will instruct them how to clean up the game to prepare for the next part of the scenario. If the investigators wish to take a break and resume playing during their next game session, the Checkpoint will instruct them to record information in the Campaign Log that makes setup for the next session quick and easy.</p>",
+      "zh": "<p class='basic'>《地球边缘》战役中的部分剧本会分为多个部分。玩家可以选择逐个游玩这些部分（在每个部分之间休息），也可以在一次更长的游戏时段中连续游玩多个部分。每个部分都是独立的一场游戏，拥有各自的初始设置与结局。</p><p class='basic'>完成剧本的某个部分后，战役指南会指引调查员前往一个检查点，检查点会指示他们接下来该怎么做。如果调查员希望直接进入剧本的下一部分，检查点会告知他们如何收拾游戏，以便为剧本的下一部分做好准备。如果调查员希望休息一下，在下次游戏时段再继续游玩，检查点会指示他们将信息记录在剧本日志中，让下次游戏时段的初始设置变得快速而简便。</p>",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.1.title",
+      "en": "Frost Tokens",
+      "zh": "寒霜标记",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.1.body",
+      "en": "<p class='basic'>This expansion introduces a new type of chaos token: the frost ({'{'}frost{'}'}) token. At the start of the Edge of the Earth campaign, the chaos bag contains only a few relatively harmless {'{'}frost{'}'} tokens, if any. As the expedition continues, depending on the decisions the investigators make and the events that unfold, more {'{'}frost{'}'} tokens may be added to (or removed from) the chaos bag, altering the difficulty of every test the investigators perform. The more frost tokens added to the chaos bag, the more crippling their effects become.</p><ul><li>The first {'{'}frost{'}'} token revealed from the chaos bag during a skill test has the following effect: “–1. Reveal another token.” If another {'{'}frost{'}'} token is revealed from the chaos bag during the same test, immediately end the “reveal chaos tokens” step of the skill test and resolve the test as an automatic failure. (Return all revealed {'{'}frost{'}'} tokens to the chaos bag after the test ends.)<ul><li>*For example: Bob investigates a location and there are two {'{'}frost{'}'} tokens in the chaos bag. During Bob’s first investigation attempt, he reveals a {'{'}frost{'}'} token. This reduces his skill value by 1 and causes him to reveal another token. The next token he reveals is a +1, resulting in a total of 0 from both tokens. Bob succeeds! Emboldened, Bob attempts to investigate a second time. This time, he reveals a {'{'}frost{'}'} token, followed by a second {'{'}frost{'}'} token. Bob must immediately stop revealing tokens and resolve the investigation as an automatic failure.*</li></ul></li><li>No more than eight total {'{'}frost{'}'} tokens can be included in the chaos bag and/or sealed on cards in play at any given time.</li><li>A {'{'}frost{'}'} token revealed outside of a skill test has no effect on its own unless otherwise specified by a card effect.</li><li>A {'{'}frost{'}'} token added to the chaos bag remains in the chaos bag from scenario to scenario unless removed by a card or game effect. Use the “Chaos Bag” section of the Campaign Log to record which tokens are currently in the chaos bag.</li></ul>",
+      "zh": "<p class='basic'>本扩展引入了一种全新类型的混乱标记：寒霜标记（[frost]）。在《地球边缘》战役开始时，混乱袋中只有少数几个相对无害的[frost]标记，甚至可能一个都没有。随着探险继续，根据调查员所做的决定以及事态的发展，可能会有更多[frost]标记被加入混乱袋（或被移除），从而改变调查员进行的每一次检定的难度。加入混乱袋的寒霜标记越多，其效果就越严重。</p><ul><li>在一次技能检定期间，从混乱袋中揭示的第一个[frost]标记具有以下效果：“–1。再揭示一个标记。”如果在同一次技能检定期间，又从混乱袋中揭示了另一个[frost]标记，立即结束该技能检定的“揭示混乱标记”步骤，并将该检定结算为自动失败。（检定结束后，将所有已揭示的[frost]标记放回混乱袋。）<ul><li>*例如：鲍勃调查一个地点，混乱袋中有两个[frost]标记。在鲍勃的第一次调查尝试中，他揭示了一个[frost]标记。这使他的技能值降低1，并使他再揭示一个标记。他揭示的下一枚标记是+1，两个标记合计为0。鲍勃成功了！受此鼓舞，鲍勃尝试进行第二次调查。这一次，他揭示了一个[frost]标记，紧接着又揭示了第二个[frost]标记。鲍勃必须立即停止揭示标记，并将该调查结算为自动失败。*</li></ul></li><li>在任何时候，混乱袋中和/或场上卡牌上封印的[frost]标记总数都不能超过八个。</li><li>在技能检定之外揭示的[frost]标记，除非卡牌效果另有说明，否则其本身没有效果。</li><li>加入混乱袋的[frost]标记会从一个剧本保留到下一个剧本，除非被卡牌或游戏效果移除。使用剧本日志的“混乱袋”部分来记录当前在混乱袋中的是哪些标记。</li></ul>",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.2.title",
+      "en": "Tekeli-li!",
+      "zh": "忒咳哩-哩！",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.2.body",
+      "en": "<p class='basic'>This campaign includes an encounter set of 16 weaknesses, each with the title “Tekeli-li!” These cards are shuffled together to form a special Tekeli-li deck during the setup of each scenario of this campaign.</p><p class='basic'>Like normal weaknesses, if one of these cards is added to an investigator’s deck, it becomes part of that deck and stays with that investigator from scenario to scenario. However, the resolution of each Tekeli-li! weakness instructs the investigator to return it to the Tekeli-li deck (removing it from their own deck). As a result, the number of cards in the Tekeli-li deck varies based on how many of these weaknesses are in each investigator’s deck.</p><p class='basic'>*Note: While all Tekeli-li! cards share the same title, they may have differing effects.*</p>",
+      "zh": "<p class='basic'>本战役包含一个由16张弱点组成的遭遇组，每张卡牌的标题均为“忒咳哩-哩！”。在本战役每个剧本的初始设置期间，这些卡牌会被洗混，组成一个特殊的忒咳哩-哩牌库。</p><p class='basic'>与普通弱点一样，如果其中一张卡牌被加入某位调查员的牌库，它就会成为该牌库的一部分，并随着该调查员从一个剧本进入下一个剧本。然而，每张忒咳哩-哩！弱点在结算时都会指示调查员将它放回忒咳哩-哩牌库（将其从自己的牌库中移除）。因此，忒咳哩-哩牌库中的卡牌数量会根据每位调查员牌库中这些弱点的数量而变化。</p><p class='basic'>*注：虽然所有忒咳哩-哩！卡牌的标题相同，但它们的效果可能各不相同。*</p>",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.3.title",
+      "en": "Partner",
+      "zh": "伙伴",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.3.body",
+      "en": "<p class='basic'>Partner is a keyword ability that appears on the nine story assets in the Expedition Team encounter set. Each of these assets represents a powerful ally whom investigators can bring along during scenarios in this campaign to improve their chances of success. However, bringing an asset with the partner keyword endangers that asset, with the risk of losing them permanently.</p><ul><li>At the start of each scenario in this campaign, each investigator is given the option to choose a partner asset and put it into play. Partner assets cannot be added to an investigator’s deck. An investigator may choose a different partner (or no partner) to bring each time they are given this choice.</li><li>A partner asset cannot leave play unless it is defeated (for example, it cannot be discarded by card effects unless it is explicitly defeated). If an investigator is defeated, any partner asset they have with them is also defeated.</li><li>If a partner asset is defeated, remove it from the game. Then, cross off that character’s name in the Expedition Team section of the Campaign Log.</li><li>Damage or horror on a partner asset is recorded in the Expedition Team section of the Campaign Log at the end of each game. (The Campaign Guide will instruct you when to do this.)</li><li>If an investigator resigns from a scenario, their partner asset leaves play, but is not defeated. Keep all damage and horror on it, as it will be recorded in the Campaign Log after the game ends.</li></ul>",
+      "zh": "<p class='basic'>伙伴是一个关键词能力，出现在探险队遭遇组的九张剧情支援上。这些支援各自代表一位强大的盟友，调查员可以在本战役的剧本中将其带上同行，以提高成功的机会。然而，带上具有伙伴关键词的支援会使该支援陷入险境，并冒着永久失去它的风险。</p><ul><li>在本战役的每个剧本开始时，每位调查员都可以选择一张伙伴支援并将其置入场上。伙伴支援不能被加入调查员的牌库。每次获得此选择时，调查员都可以选择不同的伙伴（或不选择伙伴）。</li><li>除非被击败，否则伙伴支援不能离开场上（例如，除非被明确击败，否则它不能因卡牌效果而被弃掉）。如果一名调查员被击败，与他同行的任何伙伴支援也会被击败。</li><li>如果一张伙伴支援被击败，将其从游戏中移除。然后，在剧本日志的“探险队”部分划掉该角色的名字。</li><li>每场游戏结束时，伙伴支援上的伤害或恐惧会记录在剧本日志的“探险队”部分。（战役指南会指示你们何时进行此操作。）</li><li>如果一名调查员从剧本中撤退，其伙伴支援会离开场上，但不会被击败。保留其上的所有伤害和恐惧，因为它们会在游戏结束后记录到剧本日志中。</li></ul>",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.4.title",
+      "en": "Alert",
+      "zh": "警戒",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "specialRules",
+      "path": "specialRules.4.body",
+      "en": "<p class='basic'>Each time an investigator fails a skill test while attempting to evade an enemy with the alert keyword, after applying all results for that skill test, that enemy performs an attack against the evading investigator. An enemy does not exhaust after performing an alert attack. This attack occurs whether the enemy is engaged with the evading investigator or not.</p>",
+      "zh": "<p class='basic'>每当一名调查员在尝试躲避一个具有警戒关键词的敌人的技能检定中失败，在结算该技能检定的所有结果后，该敌人对进行躲避的调查员发动一次攻击。敌人在发动一次警戒攻击后不会横置。无论该敌人是否与进行躲避的调查员交战，此攻击都会发生。</p>",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interludes",
+      "path": "interludes.1",
+      "en": "Restful Night",
+      "zh": "宁静夜晚",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interludes",
+      "path": "interludes.2",
+      "en": "Endless Night",
+      "zh": "无尽夜晚",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interludes",
+      "path": "interludes.3",
+      "en": "Final Night",
+      "zh": "最后一夜",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interlude1",
+      "path": "interlude1.label.doNotRemoveAnymore",
+      "en": "Do not remove anymore",
+      "zh": "不再移除",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interlude2",
+      "path": "interlude2.label.doNotRemoveAnymore",
+      "en": "Do not remove anymore",
+      "zh": "不再移除",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interlude3",
+      "path": "interlude3.xp.cookiesAdvice",
+      "en": "Cookie's Advice",
+      "zh": "曲奇的建议",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "interlude3",
+      "path": "interlude3.label.doNotRemoveAnymore",
+      "en": "Do not remove anymore",
+      "zh": "不再移除",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.anyuFaithfulCompanion.attemptToEvadeWithABaseAgilitySkillOf4",
+      "en": "_Evade_. Attempt to evade with a base {'{'}agility{'}'} skill of 4",
+      "zh": "躲避。以基础值为4的[agility]尝试躲避",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.anyuFaithfulCompanion.discardAnyuToChooseUpToThreeInAnyOrder",
+      "en": "Discard Anyu to choose up to three, in any order",
+      "zh": "弃掉安雨以选择最多三项（以任意顺序）",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.anyuFaithfulCompanion.gain2SkillValue",
+      "en": "You get +2 skill value for your next skill test this round",
+      "zh": "本轮你的下一次技能检定获得+2技能值",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.prologue1Believe",
+      "en": "\"I believe you…but if what you say is true, should we not investigate these findings further?\" Proceed to _Prologue 2._",
+      "zh": "“我相信你……但如果你说的是真的，我们难道不该进一步调查这些发现吗？”推进至序幕 2。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.prologue1Wild",
+      "en": "\"I'm sorry, but this seems too wild to be true.\" Skip to _Prologue 3._",
+      "zh": "“我很抱歉，但这似乎太离奇了，不可能是真的。”跳至序幕 3。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.readPartnerIntros",
+      "en": "Read _Partner_ intros",
+      "zh": "阅读伙伴介绍",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.skipPartnerIntros",
+      "en": "Skip _Partner_ intros",
+      "zh": "跳过伙伴介绍",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.theyreOnTheirOwn",
+      "en": "They're on their own.",
+      "zh": "他们只能靠自己了。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.goAfterMissingTeamMembers",
+      "en": "Go after the missing team members.",
+      "zh": "去寻找失踪队员。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.runForYourLives",
+      "en": "Run for your lives!",
+      "zh": "快逃命吧！",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.standAndFight",
+      "en": "Stand and fight!",
+      "zh": "留下来战斗！",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.openTheDoorAndVenture",
+      "en": "Open the door and venture into the mirage.",
+      "zh": "打开门，进入幻景。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.ignoreTheDoor",
+      "en": "Ignore the door and allow it to vanish",
+      "zh": "无视那扇门，任其消失",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.openTheDoorAndVentureOnceMore",
+      "en": "Open the door and venture once more into the mirage.",
+      "zh": "打开门，再次进入幻景。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.youCanStillCheckTeamMembers",
+      "en": "You can still check {count} team members",
+      "zh": "你还可以查看{count}名队员",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.williamDyer",
+      "en": "William Dyer",
+      "zh": "威廉·戴尔教授",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.danforth",
+      "en": "Danforth",
+      "zh": "丹佛斯",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.drAmyKensler",
+      "en": "Dr. Amy Kensler",
+      "zh": "艾米·肯斯勒博士",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.drMalaSinha",
+      "en": "Dr. Mala Sinha",
+      "zh": "玛拉·辛哈医生",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.jamesCookieFredericks",
+      "en": "James \"Cookie\" Fredericks",
+      "zh": "詹姆斯·“曲奇”·弗雷德里克斯",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.averyClaypool",
+      "en": "Avery Claypool",
+      "zh": "艾弗里·克莱普尔",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.roaldEllsworth",
+      "en": "Roald Ellsworth",
+      "zh": "罗尔德·埃尔斯沃思",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.takadaHiroko",
+      "en": "Takada Hiroko",
+      "zh": "高田弘子",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.eliyahAshevak",
+      "en": "Eliyah Ashevak",
+      "zh": "伊里亚·阿什瓦克",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.doNotPerformHealing",
+      "en": "Do not perform healing",
+      "zh": "不进行治疗",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.doNotBeginWithExtraResources",
+      "en": "Do not begin with extra resources",
+      "zh": "不以额外资源开始",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.doNotRemoveAnymore",
+      "en": "Do not remove anymore",
+      "zh": "不再移除",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.removeTekeliliWeaknesses",
+      "en": "Any one investigator may choose and remove up to five Tekeli-li! weaknesses from their deck (*shuffling them with the remainder of the Tekeli-li encounter set*).",
+      "zh": "任意一位调查员可以选择并从其牌库中移除最多5张忒咳哩-哩！弱点（将其与忒咳哩-哩遭遇组的其余卡牌一起洗混）。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.earnsBonusExperience",
+      "en": "Any one investigator earns 1 bonus experience.",
+      "zh": "任意一位调查员获得1点奖励经验。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.beginScenarioIIWithExtraCards",
+      "en": "Any one investigator may begin _Scenario II: To the Forbidden Peaks_ with two additional cards drawn in their opening hand.",
+      "zh": "任意一位调查员可以在开始冒险II：失落之峰时，起始手牌额外抽取2张卡牌。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.beginScenarioIIIWithExtraCards",
+      "en": "Any one investigator may begin _Scenario III: City of the Elder Things_ with two additional cards drawn in their opening hand.",
+      "zh": "任意一位调查员可以在开始冒险III：古老者之城时，起始手牌额外抽取2张卡牌。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.beginScenarioIVWithExtraCards",
+      "en": "Any one investigator may begin _Scenario IV: The Heart of Madness_ with two additional cards drawn in their opening hand.",
+      "zh": "任意一位调查员可以在开始冒险IV：疯狂之心时，起始手牌额外抽取2张卡牌。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.beginScenarioIIWithExtraResources",
+      "en": "Any one investigator may begin _Scenario II: To the Forbidden Peaks_ with 3 additional resources in their resource pool.",
+      "zh": "任意一位调查员可以在开始冒险II：失落之峰时，资源池中额外拥有3资源。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.beginScenarioIIIWithExtraResources",
+      "en": "Any one investigator may begin _Scenario III: City of the Elder Things_ with 3 additional resources in their resource pool.",
+      "zh": "任意一位调查员可以在开始冒险III：古老者之城时，资源池中额外拥有3资源。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.stayAndStudyTheGreatDoor",
+      "en": "Stay here and study the great door to learn more. You will play both parts of the scenario. Proceed to _The Heart of Madness, Part 1._",
+      "zh": "留在这里研究那扇巨门，以了解更多。你将游玩该剧本的两个部分。推进至疯狂之心 第I部分。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.passThroughTheGate",
+      "en": "There is no time to waste. Pass through the gate! You will skip the first part of the scenario. Skip directly to _The Heart of Madness, Part 2_.",
+      "zh": "没时间可以浪费了。穿过那扇门！你将跳过该剧本的第一部分。直接跳至疯狂之心 第II部分。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.skipToPrologue4",
+      "en": "Skip to _Prologue 4_",
+      "zh": "跳至序幕 4",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "label.proceedToPrologue4",
+      "en": "Proceed to _Prologue 4_",
+      "zh": "推进至序幕 4",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "nightmarishVapors.label.shuffleTekeliliIntoYourDeck",
+      "en": "Shuffle the top {count} cards of the Tekeli-li deck into your deck without looking at them.",
+      "zh": "将忒咳哩-哩牌库顶的{count}张卡牌洗入你的牌库，不要查看内容。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "apeirophobia.label.addFrostToken",
+      "en": "Add 1 {'{'}frost{'}'} token to the chaos bag.",
+      "zh": "在混乱袋里加入1个[frost]标记。",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "wukWukWuk.label.moveToYou",
+      "en": "Move it to your location",
+      "zh": "将它移动到你的地点",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "labels",
+      "path": "wukWukWuk.label.placeDoom",
+      "en": "Place 1 doom on it",
+      "zh": "在它上面放置1个毁灭标记",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08720",
+      "en": "Dr. Amy Kensler",
+      "zh": "艾米·肯斯勒博士",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08714",
+      "en": "Prof. William Dyer",
+      "zh": "威廉·戴尔教授",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08715",
+      "en": "Danforth",
+      "zh": "丹佛斯",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08721",
+      "en": "Roald Ellsworth",
+      "zh": "罗尔德·埃尔斯沃思",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08722",
+      "en": "Takada Hiroko",
+      "zh": "高田弘子",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08718",
+      "en": "Avery Claypool",
+      "zh": "艾弗里·克莱普尔",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08717",
+      "en": "Dr. Mala Sinha",
+      "zh": "玛拉·辛哈医生",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08719",
+      "en": "James \"Cookie\" Fredericks",
+      "zh": "詹姆斯·“曲奇”·弗雷德里克斯",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "partnerNames",
+      "path": "partnerNames.08716",
+      "en": "Eliyah Ashevak",
+      "zh": "伊里亚·阿什瓦克",
+      "status": "missing"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_BarrierCamp",
+      "en": "Camp - Barrier Camp (7)",
+      "zh": "屏障营地（庇护 7）",
+      "currentZh": "Camp - 屏障营地 (7)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_BroadSnowdrifts",
+      "en": "Camp - Broad Snowdrifts (4)",
+      "zh": "辽阔雪地（庇护 4）",
+      "currentZh": "Camp - 辽阔雪地 (4)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_CrashSite",
+      "en": "Camp - Crash Site (0)",
+      "zh": "坠机点（庇护 0）",
+      "currentZh": "Camp - 坠机点 (0)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_CrystallineCavern",
+      "en": "Camp - Crystalline Cavern (8)",
+      "zh": "水晶洞穴（庇护 8）",
+      "currentZh": "Camp - 水晶洞穴 (8)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_FrigidCave",
+      "en": "Camp - Frigid Cave (6)",
+      "zh": "严寒洞穴（庇护 6）",
+      "currentZh": "Camp - 严寒洞穴 (6)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_FrozenShores",
+      "en": "Camp - Frozen Shores (2)",
+      "zh": "冰冻海岸（庇护 2）",
+      "currentZh": "Camp - 冰冻海岸 (2)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_IcebreakerLanding",
+      "en": "Camp - Icebreaker Landing (5)",
+      "zh": "破冰船登陆点（庇护 5）",
+      "currentZh": "Camp - 破冰船登陆点 (5)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_IcyWastes",
+      "en": "Camp - Icy Wastes (4)",
+      "zh": "冰封荒原（庇护 4）",
+      "currentZh": "Camp - 冰封荒原 (4)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_PrecariousIceSheet",
+      "en": "Camp - Precarious Ice Sheet (2)",
+      "zh": "不稳定冰盖（庇护 2）",
+      "currentZh": "Camp - 不稳定冰盖 (2)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_RemnantsOfLakesCamp",
+      "en": "Camp - Remnants of Lake's Camp (7)",
+      "zh": "莱克营地遗址（庇护 7）",
+      "currentZh": "Camp - 莱克营地遗址 (7)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_RockyCrags",
+      "en": "Camp - Rocky Crags (3)",
+      "zh": "岩石峭壁（庇护 3）",
+      "currentZh": "Camp - 岩石峭壁 (3)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_SnowGraves",
+      "en": "Camp - Snow Graves (5)",
+      "zh": "雪冢（庇护 5）",
+      "currentZh": "Camp - 雪冢 (5)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "recordLabels",
+      "path": "key.camp_TreacherousPath",
+      "en": "Camp - Treacherous Path (1)",
+      "zh": "危险道路（庇护 1）",
+      "currentZh": "Camp - 危险道路 (1)",
+      "fixNote": "英文前缀「Camp - X (N)」+ 半角括号；应改为「X（庇护 N）」格式。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude1.restfulNight3.body",
+      "en": "<p>_Restful Night 3_: You awaken with a start and immediately reach for a weapon to defend yourself. The sound that pierced through your dreams and shook you back into reality was not one any earthly creature could make, and yet, when you awaken, nothing is out of place. In fact…</p><p>You rise to your feet, shocked, and examine your surroundings. Your makeshift camp was protected from the harsh elements, but still deep in the Antarctic wilderness. And yet, you find yourself indoors, in a hall you cannot place despite a strange familiarity. You brush aside some of the snow that still lingers on the ground around your sleeping bag, noting a tiled floor that wasn’t there before. A dream?</p><p>As you doubt the truth of this mysterious place, the walls and the tiled floor shimmer and fade. You are left back in the freezing cold of your camp, surrounded by your companions—except the door leading out of that hall still remains. Thick gray mist swirls around you, guiding you onward.</p><p>This is no natural refraction of light. Something supernatural is at work here. The thick miasma that churns around your camp is not unlike the substance that makes up the nightmarish creatures you encountered after your plane crashed. Do you really want to know what it wants you to see?</p><p class='basic'>The investigators must decide (choose one):</p><ul><li>*Open the door and venture into the mirage*. Proceed to _Scenario ???: Fatal Mirage._</li><li>*Ignore the door and allow it to vanish*. Proceed to _Scenario II: To the Forbidden Peaks_. (*You will get this chance again later.*)</li></ul>",
+      "zh": "<p>_宁静夜晚 3_：你猛然惊醒，立刻伸手去抓武器自卫。那穿透梦境、把你拽回现实的声音，绝非任何尘世生物所能发出；然而当你醒来时，周围一切如常。事实上……</p><p>你震惊地站起身，打量四周。你们的临时营地遮蔽了严酷的天气，但仍深陷南极荒野之中。可你此刻却发现自己身处室内，置身于一座你叫不出名字、却又莫名熟悉的大厅里。你拨开睡袋周围残留的积雪，发现下面有一层此前并不存在的瓷砖地板。是梦吗？</p><p>就在你怀疑这个神秘地方是否真实之际，墙壁与瓷砖地板泛起微光，渐渐消退。你又回到了营地刺骨的寒冷中，同伴环绕四周——唯独那扇通往大厅的门依旧矗立。浓密的灰雾在你身边翻涌，牵引你向前。</p><p>这并非光线的自然折射。这里有某种超自然的力量在作祟。营地四周翻腾的浓厚瘴气，与你坠机后遭遇的那些梦魇般生物身上的物质如出一辙。你真的想知道它想让你看到什么吗？</p><p class='basic'>调查员必须选择一项：</p><ul><li>*打开门，进入幻景*。推进至*冒险：致命幻景*。</li><li>*无视那扇门，任其消失*。推进至*冒险II：失落之峰*。（*之后你还会得到这个机会。*）</li></ul>",
+      "currentZh": "<p>_宁静夜晚 3_: <p>你猛然惊醒，立即拿起武器自卫。穿透你的梦并把你唤回现实的声音不属于任何正常生物，然而，当你醒来时，一切都是正常的。事实上……</p><p>你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你去发现自己身处室内，置身于一个陌生而熟悉的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？</p><p>当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著微光，渐渐褪色。你回到了冰冷的营地里，周围是你的同伴——除了通向大厅的门还在。浓浓的灰雾在你周围盘旋，指引著你前进。</p><p>这不是光的自然折射。这里有某种超自然的东西在起作用。你的营地周围弥漫著厚厚的瘴气，就像你在飞机坠毁后遇到的可怕生物一样。你真的想知道它想让你看到什么吗？</p><p class='basic'>调查员必须选择一项：</p><ul><li>*打开门，进入幻景*. 进入 _冒险???：致命幻景_</li><li>*无视门， 让它自己消失*. 进入 _冒险III： 古老者之城_. (*之后你还会得到这个机会。*)</li></ul>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude1.claypoolIsAlive",
+      "en": "<p>_If Avery Claypool is alive:_</p><p> Claypool is examining a map of the Ross Ice Shelf as you approach, tracing his fingers over topographical lines. “We were supposed to have better weather conditions,” he explains as you hunch over next to him. “I don’t know how or why, but something is messing with the weather patterns here. We’re getting hit with storms too sudden even for Antarctica, and the temperature variance is closer to what we would find in winter.” You ask Claypool if there’s anything that can be done to prevent further hardship. “The inclination might be to hunker down,” he replies, “and surely there are some among us who are too exhausted to go on. There are others who feel the opposite: that we should leave immediately and find safety elsewhere. I believe the best course of action is somewhere in between.” He taps the map in front of him again, beckoning you closer. “These storms are hitting fast and hard. We have to find our opening and move out the moment this one lets up,” he explains. You nod in approval.</p><p class='basic'>Claypool’s predictions help you stay safe from the inclement weather. Remove 1 {'{'}frost{'}'} token from the chaos bag.</p>",
+      "zh": "<p>_如果艾弗里·克莱普尔活着：_</p><p>你走近时，克莱普尔正在研究罗斯岛冰架的地图，手指在地形线上描画着。你凑到他身边弯下腰看，他解释道：“我们本来应该有更好的天气条件的。”“我不知道是怎么回事，也不知道是为什么，但有什么东西扰乱了这里的天气模式。即便这里是南极，袭击我们的风暴也实在太突然了，而且温度的变化幅度也更接近我们在冬天观测到的情况。”你询问克莱普尔能不能做点什么来避免更多的苦难。“人们或许会倾向于原地休整，”他回答道，“而且我确信我们中一些人已经筋疲力尽，没法前进了。其他人的想法恰恰相反：我们应该立即离开，到别处寻找安全的地方。我认为最好的做法是介于两者之间。”他再次轻轻敲了下放在面前的地图，示意你靠近。“这些风暴袭击得又快又猛。我们得找到机会，在风暴稍歇的瞬间就冲出去。”他解释道。你点头表示赞同。</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除1个[frost]标记。</p>",
+      "currentZh": "<p>_如果艾弗里·克莱普尔活著：_</p><p> 你走近时，克莱普尔正在研究罗斯岛冰架的地图，手指在地形线上描画著。你凑到他身边弯下腰看，他解释道：“我们本来应该有更好的天气条件的。”“我不知道是怎么回事，也不知道是为什么，但有什么东西扰乱了这里的天气模式。即便这里是南极，但袭击我们的风暴也实在太突然了，而且温度的变化也更接近我们在冬天观测的情况。”你询问克莱普尔能不能做点什么来避免更多的苦难。“按目前情况我们应该原地休整一下。”他回答道，“而且我确信我们中一些人已经筋疲力尽，没法前进了。其他人的想法恰恰相反：我们应该立即离开，到别处寻找安全的地方。我认为最好的做法是介于两者之间。”他再次轻轻敲了下放在面前的地图，示意你靠近。“这些风暴袭击得又快又猛。我们得找机会，在条件允许的时候冲出去。”他解释道。你点头表示赞同。</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除1个{'{'}frost{'}'}标记。</p>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude2.endlessNight2.body",
+      "en": "<p>_Endless Night 2_: You try in vain to sleep, but the night seems to go on forever, your thoughts meandering endlessly in a maze of worry and doubt.</p><ul><li>If you have already played _Scenario ???: Fatal Mirage_ this campaign, proceed to _Endless Night 3._</li><li>Otherwise, check the “Expedition Team” section of the Campaign Log.<ul><li>If there are three or more names crossed out, skip to _Endless Night 4._</li><li>Otherwise, proceed to _Scenario III: City of the Elder Things_.</li></ul></li></ul>",
+      "zh": "<p>_无尽夜晚 2_：你徒劳地试图入睡，但黑夜仿佛永无止境，你的思绪在担忧与怀疑的迷宫中无尽地游荡。</p><ul><li>如果你在本战役中已经游玩过*冒险：致命幻景*，推进至*无尽夜晚 3*。</li><li>否则，查看剧本日志的“探险队”部分。<ul><li>如果有三个或更多名字被划掉，跳至*无尽夜晚 4*。</li><li>否则，推进至*冒险III：古老者之城*。</li></ul></li></ul>",
+      "currentZh": "<p>_无尽夜晚 2_: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。</p><ul><li>如果在本剧本中，你已经进行过<b>冒险???：致命幻景</b>： 推进至 _无尽夜晚 3._</li><li>否则，检查剧本日志中“探险队”部分。<ul><li>如果有至少3个名字被划掉：推进至 _无尽夜晚 4._</li><li>否则，进入 _冒险III： 古老者之城_.</li></ul></li></ul>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude2.endlessNight3.body",
+      "en": "<p>_Endless Night 3_: Just as you are finally beginning to drift off, the door appears again. It shimmers momentarily, gray mist billowing out from the cracks of the doorframe. Again, you are being offered a choice. But do you dare to risk venturing into the frigid illusion once more?</p><p class='basic'>The investigators must decide (choose one):<ul><li>Open the door and venture once more into the mirage. Add 1 {'{'}frost{'}'} token to the chaos bag for the remainder of the campaign. Proceed to _Scenario ???: Fatal Mirage._</li><li>Ignore the door and allow it to vanish. Proceed to _Scenario III: City of the Elder Things_. (*You will get this chance again later.*)</li></ul></p>",
+      "zh": "<p>_无尽夜晚 3_：就在你终于开始昏昏欲睡时，那扇门又出现了。它微微闪烁，灰色的雾气从门框的缝隙中滚滚涌出。又一次，选择摆在了你面前。但你还敢再次冒险进入这冰冷的幻象吗？</p><p class='basic'>调查员必须选择一项：<ul><li>打开门，再次进入幻景。在本战役的剩余时间内，在混乱袋里加入1个[frost]标记。推进至*冒险：致命幻景*。</li><li>无视那扇门，任其消失。推进至*冒险III：古老者之城*。（*之后你还会得到这个机会。*）</li></ul></p>",
+      "currentZh": "<p>_无尽夜晚 3_: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？</p><p class='basic'>调查员必须选择一项：<ul><li>打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 _冒险???：致命幻景_ 。</li><li>无视门， 让它自己消失。 进入 _冒险III： 古老者之城_. (*之后你还会得到这个机会*)</li></ul></p>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude2.endlessNight4.body",
+      "en": "<p>_Endless Night 4_:  Just as you are finally beginning to drift off, a vague threat in the corner of your mind startles you into action. You reach instinctively for a weapon to defend yourself, but when you peer about, nothing is out of place. In fact…</p><p>You rise to your feet, shocked, and examine your surroundings. Your makeshift camp was protected from the harsh elements, but still deep in the Antarctic wilderness. And yet, you find yourself indoors, in a hall that you cannot place, though it seems familiar to you. You brush aside some of the snow that still lingers on the ground around your sleeping bag, noting a tiled floor that wasn’t there before. A dream?</p><p>As you doubt the truth of this mysterious place, the walls and the tiled floor shimmer and fade. You are left back in the freezing cold of your camp, surrounded by your companions—except the door leading out of that hall still remains. Thick gray mist swirls around you, guiding you onward.</p><p>This is no natural refraction of light. Something supernatural is at work here. The thick miasma that churns around your camp is not unlike the substance that makes up the nightmarish creatures you encountered after your plane crashed. Do you really want to know what it wants you to see?</p><p>The investigators must decide (choose one):<ul><li>Open the door and venture into the mirage. Proceed to _Scenario ???: Fatal Mirage._</li><li>Ignore the door and allow it to vanish. Proceed to _Scenario III: City of the Elder Things_. (You will get this chance again later.)</li></ul></p>",
+      "zh": "<p>_无尽夜晚 4_：就在你终于开始昏昏欲睡时，脑海角落里的隐约威胁惊得你猛然采取行动。你本能地伸手去抓武器自卫，但环顾四周，一切如常。事实上……</p><p>你震惊地站起身，打量四周。你们的临时营地遮蔽了严酷的天气，但仍深陷南极荒野之中。可你此刻却发现自己身处室内，置身于一座你无法辨认、却又似曾相识的大厅里。你拨开睡袋周围残留的积雪，发现下面有一层此前并不存在的瓷砖地板。是梦吗？</p><p>就在你怀疑这个神秘地方是否真实之际，墙壁与瓷砖地板泛起微光，渐渐消退。你又回到了营地刺骨的寒冷中，同伴环绕四周——唯独那扇通往大厅的门依旧矗立。浓密的灰雾在你身边翻涌，牵引你向前。</p><p>这并非光线的自然折射。这里有某种超自然的力量在作祟。营地四周翻腾的浓厚瘴气，与你坠机后遭遇的那些梦魇般生物身上的物质如出一辙。你真的想知道它想让你看到什么吗？</p><p>调查员必须选择一项：<ul><li>打开门，进入幻景。推进至*冒险：致命幻景*。</li><li>无视那扇门，任其消失。推进至*冒险III：古老者之城*。（你之后还会得到这个机会。）</li></ul></p>",
+      "currentZh": "<p>_无尽夜晚 4_:  就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……</p><p>你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？</p><p>当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著微光，渐渐褪色。你回到了冰冷的营地里，周围是你的同伴——除了通向大厅的门还在。浓浓的灰雾在你周围盘旋，指引你前进。</p><p>这不是光的自然折射。这里有某种超自然的东西在起作用，你的营地周围弥漫著厚厚的瘴气，就像你在飞机坠毁后遇到的可怕生物一样。你真的想知道它想让你看到什么吗？</p><p>每位调查员必须选择一项：<ul><li>打开门并进入幻景。 进入 _冒险???：致命幻景_</li><li>无视门， 让它自己消失。 进入 _冒险III： 古老者之城_. (*之后你还会得到这个机会*)</li></ul></p>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude2.claypoolIsAlive",
+      "en": "<p>_If Avery Claypool is alive:_</p><p>You find Claypool at the edge of the camp, looking out over the alien city. “Remarkable, isn’t it?” You nod and mention that the architecture is unlike anything you’ve seen before. “No, not that. I mean, that too, but look—” he points to the enormous peaks looming around the city in every direction, like a boundary. “It’s built to block and funnel the wind. They chose precisely the right place to build their city. And the way these structures and streets are built, they’re mostly protected from excess snowfall.” He glances at you meaningfully before continuing. “These creatures chose the harshest place on Earth to make their home, and despite all odds, they thrived.” You wonder if perhaps this means the inclement weather you’ve faced thus far will abate during the next leg of your journey. “Unlikely,” he responds. “A lot of the natural safeguards they built into their city seem to have weathered away. And there’s likely a lot more ice than there would have been back in their time.But I’ll make sure we avoid the nastiest of it.”</p><p class='basic'>Claypool’s predictions help you stay safe from the inclement weather. Remove 1 {'{'}frost{'}'} token from the chaos bag.</p>",
+      "zh": "<p>_如果艾弗里·克莱普尔活着：_</p><p>你发现克莱普尔在营地边缘，眺望着那座异星城市。“叹为观止，对吧？”你点头，并提到这里的建筑风格与你以前见过的任何风格都不一样。“不，不是指这个。我是说，那也算，不过你看——”他指向环绕城市四周、宛如边界的巍峨山峰。“这些山是用来阻挡和导引风的。它们精确地选择了建造城市的正确位置。而看这些建筑和街道的构造方式，它们大多能免受过量积雪的影响。”他意味深长地看了你一眼，然后继续说，“这些生物选择在地球上最严酷的地方安家，尽管困难重重，它们还是繁盛了起来。”你想知道这是否意味着，你们迄今遭遇的恶劣天气会在下一段旅程中减弱。“不太可能。”他回答道，“它们建在城市里的许多天然防护设施似乎已经被风化了。而且现在的冰很可能比它们那个时代要多得多。不过，我会确保我们避开最恶劣的部分。”</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除1个[frost]标记。</p>",
+      "currentZh": "<p>_如果艾弗里·克莱普尔活著：_</p><p>你发现克莱普尔在营地边缘，俯视著异星生物的城市。“叹为观止啊，对不对？”你点头，并提到这个建筑风格与你以前见过的任何风格都不一样。“不，不是这点。啊，我的意思是，你说的没错，不过你看——”他指了指那些完全环绕城市四周的巨大山峰，就像分界线一样。“那是用来阻挡和引导风的。它们精确地选择了正确的地方来建造它们的城市。而从这些建筑和街道的建造方式看，它们能最大程度地免受过量降雪的影响。”他意味深长地看了你一眼，然后继续说，“这些生物选择在地球上最严酷的地方安家，尽管困难重重，它们还是繁荣了起来。”你想知道这是否意味著过去面临的恶劣天气将在后续旅程中减弱。“不怎么可能。”他回答道，“它们在城市里建立的许多天然防护设施似乎已经被风化了。而且现在的冰雪可能比它们那个时代要多很多。不过，我会确保我们碰不上最恶劣的情况。”</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除{'{'}frost{'}'} 标记。</p>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude3.claypoolIsAlive",
+      "en": "<p class='basic'>_If Avery Claypool is alive:_</p><p>Claypool studies the icy walls as you approach, his brow furrowed with concern. “It should be warmer here,” he notes, “but even without windchill, it is almost 10 degrees colder.” Just then, something moves inside the ice—a shadow, perhaps, or something reflecting off its surface. You and Claypool instinctively back away as the fleeting darkness swirls and vanishes. No light behind you could have cast that shadow. “There is…something wrong with this ice,” Claypool whispers. “This cold, it is unnatural. Dyer’s report described these inner structures as warm and habitable, but this is…” You share a knowing glance. “We need to be prepared. For anything.”</p><p class='basic'>Claypool’s predictions help you stay safe from the inclement weather. Remove 1 {'{'}frost{'}'} token from the chaos bag.</p>",
+      "zh": "<p class='basic'>_如果艾弗里·克莱普尔活着：_</p><p>你走近时，克莱普尔正端详着冰冷的墙壁，眉头因忧虑而紧锁。“这里本该更暖和才对，”他指出，“可就算不计风寒效应，这里也要冷上将近10度。”就在这时，冰层里有东西动了一下——也许是一道影子，也许是冰面反射出的什么。那道转瞬即逝的暗影旋转着消失了，你和克莱普尔本能地后退。你身后的任何光线都不可能投出那样的影子。“这块冰……有点不对劲。”克莱普尔低声说。“这种寒冷是不自然的。戴尔的报告将这些内部建筑描述为温暖宜居，可这里却……”你们交换了一个心照不宣的眼神。“我们必须做好准备。应对任何情况。”</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除1个[frost]标记。</p>",
+      "currentZh": "<p class='basic'>_如果艾弗里·克莱普尔活著：_</p><p>当你走近时，克莱普尔研究著冰冷的墙壁，他的眉头紧锁著。“这里明明应该更暖和些的。”他说，“但即使没有寒风，这里也要冷近10度。”就在这时，有什么东西在冰里移动——也许是影子，或者是冰面反射出来的什么东西。黑影旋转并转瞬即逝，你和克莱普尔本能地后退。你身后的光投不出这样的影子。“这冰……有问题。”克莱普尔低声说。“这种寒冷，是反常的。戴尔的报告将这些内部建筑描述为温暖宜居，但这……”你们会意地对视一眼。“我们需要做好准备。做好能面对一切的准备。</p><p class='basic'>克莱普尔的预测帮助你远离恶劣天气。从混乱袋里移除{'{'}frost{'}'} 标记。</p>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude3.finalNight2.body",
+      "en": "<p>_Final Night 2_: You try in vain to sleep, but the night seems to go on forever. Your thoughts meander endlessly in a maze of worry and doubt.</p><ul><li>If you have already played _Scenario ???: Fatal Mirage_ this campaign, proceed to _Final Night 3_.</li><li>Otherwise, skip to _Final Night 4_.</li></ul>",
+      "zh": "<p>_最后一夜 2_：你徒劳地试图入睡，但黑夜仿佛永无止境。你的思绪在担忧与怀疑的迷宫中无尽地游荡。</p><ul><li>如果你在本战役中已经游玩过*冒险：致命幻景*，推进至*最后一夜 3*。</li><li>否则，跳至*最后一夜 4*。</li></ul>",
+      "currentZh": "<p>_最后一夜 2_: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。</p><ul><li>如果在本剧本中，你已经进行过<b>冒险???：致命幻景</b>：进入 _最后一夜 3_.</li><li>否则，进入 _最后一夜 4_.</li></ul>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude3.finalNight3.body",
+      "en": "<p>_Final Night 3_: Just as you are finally beginning to drift off, the door appears again. It shimmers momentarily, gray mist billowing out from the cracks of the doorframe. Again, you are being offered a choice. But do you dare to risk venturing into the frigid illusion once more?</p><p class='basic'>The investigators must decide (choose one):</p><ul><li>*Open the door and venture once more into the mirage*. Add 1 {'{'}frost{'}'} token to the chaos bag for the remainder of the campaign. Proceed to _Scenario ???: Fatal Mirage_.</li><li>*Ignore the door and allow it to vanish*. Proceed to _Scenario IV: The Heart of Madness_. (*You will not get another chance to return to Fatal Mirage for the remainder of the campaign.*)</li></ul>",
+      "zh": "<p>_最后一夜 3_：就在你终于开始昏昏欲睡时，那扇门又出现了。它微微闪烁，灰色的雾气从门框的缝隙中滚滚涌出。又一次，选择摆在了你面前。但你还敢再次冒险进入这冰冷的幻象吗？</p><p class='basic'>调查员必须选择一项：</p><ul><li>*打开门，再次进入幻景*。在本战役的剩余时间内，在混乱袋里加入1个[frost]标记。推进至*冒险：致命幻景*。</li><li>*无视那扇门，任其消失*。推进至*冒险IV：疯狂之心*。（*在本战役的剩余时间内，你将没有再次返回致命幻景的机会。*）</li></ul>",
+      "currentZh": "<p>_最后一夜 3_: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？</p><p class='basic'>调查员必须选择一项：</p><ul><li>*打开门， 再次进入幻景。*. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 _冒险???：致命幻景_ 。</li><li>*无视门， 让它自己消失。*. 进入<b>冒险IV：疯狂之心</b>。<i>(直到本剧本结束，你将没有机会再返回致命幻景。)</li></ul>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "interlude3.finalNight4.body",
+      "en": "<p>_Final Night 4_: Just as you are finally beginning to drift off, a vague threat in the corner of your mind startles you into action. You reach instinctively for a weapon to defend yourself, but when you peer about, nothing is out of place. In fact…</p><p>You rise to your feet, shocked, and examine your surroundings. Your makeshift camp was protected from the harsh elements, but still deep in the Antarctic wilderness. And yet, you find yourself indoors, in a hall that you cannot place, though it seems familiar to you. You brush aside some of the snow that still lingers on the ground around your sleeping bag, noting a tiled floor that wasn’t there before. A dream?</p><p>As you doubt the truth of this mysterious place, the walls and the tiled floor shimmer and fade. You are left back in the freezing cold of your camp, surrounded by your companions—except the door leading out of that hall still remains. Thick gray mist swirls around you, guiding you onward.</p><p>This is no natural refraction of light. Something supernatural is at work here. The thick miasma that churns around your camp is not unlike the substance that makes up the nightmarish creatures you encountered after your plane crashed. Do you really want to know what it wants you to see?</p><p class='basic'>The investigators must decide (choose one):</p><ul><li>Open the door and venture into the mirage. Proceed to _Scenario ???: Fatal Mirage_.</li><li>Ignore the door and allow it to vanish. Proceed to _Scenario IV: The Heart of Madness_. (*You will not get another chance to return to Fatal Mirage for the remainder of the campaign.*)</li></ul>",
+      "zh": "<p>_最后一夜 4_：就在你终于开始昏昏欲睡时，脑海角落里的隐约威胁惊得你猛然采取行动。你本能地伸手去抓武器自卫，但环顾四周，一切如常。事实上……</p><p>你震惊地站起身，打量四周。你们的临时营地遮蔽了严酷的天气，但仍深陷南极荒野之中。可你此刻却发现自己身处室内，置身于一座你无法辨认、却又似曾相识的大厅里。你拨开睡袋周围残留的积雪，发现下面有一层此前并不存在的瓷砖地板。是梦吗？</p><p>就在你怀疑这个神秘地方是否真实之际，墙壁与瓷砖地板泛起微光，渐渐消退。你又回到了营地刺骨的寒冷中，同伴环绕四周——唯独那扇通往大厅的门依旧矗立。浓密的灰雾在你身边翻涌，牵引你向前。</p><p>这并非光线的自然折射。这里有某种超自然的力量在作祟。营地四周翻腾的浓厚瘴气，与你坠机后遭遇的那些梦魇般生物身上的物质如出一辙。你真的想知道它想让你看到什么吗？</p><p class='basic'>调查员必须选择一项：</p><ul><li>打开门，进入幻景。推进至*冒险：致命幻景*。</li><li>无视那扇门，任其消失。推进至*冒险IV：疯狂之心*。（*在本战役的剩余时间内，你将没有再次返回致命幻景的机会。*）</li></ul>",
+      "currentZh": "<p>_最后一夜 4_: 就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……</p><p>你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？</p><p>当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著微光，渐渐褪色。你回到了冰冷的营地里，周围是你的同伴——除了通向大厅的门还在。浓浓的灰雾在你周围盘旋，指引你前进。</p><p>这不是光的自然折射。这里有某种超自然的东西在起作用，你的营地周围弥漫著厚厚的瘴气，就像你在飞机坠毁后遇到的可怕生物一样。你真的想知道它想让你看到什么吗？</p><p class='basic'>每位调查员必须选择一项：</p><ul><li>打开门并进入幻景。 进入 _冒险???：致命幻景_</li><li>无视门， 让它自己消失。 进入 _冒险IV：疯狂之心_. (*直到本剧本结束，你将没有机会再返回致命幻景。*)</li></ul>",
+      "fixNote": "含占位/残渣（??? 或 {…} 或 [shelterValue]），请修成通顺中文。",
+      "status": "fix-present"
+    },
+    {
+      "file": "base.json",
+      "group": "misc",
+      "path": "checkpoint1.theDisappearance3.body",
+      "en": "<div class='checkpoint'><p><b>The Disappearance 3:</b> You’ve decided to go after your missing team members…</p><ul><li>Proceed to _Ice and Death, Part II._</li></ul></div>",
+      "zh": "<div class='checkpoint'><p><b>失踪事件 3：</b>你决定去寻找失踪的队员……</p><ul><li>推进至*亡命冰原 第II部分*。</li></ul></div>",
+      "currentZh": "<div class='checkpoint'><p><b>失踪事件 3:</b> You’ve decided to go after your missing team members…</p><ul><li>Proceed to _Ice and Death, Part II._</li></ul></div>",
+      "fixNote": "untranslated（中文正文夹整段英文）；应改为通顺中文，并按 en 结构保留 <div class='checkpoint'> 与列表。",
+      "status": "untranslated"
+    }
+  ]
+}

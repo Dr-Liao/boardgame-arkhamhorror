@@ -14,6 +14,8 @@
 // 重新分层前请先跑它，别凭文件名的直觉。
 
 export const FAST_TESTS = Object.freeze([
+  'draft-mode.test.mjs',
+  'enemy-attack-presentation.test.mjs',
   'tic-scenario-reference-moving.test.mjs',
   'tic-enemy-outcomes.test.mjs',
   'tic-enemy-flow.test.mjs',
@@ -90,6 +92,45 @@ export const FAST_TESTS = Object.freeze([
   'tic-scenario-shared-encounters.test.mjs', // 10 张共享遭遇卡逐卡验收（w5）
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
+  'eote-migration.test.mjs', // 七循环 P0：范围账本 / 原始基线 / catalog-only 注册 / 遭遇组分片
+  // P2（七循环通用原语）：六组原语的正常/负面/JSON 往返/注册校验；只验证原语，不认证卡牌行为。
+  'eote-primitives-frost.test.mjs', 'eote-primitives-campaign.test.mjs', 'eote-primitives-flow.test.mjs',
+  'eote-primitives-geo.test.mjs', 'eote-primitives-travel.test.mjs', 'eote-primitives-investigator.test.mjs',
+  // P3（七循环关键词与规则书）：38 个关键词全集/代表卡直达、23 条双语规则条目与检索索引。
+  'eote-rules.test.mjs',
+  // P4（七循环交互）：待决选择事务、取消/伪造拒绝、跨座位与 deckTop/tekeli 隐私投影。
+  'eote-interactions.test.mjs',
+  // P5（七循环调查员）：逐人构筑/旧印/能力/专属依赖/存档；真实大厅浏览器验收见 P5 账本。
+  'eote-investigator-daniela.test.mjs',
+  'eote-investigator-norman.test.mjs',
+  'eote-investigator-lily.test.mjs',
+  'eote-investigator-monterey.test.mjs',
+  'eote-investigator-bob.test.mjs',
+  // P6（地球边缘一般玩家卡）：四份分片逐卡行为验收。
+  'eote-player-m2-1.test.mjs',
+  'eote-player-m2-2.test.mjs',
+  'eote-player-m2-3.test.mjs',
+  'eote-player-m2-4.test.mjs',
+  'eote-player-primitives.test.mjs',
+  // P7（地球边缘战役）：八章、共享遭遇、战役流程与指南生成。
+  'eote-scenario-iceAndDeathPart1.test.mjs',
+  'eote-scenario-iceAndDeathPart2.test.mjs',
+  'eote-scenario-iceAndDeathPart3.test.mjs',
+  'eote-scenario-fatalMirage.test.mjs',
+  'eote-scenario-toTheForbiddenPeaks.test.mjs',
+  'eote-scenario-cityOfTheElderThings.test.mjs',
+  'eote-scenario-theHeartOfMadnessPart1.test.mjs',
+  'eote-scenario-theHeartOfMadnessPart2.test.mjs',
+  'eote-scenario-shared.test.mjs',
+  'eote-campaign-flow.test.mjs',
+  'eote-story.test.mjs',
+  // P8（地球边缘发布验收）：逐卡账本、注册/战役/多人/replay 与总迁移账本。
+  'eote-all-cards.test.mjs',
+  'eote-p8-registration.test.mjs',
+  'eote-p8-campaign.test.mjs',
+  'eote-p8-multiplayer.test.mjs',
+  'replay-eote-p8.test.mjs',
+  'eote-migration-ledger.test.mjs',
   'tic-p8-registration.test.mjs', // P8 生产注册：战役/8 章/三包 playable、layout、遭遇组、记录键、大厅可见
   'tic-p8-campaign.test.mjs', // P8 完整战役：八章推进、失败/撤退、四档难度、记忆/闪回、存档/replay 确定性
   'tic-p8-multiplayer.test.mjs', // P8 多人/AI/观察隐私/权限边界/断线恢复
@@ -111,6 +152,8 @@ export const FAST_TESTS = Object.freeze([
   'view-shared-state.test.mjs', // 观察投影共享状态（同上）
   'view-static.test.mjs', // 观察投影静态内容（同上）
   'attack-style.test.mjs',
+  'direct-damage-presentation.test.mjs',
+  'themed-attacks.test.mjs',
   'rules-n3.test.mjs',
   'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具
   'encounter-resolve-context.test.mjs', // 真实遭遇抽取把所在地点作为第 5 参传给 encounterResolve（01168 崩溃回归）
@@ -340,6 +383,7 @@ export const SLOW_TESTS = Object.freeze([
 ])
 
 export const ASSET_TESTS = Object.freeze([
+  'eote-media.test.mjs',
   'audit-resources.test.mjs',
   'import-cards.test.mjs',
   'presentation-images.test.mjs',

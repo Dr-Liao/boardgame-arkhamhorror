@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-eote-p5-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/eote-investigators.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 desktop 08001 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 2380
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 desktop 08004 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1555
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 desktop 08007 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 7698
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 desktop 08010 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 2076
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 desktop 08016 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1479
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 mobile 08001 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1344
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 mobile 08004 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1265
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 mobile 08007 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 7410
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 mobile 08010 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1802
+    },
+    {
+      "file": "tests/eote-investigators.browser.mjs",
+      "title": "P5 mobile 08016 真实选人构筑与开局",
+      "status": "passed",
+      "durationMs": 1289
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/eote/p5/screenshots/desktop-08001-card.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08001-start.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08004-deck-top.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08004-start.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08007-round-end.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08007-start.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08010-discipline.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08010-start.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08016-card.png",
+    "artifacts/migration/eote/p5/screenshots/desktop-08016-start.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08001-card.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08001-start.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08004-deck-top.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08004-start.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08007-round-end.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08007-start.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08010-discipline.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08010-start.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08016-card.png",
+    "artifacts/migration/eote/p5/screenshots/mobile-08016-start.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "byCode": {
+      "08001": true,
+      "08004": true,
+      "08007": true,
+      "08010": true,
+      "08016": true
+    }
+  }
+}

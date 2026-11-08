@@ -1,5 +1,29 @@
 关卡自定义歌曲目录（相对于本文件）
 
+亡命冰原 I
+  campaigns/edgeOfTheEarth/iceAndDeathPart1/
+
+亡命冰原 II
+  campaigns/edgeOfTheEarth/iceAndDeathPart2/
+
+亡命冰原 III
+  campaigns/edgeOfTheEarth/iceAndDeathPart3/
+
+致命幻景
+  campaigns/edgeOfTheEarth/fatalMirage/
+
+失落之峰
+  campaigns/edgeOfTheEarth/toTheForbiddenPeaks/
+
+古老者之城
+  campaigns/edgeOfTheEarth/cityOfTheElderThings/
+
+疯狂之心 I
+  campaigns/edgeOfTheEarth/theHeartOfMadnessPart1/
+
+疯狂之心 II
+  campaigns/edgeOfTheEarth/theHeartOfMadnessPart2/
+
 暮色庄园失踪事件
   campaigns/theCircleUndone/disappearanceAtTheTwilightEstate/
 

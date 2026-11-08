@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-eote-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "eote-rules.browser.mjs"
+  ],
+  "tests": [
+    {
+      "title": "P3 desktop en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1062
+    },
+    {
+      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1603
+    },
+    {
+      "title": "P3 desktop 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 1401
+    },
+    {
+      "title": "P3 mobile en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1669
+    },
+    {
+      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1651
+    },
+    {
+      "title": "P3 mobile 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 1375
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/eote/reports/screenshots/desktop-card-link.png",
+    "artifacts/migration/eote/reports/screenshots/desktop-en.png",
+    "artifacts/migration/eote/reports/screenshots/desktop-zh-CN.png",
+    "artifacts/migration/eote/reports/screenshots/mobile-card-link.png",
+    "artifacts/migration/eote/reports/screenshots/mobile-en.png",
+    "artifacts/migration/eote/reports/screenshots/mobile-zh-CN.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "zh": true,
+    "en": true,
+    "cardLink": true,
+    "noHorizontalScroll": true
+  }
+}

@@ -92,14 +92,30 @@ import * as ticHorrorInHighGear from './campaigns/theInnsmouthConspiracy/scenari
 import * as ticALightInTheFog from './campaigns/theInnsmouthConspiracy/scenarios/aLightInTheFog/index.js'
 import * as ticTheLairOfDagon from './campaigns/theInnsmouthConspiracy/scenarios/theLairOfDagon/index.js'
 import * as ticIntoTheMaelstrom from './campaigns/theInnsmouthConspiracy/scenarios/intoTheMaelstrom/index.js'
+// P0（七循环 M0）：《地球边缘》只把三个 catalog-only 内容包装进生产组合根，作为「目录身份」；
+// 战役清单与八章占位模块已存在（content/campaigns/edgeOfTheEarth/），但**不进生产组合根**：
+// 战役仍是 catalog-only，目录期不注册就无法被大厅/选人/构筑/音乐/指南流程当成可玩内容。
+// 身份与依赖关系由 tests/eote-migration.test.mjs 用本地 createContentRegistry 复算，P7 再整体注册。
+import { manifest as eoteCampaignPack } from './packs/eoteCampaign/manifest.js'
+import { manifest as eoteCampaignManifest } from './campaigns/edgeOfTheEarth/manifest.js'
+import * as eoteIceAndDeathPart1 from './campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/index.js'
+import * as eoteIceAndDeathPart2 from './campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/index.js'
+import * as eoteIceAndDeathPart3 from './campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/index.js'
+import * as eoteFatalMirage from './campaigns/edgeOfTheEarth/scenarios/fatalMirage/index.js'
+import * as eoteToTheForbiddenPeaks from './campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/index.js'
+import * as eoteCityOfTheElderThings from './campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/index.js'
+import * as eoteTheHeartOfMadnessPart1 from './campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/index.js'
+import * as eoteTheHeartOfMadnessPart2 from './campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js'
+import { manifest as eoteInvestigators } from './packs/eoteInvestigators/manifest.js'
+import { manifest as eotePlayer } from './packs/eotePlayer/manifest.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
     carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer,
     tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer,
-    ticCampaignPack, ticInvestigators, ticPlayer],
+    ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
-    theDreamEaters, theInnsmouthConspiracy],
+    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -112,7 +128,8 @@ let bundle = {
     tdeBeyondTheGatesOfSleep, tdeWakingNightmare, tdeTheSearchForKadath, tdeAThousandShapesOfHorror,
     tdeDarkSideOfTheMoon, tdePointOfNoReturn, tdeWhereTheGodsDwell, tdeWeaverOfTheCosmos,
     ticThePitOfDespair, ticTheVanishingOfElinaHarper, ticInTooDeep, ticDevilReef, ticHorrorInHighGear,
-    ticALightInTheFog, ticTheLairOfDagon, ticIntoTheMaelstrom],
+    ticALightInTheFog, ticTheLairOfDagon, ticIntoTheMaelstrom,
+    eoteIceAndDeathPart1, eoteIceAndDeathPart2, eoteIceAndDeathPart3, eoteFatalMirage, eoteToTheForbiddenPeaks, eoteCityOfTheElderThings, eoteTheHeartOfMadnessPart1, eoteTheHeartOfMadnessPart2],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

@@ -1,0 +1,475 @@
+{
+ "08130": [
+  "tests/eote-player-fixture.mjs:6: // 资产（08025 Butterfly Swords）、技能（08024 Defensive Stance）、基础弱点（08130 Arm Injury）。",
+  "tests/eote-player-fixture.mjs:20: export const WEAKNESS_CODE = '08130'",
+  "tests/eote-player-m2-4.test.mjs:3: // 本文件覆盖 `08109–08133` 共 25 张一般玩家卡（含基础弱点 08130–08133 与场外/绑定卡）。",
+  "tests/eote-player-m2-4.test.mjs:43: import entry08130 from '../src/cards/entries/08130.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:632: // 08130–08133 基础弱点（威胁区 + 行动后锁；恐惧侧复用 threatHorrorSink）",
+  "tests/eote-player-m2-4.test.mjs:652: test('P6 08130 臂伤 显现入威胁区；行动后本回合不能攻击/启动', () => {",
+  "tests/eote-player-m2-4.test.mjs:655: const card = revealWeakness(state, '08130')",
+  "tests/eote-player-m2-4.test.mjs:658: const inv = lockAfterAction(state, '08130')",
+  "tests/eote-player.browser.mjs:22: const WEAKNESS_CODE = '08130' // Arm Injury（基础弱点：显现进入威胁区）"
+ ],
+ "08079": [
+  "tests/eote-player-m2-3.test.mjs:1: // P6 M2-3 分片（08079–08108）Node 验收：条目直接 import + registerCardAbilities（不依赖索引）。",
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:12: import entries08079 from '../src/cards/entries/08079.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:328: test('P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌', () => {",
+  "tests/eote-player-m2-3.test.mjs:330: fire(s, '08079', descriptors('08079', 'played')[0], {"
+ ],
+ "08108": [
+  "tests/eote-player-m2-3.test.mjs:1: // P6 M2-3 分片（08079–08108）Node 验收：条目直接 import + registerCardAbilities（不依赖索引）。",
+  "tests/eote-player-m2-3.test.mjs:41: import entries08108 from '../src/cards/entries/08108.js'",
+  "tests/eote-player-m2-3.test.mjs:47: entries08106, entries08107, entries08108]",
+  "tests/eote-player-m2-3.test.mjs:317: test('P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置', () => {",
+  "tests/eote-player-m2-3.test.mjs:323: fire(s, '08108', descriptors('08108', 'played')[0])"
+ ],
+ "08082": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:15: import entries08082 from '../src/cards/entries/08082.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:336: test('P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整', () => {",
+  "tests/eote-player-m2-3.test.mjs:339: fire(s, '08082', descriptors('08082', 'played')[0], { context: { seat: 0, location: inv(s).location, enemyId: foe.id } })",
+  "tests/eote-player-m2-3.test.mjs:344: inv(s).discard.push('08082')",
+  "tests/eote-player-m2-3.test.mjs:345: fire(s, '08082', descriptors('08082', 'reaction')[0], { context: { cardCode: '08082', seat: 0 } })",
+  "tests/eote-player-m2-3.test.mjs:346: assert.equal((s.enemies[0].attachments || []).some(card => card.code === '08082'), true)",
+  "tests/eote-player-m2-3.test.mjs:347: assert.equal(registeredEntry('08082').restrainsReady, true, '附属敌人不能重整（phases.js 读点）')"
+ ],
+ "08087": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:20: import entries08087 from '../src/cards/entries/08087.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:350: test('P6 08087 狙击：添加「符号标记视为 0」的延迟效果', () => {",
+  "tests/eote-player-m2-3.test.mjs:352: fire(s, '08087', descriptors('08087', 'played')[0])",
+  "tests/eote-player-m2-3.test.mjs:353: const effect = s.effects.find(item => item.sourceCode === '08087')"
+ ],
+ "08089": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:22: import entries08089 from '../src/cards/entries/08089.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:360: test('P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动', () => {",
+  "tests/eote-player-m2-3.test.mjs:362: const holster = asset(s, '08089')",
+  "tests/eote-player-m2-3.test.mjs:364: fire(s, '08089', descriptors('08089', 'free')[0], { source: holster })",
+  "tests/eote-player-m2-3.test.mjs:368: fire(s, '08089', descriptors('08089', 'free')[1], { source: inv(s).assets.find(card => card.code === '08089') })"
+ ],
+ "08091": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:24: import entries08091 from '../src/cards/entries/08091.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:372: test('P6 08091 恩科西·马巴蒂：入场指定符号标记为咒印', () => {",
+  "tests/eote-player-m2-3.test.mjs:375: const sorcerer = asset(s, '08091')",
+  "tests/eote-player-m2-3.test.mjs:376: fire(s, '08091', descriptors('08091', 'entersPlay')[0], { source: sorcerer })",
+  "tests/eote-player-m2-3.test.mjs:377: const curse = s.effects.find(item => item.sourceCode === '08091')",
+  "tests/eote-player-m2-3.test.mjs:379: assert.equal(curse?.sourceInstanceId, inv(s).assets.find(card => card.code === '08091').id)"
+ ],
+ "08104": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:37: import entries08104 from '../src/cards/entries/08104.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:383: test('P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:384: for (const code of ['08104', '08106']) {"
+ ],
+ "08106": [
+  "tests/eote-player-m2-3.test.mjs:3: // 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08091/08104/08106 缺引擎读点，",
+  "tests/eote-player-m2-3.test.mjs:39: import entries08106 from '../src/cards/entries/08106.js'",
+  "tests/eote-player-m2-3.test.mjs:47: entries08106, entries08107, entries08108]",
+  "tests/eote-player-m2-3.test.mjs:383: test('P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:384: for (const code of ['08104', '08106']) {"
+ ],
+ "08080": [
+  "tests/eote-player-m2-3.test.mjs:13: import entries08080 from '../src/cards/entries/08080.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:83: test('P6 08080 灭火器：攻击 +1 伤害，弃掉时自动躲避所有交战敌人', () => {",
+  "tests/eote-player-m2-3.test.mjs:85: asset(s, '08080')",
+  "tests/eote-player-m2-3.test.mjs:88: fire(s, '08080', descriptors('08080', 'action')[0])",
+  "tests/eote-player-m2-3.test.mjs:90: fire(s, '08080', descriptors('08080', 'action')[1])",
+  "tests/eote-player-m2-3.test.mjs:93: assert.equal(inv(s).assets.some(card => card.code === '08080'), false, '能力费用应弃掉灭火器')"
+ ],
+ "08081": [
+  "tests/eote-player-m2-3.test.mjs:14: import entries08081 from '../src/cards/entries/08081.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:96: test('P6 08081 有胆有识：快速沉稳 +1 意志/+1 智力', () => {",
+  "tests/eote-player-m2-3.test.mjs:98: asset(s, '08081')",
+  "tests/eote-player-m2-3.test.mjs:99: assert.equal(registeredEntry('08081').fast, true)",
+  "tests/eote-player-m2-3.test.mjs:100: assert.equal(registeredEntry('08081').composure, true)",
+  "tests/eote-player-m2-3.test.mjs:103: assert.deepEqual(registeredEntry('08081').freeTriggers.map(trigger => trigger.skill), ['willpower', 'intellect'])"
+ ],
+ "08083": [
+  "tests/eote-player-m2-3.test.mjs:16: import entries08083 from '../src/cards/entries/08083.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:106: test('P6 08083 医学生：入场治愈同地点调查员 1 伤害 1 恐惧', () => {",
+  "tests/eote-player-m2-3.test.mjs:110: const student = asset(s, '08083')",
+  "tests/eote-player-m2-3.test.mjs:111: fire(s, '08083', descriptors('08083', 'entersPlay')[0], { source: student })"
+ ],
+ "08084": [
+  "tests/eote-player-m2-3.test.mjs:17: import entries08084 from '../src/cards/entries/08084.js'",
+  "tests/eote-player-m2-3.test.mjs:43: const ALL_ENTRIES = [entries08079, entries08080, entries08081, entries08082, entries08083, entries08084,",
+  "tests/eote-player-m2-3.test.mjs:116: test('P6 08084 追踪：沿最短路径移动 2 次，或在无人地点发现线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:122: fire(moved, '08084', descriptors('08084', 'played')[0], {}, c => (c.options.some(o => o.id === 'move') ? 'move' : null))",
+  "tests/eote-player-m2-3.test.mjs:130: fire(clue, '08084', descriptors('08084', 'played')[0], {}, c => (c.options.some(o => o.id === 'clue') ? 'clue' : null))"
+ ],
+ "08085": [
+  "tests/eote-player-m2-3.test.mjs:18: import entries08085 from '../src/cards/entries/08085.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:135: test('P6 08085 追踪（3 级）：移动 2 次并在每个进入地点发现 1 个线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:143: fire(s, '08085', descriptors('08085', 'played')[0])"
+ ],
+ "08086": [
+  "tests/eote-player-m2-3.test.mjs:19: import entries08086 from '../src/cards/entries/08086.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:148: test('P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）', () => {",
+  "tests/eote-player-m2-3.test.mjs:150: asset(s, '08086')",
+  "tests/eote-player-m2-3.test.mjs:153: const evidence = descriptors('08086', 'reaction')[0]",
+  "tests/eote-player-m2-3.test.mjs:155: fire(s, '08086', evidence, { source: inv(s).assets.find(card => card.code === '08086'), context: { seat: 0, successBy: 1 } })",
+  "tests/eote-player-m2-3.test.mjs:157: assert.equal(inv(s).assets.find(card => card.code === '08086').uses, 3)",
+  "tests/eote-player-m2-3.test.mjs:396: test('P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害', () => {",
+  "tests/eote-player-m2-3.test.mjs:398: asset(s, '08086', { uses: 1 })",
+  "tests/eote-player-m2-3.test.mjs:400: fire(s, '08086', descriptors('08086', 'reaction')[1], { context: { seat: 0, actionKind: 'fight' } })",
+  "tests/eote-player-m2-3.test.mjs:403: assert.equal(inv(s).assets.find(card => card.code === '08086').exhausted, true)",
+  "tests/eote-player-m2-3.test.mjs:404: assert.equal(inv(s).assets.find(card => card.code === '08086').uses, 0)",
+  "tests/eote-player-primitives.test.mjs:238: test('P6 原语 attackDamageBonus 读点：testInitiated 窗口写入本次攻击伤害（08086）', () => {"
+ ],
+ "08088": [
+  "tests/eote-player-m2-3.test.mjs:21: import entries08088 from '../src/cards/entries/08088.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:160: test('P6 08088 老旧的霰弹枪：事件后使用值 2；成功按超过难度造成 1~3 伤害', () => {",
+  "tests/eote-player-m2-3.test.mjs:162: asset(s, '08088')",
+  "tests/eote-player-m2-3.test.mjs:163: assert.equal(inv(s).assets.find(card => card.code === '08088').uses, 0)",
+  "tests/eote-player-m2-3.test.mjs:164: fire(s, '08088', descriptors('08088', 'reaction')[0], {",
+  "tests/eote-player-m2-3.test.mjs:165: source: inv(s).assets.find(card => card.code === '08088'), context: { cardCode: '01088' },",
+  "tests/eote-player-m2-3.test.mjs:167: assert.equal(inv(s).assets.find(card => card.code === '08088').uses, 2)",
+  "tests/eote-player-m2-3.test.mjs:170: fire(s, '08088', descriptors('08088', 'action')[0])"
+ ],
+ "08090": [
+  "tests/eote-player-m2-3.test.mjs:23: import entries08090 from '../src/cards/entries/08090.js'",
+  "tests/eote-player-m2-3.test.mjs:44: entries08085, entries08086, entries08087, entries08088, entries08089, entries08090, entries08091,",
+  "tests/eote-player-m2-3.test.mjs:174: test('P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能', () => {",
+  "tests/eote-player-m2-3.test.mjs:176: asset(s, '08090')",
+  "tests/eote-player-m2-3.test.mjs:177: assert.equal(inv(s).assets.find(card => card.code === '08090').uses, 6)",
+  "tests/eote-player-m2-3.test.mjs:180: fire(s, '08090', descriptors('08090', 'action')[0], { context: { targetId: s.enemies[0].id } },",
+  "tests/eote-player-m2-3.test.mjs:183: assert.equal(inv(s).assets.find(card => card.code === '08090').uses, 4)"
+ ],
+ "08092": [
+  "tests/eote-player-m2-3.test.mjs:25: import entries08092 from '../src/cards/entries/08092.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:186: test('P6 08092 克图格亚的烙印（4 级）：+2 技能值，最多花 3 充能', () => {",
+  "tests/eote-player-m2-3.test.mjs:188: asset(s, '08092')",
+  "tests/eote-player-m2-3.test.mjs:189: assert.equal(inv(s).assets.find(card => card.code === '08092').uses, 9)",
+  "tests/eote-player-m2-3.test.mjs:192: fire(s, '08092', descriptors('08092', 'action')[0], { context: { targetId: s.enemies[0].id } },",
+  "tests/eote-player-m2-3.test.mjs:195: assert.equal(inv(s).assets.find(card => card.code === '08092').uses, 6)"
+ ],
+ "08093": [
+  "tests/eote-player-m2-3.test.mjs:26: import entries08093 from '../src/cards/entries/08093.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:198: test('P6 08093 巨石锤：加入意志，成功超过难度 3 点时 +2 伤害并击退', () => {",
+  "tests/eote-player-m2-3.test.mjs:200: asset(s, '08093')",
+  "tests/eote-player-m2-3.test.mjs:204: fire(s, '08093', descriptors('08093', 'action')[0], { context: { targetId: s.enemies[0].id } },"
+ ],
+ "08094": [
+  "tests/eote-player-m2-3.test.mjs:27: import entries08094 from '../src/cards/entries/08094.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:210: test('P6 08094/08096 长柄大锤：两种挥砸的修正与伤害', () => {",
+  "tests/eote-player-m2-3.test.mjs:212: asset(s, '08094')",
+  "tests/eote-player-m2-3.test.mjs:215: fire(s, '08094', descriptors('08094', 'action')[0], { context: { targetId: s.enemies[0].id } })",
+  "tests/eote-player-m2-3.test.mjs:217: assert.equal(registeredEntry('08094').abilities[1].cost.action, 2)"
+ ],
+ "08095": [
+  "tests/eote-player-m2-3.test.mjs:28: import entries08095 from '../src/cards/entries/08095.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:222: test('P6 08095 防护服：危险诡计显现前自伤并取消显现', () => {",
+  "tests/eote-player-m2-3.test.mjs:224: asset(s, '08095')",
+  "tests/eote-player-m2-3.test.mjs:226: fire(s, '08095', descriptors('08095', 'reaction')[0], {",
+  "tests/eote-player-m2-3.test.mjs:227: source: inv(s).assets.find(card => card.code === '08095'), context,",
+  "tests/eote-player-m2-3.test.mjs:229: const armor = inv(s).assets.find(card => card.code === '08095')"
+ ],
+ "08096": [
+  "tests/eote-player-m2-3.test.mjs:29: import entries08096 from '../src/cards/entries/08096.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:210: test('P6 08094/08096 长柄大锤：两种挥砸的修正与伤害', () => {",
+  "tests/eote-player-m2-3.test.mjs:218: assert.equal(registeredEntry('08096').abilities[1].cost.action, 3)",
+  "tests/eote-player-m2-3.test.mjs:219: assert.equal(registeredEntry('08096').abilities[1].effect.combatBonus, 5)"
+ ],
+ "08097": [
+  "tests/eote-player-m2-3.test.mjs:30: import entries08097 from '../src/cards/entries/08097.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:235: test('P6 08097 袖珍望远镜：调查相连的已揭示地点', () => {",
+  "tests/eote-player-m2-3.test.mjs:237: asset(s, '08097')",
+  "tests/eote-player-m2-3.test.mjs:242: fire(s, '08097', descriptors('08097', 'action')[0], {}, c => (c.options.some(o => o.id === 'm23-h') ? 'm23-h' : null))",
+  "tests/eote-player-m2-3.test.mjs:407: test('P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面', () => {",
+  "tests/eote-player-m2-3.test.mjs:409: asset(s, '08097')",
+  "tests/eote-player-m2-3.test.mjs:414: fire(s, '08097', descriptors('08097', 'free')[0])",
+  "tests/eote-player-m2-3.test.mjs:416: assert.equal(inv(s).assets.find(card => card.code === '08097').exhausted, true)"
+ ],
+ "08098": [
+  "tests/eote-player-m2-3.test.mjs:31: import entries08098 from '../src/cards/entries/08098.js'",
+  "tests/eote-player-m2-3.test.mjs:45: entries08092, entries08093, entries08094, entries08095, entries08096, entries08097, entries08098,",
+  "tests/eote-player-m2-3.test.mjs:247: test('P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动', () => {",
+  "tests/eote-player-m2-3.test.mjs:249: asset(s, '08098')",
+  "tests/eote-player-m2-3.test.mjs:251: fire(s, '08098', descriptors('08098', 'free')[0], {}, c => (c.options.some(o => o.id === 'move') ? 'move' : null))"
+ ],
+ "08099": [
+  "tests/eote-player-m2-3.test.mjs:32: import entries08099 from '../src/cards/entries/08099.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:263: test('P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点', () => {",
+  "tests/eote-player-m2-3.test.mjs:265: asset(s, '08099')",
+  "tests/eote-player-m2-3.test.mjs:270: fire(s, '08099', descriptors('08099', 'reaction')[0], { context: { seat: 0 } })"
+ ],
+ "08100": [
+  "tests/eote-player-m2-3.test.mjs:33: import entries08100 from '../src/cards/entries/08100.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:247: test('P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动', () => {",
+  "tests/eote-player-m2-3.test.mjs:254: asset(s2, '08100')",
+  "tests/eote-player-m2-3.test.mjs:258: fire(s2, '08100', descriptors('08100', 'free')[0], {}, c => (c.options.some(o => o.id === 'move') ? 'move' : null))",
+  "tests/eote-player-m2-3.test.mjs:260: assert.equal(inv(s2).assets.find(card => card.code === '08100').uses, 2)"
+ ],
+ "08101": [
+  "tests/eote-player-m2-3.test.mjs:34: import entries08101 from '../src/cards/entries/08101.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:275: test('P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:277: asset(s, '08101')",
+  "tests/eote-player-m2-3.test.mjs:280: fire(s, '08101', descriptors('08101', 'action')[0], {}, c => (c.options.some(o => o.id === '2') ? '2' : null))",
+  "tests/eote-player-m2-3.test.mjs:282: assert.equal(inv(s).assets.find(card => card.code === '08101').uses, 2)"
+ ],
+ "08102": [
+  "tests/eote-player-m2-3.test.mjs:35: import entries08102 from '../src/cards/entries/08102.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:292: test('P6 08102 保护魂灵：盟友离场后返回拥有者手牌或抽 3 张', () => {",
+  "tests/eote-player-m2-3.test.mjs:295: fire(s, '08102', descriptors('08102', 'played')[0], {",
+  "tests/eote-player-m2-3.test.mjs:302: fire(s2, '08102', descriptors('08102', 'played')[0], {"
+ ],
+ "08103": [
+  "tests/eote-player-m2-3.test.mjs:36: import entries08103 from '../src/cards/entries/08103.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:275: test('P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:284: asset(s2, '08103')",
+  "tests/eote-player-m2-3.test.mjs:287: fire(s2, '08103', descriptors('08103', 'action')[0], {}, c => (c.options.some(o => o.id === '3') ? '3' : null))",
+  "tests/eote-player-m2-3.test.mjs:289: assert.equal(inv(s2).assets.find(card => card.code === '08103').uses, 3)"
+ ],
+ "08105": [
+  "tests/eote-player-m2-3.test.mjs:38: import entries08105 from '../src/cards/entries/08105.js'",
+  "tests/eote-player-m2-3.test.mjs:46: entries08099, entries08100, entries08101, entries08102, entries08103, entries08104, entries08105,",
+  "tests/eote-player-m2-3.test.mjs:308: test('P6 08105/08107 破冰锥：检定窗口 +1 技能值（横置）', () => {",
+  "tests/eote-player-m2-3.test.mjs:310: asset(s, '08105')",
+  "tests/eote-player-m2-3.test.mjs:312: fire(s, '08105', descriptors('08105', 'free')[0])",
+  "tests/eote-player-m2-3.test.mjs:314: assert.equal(inv(s).assets.find(card => card.code === '08105').exhausted, true)"
+ ],
+ "08107": [
+  "tests/eote-player-m2-3.test.mjs:40: import entries08107 from '../src/cards/entries/08107.js'",
+  "tests/eote-player-m2-3.test.mjs:47: entries08106, entries08107, entries08108]",
+  "tests/eote-player-m2-3.test.mjs:308: test('P6 08105/08107 破冰锥：检定窗口 +1 技能值（横置）', () => {",
+  "tests/eote-player-m2-3.test.mjs:420: test('P6 08107 破冰锥（3 级）：弃掉自身换取成功后额外线索', () => {",
+  "tests/eote-player-m2-3.test.mjs:422: asset(s, '08107')",
+  "tests/eote-player-m2-3.test.mjs:424: fire(s, '08107', descriptors('08107', 'free')[1])",
+  "tests/eote-player-m2-3.test.mjs:426: assert.equal(inv(s).assets.some(card => card.code === '08107'), false, '弃掉自身')"
+ ],
+ "08109": [
+  "tests/eote-player-m2-4.test.mjs:3: // 本文件覆盖 `08109–08133` 共 25 张一般玩家卡（含基础弱点 08130–08133 与场外/绑定卡）。",
+  "tests/eote-player-m2-4.test.mjs:22: import entry08109 from '../src/cards/entries/08109.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:121: // 08109 身形虚化（0–1 级）",
+  "tests/eote-player-m2-4.test.mjs:124: test('P6 08109 身形虚化 成功躲避：花 1 充能并获得 1 个额外行动', () => {",
+  "tests/eote-player-m2-4.test.mjs:127: const blur = asset(state, '08109')",
+  "tests/eote-player-m2-4.test.mjs:141: test('P6 08109 身形虚化 没有充能时能力不可用', () => {",
+  "tests/eote-player-m2-4.test.mjs:144: const blur = asset(state, '08109', { uses: 0 })"
+ ],
+ "08133": [
+  "tests/eote-player-m2-4.test.mjs:3: // 本文件覆盖 `08109–08133` 共 25 张一般玩家卡（含基础弱点 08130–08133 与场外/绑定卡）。",
+  "tests/eote-player-m2-4.test.mjs:46: import entry08133 from '../src/cards/entries/08133.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:632: // 08130–08133 基础弱点（威胁区 + 行动后锁；恐惧侧复用 threatHorrorSink）",
+  "tests/eote-player-m2-4.test.mjs:695: test('P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行动后不能谈判/抽取/调查', () => {",
+  "tests/eote-player-m2-4.test.mjs:698: const card = revealWeakness(state, '08133')",
+  "tests/eote-player-m2-4.test.mjs:700: const inv = lockAfterAction(state, '08133')"
+ ],
+ "08110": [
+  "tests/eote-player-m2-4.test.mjs:23: import entry08110 from '../src/cards/entries/08110.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:174: // 08110 虚影易位",
+  "tests/eote-player-m2-4.test.mjs:177: test('P6 08110 虚影易位 与已揭示地点的非精英敌人交换位置', () => {",
+  "tests/eote-player-m2-4.test.mjs:184: resolvePlayed(state, '08110')",
+  "tests/eote-player-m2-4.test.mjs:190: test('P6 08110 虚影易位 已揭示地点没有非精英敌人时不能打出', () => {",
+  "tests/eote-player-m2-4.test.mjs:196: state.investigators[0].hand = ['08110']",
+  "tests/eote-player-m2-4.test.mjs:198: const condition = registeredEntry('08110').playCondition[0]"
+ ],
+ "08111": [
+  "tests/eote-player-m2-4.test.mjs:24: import entry08111 from '../src/cards/entries/08111.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:154: // 08111 身形虚化（4 级）",
+  "tests/eote-player-m2-4.test.mjs:157: test('P6 08111 身形虚化 成功后可花 2 充能获得 2 个额外行动', () => {",
+  "tests/eote-player-m2-4.test.mjs:160: const blur = asset(state, '08111')"
+ ],
+ "08112": [
+  "tests/eote-player-m2-4.test.mjs:25: import entry08112 from '../src/cards/entries/08112.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:493: // 08112 「再来一张！」",
+  "tests/eote-player-m2-4.test.mjs:496: test('P6 08112 再来一张！ 额外揭示 1 枚标记：负值取正结算；骷髅则自动失败', () => {",
+  "tests/eote-player-m2-4.test.mjs:500: state.investigators[0].hand = ['08112']",
+  "tests/eote-player-m2-4.test.mjs:504: const descriptor = registeredEntry('08112').abilities.find(ability => ability.kind === 'played')",
+  "tests/eote-player-m2-4.test.mjs:506: inv: draft.investigators[0], source: { id: 'probe:08112', code: '08112' }, descriptor, events: [],",
+  "tests/eote-player-primitives.test.mjs:250: test('P6 原语 revealAdditionalTestToken：登记额外揭示并把负修正取反（08112）', () => {"
+ ],
+ "08113": [
+  "tests/eote-player-m2-4.test.mjs:26: import entry08113 from '../src/cards/entries/08113.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:518: // 08113 大肆借贷",
+  "tests/eote-player-m2-4.test.mjs:521: test('P6 08113 大肆借贷 打出后获得 10 资源；轮末资源 <10 时流放自身', () => {",
+  "tests/eote-player-m2-4.test.mjs:524: const loan = asset(state, '08113')",
+  "tests/eote-player-m2-4.test.mjs:527: when: 'assetEnteredPlay', seat: 0, assetCode: '08113', assetId: loan.id,",
+  "tests/eote-player-m2-4.test.mjs:535: assert.ok((state.removedFromGame || []).includes('08113'), '被流放（移出游戏）')",
+  "tests/eote-player-m2-4.test.mjs:539: asset(rich, '08113')",
+  "tests/eote-player-m2-4.test.mjs:542: assert.equal(rich.investigators[0].assets.some(item => item.code === '08113'), true, '资源 ≥10 时不流放')"
+ ],
+ "08114": [
+  "tests/eote-player-m2-4.test.mjs:27: import entry08114 from '../src/cards/entries/08114.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:205: // 08114 / 08115 珍贵记忆",
+  "tests/eote-player-m2-4.test.mjs:208: test('P6 08114 珍贵记忆（来自前世）：失败且低于难度 2+ 后横置治愈自身 1 伤害', () => {",
+  "tests/eote-player-m2-4.test.mjs:211: const memento = asset(state, '08114', { damage: 1, horror: 1 })",
+  "tests/eote-player-m2-4.test.mjs:222: test('P6 08114 珍贵记忆（来自前世）：成功且超过难度 2+ 后横置治愈自身 1 恐惧', () => {",
+  "tests/eote-player-m2-4.test.mjs:225: const memento = asset(state, '08114', { damage: 0, horror: 1 })"
+ ],
+ "08115": [
+  "tests/eote-player-m2-4.test.mjs:28: import entry08115 from '../src/cards/entries/08115.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:205: // 08114 / 08115 珍贵记忆",
+  "tests/eote-player-m2-4.test.mjs:235: test('P6 08115 珍贵记忆（来自后世）：失败治愈恐惧、成功治愈伤害（与前世互换）', () => {",
+  "tests/eote-player-m2-4.test.mjs:238: const memento = asset(state, '08115', { damage: 1, horror: 1 })"
+ ],
+ "08116": [
+  "tests/eote-player-m2-4.test.mjs:29: import entry08116 from '../src/cards/entries/08116.js'",
+  "tests/eote-player-m2-4.test.mjs:49: entry08109, entry08110, entry08111, entry08112, entry08113, entry08114, entry08115, entry08116,",
+  "tests/eote-player-m2-4.test.mjs:247: // 08116 护身法宝",
+  "tests/eote-player-m2-4.test.mjs:250: test('P6 08116 护身法宝 将被击败时弃掉并取消最多 2 点伤害', () => {",
+  "tests/eote-player-m2-4.test.mjs:253: const talisman = asset(state, '08116')",
+  "tests/eote-player-m2-4.test.mjs:260: assert.ok(inv.discard.includes('08116'), '进入弃牌堆')",
+  "tests/eote-player-m2-4.test.mjs:263: test('P6 08116 护身法宝 伤害不足以击败你时不提供反应', () => {",
+  "tests/eote-player-m2-4.test.mjs:266: asset(state, '08116')"
+ ],
+ "08117": [
+  "tests/eote-player-m2-4.test.mjs:30: import entry08117 from '../src/cards/entries/08117.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:279: // 08117 / 08119 尘世宁静",
+  "tests/eote-player-m2-4.test.mjs:282: test('P6 08117 尘世宁静 每超过难度 1 点可花 1 充能治愈 1 伤害', () => {",
+  "tests/eote-player-m2-4.test.mjs:285: const serenity = asset(state, '08117', { uses: 4, usesType: 'charges' })",
+  "tests/eote-player-m2-4.test.mjs:295: test('P6 08117 尘世宁静 成功且等于难度时失去 1 资源', () => {",
+  "tests/eote-player-m2-4.test.mjs:298: const serenity = asset(state, '08117', { uses: 4, usesType: 'charges' })"
+ ],
+ "08118": [
+  "tests/eote-player-m2-4.test.mjs:31: import entry08118 from '../src/cards/entries/08118.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:320: // 08118 附魔弓",
+  "tests/eote-player-m2-4.test.mjs:323: test('P6 08118 附魔弓 意志替代战斗：+1 技能值、+1 伤害并横置', () => {",
+  "tests/eote-player-m2-4.test.mjs:326: const bow = asset(state, '08118')",
+  "tests/eote-player-m2-4.test.mjs:339: test('P6 08118 附魔弓 花 1 充能攻击连接地点的非精英敌人', () => {",
+  "tests/eote-player-m2-4.test.mjs:342: const bow = asset(state, '08118')"
+ ],
+ "08119": [
+  "tests/eote-player-m2-4.test.mjs:32: import entry08119 from '../src/cards/entries/08119.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:279: // 08117 / 08119 尘世宁静",
+  "tests/eote-player-m2-4.test.mjs:307: test('P6 08119 尘世宁静 意志(0) 成功且等于难度时失去 2 资源', () => {",
+  "tests/eote-player-m2-4.test.mjs:310: const serenity = asset(state, '08119', { uses: 6, usesType: 'charges' })"
+ ],
+ "08120": [
+  "tests/eote-player-m2-4.test.mjs:33: import entry08120 from '../src/cards/entries/08120.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:546: // 08120–08124 天赋（轮初补满 + 特性检定 +1 + 支付近似）",
+  "tests/eote-player-m2-4.test.mjs:573: test('P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费', () => {",
+  "tests/eote-player-m2-4.test.mjs:574: talentBehavior('08120', '01061', '先知先觉')",
+  "tests/eote-player-m2-4.test.mjs:578: const talent = asset(state, '08120')"
+ ],
+ "08121": [
+  "tests/eote-player-m2-4.test.mjs:34: import entry08121 from '../src/cards/entries/08121.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:593: test('P6 08121 一探究竟 轮初补满 + Tome 检定 +1', () => {",
+  "tests/eote-player-m2-4.test.mjs:594: talentBehavior('08121', '01035', '一探究竟')"
+ ],
+ "08122": [
+  "tests/eote-player-m2-4.test.mjs:35: import entry08122 from '../src/cards/entries/08122.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:597: test('P6 08122 好勇斗狠 轮初补满 + Melee 检定 +1', () => {",
+  "tests/eote-player-m2-4.test.mjs:598: talentBehavior('08122', '01020', '好勇斗狠')"
+ ],
+ "08123": [
+  "tests/eote-player-m2-4.test.mjs:36: import entry08123 from '../src/cards/entries/08123.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:601: test('P6 08123 技艺精湛 轮初补满 + Tool 检定 +1', () => {",
+  "tests/eote-player-m2-4.test.mjs:602: talentBehavior('08123', '10005', '技艺精湛')"
+ ],
+ "08124": [
+  "tests/eote-player-m2-4.test.mjs:37: import entry08124 from '../src/cards/entries/08124.js'",
+  "tests/eote-player-m2-4.test.mjs:50: entry08117, entry08118, entry08119, entry08120, entry08121, entry08122, entry08123, entry08124,",
+  "tests/eote-player-m2-4.test.mjs:546: // 08120–08124 天赋（轮初补满 + 特性检定 +1 + 支付近似）",
+  "tests/eote-player-m2-4.test.mjs:605: test('P6 08124 古物藏家 轮初补满 + Favor 检定 +1', () => {",
+  "tests/eote-player-m2-4.test.mjs:606: talentBehavior('08124', '08046', '古物藏家')"
+ ],
+ "08125": [
+  "tests/eote-player-m2-4.test.mjs:38: import entry08125 from '../src/cards/entries/08125.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:610: // 08125 危险处境",
+  "tests/eote-player-m2-4.test.mjs:613: test('P6 08125 危险处境 setup：一次性 2 点创伤 + 3 经验', () => {",
+  "tests/eote-player-m2-4.test.mjs:616: const descriptor = registeredEntry('08125').abilities.find(ability => ability.kind === 'setup')",
+  "tests/eote-player-m2-4.test.mjs:618: inv: draft.investigators[0], source: { id: 'probe:08125', code: '08125' }, descriptor, events: [], silent: true,"
+ ],
+ "08126": [
+  "tests/eote-player-m2-4.test.mjs:39: import entry08126 from '../src/cards/entries/08126.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:358: // 08126 厚重皮衣",
+  "tests/eote-player-m2-4.test.mjs:361: test('P6 08126 厚重皮衣 揭示符号标记后：自身受 1 伤害，取消并重抽', () => {",
+  "tests/eote-player-m2-4.test.mjs:364: const furs = asset(state, '08126')",
+  "tests/eote-player-m2-4.test.mjs:377: test('P6 08126 厚重皮衣 自动失败与数字标记不提供反应', () => {",
+  "tests/eote-player-m2-4.test.mjs:381: asset(state, '08126')"
+ ],
+ "08127": [
+  "tests/eote-player-m2-4.test.mjs:40: import entry08127 from '../src/cards/entries/08127.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:394: // 08127 雪橇犬",
+  "tests/eote-player-m2-4.test.mjs:397: test('P6 08127 雪橇犬 2 张共占 1 个盟友槽', () => {",
+  "tests/eote-player-m2-4.test.mjs:400: asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:401: asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:403: asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:405: assert.equal(registeredEntry('08127').sharedSlotGroup.upTo, 2)",
+  "tests/eote-player-m2-4.test.mjs:408: test('P6 08127 雪橇犬 横置 X 张：移动 X 次', () => {",
+  "tests/eote-player-m2-4.test.mjs:411: const first = asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:412: const second = asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:423: assert.equal(inv.assets.filter(item => item.code === '08127').every(item => item.exhausted), true, '两张雪橇犬都横置')",
+  "tests/eote-player-m2-4.test.mjs:426: test('P6 08127 雪橇犬 横置 X 张：攻击 +X 战斗并造成 X 点伤害', () => {",
+  "tests/eote-player-m2-4.test.mjs:429: asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:430: asset(state, '08127')",
+  "tests/eote-player-m2-4.test.mjs:460: assert.equal(playCostDelta(state, inv, '08127'), -1, '自己回合打出生物支援费用 -1')",
+  "tests/eote-player-m2-4.test.mjs:463: assert.equal(playCostDelta(state, inv, '08127'), 0, '不是自己回合不减费')"
+ ],
+ "08128": [
+  "tests/eote-player-m2-4.test.mjs:41: import entry08128 from '../src/cards/entries/08128.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:441: // 08128 驯兽之杖",
+  "tests/eote-player-m2-4.test.mjs:444: test('P6 08128 驯兽之杖 2 个生物专用盟友槽 + 自己回合打出生物费用 -1', () => {",
+  "tests/eote-player-m2-4.test.mjs:447: asset(state, '08128')",
+  "tests/eote-player-m2-4.test.mjs:451: assert.deepEqual(registeredEntry('08128').restrictedSlots, [{ slot: 'ally', traitsAny: ['Creature'], count: 2 }])"
+ ],
+ "08129": [
+  "tests/eote-player-m2-4.test.mjs:42: import entry08129 from '../src/cards/entries/08129.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:467: // 08129 请求支援",
+  "tests/eote-player-m2-4.test.mjs:470: test('P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治疗', () => {",
+  "tests/eote-player-m2-4.test.mjs:480: resolvePlayed(state, '08129', {"
+ ],
+ "08131": [
+  "tests/eote-player-m2-4.test.mjs:44: import entry08131 from '../src/cards/entries/08131.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:663: test('P6 08131 腿伤 显现入威胁区；行动后本回合不能移动/撤退/躲避', () => {",
+  "tests/eote-player-m2-4.test.mjs:666: const card = revealWeakness(state, '08131')",
+  "tests/eote-player-m2-4.test.mjs:668: const inv = lockAfterAction(state, '08131')"
+ ],
+ "08132": [
+  "tests/eote-player-m2-4.test.mjs:45: import entry08132 from '../src/cards/entries/08132.js'",
+  "tests/eote-player-m2-4.test.mjs:51: entry08125, entry08126, entry08127, entry08128, entry08129, entry08130, entry08131, entry08132, entry08133,",
+  "tests/eote-player-m2-4.test.mjs:674: test('P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）', () => {",
+  "tests/eote-player-m2-4.test.mjs:677: const card = revealWeakness(state, '08132')",
+  "tests/eote-player-m2-4.test.mjs:680: assert.equal(registeredEntry('08132').threatHorrorSink, true)",
+  "tests/eote-player-m2-4.test.mjs:682: const inv2 = lockAfterAction(state, '08132')",
+  "tests/eote-player-m2-4.test.mjs:692: assert.equal(inv.threat.some(item => item.code === '08132'), false, '治满后弃掉惊慌')"
+ ]
+}

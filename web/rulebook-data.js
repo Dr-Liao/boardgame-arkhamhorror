@@ -1,6 +1,7 @@
 // 第 127 轮：规则书「当作幕/议程」的卡号表在 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 import { TIC_RULES, ticCardRuleIds } from './tic-rules.js'
+import { EOTE_RULES, eoteCardRuleIds } from './eote-rules.js'
 
 // 规则书正文只写规则本身：基础规则置顶，关键词与战役条目均不写引擎、实现或界面操作。
 // 来源：官方 Learn to Play / Rules Reference（RULE_SOURCES 与 ArkhamDB 规则全文），按当前收录内容整理。
@@ -111,6 +112,7 @@ export const RULES = [
   entry("tdeStoryAssets","剧情支援（Story Assets）","食梦者",["剧情支援","Story Asset","剧情资产","故事资产"],["剧情支援是一类剧本卡。它们在设置时放在一边，剧本指示时放入场，通常由队长或剧本指定的调查员控制。","剧情支援不属于任何调查员的牌组，不占牌组张数，也不能被当作普通牌组卡抽取或升级。","控制权可以按卡面在调查员之间转移：例如《维吉尔·格雷》在神迹被发现后结算奖励，并在有多名调查员时交给另一名调查员控制。","离开场上时按卡面处理：有的被移出游戏，有的放回一边等待下次指示，有的把线索或记录留给调查员。","《兰道夫·卡特》《维吉尔·格雷》《马赫什瓦兰医生》《船长》《银钥匙》《理查德·厄普顿·匹克曼》都按这条规则处理；银钥匙还会在幕间从 B 线转到 A 线。"],["tdeCampaign","tdeRecords","tdeSignsOfTheGods"]),
   entry("tdeLocationDoom","地点上的毁灭（Location Doom）","食梦者",["地点上的毁灭","地点毁灭","Location Doom","大网毁灭","毁灭标记"],["《编织宇宙》的大网地点会累积毁灭标记：进入时检定失败、调查阶段结束时、把调查费用换成毁灭、织网者每轮结束，以及部分诡计都会放置毁灭。","地点上的毁灭是毁灭：它计入议程阈值，也可能让当前议程推进。","该章骷髅符号的负值等于场上单个地点上的最高毁灭数（困难与专家改为全部地点毁灭之和）。","石板符号可以移除你所在地点的 1 个毁灭。地点不会因为毁灭而离场，本循环也没有「毁灭达到阈值就移除地点」的规则。","地点离场时，其上的毁灭随地点一起移除，除非卡面另有说明。"],["doom","tdeCampaign","tdeChaos","tdeWebOfDreams"]),
   ...TIC_RULES,
+  ...EOTE_RULES,
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 export const DEFAULT_RULE_ID = 'basics'
@@ -152,6 +154,14 @@ const RULE_PINYIN = {
   tdeResearched:'yanjiuwancheng', tdeBonded:'bangding', tdeDreamGate:'mengjingzhimen',
   tdeInfestationBag:'zhuqunzishengdaiyuzhuqiao', tdeAlarmLevel:'jingbaodengji',
   tdeSignsOfTheGods:'shenji', tdeStoryAssets:'juqingzhiyuan', tdeLocationDoom:'didianshangdehuimie',
+  eoteCampaign:'xunhuangailan', eoteFrost:'hanshuangbiaoji', eotePartners:'tanxianduihuoban',
+  eoteResolute:'jianyimian', eoteTekeli:'tekelilibaiku', eoteShelter:'bihuzhi',
+  eoteLevel:'gaoducengji', eoteMirage:'zhiminghuanjing', eoteSeals:'fengyin',
+  eoteSealTokens:'fengyinbiaojifuhao', eoteKeys:'guchengyaoshi', eoteSupplies:'tanxianwuzi',
+  eoteExpedition:'tanxiantexing', eoteTitanic:'taitanpodaol', eoteHazard:'weixiantexing',
+  eoteBroken:'yanwushuangmian', eoteEidolon:'huanling', eoteAncientOne:'gushen',
+  eotePossessed:'fushen', eoteObjective:'mubiao', eoteResign:'chetui',
+  eoteMulticlass:'duozhijiegouzhu', eoteDiscipline:'yanwu',
 }
 export const RULE_INDEX = RULES.map(rule => ({...rule, sortKey:RULE_PINYIN[rule.id] || rule.sortKey, initial:(RULE_PINYIN[rule.id] || rule.sortKey)[0].toUpperCase()}))
   .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0) || a.sortKey.localeCompare(b.sortKey,'en'))
@@ -198,6 +208,7 @@ function scenarioCardRuleIds(card) {
   if (/^05\d{3}[a-z]?$/.test(code)) return tcuCardRuleIds(card)
   if (/^06\d{3}[a-z]?$/.test(code)) return tdeCardRuleIds(card)
   if (/^07\d{3}[a-z]?$/.test(code)) return ticCardRuleIds(card)
+  if (/^08\d{3}[a-z]?$/.test(code)) return eoteCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']

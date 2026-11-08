@@ -1,0 +1,299 @@
+{
+ "generatedAt": "2026-11-08T11:12:49.397Z",
+ "totalKeys": 10,
+ "unreadCount": 0,
+ "unread": [],
+ "contentOnly": [
+  {
+   "key": "scenarioFlags.hiddenTunnelRevealed",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 464
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 471
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 478
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.fatalMirageVersion",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 68
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.agendaCode",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 69
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/theSecretName/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.memoryAlive:${code}:dynamic",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 110
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.partnerSwitch",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 256
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.lookedAt",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+     "line": 124
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.spawnedFrom",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+     "line": 83
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.gateFlipped",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 170
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 182
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js"
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "key": "scenarioFlags.hiddenTunnelRevealed",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 464
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 471
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+     "line": 478
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.fatalMirageVersion",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 68
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.agendaCode",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 69
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/theSecretName/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.actCode",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 70
+    }
+   ],
+   "readInSrcOrWeb": [
+    "src/engine/encounter.js",
+    "src/engine/scenario-runtime.js"
+   ],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js",
+    "content/campaigns/theDunwichLegacy/later-behaviors.js",
+    "content/campaigns/theForgottenAge/scenarios/shatteredAeons/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.memoryAlive:${code}:dynamic",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 110
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.partnerSwitch",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+     "line": 256
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.camp",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+     "line": 75
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+     "line": 28
+    }
+   ],
+   "readInSrcOrWeb": [
+    "src/cards/cards-data.js",
+    "src/engine/api-mechanics.js",
+    "src/engine/eote-camp.js",
+    "src/engine/eote-primitives.js",
+    "src/engine/eote-shelter.js",
+    "src/engine/eote-state.js",
+    "web/eote-rules.js"
+   ],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/checkpoints.js",
+    "content/campaigns/edgeOfTheEarth/records.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+    "content/campaigns/edgeOfTheEarth/story-text.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.lookedAt",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js",
+     "line": 124
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.spawnedFrom",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js",
+     "line": 83
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js"
+   ]
+  },
+  {
+   "key": "scenarioFlags.gateFlipped",
+   "writtenIn": [
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 170
+    },
+    {
+     "rel": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+     "line": 182
+    }
+   ],
+   "readInSrcOrWeb": [],
+   "readInContent": [
+    "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js"
+   ]
+  }
+ ]
+}

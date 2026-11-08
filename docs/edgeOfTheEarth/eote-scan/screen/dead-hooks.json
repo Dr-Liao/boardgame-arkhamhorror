@@ -1,0 +1,1166 @@
+{
+ "generatedAt": "2026-11-08T11:21:33.006Z",
+ "summary": {
+  "totalHooks": 101,
+  "byVerdict": {
+   "dead": 61,
+   "test-only": 40
+  }
+ },
+ "byFile": {
+  "card-data.js": [
+   "encounterGroupCode(dead)",
+   "EOTE_PACKS(dead)",
+   "GROUP_ALIASES(dead)",
+   "camelToSnake(dead)"
+  ],
+  "chapters.js": [
+   "catalogChapter(dead)",
+   "catalogChapters(dead)"
+  ],
+  "checkpoints.js": [
+   "runCheckpointEffect(test-only)",
+   "CHECKPOINT_HANDLER_ID(dead)"
+  ],
+  "epilogue.js": [
+   "runEpilogueEffect(test-only)",
+   "EPILOGUE_HANDLER_ID(dead)"
+  ],
+  "flow.js": [
+   "rawEoteFlowNodes(dead)",
+   "upgradeWindowForNode(test-only)",
+   "validateEoteFlow(test-only)",
+   "EOTE_FLOW(test-only)"
+  ],
+  "interludes.js": [
+   "runInterludeEffect(test-only)",
+   "INTERLUDE_HANDLER_ID(dead)",
+   "INTERLUDE_DATA(dead)"
+  ],
+  "investigator-data.js": [
+   "eoteDisciplineFaceOf(dead)",
+   "EOTE_DISCIPLINE_SETS(dead)",
+   "EOTE_DISCIPLINE_UNBROKEN_CODES(dead)",
+   "EOTE_INVESTIGATOR_BUILD(dead)"
+  ],
+  "keywords.js": [
+   "EOTE_KEYWORDS(test-only)"
+  ],
+  "prologue.js": [
+   "runPrologueEffect(test-only)",
+   "PROLOGUE_HANDLER_ID(dead)",
+   "PROLOGUE_TEXT_KEYS(dead)"
+  ],
+  "records.js": [
+   "recordLabelMap(dead)",
+   "partnerNameMap(dead)",
+   "supplyNameMap(dead)",
+   "partnerStatusesFromRecords(test-only)"
+  ],
+  "scenarios/cityOfTheElderThings/behavior.js": [
+   "setupCityMap(dead)",
+   "cityscapeAt(dead)",
+   "mapRows(test-only)",
+   "mapColumns(test-only)",
+   "gridLocationsInRow(dead)",
+   "lookAtRow(dead)",
+   "lookAtColumn(dead)",
+   "lookRowCards(dead)",
+   "lookColumnCards(dead)",
+   "keysAtLocation(dead)",
+   "keysControlled(dead)",
+   "placeControlledKeyAtLocation(dead)",
+   "ACT_REVEAL_HANDLERS(dead)",
+   "LOCATION_ACTION_HANDLERS(dead)"
+  ],
+  "scenarios/cityOfTheElderThings/definition.js": [
+   "actsForVersion(dead)",
+   "CITYSCAPE_IDS(dead)",
+   "SET_ASIDE_BY_VERSION(dead)",
+   "REMOVED_BY_VERSION(test-only)"
+  ],
+  "scenarios/fatalMirage/behavior.js": [
+   "actCodeForVersion(dead)",
+   "eliminatePartner(test-only)",
+   "resoluteVersionOf(test-only)",
+   "basePartnerOf(test-only)"
+  ],
+  "scenarios/fatalMirage/definition.js": [
+   "HORROR_SHADOW_CODE(dead)",
+   "MEMORY_STORY_CODES(dead)",
+   "LOCATION_STORY_CODES(dead)"
+  ],
+  "scenarios/iceAndDeathPart1/definition.js": [
+   "GATHER_SET_ASIDE_GROUPS(dead)"
+  ],
+  "scenarios/iceAndDeathPart3/definition.js": [
+   "LOCATION_LINKS(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart1/behavior.js": [
+   "HEART_OF_MADNESS_RULES(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart1/chaos.js": [
+   "chaosFx(dead)",
+   "TOKEN_MEANING_SOURCE(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart1/definition.js": [
+   "ACTIVATE_LOCATION_CODES(dead)",
+   "RINGS(dead)",
+   "SPOKES(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart2/behavior.js": [
+   "HEART_OF_MADNESS_PART2_RULES(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart2/definition.js": [
+   "REMOVED_GROUPS(dead)",
+   "SLOT_CODES(dead)"
+  ],
+  "scenarios/theHeartOfMadnessPart2/texts.js": [
+   "sectionsEn(test-only)",
+   "chineseGaps(test-only)"
+  ],
+  "scenarios/toTheForbiddenPeaks/behavior.js": [
+   "climbLevel(dead)",
+   "afterMove(test-only)"
+  ],
+  "scenarios/toTheForbiddenPeaks/definition.js": [
+   "MOUNTAINSIDE_SET_ASIDE(dead)",
+   "START_LOCATION_ID(dead)"
+  ],
+  "shared-encounters.js": [
+   "encounterCodeOf(dead)",
+   "sharedGroupCodes(dead)",
+   "sharedGroupOfCard(dead)",
+   "isSharedGroup(dead)",
+   "chapterCardPool(test-only)",
+   "partnerRosterSpec(test-only)",
+   "memorialsSpec(test-only)",
+   "tekeliDeckSpec(test-only)",
+   "suppliesSpec(test-only)",
+   "SHARED_GROUP_CODES(test-only)",
+   "SHARED_GROUP_BY_ID(dead)",
+   "SHARED_GROUP_BY_ENCOUNTER_CODE(test-only)",
+   "SHARED_CARD_CODES(test-only)",
+   "SHARED_GROUP_OF_CARD(test-only)",
+   "CHAPTER_GATHER_SETS(test-only)",
+   "SHELTER_BY_LOCATION_CODE(test-only)",
+   "PARTNER_ASSET_RULES(test-only)",
+   "RESOLUTE_PARTNER_FORMS(test-only)",
+   "MEMORIAL_FOR_PARTNER(test-only)",
+   "TEKELI_FACE_CODES(test-only)",
+   "EXPEDITION_SUPPLY_CODES(test-only)",
+   "SUPPLY_LABELS(test-only)"
+  ],
+  "shared.js": [
+   "catalogPack(dead)",
+   "CYCLE_PACKS(dead)",
+   "CANDIDATE_RANGES(dead)",
+   "SCENARIO_REFERENCE_CODES(test-only)",
+   "CARD_PARTITIONS(test-only)",
+   "toCamelCase(test-only)"
+  ],
+  "story-access.js": [
+   "storyParagraphsOf(test-only)",
+   "storyEntryText(test-only)"
+  ]
+ },
+ "rows": [
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "hook": "encounterGroupCode",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "hook": "EOTE_PACKS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "hook": "GROUP_ALIASES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/card-data.js",
+   "hook": "camelToSnake",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/chapters.js",
+   "hook": "catalogChapter",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/chapters.js",
+   "hook": "catalogChapters",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+   "hook": "runCheckpointEffect",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/checkpoints.js",
+   "hook": "CHECKPOINT_HANDLER_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/epilogue.js",
+   "hook": "runEpilogueEffect",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/epilogue.js",
+   "hook": "EPILOGUE_HANDLER_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/flow.js",
+   "hook": "rawEoteFlowNodes",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/flow.js",
+   "hook": "upgradeWindowForNode",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/flow.js",
+   "hook": "validateEoteFlow",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/flow.js",
+   "hook": "EOTE_FLOW",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+   "hook": "runInterludeEffect",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+   "hook": "INTERLUDE_HANDLER_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/interludes.js",
+   "hook": "INTERLUDE_DATA",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "hook": "eoteDisciplineFaceOf",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "hook": "EOTE_DISCIPLINE_SETS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "hook": "EOTE_DISCIPLINE_UNBROKEN_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/investigator-data.js",
+   "hook": "EOTE_INVESTIGATOR_BUILD",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/keywords.js",
+   "hook": "EOTE_KEYWORDS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-migration-ledger.test.mjs",
+    "tests/eote-rules.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/prologue.js",
+   "hook": "runPrologueEffect",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/prologue.js",
+   "hook": "PROLOGUE_HANDLER_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/prologue.js",
+   "hook": "PROLOGUE_TEXT_KEYS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "hook": "recordLabelMap",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "hook": "partnerNameMap",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "hook": "supplyNameMap",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/records.js",
+   "hook": "partnerStatusesFromRecords",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-campaign-flow.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "setupCityMap",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "cityscapeAt",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "mapRows",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "mapColumns",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "gridLocationsInRow",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "lookAtRow",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "lookAtColumn",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "lookRowCards",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "lookColumnCards",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "keysAtLocation",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "keysControlled",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "placeControlledKeyAtLocation",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "ACT_REVEAL_HANDLERS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js",
+   "hook": "LOCATION_ACTION_HANDLERS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "hook": "actsForVersion",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "hook": "CITYSCAPE_IDS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "hook": "SET_ASIDE_BY_VERSION",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+   "hook": "REMOVED_BY_VERSION",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "hook": "actCodeForVersion",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "hook": "eliminatePartner",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-fatalMirage.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "hook": "resoluteVersionOf",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-fatalMirage.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js",
+   "hook": "basePartnerOf",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-fatalMirage.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "hook": "HORROR_SHADOW_CODE",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "hook": "MEMORY_STORY_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+   "hook": "LOCATION_STORY_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+   "hook": "GATHER_SET_ASIDE_GROUPS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+   "hook": "LOCATION_LINKS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
+   "hook": "HEART_OF_MADNESS_RULES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+   "hook": "chaosFx",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/chaos.js",
+   "hook": "TOKEN_MEANING_SOURCE",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "hook": "ACTIVATE_LOCATION_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "hook": "RINGS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+   "hook": "SPOKES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
+   "hook": "HEART_OF_MADNESS_PART2_RULES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "hook": "REMOVED_GROUPS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+   "hook": "SLOT_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/texts.js",
+   "hook": "sectionsEn",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-story.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/texts.js",
+   "hook": "chineseGaps",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-story.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "hook": "climbLevel",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+   "hook": "afterMove",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-release.browser.mjs",
+    "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+    "tests/tic-release.browser.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "hook": "MOUNTAINSIDE_SET_ASIDE",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+   "hook": "START_LOCATION_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "encounterCodeOf",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "sharedGroupCodes",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "sharedGroupOfCard",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "isSharedGroup",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "chapterCardPool",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "partnerRosterSpec",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "memorialsSpec",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "tekeliDeckSpec",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "suppliesSpec",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHARED_GROUP_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHARED_GROUP_BY_ID",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHARED_GROUP_BY_ENCOUNTER_CODE",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHARED_CARD_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHARED_GROUP_OF_CARD",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "CHAPTER_GATHER_SETS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SHELTER_BY_LOCATION_CODE",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "PARTNER_ASSET_RULES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "RESOLUTE_PARTNER_FORMS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "MEMORIAL_FOR_PARTNER",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "TEKELI_FACE_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "EXPEDITION_SUPPLY_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-shared.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared-encounters.js",
+   "hook": "SUPPLY_LABELS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/tfa-supply-picker.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "catalogPack",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "CYCLE_PACKS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "CANDIDATE_RANGES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [],
+   "webRefs": [],
+   "verdict": "dead"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "SCENARIO_REFERENCE_CODES",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-migration.test.mjs",
+    "tests/tic-migration.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "CARD_PARTITIONS",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-migration-ledger.test.mjs",
+    "tests/eote-migration.test.mjs",
+    "tests/tic-migration.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/shared.js",
+   "hook": "toCamelCase",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-migration.test.mjs",
+    "tests/tic-migration.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-access.js",
+   "hook": "storyParagraphsOf",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+    "tests/eote-story.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  },
+  {
+   "file": "content/campaigns/edgeOfTheEarth/story-access.js",
+   "hook": "storyEntryText",
+   "srcRefs": [],
+   "contentRefs": [],
+   "testRefs": [
+    "tests/eote-story.test.mjs"
+   ],
+   "webRefs": [],
+   "verdict": "test-only"
+  }
+ ]
+}

@@ -4,6 +4,8 @@
 // card-text.js (symbol labels and objective sentences), card-filters.js and supply-picker.js.
 // Keys mirror zh-CN.table.js one-to-one; a missing key falls back to the zh-CN source string.
 export default {
+  'table.direct.caption': '{source} → {target} · {damage} damage',
+  'table.direct.areaCaption': '{source} · Blast: {targets}',
   // ---- Card symbols (card-text.js SYMBOLS; the top-level table stores keys, t() runs at render) ----
   'symbol.action': 'Action',
   'symbol.reaction': 'Reaction',
@@ -183,6 +185,8 @@ export default {
   'table.combat.miss': 'Attack misses',
   'table.combat.damage': '{damage} damage',
   'table.combat.damageHorror': '{damage} damage / {horror} horror',
+  'table.combat.threat': 'attacks',
+  'table.combat.harmCaption': '{who} suffers · {label}',
   'table.combat.hit': 'Hit · {damage} damage',
   'table.combat.hitDefeated': 'Hit · {damage} damage · defeated',
   'table.combat.incomingCaption': '{who} is attacked by "{enemy}" · {label}',

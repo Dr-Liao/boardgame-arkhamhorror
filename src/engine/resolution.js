@@ -1,4 +1,5 @@
 import { isDeepStrictEqual } from 'node:util'
+import { transactionEvents, presentationCount } from './presentation-events.js'
 
 // 回滚开关：BOARDGAME_AUTOREACTION=0 时恢复「引擎对真人直接领取自动奖励」的旧行为。
 // 正常路径由大厅在发布前代答（autoOptionId 让窗口对真人可见）。
@@ -159,7 +160,7 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
     } catch (error) {
       if (error instanceof ResolutionCheckpoint) {
         if (draft._resolution.cursor !== transaction.answers.length) throw new Error('检查点存在未消费的选择恢复凭据')
-        newEvents.push(...draft._resolution.events.slice(transaction.emitted))
+        newEvents.push(...transactionEvents(draft, transaction))
         transaction = { id: `${revision + 1}c${checkpoints + 1}`, base: dynamicState(draft),
           seat: error.seat, move: cloneMove(error.move), answers: [], emitted: 0 }
         continue
@@ -169,8 +170,9 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
       draft.turnSeat = draft.currentSeat
       draft.currentSeat = error.choice.seat
       draft.continuation = { ...transaction, emitted: draft._resolution.events.length }
+      if (presentationCount(draft)) draft.continuation._presentationEmitted = presentationCount(draft)
     }
-    newEvents.push(...draft._resolution.events.slice(transaction.emitted))
+    newEvents.push(...transactionEvents(draft, transaction))
     break
   }
   delete draft._resolution

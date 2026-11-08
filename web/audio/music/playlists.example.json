@@ -3,6 +3,22 @@
   "playlists": {
     "common": {
       "tracks": [
+        "eoteDespairAndTriumph",
+        "eoteMoorland",
+        "eoteSpacialWinds",
+        "eoteInexorable",
+        "eoteDayOfChaos",
+        "eoteDarkeningDevelopments",
+        "eoteEveningFallHarp",
+        "eoteLostTime",
+        "eoteCrossingTheChasm",
+        "eoteLongRoadAheadB",
+        "eoteSpacialHarvest",
+        "eoteShadowlands3Machine",
+        "eoteScpX2xUnseenPresence",
+        "eoteScpX4xMindLeech",
+        "eoteBlackVortex",
+        "eoteTheComplex",
         "ticIceDemon",
         "ticBentAndBroken",
         "ticAwkwardMeeting",
@@ -275,6 +291,99 @@
         "ancientRite",
         "ticTheDescent",
         "ticStormfront",
+        "thunderDreams"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth": {
+      "tracks": [
+        "eoteDespairAndTriumph",
+        "eoteMoorland",
+        "tdeFrozenStar",
+        "eoteSpacialWinds",
+        "eoteInexorable",
+        "ticIceDemon",
+        "eoteDayOfChaos",
+        "eoteDarkeningDevelopments",
+        "ticStormfront",
+        "eoteEveningFallHarp",
+        "eoteLostTime",
+        "tdeDreamlike",
+        "eoteCrossingTheChasm",
+        "eoteLongRoadAheadB",
+        "lostFrontier",
+        "eoteSpacialHarvest",
+        "eoteShadowlands3Machine",
+        "truthInTheStones",
+        "eoteScpX2xUnseenPresence",
+        "eoteScpX4xMindLeech",
+        "orion300xb",
+        "eoteBlackVortex",
+        "eoteTheComplex",
+        "thunderDreams"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/iceAndDeathPart1": {
+      "tracks": [
+        "eoteDespairAndTriumph",
+        "eoteMoorland",
+        "tdeFrozenStar"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/iceAndDeathPart2": {
+      "tracks": [
+        "eoteSpacialWinds",
+        "eoteInexorable",
+        "ticIceDemon"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/iceAndDeathPart3": {
+      "tracks": [
+        "eoteDayOfChaos",
+        "eoteDarkeningDevelopments",
+        "ticStormfront"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/fatalMirage": {
+      "tracks": [
+        "eoteEveningFallHarp",
+        "eoteLostTime",
+        "tdeDreamlike"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/toTheForbiddenPeaks": {
+      "tracks": [
+        "eoteCrossingTheChasm",
+        "eoteLongRoadAheadB",
+        "lostFrontier"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/cityOfTheElderThings": {
+      "tracks": [
+        "eoteSpacialHarvest",
+        "eoteShadowlands3Machine",
+        "truthInTheStones"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/theHeartOfMadnessPart1": {
+      "tracks": [
+        "eoteScpX2xUnseenPresence",
+        "eoteScpX4xMindLeech",
+        "orion300xb"
+      ],
+      "includeCustom": true
+    },
+    "edgeOfTheEarth/theHeartOfMadnessPart2": {
+      "tracks": [
+        "eoteBlackVortex",
+        "eoteTheComplex",
         "thunderDreams"
       ],
       "includeCustom": true

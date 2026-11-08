@@ -13,18 +13,20 @@ import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules, optionExc
 import { PLAYER_CARDS, ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { traitLabel } from '../cards/trait-labels.js'
 import { legacyEntry, implementation } from '../cards/card-implementation.js'
+import { eoteInvestigatorBuildRules } from '../../content/campaigns/edgeOfTheEarth/investigator-data.js'
 import { PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
 import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
 import { validateMyriadLimit } from '../engine/myriad.js'
 import { playedEffect } from '../engine/lifecycle.js'
 import {
-  CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES,
+  CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES,
   PLAYABLE_INVESTIGATOR_CODES,
   SELECTABLE_INVESTIGATOR_CODES,
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
   TCU_PLAYER_BUILDABLE_CODES,
   TDE_PLAYER_BUILDABLE_CODES,
   TIC_PLAYER_BUILDABLE_CODES,
+  EOTE_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -45,7 +47,14 @@ const TDE_DECK_CARD_CODES = Object.freeze(TDE_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES])
+// P6（M2 地球边缘）：111 张可构筑玩家卡进入开放玩家池（4 张基础弱点不进）。
+// 默认池 PLAYER_CARD_CODES 不变：既有循环自动牌组产出保持基线。
+const EOTE_DECK_CARD_CODES = Object.freeze(EOTE_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES])
+export const DRAFT_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])])
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
 const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
@@ -325,7 +334,31 @@ export function buildDeck(invDef, options = {}) {
 export function signatureAndWeaknesses(invDef, rng, options = {}) {
   const signatureCards = []
   const signatureWeaknesses = []
+  // 地球边缘 P5：陈丽丽的演武不是「印刷签名主卡」，而是构筑期选择的双面永久资产；
+  // 每张演武强制配 1 张命运重担（08015 印刷 4 份，数量随已选演武数变化）。
+  const eoteBuild = eoteInvestigatorBuildRules(invDef?.code)
+  if (eoteBuild) {
+    const chosen = options.disciplines === undefined ? [eoteBuild.startingDiscipline] : options.disciplines
+    if (!Array.isArray(chosen) || !chosen.length || chosen.length > eoteBuild.disciplineSets.length) {
+      throw new Error('演武选择必须是 1–' + eoteBuild.disciplineSets.length + ' 张卡号数组')
+    }
+    const earnedXp = Math.max(0, Number.isSafeInteger(options.xp) ? options.xp : 0)
+    const allowedDisciplines = Math.min(eoteBuild.disciplineSets.length, 1 + Math.floor(earnedXp / (eoteBuild.xpPerDiscipline || 15)))
+    if (chosen.length > allowedDisciplines) throw new Error('演武数量超过经验允许：最多 ' + allowedDisciplines + ' 张')
+    if (new Set(chosen).size !== chosen.length) throw new Error('演武选择不能重复')
+    for (const code of chosen) {
+      if (!eoteBuild.disciplineCodes.includes(code)) throw new Error('非法演武卡号：' + code)
+      if (!implementation(code).implemented) throw new Error('演武尚未实现：' + code)
+      signatureCards.push(code)
+    }
+    const burden = eoteBuild.burdenCode
+    const burdenDef = ALL_CARDS[burden]
+    const burdenCount = chosen.length
+    if (burdenDef.quantity != null && burdenCount > burdenDef.quantity) throw new Error('命运重担数量超过印刷份数')
+    signatureWeaknesses.push(...Array(burdenCount).fill(burden))
+  }
   for (const code of deckRules(invDef).signatureCards) {
+    if (eoteBuild && code === eoteBuild.burdenCode) continue
     const def = ALL_CARDS[code]
     if (!def || def.code !== code
       || !implementation(code).implemented
@@ -403,6 +436,7 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
   errors.push(...validateDeckRules(invDef, codes, ALL_CARDS).errors)
+  // P5：陈丽丽的演武由 options.disciplines 选择并作为专属依赖自动加入，不进入 30 张玩家卡清单。
   // P7（食梦者 M2）：「多重」同名至多 3 张，走 P3 原语 deck.myriadLimit。
   // 浏览器侧 validateDeckRules 的同一口径也拦，这里保证 Node 侧（存档/导入/服务端）不可绕过。
   const myriad = validateMyriadLimit(codes, code => ALL_CARDS[code])

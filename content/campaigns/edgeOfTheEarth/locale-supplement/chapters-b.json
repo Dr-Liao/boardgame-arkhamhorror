@@ -1,0 +1,549 @@
+{
+  "kind": "chapter-translation",
+  "entries": [
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "heading",
+      "en": "Scenario ???",
+      "zh": "冒险???",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "specialRules.0.title",
+      "en": "",
+      "zh": "幻景",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "specialRules.0.body",
+      "en": "",
+      "zh": "幻景关键词代表那些由你的记忆与同伴们的记忆所化的地点。这些地点没有未揭示面，因此入场时以已揭示面朝上。这些地点的背面不是未揭示面，而是剧情卡牌。这些剧情卡牌让调查员能够深入这片奇异的幻景，并以地点或遭遇卡牌的形式解锁新的记忆。幻景关键词所标示的数字代表将其翻面所需的线索数量，而括号中的卡牌名则表明因此可能出现的记忆。\n\n• 作为一项[action]能力，位于幻景地点的调查员可以作为一个团队花费所标示数量的线索，将其翻面并结算其另一面的剧情卡。\n\n• 当一个带有幻景关键词的地点入场时（包括在设置期间），对于其幻景关键词所指、且已经位于场上或胜利区的每张卡牌，将该地点的线索值减少其幻景值。\n\n• 注：在你第一次游玩《致命幻景》时，这种情况不太会发生，但在之后的多次游玩中则很有可能发生。\n\n• 例如：记忆囚笼的线索值为3[per_investigator]，且具有以下文本：“幻景1[per_investigator]（大本营、菲奥多西亚号甲板、大学礼堂）。”当记忆囚笼入场时，调查员检查其幻景关键词所指的三张卡牌中，哪些已经位于场上或胜利区。大学礼堂与菲奥多西亚号甲板都已经在场上，但大本营仍被放在一边。因此，记忆囚笼的线索值减少2[per_investigator]，这意味着它入场时其上只放置1[per_investigator]个线索。\n\n• 如果一个地点由其幻景关键词所指的每张卡牌都已经位于场上或胜利区，则该地点“已破除幻景”。已破除幻景的地点不能再次翻面。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "tooltips.mirage",
+      "en": "Mirage",
+      "zh": "幻景",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.keepPlaying",
+      "en": "Keep playing",
+      "zh": "继续游玩",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.moveToPrisonOfMemories",
+      "en": "Move to the Prison of Memories",
+      "zh": "移动到记忆囚笼",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.shuffleTekeliliIntoYourDeck",
+      "en": "Shuffle the top card of the Tekeli-li deck into your deck without looking at it.",
+      "zh": "将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌库，不要查看内容。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.averyClaypoolAntarcticGuideResolute.revealANewChaosToken",
+      "en": "Reveal a new chaos token",
+      "zh": "揭示一个新的混乱标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.averyClaypoolAntarcticGuideResolute.spend1Supply",
+      "en": "Spend 1 Supply",
+      "zh": "花费1补给",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "label.chooseAgenda",
+      "en": "The investigators may choose which agenda to use (the higher the agenda number, the less time the investigators will have).",
+      "zh": "调查员可以选择使用哪张密谋（密谋编号越大，调查员可用的时间越少）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "intro2.title",
+      "en": "Scenario ???: Fatal Mirage",
+      "zh": "冒险???：致命幻景",
+      "status": "untranslated"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.isThereADifference",
+      "en": "Is there a difference?",
+      "zh": "有区别吗？",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.noSay",
+      "en": "But you have no say in the matter.",
+      "zh": "但你对此无能为力。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.victory",
+      "en": "In the “Fatal Mirage” section of the Campaign Log, under “Memories Banished,” record each story card in the victory display. Each investigator earns experience equal to the Victory X value of each card recorded in this way. (*Do not earn experience points for cards already recorded in this section*).",
+      "zh": "在剧本日志的“致命幻景”部分，于“驱除的记忆”下方记录胜利区中的每张剧情卡牌。每位调查员取得经验值，数量等于以此方式记录的每张卡牌的胜利X数值之和。（不要为已记录在本部分的卡牌取得经验值）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.memoriesDiscovered",
+      "en": " In the “Fatal Mirage” section of the Campaign Log, under “Memories Discovered,” record each non‑_Otherworld_ location in play.",
+      "zh": "在剧本日志的“致命幻景”部分，于“发现的记忆”下方记录场上的每个非异界地点。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.crossOutMemoriesDiscovered",
+      "en": "Cross off each location recorded under “Memories Discovered” for which the corresponding story card is also recorded under “Memories Banished.”",
+      "zh": "将“发现的记忆”下方记录的每个地点划掉，前提是其对应的剧情卡牌也记录在“驱除的记忆”下方。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.nonStoryVictory",
+      "en": "If there are any other non-story cards in the victory display worth Victory X, each investigator earns experience equal to that amount.",
+      "zh": "如果胜利区中还有其他带有胜利X的非剧情卡牌，每位调查员取得经验值，数量等于该数值。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.partnerDamage",
+      "en": "In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.",
+      "zh": "在剧本日志的“探险队”部分，记录场上每张伙伴支援所受的伤害与恐惧数量。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.proceed",
+      "en": "Proceed to the next scenario of the campaign, in numerical order, as follows:",
+      "zh": "按照数字顺序推进至战役的下一个冒险，如下所示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.proceedToTheForbiddenPeaks",
+      "en": "If the last scenario you played before this one was Ice and Death, proceed to _Scenario II: To the Forbidden Peaks_.",
+      "zh": "如果你在本冒险之前游玩的最后一个冒险是《亡命冰原》，则推进至冒险II：失落之峰。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.proceedToCityOfTheElderThings",
+      "en": "If the last scenario you played before this one was To the Forbidden Peaks, proceed to _Scenario III: City of the Elder Things_.",
+      "zh": "如果你在本冒险之前游玩的最后一个冒险是《失落之峰》，则推进至冒险III：古老者之城。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.proceedToTheHeartOfMadness",
+      "en": "If the last scenario you played before this one was City of the Elder Things, proceed to _Scenario IV: The Heart of Madness_.",
+      "zh": "如果你在本冒险之前游玩的最后一个冒险是《古老者之城》，则推进至冒险IV：疯狂之心。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.title",
+      "en": "Resolution 1",
+      "zh": "结局 1",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.noResolution",
+      "en": "<p>_If no resolution was reached (each investigator was defeated)_: You stumble wearily to your feet. A dream? Your grip your temples, your mind aching. It feels as though a pneumatic drill has been taken to the inside of your skull. If this is what sleep is to be in this hellish place, you want no part of it.</p>",
+      "zh": "如果未能达成任何结局（每位调查员都被击败）：你疲惫地踉跄起身。一场梦？你按住太阳穴，脑中阵阵作痛。感觉就像有人把一台气动钻伸进了你的头骨。如果在这个地狱般的地方睡觉就是这样，那你宁可不要。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "resolutions.resolution1",
+      "en": "<p>_Resolution 1_: You tumble through the doorway and onto your sleeping mat, flailing within your tangle of warm blankets. No door shuts behind you. Did you only imagine all of that? Or was it all real?</p>",
+      "zh": "结局 1：你跌跌撞撞地穿过门洞，扑到你的睡垫上，在温暖的毯子堆里胡乱挣扎。身后没有任何门关上。这一切只是你的想象吗？还是说全都是真的？",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *Fatal Mirage*, *Agents of the Unknown*, *Left Behind*, *Miasma*, *Nameless Horrors*, *Silence and Mystery*, *Tekeli-li*, and *Chilling Cold*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/fatal-mirage.png' /><img src='{setImgPath}/agents-of-the-unknown.png' /><img src='{setImgPath}/left-behind.png' /><img src='{setImgPath}/miasma.png' /><img src='{setImgPath}/nameless-horrors.png' /><img src='{setImgPath}/silence-and-mystery.png' /><img src='{setImgPath}/tekeli-li.png' /><img src='{setImgPath}/chilling-cold.png' /></section>",
+      "zh": "将下列遭遇组中的所有卡牌找出：致命幻景、未知使徒、惨遭抛弃、危险瘴气、无名恐怖、沉默与神秘、忒咳哩-哩以及寒冷刺骨。这些遭遇组由下列图标表示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.buildAgendaDeck",
+      "en": "Build the agenda deck using only agenda 1. Remove the remaining agendas from the game.",
+      "zh": "仅使用密谋1构建密谋牌堆。将剩余的密谋移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.buildActDeck",
+      "en": "Build the act deck using only act 1. Remove the remaining acts from the game.",
+      "zh": "仅使用幕1构建幕牌堆。将剩余的幕移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.placeLocations",
+      "en": "Put the Prison of Memories location into play, revealed side faceup.",
+      "zh": "将记忆囚笼地点放置入场，已揭示面朝上。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.startAt",
+      "en": "Each investigator begins play at the Prison of Memories.",
+      "zh": "每位调查员从记忆囚笼开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.setOtherLocationsAside",
+      "en": "Set each other location aside, out of play.",
+      "zh": "将其他每个地点放在一边，位于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.firstTime.setOutOfPlay",
+      "en": "Set each of the following cards aside, out of play: the nine “Memory of…” enemies, and the nine _Resolute_ story assets.",
+      "zh": "将下列每张卡牌放在一边，位于场外：九张“……之记忆”敌人，以及九张坚毅剧情支援。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.buildAgendaDeck",
+      "en": "Build the agenda deck using only agenda 2 if this is the second time you are playing _Fatal Mirage_, or agenda 3 if this is the third time. Remove the remaining agendas from the game.",
+      "zh": "如果这是你第二次游玩《致命幻景》，则仅使用密谋2构建密谋牌堆；如果这是第三次，则仅使用密谋3。将剩余的密谋移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.buildActDeck",
+      "en": "Build the act deck using only act 2 if this is the second time you are playing _Fatal Mirage_, or act 3 if this is the third time. Remove the remaining acts from the game.",
+      "zh": "如果这是你第二次游玩《致命幻景》，则仅使用幕2构建幕牌堆；如果这是第三次，则仅使用幕3。将剩余的幕移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.memoriesBanished",
+      "en": "Find each story card listed under “Memories Banished” in your Campaign Log. Put each of these cards in the victory display.",
+      "zh": "找出剧本日志中列在“驱除的记忆”下的每张剧情卡牌。将这些卡牌放入胜利区。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.setRemainingMemoriesAside",
+      "en": "Set each remaining “Memory of…” enemy aside, out of play.",
+      "zh": "将其余每张“……之记忆”敌人放在一边，位于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.memoriesDiscovered",
+      "en": "Find each location listed under “Memories Discovered” in your Campaign Log. Put each of those locations into play, revealed side faceup, along with the Prison of Memories (*remember to adjust each location’s clue value according to the mirage keyword*).",
+      "zh": "找出剧本日志中列在“发现的记忆”下的每个地点。将这些地点连同记忆囚笼一起放置入场，已揭示面朝上（记得根据幻景关键词调整每个地点的线索值）。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.startAt",
+      "en": "Each investigator begins play at the Prison of Memories.",
+      "zh": "每位调查员从记忆囚笼开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.setOtherLocationsAside",
+      "en": "Set each other location aside, out of play.",
+      "zh": "将其他每个地点放在一边，位于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.repeat.setResoluteAside",
+      "en": "Set aside each of the nine _Resolute_ story assets that have not already been earned during a previous playthrough of _Fatal Mirage_.",
+      "zh": "将九张坚毅剧情支援中尚未在之前游玩《致命幻景》时获得的那些放在一边。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.checkDifficulty",
+      "en": "Check the difficulty level.",
+      "zh": "检查难度等级。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.hard",
+      "en": "If you are playing on Hard difficulty, add 1 doom to the agenda.",
+      "zh": "如果你游玩的是困难难度，则在密谋上放置1个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.expert",
+      "en": "If you are playing on Expert difficulty, add 2 doom to the agenda.",
+      "zh": "如果你游玩的是专家难度，则在密谋上放置2个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "setup.tekelili",
+      "en": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.",
+      "zh": "将所有尚未加入调查员牌库的忒咳哩-哩弱点卡牌混洗到一起，形成忒咳哩-哩牌堆。将该牌堆放在密谋牌堆旁。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "deckOfTheTheodosia.label.addShroud",
+      "en": "Give it +2 shroud for this investigation",
+      "zh": "使其在本次调查中得到+2隐藏值",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "deckOfTheTheodosia.label.spendAdditionalAction",
+      "en": "Spend 1 additional action",
+      "zh": "额外花费1个行动",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/fatalMirage.json",
+      "guide": "fatalMirage",
+      "path": "drKenslersOffice.label.removeSecret",
+      "en": "Remove 1 secret from an asset you control",
+      "zh": "从你控制的一个支援上移除1个秘密",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "heading",
+      "en": "Scenario II",
+      "zh": "冒险II",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.gatherSets",
+      "en": "Gather all cards from the following encounter sets: *To the Forbidden Peaks*, *Deadly Weather*, *Elder Things*, *Hazards of Antarctica*, *Nameless Horrors*, and *Tekeli-li*. These sets are indicated by the following icons:<section class='encounter-sets'><img src='{setImgPath}/to-the-forbidden-peaks.png' /><img src='{setImgPath}/deadly-weather.png' /><img src='{setImgPath}/elder-things.png' /><img src='{setImgPath}/hazards-of-antarctica.png' /><img src='{setImgPath}/nameless-horrors.png' /><img src='{setImgPath}/tekeli-li.png' /></section>",
+      "zh": "将下列遭遇组中的所有卡牌找出：失落之峰、致命天气、古老者、南极险境、无名恐怖以及忒咳哩-哩。这些遭遇组由下列图标表示：",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.placeLocations",
+      "en": "Shuffle the seven Mountainside locations and put five of them into play in a diagonal line. Set the remaining two locations aside, out of play. Put The Summit location into play at the top of the diagonal line. The position of each location has its own level from 0–5, beginning at the bottommost location at level 0 and ascending to The Summit at level 5.",
+      "zh": "将七张山脉地点混洗，并将其中五张排成一条斜线放置入场。将剩余的两个地点放在一边，位于场外。将山顶地点放置入场，位于斜线顶端。每个地点所处的位置都有自己的高度，从0到5：最下方的地点为高度0，向上直至山顶为高度5。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.revealLevel0",
+      "en": "Reveal the level-0 location. Each investigator begins play at that location.",
+      "zh": "揭示高度0的地点。每位调查员从该地点开始游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.addElderThingToken",
+      "en": "Add 1 {'{'}elderThing{'}'} token to the chaos bag.",
+      "zh": "在混乱袋里加入1个[elder_thing]标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.suppliesRecovered",
+      "en": "Check the “Supplies Recovered” section of the Campaign Log and put each Expedition story asset listed there into play at the level-0 location. Remove each other Expedition story asset from the game.",
+      "zh": "查看剧本日志中“已回收的补给品”部分，将其中列出的每张探险剧情支援放置入场，位于高度0的地点。将其他每张探险剧情支援移出游戏。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.setTerrorOfTheStarsAside",
+      "en": "Set the Terror of the Stars enemy aside, out of play.",
+      "zh": "将星之恐怖敌人放在一边，位于场外。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.checkDifficulty",
+      "en": "Check the difficulty level.",
+      "zh": "检查难度等级。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.hard",
+      "en": "If you are playing on Hard difficulty, add 1 doom to agenda 1a.",
+      "zh": "如果你游玩的是困难难度，则在密谋1a上放置1个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.expert",
+      "en": "If you are playing on Expert difficulty, add 2 doom to agenda 1a.",
+      "zh": "如果你游玩的是专家难度，则在密谋1a上放置2个毁灭标记。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "setup.tekelili",
+      "en": "Shuffle each Tekeli-li! weakness card that is not already part of an investigator’s deck together to form the Tekeli-li deck. Place this deck near the agenda deck.",
+      "zh": "将所有尚未加入调查员牌库的忒咳哩-哩弱点卡牌混洗到一起，形成忒咳哩-哩牌堆。将该牌堆放在密谋牌堆旁。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "interlude.instructions2",
+      "en": "<p class='basic'>In the “Expedition Team” section of the Campaign Log, cross off the chosen character’s name. If they were in play, they are defeated and removed from the game.</p></div>",
+      "zh": "在剧本日志的“探险队”部分，将选中角色的名字划掉。如果其在场上，其被击败并从游戏中移除。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "hypothermia.label.addFrost",
+      "en": "Add 1 {'{'}frost{'}'} token to the chaos bag",
+      "zh": "在混乱袋里加入1个[frost]标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "hypothermia.label.takeHorror",
+      "en": "Take {count} horror",
+      "zh": "受到[count]点恐惧",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "label.addFrostToken",
+      "en": "Add 1 {'{'}frost{'}'} token to the chaos bag",
+      "zh": "在混乱袋里加入1个[frost]标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "label.eachInvestigatorSuffersPhysicalTrauma",
+      "en": "Each investigator suffers {count} physical trauma.",
+      "zh": "每位调查员受到[count]点物理创伤。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "label.eachInvestigatorSuffersMentalTrauma",
+      "en": "Each investigator suffers {count} mental trauma.",
+      "zh": "每位调查员受到[count]点精神创伤。",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "rooflessRampart.label.removeDoom",
+      "en": "Remove 1 doom from the agenda",
+      "zh": "从密谋上移除1个毁灭标记",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "rooflessRampart.label.discardEnemy",
+      "en": "Discard 1 non-Elite enemy",
+      "zh": "弃掉1个非精英敌人",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "rooflessRampart.label.discardTreachery",
+      "en": "Discard 1 treachery",
+      "zh": "弃掉1张诡计",
+      "status": "missing"
+    },
+    {
+      "file": "scenarios/toTheForbiddenPeaks.json",
+      "guide": "toTheForbiddenPeaks",
+      "path": "resolutions.resolution1.body",
+      "en": "<div class='resolution'><p><b>Resolution 1:</b> The view from the summit is breathtaking, but you are in no mood to enjoy the spectacle. ...</div>",
+      "zh": "**结局 1:** 山顶处的景色叹为观止，但你无心欣赏。在你面前的这些被诅咒的山峰彼端，正是戴尔报告中描述的那座城市。它那令人不安的样貌毋庸置疑。数十座由深色石板与砂岩建成的圆锥形和金字塔形建筑像蜂巢一样遍布整个地区，如同一座由完美几何形状构成的迷宫。尽管历经岁月侵蚀，这座城市依然屹立，隐藏在锯齿状山峰与厚重积雪之中。\n\n你沉默地站了一会儿，凝视这奇妙的景象。若不是一路上经历了那么多考验，这本该是凯旋的一刻。但为此付出的牺牲，让这场胜利显得空洞。\n\n刺骨的寒风扫过山峰。空气太过稀薄，你无法在此久留。短暂休息后，你开始漫长地下山，进入这座异星城市。在抵达山脚之前，你必须扎营。运气好的话，你会躲开栖息在那里的可怕生物……\n\n• 在剧本日志中记录“队伍爬上了山顶”。\n\n• 每位调查员获得的经验值，等于胜利区中所有卡牌的胜利X数值之和。\n   • 经验：{xp}\n\n• 胜利区中每有一张“探险”支援，一名调查员可以选择将该支援加入自己的牌库；它不计入其牌库张数。每有一张以此方式加入调查员牌库的“探险”支援，该调查员获得1点奖励经验。\n\n• 每有一张不在胜利区的“探险”支援，在剧本日志的“已回收的补给品”部分划掉其名称。\n\n• 在剧本日志的“探险队”部分，记录场上每名伙伴支援当前的伤害与恐惧。\n\n• 进入“幕间故事II：无尽夜晚”。",
+      "status": "untranslated"
+    }
+  ]
+}

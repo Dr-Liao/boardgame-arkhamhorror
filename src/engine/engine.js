@@ -30,6 +30,9 @@ import { notePromiseEvent } from './turn-promises.js'
 // Mod 入口 index.js 只做胶水（createState / validateMove / applyMove / describeState / legalMoves）。
 
 import { randomUUID } from 'node:crypto'
+// P6 原语：actionTaken 窗口（行动类型记账）与窗口监听者守卫（无监听者时零开销、不改变旧回放）。
+import { performedActionKinds } from './action-history.js'
+import { hasWindowListener } from './window-listeners.js'
 import { createTurnFlow } from './turn-flow.js'
 import { dispatchVehicleEvent } from './road-hazards.js'
 import { createHiddenRules } from './hidden-rules.js'
@@ -927,7 +930,7 @@ function spendAction(state, inv) {
 
 /** Seats allowed to submit now; per-seat hub preparation is simultaneous. */
 
-const HUB_SEAT_ACTIONS = new Set(['hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase',
+const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase',
   'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
 
 /** Seat preparation only touches the submitting seat, so it may follow a teammate's newer revision. */
@@ -935,7 +938,7 @@ const HUB_SEAT_ACTIONS = new Set(['hubSelectInvestigator', 'hubAutoDeck', 'hubSe
 const HUB_DIFFICULTIES = ['easy', 'standard', 'hard', 'expert']
 const inHub = state => state.hubFlow && state.uiState !== 'inScenario'
 const hubConcurrentPhase = state => (state.uiState === 'scenarioSetup'
-  && (!state.hubReady || state.campaign?.mode === 'parallel')) || state.uiState === 'interlude'
+  && (!state.hubReady || state.deckMode === 'draft' || state.campaign?.mode === 'parallel')) || state.uiState === 'interlude'
 const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter(seat => !state.hubSeatDone?.[seat])
 // AI teammates prepare after every human has confirmed: they pick from what is left,
 // and their model latency never holds the session while humans are still choosing.
@@ -1343,7 +1346,10 @@ const apiMiscDeps = { ...commonDeps,
   performImmediateAction: (...args) => performImmediateAction(...args),
   doFightRaw: (...args) => doFight(...args),
   playCardFromDiscardForced: (...args) => playCardFromDiscardForced(...args),
-  playCardFromOtherHandForced: (...args) => playCardFromOtherHandForced(...args), }
+  playCardFromOtherHandForced: (...args) => playCardFromOtherHandForced(...args),
+  // P6 原语：治疗伤害的统一入口（威胁区 threatDamageSink 承接）与放逐手牌账本写点。
+  healDamageFrom: (...args) => healDamageFrom(...args),
+  exilePlayerCard, }
 
 function abilityApi(state, events) {
   // 机制面（载具/水位/钥匙/地图/障碍…）在能力面与场景运行时共用同一份实例：
@@ -1375,21 +1381,26 @@ function abilityApi(state, events) {
       return state.skillTest?.committed.length > count ? state.skillTest.committed.at(-1) : null
     },
   })
+  // P6 地球边缘：play-misc 的通用原语并入 api.playerTools（同一对象，卡面只读一份入口）。
+  // 先建两个工厂再摊平，避免 API 构造路径重复调用工厂。
+  const miscApi = createMiscApi(state, events, apiMiscDeps)
+  const playerApi = createPlayerApi(state, events, {
+    canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code)).length > 0,
+    makeRoom: (seat, source) => replaceAssets(state, state.investigators[seat], cardDef(source.code), events),
+    notifyDraw: (seat, code) => {
+      const inv = state.investigators[seat]
+      notePromiseEvent(state, seat, 'draw', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
+      reactionWindow(state, 'cardDrawn', { when: 'cardDrawn', seat, location: inv.location, cardCode: code, weakness: false, from: 'beneath' }, events, { allowNested: true })
+      reactionWindow(state, 'cardsDrawn', { when: 'cardsDrawn', seat, location: inv.location, cards: [code], count: 1 }, events, { allowNested: true })
+    },
+    nextId: () => nextInstanceId(state, 'c'),
+    baseStatValue: (seat, skill) => baseStatValue(state, state.investigators[seat], skill),
+    api: () => abilityApi(state, events), choice: spec => requestChoice(state, spec),
+    drawWeakness: (seat, code) => { state.investigators[seat].deck.push(code); drawCards(state, state.investigators[seat], 1, events) },
+  })
+  const playerTools = { ...playerApi.playerTools, ...(miscApi.playerToolsExtras || {}) }
   return wrapInvestigatorEffects(state, {
-    ...createPlayerApi(state, events, {
-      canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code)).length > 0,
-      makeRoom: (seat, source) => replaceAssets(state, state.investigators[seat], cardDef(source.code), events),
-      notifyDraw: (seat, code) => {
-        const inv = state.investigators[seat]
-        notePromiseEvent(state, seat, 'draw', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
-        reactionWindow(state, 'cardDrawn', { when: 'cardDrawn', seat, location: inv.location, cardCode: code, weakness: false, from: 'beneath' }, events, { allowNested: true })
-        reactionWindow(state, 'cardsDrawn', { when: 'cardsDrawn', seat, location: inv.location, cards: [code], count: 1 }, events, { allowNested: true })
-      },
-      nextId: () => nextInstanceId(state, 'c'),
-      baseStatValue: (seat, skill) => baseStatValue(state, state.investigators[seat], skill),
-      api: () => abilityApi(state, events), choice: spec => requestChoice(state, spec),
-      drawWeakness: (seat, code) => { state.investigators[seat].deck.push(code); drawCards(state, state.investigators[seat], 1, events) },
-    }),
+    ...playerApi,
     ...createInvestigatorApi(state, events, {
       discardEnemy: enemy => { if (!state.enemies.includes(enemy)) return false; discardEnemyCard(state, enemy); return true },
       choice: spec => requestChoice(state, spec), cardName,
@@ -1402,7 +1413,7 @@ function abilityApi(state, events) {
       playCost: (seat, code) => playCost(state, state.investigators[seat], cardDef(code)),
       locationShroud: (id, seat) => scenarioRuntime(state, events).locationShroud(id, seat),
     }),
-    ...createMiscApi(state, events, apiMiscDeps),
+    ...miscApi,
     ...createTestApi(state, events, apiTestDeps),
     ...createClueApi(state, events, apiClueDeps),
     ...createEnemyApi(state, events, apiEnemyDeps),
@@ -1410,6 +1421,8 @@ function abilityApi(state, events) {
     enemyZones:enemyZoneApi(state,events),
     ...createCardApi(state, events, apiDeps),
     ...mechanicsApi,
+    // P6 地球边缘：合并后的 api.playerTools（基础玩家工具 + 新增原语；键同名时新原语覆盖）。
+    playerTools,
     // 与场景运行时的形状对齐：`api.mechanics.vehicles` / `api.mechanics.water` 在能力面也能用。
     // 两个 api 面共用**同一个**实例，避免同一段结算里出现两份载具/水位状态视图。
     mechanics: mechanicsApi,
@@ -2276,7 +2289,29 @@ function dispatchApi() {
   return dispatchImpl
 }
 // dispatchApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function applyMove(...args) { return dispatchApi().applyMove(...args) } export function executeCommand(...args) { return dispatchApi().executeCommand(...args) } export function executeAction(...args) { return dispatchApi().executeAction(...args) }
+export function applyMove(...args) { return dispatchApi().applyMove(...args) } export function executeCommand(...args) { return dispatchApi().executeCommand(...args) }
+// P6 原语 `actionTaken`：一次行动结算完成后开窗（context 带 { seat, location, actionKind, actionKinds }）。
+// 弱点 08130–08133 的「执行过某类行动后，本回合剩余时间不能再进行这些类型行动」靠这个窗口 +
+// 持续效果里的 capability 修正实现；没有监听者时（旧对局/旧回放）完全不开窗，行为零变化。
+export function executeAction(...args) {
+  const result = dispatchApi().executeAction(...args)
+  const [state, seat, move, events] = args
+  try {
+    if (!state || !Number.isSafeInteger(seat) || !move || state.status !== 'playing') return result
+    if (!hasWindowListener(state, 'actionTaken')) return result
+    const inv = state.investigators?.[seat]
+    if (!inv) return result
+    const kind = actionKind(state, inv, move)
+    const actionKinds = performedActionKinds(move, kind)
+    reactionWindow(state, 'actionTaken', {
+      when: 'actionTaken', seat, location: inv.location, actionKind: kind, actionKinds,
+      prompt: `${inv.name} 完成了一次行动（${actionKinds.join(' / ')}）`,
+    }, events || [])
+  } catch {
+    // 行动已经结算；窗口的附加失败不应回滚行动本身（fail-open 只限这里，不吞行动结果）。
+  }
+  return result
+}
 export function executeHubMove(...args) { return dispatchApi().executeHubMove(...args) } export function applyMoveUnchecked(...args) { return dispatchApi().applyMoveUnchecked(...args) }
 
 // Phase 6（6d-20）：遭遇牌与窗口搬进 encounter.js；惰性装配保持调用点与导出。
@@ -2346,6 +2381,7 @@ let enemiesImpl = null
 function enemiesApi() {
   enemiesImpl ||= createEnemies({
   ...commonDeps,
+  captureTableState,
   pallidMaskCode,
   SMITE_THE_WICKED_CODE,
   addVictory, syncClues, placeDoomOnCard,
@@ -2929,7 +2965,7 @@ export function targetedTest(...args) { return createHarmThreatApi().targetedTes
 export function dealDamageExhausted(...args) { return createHarmThreatApi().dealDamageExhausted(...args) } export function blankEnemy(...args) { return createHarmThreatApi().blankEnemy(...args) } export function ignoreChaos(...args) { return createHarmThreatApi().ignoreChaos(...args) }
 export function returnAssetToHand(...args) { return createHarmThreatApi().returnAssetToHand(...args) } export function shuffleIntoEncounter(...args) { return createHarmThreatApi().shuffleIntoEncounter(...args) } export function moveHorrorToInvestigator(...args) { return createHarmThreatApi().moveHorrorToInvestigator(...args) }
 export function damagedTargetsAtLocation(...args) { return createHarmThreatApi().damagedTargetsAtLocation(...args) } export function healDamageAtLocation(...args) { return createHarmThreatApi().healDamageAtLocation(...args) } export function recordResearch(...args) { return createHarmThreatApi().recordResearch(...args) }
-export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function healHorrorFrom(...args) { return createHarmThreatApi().healHorrorFrom(...args) } export function extendHealHorror(...args) { return createHarmThreatApi().extendHealHorror(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
+export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function healHorrorFrom(...args) { return createHarmThreatApi().healHorrorFrom(...args) } export function extendHealHorror(...args) { return createHarmThreatApi().extendHealHorror(...args) } export function healDamageFrom(...args) { return createHarmThreatApi().healDamageFrom(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
 
 
 // ---------------------------------------------------------------------------

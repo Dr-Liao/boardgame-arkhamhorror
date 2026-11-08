@@ -1,4 +1,5 @@
 import { mechanicState } from './mechanic-state.js'
+import { emitPresentation } from './presentation-events.js'
 import { vehicleOf } from './vehicle-state.js'
 import { createEnemyZoneApi } from './enemy-zones.js'
 import { createEnemyOutcomeApi } from './enemy-outcomes.js'
@@ -26,8 +27,13 @@ import { swarmGroup, returnSwarmCard, swarmCardsOf } from './swarm.js'
 import { tracksHistory } from './action-history.js'
 import { effectRecipient } from './effect-recipient.js'
 import { hasTrait } from './matcher.js'
+import { directDamageSource, directDamageCue } from '../integration/direct-damage.js'
+import { enemyAttackStyle, tagAttackHarm, attackHarmOrigin } from '../integration/enemy-attack-presentation.js'
 // P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
 import { checkAssetDefeated } from './asset-defeat.js'
+// P5 地球边缘：调查员专属记账（攻击历史 / 回合事件）—— 只对条目声明 tracksAttacks /
+// roundEvents 的调查员写入，旧对局与回放指纹不变。
+import { noteEnemyAttackOnInvestigator, noteRoundEvent } from './eote-investigator-support.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
 //
 // 它们被几乎所有 do* 与剧本运行时调用，拆出来后 engine.js 只剩状态机与「动作编排」。
@@ -47,6 +53,7 @@ export function createEnemies(deps) {
     cardDef,
     cardIdentityFields,
     cardName,
+    captureTableState,
     checkAct,
     checkAgendaForcedEnemyDefeated,
     checkDefeated,
@@ -62,6 +69,7 @@ export function createEnemies(deps) {
     enemyTextBlanked,
     entityRuleActive,
     getMaxSanity,
+    getStat,
     info,
     isWeaknessCode,
     leadDecisionSeat,
@@ -229,6 +237,8 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   if (context.cancelled) {
     info(state, events, `「${enemy.name}」对 ${inv.name} 的攻击被取消。`)
     attack.cancelled = true
+    // P5：攻击历史记账在「被取消也会开窗口」的窗口之前——丹妮拉/扳手读同一份记录。
+    noteEnemyAttackOnInvestigator(state, inv, enemy, attack)
     // 2026-10-25 本循环修复 05258：「敌人攻击你后，即便该次攻击被取消」也必须开一次 enemyAttacked 窗口；
     // 未取消路径仍在攻击结算后开唯一一次窗口（见本函数末尾），不会重复。
     // 注意：这里用 attackCancelled 而不是 cancelled 表达「攻击被取消」——cancelled 是
@@ -280,7 +290,10 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   attack.plannedDamage = enemy.damage + extraDamage
   attack.plannedHorror = enemy.horror + extraHorror
   const attackText = label || `🗡️ 「${enemy.name}」攻击 ${inv.name}：${enemy.damage + extraDamage} 点伤害、${enemy.horror + extraHorror} 点恐惧。`
+  const presentationOrigin = { ...enemyAttackStyle(enemy, enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code),
+    name:enemy.name, enemyId:enemy.id, code:enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }
   info(state, events, attackText, { kind: 'attack', direction: 'incoming', phase: state.phase, round: state.round,
+    ...presentationOrigin, presentationStage:'threat',
     attackKind: attack.kind,
     code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code, name: enemy.name, text: attackText,
     effect: 'attack', seat: inv.seat, enemyId: enemy.id, location: inv.location, damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror })
@@ -296,7 +309,9 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   state._enemyAttackResolving = { enemy, inv, kind: attack.kind }
   try {
     if (!inv.defeated && !tryAquinnahRedirect(state, enemy, inv, events, extraDamage, extraHorror)) {
-      applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events, false, { enemy, location: inv.location },
+      // 08003 黑帮暴徒：本敌人攻击造成的伤害/恐惧视为直接伤害/直接恐惧（不可分配给支援）。
+      applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events,
+        enemyRuleFlags(enemy.code).attackHarmDirect === true, tagAttackHarm({ enemy, location: inv.location }, presentationOrigin),
         false, enemyRuleFlags(enemy.code).harmStrategy || null)
     }
   } finally {
@@ -308,9 +323,11 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   attack.horror = Math.max(0, (inv.horror || 0) - horrorBefore)
   if (excessHorrorDamage && attack.horror > remainingSanityBefore && !inv.defeated && !inv.resigned) {
     info(state, events, `💥 「${enemy.name}」造成的恐惧超出 ${inv.name} 的神智值，额外受到 1 点伤害。`)
-    applyDamage(state, inv, 1, events)
+    applyHarm(state, inv, 1, 0, events, undefined, null, false, null, presentationOrigin)
   }
   scenarioBehavior(state).enemyAttackResolved?.(state, enemy, inv, scenarioRuntime(state, events), attack)
+  // P5：攻击历史记账（丹妮拉旧印「本轮被攻击过」、扳手「上个回合结束后攻击过你的敌人」）。
+  noteEnemyAttackOnInvestigator(state, inv, enemy, attack)
   // 第 5 步 P6：「敌人攻击你后」的反应窗口（序章故事调查员；被取消的攻击也算）。
   reactionWindow(state, 'enemyAttacked', {
     when: 'enemyAttacked', seat: inv.seat, location: inv.location, enemy, attack,
@@ -767,13 +784,18 @@ function canDamageEnemy(state, enemy, seat = null, source = null) {
   return true
 }
 
-function damageEnemy(state, enemy, amount, seat, events, source = null) {
+function damageEnemy(state, enemy, amount, seat, events, source = null, presentation = {}) {
   if (!(amount > 0) || !canDamageEnemy(state, enemy, seat, source)) return false
   // 「职业杀手」：本回合该敌人下次受到的伤害 +1（一次性）。
   let total = amount + campaignState.consumeDamageBonus(enemy, state)
   const adjusted = scenarioBehavior(state).enemyDamageAmount?.(state,enemy,total,scenarioRuntime(state,events),seat,source)
   if (Number.isFinite(adjusted)) total=Math.max(0,adjusted)
   if (!total) return false
+  if (directDamageSource(state, source, presentation)) {
+    const cue = directDamageCue(state, { source, hint: presentation, seat, enemy, damage: total, cardName,
+      tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
+    ;(state._resolution?.events || events).push(cue)
+  }
   enemy.damageTaken = (enemy.damageTaken || 0) + total
   if (source != null) enemy.lastDamageSource = source
   enemy.defeatedBy = seat
@@ -834,8 +856,14 @@ function applyThreatHarmInterceptors(state, inv, damage, horror, events) {
   return next
 }
 
-function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null) {
+function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null, presentationOrigin = null) {
   inv = effectRecipient(state, inv)
+  // P5 地球边缘：回合事件记账（陈丽丽的 Broken 面轮末条件）。
+  // 只对声明 investigator.roundEvents 的调查员写入；伤害/恐惧的「实际收入」在分配前记账，
+  // 与 applyHarm 的净变化口径一致（被取消/防止的伤害不会走到这里）。
+  if (damage > 0) noteRoundEvent(state, inv, 'damage', damage)
+  if (horror > 0) noteRoundEvent(state, inv, 'horror', horror)
+  const attackOrigin = presentationOrigin || attackHarmOrigin(attack)
   // 「在你受到恐惧时，如果这些恐惧中至少有 1 点没有分配给 X，受到 1 点伤害」（03182a 丹尼尔）。
   // 在分配前记下带这条强制的支援，分配后按分配结果判定。
   const horrorOverflowAssets = (horror || 0) > 0
@@ -858,6 +886,32 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   damage = Math.max(0, harmContext.damage || 0)
   horror = Math.max(0, harmContext.horror || 0)
   if (!(damage > 0 || horror > 0)) return
+  const blastOrigin = directDamageSource(state)
+  const blastSnapshot = blastOrigin?.style === 'blast'
+    ? captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) : null
+  const presentBlastPlacement = amount => {
+    if (!blastSnapshot || !(amount > 0)) return
+    const cue = directDamageCue(state, { hint: blastOrigin, seat: blastOrigin.sourceSeat ?? inv.seat,
+      targetSeat: inv.seat, damage: amount, tableState: blastSnapshot, cardName })
+    ;(state._resolution?.events || events).push(cue)
+  }
+  let redirectedDamage = 0
+  const harmSnapshot = attackOrigin ? captureTableState(state, getStat, getMaxSanity,
+    { enemyHealth, enemyFightValue, enemyEvadeValue }) : null
+  const placements = new Map()
+  const recordPlacement = (recipient, kind, amount, owner = inv) => {
+    if (!attackOrigin || !(amount > 0)) return
+    const key = recipient === owner ? `investigator:${owner.seat}` : `asset:${recipient.id}`
+    if (!placements.has(key)) placements.set(key, { seat:owner.seat,
+      ...(recipient !== owner ? { assetId:recipient.id } : {}), damage:0, horror:0 })
+    placements.get(key)[kind] += amount
+  }
+  const presentAttackPlacement = () => {
+    if (!placements.size) return
+    emitPresentation(state, events, {type:'presentation',kind:'enemyHarm',direction:'incoming',
+      presentationStage:'harm', ...attackOrigin, seat:inv.seat, location:inv.location,
+      targets:[...placements.values()], tableState:harmSnapshot})
+  }
   // 07338 潜水服：「当任意数量的伤害将要放置到你身上时：将其中 1 点放到潜水服上」。
   // 条目声明 `assetRule.redirectOneDamageToSelf: true`；每次结算最多转移 1 点，直接伤害也适用
   // （印刷是「any amount of damage」，不分直接/非直接），转移后总量不变、剩余照常分配。
@@ -868,11 +922,13 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
       && !asset.removedFromGame)
     if (suit) {
       suit.damage = (suit.damage || 0) + 1
+      recordPlacement(suit, 'damage', 1)
+      redirectedDamage += 1
       damage -= 1
       info(state, events, `🩱 「${cardName(suit.code)}」转移了 1 点伤害（剩余 ${damage} 点由${inv.name}承受）。`)
     }
   }
-  if (!(damage > 0 || horror > 0)) return
+  if (!(damage > 0 || horror > 0)) { presentBlastPlacement(redirectedDamage); presentAttackPlacement(); return }
   if (direct && inv.assets.some(asset => !assetPassiveData(asset.code)?.assignDirectHarm
     && ((damage > 0 && cardDef(asset.code)?.health > 0) || (horror > 0 && cardDef(asset.code)?.sanity > 0))))
     info(state, events, `本次为直接${damage > 0 && horror > 0 ? '伤害与恐惧' : damage > 0 ? '伤害' : '恐惧'}，只能由${inv.name}本人承受，不能分配给支援卡。`)
@@ -900,19 +956,28 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
     ...attack,
     damagedAssetIds: [...assignedDamage.keys()].filter(a => a !== inv).map(a => a.id),
   })
+  // Area damage can be assigned to assets, so count actual placement rather
+  // than just the investigator's health delta. Capture before lethal removal.
+  let placedDamage = redirectedDamage
   for (const [kind, assignments] of [['damage', assignedDamage], ['horror', assignedHorror]]) {
     for (const [recipient, amount] of assignments) {
       if (recipient !== inv && !inv.assets.includes(recipient)) {
         const owner = state.investigators.find(other => other.assets.includes(recipient))
         if (!owner) continue
+        if (kind === 'damage') placedDamage += amount
         recipient[kind] = (recipient[kind] || 0) + amount
+        recordPlacement(recipient, kind, amount, owner)
         info(state, events, `${cardName(recipient.code)}（${owner.name}）承受 ${amount} 点${kind === 'damage' ? '伤害' : '恐惧'}。`)
         continue
       }
       recipient[kind] = (recipient[kind] || 0) + amount
+      recordPlacement(recipient, kind, amount)
+      if (kind === 'damage') placedDamage += amount
       if (recipient !== inv) info(state, events, `${cardName(recipient.code)} 承受 ${amount} 点${kind === 'damage' ? '伤害' : '恐惧'}。`)
     }
   }
+  presentBlastPlacement(placedDamage)
+  presentAttackPlacement()
   // P6（食梦者）：支援被击败的唯一判定点（asset-defeat.js）。伤害分配、伤害移动、剧本效果
   const harmedAssets = new Set([...assignedDamage.keys(), ...assignedHorror.keys()])
   for (const source of harmedAssets) {

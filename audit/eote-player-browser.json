@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-eote-p6-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/eote-player.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 desktop 事件卡真实打出",
+      "status": "passed",
+      "durationMs": 1564
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 desktop 弱点显现与结算",
+      "status": "passed",
+      "durationMs": 3237
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 desktop 技能卡投入检定",
+      "status": "passed",
+      "durationMs": 1710
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 desktop 构筑池开放：EotE 可构筑卡在大厅玩家池",
+      "status": "passed",
+      "durationMs": 841
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 desktop 资产卡装备与发动",
+      "status": "passed",
+      "durationMs": 6943
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 mobile 事件卡真实打出",
+      "status": "passed",
+      "durationMs": 1034
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 mobile 弱点显现与结算",
+      "status": "passed",
+      "durationMs": 3031
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 mobile 技能卡投入检定",
+      "status": "passed",
+      "durationMs": 1471
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 mobile 构筑池开放：EotE 可构筑卡在大厅玩家池",
+      "status": "passed",
+      "durationMs": 598
+    },
+    {
+      "file": "tests/eote-player.browser.mjs",
+      "title": "P6 mobile 资产卡装备与发动",
+      "status": "passed",
+      "durationMs": 6791
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/eote/p6/screenshots/desktop-asset.png",
+    "artifacts/migration/eote/p6/screenshots/desktop-build-pool.png",
+    "artifacts/migration/eote/p6/screenshots/desktop-event.png",
+    "artifacts/migration/eote/p6/screenshots/desktop-skill.png",
+    "artifacts/migration/eote/p6/screenshots/desktop-weakness.png",
+    "artifacts/migration/eote/p6/screenshots/mobile-asset.png",
+    "artifacts/migration/eote/p6/screenshots/mobile-build-pool.png",
+    "artifacts/migration/eote/p6/screenshots/mobile-event.png",
+    "artifacts/migration/eote/p6/screenshots/mobile-skill.png",
+    "artifacts/migration/eote/p6/screenshots/mobile-weakness.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true
+  }
+}

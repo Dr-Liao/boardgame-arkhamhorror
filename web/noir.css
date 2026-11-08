@@ -292,4 +292,77 @@
 .ah-blast-debris{position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:1px;background:#ffcf7a;box-shadow:0 0 6px #ff8a2a;opacity:0}
 .ah-combat-burst.is-fire{width:80px;height:80px;border-color:#ffb066;background:radial-gradient(circle,#fff1c8c0,#ff8a2a50 45%,transparent 65%);box-shadow:0 0 22px #ff7a2a}
 .ah-combat-fx.is-miss .ah-combat-cut{background:linear-gradient(90deg,transparent,#e6efe9 30%,var(--strike) 60%,transparent)}
+.ah-direct-fx.is-direct-arcane,.ah-direct-fx.is-direct-redirect{--strike:#a7e5e0}
+.ah-direct-fx.is-direct-curse{--strike:#bc8fe5}
+.ah-direct-fx.is-direct-bite,.ah-direct-fx.is-direct-ambush{--strike:#ffac8e}
+.ah-direct-fx.is-direct-flash{--strike:#fff2bd}
+.ah-direct-fx .ah-combat-caption,.ah-blast-fx .ah-combat-caption{width:max-content;box-sizing:border-box}
+.ah-themed-fx .ah-combat-caption{width:max-content;box-sizing:border-box}
+.ah-p1-part{position:absolute;pointer-events:none;color:var(--p1);opacity:0;filter:drop-shadow(0 0 7px var(--p1))}
+.ah-p1-hit{width:70px;height:70px;margin:-35px;border:3px solid var(--p1);border-radius:50%;box-shadow:0 0 16px var(--p1),inset 0 0 15px var(--p1)}
+.ah-p1-projectile{width:64px;height:8px;margin:-4px 0 0 -32px;background:linear-gradient(90deg,transparent,var(--p1) 20%,#fff1d1);clip-path:polygon(0 20%,72% 20%,72% 0,100% 50%,72% 100%,72% 80%,0 80%)}
+.ah-p1-projectile.is-arrow{height:14px;margin-top:-7px;clip-path:polygon(0 0,20% 30%,75% 30%,75% 0,100% 50%,75% 100%,75% 70%,20% 70%,0 100%,8% 50%)}
+.ah-p1-projectile.is-spear,.ah-p1-projectile.is-harpoon{width:100px;height:15px;margin:-7px 0 0 -50px}
+.ah-p1-projectile.is-harpoon{clip-path:polygon(0 40%,70% 40%,70% 0,100% 50%,70% 100%,78% 60%,0 60%)}
+.ah-p1-projectile.is-bottle,.ah-p1-projectile.is-vial{width:20px;height:45px;margin:-22px 0 0 -10px;background:linear-gradient(90deg,#fff8,var(--p1),#396632);border:1px solid #fff9;clip-path:polygon(35% 0,65% 0,65% 25%,90% 45%,90% 100%,10% 100%,10% 45%,35% 25%)}
+.ah-p1-projectile.is-vial{height:30px;margin-top:-15px;border-radius:5px;background:linear-gradient(0deg,#a6eb57 65%,#eee9 65%)}
+.ah-p1-projectile.is-flare{width:70px;height:22px;margin:-11px 0 0 -35px;clip-path:none;border-radius:50%;background:linear-gradient(90deg,transparent,#ff7e2a,#fff9dc);box-shadow:9px 0 18px #ffebaa}
+.ah-p1-launch{width:55px;height:55px;margin:-28px;border:2px solid var(--p1);border-radius:50%}
+.ah-p1-launch.is-arrow{width:30px;height:80px;margin:-40px 0 0 -15px;border-left:none;border-radius:0 100% 100% 0;box-shadow:inset -2px 0 #fff9}
+.ah-p1-launch.is-bottle,.ah-p1-launch.is-vial{border:none}
+.ah-p1-tether{height:2px;transform-origin:0 50%;background:repeating-linear-gradient(90deg,var(--p1) 0 5px,#544b39 5px 7px)}
+.ah-p1-tether.is-spear{height:5px;box-shadow:0 0 12px var(--p1);background:linear-gradient(90deg,transparent,var(--p1),#fff)}
+.ah-p1-spark,.ah-p1-droplet,.ah-p1-glass,.ah-p1-blood{width:9px;height:9px;margin:-4px;background:var(--p1);border-radius:50%}
+.ah-p1-glass{width:15px;height:20px;margin:-10px 0 0 -7px;clip-path:polygon(0 0,100% 35%,30% 100%);background:linear-gradient(45deg,var(--p1),#fff)}
+.ah-p1-droplet{border-radius:70% 0 70% 70%;background:#aeeb69}
+.ah-p1-acid{width:100px;height:55px;margin:-27px 0 0 -50px;border-radius:42% 58% 66% 34%;background:radial-gradient(ellipse,#e8ff99,#73a73388 55%,transparent 70%)}
+.ah-p1-flare{width:150px;height:150px;margin:-75px;background:radial-gradient(circle,#fffbe9,#ffda7b88 30%,transparent 65%);clip-path:polygon(50% 0,58% 36%,85% 15%,64% 43%,100% 50%,64% 57%,85% 85%,57% 64%,50% 100%,43% 64%,15% 85%,36% 57%,0 50%,36% 43%,15% 15%,43% 36%)}
+.ah-p1-flame,.ah-p1-flame-core{height:85px;margin-top:-42px;transform-origin:0 50%;clip-path:polygon(0 44%,100% 0,95% 32%,100% 53%,93% 75%,100% 100%,0 56%);background:linear-gradient(90deg,#dff3ff 0 4%,#fff1b6 12%,#ffd260 36%,#ff6c1fcc 75%,#ad251000);filter:blur(2px) drop-shadow(0 0 12px #f97524)}
+.ah-p1-flame-core{height:35px;margin-top:-17px;background:linear-gradient(90deg,#fff,#fff3ac 35%,#fdb00088 70%,transparent)}
+.ah-p1-burn{width:100px;height:120px;margin:-70px 0 0 -50px;border-radius:50% 50% 35% 35%;background:radial-gradient(ellipse at 50% 80%,#fff5b5,#ff8c24bb 36%,#c8311366 60%,transparent 72%);clip-path:polygon(0 100%,5% 50%,25% 70%,22% 20%,45% 50%,60% 0,70% 58%,90% 25%,100% 100%)}
+.ah-p1-beast{width:90px;height:52px;margin:-26px 0 0 -45px;background:var(--p1);clip-path:polygon(0 25%,25% 35%,40% 10%,70% 15%,76% 0,82% 18%,100% 35%,92% 53%,72% 55%,65% 100%,55% 100%,55% 60%,30% 62%,20% 100%,10% 95%,18% 50%)}
+.ah-p1-beast.is-ghostHound{background:linear-gradient(90deg,transparent,#9ce5d6dd,#e6fff8)}
+.ah-p1-beast.is-claws{width:130px;height:80px;margin:-40px 0 0 -65px;background:radial-gradient(ellipse,#dc7182,#714c5f88);clip-path:polygon(5% 20%,30% 45%,35% 0,65% 0,70% 45%,95% 20%,85% 80%,65% 100%,35% 100%,15% 80%)}
+.ah-p1-jaws{width:70px;height:65px;margin:-32px 0 0 -35px;border:4px solid var(--p1);clip-path:polygon(0 0,100% 0,80% 45%,68% 12%,52% 40%,35% 10%,20% 45%,0 0,0 100%,100% 100%,80% 55%,68% 88%,52% 60%,35% 90%,20% 55%,0 100%);border-radius:30%}
+.ah-p1-hound-echo{width:55px;height:55px;margin:-27px;border:3px solid var(--p1);border-radius:50%}
+.ah-p1-claw{width:9px;height:110px;margin:-55px 0 0 -4px;background:linear-gradient(0deg,transparent,#ffe2d2,var(--p1),transparent);clip-path:polygon(80% 0,100% 100%,0 88%,35% 10%)}
+.ah-p1-cord{height:60px;margin-top:-30px;translate:-50% 0;border:3px double var(--p1);border-radius:50%;box-shadow:0 0 7px #181511}
+.ah-p1-cord-ends{width:85px;height:55px;margin:-27px 0 0 -42px;border-left:3px solid var(--p1);border-right:3px solid var(--p1);rotate:30deg}
+.ah-p1-sound-wave{width:45px;height:90px;margin:-45px 0 0 -22px;border-right:3px solid var(--p1);border-radius:50%}
+.ah-p1-note{font-size:38px;font-family:Georgia,serif;margin:-25px 0 0 -12px;text-shadow:0 0 12px var(--p1)}
+.ah-p1-motif{width:115px;height:115px;margin:-57px;border:3px double var(--p1);border-radius:50%}
+.ah-p1-motif.is-eclipse{width:95px;height:95px;margin:-47px;border:0;background:radial-gradient(circle at 60% 45%,#160c1b 0 43%,#a83056 45%,#fda0a2 56%,transparent 70%);box-shadow:0 0 22px #c52255}
+.ah-p1-motif.is-rift{width:65px;height:170px;margin:-85px 0 0 -32px;border:0;border-radius:0;background:linear-gradient(90deg,var(--p1),#100f26 43% 57%,var(--p1));clip-path:polygon(45% 0,80% 20%,58% 35%,100% 50%,70% 65%,75% 90%,50% 100%,22% 78%,35% 62%,0 45%,25% 30%)}
+.ah-p1-motif.is-pillar{width:95px;height:210px;margin:-145px 0 0 -47px;border:0;border-radius:0;background:linear-gradient(90deg,transparent,#fff2b3aa,#fffde9,#fff2b3aa,transparent);clip-path:polygon(40% 0,60% 0,60% 65%,100% 65%,100% 75%,60% 75%,60% 100%,40% 100%,40% 75%,0 75%,0 65%,40% 65%)}
+.ah-p1-motif.is-book{width:105px;height:65px;margin:-32px 0 0 -52px;border:0;border-radius:5px;background:linear-gradient(90deg,#e0f0bc 0 46%,#465b49 47% 53%,#e0f0bc 54%);clip-path:polygon(0 0,48% 10%,50% 18%,52% 10%,100% 0,100% 90%,52% 100%,48% 100%,0 90%)}
+.ah-p1-page{width:45px;height:60px;margin:-30px 0 0 -22px;border-left:2px solid var(--p1);background:repeating-linear-gradient(0deg,#d9efd4dd 0 8px,#62866cdd 8px 10px);transform-origin:0 50%}
+.ah-p1-motif.is-seal{border-style:dashed;box-shadow:inset 0 0 0 12px #ddbc5233,inset 0 0 0 14px var(--p1)}
+.ah-p1-motif.is-charge{border-radius:15%;rotate:45deg;box-shadow:inset 0 0 0 10px #82d8ee33,0 0 25px var(--p1)}
+.ah-p1-motif.is-moon{border:0;box-shadow:inset 22px 0 0 var(--p1);width:80px;height:80px;margin:-40px}
+.ah-p1-motif.is-ghost{border-radius:10% 80% 10% 80%;border-width:0 5px}
+.ah-p1-motif.is-drain{border:0;background:radial-gradient(circle,#dc567677,transparent 70%)}
+.ah-p1-arcane-edge{width:130px;height:8px;margin:-4px 0 0 -65px;background:linear-gradient(90deg,transparent,var(--p1),#fff,var(--p1),transparent);border-radius:50%}
+.ah-p1-blood{width:10px;height:14px;border-radius:70% 0 70% 70%}
+@media(max-width:600px){.ah-themed-fx .ah-combat-caption{font-size:14px;padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){.ah-themed-fx .ah-p1-part{display:none}}
+.ah-direct-number{position:absolute;translate:-50% -50%;color:#fff4de;text-shadow:0 2px 5px #000,0 0 12px #c42f2f;font-size:32px;font-weight:800;opacity:0;white-space:nowrap}
+.ah-direct-source{position:absolute;width:66px;height:66px;margin:-33px 0 0 -33px;border:2px solid var(--strike);border-radius:50%;box-shadow:0 0 20px var(--strike);opacity:0}
+.ah-direct-mark{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border:3px solid var(--strike);border-radius:50%;box-shadow:0 0 18px var(--strike),inset 0 0 10px var(--strike);opacity:0}
+.ah-direct-mark.is-ambush{border-radius:0;border-width:0 4px;rotate:35deg;width:30px}
+.ah-direct-mark.is-bite{border-radius:25% 25% 50% 50%;border-style:dashed}
+.ah-direct-mark.is-glass{border-radius:0;clip-path:polygon(50% 0,60% 35%,100% 20%,70% 55%,95% 90%,55% 75%,20% 100%,35% 60%,0 30%,40% 35%);background:#ffdb8a}
+.ah-direct-mark.is-redirect{border-style:dashed;border-radius:50% 0 50% 50%}
+.ah-direct-mark.is-flash{background:radial-gradient(circle,#fff7ddaa,transparent 70%)}
+@media(max-width:600px){.ah-direct-fx .ah-combat-caption,.ah-blast-fx .ah-combat-caption{font-size:14px;padding:9px 12px;overflow-wrap:anywhere}.ah-direct-number{font-size:25px}}
+@media(prefers-reduced-motion:reduce){.ah-direct-mark,.ah-direct-source,.ah-direct-number{display:none}}
 @media(prefers-reduced-motion:reduce){.ah-combat-slash,.ah-combat-burst,.ah-combat-muzzle,.ah-combat-tracer,.ah-combat-hole,.ah-combat-cut,.ah-combat-bolts,.ah-combat-charge,.ah-combat-sigil,.ah-combat-orb,.ah-combat-ward,.ah-storm-sigil,.ah-storm-vortex,.ah-storm-core,.ah-storm-wave,.ah-storm-echo,.ah-blast-stick,.ah-blast-flash,.ah-blast-fireball,.ah-blast-ring,.ah-blast-smoke,.ah-blast-debris{display:none}}
+.ah-enemy-mark { position:absolute;width:94px;height:94px;margin:-47px;overflow:visible;opacity:0;fill:none;stroke:var(--strike,#b7a8a1);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px var(--strike));pointer-events:none }
+.ah-enemy-mark.is-signature {width:144px;height:144px;margin:-72px;stroke-width:2;z-index:2}
+.ah-enemy-mark.is-swarm {width:44px;height:44px;margin:-22px;stroke-width:6}
+.ah-enemy-mark.is-bind {stroke-width:8}
+.ah-enemy-mark.is-heavy,.ah-enemy-mark.is-vehicle {width:130px;height:130px;margin:-65px;stroke-width:5}
+.ah-enemy-mark.is-spectral {stroke-dasharray:3 5}
+.ah-enemy-mark.is-fear {width:150px;height:150px;margin:-75px;stroke:#b89bdb;filter:drop-shadow(0 0 15px #9070bb)}
+.ah-enemy-harm-number {position:absolute;opacity:0;translate:-50% -50%;font:bold 25px Georgia,serif;color:var(--strike);text-shadow:0 2px 6px #000,0 0 15px #000;white-space:nowrap}
+.ah-combat-fx[data-stage="threat"] .ah-combat-caption {border-color:var(--strike);opacity:1}
+@media(prefers-reduced-motion:reduce){.ah-combat-fx[data-stage] .ah-enemy-mark.is-contact,.ah-combat-fx[data-stage="harm"] .ah-enemy-harm-number {opacity:.85}.ah-combat-fx[data-stage="threat"] .ah-enemy-mark.is-signature {opacity:.5}}

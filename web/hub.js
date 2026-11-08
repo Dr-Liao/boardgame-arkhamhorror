@@ -1,3 +1,4 @@
+import { renderDraftPane } from './draft-mode.js'
 import { renderRulesText } from './card-text.js'
 import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
@@ -7,7 +8,8 @@ import { tableIcon, classIcon } from './table-components.js'
 import { cardDisplayName, cardDisplayText, cardDisplayTraits } from './catalog.js'
 import { t } from './i18n.js'
 import { renderStoryReader } from './story-reader.js'
-import { cardSource, filterCards, renderCardFilters } from './card-filters.js'
+import { filterCards, renderCardFilters } from './card-filters.js'
+import { packLabel } from './pack-label.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
 import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
@@ -37,15 +39,7 @@ const CLASS_KEYS = {
   mystic: 'hub.class.mystic', survivor: 'hub.class.survivor', neutral: 'hub.class.neutral',
 }
 const classLabel = value => CLASS_KEYS[value] ? t(CLASS_KEYS[value]) : value
-// 选调查员时的扩展包署名：核心包沿用档案口径，其余循环复用卡牌筛选的系列表，
-// 所以新增循环（失落的时代、万象无终……）不必在两张表里各写一遍中文名。
-const PACK_KEYS = { core: 'hub.pack.core' }
-function packLabel(pack, englishName = '') {
-  if (!pack) return t('hub.investigator.fallbackName')
-  if (PACK_KEYS[pack]) return t(PACK_KEYS[pack])
-  const series = cardSource({ pack, packName: englishName }).packName
-  return series && series !== pack ? series : englishName || pack
-}
+// 选调查员时的扩展包署名见 web/pack-label.js（核心包走档案口径，其余循环复用卡牌筛选的系列表）。
 const OUTCOME_KEYS = { noResolution: 'hub.outcome.noResolution', defeat: 'hub.outcome.defeat', survived: 'hub.outcome.survived', victory: 'hub.outcome.victory' }
 const outcomeName = value => OUTCOME_KEYS[value] ? t(OUTCOME_KEYS[value])
   : String(value ?? t('hub.outcome.pending')).replace(/^r(\d+)$/, (_, number) => t('hub.outcome.resolution', { number }))
@@ -302,6 +296,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
   function renderGameSettings() {
     const values = [
+      t(state.setup.form.deckMode === 'draft' ? 'draft.title' : 'draft.standard'),
       ...(CARD_POOL_RESTRICTION_ENABLED
         ? [t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) })]
         : []),
@@ -316,7 +311,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   function renderGameSettingsModal(g) {
     if (!state.arkhamGameSettingsOpen) return null
     const spec = key => g.settingsSpec.find(item => item.key === key)
-    const scope = spec('cardPoolScope'), rollback = spec('allowRollback')
+    const scope = spec('cardPoolScope'), rollback = spec('allowRollback'), deckMode = spec('deckMode')
     const close = () => { state.arkhamGameSettingsOpen = false; render() }
     return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
       h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.gameSettings.title'),
@@ -324,6 +319,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.gameSettings.title'))),
           h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.gameSettings.closeAria') }, t('common.close'))),
         h('p', {}, t('hub.gameSettings.note')),
+        h('div', { className: 'ah-ai-dialogue-group ah-game-mode-settings' }, h('h3', {}, t('draft.modeLabel')),
+          select(deckMode.options.map(option => ({ ...option, label: t(option.value === 'draft' ? 'draft.title' : 'draft.standard') })), state.setup.form.deckMode || 'standard',
+            value => { state.setup.form.deckMode = value; render() },
+            { className: 'ah-game-mode-select', 'aria-label': t('draft.modeLabel'), 'aria-describedby': 'ah-game-mode-description' }),
+          h('p', { id: 'ah-game-mode-description', className: 'ah-game-mode-description', role: 'status' },
+            t(state.setup.form.deckMode === 'draft' ? 'draft.modeDescription' : 'draft.standardDescription'))),
         CARD_POOL_RESTRICTION_ENABLED ? h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, scope.label),
           h('div', { className: 'ah-game-settings-select' },
@@ -765,7 +766,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const themeAttributes = presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } })
     const saves = state.arkhamSaves?.filter(item => (item.mode || (item.online ? 'online' : 'solo')) === (state.arkhamSaveMode || 'solo')) ?? state.arkhamSaves
     const newGame = h('div', { className: 'ah-hub-setup-fields' },
-      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'cardPoolScope'].includes(spec.key)).map(spec => {
+      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'cardPoolScope', 'deckMode'].includes(spec.key)).map(spec => {
         return h('label', { className: 'bg-field' },
         h('span', {}, spec.label),
         select(spec.options, state.setup.form[spec.key], value => { state.setup.form[spec.key] = spec.key === 'playerCount' ? Number(value) : value; render() }),
@@ -782,7 +783,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-library', 'data-setup-action': 'deck-library',
           title: t('hub.deck.library'), 'aria-label': t('hub.deck.library'),
           onclick: () => openLibraryModal({ s: null, g, returnFocus: 'deck-library' }) }, tableIcon('supply'), t('hub.deck.library')),
-        h('button', { className: 'bg-btn secondary', onclick: () => { state.setup = null; render() } }, t('common.cancel')),
         h('button', { className: 'bg-btn', disabled: state.busy, onclick: startGame }, state.busy ? t('hub.setup.starting') : t('hub.setup.start'))))
     const saveList = h('div', { className: 'ah-save-list' },
       h('div', { className: 'bg-play-modes', role: 'group', 'aria-label': t('hub.saves.typeAria') },
@@ -820,6 +820,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         style: stableEntryHeight ? { ...themeAttributes.style, '--ah-entry-stable-h': stableEntryHeight } : themeAttributes.style,
         role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'),
         onkeydown: modalKeys(() => { state.setup = null; render() }), onclick: event => event.stopPropagation() },
+        h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-cancel',
+          onclick: () => { state.setup = null; render() } }, t('common.cancel')),
         h('div', { className: 'ah-office-entry-art' },
           h('div', { className: 'ah-office-entry-hero' }, decor('manor'),
             h('span', { className: 'ah-office-entry-blur is-top', 'aria-hidden': 'true' }),
@@ -856,6 +858,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const st = s.state, record = recordForSeat(s, seat)
     if (st.uiState === 'interlude') {
       if (record?.status !== 'active') return t('hub.task.replaceInvestigator')
+      if (record.draftMode && seat === (s.mySeat ?? 0) && st.draftDeckStatus?.missing > 0) return t('draft.refillTask')
       if (record.upgradeDraft) return t('hub.task.saveUpgrades')
       return t('hub.task.finishUpgrades')
     }
@@ -890,7 +893,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     } else if (st.uiState === 'interlude') {
       const upgraded = !!st.hubUpgradedSeats?.[mySeat]
         || record?.purchases?.some(item => item.scenarioIndex === st.campaign.scenarioIndex)
-      steps = [[t('hub.workflow.stepUpgradeOptional'), upgraded], [t('hub.task.saveUpgrades'), upgraded && !record?.upgradeDraft],
+      const needsRefill = !!record?.draftMode && st.draftDeckStatus?.missing > 0
+      steps = [[t('hub.workflow.stepUpgradeOptional'), upgraded], [t(needsRefill ? 'draft.refillTask' : 'hub.task.saveUpgrades'), upgraded && !record?.upgradeDraft && !needsRefill],
         [t('hub.workflow.stepConfirmSeat'), !!st.hubSeatDone?.[mySeat]], [t('hub.workflow.stepStartNext'), false]]
       if (acting(s, mySeat)) {
         const confirm = legal(s, 'hubConfirmUpgrades')[0], done = legal(s, 'hubDoneSeat')[0]
@@ -1253,7 +1257,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       ...laneSections, ...loose)
   }
 
+  function draftPane(s, g) {
+    state.arkhamDraftReplacements ||= {}
+    return renderDraftPane({ h, s, g, record: recordForSeat(s, s.mySeat ?? 0), moves: s.state.legalMoves || [],
+      action, art, inspectCard, selection: state.arkhamDraftReplacements, render })
+  }
+
   function deck(s, g) {
+    if (s.state.deckMode === 'draft') return draftPane(s, g)
     const record = recordForSeat(s, s.mySeat ?? 0)
     const deckCodes = record?.deck || []
     const canEdit = legal(s, 'hubSetDeck').length > 0
@@ -1298,6 +1309,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   function upgrades(s, g) {
+    if (s.state.deckMode === 'draft') return draftPane(s, g)
     const st = s.state
     const name = code => code ? cardDisplayName(st.cards?.[code]) || nameOf(g, code) : t('hub.upgrade.noReplacement')
     const card = code => code ? { ...g.clientData?.deckBuilder?.cardPool.find(item => item.code === code), ...st.cards?.[code] } : null

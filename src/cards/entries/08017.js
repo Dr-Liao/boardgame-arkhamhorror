@@ -1,0 +1,30 @@
+// 08017 精明的交易（Shrewd Dealings，鲍勃·詹金斯的专属支援）
+//
+// 卡面：鲍勃·詹金斯牌库专用。
+//   你打出的每张 [[道具]] 支援费用 -1。
+//   [reaction] 在你打出一张 [[道具]] 支援时：将其置于你所在地点的任意调查员控制下。
+//
+// 读点：
+//   · 费用 -1：`modifiers` 的 `playCost` 目标（modifiers.js#playCostDelta 是唯一读点，
+//     与手牌/场上/如同手牌通道共用），只对本控制者打出的 [[道具]] 支援生效；
+//   · 归任意调查员控制：`assetRule.playUnderAnyAtLocation`（actions.js 在资产入场处读取，
+//     控制者控制本支援时打出的 [[道具]] 支援可选择同地点任一调查员作为控制者）。
+//
+// 一张卡一个文件：这张卡的行为只在这里维护。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const isItemAsset = code => {
+  const def = ALL_CARDS[code]
+  return Boolean(def) && def.type === 'asset'
+    && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')
+}
+
+export default {
+  code: '08017',
+  assetRule: { playUnderAnyAtLocation: true },
+  modifiers: [
+    // 「你打出的每张 [[道具]] 支援费用 -1」：playCostDelta 以 cardCode 传入本张打出的牌。
+    { target: 'playCost', amount: ({ cardCode }) => (isItemAsset(cardCode) ? -1 : 0) },
+  ],
+  abilities: [],
+}

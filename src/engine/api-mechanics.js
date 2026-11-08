@@ -12,15 +12,42 @@ import { setTokenTreatment } from './chaos-token-effects.js'
 import { moveUses, spendSharedUses } from './use-transfer.js'
 import { makeTurnPromise } from './turn-promises.js'
 import { createMechanicChoices } from './mechanic-choices.js'
+import { createEoteInteractions } from './eote-interactions.js'
 import { createScenarioDeckApi } from './scenario-decks.js'
 import * as grid from './grid-map.js'
+// 七循环 P2：通用原语域。载入本文件即证明各模块存在；具体语义见 docs/edgeOfTheEarth/primitives.md。
+import * as frost from './frost.js'
+import * as shelter from './eote-shelter.js'
+import * as camp from './eote-camp.js'
+import * as facilities from './eote-facilities.js'
+import * as climb from './eote-climb.js'
+import * as city from './eote-city.js'
+import * as tekeli from './eote-tekeli.js'
+import * as deckTop from './eote-deck-top.js'
+import * as roundDistance from './eote-round-distance.js'
+import * as disciplines from './eote-disciplines.js'
+import * as levels from './vertical-chain.js'
+import { drawFromScenarioDeck, returnToScenarioDeckBottom, scenarioDeckSize, shuffleTopIntoInvestigatorDeck } from './scenario-decks.js'
+import { clearCrossSeatGrant, crossSeatData, grantCrossSeat } from './play-channels.js'
+import * as eotePartners from '../campaign/eote-partners.js'
+import * as eoteSeals from '../campaign/eote-seals.js'
+import * as eoteMemorials from '../campaign/eote-memorials.js'
+import * as eoteSupplies from '../campaign/eote-supplies.js'
 
 // Composition only. Writes remain in the reusable domain primitives.
 export function createMechanicsApi(state, deps = {}) {
   const changed = result => { deps.sealedChanged?.(); return result }
+  function eoteInteractionGroups(state, deps) {
+  // keys 会和既有 key 交互函数重名，扁平层不展开（只在 interactions.eote.keys 提供）。
+  const { keys, ...groups } = createEoteInteractions(state, deps)
+  return groups
+}
+
   const deck = createScenarioDeckApi(state, deps)
   return {
-    interactions: createMechanicChoices(state, deps),
+    // 七循环 P4：EotE 待决选择事务。`eote` 命名空间完整暴露（keys 等与既有交互同名者只在此处）；
+    // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
+    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps) },
     scenarioDecks: deck,
     enemyZones:deps.enemyZones||createEnemyZoneApi(state,{mechanicState}),
     barriers: {
@@ -121,6 +148,116 @@ export function createMechanicsApi(state, deps = {}) {
       beneath: (seat, host) => origins.beneathCards(state, seat, host), store: (seat, host, code, options) => origins.storeBeneath(state, seat, host, code, options),
       take: (seat, host, code, to) => origins.takeBeneath(state, seat, host, code, to), commit: (seat, spec) => origins.commitFromOrigin(state, seat, spec, deps.commit),
       withdraw: (seat, index) => origins.withdrawCommitment(state, seat, index),
+    },
+    // ── 七循环《地球边缘》P2 通用原语 ────────────────────────────────────────
+    frost: {
+      limit: frost.FROST_POOL_LIMIT,
+      count: () => frost.frostPoolCount(state), room: () => frost.frostPoolRoom(state),
+      add: (count, options) => frost.addFrost(state, count, options), pay: (count, options) => frost.payFrost(state, count, options),
+      extraReveal: token => frost.extraRevealForFrost(token), autoFail: drawn => frost.shouldAutoFailForFrost(drawn),
+    },
+    shelter: {
+      of: id => shelter.locationShelter(state, id), camp: () => shelter.campShelter(state),
+    },
+    camp: {
+      location: () => camp.campLocationId(state), set: id => camp.setCampLocation(state, id),
+      revealed: () => camp.revealedLocations(state), recordRevealed: id => camp.recordRevealedLocation(state, id),
+      inheritRevealed: ids => camp.inheritRevealedLocations(state, ids),
+    },
+    facilities: {
+      initialize: spec => facilities.initializeFacilities(state, spec),
+      state: id => facilities.facilityState(state, id), activate: (id, options) => facilities.activateFacility(state, id, options),
+      destroy: id => facilities.destroyFacility(state, id),
+      tower: id => facilities.towerState(state, id), towerHealth: id => facilities.towerHealth(state, id),
+      damageTower: spec => facilities.damageTower(state, spec), collapsedTowers: () => facilities.collapsedTowers(state),
+      towerSeals: () => facilities.towerSeals(state), placeTowerSeal: spec => facilities.placeTowerSeal(state, spec),
+      removeTowerSeal: spec => facilities.removeTowerSeal(state, spec),
+    },
+    climb: {
+      destinationError: (fromId, toId) => climb.climbDestinationError(state, fromId, toId),
+      ascend: (seat, toId) => climb.ascend(state, state.investigators?.[seat], toId),
+      descend: (seat, toId) => climb.descend(state, state.investigators?.[seat], toId),
+      state: () => climb.climbState(state), fallDamage: (from, to) => climb.fallDamage(state, from, to),
+      cluesLostOnMove: (seat, options) => climb.cluesLostOnMove(state, state.investigators?.[seat], options),
+      dropExpeditionAssets: (seat, options) => climb.dropExpeditionAssets(state, state.investigators?.[seat], options),
+    },
+    city: {
+      initialize: (spec, options) => city.initializeCity(state, spec, options),
+      cityscapes: () => city.cityscapes(state),
+      visibleOnRow: (index, options) => city.visibleOnRow(state, index, options),
+      visibleOnColumn: (index, options) => city.visibleOnColumn(state, index, options),
+      keyOnLocation: id => city.keyOnLocation(state, id), placeKey: spec => city.placeKey(state, spec),
+      takeKey: spec => city.takeKey(state, spec), moveKey: spec => city.moveKey(state, spec), swapKeys: spec => city.swapKeys(state, spec),
+    },
+    tekeli: {
+      initialize: spec => tekeli.initializeTekeliDeck(state, spec),
+      size: () => tekeli.tekeliDeckSize(state), shuffleIn: (seat, count, options) => tekeli.tekeliShuffleIn(state, seat, count, options),
+      draw: () => tekeli.tekeliDraw(state), return: (code, options) => tekeli.tekeliReturn(state, code, options),
+    },
+    hiddenDecks: {
+      shuffleTopIntoInvestigatorDeck: spec => shuffleTopIntoInvestigatorDeck(state, spec),
+      draw: (deckId, count) => drawFromScenarioDeck(state, deckId, count),
+      returnToBottom: (deckId, codes) => returnToScenarioDeckBottom(state, deckId, codes),
+      size: deckId => scenarioDeckSize(state, deckId),
+    },
+    levels: {
+      of: id => levels.locationLevel(state, id), set: (id, level) => levels.setLocationLevel(state.locations?.find(loc => loc.id === id), level),
+      ordered: target => levels.levelsOrdered(target), neighbors: id => levels.levelNeighbors(state, id),
+    },
+    deckTop: {
+      reveal: (seat, options) => deckTop.revealDeckTop(state, seat, options), card: seat => deckTop.deckTopCard(state, seat),
+      clear: seat => deckTop.clearDeckTop(state, seat), markPlayed: seat => deckTop.markDeckTopPlayed(state, seat),
+      discountUsed: (seat, round) => deckTop.deckTopDiscountUsed(state, seat, round),
+      play: (seat, options) => deckTop.playDeckTop(state, seat, options), weaknessDraw: seat => deckTop.deckTopWeaknessDraw(state, seat),
+    },
+    roundDistance: {
+      startLocation: seat => roundDistance.roundStartLocation(state, seat),
+      noteStartLocation: (seat, locationId) => roundDistance.noteRoundStartLocation(state, seat, locationId),
+      distance: seat => roundDistance.travelDistance(state, seat),
+      reward: (seat, options) => roundDistance.roundDistanceReward(state, seat, options),
+    },
+    disciplines: {
+      initialize: spec => disciplines.initializeDisciplines(state, spec), face: code => disciplines.disciplineFace(state, code),
+      faceCode: code => disciplines.disciplineFaceCode(state, code), flip: (code, options) => disciplines.flipDiscipline(state, code, options),
+      burden: code => disciplines.disciplineBurden(state, code), bonds: code => disciplines.bondsOfDiscipline(state, code),
+      select: options => disciplines.selectDisciplines(state, options),
+    },
+    crossSeat: {
+      data: () => crossSeatData(state),
+      grant: (seat, spec) => grantCrossSeat(state, seat, spec),
+      clear: seat => clearCrossSeatGrant(state, seat),
+    },
+    eoteCampaign: {
+      partners: {
+        initialize: spec => eotePartners.initializePartners(state, spec), state: code => eotePartners.partnerState(state, code),
+        withStatus: status => eotePartners.partnersWithStatus(state, status), remaining: () => eotePartners.remainingPartners(state),
+        adjustHarm: (code, harm) => eotePartners.adjustPartnerHarm(state, code, harm),
+        setStatus: (code, status) => eotePartners.setPartnerStatus(state, code, status),
+        alive: code => eotePartners.isPartnerAlive(state, code), resoluteForm: code => eotePartners.resoluteFormOf(state, code),
+        chooseMissing: (shelterValue, random) => eotePartners.chooseMissingPartners(state, shelterValue, random),
+      },
+      seals: {
+        initialize: spec => eoteSeals.initializeSeals(state, spec), state: kind => eoteSeals.sealState(state, kind),
+        of: predicate => eoteSeals.sealsOf(state, predicate), placed: () => eoteSeals.placedSeals(state),
+        activated: () => eoteSeals.activatedSeals(state), held: seat => eoteSeals.heldSeals(state, seat),
+        at: locationId => eoteSeals.sealsAt(state, locationId), placeDormant: (kind, locationId) => eoteSeals.placeDormantSeal(state, kind, locationId),
+        recover: (kind, options) => eoteSeals.recoverSeal(state, kind, options), activate: kind => eoteSeals.activateSeal(state, kind),
+        deactivate: kind => eoteSeals.deactivateSeal(state, kind), place: (kind, options) => eoteSeals.placeSeal(state, kind, options),
+        unplace: kind => eoteSeals.unplaceSeal(state, kind),
+      },
+      memorials: {
+        initialize: spec => eoteMemorials.initializeMemorials(state, spec), for: code => eoteMemorials.memorialFor(state, code),
+        crossedOut: () => eoteMemorials.crossedOutMemorials(state), claimed: () => eoteMemorials.claimedMemorials(state),
+        claim: code => eoteMemorials.claimMemorial(state, code), claimAll: () => eoteMemorials.claimAllAtInterlude(state),
+      },
+      supplies: {
+        initialize: spec => eoteSupplies.initializeSupplies(state, spec), items: () => eoteSupplies.supplyItems(state),
+        carrier: code => eoteSupplies.supplyCarrier(state, code), carried: seat => eoteSupplies.carriedSupplies(state, seat),
+        assign: (code, seat) => eoteSupplies.assignSupply(state, code, seat), release: code => eoteSupplies.releaseSupply(state, code),
+        drop: (code, locationId) => eoteSupplies.dropSupplyAt(state, code, locationId), recover: code => eoteSupplies.recoverSupply(state, code),
+        recovered: () => eoteSupplies.recoveredSupplies(state), missing: () => eoteSupplies.missingSupplies(state),
+        dropped: () => eoteSupplies.droppedSupplies(state),
+      },
     },
   }
 }

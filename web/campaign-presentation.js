@@ -14,6 +14,7 @@ const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
 const CIRCLE = `${ROOT}/img/campaigns/theCircleUndone`
 const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
 const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
+const EARTH_EDGE = `${ROOT}/img/campaigns/edgeOfTheEarth`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -37,6 +38,25 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  edgeOfTheEarth: Object.freeze({
+    id: 'edgeOfTheEarth',
+    palette: Object.freeze({
+      background: '#0c1722', panel: '#152838', header: '#08111b',
+      accent: '#9bcbd8', accentStrong: '#deeff3', muted: '#a1b5c0', edge: '#9bcbd866',
+    }),
+    assets: Object.freeze({
+      hubHero: `${EARTH_EDGE}/hub/antarctic-expedition.webp`,
+      tableOverlay: `${EARTH_EDGE}/table/expedition-desk.webp`,
+      storyDefault: `${EARTH_EDGE}/hub/antarctic-expedition.webp`,
+    }),
+    musicPlaylist: 'edgeOfTheEarth',
+    scenarios: Object.freeze(Object.fromEntries([
+      'iceAndDeathPart1', 'iceAndDeathPart2', 'iceAndDeathPart3', 'fatalMirage',
+      'toTheForbiddenPeaks', 'cityOfTheElderThings', 'theHeartOfMadnessPart1', 'theHeartOfMadnessPart2',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${EARTH_EDGE}/scenarios/${id}/scene.webp`,
+    }) })]))),
+  }),
   theInnsmouthConspiracy: Object.freeze({
     id: 'theInnsmouthConspiracy',
     palette: Object.freeze({

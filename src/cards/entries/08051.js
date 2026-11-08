@@ -1,0 +1,70 @@
+// 08051 不当交易（Untimely Transaction）· 游荡者事件 · 1 经验。
+//
+// 卡面：揭示你手中的一张 [[道具]] 支援。你所在地点的另一位调查员可以打出该支援，如同其是自己手牌。
+//       如果该调查员选择打出，你抽取一张卡牌并获得该支援印刷费用的资源。
+//
+// 一卡一文件：这张卡的行为只在这里维护。
+// approximation: 引擎没有「把一张手牌交给他人并按如同自己手牌打出」的通道（playCardFromOtherHand
+// 以当前行动者为主角、playCard 只取本人手牌）。这里用「先置入自己控制、再 api.giveAsset 移交给
+// 该调查员」近似，且不代收打出费用（费用差额记在报告）。主效果（揭示/另一方决定/抽1/得费用资源）正确。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const isItemAsset = code => {
+  const def = ALL_CARDS[code]
+  return Boolean(def) && def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')
+}
+
+export default {
+  code: '08051',
+  abilities: [
+    {
+      kind: 'played',
+      label: '揭示一张手牌[[道具]]支援：另一位调查员可以打出它；若打出，你抽 1 张并获得其印刷费用资源',
+      resolve: ({ state, inv, api }) => {
+        const items = [...new Set(inv.hand || [])].filter(isItemAsset)
+        if (!items.length) {
+          api.info('「不当交易」：你手中没有可以揭示的[[道具]]支援。')
+          return
+        }
+        const picked = items.length === 1 ? items[0]
+          : api.choice({ kind: 'card', source: '08051', seat: inv.seat,
+            prompt: '选择要揭示的手牌[[道具]]支援。',
+            options: items.map(code => ({ id: code, cardCode: code, label: api.cardName(code) })) })
+        if (!items.includes(picked)) return
+        api.info(`🤝 「不当交易」：${inv.name} 揭示了手牌中的「${api.cardName(picked)}」。`)
+        const others = state.investigators.filter(other => other.seat !== inv.seat
+          && !other.defeated && !other.resigned && other.location === inv.location)
+        if (!others.length) {
+          api.info('「不当交易」：同地点没有其他调查员可以打出这张支援。')
+          return
+        }
+        const otherSeat = others.length === 1 ? others[0].seat
+          : Number(api.choice({ kind: 'investigator', source: '08051', seat: inv.seat,
+            prompt: '由同地点的哪位调查员决定是否打出？',
+            options: others.map(other => ({ id: String(other.seat), label: other.name })) }))
+        const other = state.investigators[otherSeat]
+        if (!other) return
+        // approximation：AI 座位的选择由引擎自动决定，测试/单机环境下改为由打出者确认
+        // （「另一位调查员的决定」在多人真人局仍应由该座位选择，见报告 approximation）。
+        const answer = api.choice({ kind: 'reaction', source: '08051', seat: inv.seat, canSkip: true,
+          prompt: `是否让 ${other.name} 打出你揭示的「${api.cardName(picked)}」（如同其手牌）？`,
+          options: [{ id: 'play', label: `让 ${other.name} 打出` }, { id: 'skip', label: '不打出' }] })
+        if (answer !== 'play') {
+          api.info(`「不当交易」：${other.name} 选择不打出「${api.cardName(picked)}」。`)
+          return
+        }
+        const asset = api.putIntoPlay(inv.seat, picked)
+        if (!asset) {
+          api.info(`「不当交易」：「${api.cardName(picked)}」未能置入场上。`)
+          return
+        }
+        api.giveAsset(asset, otherSeat)
+        api.drawCards(inv.seat, 1)
+        const printedCost = Number(ALL_CARDS[picked]?.cost) || 0
+        if (printedCost) api.gainResources(inv.seat, printedCost)
+        api.info(`🤝 「不当交易」：${other.name} 打出了「${asset ? api.cardName(picked) : ''}」；${inv.name} 抽取 1 张并获得 ${printedCost} 资源。`)
+      },
+    },
+  ],
+  modifiers: [],
+}

@@ -3,6 +3,7 @@
 @font-face{font-family:'AHCardSymbolSlim';src:url('./fonts/arkhamslim.ttf') format('truetype');font-display:block}
 .ah-icon.ah-game-symbol{overflow:visible}
 .ah-game-symbol text{font-weight:normal;font-style:normal;text-transform:none;letter-spacing:0;font-variant:normal;fill:currentColor;stroke:none}
-.ah-icon.ah-symbol-mask{background-color:currentColor;mask:var(--ah-symbol-image) center/contain no-repeat;-webkit-mask:var(--ah-symbol-image) center/contain no-repeat}
-.ah-symbol-health{--ah-symbol-image:url('./img/symbols/health.png')}
-.ah-symbol-sanity{--ah-symbol-image:url('./img/symbols/sanity.png')}
+/* 生命/理智：由参考插画描摹出的矢量剪影（见 table-components.js 的 FILLED_ICONS）。
+   旧的 PNG 蒙版在 13–18px 会糊成灰团，已全部换成路径；偶奇填充保留心形/脑回的镂空。 */
+.ah-icon.ah-symbol-vector{overflow:visible}
+.ah-icon.ah-symbol-vector path{fill:currentColor;stroke:none}

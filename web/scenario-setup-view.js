@@ -52,6 +52,9 @@ export function createScenarioSetupView(h, { render }) {
   const renderBlocks = blocks => (blocks || []).map(block => h('div', { className: 'ah-guide-block' },
     block.title ? h('h4', {}, block.title) : null,
     block.text ? paragraphs(block.text).map(text => h('p', {}, renderRulesText(h, text, { links: false }))) : null,
+    !block.text && block.missing
+      ? h('p', { className: 'ah-guide-missing', role: 'note' }, t('setup.chineseMissing'))
+      : null,
     block.children ? renderBlocks(block.children) : null))
   const spoilerSection = (title, blocks) => blocks?.length ? h('details', { className: 'ah-setup-section ah-guide-spoilers' },
     h('summary', {}, title), renderBlocks(blocks)) : null

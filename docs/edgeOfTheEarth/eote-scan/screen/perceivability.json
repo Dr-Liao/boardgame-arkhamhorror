@@ -1,0 +1,566 @@
+{
+ "generatedAt": "2026-11-08T11:04:19.723Z",
+ "note": "静态事实：能力无 label、api.choice 无 prompt、无 choice/info 日志的能力（可能由引擎统一日志覆盖，需人工核）",
+ "summary": {
+  "cardsWithFlags": 29,
+  "abilityWithoutLabel": 0,
+  "choiceWithoutPrompt": 0,
+  "silentAbility": 29,
+  "cjkLabelCards": 29
+ },
+ "cards": [
+  {
+   "code": "08002",
+   "name": "机修工的扳手",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08006",
+   "name": "预示者",
+   "type": "treachery",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08011b",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08012a",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08012b",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08013a",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08013b",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08014a",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08014b",
+   "name": "演武",
+   "type": "asset",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08018",
+   "name": "贪婪",
+   "type": "treachery",
+   "partition": "eoteInvestigators",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08024",
+   "name": "防御姿态",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08037",
+   "name": "地区勘测",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08052",
+   "name": "行业专家",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08065",
+   "name": "密教理论",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08077",
+   "name": "人多力量大",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08078",
+   "name": "无畏精神",
+   "type": "skill",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08079",
+   "name": "血债血偿",
+   "type": "event",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08080",
+   "name": "灭火器",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 3,
+   "labelCount": 3,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 3,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08082",
+   "name": "抵挡",
+   "type": "event",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08086",
+   "name": "迈克尔·利",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08087",
+   "name": "狙击",
+   "type": "event",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 3,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 3,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08088",
+   "name": "老旧的霰弹枪",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08094",
+   "name": "长柄大锤",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08095",
+   "name": "防护服",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08096",
+   "name": "长柄大锤",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08105",
+   "name": "破冰锥",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08107",
+   "name": "破冰锥",
+   "type": "asset",
+   "partition": "eotePlayer",
+   "abilityCount": 2,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08592",
+   "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+   "type": "asset",
+   "partition": "eoteCampaign",
+   "abilityCount": 1,
+   "labelCount": 2,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 2,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  },
+  {
+   "code": "08593",
+   "name": "艾米·肯斯勒博士",
+   "type": "asset",
+   "partition": "eoteCampaign",
+   "abilityCount": 1,
+   "labelCount": 1,
+   "choiceCalls": 0,
+   "infoCalls": 0,
+   "cjkLabels": 1,
+   "flags": [
+    "silent-ability-no-choice-no-log"
+   ],
+   "choiceNoPromptLines": []
+  }
+ ],
+ "web": {
+  "eoteReferencedFiles": [
+   "web/campaign-presentation.js",
+   "web/deck-rules.js",
+   "web/eote-rules.js",
+   "web/mechanic-ui.js",
+   "web/music-player.js",
+   "web/rulebook-data.js",
+   "web/scenario-music.js",
+   "web/ui-cards.js"
+  ],
+  "chapterRefs": {
+   "iceAndDeathPart1": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "iceAndDeathPart2": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "iceAndDeathPart3": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "fatalMirage": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "toTheForbiddenPeaks": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "cityOfTheElderThings": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "theHeartOfMadnessPart1": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ],
+   "theHeartOfMadnessPart2": [
+    "web/campaign-presentation.js",
+    "web/scenario-music.js",
+    "web/ui-cards.js"
+   ]
+  },
+  "guideFiles": [
+   "aLightInTheFog.json",
+   "aPhantomOfTruth.json",
+   "atDeathsDoorstep.json",
+   "aThousandShapesOfHorror.json",
+   "beforeTheBlackThrone.json",
+   "beyondTheGatesOfSleep.json",
+   "blackStarsRise.json",
+   "bloodOnTheAltar.json",
+   "cityOfTheElderThings.json",
+   "curtainCall.json",
+   "darkSideOfTheMoon.json",
+   "devilReef.json",
+   "dimCarcosa.json",
+   "disappearanceAtTheTwilightEstate.json",
+   "echoesOfThePast.json",
+   "extracurricularActivity.json",
+   "fatalMirage.json",
+   "forTheGreaterGood.json",
+   "heartOfTheEldersPart1.json",
+   "heartOfTheEldersPart2.json",
+   "horrorInHighGear.json",
+   "iceAndDeathPart1.json",
+   "iceAndDeathPart2.json",
+   "iceAndDeathPart3.json",
+   "inTheClutchesOfChaos.json",
+   "inTooDeep.json",
+   "intoTheMaelstrom.json",
+   "lostInTimeAndSpace.json",
+   "pointOfNoReturn.json",
+   "shatteredAeons.json",
+   "theBoundaryBeyond.json",
+   "theCityOfArchives.json",
+   "theDepthsOfYoth.json",
+   "theDevourerBelow.json",
+   "theDoomOfEztli.json",
+   "theEssexCountyExpress.json",
+   "theGathering.json",
+   "theHeartOfMadnessPart1.json",
+   "theHeartOfMadnessPart2.json",
+   "theHouseAlwaysWins.json",
+   "theLairOfDagon.json",
+   "theLastKing.json",
+   "theMidnightMasks.json",
+   "theMiskatonicMuseum.json",
+   "thePallidMask.json",
+   "thePitOfDespair.json",
+   "theSearchForKadath.json",
+   "theSecretName.json",
+   "theUnspeakableOath.json",
+   "theUntamedWilds.json",
+   "theVanishingOfElinaHarper.json",
+   "theWagesOfSin.json",
+   "theWitchingHour.json",
+   "threadsOfFate.json",
+   "toTheForbiddenPeaks.json",
+   "turnBackTime.json",
+   "undimensionedAndUnseen.json",
+   "unionAndDisillusion.json",
+   "wakingNightmare.json",
+   "weaverOfTheCosmos.json",
+   "whereDoomAwaits.json",
+   "whereTheGodsDwell.json"
+  ]
+ }
+}

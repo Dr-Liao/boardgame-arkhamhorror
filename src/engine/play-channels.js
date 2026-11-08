@@ -1,4 +1,7 @@
 import { afterUsesSpent } from './uses.js'
+import { consumeDeckTop, deckTopCard, deckTopDiscountUsed, restoreDeckTop } from './eote-deck-top.js'
+import { syncPassiveDeckTop, takeDeckTopForCommit } from './eote-investigator-support.js'
+import { eoteScenarioState } from './eote-state.js'
 // 「如同手牌」通道（play / commit as if in hand）统一原语。
 //
 // 症状：同一类卡面效果（「如同它是你的手牌」「如同其在你的手牌中」）在项目里有 8 种存储形状：
@@ -36,6 +39,77 @@ import { afterUsesSpent } from './uses.js'
 //   hostCost    附加费（attached：{exhaustHost, uses}）
 //   labelSuffix 候选/日志后缀（例如「（直觉牌库）」「（银暮匕首：下方）」）
 //   uiKey       牌桌挂载协议值（'hunch:<code>' / 'beneath:<code>' / 'asset:<id>'），web 直接当 data-interaction 用
+
+// 通道 id 的权威顺序（P2，七循环新增 deckTop / otherHand 追加在既有 7 个通道之后）。
+// LEGACY_PLAY_CHANNELS 是 2026-11-07 前的既有通道集合；新增通道不得改变它的相对顺序，
+// 保证旧对局的候选顺序/重放指纹不变。
+export const LEGACY_PLAY_CHANNELS = Object.freeze(['attached', 'hunch', 'threat', 'beneath', 'backpack', 'discard', 'plan'])
+export const PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_PLAY_CHANNELS, 'deckTop', 'otherHand'])
+// 反应/能力窗口的既有顺序（与旧实现逐字一致），新通道同样追加在末尾。
+const LEGACY_WINDOW_ORDER = Object.freeze(['plan', 'attached', 'beneath', 'hunch', 'discard', 'backpack', 'threat'])
+export const WINDOW_PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_WINDOW_ORDER, 'deckTop', 'otherHand'])
+
+const isPlainObject = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+
+// 跨座位代打（investigator.crossSeatPlay，08016 鲍勃·詹金斯）的可选场景状态：
+//   state.scenarioFlags.mechanics.eote.crossSeat = {
+//     grants: { "<seat>": { fromSeat: number, codes: string[], costSplit?: { self: number, owner: number } } }
+//   }
+// grants 由内容层/能力在规则事务内登记（本模块只读）；codes 是允许代打的卡号（调用方提供，
+// 不写死卡号）；costSplit 只是暴露给调用方的元数据，本原语不支付资源。
+export function crossSeatData(state) {
+  return eoteScenarioState(state)?.crossSeat || null
+}
+
+// 「揭示队友手中道具并授权代打」的写入口（08016 鲍勃）：只有在这里登记授权后，
+// otherHand 通道才会把该卡列为合法动作；卡号由调用方提供，本函数不写死任何卡号。
+export function grantCrossSeat(state, seat, { fromSeat, codes, costSplit } = {}) {
+  if (!Number.isSafeInteger(seat) || !state?.investigators?.[seat]) throw new TypeError('跨座位代打座位无效')
+  const extension = eoteScenarioState(state, true)
+  const candidate = {
+    ...(extension.crossSeat || {}),
+    grants: {
+      ...(extension.crossSeat?.grants || {}),
+      [seat]: {
+        fromSeat,
+        codes: Array.isArray(codes) ? [...codes] : codes,
+        ...(costSplit != null ? { costSplit: { ...costSplit } } : {}),
+      },
+    },
+  }
+  // 先完整校验再写入：非法授权不产生半写状态。
+  validateEoteCrossSeat(state, candidate)
+  extension.crossSeat = candidate
+  return true
+}
+
+export function clearCrossSeatGrant(state, seat) {
+  const extension = eoteScenarioState(state)
+  if (!extension?.crossSeat?.grants || !Object.hasOwn(extension.crossSeat.grants, seat)) return false
+  delete extension.crossSeat.grants[seat]
+  return true
+}
+
+export function validateEoteCrossSeat(state, value = crossSeatData(state)) {
+  if (value == null) return true // 旧存档没有该扩展时保持原状。
+  if (!isPlainObject(value)) throw new TypeError('跨座位代打状态必须是对象')
+  for (const key of Object.keys(value)) if (!['grants'].includes(key)) throw new TypeError(`跨座位代打状态未知字段 ${key}`)
+  if (!isPlainObject(value.grants || {})) throw new TypeError('跨座位代打授权记录无效')
+  for (const [key, grant] of Object.entries(value.grants || {})) {
+    const seat = Number(key)
+    if (!Number.isSafeInteger(seat) || String(seat) !== key || !state?.investigators?.[seat]) throw new TypeError('跨座位代打座位无效')
+    if (!isPlainObject(grant)) throw new TypeError('跨座位代打授权无效')
+    for (const field of Object.keys(grant)) if (!['fromSeat', 'codes', 'costSplit'].includes(field)) throw new TypeError(`跨座位代打授权未知字段 ${field}`)
+    if (!Number.isSafeInteger(grant.fromSeat) || grant.fromSeat === seat || !state?.investigators?.[grant.fromSeat]) throw new TypeError('跨座位代打来源座位无效')
+    if (!Array.isArray(grant.codes) || !grant.codes.length || grant.codes.some(code => typeof code !== 'string' || !code)) throw new TypeError('跨座位代打卡号列表无效')
+    if (new Set(grant.codes).size !== grant.codes.length) throw new TypeError('跨座位代打卡号不能重复')
+    if (grant.costSplit != null) {
+      if (!isPlainObject(grant.costSplit) || Object.keys(grant.costSplit).some(field => !['self', 'owner'].includes(field))) throw new TypeError('跨座位费用分摊记录无效')
+      for (const amount of Object.values(grant.costSplit)) if (!Number.isSafeInteger(amount) || amount < 0) throw new TypeError('跨座位费用分摊必须是非负整数')
+    }
+  }
+  return true
+}
 
 export function createPlayChannels(deps) {
   const {
@@ -76,6 +150,8 @@ export function createPlayChannels(deps) {
       hostCost: spec.hostCost || null,
       labelSuffix: spec.labelSuffix || '',
       uiKey: spec.uiKey || null,
+      // deckTop 通道回滚时需要还原的揭示快照；既有通道不带该字段（保持候选对象形状不变）。
+      ...(spec.deckTop ? { deckTop: Object.freeze({ ...spec.deckTop }) } : {}),
       def,
       move: Object.freeze({ ...spec.move }),
     })
@@ -224,14 +300,61 @@ export function createPlayChannels(deps) {
       }
       return out
     },
+
+    // 牌库顶常驻揭示（08004 诺曼·威瑟斯，状态在 eote-deck-top.js）：
+    // 每轮一次把牌库顶当作手牌打出；揭示卡仍在牌库顶，只有真正打出时才移入手中。
+    deckTop(state, inv) {
+      const top = deckTopCard(state, inv.seat)
+      if (!top) return []
+      if (deckTopDiscountUsed(state, inv.seat, state.round ?? 0)) return []
+      const def = cardDef(top.code)
+      if (!def) return []
+      return [entry({
+        channel: 'deckTop', code: top.code, discount: top.discount || 0, sourceName: '牌库顶',
+        deckTop: { public: top.public === true, discount: top.discount || 0 },
+        move: { action: 'play', cardId: top.code, fromDeckTop: true },
+        uiKey: `deckTop:${top.code}`,
+        labelSuffix: '（牌库顶）',
+      })]
+    },
+
+    // 跨座位代打（08016 鲍勃·詹金斯）：同地点队友手牌中的 [[Item]] 支援，
+    // 授权由 eoteScenarioState(state).crossSeat.grants 提供（见 validateEoteCrossSeat）。
+    otherHand(state, inv) {
+      const grant = crossSeatData(state)?.grants?.[inv.seat]
+      if (!grant) return []
+      const owner = state.investigators?.[grant.fromSeat]
+      if (!owner || owner === inv) return []
+      if (owner.location == null || owner.location !== inv.location) return []
+      const out = []
+      for (const code of unique(grant.codes || [])) {
+        if (!(owner.hand || []).includes(code)) continue
+        const def = cardDef(code)
+        if (!def || def.type !== 'asset') continue
+        const item = (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')
+        if (!item) continue
+        const costSplit = grant.costSplit ? { ...grant.costSplit } : null
+        out.push(entry({
+          channel: 'otherHand', code, sourceId: `seat:${owner.seat}`,
+          sourceName: owner.name || `座位 ${owner.seat}`,
+          move: {
+            action: 'play', cardId: code, fromOtherHand: true, ownerSeat: owner.seat,
+            ...(costSplit ? { crossSeatCostSplit: costSplit } : {}),
+          },
+          uiKey: `otherHand:${owner.seat}:${code}`,
+          labelSuffix: `（${owner.name || `座位 ${owner.seat}`} 的手牌）`,
+        }))
+      }
+      return out
+    },
   }
 
   // 统一枚举顺序：与旧 legalMoves / reactionWindow 的通道顺序一致（AI/replay 候选顺序不变）。
   //   · CHANNEL_ORDER 对应旧 legalMoves 的通道顺序（手牌循环之后）；
   //   · WINDOW_CHANNEL_ORDER 对应旧 reactionWindow 的通道顺序（手牌候选之后），
-  //     既有通道在前、这次新接通的通道在末尾，避免改变既有对局的待决选择顺序/重放指纹。
-  const CHANNEL_ORDER = ['attached', 'hunch', 'threat', 'beneath', 'backpack', 'discard', 'plan']
-  const WINDOW_CHANNEL_ORDER = ['plan', 'attached', 'beneath', 'hunch', 'discard', 'backpack', 'threat']
+  //     既有通道在前、新接通的通道在末尾，避免改变既有对局的待决选择顺序/重放指纹。
+  const CHANNEL_ORDER = PLAY_CHANNEL_ORDER
+  const WINDOW_CHANNEL_ORDER = WINDOW_PLAY_CHANNEL_ORDER
 
   function entries(state, inv, order = CHANNEL_ORDER) {
     const out = []
@@ -251,7 +374,8 @@ export function createPlayChannels(deps) {
   // move 是否带「如同手牌」通道字段（窗口先用它分流，避免每次都全量枚举）。
   function isChannelMove(move) {
     return Boolean(move && (move.fromHunch || move.fromBeneath || move.fromAttachedEventOf
-      || move.fromBackpackId || move.fromPlanAssetId || move.threatId || move.fromDiscard))
+      || move.fromBackpackId || move.fromPlanAssetId || move.threatId || move.fromDiscard
+      || move.fromDeckTop || move.fromOtherHand))
   }
 
   // 从 move 片段还原通道条目（validateMove / dispatch / 窗口执行共用；move 是权威协议）。
@@ -264,6 +388,8 @@ export function createPlayChannels(deps) {
     else if (move.fromBackpackId) channel = 'backpack'
     else if (move.fromPlanAssetId) channel = 'plan'
     else if (move.threatId) channel = 'threat'
+    else if (move.fromDeckTop) channel = 'deckTop'
+    else if (move.fromOtherHand) channel = 'otherHand'
     else channel = 'discard'
     return byChannel(state, inv, channel).find(candidate => sameMove(candidate.move, move)) || null
   }
@@ -277,6 +403,9 @@ export function createPlayChannels(deps) {
     if ((a.fromBeneath ?? false) !== (b.fromBeneath ?? false)) return false
     if ((a.fromHunch ?? false) !== (b.fromHunch ?? false)) return false
     if ((a.fromDiscard ?? false) !== (b.fromDiscard ?? false)) return false
+    if ((a.fromDeckTop ?? false) !== (b.fromDeckTop ?? false)) return false
+    if ((a.fromOtherHand ?? false) !== (b.fromOtherHand ?? false)) return false
+    if ((a.ownerSeat ?? null) !== (b.ownerSeat ?? null)) return false
     return true
   }
 
@@ -332,6 +461,24 @@ export function createPlayChannels(deps) {
         }
         break
       }
+      case 'deckTop': {
+        const top = deckTopCard(state, inv.seat)
+        if (!top || top.code !== code) return '牌库顶没有揭示这张牌'
+        if (deckTopDiscountUsed(state, inv.seat, state.round ?? 0)) return '本轮已经使用过牌库顶的打出机会'
+        break
+      }
+      case 'otherHand': {
+        const owner = state.investigators?.[candidate.move.ownerSeat]
+        if (!owner) return '目标调查员不在场'
+        if (owner === inv) return '不能从自己的手牌代打'
+        if (owner.location == null || owner.location !== inv.location) return '只能代打同地点调查员的手牌'
+        if (!(owner.hand || []).includes(code)) return '对方手牌中没有这张牌'
+        if (candidate.def?.type !== 'asset') return '只能代打支援卡'
+        if (!(candidate.def?.traits || []).some(trait => String(trait).toLowerCase() === 'item')) return '只能代打[[Item]]支援'
+        const grant = crossSeatData(state)?.grants?.[inv.seat]
+        if (!grant || grant.fromSeat !== owner.seat || !(grant.codes || []).includes(code)) return '当前没有可代打这张牌的效果'
+        break
+      }
       default:
         return '未知的如同手牌通道'
     }
@@ -368,6 +515,15 @@ export function createPlayChannels(deps) {
     if (move.fromDiscard) {
       if (!hasPlayedEventsToDeckTop(inv)) return '你没有温蒂的护身符'
       return '不是弃牌堆中最上方的事件'
+    }
+    if (move.fromDeckTop) {
+      return deckTopCard(state, inv.seat) ? '本轮已经使用过牌库顶的打出机会' : '牌库顶没有揭示这张牌'
+    }
+    if (move.fromOtherHand) {
+      const owner = state.investigators?.[move.ownerSeat]
+      if (!owner) return '目标调查员不在场'
+      if (owner.location == null || owner.location !== inv.location) return '只能代打同地点调查员的手牌'
+      return '对方手牌中没有这张牌'
     }
     return '该卡牌不在对应的如同手牌区域'
   }
@@ -491,6 +647,47 @@ export function createPlayChannels(deps) {
         inv.hand.push(candidate.code)
         return { ...base, handIndex: inv.hand.length - 1 }
       }
+      case 'deckTop': {
+        if (!candidate.deckTop) return { ok: false }
+        const consumed = consumeDeckTop(state, inv.seat)
+        if (!consumed || consumed.code !== candidate.code) return { ok: false }
+        return {
+          ...base,
+          handIndex: inv.hand.length - 1,
+          deckTop: { ...candidate.deckTop },
+          // 08004「你牌库顶的卡牌始终揭示」：顶牌被打出后新的牌库顶立即重新揭示，
+          // 而不是等下一次抽牌/轮初才恢复（扫描报告 P0-10 #4 / H4）。
+          finish() { syncPassiveDeckTop(state, inv.seat, { force: true }) },
+        }
+      }
+      case 'otherHand': {
+        const owner = state.investigators?.[candidate.move.ownerSeat]
+        if (!owner || owner === inv || owner.location !== inv.location) return { ok: false }
+        const at = (owner.hand || []).lastIndexOf(candidate.code)
+        if (at < 0) return { ok: false }
+        owner.hand.splice(at, 1)
+        inv.hand.push(candidate.code)
+        const previous = state._playedFromOtherHand
+        const context = {
+          seat: inv.seat, fromSeat: owner.seat, code: candidate.code,
+          costSplit: candidate.move.crossSeatCostSplit || null,
+        }
+        return {
+          ...base,
+          handIndex: inv.hand.length - 1,
+          ownerSeat: owner.seat,
+          crossSeat: { ...context },
+          apply() { state._playedFromOtherHand = { ...context } },
+          restore() {
+            if (previous === undefined) delete state._playedFromOtherHand
+            else state._playedFromOtherHand = previous
+          },
+          finish() {
+            if (previous === undefined) delete state._playedFromOtherHand
+            else state._playedFromOtherHand = previous
+          },
+        }
+      }
       default:
         return { ok: false }
     }
@@ -535,6 +732,21 @@ export function createPlayChannels(deps) {
         inv.threat ||= []
         inv.threat.push({ id: candidate.sourceId || `threat:${candidate.code}`, code: candidate.code })
         break
+      case 'deckTop': {
+        // 顶牌已由 consumeDeckTop 移入手中；回滚时放回牌库顶并还原揭示/使用记录。
+        const snapshot = candidate.deckTop || { public: false, discount: 0 }
+        restoreDeckTop(state, inv.seat, { code: candidate.code, public: snapshot.public === true, discount: snapshot.discount || 0 })
+        break
+      }
+      case 'otherHand': {
+        const owner = state.investigators?.[candidate.move.ownerSeat]
+        if (owner) {
+          owner.hand ||= []
+          owner.hand.push(candidate.code)
+        }
+        delete state._playedFromOtherHand
+        break
+      }
       default:
         break
     }
@@ -585,6 +797,25 @@ export function createPlayChannels(deps) {
         inv.hand.push(move.cardId)
         return { toHand: true, handCode: move.cardId, attachedHost: host }
       }
+      case 'deckTop': {
+        const consumed = consumeDeckTop(state, inv.seat)
+        if (!consumed || consumed.code !== move.cardId) return null
+        return { toHand: true, handCode: move.cardId, playDiscount: consumed.discount || 0, deckTop: consumed }
+      }
+      case 'otherHand': {
+        const owner = state.investigators?.[move.ownerSeat]
+        if (!owner || owner === inv || owner.location !== inv.location) return null
+        const at = (owner.hand || []).lastIndexOf(move.cardId)
+        if (at < 0) return null
+        owner.hand.splice(at, 1)
+        inv.hand.push(move.cardId)
+        const context = {
+          seat: inv.seat, fromSeat: owner.seat, code: move.cardId,
+          costSplit: move.crossSeatCostSplit || null,
+        }
+        state._playedFromOtherHand = { ...context }
+        return { toHand: true, handCode: move.cardId, fromOtherHand: context }
+      }
       default:
         return { move: candidate.move }
     }
@@ -592,6 +823,10 @@ export function createPlayChannels(deps) {
 
   // 行动路径打出后的收尾（宿主附属「打出后仍附属」；由 dispatch 在 doPlay 后调用）。
   function actionFinish(state, inv, taken, events = []) {
+    // 跨座位代打只是「如同在打出者手中」的上下文：打出结束后清掉，避免污染后续行动。
+    if (taken?.fromOtherHand) delete state._playedFromOtherHand
+    // 08004「你牌库顶的卡牌始终揭示」：普通行动从牌库顶打出后，新的牌库顶立即重新揭示。
+    if (taken?.deckTop) syncPassiveDeckTop(state, inv.seat, { force: true })
     const host = taken?.attachedHost
     if (!host) return
     const hostEntry = registeredEntry(host.code)
@@ -602,10 +837,17 @@ export function createPlayChannels(deps) {
       if (index >= 0) pile.splice(index, 1)
     }
     host.attachments ||= []
-    host.attachments.push({
+    const attachment = {
       id: `${host.id}:att:${code}:${state.round ?? 0}:${(host.attachments.length + 1)}`,
       code, ownerSeat: inv.seat,
-    })
+    }
+    // P6 原语：附属事件的初始 uses/usesType（08074）与其他打出入场路径同口径。
+    const attachedEntry = registeredEntry(code)
+    if (attachedEntry?.uses != null) {
+      attachment.uses = attachedEntry.uses
+      if (attachedEntry.usesType) attachment.usesType = attachedEntry.usesType
+    }
+    host.attachments.push(attachment)
     // 沿用旧 dispatch 的玩家可见日志（05279 打出附属事件后仍附属在宿主上）。
     info(state, events, `「${code}」结算后仍附属在「${host.code}」上。`)
   }
@@ -646,6 +888,17 @@ export function createPlayChannels(deps) {
           label: `投入（附属）：${cardName(code)}` })
       }
     }
+    // 牌库顶投入（08005 伊波恩之书第二模式）：条目声明 flags.deckTopCommit 的已就绪支援，
+    // 在技能投入窗口里把揭示中的牌库顶牌投入本次检定。合法性（图标匹配/额外费用/限制）
+    // 仍由 tests.js 的 canCommitToTest 统一判定；这里只枚举通道候选。
+    for (const host of inv.assets || []) {
+      if (registeredEntry(host.code)?.flags?.deckTopCommit !== true || host.exhausted) continue
+      const top = deckTopCard(state, inv.seat)
+      if (!top || !cardDef(top.code)) continue
+      out.push({ channel: 'deckTopCommit', code: top.code, sourceId: host.id, def: cardDef(top.code),
+        optionId: `deckTopCommit:${host.id}`, uiKey: `asset:${host.id}`,
+        label: `投入（牌库顶，横置「${cardName(host.code)}」）：${cardName(top.code)}` })
+    }
     return out
   }
 
@@ -661,6 +914,15 @@ export function createPlayChannels(deps) {
       if (!attachment || (typeof attachment === 'string' ? attachment : attachment.code) !== candidate.code) return null
       host.attachments.splice(candidate.index, 1)
       return candidate.code
+    }
+    if (candidate.channel === 'deckTopCommit') {
+      // [fast] 横置伊波恩之书：把揭示中的牌库顶牌投入本次检定；投入后由原语重新揭示新顶牌。
+      const host = (inv.assets || []).find(asset => asset.id === candidate.sourceId)
+      if (!host || host.exhausted || registeredEntry(host.code)?.flags?.deckTopCommit !== true) return null
+      const code = takeDeckTopForCommit(state, inv.seat)
+      if (!code || code !== candidate.code) return null
+      host.exhausted = true
+      return code
     }
     const channel = (inv.assets || []).find(asset =>
       registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
@@ -688,6 +950,16 @@ export function createPlayChannels(deps) {
         ? `🃏 温蒂的护身符：打出弃牌堆顶事件「${name}」(${cost} 资源)`
         : `🃏 从弃牌堆打出「${name}」(${cost} 资源)`
       case 'plan': return `🃏 原定计划：打出「${name}」(${cost} 资源)`
+      case 'deckTop': return candidate.discount
+        ? `🂠 从牌库顶打出「${name}」(${cost} 资源，-${candidate.discount} 费用)`
+        : `🂠 从牌库顶打出「${name}」(${cost} 资源)`
+      case 'otherHand': {
+        const split = candidate.move?.crossSeatCostSplit
+        const splitNote = split
+          ? `，费用分摊：本席 ${split.self ?? 0} / 牌主 ${split.owner ?? 0}`
+          : ''
+        return `🤝 代打「${name}」（来自「${candidate.sourceName}」的手牌${splitNote}）`
+      }
       default: return `🃏 打出「${name}」(${cost} 资源)`
     }
   }
@@ -701,6 +973,8 @@ export function createPlayChannels(deps) {
       case 'plan': return `plan:${candidate.sourceId}:${candidate.index ?? 0}`
       case 'backpack': return `backpack:${candidate.sourceId}:${candidate.code}`
       case 'threat': return `threat:${candidate.instanceId ?? candidate.code}`
+      case 'deckTop': return 'deckTop'
+      case 'otherHand': return `otherHand:${candidate.move?.ownerSeat ?? '?'}:${candidate.code}`
       default: return candidate.channel
     }
   }

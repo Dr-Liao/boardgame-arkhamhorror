@@ -1,0 +1,4166 @@
+{
+ "area": "primitives",
+ "auditor": "lead",
+ "method": "机械复算（compliance/dead-primitives/mechanism/scope/migration 工具）+ 全仓二次 triage（207 条 unread 声明逐条分类）+ 源码近似聚类（48 对/4 簇）+ 引擎卡号字面量逐文件核读 + resolve/escape 对照",
+ "generatedAt": "2026-11-08T11:11:35.440Z",
+ "summary": {
+  "unreadDeclarations": 207,
+  "unreadBySeverity": {
+   "high": 33,
+   "medium": 154,
+   "low": 20
+  },
+  "unreadByTriage": {
+   "unimplemented-dispatch": 49,
+   "declared-without-read-point": 121,
+   "test-references-key-not-implemented": 13,
+   "dead-declaration-on-simplified-card": 20,
+   "audit-references-key-not-implemented": 4
+  },
+  "reuseIssues": 4,
+  "clonePairs": 48,
+  "cloneClusters": 4,
+  "crossCycleSameText": 4,
+  "engineCardLiterals": 100,
+  "entriesWithResolve": 201
+ },
+ "d4": {
+  "gates": {
+   "complianceCheck": "exit 0（无基线外 R1/R2/R3；R1 直写 0、R2 重印双实现 0、R3 playCondition 缺口 0）",
+   "deadPrimitives": "exit 0（无死分支）",
+   "mechanismScan": "exit 0（复算一致）",
+   "scopeCheck": "exit 0（复算一致）",
+   "migrationLedger": "exit 0（verified，403 条/8 章/38 关键词/规则书）"
+  },
+  "declaredWithoutReadPoint": {
+   "total": 207,
+   "bySeverity": {
+    "high": 33,
+    "medium": 154,
+    "low": 20
+   },
+   "byTriage": {
+    "unimplemented-dispatch": 49,
+    "declared-without-read-point": 121,
+    "test-references-key-not-implemented": 13,
+    "dead-declaration-on-simplified-card": 20,
+    "audit-references-key-not-implemented": 4
+   },
+   "rows": [
+    {
+     "code": "08624",
+     "name": "错综复杂之城(版本一)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "studyHistory",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“studyHistory”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js",
+      "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+     ]
+    },
+    {
+     "code": "08624",
+     "name": "错综复杂之城(版本一)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "discernShoggoths",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“discernShoggoths”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js"
+     ]
+    },
+    {
+     "code": "08625",
+     "name": "错综复杂之城(版本二)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "studyHistory",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“studyHistory”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js",
+      "tests/eote-scenario-cityOfTheElderThings.test.mjs"
+     ]
+    },
+    {
+     "code": "08625",
+     "name": "错综复杂之城(版本二)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "hiddenPower",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“hiddenPower”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js"
+     ]
+    },
+    {
+     "code": "08626",
+     "name": "错综复杂之城(版本三)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "discernShoggoths",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“discernShoggoths”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js"
+     ]
+    },
+    {
+     "code": "08626",
+     "name": "错综复杂之城(版本三)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "hiddenPower",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“hiddenPower”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js"
+     ]
+    },
+    {
+     "code": "08628",
+     "name": "追寻未知(版本二)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "returnTekeliWeaknesses",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“returnTekeliWeaknesses”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08629",
+     "name": "追寻未知(版本三)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "forcedOnEnemyEnter",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08629",
+     "name": "追寻未知(版本三)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "removeElderThingTokens",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“removeElderThingTokens”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08629",
+     "name": "追寻未知(版本三)",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "actRule",
+     "key": "defeatElderThingsAtLocation",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“defeatElderThingsAtLocation”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08630",
+     "name": "隐秘隧道",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "locationRule",
+     "key": "blocksClueDiscovery",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08634",
+     "name": "迷宫房间",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "doubleKeyTokenModifier",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08637",
+     "name": "破败街道",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "frostForcedDamage",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08640",
+     "name": "古老者之庙",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "frostForcedHorror",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08641",
+     "name": "星之恐怖",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "blocksKeysWhileReady",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08642",
+     "name": "和蔼的古老者",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "onDefeatDoom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08642",
+     "name": "和蔼的古老者",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "anyEmpty",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“anyEmpty”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08643",
+     "name": "复苏的古老者",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "takesKeyOnEngage",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08643",
+     "name": "复苏的古老者",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "readiesOnKeyControlled",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08643",
+     "name": "复苏的古老者",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "enemyRule",
+     "key": "placesKeyOnLeave",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08646",
+     "name": "冻伤",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "frostWeakness",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js"
+     ]
+    },
+    {
+     "code": "08646",
+     "name": "冻伤",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "healAsOneDamageApproximation",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08647",
+     "name": "附身",
+     "cardStatus": "verified",
+     "chapter": "cityOfTheElderThings",
+     "block": "flags",
+     "key": "frostWeakness",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08646.js"
+     ]
+    },
+    {
+     "code": "08550",
+     "name": "虚灵纠缠(版本一)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "agendaVersion",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08551.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08552.js"
+     ]
+    },
+    {
+     "code": "08550",
+     "name": "虚灵纠缠(版本一)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "agendaRule",
+     "key": "freeMoveToPrisonOfMemories",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08551.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08552.js"
+     ]
+    },
+    {
+     "code": "08551",
+     "name": "虚灵纠缠(版本二)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "agendaVersion",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08550.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08552.js"
+     ]
+    },
+    {
+     "code": "08551",
+     "name": "虚灵纠缠(版本二)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "agendaRule",
+     "key": "freeMoveToPrisonOfMemories",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08550.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08552.js"
+     ]
+    },
+    {
+     "code": "08552",
+     "name": "虚灵纠缠(版本三)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "agendaVersion",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08550.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08551.js"
+     ]
+    },
+    {
+     "code": "08552",
+     "name": "虚灵纠缠(版本三)",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "agendaRule",
+     "key": "freeMoveToPrisonOfMemories",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08550.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08551.js"
+     ]
+    },
+    {
+     "code": "08557",
+     "name": "大本营",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "failBy1Take1HorrorForPlus1",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“failBy1Take1HorrorForPlus1”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08558",
+     "name": "菲奥多西亚号甲板",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "harderShroudOrExtraAction",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“harderShroudOrExtraAction”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08559",
+     "name": "大学礼堂",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "millDeckForTekeliliWeaknesses",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“millDeckForTekeliliWeaknesses”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08560",
+     "name": "树篱迷宫",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "shroudPlus1AndCannotLeave",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“shroudPlus1AndCannotLeave”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "tests/eote-scenario-fatalMirage.test.mjs"
+     ]
+    },
+    {
+     "code": "08562",
+     "name": "沿海水域",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "take1HorrorThenExtraClueOnSuccess",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“take1HorrorThenExtraClueOnSuccess”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08563",
+     "name": "古老者厅室",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "shuffleTekeliliIntoDeck",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“shuffleTekeliliIntoDeck”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08564",
+     "name": "河景剧院",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "doubleEffectThenDiscoverClue",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“doubleEffectThenDiscoverClue”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08565",
+     "name": "耸立岩石",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "take1DamageThenExtraClueOnSuccess",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“take1DamageThenExtraClueOnSuccess”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08567",
+     "name": "阿拉斯加荒野",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "shuffleTekeliliOrExtraAction",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“shuffleTekeliliOrExtraAction”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08568",
+     "name": "凌乱宿舍",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "shuffleIntoDeckInsteadOfBottom",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“shuffleIntoDeckInsteadOfBottom”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08569",
+     "name": "戴尔的教室",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "heal1Horror",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“heal1Horror”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08570",
+     "name": "医务室",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "damageTo6RemainingHealth",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“damageTo6RemainingHealth”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08571",
+     "name": "肯斯勒博士的办公室",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "horrorOrRemoveSecret",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“horrorOrRemoveSecret”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08572",
+     "name": "摩艾石像",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "surgeOncePerPhase",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“surgeOncePerPhase”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08573",
+     "name": "奥斯曼前线",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "nonEliteAttackPlus2NoRetaliate",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“nonEliteAttackPlus2NoRetaliate”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08575",
+     "name": "狩猎失败之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08576",
+     "name": "去世病人之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08577",
+     "name": "失踪父亲之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08578",
+     "name": "饱经战乱的国家之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08579",
+     "name": "悔恨航程之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08580",
+     "name": "无法述说的恶魔之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08581",
+     "name": "可怕发现之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08582",
+     "name": "翻译异星文字之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08583",
+     "name": "单恋之记忆",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08584.js"
+     ]
+    },
+    {
+     "code": "08584",
+     "name": "恐怖阴影",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "enemyRule",
+     "key": "flipOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08575.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08576.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08577.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08578.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08579.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08580.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08581.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08582.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08583.js"
+     ]
+    },
+    {
+     "code": "08585",
+     "name": "易散之雾",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "attachLocationClues",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "tests/eote-scenario-fatalMirage.test.mjs"
+     ]
+    },
+    {
+     "code": "08585",
+     "name": "易散之雾",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "discardWhenLocationFlipped",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08585",
+     "name": "易散之雾",
+     "cardStatus": "verified",
+     "chapter": "fatalMirage",
+     "block": "treacheryRule",
+     "key": "attachToNearestUnflippedLocation",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08587",
+     "name": "威廉·戴尔教授",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08587",
+     "name": "威廉·戴尔教授",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "heal2HorrorAfterFreeSpend",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“heal2HorrorAfterFreeSpend”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08588",
+     "name": "丹佛斯",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08588",
+     "name": "丹佛斯",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "afterTekeliliResolvedDraw3DiscardWeaknesses",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“afterTekeliliResolvedDraw3DiscardWeaknesses”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08589",
+     "name": "伊里亚·阿什瓦克",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08589",
+     "name": "伊里亚·阿什瓦克",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "evadeBase6ThenMayMove",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“evadeBase6ThenMayMove”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08590",
+     "name": "玛拉·辛哈医生",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08590",
+     "name": "玛拉·辛哈医生",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "heal2DamageAfterFreeSpend",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“heal2DamageAfterFreeSpend”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08591",
+     "name": "艾弗里·克莱普尔",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08591",
+     "name": "艾弗里·克莱普尔",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "cancelFrostThenRevealOrSpendSupply",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“cancelFrostThenRevealOrSpendSupply”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08592",
+     "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08592",
+     "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "fightBase6NonEliteCannotAttackThisRound",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“fightBase6NonEliteCannotAttackThisRound”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08593",
+     "name": "艾米·肯斯勒博士",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08593",
+     "name": "艾米·肯斯勒博士",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "investigateBase6LookTopCard",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“investigateBase6LookTopCard”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08594",
+     "name": "罗尔德·埃尔斯沃思",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08594",
+     "name": "罗尔德·埃尔斯沃思",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "blankNonWeaknessTreacheryText",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“blankNonWeaknessTreacheryText”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08721.js"
+     ]
+    },
+    {
+     "code": "08595",
+     "name": "高田弘子",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08595",
+     "name": "高田弘子",
+     "cardStatus": "simplified",
+     "chapter": "fatalMirage",
+     "block": "flags",
+     "key": "gain1ResourceMoveUpTo3",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“gain1ResourceMoveUpTo3”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08722.js"
+     ]
+    },
+    {
+     "code": "08544",
+     "name": "邪灵现身",
+     "cardStatus": "simplified",
+     "chapter": "iceAndDeathPart3",
+     "block": "flags",
+     "key": "seepingNightmareAdvance",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08544",
+     "name": "邪灵现身",
+     "cardStatus": "simplified",
+     "chapter": "iceAndDeathPart3",
+     "block": "agendaRule",
+     "key": "forcedAdvanceHold",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": [
+      "tests/eote-scenario-iceAndDeathPart3.test.mjs"
+     ]
+    },
+    {
+     "code": "08544",
+     "name": "邪灵现身",
+     "cardStatus": "simplified",
+     "chapter": "iceAndDeathPart3",
+     "block": "agendaRule",
+     "key": "removeDoomOnHold",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08544",
+     "name": "邪灵现身",
+     "cardStatus": "simplified",
+     "chapter": "iceAndDeathPart3",
+     "block": "agendaRule",
+     "key": "spawnFromBeneath",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08545",
+     "name": "冰雪深处",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "flags",
+     "key": "deeperIce",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08547",
+     "name": "渗出梦魇",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "flags",
+     "key": "beneathHolder",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08547",
+     "name": "渗出梦魇",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "enemyRule",
+     "key": "hunterWhenNoBeneath",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08547",
+     "name": "渗出梦魇",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "enemyRule",
+     "key": "removeBeneathOnDefeat",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08548",
+     "name": "千变幻景",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "flags",
+     "key": "surgeIfNoSeepingNightmare",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "tests/eote-scenario-iceAndDeathPart3.test.mjs"
+     ]
+    },
+    {
+     "code": "08548",
+     "name": "千变幻景",
+     "cardStatus": "verified",
+     "chapter": "iceAndDeathPart3",
+     "block": "treacheryRule",
+     "key": "spawnBeneathOrHunterAttack",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08664",
+     "name": "冰川岩洞",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "sealRecover",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js"
+     ]
+    },
+    {
+     "code": "08665",
+     "name": "雕画密室",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "sealRecover",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js"
+     ]
+    },
+    {
+     "code": "08666",
+     "name": "地城祭坛",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "sealRecover",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js"
+     ]
+    },
+    {
+     "code": "08667",
+     "name": "脓水隧道",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "sealRecover",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js"
+     ]
+    },
+    {
+     "code": "08668",
+     "name": "灰岩洞穴",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "sealRecover",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js"
+     ]
+    },
+    {
+     "code": "08669",
+     "name": "原生质团",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "spawnFarthestOuterRing",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08669",
+     "name": "原生质团",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "enemyPhaseEndReadyIfActivatedSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08669",
+     "name": "原生质团",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart1",
+     "block": "flags",
+     "key": "nearestSealHolder",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“nearestSealHolder”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08672",
+     "name": "无名存在",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "finalMirageDoomReplacement",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08672",
+     "name": "无名存在",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "agendaRule",
+     "key": "namelessInPlay",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“namelessInPlay”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08673",
+     "name": "摧毁高塔",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "actRule",
+     "key": "pylonAttackable",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08673",
+     "name": "摧毁高塔",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "actRule",
+     "key": "clueReactionDamage",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08674",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "pylonKind",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08674",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "enterCostCluePerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08675",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "pylonKind",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08675",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "enterCostCluePerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08676",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "pylonKind",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08676",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "enterCostCluePerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08677",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "pylonKind",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08677",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "enterCostCluePerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js"
+     ]
+    },
+    {
+     "code": "08678",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "pylonKind",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js"
+     ]
+    },
+    {
+     "code": "08678",
+     "name": "迷雾高塔",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "enterCostCluePerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js"
+     ]
+    },
+    {
+     "code": "08679",
+     "name": "无名疯狂",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "cannotTakeDamage",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08679",
+     "name": "无名疯狂",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "exhaustNearestOnSuccess",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08680",
+     "name": "解开封印的幻影",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "spawnNearestStandingPylon",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08680",
+     "name": "解开封印的幻影",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "protectsReadyPylon",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08680",
+     "name": "解开封印的幻影",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "moveTowardPylonAtEnemyPhaseEnd",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08681",
+     "name": "最终幻景",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "finalMirage",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08681",
+     "name": "最终幻景",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "resolutionByRecords",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08681",
+     "name": "最终幻景",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "actRule",
+     "key": "namelessGainsHunter",
+     "kind": "key",
+     "verdict": "dead-declaration-on-simplified-card",
+     "severity": "low",
+     "rationale": "该卡账本已标 simplified（近似披露），flags 实为说明性数据；但按 AGENTS「声明即接线」仍是无读点死声明。",
+     "hits": []
+    },
+    {
+     "code": "08681",
+     "name": "最终幻景",
+     "cardStatus": "simplified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "actRule",
+     "key": "finalMirageOutcome",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "medium",
+     "rationale": "调度值“finalMirageOutcome”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08686",
+     "name": "隐秘隧道",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "flags",
+     "key": "objectiveRun",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08686",
+     "name": "隐秘隧道",
+     "cardStatus": "verified",
+     "chapter": "theHeartOfMadnessPart2",
+     "block": "locationRule",
+     "key": "objectiveRun",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08608",
+     "name": "星之恐怖",
+     "cardStatus": "verified",
+     "chapter": "toTheForbiddenPeaks",
+     "block": "enemyRule",
+     "key": "moveDownToBelow",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“moveDownToBelow”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08609",
+     "name": "拘束型古老者",
+     "cardStatus": "verified",
+     "chapter": "toTheForbiddenPeaks",
+     "block": "enemyRule",
+     "key": "blocksAscendWhileEngaged",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08691",
+     "name": "同源迷雾",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "replacesTekeliShuffleAtLocation",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08714",
+     "name": "威廉·戴尔教授",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js"
+     ]
+    },
+    {
+     "code": "08714",
+     "name": "威廉·戴尔教授",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "heal2Horror",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“heal2Horror”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08715",
+     "name": "丹佛斯",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08715",
+     "name": "丹佛斯",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "draw2AfterTekeliliResolved",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“draw2AfterTekeliliResolved”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08716",
+     "name": "伊里亚·阿什瓦克",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08716",
+     "name": "伊里亚·阿什瓦克",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "evadeBase5ThenMayMove",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“evadeBase5ThenMayMove”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08717",
+     "name": "玛拉·辛哈医生",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08717",
+     "name": "玛拉·辛哈医生",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "heal2Damage",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“heal2Damage”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08718",
+     "name": "艾弗里·克莱普尔",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08718",
+     "name": "艾弗里·克莱普尔",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "cancelFrostRevealNewToken",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“cancelFrostRevealNewToken”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08719",
+     "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08719",
+     "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "fightBase5NonEliteCannotAttackThisRound",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“fightBase5NonEliteCannotAttackThisRound”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08720",
+     "name": "艾米·肯斯勒博士",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08720",
+     "name": "艾米·肯斯勒博士",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "investigateBase5LookTopCard",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“investigateBase5LookTopCard”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08721",
+     "name": "罗尔德·埃尔斯沃思",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08721",
+     "name": "罗尔德·埃尔斯沃思",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "blankNonWeaknessTreacheryText",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“blankNonWeaknessTreacheryText”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js"
+     ]
+    },
+    {
+     "code": "08722",
+     "name": "高田弘子",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "partnerRules",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08587.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08588.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08589.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08590.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08591.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08592.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08593.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08594.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js"
+     ]
+    },
+    {
+     "code": "08722",
+     "name": "高田弘子",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "gain1ResourceMoveUpTo3",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“gain1ResourceMoveUpTo3”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08595.js"
+     ]
+    },
+    {
+     "code": "08699",
+     "name": "穿越冰雪",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "moveEntryTest",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08501",
+     "name": "亡命冰原",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "shelterToken",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08501",
+     "name": "亡命冰原",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "tekeliliOnFail",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08502",
+     "name": "坠机点",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08503",
+     "name": "冰冻海岸",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08503",
+     "name": "冰冻海岸",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "shroudWhenAttached",
+     "kind": "key",
+     "verdict": "audit-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在 audit 账本出现：账本记录了该规则但源码无读点。",
+     "hits": [
+      "audit/eote-migration.json"
+     ]
+    },
+    {
+     "code": "08503",
+     "name": "冰冻海岸",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "locationRule",
+     "key": "shroudWhenAttached",
+     "kind": "key",
+     "verdict": "audit-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在 audit 账本出现：账本记录了该规则但源码无读点。",
+     "hits": [
+      "audit/eote-migration.json"
+     ]
+    },
+    {
+     "code": "08504",
+     "name": "危险道路",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08505",
+     "name": "不稳定冰盖",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08506",
+     "name": "辽阔雪地",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08506",
+     "name": "辽阔雪地",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08507",
+     "name": "冰封荒原",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08507",
+     "name": "冰封荒原",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08507",
+     "name": "冰封荒原",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "firstFrostModifier",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08655.js"
+     ]
+    },
+    {
+     "code": "08508",
+     "name": "岩石峭壁",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08508",
+     "name": "岩石峭壁",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08508",
+     "name": "岩石峭壁",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "surgeOnAttachedTreachery",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08509",
+     "name": "雪冢",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08509",
+     "name": "雪冢",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08510",
+     "name": "破冰船登陆点",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08510",
+     "name": "破冰船登陆点",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08511",
+     "name": "严寒洞穴",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js"
+     ]
+    },
+    {
+     "code": "08511",
+     "name": "严寒洞穴",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08512",
+     "name": "屏障营地",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js"
+     ]
+    },
+    {
+     "code": "08512",
+     "name": "屏障营地",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08513",
+     "name": "莱克营地遗址",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js"
+     ]
+    },
+    {
+     "code": "08513",
+     "name": "莱克营地遗址",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08514.js"
+     ]
+    },
+    {
+     "code": "08514",
+     "name": "水晶洞穴",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "campCandidate",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08502.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08503.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08504.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08505.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js"
+     ]
+    },
+    {
+     "code": "08514",
+     "name": "水晶洞穴",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "entryGroupCluesPerInvestigator",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08506.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08508.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08509.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08510.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08511.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08512.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08513.js"
+     ]
+    },
+    {
+     "code": "08517",
+     "name": "零能见度",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "moveSurchargeFromTreacheryLocation",
+     "kind": "key",
+     "verdict": "audit-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在 audit 账本出现：账本记录了该规则但源码无读点。",
+     "hits": [
+      "audit/eote-migration.json"
+     ]
+    },
+    {
+     "code": "08702",
+     "name": "身陷疯狂",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "attachToPossessedEnemy",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08702",
+     "name": "身陷疯狂",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "difficultyBonus",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08730",
+     "name": "克莱普尔的皮草",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08731",
+     "name": "爱伦·坡作品集",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08732",
+     "name": "曲奇的特制.32手枪",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08733",
+     "name": "戴尔的素描",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08733",
+     "name": "戴尔的素描",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "eventCard",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js"
+     ]
+    },
+    {
+     "code": "08733",
+     "name": "戴尔的素描",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "draw3AnyFreeWindow",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“draw3AnyFreeWindow”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08734",
+     "name": "埃尔斯沃思的靴子",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08734",
+     "name": "埃尔斯沃思的靴子",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "footwear",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/entries/05036.js"
+     ]
+    },
+    {
+     "code": "08735",
+     "name": "肯斯勒的日志",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08736",
+     "name": "辛哈的医药箱",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08737",
+     "name": "高田的物品",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08737",
+     "name": "高田的物品",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "eventCard",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js"
+     ]
+    },
+    {
+     "code": "08737",
+     "name": "高田的物品",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "gain3ResourcesDraw1RemoveFromGame",
+     "kind": "rule-value",
+     "verdict": "unimplemented-dispatch",
+     "severity": "high",
+     "rationale": "调度值“gain3ResourcesDraw1RemoveFromGame”在声明卡之外零出现（全仓搜索）；若已实现应有 handler/分派点。",
+     "hits": []
+    },
+    {
+     "code": "08738",
+     "name": "安雨",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "memorial",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "src/cards/cards-data.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08706",
+     "name": "瘴气折磨",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "attachToPartnerAsset",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08707",
+     "name": "朦胧瘴气",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "turnEndDirectHorror",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08703",
+     "name": "渎神幻象",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "tekeliliDoubleResolution",
+     "kind": "key",
+     "verdict": "audit-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在 audit 账本出现：账本记录了该规则但源码无读点。",
+     "hits": [
+      "audit/eote-migration.json"
+     ]
+    },
+    {
+     "code": "08704",
+     "name": "窥看不可说之事",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "drawTekeliliAndResolveThenShuffle",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08708",
+     "name": "巨型白化企鹅",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "moveSurchargeAtEnemyLocation",
+     "kind": "key",
+     "verdict": "test-references-key-not-implemented",
+     "severity": "medium",
+     "rationale": "关键词只在测试文件出现：测试引用/断言了该字段名，但 src/content 无行为读点。",
+     "hits": [
+      "tests/eote-scenario-shared.test.mjs"
+     ]
+    },
+    {
+     "code": "08712",
+     "name": "极地幻景",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "clueDiscoveryDiscardNonWeakness",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08723",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08724",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08725",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08726",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08727",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08728",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08729.js"
+     ]
+    },
+    {
+     "code": "08729",
+     "name": "忒咳哩-哩",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "returnToTekeliliDeckBottom",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08723.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08724.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08725.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08726.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08727.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/tekelili/08728.js"
+     ]
+    },
+    {
+     "code": "08648",
+     "name": "疯狂之心",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "sealAwareToken",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08648",
+     "name": "疯狂之心",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "towerAwareToken",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08649",
+     "name": "伊夸之门",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "claimedSealsKeptOnResign",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": []
+    },
+    {
+     "code": "08650",
+     "name": "地热口",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "roomSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08651.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08652.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08653.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08654.js"
+     ]
+    },
+    {
+     "code": "08651",
+     "name": "被遗忘的神庙",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "roomSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08650.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08652.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08653.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08654.js"
+     ]
+    },
+    {
+     "code": "08652",
+     "name": "寇斯图书馆",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "roomSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08650.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08651.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08653.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08654.js"
+     ]
+    },
+    {
+     "code": "08653",
+     "name": "原生质池",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "roomSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08650.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08651.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08652.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08654.js"
+     ]
+    },
+    {
+     "code": "08654",
+     "name": "无光之海大厅",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "roomSeal",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08650.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08651.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08652.js",
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08653.js"
+     ]
+    },
+    {
+     "code": "08655",
+     "name": "水下扩张区",
+     "cardStatus": "verified",
+     "chapter": null,
+     "block": "flags",
+     "key": "firstFrostModifier",
+     "kind": "key",
+     "verdict": "declared-without-read-point",
+     "severity": "medium",
+     "rationale": "字段名在声明卡之外仅出现于兄弟条目（同模板复制）或零出现；章节 behavior/引擎均无读取。需卡级复核该行为是否由其他数据表实现。",
+     "hits": [
+      "src/cards/encounter-entries/edgeOfTheEarth/_shared/ice_and_death/08507.js"
+     ]
+    }
+   ]
+  },
+  "engineCardLiterals": {
+   "total": 100,
+   "verdict": "全部为注释中的卡号引用与 src/deck/availability.js 专属卡依赖表，无行为级卡号分支；与 baseline engineCardLiterals=0 口径一致。",
+   "byFile": {
+    "src/deck/availability.js": 16,
+    "src/deck/deckbuilding.js": 1,
+    "src/engine/actions.js": 4,
+    "src/engine/api-misc.js": 18,
+    "src/engine/combat.js": 3,
+    "src/engine/deck-ops.js": 3,
+    "src/engine/effect-state.js": 1,
+    "src/engine/enemies.js": 1,
+    "src/engine/engine.js": 2,
+    "src/engine/eote-city.js": 6,
+    "src/engine/eote-climb.js": 2,
+    "src/engine/eote-deck-top.js": 3,
+    "src/engine/eote-disciplines.js": 6,
+    "src/engine/eote-facilities.js": 1,
+    "src/engine/eote-interactions.js": 1,
+    "src/engine/eote-investigator-support.js": 3,
+    "src/engine/eote-round-distance.js": 1,
+    "src/engine/eote-tekeli.js": 1,
+    "src/engine/grid-map.js": 4,
+    "src/engine/harm-threat.js": 4,
+    "src/engine/hidden-rules.js": 1,
+    "src/engine/moves.js": 3,
+    "src/engine/play-channels.js": 5,
+    "src/engine/restricted-actions.js": 2,
+    "src/engine/scenario-decks.js": 1,
+    "src/engine/table-decisions.js": 2,
+    "src/engine/tests.js": 4,
+    "src/engine/turn-flow.js": 1
+   }
+  },
+  "escape": {
+   "planEscapeRegistered": 0,
+   "entriesWithResolve": 201,
+   "directStateWrites": 0,
+   "verdict": "无 R1 直写；201 个条目含 resolve（描述子常规通道）。primitive-plan.escape 为空：需注意「单卡一次性逻辑」实际上大量存在（如 08011a 演武翻面、08535 谈判状态机），建议把复杂 resolve 的 escape 登记补齐或在复用上收后重新评估。"
+  }
+ },
+ "d5": {
+  "reuse": [
+   {
+    "codes": [
+     "08535",
+     "08536",
+     "08537",
+     "08538",
+     "08539",
+     "08540",
+     "08541",
+     "08542",
+     "08543"
+    ],
+    "kind": "同模板 9 份独立实现（附身队员谈判敌人）",
+    "evidence": "9 个文件各 94–97 行、token 相似度 0.82–0.89（games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/screen/duplication.json#clonePairs）；均为 discardForResources/drawTekeliliForResources/spendResources 三种 CONFIG 的同一套 addProgress/THRESHOLD/resolve 状态机（例：src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart2/08535.js:1-93 与 08536.js:1-93）",
+    "suggestion": "把「谈判进度 + per-investigator 阈值 + 加入胜利区/记录」上收为通用原语（enemyScript.negotiation 已有雏形）或共享 helper；单卡只留 CONFIG 数据。"
+   },
+   {
+    "codes": [
+     "08120",
+     "08121",
+     "08122",
+     "08123",
+     "08124"
+    ],
+    "kind": "同模板 5 份独立实现（支援资源支付 + 特性检定 +1）",
+    "evidence": "5 个文件 3.5–3.7KB、token 相似度 0.926（src/cards/entries/08120.js–08124.js）；差异仅 TRAITS 数组与 label，beforePlayCost 减费近似逻辑逐份复制。",
+    "suggestion": "抽象「支援资源可支付指定特性卡」原语（费用来源），或至少提取共享 helper + 每卡数据；D5 建议登记为原语候选。"
+   },
+   {
+    "codes": [
+     "08693",
+     "08694"
+    ],
+    "kind": "同模板 2 份（deadlyWeather 诡计）",
+    "evidence": "相似度 0.757（screen/duplication.json）",
+    "suggestion": "若第三张同模板出现必须上收原语（AGENTS §4.3）。"
+   },
+   {
+    "codes": [
+     "08117",
+     "08119"
+    ],
+    "kind": "同模板 2 份（玩家卡）",
+    "evidence": "相似度 0.743（screen/duplication.json）",
+    "suggestion": "观察项：同句模板第二张，按规范进入原语候选观察。"
+   }
+  ],
+  "cloneClusters": [
+   {
+    "codes": [
+     "08535",
+     "08536",
+     "08537",
+     "08538",
+     "08541",
+     "08539",
+     "08542",
+     "08543",
+     "08540"
+    ],
+    "count": 9,
+    "lines": 859,
+    "name": "08535:威廉·戴尔教授；08536:丹佛斯；08537:伊里亚·阿什瓦克；08538:玛拉·辛哈医生；08541:艾米·肯斯勒博士；08539:艾弗里·克莱普尔；08542:罗尔德·埃尔斯沃思；08543:高田弘子；08540:詹姆斯·“曲奇”·弗雷德里克斯",
+    "chapters": [
+     "iceAndDeathPart2"
+    ],
+    "statuses": [
+     "verified"
+    ],
+    "maxJaccard": 0.887
+   },
+   {
+    "codes": [
+     "08120",
+     "08121",
+     "08122",
+     "08123",
+     "08124"
+    ],
+    "count": 5,
+    "lines": 371,
+    "name": "08120:先知先觉；08121:一探究竟；08122:好勇斗狠；08123:技艺精湛；08124:古物藏家",
+    "chapters": [
+     "?"
+    ],
+    "statuses": [
+     "verified"
+    ],
+    "maxJaccard": 0.926
+   },
+   {
+    "codes": [
+     "08693",
+     "08694"
+    ],
+    "count": 2,
+    "lines": 0,
+    "name": "08693:雪盲危机；08694:极地旋涡",
+    "chapters": [
+     "shared:_shared"
+    ],
+    "statuses": [
+     "verified"
+    ],
+    "maxJaccard": 0.757
+   },
+   {
+    "codes": [
+     "08117",
+     "08119"
+    ],
+    "count": 2,
+    "lines": 63,
+    "name": "08117:尘世宁静；08119:尘世宁静",
+    "chapters": [
+     "?"
+    ],
+    "statuses": [
+     "verified"
+    ],
+    "maxJaccard": 0.743
+   }
+  ],
+  "textDuplicateGroups": [
+   {
+    "eoteCodes": [
+     "08073"
+    ],
+    "sameTextCodes": [
+     "12073",
+     "08073"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08057"
+    ],
+    "sameTextCodes": [
+     "60379",
+     "08057"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08058"
+    ],
+    "sameTextCodes": [
+     "60384",
+     "08058"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08004"
+    ],
+    "sameTextCodes": [
+     "98007",
+     "08004"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08523",
+     "08524"
+    ],
+    "sameTextCodes": [
+     "08523",
+     "08524"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08527",
+     "08530"
+    ],
+    "sameTextCodes": [
+     "08527",
+     "08530"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08528",
+     "08531"
+    ],
+    "sameTextCodes": [
+     "08528",
+     "08531"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08529",
+     "08533"
+    ],
+    "sameTextCodes": [
+     "08529",
+     "08533"
+    ],
+    "count": 2
+   },
+   {
+    "eoteCodes": [
+     "08553",
+     "08554",
+     "08555"
+    ],
+    "sameTextCodes": [
+     "08553",
+     "08554",
+     "08555"
+    ],
+    "count": 3
+   }
+  ],
+  "crossCycleReprints": [
+   {
+    "eote": "08004",
+    "name": "Norman Withers",
+    "otherCodes": [
+     "98007"
+    ],
+    "verdict": "reprint-once-ok",
+    "evidence": "cards-data duplicateOfCode 指向同一印刷卡；仅 eote 侧有单卡条目（其他卡号无 entries 文件），符合「重印只实现一次」；但 src/cards/entries/_reprint-aliases.js 未登记这些跨包别名（若这些包未来开放需补别名）。"
+   },
+   {
+    "eote": "08057",
+    "name": "The Black Fan",
+    "otherCodes": [
+     "60379"
+    ],
+    "verdict": "reprint-once-ok",
+    "evidence": "cards-data duplicateOfCode 指向同一印刷卡；仅 eote 侧有单卡条目（其他卡号无 entries 文件），符合「重印只实现一次」；但 src/cards/entries/_reprint-aliases.js 未登记这些跨包别名（若这些包未来开放需补别名）。"
+   },
+   {
+    "eote": "08058",
+    "name": "The Red Clock",
+    "otherCodes": [
+     "60384"
+    ],
+    "verdict": "reprint-once-ok",
+    "evidence": "cards-data duplicateOfCode 指向同一印刷卡；仅 eote 侧有单卡条目（其他卡号无 entries 文件），符合「重印只实现一次」；但 src/cards/entries/_reprint-aliases.js 未登记这些跨包别名（若这些包未来开放需补别名）。"
+   },
+   {
+    "eote": "08073",
+    "name": "Bandages",
+    "otherCodes": [
+     "12073"
+    ],
+    "verdict": "reprint-once-ok",
+    "evidence": "cards-data duplicateOfCode 指向同一印刷卡；仅 eote 侧有单卡条目（其他卡号无 entries 文件），符合「重印只实现一次」；但 src/cards/entries/_reprint-aliases.js 未登记这些跨包别名（若这些包未来开放需补别名）。"
+   }
+  ]
+ },
+ "issues": [
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08624 错综复杂之城(版本一)：actRule.studyHistory（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08624 错综复杂之城(版本一)：actRule.discernShoggoths（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08624.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08625 错综复杂之城(版本二)：actRule.studyHistory（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08625 错综复杂之城(版本二)：actRule.hiddenPower（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08625.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08626 错综复杂之城(版本三)：actRule.discernShoggoths（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08626 错综复杂之城(版本三)：actRule.hiddenPower（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08626.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08628 追寻未知(版本二)：actRule.returnTekeliWeaknesses（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08628.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08629 追寻未知(版本三)：actRule.removeElderThingTokens（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08629 追寻未知(版本三)：actRule.defeatElderThingsAtLocation（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08629.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08642 和蔼的古老者：enemyRule.anyEmpty（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08642.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08557 大本营：flags.failBy1Take1HorrorForPlus1（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08557.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08558 菲奥多西亚号甲板：flags.harderShroudOrExtraAction（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08558.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08559 大学礼堂：flags.millDeckForTekeliliWeaknesses（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08559.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08563 古老者厅室：flags.shuffleTekeliliIntoDeck（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08563.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08564 河景剧院：flags.doubleEffectThenDiscoverClue（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08564.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08568 凌乱宿舍：flags.shuffleIntoDeckInsteadOfBottom（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08568.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08569 戴尔的教室：flags.heal1Horror（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08569.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08570 医务室：flags.damageTo6RemainingHealth（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08570.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08573 奥斯曼前线：flags.nonEliteAttackPlus2NoRetaliate（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08573.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08669 原生质团：flags.nearestSealHolder（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08669.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08672 无名存在：agendaRule.namelessInPlay（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08672.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08608 星之恐怖：enemyRule.moveDownToBelow（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08608.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08714 威廉·戴尔教授：flags.heal2Horror（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08714.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08715 丹佛斯：flags.draw2AfterTekeliliResolved（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08715.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08716 伊里亚·阿什瓦克：flags.evadeBase5ThenMayMove（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08716.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08717 玛拉·辛哈医生：flags.heal2Damage（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08717.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08718 艾弗里·克莱普尔：flags.cancelFrostRevealNewToken（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08718.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08719 詹姆斯·“曲奇”·弗雷德里克斯：flags.fightBase5NonEliteCannotAttackThisRound（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08719.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08720 艾米·肯斯勒博士：flags.investigateBase5LookTopCard（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08720.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08721 罗尔德·埃尔斯沃思：flags.blankNonWeaknessTreacheryText（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08721.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08722 高田弘子：flags.gain1ResourceMoveUpTo3（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/expedition_team/08722.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08733 戴尔的素描：flags.draw3AnyFreeWindow（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "high",
+   "dimension": "primitive",
+   "summary": "08737 高田的物品：flags.gain3ResourcesDraw1RemoveFromGame（调度值）无任何读取点",
+   "evidence": "src/cards/encounter-entries/edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js",
+   "suggestion": "补齐章节 behavior 分派或删除该声明并如实降级账本状态"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "同模板 9 份独立实现（附身队员谈判敌人）",
+   "evidence": "08535,08536,08537,08538,08539,08540,08541,08542,08543",
+   "suggestion": "把「谈判进度 + per-investigator 阈值 + 加入胜利区/记录」上收为通用原语（enemyScript.negotiation 已有雏形）或共享 helper；单卡只留 CONFIG 数据。"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "同模板 5 份独立实现（支援资源支付 + 特性检定 +1）",
+   "evidence": "08120,08121,08122,08123,08124",
+   "suggestion": "抽象「支援资源可支付指定特性卡」原语（费用来源），或至少提取共享 helper + 每卡数据；D5 建议登记为原语候选。"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "同模板 2 份（deadlyWeather 诡计）",
+   "evidence": "08693,08694",
+   "suggestion": "若第三张同模板出现必须上收原语（AGENTS §4.3）。"
+  },
+  {
+   "severity": "medium",
+   "dimension": "duplication",
+   "summary": "同模板 2 份（玩家卡）",
+   "evidence": "08117,08119",
+   "suggestion": "观察项：同句模板第二张，按规范进入原语候选观察。"
+  },
+  {
+   "severity": "medium",
+   "dimension": "primitive",
+   "summary": "154 条声明字段（非调度值）在源码无读点，需卡级复核",
+   "evidence": "games/arkhamhorror/docs/edgeOfTheEarth/eote-scan/primitives/findings.json#d4.declaredWithoutReadPoint",
+   "suggestion": "逐卡确认是否由其他数据表/通用 dispatcher 实现；未实现则降级账本 verified 状态"
+  },
+  {
+   "severity": "low",
+   "dimension": "primitive",
+   "summary": "primitive-plan.escape 为空但 201 条目含 resolve；复杂一次性逻辑未登记 escape",
+   "evidence": "audit/eote-primitive-plan.json",
+   "suggestion": "为上收前的复杂 resolve 补 escape 登记"
+  }
+ ]
+}

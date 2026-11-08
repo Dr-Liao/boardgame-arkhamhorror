@@ -1,0 +1,72 @@
+===== tests\eote-scenario-cityOfTheElderThings.test.mjs =====
+# tests 9
+# pass 9
+# fail 0
+# duration_ms 18.5974
+
+===== tests\eote-scenario-fatalMirage.test.mjs =====
+# tests 8
+# pass 8
+# fail 0
+# duration_ms 127.6936
+
+===== tests\eote-scenario-iceAndDeathPart1.test.mjs =====
+# tests 13
+# pass 13
+# fail 0
+# duration_ms 13.4967
+
+===== tests\eote-scenario-iceAndDeathPart2.test.mjs =====
+# tests 13
+# pass 13
+# fail 0
+# duration_ms 16.3016
+
+===== tests\eote-scenario-iceAndDeathPart3.test.mjs =====
+# tests 6
+# pass 6
+# fail 0
+# duration_ms 8.8459
+
+===== tests\eote-scenario-shared.test.mjs =====
+# tests 19
+# pass 19
+# fail 0
+# duration_ms 1925.1414
+
+===== tests\eote-scenario-theHeartOfMadnessPart1.test.mjs =====
+# tests 7
+# pass 7
+# fail 0
+# duration_ms 557.2938
+
+===== tests\eote-scenario-theHeartOfMadnessPart2.test.mjs =====
+# tests 7
+# pass 7
+# fail 0
+# duration_ms 613.6605
+
+===== tests\eote-scenario-toTheForbiddenPeaks.test.mjs =====
+# tests 11
+# pass 11
+# fail 0
+# duration_ms 14.1612
+
+===== tests\eote-campaign-flow.test.mjs =====
+# tests 17
+# pass 17
+# fail 0
+# duration_ms 33.9189
+
+===== tests\eote-p8-campaign.test.mjs =====
+# tests 9
+# pass 9
+# fail 0
+# duration_ms 36922.3517
+
+===== tests\eote-p8-registration.test.mjs =====
+# tests 6
+# pass 6
+# fail 0
+# duration_ms 37.6863
+

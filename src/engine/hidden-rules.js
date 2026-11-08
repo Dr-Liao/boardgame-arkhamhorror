@@ -118,7 +118,7 @@ export function createHiddenRules(deps) {
       item.rule.cannotFightTraits?.some(trait => traits.includes(String(trait).toLowerCase())))
   }
 
-  function movementError(state, inv, destinationId = null, { vehicle = false,ignoreBarriers=false } = {}) {
+  function movementError(state, inv, destinationId = null, { vehicle = false, ignoreBarriers = false, byScenarioEffect = false } = {}) {
     // TIC 捕获：被俘的调查员不能移动（印刷 07252）。这里是合法移动枚举 / validateMove /
     // 效果位移 / canMoveTo / shortcutMove 共用的唯一读点；捕获自身的搬家由 capture.js 瞬态放行。
     const captureError = capturedActionError(state, inv, 'move')
@@ -131,6 +131,12 @@ export function createHiddenRules(deps) {
     const currentLocation = state.locations?.find(location => location.id === inv?.location)
     if (currentLocation?.cannotLeaveRound === state.round) {
       return `本轮不能离开「${currentLocation.name || currentLocation.id}」`
+    }
+    // 地球边缘 P5（08009 被埋葬的秘密）：威胁区卡声明「所在地点可被调查时不能移动」。
+    // 印刷例外：剧本卡效果位移不受此限（调用方传 byScenarioEffect:true 时跳过）。
+    if (!byScenarioEffect && currentLocation && currentLocation.locked !== true
+      && (inv.threat || []).some(card => registeredEntry(card.originalCode || card.code)?.threatEffect?.blocksMovementWhileInvestigable === true)) {
+      return `「${currentLocation.name || currentLocation.id}」的效果禁止你移动`
     }
     // 「石障为重整状态时，调查员不能移动离开附属地点」（07299）：地点附属的声明式读点。
     // legalMoves / validateMove / 效果位移共用本函数，所以三处同时生效。

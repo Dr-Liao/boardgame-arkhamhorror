@@ -1,8 +1,9 @@
 import {test,expect} from '@playwright/test'
+import { ATTACK_THEMES } from '../web/attack-themes.js'
 
 async function fixture(page,{muted=false,reduced=false}={}) {
   await page.emulateMedia({reducedMotion:reduced?'reduce':'no-preference'})
-  await page.route('**/combat-fixture',route=>route.fulfill({contentType:'text/html',body:`<link rel="stylesheet" href="/mods/arkhamhorror/noir.css"><div class="ah-table"><button id="unlock">进入战斗</button><div class="ah-map-node" data-location-id="study" style="position:fixed;left:300px;top:250px;width:140px;height:190px"></div><button class="ah-map-investigator" data-seat="0" data-interaction="investigator:0" style="position:fixed;left:220px;top:270px;width:50px;height:65px">罗兰</button><div class="ah-engagement-cards"><button data-interaction="enemy:e1" style="position:fixed;left:640px;top:240px;width:130px;height:185px">食尸鬼</button><button data-interaction="enemy:e2" style="position:fixed;left:850px;top:250px;width:130px;height:185px">邪灵</button></div><output id="health">9</output></div>`}))
+  await page.route('**/combat-fixture',route=>route.fulfill({contentType:'text/html',body:`<meta charset="utf-8"><link rel="stylesheet" href="/mods/arkhamhorror/noir.css"><div class="ah-table"><button id="unlock">进入战斗</button><div class="ah-map-node" data-location-id="study" style="position:fixed;left:300px;top:250px;width:140px;height:190px"></div><button class="ah-map-investigator" data-seat="0" data-interaction="investigator:0" style="position:fixed;left:220px;top:270px;width:50px;height:65px">罗兰</button><div class="ah-engagement-cards"><button data-interaction="enemy:e1" style="position:fixed;left:640px;top:240px;width:130px;height:185px">食尸鬼</button><button data-interaction="enemy:e2" style="position:fixed;left:850px;top:250px;width:130px;height:185px">邪灵</button></div><output id="health">9</output></div>`}))
   await page.goto('/combat-fixture')
   await page.evaluate(async({muted})=>{
     localStorage.setItem('arkham-presentation',JSON.stringify({sound:!muted}))
@@ -35,6 +36,19 @@ async function fixture(page,{muted=false,reduced=false}={}) {
       render()
     }
     window.repaint=render;window.presenter=p
+    window.directDamage=(style='impact',code='01018')=>{
+      const before=structuredClone(session.state)
+      session=structuredClone(session);session.state.revision++
+      session.state.enemies[0].damageTaken+=2
+      const targets=[{enemyId:'e1',name:'食尸鬼',damage:2}]
+      if(style==='blast') {
+        session.state.enemies[1].damageTaken+=2
+        targets.push({enemyId:'e2',name:'邪灵',damage:2})
+      }
+      session.events.push({seq:session.events.length,type:'presentation',kind:'directDamage',code,style,sourceName:'测试伤害来源',seat:0,location:'study',damage:2,targets,tableState:before})
+      session.events.push({seq:session.events.length,type:'presentation',kind:'checkpoint',tableState:structuredClone(session.state)})
+      render()
+    }
   },{muted})
   await page.locator('#unlock').click()
 }
@@ -132,5 +146,117 @@ test('落空、静音与减弱动态保留结果，离开桌面清理演出',asy
   await expect(page.locator('.ah-combat-fx')).toBeVisible()
   await page.locator('.ah-table').evaluate(el=>el.remove())
   await expect(page.locator('.ah-fx-layer')).toHaveCount(0)
+})
+
+for(const width of [1440,390])test(`P0 direct damage templates, legal samples and source/target feedback at ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:950})
+  const errors=[]
+  page.on('pageerror',error=>errors.push(error.message))
+  const failedAudio=[]
+  page.on('response',response=>{if(/\/audio\/direct-/.test(response.url())&&!response.ok())failedAudio.push(response.url())})
+  await fixture(page)
+  await page.addStyleTag({content:'.ah-map-node{left:35% !important;top:350px !important;width:110px !important;height:150px !important}.ah-map-investigator{left:10% !important;top:270px !important}[data-interaction="enemy:e1"]{left:60% !important;top:420px !important;width:100px !important;height:150px !important}[data-interaction="enemy:e2"]{left:15% !important;top:620px !important;width:100px !important;height:150px !important}'})
+  const styles=[['impact','direct-impact.ogg'],['bite','direct-bite.ogg'],['glass','direct-glass.ogg'],['arcane','direct-arcane.ogg'],['curse','direct-arcane.ogg'],['flash','direct-arcane.ogg'],['redirect','direct-arcane.ogg'],['ambush','blade-hit.ogg'],['firearm','firearm-shot.wav']]
+  for(const [style,sample] of styles) {
+    await page.evaluate(style=>{window.samples=[];window.directDamage(style)},style)
+    const fx=page.locator('.ah-direct-fx')
+    await expect(fx).toHaveAttribute('data-style',style)
+    await expect(fx.locator('.ah-direct-source')).toHaveCount(1)
+    await expect(fx.locator('.ah-combat-caption')).toContainText('测试伤害来源 → 食尸鬼')
+    await expect(fx.locator('.ah-direct-number')).toHaveText('−2')
+    await expect(fx).toHaveClass(/is-impact/)
+    if(style==='arcane') {
+      const box=await fx.locator('.ah-combat-caption').boundingBox()
+      expect(box.x).toBeGreaterThanOrEqual(0)
+      expect(box.x+box.width).toBeLessThanOrEqual(width)
+      await page.screenshot({path:`../../artifacts/arkham-attack-audit/p0-direct-${width}.png`})
+    }
+    await expect(fx).toHaveCount(0)
+    expect(await page.evaluate(sample=>window.samples.includes(sample),sample)).toBe(true)
+    const previous=await page.evaluate(()=>window.samples.length)
+    await page.evaluate(()=>{window.repaint();window.repaint()})
+    expect(await page.evaluate(()=>window.samples.length)).toBe(previous)
+  }
+  await page.evaluate(()=>window.directDamage('blast','05273'))
+  const blast=page.locator('.ah-blast-fx')
+  await expect(blast).toHaveAttribute('data-fx','grenade')
+  await expect(blast.locator('.ah-direct-number')).toHaveCount(2)
+  await expect(blast.locator('.ah-combat-caption')).toContainText('食尸鬼 −2 / 邪灵 −2')
+  await expect(blast).toHaveClass(/is-impact/)
+  await page.screenshot({path:`../../artifacts/arkham-attack-audit/p0-grenade-${width}.png`})
+  await expect(blast).toHaveCount(0)
+  expect(errors).toEqual([])
+  expect(failedAudio).toEqual([])
+})
+
+test('P0 direct damage respects mute, reduced motion, fast mode and reset',async({page})=>{
+  await fixture(page,{muted:true,reduced:true})
+  await page.evaluate(()=>{window.samples=[];window.directDamage('glass')})
+  const fx=page.locator('.ah-direct-fx')
+  await expect(fx).toHaveClass(/is-impact/)
+  await expect(fx.locator('.ah-combat-caption')).toContainText('2 伤害')
+  await expect(fx.locator('.ah-direct-mark')).toBeHidden()
+  expect(await page.locator('.ah-map-investigator').evaluate(el=>el.getAnimations().length)).toBe(0)
+  await expect(fx).toHaveCount(0)
+  expect(await page.evaluate(()=>window.samples)).toEqual([])
+  expect(await page.evaluate(()=>window.soundStarts)).toBe(0)
+  await page.emulateMedia({reducedMotion:'no-preference'})
+  await page.evaluate(()=>{window.presenter.toggleFast();window.directDamage('curse')})
+  await expect(page.locator('.ah-direct-fx')).toHaveCount(1)
+  await page.evaluate(()=>window.presenter.reset())
+  await expect(page.locator('.ah-fx-layer')).toHaveCount(0)
+  expect(await page.evaluate(()=>window.presenter.isBlocking)).toBe(false)
+})
+
+for(const width of [1440,390])test(`P1 all themed attacks have distinct geometry, audio and bounded captions (${width})`,async({page})=>{
+  test.setTimeout(100_000)
+  await page.setViewportSize({width,height:950})
+  const errors=[],failedAudio=[]
+  page.on('pageerror',error=>errors.push(error.message))
+  page.on('response',response=>{if(/\/audio\/p1-/.test(response.url())&&!response.ok())failedAudio.push(response.url())})
+  await fixture(page)
+  await page.addStyleTag({content:'.ah-map-node{left:35% !important;top:350px !important;width:110px !important;height:150px !important}.ah-map-investigator{left:10% !important;top:270px !important}[data-interaction="enemy:e1"]{left:60% !important;top:420px !important;width:100px !important;height:150px !important}'})
+  await page.evaluate(()=>window.presenter.toggleFast())
+  for(const [style,theme] of Object.entries(ATTACK_THEMES)) {
+    await page.evaluate(style=>{window.samples=[];window.attack('outgoing',true,style)},style)
+    const fx=page.locator('.ah-themed-fx')
+    await expect(fx).toHaveAttribute('data-style',style)
+    await expect(fx).toHaveAttribute('data-family',theme.family)
+    const motif={projectile:'.ah-p1-projectile',flame:'.ah-p1-flame',beast:'.ah-p1-beast',bind:'.ah-p1-cord',wave:'.ah-p1-sound-wave',blade:'.ah-p1-motif',spell:'.ah-p1-motif'}[theme.family]
+    expect(await fx.locator(motif).count()).toBeGreaterThan(0)
+    await expect(fx).toHaveClass(/is-impact/)
+    await page.waitForTimeout(45)
+    const box=await fx.locator('.ah-combat-caption').boundingBox()
+    expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width)
+    await page.screenshot({path:`../../artifacts/arkham-attack-audit/p1/${style}-${width}.png`})
+    await expect(fx).toHaveCount(0)
+    if(theme.strikeSound.sample)expect((await page.evaluate(()=>window.samples)).length).toBeGreaterThan(0)
+    const samples=await page.evaluate(()=>window.samples.length)
+    await page.evaluate(()=>{window.repaint();window.repaint()})
+    expect(await page.evaluate(()=>window.samples.length)).toBe(samples)
+    if(width===1440) {
+      await page.evaluate(style=>window.attack('outgoing',false,style),style)
+      await expect(page.locator('.ah-themed-fx')).toHaveClass(/is-miss/)
+      await expect(page.locator('.ah-themed-fx .ah-combat-caption')).toContainText('攻击落空')
+      await expect(page.locator('.ah-themed-fx')).toHaveCount(0)
+    }
+  }
+  expect(errors).toEqual([]);expect(failedAudio).toEqual([])
+})
+
+test('P1 reduced motion and mute keep outcomes; non-attack branches do not create themed scenes',async({page})=>{
+  await fixture(page,{muted:true,reduced:true})
+  for(const style of ['flamethrower','bow','voidSpell']) {
+    await page.evaluate(style=>window.attack('outgoing',true,style),style)
+    const fx=page.locator('.ah-themed-fx')
+    await expect(fx).toHaveClass(/is-impact/)
+    await expect(fx.locator('.ah-p1-hit')).toBeHidden()
+    await expect(fx.locator('.ah-combat-caption')).toContainText('命中')
+    await expect(fx).toHaveCount(0)
+  }
+  expect(await page.evaluate(()=>window.samples)).toEqual([])
+  expect(await page.evaluate(()=>window.soundStarts)).toBe(0)
+  await page.evaluate(()=>window.repaint())
+  await expect(page.locator('.ah-themed-fx')).toHaveCount(0)
 })
 

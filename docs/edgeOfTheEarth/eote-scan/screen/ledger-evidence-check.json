@@ -1,0 +1,417 @@
+{
+ "generatedAt": "2026-11-08T11:19:56.618Z",
+ "summary": {
+  "evidenceRows": 261,
+  "evidenceFilesWithoutCode": 131,
+  "byKind": {
+   "file": 132,
+   "scenario-ledger": 129
+  },
+  "byFile": {
+   "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs": 129,
+   "tests/eote-scenario-fatalMirage.test.mjs": 2
+  }
+ },
+ "samples": [
+  {
+   "code": "08503",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08504",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08505",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08551",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08552",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08553",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08554",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08555",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08557",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08558",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08558b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08559",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08559b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08561",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08561b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08562",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08562b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08563",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08563b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08564",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08564b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08565",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08565b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08566",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08566b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08567",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08567b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08568",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08568b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08569",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08570",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08570b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08571",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08571b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08572",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08572b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08573",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08573b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08574",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  },
+  {
+   "code": "08574b",
+   "partition": "eoteCampaign",
+   "kind": "scenario-ledger",
+   "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+   "chapter": "theHeartOfMadnessPart2",
+   "ledgerMatched": true,
+   "titleMatched": false,
+   "codeExistsInFile": false
+  }
+ ]
+}

@@ -288,7 +288,7 @@ export function createCampaignPlugin(deps) {
         const chosen = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'target', source: code, seat: inv.seat,
           prompt: '选择要造成伤害的敌人。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
         const enemy = targets.find(item => item.id === chosen) || targets[0]
-        damageEnemy(state, enemy, count, inv.seat, events)
+        damageEnemy(state, enemy, count, inv.seat, events, null, { code, assetId: stone.id })
         info(state, events, `「${cardName(code)}」对「${enemy.name}」造成 ${count} 点伤害。`)
       } else {
         const options = aliveInvestigators(state).filter(other => other.location === inv.location)

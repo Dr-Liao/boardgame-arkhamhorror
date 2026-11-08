@@ -2,1270 +2,120 @@
   "schemaVersion": 2,
   "generatedBy": "playwright + tools/playwright-tic-reporter.mjs",
   "evidenceCommand": "node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tic.config.mjs",
-  "status": "passed",
+  "status": "failed",
   "sourceStableDuringRun": true,
   "coverage": {
-    "desktop:zh-CN": true,
-    "desktop:en": true,
-    "mobile:zh-CN": true,
-    "mobile:en": true
+    "desktop:zh-CN": false,
+    "desktop:en": false,
+    "mobile:zh-CN": false,
+    "mobile:en": false
   },
   "links": {
-    "desktop": true,
-    "mobile": true
+    "desktop": false,
+    "mobile": false
   },
   "scenarios": [
     {
       "scenario": "thePitOfDespair",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "theVanishingOfElinaHarper",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "inTooDeep",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "devilReef",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "horrorInHighGear",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "aLightInTheFog",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "theLairOfDagon",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     },
     {
       "scenario": "intoTheMaelstrom",
-      "desktop": true,
-      "mobile": true,
-      "ok": true,
-      "screenshots": [
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
-        "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png"
-      ]
+      "desktop": false,
+      "mobile": false,
+      "ok": false,
+      "screenshots": []
     }
   ],
-  "scenariosComplete": true,
+  "scenariosComplete": false,
   "chapterCount": 8,
   "tests": [
     {
-      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-          "sha256": "b747f49754f6643dc64989048029a6b071e420268489526d3ec65ff6746fa926"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
-          "sha256": "b3b304777f58af2e43d88345fc81952a57d49fb82831e78a813188c859b05fc5"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
-          "sha256": "86964876658e7f1a1220e7886401d03354ed2a1379202c69552691b44a68076e"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
-          "sha256": "b71074ca9d38740c3a5916bf0a6402bd7f5aa5546b492f0420993d87a3d500c2"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
-          "sha256": "af01203ae5ad11fb37101b83e3b255be6451fe06edfb2059dd43bc8258cc99ad"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
-          "sha256": "98c34dac247eb02fac76f242f2e28cb2b60253e5b6e2317c2bfbe1e9fe9e8df8"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
-          "sha256": "57c742e24ed8229ae09e4acf8a805e8743e48a4fde3766297f54b390938afc57"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png",
-          "sha256": "1108d69d515a678c54302e0d92aa852da0fb3dd32dadc1aa9e5e4bea4b337c73"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
-          "sha256": "988d7610428366b21f9db080887246f0b92902147260fe70f02115fdbe4126de"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
-          "sha256": "4630ac9cd4ee2f53cac0839a4d26a86ac0c9b11eafde0b4ddd2a24391e3943fe"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
-          "sha256": "fdbcf9c39b4c341b7b67d20259f3c1749e63770355cce56df74ed4bf4a3750d7"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
-          "sha256": "f201e702b36929d1bf50e95a4615482e107981a52de3afecda63659db01dbe2e"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
-          "sha256": "e0ef2e7d57549c6e2850007de3c038a2155d4434acace7c1a0cebbcf3eff2207"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
-          "sha256": "82e7407e1b491990ce15812cb7b013dbc19803416b37563b2fa6e72040e36e8f"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
-          "sha256": "e83f4467d5d39dfd3d51a1a42104796a90de9e572368b29ff028000bdfbc43f0"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png",
-          "sha256": "062c46d51d6622481bcd9f5a383668b1ff08210d871caaa2d95cea58e0029089"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
-          "sha256": "76eebfa18d62aa2a57fe48a8d3b842f801c51963f30fb83d353e15321561d5c2"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
-          "sha256": "318280357ffdd09d8be473a0650cd621a8101fc31ad18a47e2c6b1b68c1e5fda"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
-          "sha256": "17e455a4cef0963083333778e48fb4e1e256d1ba02a4712c5e46b0cf5bb36942"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
-          "sha256": "5984251ce8f3d36d7a8eb53e0d86ba664b292ae099352dbcfda51691f945e0fa"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
-          "sha256": "9c0d0893d9b2e4334b7267ae982540fe86376b6e879de134b6a253c36eef8335"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
-          "sha256": "b3336e3852448f7c3074dd8d70276bf7d1defd18fc82a434f621bc18eeb118dd"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
-          "sha256": "3c9a9bd6148a9e987eee14c35e367ec9ca05ebf9c97a90a241846b30267b2a22"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
-          "sha256": "e580172cf6d7bdc78e5fbfb0a807e461ab8624fc5b459684dd920623d509d761"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
-          "sha256": "de5b28dd5c19b4f5a00c0527042583fbf2db6a33d38ff7f974f0bd4f08028629"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
-          "sha256": "f7f23c82a8a7abdd74dd4f0fdd15de4d1afcbb5017c28ccc66e8372f456bc743"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
-          "sha256": "c33570f42d35403c946d86e7ef4b7172d0837433f3f996c4fc475b471eba8503"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
-          "sha256": "741c72c6e0adf35344d025664ab4e74a8dee2d1b66f4d7a1921bff25cdd1b668"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
-          "sha256": "c561ad9fce978f9bf25f4123eeb3967c669b9b74565f4c7509719057d3c8f061"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
-          "sha256": "622ab72bb9c24b1df72579ba5f7e4c682c0daa4c144af23b6291e47021754b0c"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
-          "sha256": "aac48437cf990527c95609c3a341d854f796cdadbe7697174f6fe6feb24aed40"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png",
-          "sha256": "e20436f0dfb810773edd814764f85db6b39ece392f3b7b28c8e79b0278dc856d"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
-          "sha256": "4e48c97444478b44373e3203502d2b20ae48c9bea5fc6d0f93fbc9b397f238bd"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
-          "sha256": "a2c9322236b331ce7c8c57ed195e370610510be57b3d9ba44982c50682c9c805"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
-          "sha256": "9e31f8ab40f9b1d88403b44298dce89ecf3308d79e42ecb5d7ce759c6069f4cd"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
-          "sha256": "a972b05f86543d4368aaea8955408f3718657f9dda8991ca9a773dfd9abb6c99"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
-          "sha256": "adfa4954197fd609af47bd0ebdf7ecc653c48672ae0b00f8494c3b151e5f466e"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
-          "sha256": "72ddb8425766f2143098c05df39e01db0755f6829d42f39a650afdac3753d63d"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
-          "sha256": "4c98a09a1737e22f95143eb4b2e3005b6d44558907b50ed9f78392f05594e415"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
-          "sha256": "027822f1e6571b5e5b1ae9ad67438abf31682440e664ed991b2ad186138c4743"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
-          "sha256": "ec669f2665a1bb7a677e692dc71274401c8012e90ba0ae7529e369c126f59721"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
-          "sha256": "441f338aa5eb046c88246200acbe43af59b622c094b9101ae2d1a9cfeed9328b"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
-          "sha256": "1d01777fee8e2310e496ac32038980f66763aed0bfa14e6f37046b7e70cd27da"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
-          "sha256": "08f9e4acce9081d15b2bd712f9fffeb21e57f5c8160913a15d546b115d89430f"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
-          "sha256": "eee7f7ed3d08164a829f526a5278b1ecb3613a2f8bb9b87dab6b287337b253ca"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
-          "sha256": "8415e04f6ff3d5fcfdb79899e0d68972bbafdb3fe100ceec8dcf4293a6eabe87"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
-          "sha256": "27d3463574cefead22881903df5077ff880f06e2d1584e2304110f5b7bc78521"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png",
-          "sha256": "dd39ab87be572a7b9a3b2bd0ade01a045a4a5013a86f5d247a436aa73e8b0182"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
-          "sha256": "5e23aafab7d28d493f6f51f8ff4c162033726324f799334a475261af2f0ffb25"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
-          "sha256": "97a012d62ddddd51d66d32e912e0e88adcbc82f2669495844d01194cf171f9c2"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
-          "sha256": "7d533941bd692f26d725c2780c44e3f3704c59787c9b82125afce382bb39cdb8"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
-          "sha256": "3aaecb887adbf26b901f2a1abd5b82b078d1d2fda89729af09b7cdc116c6a40a"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
-          "sha256": "e2696b4b645fb73a1d75ef657dd41ee327be088a3ef77ade50a25c10ffd4b170"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
-          "sha256": "068fd7b0b75dedef3fa8c465d671cb31e0a3a652cb6c54327d6d9a78000fd1eb"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
-          "sha256": "2fd07ca88a797e263ea85db2412ba8569f8af6a2c6b5f4863f0d39f7e5473c83"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
-          "sha256": "60960e05fd1c47b086da2df70dafb1a41ffacde3a619ae6bd9fab7de9b6e6924"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
-          "sha256": "3945788ca79bcc66cb52cc7e4c27448f8d226f20b5a819e0800fa21df47c016a"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
-          "sha256": "c6dfcde2277b54ab2b07586178c83dc9139583bcbbd47ff9e14d480547af9673"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收",
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
-          "sha256": "5386d0b5f0641aa7fb690edb2eca247e9393a7fd860d43b99c9a1258774ba9f2"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
-          "sha256": "faea6854bcc9704f37f9e94c2a6f963760dbd3d9c25c187a0e16a80a96affd5f"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收",
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
-          "sha256": "bba00f46165a01ad9e7256f46b5ba81ff3f95b24b6da8d4768ee9615f143e0ed"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
-          "sha256": "dd912ce1822bcfe4602f8f3739caaf42716e992dc523e5bf43dde6f4c4f8e2d3"
-        }
-      ]
-    },
-    {
-      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收",
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
-          "sha256": "9c1f6b51e3bb6295c8a3a0fda079b46a319d6f67a8ff55efebbb62ac69b54cfb"
-        },
-        {
-          "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
-          "sha256": "6470a0817c8e2ba67f2ea55daa4182c232ae0081232d92684a4114db31fbfcd1"
-        }
-      ]
-    },
-    {
-      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
+      "title": "P4 desktop 封印多选、取消、提交中与失败重试",
       "scenario": null,
       "viewport": "desktop",
       "status": "passed",
       "screenshots": [
         {
-          "path": "artifacts/migration/tic/reports/screenshots/desktop-zh-CN.png",
-          "sha256": "dbbd63dea53f3e479ccc582530b241ff21e5632ff7ec2858d2bebdf861904c47"
+          "path": "artifacts/migration/tic/p4/screenshots/desktop-seal-selection.png",
+          "sha256": "a96a3696c1f975a11ae1ed51903c9ace7bc423f9faa82962dfcf3e639e169d6d"
         }
       ]
     },
     {
-      "title": "P3 desktop en 规则目录、阅读与返回",
-      "scenario": null,
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/reports/screenshots/desktop-en.png",
-          "sha256": "6c3b8f63143e25b0ab028cc4289513d148af69965a0541ef2ef632ad4c8c3a77"
-        }
-      ]
-    },
-    {
-      "title": "P3 desktop 卡文直达并恢复详情焦点",
-      "scenario": null,
-      "viewport": "desktop",
-      "status": "passed",
-      "screenshots": []
-    },
-    {
-      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
+      "title": "P4 mobile 封印多选、取消、提交中与失败重试",
       "scenario": null,
       "viewport": "mobile",
       "status": "passed",
       "screenshots": [
         {
-          "path": "artifacts/migration/tic/reports/screenshots/mobile-zh-CN.png",
-          "sha256": "dcfae556cc1d0655551ef297598d4edbf35b3ac17e3524b1ab276b9b1ea31726"
+          "path": "artifacts/migration/tic/p4/screenshots/mobile-seal-selection.png",
+          "sha256": "1299b2c77fefcaad43f632e3a554db2958a2a5c976b43942fbb2ab6101db4d91"
         }
       ]
-    },
-    {
-      "title": "P3 mobile en 规则目录、阅读与返回",
-      "scenario": null,
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": [
-        {
-          "path": "artifacts/migration/tic/reports/screenshots/mobile-en.png",
-          "sha256": "49725cf22d0f41c0a4cd5f408e115a3fa87b4f55383d2a88328e3e23e1fc7836"
-        }
-      ]
-    },
-    {
-      "title": "P3 mobile 卡文直达并恢复详情焦点",
-      "scenario": null,
-      "viewport": "mobile",
-      "status": "passed",
-      "screenshots": []
     }
   ],
   "screenshots": [
     {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-table.png",
-      "sha256": "b747f49754f6643dc64989048029a6b071e420268489526d3ec65ff6746fa926",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-zh-CN-guide.png",
-      "sha256": "b3b304777f58af2e43d88345fc81952a57d49fb82831e78a813188c859b05fc5",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "title": "P7 TIC 绝望深坑 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-table.png",
-      "sha256": "86964876658e7f1a1220e7886401d03354ed2a1379202c69552691b44a68076e",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-desktop-en-guide.png",
-      "sha256": "b71074ca9d38740c3a5916bf0a6402bd7f5aa5546b492f0420993d87a3d500c2",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "desktop",
-      "title": "P7 TIC 绝望深坑 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-table.png",
-      "sha256": "af01203ae5ad11fb37101b83e3b255be6451fe06edfb2059dd43bc8258cc99ad",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-zh-CN-guide.png",
-      "sha256": "98c34dac247eb02fac76f242f2e28cb2b60253e5b6e2317c2bfbe1e9fe9e8df8",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "title": "P7 TIC 绝望深坑 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-table.png",
-      "sha256": "57c742e24ed8229ae09e4acf8a805e8743e48a4fde3766297f54b390938afc57",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-thePitOfDespair-mobile-en-guide.png",
-      "sha256": "1108d69d515a678c54302e0d92aa852da0fb3dd32dadc1aa9e5e4bea4b337c73",
-      "exists": true,
-      "scenario": "thePitOfDespair",
-      "viewport": "mobile",
-      "title": "P7 TIC 绝望深坑 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-table.png",
-      "sha256": "988d7610428366b21f9db080887246f0b92902147260fe70f02115fdbe4126de",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-zh-CN-guide.png",
-      "sha256": "4630ac9cd4ee2f53cac0839a4d26a86ac0c9b11eafde0b4ddd2a24391e3943fe",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-table.png",
-      "sha256": "fdbcf9c39b4c341b7b67d20259f3c1749e63770355cce56df74ed4bf4a3750d7",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-desktop-en-guide.png",
-      "sha256": "f201e702b36929d1bf50e95a4615482e107981a52de3afecda63659db01dbe2e",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "desktop",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-table.png",
-      "sha256": "e0ef2e7d57549c6e2850007de3c038a2155d4434acace7c1a0cebbcf3eff2207",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-zh-CN-guide.png",
-      "sha256": "82e7407e1b491990ce15812cb7b013dbc19803416b37563b2fa6e72040e36e8f",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-table.png",
-      "sha256": "e83f4467d5d39dfd3d51a1a42104796a90de9e572368b29ff028000bdfbc43f0",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theVanishingOfElinaHarper-mobile-en-guide.png",
-      "sha256": "062c46d51d6622481bcd9f5a383668b1ff08210d871caaa2d95cea58e0029089",
-      "exists": true,
-      "scenario": "theVanishingOfElinaHarper",
-      "viewport": "mobile",
-      "title": "P7 TIC 艾莲娜·哈珀失踪案 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-table.png",
-      "sha256": "76eebfa18d62aa2a57fe48a8d3b842f801c51963f30fb83d353e15321561d5c2",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-zh-CN-guide.png",
-      "sha256": "318280357ffdd09d8be473a0650cd621a8101fc31ad18a47e2c6b1b68c1e5fda",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "title": "P7 TIC 深陷危局 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-table.png",
-      "sha256": "17e455a4cef0963083333778e48fb4e1e256d1ba02a4712c5e46b0cf5bb36942",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-desktop-en-guide.png",
-      "sha256": "5984251ce8f3d36d7a8eb53e0d86ba664b292ae099352dbcfda51691f945e0fa",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "desktop",
-      "title": "P7 TIC 深陷危局 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-table.png",
-      "sha256": "9c0d0893d9b2e4334b7267ae982540fe86376b6e879de134b6a253c36eef8335",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-zh-CN-guide.png",
-      "sha256": "b3336e3852448f7c3074dd8d70276bf7d1defd18fc82a434f621bc18eeb118dd",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "title": "P7 TIC 深陷危局 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-table.png",
-      "sha256": "3c9a9bd6148a9e987eee14c35e367ec9ca05ebf9c97a90a241846b30267b2a22",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-inTooDeep-mobile-en-guide.png",
-      "sha256": "e580172cf6d7bdc78e5fbfb0a807e461ab8624fc5b459684dd920623d509d761",
-      "exists": true,
-      "scenario": "inTooDeep",
-      "viewport": "mobile",
-      "title": "P7 TIC 深陷危局 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-table.png",
-      "sha256": "de5b28dd5c19b4f5a00c0527042583fbf2db6a33d38ff7f974f0bd4f08028629",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-zh-CN-guide.png",
-      "sha256": "f7f23c82a8a7abdd74dd4f0fdd15de4d1afcbb5017c28ccc66e8372f456bc743",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "title": "P7 TIC 魔鬼礁石 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-table.png",
-      "sha256": "c33570f42d35403c946d86e7ef4b7172d0837433f3f996c4fc475b471eba8503",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-desktop-en-guide.png",
-      "sha256": "741c72c6e0adf35344d025664ab4e74a8dee2d1b66f4d7a1921bff25cdd1b668",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "desktop",
-      "title": "P7 TIC 魔鬼礁石 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-table.png",
-      "sha256": "c561ad9fce978f9bf25f4123eeb3967c669b9b74565f4c7509719057d3c8f061",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-zh-CN-guide.png",
-      "sha256": "622ab72bb9c24b1df72579ba5f7e4c682c0daa4c144af23b6291e47021754b0c",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "title": "P7 TIC 魔鬼礁石 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-table.png",
-      "sha256": "aac48437cf990527c95609c3a341d854f796cdadbe7697174f6fe6feb24aed40",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-devilReef-mobile-en-guide.png",
-      "sha256": "e20436f0dfb810773edd814764f85db6b39ece392f3b7b28c8e79b0278dc856d",
-      "exists": true,
-      "scenario": "devilReef",
-      "viewport": "mobile",
-      "title": "P7 TIC 魔鬼礁石 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-table.png",
-      "sha256": "4e48c97444478b44373e3203502d2b20ae48c9bea5fc6d0f93fbc9b397f238bd",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-zh-CN-guide.png",
-      "sha256": "a2c9322236b331ce7c8c57ed195e370610510be57b3d9ba44982c50682c9c805",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "title": "P7 TIC 全速恐惧 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-table.png",
-      "sha256": "9e31f8ab40f9b1d88403b44298dce89ecf3308d79e42ecb5d7ce759c6069f4cd",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-desktop-en-guide.png",
-      "sha256": "a972b05f86543d4368aaea8955408f3718657f9dda8991ca9a773dfd9abb6c99",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "desktop",
-      "title": "P7 TIC 全速恐惧 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-table.png",
-      "sha256": "adfa4954197fd609af47bd0ebdf7ecc653c48672ae0b00f8494c3b151e5f466e",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-zh-CN-guide.png",
-      "sha256": "72ddb8425766f2143098c05df39e01db0755f6829d42f39a650afdac3753d63d",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "title": "P7 TIC 全速恐惧 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-table.png",
-      "sha256": "4c98a09a1737e22f95143eb4b2e3005b6d44558907b50ed9f78392f05594e415",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-horrorInHighGear-mobile-en-guide.png",
-      "sha256": "027822f1e6571b5e5b1ae9ad67438abf31682440e664ed991b2ad186138c4743",
-      "exists": true,
-      "scenario": "horrorInHighGear",
-      "viewport": "mobile",
-      "title": "P7 TIC 全速恐惧 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-table.png",
-      "sha256": "ec669f2665a1bb7a677e692dc71274401c8012e90ba0ae7529e369c126f59721",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-zh-CN-guide.png",
-      "sha256": "441f338aa5eb046c88246200acbe43af59b622c094b9101ae2d1a9cfeed9328b",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "title": "P7 TIC 雾中之光 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-table.png",
-      "sha256": "1d01777fee8e2310e496ac32038980f66763aed0bfa14e6f37046b7e70cd27da",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-desktop-en-guide.png",
-      "sha256": "08f9e4acce9081d15b2bd712f9fffeb21e57f5c8160913a15d546b115d89430f",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "desktop",
-      "title": "P7 TIC 雾中之光 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-table.png",
-      "sha256": "eee7f7ed3d08164a829f526a5278b1ecb3613a2f8bb9b87dab6b287337b253ca",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-zh-CN-guide.png",
-      "sha256": "8415e04f6ff3d5fcfdb79899e0d68972bbafdb3fe100ceec8dcf4293a6eabe87",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "title": "P7 TIC 雾中之光 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-table.png",
-      "sha256": "27d3463574cefead22881903df5077ff880f06e2d1584e2304110f5b7bc78521",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-aLightInTheFog-mobile-en-guide.png",
-      "sha256": "dd39ab87be572a7b9a3b2bd0ade01a045a4a5013a86f5d247a436aa73e8b0182",
-      "exists": true,
-      "scenario": "aLightInTheFog",
-      "viewport": "mobile",
-      "title": "P7 TIC 雾中之光 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-table.png",
-      "sha256": "5e23aafab7d28d493f6f51f8ff4c162033726324f799334a475261af2f0ffb25",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-zh-CN-guide.png",
-      "sha256": "97a012d62ddddd51d66d32e912e0e88adcbc82f2669495844d01194cf171f9c2",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "title": "P7 TIC 达贡巢穴 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-table.png",
-      "sha256": "7d533941bd692f26d725c2780c44e3f3704c59787c9b82125afce382bb39cdb8",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-desktop-en-guide.png",
-      "sha256": "3aaecb887adbf26b901f2a1abd5b82b078d1d2fda89729af09b7cdc116c6a40a",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "desktop",
-      "title": "P7 TIC 达贡巢穴 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-table.png",
-      "sha256": "e2696b4b645fb73a1d75ef657dd41ee327be088a3ef77ade50a25c10ffd4b170",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-zh-CN-guide.png",
-      "sha256": "068fd7b0b75dedef3fa8c465d671cb31e0a3a652cb6c54327d6d9a78000fd1eb",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "title": "P7 TIC 达贡巢穴 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-table.png",
-      "sha256": "2fd07ca88a797e263ea85db2412ba8569f8af6a2c6b5f4863f0d39f7e5473c83",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-theLairOfDagon-mobile-en-guide.png",
-      "sha256": "60960e05fd1c47b086da2df70dafb1a41ffacde3a619ae6bd9fab7de9b6e6924",
-      "exists": true,
-      "scenario": "theLairOfDagon",
-      "viewport": "mobile",
-      "title": "P7 TIC 达贡巢穴 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-table.png",
-      "sha256": "3945788ca79bcc66cb52cc7e4c27448f8d226f20b5a819e0800fa21df47c016a",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-zh-CN-guide.png",
-      "sha256": "c6dfcde2277b54ab2b07586178c83dc9139583bcbbd47ff9e14d480547af9673",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "title": "P7 TIC 暗潮之下 desktop zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-table.png",
-      "sha256": "5386d0b5f0641aa7fb690edb2eca247e9393a7fd860d43b99c9a1258774ba9f2",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-desktop-en-guide.png",
-      "sha256": "faea6854bcc9704f37f9e94c2a6f963760dbd3d9c25c187a0e16a80a96affd5f",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "desktop",
-      "title": "P7 TIC 暗潮之下 desktop en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-table.png",
-      "sha256": "bba00f46165a01ad9e7256f46b5ba81ff3f95b24b6da8d4768ee9615f143e0ed",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-zh-CN-guide.png",
-      "sha256": "dd912ce1822bcfe4602f8f3739caaf42716e992dc523e5bf43dde6f4c4f8e2d3",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "title": "P7 TIC 暗潮之下 mobile zh-CN 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-table.png",
-      "sha256": "9c1f6b51e3bb6295c8a3a0fda079b46a319d6f67a8ff55efebbb62ac69b54cfb",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/p7/workers/w4/screenshots/tic-chapter-intoTheMaelstrom-mobile-en-guide.png",
-      "sha256": "6470a0817c8e2ba67f2ea55daa4182c232ae0081232d92684a4114db31fbfcd1",
-      "exists": true,
-      "scenario": "intoTheMaelstrom",
-      "viewport": "mobile",
-      "title": "P7 TIC 暗潮之下 mobile en 实机关卡设置入口与完整指南验收"
-    },
-    {
-      "path": "artifacts/migration/tic/reports/screenshots/desktop-zh-CN.png",
-      "sha256": "dbbd63dea53f3e479ccc582530b241ff21e5632ff7ec2858d2bebdf861904c47",
+      "path": "artifacts/migration/tic/p4/screenshots/desktop-seal-selection.png",
+      "sha256": "a96a3696c1f975a11ae1ed51903c9ace7bc423f9faa82962dfcf3e639e169d6d",
       "exists": true,
       "scenario": null,
       "viewport": "desktop",
-      "title": "P3 desktop zh-CN 规则目录、阅读与返回"
+      "title": "P4 desktop 封印多选、取消、提交中与失败重试"
     },
     {
-      "path": "artifacts/migration/tic/reports/screenshots/desktop-en.png",
-      "sha256": "6c3b8f63143e25b0ab028cc4289513d148af69965a0541ef2ef632ad4c8c3a77",
-      "exists": true,
-      "scenario": null,
-      "viewport": "desktop",
-      "title": "P3 desktop en 规则目录、阅读与返回"
-    },
-    {
-      "path": "artifacts/migration/tic/reports/screenshots/mobile-zh-CN.png",
-      "sha256": "dcfae556cc1d0655551ef297598d4edbf35b3ac17e3524b1ab276b9b1ea31726",
+      "path": "artifacts/migration/tic/p4/screenshots/mobile-seal-selection.png",
+      "sha256": "1299b2c77fefcaad43f632e3a554db2958a2a5c976b43942fbb2ab6101db4d91",
       "exists": true,
       "scenario": null,
       "viewport": "mobile",
-      "title": "P3 mobile zh-CN 规则目录、阅读与返回"
-    },
-    {
-      "path": "artifacts/migration/tic/reports/screenshots/mobile-en.png",
-      "sha256": "49725cf22d0f41c0a4cd5f408e115a3fa87b4f55383d2a88328e3e23e1fc7836",
-      "exists": true,
-      "scenario": null,
-      "viewport": "mobile",
-      "title": "P3 mobile en 规则目录、阅读与返回"
+      "title": "P4 mobile 封印多选、取消、提交中与失败重试"
     }
   ],
   "sourceFiles": [
@@ -1308,6 +158,26 @@
       "path": "content/browser-demo/dualHub.js",
       "bytes": 4714,
       "sha256": "126cc86a12a789ea02575ceccf299ef3384c98ce61dbb60465b5e7ce47cc895c"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/chapters.js",
+      "bytes": 1654,
+      "sha256": "208e2f0a93ee71ffea68ac0b276f570d3bcb1652ebfc92c58f3e951e03e7ed4d"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/keywords.js",
+      "bytes": 5557,
+      "sha256": "921a2d9a7f31756c9a59046561340497b2a164207ab774415bc25a790a8a7e15"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/manifest.js",
+      "bytes": 1672,
+      "sha256": "bd0e0916b37e2a1805da40be7bf708753d9e381104ab4d9a4df060c2c5ef7b64"
+    },
+    {
+      "path": "content/campaigns/edgeOfTheEarth/shared.js",
+      "bytes": 8265,
+      "sha256": "d06ea62260ccf72ea040a7ba08841b751bcffa3b615283bbcc81f40f520a0a3d"
     },
     {
       "path": "content/campaigns/nightOfTheZealot/manifest.js",
@@ -1471,8 +341,8 @@
     },
     {
       "path": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js",
-      "bytes": 78795,
-      "sha256": "4531ba97797b0787d945f50813220d0a8d40abff13bbb83c5e2247488242125d"
+      "bytes": 78994,
+      "sha256": "5c4a6205b6d8a0a0e9f80d4d2b172b9d07d10a3060b8ce99ab48bd3f631e1aa6"
     },
     {
       "path": "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/chaos.js",
@@ -2226,8 +1096,8 @@
     },
     {
       "path": "content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js",
-      "bytes": 52102,
-      "sha256": "b9459e62d027177bbed075df1b919e5248c2b74053d8e5d99da572156b18b44e"
+      "bytes": 53532,
+      "sha256": "41f8859bb0b84861a24361e915af9166751871e2fbb4738518f092b631dcbc8c"
     },
     {
       "path": "content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/definition.js",
@@ -2286,13 +1156,13 @@
     },
     {
       "path": "content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js",
-      "bytes": 28184,
-      "sha256": "5865a1c312dac0cb5973f58cad6031b253e46b4bf3d5508ca20c804f1eee8a0e"
+      "bytes": 29151,
+      "sha256": "c70e48c78ac656b8c72a14ef66c280b1a4feba07049992c21eabf30730594933"
     },
     {
       "path": "content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/definition.js",
-      "bytes": 6049,
-      "sha256": "7487d0aceb6b10aa2b0fb67593dc389b639e753b6017df0d0978aab85255c6a6"
+      "bytes": 6232,
+      "sha256": "55d3a5741e73871147844a39b0814c097799be90d8a769ee354fb5528a043a75"
     },
     {
       "path": "content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js",
@@ -2396,8 +1266,8 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
-      "bytes": 392355,
-      "sha256": "50e8e0f868290739f1a44f5ebe38bd65fcf318c54f0b4e28ab76f63ebcec6305"
+      "bytes": 393979,
+      "sha256": "820fb043d934bef8e00600583da7fb194b66b5eaa8645faf2e5b4d1ed3ecaaa8"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-definition.js",
@@ -2436,18 +1306,18 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/flow.js",
-      "bytes": 1428,
-      "sha256": "747e1e69266e9af4fe1d99a39a654a90d08410c250007ccd9cdcf95cb1a8f15b"
+      "bytes": 1552,
+      "sha256": "938109f6d9514e0559e895b0b647ad5d9e06676bddcf725b94208afc399e110f"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/interludes.js",
-      "bytes": 5406,
-      "sha256": "ee1871c06e6d8f1edad05113217d4e2c2b07cb3028bf8b6d515cc5fd21b69e1a"
+      "bytes": 5344,
+      "sha256": "6ec52311f7ac7b513b2d17ba2d33495f17021d97d965a9d2e3018ea8b27275d0"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/introduction.js",
-      "bytes": 1169,
-      "sha256": "5b89b93e4c3ad50e3806f45cb75f265cee06f39480d79414796b400dfaa18efa"
+      "bytes": 1168,
+      "sha256": "9a1462214173b7d58c312e0a4d46e4e9dd2d09a18725a131bb1cfd2c94b07b7e"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/keywords.js",
@@ -2466,8 +1336,8 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/manifest.js",
-      "bytes": 2503,
-      "sha256": "ad3afcbcfe292c9546cc9a8a35e89ea59524bf5a38040f22c87af569168b46be"
+      "bytes": 5590,
+      "sha256": "970ca601252a499d19c165c60fc71ad9a2205a68866bea1a764ba0581c8945da"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/middle-setup.js",
@@ -2860,6 +1730,21 @@
       "sha256": "d680883b1e52d8d6995524cbbf5bcf5291fda23cdcaf712b507d275b524b6cd8"
     },
     {
+      "path": "content/packs/eoteCampaign/manifest.js",
+      "bytes": 427,
+      "sha256": "485b07851676edc4ab5fdfbb98eddbb636fd643990ceba103dfd01152e1fe832"
+    },
+    {
+      "path": "content/packs/eoteInvestigators/manifest.js",
+      "bytes": 435,
+      "sha256": "43646baf422727a958f34d5fd6ad69a7ec82f9a447ddf6f7a82fe03ec4d10ea3"
+    },
+    {
+      "path": "content/packs/eotePlayer/manifest.js",
+      "bytes": 412,
+      "sha256": "8f335063f435a1dfca7f531226a53b31ee2d7cf87222d71d5011521b18271b3b"
+    },
+    {
       "path": "content/packs/manifests.js",
       "bytes": 2236,
       "sha256": "c378284cbfcc9a944124962e9eb7e9a950d28e67ca69f48342de7c42dd77098e"
@@ -2936,13 +1821,23 @@
     },
     {
       "path": "content/presentation/attack-styles.js",
-      "bytes": 705,
-      "sha256": "08651740964f3b2ce4c8252f2bf95ddb0d093300ce518abce69468f4502322a8"
+      "bytes": 1212,
+      "sha256": "6f830e6bfc4dbdeac2168ad0bf1fc6769ae1007f900370184d49057bdbac4153"
+    },
+    {
+      "path": "content/presentation/direct-damage-styles.js",
+      "bytes": 793,
+      "sha256": "956ca885c2fe88f035167c7e46729495e4da6d9a94d7e6ad1c24cbaadf810ada"
+    },
+    {
+      "path": "content/presentation/enemy-attack-styles.js",
+      "bytes": 14038,
+      "sha256": "488d0b5ff8cbbb8d8d0a6aa810b2413996174d1422cb57ffe265511c0ab3b79d"
     },
     {
       "path": "content/registered.js",
-      "bytes": 12545,
-      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
+      "bytes": 13326,
+      "sha256": "2e60da8273a8d85e0e2f6af47b4e520acc52f9518f736b1efe3c14fe4fc35bb0"
     },
     {
       "path": "content/registry.js",
@@ -2971,8 +1866,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 16377,
-      "sha256": "5dd8c7a89ff8a4e3da67279a78285ce635ce03a92a1350a7390032ce2e40d76d"
+      "bytes": 17658,
+      "sha256": "f26bd2845b65c93373ad041773e870805841bff76ddc02e930890731412529a8"
     },
     {
       "path": "src/ai/agent-plans.js",
@@ -2981,8 +1876,8 @@
     },
     {
       "path": "src/ai/ai-context.js",
-      "bytes": 19505,
-      "sha256": "3790231b513fa97b769e3155a09ba1709d48e7fffe7035c5c67451fa854fcede"
+      "bytes": 19774,
+      "sha256": "7dfdfaedb4ce0ad8c6c2c4291da66ff7859e3ec5e2b059c14e001f723e71d642"
     },
     {
       "path": "src/ai/ai-dialogue.js",
@@ -3006,8 +1901,8 @@
     },
     {
       "path": "src/campaign/campaign-flow.js",
-      "bytes": 13098,
-      "sha256": "44fcf2c761ca22029abd1c93beaec13eda0da4a00d7091ac2226f40ebe5a2da3"
+      "bytes": 33951,
+      "sha256": "8b9be2f043affcd863dd99ac83677aa0cb9bd3f19b825a6cf62c47945b83b794"
     },
     {
       "path": "src/campaign/campaign-modes.js",
@@ -3016,8 +1911,8 @@
     },
     {
       "path": "src/campaign/campaign-parts.js",
-      "bytes": 20144,
-      "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b"
+      "bytes": 30000,
+      "sha256": "9dc52444f1794a05b63c1389ba252a9b5aae31a2a5773e0d77f437e615f992f6"
     },
     {
       "path": "src/campaign/campaign.js",
@@ -3026,8 +1921,8 @@
     },
     {
       "path": "src/campaign/content-effects.js",
-      "bytes": 615,
-      "sha256": "3504dbba957bdbdf1e605af5f53d0d81abffef200cb4cd91a1d33e4ded140202"
+      "bytes": 614,
+      "sha256": "cb59b3b57109a37ab3b23160abfdf74b8c9d353296549ccd7090223c53a3f697"
     },
     {
       "path": "src/campaign/dual-runtime.js",
@@ -3035,9 +1930,29 @@
       "sha256": "4ba5f5815441dbb1a0a6527b227ab441d314502bc0116583ae52261e88732991"
     },
     {
+      "path": "src/campaign/eote-memorials.js",
+      "bytes": 8126,
+      "sha256": "ac2310598eda0645534d8151fc701e33169c7dc15d9dad1357f196fdf65940b3"
+    },
+    {
+      "path": "src/campaign/eote-partners.js",
+      "bytes": 12582,
+      "sha256": "bfd5830f3602c25a69cec8ce0c680f3118133e9e960a3447c2c2185406e77c11"
+    },
+    {
+      "path": "src/campaign/eote-seals.js",
+      "bytes": 11593,
+      "sha256": "00d597397e08499cd19582840ce3866d9b824b3958d34e4c1b58804fe445b905"
+    },
+    {
+      "path": "src/campaign/eote-supplies.js",
+      "bytes": 13897,
+      "sha256": "5d6aaf52458a20253a3c960b83cf47c3eac8bf98bd8b6df13e1f81eae677d448"
+    },
+    {
       "path": "src/campaign/epilogue-matrix.js",
-      "bytes": 3264,
-      "sha256": "3f03fe57431cb0128dfcec1b717d090c7f9b0ecaff7927dc6cca50d68b44e2dd"
+      "bytes": 14126,
+      "sha256": "37c353cab4535c81e3e549552f1070d29dce883a72957c756eb74bbd608a59e9"
     },
     {
       "path": "src/campaign/lane-adapter.js",
@@ -3066,8 +1981,8 @@
     },
     {
       "path": "src/cards/campaign-plugin.js",
-      "bytes": 30966,
-      "sha256": "a18e18c43c4df2f1493e62feb026c7582efc3d33c4a48b531b065783d7c0dfbe"
+      "bytes": 31825,
+      "sha256": "bdd235cff82f4e61ff0944d06968c21d54f2ecb2123a0ef23021e28268816461"
     },
     {
       "path": "src/cards/campaign-state.js",
@@ -3082,12 +1997,12 @@
     {
       "path": "src/cards/carcosa-campaign-acceptance.js",
       "bytes": 3736,
-      "sha256": "4008cbd9e4392b46111ec6d3b893266677a87b6d38b68ccad1224d0f8a11ef8e"
+      "sha256": "001c8706176da5c4a3ec9098f61e9c5792c1bf8063ab433ad520fba0eedc975a"
     },
     {
       "path": "src/cards/carcosa-player-acceptance.js",
       "bytes": 1900,
-      "sha256": "a56854250b773b5d849682ce5013725bfbcfef2449ab4564a977a5d77b36de11"
+      "sha256": "bc694aa863fc367ebc8b636bf5a30e8bc028e384c4cf099296c4aea50d353089"
     },
     {
       "path": "src/cards/card-abilities.js",
@@ -3127,7 +2042,7 @@
     {
       "path": "src/cards/core-acceptance.js",
       "bytes": 2655,
-      "sha256": "34e6a4e317508f9f5317c8bd63123bb3964eb7084fcdc346cefc3ae480a81018"
+      "sha256": "32ca9441f017669c1b766da0b7f6585e4e40e9b5ab21197edec5c64d9803bc8b"
     },
     {
       "path": "src/cards/dunwich-acceptance.js",
@@ -3146,13 +2061,13 @@
     },
     {
       "path": "src/cards/encounter-entries/_shared.js",
-      "bytes": 70684,
-      "sha256": "e592ba5edc891e8a0587fb9fe7125e402fd53d3d52605c483b6a28919e2fb92b"
+      "bytes": 71869,
+      "sha256": "1569b1d54329d11b0d3eaddf1e8ec5fb7d49dea52f9856d59f1acc41c5a4f925"
     },
     {
       "path": "src/cards/encounter-entries/index.js",
-      "bytes": 101701,
-      "sha256": "029633de31989f1cd9484ee880623bb4fbb57ffa8d5d71408e676eb406a0d0d8"
+      "bytes": 101738,
+      "sha256": "584970eb4300222cc597f4b8c48f5df77beeb03aee43fdfa2873c7e4f38bdfed"
     },
     {
       "path": "src/cards/encounter-entries/nightOfTheZealot/theDevourerBelow/01156.js",
@@ -3163,11 +2078,6 @@
       "path": "src/cards/encounter-entries/nightOfTheZealot/theDevourerBelow/screechingByakhee.js",
       "bytes": 1193,
       "sha256": "cc87fdb0948f6433be5fff90c72bb7c00a5c9100aeb5c0afe0109ca5be3ada86"
-    },
-    {
-      "path": "src/cards/encounter-entries/nightOfTheZealot/theDevourerBelow/youngDeepOne.js",
-      "bytes": 987,
-      "sha256": "5237ef84c9d4e33c0e9d081062c2502a1f93dbab21548de55b363f06e1d9108a"
     },
     {
       "path": "src/cards/encounter-entries/nightOfTheZealot/theMidnightMasks/01121b.js",
@@ -3183,6 +2093,16 @@
       "path": "src/cards/encounter-entries/nightOfTheZealot/theMidnightMasks/wolfManDrew.js",
       "bytes": 978,
       "sha256": "3f61c6ded1b0ab6bb15a24ca57c7875073fab2fae446e16ae4d81c9b3a281203"
+    },
+    {
+      "path": "src/cards/encounter-entries/shared/agents_of_cthulhu/01181.js",
+      "bytes": 2365,
+      "sha256": "b1dd6ce8c8f85b25ec95aaf87fb5fce15aafdc090ef2371e2cf5ad2d2eec2129"
+    },
+    {
+      "path": "src/cards/encounter-entries/shared/agents_of_cthulhu/01182.js",
+      "bytes": 2470,
+      "sha256": "1cea48f8ce8b37397ea1f2709beea4f6912414ecd7b3017b0e575e0aa03c1f4d"
     },
     {
       "path": "src/cards/encounter-entries/shared/agents_of_hastur/01176.js",
@@ -7551,8 +6471,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07094.js",
-      "bytes": 1373,
-      "sha256": "63ccb92427620b6513c9ffd052f7ab2d711eed73eb4be11ea9498a2fb5b6b0d5"
+      "bytes": 1883,
+      "sha256": "04b517b49270209bba060591ad5715a2886cff22344be55846b2e99b023a9195"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/_shared/fog_over_innsmouth/07095.js",
@@ -7771,8 +6691,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/aLightInTheFog/07260.js",
-      "bytes": 1853,
-      "sha256": "2c137896a6fc16381071c29c077cb4245ffc7232295d2904b757b01a86c2b80d"
+      "bytes": 2167,
+      "sha256": "2ae1ca0588aa7ba43a6e19b90f3af9fc43d9d32e7d1245c6e52cd2acbbc9e254"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07163.js",
@@ -7811,8 +6731,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07168.js",
-      "bytes": 2595,
-      "sha256": "99f2be3b08a446468d92c5a7f803b487930d7d85f1bda2acba2059af7671a27e"
+      "bytes": 3063,
+      "sha256": "894edb5d0a8870ec73fa379d7e96bf344c9cf2f11fc4682829edc63c32307214"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07169.js",
@@ -7971,73 +6891,73 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204a.js",
-      "bytes": 1496,
-      "sha256": "ac6c85928bc77a835fcaa4e6b3046f7db40490c1c980b69211c34eb48b32d569"
+      "bytes": 1494,
+      "sha256": "a3efe310a1fb6f3086b99105a1fc7606db18e074bdbd386fae3ea527c158c1a6"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204b.js",
-      "bytes": 1496,
-      "sha256": "38b9b7b0732ef3502f85c0fc64263461bddde00a92cda876e33b2e8721825b42"
+      "bytes": 1494,
+      "sha256": "2dc54853af2e17310afc8f3201b628e39a6b88d5aa3ee1c20473ab1d87afaf2c"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07204c.js",
-      "bytes": 1496,
-      "sha256": "87764192b2f49374a3ef1eead419fe33f7e8f6c62bb364c1980065eb8a701904"
+      "bytes": 1494,
+      "sha256": "92db68d5929a59528053bc95236b0d96611837fc88d8419c33d32c2ffccde04f"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205a.js",
-      "bytes": 3211,
-      "sha256": "3d2234304ad64829985a3418ad22571ad54cfd1333926a08f733d445ff22963c"
+      "bytes": 3209,
+      "sha256": "da176c578a1e09873ddcde7bbfc9516c593471064aab80250be2d6c722815782"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07205b.js",
-      "bytes": 3458,
-      "sha256": "d82b88b77dd18afb5272bc34720088bde90d07238d77e2c4fb54abaee1637c7f"
+      "bytes": 3456,
+      "sha256": "0c1345f8e9e57aebd45d5dbd2ccc8f1c563a2f5e06cc716ab8ad6b1894c160b3"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206a.js",
-      "bytes": 803,
-      "sha256": "e15e3127268902b01c139395a3b89a45261051787a2c9a0b7fe10ddd78bc85f3"
+      "bytes": 1707,
+      "sha256": "fa0dccb34ea4e37503e595f7ac084f91d3f442c917db5dd526faa1fdcb4ff05f"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07206b.js",
-      "bytes": 803,
-      "sha256": "e632764e7104e39ab94e7e2773417251d13c79d7de08e47b3d08a48cef3deaa5"
+      "bytes": 1707,
+      "sha256": "1ad6ef46f8fa17cf869475921cd2f52d829141b27a5b5f705bcc55586646eef9"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207a.js",
-      "bytes": 803,
-      "sha256": "8d4c66038644ac5d5ccb049d9287524e076fe33c2176057e0b7a037db819b0c8"
+      "bytes": 1719,
+      "sha256": "216177a8ff04c11b74b19e29619bcc87e3937a8e3379ef45e86860dafa2142b8"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07207b.js",
-      "bytes": 803,
-      "sha256": "a9d1020423853fc57c6fb74784cde5db8d8e2baaa3337491c6b59dba5d6477cb"
+      "bytes": 1719,
+      "sha256": "6f63e0861eb43e036a1a6e7ed59d61fcb6f51a5c24260f50fe58d3b7a9f6ddb1"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208a.js",
-      "bytes": 1490,
-      "sha256": "7e7c592244896db3e92054306d992c54be82c0354f0195d771d82b05ef3a0b44"
+      "bytes": 1488,
+      "sha256": "14721885bd8cc2e6b4e815995ac2da4e164d5f381ad47cfec527d36dc0541923"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208b.js",
-      "bytes": 1490,
-      "sha256": "15c6eb320960ff80e6b17fab05bd3d9ff1046938fc9f2e15eb7b06fdb381f2c1"
+      "bytes": 1488,
+      "sha256": "7a5176c8f9e62c5a55f2f0570d390e0d01ea06f2709773107f4a26a45055b1c0"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07208c.js",
-      "bytes": 1490,
-      "sha256": "d6ed9dae9f9634650b2f10de78787222fd97b768f443e6a5095b92c4ddbb61c5"
+      "bytes": 1488,
+      "sha256": "2803d15ad2693779433f2478b3b80e7ed82a57f79815cfeb0766ccb2525b671a"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209a.js",
-      "bytes": 1727,
-      "sha256": "f1bcd12223c2e2abedb327f896a0cd4a03b225296bccf8860af0dd1a2009ae2e"
+      "bytes": 1725,
+      "sha256": "97fe429211e45c44093e8db18c2ef16a673a526b1ec735f150c32603647d4eed"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07209b.js",
-      "bytes": 1724,
-      "sha256": "0c2b8547e4ca19970fae83988012a96488d47f3a7497ac0cd3f7199f7d2aec4f"
+      "bytes": 1722,
+      "sha256": "e720cf7e3c22278695ddaebc625a52cda109ac19d2645c9b1555db07f11b293f"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/horrorInHighGear/07210.js",
@@ -8126,8 +7046,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07128.js",
-      "bytes": 883,
-      "sha256": "864e9b41838a2246e4d98978a5150486a3b6e0951bd9e7bf614fb39946817e8f"
+      "bytes": 2285,
+      "sha256": "d45eddde0fcf6af86eb467b144a0b76c7c1005a6890499cfde0d5b8bd4efc4e8"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07129.js",
@@ -8271,13 +7191,13 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07316.js",
-      "bytes": 7064,
-      "sha256": "6501dd365f624f0c68b2a50caacc35153b24a75b7574425041264be47b9c9b33"
+      "bytes": 7999,
+      "sha256": "cfdf1b31cd9c340881c3405148f8aa05da0a9fa2a18caccc21198456992671a3"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07317.js",
-      "bytes": 3476,
-      "sha256": "db7dc6567d7cce6c97f14f885b3af12fcdbc2f2974eb6bbc3fa533dcba2a6b7c"
+      "bytes": 3926,
+      "sha256": "022957dd641f4222d0105a354bdc8fa305c5451a557d787735fc2dfc0eb3ee79"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07318.js",
@@ -8301,8 +7221,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07322.js",
-      "bytes": 1451,
-      "sha256": "94bc039071ff731256617eb86ca24f1a622bc78fecbb2109ea2e26b3e3903cb3"
+      "bytes": 1580,
+      "sha256": "747719f7dda5f743c2482ad251e3ae7e231ecc4825e1ee169dcdc5c58ef8c319"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07323.js",
@@ -8326,8 +7246,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07327.js",
-      "bytes": 842,
-      "sha256": "b6f486fede1700a915147b03e0a4acc10214c27b99965f9c4b8c73ed57e03f9b"
+      "bytes": 2930,
+      "sha256": "fc5011a0d063e9effb15f35188762fb5427f8ffbfcd70a165e3c1f417b0fe962"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07328.js",
@@ -8486,8 +7406,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292a.js",
-      "bytes": 2411,
-      "sha256": "5c85d4da580f71e5e1eb480733aae2baf05106dd8815e2f9edbe2a11f79177eb"
+      "bytes": 2576,
+      "sha256": "15238d21e184e542322fed5d937d4810b35558c348e7742fd379be315eee50ce"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07292b.js",
@@ -8531,13 +7451,13 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300.js",
-      "bytes": 864,
-      "sha256": "316ef329f4ba9f3c914d36774abbf24f956fa22a6e30440b751127c79c00dd87"
+      "bytes": 3052,
+      "sha256": "2bc1a429c75117cca2e05ad6cd6c33563b1bfa9416b943a7af3a817cdb8c379a"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07300b.js",
-      "bytes": 1064,
-      "sha256": "5db74187eb33db1bba692d12f6dd5627f818e86358d19830017c9c82e0f339a9"
+      "bytes": 2201,
+      "sha256": "f6a09d37fb95d060a7a924eaf6d072a58dc5c72b7ec5ed6be488295d32122cbe"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07041.js",
@@ -8566,8 +7486,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07046.js",
-      "bytes": 879,
-      "sha256": "65d50fd3b472fc67fa57040c6505a7ba019f865640e079b6774d9e44c7d46e55"
+      "bytes": 1913,
+      "sha256": "3a0304d67b9b65df1dbc8dc805b04b559d1c56cff3dc40419b2c5d4821ad2083"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/thePitOfDespair/07047.js",
@@ -8636,8 +7556,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07060.js",
-      "bytes": 9745,
-      "sha256": "1b5db4aaf13d59a3cd37820568fac4f95a44bbc1657c0337b51aa87a57a0b3fd"
+      "bytes": 7278,
+      "sha256": "226379bc6a3ce2e3b7a6e70ed5cdb84b36371fd9282d1e34de5820b74ffe1e50"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07061.js",
@@ -8711,8 +7631,8 @@
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js",
-      "bytes": 743,
-      "sha256": "2ab40120485caee901f6ed5e1c1a342307bbbd6d36afd1b2d56ee5f14f14cedd"
+      "bytes": 1877,
+      "sha256": "bab84844505ed9760b18d0dccf8afcd2f7da4610c10a89aed19fa26425f37e04"
     },
     {
       "path": "src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07075.js",
@@ -10286,8 +9206,8 @@
     },
     {
       "path": "src/cards/entries/02017.js",
-      "bytes": 1508,
-      "sha256": "0f06be2da01b740e065c835560a9f43a125f1439e4c71ddd385899b6975cf1a7"
+      "bytes": 1507,
+      "sha256": "920d80b870844f4f7a8d9afc2b10fef65f4dfcc52547cdaa909fc6eb95e927de"
     },
     {
       "path": "src/cards/entries/02018.js",
@@ -10296,8 +9216,8 @@
     },
     {
       "path": "src/cards/entries/02019.js",
-      "bytes": 1608,
-      "sha256": "a3151f05cf4ecf067aacbc0b93f67a9e606e077ffc839460fd379bac96c9fcc0"
+      "bytes": 1607,
+      "sha256": "46774caf99e8ff75b17eeee804d4c2918ec70e05db294962a87529d2f994bcd2"
     },
     {
       "path": "src/cards/entries/02020.js",
@@ -11331,8 +10251,8 @@
     },
     {
       "path": "src/cards/entries/03271.js",
-      "bytes": 1580,
-      "sha256": "78ddfb1a0f8346c5821fa37bec00dc563be287a8598cf24700bdea46465a0d94"
+      "bytes": 1727,
+      "sha256": "0d32a261dd949b49c571ca066fbf4a61bb17a113349a75193502629f37572a64"
     },
     {
       "path": "src/cards/entries/03272.js",
@@ -11691,8 +10611,8 @@
     },
     {
       "path": "src/cards/entries/04151.js",
-      "bytes": 1835,
-      "sha256": "cbc2c275d3ad4ce7869f168af28ede89a240948368b3d68c484dec993c64b75d"
+      "bytes": 2112,
+      "sha256": "14894e993f38808e06eeef4a7ddba4fd426291fd3792bbf119fc6c3725663785"
     },
     {
       "path": "src/cards/entries/04152.js",
@@ -11986,8 +10906,8 @@
     },
     {
       "path": "src/cards/entries/05004.js",
-      "bytes": 5121,
-      "sha256": "5327a0be8b5a5bb7e0555319fd0e9307de0cf7033b12c0ed2317229283f287e8"
+      "bytes": 5460,
+      "sha256": "466d8322da156fc11835fa459e8f19d8fc2f18d43e2a004420f64491f09e9262"
     },
     {
       "path": "src/cards/entries/05005.js",
@@ -12266,13 +11186,13 @@
     },
     {
       "path": "src/cards/entries/05153.js",
-      "bytes": 4143,
-      "sha256": "95a9afd14e8339b62cafa8ce9112363d7773d2c5fbbfcdddb526b19cb78a6e72"
+      "bytes": 2361,
+      "sha256": "1af564ea309780505966f377dcf2768a75e3e9551e2dd9122444469b3516abf3"
     },
     {
       "path": "src/cards/entries/05154.js",
-      "bytes": 2421,
-      "sha256": "9d225cc0d1769fb94a70162df7d352a4946612ce3a13b9bde2d17a27b5c12fed"
+      "bytes": 3080,
+      "sha256": "0397aa1f9127abc05ca93544f7c7a267ba273ccc17fefc2084459c79b1bffc4b"
     },
     {
       "path": "src/cards/entries/05155.js",
@@ -12286,13 +11206,13 @@
     },
     {
       "path": "src/cards/entries/05157.js",
-      "bytes": 2736,
-      "sha256": "6345cb8b6ad5a47743034afbf04ca31975dd67fc2bcbd88b1092fce4ec92b0c4"
+      "bytes": 3097,
+      "sha256": "e466a447b82684e132d68bd8844562ab8a70cc49eb1500f3d9b37c7bf2a5aed4"
     },
     {
       "path": "src/cards/entries/05158.js",
-      "bytes": 3898,
-      "sha256": "4422ecf8499504610f8087d0f07b8e7d4069f7ffe3679abf51aacdc6c846af1b"
+      "bytes": 4305,
+      "sha256": "09a8695da3a03df68152893305dc99e4ae27b051772d50ddab6480244e3605a7"
     },
     {
       "path": "src/cards/entries/05159.js",
@@ -12571,8 +11491,8 @@
     },
     {
       "path": "src/cards/entries/06011.js",
-      "bytes": 2581,
-      "sha256": "be9a96250609358fa744f2a270f2bc572e3b9237836ddc1b03b221e255481fcf"
+      "bytes": 2836,
+      "sha256": "8af876a0802ce1fdbc335df2465ac3434b8542c1a7732d0357a8146ef88ae8f9"
     },
     {
       "path": "src/cards/entries/06012.js",
@@ -12951,8 +11871,8 @@
     },
     {
       "path": "src/cards/entries/06279.js",
-      "bytes": 2997,
-      "sha256": "7fccba3d031db292d059069c9f1c67875da692d46f7f7240efb952e2ff6323ab"
+      "bytes": 3174,
+      "sha256": "84c1243de2b23370a31c56b6eef52d8cbc9f43913693560cde63d7cc135c69f8"
     },
     {
       "path": "src/cards/entries/06280.js",
@@ -13066,8 +11986,8 @@
     },
     {
       "path": "src/cards/entries/07007.js",
-      "bytes": 694,
-      "sha256": "1abb14df9c1a3c3c7629967fad8363f1c5738abbeeee357aa3beb80b47a158c3"
+      "bytes": 1049,
+      "sha256": "c8e6e1cba365c53a39f9ccb840a241954e21911a69479be32fb0a12f75c4d65a"
     },
     {
       "path": "src/cards/entries/07008.js",
@@ -13206,8 +12126,8 @@
     },
     {
       "path": "src/cards/entries/07035.js",
-      "bytes": 976,
-      "sha256": "0f7c2bc8cc44e945dbc78c82f457dfdc8bec344e5eca27541fccbc153620089f"
+      "bytes": 1091,
+      "sha256": "ae9a7a3f89605eed3eb57957498a7c8a399bebb1e72c1949e96c430c38caee7c"
     },
     {
       "path": "src/cards/entries/07036.js",
@@ -13351,8 +12271,8 @@
     },
     {
       "path": "src/cards/entries/07160.js",
-      "bytes": 450,
-      "sha256": "91815cc05315c3d825a40bed277624aae4c0c928d167cf21f61f286dd46758b4"
+      "bytes": 647,
+      "sha256": "7691c3a4a8e6b64fea1657150dd8b708b50778dd14c4a4e6b83e8be596e51407"
     },
     {
       "path": "src/cards/entries/07161.js",
@@ -13411,8 +12331,8 @@
     },
     {
       "path": "src/cards/entries/07220.js",
-      "bytes": 473,
-      "sha256": "df92e3a2a7d047b15ccdf3a1eb3d80d056e7fbb0205fcdf1d948aad616ced44b"
+      "bytes": 748,
+      "sha256": "5922fb4ad16696f6c7ea2b9a6d28b8b16f7a48498c555888404f67d4c0f351bd"
     },
     {
       "path": "src/cards/entries/07221.js",
@@ -13612,12 +12532,12 @@
     {
       "path": "src/cards/tcu-campaign-acceptance.js",
       "bytes": 8112,
-      "sha256": "913e6710cac08745d8020e7fbc4b839d18af318749ad5fe07f5767645ed31461"
+      "sha256": "7094da663e61c3d75ff97833fad952ec4e9ed325b4313261cefeab0cd9f0469a"
     },
     {
       "path": "src/cards/tcu-player-acceptance.js",
       "bytes": 2211,
-      "sha256": "54ce2aef83d02bd2dfc4e534b470b5af13e111fd8b53109a98db7a64c0608679"
+      "sha256": "bc0f8979b16020f8d6a8aa679e42b126b958610c3ee43dbc14a68749857ebce0"
     },
     {
       "path": "src/cards/tic-player-acceptance.js",
@@ -13651,13 +12571,13 @@
     },
     {
       "path": "src/engine/ability-exec.js",
-      "bytes": 34215,
-      "sha256": "080245611c889cb71f90f20534422ea1d231cf80c007d92985bef9e7549f994c"
+      "bytes": 34411,
+      "sha256": "e63934ec786dedc358c0a11fc96c78edbcbee788e2e0fcbb1de39ff2638cf4be"
     },
     {
       "path": "src/engine/ability-rules.js",
-      "bytes": 24976,
-      "sha256": "ae0700cc1c5f61601ed3dea8966def53004b1130250a54810bc9801be78f01de"
+      "bytes": 25513,
+      "sha256": "3e5d1fc90261fdf6a138e618b476e62a61337d4d1f2f63e0ffc579727abbd83c"
     },
     {
       "path": "src/engine/ability.js",
@@ -13676,13 +12596,13 @@
     },
     {
       "path": "src/engine/actions-extra.js",
-      "bytes": 24475,
-      "sha256": "e2b4d47739321a0712379d57f888a277576b871780032825baf1e47a33c9e976"
+      "bytes": 24726,
+      "sha256": "a06fed625fc412de0f20817e76cc7df5d1e91bc249148ffb8eb7485dcd4f4f1d"
     },
     {
       "path": "src/engine/actions.js",
-      "bytes": 39472,
-      "sha256": "243bc0dded6fe86ac4806864cc3312f6f45a84b7a1a097662925e77dd9b5d640"
+      "bytes": 40182,
+      "sha256": "86d13b58eaff83d84d5d6c33b8f1609c9b990b0ff81dfcbda4e63d93876815e7"
     },
     {
       "path": "src/engine/agenda-advance-frame.js",
@@ -13711,13 +12631,13 @@
     },
     {
       "path": "src/engine/api-mechanics.js",
-      "bytes": 9091,
-      "sha256": "d4553363a9fc1b9afa99caf5a2cca2f9a94f289618745d99ed3b088cf24c758d"
+      "bytes": 18875,
+      "sha256": "8dd12c949bcad37c9e89f7234f962f807841d153cb55cd23441fb7b132971278"
     },
     {
       "path": "src/engine/api-misc.js",
-      "bytes": 73130,
-      "sha256": "a78a32e0b1e4f76cabb70e41695ec9c22cc66d0eec87424656dd029c98e7547d"
+      "bytes": 73212,
+      "sha256": "c2098411afb513f662bd5f98743e616403451aee3b40ccd8ee19747d98a73881"
     },
     {
       "path": "src/engine/api-test.js",
@@ -13726,8 +12646,8 @@
     },
     {
       "path": "src/engine/as-if-location.js",
-      "bytes": 1218,
-      "sha256": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5"
+      "bytes": 1246,
+      "sha256": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc"
     },
     {
       "path": "src/engine/asset-defeat.js",
@@ -13751,13 +12671,13 @@
     },
     {
       "path": "src/engine/campaign-flow.js",
-      "bytes": 16258,
-      "sha256": "53496fdfbca92835b51e9186176c3aba699c0356b6fd0bf947d95aa938eb46e6"
+      "bytes": 17509,
+      "sha256": "9440669a153ed268928f6b213144c93a5878eb3504cdba0bbc1c9781405fca98"
     },
     {
       "path": "src/engine/cancel-note.js",
-      "bytes": 2496,
-      "sha256": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2"
+      "bytes": 2752,
+      "sha256": "c048a6b87483d59c201213da84f893739c1093513358c286a1ce497a9ece23b1"
     },
     {
       "path": "src/engine/capture.js",
@@ -13781,28 +12701,28 @@
     },
     {
       "path": "src/engine/card-ops.js",
-      "bytes": 21010,
-      "sha256": "5db037fef2c0c3b679c1f0337786bbd4d759144ce980a1188eeca98339038a75"
+      "bytes": 23532,
+      "sha256": "549c71a149bf3ccf1e48cb33e655edad2148114dd20cce4fdc1d1a922729ef8d"
     },
     {
       "path": "src/engine/card-text.js",
-      "bytes": 247,
-      "sha256": "2e59ec68caac6bfd0cbc01d12d5e93e38b034d12c91cc496f47e8dedd27dc330"
+      "bytes": 1661,
+      "sha256": "ba1f90400d645ee81dcb24360ab0e4e74e86d8db26020ad93076b37304750072"
     },
     {
       "path": "src/engine/chaos-bag.js",
-      "bytes": 4651,
-      "sha256": "e2c621f977026e3d34064edd3f88853bd16f51f7ad0382f91f47b49cd2c681b0"
+      "bytes": 5084,
+      "sha256": "2411b189d0cfd733031ed83b54d9d4fd9a97ec0e7fafbac9ac8d4c05496e0cc6"
     },
     {
       "path": "src/engine/chaos-token-effects.js",
-      "bytes": 1706,
-      "sha256": "637bf2c8f2af3214984e2fead75c1edabe350eeefda69570ea8b2ba5c5955f30"
+      "bytes": 2271,
+      "sha256": "a41f7b3ceae40f67b51d8ed0eefc3844ccd3dfdc7b4b65cac15bce9f0d0b6828"
     },
     {
       "path": "src/engine/chaos-token-pool.js",
-      "bytes": 5801,
-      "sha256": "5343cd6191e5e1cd4129ca2e0e465dd06d89f86900d2512f85779e00bf84f166"
+      "bytes": 6443,
+      "sha256": "8a3fb8b375968b1d219f0d61fee20c7b279ac862185f572f563742d78c0d1d53"
     },
     {
       "path": "src/engine/combat-odds.js",
@@ -13811,8 +12731,8 @@
     },
     {
       "path": "src/engine/combat.js",
-      "bytes": 49178,
-      "sha256": "3b17f4e590aec28835c81d0a08644548a9d31097fc88f11b2a1e74a5289cae99"
+      "bytes": 50181,
+      "sha256": "9efda3999be9f488dcdb79b0b1388710db14d7279871d2cded3fd0eddf0d2d93"
     },
     {
       "path": "src/engine/commit-origins.js",
@@ -13836,13 +12756,13 @@
     },
     {
       "path": "src/engine/debug.js",
-      "bytes": 19140,
-      "sha256": "dd3fd5061ee59a21640a4c7ba00ef27054c289d34676f7a951e7aa9f12053785"
+      "bytes": 27864,
+      "sha256": "27777358070a3245802b15ef4d6eaaecf70b5181d7237449179313fbde180fb1"
     },
     {
       "path": "src/engine/deck-ops.js",
-      "bytes": 31978,
-      "sha256": "d8fd08297a233467b4c50edf16c0f681a4a1862f42b7d1c9afcb88894e924567"
+      "bytes": 32289,
+      "sha256": "9b3aa03f812ed6cfac11479c69c4cbf00609dd6009922b12f4831fd5de0f4242"
     },
     {
       "path": "src/engine/describe-ai.js",
@@ -13861,13 +12781,13 @@
     },
     {
       "path": "src/engine/dispatch.js",
-      "bytes": 38701,
-      "sha256": "523db1becd523f86295f9a2cfe3c97503e9dc77288177dac33608ebbf41b262e"
+      "bytes": 38977,
+      "sha256": "67381db92d58f8f71dc3e4073fbdde44b04895f3f996f467a1241fbededc6010"
     },
     {
       "path": "src/engine/dream-gate.js",
-      "bytes": 4493,
-      "sha256": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58"
+      "bytes": 4604,
+      "sha256": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc"
     },
     {
       "path": "src/engine/edge-barriers.js",
@@ -13896,13 +12816,13 @@
     },
     {
       "path": "src/engine/encounter.js",
-      "bytes": 44945,
-      "sha256": "48aaedf445d30199b6c015ca2f35e82ef16d0cf7b7478e4fed532cf352c16096"
+      "bytes": 46316,
+      "sha256": "2f03a4625536778b518b7b7e12acafc032b909dbb131f8272ac31005453c845a"
     },
     {
       "path": "src/engine/enemies.js",
-      "bytes": 58609,
-      "sha256": "eca8e1b1597a4f20b6392095c1dd0301729531204eb5a01fd23d19288ba11b03"
+      "bytes": 63723,
+      "sha256": "ecd9a99c6610454e9419415a76db370cfcabeb175f941501de04a016ebef528c"
     },
     {
       "path": "src/engine/enemy-aloof.js",
@@ -13946,8 +12866,68 @@
     },
     {
       "path": "src/engine/engine.js",
-      "bytes": 158631,
-      "sha256": "1b97726ced5ab591d50096903708b7ae8a484b762e690a2c1f87cd4f684da782"
+      "bytes": 158884,
+      "sha256": "88401b0e62b4687351ba16e9a73493b8bb2d9b9097f5d3115ee0e6bcc5125a73"
+    },
+    {
+      "path": "src/engine/eote-camp.js",
+      "bytes": 6159,
+      "sha256": "d669cf80b327576dae5c9c7df9cde360bb57021d7f6fe8e0b7584b579ae580ec"
+    },
+    {
+      "path": "src/engine/eote-city.js",
+      "bytes": 17257,
+      "sha256": "62c78d9de75d5142c7b529276c7686afc5c583b4145a706570fcd0069aefcfc3"
+    },
+    {
+      "path": "src/engine/eote-climb.js",
+      "bytes": 13163,
+      "sha256": "d11e205200ff439bc68cc039e049d1d069c17995b42887b2da2a0229cb0f79a0"
+    },
+    {
+      "path": "src/engine/eote-deck-top.js",
+      "bytes": 9160,
+      "sha256": "f229aeab4ec0e9cd01644fc05f5b811a44a0b21655e67dc8c7ba03c90acf77ad"
+    },
+    {
+      "path": "src/engine/eote-disciplines.js",
+      "bytes": 8807,
+      "sha256": "a8d65eeb604bdcc7b5eeb88210a6328085592f41903310579fe92097319dca3f"
+    },
+    {
+      "path": "src/engine/eote-facilities.js",
+      "bytes": 16663,
+      "sha256": "83c740cf376a314368b44bc27ea1c46e96f0ee79e40c4255a15d72dc35307ddd"
+    },
+    {
+      "path": "src/engine/eote-interactions.js",
+      "bytes": 25274,
+      "sha256": "1daeed2f96988144fc6ff753e0c4071dec86ccb9a56ccbe6b814186f3e015661"
+    },
+    {
+      "path": "src/engine/eote-primitives.js",
+      "bytes": 3157,
+      "sha256": "d5dc7212cd2deb7fae0f94204025395cd5b16806289d977719290108decd8050"
+    },
+    {
+      "path": "src/engine/eote-round-distance.js",
+      "bytes": 3767,
+      "sha256": "1a3987102f55c9d3a00b7efbe514c5684b5aa4eb9a2476a1fb0a40b52644e3d2"
+    },
+    {
+      "path": "src/engine/eote-shelter.js",
+      "bytes": 3133,
+      "sha256": "a5c71493bdda3514589160bcad137598ee227c6204e76fded0f0e4f3ecc653bc"
+    },
+    {
+      "path": "src/engine/eote-state.js",
+      "bytes": 3256,
+      "sha256": "70463d454d1dc1c42e099a41fd17ec25ed4b888644e4b3219591776ac644b8cc"
+    },
+    {
+      "path": "src/engine/eote-tekeli.js",
+      "bytes": 10431,
+      "sha256": "14bfcea0c2ecfdba50dbe5bc2057be698de775900532ef74896ca7e4222df7dd"
     },
     {
       "path": "src/engine/event-window.js",
@@ -13960,9 +12940,14 @@
       "sha256": "1712de9d80f9ca269440dd1b8149f3c6d0a4acbbce10f50df7075c6ef29d9695"
     },
     {
+      "path": "src/engine/frost.js",
+      "bytes": 2968,
+      "sha256": "6c5c46474060b94d2d681502935639e8b3da52a35d929c1f8cd8acda31ff50a8"
+    },
+    {
       "path": "src/engine/grid-map.js",
-      "bytes": 4362,
-      "sha256": "80fd364832e3ef3a4629821966ce182d5d1caacffbb33bf50e9af616b185b3e6"
+      "bytes": 16690,
+      "sha256": "30cbe797220b2cd583320738015cad0b7a56a96ea041799be324877746a32526"
     },
     {
       "path": "src/engine/group-cost.js",
@@ -13976,13 +12961,13 @@
     },
     {
       "path": "src/engine/hand-entry.js",
-      "bytes": 441,
-      "sha256": "2ec4f9db52145a1e4e32c34871519e1a1a02b3a1d0b03eb4cd36b05d23915093"
+      "bytes": 440,
+      "sha256": "b8144de94dfc5ab3591ed93e360c7cab2f5cd1eb3d99fbb82a2ceaec71ada877"
     },
     {
       "path": "src/engine/harm-threat.js",
-      "bytes": 38454,
-      "sha256": "5c2ebaa7a6b5b1883b5c57ecc91bdb471150f550a5c2b5d078008bc334ec250b"
+      "bytes": 38501,
+      "sha256": "9fc26be096edc7fe828e771bcff875d1b4492122b723a6abc3a2c9a7dca637d1"
     },
     {
       "path": "src/engine/harm-transfer.js",
@@ -14016,8 +13001,8 @@
     },
     {
       "path": "src/engine/investigator-mechanics.js",
-      "bytes": 9323,
-      "sha256": "df90ec3f864eecd68747dfe89b34af7558d8cbb69d88785d6073b0599e786649"
+      "bytes": 9405,
+      "sha256": "7391512ff911bc041051b6e1c89cfd3626b7348dcebc700ea230440388279e6b"
     },
     {
       "path": "src/engine/key-cost.js",
@@ -14081,8 +13066,8 @@
     },
     {
       "path": "src/engine/location-symbols.js",
-      "bytes": 1118,
-      "sha256": "50b5f51b8ac65b638d72c1f45ecb7f53dee147cc7f6a098d6543f1e1ca419c0b"
+      "bytes": 1826,
+      "sha256": "44666404cbda8f67d3108ddc8df4c8b8f8b6579de12d214da0a6ae1f5586ab07"
     },
     {
       "path": "src/engine/location-traits.js",
@@ -14091,8 +13076,8 @@
     },
     {
       "path": "src/engine/locations.js",
-      "bytes": 25026,
-      "sha256": "d537a5377cad0c85b5a5a818ab957ee1df5f1f79e5613f5708e101d6d1bd22ff"
+      "bytes": 25833,
+      "sha256": "547d7fac751ccfbef91ee0cc44df28c656122ee3dfbdf45a4435571ac387607b"
     },
     {
       "path": "src/engine/look.js",
@@ -14101,8 +13086,8 @@
     },
     {
       "path": "src/engine/map-graph.js",
-      "bytes": 3278,
-      "sha256": "c8b937e01dc5906e63b920408daf5db8636cd340478b4d95f68ae3d6817e5061"
+      "bytes": 4992,
+      "sha256": "a5085f7d44e4c3b64d6bdc4be41effec2a76cb858b84555bd6c3d78195fe64eb"
     },
     {
       "path": "src/engine/marker-count.js",
@@ -14116,13 +13101,13 @@
     },
     {
       "path": "src/engine/mechanic-choices.js",
-      "bytes": 10298,
-      "sha256": "7286f5689da71fee36488b0ab19525b76abd98f56a9d0706abe472ab45a0b357"
+      "bytes": 10586,
+      "sha256": "36314461e291be3a3bb9653c998f80125b8f474114d8400e49aba9c764257981"
     },
     {
       "path": "src/engine/mechanic-state.js",
-      "bytes": 8176,
-      "sha256": "c1eccb5292fab0f1dd1afc763799eba2812a909215f08b33bd7e1ab390f21fb0"
+      "bytes": 8317,
+      "sha256": "66ad0359d8443745013e18d4cc4ef06fe3d8f8cddca43016e8cd71ca0a69c4ef"
     },
     {
       "path": "src/engine/modifiers.js",
@@ -14136,8 +13121,8 @@
     },
     {
       "path": "src/engine/moves.js",
-      "bytes": 62296,
-      "sha256": "fd78cb25a0eb777092cb4448226cf9073bcece276a7978527bf49298a224bbbb"
+      "bytes": 63216,
+      "sha256": "8bad14678cf24ff90db47ac661e73e5290782b63bb6589f413cb53f9c2dd72e1"
     },
     {
       "path": "src/engine/myriad.js",
@@ -14156,13 +13141,13 @@
     },
     {
       "path": "src/engine/phases.js",
-      "bytes": 14307,
-      "sha256": "d3a227e9361255f0a90c09e424a0af1536a6ba66a2d00897a6dd8301b3270fa2"
+      "bytes": 14696,
+      "sha256": "2af58555e92683d648168c8e728866aa054cb88710ea0f30bca1231b68a3b54d"
     },
     {
       "path": "src/engine/physical-faces.js",
-      "bytes": 4146,
-      "sha256": "f783b52bac6c690b634de2a25de3171da9cb02e4485b08083a4e3d2cf23757ab"
+      "bytes": 6354,
+      "sha256": "5d316f43ab97aa2d8d99d95054f27b53a367b36f3a2f2750f245f2560c379db6"
     },
     {
       "path": "src/engine/play-attempt.js",
@@ -14171,8 +13156,8 @@
     },
     {
       "path": "src/engine/play-channels.js",
-      "bytes": 34276,
-      "sha256": "c8af271605913cba72c6febe05b3c77c0e87caefcc9990738b6b53266cb809b6"
+      "bytes": 47292,
+      "sha256": "5a769589b4aa7b1f691a50f39e9c1c8c8f9da6683e3347f3ea641b20996f425f"
     },
     {
       "path": "src/engine/play-condition.js",
@@ -14200,6 +13185,11 @@
       "sha256": "313be4c2bb5ae36e5ece8de364e87165d8434be52126d06f03a8a9cf4fd462a8"
     },
     {
+      "path": "src/engine/presentation-events.js",
+      "bytes": 971,
+      "sha256": "61a8f37a00a0d90eb1f76ecc821debd77d4dd3c38657886a0737a215f00f1db6"
+    },
+    {
       "path": "src/engine/replay.js",
       "bytes": 14838,
       "sha256": "40178b91d75f05a0e48e5340ed2471b604f20970913a7cd866634ee0b63934ad"
@@ -14211,8 +13201,8 @@
     },
     {
       "path": "src/engine/resolution.js",
-      "bytes": 9773,
-      "sha256": "96ee3053f15e8076087e28e95c1bd79b5c297c5a9aa72932f2fd77f114ac8536"
+      "bytes": 9928,
+      "sha256": "d2c316d6c9c2b3c1995edc9986144919ebc93aef1e64f90f7a28230e1b7c49d1"
     },
     {
       "path": "src/engine/resource-bank.js",
@@ -14246,18 +13236,18 @@
     },
     {
       "path": "src/engine/save-migration.js",
-      "bytes": 22650,
-      "sha256": "5fed366c33ada1093d8f77d1720ec50cb8100607aaa8e31fcfdf0966dd5d0f12"
+      "bytes": 22983,
+      "sha256": "d4f00fc49a5edd0e07af368db68e094ff5c100bdf9382c1eb13279d10ff0bf2e"
     },
     {
       "path": "src/engine/scenario-decks.js",
-      "bytes": 4478,
-      "sha256": "b1d8ae693fcc5fea46bbd13780272b921ac10bd7d6d82ca0875b24f1097f8174"
+      "bytes": 9899,
+      "sha256": "74c3553300bfff48e980f4d9176115623247ea026e23c54896dc66410fbd08b3"
     },
     {
       "path": "src/engine/scenario-keys.js",
-      "bytes": 7596,
-      "sha256": "caf44d3faa1bad0bfe06b1417be476e2926e04d9fe60613887105b0addfaab1f"
+      "bytes": 15656,
+      "sha256": "1e5d18ec9e0a47ceb77ff280a1a1b8864b27ae07889182ac30942a0089f74712"
     },
     {
       "path": "src/engine/scenario-runtime-extras.js",
@@ -14266,8 +13256,8 @@
     },
     {
       "path": "src/engine/scenario-runtime.js",
-      "bytes": 107369,
-      "sha256": "bbe41a9821bd21d4f12c5ca3ea9025c2236da84db0766c1c0a63b82ec491b566"
+      "bytes": 108325,
+      "sha256": "cf2c08c9585d604ee30991bd6799b46c371cdace079de91f24ab0f55989e2361"
     },
     {
       "path": "src/engine/script-cards.js",
@@ -14281,8 +13271,8 @@
     },
     {
       "path": "src/engine/skill-effects.js",
-      "bytes": 20860,
-      "sha256": "243e564e3491f4a884c79bde2de9a9784a3af96d53040972d74390b06f0fd7fd"
+      "bytes": 20942,
+      "sha256": "0706d4eeaceddb69bbe2177e484cb8a9863339e962d9353ed5f5ebcfd6d09389"
     },
     {
       "path": "src/engine/skill-substitution.js",
@@ -14296,8 +13286,8 @@
     },
     {
       "path": "src/engine/stats.js",
-      "bytes": 20285,
-      "sha256": "42ca39db9415edf6f851c59c90971945981983df05d40fb3cc8fcb860d0402ca"
+      "bytes": 20000,
+      "sha256": "0698f4f438a35207463b68000aee0057b47c2ea7f38a8bccf7a31783eeb211ab"
     },
     {
       "path": "src/engine/story-investigators.js",
@@ -14341,8 +13331,8 @@
     },
     {
       "path": "src/engine/tests.js",
-      "bytes": 88949,
-      "sha256": "20f0826c3255b045c042dc6887cdc0b1ff244463b595d02fe34cebcc2236516c"
+      "bytes": 90342,
+      "sha256": "ca7afe42b88aa42907f11d86172a1742542b814a32b9a02b5e1761b7453a0ed1"
     },
     {
       "path": "src/engine/threat-entry.js",
@@ -14381,8 +13371,8 @@
     },
     {
       "path": "src/engine/turn.js",
-      "bytes": 36696,
-      "sha256": "a36ae22759196f39b5e8480ed8edc3465c3606bbad1367c92d267aaec9ed686a"
+      "bytes": 37293,
+      "sha256": "d5f0d2463f4ca1e7dcf2a6395fe0e7d462be8e5fa46c14ddd131ee878b09afcc"
     },
     {
       "path": "src/engine/use-transfer.js",
@@ -14401,8 +13391,8 @@
     },
     {
       "path": "src/engine/vehicles.js",
-      "bytes": 8013,
-      "sha256": "fe85c54a646eea230322cfb316cf1bb309331a783866e4ba73608cbc44cf87e7"
+      "bytes": 8640,
+      "sha256": "484614c14374eda80856d1b3c60986f2da9e83757f4e729ef9db407313ce9dc3"
     },
     {
       "path": "src/engine/veiled.js",
@@ -14411,8 +13401,8 @@
     },
     {
       "path": "src/engine/vertical-chain.js",
-      "bytes": 3734,
-      "sha256": "0e319b1c97ead9d2560a3790dd64d3d4d6cf84d90a015dfbca09257ce8ec075f"
+      "bytes": 7925,
+      "sha256": "96aac5ac7fa9086697a2f5b4b77137fe1745490dcd1a1ec24bc4e8b01bb346fa"
     },
     {
       "path": "src/engine/victory-destination.js",
@@ -14446,8 +13436,8 @@
     },
     {
       "path": "src/integration/attack-style.js",
-      "bytes": 1441,
-      "sha256": "46a60341e396103d1f25a86e2078582c91302ffc02499dbd2e4fce3002626500"
+      "bytes": 1553,
+      "sha256": "e9f8180ed954e781e34b4b5c06cd8883aeedc2a3b5bc2ca3be8c3a71f6674f6d"
     },
     {
       "path": "src/integration/choice-batch.js",
@@ -14456,13 +13446,23 @@
     },
     {
       "path": "src/integration/debug-console.js",
-      "bytes": 44565,
-      "sha256": "eb4c3e82fbfed0dac4baf149fffbbbc857ca827e287cea7aceee06e8f460fe3e"
+      "bytes": 63688,
+      "sha256": "36d0c07df0f61ff34565bae4c7db70f619f90532e2f33384f7615e45908671ab"
     },
     {
       "path": "src/integration/deck-library.js",
-      "bytes": 4110,
-      "sha256": "05dc3081af7a565f36a79d0f8840d2bf39298dfabcfc3159e75218743764125b"
+      "bytes": 5304,
+      "sha256": "b672a372fdf67d4b449f4f2bc7699d7422c8d1d28e68d0946c22d8d79e5b22e0"
+    },
+    {
+      "path": "src/integration/direct-damage.js",
+      "bytes": 1991,
+      "sha256": "1ddca71157943767c6b9705c980a4dad3f225c2616938db922638b74333601a7"
+    },
+    {
+      "path": "src/integration/enemy-attack-presentation.js",
+      "bytes": 1346,
+      "sha256": "8a0c40d5b7a8ca510bdfb654d484177823ed6b5b0af941b07ae7d15d254bbe39"
     },
     {
       "path": "src/integration/hall-integration.js",
@@ -14476,8 +13476,8 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "bytes": 4458,
-      "sha256": "1459d8c6855577da62e0b29defd8bb1dc29a3759dce2ad7f28d7dae4558cd2bc"
+      "bytes": 9325,
+      "sha256": "6560979ca31ad3e4c3c488f2cac74baf395ae0e404593e8a628751417e4cd9ea"
     },
     {
       "path": "src/integration/music-cache.js",
@@ -14496,13 +13496,13 @@
     },
     {
       "path": "src/integration/parallel-runtime.js",
-      "bytes": 35682,
-      "sha256": "0f1785b619c8139233eefced77de4daa60e813d14d87f57eabecc6c5000428e4"
+      "bytes": 37027,
+      "sha256": "217e31b8a7e06d4087310238a73e9f210a3c60b23820563335f1db1be166a9d5"
     },
     {
       "path": "src/integration/presentation-state.js",
-      "bytes": 12569,
-      "sha256": "99ead702e8cbfb24ac9cef00c0043d130d5c96dc4867e7ec41dc4ec74a65d6e5"
+      "bytes": 13116,
+      "sha256": "8273091718a1d5d97c9d288e1a70bd1cacf4346cf91974e6044671093333cba3"
     },
     {
       "path": "src/integration/scenario-images.js",
@@ -14511,13 +13511,13 @@
     },
     {
       "path": "src/integration/scenario-interactions.js",
-      "bytes": 4638,
-      "sha256": "0f754d30964bf4a17c49431b7cc78d0cc01a2b00b8dc3272931f6adca5081252"
+      "bytes": 5069,
+      "sha256": "0782a5bc6ec6ba7f804b5dcd5010b4581178f36d4f16e0a2c39cecc8cbc9013f"
     },
     {
       "path": "src/integration/web-api.js",
-      "bytes": 5943,
-      "sha256": "00f964ad6ca92efa3d40171be630c29726a1cab29a82540d5392d0b5473fa149"
+      "bytes": 5973,
+      "sha256": "e6d24ec4ce23d1c2d3ca93ffb5a165dcacb8ac6536c4f3b90908874658436bab"
     },
     {
       "path": "tests/ability-layer.test.mjs",
@@ -14551,8 +13551,8 @@
     },
     {
       "path": "tests/fixtures/replay/tic-p8-baseline.json",
-      "bytes": 231515,
-      "sha256": "16aeff65f6dd1a72b7130da58823292f0aec9c8eb9ef30bc28900a3f2e012c1b"
+      "bytes": 231860,
+      "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b"
     },
     {
       "path": "tests/i18n-dict.test.mjs",
@@ -14561,8 +13561,8 @@
     },
     {
       "path": "tests/node-suite.mjs",
-      "bytes": 14164,
-      "sha256": "8b0344529ca22ceffa94b35b70d597ecd1084df895d504714fb3b5ff84c203ca"
+      "bytes": 15452,
+      "sha256": "6c9aa18aa0463f6b9a1dc57622284df35797a549c9e34f09cd0c35c60abadd07"
     },
     {
       "path": "tests/p0-regressions.test.mjs",
@@ -14586,8 +13586,8 @@
     },
     {
       "path": "tests/reaction-preferences.test.mjs",
-      "bytes": 24634,
-      "sha256": "68882d006560ff358c7dcf10421922b09b2c0be6c4ab493643c1dc5f899b4493"
+      "bytes": 26419,
+      "sha256": "a54cbf1ed1d6cba9949107313c10014ff6eedf297f711514d124d3f2f90e98d5"
     },
     {
       "path": "tests/replay-tic-p8.test.mjs",
@@ -14611,8 +13611,8 @@
     },
     {
       "path": "tests/suites.mjs",
-      "bytes": 25060,
-      "sha256": "816ca60cad2bd0bc5a785b6feba9135d4009b21168204805b52449e5a5fbe41a"
+      "bytes": 26312,
+      "sha256": "2e7be2f18b672ce9e83ca743c50ec58f7231f31e8385ae9e26c5fe2a2870adaa"
     },
     {
       "path": "tests/tcu-wages-of-sin.test.mjs",
@@ -14646,8 +13646,8 @@
     },
     {
       "path": "tests/tic-investigators.test.mjs",
-      "bytes": 24225,
-      "sha256": "706d8a00ca04c6d753c850c740aa9f02d35c4c434cb7bf58ca12bd16981f1fdc"
+      "bytes": 27390,
+      "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
     },
     {
       "path": "tests/tic-late-b-cards.test.mjs",
@@ -14666,8 +13666,8 @@
     },
     {
       "path": "tests/tic-p8-campaign.test.mjs",
-      "bytes": 48035,
-      "sha256": "8dd823a43e6fd75ffc9e33b1f98a9da65979c758178229140c4dca760cf28479"
+      "bytes": 49273,
+      "sha256": "afd0260c9d1689705305ca7e6f302084b755d6528641178cea95de7e964e0ee1"
     },
     {
       "path": "tests/tic-p8-fixture.mjs",
@@ -14691,8 +13691,8 @@
     },
     {
       "path": "tests/tic-player-guardian-seeker.test.mjs",
-      "bytes": 21859,
-      "sha256": "ed6281f58287b0cadb1bc1cf460ebced31c5b54aded791f78440235bb9321d98"
+      "bytes": 22356,
+      "sha256": "9339388b9107011594ca7d17c44c441b2cab2108c4958aa02c6248454d7407c4"
     },
     {
       "path": "tests/tic-player-primitives.test.mjs",
@@ -14701,13 +13701,13 @@
     },
     {
       "path": "tests/tic-player-rogue-mystic.test.mjs",
-      "bytes": 24418,
-      "sha256": "7f8cb4e241e6d05de5d77e9a4fead993a756418ab716cd395bac6cada0004ac5"
+      "bytes": 27380,
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
     },
     {
       "path": "tests/tic-player-survivor-neutral.test.mjs",
-      "bytes": 30249,
-      "sha256": "b7a4723dd9096c16bb141dd0a273cafa7d8171d5a7069908846928947042c5fc"
+      "bytes": 31653,
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
     },
     {
       "path": "tests/tic-player.browser.mjs",
@@ -14876,8 +13876,13 @@
     },
     {
       "path": "web/attack-fx.js",
-      "bytes": 13795,
-      "sha256": "feff4dbca8eee1327f33b264a062d554753dd94d03fa507265960964c5538c98"
+      "bytes": 14033,
+      "sha256": "5c1292ad07324131becbb0e24a861c47179f3963c9c126456d74ef0373b125f1"
+    },
+    {
+      "path": "web/attack-themes.js",
+      "bytes": 2276,
+      "sha256": "28cba70ed4714155c2fc5bf217584dc7a61f93a0dfd980cfd263fdbc87b3a7c6"
     },
     {
       "path": "web/campaign-experience.css",
@@ -14886,8 +13891,8 @@
     },
     {
       "path": "web/campaign-presentation.js",
-      "bytes": 10745,
-      "sha256": "3b2491cd65f6ded7b5d0ec8a70ea27b9e833d2449353b2452e1c2ce6981be0fe"
+      "bytes": 10746,
+      "sha256": "22406a7ec74bdadc864d105389528d21ff0b2c2aa667869a1d9bb71015329db1"
     },
     {
       "path": "web/campaign-records.js",
@@ -14911,13 +13916,13 @@
     },
     {
       "path": "web/card-interactions.css",
-      "bytes": 21898,
-      "sha256": "0128d26534e65c80b9c3ba3bf6dbd040d1e31297acf38ec37f707a4789476ede"
+      "bytes": 23129,
+      "sha256": "f871a056d5b1a87fc2e49b0be19a31db09d527ee39967f3b4caec705548db29a"
     },
     {
       "path": "web/card-interactions.js",
-      "bytes": 30903,
-      "sha256": "ecbbbcf674d4a46e679f372fe497e6419e1bbce069c05e67810d93808695c53b"
+      "bytes": 36293,
+      "sha256": "0a910546fec42b98cf600798c44dca26d7757a94f83496565f5f007fa0d9b7fe"
     },
     {
       "path": "web/card-text.js",
@@ -14936,8 +13941,8 @@
     },
     {
       "path": "web/catalog.js",
-      "bytes": 27666,
-      "sha256": "0e7a1c83a530a598402ab8ca90a218cef461fc156878e05f8bbf0ef5c50ecdce"
+      "bytes": 27930,
+      "sha256": "b7c9843303140a20d52c73d235331631e399e4214740861c58519aba752d4c14"
     },
     {
       "path": "web/chaos-bag-view.js",
@@ -14946,8 +13951,8 @@
     },
     {
       "path": "web/chaos-token.js",
-      "bytes": 2691,
-      "sha256": "99494abf914c82393e2913234505c5940f2e0e4d74cf838dc7569f3b85c3023d"
+      "bytes": 2694,
+      "sha256": "486526924ed5c8275d671b37f17a41026aa3ce225e81ea36819a54b3896167db"
     },
     {
       "path": "web/combat-sound.js",
@@ -14961,18 +13966,23 @@
     },
     {
       "path": "web/debug-console.css",
-      "bytes": 6632,
-      "sha256": "d1adb226f5cb0a1db453389c88924b2368ec550a19005ce851f3b1be99934ba9"
+      "bytes": 7152,
+      "sha256": "2f10f444be2a92861142da4dafdc2894dd0ff4a3a0ac1bb8786fa1172b7102a4"
     },
     {
       "path": "web/debug-console.js",
-      "bytes": 17929,
-      "sha256": "12d74914ea41b1dcb0c5b99cfe663a140b90ce9351846368f5d9d89b2da307ed"
+      "bytes": 21945,
+      "sha256": "76ac5bd83e58fb171b4be344519ac96d09cc6377f45ac1a0b7b3f0dae5e25ded"
+    },
+    {
+      "path": "web/deck-library.css",
+      "bytes": 15966,
+      "sha256": "b142fe08ec586f5a941694ecfa649555c5f1c6d60e1a9994ef749a3635cd83a0"
     },
     {
       "path": "web/deck-library.js",
-      "bytes": 882,
-      "sha256": "fe91c741f7475cd077b984618c28d10e7ebf6873b1d676b372ca6db8e1146fc9"
+      "bytes": 1737,
+      "sha256": "dcd75b5b52ffd99f92656570ea3ccc3cfd3136112646eafb0a5753646d08d2f3"
     },
     {
       "path": "web/deck-rules.js",
@@ -14983,6 +13993,26 @@
       "path": "web/departure-lanes.js",
       "bytes": 1766,
       "sha256": "54e45b1a6ab07880f2e963ecf1a461f462c12c6b31cb44c295172c1f05ca5164"
+    },
+    {
+      "path": "web/direct-damage-fx.js",
+      "bytes": 1907,
+      "sha256": "1a0ea95f018b4a2ef9d87ddab88a852f933d7bfd5507473abde4c7e503fe13ab"
+    },
+    {
+      "path": "web/enemy-attack-fx.js",
+      "bytes": 6474,
+      "sha256": "28c0eab74075e501fc58f1ab2a33605adec31921f443748a292a7e5062238479"
+    },
+    {
+      "path": "web/enemy-attack-themes.js",
+      "bytes": 1992,
+      "sha256": "c7fa2f77f814d5aabdd1b9b3805c1437c8e7c9bbbd2448df453dbed970e7b13f"
+    },
+    {
+      "path": "web/eote-rules.js",
+      "bytes": 51588,
+      "sha256": "b411ae907621d69512035b76459c724939a14dbc4437c80d04548224a644e68f"
     },
     {
       "path": "web/game-symbols.css",
@@ -14996,8 +14026,8 @@
     },
     {
       "path": "web/game-ui.js",
-      "bytes": 167256,
-      "sha256": "a24b0b26a98756b72d0056207ea2a693a2fdec56b7636e5ba3a88cdc5be94589"
+      "bytes": 169539,
+      "sha256": "b425ed7b75cf1b82824a31733cc288f99eb3a1b4bf999899597ba0cbc5506de4"
     },
     {
       "path": "web/hub-mode-view.js",
@@ -15006,13 +14036,13 @@
     },
     {
       "path": "web/hub-office.css",
-      "bytes": 65776,
-      "sha256": "4ade95744cc1478efad759c5c08c754c60612d83a0cdd0f713588845a71879f8"
+      "bytes": 65899,
+      "sha256": "0a37c1d30851cfcc00978d31df58552a02da2ef827f49a827a848a8de97b273a"
     },
     {
       "path": "web/hub.js",
-      "bytes": 126321,
-      "sha256": "ffcf31deecaa86eff8a7f102c852aa6753591e5b6c2d5b829288903f025e6df8"
+      "bytes": 160655,
+      "sha256": "92a66b694c3f732a0ee4d0f6b233bc2f80c7521e0a82bd38c99fe55a1d9b01b0"
     },
     {
       "path": "web/i18n.js",
@@ -15021,23 +14051,23 @@
     },
     {
       "path": "web/images.js",
-      "bytes": 6105,
-      "sha256": "cf2cb72c4631a9cb4cbe896bc9668119e8aa6b0c9b406342c9e9d1caf678e868"
+      "bytes": 6240,
+      "sha256": "7ad5f29cffd27ec09e3cf58696c8ecb916c554440d78573dc5ca48b3b33f39b5"
     },
     {
       "path": "web/locales/en.core.js",
-      "bytes": 8112,
-      "sha256": "59788b31c2bf52a056b46f7443737fe543e38e50aa06eb5db450ae60fbd14dd7"
+      "bytes": 8121,
+      "sha256": "9fe76cbfefb749565dc1b586d59ad80324a3dc60c8c67eab68763cc53a9e9fe4"
     },
     {
       "path": "web/locales/en.gameui.js",
-      "bytes": 23804,
-      "sha256": "d38dcefee64a0aa32a9d8c4aaa632a3469e0b39e0e191a34c10977b6d2766456"
+      "bytes": 25647,
+      "sha256": "b851e7092fe537bc5e7d577f5f34730c1df429aceebdbef44625087065a9dcf5"
     },
     {
       "path": "web/locales/en.hub.js",
-      "bytes": 29197,
-      "sha256": "2f618f7ca2446cdd722a2352f8be517ebe6c5c3dbd5057a2a2682acea80fc65b"
+      "bytes": 33315,
+      "sha256": "da66d2d70e508aa5e254d503c6e222be6966602bc17340561876a64dabeafa43"
     },
     {
       "path": "web/locales/en.js",
@@ -15051,8 +14081,8 @@
     },
     {
       "path": "web/locales/en.misc.js",
-      "bytes": 6096,
-      "sha256": "51794bbf3c6f792e96cf4efdc115ad10d2355ec53769333d770b51a73738060d"
+      "bytes": 8072,
+      "sha256": "c38900f5a1ff42440dc922ee90d8bb93abc69fa034ad26e7a4c8e7b6d20e5560"
     },
     {
       "path": "web/locales/en.panels.js",
@@ -15061,23 +14091,23 @@
     },
     {
       "path": "web/locales/en.table.js",
-      "bytes": 14370,
-      "sha256": "e295c8b8c625225cab23c882ca1e63a47f07e08831f1d705f9f60b4d9c7fb836"
+      "bytes": 14596,
+      "sha256": "8aea034ad9b2f591cc612eab5c097790a2ab28a3cb99ee0dae70ad086cc9229f"
     },
     {
       "path": "web/locales/zh-CN.core.js",
-      "bytes": 7951,
-      "sha256": "9b9eb2ac3eb20f65ced4ee695d47ec476c05c57df69a771f97c0ec4a249adc13"
+      "bytes": 7956,
+      "sha256": "21b868a47892a9a22accac331723dfe6d560f058dba23b0c561894bdb16efe9b"
     },
     {
       "path": "web/locales/zh-CN.gameui.js",
-      "bytes": 23529,
-      "sha256": "c1dd3559a7e03c7b420161d8dd70af437d9a71948d3ccb73cc3b469d6c610403"
+      "bytes": 25426,
+      "sha256": "6c069677849a5eb89435b9e33810f6e50b16a1c1a1b943590a348ffee16aa857"
     },
     {
       "path": "web/locales/zh-CN.hub.js",
-      "bytes": 27730,
-      "sha256": "43da112f0687f373cd9763563372d749b57a024a6bf43bb378ed6d70e0f8acef"
+      "bytes": 31969,
+      "sha256": "e6e5f73d922fbea97912fc8964d27250b902eddc770c2814a4ed792f4f895c62"
     },
     {
       "path": "web/locales/zh-CN.js",
@@ -15091,8 +14121,8 @@
     },
     {
       "path": "web/locales/zh-CN.misc.js",
-      "bytes": 5877,
-      "sha256": "dc0c8ad6ac272958f1ed969b287732c2be3365f1ceefbd0f983f43b29a422b0c"
+      "bytes": 7872,
+      "sha256": "1b4e9712573ac256e862a3fc2b4bd2da1c1178a5c7db096fd0a08d765611cd57"
     },
     {
       "path": "web/locales/zh-CN.panels.js",
@@ -15101,8 +14131,8 @@
     },
     {
       "path": "web/locales/zh-CN.table.js",
-      "bytes": 14114,
-      "sha256": "28b00598b648a61e7c7168d965766c2af9e0b98b9ed553169b60d489f602fb6c"
+      "bytes": 14346,
+      "sha256": "063a1779a52bfdc1f161df3da0cffd184c51cd35f35e5e701398222032c0c6d3"
     },
     {
       "path": "web/map-layout.js",
@@ -15111,13 +14141,13 @@
     },
     {
       "path": "web/mechanic-ui.css",
-      "bytes": 3227,
-      "sha256": "81c5e8540aadd1628029915acf7af04b92f93765c5954dee01da8e83073e7174"
+      "bytes": 4501,
+      "sha256": "461511c52d200207e092c4937788153fd7a49251ac0e0c9dafd7cc507e1cabfe"
     },
     {
       "path": "web/mechanic-ui.js",
-      "bytes": 9366,
-      "sha256": "b29d638333c1407443425e31c76d3f7aadd78189074876ec7cc043983227881c"
+      "bytes": 15193,
+      "sha256": "0dc9f4380ea6212313102456832b12dc3c42a24c2312f4b176311389a640fd1a"
     },
     {
       "path": "web/music-player.css",
@@ -15131,8 +14161,8 @@
     },
     {
       "path": "web/noir.css",
-      "bytes": 42947,
-      "sha256": "9ddc92709e37195281eb06825f0e732e3d019be8a6eef3357da66c91ffa210e4"
+      "bytes": 53149,
+      "sha256": "4acd9433d901adca01b928cfd462da6027376c6763ee7babbe0cd0cc6416ecb9"
     },
     {
       "path": "web/player-dashboard.css",
@@ -15141,13 +14171,13 @@
     },
     {
       "path": "web/reaction-preferences.js",
-      "bytes": 9388,
-      "sha256": "c9e8e919ece1f8c1508b64229f66eb34adafa8646fb05f6db5af9ec2c26dfe2e"
+      "bytes": 10255,
+      "sha256": "e7e80e2f30d3b1064de8327c97ccad7147d5fb26fa2eff906830ebc40f3247d9"
     },
     {
       "path": "web/rulebook-data.js",
-      "bytes": 95356,
-      "sha256": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4"
+      "bytes": 96147,
+      "sha256": "5bc1e72d707b4ceb44496f7872fc508eec17f75cf53dc9200ea97aa3a5d93e8c"
     },
     {
       "path": "web/rulebook.js",
@@ -15241,8 +14271,8 @@
     },
     {
       "path": "web/style.css",
-      "bytes": 62266,
-      "sha256": "503c550f3e1ce94a505c4389a2b5185549a2487b2dc0f6012615602c3c6d4342"
+      "bytes": 62301,
+      "sha256": "cc68ee12d84971f5b477ee5a85fa30bd70df6650a002f939991f337b3ba3fd38"
     },
     {
       "path": "web/supply-picker.js",
@@ -15261,8 +14291,8 @@
     },
     {
       "path": "web/table-presentation.js",
-      "bytes": 57705,
-      "sha256": "a96a10df0ace407f0ba797d2b20e7069e9305a96c7e154ac410787a2d708bb78"
+      "bytes": 62628,
+      "sha256": "8ae355f85bab8074af84c380b936b8d88b83b5a92dfa489aeccf3ec672f0e173"
     },
     {
       "path": "web/table-regions.js",
@@ -15291,8 +14321,13 @@
     },
     {
       "path": "web/tde-ui.js",
-      "bytes": 4874,
-      "sha256": "f01c7a58d8d0a8ff63cf1c1053a72b547e6af494c4de6d4cd2bb435fc9250dd5"
+      "bytes": 4911,
+      "sha256": "178fc88c3aa48e642f1a6dea41c6366f2afa733e71e52647d0b2a3cec76c73af"
+    },
+    {
+      "path": "web/themed-attack-fx.js",
+      "bytes": 8556,
+      "sha256": "1ee2068663b323b9eb8885bb45aff9176283cd85b3a19769e81d087f30af2298"
     },
     {
       "path": "web/tic-rules.js",

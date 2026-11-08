@@ -1,0 +1,3426 @@
+{
+  "stats": {
+    "chapters": 8,
+    "chapterSections": 469,
+    "chapterGaps": 209,
+    "chapterPresent": 260,
+    "chapterEnglishOnly": 0,
+    "chapterZhe": 211,
+    "campaignGroups": 15,
+    "campaignEntries": 226,
+    "campaignGaps": 64,
+    "campaignMixed": 3,
+    "campaignPunct": 40,
+    "campaignTrad": 0,
+    "campaignZhe": 240,
+    "localeKeys": 258,
+    "localeKeyGaps": 69,
+    "flowNodes": 33,
+    "flowEnglishNodes": 1
+  },
+  "perChapter": {
+    "iceAndDeathPart1": {
+      "sectionCount": 55,
+      "chinese": {
+        "total": 55,
+        "presentNeedsReview": 43,
+        "untranslated": 2,
+        "missing": 10
+      },
+      "status": "mixed",
+      "gaps": 12,
+      "mixed": 1,
+      "punct": 13,
+      "trad": 0,
+      "zhe": 44,
+      "englishOnly": 0
+    },
+    "iceAndDeathPart2": {
+      "sectionCount": 38,
+      "chinese": {
+        "total": 38,
+        "presentNeedsReview": 30,
+        "untranslated": 2,
+        "missing": 6
+      },
+      "status": "mixed",
+      "gaps": 8,
+      "mixed": 0,
+      "punct": 17,
+      "trad": 0,
+      "zhe": 10,
+      "englishOnly": 0
+    },
+    "iceAndDeathPart3": {
+      "sectionCount": 31,
+      "chinese": {
+        "total": 31,
+        "presentNeedsReview": 15,
+        "untranslated": 2,
+        "missing": 14
+      },
+      "status": "mixed",
+      "gaps": 16,
+      "mixed": 0,
+      "punct": 7,
+      "trad": 0,
+      "zhe": 3,
+      "englishOnly": 0
+    },
+    "fatalMirage": {
+      "sectionCount": 68,
+      "chinese": {
+        "total": 68,
+        "presentNeedsReview": 21,
+        "untranslated": 1,
+        "missing": 46
+      },
+      "status": "mixed",
+      "gaps": 47,
+      "mixed": 0,
+      "punct": 6,
+      "trad": 0,
+      "zhe": 16,
+      "englishOnly": 0
+    },
+    "toTheForbiddenPeaks": {
+      "sectionCount": 51,
+      "chinese": {
+        "total": 51,
+        "presentNeedsReview": 30,
+        "untranslated": 1,
+        "missing": 20
+      },
+      "status": "mixed",
+      "gaps": 21,
+      "mixed": 0,
+      "punct": 14,
+      "trad": 0,
+      "zhe": 17,
+      "englishOnly": 0
+    },
+    "cityOfTheElderThings": {
+      "sectionCount": 94,
+      "chinese": {
+        "total": 94,
+        "presentNeedsReview": 40,
+        "untranslated": 0,
+        "missing": 54
+      },
+      "status": "mixed",
+      "gaps": 54,
+      "mixed": 0,
+      "punct": 10,
+      "trad": 0,
+      "zhe": 33,
+      "englishOnly": 0
+    },
+    "theHeartOfMadnessPart1": {
+      "sectionCount": 79,
+      "chinese": {
+        "total": 79,
+        "presentNeedsReview": 59,
+        "untranslated": 0,
+        "missing": 20
+      },
+      "status": "mixed",
+      "gaps": 20,
+      "mixed": 0,
+      "punct": 10,
+      "trad": 0,
+      "zhe": 56,
+      "englishOnly": 0
+    },
+    "theHeartOfMadnessPart2": {
+      "sectionCount": 53,
+      "chinese": {
+        "total": 53,
+        "presentNeedsReview": 22,
+        "untranslated": 2,
+        "missing": 29
+      },
+      "status": "mixed",
+      "gaps": 31,
+      "mixed": 0,
+      "punct": 7,
+      "trad": 0,
+      "zhe": 32,
+      "englishOnly": 0
+    }
+  },
+  "candidates": {
+    "chapterMixed": [
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "resolutions.resolution1.body",
+        "type": "latin-words",
+        "words": [
+          "Shelter",
+          "Value",
+          "shelterValue",
+          "Experience"
+        ],
+        "sample": "结局 1: 当你扎营时，你被冰冷荒野中遇到的生物的记忆所困扰。这种东西不应该存在。就连丹佛斯的报告中，也没有任何地方提到过这种东西。当你搭建庇护所时，可怕的沉默笼罩著探险队。没人说起他们在冰冻荒野上看到了什么。没人说起那些怪物发出的可怕声音。你只能希望这个营地足够隐蔽，可以避免引起那些东西的注意——不管它们是什么……\n\n• 在剧本日志中，写下“营地”，然后在旁边记录该地点的名称。直到《亡命冰原》结束，该地点就指定为调查员的营地。\n\n• "
+      }
+    ],
+    "chapterSymbols": [
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.easyStandard.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.hardExpert.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "4"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "4"
+            ]
+          }
+        ],
+        "sample": "–4. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.easyStandard.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.hardExpert.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "4"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "4"
+            ]
+          }
+        ],
+        "sample": "–4. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "intro.body",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1"
+            ],
+            "zh": []
+          }
+        ],
+        "sample": "就在那儿，看见了吗？”一名队员递给你双筒望远镜，并指向远方。你们来到营地外，想寻找有利防守的地形，以便在那种生物接近时能尽早发现……但你的发现反而更糟。它们不仅如你所料正向营地袭来，甚至还有更多在从冰面下不断冒出来。\n\n你看到冰架裂开了，彩色的瘴气喷泉从裂缝中渗出。你的同伴抓住你的手臂，指引你看向另一个方向，在那里有另一道喷泉涌出。然后，又一道。“它们数量总得有个尽头吧？”\n\n你放下望远镜，告诉其他队员准备战斗。你不确定你们能否抵挡住这"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.easyStandard.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.hardExpert.cultist",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "2"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "4"
+            ],
+            "zh": [
+              "1",
+              "1",
+              "4"
+            ]
+          }
+        ],
+        "sample": "–4. 你检定失败且每低于难度1点，丢弃你牌堆顶的1张卡牌。抽取所有以此效果弃掉的弱点。"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 如果你检定失败，你必须移动到记忆囚笼，或将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容。"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "2",
+              "4"
+            ],
+            "zh": [
+              "1",
+              "2",
+              "4"
+            ]
+          }
+        ],
+        "sample": "–4. 如果你检定失败，你必须移动到记忆囚笼，或将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容。 (如果你检定失败且低于难度至少2点，改为两项都执行)。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "eliyah.otherwise",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1"
+            ],
+            "zh": [
+              "40"
+            ]
+          }
+        ],
+        "sample": "否则：\n\n你呻吟著把一个装满装备又大又重的背包扛到背上。你肯定不想带著额外的40磅重量徒步穿越雪地，但这已无法避免。你不知道要花多久才能到你要去的地方，而如果你想活下去，背包里的一切都是必需的。.\n\n向混乱袋中添加一个 {'{'}frost{'}'} 标记。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "claypool.otherwise",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "1"
+            ],
+            "zh": []
+          }
+        ],
+        "sample": "否则：\n\n当天空看起来很晴朗的时候，你冒险外出，但只过了一个小时，天气就突然变坏了。大雪已经够糟糕的了，但真正让你慢下来的是冰。没有克莱普尔的安全指引，你必须缓慢小心地前进以确保你能活著到达山脉。.\n\n要么向混乱袋中添加一个 {'{'}frost{'}'} 标记, 或者每位调查员承受一点物理创伤。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "takada.otherwise",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "1",
+              "1"
+            ],
+            "zh": []
+          }
+        ],
+        "sample": "否则：\n\n队伍在难以忍受的寂静中忍受著寒冷前进。每一步都是孤独的，也是痛苦的。.\n\n要么向混乱袋中添加一个 {'{'}frost{'}'} 标记, 或者每位调查员承受一点精神创伤。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 如果你检定失败，抽取忒咳哩-哩牌堆顶的1张卡牌。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 抽取忒咳哩-哩牌堆顶的1张卡牌。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "tokens.easyStandard.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 如果你检定失败，抽取忒咳哩-哩牌堆顶的1张卡牌。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "tokens.hardExpert.tablet",
+        "issues": [
+          {
+            "kind": "digits",
+            "en": [
+              "3"
+            ],
+            "zh": [
+              "1",
+              "3"
+            ]
+          }
+        ],
+        "sample": "–3. 抽取忒咳哩-哩牌堆顶的1张卡牌。"
+      }
+    ],
+    "chapterPunct": [
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "investigatorSetup.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "• 每位调查员可以选择一名探险队的可用成员(即未被划掉的成员)加入他们。将所选角色的剧情支援放置入场，位于该调查员的游戏区域(这些剧情支援可以在探险队遭遇组中找到)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "setup.placeLocations",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "将以下地点放置入场：坠机点、不稳定冰盖、危险道路、冰冻海岸。(可参考下一页的地图摆放方式)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "setup.setSkitteringNonsenseOutOfPlay",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "将所有疾行谬物敌人放在一边，位于场外。."
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "setup.tekelili",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "将所有忒咳哩-哩！弱点卡牌混洗到一起,形成忒咳哩-哩牌堆。将该牌堆放在密谋牌堆旁。."
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "eliyahAshevakKilledInPlaneCrash",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」2 vs「”」1",
+            "count": 1
+          }
+        ],
+        "sample": "如果伊里亚·阿什瓦克在坠机事故遇难：\n\n安雨趴在伊里亚身边，用手一遍又一遍地推他，徒劳地希望他不再装死。你们鸦雀无声，谁都不敢说话，只有狗在不断哀鸣。\n\n最终，高田在安雨身边坐下，开始用她戴著手套的手指抚摸著它的毛发。“好了，小姑娘。我们得走了。\n\n“噢，别管这该死的狗了。”曲奇说道。但其他队员的怒视使他很快闭上了嘴。\n\n又花了一些时间，高田才成功哄著安雨从伊里亚的尸体边离开。甚至当你们在雪地上跋涉时，这只狗还会转过头哀嚎，期盼著它的主"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "jamesFredericksKilledInPlaneCrash",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果詹姆斯·“曲奇”·弗雷德里克斯在坠机事故遇难：\n\n克莱普尔和埃尔斯沃思跪在曲奇那血肉模糊的尸体前。\n\n“他是个好人。”克莱普尔终于吐出一句话。\n\n埃尔斯沃思点头。“不管他多少次尝试不让我们这么认为。”他补充道。\n\n克莱普尔拼命屏住笑，但你还是看得出他的嘴唇在颤抖。\n\n随后两人沉默了一段时间，直到肯斯勒博士打断了他们的哀悼。“我很抱歉,但我们得走了。”\n\n“让他们再哀悼一会吧，可以吗？”伊里亚插话道，但尽管如此，两名探险家都站了起来，"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "averyClaypoolKilledInPlaneCrash",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」6 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾弗里·克莱普尔在坠机事故遇难：\n\n辛哈医生抬头看了看其他队员，摇了摇头，把克莱普尔胳膊放回雪地上。\n\n埃尔斯沃思把手放在曲奇的肩上，但那个粗暴的人只是把它抖了下来。他手指著高田指责道：“这都是你的错！”他一边喊著，一边迈著沉重的步子往前走，将她推倒在地。“如果你没有把这该死的飞机造得这么危险，克莱普尔就还能活著！”\n\n高田怒视著他。“飞机没有任何问题！你也看到天上那个东西了吧！”\n\n伊里亚和埃尔斯沃思拉著曲奇的手臂，把他拉了回来。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "resolutions.noResolution.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果未能达成任何结局（所有调查员都被击败）: 再多的准备也无法使你在冰天雪地的旅途中变得轻松。探险前经受的数月训练在你陷入困境时有了成效。在寻找安全的地方过夜时，你甚至还找到了一些补给……但你的思绪总是回到那个让你坠机的东西，那个在雪地里追著你的可怕东西，还有那个声音——那个可怕的声音，那个喊声！有时你甚至希望你的感官能被完全剥夺，这样你就不会像现在这样，每时每刻都听到萦绕著你的喊声。当疲惫袭来，你渐入梦乡时，那声音仍在你的脑海中回响，"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 当你扎营时，你被冰冷荒野中遇到的生物的记忆所困扰。这种东西不应该存在。就连丹佛斯的报告中，也没有任何地方提到过这种东西。当你搭建庇护所时，可怕的沉默笼罩著探险队。没人说起他们在冰冻荒野上看到了什么。没人说起那些怪物发出的可怕声音。你只能希望这个营地足够隐蔽，可以避免引起那些东西的注意——不管它们是什么……\n\n• 在剧本日志中，写下“营地”，然后在旁边记录该地点的名称。直到《亡命冰原》结束，该地点就指定为调查员的营地。\n\n• "
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "resolutions.xp.bonus",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "营地的庇护值(最小为3)"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.easyStandard.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–X. X为你所在地点的庇护值的一半(向上取整)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.easyStandard.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart1",
+        "path": "tokens.hardExpert.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "investigatorSetup.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "• 每位调查员的基础起始资源数量改为等于营地的庇护值，而不是五个。\n\n• 庇护值: [shelterValue]\n\n• 每位调查员可以选择一名探险队的可用成员(即未被划掉或标记为“失踪”的成员)加入他们。将所选角色的剧情放置入场，位于该调查员的游戏区域，将该角色的生命值和神智值设为剧本日志中探险队部分记录的对应值。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "setup.buildAgendaDecks",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "使用密谋4-6创建密谋牌堆，并使用场景2创建场景牌堆(这些卡牌可以在夜半失踪遭遇组中找到)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "setup.placeLocations",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "在剧本日志中“亡命冰原”部分，找出已揭示的地点下的每个地点。将这些地点放置入场，已揭示面朝上(拥有等于其线索值的线索)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "intro.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "你的队伍正准备搜寻那些在夜间失踪的人。你不喜欢在避难后这么快就冒险回到寒冷中，但如果你想找到同伴，你别无选择。.\n\n向混乱袋中添加1个 {'{'}frost{'}'} 标记。\n\n阅读下面对应着探险队队员未下落不明的段落，然后进入 设置."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "kenslerAliveAndNotMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士活著且未失踪：\n\n“这真是一团糟。”肯斯勒博士用恼怒而尖锐的声音说。“失踪的人能跑哪儿去？而且我们没一个人注意到？”你伸手想让她冷静，但她已经在收拾东西，准备亲自领导搜寻工作。.\n\n如果本场游戏艾米·肯斯勒博士被调查员选择为陪同者，则她入场时拥有额外1秘密。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "sinhaMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "_此外，如果玛拉·辛哈医生失踪了：_“玛拉，你……你这个白痴！”她一边往手提包里塞东西，一边喃喃自语。“你为什么要这样做……？”\n\n如可能，本场游戏艾米·肯斯勒博士必须被调查员选择为陪同者。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "dyerAliveAndNotMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果威廉·戴尔教授活著且未失踪：\n\n“这跟莱克教授的团队那时候一模一样。”戴尔抱怨道。“当我们刚开始与他们失去联系时，我们还以为是天气的原因。不过……”他冰冷而死气沉沉地注视著你。“这次我们有经验了，是吧？至少，我认为我们是的。”\n\n如果本场游戏威廉·戴尔教授被调查员选择为陪同者，则他入场时拥有额外1秘密。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "danforthMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "此外，如果丹佛斯失踪了：\n\n“丹佛斯，他……他总是说要回来。”戴尔承认，疲惫地握紧皱巴巴的拳头。“如果他……如果他就是这个意思呢？我应该更注意他，我应该更认真地对待他……”\n\n如可能，本场游戏威廉·戴尔教授必须被调查员选择为陪同者。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "claypoolAliveAndNotMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾弗里·克莱普尔活著且未失踪：\n\n克莱普尔清点著你们剩下的补给品，一边数一边摇头。“没有少东西。”他简直不敢相信，“失踪的人什么都没带。没人看到有人离开，也没有强行带走的痕迹。这简直是胡闹。”你询问克莱普尔，在没有补给的情况下，一个人在这儿能活多久。“在这种天气下？还有那些……东西还在外面？”他知情的眼睛躲闪著你的目光，“他们活不过今晚。”\n\n如果本场游戏艾弗里·克莱普尔被调查员选择为陪同者，则他入场时拥有额外1补给。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "ellsworthMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "此外，如果罗尔德·埃尔斯沃思失踪了：\n\n克莱普尔——平时是个喋喋不休的家伙——在接下来的准备工作中冷酷而沉默。你从未见过他如此坚决。\n\n如可能，本场游戏艾弗里·克莱普尔必须被调查员选择为陪同者。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "fredericksAliveAndNotMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果詹姆斯·“曲奇”·弗雷德里克斯活著且未失踪：\n\n曲奇目光恍惚地往他的左轮手枪里装填子弹。你感受到，这不是他第一次醒来面对这样的痛苦场面。“我们找到失踪的人。”他一遍又一遍地低声说，“我们会找到失踪的人。”你不确定他想说服谁。\n\n如果本场游戏詹姆斯·“曲奇”·弗雷德里克斯被调查员选择为陪同者，则他入场时拥有额外1子弹。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "takadaMissing",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "此外，如果高田弘子失踪了：\n\n“可恶，小弘——我不会失去你的！”曲奇生气地嘟囔著。“你可别翘辫子了，一定要给我活著回来啊。”\n\n如可能，本场游戏詹姆斯·“曲奇”·弗雷德里克斯必须被调查员选择为陪同者。."
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "resolutions.noResolution.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果未能达成任何结局（所有调查员都被击败） 夜幕退散，风暴肆虐。凛冽的寒风和密集的大雪让你的任务失去了成功的可能。在这种情况下你永远也找不到剩下的团队成员，而即使你找到了……\n\n一股强烈的内疚和绝望涌上你的喉咙。在这场风暴中没有补给和庇护所，活下来是不可能的。你只能在双方的性命之间做取舍，这项决定会成为你一辈子的心理负担。当然，前提是你这辈子不会过几天就到头。.\n\n• 进入 结局 1"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 很明显，有什么东西迫使著你的队友冒险离开安全的营地。某种异样、神秘的东西。某种颠覆你们对南极认知的东西。那些走失的人都不记得他们为什么这么做，也没有意识到他们在做什么。就好像他们的记忆被抹去了一样。或者他们的意识被取代了……\n\n无论如何，他们似乎已经恢复。你哀悼那些失去的人，并为新的一天作准备。不管休息还是不休息，为了求生，你都只有一次机会。.\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 经验"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.easyStandard.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–X. X为你所在地点的庇护值的一半(向上取整)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.easyStandard.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart2",
+        "path": "tokens.hardExpert.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "intro.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 2
+          },
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」1 vs「”」2",
+            "count": 1
+          }
+        ],
+        "sample": "就在那儿，看见了吗？”一名队员递给你双筒望远镜，并指向远方。你们来到营地外，想寻找有利防守的地形，以便在那种生物接近时能尽早发现……但你的发现反而更糟。它们不仅如你所料正向营地袭来，甚至还有更多在从冰面下不断冒出来。\n\n你看到冰架裂开了，彩色的瘴气喷泉从裂缝中渗出。你的同伴抓住你的手臂，指引你看向另一个方向，在那里有另一道喷泉涌出。然后，又一道。“它们数量总得有个尽头吧？”\n\n你放下望远镜，告诉其他队员准备战斗。你不确定你们能否抵挡住这"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "resolutions.noResolution.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 3
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 2
+          }
+        ],
+        "sample": "如果未能达成任何结局（所有调查员都被击败） 在冰雪风暴中，你险些丧命。你在冰雪覆盖的平原上跋涉数英里，筋疲力竭、惊恐万分。你无法确定那些追逐你的幽灵是真实的，还是你慌乱的想像所虚构的。.\n\n你和剩下的同伴在无言的痛苦中艰难地向前走著。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。.\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 4
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 你和剩下的同伴在无言的痛苦中艰难地向前走著。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。.\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。到头来，这还能算是一次研究考察吗？\n\n• 在剧本日志中记录 队伍击败了追猎生物。.\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。 每位调查员取得5点奖励经"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "resolutions.resolution2.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 3
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "结局 2: 你和剩下的同伴在无言的痛苦中艰难地向前走著。太阳缓缓移向地平线，但永远不会落下。你已经好几个小时没有看到任何危险的迹象了，可你却不敢逗留。恐惧迫使你继续前进。.\n\n只有当你累得再也走不动的时候，你才最终停下来，想要明确你的所在，以及决定如何继续前进。到头来，这还能算是一次研究考察吗？\n\n• 在剧本日志中记录 队伍逃进山脉中。.\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。如果胜利区至少有一个渗出梦魇，"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.easyStandard.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–X. X为你所在地点的庇护值的一半(向上取整)。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.easyStandard.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 如果你检定失败，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(如果你不能这么做，受到1点恐惧)。"
+      },
+      {
+        "chapter": "iceAndDeathPart3",
+        "path": "tokens.hardExpert.cultist",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2. 你检定失败且每低于难度1点，将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容(每有1张卡牌不能混洗入你的牌堆，受到1点恐惧)。"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "intro1.title",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "冒险???：致命幻景"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "intro1.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "如果这是你第一次进入致命幻景，进入 序言 1. 否则，则进入 序言 2.\n\n序言 1: 一进入门口，你就发现自己在一个冰冷的隧道网路中，里面充斥著瘴气，还滴著五光十色的脓水。你的倒影在无数奇特的角度注视著你。你的声音在这无尽的镜子大厅里回响。你转身，却发现入口已经消失在你身后。然后，在你的眼角，你发现一个熟悉的身影穿过同样的迷雾——但是，不，那不可能。那可能吗？\n\n找到并阅读下方与在坠机事故中遇难角色对应的章节。 然后进入 设置."
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "intro2.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "如果这是你第一次进入致命幻景，进入 序言 1. 否则，则进入 _序言 2_。\n\n又一次，你发现自己置身于一个冰冷的隧道网路中，弥漫著雾气和瘴气。入口在你身后消失了。你的倒影，闪烁著虚幻微弱的暗示，从众多角度同时盯著你。\n\n进入 设置."
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "danforthWasKilledInThePlaneCrash",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」2 vs「”」1",
+            "count": 1
+          }
+        ],
+        "sample": "如果丹佛斯在坠机事故中遇难：\n\n丹佛斯已经死了。这绝不可能是他,然而……\n\n这名学生坐在奥恩图书馆的一张桌子旁，一边开读著，一边喃喃自语：“我看到它了。我知道我看到了。我看到它了。”他开始打瞌睡，但很快就打了个寒颤醒了。他的黑眼圈告诉你，他已经好几天没睡觉了。“我看到它了……那是真实的……\n\n幻境消失了，速度就和它出现时一样快。这到底是什么鬼地方？这些你不知道的事情，怎么就在你眼前展开了呢？"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "claypoolWasKilledInThePlaneCrash",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾弗里·克莱普尔在坠机事故中遇难：\n\n克莱普尔已经死了。这绝不可能是他。然而……\n\n当你看到他在研究南极地图时，边界内的区域只有部分记录。“它一定在这里。”他指著一个用铅笔匆匆画出的圆圈里的一个点说道，“在这些山脉范围内。但是……”他颤抖著，回头看向你看不到的人。“那是不可能的啊？”\n\n幻境消失了，速度就和它出现时一样快。这到底是什么鬼地方？这些你不知道的事情，怎么就在你眼前展开了呢?"
+      },
+      {
+        "chapter": "fatalMirage",
+        "path": "tokens.hardExpert.tablet",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–4. 如果你检定失败，你必须移动到记忆囚笼，或将忒咳哩-哩牌堆顶的1张卡牌混洗入你的牌堆，不要查看内容。 (如果你检定失败且低于难度至少2点，改为两项都执行)。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "intro1.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "导言 1: 当你的队伍准备远行时，狂风呼啸。队伍中几乎没有交谈声。即使你能透过耳套和围巾听到其他人低沉的声音，你会有什么想说的吗？你们共同恐惧的沉默已经够响亮了。.\n\n你的目的地在前方数英里开外。锯齿状山峰隐约显现在远方的地平线上，奚落著你。你在心里对自己的处境列了一个清单……"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "intro2.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          }
+        ],
+        "sample": "导言 2: 你在冰雪中跋涉了好几个小时。幸运的是，你没有再遇到前两天的生物，这让你思考那是否只是某种残酷的幻景。但当你走近锯齿状雪山的底部时，你发现了另一种完全不同的生物。.\n\n它被冻结著半埋在雪里，像一个令人毛骨悚然的路标指引著你前进。它的身体形状像鼓，有厚厚的皮和一对撕裂的皮翼。一个海星形状的附属器官从它的上半部分伸出雪中，长有五只死眼和一组五颜六色的纤毛。五组触须则都冻在冰里。看到这东西，你感受到的寒意比南极的天气更冷。.\n\n毫无"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "interlude.instructions1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "找出剧本日志中“探险队”部分，名字旁没有打勾的所有存活探险队成员(包括那些当前处于调查员控制下的)，并随机选择其中一名。如果没有这样的探险队成员，则跳过本幕间故事的剩余部分。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "interlude.paragraph1",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "这一切都发生在眨眼之间。在同伴被抓住之前，你只来得及尖叫一声对方的名字。它千变万化的身体缠在你同伴身上。你的同伴挣扎著想逃脱，但毫无希望。."
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "interlude.cookie",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          }
+        ],
+        "sample": "如果受害者是詹姆斯·“曲奇”·弗雷德里克斯：:\n\n身经百战的老兵咒骂了一句，设法将右臂从那东西的抓攫中松开。这足以让他用他的柯尔特开一枪。枪声响彻山脉，那团奇怪无形的东西上被打穿了一个开口。.\n\n对星之恐怖造成2点伤害。."
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "interlude.paragraph2",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "然后，它毫不犹豫地把卷须插进受害者的身体，把后者就像一块生肉似的当场撕碎。喷出的血把雪染成了红色。它毫不客气地把你同伴的残骸扔到地上，然后把注意力转向你。."
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "resolutions.resolution2.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 6
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 2: 正当你开始失去希望时，你在半山腰发现一座黑暗的洞穴。洞口外狂风呼啸，一场大雪突然接踵而至。你不知道哪种情况更糟——被困在冰冷洞穴里慢慢死去，还是在到达顶峰前同样缓慢地死去。但当你的一个同伴打开手电筒时，你意识到可能还有第三种选择。.\n\n这条狭窄隧道的墙壁上布满了你从未见过的奇怪的象形文字。你认为这是用异星语言所写的古代作品。甚至可能就是那些曾经在这片地方安家的古老者写的。更重要的是，洞穴通向山峰内侧越来越深的地方，远远超出了"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "eliyah.otherwise",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "否则：\n\n你呻吟著把一个装满装备又大又重的背包扛到背上。你肯定不想带著额外的40磅重量徒步穿越雪地，但这已无法避免。你不知道要花多久才能到你要去的地方，而如果你想活下去，背包里的一切都是必需的。.\n\n向混乱袋中添加一个 {'{'}frost{'}'} 标记。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "claypool.alive",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果克莱普尔活着\n\n克莱普尔解释说：“现在天气可能看起来很晴朗，但它可能在瞬间转变。我们大部分时间都在冰上，所以要注意裂缝。我们需要60公分厚的冰才能走过去，所以要一直跟在我后面，我会用这个来确保安全。”他手持一个螺旋形的钻孔装置，一马当先。.\n\n调查员没有承受任何不良效果。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "claypool.otherwise",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "否则：\n\n当天空看起来很晴朗的时候，你冒险外出，但只过了一个小时，天气就突然变坏了。大雪已经够糟糕的了，但真正让你慢下来的是冰。没有克莱普尔的安全指引，你必须缓慢小心地前进以确保你能活著到达山脉。.\n\n要么向混乱袋中添加一个 {'{'}frost{'}'} 标记, 或者每位调查员承受一点物理创伤。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "takada.alive",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "如果高田弘子活着\n\n当你出发的时候，你听到高田低声唱著什么——声音小到你听不出那是什么。然而，有其他人似乎认出来了。“又是那首歌。”那人说。“来的路上听到你在菲奥多西亚号上唱的。”\n\n高田叹了一口气。“这是我父亲教我的一首歌。它能帮我打发时间。”她解释道。.\n\n你问她是否愿意教你，她回你一个微笑，这是徒步旅行以来你第一次看到她笑。“行。来吧，我来教你。”在剩下的旅途中，你们一起唱歌、聚在一起，消磨时间。\n\n调查员没有承受任何不良效果。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "takada.otherwise",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "否则：\n\n队伍在难以忍受的寂静中忍受著寒冷前进。每一步都是孤独的，也是痛苦的。.\n\n要么向混乱袋中添加一个 {'{'}frost{'}'} 标记, 或者每位调查员承受一点精神创伤。"
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "theMountainPass.scouted",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果调查员对山口进行了侦察：\n\n你找出昨晚你和埃尔斯沃思侦察时发现的那条安全通道，引导其他队员过去。当你接近山麓时，陡峭的悬崖挡住了寒风。你开始向山顶攀登，这条捷径让你们进展迅速……\n\n冒险设置期间，在你揭示起始地点时，使其线索值减半(向上取整)。."
+      },
+      {
+        "chapter": "toTheForbiddenPeaks",
+        "path": "theMountainPass.otherwise",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 1
+          }
+        ],
+        "sample": "否则：\n\n通向锯齿状山脉的丘陵冻土带是很难穿越的地形。即使你已经准备好了雪地鞋和保暖的衣服来御寒，行路仍然缓慢而艰难。狂风在每一个拐角都与你搏斗，强到足以把你吹倒。但是你依然继续前进，毫不动摇。.\n\n调查员没有承受任何不良效果。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "intro.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "导言: 即使你从戴尔的报告中已经得知，你还是发现自己完全没有准备好面对南极中心的这座可怕而巨大的亵渎之城，以及它那属于异星的种种不可思议。巨大的塔楼、庙宇、桥梁和金字塔点缀著广阔的风景。在遍及四处的晨光中，这座由巨大结构和棱角分明的石块组成的无名迷宫向每个方向延伸数英里，无疑是真实的，但却让人难以置信。这毫无疑问是世间奇观。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "sinha.otherwise",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "否则:\n\n你听过很多次南极环境的危险，但没有辛哈医生，你在恶劣的天气中非常不利。她用专业知识弥补了对病人态度的不足。你真希望自己当时能救下她，但现在只能咬紧牙关，继续艰难前行，观察著同伴是否有体温过低的迹象。\n\n每位调查员将一张冻伤弱点加入自己牌组。这张卡牌不计入该调查员的牌组卡牌张数。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "scoutedTheCityOutskirts.yes",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果调查员对城市市郊进行了侦查：\n\n你叫其他人跟著你，而不是前往瞭望塔。回想起你和埃尔斯沃思前一天晚上侦查的路线，你带著队伍走向你们发现的半埋的建筑。到那儿去比瞭望塔花了更多时间，但是它提供了一条进入城市的捷径。\n\n冒险设置期间，你揭示起始地点后，调查员队长发现该地点的线索，数量等于其线索值的一半(向上取整)。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "cookie.alive",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」4 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果詹姆斯·“曲奇”·弗雷德里克斯活著，且“已回收的补给品”下记录著炸药：”\n\n不幸的是，当你试图离开建筑时，你发现通道被冰雪和碎石堵塞了。就在你正在考虑如何挖出一条路的时候，曲奇拿了几根捆在一起的炸药走过来。“噢，看在老天份上。闪开。”他一边抱怨，一边把炸药设置好，毫无征兆地就点燃了导火索。你和其他人连忙跑到拐角处，捂著耳朵低声咒骂。几秒钟后，一场巨大的爆炸震动了整个建筑。当一切尘埃落定，曲奇为团队开了一条捷径。“有时候，曲奇，我发誓"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "vote.tied",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "因为有2组以上平手，调查员队长投出打破平局的一票。 (解决上述问题的时候，视为选择的团队中有最多仍然生还的成员)"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "interlude.instructions",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "找出剧本日志中“探险队”部分，名字旁没有打勾的所有存活探险队成员(包括那些当前处于调查员控制下的)，并随机选择其中一名。如果没有这样的探险队成员，则跳过本幕间故事的剩余部分。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "interlude.danforth",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果受害者是丹佛斯：\n\n学生睁大了眼睛，将噩梦般的景象一寸都不错过地收入眼帘。每一次隐伏的低语。每一块疯狂的残片。他手里的破冰锥掉到了地上。“这……太美了。”他最后宣告著，“黑色深坑……雕刻边框……登月梯……”他的声音越来越激动。“起源——永恒——不朽！”他咧嘴露出一个可怕的微笑。\n\n控制丹佛斯的调查员发现最近的有线索的地点的一个线索(如果没有调查员控制丹佛斯，改为调查员队长发现线索)。"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "resolutions.noResolution.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果没有完成结局 (每位调查员都被击败): 你受伤且疲惫不堪，躲在这座城市高耸的建筑中一个相对安全的地方。你唯一的希望是在这个异星生物的城市中避难，祈祷你的存在不会被仍然徘徊在它的街道和古老大厅里的居民注意到。\n\n• 推进至 结局 2."
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 当你的团队潜入秘密通道时，怪异的寂静迎接著你。你以为迎接你的是喧嚣和愤怒，但这种诡异的寂静几乎更糟糕。当你越来越深入这个秘密竖井时，你们全都沉默不语。你注意著光滑的墙壁、地板上奇异的标记，以及远处柔和的滴答、滴答、滴答的滴水声。\n\n你在一片漆黑中持续走了几个小时，每一步都在质疑自己的判断。什么样的人才会心甘情愿地进入这样恐怖的鬼地方啊？你赌上名誉参加这次探险。然后你赌上性命在情况变糟的时候也不肯回头。现在你要赌上你全部的理智"
+      },
+      {
+        "chapter": "cityOfTheElderThings",
+        "path": "resolutions.resolution2.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 2: 几个小时过去了。你不敢到外面去冒险，但你探索了避难所的每一个缝隙，希望能找到一些值得的东西。然而你的发现反而更让人难以置信。在这座建筑冰冷的底层，有一个神圣的房间，里面充满了千变万化的瘴气。旋转的灰雾从表面蒸发，熟悉的形状和奇怪的幻觉在里面出现和消失。\n\n仿佛感觉到了你的到来，那团瘴气停止了旋转，自己升了起来，仿佛是在打招呼。然后，它凝聚成闪烁的、五光十色的一团，沿著地板向前爬行，当你停止时它也停止，当你跟随时它又继续前进。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "tokens.easyStandard.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–1 (-3 如果你所在地点有_古神_敌人)。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "tokens.hardExpert.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2 (–4 如果你所在地点有_古神_敌人)."
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "part1Intro.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "你决定研究这个入口和从这个巨大的隧道分叉出的诸多路径，希望能找到一种方法来阻止另一边的存在逃跑。你认为用来封印这扇门的技术与这五个符号有某种联系。也许如果你探索周围的区域，能找到缺失的部分。\n\n进入设置."
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "interlude.instructions.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "你本能地采取行动，防御你所知的那来自幻象彼端的生物的伤害，但你的同伴似乎还并不清楚情况。他们惊异地张大了嘴。他们的目光呆滞，只反映出瘴气想让他们看到的真相。\n\n找出剧本日志中“探险队”部分，名字旁没有打勾的所有存活探险队成员(包括那些当前处于调查员控制下的)，并随机选择其中一名。如果没有这样的探险队成员，则跳过本幕间故事的剩余部分。然后阅读下面对应探险队成员的内容。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "interlude.kensler.saved",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」3 vs「”」2",
+            "count": 1
+          }
+        ],
+        "sample": "如果玛拉·辛哈医生还活著：\n\n“不！”辛哈医生比卷须更快抓住了肯斯勒博士，把她拉入自己怀中。她用手紧紧地按住肯斯勒博士的双颊，强迫她的同事盯著她的眼睛，而且只盯著她的眼睛。“我在这，艾米。我就在这。\n\n肯斯勒博士的手臂在颤抖。“玛拉！你在……我……我差点……”她摇了摇头，倒在医师的怀里，默默地哭泣著。那存在撤退了，阴谋遭到了挫败。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "interlude.dyer.saved",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」6 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士还活著：\n\n“莱克已经死了。”肯斯勒博士说道，将手放在教授的肩上，“我们一起参加了他的葬礼。记得吗？在圣玛丽。”当戴尔意识到真相时，他呆滞的乳白色双眼逐渐恢复正常。\n\n“是的。”他终于开了口。“是的，我……我记得。“那……”他深吸一口气，闭上眼睛，让痛苦的记忆消失。“那真是一场隆重的葬礼。”那存在撤退了，阴谋遭到了挫败。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "interlude.dyer.otherwise",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "否则:\n\n他伸出手握住它的手。那实体把他拉进了幻景，进入了虚假的快乐世界，再也没有人见过他，也没有人听过他。\n\n在“探险队”部分，将威廉·戴尔教授划掉。如果他在场上，他被击败并从游戏中移除。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "interlude.danforth.otherwise",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "否则:\n\n他伸出手握住它的手。那实体把他拉进了幻景，进入了虚假的快乐世界，再也没有人见过他，也没有人听过他。\n\n在“探险队”部分，将丹佛斯划掉。如果他在场上，他被击败并从游戏中移除。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 巨大的门闪著光发出一种异星电流的嗡嗡声，你使劲推开它，打开了前进的路。你所有问题的答案就藏在这里某处。你前来这里的原因。你奋力向前，不是为了你的事业，而是为了让你自己理智。你必须要知道真相。即使它会让你分崩离析。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。场上每有一个启动的封印，每位调查员取得1点奖励经验值。\n\n• 经验: （按上述说明计算）\n\n• 在剧本日志中“探险队”部分，记录场上每名伙伴支援的"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart1",
+        "path": "resolutions.resolution2.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 2: 随著最后的嘶嘶声一声原始的尖叫，巨大的门猛的打开了。五光十色的卷须向前伸展，在地板和墙壁上滑动。混乱在几秒内就结束了。瘴气以不可思议的力量紧缠住你，抓著你的四肢拽著你走。可怕的形状、熟悉的景象以及难以描述的噩梦在那个存在的外表不断展现，它拉著你尖叫著穿过大门进入彼端。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。场上每有一个启动的封印，每位调查员取得1点奖励经验值。\n\n• 经验: （按上述说明计算）\n"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "tokens.easyStandard.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–1 (-3 如果你所在地点有_古神_敌人)。"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "tokens.hardExpert.skull",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "–2 (–4 如果你所在地点有_古神_敌人)."
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "intro2.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」8 vs「”」7",
+            "count": 1
+          }
+        ],
+        "sample": "序言 2: 肯斯勒博士一边研究古代壁画，一边解释了一切。“这些古老者是旅者。殖民者。它们在十多亿年前就来到了地球。”她引用戴尔教授的笔记说，“但它们不是最早到达这儿的。这个地方，所有这一切——在那时都是远古的存在。”她一边用手摸著壁画，一边解释她了解到的东西。“但这个存在并非被困于此。”\n\n你问她这是什么意思，你被这种新的理解吓到了。她转过身来面对著你，眼睛闪耀著智慧的光芒。“我一直在研究它们的生理，试图辨别它们是如何以它们现在的方式存"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "intro3.body",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "Intro 3: 在这些古代壁画中，你只能收集到隐于其中的一小部分真相，但你的发现已经几乎令人难以置信了。当古老者在十多亿年前来到地球时，它们不仅殖民了南极，还殖民了整个地球。而当它们做著这些的时候，这里——以及住在里面的存在——其实早就在了。它们在它周围建造了建筑群，以研究内部的远古存在，从而更好地了解它。而在这过程中，吸引了甚至超出它们所知的力量。大门和封印是用来控制它的，但年久失修使它变得衰弱失效。你怀疑是因为南极洲上智慧生命的出"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "resolutions.resolution1.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 5
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 2
+          },
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」11 vs「”」10",
+            "count": 1
+          }
+        ],
+        "sample": "结局 1: 突然，有一股暖风吹来，还有一个像巨大呼气声的声音。空气中闪烁著扭曲的幻景，而你震惊地看到汹涌的瘴气突然退却了。就在雪崩开始的时候，它自我崩解并退回到山腰。明亮的蓝色裂缝沿著墙壁迅速蔓延。没有了高塔，不仅是山中设施，连同整个城市的结构都受到了牵连。冰结的地板裂开了。这座异星生物的城市的巨大建筑开始沉入雪中。.\n\n然后你听到了：头顶上飞机引擎的轰鸣。高田三架飞机中仅存的那架，正在城市上空盘旋，熟悉的喊声回荡在古老的破败街道上。“"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "resolutions.resolution2.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 6
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "结局 2: 突然，隧道里传来一阵嗡嗡声，希望在你心中重新燃起。当你从拱门下逃走时，明亮的蓝色裂缝沿著墙壁迅速蔓延。没有了高塔，不仅是山中设施，连同整个城市的结构都受到了牵连。冰结的地板裂开了。这座异星生物的城市的巨大建筑开始沉入雪中。这里可能会是你的墓地，但至少你能把这个存在和这座该死的城市一起当作你的陪葬。.\n\n然后你听到了：头顶上飞机引擎的轰鸣。高田三架飞机中仅存的那架，正在城市上空盘旋，熟悉的喊声回荡在古老的破败街道上。“他们在那"
+      },
+      {
+        "chapter": "theHeartOfMadnessPart2",
+        "path": "resolutions.resolution3.body",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 6
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 2
+          }
+        ],
+        "sample": "结局 3: 当你从拱门下逃走时，山脉开始怒吼，隆隆作响。你摧毁了足够多的高塔，威胁到了城市深处设施的结构完整性，但这还不够。你会死在这里，更糟糕的是，你的作为只是在帮助那个存在逃脱。.\n\n然后你听到了：头顶上飞机引擎的轰鸣。高田三架飞机中仅存的那架，正在城市上空盘旋，熟悉的喊声回荡在古老的破败街道上。“他们在那儿！在隧道旁边！快！”两辆雪橇滑进了视野，由伊里亚留在屏障营地里的其余随行犬拉著，载著几名菲奥多西亚号的船员。看到这一幕，你情不"
+      }
+    ],
+    "chapterTrad": [],
+    "gapMismatch": [],
+    "groupMixed": [
+      {
+        "group": "checkpoint1",
+        "key": "checkpoint1.theDisappearance2",
+        "type": "latin-words",
+        "words": [
+          "II",
+          "II"
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.endlessNight3",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "III"
+        ],
+        "sample": "无尽夜晚 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。 进入 冒险III： 古老者之城. (之后你还会得到这个机会)"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.finalNight3",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "IV"
+        ],
+        "sample": "最后一夜 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。. 进入冒险IV：疯狂之心。(直到本剧本结束，你将没有机会再返回致命幻景。)"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1NoLoss",
+        "type": "latin-words",
+        "words": [
+          "II",
+          "II"
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1AbandonStory",
+        "type": "latin-words",
+        "words": [
+          "II",
+          "II"
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night3Choice",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "III"
+        ],
+        "sample": "无尽夜晚 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。 进入 冒险III： 古老者之城. (之后你还会得到这个机会)"
+      },
+      {
+        "group": "flow",
+        "key": "interlude3Night3Choice",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "IV"
+        ],
+        "sample": "最后一夜 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。. 进入冒险IV：疯狂之心。(直到本剧本结束，你将没有机会再返回致命幻景。)"
+      }
+    ],
+    "groupPunct": [
+      {
+        "group": "prologue",
+        "key": "prologue2",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」15 vs「”」14",
+            "count": 1
+          }
+        ],
+        "sample": "序幕 2: 戴尔长舒一口气，平静了下来。“以前的我可能也会这么说。但是现在，在我看到过……”他衰老的身体一阵颤栗。“你在不属于人类的地方冒险。我开始相信，像我们这样的学者，只能在科学的深渊探索一阵，然后就会被我们发现的东西压垮。\n\n“或者被发现我们的东西压垮。”丹佛斯在后面插话道。\n\n戴尔瞥了他的学生一眼，琢磨了一下他的表情，然后把注意力转回你身上。“如果你随同肯斯勒博士一同踏上这次旅途，很可能全员有去无回。你不再考虑一下吗？”\n\n你解"
+      },
+      {
+        "group": "prologue",
+        "key": "prologue3",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」12 vs「”」11",
+            "count": 1
+          }
+        ],
+        "sample": "序幕 3: 戴尔咬紧牙关，两颊发红。有那么一会儿，他看上去好像要用拳头猛锤你们之间的桌子，但经过片刻的考虑，他深吸一口气，摇了摇头。“看来在任何有理智的人眼中，都应该是这样。也许我不该将信仰寄托在科学界吧。当然，即使有这么多的证据，肯斯勒博士还是不会相信我的。”他沮丧地把桌上的几张照片推到一边。\n\n你解释说，艾米·肯斯勒博士——带领这次新的南极之旅的科学家——的动机是纯粹的学术好奇心，而不是贪婪或荣誉。\n\n“这不重要。”戴尔痛苦地说，“"
+      },
+      {
+        "group": "partnerIntros",
+        "key": "amyKensler",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」1 vs「”」0",
+            "count": 1
+          }
+        ],
+        "sample": "站在通往菲奥多西亚号甲板的跳板前的，就是艾米·肯斯勒博士。作为米斯卡塔尼克大学的生物学教授，这位严肃的科学家十多年来一直是大学科学系的常驻成员。在你走近时，她甚至都没有抬头看你一眼，就在写字板上划掉了你的名字。“你能准时赶到，很好。这位埃尔斯沃思先生会把你的行李搬上去的。"
+      },
+      {
+        "group": "partnerIntros",
+        "key": "roaldEllsworth",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」8 vs「”」7",
+            "count": 1
+          }
+        ],
+        "sample": "“噢，那不是当然的吗？”站在她身边的男子轻笑著回答。他伸出手与你握了一下，自我介绍道：“罗尔德·埃尔斯沃思为您效劳。”\n\n肯斯勒博士通过介绍向你解释：“埃尔斯沃思先生有参与数十场探险的经验，在挑选本次探险成员时得到了强烈推荐。我相信在未来几周，他的专业知识会显得举足轻重。”\n\n埃尔斯沃思翻了个白眼。“他的专业知识，没错……而且他还能当苦力！”他边笑著说，边把你的行李搬起走上跳板。\n\n“快点，埃尔斯沃思！”船内的另一个声音喊道。一个长著浓"
+      },
+      {
+        "group": "partnerIntros",
+        "key": "takadaHiroko",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」1 vs「”」0",
+            "count": 1
+          }
+        ],
+        "sample": "肯斯勒博士头也不抬地低声念叨：“高田弘子女士是我们的飞机技师。和上次探险一样，我们会在现场组装飞机。不用担心——她可能是这个领域里最年轻的，但是她明白自己在做什么。"
+      },
+      {
+        "group": "partnerIntros",
+        "key": "averyClaypool",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」11 vs「”」10",
+            "count": 1
+          }
+        ],
+        "sample": "更多成员陆续到达。第一位是一名30多岁的男子，留著一小撮金色胡须，有著明亮的绿色眼睛。“艾弗里·克莱普尔先生。”肯斯勒博士把你介绍给那名男子，你们握了握手。“克莱普尔先生是埃尔斯沃思先生的……熟人。他将担任我们的南极向导。\n\n“只要老天爷愿意行个方便。”克莱普尔开玩笑道，“说实话，我们哪怕能从冰架上下来，就已经很幸运了。”\n\n“我坚信在有了你的技术，我们至少能走得和戴尔和莱克他们一样远。”\n\n“这正是我担心的。”克莱普尔嘟囔著，快步地走"
+      },
+      {
+        "group": "partnerIntros",
+        "key": "malaSinha",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "等她走远了，肯斯勒博士清了清喉咙。“玛拉·辛哈医生，是我们的医师。”她解释道，“说服她加入我们花了不少时间，所以尽量不要在一些无关紧要的问题上滥用她的专业技能。冻伤会是很严重的问题，还有坏疽和体温过低也是。请尽量不要惹她生气。”你不确定肯斯勒博士是否在开玩笑。\n\n男子的声音伴随著一阵犬吠打破了这突然的寂静。“安雨！该死的，安雨，别这样乱跑!”他大吼。"
+      },
+      {
+        "group": "checkpoint1",
+        "key": "checkpoint1.theDisappearance1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 2
+          }
+        ],
+        "sample": "失踪事件 1: 你睡的一点也不舒服。令人发疯的寒冷噬咬著你的身体，不停呼啸的狂风让你胡思乱想著，或许会有怪异的墨状怪形从地下冒出来，把所有人撕成碎片。\n\n正当你终于开始摆脱这些可怕的想法时，一声惊叫打断了你的休息。你醒来时发现营地一片混乱，有几个同伴失踪了。令你沮丧的是，足迹离开了相对安全的营地，延伸到了冰冻荒野之中。\n\n找到并收齐探险队中存活成员的剧情支援。混洗他们并从中随机选择等于你营地庇护值数量的支援。这些角色是安全的。\n\n如果探"
+      },
+      {
+        "group": "checkpoint1",
+        "key": "checkpoint1.theDisappearance2",
+        "details": [
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "checkpoint2",
+        "key": "checkpoint2.theAttack1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "袭击 1: 你还没来得及休息一下，就听到附近地面有什么东西喷发出来，把你震得直不起腰。随之而来的是巨大的震动，你周围的冰都裂开了。然后，那噪音——那阴险的尖声——忒咳哩-哩！忒咳哩-哩！\n\n不管你之前遇到的那些生物是什么，你都可以肯定它们是从冰下出来的，通过破冰或渗透到达地表。它们一定生活在南极冰川的地壳深处。这地震只能说明一件事。\n\n你想像著这些怪物在你周围一拥而上，爬进你的眼睛和嘴巴，控制著你的景象。很明显你再待在这儿已经不安全了。"
+      },
+      {
+        "group": "checkpoint3",
+        "key": "checkpoint3.theOtherSide2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "彼端 2: 是时候结束这一切了——一了百了。\n\n• 将场上除了伊夸之门外的所有地点从游戏中移除。不要移除伊夸之门上的任何封印标记(如常移除伊夸之门上的所有其他标记，并弃掉该地点上的所有卡牌)。\n\n• 每位控制封印的调查员依然将该封印保留在自己的调查员卡上(在下一场游戏开始时调查员依然会控制它)。然而，它似乎失去了原本拥有的能量。如果它是启动面，将它翻至休眠面。\n\n• 将所有不在调查员控制下或在伊夸之门上的封印从游戏中移除。\n\n• 进入 "
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.restfulNight1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "宁静夜晚 1: 你们最终安全了，开始评估当前的处境。你们失去了几名队员，但你们的人数依然够多。你心里明白，再待下去是非常愚蠢且致命的。但心中除了担忧，还有大量疑问未能解答。那些不可思议的、幽灵般的生物到底是什么？在戴尔他们那次探险结束后，这冰封荒原发生了什么？\n\n你和其他人详细讨论情况并考虑各种计划。有些人认为应该彻底放弃探险。但是现在空手而归对大学来说将是灾难性的，会让科学界失望，还可能会让剩下的成员丢了饭碗。毕竟，几乎没人相信戴尔古"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.restfulNight3",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 3
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "宁静夜晚 3: 你猛然惊醒，立即拿起武器自卫。穿透你的梦并把你唤回现实的声音不属于任何正常生物，然而，当你醒来时，一切都是正常的。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你去发现自己身处室内，置身于一个陌生而熟悉的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著微光，渐渐褪色。你回到了冰冷的"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.williamDyerIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果威廉·戴尔活著：\n\n当你走近时，教授被你的突然出现吓了一跳。“噢！抱歉。我以为——我还以为你已经……”他话音渐衰，但是他已无需再说下去了。你完全明白他的感受。“你知道，我是一名从事科学研究的人。而作为一名从事科学的人，我发现我自己很难……很难接受我们迄今为止看到的东西。”你点头并请求戴尔解释他目前得出的理论。“好吧。”他开始说，“这些幽灵生物，它们似乎拥有某种飘渺的生理机能，与我上次在这里时莱克团队发现并解剖的古老者完全不同。那些生"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.danforthIsAlive",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」4 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果丹佛斯活著：\n\n你进入丹佛斯的帐篷时，他正在自言自语：现在已经没有希望了……而且在我那些同伴的脸上……我可以感觉到……他们已经下定决心要灭亡……”他声音的节奏表明，他是在背诵什么东西，而不是在说出自己的想法。你大声清了清嗓子，他才注意到你的存在。他的眼睛睁得大大的，一眨也不眨。“现在你明白了。”他低声说，“你看到了我所看到的。”你点头。这毋庸置疑。丹佛斯在他和教授逃离厄运之旅时看到的，就是把你们的飞机撞到地面的那个东西。“它知道我们"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.kenslerIsCrossedOut",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士被划去:\n\n你查看了这次注定失败的探险的领袖留下的研究笔记。显然，如果说有谁能从你目前所看到的东西中理解些什么，那一定是肯斯勒博士。也许她对这些生物的了解比她表现出来的要多。你搜遍了她的帐篷，仔细检查了她的物品，直到你发现一本厚厚的日记，里面写满了关于南极之旅的细致笔记，以及你们卸下补给和搭帐篷的头几天。从那以后，笔记变得不那么详细，而且更加混乱。她对飞机失事前几天的叙述，与其说是一本保存完好的日记，还不如说是一堆毫"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.sinhaIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果马拉辛哈博士活着：\n\n在你靠近时，辛哈医生狠狠瞪了你一眼。“如果你告诉我你是因为‘太冷了睡不著’……”她开口，但看到你摇头时叹了口气，“抱歉。我明白的。那么给我看看你的伤口吧。让我做好我的工作。”她拿出她的医疗箱，示意你坐在旁边的铺盖卷上。“没有冻伤、体温过低或坏疽的迹象，这很好……”她默默地研究著你在坠机中受的瘀伤和表面伤。最后，她咂咂舌头，摇了摇头。“太诡异了。” 她低声说。你用询问的眼神看著她。“两架飞机。”她解释道，“我们十"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.claypoolIsCrossedOut",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾弗里·克莱普尔被划掉:\n\n克莱普尔的遗物散落在营地的主帐篷里，包括一张罗斯岛冰架的地图，他在上面做了各种注释，但你看不太懂。一阵冷风吹开帐篷，使帐篷内的空间充满了寒冷的空气。你用双臂环抱胸部以保持温暖。没有了克莱普尔，你对危险的天气毫无防备。遇到极地风暴是致命的，而他是唯一有能力准确预测风暴的人。你叹了口气准备离开，但又停下来看了看那件和克莱普尔剩下的东西捆在一起的厚厚的皮大衣。然后你低头看了看自己的外套：由于你的艰苦旅程而破旧不"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.ellsworthIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "如果罗尔德·埃尔斯沃思还活著：\n\n当你在营地中漫步，寻找能做的事时，埃尔斯沃思扔给你一个袖珍望远镜。“你看著没事干。跟我来。”他要求道，你翻了个白眼，不情不愿地跟在他后面，而他带著你走进了白雪皑皑的荒野。在呼啸的狂风中，你大声询问他要把你带到哪里去。“高处。”埃尔斯沃思简短地回答。在将近一个小时的时间里，你跟著他沿著一条危险的小路穿过岩石峭壁来到一个可以俯瞰冰架的冰崖。锯齿状的黑色山脉隐约出现在远处，在严酷的大雪中几乎看不见。“那儿。”"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.ellsworthIsCrossedOut",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果罗尔德·埃尔斯沃思被划掉:\n\n如果你不了解情况，你会以为埃尔斯沃思是在为世界末日做准备。尽管他是一个脚步轻盈的探险者和专业的背包客，但只要粗略地看一眼他留下的物品，就能发现大量的预备品、补给和应对寒冷天气的装备。当团队成员悲痛不舍地把他的东西分门别类摆好，以便以后用得著的时候，你发现了额外一双防水靴子，一定是他带著备用的。你们不知道你们中是否有人能真正追随他的脚步，但至少有了这东西，你们可以用他的鞋来前行。\n\n任意一位调查员可以将埃"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.takadaIsCrossedOut",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果高田弘子被划掉:\n\n对于一个自傲于组织能力的人来说，高田的机械物资放的简直一团糟。如果你不了解，会认为高田储存东西的方式毫无道理可言——但对她来说，你怀疑她有某种系统化的安排。你花了几分钟在她的遗物中寻找可能对探险队其他成员有价值的东西。没有高田，你无法将最后一架飞机修整成可以起飞的状态。事实上，你想像著当你明天要上山时，你将被迫把她的大部分东西都留下。不过你觉得你还是可以利用她藏起来的一些补给。\n\n任意一位调查员可以将高田的物品剧"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.ashevakIsCrossedOut",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "如果伊里亚·阿什瓦克被划掉:\n\n当你坐在营地的边缘，思考未来的命运可能会为你准备什么，一下轻推将你从你的思想中唤醒。你震惊地转过身来，准备好面对另一个可怕的生物从冰里冒出来——但那只是伊里亚的忠实同伴安雨。那只大灰狗用乞求的眼神看著你。你摇了摇头，沉重地站起身来。这一晚哀悼的够多了。当你冒险返回营地时，轻柔的脚步声穿过雪地跟在你身后。你停下来瞥了一眼安雨。再一次，她抬起头来与你对视。她是在寻求安慰，还是指导？你跪下来，用戴著手套的手指穿"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.endlessNight1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "无尽夜晚 1: 再一次安全了，你和你的同伴沉默地搭建营地。你惊奇地发现，与之前相比，今夜安静多了，这可能是由于你们人数的减少，也可能是由于笼罩在营地上空的阴郁情绪。但这里的安静绝不代表和平。随著时间的流逝，你似乎得不到任何休息。你决定去看看你的同伴……\n\n你只有一点时间去查看几名队员(无论他们是活著还是被划掉)。每次选择以下一个部分阅读，一共三次(如果队伍找到另一条路穿过山脉，改为四次)。如果所选择的部分的游戏效果不能执行，则这次选择不"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.endlessNight2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景： 推进至 无尽夜晚 3.\n\n• 否则，检查剧本日志中“探险队”部分。\n\n• 如果有至少3个名字被划掉：推进至 无尽夜晚 4.\n\n• 否则，进入 冒险III： 古老者之城."
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.endlessNight3",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          },
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。 进入 冒险III： 古老者之城. (之后你还会得到这个机会)"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.endlessNight4",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 4: 就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.williamDyerIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果威廉戴尔教授活着：\n\n教授来回踱步，用手指梳理著他灰白的头发。“它们是有联系的。它们一定是有联系的。”你走近时，他正在自言自语，“古老者和这些显现，这些‘幻景’。”他继续说著，好像在回答你没有问出口的问题。“我们上次到这儿的时候，我看到了古老者与其他种族，其他……异形生物发生冲突的画面。但如果它们恐惧的真正源头就在地球上呢？”他凝视著你的眼睛。“如果这儿不是它们真正的家园呢？如果……如果它们是在看守什么东西呢？”\n\n与戴尔教授交谈使"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.kenslerIsAliveAndSharingResearch",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」4 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士活著，且在剧本日志中记录著肯斯勒博士与你分享她的研究：\n\n当你进入肯斯勒博士的帐篷时，她并不惊讶。她从桌子上抬起头来，拿下眼镜直视著你。“来打听我的发现吗？”她问道，你点点头。“好吧。”当你走近她，越过肩膀看向她后方时，你注意到她异常热情。在她面前，一个古老者肢体的一部分被精确解剖了。深绿色的液体污染了它鳞片状的皮肤与下方的表面。她再次抬起眼镜，转向她的解剖样本。“它和我们没什么不同。”她说，“正如戴尔在他自己的描述"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.kenslerIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士活著，但在剧本日志中并未记录著肯斯勒博士与你分享她的研究：\n\n当你进入肯斯勒博士的帐篷时，她冷冷地看了你一眼，然后继续她的工作。“对不起，我太忙了，没空照顾你那琐碎的事，我可没有时间磨蹭。你去找别人聊天吧，我要继续我的工作。”\n\n他现在不想见你。选择其他人吧。(这并不计入你可以阅读的部分的数量。)"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.finalNight1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "最后一夜 1: 你犹豫自己身处的黑暗之坑是否能称为“安全”，但不管怎样你觉得这是一个休息的好地方。太阳在南极上空徘徊永不落下的时候，分辨时间已经够难了——而现在，深处地底，根本没有阳光，要靠阳光分辨时间是更加不可能的了。当你的一个同伴看了看怀表，告诉其他人自从进入地下已经过去了14个小时，其他人的反应是完全不敢相信。你不记得走了那么长的路，但你的身体疲倦得足以证明这一点。\n\n在阴郁寂静中，你和其他人又搭起了营地。队伍人数已经减少到除了你"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.williamDyerIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果威廉戴尔教授还活着：\n\n原先非常抗拒参加这次探险的教授似乎完全改变了他的态度……尽管他这新的一面更让你担心。“我现在明白丹佛斯为什么想回来了。”他解释道，“它在召唤我们。你感觉不到它吗？你听不到它的声音吗？它希望我们继续前进。”你询问他“它”指的是什么，而他在你俩周围比了个含糊的手势。“它。我不知道。这些幻影不像独立的生物，你不觉得吗？也许他们被更强大的力量控制著。或者……”他仔细考虑著接下来要说的话，“也许它们都是同一个个体。是某"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.kenslerIsAlive",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾米·肯斯勒博士活著，但在剧本日志中并未记录著肯斯勒博士马上就要明白了：\n\n当你进入肯斯勒博士的帐篷时，她冷冷地看了你一眼，然后继续她的工作。“对不起，我太忙了，没空照顾你那琐碎的事，我可没有时间磨蹭。你去找别人聊天吧，我要继续我的工作。”\n\n他现在不想见你。选择其他人吧。(这并不计入你可以阅读的部分的数量。)"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.claypoolIsAlive",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」5 vs「”」4",
+            "count": 1
+          }
+        ],
+        "sample": "如果艾弗里·克莱普尔活著：\n\n当你走近时，克莱普尔研究著冰冷的墙壁，他的眉头紧锁著。“这里明明应该更暖和些的。”他说，“但即使没有寒风，这里也要冷近10度。”就在这时，有什么东西在冰里移动——也许是影子，或者是冰面反射出来的什么东西。黑影旋转并转瞬即逝，你和克莱普尔本能地后退。你身后的光投不出这样的影子。“这冰……有问题。”克莱普尔低声说。“这种寒冷，是反常的。戴尔的报告将这些内部建筑描述为温暖宜居，但这……”你们会意地对视一眼。“我们"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.ellsworthIsAlive",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」6 vs「”」7",
+            "count": 1
+          }
+        ],
+        "sample": "如果罗尔德·埃尔斯沃思活著：\n\n你已经知道埃尔斯沃思走近你的时候在想什么了，他一手拿著提灯，一手拿著冰锥。“跟我一起走一段？”他把提灯递给你，然后你们一起离开营地。你们在探索冰冷深渊的路上谨慎地低声交谈。你们两个人走到了和队伍里的其他人都到不了的遥远地方。“你一定认为我疯了，要不就是傻了。”经过一小时快节奏的跋涉后，他说道，总是独自前行，陷入这样的危险。进入我们不该去的地方。”你耸耸肩，指出了事实：你也和他在一起。“没错。所以我怀疑你对"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.takadaIsAlive",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」6 vs「”」5",
+            "count": 1
+          }
+        ],
+        "sample": "如果高田弘子活著：\n\n你来找高田不是为了寻求帮助，而是为了谴责。她一直在秘密地准备——你从她对团队其他成员保密的备用品，和她在闲暇时修补的飞机零件中就可以看出。“没错。”她叹了口气作为对你的回应，“我在考虑回去。偷偷离队，返回冰架，尽可能地远离这个该死的地方。但是……”她瞥了一眼其他队员，尽管空气中弥漫著不祥的气味，但他们的内心还是充满了希望。“靠我自己是永远回不去的。不要担心。我哪儿都不去。去吧，包里的东西你想要啥就自己拿。”你选择信"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.finalNight2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景：进入 最后一夜 3.\n\n• 否则，进入 最后一夜 4."
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.finalNight3",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          },
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。. 进入冒险IV：疯狂之心。(直到本剧本结束，你将没有机会再返回致命幻景。)"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.finalNight4",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 4: 就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著"
+      },
+      {
+        "group": "epilogue",
+        "key": "epilogue.epilogue",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "检查剧本日志. 只有当调查员在战役中胜利，且所对应的探险队队员生还的情况下，按照顺序阅读以下条目"
+      },
+      {
+        "group": "recordLabels",
+        "key": "key.theSurvivorsOfTheExpeditionWere",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "本次探险的幸存者是..."
+      },
+      {
+        "group": "flow",
+        "key": "prologueBelieve",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」15 vs「”」14",
+            "count": 1
+          }
+        ],
+        "sample": "序幕 2: 戴尔长舒一口气，平静了下来。“以前的我可能也会这么说。但是现在，在我看到过……”他衰老的身体一阵颤栗。“你在不属于人类的地方冒险。我开始相信，像我们这样的学者，只能在科学的深渊探索一阵，然后就会被我们发现的东西压垮。\n\n“或者被发现我们的东西压垮。”丹佛斯在后面插话道。\n\n戴尔瞥了他的学生一眼，琢磨了一下他的表情，然后把注意力转回你身上。“如果你随同肯斯勒博士一同踏上这次旅途，很可能全员有去无回。你不再考虑一下吗？”\n\n你解"
+      },
+      {
+        "group": "flow",
+        "key": "prologueWild",
+        "details": [
+          {
+            "type": "bracket-unbalanced",
+            "detail": "「“」12 vs「”」11",
+            "count": 1
+          }
+        ],
+        "sample": "序幕 3: 戴尔咬紧牙关，两颊发红。有那么一会儿，他看上去好像要用拳头猛锤你们之间的桌子，但经过片刻的考虑，他深吸一口气，摇了摇头。“看来在任何有理智的人眼中，都应该是这样。也许我不该将信仰寄托在科学界吧。当然，即使有这么多的证据，肯斯勒博士还是不会相信我的。”他沮丧地把桌上的几张照片推到一边。\n\n你解释说，艾米·肯斯勒博士——带领这次新的南极之旅的科学家——的动机是纯粹的学术好奇心，而不是贪婪或荣誉。\n\n“这不重要。”戴尔痛苦地说，“"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 2
+          }
+        ],
+        "sample": "失踪事件 1: 你睡的一点也不舒服。令人发疯的寒冷噬咬著你的身体，不停呼啸的狂风让你胡思乱想著，或许会有怪异的墨状怪形从地下冒出来，把所有人撕成碎片。\n\n正当你终于开始摆脱这些可怕的想法时，一声惊叫打断了你的休息。你醒来时发现营地一片混乱，有几个同伴失踪了。令你沮丧的是，足迹离开了相对安全的营地，延伸到了冰冻荒野之中。\n\n找到并收齐探险队中存活成员的剧情支援。混洗他们并从中随机选择等于你营地庇护值数量的支援。这些角色是安全的。\n\n如果探"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1NoLoss",
+        "details": [
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1Choice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 2
+          }
+        ],
+        "sample": "失踪事件 1: 你睡的一点也不舒服。令人发疯的寒冷噬咬著你的身体，不停呼啸的狂风让你胡思乱想著，或许会有怪异的墨状怪形从地下冒出来，把所有人撕成碎片。\n\n正当你终于开始摆脱这些可怕的想法时，一声惊叫打断了你的休息。你醒来时发现营地一片混乱，有几个同伴失踪了。令你沮丧的是，足迹离开了相对安全的营地，延伸到了冰冻荒野之中。\n\n找到并收齐探险队中存活成员的剧情支援。混洗他们并从中随机选择等于你营地庇护值数量的支援。这些角色是安全的。\n\n如果探"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint1AbandonStory",
+        "details": [
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "袭击 1: 你还没来得及休息一下，就听到附近地面有什么东西喷发出来，把你震得直不起腰。随之而来的是巨大的震动，你周围的冰都裂开了。然后，那噪音——那阴险的尖声——忒咳哩-哩！忒咳哩-哩！\n\n不管你之前遇到的那些生物是什么，你都可以肯定它们是从冰下出来的，通过破冰或渗透到达地表。它们一定生活在南极冰川的地壳深处。这地震只能说明一件事。\n\n你想像著这些怪物在你周围一拥而上，爬进你的眼睛和嘴巴，控制著你的景象。很明显你再待在这儿已经不安全了。"
+      },
+      {
+        "group": "flow",
+        "key": "checkpoint2Choice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "袭击 1: 你还没来得及休息一下，就听到附近地面有什么东西喷发出来，把你震得直不起腰。随之而来的是巨大的震动，你周围的冰都裂开了。然后，那噪音——那阴险的尖声——忒咳哩-哩！忒咳哩-哩！\n\n不管你之前遇到的那些生物是什么，你都可以肯定它们是从冰下出来的，通过破冰或渗透到达地表。它们一定生活在南极冰川的地壳深处。这地震只能说明一件事。\n\n你想像著这些怪物在你周围一拥而上，爬进你的眼睛和嘴巴，控制著你的景象。很明显你再待在这儿已经不安全了。"
+      },
+      {
+        "group": "flow",
+        "key": "interlude1",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "宁静夜晚 1: 你们最终安全了，开始评估当前的处境。你们失去了几名队员，但你们的人数依然够多。你心里明白，再待下去是非常愚蠢且致命的。但心中除了担忧，还有大量疑问未能解答。那些不可思议的、幽灵般的生物到底是什么？在戴尔他们那次探险结束后，这冰封荒原发生了什么？\n\n你和其他人详细讨论情况并考虑各种计划。有些人认为应该彻底放弃探险。但是现在空手而归对大学来说将是灾难性的，会让科学界失望，还可能会让剩下的成员丢了饭碗。毕竟，几乎没人相信戴尔古"
+      },
+      {
+        "group": "flow",
+        "key": "interlude1DoorChoice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 3
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "宁静夜晚 3: 你猛然惊醒，立即拿起武器自卫。穿透你的梦并把你唤回现实的声音不属于任何正常生物，然而，当你醒来时，一切都是正常的。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你去发现自己身处室内，置身于一个陌生而熟悉的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著微光，渐渐褪色。你回到了冰冷的"
+      },
+      {
+        "group": "flow",
+        "key": "interlude2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "无尽夜晚 1: 再一次安全了，你和你的同伴沉默地搭建营地。你惊奇地发现，与之前相比，今夜安静多了，这可能是由于你们人数的减少，也可能是由于笼罩在营地上空的阴郁情绪。但这里的安静绝不代表和平。随著时间的流逝，你似乎得不到任何休息。你决定去看看你的同伴……\n\n你只有一点时间去查看几名队员(无论他们是活著还是被划掉)。每次选择以下一个部分阅读，一共三次(如果队伍找到另一条路穿过山脉，改为四次)。如果所选择的部分的游戏效果不能执行，则这次选择不"
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景： 推进至 无尽夜晚 3.\n\n• 否则，检查剧本日志中“探险队”部分。\n\n• 如果有至少3个名字被划掉：推进至 无尽夜晚 4.\n\n• 否则，进入 冒险III： 古老者之城."
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night2Door",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景： 推进至 无尽夜晚 3.\n\n• 否则，检查剧本日志中“探险队”部分。\n\n• 如果有至少3个名字被划掉：推进至 无尽夜晚 4.\n\n• 否则，进入 冒险III： 古老者之城."
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night2AltDoor",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景： 推进至 无尽夜晚 3.\n\n• 否则，检查剧本日志中“探险队”部分。\n\n• 如果有至少3个名字被划掉：推进至 无尽夜晚 4.\n\n• 否则，进入 冒险III： 古老者之城."
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night3Choice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          },
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。 进入 冒险III： 古老者之城. (之后你还会得到这个机会)"
+      },
+      {
+        "group": "flow",
+        "key": "interlude2Night4Choice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "无尽夜晚 4: 就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著"
+      },
+      {
+        "group": "flow",
+        "key": "interlude3",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 2
+          }
+        ],
+        "sample": "最后一夜 1: 你犹豫自己身处的黑暗之坑是否能称为“安全”，但不管怎样你觉得这是一个休息的好地方。太阳在南极上空徘徊永不落下的时候，分辨时间已经够难了——而现在，深处地底，根本没有阳光，要靠阳光分辨时间是更加不可能的了。当你的一个同伴看了看怀表，告诉其他人自从进入地下已经过去了14个小时，其他人的反应是完全不敢相信。你不记得走了那么长的路，但你的身体疲倦得足以证明这一点。\n\n在阴郁寂静中，你和其他人又搭起了营地。队伍人数已经减少到除了你"
+      },
+      {
+        "group": "flow",
+        "key": "interlude3Night2",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景：进入 最后一夜 3.\n\n• 否则，进入 最后一夜 4."
+      },
+      {
+        "group": "flow",
+        "key": "interlude3Night2Door",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 2: 你徒劳地试图在担忧和怀疑的迷宫中无休止地游荡。\n\n• 如果在本剧本中，你已经进行过冒险???：致命幻景：进入 最后一夜 3.\n\n• 否则，进入 最后一夜 4."
+      },
+      {
+        "group": "flow",
+        "key": "interlude3Night3Choice",
+        "details": [
+          {
+            "type": "double-punct",
+            "detail": "。后紧跟半角句点（。.）",
+            "count": 2
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          },
+          {
+            "type": "space",
+            "detail": "中文与标点间多余空格",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。. 进入冒险IV：疯狂之心。(直到本剧本结束，你将没有机会再返回致命幻景。)"
+      },
+      {
+        "group": "flow",
+        "key": "interlude3Night4Choice",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角逗号/分号/冒号/叹号/问号",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          },
+          {
+            "type": "punct-mix",
+            "detail": "半角括号包裹中文",
+            "count": 1
+          }
+        ],
+        "sample": "最后一夜 4: 就在你终于开始感到昏昏沉沉的时候，你在脑海的角落里感到模糊的威胁，吓得你采取行动。你本能地拿起武器自卫，但当你环顾四周时，一切正常。事实上……\n\n你震惊地站起身来，环顾四周。你们的临时营地虽然不受恶劣天气的影响，但仍然是在南极的荒野深处。然而，你却发现自己是在室内，在一个你似乎很熟悉但却不知是何处的大厅里。你拨开了一些还在睡袋周围的积雪，发现原来没有的瓷砖地板。是梦？\n\n当你怀疑这个神秘地方的真实性时，墙壁和瓷砖地板闪著"
+      },
+      {
+        "group": "flow",
+        "key": "epilogue",
+        "details": [
+          {
+            "type": "punct-mix",
+            "detail": "中文后接半角句点（非数字小数）",
+            "count": 1
+          }
+        ],
+        "sample": "检查剧本日志. 只有当调查员在战役中胜利，且所对应的探险队队员生还的情况下，按照顺序阅读以下条目"
+      }
+    ],
+    "groupTrad": [],
+    "groupGaps": [
+      {
+        "group": "checkpoint1",
+        "key": "checkpoint1.theDisappearance3",
+        "status": "untranslated",
+        "sample": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Proceed to Ice and Death, Part II."
+      },
+      {
+        "group": "interludes",
+        "key": "interludes.1",
+        "status": "missing",
+        "sample": "Restful Night"
+      },
+      {
+        "group": "interludes",
+        "key": "interludes.2",
+        "status": "missing",
+        "sample": "Endless Night"
+      },
+      {
+        "group": "interludes",
+        "key": "interludes.3",
+        "status": "missing",
+        "sample": "Final Night"
+      },
+      {
+        "group": "interlude1",
+        "key": "interlude1.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "group": "interlude2",
+        "key": "interlude2.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.xp.cookiesAdvice",
+        "status": "missing",
+        "sample": "Cookie's Advice"
+      },
+      {
+        "group": "interlude3",
+        "key": "interlude3.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "group": "specialRules",
+        "key": "specialRules.0",
+        "status": "missing",
+        "sample": "Some of the scenarios in the Edge of the Earth campaign are split into multiple parts. Players may choose to play these parts one at a time (with breaks between"
+      },
+      {
+        "group": "specialRules",
+        "key": "specialRules.1",
+        "status": "missing",
+        "sample": "This expansion introduces a new type of chaos token: the frost ({'{'}frost{'}'}) token. At the start of the Edge of the Earth campaign, the chaos bag contains o"
+      },
+      {
+        "group": "specialRules",
+        "key": "specialRules.2",
+        "status": "missing",
+        "sample": "This campaign includes an encounter set of 16 weaknesses, each with the title “Tekeli-li!” These cards are shuffled together to form a special Tekeli-li deck du"
+      },
+      {
+        "group": "specialRules",
+        "key": "specialRules.3",
+        "status": "missing",
+        "sample": "Partner is a keyword ability that appears on the nine story assets in the Expedition Team encounter set. Each of these assets represents a powerful ally whom in"
+      },
+      {
+        "group": "specialRules",
+        "key": "specialRules.4",
+        "status": "missing",
+        "sample": "Each time an investigator fails a skill test while attempting to evade an enemy with the alert keyword, after applying all results for that skill test, that ene"
+      },
+      {
+        "group": "labels",
+        "key": "label.anyuFaithfulCompanion.attemptToEvadeWithABaseAgilitySkillOf4",
+        "status": "missing",
+        "sample": "Evade. Attempt to evade with a base {'{'}agility{'}'} skill of 4"
+      },
+      {
+        "group": "labels",
+        "key": "label.anyuFaithfulCompanion.discardAnyuToChooseUpToThreeInAnyOrder",
+        "status": "missing",
+        "sample": "Discard Anyu to choose up to three, in any order"
+      },
+      {
+        "group": "labels",
+        "key": "label.anyuFaithfulCompanion.gain2SkillValue",
+        "status": "missing",
+        "sample": "You get +2 skill value for your next skill test this round"
+      },
+      {
+        "group": "labels",
+        "key": "label.prologue1Believe",
+        "status": "missing",
+        "sample": "\"I believe you…but if what you say is true, should we not investigate these findings further?\" Proceed to Prologue 2."
+      },
+      {
+        "group": "labels",
+        "key": "label.prologue1Wild",
+        "status": "missing",
+        "sample": "\"I'm sorry, but this seems too wild to be true.\" Skip to Prologue 3."
+      },
+      {
+        "group": "labels",
+        "key": "label.readPartnerIntros",
+        "status": "missing",
+        "sample": "Read Partner intros"
+      },
+      {
+        "group": "labels",
+        "key": "label.skipPartnerIntros",
+        "status": "missing",
+        "sample": "Skip Partner intros"
+      },
+      {
+        "group": "labels",
+        "key": "label.theyreOnTheirOwn",
+        "status": "missing",
+        "sample": "They're on their own."
+      },
+      {
+        "group": "labels",
+        "key": "label.goAfterMissingTeamMembers",
+        "status": "missing",
+        "sample": "Go after the missing team members."
+      },
+      {
+        "group": "labels",
+        "key": "label.runForYourLives",
+        "status": "missing",
+        "sample": "Run for your lives!"
+      },
+      {
+        "group": "labels",
+        "key": "label.standAndFight",
+        "status": "missing",
+        "sample": "Stand and fight!"
+      },
+      {
+        "group": "labels",
+        "key": "label.openTheDoorAndVenture",
+        "status": "missing",
+        "sample": "Open the door and venture into the mirage."
+      },
+      {
+        "group": "labels",
+        "key": "label.ignoreTheDoor",
+        "status": "missing",
+        "sample": "Ignore the door and allow it to vanish"
+      },
+      {
+        "group": "labels",
+        "key": "label.openTheDoorAndVentureOnceMore",
+        "status": "missing",
+        "sample": "Open the door and venture once more into the mirage."
+      },
+      {
+        "group": "labels",
+        "key": "label.youCanStillCheckTeamMembers",
+        "status": "missing",
+        "sample": "You can still check [count] team members"
+      },
+      {
+        "group": "labels",
+        "key": "label.williamDyer",
+        "status": "missing",
+        "sample": "William Dyer"
+      },
+      {
+        "group": "labels",
+        "key": "label.danforth",
+        "status": "missing",
+        "sample": "Danforth"
+      },
+      {
+        "group": "labels",
+        "key": "label.drAmyKensler",
+        "status": "missing",
+        "sample": "Dr. Amy Kensler"
+      },
+      {
+        "group": "labels",
+        "key": "label.drMalaSinha",
+        "status": "missing",
+        "sample": "Dr. Mala Sinha"
+      },
+      {
+        "group": "labels",
+        "key": "label.jamesCookieFredericks",
+        "status": "missing",
+        "sample": "James \"Cookie\" Fredericks"
+      },
+      {
+        "group": "labels",
+        "key": "label.averyClaypool",
+        "status": "missing",
+        "sample": "Avery Claypool"
+      },
+      {
+        "group": "labels",
+        "key": "label.roaldEllsworth",
+        "status": "missing",
+        "sample": "Roald Ellsworth"
+      },
+      {
+        "group": "labels",
+        "key": "label.takadaHiroko",
+        "status": "missing",
+        "sample": "Takada Hiroko"
+      },
+      {
+        "group": "labels",
+        "key": "label.eliyahAshevak",
+        "status": "missing",
+        "sample": "Eliyah Ashevak"
+      },
+      {
+        "group": "labels",
+        "key": "label.doNotPerformHealing",
+        "status": "missing",
+        "sample": "Do not perform healing"
+      },
+      {
+        "group": "labels",
+        "key": "label.doNotBeginWithExtraResources",
+        "status": "missing",
+        "sample": "Do not begin with extra resources"
+      },
+      {
+        "group": "labels",
+        "key": "label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "group": "labels",
+        "key": "label.removeTekeliliWeaknesses",
+        "status": "missing",
+        "sample": "Any one investigator may choose and remove up to five Tekeli-li! weaknesses from their deck (shuffling them with the remainder of the Tekeli-li encounter set)."
+      },
+      {
+        "group": "labels",
+        "key": "label.earnsBonusExperience",
+        "status": "missing",
+        "sample": "Any one investigator earns 1 bonus experience."
+      },
+      {
+        "group": "labels",
+        "key": "label.beginScenarioIIWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with two additional cards drawn in their opening hand."
+      },
+      {
+        "group": "labels",
+        "key": "label.beginScenarioIIIWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario III: City of the Elder Things with two additional cards drawn in their opening hand."
+      },
+      {
+        "group": "labels",
+        "key": "label.beginScenarioIVWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario IV: The Heart of Madness with two additional cards drawn in their opening hand."
+      },
+      {
+        "group": "labels",
+        "key": "label.beginScenarioIIWithExtraResources",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with 3 additional resources in their resource pool."
+      },
+      {
+        "group": "labels",
+        "key": "label.beginScenarioIIIWithExtraResources",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario III: City of the Elder Things with 3 additional resources in their resource pool."
+      },
+      {
+        "group": "labels",
+        "key": "label.stayAndStudyTheGreatDoor",
+        "status": "missing",
+        "sample": "Stay here and study the great door to learn more. You will play both parts of the scenario. Proceed to The Heart of Madness, Part 1."
+      },
+      {
+        "group": "labels",
+        "key": "label.passThroughTheGate",
+        "status": "missing",
+        "sample": "There is no time to waste. Pass through the gate! You will skip the first part of the scenario. Skip directly to The Heart of Madness, Part 2."
+      },
+      {
+        "group": "labels",
+        "key": "label.skipToPrologue4",
+        "status": "missing",
+        "sample": "Skip to Prologue 4"
+      },
+      {
+        "group": "labels",
+        "key": "label.proceedToPrologue4",
+        "status": "missing",
+        "sample": "Proceed to Prologue 4"
+      },
+      {
+        "group": "labels",
+        "key": "nightmarishVapors.label.shuffleTekeliliIntoYourDeck",
+        "status": "missing",
+        "sample": "Shuffle the top [count] cards of the Tekeli-li deck into your deck without looking at them."
+      },
+      {
+        "group": "labels",
+        "key": "apeirophobia.label.addFrostToken",
+        "status": "missing",
+        "sample": "Add 1 {'{'}frost{'}'} token to the chaos bag."
+      },
+      {
+        "group": "labels",
+        "key": "wukWukWuk.label.moveToYou",
+        "status": "missing",
+        "sample": "Move it to your location"
+      },
+      {
+        "group": "labels",
+        "key": "wukWukWuk.label.placeDoom",
+        "status": "missing",
+        "sample": "Place 1 doom on it"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08720",
+        "status": "missing",
+        "sample": "Dr. Amy Kensler"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08714",
+        "status": "missing",
+        "sample": "Prof. William Dyer"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08715",
+        "status": "missing",
+        "sample": "Danforth"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08721",
+        "status": "missing",
+        "sample": "Roald Ellsworth"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08722",
+        "status": "missing",
+        "sample": "Takada Hiroko"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08718",
+        "status": "missing",
+        "sample": "Avery Claypool"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08717",
+        "status": "missing",
+        "sample": "Dr. Mala Sinha"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08719",
+        "status": "missing",
+        "sample": "James \"Cookie\" Fredericks"
+      },
+      {
+        "group": "partnerNames",
+        "key": "partnerNames.08716",
+        "status": "missing",
+        "sample": "Eliyah Ashevak"
+      }
+    ],
+    "localeKeyGaps": [
+      {
+        "key": "edgeOfTheEarth.specialRules.0.title",
+        "status": "missing",
+        "sample": "Checkpoints"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.0.body",
+        "status": "missing",
+        "sample": "Some of the scenarios in the Edge of the Earth campaign are split into multiple parts. Players may choose to play these parts one at a time (with breaks between"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.1.title",
+        "status": "missing",
+        "sample": "Frost Tokens"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.1.body",
+        "status": "missing",
+        "sample": "This expansion introduces a new type of chaos token: the frost ({'{'}frost{'}'}) token. At the start of the Edge of the Earth campaign, the chaos bag contains o"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.2.title",
+        "status": "missing",
+        "sample": "Tekeli-li!"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.2.body",
+        "status": "missing",
+        "sample": "This campaign includes an encounter set of 16 weaknesses, each with the title “Tekeli-li!” These cards are shuffled together to form a special Tekeli-li deck du"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.3.title",
+        "status": "missing",
+        "sample": "Partner"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.3.body",
+        "status": "missing",
+        "sample": "Partner is a keyword ability that appears on the nine story assets in the Expedition Team encounter set. Each of these assets represents a powerful ally whom in"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.4.title",
+        "status": "missing",
+        "sample": "Alert"
+      },
+      {
+        "key": "edgeOfTheEarth.specialRules.4.body",
+        "status": "missing",
+        "sample": "Each time an investigator fails a skill test while attempting to evade an enemy with the alert keyword, after applying all results for that skill test, that ene"
+      },
+      {
+        "key": "edgeOfTheEarth.interludes.1",
+        "status": "missing",
+        "sample": "Restful Night"
+      },
+      {
+        "key": "edgeOfTheEarth.interludes.2",
+        "status": "missing",
+        "sample": "Endless Night"
+      },
+      {
+        "key": "edgeOfTheEarth.interludes.3",
+        "status": "missing",
+        "sample": "Final Night"
+      },
+      {
+        "key": "edgeOfTheEarth.checkpoint1.theDisappearance3.body",
+        "status": "untranslated",
+        "sample": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Proceed to Ice and Death, Part II."
+      },
+      {
+        "key": "edgeOfTheEarth.interlude1.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "key": "edgeOfTheEarth.interlude2.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "key": "edgeOfTheEarth.interlude3.xp.cookiesAdvice",
+        "status": "missing",
+        "sample": "Cookie's Advice"
+      },
+      {
+        "key": "edgeOfTheEarth.interlude3.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "key": "edgeOfTheEarth.label.anyuFaithfulCompanion.attemptToEvadeWithABaseAgilitySkillOf4",
+        "status": "missing",
+        "sample": "Evade. Attempt to evade with a base {'{'}agility{'}'} skill of 4"
+      },
+      {
+        "key": "edgeOfTheEarth.label.anyuFaithfulCompanion.discardAnyuToChooseUpToThreeInAnyOrder",
+        "status": "missing",
+        "sample": "Discard Anyu to choose up to three, in any order"
+      },
+      {
+        "key": "edgeOfTheEarth.label.anyuFaithfulCompanion.gain2SkillValue",
+        "status": "missing",
+        "sample": "You get +2 skill value for your next skill test this round"
+      },
+      {
+        "key": "edgeOfTheEarth.label.prologue1Believe",
+        "status": "missing",
+        "sample": "\"I believe you…but if what you say is true, should we not investigate these findings further?\" Proceed to Prologue 2."
+      },
+      {
+        "key": "edgeOfTheEarth.label.prologue1Wild",
+        "status": "missing",
+        "sample": "\"I'm sorry, but this seems too wild to be true.\" Skip to Prologue 3."
+      },
+      {
+        "key": "edgeOfTheEarth.label.readPartnerIntros",
+        "status": "missing",
+        "sample": "Read Partner intros"
+      },
+      {
+        "key": "edgeOfTheEarth.label.skipPartnerIntros",
+        "status": "missing",
+        "sample": "Skip Partner intros"
+      },
+      {
+        "key": "edgeOfTheEarth.label.theyreOnTheirOwn",
+        "status": "missing",
+        "sample": "They're on their own."
+      },
+      {
+        "key": "edgeOfTheEarth.label.goAfterMissingTeamMembers",
+        "status": "missing",
+        "sample": "Go after the missing team members."
+      },
+      {
+        "key": "edgeOfTheEarth.label.runForYourLives",
+        "status": "missing",
+        "sample": "Run for your lives!"
+      },
+      {
+        "key": "edgeOfTheEarth.label.standAndFight",
+        "status": "missing",
+        "sample": "Stand and fight!"
+      },
+      {
+        "key": "edgeOfTheEarth.label.openTheDoorAndVenture",
+        "status": "missing",
+        "sample": "Open the door and venture into the mirage."
+      },
+      {
+        "key": "edgeOfTheEarth.label.ignoreTheDoor",
+        "status": "missing",
+        "sample": "Ignore the door and allow it to vanish"
+      },
+      {
+        "key": "edgeOfTheEarth.label.openTheDoorAndVentureOnceMore",
+        "status": "missing",
+        "sample": "Open the door and venture once more into the mirage."
+      },
+      {
+        "key": "edgeOfTheEarth.label.youCanStillCheckTeamMembers",
+        "status": "missing",
+        "sample": "You can still check [count] team members"
+      },
+      {
+        "key": "edgeOfTheEarth.label.williamDyer",
+        "status": "missing",
+        "sample": "William Dyer"
+      },
+      {
+        "key": "edgeOfTheEarth.label.danforth",
+        "status": "missing",
+        "sample": "Danforth"
+      },
+      {
+        "key": "edgeOfTheEarth.label.drAmyKensler",
+        "status": "missing",
+        "sample": "Dr. Amy Kensler"
+      },
+      {
+        "key": "edgeOfTheEarth.label.drMalaSinha",
+        "status": "missing",
+        "sample": "Dr. Mala Sinha"
+      },
+      {
+        "key": "edgeOfTheEarth.label.jamesCookieFredericks",
+        "status": "missing",
+        "sample": "James \"Cookie\" Fredericks"
+      },
+      {
+        "key": "edgeOfTheEarth.label.averyClaypool",
+        "status": "missing",
+        "sample": "Avery Claypool"
+      },
+      {
+        "key": "edgeOfTheEarth.label.roaldEllsworth",
+        "status": "missing",
+        "sample": "Roald Ellsworth"
+      },
+      {
+        "key": "edgeOfTheEarth.label.takadaHiroko",
+        "status": "missing",
+        "sample": "Takada Hiroko"
+      },
+      {
+        "key": "edgeOfTheEarth.label.eliyahAshevak",
+        "status": "missing",
+        "sample": "Eliyah Ashevak"
+      },
+      {
+        "key": "edgeOfTheEarth.label.doNotPerformHealing",
+        "status": "missing",
+        "sample": "Do not perform healing"
+      },
+      {
+        "key": "edgeOfTheEarth.label.doNotBeginWithExtraResources",
+        "status": "missing",
+        "sample": "Do not begin with extra resources"
+      },
+      {
+        "key": "edgeOfTheEarth.label.doNotRemoveAnymore",
+        "status": "missing",
+        "sample": "Do not remove anymore"
+      },
+      {
+        "key": "edgeOfTheEarth.label.removeTekeliliWeaknesses",
+        "status": "missing",
+        "sample": "Any one investigator may choose and remove up to five Tekeli-li! weaknesses from their deck (shuffling them with the remainder of the Tekeli-li encounter set)."
+      },
+      {
+        "key": "edgeOfTheEarth.label.earnsBonusExperience",
+        "status": "missing",
+        "sample": "Any one investigator earns 1 bonus experience."
+      },
+      {
+        "key": "edgeOfTheEarth.label.beginScenarioIIWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with two additional cards drawn in their opening hand."
+      },
+      {
+        "key": "edgeOfTheEarth.label.beginScenarioIIIWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario III: City of the Elder Things with two additional cards drawn in their opening hand."
+      },
+      {
+        "key": "edgeOfTheEarth.label.beginScenarioIVWithExtraCards",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario IV: The Heart of Madness with two additional cards drawn in their opening hand."
+      },
+      {
+        "key": "edgeOfTheEarth.label.beginScenarioIIWithExtraResources",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario II: To the Forbidden Peaks with 3 additional resources in their resource pool."
+      },
+      {
+        "key": "edgeOfTheEarth.label.beginScenarioIIIWithExtraResources",
+        "status": "missing",
+        "sample": "Any one investigator may begin Scenario III: City of the Elder Things with 3 additional resources in their resource pool."
+      },
+      {
+        "key": "edgeOfTheEarth.label.stayAndStudyTheGreatDoor",
+        "status": "missing",
+        "sample": "Stay here and study the great door to learn more. You will play both parts of the scenario. Proceed to The Heart of Madness, Part 1."
+      },
+      {
+        "key": "edgeOfTheEarth.label.passThroughTheGate",
+        "status": "missing",
+        "sample": "There is no time to waste. Pass through the gate! You will skip the first part of the scenario. Skip directly to The Heart of Madness, Part 2."
+      },
+      {
+        "key": "edgeOfTheEarth.label.skipToPrologue4",
+        "status": "missing",
+        "sample": "Skip to Prologue 4"
+      },
+      {
+        "key": "edgeOfTheEarth.label.proceedToPrologue4",
+        "status": "missing",
+        "sample": "Proceed to Prologue 4"
+      },
+      {
+        "key": "edgeOfTheEarth.nightmarishVapors.label.shuffleTekeliliIntoYourDeck",
+        "status": "missing",
+        "sample": "Shuffle the top [count] cards of the Tekeli-li deck into your deck without looking at them."
+      },
+      {
+        "key": "edgeOfTheEarth.apeirophobia.label.addFrostToken",
+        "status": "missing",
+        "sample": "Add 1 {'{'}frost{'}'} token to the chaos bag."
+      },
+      {
+        "key": "edgeOfTheEarth.wukWukWuk.label.moveToYou",
+        "status": "missing",
+        "sample": "Move it to your location"
+      },
+      {
+        "key": "edgeOfTheEarth.wukWukWuk.label.placeDoom",
+        "status": "missing",
+        "sample": "Place 1 doom on it"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08720",
+        "status": "missing",
+        "sample": "Dr. Amy Kensler"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08714",
+        "status": "missing",
+        "sample": "Prof. William Dyer"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08715",
+        "status": "missing",
+        "sample": "Danforth"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08721",
+        "status": "missing",
+        "sample": "Roald Ellsworth"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08722",
+        "status": "missing",
+        "sample": "Takada Hiroko"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08718",
+        "status": "missing",
+        "sample": "Avery Claypool"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08717",
+        "status": "missing",
+        "sample": "Dr. Mala Sinha"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08719",
+        "status": "missing",
+        "sample": "James \"Cookie\" Fredericks"
+      },
+      {
+        "key": "edgeOfTheEarth.partnerNames.08716",
+        "status": "missing",
+        "sample": "Eliyah Ashevak"
+      }
+    ],
+    "localeKeyMixed": [
+      {
+        "key": "edgeOfTheEarth.checkpoint1.theDisappearance2.body",
+        "type": "latin-words",
+        "words": [
+          "II",
+          "II"
+        ],
+        "sample": "失踪事件 2: 第二天，你们都在养精蓄锐，为下一段旅程做准备。\n\n• 完整跳过 亡命冰原 第II部分 。\n\n• 失踪的队员肯定熬不过晚上。在剧本日志中“探险队”部分，将每名标记为“失踪”的角色名字划掉。\n\n• 迅速推进至 检查点II：袭击"
+      },
+      {
+        "key": "edgeOfTheEarth.interlude2.endlessNight3.body",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "III"
+        ],
+        "sample": "无尽夜晚 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。 在混乱袋里加入1个 {'{'}frost{'}'}标记， 直到剧本结束。进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。 进入 冒险III： 古老者之城. (之后你还会得到这个机会)"
+      },
+      {
+        "key": "edgeOfTheEarth.interlude3.finalNight3.body",
+        "type": "latin-words",
+        "words": [
+          "frost",
+          "IV"
+        ],
+        "sample": "最后一夜 3: 就在你终于开始感到昏昏沉沉时，门又出现了。它闪著微光，灰色的薄雾从门框的缝隙中滚滚而出。再一次，你被授予选择。但是你敢再一次冒险进入这冰冷的幻觉吗？\n\n调查员必须选择一项：\n\n• 打开门， 再次进入幻景。. 在混乱袋里加入1个 {'{'}frost{'}'} 标记， 直到剧本结束。 进入 冒险???：致命幻景 。\n\n• 无视门， 让它自己消失。. 进入冒险IV：疯狂之心。(直到本剧本结束，你将没有机会再返回致命幻景。)"
+      }
+    ],
+    "flowEnglish": [
+      {
+        "node": "checkpoint1SearchStory",
+        "text": "The Disappearance 3: You’ve decided to go after your missing team members…\n\n• Proceed to Ice and Death, Part II."
+      }
+    ],
+    "statusInconsistent": []
+  }
+}
