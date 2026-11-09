@@ -28,7 +28,7 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：往事回声、黄色印记信徒、妄想、午夜假面、上锁的门、以及黑暗异教徒。这些遭遇组的图标为：在收齐午夜假面遭遇组时，只收齐5张诡计卡牌（2张错误指示和3张追猎鬼影）。不要收齐该遭遇组中的地点、场景、密谋和冒险参考卡。"
+              "text": "收齐以下遭遇组的所有卡牌：往事回声、黄色印记信徒、妄想、午夜假面、上锁的门、以及黑暗异教徒。在收齐午夜假面遭遇组时，只收齐5张诡计卡牌（2张错误指示和3张追猎鬼影）。不要收齐该遭遇组中的地点、场景、密谋和冒险参考卡。"
             },
             {
               "text": "随机选择一个一楼历史协会地点、一个二楼历史协会地点和一个三楼历史协会地点。将这些地点移出游戏，不要查看它们的已揭示面。"
@@ -137,7 +137,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: Echoes of the Past, Cult of the Yellow Sign, Delusions, The Midnight Masks, Locked Doors, and Dark Cult. These sets are indicated by the following icons:When gathering The Midnight Masks encounter set, only gather the 5 treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather the location, act, agenda, or scenario reference cards from that set."
+              "text": "Gather all cards from the following encounter sets: Echoes of the Past, Cult of the Yellow Sign, Delusions, The Midnight Masks, Locked Doors, and Dark Cult. When gathering The Midnight Masks encounter set, only gather the 5 treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather the location, act, agenda, or scenario reference cards from that set."
             },
             {
               "text": "Randomly choose one Ground Floor Historical Society location, one Second Floor Historical Society location, and one Third Floor Historical Society location. Remove those locations from the game, without looking at their revealed sides."

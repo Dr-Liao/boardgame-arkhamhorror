@@ -91,6 +91,8 @@ function resolveLocaleRef(value, lang, file, depth = 0) {
 /** 中文发布文本的后处理（参考 locale 历史遗留问题的确定性修复；仅作用于 zh 展示值）。 */
 export function normalizeZhText(value) {
   let text = String(value ?? '')
+  // 0) 结局/导入段首的英文分节标签由标题层承载（Resolution 3: / Intro 3:），正文不重复。
+  text = text.replace(/^[ \t]*(?:Intro|Resolution|No Resolution)\s*\d*\s*[:：][ \t]*/gim, '')
   // 1) i18next 转义残渣：{'{'}frost{'}'} -> [frost]
   text = text.replace(/\{'\{'\}([^{}]+)\{'\}'\}/g, '[$1]')
   text = text.replace(/\{'\}'\}/g, '')
@@ -101,6 +103,8 @@ export function normalizeZhText(value) {
   text = text.replace(/•\s*Experience:\s*（按上述说明计算）/g, '• 经验值：（按上述说明计算）')
   text = text.replace(/庇护值\s*[:：]\s*\[shelterValue\]/g, '庇护值：营地庇护值')
   text = text.replace(/\[shelterValue\]/g, '营地庇护值')
+  // 参考 locale 的未替换计数占位（campaign records / labels）：渲染层没有插值点，改成可读的 X。
+  text = text.replace(/\[count\]/g, 'X')
   // 4) 参考 locale 印刷留白/占位
   text = text.replace(/冒险\?\?\?：/g, '冒险：').replace(/冒险\?\?\?/g, '冒险')
   text = text.replace(/第I部分I/g, '第II部分')
@@ -666,6 +670,15 @@ for (const [id, group] of Object.entries(campaignData.interludes || {})) if (gro
 // \`edgeOfTheEarth.*\` locale 键 → 中文展示值（story-access.js 的 storyEntry 读这里）。
 export const EOTE_STORY_KEYS = EOTE_STORY_DATA.localeKeys
 
+// 尾声分节标题：参考 locale 只提供分节 key（ellsworthAndClaypool 等），没有中文标题。
+const EPILOGUE_SECTION_TITLES = Object.freeze({
+  ellsworthAndClaypool: '埃尔斯沃思与克莱普尔',
+  kenslerAndSinha: '肯斯勒与辛哈',
+  dyerAndDanforth: '戴尔与丹佛斯',
+  takadaAndCookie: '高田与曲奇',
+  ashevak: '阿什瓦克',
+})
+
 export const EOTE_STORY_TEXT = {
   ...EOTE_STORY_DATA,
   interludes: {
@@ -676,7 +689,7 @@ export const EOTE_STORY_TEXT = {
   epilogue: {
     sections: (campaignData.epilogue?.entries || []).map(entry => ({
       key: \`edgeOfTheEarth.epilogue.\${entry.key}\`,
-      title: entry.title || entry.key,
+      title: entry.title || EPILOGUE_SECTION_TITLES[String(entry.key).split('.').at(-1)] || entry.key,
       paragraphs: paragraphsOf(entry.body ?? entry.text),
     })),
     cells: [],

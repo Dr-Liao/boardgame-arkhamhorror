@@ -486,6 +486,33 @@ test('幕 1b：全员移到维多利亚式宴会厅、7 地点翻到幽灵面、
   assert.equal(state.scenarioFlags.monsterSetAside.length, 0)
 })
 
+test('05072 维多利亚式宴会厅：【action】弃到银暮秘社敌人后从遭遇弃牌堆取回生成（不重复实体）', () => {
+  const state = setup(stateFor(2))
+  state.investigators[0].location = 'victorianHalls'
+  // 栈（pop 顺序）：先 05266，再 05096；05096 是银暮秘社敌人。
+  state.encounterDeck = ['05096', '05266']
+  state.encounterDiscard = []
+  const spawned = []
+  const api = stubApi({
+    spawn: (code, location) => {
+      spawned.push([code, location])
+      api.calls.push({ name: 'spawn', args: [code, location] })
+      return null
+    },
+  })
+  api.takeEncounterDiscard = code => {
+    const index = state.encounterDiscard.lastIndexOf(code)
+    if (index < 0) return false
+    state.encounterDiscard.splice(index, 1)
+    api.calls.push({ name: 'takeEncounterDiscard', args: [code] })
+    return true
+  }
+  behavior.performAction(state, state.investigators[0], { rule: 'victorianHallsAction' }, api)
+  assert.deepEqual(spawned.map(item => item[0]), ['05096'], '弃出的银暮秘社敌人被生成')
+  assert.equal(state.encounterDiscard.includes('05096'), false, '生成后不再同时留在遭遇弃牌堆')
+  assert.equal(state.scenarioFlags.victorianHallsActionUsed, true)
+})
+
 test('幕 1b：每位调查员从放一边怪物中自选 1 个生成在自己地点（按玩家顺序循环到全部生成）', () => {
   const state = setup(stateFor(2))
   state.locations.forEach(location => { location.revealed = true })

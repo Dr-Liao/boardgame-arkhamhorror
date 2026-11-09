@@ -24,15 +24,17 @@ export default {
       if (move.rule !== 'removeNahabDoom') return false
       api.payClues?.(state.numInvestigators, inv.location)
       const nahab = state.enemies.find(enemy => String(originalOf(enemy)) === '05149')
-      if (nahab) nahab.doom = Math.max(0, (nahab.doom || 0) - 1)
+      // 「移除 1 个毁灭标记」走引擎毁灭写点（条目不直写 enemy.doom）。
+      if (nahab) api.removeDoomFromCard?.(nahab, 1)
       api.info?.('🩸 献祭场所：移除那赫卜上的 1 个毁灭标记。')
       return true
     },
     // 引擎直接读取：强制 - 轮末把本地点的线索补到 3×人数。
     onRoundEnd(state, location, api) {
       const target = 3 * state.numInvestigators
-      if ((location.clues || 0) >= target) return
-      location.clues = target
+      const missing = target - (location.clues || 0)
+      if (missing <= 0) return
+      api?.addCluesToLocation?.(location.id, missing)
       api?.info?.(`🩸 献祭场所：线索补充到 ${target}。`)
     },
   },

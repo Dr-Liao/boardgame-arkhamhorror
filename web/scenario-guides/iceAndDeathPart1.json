@@ -64,7 +64,7 @@
           "title": "亡命冰原 第I部分",
           "children": [
             {
-              "text": "引言 4：当你恢复知觉时，强烈的疼痛灼烧着你起泡的皮肤。你在燃烧的飞机残骸中勉强听到外面透过烟雾传来沉闷的喊声。有人抓住你的胳膊，把你从残骸中拉出来，你摔倒在柔软的雪地上。你周围爆发出更多的喊声。“还有一个！”“快！”“抓住我的手！”\n\n你竭尽全力站了起来。除了擦伤和有些气喘，你奇迹般地平安无事。大部分其他队员也都安然无恙，除了……"
+              "text": "引言 4：当你恢复知觉时，强烈的疼痛灼烧着你起泡的皮肤。你在燃烧的飞机残骸中勉强听到外面透过烟雾传来沉闷的喊声。有人抓住你的胳膊，把你从残骸中拉出来，你摔倒在柔软的雪地上。你周围爆发出更多的喊声。“还有一个！”“快！”“抓住我的手！”\n\n你竭尽全力站了起来。除了擦伤和有些气喘，你奇迹般地平安无事。大部分其他队员也都安然无恙，除了……\n\n找到并阅读下一栏中与坠机罹难角色对应的段落。然后，进入冒险设置。"
             }
           ]
         }
@@ -87,7 +87,7 @@
               "text": "否则，跳到导言 3。"
             },
             {
-              "text": "收集以下遭遇组中的所有卡牌：亡命冰原、坠机、冰中生物、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示："
+              "text": "收集以下遭遇组中的所有卡牌：亡命冰原、坠机、冰中生物、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。"
             },
             {
               "text": "将冰中生物遭遇组放在一边。"
@@ -236,7 +236,7 @@
               "text": "Otherwise, skip to Intro 3."
             },
             {
-              "text": "Gather all cards from the following encounter sets: Ice and Death, The Crash, Creatures in the Ice, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: Ice and Death, The Crash, Creatures in the Ice, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. "
             },
             {
               "text": "Set aside the Creatures in the Ice encounter set."
@@ -316,7 +316,7 @@
               "title": "Resolution 1",
               "children": [
                 {
-                  "text": "Resolution 1: As you make camp, you are haunted by memories of the creatures you encountered in the icy wilds. Such entities should not exist. Not even Dyer’s report mentions anything of the kind. Grim silence settles over the expedition team as you set up shelter. No one speaks of what they saw in the frozen wilderness. No one speaks of the awful sounds those monsters made. You can only hope that this camp is secluded enough to avoid the attention of those things—whatever they may be…\n\n• In your Campaign Log, write “Camp –,” and next to it, record the name of the location the investigators resigned at. This location is referred to as the investigators’ camp for the remainder of Ice and Death.\n\n• Record the camp’s shelter value in parentheses next to its name.\n\n• Shelter Value: [shelterValue]\n\n• Each investigator earns experience equal to the camp’s shelter value (to a minimum of 3) plus the Victory X value of each card in the victory display.\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Proceed to Checkpoint I: The Disappearance."
+                  "text": "Resolution 1: As you make camp, you are haunted by memories of the creatures you encountered in the icy wilds. Such entities should not exist. Not even Dyer’s report mentions anything of the kind. Grim silence settles over the expedition team as you set up shelter. No one speaks of what they saw in the frozen wilderness. No one speaks of the awful sounds those monsters made. You can only hope that this camp is secluded enough to avoid the attention of those things—whatever they may be…\n\n• In your Campaign Log, write “Camp –,” and next to it, record the name of the location the investigators resigned at. This location is referred to as the investigators’ camp for the remainder of Ice and Death.\n\n• Record the camp’s shelter value in parentheses next to its name.\n\n• Shelter Value: the camp's shelter value\n\n• Each investigator earns experience equal to the camp’s shelter value (to a minimum of 3) plus the Victory X value of each card in the victory display.\n\n• Experience: (calculate as instructed above)\n\n• In the “Expedition Team” section of the Campaign Log, record the amount of damage and horror on each partner asset in play.\n\n• Proceed to Checkpoint I: The Disappearance."
                 }
               ]
             }

@@ -73,7 +73,7 @@ test('TCU 05156 他人行动之间打出，立即执行一次行动并恢复座�
   const before = state.investigators.map(inv => inv.actionsLeft)
   const serial = state.turnSerial
   let offered = false, acted = false
-  const execute = s => playerWindow(s, 'investigation.afterAction', [], null, { fastCards: true })
+  const execute = s => playerWindow(s, 'investigation.afterAction', [], null, { fastCards: true, betweenActions: true })
   resolveTransaction(state, 0, { action: 'completion-test' }, execute)
   for (let guard = 0; state.pendingChoice; guard++) {
     assert.ok(guard < 100)
@@ -98,6 +98,30 @@ test('TCU 05156 他人行动之间打出，立即执行一次行动并恢复座�
   assert.deepEqual(state.investigators.map(inv => inv.actionsLeft), before)
   assert.equal(state.investigators[1].resources, 4, '支付2，再执行资源行动获得1')
   assert.equal(state.immediateAction, undefined)
+})
+
+test('TCU 05156 反应灵敏 只在「行动之间」窗口提供：技能检定/神话/敌人窗口不出现', () => {
+  const state = fixture('01001', 2)
+  state.humanSeats = [0, 1]
+  state.investigators[1].hand = ['05156']
+  state.investigators[1].resources = 5
+  for (const [timing, options] of [
+    ['test.beforeCommit', {}],
+    ['mythos.afterEncounter', {}],
+    ['enemy.afterAttacks', {}],
+    ['upkeep.end', {}],
+  ]) {
+    let offered = false
+    const execute = s => playerWindow(s, timing, [], null, options)
+    resolveTransaction(state, 0, { action: `05156-window-${timing}` }, execute)
+    for (let guard = 0; state.pendingChoice && guard < 20; guard++) {
+      const pending = state.pendingChoice
+      if (pending.options.some(option => option.id === 'fast-card:05156')) offered = true
+      const optionId = pending.options.find(option => ['skip', 'done'].includes(String(option.id)))?.id ?? pending.options[0].id
+      resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, execute)
+    }
+    assert.equal(offered, false, `${timing} 窗口不应提供 05156`)
+  }
 })
 
 for (const token of ['-8', 'autofail', 'tablet']) {

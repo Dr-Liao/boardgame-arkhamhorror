@@ -459,7 +459,7 @@ const INTERLUDE_ONE_DUAL = [
     id: 'interlude1.2',
     type: 'choice',
     textKey: 'theBlackCat2',
-    prompt: 'What shall I tell your friends in the waking world?',
+    prompt: '我该对你清醒世界的朋友们说些什么呢？',
     options: [
       {
         id: 'newsOfYourPlight',
@@ -625,7 +625,7 @@ const INTERLUDE_TWO_DUAL = [
     id: 'interlude2.1',
     type: 'choice',
     textKey: 'youDidNotAskForIt',
-    prompt: 'What message should the black cat carry to your companions?',
+    prompt: '黑猫该给你的同伴带什么口信？',
     options: [
       {
         id: 'blackCatWandersOff',
@@ -868,7 +868,7 @@ const INTERLUDE_THREE_DUAL = [
     id: 'interlude3.1',
     type: 'choice',
     textKey: 'theGreatOnes1Part2',
-    prompt: 'What message should the black cat carry to your companions?',
+    prompt: '黑猫该给你的同伴带什么口信？',
     options: [
       {
         id: 'blackCatBoundsOff',

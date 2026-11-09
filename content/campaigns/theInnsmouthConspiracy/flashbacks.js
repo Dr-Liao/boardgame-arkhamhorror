@@ -1,4 +1,5 @@
 import { STORY_TEXT } from './story-text.js'
+import { restoreInlineText } from './chapter-definition.js'
 import { recordSetAdd } from '../../../src/campaign/record-sets.js'
 
 const FLASHBACKS = {
@@ -24,9 +25,13 @@ export function story(state, api, id, { scenario = state.scenario.id, locale = '
   if (!raw) throw new Error(`Missing Innsmouth story ${scenario}.${id}`)
   const html = typeof raw === 'string' ? raw : raw.body
   if (typeof html !== 'string') throw new Error(`Missing Innsmouth story body ${scenario}.${id}`)
-  const text = html.replace(/<\/(?:p|div|ul|h[1-6])>/g,'\n\n').replace(/<li>/g,'\n• ').replace(/<br\s*\/?>/g,'\n')
+  const rawText = restoreInlineText(html).replace(/<\/(?:p|div|ul|h[1-6])>/g,'\n\n').replace(/<li\b[^>]*>/g,'\n• ').replace(/<br\s*\/?>/g,'\n')
     .replace(/<[^>]+>/g,'').replaceAll('&nbsp;',' ').replaceAll('&amp;','&').replaceAll('&lt;','<').replaceAll('&gt;','>')
     .replace(/\n{3,}/g,'\n\n').trim()
+  // 结局正文段首「结局 N：」由结局面板标题层承载，正文不重复（story-0009）。
+  const text = id.startsWith('resolutions.')
+    ? rawText.replace(/^(?:结局|尾声|无结局)\s*\d*\s*[:：]\s*/, '').trim()
+    : rawText
   api.present(text, { kind: 'story', title: typeof raw === 'string' ? id : raw.title || id, text })
 }
 function changePermanentToken(state, token, amount) {

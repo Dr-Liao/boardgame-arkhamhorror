@@ -365,6 +365,11 @@ export const behavior = {
   preScenarioSetup(state) {
     const members = isMembersOfTheLodge(state)
     if (members && state.acts?.[0]) state.acts[0] = JSON.parse(JSON.stringify(membersAct1))
+    // 05201《渗透秘社》1a 正面：「直到游戏结束，当前幕获得转化反应」。
+    // actReveal 只在「幕背面推进」时触发（引擎 advancing 流程），所以正面效果必须在开局即置真。
+    if (String(original(state.acts?.[0] || {})) === ACT_INFILTRATING) {
+      setFlags(state, { infiltrationReactionActive: true })
+    }
     setFlags(state, { members })
   },
 

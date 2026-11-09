@@ -6,6 +6,7 @@
 //      （索引由 Lead 合并后重建，因此条目逻辑直接 import 单卡文件验证，不依赖 implementedFor。）
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { zoneApi } from './tcu-zone-api.mjs'
 // 引擎装配点注册能力层（修正读点等）。
 import '../src/engine/engine.js'
 import * as witchingHour from '../content/campaigns/theCircleUndone/scenarios/theWitchingHour/index.js'
@@ -113,7 +114,7 @@ function ensureWoodInPlay(state, code) {
 const woodIds = () => WOODS.map(entry => entry.id)
 
 function apiStub(state, overrides = {}) {
-  return {
+  const api = {
     info: () => {},
     choose: () => 'skip',
     random: () => 0.5,
@@ -164,6 +165,7 @@ function apiStub(state, overrides = {}) {
     stepToward: (from, to) => to,
     ...overrides,
   }
+  return { ...zoneApi(state), ...api }
 }
 
 // ---------------------------------------------------------------------------
@@ -274,6 +276,11 @@ test('05053/05054 面前地点限制：movementError 读点覆盖效果移动与
   assert.equal(witchingHour.behavior.movementError(state, inv, undefined), undefined, '无目标地点不拦')
   state.actIndex = 2
   assert.equal(witchingHour.behavior.movementError(state, inv, loc(state, othersFront)), undefined, 'act2 背面解锁')
+  // 05054 幕背写入 frontsUnlocked 后（act<2 也解锁）——2026-11-09 P1：该 flag 现在有真实读点。
+  state.actIndex = 0
+  state.scenarioFlags.frontsUnlocked = true
+  assert.equal(witchingHour.behavior.movementError(state, inv, loc(state, othersFront)), undefined,
+    '05054 写入 frontsUnlocked 后进入别人面前的地点不再被拒')
 })
 
 test('印刷符号图：森林彼此相连，女巫圆环连到所有森林', () => {
@@ -848,7 +855,10 @@ test('剧本数据：scriptCards 只把 [fast] 推进挂在 act2 上，tokenMean
     { card: 'act', codes: ['05054'] })
   assert.equal(witchingHour.behavior.tokenMeanings.standard.skull.delta, -1)
   assert.equal(witchingHour.behavior.tokenMeanings.hard.elderthing.delta, -4)
-  assert.deepEqual(lostInTheWoodsAct.actRule, { chapterFlow: 'resolveLostInTheWoods' })
+  // 05053 的章节流程 id 由 definition 的 act 数据携带（behavior 读 act.chapterFlow），条目不再重复声明。
+  assert.equal(lostInTheWoodsAct.actRule, undefined, '05053 条目不再保留无读点的 actRule.chapterFlow')
+  assert.equal(witchingHour.scenario.acts.find(act => act.originalCode === '05053')?.chapterFlow,
+    'resolveLostInTheWoods', '章节流程 id 仍在 definition 的幕数据上')
 })
 
 // 05062 被污染的井：跨地点投入（引擎 tests.js 的 crossLocationCommit 钩子）。

@@ -58,12 +58,11 @@ export default {
       if (isSpellOrRelicDamage(state, enemy.lastDamageSource)) return false
       const location = (state.locations || []).find(entry => entry.id === enemy.location)
       if (!location) return false
-      location.attachments ||= []
       const attachmentId = `wraith:${enemy.id}`
-      if (!location.attachments.some(item => item.id === attachmentId)) {
-        location.attachments.push({
-          id: attachmentId, code: WRAITH, originalCode: WRAITH,
-        })
+      // 附属到地点走 api（唯一写点 attachEncounterToLocation / locationAttachments 读点）。
+      const existing = api.locationAttachments?.(location.id) || []
+      if (!existing.some(item => item.id === attachmentId)) {
+        api.attachEncounterToLocation?.(WRAITH, location.id, { id: attachmentId, originalCode: WRAITH })
       }
       // 每只怨灵各自授予一条「将怨灵生成在本地点」（同名多只时各自独立）。
       const grantId = `05103:haunt:${enemy.id}`

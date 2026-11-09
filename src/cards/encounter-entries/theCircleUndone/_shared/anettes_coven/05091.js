@@ -17,7 +17,7 @@ export default {
   enemyStatRule: { fightEvadePerWitchInDiscard: { cap: 3 } },
   enemyScript: {
     onEncounterDeckEmpty(state, enemy, api) {
-      enemy.exhausted = false
+      api.readyEnemy?.(enemy)
       api.info?.('遭遇牌库耗尽：女巫集会的女祭司重整并攻击其所在地点的每位调查员。')
       if (api.cannotAttack?.(enemy)) return
       for (const inv of activeInvestigators(state).filter(target => target.location === enemy.location)) {

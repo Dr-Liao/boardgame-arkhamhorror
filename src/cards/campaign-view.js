@@ -139,6 +139,40 @@ export function campaignProjection(state) {
   out.vengeance = (state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
   // 伊格之怒：战役记录里的累计值。
   out.yigsFury = Number(state.campaign?.records?.yigsFury || 0)
+  // —— 第四循环 P1（2026-11-09 全量扫描）：以下公开计数此前没有观察投影，玩家/前端看不到。
+  // 幕上的裂口（05284/05286b/05288b/05310/05311 等写 state.acts[i].breaches）：桌面公开计数。
+  const actBreaches = Number(state.acts?.[state.actIndex ?? 0]?.breaches || 0)
+  if (actBreaches > 0) out.actBreaches = actBreaches
+  // 「放在密谋牌库旁边」的卡与它们授予的闹鬼（05089/05102/05107）：卡面朝上是公开信息。
+  // 统一表示 state.agendaAside（api.putNextToAgenda）；旧存档的 scenarioZones.agendaAside 兼容读取。
+  const agendaAside = [...(state.agendaAside || state.scenarioZones?.agendaAside || [])]
+  if (agendaAside.length) out.agendaAside = agendaAside
+  if (Array.isArray(state.hauntedGrants) && state.hauntedGrants.length) {
+    out.hauntedGrants = state.hauntedGrants.map(grant => ({
+      id: grant.id || null,
+      locationId: grant.locationId || null,
+      text: grant.ability?.text || '',
+    }))
+  }
+  // 05325《黑色王座》：阿撒托斯毁灭计数与冒险参考卡资源是公开计时器/资源。
+  if (state.scenario?.id === 'beforeTheBlackThrone') {
+    out.beforeTheBlackThrone = {
+      azathothDoom: Number(state.scenarioFlags?.azathothDoom || 0),
+      referenceResources: Number(state.scenarioFlags?.referenceResources || 0),
+      devoured: state.scenarioFlags?.azathothDevoured === true,
+    }
+  }
+  // 05203《崇高利益》四把钥匙：归属（持有者/地点/敌人/支援/放一边）都是桌面公开信息。
+  if (state.scenario?.id === 'forTheGreaterGood' && Array.isArray(state.scenarioKeys)) {
+    out.fourKeys = state.scenarioKeys.map(key => ({
+      id: key.id,
+      label: key.label || key.id,
+      holder: Number.isInteger(key.holder) ? key.holder : null,
+      location: key.location || null,
+      enemyId: key.enemyId || null,
+      assetId: key.assetId || null,
+    }))
+  }
   return out
 }
 

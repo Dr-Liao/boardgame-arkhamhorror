@@ -13,8 +13,7 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'requestPastSelf') return false
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.meddledRequested = true
+      api.setScenarioFlag?.('meddledRequested', true)
       for (const other of activeInvestigators(state).filter(entry => entry.location === inv.location)) {
         if (!(other.discard || []).length) continue
         const answer = api.choose?.({
@@ -34,7 +33,9 @@ export default {
         })
         const index = Number(pickedIndex)
         const index2 = Number.isInteger(index) && index >= 0 && index < other.discard.length ? index : other.discard.length - 1
-        other.hand.push(other.discard.splice(index2, 1)[0])
+        const taken = other.discard[index2]
+        // 弃牌堆→手牌走 api 区域原语（条目不直写 inv.hand / inv.discard）。
+        if (taken != null && api.takeDiscardCard?.(other.seat, taken)) api.putInHand?.(other.seat, taken)
         // 参考实现 `remember $ MeddledWithThePast $ Name.labeled name iid`：写入战役记录
         // （按调查员卡号；后续章节/结局可读）。
         const key = String(other.code || other.name)

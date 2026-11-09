@@ -68,15 +68,15 @@ export default {
         // 1) 可以弃掉其中 1 张。
         const discarded = pickOne('你可以弃掉其中 1 张卡牌。')
         if (discarded != null) {
-          if (zone.kind === 'encounter') state.encounterDiscard.push(discarded)
-          else state.investigators[zone.seat].discard.push(discarded)
+          if (zone.kind === 'encounter') api.discardEncounterCards?.(discarded)
+          else api.putInDiscard?.(zone.seat, discarded)
           api.info(`🃏 弃掉「${api.cardName(discarded)}」。`)
         }
         // 2) 可以将其中的 1 张加入其所有者手牌（遭遇牌库没有所有者，不提供该选项）。
         if (zone.kind === 'investigator') {
           const toHand = pickOne('你可以将其中 1 张加入该调查员的手牌。')
           if (toHand != null) {
-            state.investigators[zone.seat].hand.push(toHand)
+            api.putInHand?.(zone.seat, toHand)
             api.info(`✋ 「${api.cardName(toHand)}」加入 ${state.investigators[zone.seat].name} 的手牌。`)
           }
         }

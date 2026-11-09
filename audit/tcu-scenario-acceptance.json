@@ -13,7 +13,7 @@
     "totalEncounterCards": 293,
     "pendingEncounterCards": 0,
     "gaps": 0,
-    "testCases": 446
+    "testCases": 448
   },
   "items": [
     {
@@ -93,9 +93,9 @@
       "fileHashes": {
         "definition.js": "0403ea592199cba6c515b60e5088affb7aae0a7e54532319e4cbdc9c29d03820",
         "layout.js": "929650d2a5d46db00e032fbf8dfbf8bde702be7205939ffca2ec73777897507c",
-        "behavior.js": "6ca3a693a57b55c8298345e7f4c8ecf4c4db3cc1b73202a46f2741dde37425b1",
+        "behavior.js": "8cf17e1a9eda9cfbc0178865fdb32e29073e7aefebadc57f89b0a0a140614fd6",
         "index.js": "bc4051a14b5df375942a39a99ece2e83e92bb20e62dff97972f32c632addca1b",
-        "chaos.js": "d9b9def127601519ca927d59caedf86db7a2cc5b8deadbf12d018cf70c3ce0d2"
+        "chaos.js": "02e46a7fb5a8d7a48b7d16aef3190f2a4e5d390fdecce87e4ddf8b88881bb676"
       }
     },
     {
@@ -190,7 +190,7 @@
       "fileHashes": {
         "definition.js": "d24e2e2f08c6415f2fc330fc86505a897360eb9a4ee23802ee5ca9aa951157be",
         "layout.js": "789c36ea0a1460f3fce7c532fc76a0f65d6917aa771866cf0f6c012f84edd974",
-        "behavior.js": "fa032eae93f2aa4053915e74819145ee62d19ed50a33aec82db19b9211a9c3b9",
+        "behavior.js": "1bcf85b4871098a34867100f934c5e0ef45419829d8131698e67f6dbc7acb826",
         "index.js": "209c5e51bcb8a5590a8fbb0f7e6561e42a5d775248885489f909b032c81833cd",
         "chaos.js": "d3c7b65f8ba4b188e09252b408f20fb882e37ac14f94db7d57a9c9fd0e0489d5"
       }
@@ -265,7 +265,7 @@
       "approximations": [],
       "testFile": "tests/tcu-deaths-doorstep.test.mjs",
       "testCases": {
-        "passed": 40,
+        "passed": 41,
         "failed": 0
       },
       "sources": [
@@ -285,7 +285,7 @@
       "fileHashes": {
         "definition.js": "faceb3e25ae1586ed49a87b5751c3ea4a4ba6b44cfec70c2b16f41109b7290e7",
         "layout.js": "40b2c68a6fc7fd620eb036c6a68cc20a90ebd3c7e0988f853fc3eb2d79e81830",
-        "behavior.js": "5a86b2616f4a82889aef61167fd15dc4195fbce40903c123d6d0420638493419",
+        "behavior.js": "dd6d913531d0a7fb773111e0bae432c2cfcdb9ac34a4909be2837f7b7aff216c",
         "index.js": "0495643d1e3dedba53283267d8ed529e05064e6066f284e40a50cb06e8e1e3ad",
         "chaos.js": "d1aeb9be0c5e6f48bdfcbdace36fff8559aeb858ec6533182a6d0e8f1a2c9e89"
       }
@@ -474,7 +474,7 @@
       "fileHashes": {
         "definition.js": "b92881c5f75a013ad33798c412dcd0d1706ef40c729e02cffb246887b39c13f4",
         "layout.js": "d00f13dca9f914eb582b6805319b3d82d5157a4f86ae686f3a73d623ee66e2b2",
-        "behavior.js": "f611bd7d2a0e20b86d1b9d0dab8a28d38b2cf2a857376085e842c7371dfbf636",
+        "behavior.js": "620d4342ece185b85903ae858b1e8d289b21aef7cfeab3716d16ae45739b2545",
         "index.js": "5d31c78d1cec1f182396415e067a223b5d915c5d0bd6eb24d1981b2a2e2a0ba4",
         "chaos.js": "0acc3d7b0a99568a895c99fb8faa41dc1d041fc268e56558805f331ad7452e98"
       }
@@ -563,7 +563,7 @@
       "fileHashes": {
         "definition.js": "08f35168ae4e86a9feb501dff4efced966c5ada3a2a44dd8d34be46a5b7284ba",
         "layout.js": "6e4c0c5a4311abd9fee4a38530cae1a24653f65efd8ae6e49c69385b8d2b40bf",
-        "behavior.js": "91f6124719b320c833e2824c381364406a0d5fae057e10306e4950f516ef35ec",
+        "behavior.js": "99586b19ec84af1f0783c6280821fbdcf68997476b09e76f387170fefbb29909",
         "index.js": "4fe9aa163b92c2a13ee317fbdf256f251107b8bc5bfa06459b65504e44a7b53f",
         "chaos.js": "080dc568f2735c15187fa0cea72031f1e3ea033ff0785ad1cbb5dc4352ac3eeb"
       }
@@ -655,7 +655,7 @@
       "approximations": [],
       "testFile": "tests/tcu-union-disillusion.test.mjs",
       "testCases": {
-        "passed": 42,
+        "passed": 43,
         "failed": 0
       },
       "sources": [
@@ -675,7 +675,7 @@
       "fileHashes": {
         "definition.js": "3142b540e66de543152f3e0d55e1690bff62245fbda5283508b5831d2f3da93c",
         "layout.js": "10409d9f4d7d653d32c1cd0a584c4778829aecc5725dd20e8b021f402f26cc04",
-        "behavior.js": "f3491775faed0e0b748599248c878f83388c0ee15a0a3dc4aa24d59b859dcf5d",
+        "behavior.js": "e46f19b4b4f7e63f69fc0894a8ffcbf171c54f56f5db3ae283250d4463b5a71c",
         "index.js": "04657726de4bfd861ce862e1e96da30c27825b9d2ec7651dcdee11219eecce99",
         "chaos.js": "ae91554baca78e38a0572b9f0de66e1a9103ad3bd9ab15a96b92f08d34f87198"
       }
@@ -776,7 +776,7 @@
       "fileHashes": {
         "definition.js": "e18ac1db45c8c2ff950c7e99838632acf2bb8aad53c430194917334b4eb01e1d",
         "layout.js": "a31b2ea9a8421a9f8d8890c02b5fe540adc682e04c659254f49292f7754df6fc",
-        "behavior.js": "5b9f6f15f00a40ab442af4af0edb694ff2e2d4189125c719a217a1b596bf7c26",
+        "behavior.js": "4fbe625e639ffb57f97c92493721aabe8ed52c583abe662d0921426c09a64c2e",
         "index.js": "8b743346b28ee6ee90744b3206df447243c32ce184a54497cd6e504535ae449f",
         "chaos.js": "e49d22eb76a04fbc89a05a653ed75ade1442fa4e25b9e198e82c30759a588770"
       }

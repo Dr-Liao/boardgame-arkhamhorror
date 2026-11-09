@@ -386,7 +386,7 @@ test('P6 乔旧印：+1，并把弃牌堆的一张洞察事件放到直觉牌库
     if (pending.kind === 'card' && pending.options.some(option => option.id === '0')) return '0'
     return null
   })
-  assert.equal(me(state).hunchDeck.at(-1), '01037')
+  assert.equal(me(state).hunchDeck.at(0), '01037', '洞察事件被放到直觉牌库底（数组头）')
   assert.equal(me(state).discard.includes('01037'), false)
 })
 
@@ -1393,7 +1393,7 @@ test('fix 05009 柯尔特：本次攻击击败敌人时回收弃牌堆洞察事�
     return null
   })
   assert.equal(recycled, true, '击败敌人后应提供回收洞察事件的选项')
-  assert.equal(me(state).hunchDeck.at(-1), '01022', '洞察事件被放到直觉牌库底')
+  assert.equal(me(state).hunchDeck.at(0), '01022', '洞察事件被放到直觉牌库底（数组头）')
   assert.equal(me(state).discard.includes('01022'), false)
 })
 
@@ -1654,7 +1654,7 @@ test('task-50 05049 佩妮：显现效果期间的旧印给下回合额外行动
 // ---------------------------------------------------------------------------
 // 第六轮（R6）：05014 黑暗洞察 —— cardWouldBeDrawn 窗口取消抽到的弱点
 // ---------------------------------------------------------------------------
-test('R6 05014 黑暗洞察：抽到弱点时可取消并洗回牌库（不重抽）', () => {
+test('R6 05014 黑暗洞察：抽到普通弱点时可取消并洗回牌库（不重抽）', () => {
   const state = investigatorFixture('05004')
   const inv = me(state)
   inv.hand = ['05014']
@@ -1662,7 +1662,7 @@ test('R6 05014 黑暗洞察：抽到弱点时可取消并洗回牌库（不重�
   inv.discard = []
   const cost = playCost(state, inv, ALL_CARDS['05014'])
   let offered = false
-  drawWeakness(state, '05015', pending => {
+  drawWeakness(state, '10137', pending => {
     if (pending.kind === 'reaction') {
       const dark = pending.options.find(option => option.cardCode === '05014')
       if (dark) { offered = true; return dark.id }
@@ -1670,11 +1670,39 @@ test('R6 05014 黑暗洞察：抽到弱点时可取消并洗回牌库（不重�
     return null
   })
   assert.equal(offered, true, '抽到弱点时应出现 05014 的取消窗口')
-  assert.equal((me(state).hand || []).includes('05015'), false, '弱点没有进入手牌')
-  assert.ok((me(state).deck || []).includes('05015'), '弱点洗回牌库')
+  assert.equal((me(state).hand || []).includes('10137'), false, '弱点没有进入手牌')
+  assert.ok((me(state).deck || []).includes('10137'), '弱点洗回牌库')
   assert.equal((me(state).discard || []).includes('05014'), true, '05014 使用后进弃牌堆')
   assert.equal(me(state).hand.length, 0, '不重抽：没有替换牌进入手牌')
   assert.equal(me(state).resources, 10 - cost, '支付 05014 的打出费用')
+})
+
+test('R6 05015 可怕的秘密：印刷「不能取消」，05014 的取消不生效', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.beneath = ['01036']
+  inv.horror = 0
+  inv.hand = ['05014']
+  inv.resources = 10
+  inv.discard = []
+  const cost = playCost(state, inv, ALL_CARDS['05014'])
+  let attempted = false
+  drawWeakness(state, '05015', pending => {
+    if (pending.kind === 'reaction') {
+      const dark = pending.options.find(option => option.cardCode === '05014')
+      if (dark) { attempted = true; return dark.id }
+    }
+    // 不能取消后正常结算 05015：底下每张卡弃掉或承受 1 恐惧。
+    const horror = pending.options.find(option => option.id === 'horror')
+    if (horror) return horror.id
+    return null
+  })
+  assert.equal(attempted, true, '窗口可能列出 05014（但取消不应生效）')
+  assert.equal((me(state).deck || []).includes('05015'), false, '不能取消：弱点不会被洗回牌库')
+  assert.equal((me(state).discard || []).includes('05015'), true, '弱点正常结算后进弃牌堆')
+  assert.equal(me(state).horror, 1, '选择了承受 1 点恐惧')
+  assert.deepEqual(me(state).beneath, ['01036'], '结算后底下数量不变（选择恐惧分支）')
+  assert.equal(me(state).resources, 10 - cost, '05014 的打出费用仍要支付')
 })
 
 test('R6 05014 黑暗洞察：普通抽牌不触发（窗口只对弱点开）', () => {

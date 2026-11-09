@@ -9,7 +9,5 @@ export default {
   // 本条目登记读点标记，behavior.canCommitCard / commitIconMultiplier 已接线；真正的远程投入
   // 交互受引擎限制（见 scenarios/theWitchingHour/behavior.js 的 scenarioApproximations）。
   locationRule: {
-    allowsCrossWoodsCommit: true,
-    crossWoodsCommitIcons: 1,
   },
 }

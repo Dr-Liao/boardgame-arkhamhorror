@@ -12,7 +12,6 @@ export default {
   scope: 'treachery',
   implemented: true,
   treacheryRule: {
-    threatArea: true,
     turnBeginsHaunted: true,
     turnEndTest: { skill: 'willpower', difficulty: 3 },
   },

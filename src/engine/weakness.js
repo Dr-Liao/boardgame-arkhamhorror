@@ -29,6 +29,8 @@ export function createWeakness(deps) {
     drawCards,
     executeDescriptor,
     farthestLocationsFor,
+    getMaxHealth,
+    getMaxSanity,
     info,
     isWeaknessCard,
     leaveAsset,
@@ -278,8 +280,15 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
   // 2026-10-25 第七轮修复 05019：卡面「放置入场」的弱点资产进支援区（而不是威胁区）。
   if (eff.weakness.type === 'threat' && def.type === 'asset' && registeredEntry(def.code)?.weaknessPlaysAsAsset) {
     if (registeredEntry(def.code)?.weaknessExhaustsAssets) for (const asset of inv.assets) asset.exhausted = true
+    const healthBefore = getMaxHealth(inv)
+    const sanityBefore = getMaxSanity(inv)
     inv.assets.push(newCardInstance(state, def.code, { doom: 0 }))
     info(state, events, `⚠️ 「${cardName(def.code)}」进入 ${inv.name} 的支援区域。`)
+    // 支援区的生命/神智上限修正入场即生效：只有上限确实下调且已经降到等于伤害/恐惧时才补判负。
+    if ((getMaxHealth(inv) < healthBefore && inv.damage >= getMaxHealth(inv))
+      || (getMaxSanity(inv) < sanityBefore && inv.horror >= getMaxSanity(inv))) {
+      checkDefeated(state, inv.seat, events)
+    }
     return
   }
   if (eff.weakness.type === 'threat') {

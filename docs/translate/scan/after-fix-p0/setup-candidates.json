@@ -1,0 +1,2285 @@
+{
+  "summary": {
+    "generatedAt": "2026-11-09",
+    "scope": {
+      "scenarios": 62,
+      "campaigns": 8,
+      "guidesSourceEntries": 62
+    },
+    "byKind": {
+      "scenario-setup-empty": 7,
+      "guideSetup-traditional-chars": 1,
+      "setup-traditional-chars": 1,
+      "resolution-label-duplicate": 48,
+      "resolutions-traditional-chars": 29,
+      "scenario-name-mixed": 6,
+      "intro-single-newline-block": 9,
+      "setup-single-newline-block": 21,
+      "intro-long-block": 6,
+      "setup-long-block": 8,
+      "intro-traditional-chars": 4,
+      "resolutions-punct-unpaired-quote": 3,
+      "intro-punct-unpaired-quote": 3,
+      "resolution-empty": 3,
+      "intro-punct-space-before-punct": 1,
+      "scenario-intro-missing": 1,
+      "note-traditional-chars": 1
+    },
+    "bySeverity": {
+      "low": 148,
+      "medium": 4
+    },
+    "candidateCount": 152,
+    "groupedCount": 136,
+    "campaigns": {
+      "nightOfTheZealot": {
+        "campaign": "nightOfTheZealot",
+        "name": "夜之狂热",
+        "scenarios": 3,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 0
+      },
+      "theDunwichLegacy": {
+        "campaign": "theDunwichLegacy",
+        "name": "敦威治遗产",
+        "scenarios": 8,
+        "missingSetup": 6,
+        "missingNote": 0,
+        "candidates": 7
+      },
+      "thePathToCarcosa": {
+        "campaign": "thePathToCarcosa",
+        "name": "卡尔克萨之路",
+        "scenarios": 8,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 1
+      },
+      "theForgottenAge": {
+        "campaign": "theForgottenAge",
+        "name": "失落的时代",
+        "scenarios": 10,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 6
+      },
+      "theCircleUndone": {
+        "campaign": "theCircleUndone",
+        "name": "万象无终",
+        "scenarios": 9,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 23
+      },
+      "theDreamEaters": {
+        "campaign": "theDreamEaters",
+        "name": "食梦者",
+        "scenarios": 8,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 20
+      },
+      "theInnsmouthConspiracy": {
+        "campaign": "theInnsmouthConspiracy",
+        "name": "印斯茅斯暗潮",
+        "scenarios": 8,
+        "missingSetup": 0,
+        "missingNote": 0,
+        "candidates": 64
+      },
+      "edgeOfTheEarth": {
+        "campaign": "edgeOfTheEarth",
+        "name": "地球边缘",
+        "scenarios": 8,
+        "missingSetup": 1,
+        "missingNote": 0,
+        "candidates": 31
+      }
+    },
+    "sourceErrors": []
+  },
+  "candidates": [
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "theMiskatonicMuseum",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "theMiskatonicMuseum"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "theEssexCountyExpress",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "theEssexCountyExpress"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "bloodOnTheAltar",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "bloodOnTheAltar"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "undimensionedAndUnseen",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "undimensionedAndUnseen"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "whereDoomAwaits",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "whereDoomAwaits"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "lostInTimeAndSpace",
+      "file": "content/scenario-guides.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "lostInTimeAndSpace"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDunwichLegacy",
+      "campaignName": "敦威治遗产",
+      "scenario": "lostInTimeAndSpace",
+      "file": "content/scenario-guides.js",
+      "kind": "guideSetup-traditional-chars",
+      "severity": "low",
+      "pointer": "guides.setup",
+      "evidence": "陋",
+      "line": 46,
+      "count": 1,
+      "scenarios": [
+        "lostInTimeAndSpace"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "thePathToCarcosa",
+      "campaignName": "卡尔克萨之路",
+      "scenario": "theLastKing",
+      "file": "content/campaigns/thePathToCarcosa/scenarios/theLastKing/definition.js",
+      "kind": "setup-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "污",
+      "line": 29,
+      "count": 1,
+      "scenarios": [
+        "theLastKing"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "无结局：",
+      "line": 171,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r1",
+      "evidence": "结局 1：",
+      "line": 172,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r2",
+      "evidence": "结局 2：",
+      "line": 173,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r3",
+      "evidence": "结局 3：",
+      "line": 174,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r4",
+      "evidence": "结局 4：",
+      "line": 175,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theForgottenAge",
+      "campaignName": "失落的时代",
+      "scenario": "shatteredAeons",
+      "file": "content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r5",
+      "evidence": "结局 5：",
+      "line": 176,
+      "count": 1,
+      "scenarios": [
+        "shatteredAeons"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "atDeathsDoorstep",
+      "file": "content/campaigns/theCircleUndone/scenarios/atDeathsDoorstep/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r1",
+      "evidence": "结局 1：",
+      "line": 154,
+      "count": 1,
+      "scenarios": [
+        "atDeathsDoorstep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "atDeathsDoorstep",
+      "file": "content/campaigns/theCircleUndone/scenarios/atDeathsDoorstep/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r2",
+      "evidence": "结局 2：",
+      "line": 157,
+      "count": 1,
+      "scenarios": [
+        "atDeathsDoorstep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "atDeathsDoorstep",
+      "file": "content/campaigns/theCircleUndone/scenarios/atDeathsDoorstep/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r3",
+      "evidence": "结局 3：",
+      "line": 159,
+      "count": 1,
+      "scenarios": [
+        "atDeathsDoorstep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "theSecretName",
+      "file": "content/campaigns/theCircleUndone/scenarios/theSecretName/definition.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "污",
+      "line": 236,
+      "count": 1,
+      "scenarios": [
+        "theSecretName"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "theWagesOfSin",
+      "file": "content/campaigns/theCircleUndone/scenarios/theWagesOfSin/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r1",
+      "evidence": "结局 1：",
+      "line": 293,
+      "count": 1,
+      "scenarios": [
+        "theWagesOfSin"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "theWagesOfSin",
+      "file": "content/campaigns/theCircleUndone/scenarios/theWagesOfSin/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r2",
+      "evidence": "结局 2：",
+      "line": 296,
+      "count": 1,
+      "scenarios": [
+        "theWagesOfSin"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "theWagesOfSin",
+      "file": "content/campaigns/theCircleUndone/scenarios/theWagesOfSin/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r3",
+      "evidence": "结局 3：",
+      "line": 299,
+      "count": 1,
+      "scenarios": [
+        "theWagesOfSin"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "forTheGreaterGood",
+      "file": "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/definition.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "著",
+      "line": null,
+      "count": 2,
+      "scenarios": [
+        "forTheGreaterGood",
+        "forTheGreaterGood"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "forTheGreaterGood",
+      "file": "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r1",
+      "evidence": "结局 1：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "forTheGreaterGood"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "forTheGreaterGood",
+      "file": "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r2",
+      "evidence": "结局 2：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "forTheGreaterGood"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "forTheGreaterGood",
+      "file": "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r3",
+      "evidence": "结局 3：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "forTheGreaterGood"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r1",
+      "evidence": "结局 1：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r2",
+      "evidence": "结局 2：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r3",
+      "evidence": "结局 3：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r4",
+      "evidence": "结局 4：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r5",
+      "evidence": "结局 5：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r6",
+      "evidence": "结局 6：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r7",
+      "evidence": "结局 7：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r8",
+      "evidence": "结局 8：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r9",
+      "evidence": "结局 9：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r10",
+      "evidence": "霜",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theCircleUndone",
+      "campaignName": "万象无终",
+      "scenario": "unionAndDisillusion",
+      "file": "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.r10",
+      "evidence": "结局 10：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "unionAndDisillusion"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "beyondTheGatesOfSleep",
+      "file": "content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "梦境门外 · Beyond the Gates of Sleep",
+      "line": 133,
+      "count": 1,
+      "scenarios": [
+        "beyondTheGatesOfSleep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "beyondTheGatesOfSleep",
+      "file": "content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "剧本 I–A：梦境门外\n\n按玩家顺序，每名调查员选择下列适用于自己的梦境条目之一，并大声朗读。「中立」梦境可由任何调查员选择。若有可能，每名调查员必须选择不同的梦境。然后，前往〈设置〉。",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "beyondTheGatesOfSleep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "beyondTheGatesOfSleep",
+      "file": "content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组中收集所有卡牌：梦境门外、奈亚拉托提普的使徒、祖格鼠、入梦者的诅咒、幻梦境与刺骨严寒。这些遭遇组由以下图标标示：\n\n将七十级台阶（浅眠）与火焰洞穴置入游戏。每名调查员从七十级台阶（浅眠）开始。\n\n将以下卡牌放在一边、移出游戏：伦",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "beyondTheGatesOfSleep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "wakingNightmare",
+      "file": "content/campaigns/theDreamEaters/scenarios/wakingNightmare/definition.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "剧本 I–B：清醒噩梦\n\n开场 1：你的同伴入睡已经超过二十四小时了。过去这一天里，你的好奇渐渐变成了担忧，又变成了恐惧。问题始于你的一位朋友开始在睡梦中剧烈地",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "wakingNightmare"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "wakingNightmare",
+      "file": "content/campaigns/theDreamEaters/scenarios/wakingNightmare/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "剧本 I–B：清醒噩梦\n\n开场 1：你的同伴入睡已经超过二十四小时了。过去这一天里，你的好奇渐渐变成了担忧，又变成了恐惧。问题始于你的一位朋友开始在睡梦中剧烈地辗转反侧。你猛然警觉，试图把他们摇醒，却毫无用处。你试尽了各种办法。身体接触没有",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "wakingNightmare"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "wakingNightmare",
+      "file": "content/campaigns/theDreamEaters/scenarios/wakingNightmare/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：清醒噩梦、现实交融、修普诺斯的低语、紧锁的门，以及惊骇袭击。这些遭遇组由下列图标标示：\n\n将以下每个遭遇组放在一边：阿特拉克·纳克亚的使徒与蜘蛛。这些遭遇组由下列图标标示：\n\n将候诊室、急救病房、实验疗法病房和档案",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "wakingNightmare"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "theSearchForKadath",
+      "file": "content/campaigns/theDreamEaters/scenarios/theSearchForKadath/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：寻觅卡达斯、奈亚拉托提普的使徒、海盗、幻梦境、修普诺斯的低语与祖格鼠。这些遭遇组由以下图标标示：\n将乌撒、斯凯河与狄拉斯-利恩放入场中。每名调查员从乌撒开始游戏。\n将其他每个地点放在一边，置于场外。\n将以下敌人放在",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theSearchForKadath"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "theSearchForKadath",
+      "file": "content/campaigns/theDreamEaters/scenarios/theSearchForKadath/definition.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "污",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theSearchForKadath"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "theSearchForKadath",
+      "file": "content/campaigns/theDreamEaters/scenarios/theSearchForKadath/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution2",
+      "evidence": "结局 2：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theSearchForKadath"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "pointOfNoReturn",
+      "file": "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：无归之地、地下世界生物、修普诺斯的低语、远古邪恶、食尸鬼，以及惊骇袭击。这些遭遇组由以下图标标示：\n将以下每个遭遇组放在一边，置于游戏",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "pointOfNoReturn"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "pointOfNoReturn",
+      "file": "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：无归之地、地下世界生物、修普诺斯的低语、远古邪恶、食尸鬼，以及惊骇袭击。这些遭遇组由以下图标标示：\n将以下每个遭遇组放在一边，置于游戏外：深入漆黑、山谷恐怖、阿特拉克·纳克亚的使徒，以及夜魇。这些遭遇组由以下图标标",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "pointOfNoReturn"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "pointOfNoReturn",
+      "file": "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "pointOfNoReturn"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "pointOfNoReturn",
+      "file": "content/campaigns/theDreamEaters/scenarios/pointOfNoReturn/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution2",
+      "evidence": "结局 2：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "pointOfNoReturn"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：神居之所、奈亚拉托提普的使徒、入梦者的诅咒、修普诺斯的低语、黑暗教团。这些遭遇组由以下图标标示：\n将以下地点放入游戏：冷原、冰封荒土、冷原隐修院、缟玛瑙大门，以及缟玛瑙城堡（见建议的地点摆放）。\n每名调查员从冷原开",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution2",
+      "evidence": "结局 2：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution3",
+      "evidence": "结局 3：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution4",
+      "evidence": "结局 4：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "whereTheGodsDwell",
+      "file": "content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution5",
+      "evidence": "结局 5：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "whereTheGodsDwell"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theDreamEaters",
+      "campaignName": "食梦者",
+      "scenario": "weaverOfTheCosmos",
+      "file": "content/campaigns/theDreamEaters/scenarios/weaverOfTheCosmos/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "从以下遭遇组收集所有卡牌：编织宇宙、阿特拉克·纳克亚的使徒、蜘蛛、远古邪恶，以及刺骨严寒。这些遭遇组由以下图标标示：\n将每张「巨网」洗混，随机将其中的 4 张置入游戏，排成一条竖线。\n每名调查员从最顶端的巨网地点开始游戏。\n将其他每张巨网地",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "weaverOfTheCosmos"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "thePitOfDespair",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "著",
+      "line": 1036,
+      "count": 1,
+      "scenarios": [
+        "thePitOfDespair"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "thePitOfDespair",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "你挣扎著睁开双眼，疲惫得彷佛已经沉睡数日。你的知觉还未完全恢复。你眨眨眼，拼命想看清身边的一团墨黑。你身上每一寸都传来阵阵钝痛。你的皮肤冰冷麻木，衣服湿湿漉漉。",
+      "line": 1036,
+      "count": 1,
+      "scenarios": [
+        "thePitOfDespair"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "thePitOfDespair",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组的所有卡牌：绝望深坑、深海生物、淹水洞窟、涨潮、破碎记忆、克苏鲁的爪牙和鼠群。这些遭遇组以下列图标标识：注意：每张潮汐隧道地点的遭遇组图标仅印在其已揭示面。\n\n按以下方式放置各把钥匙：\n\n将蓝色和绿色钥匙正面朝上放到一边。\n\n",
+      "line": 999,
+      "count": 1,
+      "scenarios": [
+        "thePitOfDespair"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "thePitOfDespair",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "著",
+      "line": 1055,
+      "count": 2,
+      "scenarios": [
+        "thePitOfDespair",
+        "thePitOfDespair"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组的所有卡牌：艾莲娜·哈珀失踪案、达贡的爪牙、印斯茅斯迷雾、当地人、刺骨寒意、锁住的门、夜魇和午夜假面。这些遭遇组以下列图标标识：收集午夜假面遭遇组",
+      "line": 999,
+      "count": 1,
+      "scenarios": [
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组的所有卡牌：艾莲娜·哈珀失踪案、达贡的爪牙、印斯茅斯迷雾、当地人、刺骨寒意、锁住的门、夜魇和午夜假面。这些遭遇组以下列图标标识：收集午夜假面遭遇组时，仅收集其中五张诡计卡（2张错误指示和3张追猎鬼影）。不要收集该遭遇组的任何其",
+      "line": 999,
+      "count": 1,
+      "scenarios": [
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "陋著",
+      "line": 1110,
+      "count": 1,
+      "scenarios": [
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "著",
+      "line": 1111,
+      "count": 7,
+      "scenarios": [
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper",
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution3",
+      "evidence": "“×7 ”×6",
+      "line": 1113,
+      "count": 1,
+      "scenarios": [
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theVanishingOfElinaHarper",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution5",
+      "evidence": "“×8 ”×9",
+      "line": 1115,
+      "count": 1,
+      "scenarios": [
+        "theVanishingOfElinaHarper"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "“×5 ”×4",
+      "line": 1179,
+      "count": 1,
+      "scenarios": [
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "著",
+      "line": 1179,
+      "count": 1,
+      "scenarios": [
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "你沿著海岸朝印斯茅斯渔村前进的时候，海平面还在不断上升。远处的地平线上日月齐列，预示著凶险而不确定的未来。\n\n你还记得村子的布局，以及刚来几天遇到的一些陌生面庞",
+      "line": 1179,
+      "count": 1,
+      "scenarios": [
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组的所有卡牌：深陷危局、深海生物、涨潮、天体合相、当地人和克苏鲁的爪牙。这些遭遇组以下列图标标识：\n\n将全部15个地点放置入场。\n\n按图示在这些地点之间放置24个屏障（使用资源标记）。\n\n每位调查员从荒芜海岸开始游戏。\n\n按以下",
+      "line": 999,
+      "count": 1,
+      "scenarios": [
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "著",
+      "line": 1110,
+      "count": 2,
+      "scenarios": [
+        "inTooDeep",
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "inTooDeep",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局1：",
+      "line": 1204,
+      "count": 1,
+      "scenarios": [
+        "inTooDeep"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "devilReef",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：魔鬼礁石、海德拉的爪牙、深海生物、淹没洞穴、故障和涨潮。这些遭遇组以下列图标标示：\n\n按下列方式将各把钥匙放在一边：\n\n将紫色、白色",
+      "line": 1237,
+      "count": 1,
+      "scenarios": [
+        "devilReef"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "devilReef",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：魔鬼礁石、海德拉的爪牙、深海生物、淹没洞穴、故障和涨潮。这些遭遇组以下列图标标示：\n\n按下列方式将各把钥匙放在一边：\n\n将紫色、白色和黑色钥匙正面朝上放在一边。\n\n将黄色、绿色、红色和蓝色钥匙背面朝上放在一边。将",
+      "line": 1237,
+      "count": 1,
+      "scenarios": [
+        "devilReef"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "devilReef",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-empty",
+      "severity": "medium",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "noResolution",
+      "count": 1,
+      "scenarios": [
+        "devilReef"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "devilReef",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "著",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "devilReef"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "devilReef",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1：",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "devilReef"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "horrorInHighGear",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：全速恐惧、雾罩印斯茅斯、故障、破碎记忆和远古恶魔。这些遭遇组以下列图标标示：\n\n按下列步骤组成道路牌堆：\n\n找出猎鹰岬近郊和全部6张",
+      "line": 1237,
+      "count": 1,
+      "scenarios": [
+        "horrorInHighGear"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "horrorInHighGear",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：全速恐惧、雾罩印斯茅斯、故障、破碎记忆和远古恶魔。这些遭遇组以下列图标标示：\n\n按下列步骤组成道路牌堆：\n\n找出猎鹰岬近郊和全部6张绕远路。每张卡牌都是旧印斯茅斯公路地点的已揭示面。将它们全部放在一边，置于场外。",
+      "line": 1237,
+      "count": 1,
+      "scenarios": [
+        "horrorInHighGear"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "horrorInHighGear",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1:",
+      "line": 1383,
+      "count": 1,
+      "scenarios": [
+        "horrorInHighGear"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "著",
+      "line": 1445,
+      "count": 1,
+      "scenarios": [
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "你到达猎鹰岬门房的时候，天上弥漫著深红色的浓雾。唯有头顶悬崖上的灯塔发出的亮光刺透迷雾。你想到印斯茅斯如今的情况，不禁好奇这样的讯号是为谁发出。这般恶劣的天气，你怀疑压根儿就不会有船出海。.\n\n这里面某个地方有你数周前追寻的证据。你怀疑奥赛",
+      "line": 1445,
+      "count": 1,
+      "scenarios": [
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：雾中之光、深海生物、淹没的洞穴、涨潮、天体合相和惊惧。这些遭遇组由以下图标表示：\n\n将猎鹰岬门房、猎鹰岬崖边、灯塔梯井和灯塔看门人小",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：雾中之光、深海生物、淹没的洞穴、涨潮、天体合相和惊惧。这些遭遇组由以下图标表示：\n\n将猎鹰岬门房、猎鹰岬崖边、灯塔梯井和灯塔看门人小屋放置入场，置于同一行。将灯光室放置入场，置于灯塔梯井正上方。\n\n每位调查员在猎",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-empty",
+      "severity": "medium",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "noResolution",
+      "count": 1,
+      "scenarios": [
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "aLightInTheFog",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "著",
+      "line": 1458,
+      "count": 4,
+      "scenarios": [
+        "aLightInTheFog",
+        "aLightInTheFog",
+        "aLightInTheFog",
+        "aLightInTheFog"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：达贡巢穴、达贡的爪牙、淹没的洞穴、天体合相、黑暗教团和锁住的门。这些遭遇组由以下图标表示：\n\n按以下方式放置各把钥匙：\n\n将黑色、蓝",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：达贡巢穴、达贡的爪牙、淹没的洞穴、天体合相、黑暗教团和锁住的门。这些遭遇组由以下图标表示：\n\n按以下方式放置各把钥匙：\n\n将黑色、蓝色、绿色、紫色和红色钥匙正面朝上放在一边。\n\n将白色和黄色钥匙背面朝上放在一边。",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "著",
+      "line": 1572,
+      "count": 3,
+      "scenarios": [
+        "theLairOfDagon",
+        "theLairOfDagon",
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1:",
+      "line": 1576,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution2",
+      "evidence": "结局 2:",
+      "line": 1580,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution3",
+      "evidence": "结局 3:",
+      "line": 1580,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "theLairOfDagon",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution4",
+      "evidence": "结局 4:",
+      "line": 1580,
+      "count": 1,
+      "scenarios": [
+        "theLairOfDagon"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "intro-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "著",
+      "line": 1687,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：暗潮之下、海德拉的爪牙、深海生物、淹没的洞穴、破碎记忆、天体合相和远古邪恶。这些遭遇组由以下图标表示：\n\n检查冒险日志。按以下方式放",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "集齐以下遭遇组中的所有卡牌：暗潮之下、海德拉的爪牙、深海生物、淹没的洞穴、破碎记忆、天体合相和远古邪恶。这些遭遇组由以下图标表示：\n\n检查冒险日志。按以下方式放置蓝色、红色、绿色和黄色钥匙：\n\n如果_调查员持有伊哈·恩斯雷的钥匙_，选择一位",
+      "line": 1418,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "著",
+      "line": 1703,
+      "count": 3,
+      "scenarios": [
+        "intoTheMaelstrom",
+        "intoTheMaelstrom",
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "结局 1:",
+      "line": 1703,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution2",
+      "evidence": "结局 2:",
+      "line": 1707,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution3",
+      "evidence": "结局 3:",
+      "line": 1711,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution4",
+      "evidence": "结局 4:",
+      "line": 1715,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution5",
+      "evidence": "结局 5:",
+      "line": 1719,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution6",
+      "evidence": "结局 6:",
+      "line": 1723,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution7",
+      "evidence": "结局 7:",
+      "line": 1727,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "theInnsmouthConspiracy",
+      "campaignName": "印斯茅斯暗潮",
+      "scenario": "intoTheMaelstrom",
+      "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+      "kind": "resolution-label-duplicate",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution8",
+      "evidence": "结局 8:",
+      "line": 1731,
+      "count": 1,
+      "scenarios": [
+        "intoTheMaelstrom"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "亡命冰原 第 I 部分 · Ice and Death, Part I",
+      "line": 162,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "kind": "intro-punct-space-before-punct",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": " ”",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "冒险 I\n\n调查员设置\n\n• 每位调查员可以选择一名探险队的可用成员（即未被划掉的成员）加入他们。将所选角色的剧情支援放置入场，位于该调查员的游戏区域（这些剧情",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "冒险 I\n\n调查员设置\n\n• 每位调查员可以选择一名探险队的可用成员（即未被划掉的成员）加入他们。将所选角色的剧情支援放置入场，位于该调查员的游戏区域（这些剧情支援可以在探险队遭遇组中找到）。\n\n冒险I：亡命冰原 第I部分\n\n自从离开波士顿",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "如果参与本剧本的调查员中有温妮弗雷德·哈巴默克，进入 导言 2。\n\n否则，跳到导言 3。\n\n收集以下遭遇组中的所有卡牌：亡命冰原、坠机、冰中生物、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示：\n\n将冰中生",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "亡命冰原 第 II 部分 · Ice and Death, Part II",
+      "line": 151,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "冒险 I\n\n调查员设置\n\n• 每位调查员的起始基础资源数改为等于营地的庇护值，而不是5点。\n\n• 庇护值：营地庇护值\n\n• 每位调查员可以选择一名未被划掉、也未标记为“失踪”的可用探险队成员与自己同行。将所选角色的剧情支援放置入场，置于该调",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：亡命冰原、夜半失踪、被遗弃者、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示：\n\n使用密谋4-6创建密谋牌堆，并使用场景2创建场景牌堆（这些卡牌可以在夜半失踪遭遇组中找到）。\n\n",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart3",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "亡命冰原 第 III 部分 · Ice and Death, Part III",
+      "line": 154,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart3"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart3",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "kind": "intro-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "“×1 ”×2",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart3"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart3",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "亡命冰原 第III部分\n\n就在那儿，看见了吗？”一名队员递给你双筒望远镜，并指向远方。你们来到营地外，想寻找有利防守的地形，以便在那种生物接近时能尽早发现……但你的发现反而更糟。它们不仅如你所料正向营地袭来，甚至还有更多在从冰面下不断冒出来",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart3"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "iceAndDeathPart3",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：亡命冰原、渗出梦魇、冰中生物、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示：\n\n使用密谋7–8组建密谋牌库，并使用幕3组建幕牌库。（这些卡牌可以在渗出梦魇遭遇组中找到。）\n\n在",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "iceAndDeathPart3"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "fatalMirage",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+      "kind": "scenario-intro-missing",
+      "severity": "medium",
+      "pointer": "scenario.intro",
+      "evidence": "",
+      "count": 1,
+      "scenarios": [
+        "fatalMirage"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "fatalMirage",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+      "kind": "scenario-setup-empty",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "guide 有设置正文，场景数据为空",
+      "count": 1,
+      "scenarios": [
+        "fatalMirage"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "fatalMirage",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+      "kind": "resolution-empty",
+      "severity": "medium",
+      "pointer": "scenario.resolutions.defeat",
+      "evidence": "defeat",
+      "count": 1,
+      "scenarios": [
+        "fatalMirage"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "toTheForbiddenPeaks",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "冒险II：失落之峰\n\n导言 1：当你的队伍准备远行时，狂风呼啸。队伍中几乎没有交谈声。即使你能透过耳套和围巾听到其他人低沉的声音，你会有什么想说的吗？你们共同恐惧的沉默已经够响亮了。\n\n你的目的地在前方数英里开外。锯齿状山峰隐约显现在远方的",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "toTheForbiddenPeaks"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "toTheForbiddenPeaks",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "将下列遭遇组中的所有卡牌找出：失落之峰、致命天气、古老者、南极险境、无名恐怖以及忒咳哩-哩。这些遭遇组由下列图标表示：\n\n将七张山脉地点混洗，并将其中五张排成一条斜线放置入场。将剩余的两个地点放在一边，位于场外。将山顶地点放置入场，位于斜线",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "toTheForbiddenPeaks"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "toTheForbiddenPeaks",
+      "file": "content/scenario-guides.js",
+      "kind": "note-traditional-chars",
+      "severity": "low",
+      "pointer": "guides.note",
+      "evidence": "霜",
+      "line": 198,
+      "count": 1,
+      "scenarios": [
+        "toTheForbiddenPeaks"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "cityOfTheElderThings",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：古老者之城、古老者、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、紧锁之门。这些遭遇组由以下图标标示：\n\n将修格斯遭遇组放在一边，置于场外。\n\n仅使用《错综复杂之城》（版本一）和《追寻未知》（版本一）创建幕牌堆。将其",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "cityOfTheElderThings"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "疯狂之心 第 I 部分 · The Heart of Madness, Part I",
+      "line": 192,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "疯狂之心第I部分\n\n你决定研究这个入口和从这个巨大的隧道分叉出的诸多路径，希望能找到一种方法来阻止另一边的存在逃跑。你认为用来封印这扇门的技术与这五个符号有某种",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "疯狂之心第I部分\n\n你决定研究这个入口和从这个巨大的隧道分叉出的诸多路径，希望能找到一种方法来阻止另一边的存在逃跑。你认为用来封印这扇门的技术与这五个符号有某种联系。也许如果你探索周围的区域，能找到缺失的部分。\n\n进入设置。\n\n冒险IV：疯",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart1",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：疯狂之心、巨大封印、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、远古恶魔、紧锁之门。这些遭遇组由以下图标标示：\n\n将伊夸之门放置入场，已揭示面朝上。\n\n每位调查员从伊夸之门开始游戏。\n\n注：伊夸之门的未揭示面在本部",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart1"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "scenario-name-mixed",
+      "severity": "low",
+      "pointer": "scenario.name",
+      "evidence": "疯狂之心 第 II 部分 · The Heart of Madness, Part II",
+      "line": 155,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "intro-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "“×8 ”×7",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "intro-long-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "检查剧本日志：\n\n如果肯斯勒博士还活着，且肯斯勒博士理解了瘴气的本质：, 进入 序言 2。\n\n否则，进入 序言 3。\n\n疯狂之心 第II部分\n\n序言 1：远古大",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "intro-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.intro",
+      "evidence": "检查剧本日志：\n\n如果肯斯勒博士还活着，且肯斯勒博士理解了瘴气的本质：, 进入 序言 2。\n\n否则，进入 序言 3。\n\n疯狂之心 第II部分\n\n序言 1：远古大门另一端的设施甚至更为古老和奇异。谁能知道当地球在另一端在不断变化发展的时候，此",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "setup-long-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：深海涌动、未知的使徒、刺骨严寒、惊骇袭击。这些遭遇组由以下图标标示：\n\n收集惊骇袭击遭遇组时，只收集2张刺耳之声和2张呆若木鸡（不要",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "setup-single-newline-block",
+      "severity": "low",
+      "pointer": "scenario.setup",
+      "evidence": "收集以下遭遇组中的所有卡牌：深海涌动、未知的使徒、刺骨严寒、惊骇袭击。这些遭遇组由以下图标标示：\n\n收集惊骇袭击遭遇组时，只收集2张刺耳之声和2张呆若木鸡（不要收集3张腐烂的尸体）。\n\n在遭遇牌库和所有场外区域中搜寻巨大封印、修格斯和紧锁之",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "resolutions-traditional-chars",
+      "severity": "low",
+      "pointer": "scenario.resolutions.noResolution",
+      "evidence": "霜",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    },
+    {
+      "layer": "setup",
+      "campaign": "edgeOfTheEarth",
+      "campaignName": "地球边缘",
+      "scenario": "theHeartOfMadnessPart2",
+      "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+      "kind": "resolutions-punct-unpaired-quote",
+      "severity": "low",
+      "pointer": "scenario.resolutions.resolution1",
+      "evidence": "“×11 ”×10",
+      "line": null,
+      "count": 1,
+      "scenarios": [
+        "theHeartOfMadnessPart2"
+      ]
+    }
+  ]
+}

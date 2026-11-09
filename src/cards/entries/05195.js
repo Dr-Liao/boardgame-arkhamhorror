@@ -61,7 +61,7 @@ export default {
         const icon = chooseCommittedIcon(state, inv, api, committed.code)
         if (!icon) { api.info(`「${api.cardName(committed.code)}」没有可选技能图标。`); return }
         // 「该卡牌额外获得该图标」：记录在刚投入的卡牌条目上（本次检定内可见）。
-        committed.extraIcons = [...(committed.extraIcons || []), icon]
+        api.addCommittedExtraIcons?.(icon, { committedId: committed.id })
         const matched = icon === 'wild' || testSkillList(state).includes(icon)
         if (matched) api.addPendingTestBonus(1)
         if (source) source.grislyReturn = committed.code
@@ -82,7 +82,7 @@ export default {
         const index = committed.findIndex(item => item.seat === inv.seat && item.code === code)
         if (index < 0) return
         committed.splice(index, 1)
-        inv.hand.push(code)
+        api.putInHand?.(inv.seat, code)
         api.info(`🪬 「恐怖图腾」：检定失败，把投入的「${api.cardName(code)}」返回 ${inv.name} 的手牌。`)
       },
     },

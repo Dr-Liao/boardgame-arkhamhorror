@@ -355,6 +355,7 @@ export default {
   'game.vital.health': '生命',
   'game.vital.sanity': '理智',
   'game.vital.aria': '{label} {current} / {max}',
+  'game.vital.limitMod': '（上限修正 {delta}）',
   'game.dock.skillsAria': '当前人物属性',
   'game.dock.actionsAria': '剩余 {count} 行动',
   'game.dock.actionPoints': '行动点',

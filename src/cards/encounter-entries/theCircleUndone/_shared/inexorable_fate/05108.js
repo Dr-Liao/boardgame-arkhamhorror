@@ -22,7 +22,7 @@ export default {
   code: '05108',
   scope: 'treachery',
   implemented: true,
-  treacheryRule: { threatArea: true },
+  treacheryRule: {},
   encounterResolve(state, inv, card, api) {
     const copies = copiesInPlay(state)
     if (!copies.length) {

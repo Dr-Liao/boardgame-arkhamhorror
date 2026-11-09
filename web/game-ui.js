@@ -1675,11 +1675,18 @@ function renderPlayerDock(s, inv, humanTurn) {
         renderReactionModes(s, inv),
         // 头像与三态齿轮同排居中：早先绝对定位在名字行右上角，和齿轮上下错开半个按钮高。
         h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name))),
-      h('div', { className: 'ah-dock-vitals' }, [['health',t('game.vital.health'),inv.maxHealth,inv.damage],['sanity',t('game.vital.sanity'),inv.maxSanity,inv.horror]].map(([kind,label,max,loss])=>{
+      h('div', { className: 'ah-dock-vitals' }, [['health',t('game.vital.health'),inv.maxHealth,inv.damage,inv.health],['sanity',t('game.vital.sanity'),inv.maxSanity,inv.horror,inv.sanity]].map(([kind,label,max,loss,printed])=>{
         // 理智允许负数：卡城幽影的调查员不会因恐惧被击败，恐惧超过理智上限是合法状态，
         // 剩余理智（maxSanity - horror）为负时要如实显示（见 web/vitals.js）。
         const shown=vitalDisplay(max, (Number(max)||0)-(Number(loss)||0), { allowNegative: kind==='sanity' })
-        return h('div',{className:'ah-vital ah-vital-'+kind+(shown.overflow?' is-overflow':''),'aria-label':t('game.vital.aria', { label, current: shown.current, max: shown.total })},
+        // max 是观察数据里的「有效上限」（威胁区/支援修正都已计入），printed 是印刷上限（含创伤）。
+        // 两者不同时在 aria/tooltip 里标出修正量：伊格的诅咒 -1 生命这类修正决定是否被击败，
+        // 只显示印刷上限会让「0/4」看起来像「还有 1 点血」。
+        const printedValue = Number(printed)
+        const limitDelta = Number.isFinite(printedValue) ? shown.total - printedValue : 0
+        const desc = t('game.vital.aria', { label, current: shown.current, max: shown.total })
+          + (limitDelta ? t('game.vital.limitMod', { delta: (limitDelta > 0 ? '+' : '') + limitDelta }) : '')
+        return h('div',{className:'ah-vital ah-vital-'+kind+(shown.overflow?' is-overflow':''),'aria-label':desc,title:desc},
           tableIcon(kind),h('span',{className:'ah-vital-label'},label),h('span',{className:'ah-vital-value'},h('strong',{},shown.current),h('small',{},'/ '+shown.total)),
           h('span',{className:'ah-vital-track','aria-hidden':'true'},h('i',{style:{width:shown.fill+'%'}})))
       })),

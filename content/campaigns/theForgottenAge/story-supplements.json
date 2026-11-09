@@ -1,0 +1,9 @@
+{
+  "source": "本仓补译（非官方中文）。参考工程 zh locale 的 heartOfTheElders.json 中，上篇 resolution2 正文仍是英文；此文件只补这一段的叙事正文（列表类结算指示由剧情规则/指南承载，不进入故事日志）。",
+  "officialChinese": false,
+  "entries": {
+    "resolutions.heartOfTheEldersPart1.r2": [
+      "你还没有解开六根石柱——昆扬入口——的谜题，但你不愿在这片充满敌意的丛林中多做停留。你决定还是进入洞穴，希望石柱所代表的那些“结界”不过是古老的迷信而已……"
+    ]
+  }
+}

@@ -34,8 +34,8 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'walterDrawCards') return false
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.walterDrawUsedBySeat = { ...(state.scenarioFlags.walterDrawUsedBySeat || {}), [inv.seat]: true }
+      const usedBySeat = { ...(api.scenarioFlag?.('walterDrawUsedBySeat') || {}), [inv.seat]: true }
+      api.setScenarioFlag?.('walterDrawUsedBySeat', usedBySeat)
       api.drawCards?.(inv.seat, 3)
       api.horror?.(inv.seat, 1)
       api.info?.(`📜 ${inv.name} 抽 3 张卡牌并受到 1 点恐惧。`)

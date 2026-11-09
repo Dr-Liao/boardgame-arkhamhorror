@@ -2,7 +2,9 @@
 // continuations. Store their insertion points outside authoritative state.
 const pending = new WeakMap()
 export function emitPresentation(state, events, cue) {
-  if (!state._resolution) { events.push(cue); return }
+  // 有些纯规则调用（测试直调 api.harm、无事务的调试路径）没有 events 容器：
+  // 没有可投递的通道就丢弃演出 cue，绝不能因此抛错打断规则结算。
+  if (!state._resolution) { if (Array.isArray(events)) events.push(cue); return }
   if (!pending.has(state)) pending.set(state, [])
   pending.get(state).push({ at:state._resolution.events.length, cue })
 }

@@ -32,6 +32,8 @@ export function storyParagraphs(html = '') {
     .replace(/\{setImgPath\}[^\s]*/g, '')
     .split(/\r?\n/)
     .map(line => line.replace(/\s+/g, ' ').replace(/：:/g, '：')
+      // 结局段首的英文分节标签（Resolution N: / No Resolution:）由标题层承载，正文不重复。
+      .replace(/^(?:Intro|Resolution|No Resolution)\s*\d*\s*[:：]\s*/i, '')
       .replace(/\s*前往 设置[。.]?$/g, '').replace(/\{xp\}/g, '以本次结算为准')
       .replace(/([。！？])\.$/, '$1').replace(/\.$/, '。').trim())
     .filter(line => line && !/^前往 设置[。.]?$/.test(line))
@@ -61,7 +63,10 @@ for (const [id, source] of Object.entries(scenarios)) {
     const destination = key === 'noResolution' || key === 'defeat' || key === 'defeated'
       ? 'noResolution' : /^resolution\d+$/.test(key) ? `r${key.slice(10)}` : null
     if (!destination) continue
-    mapped[destination] = storyParagraphs(value.body || value)
+    // 结局正文段首「结局 N：」由 UI 标题层承载，正文不重复（story-0009）。
+    const paragraphs = storyParagraphs(value.body || value)
+    if (paragraphs.length) paragraphs[0] = paragraphs[0].replace(/^(?:结局|尾声|无结局)\s*\d*\s*[:：]\s*/, '').trim()
+    mapped[destination] = paragraphs
   }
   // This scenario explicitly says that no resolution is resolved as R1.
   if (id === 'theHouseAlwaysWins' && mapped.noResolution && mapped.r1) mapped.noResolution.push(...mapped.r1)

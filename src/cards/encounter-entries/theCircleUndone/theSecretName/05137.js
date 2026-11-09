@@ -16,10 +16,8 @@ export default {
     performAction(state, inv, move, api) {
       if (move.rule !== 'investigateRuins') return false
       // 「每场游戏仅限一次」：能力一旦使用就消耗次数（失败也算），不是只在成功时置位。
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.ruinsHealUsedBySeat = {
-        ...(state.scenarioFlags.ruinsHealUsedBySeat || {}), [inv.seat]: true,
-      }
+      const usedBySeat = { ...(api.scenarioFlag?.('ruinsHealUsedBySeat') || {}), [inv.seat]: true }
+      api.setScenarioFlag?.('ruinsHealUsedBySeat', usedBySeat)
       // 参考 WitchHouseRuins.hs：investigateAbility（标准调查管线）+ 成功时治愈 2 恐惧。
       // 地点 0 线索，所以 allowNoClues；成功改为不发现线索。
       api.investigate?.(inv.seat, {

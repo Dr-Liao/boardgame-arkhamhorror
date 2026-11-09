@@ -19,17 +19,23 @@ export default {
     cluesRemoved(state, location, amount, api) {
       if ((amount || 0) <= 0 || location.clues > 0) return
       const isEnemy = code => ALL_CARDS[code]?.type === 'enemy'
+      // 遭遇弃牌堆/牌库的读写收口到 api（条目不得直写 state.*）。
+      const discard = api.encounterDiscardCards?.() || [...(state.encounterDiscard || [])]
       let code = null
-      for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
-        if (!isEnemy(state.encounterDiscard[index])) continue
-        code = state.encounterDiscard.splice(index, 1)[0]
+      for (let index = discard.length - 1; index >= 0; index--) {
+        if (!isEnemy(discard[index])) continue
+        code = discard[index]
+        api.takeEncounterDiscard?.(code)
         break
       }
       if (!code) {
-        while (state.encounterDeck.length) {
-          const top = state.encounterDeck.pop()
+        const deck = api.encounterDeckCards?.() || [...(state.encounterDeck || [])]
+        while (deck.length) {
+          const top = deck[deck.length - 1]
+          api.takeEncounterDeckCard?.(top)
           if (isEnemy(top)) { code = top; break }
-          state.encounterDiscard.push(top)
+          api.discardEncounterCards?.(top)
+          deck.pop()
         }
       }
       if (!code) {

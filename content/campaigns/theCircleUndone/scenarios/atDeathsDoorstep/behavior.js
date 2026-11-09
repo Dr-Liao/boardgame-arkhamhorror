@@ -823,6 +823,9 @@ export const behavior = {
         api?.info?.('遭遇牌库被弃空，也没有出现银暮秘社敌人。')
         return
       }
+      // 生成前先从遭遇弃牌堆取回这张卡：否则同一张实体卡会同时在场与遭遇弃牌堆，
+      // 洗回后可再抽出第二份（05072 审计 high）。
+      api?.takeEncounterDiscard?.(found)
       api?.spawn?.(found, inv.location)
       api?.gainClues?.(inv.seat, 2)
       api?.info?.(`🗣️ 「${ALL_CARDS[found]?.nameZh || found}」被你的追问逼了出来；你获得 2 个线索。`)

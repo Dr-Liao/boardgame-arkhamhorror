@@ -19,16 +19,10 @@ import { ALL_CARDS } from '../../../_shared.js'
 
 const INITIATE = '05090'
 
-function encounterPiles(state) {
-  if (state.scenarioFlags?.lastEncounterDeck === 'spectral' && state.extraEncounterDecks?.spectral) {
-    const piles = state.extraEncounterDecks.spectral
-    if (!Array.isArray(piles.deck)) piles.deck = []
-    if (!Array.isArray(piles.discard)) piles.discard = []
-    return { deckId: 'spectral', deck: piles.deck, discard: piles.discard }
-  }
-  if (!Array.isArray(state.encounterDeck)) state.encounterDeck = []
-  if (!Array.isArray(state.encounterDiscard)) state.encounterDiscard = []
-  return { deckId: 'encounter', deck: state.encounterDeck, discard: state.encounterDiscard }
+// 双牌堆：由场景标记 lastEncounterDeck 决定本卡属于基础还是幽灵遭遇牌堆（读点来自章节）。
+function encounterDeckId(state) {
+  if (state.scenarioFlags?.lastEncounterDeck === 'spectral' && state.extraEncounterDecks?.spectral) return 'spectral'
+  return 'encounter'
 }
 
 export default {
@@ -38,39 +32,50 @@ export default {
   enemyScript: {
     onSpawn(state, enemy, api) {
       if (String(enemy.originalCode || enemy.code) !== INITIATE) return
-      const flags = (state.scenarioFlags ||= {})
-      const last = flags.lastEncounterDrawn
+      const last = api.scenarioFlag?.('lastEncounterDrawn') ?? state.scenarioFlags?.lastEncounterDrawn
       const drawnNow = Boolean(last && String(last.code) === INITIATE)
-      if (drawnNow) delete flags.lastEncounterDrawn
+      if (drawnNow) api.setScenarioFlag?.('lastEncounterDrawn', null)
       // 兼容旧存档/直接生成路径：没有抽牌记录时，只有与抽牌者关联的实例才按「抽到」处理。
       const wasDrawn = drawnNow || (!last && enemy.drawnBySeat != null)
       if (!wasDrawn) {
         api.info?.('女巫集会学徒由剧本效果生成：不结算显现（弃牌库顶）。')
         return
       }
-      const piles = encounterPiles(state)
-      const startedWithCards = piles.deck.length > 0
-      const discarded = []
-      for (let index = 0; index < 2; index++) {
-        if (!piles.deck.length) break
-        const code = piles.deck.pop()
-        piles.discard.push(code)
-        discarded.push(code)
-      }
+      const deckId = encounterDeckId(state)
+      const spectral = deckId === 'spectral'
+      const deckSize = spectral
+        ? (api.extraDeckInfo?.('spectral')?.deck || 0)
+        : (api.encounterDeckCards?.() || state.encounterDeck || []).length
+      const startedWithCards = deckSize > 0
+      // 弃顶 2 张（收口到 api；牌库中途为空即停，不洗回）。
+      const discarded = spectral
+        ? (api.discardExtra?.('spectral', 2) || [])
+        : (api.discardEncounterTop?.(2, { reshuffle: false }) || [])
       const labels = discarded.map(code => ALL_CARDS[code]?.nameZh || code).join('、') || '无'
       api.info?.(`女巫集会学徒：弃掉遭遇牌库顶 ${discarded.length} 张卡牌（${labels}）。`)
       // 只有「本效果把牌库从有牌弃到 0」才触发后续抽取；牌库本来就是 0 或中途为空不算。
-      if (!startedWithCards || piles.deck.length > 0 || discarded.length === 0) return
+      const remaining = spectral
+        ? (api.extraDeckInfo?.('spectral')?.deck || 0)
+        : (api.encounterDeckCards?.() || state.encounterDeck || []).length
+      if (!startedWithCards || remaining > 0 || discarded.length === 0) return
       // 遭遇牌库耗尽：取本牌堆弃牌堆最顶部的巫术（Hex）卡牌并抽取（放回牌库顶再走抽牌管线）。
-      for (let index = piles.discard.length - 1; index >= 0; index--) {
-        const code = piles.discard[index]
+      const discardPile = spectral
+        ? (api.extraDeckInfo?.('spectral')?.discard || [])
+        : (api.encounterDiscardCards?.() || state.encounterDiscard || [])
+      for (let index = discardPile.length - 1; index >= 0; index--) {
+        const code = discardPile[index]
         const card = ALL_CARDS[code]
         if (!card || !(card.traits || []).some(trait => String(trait).toLowerCase() === 'hex')) continue
-        piles.discard.splice(index, 1)
-        piles.deck.push(code)
+        if (spectral) {
+          api.takeExtraDiscard?.('spectral', code)
+          api.addExtra?.('spectral', [code], { top: true })
+        } else {
+          api.takeEncounterDiscard?.(code)
+          api.putOnEncounterDeck?.(code, { top: true })
+        }
         const seat = enemy.drawnBySeat != null ? enemy.drawnBySeat : (state.campaign?.leadSeat ?? 0)
         api.info?.(`遭遇牌库耗尽：抽取遭遇弃牌堆顶的巫术卡牌「${card.nameZh || card.name}」。`)
-        if (piles.deckId === 'spectral') api.drawExtra?.(seat, 'spectral')
+        if (spectral) api.drawExtra?.(seat, 'spectral')
         else api.drawEncounter?.(seat)
         return
       }

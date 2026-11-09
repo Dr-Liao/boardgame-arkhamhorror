@@ -23,8 +23,8 @@ export default {
           })
           const parsed = Number(picked)
           if (Number.isInteger(parsed) && parsed >= 0 && parsed < inv.hand.length) index = parsed
-          const [code] = inv.hand.splice(index, 1)
-          ;(inv.discard ||= []).push(code)
+          const code = inv.hand[index]
+          api.discardFromHand?.(inv.seat, code)
         } else {
           api.damage(inv.seat, 1)
         }

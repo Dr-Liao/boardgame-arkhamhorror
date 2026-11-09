@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-11-09",
+  "scope": {
+    "scenarios": 62,
+    "campaigns": 8,
+    "guidesSourceEntries": 62
+  },
+  "byKind": {
+    "scenario-setup-empty": 7,
+    "guideSetup-traditional-chars": 1,
+    "setup-traditional-chars": 1,
+    "resolution-label-duplicate": 25,
+    "resolutions-traditional-chars": 29,
+    "scenario-name-mixed": 6,
+    "intro-single-newline-block": 9,
+    "setup-single-newline-block": 21,
+    "intro-long-block": 6,
+    "setup-long-block": 7,
+    "intro-traditional-chars": 4,
+    "resolutions-punct-unpaired-quote": 3,
+    "intro-punct-unpaired-quote": 3,
+    "resolution-empty": 3,
+    "intro-punct-space-before-punct": 1,
+    "scenario-intro-missing": 1,
+    "note-traditional-chars": 1
+  },
+  "bySeverity": {
+    "low": 124,
+    "medium": 4
+  },
+  "candidateCount": 128,
+  "groupedCount": 112,
+  "campaigns": {
+    "nightOfTheZealot": {
+      "campaign": "nightOfTheZealot",
+      "name": "夜之狂热",
+      "scenarios": 3,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 0
+    },
+    "theDunwichLegacy": {
+      "campaign": "theDunwichLegacy",
+      "name": "敦威治遗产",
+      "scenarios": 8,
+      "missingSetup": 6,
+      "missingNote": 0,
+      "candidates": 7
+    },
+    "thePathToCarcosa": {
+      "campaign": "thePathToCarcosa",
+      "name": "卡尔克萨之路",
+      "scenarios": 8,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 1
+    },
+    "theForgottenAge": {
+      "campaign": "theForgottenAge",
+      "name": "失落的时代",
+      "scenarios": 10,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 6
+    },
+    "theCircleUndone": {
+      "campaign": "theCircleUndone",
+      "name": "万象无终",
+      "scenarios": 9,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 23
+    },
+    "theDreamEaters": {
+      "campaign": "theDreamEaters",
+      "name": "食梦者",
+      "scenarios": 8,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 12
+    },
+    "theInnsmouthConspiracy": {
+      "campaign": "theInnsmouthConspiracy",
+      "name": "印斯茅斯暗潮",
+      "scenarios": 8,
+      "missingSetup": 0,
+      "missingNote": 0,
+      "candidates": 48
+    },
+    "edgeOfTheEarth": {
+      "campaign": "edgeOfTheEarth",
+      "name": "地球边缘",
+      "scenarios": 8,
+      "missingSetup": 1,
+      "missingNote": 0,
+      "candidates": 31
+    }
+  },
+  "sourceErrors": []
+}

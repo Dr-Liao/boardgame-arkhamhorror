@@ -13,7 +13,6 @@ export default {
   scope: 'treachery',
   implemented: true,
   treacheryRule: {
-    threatArea: true,
     encounterDeckEmptyForced: { horror: 2, test: { skill: 'willpower', difficulty: 3, discardOnSuccess: true } },
   },
   encounterResolve(state, inv, card, api) {

@@ -38,8 +38,8 @@ export default {
       label: '秘社“债务”：移出游戏',
       weakness: { type: 'lodgeDebts' },
       resolve: ({ inv, state, api }) => {
-        state.removedFromGame ||= []
-        state.removedFromGame.push('05012')
+        // 移出游戏走 api（条目不直写 state.removedFromGame）。
+        api.removeFromGameCards?.('05012')
         api.info(`${inv.name} 把「秘社“债务”」移出游戏。`)
       },
     },

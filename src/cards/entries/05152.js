@@ -11,7 +11,9 @@ export default {
   code: '05152',
   fast: true,
   attachTo: { kind: 'asset', trait: 'item', maxPerTarget: 1 },
-  playCondition: [{ when: ({ state, inv }) => state.currentSeat === inv.seat, message: '只能在你自己的回合打出' }],
+  // 卡面「快速。只能在你回合期间打出」：回合=调查阶段（currentSeat 是你），不包含神话/敌人/维持阶段。
+  playCondition: [{ when: ({ state, inv }) => state.phase === 'investigation' && state.currentSeat === inv.seat,
+    message: '只能在你的回合（调查阶段）打出' }],
   abilities: [
     {
       kind: 'reaction',

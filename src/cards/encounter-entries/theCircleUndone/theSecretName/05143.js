@@ -6,14 +6,8 @@
 // 伤害在生成后无条件结算。布朗·詹金在遭遇牌库（setup 不再把他放 set aside）。
 import { originalOf } from '../../_shared.js'
 
-const findInEncounter = (state, wanted) => {
-  const target = String(wanted)
-  const discardIndex = state.encounterDiscard.findIndex(code => String(code) === target)
-  if (discardIndex >= 0) return state.encounterDiscard.splice(discardIndex, 1)[0]
-  const deckIndex = state.encounterDeck.findIndex(code => String(code) === target)
-  if (deckIndex >= 0) return state.encounterDeck.splice(deckIndex, 1)[0]
-  return null
-}
+// 「找出」指定卡：遭遇牌库/弃牌堆取一张物理卡（唯一写点 api.takeEncounterCard）。
+const findInEncounter = (api, wanted) => (api.takeEncounterCard?.(String(wanted)) ? String(wanted) : null)
 
 export default {
   code: '05143', scope: 'treachery', implemented: true,
@@ -21,14 +15,14 @@ export default {
     const jenkin = state.enemies.find(enemy => String(originalOf(enemy)) === '05148')
     if (!jenkin) {
       // 卡面：找出布朗·詹金并生成在你所在地点，然后你受到 1 点伤害（伤害无条件）。
-      const found = findInEncounter(state, '05148')
+      const found = findInEncounter(api, '05148')
       if (found) api.spawn?.(found, inv.location)
       api.damage?.(inv.seat, 1)
       api.info?.(`🐀 「好事魔宠」：找出布朗·詹金并放在 ${inv.name} 所在地点，${inv.name} 受到 1 点伤害。`)
       return false
     }
     // 卡面：找出鼠群并与你交战，然后你受到 1 点伤害；找不到时不凭空生成。
-    const rats = findInEncounter(state, '01159')
+    const rats = findInEncounter(api, '01159')
     const spawned = rats ? (api.spawn?.(rats, inv.location) || null) : null
     if (spawned) api.engage?.(spawned, inv.seat)
     api.damage?.(inv.seat, 1)

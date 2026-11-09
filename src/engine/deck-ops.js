@@ -581,10 +581,17 @@ function drawCards(state, inv, n, events) {
     const def = cardDef(code)
     if (isWeaknessCard(def)) {
       // 2026-10-25 第六轮修复 05014：抽到弱点前的取消窗口（取消后洗回牌库、不重抽）。
+      // 2026-11-09 05015：「不能取消」弱点（条目声明 cannotBeCanceledRevelation）在该窗口不可被取消。
+      const weaknessCannotCancel = registeredEntry(code)?.cannotBeCanceledRevelation === true
       const weaknessDrawContext = { when: 'cardWouldBeDrawn', seat: inv.seat, location: inv.location,
         cardCode: code, weakness: true, from: 'deck', cancelled: false,
+        ...(weaknessCannotCancel ? { cannotCancel: true } : {}),
         prompt: `${inv.name} 将要抽到弱点「${cardName(code)}」` }
       reactionWindow(state, 'cardWouldBeDrawn', weaknessDrawContext, events)
+      if (weaknessDrawContext.cancelled && weaknessCannotCancel) {
+        weaknessDrawContext.cancelled = false
+        info(state, events, `🚫 「${cardName(code)}」的显现不能被取消。`)
+      }
       if (weaknessDrawContext.captured) continue
       if (weaknessDrawContext.cancelled) {
         inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')

@@ -77,7 +77,9 @@ export function backFace(code, explicitBackCode = null) {
     traits: [...(back.traits || [])],
     ...(back.type === 'location' ? {
       shroud: back.shroud,
-      clues: back.clues ?? 0,
+      // 背面未印刷线索 = 不声明 clues：引擎翻面时保留正面线索（P2.3 契约；
+      // back.clues 只有印刷了才作为覆盖值，不能默认合成 0）。
+      ...(Number.isFinite(back.clues) ? { clues: back.clues } : {}),
       ...(back.cluesFixed ? { cluesFixed: back.clues } : {}),
       victory: back.victory || 0,
     } : {}),

@@ -30,9 +30,9 @@ export default {
         const decks = [
           ...state.investigators
             .filter(owner => !owner.defeated && !owner.resigned && (owner.deck || []).length)
-            .map(owner => ({ id: `seat:${owner.seat}`, label: `${owner.name} 的牌库底`, owner, pile: owner.deck })),
-          ...(state.encounterDeck.length
-            ? [{ id: 'encounter', label: '遭遇牌库底', owner: null, pile: state.encounterDeck }]
+            .map(owner => ({ id: `seat:${owner.seat}`, label: `${owner.name} 的牌库底`, owner })),
+          ...((api.encounterDeckCards?.() || state.encounterDeck || []).length
+            ? [{ id: 'encounter', label: '遭遇牌库底', owner: null }]
             : []),
         ]
         if (!decks.length) { api.info('没有可查看的牌库。'); return }
@@ -41,23 +41,26 @@ export default {
             prompt: '秘密卷轴：选择要查看牌库底的牌库。',
             options: decks.map(deck => ({ id: deck.id, label: deck.label })) })
         const deck = decks.find(item => item.id === deckId) || decks[0]
-        const bottom = deck.pile[0]
+        // 牌库底读写走引擎原语（takeDeckBottom / putOnDeckBottom / putOnEncounterDeck 等）。
+        const bottom = deck.owner ? api.takeDeckBottom?.(deck.owner.seat) : api.takeEncounterDeckBottom?.()
+        if (bottom == null) { api.info('牌库底没有卡牌。'); return }
         api.info(`👁 「秘密卷轴」查看「${api.cardName(bottom)}」（${deck.label}）。`)
         const options = ['discard', ...(deck.owner ? ['hand'] : []), 'bottom', 'top']
           .map(id => ({ id, label: DESTINATION_LABELS[id] }))
         const destination = options.length === 1 ? options[0].id
           : api.choice({ kind: 'effect', source: '05116', seat: inv.seat,
             prompt: `秘密卷轴：「${api.cardName(bottom)}」的去向。`, options })
-        deck.pile.splice(0, 1)
         if (destination === 'discard') {
-          if (deck.owner) deck.owner.discard.push(bottom)
-          else state.encounterDiscard.push(bottom)
+          if (deck.owner) api.putInDiscard?.(deck.owner.seat, bottom)
+          else api.discardEncounterCards?.(bottom)
         } else if (destination === 'hand') {
-          deck.owner.hand.push(bottom)
+          api.putInHand?.(deck.owner.seat, bottom)
         } else if (destination === 'bottom') {
-          deck.pile.unshift(bottom)
+          if (deck.owner) api.putOnDeckBottom?.(deck.owner.seat, bottom)
+          else api.putOnEncounterDeck?.(bottom, { bottom: true })
         } else {
-          deck.pile.push(bottom)
+          if (deck.owner) api.putOnTopOfDeck?.(deck.owner.seat, bottom)
+          else api.putOnEncounterDeck?.(bottom, { top: true })
         }
         api.info(`秘密卷轴：「${api.cardName(bottom)}」${DESTINATION_LABELS[destination]}。`)
       },

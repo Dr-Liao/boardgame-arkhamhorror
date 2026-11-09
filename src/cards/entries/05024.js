@@ -13,7 +13,6 @@ export default {
   code: '05024',
   uses: 3,
   usesType: 'supplies',
-  discardWhenEmpty: true,
   abilities: [
     {
       kind: 'action',

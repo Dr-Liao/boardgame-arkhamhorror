@@ -55,7 +55,7 @@ export default {
         // 符号 → 下一个补给阶段不重整。preventReady 是引擎在重整段唯一读的字段
         // （rounds/from 与 combat.js 的 skipReadyRounds 同形状）。
         if ((result.drawn || []).some(token => TOWER_SYMBOLS.includes(token))) {
-          enemy.preventReady = { rounds: 1, from: state.round }
+          api.preventEnemyReady?.(enemy, 1)
           api.info(`「${enemy.name}」在下一个补给阶段期间不重整。`)
         }
       },

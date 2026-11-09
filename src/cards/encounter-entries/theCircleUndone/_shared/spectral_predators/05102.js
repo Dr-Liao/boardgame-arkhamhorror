@@ -14,12 +14,11 @@ export default {
   implemented: true,
   treacheryRule: { discardAtRoundEnd: true },
   encounterResolve(state, inv, card, api) {
-    const zones = (state.scenarioZones ||= {})
-    const aside = (zones.agendaAside ||= [])
-    const entry = { id: `05102:${state.round}:${aside.length}`, code: '05102' }
-    const grantId = `05102:haunt:${entry.id}`
-    entry.hauntGrantId = grantId
-    aside.push(entry)
+    // 公开区统一为 state.agendaAside（api.putNextToAgenda 的写入口）；条目不直写状态。
+    const asideCount = (api.agendaAsideCards?.() || state.agendaAside || []).length
+    const id = `05102:${state.round}:${asideCount}`
+    const grantId = `05102:haunt:${id}`
+    api.putNextToAgenda?.('05102', { id, hauntGrantId: grantId })
     api.grantHaunted?.({
       locationId: 'all',
       ability: { id: grantId, text: '闹鬼 - 受到 1 点恐惧。', effect: [{ kind: 'horror', amount: 1 }] },

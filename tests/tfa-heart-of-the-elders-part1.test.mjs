@@ -813,10 +813,12 @@ test('序盘导入（P2）：按战役卡/记录决定伊塔卡、亚历山卓�
   assert.equal(none.scenarioFlags.alejandroPresent, false)
   assert.equal(none.scenarioFlags.journalPresent, false)
   const bare = read(none)
-  assert.ok(bare.includes('Intro 1:'))
-  assert.equal(bare.includes('Intro 2:'), false)
-  assert.equal(bare.includes('Intro 3:'), false)
-  assert.equal(bare.includes('Intro 4:'), false)
+  // 久远腹地导入来自 heartOfTheElders.json 的官方中文 part1；不得再出现英文 Intro 标签。
+  assert.ok(bare.includes('自从你的队伍再次进入丛林探险以来'), 'intro1 使用官方中文正文')
+  assert.doesNotMatch(bare, /Intro \d:/)
+  assert.equal(bare.includes('那个入口有结界'), false)
+  assert.equal(bare.includes('亚历山卓仔细地查看每根石柱'), false)
+  assert.equal(bare.includes('在上一次探险的日志内并不能找到所有的答案'), false)
 
   const withAll = stateFor(1)
   withAll.campaign.investigators[0].deck.push('04147', '04051', '04148')
@@ -825,7 +827,10 @@ test('序盘导入（P2）：按战役卡/记录决定伊塔卡、亚历山卓�
   assert.equal(withAll.scenarioFlags.alejandroPresent, true)
   assert.equal(withAll.scenarioFlags.journalPresent, true)
   const full = read(withAll)
-  for (const key of ['Intro 2:', 'Intro 3:', 'Intro 4:']) assert.ok(full.includes(key), key)
+  for (const snippet of ['那个入口有结界', '亚历山卓仔细地查看每根石柱', '在上一次探险的日志内并不能找到所有的答案']) {
+    assert.ok(full.includes(snippet), snippet)
+  }
+  assert.doesNotMatch(full, /Intro \d:/)
 
   const byRecord = stateFor(1)
   byRecord.campaign.records.ichtacasFaithIsRestored = true

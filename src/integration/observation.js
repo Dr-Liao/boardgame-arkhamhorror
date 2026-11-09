@@ -52,6 +52,8 @@ const PUBLIC_INVESTIGATOR_FIELDS = [
   'seat', 'code', 'name', 'nameEn', 'klass', 'willpower', 'intellect', 'combat', 'agility',
   'baseHealth', 'baseSanity', 'health', 'sanity', 'maxHealth', 'maxSanity',
   'damage', 'horror', 'resources', 'clues', 'actionsLeft', 'exploreOnlyActions', 'discard', 'assets', 'threat',
+  // 05006 法术专用额外行动额度：额度是公开信息（决定 UI 是否显示「额外行动」入口）。
+  'spellOnlyActions',
   'location', 'engaged', 'defeated', 'resigned', 'defeatCause', 'testBonus',
   'handSlotsPenalty', 'handPenaltyActive',
   'phaseStatBonus', 'onTheLam', 'fearExtraPaid', 'usedReactions', 'autoBuilt', 'deckName',

@@ -635,6 +635,13 @@ function startScenario(state, index, events) {
   const sc = structuredClone(SCENARIOS[scenarioId])
   resolveAgendaDoomThresholds(sc.agendas, state.numInvestigators)
   state.scenario = sc
+  // 剧本级混乱标记含义：definition 数据优先；内容层 behavior 声明的 tokenMeanings（05050 等）
+  // 在这里并进 state.scenario，供 AI 概率预估（src/ai/ai-context.js）与符号结算
+  // （src/engine/combat-odds.js / treachery-tokens.js）读取——此前 behavior.tokenMeanings 是死声明。
+  if (!state.scenario.tokenMeanings) {
+    const hookMeanings = scenarioBehavior(state).tokenMeanings
+    if (hookMeanings) state.scenario.tokenMeanings = hookMeanings
+  }
   // 第四循环P2.1：地点闹鬼能力在开局校验——未知子句/未知目标在加载时失败，
   // 并把规范化后的能力写回剧本数据（读取点只做查询，不再逐次校验）。
   for (const [id, abilities] of Object.entries(normalizeScenarioHaunted(sc.locations))) {

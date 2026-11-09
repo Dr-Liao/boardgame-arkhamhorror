@@ -2,11 +2,14 @@
 // 地点行动、混乱标记四难度、结局记录、存档往返与确定性。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+// 地点规则已迁回单卡条目：加载引擎装配点，让 locationRuleFor(code) 能读到已注册条目。
+import '../src/engine/engine.js'
 import * as clutches from '../content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/index.js'
 import {
   scenario as definition, VARIANT, VARIANT_ACTS, LOCATIONS, LOCATION_PAIRS, deckCodesForVariant,
 } from '../content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/definition.js'
-import { addBreach, removeBreach, breachTotal, locationSkullValue } from '../src/engine/location-state.js'
+import { addBreach, removeBreach, breachOf, breachTotal, locationSkullValue } from '../src/engine/location-state.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 
 const clone = value => structuredClone(value)
 
@@ -123,8 +126,81 @@ function apiFor(state, options = {}) {
     },
     breach: (id, amount = 1) => { log.push(`breach:${id}`); addBreach(state, id, amount) },
     removeBreach: (id, amount = 1) => removeBreach(state, id, amount),
+    breachOf: id => breachOf(loc(state, id)),
     breachTotal: () => breachTotal(state),
     skullValue: id => locationSkullValue(state, id),
+    // 2026-11-09 P1-16：地点条目迁回单卡后使用 scenarioRuntime 的通用动作原语，测试桩按同语义补齐。
+    moveBreachesToAct: (locationId, amount = 1) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location) return 0
+      const moved = Math.min(Number(location.breaches || 0), Math.max(0, Number(amount) || 0))
+      if (moved <= 0) return 0
+      removeBreach(state, locationId, moved)
+      setActBreaches(state, actBreaches(state) + moved)
+      return moved
+    },
+    discardOneFromHand: (seat, options = {}) => {
+      const owner = state.investigators[seat]
+      if (!owner || !(owner.hand || []).length) return null
+      const answer = api.choose({
+        kind: 'card', source: options.source || 'discardOneFromHand', seat,
+        options: owner.hand.map((code, index) => ({ id: String(index), label: code })),
+      })
+      const picked = Number(answer)
+      const index = Number.isInteger(picked) && picked >= 0 && picked < owner.hand.length ? picked : 0
+      const [code] = owner.hand.splice(index, 1)
+      ;(owner.discard ||= []).push(code)
+      return code
+    },
+    discardOneAsset: (seat, options = {}) => {
+      const owner = state.investigators[seat]
+      const asset = (owner?.assets || [])[0]
+      if (!asset) return null
+      api.discardAsset(seat, asset.id)
+      return asset.code
+    },
+    discardTop: (seat, count = 1) => {
+      const owner = state.investigators[seat]
+      const discarded = []
+      for (let index = 0; index < count && (owner.deck || []).length; index++) {
+        const code = owner.deck.pop()
+        ;(owner.discard ||= []).push(code)
+        discarded.push(code)
+      }
+      return discarded
+    },
+    loseResources: (seat, amount) => {
+      const owner = state.investigators[seat]
+      const lost = Math.min(owner.resources || 0, Number(amount) || 0)
+      owner.resources -= lost
+      return lost
+    },
+    randomLocationIds: count => {
+      const ids = state.locations.map(location => location.id)
+      return ids.slice(0, Math.max(0, Math.min(count, ids.length)))
+    },
+    drawEncounterByTrait: (trait, seat, options = {}) => {
+      const wanted = String(trait || '').toLowerCase()
+      const candidates = (state.encounterDeck || []).filter(code => {
+        const def = ALL_CARDS[code]
+        return def?.type === 'enemy' && (def.traits || []).some(value => String(value).toLowerCase() === wanted)
+      })
+      if (!candidates.length) return null
+      const code = candidates[candidates.length - 1]
+      state.encounterDeck.splice(state.encounterDeck.lastIndexOf(code), 1)
+      api.drawEncounter(seat)
+      return code
+    },
+    discardEncounterTop: (count = 1, options = {}) => {
+      const discarded = []
+      for (let index = 0; index < count && (state.encounterDeck || []).length; index++) {
+        const code = state.encounterDeck.pop()
+        ;(state.encounterDiscard ||= []).push(code)
+        log.push(`encounterDiscard:${code}`)
+        discarded.push(code)
+      }
+      return discarded
+    },
     // 05307：地点附属真实实例（与 scenario-runtime.js:326-344 同形状）。
     attachEncounterToLocation: (code, locationId, extra = {}) => {
       const location = state.locations.find(item => item.id === locationId)

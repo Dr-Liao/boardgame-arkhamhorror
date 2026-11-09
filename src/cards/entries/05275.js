@@ -32,8 +32,8 @@ export default {
             const amount = api.choice({ kind: 'resource', source: '05275', seat: inv.seat, prompt: '交出多少个线索？',
               options: Array.from({ length: inv.clues }, (_, index) => ({ id: String(index + 1), label: `${index + 1} 个线索` })) })
             const n = Math.min(inv.clues, Math.max(1, Number(amount) || 1))
-            inv.clues -= n
-            target.clues += n
+            api.loseClues?.(inv.seat, n)
+            api.gainClues?.(target.seat, n)
             api.info(`${inv.name} 把 ${n} 个线索交给 ${target.name}。`)
           } else if (action === 'place') {
             const locationId = api.choice({ kind: 'target', source: '05275', seat: inv.seat, prompt: '选择放置线索的地点。',
@@ -43,8 +43,8 @@ export default {
               const amount = api.choice({ kind: 'resource', source: '05275', seat: inv.seat, prompt: '放置多少个线索？',
                 options: Array.from({ length: inv.clues }, (_, index) => ({ id: String(index + 1), label: `${index + 1} 个线索` })) })
               const n = Math.min(inv.clues, Math.max(1, Number(amount) || 1))
-              inv.clues -= n
-              location.clues = (location.clues || 0) + n
+              api.loseClues?.(inv.seat, n)
+              api.addCluesToLocation?.(location.id, n)
               api.info(`${inv.name} 把 ${n} 个线索放置在「${location.name || location.id}」。`)
             }
           }

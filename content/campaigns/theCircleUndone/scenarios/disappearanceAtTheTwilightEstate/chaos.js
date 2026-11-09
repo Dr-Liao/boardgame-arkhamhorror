@@ -24,3 +24,14 @@ export function prologueChaosToken(state, inv, token, api) {
   if (token !== 'skull') return null
   return { delta: prologueSkullValue(state) }
 }
+
+// 05043 剧本卡的标记含义表（引擎读点：setup 把 behavior.tokenMeanings 并进 state.scenario；
+// AI 概率预估与符号结算据此取数值/文本，不再回落到引擎默认表）。
+export const PROLOGUE_TOKEN_MEANINGS = Object.freeze({
+  standard: {
+    skull: { text: '-3。如果你检定失败且本次检定为攻击或躲避尝试，结算你所在地点的每个闹鬼能力。', delta: -3 },
+  },
+  hard: {
+    skull: { text: '-5。如果你检定失败且本次检定为攻击或躲避尝试，结算你所在地点的每个闹鬼能力。', delta: -5 },
+  },
+})

@@ -31,10 +31,10 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：巫异时刻、安妮特的女巫集会、罪恶之城、巫法、远古恶魔、恐惧打击，以及地底噬魔。这些遭遇组的图标为：在收齐地底噬魔遭遇组时，只收齐6张阿卡姆密林地点。不要收齐该遭遇组中的任何其他卡牌。"
+              "text": "收齐以下遭遇组的所有卡牌：巫异时刻、安妮特的女巫集会、罪恶之城、巫法、远古恶魔、恐惧打击，以及地底噬魔。在收齐地底噬魔遭遇组时，只收齐6张阿卡姆密林地点。不要收齐该遭遇组中的任何其他卡牌。"
             },
             {
-              "text": "收齐阿撒托斯的使徒和莎布·尼古拉斯的使徒遭遇组的所有卡牌。将这些遭遇组放在一边，位于场外。这些遭遇组的图标为："
+              "text": "收齐阿撒托斯的使徒和莎布·尼古拉斯的使徒遭遇组的所有卡牌。将这些遭遇组放在一边，位于场外。"
             },
             {
               "text": "按照以下指示，将5张女巫作祟之林地点放置入场："
@@ -151,10 +151,10 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Witching Hour, Anette’s Coven, City of Sins, Witchcraft, Ancient Evils, Striking Fear, and The Devourer Below. These sets are indicated by the following icons:When gathering The Devourer Below encounter set, only gather the 6 Arkham Woods locations. Do not gather any of the other cards from that encounter set."
+              "text": "Gather all cards from the following encounter sets: The Witching Hour, Anette’s Coven, City of Sins, Witchcraft, Ancient Evils, Striking Fear, and The Devourer Below. When gathering The Devourer Below encounter set, only gather the 6 Arkham Woods locations. Do not gather any of the other cards from that encounter set."
             },
             {
-              "text": "Gather all cards from the Agents of Azathoth and Agents of Shub-Niggurath encounter sets. Set these encounter sets aside, out of play. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the Agents of Azathoth and Agents of Shub-Niggurath encounter sets. Set these encounter sets aside, out of play. "
             },
             {
               "text": "Put 5 Witch-Haunted Woods locations into play as follows:"

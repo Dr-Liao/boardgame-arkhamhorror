@@ -22,10 +22,10 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：聚合幻灭、在劫难逃、冥界、幽灵捕食者、远古恶魔和寒冷刺骨。这些遭遇组的图标为："
+              "text": "收齐以下遭遇组的所有卡牌：聚合幻灭、在劫难逃、冥界、幽灵捕食者、远古恶魔和寒冷刺骨。"
             },
             {
-              "text": "请将以下遭遇套装放在一边，使其无法使用：安妮特的女巫集会、银暮秘社和看守人。这些遭遇组的图标为："
+              "text": "请将以下遭遇套装放在一边，使其无法使用：安妮特的女巫集会、银暮秘社和看守人。"
             },
             {
               "text": "将“米斯卡塔尼克河”和危险河岸放置入场。每位调查员从米斯卡塔尼克河开始游戏。然后，混洗6张未访之岛地点并随机选择2张放置入场。将剩下的未访之岛地点放在一边，位于场外。"
@@ -43,16 +43,16 @@
               "text": "检查剧本日志中“失踪人口”部分。根据角色是否被划掉，执行以下段落："
             },
             {
-              "text": "如果加弗瑞拉·米兹拉克未被划掉, 将“加弗瑞拉·米兹拉克”剧情支援卡放在一边，并将“加弗瑞拉的命运”剧情卡放在冒险参考卡牌底下。"
+              "text": "如果加弗瑞拉·米兹拉克未被划掉、将“加弗瑞拉·米兹拉克”剧情支援卡放在一边，并将“加弗瑞拉的命运”剧情卡放在冒险参考卡牌底下。"
             },
             {
-              "text": "如果佩妮·怀特未被划掉, 将“佩妮·怀特”剧情支援卡放在一边，再将“佩妮的命运”剧情卡放在冒险参考卡牌底下。"
+              "text": "如果佩妮·怀特未被划掉、将“佩妮·怀特”剧情支援卡放在一边，再将“佩妮的命运”剧情卡放在冒险参考卡牌底下。"
             },
             {
-              "text": "如果杰罗姆·戴维斯未被划掉, 将“杰罗姆·戴维斯”剧情支援卡放在一边，再将“杰罗姆的命运”剧情卡放在冒险参考卡牌底下。"
+              "text": "如果杰罗姆·戴维斯未被划掉、将“杰罗姆·戴维斯”剧情支援卡放在一边，再将“杰罗姆的命运”剧情卡放在冒险参考卡牌底下。"
             },
             {
-              "text": "如果瓦伦蒂诺·里瓦斯未被划掉, 将“瓦伦蒂诺·里瓦斯”剧情支援卡放在一边，再将“瓦伦蒂诺的命运”剧情卡放在冒险参考卡牌底下。"
+              "text": "如果瓦伦蒂诺·里瓦斯未被划掉、将“瓦伦蒂诺·里瓦斯”剧情支援卡放在一边，再将“瓦伦蒂诺的命运”剧情卡放在冒险参考卡牌底下。"
             },
             {
               "text": "将聚合幻灭遭遇组剩余的剧情支援和剧情卡牌从游戏中移除。"
@@ -222,10 +222,10 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: Union and Disillusion, Inexorable Fate, Realm of Death, Spectral Predators, Ancient Evils, and Chilling Cold. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: Union and Disillusion, Inexorable Fate, Realm of Death, Spectral Predators, Ancient Evils, and Chilling Cold. "
             },
             {
-              "text": "Set the following encounter sets aside, out of play: Anette’s Coven, Silver Twilight Lodge, and The Watcher. These sets are indicated by the following icons:"
+              "text": "Set the following encounter sets aside, out of play: Anette’s Coven, Silver Twilight Lodge, and The Watcher. "
             },
             {
               "text": "Put the Miskatonic River and Forbidding Shore into play. Each investigator begins play at the Miskatonic River. Then, shuffle the 6 Unvisited Isle locations and choose 2 at random to put into play. Set the rest aside, out of play."

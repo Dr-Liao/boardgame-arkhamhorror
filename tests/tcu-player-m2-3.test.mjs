@@ -246,7 +246,7 @@ test('TCU 05190 田纳西酸麦芽威士忌 诡计卡牌检定 +3 意志（横�
   assert.equal(cardOf(state, '05190').exhausted, true)
 })
 
-test('TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +3 意志', () => {
+test('TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）', () => {
   const state = fixture('01001')
   playCard(state, '05190')
   const mash = cardOf(state, '05190')
@@ -260,10 +260,11 @@ test('TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +3
     if (ability) { used = true; return ability }
     return null
   })
-  assert.equal(used, true, '能力本身仍可触发（花补给）')
+  assert.equal(used, false, '条件（诡计卡牌意志检定）不成立时不出现在窗口里')
   assert.equal(outcome?.value, 4, '非意志检定不会得到 +3 技能值')
   assert.equal(outcome?.success, false, '没有 +3 时战斗 4 vs 5 失败')
-  assert.equal(cardOf(state, '05190').uses, 1, '花费 1 补给')
+  assert.equal(cardOf(state, '05190').uses, 2, '不扣补给')
+  assert.equal(cardOf(state, '05190').exhausted, false, '不横置')
 })
 
 // ---------------------------------------------------------------------------
@@ -302,7 +303,7 @@ test('TCU 05191 田纳西酸麦芽威士忌 诡计卡牌意志检定 +2 意志�
   assert.equal(cardOf(state, '05191').exhausted, true)
 })
 
-test('TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +2 意志', () => {
+test('TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）', () => {
   const state = fixture('01001')
   playCard(state, '05191')
   const mash = cardOf(state, '05191')
@@ -316,10 +317,11 @@ test('TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +2
     if (ability) { used = true; return ability }
     return null
   })
-  assert.equal(used, true, '能力本身仍可触发（花补给）')
+  assert.equal(used, false, '条件（诡计卡牌意志检定）不成立时不出现在窗口里')
   assert.equal(outcome?.value, 4, '非意志检定不会得到 +2 技能值')
   assert.equal(outcome?.success, false, '没有 +2 时战斗 4 vs 6 失败')
-  assert.equal(cardOf(state, '05191').uses, 2, '花费 1 补给')
+  assert.equal(cardOf(state, '05191').uses, 3, '不扣补给')
+  assert.equal(cardOf(state, '05191').exhausted, false, '不横置')
 })
 
 // ---------------------------------------------------------------------------
@@ -658,6 +660,31 @@ test('TCU 05230 瞄准镜 反应横置写回宿主 attachments 实体（不能�
     return pending.kind === 'reaction' ? 'skip' : null
   })
   assert.equal(offeredAgain, false, '已横置的瞄准镜不再提供反应')
+})
+
+test('TCU 05230 瞄准镜 本地无敌人：所附属枪械的攻击入口仍出现，反应改指连接地点的非精英敌人', () => {
+  const state = fixture('01001')
+  const gun = asset(state, '05186')
+  playCard(state, '05230')
+  addConnections(state, [{ id: 'hallway', name: '走廊', connections: ['study'], clues: 0, revealed: true }])
+  state.locations[0].connections = ['hallway']
+  state.chaosBag = ['0']
+  // 连接地点的非精英敌人，且带冷漠（卡面：本次攻击忽略冷漠和反击）。
+  const remote = enemy(state, { id: 'remote-scope', location: 'hallway', engagedSeat: null, aloof: true, fight: 0, evade: 0, health: 8 })
+  const attackMoves = legalMoves(state).filter(item => item.action === 'ability'
+    && item.assetId === gun.id && item.abilityIndex === 0)
+  assert.equal(attackMoves.length, 1, '本地没有敌人时，所附属枪械的攻击入口仍应枚举（05230 主场景）')
+  let offered = false
+  move(state, attackMoves[0])
+  settle(state, pending => {
+    if (pending.kind !== 'reaction') return null
+    const option = pending.options.find(item => item.cardCode === '05230')
+    if (option) { offered = true; return option.id }
+    return 'skip'
+  })
+  assert.equal(offered, true, '攻击时提供瞄准镜反应')
+  assert.equal(state.enemies.find(item => item.id === remote.id).damageTaken, 2, '改指连接地点的冷漠非精英敌人并命中')
+  assert.equal(me(state).location, 'study', '射击者自己不会移动到连接地点')
 })
 
 test('TCU 05231 知识就是力量 结算所选[[书籍]]支援的[行动]能力（忽略费用）', () => {

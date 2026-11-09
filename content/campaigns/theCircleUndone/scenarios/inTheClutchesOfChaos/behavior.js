@@ -11,7 +11,7 @@
 //   · 逐卡规则写在单卡条目的 actRule / enemySpawnRule 等字段里；本文件只读
 //     actRuleFor / enemySpawnRuleFor 数据分派，不写按卡号字面量的分支（架构守卫口径）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, enemySpawnRuleFor, entryFlags, traitLabel } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, enemySpawnRuleFor, entryFlags, locationRuleFor, treacheryRuleFor, traitLabel } from '../../../../../src/cards/card-rules.js'
 import { addBreach, removeBreach, breachOf as breachCount } from '../../../../../src/engine/location-state.js'
 import { encounterRules } from '../../encounter-rules.js'
 import {
@@ -435,12 +435,14 @@ function resolveToilAndTrouble(state, inv, api) {
   return false
 }
 
-const TREACHERY_RESOLVERS = Object.freeze({
-  '05306': resolveChaosManifest,
-  '05307': resolvePrimordialGateway,
-  '05308': resolveTerrorUnleashed,
-  '05310': resolveSecretsOfTheBeyond,
-  '05312': resolveToilAndTrouble,
+// 诡计的分派规则 id 表：卡号→实现由单卡条目的 treacheryRule.resolveRule 声明，
+// 本表只按通用 rule id 落到章节规则实现（不写卡号字面量；架构守卫口径）。
+const TREACHERY_RULES = Object.freeze({
+  chaosManifest: resolveChaosManifest,
+  primordialGateway: resolvePrimordialGateway,
+  terrorUnleashed: resolveTerrorUnleashed,
+  secretsOfTheBeyond: resolveSecretsOfTheBeyond,
+  toilAndTrouble: resolveToilAndTrouble,
 })
 
 // ---------------------------------------------------------------------------
@@ -480,310 +482,13 @@ function actRevealFor(state, act, api) {
 // 地点能力（actions / performAction 分派；每个 handler 的 perform 返回 true 表示已结算）
 // ---------------------------------------------------------------------------
 
-function withBreach(location) {
-  return breachesOf(location) > 0
-}
-
-function discardIconsBreach(state, inv, api, location, skills, source) {
-  const code = discardOneFromHand(state, inv, api, source)
-  if (!code) return
-  const bonus = countIcons(code, skills)
-  const n = 1 + Math.min(breachesOf(location), bonus)
-  moveBreachesToAct(state, api, location, n)
-}
-
-function skillTestBreach(state, inv, api, location, skill, difficulty, source) {
-  if (typeof api.test !== 'function') return
-  api.test(inv.seat, skill, difficulty, result => {
-    if (!result?.success) return
-    // 卡面「成功且每超过难度 1 点移 1 个」：恰好成功（差值 0）应移 0 个。
-    const successBy = Math.max(0, Number(result.value || 0) - Number(result.difficulty || difficulty))
-    if (successBy <= 0) return
-    moveBreachesToAct(state, api, location, Math.min(breachesOf(location), successBy))
-  }, 0, { code: source })
-}
-
 // 05309 秘社打手：「将其所在地点的印刷文本框视为空白（除[[特性]]外）」。
-// ICC 的 16 个地点印刷文本全部由 LOCATION_HANDLERS 提供，因此内容层屏蔽这些行动即等价实现
-// （引擎自带的调查/移动规则不属于印刷文本，不受影响）。
+// ICC 的 16 个地点印刷文本现在由单卡条目的 locationRule.actions 提供，因此内容层在分派前
+// 屏蔽这些行动即等价实现（引擎自带的调查/移动规则不属于印刷文本，不受影响）。
 function locationTextBlankedByEnforcer(state, location) {
   if (!location) return false
   return (state.enemies || []).some(enemy =>
     String(original(enemy)) === '05309' && enemy.location === location.id)
-}
-
-const LOCATION_HANDLERS = {
-  '05290': {
-    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
-      ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个意志图标多移除 1），移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => {
-      discardIconsBreach(state, inv, api, location, ['willpower'], '05290')
-      return true
-    },
-  },
-  '05291': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locWillpowerBreach', label: '🧠 意志(2) 检定：成功且每超出 1 点，移除 1 个裂口并移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => { skillTestBreach(state, inv, api, location, 'willpower', 2, '05291'); return true },
-  },
-  '05292': {
-    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
-      ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个智识图标多移除 1），移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => {
-      discardIconsBreach(state, inv, api, location, ['intellect'], '05292')
-      return true
-    },
-  },
-  '05293': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locIntellectBreach', label: '📖 智识(2) 检定：成功且每超出 1 点，移除 1 个裂口并移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => { skillTestBreach(state, inv, api, location, 'intellect', 2, '05293'); return true },
-  },
-  '05294': {
-    // 南区（1）：[free] 弃遭遇牌库顶 3 张；如可能，选择其中 1 张「力量」诡计并结算其显现能力；
-    // 把南区 1 个裂口移到当前幕。卡面不要求此处有裂口，但要求遭遇牌库有牌可弃。
-    actions: (state, inv, location) => (state.encounterDeck || []).length
-      ? [{ rule: 'locSouthsideDiscard', label: '🎴 弃遭遇牌库顶 3 张：如可能结算其中 1 张力量诡计的显现；移除 1 个裂口并移到当前幕', actions: 0 }]
-      : [],
-    perform: (state, inv, api, location) => {
-      const discarded = []
-      for (let index = 0; index < 3; index++) {
-        const code = (state.encounterDeck || []).pop()
-        if (code == null) break
-        discarded.push(code)
-        ;(state.encounterDiscard ||= []).push(code)
-      }
-      const powers = discarded.filter(code => hasTraitCode(code, 'power'))
-      api.info?.(`🎴 弃掉遭遇牌库顶 ${discarded.length} 张：${discarded.map(code => ALL_CARDS[code]?.nameZh || code).join('、') || '（空）'}。`)
-      if (powers.length) {
-        const chosen = chooseOption(api, state, {
-          kind: 'card', source: '05294', seat: inv.seat, prompt: '选择 1 张力量诡计结算其显现能力。',
-          options: powers.map(code => ({ id: code, label: ALL_CARDS[code]?.nameZh || code })),
-        })
-        const code = powers.includes(chosen) ? chosen : powers[0]
-        if (typeof api.replayEncounterRevelation === 'function') {
-          // 卡面是「结算其显现能力」而不是「抽这张牌」：在弃牌堆就地结算，不经过抽牌窗口。
-          api.replayEncounterRevelation(inv.seat, code)
-        } else {
-          // 测试桩/旧引擎兜底：放回牌库顶再走一次抽牌管线。
-          state.encounterDeck.push(code)
-          const index = state.encounterDiscard.lastIndexOf(code)
-          if (index >= 0) state.encounterDiscard.splice(index, 1)
-          api.drawEncounter?.(inv.seat)
-        }
-      }
-      moveBreachesToAct(state, api, location, 1)
-      return true
-    },
-  },
-  '05295': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locSouthsideHandBreaches', label: '🃏 弃任意张手牌：每弃 1 张移除 1 个裂口并移到当前幕', actions: 0 }]
-      : [],
-    perform: (state, inv, api, location) => {
-      const hand = (inv.hand || []).length
-      // 卡面允许弃超过裂口数量的手牌（超出部分白弃），数量上限只由手牌数决定。
-      const limit = hand
-      let count = 0
-      if (limit > 0) {
-        count = Number(chooseOption(api, state, {
-          kind: 'number', source: '05295', seat: inv.seat, prompt: `弃任意张手牌（最多 ${limit} 张）。`,
-          options: Array.from({ length: limit + 1 }, (_, index) => ({ id: String(index), label: `弃 ${index} 张` })),
-        }))
-        if (!Number.isInteger(count) || count < 0 || count > limit) count = limit
-      }
-      // 「选择并弃掉」：逐张让玩家选择，而不是按手牌顺序强弃前 N 张。
-      for (let index = 0; index < count; index++) discardOneFromHand(state, inv, api, '05295')
-      moveBreachesToAct(state, api, location, Math.min(count, breachesOf(location)))
-      return true
-    },
-  },
-  '05296': {
-    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
-      ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个敏捷图标多移除 1），移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => {
-      discardIconsBreach(state, inv, api, location, ['agility'], '05296')
-      return true
-    },
-  },
-  '05297': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locAgilityBreach', label: '🤸 敏捷(2) 检定：成功且每超出 1 点，移除 1 个裂口并移到当前幕' }]
-      : [],
-    perform: (state, inv, api, location) => { skillTestBreach(state, inv, api, location, 'agility', 2, '05297'); return true },
-  },
-  '05298': {
-    actions: (state, inv, location) => [
-      ...(((state.encounterDeck || []).length || (state.encounterDiscard || []).length)
-        ? [{ rule: 'locSouthChurchDraw', label: '🎴 抽取 1 张遭遇牌：移除此处所有裂口并移到当前幕' }]
-        : []),
-      { rule: 'locResign', label: '🏳️ 撤退：你躲藏起来，熬过这一夜。' },
-    ],
-    perform: (state, inv, api, location, move) => {
-      if (move?.rule === 'locSouthChurchDraw') {
-        api.drawEncounter?.(inv.seat)
-        moveBreachesToAct(state, api, location, breachesOf(location))
-        return true
-      }
-      api.resign?.(inv.seat)
-      return true
-    },
-  },
-  '05299': {
-    actions: (state, inv, location) => [
-      // 卡面费用「弃掉你控制的 1 个支援」：没有支援时不可用。
-      ...(withBreach(location) && (inv.assets || []).length
-        ? [{ rule: 'locSouthChurchAsset', label: '🗡️ 弃 1 个支援：移除此处所有裂口并移到当前幕' }]
-        : []),
-      { rule: 'locResign', label: '🏳️ 撤退：你躲藏起来，熬过这一夜。' },
-    ],
-    perform: (state, inv, api, location, move) => {
-      if (move?.rule === 'locSouthChurchAsset') {
-        // 费用必须支付：没有支援时不能结算后面的移裂口效果。
-        if (!(inv.assets || []).length) {
-          api.info?.('没有支援可弃：这次行动没有效果。')
-          return true
-        }
-        chooseAssetToDiscard(state, inv, api, '05299')
-        moveBreachesToAct(state, api, location, breachesOf(location))
-        return true
-      }
-      api.resign?.(inv.seat)
-      return true
-    },
-  },
-  '05300': {
-    // 卡面 [action]：弃牌库顶 5/10/15 张，每 5 张移 1 个裂口；没有「必须有裂口」的前置。
-    actions: (state, inv, location) => (inv.deck || []).length
-      ? [{ rule: 'locMerchantDiscardTop', label: '🃏 弃牌库顶 5/10/15 张：每 5 张移除 1 个裂口，抽到弱点则入手' }]
-      : [],
-    perform: (state, inv, api, location) => {
-      const available = (inv.deck || []).length
-      // 牌库不足 5 张时仍可选择 5/10/15（能弃多少弃多少，按实际弃牌数每 5 张移 1）。
-      const choices = [5, 10, 15]
-      const picked = Number(chooseOption(api, state, {
-        kind: 'number', source: '05300', seat: inv.seat, prompt: '选择弃掉牌库顶多少张。',
-        options: choices.map(value => ({ id: String(value), label: `弃 ${value} 张（牌库 ${available} 张）` })),
-      }))
-      const count = Math.min(choices.includes(picked) ? picked : choices[0], available)
-      const discarded = count > 0 ? (inv.deck || []).splice(Math.max(0, available - count)) : []
-      ;(inv.discard ||= []).push(...discarded)
-      const remove = Math.min(breachesOf(location), Math.floor(count / 5))
-      moveBreachesToAct(state, api, location, remove)
-      const weaknesses = discarded.filter(code => ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype))
-      for (const code of weaknesses) {
-        // 卡面「抽取所有以此方式弃掉的弱点」：走引擎抽牌管线（drawDiscard→drawCards），
-        // 让弱点的揭示效果正常结算（旧实现直接塞进手牌，绕过了 resolveWeakness）。
-        const index = (inv.discard || []).lastIndexOf(code)
-        if (index < 0) continue
-        if (typeof api.drawDiscard === 'function') {
-          api.drawDiscard(inv.seat, index)
-        } else {
-          inv.discard.splice(index, 1)
-          ;(inv.hand ||= []).push(code)
-        }
-        api.info?.(`🃏 弃牌中的弱点「${ALL_CARDS[code]?.nameZh || code}」被抽取。`)
-      }
-      return true
-    },
-  },
-  '05301': {
-    actions: (state, inv, location) => withBreach(location) && (inv.resources || 0) >= 2
-      ? [{ rule: 'locMerchantPay', label: '💰 支付 2 资源：移除 1 个裂口并移到当前幕', actions: 0 }]
-      : [],
-    perform: (state, inv, api, location) => {
-      if ((inv.resources || 0) < 2) return true
-      inv.resources -= 2
-      moveBreachesToAct(state, api, location, 1)
-      return true
-    },
-  },
-  '05302': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locHangmansHillSearch', label: '🧙 查找遭遇牌库/弃牌堆的「女巫」敌人并抽取：然后把此处所有裂口移到当前幕' }]
-      : [{ rule: 'locHangmansHillSearch', label: '🧙 查找遭遇牌库/弃牌堆的「女巫」敌人并抽取' }],
-    perform: (state, inv, api, location) => {
-      drawEnemyByTrait(state, api, inv.seat, 'Witch')
-      moveBreachesToAct(state, api, location, breachesOf(location))
-      api.shuffleEncounterDeck?.()
-      return true
-    },
-  },
-  '05303': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locLodgeHorror', label: '😱 受到 1 点恐惧：移除此处 1 个裂口并移到当前幕', actions: 0 }]
-      : [],
-    perform: (state, inv, api, location) => {
-      api.horror?.(inv.seat, 1)
-      moveBreachesToAct(state, api, location, 1)
-      return true
-    },
-  },
-  '05304': {
-    actions: (state, inv, location) => withBreach(location)
-      ? [{ rule: 'locHangmansDamage', label: '💥 受到 1 点伤害：移除此处 1 个裂口并移到当前幕', actions: 0 }]
-      : [],
-    perform: (state, inv, api, location) => {
-      api.damage?.(inv.seat, 1)
-      moveBreachesToAct(state, api, location, 1)
-      return true
-    },
-  },
-  '05305': {
-    actions: () => [{ rule: 'locLodgeSearch', label: '🎩 查找遭遇牌库/弃牌堆的「银暮秘社」敌人并抽取：然后把此处所有裂口移到当前幕' }],
-    perform: (state, inv, api, location) => {
-      drawEnemyByTrait(state, api, inv.seat, 'Silver Twilight')
-      moveBreachesToAct(state, api, location, breachesOf(location))
-      api.shuffleEncounterDeck?.()
-      return true
-    },
-  },
-}
-
-function drawEnemyByTrait(state, api, seat, trait) {
-  const wanted = String(trait).toLowerCase()
-  const isEnemy = code => ALL_CARDS[code]?.type === 'enemy' || (state.scenario.enemies || {})[code]
-  // 收集遭遇牌库与弃牌堆里的全部合法候选（自顶向下），卡面是「查找」，允许多张时选择。
-  const collect = (pile, kind) => {
-    const found = []
-    for (let index = pile.length - 1; index >= 0; index--) {
-      const code = pile[index]
-      if (isEnemy(code) && hasTraitCode(code, wanted)) found.push({ kind, index, code })
-    }
-    return found
-  }
-  const candidates = [
-    ...collect(state.encounterDeck || [], 'deck'),
-    ...collect(state.encounterDiscard || [], 'discard'),
-  ]
-  if (!candidates.length) {
-    api.info?.(`没有找到[[${traitLabel(trait)}]]敌人。`)
-    return null
-  }
-  let chosen = candidates[0]
-  if (candidates.length > 1 && typeof api.choose === 'function') {
-    const answer = api.choose({
-      kind: 'card', source: 'searchEnemy', seat,
-      prompt: `查找遭遇牌库和弃牌堆，选择要抽取的[[${traitLabel(trait)}]]敌人。`,
-      options: candidates.map((entry, index) => ({
-        id: String(index),
-        label: `${ALL_CARDS[entry.code]?.nameZh || entry.code}（${entry.kind === 'deck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,
-      })),
-    })
-    const picked = Number(answer)
-    if (Number.isInteger(picked) && picked >= 0 && picked < candidates.length) chosen = candidates[picked]
-  }
-  const pile = chosen.kind === 'deck' ? (state.encounterDeck ||= []) : (state.encounterDiscard ||= [])
-  const code = pile.splice(chosen.index, 1)[0]
-  if (code == null) return null
-  state.encounterDeck.push(code)
-  api.drawEncounter?.(seat)
-  return code
 }
 
 // 05307 附属实例读取：runtime 写 location.attachments（src/engine/scenario-runtime.js:326-344），
@@ -1108,7 +813,9 @@ export const behavior = {
   // ---- 诡计 ----
   resolveEncounter(state, inv, treachery, api) {
     const code = String(original(treachery))
-    const resolver = TREACHERY_RESOLVERS[code]
+    // 卡号 → 规则 id 由条目声明（声明即接线）；本文件只按通用 rule id 分派。
+    const ruleId = treacheryRuleFor(code)?.resolveRule
+    const resolver = ruleId ? TREACHERY_RULES[ruleId] : null
     if (resolver) return resolver(state, inv, api)
     return encounterRules.resolveEncounter?.(state, inv, treachery, api) ?? false
   },
@@ -1126,11 +833,12 @@ export const behavior = {
     const here = locationById(state, inv.location)
     if (here) {
       moves.push(...gatewayActions(state, inv, here))
-      const handler = LOCATION_HANDLERS[String(original(here))]
-      if (handler && !gatewayAttachment(here) && !locationTextBlankedByEnforcer(state, here)) {
-        for (const action of handler.actions(state, inv, here)) {
-          moves.push({ action: 'scenarioAction', locationId: here.id, ...action })
-        }
+      // 地点印刷文本在单卡条目的 locationRule.actions 里；这里只做通用分派与“文本被屏蔽”过滤。
+      const rule = locationRuleFor(String(original(here)))
+      if (rule?.actions && !gatewayAttachment(here) && !locationTextBlankedByEnforcer(state, here)) {
+        const localMoves = []
+        rule.actions({ moves: localMoves, state, inv, location: here })
+        for (const action of localMoves) moves.push({ action: 'scenarioAction', locationId: here.id, ...action })
       }
     }
     return moves
@@ -1155,16 +863,10 @@ export const behavior = {
       if (gatewayAttachment(here)) performGateway(state, inv, api, here)
       return
     }
-    const handler = here && !gatewayAttachment(here) && !locationTextBlankedByEnforcer(state, here)
-      ? LOCATION_HANDLERS[String(original(here))]
+    const rule = here && !gatewayAttachment(here) && !locationTextBlankedByEnforcer(state, here)
+      ? locationRuleFor(String(original(here)))
       : null
-    if (handler) {
-      const rules = handler.actions(state, inv, here).map(action => action.rule)
-      if (rules.includes(move.rule)) {
-        handler.perform(state, inv, api, here, move)
-        return
-      }
-    }
+    if (rule?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'locResign') {
       api.resign?.(inv.seat)
       return

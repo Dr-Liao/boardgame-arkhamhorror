@@ -442,6 +442,21 @@ test(`TCU 05282 ${nameOf('05282')} 选项 B 走真实躲避（含躲避支援加
   assert.equal(state.lastTestResult?.value, 3, '躲避检定吃到战壕大衣 +1（敌人躲避 2 + 1）')
 })
 
+test(`TCU 05282 ${nameOf('05282')} 打出按「躲避」结算，不引发借机攻击`, () => {
+  const state = fixture('01001')
+  addConnections(state, [{ id: 'hallway2', name: '走廊', connections: ['study'], clues: 0, revealed: true }])
+  state.locations[0].connections = ['hallway2']
+  state.chaosBag = ['0']
+  const target = enemy(state, { engagedSeat: 0, fight: 1, evade: 1, health: 5 })
+  me(state).health = 8
+  me(state).hand = ['05282']
+  move(state, { action: 'play', cardId: '05282' })
+  settle(state)
+  assert.equal(me(state).health, 8, '按躲避结算：不应受到借机攻击伤害')
+  const moved = state.enemies.find(item => item.id === target.id)
+  assert.equal(moved.exhausted, true, '敌人被躲避')
+})
+
 test(`TCU 05283 ${nameOf('05283')} 额外 2 个塔罗槽位`, () => {
   const state = fixture('01001')
   assert.equal(tarotSlotCapacity(me(state)), 1)

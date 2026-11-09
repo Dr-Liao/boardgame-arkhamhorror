@@ -174,7 +174,18 @@ export function tcuCampaignModel(state) {
   const taken = (watcher?.taken || []).map(code => nameOfCode(code))
   const hunted = (watcher?.huntedSeats || []).map(seat => (state.investigators || []).find(inv => inv.seat === seat)?.name || t('situation.seat', { number: Number(seat) + 1 }))
   const story = state.storyInvestigators || null
+  // P1（2026-11-09）：幕上裂口 / 黑色王座计时器 / 四把钥匙 / 密谋牌库旁的卡与额外闹鬼 /
+  // 法术专用行动额度——这些以前都没有观察投影，牌桌无法据此决策。
+  const actBreaches = Number(state.actBreaches || 0)
+  const bbt = state.beforeTheBlackThrone || null
+  const fourKeys = Array.isArray(state.fourKeys) ? state.fourKeys : []
+  const agendaAside = Array.isArray(state.agendaAside) ? state.agendaAside : []
+  const hauntedGrants = Array.isArray(state.hauntedGrants) ? state.hauntedGrants : []
+  const observer = (state.investigators || []).find(inv => inv.seat === state.currentSeat) || (state.investigators || [])[0] || null
+  const spellOnlyActions = Number(observer?.spellOnlyActions || 0)
+  const locationName = id => (state.locations || []).find(location => location.id === id)?.name || id
   const hasAny = spectral || tarot || watcher || mementos.length || breaches || braziers.length || story
+    || actBreaches || bbt || fourKeys.length || agendaAside.length || hauntedGrants.length || spellOnlyActions
   if (!hasAny) return null
   return {
     spectral: spectral ? { deck: Number(spectral.deck ?? 0), discard: Number((spectral.discard || []).length) } : null,
@@ -185,6 +196,22 @@ export function tcuCampaignModel(state) {
     watcher: watcher ? { hunted, taken } : null,
     mementos: mementos.map(id => ({ id, label: labels[id] || id })),
     storyInvestigators: story ? { chosen: story.chosen || [], crossedOut: story.crossedOut || [] } : null,
+    actBreaches,
+    beforeTheBlackThrone: bbt ? {
+      azathothDoom: Number(bbt.azathothDoom || 0),
+      referenceResources: Number(bbt.referenceResources || 0),
+      devoured: bbt.devoured === true,
+    } : null,
+    fourKeys: fourKeys.map(key => ({
+      ...key,
+      holderName: Number.isInteger(key.holder)
+        ? ((state.investigators || []).find(inv => inv.seat === key.holder)?.name || t('situation.seat', { number: key.holder + 1 }))
+        : null,
+      locationName: key.location ? locationName(key.location) : null,
+    })),
+    agendaAside: agendaAside.map(code => ({ code, name: nameOfCode(code) })),
+    hauntedGrants: hauntedGrants.map(grant => ({ ...grant, locationName: grant.locationId ? locationName(grant.locationId) : null })),
+    spellOnlyActions,
   }
 }
 
@@ -436,6 +463,32 @@ export function renderTcuCampaignPanel(h, model) {
   }
   if (model.storyInvestigators) rows.push([t('tcu.campaign.storyInvestigators'),
     model.storyInvestigators.chosen.map(entry => entry.name).join(t('tcu.listSeparator')) || t('tcu.campaign.notSelected'), 'ally'])
+  // P1（2026-11-09）：幕上裂口 / 黑色王座计时器 / 四把钥匙 / 密谋牌库旁的卡 / 额外闹鬼 / 法术行动额度。
+  if (model.actBreaches) rows.push([t('tcu.campaign.actBreaches'),
+    t('tcu.campaign.actBreachesValue', { count: model.actBreaches }), 'doom'])
+  if (model.beforeTheBlackThrone) {
+    const bbt = model.beforeTheBlackThrone
+    rows.push([t('tcu.campaign.azathothDoom'),
+      bbt.devoured ? t('tcu.campaign.azathothDevoured') : t('tcu.campaign.azathothDoomValue', { count: bbt.azathothDoom }), 'doom'])
+    rows.push([t('tcu.campaign.referenceResources'),
+      t('tcu.campaign.referenceResourcesValue', { count: bbt.referenceResources }), 'star'])
+  }
+  if (model.fourKeys.length) {
+    const keyValue = key => key.holderName
+      ? t('tcu.campaign.keyHolder', { name: key.holderName })
+      : key.locationName ? t('tcu.campaign.keyLocation', { name: key.locationName })
+        : key.enemyId ? t('tcu.campaign.keyEnemy') : t('tcu.campaign.keyAside')
+    rows.push([t('tcu.campaign.fourKeys'), model.fourKeys.map(keyValue).join(t('tcu.listSeparator')), 'star'])
+  }
+  if (model.agendaAside.length) rows.push([t('tcu.campaign.agendaAside'),
+    model.agendaAside.map(entry => entry.name).join(t('tcu.listSeparator')), 'eye'])
+  if (model.hauntedGrants.length) {
+    const spots = new Set(model.hauntedGrants.map(grant => grant.locationId).filter(Boolean))
+    rows.push([t('tcu.campaign.hauntedGrants'),
+      t('tcu.campaign.hauntedGrantsValue', { count: model.hauntedGrants.length, locations: spots.size }), 'eye'])
+  }
+  if (model.spellOnlyActions) rows.push([t('tcu.campaign.spellOnlyActions'),
+    String(model.spellOnlyActions), 'star'])
   const hunted = model.watcher
     ? (model.watcher.hunted.length ? t('tcu.campaign.hunted', { names: model.watcher.hunted.join(t('tcu.listSeparator')) }) : t('tcu.campaign.nobody'))
       + (model.watcher.taken.length ? t('tcu.campaign.taken', { names: model.watcher.taken.join(t('tcu.listSeparator')) }) : '')

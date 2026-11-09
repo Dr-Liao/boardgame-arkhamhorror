@@ -7,5 +7,4 @@ export default {
   code: '05053', scope: 'act', implemented: true,
   // 背面需要「面前地点/黑山羊/魔鬼的笛声」章节 helper，流程在 behavior.resolveLostInTheWoods
   // （behavior.actReveal 对 05053 特判），条目保留 implemented 声明与本注释。
-  actRule: { chapterFlow: 'resolveLostInTheWoods' },
 }

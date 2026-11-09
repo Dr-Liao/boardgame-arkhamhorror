@@ -19,7 +19,7 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：荒莽密林、雨林、蛇族、探险、时间守卫者、伊格的使徒、毒药、远古恶魔。这些遭遇组的图标为："
+              "text": "收齐以下遭遇组的所有卡牌：荒莽密林、雨林、蛇族、探险、时间守卫者、伊格的使徒、毒药、远古恶魔。"
             },
             {
               "text": "将探险营地放置入场。每位调查员从探险营地开始游戏。"
@@ -28,7 +28,7 @@
               "text": "构建探索牌库。拿取5张单面的丛林地点，与下列诡计卡各1张混洗，组成探索牌堆：迷失荒野、疯狂生长、毒蛇噬咬、补给短缺、林中暗箭。"
             },
             {
-              "text": "将下列卡牌放在一边，位于场外: 3张单面的遗迹地点、伊格的使徒遭遇组、4张中毒弱点、亚历山卓·维拉支援、伊塔卡敌人。伊格的使徒遭遇组以此图标表示："
+              "text": "将下列卡牌放在一边，位于场外: 3张单面的遗迹地点、伊格的使徒遭遇组、4张中毒弱点、亚历山卓·维拉支援、伊塔卡敌人。伊格的使徒"
             }
           ]
         }
@@ -81,7 +81,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Untamed Wilds, Rainforest, Serpents, Expedition, Guardians of Time, Agents of Yig, Poison, and Ancient Evils. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: The Untamed Wilds, Rainforest, Serpents, Expedition, Guardians of Time, Agents of Yig, Poison, and Ancient Evils. "
             },
             {
               "text": "Put the Expedition Camp into play. Each investigator begins play at the Expedition Camp."

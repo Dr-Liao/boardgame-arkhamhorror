@@ -62,11 +62,16 @@ export default {
         options: Array.from({ length: available }, (_, index) => ({ id: String(index + 1), label: String(index + 1) + ' 点资源' })),
       }) || String(available)
       const amount = Math.max(1, Math.min(available, Number(answer) || 1))
-      if (direction === 'toThem') { inv.resources -= amount; picked.resources = (picked.resources || 0) + amount }
-      else { picked.resources -= amount; inv.resources = (inv.resources || 0) + amount }
-      state.scenarioFlags ||= {}
-      // 团队每轮仅限一次：全队共享一个轮次标记。
-      state.scenarioFlags.mineSwapRound = state.round
+      // 资源转移走 api 的统一增减入口（条目不直写 inv.resources）。
+      if (direction === 'toThem') {
+        api.loseResources?.(inv.seat, amount)
+        api.gainResources?.(picked.seat, amount)
+      } else {
+        api.loseResources?.(picked.seat, amount)
+        api.gainResources?.(inv.seat, amount)
+      }
+      // 团队每轮仅限一次：全队共享一个轮次标记（经 api.setScenarioFlag 写入）。
+      api.setScenarioFlag?.('mineSwapRound', state.round)
       api.info?.(`⛏️ ${inv.name} 与 ${picked.name} 交换了 ${amount} 点资源。`)
       return true
     },

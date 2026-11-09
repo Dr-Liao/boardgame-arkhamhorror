@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
+      "sha256": "c2885ec31be3e2cf0458a23e6e7bbab6d4c92f756ffddff2b5f65c0010be6c8b"
     },
     {
       "path": "content/registry.js",
@@ -1389,7 +1389,7 @@
     },
     {
       "path": "content/mechanics.js",
-      "sha256": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836"
+      "sha256": "2e2d820b1982a2164e112acb1e795c3e8bde905ed9a2e7a1fc9983a670a4d1eb"
     },
     {
       "path": "content/campaigns/theDreamEaters/shared.js",
@@ -1421,7 +1421,7 @@
     },
     {
       "path": "content/campaigns/theDreamEaters/interludes.js",
-      "sha256": "dceed721b176bc70ee01b6ffaf204966784747a486ccdedd6e51095ef9ccf598"
+      "sha256": "08f3fd1a39b90435cf0c81c683f3e6e1c4a5341fc26d704f10b1786ade0bf381"
     },
     {
       "path": "content/campaigns/theDreamEaters/dual-story.js",
@@ -1449,15 +1449,15 @@
     },
     {
       "path": "web/rulebook-data.js",
-      "sha256": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4"
+      "sha256": "5bc1e72d707b4ceb44496f7872fc508eec17f75cf53dc9200ea97aa3a5d93e8c"
     },
     {
       "path": "web/ui-cards.js",
-      "sha256": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de"
+      "sha256": "08c3aaed4ef9a8416a9c1d8819ca98b671fb867f958897d0e5bd1d36029ac391"
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
+      "sha256": "ec503cc56167d5015c93ff298b83bc2c3341a524c445bec82c6cc1986fa1924d"
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
@@ -1469,11 +1469,11 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
+      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",
-      "sha256": "3f03fe57431cb0128dfcec1b717d090c7f9b0ecaff7927dc6cca50d68b44e2dd"
+      "sha256": "37c353cab4535c81e3e549552f1070d29dce883a72957c756eb74bbd608a59e9"
     },
     {
       "path": "src/campaign/part-flow.js",
@@ -2489,7 +2489,7 @@
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
-      "content/campaigns/theDreamEaters/story-text.js": "0c951e348f4752e2cf8c956d484c41a0360dc698058ef3b9469893113d3568f5",
+      "content/campaigns/theDreamEaters/story-text.js": "ad30a1da065b51b01ff388a5f0e2ff88852e24068004f04834fc438814bac9f7",
       "src/cards/tde-campaign-acceptance.js": "b1e36e6152debd2d4596b8309dcefd392bdf80b13d8a2b65713d34c6aa60d672",
       "src/cards/tde-player-acceptance.js": "87a6e1746a38c1ce358eda0c9d18fc7195450dea7f8922c8f02898b3e2fd4f44"
     },

@@ -136,6 +136,7 @@ export function createDispatch(deps) {
     recommendUpgrade,
     registerCampaignInvestigator,
     registeredEntry,
+    reopenReplacementPreparation,
     // 2026-10-25 第六轮修复 05040：行动结束统一清 endOfAction 时长的效果。
     expireEffects,
     resolveTransaction,
@@ -488,7 +489,10 @@ function executeHubMove(state, seat, move, events) {
           delete campaign.investigators[seat]
           // 关间替补：新调查员的 0 XP 起始牌组在确认席位前仍可反复调整（自动构筑/手动/
           // 卡组库/ArkhamDB）。只标记本关间换人的席位，现役调查员仍不能在关间重建牌组。
-          if (state.uiState === 'interlude') state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
+          // 两关直接相邻时换人发生在下一关的 scenarioSetup 窗口，与幕间同口径。
+          if (state.uiState === 'interlude' || state.uiState === 'scenarioSetup') {
+            state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
+          }
         }
         state.investigators[seat] = makeInvestigator(ALL_INVESTIGATORS[move.code], seat)
         if (campaign.investigators[seat]) state.investigators[seat].campaignId = campaign.investigators[seat].id
@@ -607,6 +611,14 @@ function executeHubMove(state, seat, move, events) {
       }
       if (!state.hubReady || state.hubSelectedScenarioId !== CAMPAIGN.scenarioOrder[campaign.scenarioIndex]) {
         throw new Error('关卡尚未解锁或队伍尚未准备')
+      }
+      // 旧存档兼容：两关直接相邻（中间没有幕间节点）时，更新前的版本会带着上一轮的
+      // 「全队已就绪」直接落到下一关准备。若队伍里有阵亡/疯狂但还没换人的席位，先重新打开
+      // 席位准备窗口，交给关间替补流程换人；否则会带着非现役战役身份开局并在
+      // prepareInvestigator 抛「调查员战役身份不可进入剧本」。
+      if (reopenReplacementPreparation(state).length) {
+        info(state, events, '有调查员已经阵亡或疯狂：请先挑选替补调查员并确认准备，再开始关卡。')
+        break
       }
       if (parts && campaign.mode) {
         const part = partOfScenario(manifest.parts, state.hubSelectedScenarioId)

@@ -178,9 +178,22 @@ export function createMoves(deps) {
 
   // 「枪法如神」（04104）：持有 activateFirearmFight 窗口的快速事件时，枪械/远程支援的攻击
   // 可以只指向连接地点上的敌人——没有同地点目标也能激活，由窗口里的 04104 选择目标。
-  function canExtendFirearmTarget(inv, asset) {
+  // 05230「瞄准镜」：附属在宿主枪械上时提供同一扩展（条目字段 hostAttackConnecting），
+  // 但按印刷限制「你没有与任何敌人交战」且连接地点存在非精英敌人。
+  function hostAttackExtensionEnemies(state, inv, asset) {
+    const declares = (asset?.attachments || []).some(attachment =>
+      registeredEntry(attachment.originalCode || attachment.code)?.hostAttackConnecting === true)
+    if (!declares) return []
+    if ((state.enemies || []).some(enemy => !enemy.defeated && enemy.engagedSeat === inv.seat)) return []
+    const here = (state.locations || []).find(location => location.id === inv.location)
+    const links = here?.connections || []
+    return (state.enemies || []).filter(enemy => !enemy.defeated && !enemy.elite && links.includes(enemy.location))
+  }
+
+  function canExtendFirearmTarget(state, inv, asset) {
     const traits = cardDef(asset?.code)?.traits || []
     if (!traits.some(trait => ['firearm', 'ranged'].includes(String(trait).toLowerCase()))) return false
+    if (hostAttackExtensionEnemies(state, inv, asset).length) return true
     return (inv.hand || []).some(code => {
       const descriptor = descriptorOfKind(code, 'played')
       return descriptor?.fast === true && descriptor.trigger.includes('activateFirearmFight')
@@ -502,11 +515,21 @@ export function createMoves(deps) {
       // 2026-10-25 第七轮修复 05230：所附属卡禁止宿主攻击与你交战的敌人。
       const hostAttackBlocked = (a.attachments || []).some(attachment => registeredEntry(attachment.code)?.hostCannotAttackEngaged)
       const hostFilter = candidate => !(hostAttackBlocked && ((candidate && candidate.engagedSeat === inv.seat) || (candidate && candidate.entity && candidate.entity.engagedSeat === inv.seat)))
+      // 05230「瞄准镜」：本地没有敌人时，宿主枪械的攻击仍可枚举（目标为连接地点的非精英敌人），
+      // 由 activateFirearmFight 窗口里的瞄准镜反应完成改指与忽略冷漠/反击。
+      const extensionEnemies = hostAttackExtensionEnemies(state, inv, a)
       // 目标枚举（B1）：描述子声明 target 时，每个合法目标拆成一条独立行动，
       // 牌桌可以先选目标、AI 不用再多问一轮。没有目标且非 optional 就不出现。
       if (ab.descriptor && ab.descriptor.target) {
         const candidates = enumerateTargets(state, inv, ab.descriptor.target, { source: a }).filter(hostFilter)
         if (!candidates.length) {
+          if (extensionEnemies.length) {
+            for (const enemy of extensionEnemies) {
+              moves.push({ ...base, targetId: enemy.id, connectingTarget: true,
+                label: `${prefix}${ab.label} → ${enemy.name}（连接地点）${suffix}${progress}` })
+            }
+            return
+          }
           if (!ab.descriptor.target.optional) return
           moves.push({ ...base, label: `${prefix}${ab.label}${suffix}${progress}` })
           return
@@ -517,7 +540,7 @@ export function createMoves(deps) {
         return
       }
       if (ab.effect?.type === 'fight' && !abilityTargets(state, inv, ab.effect).length
-        && !canExtendFirearmTarget(inv, a)) return
+        && !extensionEnemies.length && !canExtendFirearmTarget(state, inv, a)) return
       // 2026-11-06 规则修正：调查类能力在零线索地点同样可以发起（成功不发现线索）；
       // 「发现线索」类能力仍要求地点还有线索。可用性与 validateMove 的 effectError 同源。
       if (ab.effect && ['investigate', 'discoverClue'].includes(ab.effect.type)
@@ -535,6 +558,13 @@ export function createMoves(deps) {
       if (targets.length > 0) {
         for (const t of targets) {
           moves.push({ ...base, targetId: t.id, label: `${prefix}${ab.label} → ${t.name}${suffix}${progress}` })
+        }
+        return
+      }
+      if (extensionEnemies.length) {
+        for (const enemy of extensionEnemies) {
+          moves.push({ ...base, targetId: enemy.id, connectingTarget: true,
+            label: `${prefix}${ab.label} → ${enemy.name}（连接地点）${suffix}${progress}` })
         }
         return
       }
@@ -937,8 +967,9 @@ export function createMoves(deps) {
       if (ability.requiresNoClues) { const loc = state.locations.find(item => item.id === inv.location); if (loc && loc.clues > 0) return '所在地点仍有线索' }
       if (moveToBlocked(state, inv, ability.effect)) return '与敌人交战时不能使用这项移动'
       const effectInvalid = effectError(state, inv, ability.effect)
-      // 没有同地点目标时，持有 04104 的枪械攻击仍然可以激活（窗口里改指连接地点）。
-      const extendTarget = ability.effect?.type === 'fight' && canExtendFirearmTarget(inv, asset)
+      // 没有同地点目标时，持有 04104 的枪械攻击仍然可以激活（窗口里改指连接地点）；
+      // 05230「瞄准镜」附属在宿主上时同理（见 canExtendFirearmTarget）。
+      const extendTarget = ability.effect?.type === 'fight' && canExtendFirearmTarget(state, inv, asset)
       if (effectInvalid && !extendTarget) return effectInvalid
       if (move.optionIndex != null) {
         const ok = ability.effect && ability.effect.type === 'chooseOne' && Array.isArray(ability.effect.options) && ability.effect.options[move.optionIndex]
@@ -947,16 +978,18 @@ export function createMoves(deps) {
         if (branchError) return branchError
       }
       if (move.targetId != null) {
+        // 05230「瞄准镜」：连接地点的非精英目标不属于常规 target 枚举，由附属声明放行。
+        const extensionTarget = hostAttackExtensionEnemies(state, inv, asset).some(enemy => enemy.id === move.targetId)
         if (ability.descriptor?.target) {
           // 目标枚举（B1）：只接受 enumerateTargets 的候选，与 legalMoves 用的是同一份枚举。
           const candidate = resolveTarget(state, inv, ability.descriptor.target, move.targetId, { source: asset })
-          if (!candidate) return '该目标不是合法的能力目标'
+          if (!candidate && !extensionTarget) return '该目标不是合法的能力目标'
         } else if (ability.descriptor) {
           // 描述子没有声明 target 时，目标由 resolve() 自己询问，这里只要求实体存在。
           if (!state.enemies.some(enemy => enemy.id === move.targetId)) return '该敌人不是有效目标'
         } else {
           const targets = abilityTargets(state, inv, ability.effect)
-          if (!targets.some((e) => e.id === move.targetId)) return '该敌人不是有效目标'
+          if (!targets.some((e) => e.id === move.targetId) && !extensionTarget) return '该敌人不是有效目标'
         }
       } else if (ability.descriptor?.target && !ability.descriptor.target.optional) {
         return '该能力需要选择目标'

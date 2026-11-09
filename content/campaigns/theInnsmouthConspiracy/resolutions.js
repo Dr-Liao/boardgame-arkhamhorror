@@ -5,7 +5,8 @@ import { story } from './flashbacks.js'
 import { awardStoryCard } from '../../../src/campaign/campaign-effects.js'
 import { changeChaosBag } from '../../../src/engine/chaos-bag.js'
 const codeOf=card=>card.originalCode||card.code
-function journal(state,keys){const sections=keys.map(key=>({title:key,paragraphs:textBlocks(STORY_TEXT.zh.scenarios[state.scenario.id].resolutions[key])}));return{version:3,title:state.scenario.name,sections,paragraphs:sections.flatMap(s=>s.paragraphs)}}
+const RESOLUTION_LABEL = /^(?:结局|尾声|无结局)\s*\d*\s*[:：]\s*/
+function journal(state,keys){const sections=keys.map(key=>{const paragraphs=textBlocks(STORY_TEXT.zh.scenarios[state.scenario.id].resolutions[key]);if(paragraphs.length)paragraphs[0]=paragraphs[0].replace(RESOLUTION_LABEL,'').trim();return{title:key,paragraphs}});return{version:3,title:state.scenario.name,sections,paragraphs:sections.flatMap(s=>s.paragraphs)}}
 const actKeys=state=>Object.entries(state.scenarioFlags.mechanics?.keys||{}).filter(([,key])=>key.holder.startsWith('act:')).map(([color])=>color)
 function addRecord(result,key,value=true){result.effects ||= [];result.effects.push({record:{[key]:value}})}
 export function resolveChapter(state,key,events,api){

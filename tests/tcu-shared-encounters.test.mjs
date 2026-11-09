@@ -9,6 +9,7 @@
 //（enemyScriptFor / treacheryRuleFor / encounterResolveFor …）在合并前就能验收。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { zoneApi } from './tcu-zone-api.mjs'
 // 只注册本测试要用的 23 个条目：不 import engine.js，避免并行 worker 尚未合并的
 // 其他 TCU 章节条目（引擎在 import 时会全局注册全部条目）影响本文件的独立验收。
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
@@ -273,7 +274,7 @@ function makeApi(state, options = {}) {
     },
     cannotAttack: enemy => options.cannotAttack?.(enemy) === true,
   }
-  return api
+  return { ...zoneApi(state), ...api }
 }
 
 const inv = (state, seat = 0) => state.investigators[seat]
@@ -873,7 +874,7 @@ test('05107 恐怖夜色：从幽灵遭遇牌堆抽到时，牌库旁的 2 张�
   resolve(state, inv(state, 0), { code: '05107' }, spectralApi())
   resolve(state, inv(state, 0), { code: '05107' }, spectralApi())
   assert.equal(agendaAsideCount(state, '05107'), 2)
-  assert.deepEqual(state.scenarioZones.agendaAside.filter(entry => entry.code === '05107').map(entry => entry.deck),
+  assert.deepEqual(state.agendaAside.filter(entry => (entry.originalCode || entry.code) === '05107').map(entry => entry.deck),
     ['spectral', 'spectral'], '每张记录来源牌堆')
   resolve(state, inv(state, 0), { code: '05107' }, spectralApi())
   assert.equal(agendaAsideCount(state, '05107'), 0)

@@ -286,6 +286,40 @@ test('P5 战役面板：把六类投影合成一块面板，旧战役没有这�
   // 10 个 Memento 中文名齐全，不把英文枚举暴露给玩家。
   assert.equal(Object.keys(tcuManifest.mementoLabels).length, 10)
   for (const label of Object.values(tcuManifest.mementoLabels)) assert.match(label, /^[\u4e00-\u9fa5]+$/)
+
+  // P1（2026-11-09）：补投影的五类公开信息（幕上裂口 / 黑色王座计时器 / 四把钥匙 /
+  // 密谋牌库旁 / 额外闹鬼 / 法术专用行动额度），且牌桌模型能读到。
+  state.acts = [{ breaches: 2 }]
+  state.actIndex = 0
+  state.scenario = { id: 'beforeTheBlackThrone' }
+  state.scenarioFlags = { ...(state.scenarioFlags || {}), azathothDoom: 7, referenceResources: 3 }
+  state.scenarioZones = { ...(state.scenarioZones || {}), agendaAside: ['05102'] }
+  state.hauntedGrants = [{ id: 'grant-1', locationId: location.id, ability: { text: '闹鬼 - 将怨灵生成在本地点。' } }]
+  state.investigators[0].spellOnlyActions = 2
+  state.currentSeat = 0
+  const extendedView = { ...state, ...campaignProjection(state) }
+  assert.equal(extendedView.actBreaches, 2, '幕上裂口进入观察投影')
+  assert.deepEqual(extendedView.beforeTheBlackThrone,
+    { azathothDoom: 7, referenceResources: 3, devoured: false }, '黑色王座计时器/参考资源进入观察投影')
+  assert.deepEqual(extendedView.agendaAside, ['05102'], '密谋牌库旁的卡进入观察投影')
+  assert.equal(extendedView.hauntedGrants.length, 1, '额外授予的闹鬼进入观察投影')
+  const bbtModel = tcuCampaignModel({ ...extendedView, campaign: { mementoLabels: tcuManifest.mementoLabels } })
+  assert.equal(bbtModel.actBreaches, 2)
+  assert.equal(bbtModel.beforeTheBlackThrone.azathothDoom, 7)
+  assert.equal(bbtModel.beforeTheBlackThrone.referenceResources, 3)
+  assert.deepEqual(bbtModel.agendaAside.map(entry => entry.code), ['05102'])
+  assert.equal(bbtModel.hauntedGrants.length, 1)
+  assert.equal(bbtModel.spellOnlyActions, 2, '法术专用行动额度进入牌桌模型')
+  // 四把钥匙：持有者名/地点名在前端可读（不暴露原始 seat/id 判断）。
+  state.scenario = { id: 'forTheGreaterGood' }
+  state.scenarioKeys = [
+    { id: 'key1', label: '钥匙一', holder: 0, location: null, enemyId: null, assetId: null },
+    { id: 'key2', label: '钥匙二', holder: null, location: location.id, enemyId: null, assetId: null },
+  ]
+  const keysModel = tcuCampaignModel({ ...state, ...campaignProjection(state), campaign: { mementoLabels: tcuManifest.mementoLabels } })
+  assert.equal(keysModel.fourKeys.length, 2, '四把钥匙进入观察投影')
+  assert.equal(keysModel.fourKeys[0].holderName, state.investigators[0].name, '钥匙持有者投影为名字')
+  assert.equal(keysModel.fourKeys[1].locationName, location.name, '钥匙所在地点投影为地点名')
 })
 
 test('P5 地点标记 / 异端者面 / 阵法多技能：读投影，不猜规则', () => {

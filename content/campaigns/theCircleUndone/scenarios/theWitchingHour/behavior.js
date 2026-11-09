@@ -76,9 +76,11 @@ function triggerBarnReaction(state, api) {
 }
 
 // 「别人面前的地点」限制：move 行动与效果移动（relocateInvestigator→movementError）共用同一判定。
+// 05054 幕背「本场冒险余下时间可以进入其他调查员面前的地点」→ scenarioFlags.frontsUnlocked 读点。
 function frontLocationError(state, inv, destLoc) {
   const actIndex = state.actIndex ?? 0
   if (actIndex >= 2) return undefined
+  if (state.scenarioFlags?.frontsUnlocked === true) return undefined
   const fronts = state.scenarioFlags?.frontOf
   if (!fronts || !destLoc) return undefined
   const owner = fronts[destLoc.id]
@@ -302,7 +304,6 @@ export const behavior = {
     flags.mineSwapRound = 0
     flags.lonelyTreeRound = 0
     flags.barnRedirect = null
-    flags.anetteSpawned = false
     return placed
   },
 

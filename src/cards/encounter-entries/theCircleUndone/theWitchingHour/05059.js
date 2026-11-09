@@ -22,7 +22,7 @@ export default {
       if ((amount || 0) <= 0) return
       for (const inv of activeInvestigators(state).filter(entry => entry.location === location.id)) {
         const lost = Math.min(inv.resources || 0, amount)
-        inv.resources = (inv.resources || 0) - lost
+        api.loseResources?.(inv.seat, lost)
         api.info?.(`🪨 巨石堆：${inv.name} 失去 ${lost} 点资源。`)
       }
     },

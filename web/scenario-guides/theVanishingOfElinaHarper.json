@@ -27,7 +27,7 @@
         {
           "children": [
             {
-              "text": "收集以下遭遇组的所有卡牌：艾莲娜·哈珀失踪案、达贡的爪牙、印斯茅斯迷雾、当地人、刺骨寒意、锁住的门、夜魇和午夜假面。这些遭遇组以下列图标标识：收集午夜假面遭遇组时，仅收集其中五张诡计卡（2张错误指示和3张追猎鬼影）。不要收集该遭遇组的任何其他卡牌。"
+              "text": "收集以下遭遇组的所有卡牌：艾莲娜·哈珀失踪案、达贡的爪牙、印斯茅斯迷雾、当地人、刺骨寒意、锁住的门、夜魇和午夜假面。收集午夜假面遭遇组时，仅收集其中五张诡计卡（2张错误指示和3张追猎鬼影）。不要收集该遭遇组的任何其他卡牌。"
             },
             {
               "text": "将以下地点放置入场：印斯茅斯广场、马什精炼厂、印斯茅斯港口、鱼街旧桥、国立第一杂货铺、吉尔曼旅社和小利透书店。"
@@ -132,7 +132,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Vanishing of Elina Harper, Agents of Dagon, Fog over Innsmouth, The Locals, Chilling Cold, Locked Doors, Nightgaunts, and The Midnight Masks. These sets are indicated by the following icons:When gathering The Midnight Masks encounter set, only gather the five treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather any of the other cards from that encounter set."
+              "text": "Gather all cards from the following encounter sets: The Vanishing of Elina Harper, Agents of Dagon, Fog over Innsmouth, The Locals, Chilling Cold, Locked Doors, Nightgaunts, and The Midnight Masks. When gathering The Midnight Masks encounter set, only gather the five treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather any of the other cards from that encounter set."
             },
             {
               "text": "Put the following locations into play: Innsmouth Square, Marsh Refinery, Innsmouth Harbour, Fish Street Bridge, First National Grocery, Gilman House, and The Little Bookshop."

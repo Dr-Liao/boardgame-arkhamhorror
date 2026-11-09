@@ -119,6 +119,16 @@ function runtimeApi(state, seed = 1, { tarot = true } = {}) {
       calls.info.push(`face:${face}`)
     },
     privateInfo: () => {},
+    // 战役记录读写：与引擎 scenario-runtime 的 campaignRecord/setCampaignRecord 同形状
+    //（05045 幕 1b 的 onReveal 经这两个 API 写「你被追捕」）。
+    campaignRecord: key => state.campaign?.records?.[key] ?? null,
+    setCampaignRecord: (key, value) => {
+      state.campaign ||= {}
+      state.campaign.records ||= {}
+      if (value === undefined || value === null) delete state.campaign.records[key]
+      else state.campaign.records[key] = value
+      return state.campaign.records[key] ?? null
+    },
     damage: (seat, amount) => { calls.damage.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.damage += amount },
     horror: (seat, amount) => { calls.horror.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.horror += amount },
     haunted: (seat, options) => calls.haunted.push({ seat, ...options }),
@@ -332,7 +342,6 @@ test('布置：瓦伦蒂诺与暗影猎犬交战、恐怖夜色在密谋旁', ()
   assert.equal(hound.location, 'billiardsRoom')
   assert.deepEqual(nextToAgendaCodes(state), ['05107'])
 })
-
 test('布置：佩妮与怨灵交战、黑暗中的低语在密谋旁', () => {
   const { state } = setupGame({ count: 1, picks: ['05049'] })
   const wraith = enemyOf(state, '05103')
@@ -695,9 +704,10 @@ test('存档往返：JSON 往返后塔罗/区域/记录/幕线索完全一致', 
   assert.ok(restored.campaign.records.piecesOfEvidenceWereLeftBehind >= first.campaign.records.piecesOfEvidenceWereLeftBehind)
 })
 
-// 小工具：密谋旁卡号（避免测试里重复读共享 agendaAside 结构）。
+// 小工具：密谋旁卡号（避免测试里重复读共享 agendaAside 结构；统一区 state.agendaAside，旧区兼容）。
 function nextToAgendaCodes(state) {
-  return (state.scenarioZones.agendaAside || []).map(card => card.code || card.originalCode)
+  const aside = state.agendaAside || state.scenarioZones?.agendaAside || []
+  return aside.map(card => card.code || card.originalCode)
 }
 
 // 无牌组故事调查员用卡面印刷的固定属性（05046–05049），不能沿用开局时原本调查员的

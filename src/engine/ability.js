@@ -151,7 +151,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 2026-10-26：占用豁免泛化为 slotExemptions:[{ slot, traitsAny?, count }]（05009 工具手槽）。
   'staysInOpeningHand', 'slotExemptions',
   // 2026-10-25：05230 瞄准镜「所附属支援不能攻击与你交战的敌人」宿主限制读点。
-  'hostCannotAttackEngaged',
+  // 2026-11-09：05230 的「本地无敌人时宿主攻击仍可激活、改指连接地点」也走附属声明读点。
+  'hostCannotAttackEngaged', 'hostAttackConnecting',
   // 地点计数器型障碍（奥术屏障 02102）：检定难度、取消/继续选项与「弃牌库顶 N 张」都由卡条目声明，
   // 引擎按 locationBarrier.counter 找规则，不再写死卡号（REPORT.md 第 1 批）。
   'locationBarrier',
@@ -904,6 +905,7 @@ export function registerCardAbilities(entries) {
       staysInOpeningHand: entry.staysInOpeningHand === true,
       slotExemptions: entry.slotExemptions ?? null,
       hostCannotAttackEngaged: entry.hostCannotAttackEngaged === true,
+      hostAttackConnecting: entry.hostAttackConnecting === true,
       sealOnEnter: entry.sealOnEnter ?? null,
       substituteSealedElderSign: entry.substituteSealedElderSign === true,
       attachTo: entry.attachTo ? Object.freeze({ ...entry.attachTo }) : null,

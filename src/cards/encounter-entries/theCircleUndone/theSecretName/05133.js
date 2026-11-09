@@ -3,32 +3,6 @@
 // 一卡一文件：规则只在这里维护；跨章共享规则在 content/campaigns/theCircleUndone/encounter-rules.js。
 import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
 
-const isEnemyCode = code => ALL_CARDS[code]?.type === 'enemy'
-const findInEncounter = (state, predicate) => {
-  for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
-    const code = state.encounterDiscard[index]
-    if (!predicate(code)) continue
-    state.encounterDiscard.splice(index, 1)
-    return code
-  }
-  for (let index = state.encounterDeck.length - 1; index >= 0; index--) {
-    const code = state.encounterDeck[index]
-    if (!predicate(code)) continue
-    state.encounterDeck.splice(index, 1)
-    return code
-  }
-  return null
-}
-const takeFromSetAside = (state, code) => {
-  const list = state.scenarioZones?.setAside || []
-  const index = list.indexOf(code)
-  if (index >= 0) list.splice(index, 1)
-}
-const spawnFromAside = (state, api, code, locationId) => {
-  if (!locationId) return null
-  takeFromSetAside(state, code)
-  return api.spawn?.(code, locationId) || null
-}
 const traitsOf = card => (ALL_CARDS[originalOf(card)]?.traits || card?.traits || []).map(trait => String(trait).toLowerCase())
 const hasTrait = (card, trait) => traitsOf(card).includes(String(trait).toLowerCase())
 
@@ -57,8 +31,8 @@ export default {
       const placed = state.locations.find(entry => entry.id === id)
       const here = state.locations.find(entry => entry.id === location.id)
       if (placed && here) {
-        if (!here.connections.includes(id)) here.connections.push(id)
-        if (!placed.connections.includes(location.id)) placed.connections.push(location.id)
+        // 「本场冒险余下时间视为互相连接」：连接走 api（条目不直写 location.connections）。
+        api.connectLocations?.(location.id, id)
       }
       api.info?.(`🌫️ 凯夏的房间：未知地点牌库顶的「${api.locName?.(id) || id}」以未揭示面入场。`)
       const moveAnswer = api.choose?.({

@@ -10,23 +10,19 @@ export default {
       const step = (state.actIndex ?? 0) + 1
       const nahab = state.enemies.find(enemy => String(originalOf(enemy)) === '05149')
       if (step === 3) {
-        if (nahab) nahab.doom = (nahab.doom || 0) + 1
+        if (nahab) api.doomOn?.(nahab, 1)
         api.info?.('🌑 那赫卜获得 1 个毁灭标记。')
         return true
       }
       if (nahab) {
-        state.enemies = state.enemies.filter(enemy => enemy !== nahab)
-        const inv = state.investigators[nahab.engagedSeat]
-        if (inv) inv.engaged = (inv.engaged || []).filter(id => id !== nahab.id)
-        state.scenarioZones ||= {}
-        state.scenarioZones.setAside = [...(state.scenarioZones.setAside || []), '05149']
+        // 放回场外（set aside）：走引擎敌人放回原语（disengage + 移出 state.enemies + 记 setAsideEnemies）。
+        api.setEnemyAside?.(nahab)
         api.info?.('🌑 那赫卜被放回场外（set aside）。')
       }
       // 「密谋 4a 入场时在其上放 4 毁灭」：此刻 4a 尚未成为当前议程（引擎没有「议程入场」钩子）。
       // 只登记待放标记，由 behavior.agendaChain 在 05124 真正成为当前议程的同一结算里放
       // （对照参考实现 advanceAgendaDeck 后的 placeDoomOnAgenda 4）。
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.pendingAgendaDoom = { code: '05124', amount: 4 }
+      api.setScenarioFlag?.('pendingAgendaDoom', { code: '05124', amount: 4 })
       api.info?.('🌑 密谋 4a 入场时将带有 4 个毁灭标记。')
       return true
     },

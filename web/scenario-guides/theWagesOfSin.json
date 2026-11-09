@@ -19,10 +19,10 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：恶罪报应、安妮特的女巫集会、罪恶之城、在劫难逃、冥界、被困的灵魂和巫法。这些遭遇组的图标为："
+              "text": "收齐以下遭遇组的所有卡牌：恶罪报应、安妮特的女巫集会、罪恶之城、在劫难逃、冥界、被困的灵魂和巫法。"
             },
             {
-              "text": "将看守人遭遇组放在一边，位于场外。这个遭遇组的图标为："
+              "text": "将看守人遭遇组放在一边，位于场外。这个"
             },
             {
               "text": "随机从以下每种地点的两个版本中各选择一个：绞刑架、异端者的墓地、教堂阁楼、教堂地下室，并将选出的4个地点放置入场。将所选地点的其他版本从游戏中移除。然后，将闹鬼农田、废弃教堂、绞刑者河放置入场。"
@@ -128,7 +128,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Wages of Sin, Anette’s Coven, City of Sins, Inexorable Fate, Realm of Death, Trapped Spirits, and Witchcraft. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: The Wages of Sin, Anette’s Coven, City of Sins, Inexorable Fate, Realm of Death, Trapped Spirits, and Witchcraft. "
             },
             {
               "text": "Set The Watcher encounter set aside, out of play. This encounter set is indicated by the following icon:"

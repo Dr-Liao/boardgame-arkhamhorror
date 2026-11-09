@@ -369,11 +369,15 @@ export function createMiscApi(state, events, deps) {
         if (options.onlyUpgrades && !traits.some(trait => String(trait).toLowerCase() === 'upgrade')) continue
         const owner = options.byOwnerSeat && Number.isInteger(attachment.ownerSeat)
           ? (state.investigators[attachment.ownerSeat] || controller) : controller
-        targets.push({ code: attachment.code, owner })
+        targets.push({ code: attachment.code, owner, attachment })
       }
-      for (const { code, owner } of targets) {
+      for (const { code, owner, attachment } of targets) {
+        // 标记 returnedToHand：宿主离场流程会在 assetLeavesPlay 窗口之后才弃置未返回的附属，
+        // 该标记让它们不再进弃牌堆（旧实现先弃置后返回，造成同一张卡两手/弃牌堆重复）。
+        if (attachment) attachment.returnedToHand = true
         if (owner && !(owner.hand || []).includes(code)) putInHand(state, owner, code)
       }
+      if (options.includeAttachments !== false) asset.attachments = []
       asset.returnedToHand = true
       const countText = targets.length > 1 ? `及其 ${targets.length - 1} 张附属` : ''
       info(state, events, `♻️ ${controller.name} 把「${label}」${countText}返回手牌。`)
@@ -674,6 +678,88 @@ export function createMiscApi(state, events, deps) {
     // 与遭遇面 scenario-runtime 共用同一份实现（src/engine/location-swap.js），这里只是能力面入口。
     swapLocation: (fromId, toId, options = {}) => scenarioRuntime(state, events).swapLocation(fromId, toId, options),
     removeLocationFromGame: (id, options = {}) => scenarioRuntime(state, events).removeLocationFromGame(id, options),
+    // 2026-11-09 P1-14（R1 收口）：序列化区域原语在「能力面」的入口。
+    // 条目（玩家卡与遭遇卡）只能经 api 写这些区域；实现仍在 scenario-runtime 的唯一写点，
+    // 这里只把同一实例的方法挂到能力面，避免出现第二份实现。
+    encounterDeckCards: () => scenarioRuntime(state, events).encounterDeckCards(),
+    encounterDiscardCards: () => scenarioRuntime(state, events).encounterDiscardCards(),
+    discardEncounterCards: (codes, options) => scenarioRuntime(state, events).discardEncounterCards(codes, options),
+    putOnEncounterDeck: (codes, options) => scenarioRuntime(state, events).putOnEncounterDeck(codes, options),
+    discardEncounterTop: (count, options) => scenarioRuntime(state, events).discardEncounterTop(count, options),
+    takeEncounterDeckCard: code => scenarioRuntime(state, events).takeEncounterDeckCard(code),
+    takeEncounterDiscard: (code, options) => scenarioRuntime(state, events).takeEncounterDiscard(code, options),
+    takeEncounterCard: (code, options) => scenarioRuntime(state, events).takeEncounterCard(code, options),
+    rebuildEncounterDeckFromDiscard: options => scenarioRuntime(state, events).rebuildEncounterDeckFromDiscard(options),
+    extraDeckInfo: id => scenarioRuntime(state, events).extraDeckInfo(id),
+    discardExtra: (id, count) => scenarioRuntime(state, events).discardExtra(id, count),
+    discardExtraCards: (id, codes) => scenarioRuntime(state, events).discardExtraCards(id, codes),
+    takeExtraDiscard: (id, code) => scenarioRuntime(state, events).takeExtraDiscard(id, code),
+    addExtra: (id, codes, options) => scenarioRuntime(state, events).addExtra(id, codes, options),
+    drawExtra: (seat, id, options) => scenarioRuntime(state, events).drawExtra(seat, id, options),
+    putNextToAgenda: (code, extra) => scenarioRuntime(state, events).putNextToAgenda(code, extra),
+    agendaAsideCards: () => scenarioRuntime(state, events).agendaAsideCards(),
+    discardAgendaAside: id => scenarioRuntime(state, events).discardAgendaAside(id),
+    removeAgendaAside: id => scenarioRuntime(state, events).removeAgendaAside(id),
+    takeFromSetAside: code => scenarioRuntime(state, events).takeFromSetAside(code),
+    spawnEngaged: (code, location, seat) => scenarioRuntime(state, events).spawnEngaged(code, location, seat),
+    setEnemyPreySeat: (enemy, seat) => scenarioRuntime(state, events).setEnemyPreySeat(enemy, seat),
+    readyEnemy: enemy => scenarioRuntime(state, events).readyEnemy(enemy),
+    exhaustEnemy: enemy => scenarioRuntime(state, events).exhaustEnemy(enemy),
+    putInDiscard: (seat, code, options) => scenarioRuntime(state, events).putInDiscard(seat, code, options),
+    putInHand: (seat, code) => scenarioRuntime(state, events).putInHand(seat, code),
+    drawEncounterDiscard: (seat, index) => scenarioRuntime(state, events).drawEncounterDiscard(seat, index),
+    spendClues: (seat, n) => scenarioRuntime(state, events).spendClues(seat, n),
+    loseClues: (seat, n) => scenarioRuntime(state, events).loseClues(seat, n),
+    gainClues: (seat, n) => scenarioRuntime(state, events).gainClues(seat, n),
+    addCluesToLocation: (locationId, amount) => scenarioRuntime(state, events).addCluesToLocation(locationId, amount),
+    removeLocationClues: (locationId, amount) => scenarioRuntime(state, events).removeLocationClues(locationId, amount),
+    takeDiscardCard: (seat, code) => scenarioRuntime(state, events).takeDiscardCard(seat, code),
+    putOnTopOfDeck: (seat, code) => scenarioRuntime(state, events).putOnTopOfDeck(seat, code),
+    putOnDeckBottom: (seat, code) => scenarioRuntime(state, events).putOnDeckBottom(seat, code),
+    takeDeckBottom: seat => scenarioRuntime(state, events).takeDeckBottom(seat),
+    takeEncounterDeckBottom: () => scenarioRuntime(state, events).takeEncounterDeckBottom(),
+    takeDeckCard: (seat, code) => scenarioRuntime(state, events).takeDeckCard(seat, code),
+    removeFromGameCards: (codes, options) => scenarioRuntime(state, events).removeFromGameCards(codes, options),
+    beneathCards: seat => scenarioRuntime(state, events).beneathCards(seat),
+    takeBeneathCard: (seat, code, options) => scenarioRuntime(state, events).takeBeneathCard(seat, code, options),
+    setEnemyDamageTaken: (enemy, amount) => scenarioRuntime(state, events).setEnemyDamageTaken(enemy, amount),
+    putEnemyInPlay: enemy => scenarioRuntime(state, events).putEnemyInPlay(enemy),
+    setEnemyRoundFightEvadeBonus: (enemy, amount, options) => scenarioRuntime(state, events).setEnemyRoundFightEvadeBonus(enemy, amount, options),
+    preventEnemyReady: (enemy, rounds) => scenarioRuntime(state, events).preventEnemyReady(enemy, rounds),
+    disengageEnemy: enemy => scenarioRuntime(state, events).disengage(enemy),
+    connectLocations: (aId, bId) => scenarioRuntime(state, events).connectLocations(aId, bId),
+    locationAttachments: locationId => scenarioRuntime(state, events).locationAttachments(locationId),
+    attachEncounterToLocation: (code, locationId, extra) => scenarioRuntime(state, events).attachEncounterToLocation(code, locationId, extra),
+    // 放逐玩家卡：走引擎唯一的 exilePlayerCard 记账（state.exiled / exiledBySeat）。
+    exileCard: (code, options = {}) => {
+      const seat = options.seat ?? state.currentSeat
+      const owner = state.investigators?.[seat]
+      if (!owner || typeof code !== 'string' || !code) return false
+      exilePlayerCard(state, owner, code, events)
+      return true
+    },
+    // 「本次检定再获得 1 个图标」：记录在 committed 条目上（引擎结算图标时读 extraIcons）。
+    addCommittedExtraIcons: (icon, options = {}) => {
+      const committed = (state.skillTest?.committed || [])
+        .find(item => options.committedId == null || item.id === options.committedId)
+        || (state.skillTest?.committed || [])[state.skillTest?.committed?.length - 1]
+      if (!committed) return false
+      committed.extraIcons = [...(committed.extraIcons || []), icon]
+      return true
+    },
+    // 2026-11-09 P1-14 复核：条目里既有 `api.doomOn` 写法（多个循环的多张卡），但能力面
+    // 之前只有 placeDoomOnCard —— 那些卡的毁灭放置实际是静默无操作。这里补能力面别名，
+    // 返回「实际放置数」（0 = 被 canPlaceDoomOn 拦下），与测试桩和 scenario-runtime 同语义。
+    // 2026-11-09 P1-14 复核：多张条目调用 api.campaignRecord / setCampaignRecord（战役记录读写），
+    // 但能力面此前没有这两个入口——记录实际不会写入。补能力面别名，读写仍落在唯一 state.campaign.records。
+    campaignRecord: key => scenarioRuntime(state, events).campaignRecord(key),
+    setCampaignRecord: (key, value) => scenarioRuntime(state, events).setCampaignRecord(key, value),
+    doomOn: (card, amount = 1) => scenarioRuntime(state, events).doomOn(card, amount),
+    removeDoom: (amount = 1) => scenarioRuntime(state, events).removeDoom(amount),
+    setEnemyAside: enemy => scenarioRuntime(state, events).setEnemyAside(enemy),
+    restoreEnemyFromAside: (id, locationId) => scenarioRuntime(state, events).restoreEnemyFromAside(id, locationId),
+    removeEnemyFromGame: enemy => scenarioRuntime(state, events).removeEnemyFromGame(enemy),
+    shuffleIntoEncounterDeck: (codes, options) => scenarioRuntime(state, events).shuffleIntoEncounterDeck(codes, options),
     // 调查员获得特性（04085 伊格的诅咒「获得蛇族特性」）：写 inv.traits，读点 effectiveTraits / 投影。
     addInvestigatorTrait: (seat, trait) => {
       const owner = state.investigators[seat]

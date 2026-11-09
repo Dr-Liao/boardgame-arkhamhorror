@@ -5,29 +5,25 @@ import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
 
 const isEnemyCode = code => ALL_CARDS[code]?.type === 'enemy'
 // 查找遭遇牌库与遭遇弃牌堆（卡面：查找 encounter deck/discard pile）。牌库顶 = 数组尾。
-const findInEncounter = (state, predicate) => {
-  for (let index = state.encounterDeck.length - 1; index >= 0; index--) {
-    const code = state.encounterDeck[index]
-    if (!predicate(code)) continue
-    state.encounterDeck.splice(index, 1)
-    return code
+const findInEncounter = (api, predicate) => {
+  // 卡面：先查遭遇牌库（牌库顶 = 数组尾）再查弃牌堆；读写收口到 api。
+  const deck = api.encounterDeckCards?.() || []
+  for (let index = deck.length - 1; index >= 0; index--) {
+    if (!predicate(deck[index])) continue
+    api.takeEncounterDeckCard?.(deck[index])
+    return deck[index]
   }
-  for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
-    const code = state.encounterDiscard[index]
-    if (!predicate(code)) continue
-    state.encounterDiscard.splice(index, 1)
-    return code
+  const discard = api.encounterDiscardCards?.() || []
+  for (let index = discard.length - 1; index >= 0; index--) {
+    if (!predicate(discard[index])) continue
+    api.takeEncounterDiscard?.(discard[index])
+    return discard[index]
   }
   return null
 }
-const takeFromSetAside = (state, code) => {
-  const list = state.scenarioZones?.setAside || []
-  const index = list.indexOf(code)
-  if (index >= 0) list.splice(index, 1)
-}
 const spawnFromAside = (state, api, code, locationId) => {
   if (!locationId) return null
-  takeFromSetAside(state, code)
+  api.takeFromSetAside?.(code)
   return api.spawn?.(code, locationId) || null
 }
 const traitsOf = card => (ALL_CARDS[originalOf(card)]?.traits || card?.traits || []).map(trait => String(trait).toLowerCase())
@@ -37,7 +33,7 @@ export default {
   code: '05129', scope: 'location', implemented: true,
   locationRule: {
     onReveal(state, location, api) {
-      const code = findInEncounter(state, candidate => String(candidate) === '01159')
+      const code = findInEncounter(api, candidate => String(candidate) === '01159')
       // 卡面是「查找」，找不到时没有效果；不得从场外凭空生成第 4 张鼠群。
       if (!code) {
         api.info?.('🐀 屋主的住处：遭遇牌库与弃牌堆里没有「鼠群」，本次没有效果。')

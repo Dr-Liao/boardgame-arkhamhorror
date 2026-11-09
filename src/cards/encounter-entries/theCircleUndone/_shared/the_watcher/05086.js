@@ -19,14 +19,13 @@ export default {
   enemyScript: {
     onDefeated(state, enemy, api) {
       if (originalOf(enemy) !== '05086') return false
-      enemy.damageTaken = 0
-      enemy.exhausted = true
+      // 敌人实例字段/集合法走引擎原语（P1-14：条目不直写 enemy.* / state.enemies）。
+      api.setEnemyDamageTaken?.(enemy, 0)
+      api.exhaustEnemy?.(enemy)
       // 本轮（含即将到来的补给阶段）不重整：from=当前轮，rounds=1。
-      enemy.preventReady = { from: state.round, rounds: 1 }
-      const holder = enemy.engagedSeat == null ? null : state.investigators[enemy.engagedSeat]
-      if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
-      enemy.engagedSeat = null
-      if (!state.enemies.includes(enemy)) state.enemies.push(enemy)
+      api.preventEnemyReady?.(enemy, 1)
+      api.disengageEnemy?.(enemy)
+      api.putEnemyInPlay?.(enemy)
       api.info?.('👁️ 幽灵看守人没有被击败：治愈所有伤害、与所有调查员解除交战、横置，本轮补给阶段不重整。')
       return true
     },

@@ -15,14 +15,10 @@ function encounterDeckId(state) {
   return 'encounter'
 }
 
-function discardAsideCopy(state, deckId) {
-  if (deckId === 'spectral' && state.extraEncounterDecks?.spectral) {
-    const piles = state.extraEncounterDecks.spectral
-    if (!Array.isArray(piles.discard)) piles.discard = []
-    piles.discard.push('05107')
-    return
-  }
-  state.encounterDiscard.push('05107')
+function discardAsideCopy(state, api, deckId) {
+  // 放在密谋牌库旁的这张卡按其「来源牌堆」弃置：额外牌堆走 api.discardExtraCards，基础牌堆走 api.discardEncounterCards。
+  if (deckId === 'spectral') api.discardExtraCards?.('spectral', ['05107'])
+  else api.discardEncounterCards?.('05107')
 }
 
 export default {
@@ -36,15 +32,16 @@ export default {
       failedBy = Math.max(0, (result.difficulty ?? 4) - (result.value ?? 0))
     })
     if (failedBy <= 0) return false // 成功：正常进遭遇弃牌堆
-    const zones = (state.scenarioZones ||= {})
-    const aside = (zones.agendaAside ||= [])
-    const existing = aside.filter(entry => entry.code === '05107')
+    const aside = (state.agendaAside || [])
+    const existing = aside.filter(entry => (entry.originalCode || entry.code) === '05107')
     let placed = true
-    let surge = failedBy >= 3
+    const surge = failedBy >= 3
     if (existing.length >= 2) {
       // 第三张：牌库旁 2 张 + 当前这张共 3 张全部弃掉；当前这张交给引擎弃置（会进本次抽牌牌堆的弃牌堆）。
-      zones.agendaAside = aside.filter(entry => entry.code !== '05107')
-      for (const entry of existing) discardAsideCopy(state, entry.deck === 'spectral' ? 'spectral' : 'encounter')
+      for (const entry of existing) {
+        api.discardAgendaAside?.(entry.id)
+        discardAsideCopy(state, api, entry.deck === 'spectral' ? 'spectral' : 'encounter')
+      }
       api.info?.('密谋牌库旁集齐 3 张「恐怖夜色」：全部弃掉，每位调查员受到 3 点恐惧。')
       for (const target of state.investigators || []) {
         if (target.defeated) continue
@@ -52,7 +49,8 @@ export default {
       }
       placed = false
     } else {
-      aside.push({ id: `05107:${state.round}:${aside.length}`, code: '05107', deck: encounterDeckId(state) })
+      const id = `05107:${state.round}:${(api.agendaAsideCards?.() || []).length}`
+      api.putNextToAgenda?.('05107', { id, deck: encounterDeckId(state) })
       api.info?.('「恐怖夜色」被放到密谋牌库旁边。')
     }
     if (surge) {

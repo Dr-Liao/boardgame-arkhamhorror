@@ -49,8 +49,9 @@ const placeClueOnHighestShroud = ({ inv, state, api }) => {
         label: `${location.name || location.id}（隐藏值 ${location.shroud}）`,
       })),
     }))) || candidates[0]
-  inv.clues = Math.max(0, (inv.clues || 0) - 1)
-  target.clues = (target.clues || 0) + 1
+  // 线索转移走 api（条目不直写 inv.clues / location.clues）。
+  api.loseClues?.(inv.seat, 1)
+  api.addCluesToLocation?.(target.id, 1)
   api.info(`${inv.name} 把 1 个线索放在「${target.name || target.id}」（隐藏值 ${target.shroud}）。`)
   return target
 }
@@ -85,8 +86,7 @@ export default {
       weakness: { type: 'unresolvedCase' },
       resolve: ({ inv, state, api }) => {
         placeClueOnHighestShroud({ inv, state, api })
-        state.removedFromGame ||= []
-        state.removedFromGame.push('05010')
+        api.removeFromGameCards?.('05010')
         api.info('「悬案」被移出游戏。')
       },
     },

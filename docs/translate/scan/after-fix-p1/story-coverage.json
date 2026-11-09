@@ -1,0 +1,220 @@
+{
+  "generatedAt": "2026-11-09",
+  "scope": {
+    "campaigns": 8,
+    "units": 3498,
+    "rawLiteralFiles": 19,
+    "flowNodes": 244
+  },
+  "campaigns": {
+    "nightOfTheZealot": {
+      "campaign": "nightOfTheZealot",
+      "name": "夜之狂热",
+      "uniqueTexts": 37,
+      "occurrences": 37,
+      "cjkChars": 2767,
+      "flagCounts": {
+        "punct-ascii-punct-after-cjk": 3,
+        "punct-ellipsis-ascii": 3,
+        "traditional-chars": 5,
+        "unterminated-paragraph": 1
+      },
+      "scenarios": [],
+      "traditionalTotal": 0,
+      "zhu": 10
+    },
+    "theDunwichLegacy": {
+      "campaign": "theDunwichLegacy",
+      "name": "敦威治遗产",
+      "uniqueTexts": 240,
+      "occurrences": 240,
+      "cjkChars": 12903,
+      "flagCounts": {
+        "traditional-chars": 20,
+        "punct-ascii-punct-after-cjk": 13,
+        "punct-space-before-punct": 4,
+        "punct-cjk-then-ascii-paren": 1,
+        "unterminated-paragraph": 1,
+        "punct-ellipsis-ascii": 1
+      },
+      "scenarios": [],
+      "traditionalTotal": 1,
+      "zhu": 27
+    },
+    "thePathToCarcosa": {
+      "campaign": "thePathToCarcosa",
+      "name": "卡尔克萨之路",
+      "uniqueTexts": 186,
+      "occurrences": 186,
+      "cjkChars": 16208,
+      "flagCounts": {
+        "punct-unpaired-quote": 1,
+        "punct-ascii-punct-after-cjk": 4,
+        "traditional-chars": 2
+      },
+      "scenarios": [],
+      "traditionalTotal": 2,
+      "zhu": 0
+    },
+    "theForgottenAge": {
+      "campaign": "theForgottenAge",
+      "name": "失落的时代",
+      "uniqueTexts": 376,
+      "occurrences": 376,
+      "cjkChars": 27889,
+      "flagCounts": {
+        "punct-unpaired-quote": 2,
+        "unterminated-paragraph": 1,
+        "punct-ascii-punct-after-cjk": 4,
+        "punct-cjk-then-ascii-paren": 1,
+        "long-paragraph": 1
+      },
+      "scenarios": [],
+      "traditionalTotal": 0,
+      "zhu": 0
+    },
+    "theCircleUndone": {
+      "campaign": "theCircleUndone",
+      "name": "万象无终",
+      "uniqueTexts": 432,
+      "occurrences": 432,
+      "cjkChars": 34243,
+      "flagCounts": {
+        "traditional-chars": 70,
+        "punct-unpaired-quote": 8,
+        "punct-ascii-punct-after-cjk": 4,
+        "label-chinese-label": 8,
+        "mixed-language": 1,
+        "mixed-language-word": 3
+      },
+      "scenarios": [],
+      "traditionalTotal": 4,
+      "zhu": 120
+    },
+    "theDreamEaters": {
+      "campaign": "theDreamEaters",
+      "name": "食梦者",
+      "uniqueTexts": 944,
+      "occurrences": 944,
+      "cjkChars": 85071,
+      "flagCounts": {
+        "long-paragraph": 23,
+        "traditional-chars": 4
+      },
+      "scenarios": [],
+      "traditionalTotal": 4,
+      "zhu": 0
+    },
+    "theInnsmouthConspiracy": {
+      "campaign": "theInnsmouthConspiracy",
+      "name": "印斯茅斯暗潮",
+      "uniqueTexts": 307,
+      "occurrences": 307,
+      "cjkChars": 27902,
+      "flagCounts": {
+        "traditional-chars": 47,
+        "punct-unpaired-quote": 3,
+        "mixed-language": 1,
+        "label-chinese-label": 23
+      },
+      "scenarios": [],
+      "traditionalTotal": 4,
+      "zhu": 165
+    },
+    "edgeOfTheEarth": {
+      "campaign": "edgeOfTheEarth",
+      "name": "地球边缘",
+      "uniqueTexts": 976,
+      "occurrences": 976,
+      "cjkChars": 108278,
+      "flagCounts": {
+        "unterminated-paragraph": 28,
+        "long-paragraph": 30,
+        "punct-space-before-punct": 7,
+        "punct-unpaired-quote": 28,
+        "traditional-chars": 8,
+        "label-chinese-label": 7
+      },
+      "scenarios": [],
+      "traditionalTotal": 11,
+      "zhu": 0
+    }
+  },
+  "candidateCount": 371,
+  "groupedCount": 366,
+  "byKind": {
+    "punct-ascii-punct-after-cjk": 28,
+    "punct-ellipsis-ascii": 4,
+    "traditional-chars": 156,
+    "unterminated-paragraph": 31,
+    "punct-space-before-punct": 11,
+    "punct-cjk-then-ascii-paren": 2,
+    "punct-unpaired-quote": 42,
+    "label-chinese-label": 38,
+    "long-paragraph": 54,
+    "mixed-language": 2,
+    "mixed-language-word": 3
+  },
+  "bySeverity": {
+    "low": 366,
+    "high": 2,
+    "medium": 3
+  },
+  "reference": {
+    "edgeOfTheEarth": {
+      "chapters": {
+        "iceAndDeathPart1": {
+          "zhLeaves": 55,
+          "enLeaves": 55,
+          "gaps": 0
+        },
+        "iceAndDeathPart2": {
+          "zhLeaves": 38,
+          "enLeaves": 38,
+          "gaps": 0
+        },
+        "iceAndDeathPart3": {
+          "zhLeaves": 31,
+          "enLeaves": 31,
+          "gaps": 0
+        },
+        "fatalMirage": {
+          "zhLeaves": 68,
+          "enLeaves": 68,
+          "gaps": 0
+        },
+        "toTheForbiddenPeaks": {
+          "zhLeaves": 51,
+          "enLeaves": 51,
+          "gaps": 0
+        },
+        "cityOfTheElderThings": {
+          "zhLeaves": 94,
+          "enLeaves": 94,
+          "gaps": 0
+        },
+        "theHeartOfMadnessPart1": {
+          "zhLeaves": 79,
+          "enLeaves": 79,
+          "gaps": 0
+        },
+        "theHeartOfMadnessPart2": {
+          "zhLeaves": 53,
+          "enLeaves": 53,
+          "gaps": 0
+        }
+      },
+      "campaignLeaves": 3093
+    }
+  },
+  "localizedFallbackSource": 60,
+  "storyCoverage": {
+    "theInnsmouthConspiracy": {
+      "enLeaves": 421,
+      "zhLeaves": 421,
+      "enOnly": 0,
+      "zhOnly": 0
+    }
+  },
+  "sourceErrors": []
+}

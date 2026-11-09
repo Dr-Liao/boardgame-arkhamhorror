@@ -23,7 +23,7 @@ import {
   AGENDA_CARD, ACT_CARD, STARTING_PLAY_AREA_USES, START_LOCATION, STORY_INVESTIGATOR_CODES,
   STORY_INVESTIGATOR_SETUP, THE_SPECTRAL_WATCHER, setupCardsFor,
 } from './definition.js'
-import { prologueChaosToken } from './chaos.js'
+import { prologueChaosToken, PROLOGUE_TOKEN_MEANINGS } from './chaos.js'
 
 // 本章自己没有敌人/诡计条目（theWatcher 等 6 个共享组的逐卡条目归 W-shared）；
 // 05043 的骷髅规则在 resolveChaosToken/afterTest 里实现，05044/05045 在单卡条目里实现。
@@ -377,6 +377,10 @@ export const behavior = {
     encounterRules.resolveChaosToken?.(state, inv, token, api)
     return prologueChaosToken(state, inv, token, api)
   },
+
+  // 05043 剧本卡的标记含义（引擎读点：setup 把 behavior.tokenMeanings 并进 state.scenario，
+  // 供 AI 概率预估与符号结算读取；与 resolveChaosToken 的数值同源）。
+  tokenMeanings: PROLOGUE_TOKEN_MEANINGS,
 
   // 05043 骷髅的后半句：失败且为攻击/躲避尝试 → 结算你所在地点的每条闹鬼能力。
   // 判定按「检定动作种类」而不是技能值：战斗/敏捷检定也可能是卡牌效果或其他行动（例如 05104 的

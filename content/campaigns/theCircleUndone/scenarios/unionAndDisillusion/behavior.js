@@ -776,7 +776,7 @@ export const behavior = {
           state.campaign.chaosBag = state.campaign.chaosBag.filter(token => token !== 'cultist')
         }
         api?.info?.('迷雾彼端（版本二）：所有异教徒标记从混乱袋（含封印）与战役袋中移除，直到剧本结束。')
-      } else {
+      } else if (code === ACT_BEYOND_V3) {
         const count = (state.numInvestigators || 1) > 2 ? 2 : 1
         for (let index = 0; index < count; index++) {
           // 生成的秘社新信徒来自「放在一边」的银暮秘社组：spawnPrinted 会同步从 setAside 移除。
@@ -787,10 +787,16 @@ export const behavior = {
           spawnPrinted(state, api, JOSEF_MEIGER, 'geistTrap')
         }
         // 卡面：将放在一边的「银暮秘社」遭遇组剩余卡牌与遭遇弃牌堆一起洗入遭遇牌库。
-        const aside = state.scenarioZones?.setAside || []
-        const remainingLodge = aside.filter(code =>
-          [LODGE_NEOPHYTE, KEEPER_OF_SECRETS, '05097'].includes(code))
-        shuffleAsideIntoDeck(state, api, remainingLodge)
+        shuffleAsideIntoDeck(state, api, remainingLodgeInSetAside(state))
+      } else if (code === ACT_BEYOND_V4) {
+        // 版本四（05246）背面没有「生成秘社新信徒」句——那是版本三（05245）的规则，不能串到版本四。
+        // 卡面：揭示灵怪陷阱 → 将放在一边的银暮秘社遭遇组与遭遇弃牌堆一起洗入遭遇牌库 →
+        // 若约瑟夫健在则生成他且本局剩余时间不能谈判。
+        if (recordsFor(state).josefIsAliveAndWell) {
+          setFlags(state, { noParleyJosef: true })
+          spawnPrinted(state, api, JOSEF_MEIGER, 'geistTrap')
+        }
+        shuffleAsideIntoDeck(state, api, remainingLodgeInSetAside(state))
       }
       return
     }
@@ -1123,16 +1129,30 @@ function idOfIsle(code) {
   return entry ? entry[0] : code
 }
 
+// 版本三/四共用：从「放在一边」取出剩余银暮秘社组卡（数据集合，不写卡号分支）。
+function remainingLodgeInSetAside(state) {
+  const lodgeCodes = new Set([LODGE_NEOPHYTE, KEEPER_OF_SECRETS, '05097'])
+  return (state.scenarioZones?.setAside || []).filter(code => lodgeCodes.has(code))
+}
+
 function spawnPrinted(state, api, code, locationId) {
   // 从「放在一边」生成：同步消耗账本（对不在 setAside 的卡是无操作）。
   takeFromSetAside(state, code)
   const card = ALL_CARDS[code] || {}
   const printed = state.scenario?.enemies?.[code] || {}
+  // 印刷数值直通：`healthPerInvestigator` 是「每调查员」生命（安妮特 4/调查员），
+  // `victory` 是胜利点（安妮特/约瑟夫各 2），旧实现只传 health/victory 之外的基础字段会丢。
+  const perInvestigatorHealth = printed.healthPerInvestigator ?? card.healthPerInvestigator ?? 0
+  const health = perInvestigatorHealth
+    ? perInvestigatorHealth * (state.numInvestigators || 1)
+    : (printed.health ?? card.health ?? 1)
   if (typeof api?.spawnStoryEnemy === 'function') {
     return api.spawnStoryEnemy(code, locationId, {
       name: card.nameZh || card.name || code,
       fight: printed.fight ?? card.fight ?? 0, evade: printed.evade ?? card.evade ?? 0,
-      health: printed.health ?? card.health ?? 1,
+      health,
+      healthPerInvestigator: perInvestigatorHealth,
+      victory: printed.victory ?? card.victory ?? 0,
       damage: printed.damage ?? card.damage ?? 0, horror: printed.horror ?? card.horror ?? 0,
       hunter: Boolean(printed.hunter), alert: Boolean(printed.alert),
       retaliate: Boolean(printed.retaliate), aloof: Boolean(printed.aloof),

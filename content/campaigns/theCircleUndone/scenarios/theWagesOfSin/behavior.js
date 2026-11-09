@@ -40,6 +40,12 @@ const actStep = state => Number(state.actIndex || 0) + 1
 const agendaStep = state => Number(state.agendaIndex || 0) + 1
 const recordsFor = state => (state.campaign.records ||= {})
 const EMPTY_RULE = Object.freeze({})
+// 双面地点翻到幽灵面后 originalCode 会变成背面卡号（05169b…）；分组匹配必须按「正面卡号」归一化，
+// 否则翻面后 placedGroup/locationGroupOf/isAtAttic 全部失效（05179/05180 生成规则与 05175b 两条规则不可达）。
+const VARIANT_GROUPS = Object.freeze(Object.fromEntries(
+  Object.entries(LOCATION_VARIANTS).map(([group, frontCodes]) => [group,
+    frontCodes.flatMap(code => [code, ALL_CARDS[code]?.linkedCardCode]).filter(Boolean)]),
+))
 
 // 单卡规则读点：条目 flags → definition.CARD_RULES（同一份规则键）。
 function rulesOf(_state, code) {
@@ -87,11 +93,11 @@ function placedByFrontCodes(state, codes) {
   return (state.locations || []).filter(location => codes.includes(original(location)))
 }
 function placedGroup(state, key) {
-  return placedByFrontCodes(state, LOCATION_VARIANTS[key] || [])
+  return placedByFrontCodes(state, VARIANT_GROUPS[key] || [])
 }
 function locationGroupOf(state, locationId) {
   const code = original(loc(state, locationId))
-  for (const [group, codes] of Object.entries(LOCATION_VARIANTS)) {
+  for (const [group, codes] of Object.entries(VARIANT_GROUPS)) {
     if (codes.includes(code)) return group
   }
   return null

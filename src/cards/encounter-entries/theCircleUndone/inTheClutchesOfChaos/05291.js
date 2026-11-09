@@ -1,7 +1,29 @@
-// 05291 · 地点 05291 法兰西山（4/0）：[action] 意志(2) 检定按超出点数移除裂口，在 behavior.js 的 LOCATION_HANDLERS[05291]。
-// 卡面规则的唯一实现位置见注释；本文件负责归属与 implemented 审计读点。
+// 05291 地点条目（ICC）
+// 归属：关卡专用 · inTheClutchesOfChaos（P8 w-clutches）。卡面：${skillZh}(${difficulty}) 检定：成功且每超出 1 点，移除 1 个裂口并移到当前幕。
+// 一卡一文件：地点行动由 locationRule.actions / performAction 提供，章节 behavior 按
+// locationRuleFor(卡号) 通用分派；裂口读写只走 api（breach / moveBreachesToAct）。
+
+const locationOf = (state, id) => (state.locations || []).find(location => location.id === id) || null
 export default {
   code: '05291',
   scope: 'location',
   implemented: true,
+  locationRule: {
+    actions({ moves, location }) {
+      if (Number(location?.breaches || 0) > 0) moves.push({ rule: 'locWillpowerBreach', label: '🧠 意志(2) 检定：成功且每超出 1 点，移除 1 个裂口并移到当前幕' })
+    },
+    performAction(state, inv, move, api) {
+      if (move.rule !== 'locWillpowerBreach') return false
+      const location = locationOf(state, move.locationId || inv.location)
+      if (!location) return true
+      api.test?.(inv.seat, 'willpower', 2, result => {
+        if (!result?.success) return
+        // 恰好成功（差值 0）不移裂口；每超出 1 点移 1。
+        const successBy = Math.max(0, Number(result.value || 0) - Number(result.difficulty || 2))
+        if (successBy <= 0) return
+        api.moveBreachesToAct?.(location.id, Math.min(Number(location.breaches || 0), successBy))
+      }, 0, { code: '05291' })
+      return true
+    },
+  },
 }

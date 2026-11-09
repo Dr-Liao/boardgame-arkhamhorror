@@ -46,11 +46,12 @@ export default {
       if (answer === 'skip') return { delta: bonus }
       const index = Number(answer)
       if (Number.isInteger(index) && index >= 0 && index < beneath.length) {
-        // 先取出所选卡号再 splice：旧实现先 `inv.beneath.splice(index, 1)` 再读
+        // 先取出所选卡号再出区：旧实现先 `inv.beneath.splice(index, 1)` 再读
         // `beneath[index]`，会把「所选卡牌的下一张」加入手牌（选最后一张时是 undefined）。
         // 审计第三轮（reaudit-h）修复；回归用例见 tests/tcu-investigators.test.mjs 旧印段。
-        const [cardCode] = inv.beneath.splice(index, 1)
-        inv.hand.push(cardCode)
+        // 2026-11-09 P1-14：beneath 出区走 api.takeBeneathCard（条目不直写 inv.beneath / inv.hand）。
+        const cardCode = beneath[index]
+        api.takeBeneathCard?.(inv.seat, cardCode, { to: 'hand' })
         api.info(`${inv.name} 把「${api.cardName(cardCode)}」加入手牌。`)
       }
       return { delta: bonus }
@@ -79,7 +80,6 @@ export default {
           ? (inv.assets || []).find(item => item.id === context.assetId)
           : (inv.assets || []).find(item => item.code === code)
         if (asset) api.discardAsset(inv.seat, asset)
-        inv.beneath ||= []
         // 日志由本反应自己写。冲刷时若再写一行「被放在底下」，同一张卡看起来像放了两次。
         api.deferCardBeneath(inv.seat, code, { log: false })
         api.drawCards(inv.seat, 1)

@@ -18,7 +18,6 @@ export default {
   implemented: true,
   // 引擎读点：受影响的调查员不能触发其控制卡牌上的 [action] 能力（moves.js）。
   threatEffect: { cannotTriggerActionAbilities: true },
-  treacheryRule: { threatArea: true },
   threatAction: {
     rule: 'discardBedeviled',
     label: '检定意志(3)摆脱苦痛折磨',

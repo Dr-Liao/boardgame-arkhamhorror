@@ -332,6 +332,10 @@ export const encounterRules = {
     const skill = move.skill || spec.skills[0]
     // 04089 半身入土：失败后本次检定难度降低 1 点，直到一轮结束。
     const reduction = spec.rule === 'escapeEntombed' ? (threat?.difficultyReduction || 0) : 0
+    // 检定的来源名由服务端按卡号解析：客户端的 move 不带 label（DOP 只提交规则字段），
+    // 之前用 move.label 会让时间线里的检定只显示「技能检定」，看不出是在摆脱哪张威胁卡。
+    const sourceCode = original(threat || attachment)
+    const sourceName = ALL_CARDS[sourceCode]?.nameZh || ALL_CARDS[sourceCode]?.name || sourceCode
     api.test(inv.seat, skill, Math.max(0, spec.difficulty + vengeance - reduction), result => {
       if (!result.success) {
         if (spec.rule === 'escapeEntombed' && threat) {
@@ -342,7 +346,7 @@ export const encounterRules = {
       }
       if (threat) discardThreat(state, inv, threat)
       if (attachment) discardAttachment(state, location, attachment)
-    }, 0, { type: 'scenario', name: move.label, ability: true })
+    }, 0, { type: 'scenario', name: sourceName, code: sourceCode, ability: true })
     return true
   },
 

@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-11-09",
+  "scope": {
+    "guides": 62,
+    "zhBlocks": 1948,
+    "enBlocks": 1939,
+    "missingBlocks": 0
+  },
+  "byKind": {
+    "traditional-chars": 114,
+    "single-newline-block": 177,
+    "missing-setup-transition": 41,
+    "punct-cjk-then-ascii-paren": 19,
+    "punct-unpaired-quote": 24,
+    "punct-ascii-punct-after-cjk": 148,
+    "icon-count-mismatch": 9,
+    "zh-shorter-than-en": 2,
+    "punct-space-before-punct": 4,
+    "mixed-language": 1,
+    "punct-ellipsis-ascii": 3,
+    "bullets-inline": 1,
+    "structure-diff-inline": 4,
+    "dangling-resolution-ref": 1
+  },
+  "bySeverity": {
+    "low": 536,
+    "medium": 11,
+    "high": 1
+  },
+  "candidateCount": 548,
+  "groupedCount": 413,
+  "campaigns": {
+    "theInnsmouthConspiracy": {
+      "campaign": "theInnsmouthConspiracy",
+      "name": "印斯茅斯暗潮",
+      "guides": 8,
+      "guidesWithIssues": 8,
+      "zhBlocks": 279,
+      "missing": 0,
+      "candidates": 91
+    },
+    "thePathToCarcosa": {
+      "campaign": "thePathToCarcosa",
+      "name": "卡尔克萨之路",
+      "guides": 8,
+      "guidesWithIssues": 8,
+      "zhBlocks": 221,
+      "missing": 0,
+      "candidates": 66
+    },
+    "theDreamEaters": {
+      "campaign": "theDreamEaters",
+      "name": "食梦者",
+      "guides": 8,
+      "guidesWithIssues": 8,
+      "zhBlocks": 308,
+      "missing": 0,
+      "candidates": 19
+    },
+    "theCircleUndone": {
+      "campaign": "theCircleUndone",
+      "name": "万象无终",
+      "guides": 9,
+      "guidesWithIssues": 9,
+      "zhBlocks": 312,
+      "missing": 0,
+      "candidates": 90
+    },
+    "theDunwichLegacy": {
+      "campaign": "theDunwichLegacy",
+      "name": "敦威治遗产",
+      "guides": 8,
+      "guidesWithIssues": 8,
+      "zhBlocks": 163,
+      "missing": 0,
+      "candidates": 94
+    },
+    "edgeOfTheEarth": {
+      "campaign": "edgeOfTheEarth",
+      "name": "地球边缘",
+      "guides": 8,
+      "guidesWithIssues": 8,
+      "zhBlocks": 343,
+      "missing": 0,
+      "candidates": 100
+    },
+    "theForgottenAge": {
+      "campaign": "theForgottenAge",
+      "name": "失落的时代",
+      "guides": 10,
+      "guidesWithIssues": 9,
+      "zhBlocks": 270,
+      "missing": 0,
+      "candidates": 47
+    },
+    "nightOfTheZealot": {
+      "campaign": "nightOfTheZealot",
+      "name": "夜之狂热",
+      "guides": 3,
+      "guidesWithIssues": 3,
+      "zhBlocks": 52,
+      "missing": 0,
+      "candidates": 41
+    }
+  },
+  "orthography": {
+    "theInnsmouthConspiracy": {
+      "campaign": "theInnsmouthConspiracy",
+      "name": "印斯茅斯暗潮",
+      "traditionalTotal": 4,
+      "zhu": 164,
+      "byChar": {
+        "陋": 3,
+        "污": 1
+      }
+    },
+    "thePathToCarcosa": {
+      "campaign": "thePathToCarcosa",
+      "name": "卡尔克萨之路",
+      "traditionalTotal": 4,
+      "zhu": 0,
+      "byChar": {
+        "污": 3,
+        "陋": 1
+      }
+    },
+    "theDreamEaters": {
+      "campaign": "theDreamEaters",
+      "name": "食梦者",
+      "traditionalTotal": 3,
+      "zhu": 0,
+      "byChar": {
+        "霜": 1,
+        "陋": 1,
+        "污": 1
+      }
+    },
+    "theCircleUndone": {
+      "campaign": "theCircleUndone",
+      "name": "万象无终",
+      "traditionalTotal": 3,
+      "zhu": 111,
+      "byChar": {
+        "污": 3
+      }
+    },
+    "theDunwichLegacy": {
+      "campaign": "theDunwichLegacy",
+      "name": "敦威治遗产",
+      "traditionalTotal": 3,
+      "zhu": 8,
+      "byChar": {
+        "陋": 2,
+        "污": 1
+      }
+    },
+    "edgeOfTheEarth": {
+      "campaign": "edgeOfTheEarth",
+      "name": "地球边缘",
+      "traditionalTotal": 2,
+      "zhu": 0,
+      "byChar": {
+        "污": 1,
+        "霜": 1
+      }
+    },
+    "theForgottenAge": {
+      "campaign": "theForgottenAge",
+      "name": "失落的时代",
+      "traditionalTotal": 0,
+      "zhu": 0,
+      "byChar": {}
+    },
+    "nightOfTheZealot": {
+      "campaign": "nightOfTheZealot",
+      "name": "夜之狂热",
+      "traditionalTotal": 0,
+      "zhu": 11,
+      "byChar": {}
+    }
+  },
+  "sourceErrors": []
+}

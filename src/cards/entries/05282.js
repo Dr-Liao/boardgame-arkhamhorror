@@ -27,6 +27,8 @@ export default {
   abilities: [
     {
       kind: 'played',
+      // 卡面两项都是「躲避。」：按躲避结算，不引发借机攻击（与 05234 同一读点）。
+      countsAs: 'evade',
       label: '躲避并移动敌人 / 与连接地点的敌人换位',
       resolve: ({ state, inv, api }) => {
         const engaged = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)

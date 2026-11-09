@@ -16,7 +16,7 @@ export default {
           kind: 'location', source: location.id, seat: inv.seat,
           prompt: '进入宇宙门扉：花费 1 个线索，或受到 1 点恐惧。', options,
         })
-        if (answer === 'clue' && (inv.clues || 0) >= 1) inv.clues -= 1
+        if (answer === 'clue' && (inv.clues || 0) >= 1) api.spendClues?.(inv.seat, 1)
         else api.horror(inv.seat, 1)
       },
     },

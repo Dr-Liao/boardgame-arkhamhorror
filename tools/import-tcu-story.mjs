@@ -9,7 +9,7 @@ const target = new URL('../content/campaigns/theCircleUndone/story-text.js', imp
 
 const SOURCE_LABEL = '参考资源/ArkhamHorror-main/frontend/src/locales/zh/theCircleUndone'
 const GENERATED_BY = 'tools/import-tcu-story.mjs'
-const FILE_HEADER = '// 由 tools/import-tcu-story.mjs 从随仓库保存的中文参考资源生成，运行时不读参考资源；只含已到达分支可展示的叙事正文。'
+const FILE_HEADER = '// 由 tools/import-tcu-story.mjs 从随仓库保存的中文参考资源生成，运行时不读参考资源；只含已到达分支可展示的叙事正文。本仓补译见 content/campaigns/theCircleUndone/story-supplements.json（story.supplements 登记哈希）。'
 
 const SCENARIO_IDS = [
   'disappearanceAtTheTwilightEstate', 'theWitchingHour', 'atDeathsDoorstep', 'theSecretName',
@@ -156,11 +156,16 @@ function cleanText(html) {
     .replace(/<\/?(?:section|div)\b[^>]*>/gi, ' ')
     .replace(/<[^>]*>/g, '')
     .replace(/\{'\{'\}([^{}]+)\{'\}'\}/g, '{$1}')
+    // 参考 locale 的职阶占位（`({mystic}):`）：故事正文按卡文 token 渲染为职阶图标。
+    .replace(/[（(]\{([A-Za-z][A-Za-z0-9_]*)\}[）)]\s*[:：]?\s*/g, '[$1] ')
     // 去掉来源的成对强调标记（`_结局 1_`、`*如果……*`），与 TFA 导入文风一致。
     .replace(/[*_]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
 }
+
+/** 结局正文段首标签（「结局 5：」/「无结局：」）由 UI 标题层承载，正文不重复。 */
+const stripResolutionLabel = text => String(text ?? '').replace(/^(?:结局|尾声|无结局|没有结局)\s*\d*\s*[:：]\s*/, '').trim()
 
 function paragraphTexts(html, { keepBasic }) {
   const source = String(html ?? '')
@@ -332,6 +337,7 @@ for (const { id, entries } of RESOLUTION_MAPS) {
       paragraphs = summary
       fallbacks.push({ id: `${id}/${entry.key}`, reason })
     }
+    if (paragraphs.length) paragraphs[0] = stripResolutionLabel(paragraphs[0])
     mapped[entry.key] = paragraphs
   }
   resolutions[id] = mapped
@@ -435,6 +441,49 @@ const story = {
   endings,
   fallbacks,
 }
+
+// ---------------------------------------------------------------------------
+// 本仓补译层：参考 zh locale 的 5 段结局 + 1 段附加引言仍是英文。
+// 补译复用 content/scenario-guide-translations.json 已审阅的指南译文（去结算列表），
+// 按生成物点路径覆盖叙事段落数组，并在 story-text.js 里登记来源哈希；缺失/带英文直接抛错。
+// ---------------------------------------------------------------------------
+const supplementSource = new URL('../content/campaigns/theCircleUndone/story-supplements.json', import.meta.url)
+const supplementRaw = await readFile(supplementSource)
+const supplements = JSON.parse(supplementRaw.toString('utf8'))
+
+function applySupplements(target, entries) {
+  const applied = []
+  for (const [path, value] of Object.entries(entries)) {
+    const segments = path.split('.')
+    let cursor = target
+    for (const segment of segments.slice(0, -1)) {
+      if (!cursor || typeof cursor !== 'object' || !(segment in cursor)) throw new Error(`补译路径不存在：${path}`)
+      cursor = cursor[segment]
+    }
+    const key = segments.at(-1)
+    if (!cursor || typeof cursor !== 'object' || !(key in cursor)) throw new Error(`补译路径不存在：${path}`)
+    if (!Array.isArray(value) || !value.length
+      || value.some(paragraph => typeof paragraph !== 'string' || !paragraph.trim() || !/[\u3400-\u9fff]/.test(paragraph))) {
+      throw new Error(`补译内容必须是中文段落数组：${path}`)
+    }
+    if (value.some(paragraph => /\b[a-z]{4,}\s+[a-z]{3,}\s+[a-z]{3,}\b/i.test(paragraph))) throw new Error(`补译内容仍含英文句子：${path}`)
+    const paragraphs = value.map(paragraph => paragraph.trim())
+    // 结局/尾声补译段首同样去掉「结局 N：」标签，避免 UI 标题与正文重复。
+    if (/(?:^|\.)resolutions(?:\.|$)/.test(path) && paragraphs.length) {
+      paragraphs[0] = stripResolutionLabel(paragraphs[0])
+    }
+    cursor[key] = paragraphs
+    applied.push(path)
+  }
+  return applied
+}
+
+const supplementApplied = applySupplements(story, supplements.entries || {})
+story.supplements = [{
+  path: 'content/campaigns/theCircleUndone/story-supplements.json',
+  sha256: createHash('sha256').update(supplementRaw).digest('hex'),
+  entries: supplementApplied,
+}]
 
 // ---------------------------------------------------------------------------
 // 自检（契约 §2.7 验收；不通过就直接抛错，不写文件）

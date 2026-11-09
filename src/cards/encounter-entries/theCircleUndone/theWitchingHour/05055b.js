@@ -10,8 +10,6 @@ export default {
       const list = state.scenarioZones?.setAside || []
       const index = list.indexOf('05057')
       if (index >= 0) list.splice(index, 1)
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.anetteSpawned = true
       const enemy = api.spawn?.('05057', location.id)
       api.info?.(`🌒 「女巫圆环」显现：安妮特·梅森在圆环中央现身${enemy ? '' : '（生成失败）'}。`)
       return true

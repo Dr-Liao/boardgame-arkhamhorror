@@ -523,16 +523,22 @@ function triggerReaction(state, seat, when, events, context = {}, options={}) {
 function fastHandPlays(state, inv, opts = {}) {
   const helpers = playConditionHelpers(state)
   return legalMoves({ ...state, currentSeat: inv.seat })
-    .filter(move => move.action === 'play' && move.cardId && !move.copyCode
-      && ((opts.fastCards && inv.seat === state.currentSeat) || registeredEntry(move.cardId)?.betweenActionsAnyTurn
-        || move.fastSourceId
-        || (!quickEventView(move.cardId) && (registeredEntry(move.cardId)?.fast
-          || registeredEntry(move.cardId)?.abilities.some(descriptor => descriptor.kind === 'played' && descriptor.fast))))
-      && (inv.hand.includes(move.cardId) || playChannels.isChannelMove(move))
-      && actionCost(state, inv, move) === 0
+    .filter(move => {
+      if (move.action !== 'play' || !move.cardId || move.copyCode) return false
+      if (!(inv.hand.includes(move.cardId) || playChannels.isChannelMove(move))) return false
+      if (actionCost(state, inv, move) !== 0) return false
       // legalMoves 只做「区域/类型/费用」级筛选，打出条件由 validateMove 读；
       // 窗口里的快速卡必须同样过一遍，否则会绕过「只能在你回合期间打出」这类限制。
-      && !playConditionError(state, inv, move.cardId, helpers))
+      if (playConditionError(state, inv, move.cardId, helpers)) return false
+      const entry = registeredEntry(move.cardId)
+      // 05156「反应灵敏」：快速。在任意调查员的回合期间（不含行动期间）打出。
+      // 引擎只在「行动之间」的玩家窗口传 betweenActions 标记；不能在技能检定/神话/敌人/维持窗口提供。
+      if (entry?.betweenActionsAnyTurn) return opts.betweenActions === true
+      if (opts.fastCards && inv.seat === state.currentSeat) return true
+      if (move.fastSourceId) return true
+      return !quickEventView(move.cardId) && (entry?.fast
+        || entry?.abilities.some(descriptor => descriptor.kind === 'played' && descriptor.fast))
+    })
     .map(move => ({ move, entry: playChannels.entryOf(state, inv, move) }))
 }
 

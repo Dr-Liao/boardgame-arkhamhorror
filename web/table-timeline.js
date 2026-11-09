@@ -10,6 +10,16 @@ function timelineDetail(event) {
   const detail = presentation.text.trim()
   return detail && !event.text.includes(detail) ? detail : ''
 }
+// 非攻击来源的自身伤害/恐惧：引擎 applyHarm 会发一条 kind:'harm' 的纯展示 cue
+// （攻击伤害已有 attack / enemyHarm 演出与文字）。时间线把它补成一行数字。
+function harmCueText(event) {
+  const name = event.name || t('table.investigator')
+  const damage = Number(event.damage) || 0
+  const horror = Number(event.horror) || 0
+  if (damage > 0 && horror > 0) return t('table.timeline.harmBoth', { name, damage, horror })
+  if (damage > 0) return t('table.timeline.harmDamage', { name, damage })
+  return t('table.timeline.harmHorror', { name, horror })
+}
 export function timelineEntries(session) {
   const entries = []
   for (const event of session.events || []) {
@@ -18,6 +28,7 @@ export function timelineEntries(session) {
       entries.push({ id: event.seq, text: detail ? `${event.text} ${detail}` : event.text, phase: event.presentation?.phase })
     }
     else if (event.type === 'presentation' && event.kind === 'chaos') entries.push({ id: event.seq, text: t('table.timeline.chaos', { name: event.name || t('table.investigator'), token: symbolToken(event.token) }) })
+    else if (event.type === 'presentation' && event.kind === 'harm') entries.push({ id: event.seq, text: harmCueText(event) })
     else if (event.type === 'presentation' && event.kind === 'test') entries.push({ id: event.seq, text: t('table.timeline.test', {
       name: event.name || t('table.investigator'),
       source: event.source?.name || t('table.test.generic'),

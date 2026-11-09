@@ -8,5 +8,4 @@ export default {
   code: '05178j',
   scope: 'storyAsset',
   implemented: true,
-  flags: { storyRule: 'unfinishedBusinessImmediate' },
 }

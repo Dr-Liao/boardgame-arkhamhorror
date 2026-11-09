@@ -15,8 +15,8 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'salemIntellect') return false
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.salemUsedBySeat = { ...(state.scenarioFlags.salemUsedBySeat || {}), [inv.seat]: true }
+      const usedBySeat = { ...(api.scenarioFlag?.('salemUsedBySeat') || {}), [inv.seat]: true }
+      api.setScenarioFlag?.('salemUsedBySeat', usedBySeat)
       api.test?.(inv.seat, 'intellect', 3, result => {
         if (!result?.success) return
         const revealed = state.locations.filter(entry => entry.revealed && entry.id !== inv.location)

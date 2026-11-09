@@ -1,0 +1,2742 @@
+{
+  "generatedAt": "2026-11-09",
+  "title": "全战役剧情 / 冒险指南 / 关卡设置文本中文审计",
+  "method": "静态提取 + 机械候选 + 人工复核；扫描器见 docs/translate/tools/scan-*.mjs，原始候选见 docs/translate/scan/*.json",
+  "scope": {
+    "campaigns": 8,
+    "scenarios": 62,
+    "storyUnits": 3499,
+    "guideFiles": 62,
+    "guideZhBlocks": 1933,
+    "setupScenarios": 62,
+    "excluded": [
+      "5,930 张卡面文本",
+      "规则书文本",
+      "交互按钮/技能检定提示",
+      "记录标签 UI",
+      "卡牌图内文字"
+    ]
+  },
+  "summary": {
+    "findings": 36,
+    "byCategory": {
+      "missing-translation": 6,
+      "segmentation": 2,
+      "symbol-format": 10,
+      "mixed-language": 3,
+      "marker-leak": 1,
+      "coverage": 6,
+      "terminology": 3,
+      "format": 2,
+      "vague": 1,
+      "structure": 2
+    },
+    "bySeverity": {
+      "high": 10,
+      "medium": 15,
+      "low": 11
+    },
+    "occurrencesByArea": {
+      "story": 467,
+      "guides": 618,
+      "setup": 34,
+      "crosscut": 19
+    }
+  },
+  "findings": [
+    {
+      "id": "story-0001",
+      "area": "story",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "《失落的时代》久远腹地（上/下）导入与结局整段仍是英文原文（故事导入直接显示 Intro 1: / Resolution 1: 英文）",
+      "count": {
+        "occurrences": 12,
+        "groups": 12
+      },
+      "campaigns": [
+        "theForgottenAge"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 146,
+          "pointer": "introductions.heartOfTheEldersPart1.sections.intro1.0",
+          "scenario": null,
+          "evidence": "Intro 1: It has been several days since your party ventured forth into the rainforest once more, and each day, the hazards you face grow more dangerous and freq"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 147,
+          "pointer": "introductions.heartOfTheEldersPart1.sections.intro1.1",
+          "scenario": null,
+          "evidence": "On the morning of the sixth day, you find the entrance. It is a huge cave opening, partially obscured by trees, brush, and vines. You nearly missed the great ca"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 150,
+          "pointer": "introductions.heartOfTheEldersPart1.sections.intro2.0",
+          "scenario": null,
+          "evidence": "Intro 2: “The entrance is warded against intruders,” Ichtaca says cryptically, her eyes closed as though probing the cavern with unnatural senses. “These pillar"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 153,
+          "pointer": "introductions.heartOfTheEldersPart1.sections.intro3.0",
+          "scenario": null,
+          "evidence": "Intro 3: Alejandro examines each of the pillars studiously. “It is a lock of some sort. Look here, see? The grooves do not line up perfectly.” He twists one of "
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 156,
+          "pointer": "introductions.heartOfTheEldersPart1.sections.intro4.0",
+          "scenario": null,
+          "evidence": "Intro 4: The previous expedition’s journal doesn’t have all the answers, but as you browse its pages, you are struck by a familiar diagram—one drawn by Lorenzo,"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 369,
+          "pointer": "resolutions.heartOfTheEldersPart1.noResolution.0",
+          "scenario": null,
+          "evidence": "If no resolution was reached (each investigator resigned or was defeated): The hazards of the jungle are too dangerous for you to continue exploring. If you rem"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 372,
+          "pointer": "resolutions.heartOfTheEldersPart1.r1.0",
+          "scenario": null,
+          "evidence": "Resolution 1: Swallowing your fear, you enter the cavern…"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 375,
+          "pointer": "resolutions.heartOfTheEldersPart1.r2.0",
+          "scenario": null,
+          "evidence": "Resolution 2: You haven’t yet completed the puzzle of the six pillars that serve as the entrance to K’n-yan, but you don’t wish to tarry any further in this hos"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 380,
+          "pointer": "resolutions.heartOfTheEldersPart2.noResolution.0",
+          "scenario": null,
+          "evidence": "If no resolution was reached (each investigator was defeated): You awaken, lying on rough stone in a place much colder and deeper than before. You stand and tak"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 383,
+          "pointer": "resolutions.heartOfTheEldersPart2.r1.0",
+          "scenario": null,
+          "evidence": "Resolution 1: “Finally! Yoth, cavern of the serpents! The cursed ones, who fled the destruction of Valusia!” Alejandro examines the entryway with wonder in his "
+        }
+      ],
+      "evidence": "Intro 1: It has been several days since your party ventured forth into the rainforest once more, and each day, the hazards you face grow more dangerous and freq",
+      "expected": "使用随仓库保存的 `参考资源/.../locales/zh/theForgottenAge/scenarios/heartOfTheElders.json` 的 part1/part2 中文正文（该文件已有完整官方中文），并按段拆分；不要带 \"Intro N:\" / \"Resolution N:\" 英文标签。",
+      "suggestion": "改 `tools/import-tfa-story.mjs` 的来源选择：heartOfTheEldersPart1/2 读 `heartOfTheElders.json` 的 part1/part2，而不是读 upstream 里未译的 `heartOfTheEldersPart1.json`（其 intro 仍是英文）；改完后 `node tools/import-tfa-story.mjs --write` 重生成 `content/campaigns/theForgottenAge/story-text.js`，并把 `tests/tfa-heart-of-the-elders-part1.test.mjs:816` 里 `assert.ok(bare.includes('Intro 1:'))` 改为断言中文正文。",
+      "sourceKind": "reference-zh-locale / untranslated-upstream-variant",
+      "rootCause": "import-tfa-story.mjs 按 scenarioId 读 `scenarios/<id>.json`；upstream 这几个 id 文件只译了 tokens/label，intro/resolutions 仍是英文；真正的中文在 `scenarios/heartOfTheElders.json` 的 part1/part2。"
+    },
+    {
+      "id": "story-0002",
+      "area": "story",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "《万象无终》6 段导入/结局正文仍是英文（含 unionAndDisillusion 的 Additional Intro 与 4 个结局分支）",
+      "count": {
+        "occurrences": 11,
+        "groups": 11
+      },
+      "campaigns": [
+        "theCircleUndone"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 449,
+          "pointer": "resolutions.theWitchingHour.resolution5.0",
+          "scenario": null,
+          "evidence": "You watch as Anette"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 496,
+          "pointer": "resolutions.theWagesOfSin.r3.0",
+          "scenario": null,
+          "evidence": "As you depart Hangman’s Hill"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 574,
+          "pointer": "resolutions.unionAndDisillusion.r9.0",
+          "scenario": null,
+          "evidence": "You step forward and meet Keziah’s gaze"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 578,
+          "pointer": "resolutions.unionAndDisillusion.r10.0",
+          "scenario": null,
+          "evidence": "You hate to admit it"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 633,
+          "pointer": "resolutions.beforeTheBlackThrone.r6.0",
+          "scenario": null,
+          "evidence": "This is it"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 375,
+          "pointer": "introductions.unionAndDisillusion.sections.additionalIntro.0",
+          "scenario": null,
+          "evidence": "Additional Intro: Erynn considers your words carefully as you tell her that you intend to side with her coven and help them stop the Lodge’s ritual despite what"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 450,
+          "pointer": "resolutions.theWitchingHour.resolution5.1",
+          "scenario": null,
+          "evidence": "With their spell complete, a dark gale snuffs out the fire at the center of the clearing. Shadows from behind the treeline suddenly twist and coil around the wi"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 451,
+          "pointer": "resolutions.theWitchingHour.resolution5.2",
+          "scenario": null,
+          "evidence": "The witch named Erynn lingers for a moment, peering into your eyes as though to discern your intent. “If you are true, meet me where our ancestors lie buried. T"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 575,
+          "pointer": "resolutions.unionAndDisillusion.r9.1",
+          "scenario": null,
+          "evidence": "Outmatched, Carl Sanford and the Lodge members flee into the woods, leaving you and the coven alone. One by one, you and your new allies each sign the Black Boo"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 579,
+          "pointer": "resolutions.unionAndDisillusion.r10.1",
+          "scenario": null,
+          "evidence": "Your escape is a blur. Witches and spirits chase you relentlessly through the forsaken woods. You are only barely able to make it back to the shore before they "
+        }
+      ],
+      "evidence": "You watch as Anette",
+      "expected": "按参考英文源逐段补译，保留「结局 N」标题（标题由 UI 生成，正文不要重复标签）；厄琳倒向女巫集会的 Additional Intro 只在调查员与女巫结盟时阅读，尤其不能漏。",
+      "suggestion": "在 `content/campaigns/theCircleUndone/story-text.js` 对应段落补译（上游 zh locale 缺这几段）；补译后重跑 `npm run import:tcu-story -- --check` 与 `npm run test:tcu:story`。",
+      "sourceKind": "reference-zh-locale gap"
+    },
+    {
+      "id": "story-0003",
+      "area": "story",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "《食梦者》3 个幕间选择节点的 prompt 仍是英文（选择面板直接显示英文问句）",
+      "count": {
+        "occurrences": 2,
+        "groups": 2
+      },
+      "campaigns": [
+        "theDreamEaters"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theDreamEaters/interludes.js",
+          "line": 628,
+          "pointer": "flow.nodes.interlude3.1.prompt",
+          "scenario": null,
+          "evidence": "What message should the black cat carry to your companions?"
+        },
+        {
+          "file": "content/campaigns/theDreamEaters/interludes.js",
+          "line": 57,
+          "pointer": "flow.nodes.interlude1.2.prompt",
+          "scenario": null,
+          "evidence": "What shall I tell your friends in the waking world?"
+        }
+      ],
+      "evidence": "What message should the black cat carry to your companions?",
+      "expected": "「我该对你清醒世界的朋友们说些什么呢？」/「黑猫该给你的同伴带什么口信？」等。",
+      "suggestion": "`content/campaigns/theDreamEaters/interludes.js` 的 INTERLUDE_ONE_DUAL / INTERLUDE_TWO / INTERLUDE_THREE 节点 prompt 是硬编码英文；改成从 story-text 的 label/标题取中文（或补 `promptKey` 走 TDE_STORY_KEYS 本地化）。",
+      "sourceKind": "repo-authored"
+    },
+    {
+      "id": "story-0004",
+      "area": "story",
+      "category": "segmentation",
+      "severity": "high",
+      "title": "《印斯茅斯暗潮》8 关故事导入与部分结局在「调查纪事」中丢失分段（多段 HTML 被 textBlocks() 折成单个 <p>）",
+      "count": {
+        "occurrences": 21,
+        "groups": 21
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1036,
+          "pointer": "scenarios.thePitOfDespair.intro.body",
+          "scenario": null,
+          "evidence": "<p>你挣扎著睁开双眼，疲惫得彷佛已经沉睡数日。你的知觉还未完全恢复。你眨眨眼，拼命想看清身边的一团墨黑。你身上每一寸都传来阵阵钝痛。你的皮肤冰冷麻木，衣服湿湿漉漉。你的脑海里回荡著四分五裂的思绪和支离破碎的记忆。你不知道自己是谁，也不明白自己为何会在这儿。</p><p>你猛地回过神来，胸膛里心脏狂跳。你躺在参差的石地"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1102,
+          "pointer": "scenarios.theVanishingOfElinaHarper.intro1.body",
+          "scenario": null,
+          "evidence": "<header><p>1927年，8月17日，周三</p><p>五周前。</p></header><p>“醒醒！他妈的！”道森特工用右手把你摇醒。你坐在一辆一等一的崭新轿车里，穿行于马萨诸塞州烟雾朦胧的乡间小道。月光洒下来，把锃光发亮的车子照得熠熠生辉。“我们就要到了。”道森告诉你。其实你更想坐火车来此，但不幸的是，并"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1107,
+          "pointer": "scenarios.theVanishingOfElinaHarper.intro2.body",
+          "scenario": null,
+          "evidence": "<p>萨金特最后问你来印斯茅斯干什么。你闪烁其词，转而描述了一番哈珀特工的特征，问他在村里有没有见过相仿的人。他顿住了，摇了摇头。“从没见过。”他嘟囔著躲开了你的眼神。</p><p>这天接下来的时候你都在研究村子的布局，徒劳无功地试图和当地人对话。你在这座诡异肮脏的村子里每多待一分，就越觉得自己不该接下道森特工的案子。"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1179,
+          "pointer": "scenarios.inTooDeep.intro.body",
+          "scenario": null,
+          "evidence": "<p>你沿著海岸朝印斯茅斯渔村前进的时候，海平面还在不断上升。远处的地平线上日月齐列，预示著凶险而不确定的未来。</p><p>你还记得村子的布局，以及刚来几天遇到的一些陌生面庞，但在那之后，从水漫金山的深坑里醒来之前的一段事情，完全是一片空白。哈珀特工试图帮你回想，但你的记忆中实在有太多缺失，每种解释都只是加剧了你的困"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1200,
+          "pointer": "scenarios.inTooDeep.resolutions.noResolution.body",
+          "scenario": null,
+          "evidence": "<p><b>如果你未达成任何结局（所有调查员都被击败）：</b> 你逃出印斯茅斯的路上充满了危险。步步惊心。每条街道上都有骇人的怪物，它们的眼睛一眨不眨，搜寻任何活人的迹象。街上一片诡异的沉默。唯独间或有可怜人被这些邪物抓住时发出的惨叫会打破这片宁静。你竭力尽快穿越了村镇，但它们还是在后面紧紧相随。跟著你的每一步移动。"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1204,
+          "pointer": "scenarios.inTooDeep.resolutions.resolution1.body",
+          "scenario": null,
+          "evidence": "<p><b>结局1：</b>你冲到了安全之处，终于逃出了这个地狱一般的地方，你十分高兴。但就在你爬上载具的时候，你不禁犹豫了起来。你扭头朝著哈珀特工，她立刻看懂了你的表情。</p><p>你现在知道自己受雇来营救她，但事情已经出了岔子。你和道森特工被人擒获，而他已经被献祭给了那个潮水洞窟里的……东西。现在你和哈珀特工都已"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1102,
+          "pointer": "scenarios.devilReef.intro1.body",
+          "scenario": null,
+          "evidence": "<header><p>1927年，9月2日，星期五。</p><p>三周前</p></header><p><b>导言 1:</b> 船只的引擎声将你叫醒。“都还好吗？”船长吼道，“你看上去跟鬼一样的。脸白的跟纸一样的，你啊。”</p><p>你转过来朝著头发花白的老人。你在印斯茅斯只能找到摩尔船长还肯载你了。无论是诅咒还是"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1285,
+          "pointer": "scenarios.devilReef.intro2.body",
+          "scenario": null,
+          "evidence": "<p><b>导言 2:</b> 道森特工最后一个上船。他得意地穿著一件厚外套，肩膀上拖著一把霰弹枪。“哈珀特工藏了一些额外的武器。”他解释道，“考虑到那些流言，我估摸著，带上可没什么坏处。”</p><p>你知道道森特工说的“流言”指的是什么：怕是有某种邪恶的海洋生物萦绕著——或者说感染了魔鬼礁石。印斯茅斯的水手提过礁石"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1289,
+          "pointer": "scenarios.devilReef.intro3.body",
+          "scenario": null,
+          "evidence": "<p><b>导言 3:</b> 道森特工最后一个上船。他疲惫的双眼下挂著沉重的眼袋。“我们的线索都断了。”他颓唐地说道，“无论哈珀特工现在在哪，我们都找不到了。”</p><p>你试著安慰道森特工，提醒他你们为何要来调查魔鬼礁石。流言说有某种邪恶的海洋生物萦绕著——或者说感染了魔鬼礁石。印斯茅斯的水手提过礁石洞穴内外匍匐"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1306,
+          "pointer": "scenarios.devilReef.resolutions.resolution1.body",
+          "scenario": null,
+          "evidence": "<p><b>结局 1：</b> 天色渐暗，海水吞没了印斯茅斯海岸的数个岛礁，你决定带著自己的发现回到港口。“找到你要的了吗？”一安全抵达海岸，摩尔船长就问道。</p><p>说实话，你并不确定。你的发现非常惊人。魔鬼礁石的洞穴和潮道不仅藏著达贡密教的遗物，还有一大群诡异的生物：鱼、人和怪物之间的混血。你或许得以身免，但你"
+        }
+      ],
+      "evidence": "HTML 内含 4 个 <p>，textBlocks() 折成单段",
+      "expected": "一章导入/结局按原文 `<p>` / `</p>` 拆成多个段落数组元素，故事日志逐段渲染；不要靠 `\\n\\n` 留在同一个字符串里。",
+      "suggestion": "`content/campaigns/theInnsmouthConspiracy/chapter-definition.js#textBlocks()` 对字符串返回 `[整串]`，导致 `introduction.js`/`resolutions.js#journal()` 的 paragraphs 只有一个元素。改为按 `</p>`/`<li>` 切分成数组（flashbacks.js#story() 已按段落转换，可复用同一转换函数），或让 story-reader 对含 `\\n\\n` 的段落再分段。",
+      "sourceKind": "repo-authored display chain",
+      "rootCause": "textBlocks 只做标签剥离、不按块切段；story-reader 每个数组元素渲染成一个 <p>，单段内的换行被 HTML 折叠。"
+    },
+    {
+      "id": "story-0005",
+      "area": "story",
+      "category": "symbol-format",
+      "severity": "high",
+      "title": "《印斯茅斯暗潮》闪现记忆正文泄漏 i18next ICU 转义：玩家看到 `{'{'}cultist{'}'}` 而不是混乱标记图标",
+      "count": {
+        "occurrences": 13,
+        "groups": 6
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1044,
+          "pointer": "scenarios.thePitOfDespair.flashback2.body",
+          "scenario": null,
+          "evidence": "{'{'}cultist{'}'}"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1048,
+          "pointer": "scenarios.thePitOfDespair.flashback3.body",
+          "scenario": null,
+          "evidence": "{'{'}tablet{'}'}"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1052,
+          "pointer": "scenarios.thePitOfDespair.flashback4.body",
+          "scenario": null,
+          "evidence": "{'{'}elderThing{'}'}"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1044,
+          "pointer": "scenarios.inTooDeep.flashback8.body",
+          "scenario": null,
+          "evidence": "{'{'}cultist{'}'}"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1044,
+          "pointer": "scenarios.aLightInTheFog.flashback12.body",
+          "scenario": null,
+          "evidence": "{'{'}cultist{'}'}"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1044,
+          "pointer": "scenarios.aLightInTheFog.flashback13.body",
+          "scenario": null,
+          "evidence": "{'{'}cultist{'}'}"
+        }
+      ],
+      "evidence": "{'{'}cultist{'}'}",
+      "expected": "`[cultist]` / `[tablet]` / `[elder_thing]` / `[bless]` 等图标记号，由展示层渲染成符号。",
+      "suggestion": "`flashbacks.js#story()`（以及任何直接展示 STORY_TEXT 正文的路径）在 HTML→纯文本时补 `{'{'}x{'}'}` → `[x]` 还原（与 `tools/import-scenario-guides.mjs#guideText` 已有替换同口径）；或先在 import-tic-story 生成物里还原。",
+      "sourceKind": "upstream-zh-locale escape residual"
+    },
+    {
+      "id": "story-0006",
+      "area": "story",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "《印斯茅斯暗潮》闪现记忆正文保留 Markdown 星号强调（`*与托马斯·道森会面*` 原样显示）",
+      "count": {
+        "occurrences": 18,
+        "groups": 15
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1040,
+          "pointer": "scenarios.thePitOfDespair.flashback1.body",
+          "scenario": null,
+          "evidence": "*与托马斯·道森会面*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1044,
+          "pointer": "scenarios.thePitOfDespair.flashback2.body",
+          "scenario": null,
+          "evidence": "*与骇人恶魔交战*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1048,
+          "pointer": "scenarios.thePitOfDespair.flashback3.body",
+          "scenario": null,
+          "evidence": "*决定共同行动*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1052,
+          "pointer": "scenarios.thePitOfDespair.flashback4.body",
+          "scenario": null,
+          "evidence": "*遭遇秘密教团*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1183,
+          "pointer": "scenarios.inTooDeep.flashback5.body",
+          "scenario": null,
+          "evidence": "*与乔·萨金特的交易*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1187,
+          "pointer": "scenarios.inTooDeep.flashback6.body",
+          "scenario": null,
+          "evidence": "*追查一条线索*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1191,
+          "pointer": "scenarios.inTooDeep.flashback7.body",
+          "scenario": null,
+          "evidence": "*一次干预*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1195,
+          "pointer": "scenarios.inTooDeep.flashback8.body",
+          "scenario": null,
+          "evidence": "*一次越狱*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1293,
+          "pointer": "scenarios.devilReef.flashback9.body",
+          "scenario": null,
+          "evidence": "*发现一尊奇怪的神像。*"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1297,
+          "pointer": "scenarios.devilReef.flashback10.body",
+          "scenario": null,
+          "evidence": "*发现一件不洁的斗篷。*"
+        }
+      ],
+      "evidence": "*与托马斯·道森会面*",
+      "expected": "「在战役日志的“已恢复的记忆”下记录与托马斯·道森会面」——去掉 `*`，或改成「」书名号/加粗语义。",
+      "suggestion": "flashbacks.js#story() 的 HTML→纯文本链补 `*…*`/`_…_` 剥离（TDE/TIC 正文统一无 Markdown 是既定口径）；生成器 import-tic-story 侧同步清理。",
+      "sourceKind": "upstream-zh-locale markdown residual"
+    },
+    {
+      "id": "story-0007",
+      "area": "story",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "《失落的时代》幕间三/四用花括号 {cultist}/{skull}/{tablet} 写混乱标记，故事日志原样显示花括号",
+      "count": {
+        "occurrences": 16,
+        "groups": 10
+      },
+      "campaigns": [
+        "theForgottenAge"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 566,
+          "pointer": "interludes.interludeThree.sections.cultistCount.0",
+          "scenario": null,
+          "evidence": "{cultist}"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 587,
+          "pointer": "interludes.interludeFour.sections.checkProcess.noIllEffects.0",
+          "scenario": null,
+          "evidence": "{elderSign}"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 590,
+          "pointer": "interludes.interludeFour.sections.checkProcess.outOfBodyExperience.0",
+          "scenario": null,
+          "evidence": "{skull}"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 593,
+          "pointer": "interludes.interludeFour.sections.checkProcess.bodyOfAYithian.0",
+          "scenario": null,
+          "evidence": "{cultist}"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 599,
+          "pointer": "interludes.interludeFour.sections.checkAMindRecovered.tabletCount.0",
+          "scenario": null,
+          "evidence": "{tablet}"
+        }
+      ],
+      "evidence": "{cultist}",
+      "expected": "卡面记号统一用方括号 `[cultist]`/`[skull]`/`[tablet]`/`[elder_sign]`（`web/card-text.js#SYMBOLS` 只识别方括号）。",
+      "suggestion": "在 `tools/import-tfa-story.mjs#clean` 把 `{token}` 转成 `[token]`（elderSign→elder_sign），重生成 story-text；`supplies.choose` 的 `{pointsRemaining}` 由 campaign-effects 替换，不在此列。",
+      "sourceKind": "reference-zh-locale token format"
+    },
+    {
+      "id": "story-0008",
+      "area": "story",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "《万象无终》隐秘之名 intro3Mystic 首段泄漏 `({mystic})` 花括号职阶记号",
+      "count": {
+        "occurrences": 1,
+        "groups": 1
+      },
+      "campaigns": [
+        "theCircleUndone"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 290,
+          "pointer": "introductions.theSecretName.sections.intro3Mystic.0",
+          "scenario": null,
+          "evidence": "{mystic}"
+        }
+      ],
+      "evidence": "{mystic}",
+      "expected": "「（潜修者）：…」或去掉前缀——参考 en 里是职业条件标记，不应把 `{mystic}` 原样展示。",
+      "suggestion": "在 story-text 该段去掉 `({mystic})` 前缀（投影层本就知道是否有潜修者才读这一段），或改为 `[mystic]`。",
+      "sourceKind": "reference-zh-locale residual"
+    },
+    {
+      "id": "story-0009",
+      "area": "story",
+      "category": "segmentation",
+      "severity": "medium",
+      "title": "结局正文段首重复「结局 N：」标签：标题已由 UI 生成，正文又从头念一遍（TCU 36 / TDE 39 / 敦威治 17 / TIC 15 处）",
+      "count": {
+        "occurrences": 107,
+        "groups": 107
+      },
+      "campaigns": [
+        "theCircleUndone",
+        "theDreamEaters",
+        "theDunwichLegacy",
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 422,
+          "pointer": "resolutions.theWitchingHour.resolution1.0",
+          "scenario": null,
+          "evidence": "结局 1:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 430,
+          "pointer": "resolutions.theWitchingHour.resolution2.0",
+          "scenario": null,
+          "evidence": "结局 2:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 441,
+          "pointer": "resolutions.theWitchingHour.resolution3.0",
+          "scenario": null,
+          "evidence": "结局 3:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 445,
+          "pointer": "resolutions.theWitchingHour.resolution4.0",
+          "scenario": null,
+          "evidence": "结局 4:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 449,
+          "pointer": "resolutions.theWitchingHour.resolution5.0",
+          "scenario": null,
+          "evidence": "结局 5:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 461,
+          "pointer": "resolutions.atDeathsDoorstep.r1.0",
+          "scenario": null,
+          "evidence": "结局 1:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 464,
+          "pointer": "resolutions.atDeathsDoorstep.r2.0",
+          "scenario": null,
+          "evidence": "结局 2:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 467,
+          "pointer": "resolutions.atDeathsDoorstep.r3.0",
+          "scenario": null,
+          "evidence": "结局 3:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 475,
+          "pointer": "resolutions.theSecretName.resolution1.0",
+          "scenario": null,
+          "evidence": "结局 1:"
+        },
+        {
+          "file": "content/campaigns/theCircleUndone/story-text.js",
+          "line": 478,
+          "pointer": "resolutions.theSecretName.resolution2.0",
+          "scenario": null,
+          "evidence": "结局 2:"
+        }
+      ],
+      "evidence": "结局 1:",
+      "expected": "结局面板小标题显示「结局 N」，正文直接从叙事开始；正文不要带「结局 N：「」前缀。EOTE 的 `story-access.js#resolutionText()` 已显式剥离该前缀，可作为口径参考。",
+      "suggestion": "按战役修数据源：TCU/TDE/TIC/Dunwich 的 story-text 结局正文去掉段首标签（生成器 import-*-story 统一 `^结局\\s*\\d*[：:]\\s*` 剥离）；TDE 另有 16 段尾声 localeKeys 正文以「尾声 N：」开头，同样剥离。",
+      "sourceKind": "reference-zh-locale + self-translated",
+      "rootCause": "上游中文来源把「Resolution N:」标题内联进正文；各战役生成器只做 `_`/`*` 清理，没有剥离开头标签。"
+    },
+    {
+      "id": "story-0010",
+      "area": "story",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "结局正文段首是英文「Resolution N:」标签（敦威治 5 处、失落的时代 4 处、地球边缘 1 处），中文段落里夹英文标签",
+      "count": {
+        "occurrences": 10,
+        "groups": 10
+      },
+      "campaigns": [
+        "edgeOfTheEarth",
+        "theDunwichLegacy",
+        "theForgottenAge"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3673,
+          "pointer": "chapters.theHeartOfMadnessPart1.sections.resolutions.resolution3.body",
+          "scenario": null,
+          "evidence": "Resolution 3:"
+        },
+        {
+          "file": "content/campaigns/theDunwichLegacy/story-text.js",
+          "line": 284,
+          "pointer": "resolutions.undimensionedAndUnseen.r1.0",
+          "scenario": null,
+          "evidence": "Resolution 1:"
+        },
+        {
+          "file": "content/campaigns/theDunwichLegacy/story-text.js",
+          "line": 291,
+          "pointer": "resolutions.undimensionedAndUnseen.r2.0",
+          "scenario": null,
+          "evidence": "Resolution 2:"
+        },
+        {
+          "file": "content/campaigns/theDunwichLegacy/story-text.js",
+          "line": 291,
+          "pointer": "resolutions.lostInTimeAndSpace.r2.0",
+          "scenario": null,
+          "evidence": "Resolution 2:"
+        },
+        {
+          "file": "content/campaigns/theDunwichLegacy/story-text.js",
+          "line": 341,
+          "pointer": "resolutions.lostInTimeAndSpace.r3.0",
+          "scenario": null,
+          "evidence": "Resolution 3:"
+        },
+        {
+          "file": "content/campaigns/theDunwichLegacy/story-text.js",
+          "line": 347,
+          "pointer": "resolutions.lostInTimeAndSpace.r4.0",
+          "scenario": null,
+          "evidence": "Resolution 4:"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 280,
+          "pointer": "resolutions.heartOfTheEldersPart1.r1.0",
+          "scenario": null,
+          "evidence": "Resolution 1:"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 280,
+          "pointer": "resolutions.heartOfTheEldersPart1.r2.0",
+          "scenario": null,
+          "evidence": "Resolution 2:"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 280,
+          "pointer": "resolutions.heartOfTheEldersPart2.r1.0",
+          "scenario": null,
+          "evidence": "Resolution 1:"
+        },
+        {
+          "file": "content/campaigns/theForgottenAge/story-text.js",
+          "line": 280,
+          "pointer": "resolutions.heartOfTheEldersPart2.r2.0",
+          "scenario": null,
+          "evidence": "Resolution 2:"
+        }
+      ],
+      "evidence": "Resolution 3:",
+      "expected": "去掉标签（标题由 UI 生成）；若保留分节语义则写「结局 N」。",
+      "suggestion": "在对应生成器（import-dunwich-story / import-tfa-story / EOTE 生成链）统一剥离/翻译段首标签；同时把「结局标题」补进指南结构，避免中文靠正文标签区分分支。",
+      "sourceKind": "reference-zh-locale / upstream mix"
+    },
+    {
+      "id": "story-0011",
+      "area": "story",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "《地球边缘》残留英文标签与短句（\"Resolution 3:\" / \"Intro 3:\" 等），EOTE 翻译修复批次未清干净",
+      "count": {
+        "occurrences": 9,
+        "groups": 9
+      },
+      "campaigns": [
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3673,
+          "pointer": "chapters.theHeartOfMadnessPart1.sections.resolutions.resolution3.body",
+          "scenario": null,
+          "evidence": "Resolution 3:"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3673,
+          "pointer": "chapters.theHeartOfMadnessPart1.resolutions.resolution3.text",
+          "scenario": null,
+          "evidence": "Resolution 3:"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3958,
+          "pointer": "chapters.theHeartOfMadnessPart2.sections.intro3.body",
+          "scenario": null,
+          "evidence": "Intro 3:"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1061,
+          "pointer": "epilogue.sections.1.title",
+          "scenario": null,
+          "evidence": "epilogue.ellsworthAndClaypool"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1068,
+          "pointer": "epilogue.sections.2.title",
+          "scenario": null,
+          "evidence": "epilogue.kenslerAndSinha"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1075,
+          "pointer": "epilogue.sections.3.title",
+          "scenario": null,
+          "evidence": "epilogue.dyerAndDanforth"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1082,
+          "pointer": "epilogue.sections.4.title",
+          "scenario": null,
+          "evidence": "epilogue.takadaAndCookie"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1089,
+          "pointer": "epilogue.sections.5.title",
+          "scenario": null,
+          "evidence": "epilogue.ashevak"
+        }
+      ],
+      "evidence": "Resolution 3:",
+      "expected": "标题层已显示「结局 3」「引言 3」，正文段首不应再有英文标签；EOTE 的 story-text 应有纯中文正文。",
+      "suggestion": "在 `content/campaigns/edgeOfTheEarth/story-text.js` 的 zh 叶子里剥离 `Resolution N:` / `Intro N:` / `Scenario I:` 前缀，重跑 `node tools/import-eote-story.mjs --check`；核查为什么这批未进入既有 chineseGaps（可能是补译层手工写入时带入）。",
+      "sourceKind": "generated / locale-supplement"
+    },
+    {
+      "id": "story-0012",
+      "area": "story",
+      "category": "marker-leak",
+      "severity": "medium",
+      "title": "《地球边缘》5 处 `[count]` 占位符残留（label / specialRules），当前实现没有替换点，一旦渲染就是字面量",
+      "count": {
+        "occurrences": 5,
+        "groups": 5
+      },
+      "campaigns": [
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1666,
+          "pointer": "campaign.records.labels.entries.14.body",
+          "scenario": null,
+          "evidence": "[count]"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1834,
+          "pointer": "campaign.records.labels.entries.38.body",
+          "scenario": null,
+          "evidence": "[count]"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 2997,
+          "pointer": "chapters.toTheForbiddenPeaks.sections.hypothermia.label.takeHorror",
+          "scenario": null,
+          "evidence": "[count]"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3002,
+          "pointer": "chapters.toTheForbiddenPeaks.sections.label.eachInvestigatorSuffersPhysicalTrauma",
+          "scenario": null,
+          "evidence": "[count]"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3003,
+          "pointer": "chapters.toTheForbiddenPeaks.sections.label.eachInvestigatorSuffersMentalTrauma",
+          "scenario": null,
+          "evidence": "[count]"
+        }
+      ],
+      "evidence": "[count]",
+      "expected": "占位符由消费端替换成实际数字，或直接改写为「若干/等同于…」的正文；不能把 `[count]` 暴露给玩家。",
+      "suggestion": "`content/campaigns/edgeOfTheEarth/story-text.js`（以及 locale-supplement 源）把 `{count}` 改写为可读文本，或在 story-access/record label 渲染处实现替换；同时巡检 `[shelterValue]` 同类占位符（en 指南面板 3 处）。",
+      "sourceKind": "generated"
+    },
+    {
+      "id": "story-0013",
+      "area": "story",
+      "category": "coverage",
+      "severity": "medium",
+      "title": "《食梦者》英文回退源保留 60 条英文原文：当前 pendingTranslation 已全部为 false，不会进界面，但需要保留回归断言",
+      "count": {
+        "occurrences": 0,
+        "groups": 0
+      },
+      "campaigns": [],
+      "scenarios": [],
+      "samples": [],
+      "evidence": "",
+      "expected": "interludes.js / dual-story.js 的英文原文只作回退；一旦 story-text 缺键，UI 不得静默显示英文。",
+      "suggestion": "保留 `tests/tde-story.test.mjs` 的 `pendingTranslation === false` 断言；新增/改键时先补中文再重生成。",
+      "sourceKind": "locked-english-fallback",
+      "metrics": {
+        "englishFallbackSource": 60
+      }
+    },
+    {
+      "id": "story-0014",
+      "area": "story",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "简繁混用：剧情正文 155 段命中繁体用字，其中台湾译文「著」（应为「着」）约 320 处；卡面/规则书为简体「着」",
+      "count": {
+        "occurrences": 155,
+        "groups": 155
+      },
+      "campaigns": [
+        "edgeOfTheEarth",
+        "nightOfTheZealot",
+        "theCircleUndone",
+        "theDreamEaters",
+        "theDunwichLegacy",
+        "theInnsmouthConspiracy",
+        "thePathToCarcosa"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 740,
+          "pointer": "campaign.interludes.interlude2.entries.10.body",
+          "scenario": null,
+          "evidence": "污"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": null,
+          "pointer": "campaign.specialRules.entries.1.title",
+          "scenario": null,
+          "evidence": "霜"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1119,
+          "pointer": "campaign.specialRules.entries.1.body",
+          "scenario": null,
+          "evidence": "霜"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 1120,
+          "pointer": "campaign.specialRules.entries.1.text",
+          "scenario": null,
+          "evidence": "霜"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 2712,
+          "pointer": "chapters.fatalMirage.sections.cookieWasKilledInThePlaneCrash",
+          "scenario": null,
+          "evidence": "污"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 3970,
+          "pointer": "chapters.theHeartOfMadnessPart2.sections.resolutions.noResolution.body",
+          "scenario": null,
+          "evidence": "霜"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 4089,
+          "pointer": "chapters.theHeartOfMadnessPart2.resolutions.noResolution.text",
+          "scenario": null,
+          "evidence": "霜"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 740,
+          "pointer": "interludes.interlude2.sections.10.paragraphs.1",
+          "scenario": null,
+          "evidence": "污"
+        },
+        {
+          "file": "content/campaigns/nightOfTheZealot/story-text.js",
+          "line": 23,
+          "pointer": "theMidnightMasks.common.0",
+          "scenario": null,
+          "evidence": "著"
+        },
+        {
+          "file": "content/campaigns/nightOfTheZealot/story-text.js",
+          "line": 24,
+          "pointer": "theMidnightMasks.common.1",
+          "scenario": null,
+          "evidence": "著"
+        }
+      ],
+      "evidence": "污",
+      "expected": "剧情/指南与卡面/规则书统一简体用字（「着」），专名除外。",
+      "suggestion": "按战役批量替换（先处理 '著'→'着'，人工复核 著名/著作/土著/显著 等合法词）；来源是参考 zh locale 的台湾译文，EOTE 修复批次已示范过同类清理。",
+      "sourceKind": "upstream-zh-locale orthography",
+      "metrics": [
+        {
+          "campaign": "nightOfTheZealot",
+          "zhu": 10,
+          "traditional": 0
+        },
+        {
+          "campaign": "theDunwichLegacy",
+          "zhu": 27,
+          "traditional": 1
+        },
+        {
+          "campaign": "thePathToCarcosa",
+          "zhu": 0,
+          "traditional": 2
+        },
+        {
+          "campaign": "theCircleUndone",
+          "zhu": 118,
+          "traditional": 4
+        },
+        {
+          "campaign": "theDreamEaters",
+          "zhu": 0,
+          "traditional": 4
+        },
+        {
+          "campaign": "theInnsmouthConspiracy",
+          "zhu": 165,
+          "traditional": 4
+        },
+        {
+          "campaign": "edgeOfTheEarth",
+          "zhu": 0,
+          "traditional": 11
+        }
+      ]
+    },
+    {
+      "id": "story-0015",
+      "area": "story",
+      "category": "format",
+      "severity": "low",
+      "title": "剧情正文标点/排版机械问题：CJK 后接半角标点 28 处、引号不配对 42 处、中文前多余空格 11 处等",
+      "count": {
+        "occurrences": 87,
+        "groups": 84
+      },
+      "campaigns": [
+        "edgeOfTheEarth",
+        "nightOfTheZealot",
+        "theCircleUndone",
+        "theDunwichLegacy",
+        "theForgottenAge",
+        "theInnsmouthConspiracy",
+        "thePathToCarcosa"
+      ],
+      "scenarios": [],
+      "samples": [
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 240,
+          "pointer": "campaign.prologue.entries.3.body",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 241,
+          "pointer": "campaign.prologue.entries.3.text",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 509,
+          "pointer": "campaign.interludes.interlude1.entries.3.body",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 388,
+          "pointer": "campaign.interludes.interlude1.entries.3.text",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 2054,
+          "pointer": "chapters.iceAndDeathPart1.sections.intro.body",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 2053,
+          "pointer": "chapters.iceAndDeathPart1.intro",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 509,
+          "pointer": "interludes.interlude1.sections.3.paragraphs.1",
+          "scenario": null,
+          "evidence": " ”"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 247,
+          "pointer": "campaign.prologue.entries.4.body",
+          "scenario": null,
+          "evidence": "序幕 3：戴尔咬紧牙关，两颊发红。有那么一会儿，他看上去好像要用拳头猛锤你们之间的桌子，但经过片刻的考虑，他深吸一口气，摇了摇头。“看来在任何有理智的人眼中，都应该是这样。也许我不该将信仰寄托在科学界吧。当然，即使有这么多的证据，肯斯勒博士还是不会相信我的。”他沮丧地把桌上的几张照片推到一边。\n\n你解释说，艾米·肯斯勒"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 246,
+          "pointer": "campaign.prologue.entries.4.text",
+          "scenario": null,
+          "evidence": "序幕 3\n\n序幕 3：戴尔咬紧牙关，两颊发红。有那么一会儿，他看上去好像要用拳头猛锤你们之间的桌子，但经过片刻的考虑，他深吸一口气，摇了摇头。“看来在任何有理智的人眼中，都应该是这样。也许我不该将信仰寄托在科学界吧。当然，即使有这么多的证据，肯斯勒博士还是不会相信我的。”他沮丧地把桌上的几张照片推到一边。\n\n你解释说，"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/story-text.js",
+          "line": 275,
+          "pointer": "campaign.partnerIntros.entries.0.body",
+          "scenario": null,
+          "evidence": "站在通往菲奥多西亚号甲板的跳板前的，就是艾米·肯斯勒博士。作为米斯卡塔尼克大学的生物学教授，这位严肃的科学家十多年来一直是大学科学系的常驻成员。在你走近时，她甚至都没有抬头看你一眼，就在写字板上划掉了你的名字。“你能准时赶到，很好。这位埃尔斯沃思先生会把你的行李搬上去的。"
+        }
+      ],
+      "evidence": " ”",
+      "expected": "中文正文统一全角标点，引号成对，CJK 与标点之间不留空格。",
+      "suggestion": "按扫描候选逐条清理；多来自上游 zh locale，可在各 import-*-story 生成器统一做确定性替换。",
+      "sourceKind": "upstream-zh-locale punctuation"
+    },
+    {
+      "id": "story-0016",
+      "area": "story",
+      "category": "coverage",
+      "severity": "low",
+      "title": "剧情正文里的英文虚词残留多为「作品名引用」（如 Lovecraft 英文篇名），保留时需与中文引用格式统一",
+      "count": {
+        "occurrences": 0,
+        "groups": 0
+      },
+      "campaigns": [],
+      "scenarios": [],
+      "samples": [],
+      "evidence": "",
+      "expected": "同一类「作品引用」在剧情中的写法一致（中文译名 / 原文名并列）。",
+      "suggestion": "在战役故事文本层统一引文格式；不要求把作品名强行翻译。",
+      "sourceKind": "upstream-zh-locale",
+      "metrics": {
+        "note": "参考 story-0016 旧候选：flow prologue 引文里 The Dreams in the Witch House 属英文作品名，保留但建议加书名号并标注原文；TFA 用《超越时空之影》中文译名，两处风格不一致。"
+      }
+    },
+    {
+      "id": "guides-0001",
+      "area": "guides",
+      "category": "vague",
+      "severity": "high",
+      "title": "中文冒险指南成段丢失分支收尾/去向指引：17 关分支指令数显著少于英文（TDE《神居之所》22→5、TCU《聚合幻灭》16→6、TFA《命运之线》13→4 等）",
+      "count": {
+        "occurrences": 85,
+        "groups": 85
+      },
+      "campaigns": [
+        "theCircleUndone",
+        "thePathToCarcosa",
+        "edgeOfTheEarth",
+        "theDunwichLegacy",
+        "theForgottenAge",
+        "nightOfTheZealot",
+        "theDreamEaters"
+      ],
+      "scenarios": [
+        "atDeathsDoorstep",
+        "beforeTheBlackThrone",
+        "blackStarsRise",
+        "cityOfTheElderThings",
+        "disappearanceAtTheTwilightEstate",
+        "echoesOfThePast",
+        "extracurricularActivity",
+        "fatalMirage",
+        "forTheGreaterGood",
+        "iceAndDeathPart1",
+        "inTheClutchesOfChaos",
+        "shatteredAeons",
+        "theCityOfArchives",
+        "theDepthsOfYoth",
+        "theDoomOfEztli",
+        "theHeartOfMadnessPart2",
+        "theHouseAlwaysWins",
+        "theMidnightMasks",
+        "thePallidMask",
+        "theSecretName",
+        "theWagesOfSin",
+        "theWitchingHour",
+        "threadsOfFate",
+        "turnBackTime",
+        "unionAndDisillusion",
+        "whereTheGodsDwell"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": 162,
+          "pointer": "locales.zh.intro.0.children.3.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "As you prepare for the night ahead, you cannot help but wonder: Are you taking action to remedy your"
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": null,
+          "pointer": "locales.zh",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "en 分支指引 10 处 / zh 6 处"
+        },
+        {
+          "file": "web/scenario-guides/beforeTheBlackThrone.json",
+          "line": 269,
+          "pointer": "locales.zh.resolutions.0.children.4.children.0.text",
+          "scenario": "beforeTheBlackThrone",
+          "evidence": "Resolution 4: You have reached the nighted throne of Azathoth, but there is no easy way to reach the"
+        },
+        {
+          "file": "web/scenario-guides/beforeTheBlackThrone.json",
+          "line": null,
+          "pointer": "locales.zh",
+          "scenario": "beforeTheBlackThrone",
+          "evidence": "en 分支指引 7 处 / zh 4 处"
+        },
+        {
+          "file": "web/scenario-guides/blackStarsRise.json",
+          "line": null,
+          "pointer": "locales.zh",
+          "scenario": "blackStarsRise",
+          "evidence": "en 分支指引 4 处 / zh 2 处"
+        },
+        {
+          "file": "web/scenario-guides/cityOfTheElderThings.json",
+          "line": 583,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "cityOfTheElderThings",
+          "evidence": "If no resolution was reached (each investigator was defeated): Injured and weary, you hole up in the"
+        },
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": null,
+          "pointer": "locales.zh",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": "en 分支指引 8 处 / zh 5 处"
+        },
+        {
+          "file": "web/scenario-guides/echoesOfThePast.json",
+          "line": 185,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "echoesOfThePast",
+          "evidence": "If no resolution was reached (each investigator resigned or was defeated): You barely escape the bui"
+        },
+        {
+          "file": "web/scenario-guides/extracurricularActivity.json",
+          "line": 143,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "extracurricularActivity",
+          "evidence": "If no resolution was reached (each investigator resigned or was defeated): As you flee from the univ"
+        },
+        {
+          "file": "web/scenario-guides/extracurricularActivity.json",
+          "line": 151,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0.text",
+          "scenario": "extracurricularActivity",
+          "evidence": "Resolution 1: You find Professor Rice bound and gagged in the closet of his office. When you free hi"
+        }
+      ],
+      "evidence": "As you prepare for the night ahead, you cannot help but wonder: Are you taking action to remedy your",
+      "expected": "每个条件分支都以「前往〈引言 N〉/跳至结局 N/进入冒险设置」收束；不得停在「检查剧本日志。如果……」这种半句。",
+      "suggestion": "以英文指南为对照，逐关补译缺失的分支行；典型证据：`web/scenario-guides/whereTheGodsDwell.json` 中文 story 段缺少 Ground Design 分支（en 22 处 vs zh 5 处），`shatteredAeons` 开场只剩「检查剧本日志。如果你点燃了火盆」。来源锁在参考 zh locale，需要在生成前补译进 `content/scenario-guide-translations.json` 或战役自译源。",
+      "sourceKind": "reference-zh-locale gaps",
+      "rootCause": "参考工程 zh locale 的指南本身缺分支收尾（英文由 en locale 生成），生成器按 locale 逐块取文本，缺项没有显式 missing 标记。"
+    },
+    {
+      "id": "guides-0002",
+      "area": "guides",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "中文指南残留整行英文「Proceed to Setup / Proceed to Intro / Proceed to Scenario」（3 处，玩家读到的下一步指引是英文）",
+      "count": {
+        "occurrences": 3,
+        "groups": 3
+      },
+      "campaigns": [
+        "theCircleUndone"
+      ],
+      "scenarios": [
+        "atDeathsDoorstep",
+        "disappearanceAtTheTwilightEstate"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": 22,
+          "pointer": "locales.zh.intro.0.children.3.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "Proceed to Setup"
+        },
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": 85,
+          "pointer": "locales.zh.intro.0.children.24.text",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": "Proceed to Intro"
+        },
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": 156,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": "Proceed to Scenario"
+        }
+      ],
+      "evidence": "Proceed to Setup",
+      "expected": "「进入冒险设置」「继续阅读引言」「前往下一场冒险」。",
+      "suggestion": "`content/scenario-guide-translations.json` 为 `atDeathsDoorstep`、`disappearanceAtTheTwilightEstate` 补这些过渡句译文；重跑 `node tools/import-scenario-guides.mjs --write`。",
+      "sourceKind": "reference-zh-locale"
+    },
+    {
+      "id": "guides-0003",
+      "area": "guides",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "中文指南保留英文小标题/连接词：`Intro N:`、`Resolution N:`、`Scenario I:` 等英文标签 15 处，另有中文句中 `and` 等连接词",
+      "count": {
+        "occurrences": 24,
+        "groups": 21
+      },
+      "campaigns": [
+        "theCircleUndone",
+        "theDunwichLegacy",
+        "nightOfTheZealot",
+        "edgeOfTheEarth",
+        "theInnsmouthConspiracy",
+        "thePathToCarcosa"
+      ],
+      "scenarios": [
+        "disappearanceAtTheTwilightEstate",
+        "extracurricularActivity",
+        "forTheGreaterGood",
+        "lostInTimeAndSpace",
+        "theGathering",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2",
+        "theLairOfDagon",
+        "theLastKing",
+        "theMidnightMasks",
+        "theUnspeakableOath",
+        "undimensionedAndUnseen"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": 156,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": " Scenario I: The Witchin"
+        },
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": 156,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": "Scenario I:"
+        },
+        {
+          "file": "web/scenario-guides/extracurricularActivity.json",
+          "line": 22,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "extracurricularActivity",
+          "evidence": " 远古恶魔, 上锁的门, and 犹格·索托斯的"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.0.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 1:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.5.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 2:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.8.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 3:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.9.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 4:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.10.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 5:"
+        },
+        {
+          "file": "web/scenario-guides/lostInTimeAndSpace.json",
+          "line": 74,
+          "pointer": "locales.zh.resolutions.0.children.2.children.0.text",
+          "scenario": "lostInTimeAndSpace",
+          "evidence": "Resolution 2:"
+        },
+        {
+          "file": "web/scenario-guides/lostInTimeAndSpace.json",
+          "line": 82,
+          "pointer": "locales.zh.resolutions.0.children.3.children.0.text",
+          "scenario": "lostInTimeAndSpace",
+          "evidence": "Resolution 3:"
+        }
+      ],
+      "evidence": " Scenario I: The Witchin",
+      "expected": "「引言 N：」「结局 N」「剧本 I：」；连接词用「、/以及」。",
+      "suggestion": "上游 zh locale 把 Intro/Resolution 标记留成英文；在指南生成器的 zh 分支统一替换（`Intro\\s*(\\d+)`→`引言 $1` 等），并修 `and` 句；TIC 的「ph'nglui mglw'nafh…」咒语属保留项，不做替换。",
+      "sourceKind": "upstream-zh-locale"
+    },
+    {
+      "id": "guides-0004",
+      "area": "guides",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "遭遇组图标清单整体缺失：61 份中文指南的 setup 都写着「这些遭遇组由以下图标标示：」，后面没有任何图标（87 处）",
+      "count": {
+        "occurrences": 87,
+        "groups": 86
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy",
+        "thePathToCarcosa",
+        "theDreamEaters",
+        "theCircleUndone",
+        "theDunwichLegacy",
+        "edgeOfTheEarth",
+        "theForgottenAge",
+        "nightOfTheZealot"
+      ],
+      "scenarios": [
+        "aLightInTheFog",
+        "aPhantomOfTruth",
+        "aThousandShapesOfHorror",
+        "atDeathsDoorstep",
+        "beforeTheBlackThrone",
+        "beyondTheGatesOfSleep",
+        "blackStarsRise",
+        "bloodOnTheAltar",
+        "cityOfTheElderThings",
+        "curtainCall",
+        "darkSideOfTheMoon",
+        "devilReef",
+        "dimCarcosa",
+        "disappearanceAtTheTwilightEstate",
+        "echoesOfThePast",
+        "extracurricularActivity",
+        "fatalMirage",
+        "forTheGreaterGood",
+        "heartOfTheEldersPart1",
+        "heartOfTheEldersPart2",
+        "horrorInHighGear",
+        "iceAndDeathPart1",
+        "iceAndDeathPart2",
+        "iceAndDeathPart3",
+        "inTheClutchesOfChaos",
+        "inTooDeep",
+        "intoTheMaelstrom",
+        "lostInTimeAndSpace",
+        "pointOfNoReturn",
+        "shatteredAeons",
+        "theCityOfArchives",
+        "theDepthsOfYoth",
+        "theDevourerBelow",
+        "theDoomOfEztli",
+        "theEssexCountyExpress",
+        "theGathering",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2",
+        "theHouseAlwaysWins",
+        "theLairOfDagon",
+        "theLastKing",
+        "theMidnightMasks",
+        "theMiskatonicMuseum",
+        "thePallidMask",
+        "thePitOfDespair",
+        "theSearchForKadath",
+        "theSecretName",
+        "theUnspeakableOath",
+        "theUntamedWilds",
+        "theVanishingOfElinaHarper",
+        "theWagesOfSin",
+        "theWitchingHour",
+        "threadsOfFate",
+        "toTheForbiddenPeaks",
+        "turnBackTime",
+        "undimensionedAndUnseen",
+        "unionAndDisillusion",
+        "wakingNightmare",
+        "weaverOfTheCosmos",
+        "whereDoomAwaits",
+        "whereTheGodsDwell"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": 22,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "集齐以下遭遇组中的所有卡牌：雾中之光、深海生物、淹没的洞穴、涨潮、天体合相和惊惧。这些遭遇组由以下图标表示："
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": 118,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "收齐以下遭遇组的所有卡牌：真相幻影、邪兆、拜亚基、陌生人、哈斯塔的使徒、午夜假面。这些遭遇组的图标为:在收齐午夜假面遭遇组时，只收齐其中5张诡计卡(2张错误指示和3张追猎鬼影)。注意不要拿出该遭遇组中的地点、场景、密谋和冒险参考卡。"
+        },
+        {
+          "file": "web/scenario-guides/aThousandShapesOfHorror.json",
+          "line": 46,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "aThousandShapesOfHorror",
+          "evidence": "从以下遭遇组收集所有卡牌：万千骇形、地下世界生物、现实交融、刺骨严寒、食尸鬼、紧锁之门、鼠群。这些遭遇组由以下图标标示："
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": 31,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "将下列遭遇组中，所有遭遇卡找出：死亡门前、银暮秘社、幽灵捕食者、被困的灵魂、在劫难逃，以及寒冷刺骨。这些遭遇组的图标为："
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": 34,
+          "pointer": "locales.zh.setup.0.children.1.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "将冥界和看守人遭遇组放在一边，位于场外。这些遭遇组的图标为："
+        },
+        {
+          "file": "web/scenario-guides/beforeTheBlackThrone.json",
+          "line": 22,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "beforeTheBlackThrone",
+          "evidence": "将下列遭遇组中，所有遭遇卡找出：黑色王座、阿撒托斯的使徒、在劫难逃、远古恶魔以及黑暗异教徒。这些遭遇组的图标为："
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": 166,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "从以下遭遇组中收集所有卡牌：梦境门外、奈亚拉托提普的使徒、祖格鼠、入梦者的诅咒、幻梦境与刺骨严寒。这些遭遇组由以下图标标示："
+        },
+        {
+          "file": "web/scenario-guides/blackStarsRise.json",
+          "line": 31,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "blackStarsRise",
+          "evidence": "收齐以下遭遇组的所有卡牌: 黑星升起、邪兆、拜亚基、卡尔克萨居民、陌生人、黑暗邪教徒、远古恶魔。这些遭遇组的图标为:注意，黑星升起遭遇组中的部分卡牌有多个版本，其中部分卡牌背面有地底洪流遭遇组图标，而另一部分卡牌背面有空中漩涡遭遇组图标。图"
+        },
+        {
+          "file": "web/scenario-guides/blackStarsRise.json",
+          "line": 39,
+          "pointer": "locales.zh.setup.0.children.2.children.0.text",
+          "scenario": "blackStarsRise",
+          "evidence": "将以下所有卡牌根据其背面的遭遇组图标，分类摆作两堆：密谋2a—风暴肆虐，密谋2c—悬空之物，圣奥伯特礼拜堂，修道院塔楼。"
+        },
+        {
+          "file": "web/scenario-guides/blackStarsRise.json",
+          "line": 42,
+          "pointer": "locales.zh.setup.0.children.2.children.1.text",
+          "scenario": "blackStarsRise",
+          "evidence": "摆放完毕后应为2堆各4张卡牌。每堆卡牌应有上述列出的每种卡牌各一张。一堆卡牌的背面应为地底洪流遭遇组图标，而另一堆则是空中漩涡遭遇组图标。"
+        }
+      ],
+      "evidence": "集齐以下遭遇组中的所有卡牌：雾中之光、深海生物、淹没的洞穴、涨潮、天体合相和惊惧。这些遭遇组由以下图标表示：",
+      "expected": "句后展示对应遭遇组图标（官方指南的 icon 行），玩家据此核对遭遇组。",
+      "suggestion": "`tools/import-scenario-guides.mjs#guideText()` 把 `<section class=\"encounter-sets\"><img …></section>` 整段剥掉了，导致中文/英文面板都只剩悬空句。两种修法：①生成期把该 section 转成文本（如「聚集于此、老鼠…」已有名单则删掉「图标」句）；②把图标 alt/遭遇组名渲染成 token/文本列表。en 面板同缺陷，属生成器问题而非翻译问题。",
+      "sourceKind": "generated (generator strips <img> section)",
+      "rootCause": "guideText 的 `.replace(/<img[^>]*>/gi, '')` + `<section class='encounter-sets'>` 整体删除。"
+    },
+    {
+      "id": "guides-0005",
+      "area": "guides",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "《食梦者·梦境门外》14 个梦境条目的职阶图标（[guardian]/[seeker]/[rogue]/[mystic]/[survivor]…）在中文指南中全部丢失（命中 10 个文本块）",
+      "count": {
+        "occurrences": 10,
+        "groups": 2
+      },
+      "campaigns": [
+        "theDreamEaters"
+      ],
+      "scenarios": [
+        "beyondTheGatesOfSleep"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.0.children.0.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.0.children.1.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.1.children.0.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.1.children.1.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.2.children.1.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.3.children.0.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=1"
+        },
+        {
+          "file": "web/scenario-guides/beyondTheGatesOfSleep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.1.children.2.children.0.text",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "zh=0 en=2"
+        }
+      ],
+      "evidence": "zh=0 en=1",
+      "expected": "「守卫者（[guardian]）之梦」——玩家按职阶选梦境，图标/职阶必须可见。",
+      "suggestion": "zh locale 的 14 条梦境标题缺 `([class])` 标记；优先修 `web/scenario-guides/beyondTheGatesOfSleep.json` 的生成来源（参考 zh locale / TDE 自译源），补回职阶 token。",
+      "sourceKind": "reference-zh-locale"
+    },
+    {
+      "id": "guides-0006",
+      "area": "guides",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "英文指南面板 3 处 `[shelterValue]` 占位符原样显示（中文侧已改写为「营地庇护值」，英文侧没有）",
+      "count": {
+        "occurrences": 3,
+        "groups": 3
+      },
+      "campaigns": [
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [
+        "iceAndDeathPart1",
+        "iceAndDeathPart2",
+        "iceAndDeathPart3"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/iceAndDeathPart1.json",
+          "line": 319,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0.text",
+          "scenario": "iceAndDeathPart1",
+          "evidence": "[shelterValue]"
+        },
+        {
+          "file": "web/scenario-guides/iceAndDeathPart2.json",
+          "line": 150,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "iceAndDeathPart2",
+          "evidence": "[shelterValue]"
+        },
+        {
+          "file": "web/scenario-guides/iceAndDeathPart3.json",
+          "line": 130,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "iceAndDeathPart3",
+          "evidence": "[shelterValue]"
+        }
+      ],
+      "evidence": "[shelterValue]",
+      "expected": "「Shelter Value: （记录营地庇护值）」或在运行时替换为记录值；不能显示内部占位符。",
+      "suggestion": "EOTE 生成链 `localizePlaceholders` 只处理 `{xp}/{name}/{key}/{perPlayer}/{fast}`；`[shelterValue]` 应在指南文本改写或渲染层替换。",
+      "sourceKind": "generated"
+    },
+    {
+      "id": "guides-0007",
+      "area": "guides",
+      "category": "missing-translation",
+      "severity": "high",
+      "title": "《食梦者》中文指南成块缺失：whereTheGodsDwell 缺 11 块、weaverOfTheCosmos 缺 4 块（故事/结局的分支收尾与「宏大计划」分支整段没有中文）",
+      "count": {
+        "occurrences": 15,
+        "groups": 15
+      },
+      "campaigns": [
+        "theDreamEaters"
+      ],
+      "scenarios": [
+        "weaverOfTheCosmos",
+        "whereTheGodsDwell"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/weaverOfTheCosmos.json",
+          "line": 215,
+          "pointer": "locales.zh.story.0.children.0",
+          "scenario": "weaverOfTheCosmos",
+          "evidence": "The Spider Queen 1: You climb a precipice of stone and behold the enormity of the spider’s bridge an"
+        },
+        {
+          "file": "web/scenario-guides/weaverOfTheCosmos.json",
+          "line": 223,
+          "pointer": "locales.zh.story.1.children.0",
+          "scenario": "weaverOfTheCosmos",
+          "evidence": "The Spider Queen 2: You are about to climb down the web to the platform below, when you hear the bla"
+        },
+        {
+          "file": "web/scenario-guides/weaverOfTheCosmos.json",
+          "line": 231,
+          "pointer": "locales.zh.story.2.children.0",
+          "scenario": "weaverOfTheCosmos",
+          "evidence": "The Spider Queen 3: You begin to climb down the web to the platform below, from which you can reach "
+        },
+        {
+          "file": "web/scenario-guides/weaverOfTheCosmos.json",
+          "line": 239,
+          "pointer": "locales.zh.story.3.children.0",
+          "scenario": "weaverOfTheCosmos",
+          "evidence": "The Spider Queen 4: The creature is close to completing its design. Its legs move about swiftly, spi"
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 158,
+          "pointer": "locales.zh.story.0.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "Grand Design 1: Higher and higher, you scale the mountains far to the north. Pale light shines from "
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 166,
+          "pointer": "locales.zh.story.1.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "Grand Design 2: You turn to Randolph for answers. He has been your guide through all of this madness"
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 174,
+          "pointer": "locales.zh.story.2.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "Grand Design 3: Just then, a voice behind you breaks the silence, punctuating your confusion. “Virgi"
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 182,
+          "pointer": "locales.zh.story.3.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "Grand Design 4: All the while, the black cat stays perched on your shoulder, watching with cold, nar"
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 190,
+          "pointer": "locales.zh.story.4.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "Grand Design 5: The Crawling Chaos splits into a hundred thousand shadows, and vanishes into the col"
+        },
+        {
+          "file": "web/scenario-guides/whereTheGodsDwell.json",
+          "line": 202,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0",
+          "scenario": "whereTheGodsDwell",
+          "evidence": "If no resolution was reached because each investigator was defeated: You startle awake, riveted and "
+        }
+      ],
+      "evidence": "The Spider Queen 1: You climb a precipice of stone and behold the enormity of the spider’s bridge an",
+      "expected": "按 en 指南逐块补译，不得只剩叙事、丢掉分支/结算块。",
+      "suggestion": "这两关的中文来自 TDE 自译 story-text（sections.story/resolutions），缺块说明自译源缺键；补 `content/campaigns/theDreamEaters/story-source/` 对应条目后重跑 `node tools/import-tde-story.mjs --write` 与 `node tools/import-scenario-guides.mjs --write`。",
+      "sourceKind": "self-translated gap"
+    },
+    {
+      "id": "guides-0008",
+      "area": "guides",
+      "category": "symbol-format",
+      "severity": "low",
+      "title": "中文指南图标 token 与英文数量不一致（如「移除所有…然后各加1个」省略重复 token；封印/庇护值等）",
+      "count": {
+        "occurrences": 7,
+        "groups": 6
+      },
+      "campaigns": [
+        "thePathToCarcosa",
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [
+        "echoesOfThePast",
+        "fatalMirage",
+        "iceAndDeathPart3",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2",
+        "theLastKing"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/echoesOfThePast.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.4.children.0.text",
+          "scenario": "echoesOfThePast",
+          "evidence": "zh=3 en=6"
+        },
+        {
+          "file": "web/scenario-guides/fatalMirage.json",
+          "line": null,
+          "pointer": "locales.zh.specialRules.0.children.0.children.0.text",
+          "scenario": "fatalMirage",
+          "evidence": "zh=5 en=1"
+        },
+        {
+          "file": "web/scenario-guides/iceAndDeathPart3.json",
+          "line": null,
+          "pointer": "locales.zh.setup.1.children.6.text",
+          "scenario": "iceAndDeathPart3",
+          "evidence": "zh=1 en=0"
+        },
+        {
+          "file": "web/scenario-guides/theHeartOfMadnessPart1.json",
+          "line": null,
+          "pointer": "locales.zh.specialRules.0.children.1.children.0.text",
+          "scenario": "theHeartOfMadnessPart1",
+          "evidence": "zh=6 en=1"
+        },
+        {
+          "file": "web/scenario-guides/theHeartOfMadnessPart2.json",
+          "line": null,
+          "pointer": "locales.zh.specialRules.0.children.1.children.0.text",
+          "scenario": "theHeartOfMadnessPart2",
+          "evidence": "zh=6 en=1"
+        },
+        {
+          "file": "web/scenario-guides/theLastKing.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.3.children.0.text",
+          "scenario": "theLastKing",
+          "evidence": "zh=3 en=6"
+        },
+        {
+          "file": "web/scenario-guides/theLastKing.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.4.children.0.text",
+          "scenario": "theLastKing",
+          "evidence": "zh=3 en=6"
+        }
+      ],
+      "evidence": "zh=3 en=6",
+      "expected": "需要玩家点击/放置的每个图标在中文里都能对应到明确 token（至少保留 `[cultist]` 等）。",
+      "suggestion": "逐条复核：语义完整的中文简写可保留（如「各加1个」），涉及具体混乱标记/封印的必须保留 token；建议在生成器做「en 去重后 token 集合 ⊆ zh token 集合」校验。",
+      "sourceKind": "reference-zh-locale 简写"
+    },
+    {
+      "id": "guides-0009",
+      "area": "guides",
+      "category": "terminology",
+      "severity": "medium",
+      "title": "中文指南简繁混用：127 段命中繁体用字，其中「著」（应为「着」）约 329 处（TIC 164 / TCU 111 / TDE 35 / NOTZ 11 / Dunwich 8）",
+      "count": {
+        "occurrences": 127,
+        "groups": 38
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy",
+        "theCircleUndone",
+        "theDreamEaters",
+        "theDunwichLegacy",
+        "edgeOfTheEarth",
+        "nightOfTheZealot",
+        "thePathToCarcosa"
+      ],
+      "scenarios": [
+        "aLightInTheFog",
+        "atDeathsDoorstep",
+        "beyondTheGatesOfSleep",
+        "darkSideOfTheMoon",
+        "devilReef",
+        "disappearanceAtTheTwilightEstate",
+        "extracurricularActivity",
+        "fatalMirage",
+        "forTheGreaterGood",
+        "inTheClutchesOfChaos",
+        "inTooDeep",
+        "intoTheMaelstrom",
+        "lostInTimeAndSpace",
+        "theDevourerBelow",
+        "theEssexCountyExpress",
+        "theHeartOfMadnessPart2",
+        "theHouseAlwaysWins",
+        "theLairOfDagon",
+        "theLastKing",
+        "theMidnightMasks",
+        "thePallidMask",
+        "thePitOfDespair",
+        "theSearchForKadath",
+        "theSecretName",
+        "theUnspeakableOath",
+        "theVanishingOfElinaHarper",
+        "theWagesOfSin",
+        "theWitchingHour",
+        "weaverOfTheCosmos",
+        "whereDoomAwaits",
+        "whereTheGodsDwell"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.story.0.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.story.1.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/aLightInTheFog.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.2.children.0.text",
+          "scenario": "aLightInTheFog",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.1.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": null,
+          "pointer": "locales.zh.story.0.children.1.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": null,
+          "pointer": "locales.zh.story.0.children.3.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "著"
+        },
+        {
+          "file": "web/scenario-guides/atDeathsDoorstep.json",
+          "line": null,
+          "pointer": "locales.zh.story.0.children.4.text",
+          "scenario": "atDeathsDoorstep",
+          "evidence": "著"
+        }
+      ],
+      "evidence": "著",
+      "expected": "指南与卡面/规则书一样使用简体（「着」）。",
+      "suggestion": "在参考 zh locale 与 TDE 自译源统一替换；EOTE 修复批次已有同类改写脚本可参考。",
+      "sourceKind": "upstream-zh-locale orthography",
+      "metrics": [
+        {
+          "campaign": "theInnsmouthConspiracy",
+          "zhu": 164,
+          "traditional": 4
+        },
+        {
+          "campaign": "thePathToCarcosa",
+          "zhu": 0,
+          "traditional": 4
+        },
+        {
+          "campaign": "theDreamEaters",
+          "zhu": 35,
+          "traditional": 3
+        },
+        {
+          "campaign": "theCircleUndone",
+          "zhu": 111,
+          "traditional": 3
+        },
+        {
+          "campaign": "theDunwichLegacy",
+          "zhu": 8,
+          "traditional": 3
+        },
+        {
+          "campaign": "edgeOfTheEarth",
+          "zhu": 0,
+          "traditional": 2
+        },
+        {
+          "campaign": "nightOfTheZealot",
+          "zhu": 11,
+          "traditional": 0
+        }
+      ]
+    },
+    {
+      "id": "guides-0010",
+      "area": "guides",
+      "category": "format",
+      "severity": "low",
+      "title": "中文指南标点机械问题：CJK 后接半角标点 201 处、引号不配对 25 处、半角括号 19 处等",
+      "count": {
+        "occurrences": 252,
+        "groups": 193
+      },
+      "campaigns": [
+        "thePathToCarcosa",
+        "theCircleUndone",
+        "theDunwichLegacy",
+        "edgeOfTheEarth",
+        "theInnsmouthConspiracy",
+        "theForgottenAge",
+        "nightOfTheZealot",
+        "theDreamEaters"
+      ],
+      "scenarios": [
+        "aPhantomOfTruth",
+        "atDeathsDoorstep",
+        "beforeTheBlackThrone",
+        "blackStarsRise",
+        "bloodOnTheAltar",
+        "cityOfTheElderThings",
+        "curtainCall",
+        "dimCarcosa",
+        "disappearanceAtTheTwilightEstate",
+        "echoesOfThePast",
+        "extracurricularActivity",
+        "fatalMirage",
+        "iceAndDeathPart1",
+        "iceAndDeathPart3",
+        "inTheClutchesOfChaos",
+        "inTooDeep",
+        "lostInTimeAndSpace",
+        "shatteredAeons",
+        "theCityOfArchives",
+        "theDepthsOfYoth",
+        "theDevourerBelow",
+        "theDoomOfEztli",
+        "theEssexCountyExpress",
+        "theGathering",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2",
+        "theHouseAlwaysWins",
+        "theLastKing",
+        "theMidnightMasks",
+        "theMiskatonicMuseum",
+        "thePallidMask",
+        "theSecretName",
+        "theUnspeakableOath",
+        "theUntamedWilds",
+        "theVanishingOfElinaHarper",
+        "threadsOfFate",
+        "turnBackTime",
+        "undimensionedAndUnseen",
+        "unionAndDisillusion",
+        "whereDoomAwaits",
+        "whereTheGodsDwell"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.10.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "点(基础97)"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.13.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "“×2 ”×3"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.17.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "醒:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "为:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": 118,
+          "pointer": "locales.zh.setup.0.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "卡(2张错误指示和3张追猎鬼影)"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.setup.0.children.1.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "数:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.setup.0.children.2.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "数:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "值:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "值:"
+        },
+        {
+          "file": "web/scenario-guides/aPhantomOfTruth.json",
+          "line": null,
+          "pointer": "locales.zh.resolutions.0.children.2.children.0.text",
+          "scenario": "aPhantomOfTruth",
+          "evidence": "值:"
+        }
+      ],
+      "evidence": "点(基础97)",
+      "expected": "中文标点全角、引号成对、CJK 与英文 token 之间空格统一。",
+      "suggestion": "生成器 `tools/import-scenario-guides.mjs` 的 zh 分支做确定性标点规整（EOTE 修复批次已示范「。.」「, 」等批量替换）。",
+      "sourceKind": "upstream-zh-locale punctuation"
+    },
+    {
+      "id": "guides-0011",
+      "area": "guides",
+      "category": "structure",
+      "severity": "low",
+      "title": "中文指南把「No Resolution / Resolution N」标题内联进正文，导致 zh/en 块结构不一致（5 处结构差异，标题层没有中文）",
+      "count": {
+        "occurrences": 5,
+        "groups": 5
+      },
+      "campaigns": [
+        "theDreamEaters",
+        "nightOfTheZealot"
+      ],
+      "scenarios": [
+        "darkSideOfTheMoon",
+        "theDevourerBelow"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/darkSideOfTheMoon.json",
+          "line": 235,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0",
+          "scenario": "darkSideOfTheMoon",
+          "evidence": "Resolution 1: As the white galley glides silently back toward the Earth, its captain sings a soft, m"
+        },
+        {
+          "file": "web/scenario-guides/theDevourerBelow.json",
+          "line": 145,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0",
+          "scenario": "theDevourerBelow",
+          "evidence": "If no resolution was reached (each investigator resigned or was defeated): Too frightened to face he"
+        },
+        {
+          "file": "web/scenario-guides/theDevourerBelow.json",
+          "line": 153,
+          "pointer": "locales.zh.resolutions.0.children.1.children.0",
+          "scenario": "theDevourerBelow",
+          "evidence": "Resolution 1: You have managed to prevent the cult from summoning its master. Although you’re unsure"
+        },
+        {
+          "file": "web/scenario-guides/theDevourerBelow.json",
+          "line": 161,
+          "pointer": "locales.zh.resolutions.0.children.2.children.0",
+          "scenario": "theDevourerBelow",
+          "evidence": "Resolution 2: Through force of arms and strength of will, you are somehow able to harm Umôrdhoth eno"
+        },
+        {
+          "file": "web/scenario-guides/theDevourerBelow.json",
+          "line": 169,
+          "pointer": "locales.zh.resolutions.0.children.3.children.0",
+          "scenario": "theDevourerBelow",
+          "evidence": "Resolution 3: In the face of this horror, you don’t believe there is anything you can do to stop it."
+        }
+      ],
+      "evidence": "Resolution 1: As the white galley glides silently back toward the Earth, its captain sings a soft, m",
+      "expected": "结局块保留与英文一致的标题层（「未达成结局」「结局 1」），正文不重复标签。",
+      "suggestion": "属上游 zh locale 结构差异；补 title 层或在生成器把正文首标签提升为 title。",
+      "sourceKind": "reference-zh-locale structure"
+    },
+    {
+      "id": "setup-0001",
+      "area": "setup",
+      "category": "symbol-format",
+      "severity": "high",
+      "title": "《印斯茅斯暗潮·达贡巢穴》场景设置文本残留 ICU 转义 `{'{'}bless{'}'}` / `{'{'}curse{'}'}`（设置回退面板会原样显示）",
+      "count": {
+        "occurrences": 3,
+        "groups": 2
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [
+        "theLairOfDagon"
+      ],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1519,
+          "pointer": "scenario.setup",
+          "scenario": "theLairOfDagon",
+          "evidence": "{'{'}bless{'}'}"
+        }
+      ],
+      "evidence": "{'{'}bless{'}'}",
+      "expected": "`[bless]` / `[curse]`，或「祝福标记／诅咒标记」。",
+      "suggestion": "在 `content/campaigns/theInnsmouthConspiracy` 的 setup 生成本身还原 ICU 转义（与 story-0005 同一根因），或设置面板渲染前统一还原。",
+      "sourceKind": "upstream-zh-locale escape residual"
+    },
+    {
+      "id": "setup-0002",
+      "area": "setup",
+      "category": "mixed-language",
+      "severity": "medium",
+      "title": "《印斯茅斯暗潮》8 关场景设置正文是未清理的 HTML/Markdown 串：保留 `*遭遇组名*` 星号、`<p>` 折叠、悬空的「图标」句",
+      "count": {
+        "occurrences": 14,
+        "groups": 14
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [
+        "thePitOfDespair",
+        "theVanishingOfElinaHarper",
+        "inTooDeep",
+        "devilReef",
+        "horrorInHighGear",
+        "aLightInTheFog",
+        "theLairOfDagon",
+        "intoTheMaelstrom"
+      ],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 999,
+          "pointer": "scenario.setup",
+          "scenario": "thePitOfDespair",
+          "evidence": "收集以下遭遇组的所有卡牌：*绝望深坑*、*深海生物*、*淹水洞窟*、*涨潮*、*破碎记忆*、*克苏鲁的爪牙*和*鼠群*。这些遭遇组以下列图标标识：注意：每张潮汐隧道地点的遭遇组图标仅印在其已揭示面。\n\n按以下方式放置各把钥匙：\n\n将蓝色和绿"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 999,
+          "pointer": "scenario.setup",
+          "scenario": "theVanishingOfElinaHarper",
+          "evidence": "收集以下遭遇组的所有卡牌：*艾莲娜·哈珀失踪案*、*达贡的爪牙*、*印斯茅斯迷雾*、*当地人*、*刺骨寒意*、*锁住的门*、*夜魇*和*午夜假面*。这些遭遇组以"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 999,
+          "pointer": "scenario.setup",
+          "scenario": "inTooDeep",
+          "evidence": "收集以下遭遇组的所有卡牌：*深陷危局*、*深海生物*、*涨潮*、*天体合相*、*当地人*和*克苏鲁的爪牙*。这些遭遇组以下列图标标识：\n\n将全部15个地点放置入场。\n\n按图示在这些地点之间放置24个屏障（使用资源标记）。\n\n每位调查员从荒芜"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1237,
+          "pointer": "scenario.setup",
+          "scenario": "devilReef",
+          "evidence": "收集以下遭遇组中的所有卡牌：*魔鬼礁石*、*海德拉的爪牙*、*深海生物*、*淹没洞穴*、*故障*和*涨潮*。这些遭遇组以下列图标标示：\n\n按下列方式将各把钥匙放"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1237,
+          "pointer": "scenario.setup",
+          "scenario": "horrorInHighGear",
+          "evidence": "收集以下遭遇组中的所有卡牌：*全速恐惧*、*雾罩印斯茅斯*、*故障*、*破碎记忆*和*远古恶魔*。这些遭遇组以下列图标标示：\n\n按下列步骤组成道路牌堆：\n\n找出"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1418,
+          "pointer": "scenario.setup",
+          "scenario": "aLightInTheFog",
+          "evidence": "集齐以下遭遇组中的所有卡牌：*雾中之光*、*深海生物*、*淹没的洞穴*、*涨潮*、*天体合相*和*惊惧*。这些遭遇组由以下图标表示：\n\n将猎鹰岬门房、猎鹰岬崖边"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1418,
+          "pointer": "scenario.setup",
+          "scenario": "theLairOfDagon",
+          "evidence": "集齐以下遭遇组中的所有卡牌：*达贡巢穴*、*达贡的爪牙*、*淹没的洞穴*、*天体合相*、*黑暗教团*和*锁住的门*。这些遭遇组由以下图标表示：\n\n按以下方式放置"
+        },
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1418,
+          "pointer": "scenario.setup",
+          "scenario": "intoTheMaelstrom",
+          "evidence": "集齐以下遭遇组中的所有卡牌：*暗潮之下*、*海德拉的爪牙*、*深海生物*、*淹没的洞穴*、*破碎记忆*、*天体合相*和*远古邪恶*。这些遭遇组由以下图标表示：\n"
+        }
+      ],
+      "evidence": "收集以下遭遇组的所有卡牌：*绝望深坑*、*深海生物*、*淹水洞窟*、*涨潮*、*破碎记忆*、*克苏鲁的爪牙*和*鼠群*。这些遭遇组以下列图标标识：注意：每张潮汐隧道地点的遭遇组图标仅印在其已揭示面。\n\n按以下方式放置各把钥匙：\n\n将蓝色和绿",
+      "expected": "设置步骤为纯文本句子列表，不出现 `*` 强调符或「以下图标表示：」悬空句。",
+      "suggestion": "TIC 的 `definition.setup` 来自 `textBlocks(story.setup…)`；补 `*…*` 剥离与图标句处理（或直接复用指南 setup 的中文步骤），不要让设置回退面板显示 Markdown。",
+      "sourceKind": "generated"
+    },
+    {
+      "id": "setup-0003",
+      "area": "setup",
+      "category": "coverage",
+      "severity": "low",
+      "title": "6 关场景数据没有 `setup` 文本（敦威治 6 关），设置面板的「步骤」完全依赖指南 JSON 加载成功",
+      "count": {
+        "occurrences": 7,
+        "groups": 7
+      },
+      "campaigns": [
+        "theDunwichLegacy",
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [
+        "theMiskatonicMuseum",
+        "theEssexCountyExpress",
+        "bloodOnTheAltar",
+        "undimensionedAndUnseen",
+        "whereDoomAwaits",
+        "lostInTimeAndSpace",
+        "fatalMirage"
+      ],
+      "samples": [
+        {
+          "file": "content/scenario-guides.js",
+          "line": null,
+          "pointer": "scenario.setup",
+          "scenario": "theMiskatonicMuseum",
+          "evidence": "guide 有设置正文，场景数据为空"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+          "line": null,
+          "pointer": "scenario.setup",
+          "scenario": "fatalMirage",
+          "evidence": "guide 有设置正文，场景数据为空"
+        }
+      ],
+      "evidence": "guide 有设置正文，场景数据为空",
+      "expected": "场景数据至少有可回退的布置摘要（设置面板加载失败时显示），与完整指南互补。",
+      "suggestion": "为 theMiskatonicMuseum / theEssexCountyExpress / bloodOnTheAltar / undimensionedAndUnseen / whereDoomAwaits / lostInTimeAndSpace 补 `content/scenario-guides.js` 的 setup 摘要（参照 theGathering 等已有写法）。",
+      "sourceKind": "content gap"
+    },
+    {
+      "id": "setup-0004",
+      "area": "setup",
+      "category": "structure",
+      "severity": "low",
+      "title": "关卡名中英混排不统一：TDE 仅前两关带英文原名，EOTE 5 关带英文原名；其余战役为纯中文",
+      "count": {
+        "occurrences": 6,
+        "groups": 6
+      },
+      "campaigns": [
+        "theDreamEaters",
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [
+        "beyondTheGatesOfSleep",
+        "iceAndDeathPart1",
+        "iceAndDeathPart2",
+        "iceAndDeathPart3",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2"
+      ],
+      "samples": [
+        {
+          "file": "content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/definition.js",
+          "line": 133,
+          "pointer": "scenario.name",
+          "scenario": "beyondTheGatesOfSleep",
+          "evidence": "梦境门外 · Beyond the Gates of Sleep"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart1/definition.js",
+          "line": 162,
+          "pointer": "scenario.name",
+          "scenario": "iceAndDeathPart1",
+          "evidence": "亡命冰原 第 I 部分 · Ice and Death, Part I"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart2/definition.js",
+          "line": 151,
+          "pointer": "scenario.name",
+          "scenario": "iceAndDeathPart2",
+          "evidence": "亡命冰原 第 II 部分 · Ice and Death, Part II"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/definition.js",
+          "line": 154,
+          "pointer": "scenario.name",
+          "scenario": "iceAndDeathPart3",
+          "evidence": "亡命冰原 第 III 部分 · Ice and Death, Part III"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/definition.js",
+          "line": 192,
+          "pointer": "scenario.name",
+          "scenario": "theHeartOfMadnessPart1",
+          "evidence": "疯狂之心 第 I 部分 · The Heart of Madness, Part I"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/definition.js",
+          "line": 155,
+          "pointer": "scenario.name",
+          "scenario": "theHeartOfMadnessPart2",
+          "evidence": "疯狂之心 第 II 部分 · The Heart of Madness, Part II"
+        }
+      ],
+      "evidence": "梦境门外 · Beyond the Gates of Sleep",
+      "expected": "同一战役内关卡名格式一致（要么统一「中文 · English」，要么统一中文）。",
+      "suggestion": "由 product 裁定后统一 `content/campaigns/*/chapters.js` / manifest 的 name 字段；catalog 双语展示逻辑不要求 name 里带英文。",
+      "sourceKind": "repo-authored"
+    },
+    {
+      "id": "setup-0005",
+      "area": "setup",
+      "category": "coverage",
+      "severity": "low",
+      "title": "设置层缺口：fatalMirage 无 scenario.intro、3 个结局键为空（noResolution/defeat 走重定向），属实现接线而非翻译缺失",
+      "count": {
+        "occurrences": 4,
+        "groups": 4
+      },
+      "campaigns": [
+        "theInnsmouthConspiracy",
+        "edgeOfTheEarth"
+      ],
+      "scenarios": [
+        "devilReef",
+        "aLightInTheFog",
+        "fatalMirage"
+      ],
+      "samples": [
+        {
+          "file": "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "line": 1055,
+          "pointer": "scenario.resolutions.noResolution",
+          "scenario": "devilReef",
+          "evidence": "noResolution"
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+          "line": null,
+          "pointer": "scenario.intro",
+          "scenario": "fatalMirage",
+          "evidence": ""
+        },
+        {
+          "file": "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/definition.js",
+          "line": null,
+          "pointer": "scenario.resolutions.defeat",
+          "scenario": "fatalMirage",
+          "evidence": "defeat"
+        }
+      ],
+      "evidence": "noResolution",
+      "expected": "若这些分支确实不可达，在代码/账本里显式声明；若可达，必须补正文。",
+      "suggestion": "人工确认 fatalMirage 回场流程与 TIC noResolution 重定向逻辑后，把它标为既定行为并写进本报告附录。",
+      "sourceKind": "verification-needed"
+    },
+    {
+      "id": "cross-0001",
+      "area": "crosscut",
+      "category": "symbol-format",
+      "severity": "medium",
+      "title": "图标记号书写不统一：剧情用 `{token}` 花括号（TFA 9 处正文）、`[count]` 占位符（EOTE 5 处）、英文指南 `[shelterValue]`（3 处），而渲染器只认 `[token]`",
+      "count": {
+        "occurrences": 0,
+        "groups": 0
+      },
+      "campaigns": [],
+      "scenarios": [],
+      "samples": [],
+      "evidence": "",
+      "expected": "所有玩家可见文本统一 `[token]`；占位符要么替换、要么改成可读文本。",
+      "suggestion": "在各 import/生成器统一 token 规范化（`{elderSign}`→`[elder_sign]`、ICU 转义还原、拒绝未知 `[xxx]`），并把「渲染器未注册的 `[...]`」列为 CI 检查。",
+      "sourceKind": "multi-source",
+      "metrics": {
+        "braceTokensInStory": 9,
+        "countPlaceholders": 5,
+        "shelterValueInEnglishGuides": 3,
+        "note": "花括号/占位符不会渲染成图标或数字；见 story-0007/0012、guides-0006。"
+      }
+    },
+    {
+      "id": "cross-0002",
+      "area": "crosscut",
+      "category": "terminology",
+      "severity": "low",
+      "title": "「Intro」类译名混用：引言 / 开场 / 介绍 / Intro 并存（TIC 用「导言」、TCU 有「转至介绍 1」、EOTE/Dunwich 残留「Intro N:」）",
+      "count": {
+        "occurrences": 19,
+        "groups": 19
+      },
+      "campaigns": [
+        "theCircleUndone",
+        "theDunwichLegacy",
+        "edgeOfTheEarth",
+        "theInnsmouthConspiracy"
+      ],
+      "scenarios": [
+        "disappearanceAtTheTwilightEstate",
+        "forTheGreaterGood",
+        "lostInTimeAndSpace",
+        "theHeartOfMadnessPart1",
+        "theHeartOfMadnessPart2",
+        "theLairOfDagon",
+        "theSecretName",
+        "undimensionedAndUnseen"
+      ],
+      "samples": [
+        {
+          "file": "web/scenario-guides/disappearanceAtTheTwilightEstate.json",
+          "line": 156,
+          "pointer": "locales.zh.resolutions.0.children.0.children.0.text",
+          "scenario": "disappearanceAtTheTwilightEstate",
+          "evidence": "Scenario I:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.0.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 1:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.5.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 2:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.8.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 3:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.9.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 4:"
+        },
+        {
+          "file": "web/scenario-guides/forTheGreaterGood.json",
+          "line": null,
+          "pointer": "locales.zh.intro.0.children.10.text",
+          "scenario": "forTheGreaterGood",
+          "evidence": "Intro 5:"
+        },
+        {
+          "file": "web/scenario-guides/lostInTimeAndSpace.json",
+          "line": 74,
+          "pointer": "locales.zh.resolutions.0.children.2.children.0.text",
+          "scenario": "lostInTimeAndSpace",
+          "evidence": "Resolution 2:"
+        },
+        {
+          "file": "web/scenario-guides/lostInTimeAndSpace.json",
+          "line": 82,
+          "pointer": "locales.zh.resolutions.0.children.3.children.0.text",
+          "scenario": "lostInTimeAndSpace",
+          "evidence": "Resolution 3:"
+        },
+        {
+          "file": "web/scenario-guides/lostInTimeAndSpace.json",
+          "line": 90,
+          "pointer": "locales.zh.resolutions.0.children.4.children.0.text",
+          "scenario": "lostInTimeAndSpace",
+          "evidence": "Resolution 4:"
+        },
+        {
+          "file": "web/scenario-guides/theHeartOfMadnessPart1.json",
+          "line": 330,
+          "pointer": "locales.zh.resolutions.0.children.3.children.0.text",
+          "scenario": "theHeartOfMadnessPart1",
+          "evidence": "Resolution 3:"
+        }
+      ],
+      "evidence": "Scenario I:",
+      "expected": "统一词表：Intro→引言；Resolution→结局；Scenario→冒险/剧本与既有界面用词一致。",
+      "suggestion": "建立与卡面/规则书一致的术语表，在指南生成器与战役自译源统一替换；`check-tde-terms` 已有类似机制，可扩展到全战役。",
+      "sourceKind": "multi-source"
+    },
+    {
+      "id": "cross-0003",
+      "area": "crosscut",
+      "category": "coverage",
+      "severity": "low",
+      "title": "来源口径：NOTZ/敦威治/卡尔克萨/TFA/TCU/TIC 的剧情与指南来自参考工程 zh locale（部分台湾繁中/上游缺译），TDE 为自译，EOTE 为 zh locale + 本地补译；同一问题要按来源归属修",
+      "count": {
+        "occurrences": 0,
+        "groups": 0
+      },
+      "campaigns": [],
+      "scenarios": [],
+      "samples": [],
+      "evidence": "",
+      "expected": "修上游缺译时写到本仓补译源（content/scenario-guide-translations.json / story-source / locale-supplement），重跑生成器，不要手改生成物。",
+      "suggestion": "按 finding 的 sourceKind 分流：upstream 继承问题在补译层修；generated 问题修生成器；repo-authored 问题直接改内容模块。",
+      "sourceKind": "methodology",
+      "metrics": {
+        "storySources": {
+          "nightOfTheZealot": "reference-zh-locale",
+          "theDunwichLegacy": "reference-zh-locale",
+          "thePathToCarcosa": "reference-zh-locale",
+          "theForgottenAge": "reference-zh-locale",
+          "theCircleUndone": "reference-zh-locale",
+          "theDreamEaters": "self-translated",
+          "theInnsmouthConspiracy": "reference-zh-locale + self-translated supplements",
+          "edgeOfTheEarth": "reference-zh-locale + locale-supplement"
+        }
+      }
+    },
+    {
+      "id": "cross-0004",
+      "area": "crosscut",
+      "category": "coverage",
+      "severity": "low",
+      "title": "范围说明：本轮不覆盖 5,930 张卡面文本、规则书、交互按钮/技能检定提示与记录标签 UI；EOTE 已有独立翻译审计（docs/edgeOfTheEarth/translate）",
+      "count": {
+        "occurrences": 0,
+        "groups": 0
+      },
+      "campaigns": [],
+      "scenarios": [],
+      "samples": [],
+      "evidence": "",
+      "expected": "卡面由既有卡牌迁移/审计链路负责；本报告只覆盖剧情、冒险指南、关卡设置三层。",
+      "suggestion": "后续如要全 Mod 中文验收，把卡面审计与本报告合并成总账本。",
+      "sourceKind": "scope",
+      "metrics": {
+        "note": "scope-only finding"
+      }
+    }
+  ]
+}

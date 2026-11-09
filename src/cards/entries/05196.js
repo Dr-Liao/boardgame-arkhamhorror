@@ -64,15 +64,11 @@ export default {
         for (const owner of state.investigators.filter(item => !item.defeated && !item.resigned)) {
           searchAndPlayForFree(owner, api)
         }
-        // 放逐自身：与引擎 exilePlayerCard 同一记账口径（战役层读 state.exiled / exiledBySeat）。
+        // 放逐自身：走 api（takeDiscardCard + exileCard；exileCard 与引擎 exilePlayerCard 同一记账口径）。
         api.discardAsset(inv.seat, source)
         // discardAsset 会先放进调查员弃牌堆；放逐的卡不应留在弃牌堆（否则可被检索类效果取回）。
-        const discardIndex = (inv.discard || []).lastIndexOf('05196')
-        if (discardIndex >= 0) inv.discard.splice(discardIndex, 1)
-        state.exiled ||= []
-        state.exiled.push('05196')
-        state.exiledBySeat ||= []
-        state.exiledBySeat.push({ seat: inv.seat, code: '05196' })
+        api.takeDiscardCard?.(inv.seat, '05196')
+        api.exileCard?.('05196', { seat: inv.seat })
         api.info('「委员会的保险箱」被放逐。')
       },
     },

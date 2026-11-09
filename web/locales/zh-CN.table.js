@@ -76,6 +76,10 @@ export default {
   'table.result.success': '成功',
   'table.result.failure': '失败',
   'table.timeline.move': '{name} · {action}',
+  // 非攻击来源的自身伤害/恐惧（引擎 applyHarm 的纯展示 cue，见 enemies.js）。
+  'table.timeline.harmDamage': '{name} 受到 {damage} 点伤害',
+  'table.timeline.harmHorror': '{name} 受到 {horror} 点恐惧',
+  'table.timeline.harmBoth': '{name} 受到 {damage} 点伤害、{horror} 点恐惧',
   'table.move.draw': '抽牌',
   'table.move.resource': '获得资源',
   'table.move.move': '移动',

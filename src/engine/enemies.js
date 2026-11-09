@@ -571,8 +571,14 @@ function enterExistingEnemy(state,enemy,{engageSeat=null}={},events=[]) {
     const ruleDoom = Number(enemySpawnRuleFor(code)?.doomOnSpawn) || 0
     const missing = ruleDoom - (enemy.doom || 0)
     if (missing > 0) {
-      enemy.doom = (enemy.doom || 0) + missing
-      info(state, events, `🧿 「${enemy.name}」入场：在它身上放置 ${missing} 个毁灭标记。`)
+      // 与 act-agenda.placeDoomOnCard 同口径：章节声明「毁灭不能放在这张卡上」时，
+      // 入场毁灭的兜底也不能绕过（05095 ×《死亡门前》05085b 的「毁灭不能放在银暮秘社敌人上」）。
+      if (scenarioBehavior(state).canPlaceDoomOn?.(state, enemy) === false) {
+        info(state, events, `🔒 「${enemy.name}」当前不能放置毁灭标记。`)
+      } else {
+        enemy.doom = (enemy.doom || 0) + missing
+        info(state, events, `🧿 「${enemy.name}」入场：在它身上放置 ${missing} 个毁灭标记。`)
+      }
     }
   }
   for (const inv of aliveInvestigators(state)) {
@@ -1017,6 +1023,16 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   }
   const actualDamage = assignedDamage.get(inv) || 0
   const actualHorror = assignedHorror.get(inv) || 0
+  // 非攻击来源、且真正落在调查员身上的伤害/恐惧补一条纯展示 cue：
+  // 时间线此前只有攻击（attack / enemyHarm）或卡面自己写的文字，剧本行为、直接伤害、
+  // 强制效果造成的「卢克·罗宾逊 受到 3 点伤害」完全不可见（2026-11-09 实机排查时，
+  // 落入陷阱的 3 点伤害在日志里没有任何痕迹）。被支援吸收的份额不记（支援自己有承受日志）。
+  // 展示 cue 不进 state.log、不进重放指纹；时间线按 kind === 'harm' 渲染成一行文字。
+  if (!attackOrigin && (actualDamage > 0 || actualHorror > 0)) {
+    emitPresentation(state, events, { type: 'presentation', kind: 'harm',
+      seat: inv.seat, location: inv.location, name: inv.name,
+      damage: actualDamage, horror: actualHorror, direct: !!direct })
+  }
   if (actualDamage > 0 || actualHorror > 0) reactionWindow(state, 'harmAssigned', {
     when: 'harmAssigned', seat: inv.seat, location: inv.location,
     damage: actualDamage, horror: actualHorror, attack,

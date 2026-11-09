@@ -201,7 +201,8 @@ export function createHunchDeck(deps) {
     if (index < 0) return null
     inv.discard.splice(index, 1)
     inv.hunchDeck ||= []
-    inv.hunchDeck.push(code)
+    // 直觉牌库的「顶」是数组尾（揭示用 pop，见 revealHunchCard），因此「底」= 数组头（unshift）。
+    inv.hunchDeck.unshift(code)
     info(state, events, `🔮 ${inv.name} 把弃牌堆里的「${cardName(code)}」放到直觉牌库底。`)
     return code
   }

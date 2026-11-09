@@ -33,12 +33,8 @@ export default {
         if (horror < sanity) return
         // 离场时仍在场上实例里读到的恐惧已达神智上限 → 因恐惧被击败。
         if (source) source.removedFromGame = true
-        state.removedFromGame ||= []
-        if (!state.removedFromGame.includes('05236')) state.removedFromGame.push('05236')
-        state.exiled ||= []
-        if (!state.exiled.includes('05236')) state.exiled.push('05236')
-        state.exiledBySeat ||= []
-        state.exiledBySeat.push({ seat: inv.seat, code: '05236' })
+        api.removeFromGameCards?.('05236')
+        api.exileCard?.('05236', { seat: inv.seat })
         api.info(`${inv.name} 的「指路鬼魂」因恐惧被击败，被放逐（本关结束后从战役牌组移除）。`)
       },
     },

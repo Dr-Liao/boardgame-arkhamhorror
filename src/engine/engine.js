@@ -4,6 +4,7 @@ import { createInvestigatorApi } from './investigator-mechanics.js'
 import { createPlayerApi } from './player-mechanics.js'
 import { setTokenCostShroudReader } from './token-cost.js'
 import { notePromiseEvent } from './turn-promises.js'
+import { setThreatEntryHooks } from './threat-entry.js'
 // 诡镇奇谈：卡牌版 · 规则引擎（Night of the Zealot 三关简化流程）
 //
 // 职责划分：
@@ -180,6 +181,20 @@ setModifierHooks({
   // 2026-11-04 合并：main 侧 batch2 用 hooks.cardDef + SCENE_ENTITY_RULES 实现；
   // backup 侧的 modifierRowAllowed 钩子已被同一读点取代，不重复保留。
   cardDef,
+})
+// 威胁区入场收尾要重判击败（threat-entry.js 不 import 引擎，判定由这里注入）：
+// 威胁卡的持续生命/神智上限修正（如 04085 伊格的诅咒 -1 生命）在入场瞬间生效，
+// 若已有伤害/恐惧已经等于新上限，调查员应当立即被击败，而不是拖到下一次行动结算。
+// 只有确实下调了对应上限才检查：上限没变时提前判负会改变既有结算顺序。
+setThreatEntryHooks({
+  checkLimitDefeat: (state, inv, card, events) => {
+    const effect = getThreatEffect(card)
+    const healthDown = (effect?.healthModifier || 0) < 0
+    const sanityDown = (effect?.sanityModifier || 0) < 0
+    if (!healthDown && !sanityDown) return
+    if ((healthDown && inv.damage >= getMaxHealth(inv))
+      || (sanityDown && inv.horror >= getMaxSanity(inv))) checkDefeated(state, inv.seat, events)
+  },
 })
 // 能力层内容注册（src/cards/card-abilities.js）：描述子、修正、旧印效果。
 // 注册是幂等的"谁先加载谁注册"：审计工具（tools/audit-abilities.mjs）在单进程测试里
@@ -2143,6 +2158,7 @@ function campaignFlowApi() {
 }
 function progressCampaign(...args) { return campaignFlowApi().progressCampaign(...args) }
 function restartScenario(...args) { return campaignFlowApi().restartScenario(...args) }
+function reopenReplacementPreparation(...args) { return campaignFlowApi().reopenReplacementPreparation(...args) }
 export function finishScenario(...args) { return campaignFlowApi().finishScenario(...args) }
 function applyResolutionEffects(...args) { return campaignFlowApi().applyResolutionEffects(...args) }
 function addTrauma(...args) { return campaignFlowApi().addTrauma(...args) }
@@ -2277,6 +2293,7 @@ function dispatchApi() {
   progressCampaign,
   recommendUpgrade,
   registerCampaignInvestigator,
+  reopenReplacementPreparation,
   resolveTransaction,
   runInterlude,
   runMulligans,

@@ -26,14 +26,17 @@ export default {
         if (location.id === 'keziahsRoom') continue
         api.removeLocationFromGame(location.id)
       }
-      // 选择一位调查员控制放在一边的黑书。
+      // 选择一位调查员控制放在一边的黑书（api.choose 只调用一次，不能放进 find 谓词里逐项询问）。
       api.takeFromSetAside(BLACK_BOOK)
-      const chosen = investigators.length === 1 ? investigators[0] : investigators.find(inv =>
-        String(inv.seat) === String(api.choose({
+      let chosen = investigators[0] || null
+      if (investigators.length > 1) {
+        const answer = api.choose?.({
           kind: 'investigator', source: '05125', seat: state.campaign?.leadSeat ?? 0,
           prompt: '选择一位调查员控制放在一边的黑书支援。',
           options: investigators.map(inv => ({ id: String(inv.seat), label: inv.name })),
-        }))) || investigators[0]
+        })
+        chosen = investigators.find(inv => String(inv.seat) === String(answer)) || investigators[0]
+      }
       if (chosen) {
         api.giveAsset(chosen.seat, BLACK_BOOK)
         api.setScenarioFlag('blackBookSeat', chosen.seat)

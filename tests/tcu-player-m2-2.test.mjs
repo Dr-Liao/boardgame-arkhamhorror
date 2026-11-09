@@ -698,6 +698,18 @@ test('TCU 05152 妥善养护 宿主被弃后宿主与其[[升级]]附属一起�
   assert.equal(inv.hand.includes('01030'), true, '宿主返回手牌')
   assert.equal(inv.hand.includes('05152'), true, '附属的[[升级]]卡也返回手牌')
   assert.equal(inv.discard.includes('01030'), false, '不再进弃牌堆（returnedToHand 守卫生效）')
+  assert.equal(inv.discard.includes('05152'), false, '返回手牌的附属不再同时留在弃牌堆')
+  assert.equal(inv.hand.filter(code => code === '05152').length, 1, '附件只返回一张，不重复')
+})
+
+test('TCU 05152 妥善养护 非调查阶段不能再打出（只能在你回合期间）', () => {
+  const state = fixture('01001')
+  asset(state, '01030')
+  me(state).hand = ['05152']
+  me(state).resources = 10
+  state.phase = 'upkeep'
+  const error = validateMove(state, 0, { action: 'play', cardId: '05152' })
+  assert.match(String(error), /回合|调查阶段/, '维持阶段不能打出（只能在你回合期间）')
 })
 
 // ---------------------------------------------------------------------------

@@ -49,7 +49,7 @@
         {
           "children": [
             {
-              "text": "收集以下遭遇组中的所有卡牌：疯狂之心、巨大封印、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、远古恶魔、紧锁之门。这些遭遇组由以下图标标示："
+              "text": "收集以下遭遇组中的所有卡牌：疯狂之心、巨大封印、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、远古恶魔、紧锁之门。"
             },
             {
               "text": "将伊夸之门放置入场，已揭示面朝上。"
@@ -327,7 +327,7 @@
               "title": "结局 3",
               "children": [
                 {
-                  "text": "Resolution 3: 由你们灾难性的错误引起的能量脉冲将会抹去地球表面所有的有机生命。\n\n• 哎呀。\n\n• 在剧本日志中记录 封印使用……不当。\n\n• 所有调查员被击败。\n\n• 调查员在此战役失败"
+                  "text": "由你们灾难性的错误引起的能量脉冲将会抹去地球表面所有的有机生命。\n\n• 哎呀。\n\n• 在剧本日志中记录 封印使用……不当。\n\n• 所有调查员被击败。\n\n• 调查员在此战役失败"
                 }
               ]
             }
@@ -358,7 +358,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Heart of Madness, The Great Seal, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, Ancient Evils, and Locked Doors. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: The Heart of Madness, The Great Seal, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, Ancient Evils, and Locked Doors. "
             },
             {
               "text": "Put The Gate of Y’quaa into play, revealed side faceup."

@@ -367,7 +367,7 @@ test('TCU 05024 指纹采集工具 横置花补给调查：+1 智识且成功额
   assert.equal(after.exhausted, true, '调查需要横置')
 })
 
-test('TCU 05024 指纹采集工具 补给耗尽后弃置且不能再使用', () => {
+test('TCU 05024 指纹采集工具 补给耗尽后仍在场（卡面没有弃置句）', () => {
   const state = fixture('01001')
   const kit = asset(state, '05024', { uses: 1 })
   state.locations[0].clues = 1
@@ -375,8 +375,10 @@ test('TCU 05024 指纹采集工具 补给耗尽后弃置且不能再使用', () 
   use(state, kit)
   resolveChoices(state)
   const inv = state.investigators[0]
-  assert.equal(inv.assets.some(item => item.code === '05024'), false, '用尽后弃置')
-  assert.ok(inv.discard.includes('05024'))
+  const after = inv.assets.find(item => item.code === '05024')
+  assert.ok(after, '用尽后仍留在场上')
+  assert.equal(after.uses, 0, '3 次补给用尽')
+  assert.equal(inv.discard.includes('05024'), false, '卡面没有「补给耗尽后弃置」，不应进弃牌堆')
 })
 
 // ---------------------------------------------------------------------------

@@ -49,7 +49,7 @@
         {
           "children": [
             {
-              "text": "收集以下遭遇组中的所有卡牌：亡命冰原、夜半失踪、被遗弃者、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。这些遭遇组以下列图标标示："
+              "text": "收集以下遭遇组中的所有卡牌：亡命冰原、夜半失踪、被遗弃者、致命天气、南极险境、寂静与谜团、忒咳哩-哩以及远古恶魔。"
             },
             {
               "text": "使用密谋4-6创建密谋牌堆，并使用场景2创建场景牌堆（这些卡牌可以在夜半失踪遭遇组中找到）。"
@@ -147,14 +147,14 @@
           "title": "Investigator Setup",
           "children": [
             {
-              "text": "• Each investigator’s base starting resources is equal to the shelter value of the camp, instead of five.\n\n• Shelter Value: [shelterValue]\n\n• Each investigator may choose one available member of the Expedition Team who is not crossed off or marked “MIA” to join them. Put the story asset for the chosen character into play in that investigator’s play area. Place damage and horror on that character as indicated in the “Expedition Team” section of the Campaign Log."
+              "text": "• Each investigator’s base starting resources is equal to the shelter value of the camp, instead of five.\n\n• Shelter Value: the camp's shelter value\n\n• Each investigator may choose one available member of the Expedition Team who is not crossed off or marked “MIA” to join them. Put the story asset for the chosen character into play in that investigator’s play area. Place damage and horror on that character as indicated in the “Expedition Team” section of the Campaign Log."
             }
           ]
         },
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: Ice and Death, Lost in the Night, Left Behind, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: Ice and Death, Lost in the Night, Left Behind, Deadly Weather, Hazards of Antarctica, Silence and Mystery, Tekeli-li, and Ancient Evils. "
             },
             {
               "text": "Build the agenda deck using agendas 4–6 and the act deck using act 2. (These can be found in the Lost in the Night encounter set.)"

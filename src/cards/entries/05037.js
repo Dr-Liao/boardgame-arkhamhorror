@@ -58,8 +58,8 @@ export default {
           const code = String(chosen).slice('hand:'.length)
           const index = inv.hand.indexOf(code)
           if (index < 0) return
-          inv.hand.splice(index, 1)
-          inv.discard.push(code)
+          // 手牌→弃牌堆走 api（条目不直写 inv.hand / inv.discard）。
+          api.discardFromHand?.(inv.seat, code)
           printedCost = api.cardCost(code) || 0
         } else {
           const asset = inv.assets.find(item => item.id === String(chosen).slice('play:'.length))

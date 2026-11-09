@@ -7,8 +7,8 @@ export default {
   code: '05054', scope: 'act', implemented: true,
   actRule: {
     onReveal(state, act, api) {
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.frontsUnlocked = true
+      // 写入口走 api.setScenarioFlag（读点：本章 behavior.frontLocationError 检查 frontsUnlocked）。
+      api?.setScenarioFlag?.('frontsUnlocked', true)
       api.info?.('🌒 本场冒险接下来的时间里，调查员可以进入其他调查员面前的地点。')
       return true
     },

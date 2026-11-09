@@ -7,6 +7,8 @@
 
 export default {
   code: '05015',
+  // 卡面「不能取消」：引擎读点见 deck-ops 的弱点抽取窗口（registeredEntry(...).cannotBeCanceledRevelation）。
+  cannotBeCanceledRevelation: true,
   abilities: [
     {
       kind: 'weakness',
@@ -28,9 +30,8 @@ export default {
           if (answer === 'horror') {
             api.harm(inv.seat, { horror: 1, strategy: 'self' })
           } else {
-            const index = inv.beneath.indexOf(code)
-            if (index >= 0) inv.beneath.splice(index, 1)
-            inv.discard.push(code)
+            // 2026-11-09 P1-14：beneath 出区走 api.takeBeneathCard（条目不直写 inv.beneath / inv.discard）。
+            api.takeBeneathCard?.(inv.seat, code, { to: 'discard' })
             api.info(`${inv.name} 弃掉了底下的「${api.cardName(code)}」。`)
           }
         }

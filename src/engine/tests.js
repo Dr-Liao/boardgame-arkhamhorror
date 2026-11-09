@@ -366,11 +366,6 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       // 计数在真正投入后由 noteHiddenCommit 写入 `state.scenarioFlags.hiddenCommitCounts`（按轮重置）。
       if (hiddenCommitLimitReached(state, owner)) break
       state.skillTest.value = value + skillTotal() - statReference
-      // 2026-10-25 第四轮修复 commit-extra-cost-hook（05104 被困的灵魂）：
-      // 「在闹鬼地点投入手牌」的额外费用由剧本钩子结算（内容自行保证每场/每次只结算一次）。
-      scenarioBehavior(state).beforeCommitCard?.(state, owner, {
-        skill: skillContext, difficulty, committed: state.skillTest.committed || [],
-      }, scenarioRuntime(state, events))
       const candidates = owner.hand.map((code, index) => ({ code, index }))
         .filter(() => !(cannotCommit && owner === inv))
         // 第 2 步 P2.9：手牌里有「不能投入」的卡（高塔）时，本人不能投入任何卡牌。
@@ -523,6 +518,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       noteHiddenCommit(state, owner)
       notePromiseEvent(state, owner.seat, 'commit', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
       count++
+      // 2026-11-09 P1 修复 05104「被困的灵魂」：投入卡牌的额外费用只在「确实投入了这张牌」之后
+      // 结算（旧实现放在询问「投入/开始检定/放弃协助」之前，投入 0 张或放弃协助也会被迫结算闹鬼）。
+      if (count === 1) {
+        scenarioBehavior(state).beforeCommitCard?.(state, owner, {
+          skill: skillContext, difficulty, committed: state.skillTest.committed || [], committedCode: code,
+        }, scenarioRuntime(state, events))
+      }
       // 2026-10-25 第六轮修复 05119：卡牌进入投入区后的窗口（可追加本次检定图标）。
       {
         const commitContext = { when: 'committedCard', seat: owner.seat, location: owner.location, cardCode: code, card: code, icons }

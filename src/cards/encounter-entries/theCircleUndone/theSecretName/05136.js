@@ -22,11 +22,11 @@ export default {
       const placed = state.locations.find(entry => entry.id === id)
       if (!placed) return
       // 「本场冒险余下的时间里视为互相连接」：写进 scenarioFlags.extraConnections，
-      // behavior.locationRevealed 在每次按符号重算连线后会把它们并回来。
-      state.scenarioFlags ||= {}
-      const extra = (state.scenarioFlags.extraConnections ||= {})
+      // behavior.locationRevealed 在每次按符号重算连线后会把它们并回来（经 api.setScenarioFlag 写入）。
+      const extra = { ...(api.scenarioFlag?.('extraConnections') || {}) }
       extra[location.id] = [...new Set([...(extra[location.id] || []), id])]
       extra[id] = [...new Set([...(extra[id] || []), location.id])]
+      api.setScenarioFlag?.('extraConnections', extra)
       api.connectLocations?.(location.id, id)
       api.info?.(`🌫️ 古老者之城与「${api.locName?.(id) || id}」互相连接。`)
     },

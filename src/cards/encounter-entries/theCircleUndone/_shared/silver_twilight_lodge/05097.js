@@ -54,7 +54,7 @@ export default {
       api.drawEncounter?.(inv.seat)
       return false
     }
-    chosen.roundFightEvadeBonus = { round: state.round, amount: 2 }
+    api.setEnemyRoundFightEvadeBonus?.(chosen, 2)
     api.info?.(`秘社玄仪：在「${chosen.name}」上放置 1 个毁灭标记；直到一轮结束，对其攻击、躲避或谈判的难度 +2。`)
     return false
   },

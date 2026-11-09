@@ -37,7 +37,7 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：苍白面具、食尸鬼、如影随形、寒冷刺骨。这些遭遇组的图标为："
+              "text": "收齐以下遭遇组的所有卡牌：苍白面具、食尸鬼、如影随形、寒冷刺骨。"
             },
             {
               "text": "找出暗影坟墓和堵塞通道(每张均为地下墓穴地点的已揭示面)。将这些卡牌放在一边，位于场外。"
@@ -156,7 +156,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Pallid Mask, Ghouls, Hauntings, and Chilling Cold. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: The Pallid Mask, Ghouls, Hauntings, and Chilling Cold. "
             },
             {
               "text": "Find the Tomb of Shadows and the Blocked Passage (each one is the revealed side of a Catacombs location). Set them aside, out of play."

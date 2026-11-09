@@ -93,6 +93,7 @@ export function createScenarioRuntime(deps) {
     canDiscoverClueAt,
     cardDef,
     cardName,
+    checkDefeated,
     checkSupplies,
     crossOffSupply,
     damageEnemy,
@@ -147,6 +148,8 @@ export function createScenarioRuntime(deps) {
     groupPayment,
     // 2026-10-25 第四轮修复 05171b：把修改后的技能值暴露给内容层（区别于印刷基值）。
     getStat,
+    getMaxHealth,
+    getMaxSanity,
     // 第四循环P2.1：闹鬼结算（印刷 + 授予能力、顺序询问、可取消、可重复）。
     clearHauntedGrants,
     grantHaunted,
@@ -1002,6 +1005,14 @@ function scenarioRuntime(state, events, testSource = null) {
       state.removedFromGame.push(card.originalCode || card.code)
       return true
     },
+    // 2026-11-09 P1-14：密谋牌库旁的公开读/弃入口（05089/05102/05107 不再直写 scenarioZones）。
+    agendaAsideCards: () => (state.agendaAside || []).map(card => card.originalCode || card.code),
+    discardAgendaAside: id => {
+      const card = (state.agendaAside || []).find(item => item.id === id)
+      if (!card) return null
+      state.agendaAside.splice(state.agendaAside.indexOf(card), 1)
+      return card.originalCode || card.code
+    },
     addAgendaDoomThreshold: (delta = 1) => {
       const agenda = state.agendas?.[state.agendaIndex]
       if (!agenda) return null
@@ -1343,6 +1354,15 @@ function scenarioRuntime(state, events, testSource = null) {
     // 抽牌走与普通遭遇牌同一条显现管线；牌堆顺序不进入观察投影，只公开张数与弃牌堆。
     extraDeck: (id, codes) => setExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
     extraDeckInfo: id => extraEncounterDeckInfo(state, id),
+    // 2026-11-09 P1-14：额外遭遇牌堆（幽灵/异界）的取回入口，条目不再直写 piles.discard/deck。
+    takeExtraDiscard: (id, code) => {
+      const piles = state.extraEncounterDecks?.[id]
+      const target = String(code)
+      if (!piles || !Array.isArray(piles.discard)) return null
+      const index = piles.discard.lastIndexOf(target)
+      if (index < 0) return null
+      return piles.discard.splice(index, 1)[0] ?? null
+    },
     extraDecks: () => extraEncounterDecksInfo(state),
     addExtra: (id, codes, options) => addToExtraEncounterDeck(state, id, codes, options),
     shuffleExtra: (id, codes) => shuffleIntoExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
@@ -1589,6 +1609,100 @@ function scenarioRuntime(state, events, testSource = null) {
     removeBreach: (id, amount = 1) => removeBreach(state, id, amount),
     breachOf: id => breachOf((state.locations || []).find(location => location.id === id)),
     breachTotal: () => breachTotal(state),
+    // 2026-11-09 P1-16：地点/诡计条目化的通用动作原语。
+    discardOneFromHand: (seat, options = {}) => {
+      const inv = state.investigators?.[seat]
+      if (!inv || !(inv.hand || []).length) return null
+      let index = 0
+      const answer = requestChoice(state, {
+        kind: 'card', source: options.source || 'discardOneFromHand', seat,
+        prompt: options.prompt || '选择并弃掉 1 张手牌。',
+        options: inv.hand.map((code, position) => ({ id: String(position), label: cardName(code) })),
+      })
+      const parsed = Number(answer)
+      if (Number.isInteger(parsed) && parsed >= 0 && parsed < inv.hand.length) index = parsed
+      const [code] = inv.hand.splice(index, 1)
+      discardPlayerCards(state, inv, code)
+      return code
+    },
+    discardOneAsset: (seat, options = {}) => {
+      const inv = state.investigators?.[seat]
+      const assets = [...(inv?.assets || [])]
+      if (!assets.length) return null
+      let index = 0
+      const answer = requestChoice(state, {
+        kind: 'asset', source: options.source || 'discardOneAsset', seat,
+        prompt: options.prompt || '选择并弃掉 1 个支援。',
+        options: assets.map((asset, position) => ({ id: String(position), label: cardName(asset.code) })),
+      })
+      const parsed = Number(answer)
+      if (Number.isInteger(parsed) && parsed >= 0 && parsed < assets.length) index = parsed
+      const asset = assets[index]
+      // 走引擎统一离场入口（leaveAsset：处理附属/离场替代/不能离场）。
+      if (leaveAsset(state, inv, asset, events) === false || inv.assets.includes(asset)) return null
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+      return asset.code
+    },
+    randomLocationIds: (count = 1, options = {}) => {
+      const pool = (state.locations || []).map(location => location.id)
+      const total = Math.min(Math.max(0, Math.floor(Number(count) || 0)), pool.length)
+      if (total <= 0) return []
+      const shuffledPool = options.shuffle
+        ? options.shuffle(pool, () => randomValue(state))
+        : shuffle(pool, () => randomValue(state))
+      return shuffledPool.slice(0, total)
+    },
+    // 「查找遭遇牌库/弃牌堆的某特性敌人并抽取」：候选由队长选择；取牌→置于遭遇牌库顶→走抽牌管线。
+    drawEncounterByTrait: (trait, seat, options = {}) => {
+      const wanted = String(trait || '').toLowerCase()
+      const isCandidate = code => {
+        const def = cardDef(code)
+        return def?.type === 'enemy'
+          && (def.traits || []).some(value => String(value).toLowerCase() === wanted)
+      }
+      const collect = (list, pile) => list
+        .map((code, index) => ({ pile, index, code }))
+        .filter(item => isCandidate(item.code))
+      const candidates = [
+        ...collect([...(state.encounterDeck || [])], 'encounterDeck'),
+        ...collect([...(state.encounterDiscard || [])], 'encounterDiscard'),
+      ]
+      if (!candidates.length) return null
+      let chosen = candidates[0]
+      if (candidates.length > 1) {
+        const answer = requestChoice(state, {
+          kind: 'card', source: options.source || 'drawEncounterByTrait', seat,
+          prompt: `查找遭遇牌库和弃牌堆，选择要抽取的[[${trait}]]敌人。`,
+          options: candidates.map((entry, index) => ({
+            id: String(index),
+            label: `${cardName(entry.code)}（${entry.pile === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,
+          })),
+        })
+        const picked = Number(answer)
+        if (Number.isInteger(picked) && picked >= 0 && picked < candidates.length) chosen = candidates[picked]
+      }
+      const pile = chosen.pile === 'encounterDeck' ? (state.encounterDeck ||= []) : (state.encounterDiscard ||= [])
+      const index = pile.indexOf(chosen.code)
+      if (index < 0) return null
+      pile.splice(index, 1)
+      state.encounterDeck ||= []
+      state.encounterDeck.push(chosen.code)
+      drawEncounter(state, state.investigators[seat], events)
+      return chosen.code
+    },
+    moveBreachesToAct: (locationId, amount = 1) => {
+      const location = (state.locations || []).find(item => item.id === locationId)
+      if (!location) return 0
+      const pile = state.acts?.[state.actIndex ?? 0]
+      if (!pile) return 0
+      const want = Math.max(0, Math.floor(Number(amount) || 0))
+      const have = Number(breachesOf(location) || 0)
+      const moved = Math.min(want, have)
+      if (moved <= 0) return 0
+      removeBreach(state, locationId, moved)
+      pile.breaches = Math.max(0, (Number(pile.breaches) || 0) + moved)
+      return moved
+    },
     skullValue: id => locationSkullValue(state, id),
     locationFlag: id => {
       const location = (state.locations || []).find(item => item.id === id)
@@ -1669,7 +1783,15 @@ function scenarioRuntime(state, events, testSource = null) {
         return null
       }
       const asset = newCardInstance(state, code, { exhausted: false, ...extra })
+      const healthBefore = getMaxHealth(inv)
+      const sanityBefore = getMaxSanity(inv)
       inv.assets.push(asset); scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
+      // 剧本直接放置的支援可能带负数生命/神智上限修正（如 03321b 神智 -2）：只有上限确实
+      // 下调、且已经降到等于伤害/恐惧时才补判负（避免在嵌套结算里提前结束流程）。
+      if ((getMaxHealth(inv) < healthBefore && inv.damage >= getMaxHealth(inv))
+        || (getMaxSanity(inv) < sanityBefore && inv.horror >= getMaxSanity(inv))) {
+        checkDefeated(state, inv.seat, events)
+      }
       return asset
     },
     canPlayAsset: (seat, code) => !scenarioAssetPlayError(state, state.investigators[seat], code),
@@ -1795,6 +1917,125 @@ function scenarioRuntime(state, events, testSource = null) {
       state.encounterDiscard.splice(index, 1)
       if (options.toDeck === true) state.encounterDeck.push(target)
       return true
+    },
+    // 2026-11-09 P1-14（R1 收口）：遭遇/玩家区域的通用读写原语。条目不得直写
+    // state.encounterDeck / state.encounterDiscard / inv.hand / inv.discard / state.removedFromGame。
+    encounterDeckCards: () => [...(state.encounterDeck || [])],
+    encounterDiscardCards: () => [...(state.encounterDiscard || [])],
+    discardEncounterCards: (codes, options = {}) => {
+      state.encounterDiscard ||= []
+      const list = (Array.isArray(codes) ? codes : [codes]).filter(code => typeof code === 'string' && code)
+      for (const code of list) state.encounterDiscard.push(code)
+      if (options.log !== false && list.length) info(state, events, `弃掉遭遇卡：${list.map(cardName).join('、')}。`)
+      return list.length
+    },
+    // 放到遭遇牌库顶（默认，pop 读顶）或牌库底；shuffle=true 时与整叠混洗。
+    putOnEncounterDeck: (codes, options = {}) => {
+      state.encounterDeck ||= []
+      const list = (Array.isArray(codes) ? codes : [codes]).filter(code => typeof code === 'string' && code)
+      if (options.shuffle === true) state.encounterDeck = shuffle([...state.encounterDeck, ...list], () => randomValue(state))
+      else if (options.bottom === true) state.encounterDeck.unshift(...list)
+      else state.encounterDeck.push(...list)
+      return list.length
+    },
+    rebuildEncounterDeckFromDiscard: (options = {}) => {
+      const pool = [...(state.encounterDiscard || [])]
+      if (!pool.length) return 0
+      state.encounterDiscard = []
+      state.encounterDeck = options.shuffle === false ? pool : shuffle(pool, () => randomValue(state))
+      info(state, events, `遭遇弃牌堆的 ${pool.length} 张卡洗回遭遇牌库。`)
+      return pool.length
+    },
+    // 玩家区域：手牌/弃牌堆/牌库顶/移除区。`putInDiscard` 默认只补进弃牌堆；
+    // fromHand=true 时同时从手牌移出（等价 discardFromHand 但不触发弃牌窗口之外的副作用）。
+    putInDiscard: (seat, code, options = {}) => {
+      const inv = state.investigators?.[seat]
+      if (!inv || typeof code !== 'string' || !code) return false
+      if (options.fromHand === true) {
+        const handIndex = (inv.hand || []).lastIndexOf(code)
+        if (handIndex >= 0) inv.hand.splice(handIndex, 1)
+      }
+      inv.discard ||= []
+      inv.discard.push(code)
+      return true
+    },
+    takeDiscardCard: (seat, code) => {
+      const inv = state.investigators?.[seat]
+      const index = inv?.discard?.lastIndexOf(String(code)) ?? -1
+      if (!inv || index < 0) return null
+      return inv.discard.splice(index, 1)[0]
+    },
+    putOnTopOfDeck: (seat, code) => {
+      const inv = state.investigators?.[seat]
+      if (!inv || typeof code !== 'string' || !code) return false
+      inv.deck ||= []
+      inv.deck.push(code)
+      return true
+    },
+    putOnDeckBottom: (seat, code) => {
+      const inv = state.investigators?.[seat]
+      if (!inv || typeof code !== 'string' || !code) return false
+      inv.deck ||= []
+      inv.deck.unshift(code)
+      return true
+    },
+    takeDeckBottom: seat => {
+      const inv = state.investigators?.[seat]
+      if (!inv || !(inv.deck || []).length) return null
+      return inv.deck.shift()
+    },
+    takeEncounterDeckBottom: () => {
+      state.encounterDeck ||= []
+      if (!state.encounterDeck.length) return null
+      return state.encounterDeck.shift()
+    },
+    takeDeckCard: (seat, code) => {
+      const inv = state.investigators?.[seat]
+      const index = inv?.deck?.lastIndexOf(String(code)) ?? -1
+      if (!inv || index < 0) return null
+      return inv.deck.splice(index, 1)[0]
+    },
+    removeFromGameCards: (codes, options = {}) => {
+      state.removedFromGame ||= []
+      const list = (Array.isArray(codes) ? codes : [codes]).filter(code => typeof code === 'string' && code)
+      for (const code of list) if (!state.removedFromGame.includes(code)) state.removedFromGame.push(code)
+      if (options.log !== false && list.length) info(state, events, `把 ${list.map(cardName).join('、')} 移出游戏。`)
+      return list.length
+    },
+    // 2026-11-09 P1-14：压在某张宿主卡/调查员「底下」的卡（黛安娜·史丹利的 beneath 区）。
+    beneathCards: seat => [...(state.investigators?.[seat]?.beneath || [])],
+    takeBeneathCard: (seat, code, options = {}) => {
+      const owner = state.investigators?.[seat]
+      if (!owner) return null
+      const index = (owner.beneath || []).lastIndexOf(String(code))
+      if (index < 0) return null
+      const [taken] = owner.beneath.splice(index, 1)
+      if (options.to === 'hand') {
+        owner.hand ||= []
+        owner.hand.push(taken)
+      } else if (options.to === 'discard') {
+        owner.discard ||= []
+        owner.discard.push(taken)
+      }
+      return taken
+    },
+    // 敌人实例字段的通用写点（P1-14：05086/05091/05097/05123 等不再直写 enemy.*）。
+    setEnemyDamageTaken: (enemy, amount = 0) => {
+      if (!enemy) return null
+      const value = Math.max(0, Number(amount) || 0)
+      enemy.damageTaken = value
+      if (enemy.health != null && value >= enemy.health) return enemy
+      return value
+    },
+    putEnemyInPlay: enemy => {
+      if (!enemy) return false
+      if (!state.enemies.includes(enemy)) state.enemies.push(enemy)
+      return state.enemies.includes(enemy)
+    },
+    setEnemyRoundFightEvadeBonus: (enemy, amount = 2, options = {}) => {
+      if (!enemy) return null
+      enemy.roundFightEvadeBonus = { round: options.round ?? state.round, amount: Number(amount) || 2 }
+      return enemy.roundFightEvadeBonus
     },
     // 地点线索的通用增减（调查/效果共用唯一写入口；同步组线索池）。
     addCluesToLocation: (locationId, amount = 1) => {

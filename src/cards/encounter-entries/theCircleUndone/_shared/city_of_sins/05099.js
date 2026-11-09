@@ -9,26 +9,6 @@
 
 import { ALL_CARDS, hasTrait } from '../../../_shared.js'
 
-// 弃遭遇牌库顶 1 张（牌库空则把弃牌堆洗回，与引擎抽牌补牌口径一致，但不触发显现）。
-function discardEncounterTop(state, api, count) {
-  const discarded = []
-  for (let index = 0; index < count; index++) {
-    if (!state.encounterDeck.length) {
-      if (!state.encounterDiscard.length) break
-      if (typeof api.shuffleDiscard === 'function') api.shuffleDiscard()
-      else {
-        state.encounterDeck = [...state.encounterDiscard]
-        state.encounterDiscard = []
-      }
-    }
-    if (!state.encounterDeck.length) break
-    const code = state.encounterDeck.pop()
-    state.encounterDiscard.push(code)
-    discarded.push(code)
-  }
-  return discarded
-}
-
 export default {
   code: '05099',
   scope: 'treachery',
@@ -40,7 +20,8 @@ export default {
       failedBy = Math.max(0, (result.difficulty ?? 5) - (result.value ?? 0))
     })
     if (failedBy <= 0) return false
-    const discarded = discardEncounterTop(state, api, failedBy)
+    // 弃遭遇牌库顶 N 张走引擎弃顶入口（牌库空时自动把弃牌堆洗回，与抽牌补牌口径一致）。
+    const discarded = api.discardEncounterTop?.(failedBy, { reshuffle: true }) || []
     const labels = discarded.map(code => ALL_CARDS[code]?.nameZh || code).join('、') || '无'
     api.info?.(`百年秘事：检定失败 ${failedBy} 点，弃掉遭遇牌库顶 ${discarded.length} 张（${labels}）。`)
     const cursed = discarded.some(code => ALL_CARDS[code]?.type === 'treachery' && hasTrait(ALL_CARDS[code], 'Curse'))

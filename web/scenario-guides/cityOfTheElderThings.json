@@ -43,7 +43,7 @@
             {
               "children": [
                 {
-                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、古老者、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、紧锁之门。这些遭遇组由以下图标标示："
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、古老者、瘴气、无名恐怖、企鹅、修格斯、忒咳哩-哩、紧锁之门。"
                 },
                 {
                   "text": "将修格斯遭遇组放在一边，置于场外。"
@@ -74,7 +74,7 @@
             {
               "children": [
                 {
-                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、古老者、无名恐怖、企鹅、寂静与谜团、忒咳哩-哩、刺骨严寒。这些遭遇组由以下图标标示："
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、古老者、无名恐怖、企鹅、寂静与谜团、忒咳哩-哩、刺骨严寒。"
                 },
                 {
                   "text": "将冰中生物遭遇组放在一边，置于场外。"
@@ -105,7 +105,7 @@
             {
               "children": [
                 {
-                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、瘴气、企鹅、修格斯、忒咳哩-哩、刺骨严寒、紧锁之门。这些遭遇组由以下图标标示："
+                  "text": "收集以下遭遇组中的所有卡牌：古老者之城、冰中生物、瘴气、企鹅、修格斯、忒咳哩-哩、刺骨严寒、紧锁之门。"
                 },
                 {
                   "text": "将修格斯遭遇组放在一边，置于场外。"
@@ -332,7 +332,7 @@
             {
               "children": [
                 {
-                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Elder Things, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, and Locked Doors. These sets are indicated by the following icons:"
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Elder Things, Miasma, Nameless Horrors, Penguins, Shoggoths, Tekeli-li, and Locked Doors. "
                 },
                 {
                   "text": "Set aside the Shoggoths encounter set."
@@ -363,7 +363,7 @@
             {
               "children": [
                 {
-                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Elder Things, Nameless Horrors, Penguins, Silence and Mystery, Tekeli-li, and Chilling Cold. These sets are indicated by the following icons:"
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Elder Things, Nameless Horrors, Penguins, Silence and Mystery, Tekeli-li, and Chilling Cold. "
                 },
                 {
                   "text": "Set aside the Creatures in the Ice encounter set."
@@ -394,7 +394,7 @@
             {
               "children": [
                 {
-                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Miasma, Penguins, Shoggoths, Tekeli-li, Chilling Cold, and Locked Doors. These sets are indicated by the following icons:"
+                  "text": "Gather all cards from the following encounter sets: City of the Elder Things, Creatures in the Ice, Miasma, Penguins, Shoggoths, Tekeli-li, Chilling Cold, and Locked Doors. "
                 },
                 {
                   "text": "Set aside the Shoggoths encounter set."

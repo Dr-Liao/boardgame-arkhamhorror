@@ -14,26 +14,30 @@ export default {
     performAction(state, inv, move, api) {
       if (move.rule !== 'joeSearchBlessed') return false
       // 卡面是「团队每场游戏一次」：能力一旦被触发就消耗次数，即使牌组里没有合法目标。
-      state.scenarioFlags ||= {}
-      if (state.scenarioFlags.joeSearchUsed) return false
-      state.scenarioFlags.joeSearchUsed = true
-      const candidates = (inv.deck || []).filter(code => {
+      if (api.scenarioFlag?.('joeSearchUsed')) return false
+      api.setScenarioFlag?.('joeSearchUsed', true)
+      // 牌组里同名卡通常有两张：选项 id 必须按卡号去重，否则引擎 requestChoice 会因重复 id 抛错。
+      const candidates = [...new Set((inv.deck || []).filter(code => {
         const card = ALL_CARDS[code]
         return card?.type === 'asset'
           && (card.traits || []).some(trait => ['Blessed', 'Item'].includes(trait))
-      })
+      }))]
       if (!candidates.length) {
         api.info?.('📖 乔的房间：牌组里没有祝福/道具支援（本次已消耗团队每场一次）。')
         return true
       }
-      const picked = candidates.length === 1 ? candidates[0] : candidates.find(code =>
-        String(api.choose?.({
+      let picked = candidates[0]
+      if (candidates.length > 1) {
+        const answer = api.choose?.({
           kind: 'card', source: '05130', seat: inv.seat,
           prompt: '选择一张祝福/道具支援加入手牌。',
           options: candidates.map(code => ({ id: code, label: ALL_CARDS[code]?.nameZh || code })),
-        })) === code) || candidates[0]
-      inv.deck.splice(inv.deck.indexOf(picked), 1)
-      inv.hand.push(picked)
+        })
+        picked = candidates.find(code => String(answer) === code) || candidates[0]
+      }
+      // 牌组→手牌走 api 区域原语（条目不直写 inv.deck / inv.hand）。
+      api.takeDeckCard?.(inv.seat, picked)
+      api.putInHand?.(inv.seat, picked)
       api.info?.(`📖 乔的房间：${inv.name} 找到「${ALL_CARDS[picked]?.nameZh || picked}」。`)
       return true
     },

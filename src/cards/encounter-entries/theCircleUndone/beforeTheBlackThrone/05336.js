@@ -10,8 +10,7 @@ export default {
   locationRule: {
     onEnter: {
       effect(state, location, api, inv) {
-        const flags = state.scenarioFlags ||= {}
-        const resources = Number(flags.referenceResources || 0)
+        const resources = Number(api.scenarioFlag?.('referenceResources') ?? state.scenarioFlags?.referenceResources ?? 0)
         if (resources < 1) return
         const connections = (location.connections || [])
           .filter(id => (state.locations || []).some(candidate => candidate.id === id))
@@ -25,7 +24,7 @@ export default {
           prompt: '舞者之雾：移除冒险参考卡 1 资源，移动到一个连接地点。', options,
         })
         if (answer === 'skip' || !connections.includes(answer)) return
-        flags.referenceResources = resources - 1
+        api.setScenarioFlag?.('referenceResources', resources - 1)
         api.moveInvestigator(inv.seat, answer)
         api.info(`💨 舞者之雾把 ${inv.name} 送到「${(state.locations.find(candidate => candidate.id === answer) || {}).name || answer}」。`)
       },

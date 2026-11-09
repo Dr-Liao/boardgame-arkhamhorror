@@ -7,6 +7,7 @@
 //      treacheryRule 的规则行为（直接 import 单卡文件，不依赖 implementedFor）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { zoneApi } from './tcu-zone-api.mjs'
 import { investigatorEntryError } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import * as secretName from '../content/campaigns/theCircleUndone/scenarios/theSecretName/index.js'
@@ -106,7 +107,7 @@ const loc = (state, id) => state.locations.find(location => location.id === id)
 const codeOf = card => card?.originalCode || card?.code
 
 function apiStub(state, overrides = {}) {
-  return {
+  const api = {
     info: () => {}, choose: () => 'skip', random: () => 0.5,
     damage: (seat, amount) => { state.investigators[seat].damage += amount },
     horror: (seat, amount) => { state.investigators[seat].horror += amount },
@@ -255,6 +256,7 @@ function apiStub(state, overrides = {}) {
     locName: id => loc(state, id)?.name || id,
     ...overrides,
   }
+  return { ...zoneApi(state), ...api }
 }
 const apiForAttack = []
 

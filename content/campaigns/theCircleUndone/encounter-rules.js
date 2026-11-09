@@ -177,18 +177,28 @@ export const watcherSummary = state => ({
 
 // ---------------------------------------------------------------------------
 // 「放在密谋牌库旁边」的共享区（05089 魔鬼的笛声 / 05087 / 05102 等）：纯 JSON，
-// 挂在 state.scenarioZones.agendaAside = [{ id, code }]，不进 manifest 区域。
-// 单卡条目直接读写这个区；轮末清理走 encounterRules.roundEnded 的通用分支。
+// 统一挂在 state.agendaAside（引擎 api.putNextToAgenda / api.discardAgendaAside 的公开区；
+// 旧存档里的 state.scenarioZones.agendaAside 由本文件兼容读取）。
+// 单卡条目经 api 读写该区；轮末清理走 encounterRules.roundEnded 的通用分支。
 // ---------------------------------------------------------------------------
+function legacyAgendaAside(state) {
+  const legacy = state.scenarioZones?.agendaAside
+  return Array.isArray(legacy) ? legacy : []
+}
 export function agendaAside(state) {
-  const zones = (state.scenarioZones ||= {})
-  return (zones.agendaAside ||= [])
+  if (!Array.isArray(state.agendaAside)) state.agendaAside = []
+  // 读到旧表示时并进统一区一次（迁移后不再写回 scenarioZones）。
+  for (const entry of legacyAgendaAside(state)) {
+    if (!state.agendaAside.some(item => item.id === entry.id)) state.agendaAside.push({ ...entry })
+  }
+  if (Array.isArray(state.scenarioZones?.agendaAside)) delete state.scenarioZones.agendaAside
+  return state.agendaAside
 }
 export function agendaAsideCount(state, code) {
-  return agendaAside(state).filter(entry => entry.code === code).length
+  return agendaAside(state).filter(entry => (entry.originalCode || entry.code) === code).length
 }
 export function placeAgendaAside(state, code, extra = {}) {
-  const entry = { id: `${code}:${state.round}:${agendaAside(state).length}`, code, ...extra }
+  const entry = { id: `${code}:${state.round}:${agendaAside(state).length}`, code, originalCode: code, ...extra }
   agendaAside(state).push(entry)
   return entry
 }
@@ -196,7 +206,7 @@ export function removeAgendaAside(state, predicate) {
   const list = agendaAside(state)
   const removed = list.filter(predicate)
   if (!removed.length) return []
-  state.scenarioZones.agendaAside = list.filter(entry => !predicate(entry))
+  state.agendaAside = list.filter(entry => !predicate(entry))
   return removed
 }
 
@@ -635,18 +645,15 @@ export const encounterRules = Object.freeze({
 
   roundEnded(state, api) {
     // 密谋牌库旁的诡计：轮末弃掉（05102 黑暗中的低语）；同时清理它授予的闹鬼能力。
-    const aside = state.scenarioZones?.agendaAside
-    if (Array.isArray(aside)) {
-      for (const entry of [...aside]) {
-        const rule = treacheryRuleFor(entry.code)
-        if (!rule?.discardAtRoundEnd) continue
-        removeAgendaAside(state, candidate => candidate.id === entry.id)
-        if (entry.hauntGrantId && typeof api.clearHauntedGrants === 'function') {
-          api.clearHauntedGrants(grant => grant.ability?.id === entry.hauntGrantId)
-        }
-        state.encounterDiscard.push(entry.code)
-        api.info?.(`🌀 「${ALL_CARDS[entry.code]?.nameZh || entry.code}」在轮末被弃掉。`)
+    for (const entry of [...agendaAside(state)]) {
+      const rule = treacheryRuleFor(entry.code)
+      if (!rule?.discardAtRoundEnd) continue
+      removeAgendaAside(state, candidate => candidate.id === entry.id)
+      if (entry.hauntGrantId && typeof api.clearHauntedGrants === 'function') {
+        api.clearHauntedGrants(grant => grant.ability?.id === entry.hauntGrantId)
       }
+      state.encounterDiscard.push(entry.code)
+      api.info?.(`🌀 「${ALL_CARDS[entry.code]?.nameZh || entry.code}」在轮末被弃掉。`)
     }
     // 敌人轮末强制（条目 enemyScript.onRoundEnd）。
     for (const enemy of [...(state.enemies || [])]) {
@@ -740,9 +747,13 @@ export const encounterRules = Object.freeze({
       finish()
       return true
     }
+    // 来源名按卡号在服务端解析：客户端的 move 不带 label，用 move.label 会让时间线的检定
+    // 只显示通用「技能检定」，看不出是在摆脱哪张威胁卡/地点附属。
+    const sourceCode = original(target)
+    const sourceName = ALL_CARDS[sourceCode]?.nameZh || ALL_CARDS[sourceCode]?.name || sourceCode
     api.test(inv.seat, skill, Number(spec.difficulty ?? 0), result => {
       if (result.success) finish()
-    }, 0, { type: 'scenario', name: move.label, ability: true, code: original(target) })
+    }, 0, { type: 'scenario', name: sourceName, ability: true, code: sourceCode })
     return true
   },
 })

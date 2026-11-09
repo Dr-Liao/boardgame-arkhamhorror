@@ -47,13 +47,13 @@
   "cycles01to05": 1341
  },
  "counts": {
-  "directStateWrite": 164,
-  "singleCardField": 30,
+  "directStateWrite": 113,
+  "singleCardField": 21,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
   "testWrapper": 22,
   "revelationTestCards": 81,
-  "selfCodeInstanceLookup": 20
+  "selfCodeInstanceLookup": 19
  },
  "baseline": {
   "directStateWrite": [
@@ -169,57 +169,6 @@
    "04319",
    "04345",
    "04346",
-   "05004",
-   "05010",
-   "05012",
-   "05015",
-   "05037",
-   "05045",
-   "05047",
-   "05051",
-   "05054",
-   "05055b",
-   "05057",
-   "05058",
-   "05059",
-   "05060",
-   "05061",
-   "05086",
-   "05089",
-   "05090",
-   "05091",
-   "05097",
-   "05099",
-   "05102",
-   "05103",
-   "05107",
-   "05113",
-   "05116",
-   "05121",
-   "05122",
-   "05123",
-   "05126",
-   "05129",
-   "05130",
-   "05132",
-   "05133",
-   "05134",
-   "05136",
-   "05137",
-   "05138",
-   "05139",
-   "05141",
-   "05143",
-   "05144",
-   "05188",
-   "05195",
-   "05196",
-   "05236",
-   "05259",
-   "05275",
-   "05336",
-   "05339",
-   "05340",
    "08008"
   ],
   "reprintDuplicate": [],
@@ -252,20 +201,8 @@
     "code": "01174"
    },
    {
-    "field": "chosen.roundFightEvadeBonus",
-    "code": "05097"
-   },
-   {
     "field": "chosen.toweringBeasts",
     "code": "02256"
-   },
-   {
-    "field": "committed.extraIcons",
-    "code": "05195"
-   },
-   {
-    "field": "entry.hauntGrantId",
-    "code": "05102"
    },
    {
     "field": "entry.removedCards",
@@ -288,20 +225,8 @@
     "code": "04137b"
    },
    {
-    "field": "flags.referenceResources",
-    "code": "05336"
-   },
-   {
     "field": "guest.clues",
     "code": "03082"
-   },
-   {
-    "field": "here.connections",
-    "code": "05133"
-   },
-   {
-    "field": "holder.engaged",
-    "code": "05086"
    },
    {
     "field": "horror.doom",
@@ -316,8 +241,8 @@
     "code": "02142"
    },
    {
-    "field": "nahab.exhausted",
-    "code": "05144"
+    "field": "inv.engaged",
+    "code": "04302"
    },
    {
     "field": "picked.doom",
@@ -326,18 +251,6 @@
    {
     "field": "picked.exhausted",
     "code": "03097"
-   },
-   {
-    "field": "piles.deck",
-    "code": "05090"
-   },
-   {
-    "field": "placed.connections",
-    "code": "05133"
-   },
-   {
-    "field": "records.youAreBeingHunted",
-    "code": "05045"
    },
    {
     "field": "whip.exhausted",
@@ -477,42 +390,12 @@
     "file": "src/cards/encounter-entries/theCircleUndone/_shared/agents_of_azathoth/05089.js",
     "hits": [
      {
-      "line": 57,
+      "line": 55,
       "text": "api.info?.('「魔鬼的笛声」被放到密谋牌库旁边。')"
      },
      {
-      "line": 58,
-      "text": "const copies = aside.filter(item => item.code === '05089')"
-     },
-     {
-      "line": 60,
-      "text": "// 3 张齐了：弃掉这 3 张，吹笛手与猎物交战生成（从场外任意区域）。"
-     },
-     {
-      "line": 61,
-      "text": "zones.agendaAside = aside.filter(item => item.code !== '05089')"
-     }
-    ]
-   },
-   {
-    "code": "05107",
-    "file": "src/cards/encounter-entries/theCircleUndone/_shared/inexorable_fate/05107.js",
-    "hits": [
-     {
-      "line": 40,
-      "text": "const aside = (zones.agendaAside ||= [])"
-     },
-     {
-      "line": 41,
-      "text": "const existing = aside.filter(entry => entry.code === '05107')"
-     },
-     {
-      "line": 45,
-      "text": "// 第三张：牌库旁 2 张 + 当前这张共 3 张全部弃掉；当前这张交给引擎弃置（会进本次抽牌牌堆的弃牌堆）。"
-     },
-     {
-      "line": 46,
-      "text": "zones.agendaAside = aside.filter(entry => entry.code !== '05107')"
+      "line": 56,
+      "text": "const copies = (api.agendaAsideCards?.() || []).filter(code => code === '05089')"
      }
     ]
    },
@@ -521,11 +404,11 @@
     "file": "src/cards/entries/05152.js",
     "hits": [
      {
-      "line": 26,
+      "line": 28,
       "text": "const upgrades = context.asset?.attachments || []"
      },
      {
-      "line": 27,
+      "line": 29,
       "text": "return upgrades.some(entry => entry.code === '05152')"
      }
     ]
@@ -827,21 +710,14 @@
   "chosen.lockedDoorCode": [
    "01174"
   ],
-  "chosen.roundFightEvadeBonus": [
-   "05097"
-  ],
   "chosen.toweringBeasts": [
    "02256"
-  ],
-  "committed.extraIcons": [
-   "05195"
   ],
   "enemy.damageTaken": [
    "02280",
    "03140",
    "04055",
-   "04302",
-   "05086"
+   "04302"
   ],
   "enemy.doom": [
    "02082",
@@ -853,29 +729,18 @@
    "01173",
    "03201",
    "03202",
-   "04302",
-   "05086"
+   "04302"
   ],
   "enemy.exhausted": [
    "02058",
    "02183",
-   "03140",
-   "05057",
-   "05086",
-   "05091"
+   "03140"
   ],
   "enemy.health": [
    "02237",
    "02238",
    "02259",
    "02314"
-  ],
-  "enemy.preventReady": [
-   "05086",
-   "05113"
-  ],
-  "entry.hauntGrantId": [
-   "05102"
   ],
   "entry.removedCards": [
    "04045"
@@ -892,17 +757,8 @@
   "flags.ichtacasPrey": [
    "04137b"
   ],
-  "flags.referenceResources": [
-   "05336"
-  ],
   "guest.clues": [
    "03082"
-  ],
-  "here.connections": [
-   "05133"
-  ],
-  "holder.engaged": [
-   "05086"
   ],
   "horror.doom": [
    "02146"
@@ -918,10 +774,6 @@
    "03085",
    "04222"
   ],
-  "inv.beneath": [
-   "05004",
-   "05015"
-  ],
   "inv.clues": [
    "01135",
    "01136",
@@ -930,10 +782,7 @@
    "02162",
    "02163",
    "02199",
-   "04046",
-   "05010",
-   "05275",
-   "05339"
+   "04046"
   ],
   "inv.damage": [
    "03174",
@@ -941,25 +790,17 @@
   ],
   "inv.deck": [
    "03211",
-   "04175",
-   "05130"
+   "04175"
   ],
   "inv.discard": [
    "03055",
    "03102",
    "03338",
    "04175",
-   "04178",
-   "05015",
-   "05037",
-   "05047",
-   "05196",
-   "05259",
-   "05340"
+   "04178"
   ],
   "inv.engaged": [
-   "04302",
-   "05123"
+   "04302"
   ],
   "inv.hand": [
    "03102",
@@ -968,14 +809,7 @@
    "03187",
    "03211",
    "03338",
-   "04178",
-   "05004",
-   "05037",
-   "05047",
-   "05130",
-   "05195",
-   "05259",
-   "05340"
+   "04178"
   ],
   "inv.hiddenCards": [
    "03186",
@@ -993,22 +827,17 @@
    "02326",
    "03054",
    "03255",
-   "04073",
-   "05058",
-   "05059"
+   "04073"
   ],
   "location.attachments": [
    "03091",
-   "03262",
-   "05103"
+   "03262"
   ],
   "location.clues": [
    "01136",
    "02222",
    "03124",
-   "03125",
-   "05141",
-   "05275"
+   "03125"
   ],
   "location.doom": [
    "03075",
@@ -1017,32 +846,11 @@
    "04225",
    "04293"
   ],
-  "nahab.doom": [
-   "05123",
-   "05141",
-   "05144"
-  ],
-  "nahab.exhausted": [
-   "05144"
-  ],
   "picked.doom": [
    "04092"
   ],
   "picked.exhausted": [
    "03097"
-  ],
-  "piles.deck": [
-   "05090"
-  ],
-  "piles.discard": [
-   "05090",
-   "05107"
-  ],
-  "placed.connections": [
-   "05133"
-  ],
-  "records.youAreBeingHunted": [
-   "05045"
   ],
   "state.acts": [
    "02067",
@@ -1076,16 +884,7 @@
    "03224",
    "04044",
    "04046",
-   "04316",
-   "05090",
-   "05099",
-   "05121",
-   "05122",
-   "05126",
-   "05129",
-   "05133",
-   "05143",
-   "05144"
+   "04316"
   ],
   "state.encounterDiscard": [
    "01171",
@@ -1095,37 +894,11 @@
    "02326",
    "02331",
    "03224",
-   "04319",
-   "05051",
-   "05057",
-   "05061",
-   "05089",
-   "05090",
-   "05099",
-   "05107",
-   "05116",
-   "05121",
-   "05122",
-   "05126",
-   "05129",
-   "05133",
-   "05143",
-   "05144",
-   "05188"
+   "04319"
   ],
   "state.enemies": [
    "03244",
-   "04047",
-   "05086",
-   "05123"
-  ],
-  "state.exiled": [
-   "05196",
-   "05236"
-  ],
-  "state.exiledBySeat": [
-   "05196",
-   "05236"
+   "04047"
   ],
   "state.explorationDeck": [
    "04047",
@@ -1141,11 +914,6 @@
    "04319",
    "04346"
   ],
-  "state.removedFromGame": [
-   "05010",
-   "05012",
-   "05236"
-  ],
   "state.scenarioFlags": [
    "03101",
    "03215",
@@ -1159,31 +927,13 @@
    "04282",
    "04283",
    "04303",
-   "04345",
-   "05054",
-   "05055b",
-   "05058",
-   "05060",
-   "05090",
-   "05123",
-   "05130",
-   "05132",
-   "05134",
-   "05136",
-   "05137",
-   "05138",
-   "05139",
-   "05336"
+   "04345"
   ],
   "state.scenarioZones": [
    "04281",
    "04282",
    "04283",
-   "04302",
-   "05089",
-   "05102",
-   "05107",
-   "05123"
+   "04302"
   ],
   "state.victoryDisplay": [
    "03044",
@@ -1197,21 +947,12 @@
    "02081",
    "02181"
   ],
-  "target.clues": [
-   "05010",
-   "05275"
-  ],
   "target.doom": [
    "01171",
    "04096"
   ],
   "whip.exhausted": [
    "08008"
-  ],
-  "zones.agendaAside": [
-   "05089",
-   "05102",
-   "05107"
   ],
   "zones.pursuit": [
    "04281"

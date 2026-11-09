@@ -67,8 +67,8 @@ export default {
       })
       const direction = directions.includes(answer) ? answer : null
       if (!direction) return false
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.lonelyTreeRoundBySeat = { ...(state.scenarioFlags.lonelyTreeRoundBySeat || {}), [inv.seat]: state.round }
+      const usedBySeat = { ...(api.scenarioFlag?.('lonelyTreeRoundBySeat') || {}), [inv.seat]: state.round }
+      api.setScenarioFlag?.('lonelyTreeRoundBySeat', usedBySeat)
       // 弃哪张由该调查员选择（引擎 discardChosen）；无该 API 时退回随机弃。
       const discarder = direction === 'youDiscardTheyDraw' ? inv : picked
       if (typeof api.discardChosen === 'function') api.discardChosen(discarder.seat, 1)

@@ -71,7 +71,7 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌：界限彼端、时间涌动、毒药。这些遭遇组的图标为：\n• 如果混乱袋中有至少2个[cultist]标记，再收齐纳克特兄弟会和黑暗异教徒遭遇组，这些遭遇组的图标为：\n\n• 如果混乱袋中有至少2个[tablet]标记，再收齐伊格的毒液和时间守卫者遭遇组，这些遭遇组的图标为：\n\n• 如果上述两种情况均未出现，再收齐纳克特兄弟会和时间守卫者遭遇组，这些遭遇组的图标为："
+              "text": "收齐以下遭遇组的所有卡牌：界限彼端、时间涌动、毒药。• 如果混乱袋中有至少2个[cultist]标记，再收齐纳克特兄弟会和黑暗异教徒• 如果混乱袋中有至少2个[tablet]标记，再收齐伊格的毒液和时间守卫者• 如果上述两种情况均未出现，再收齐纳克特兄弟会和时间守卫者"
             },
             {
               "text": "将大都会教堂、索卡洛广场、神庙遗迹、霍奇米尔科、查普尔特佩克公园、科约阿坎区放置入场。每位调查员从索卡洛广场或科约阿坎区开始游戏（自行选择）。"
@@ -204,7 +204,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Boundary Beyond, Temporal Flux, and Poison. These sets are indicated by the following icons:\n• If there are 2 or more [cultist] tokens in the chaos bag, also gather the Pnakotic Brotherhood and Dark Cult encounter sets, indicated by these icons:\n\n• If there are 2 or more [tablet] tokens in the chaos bag, also gather the Yig’s Venom and Guardians of Time encounter sets, indicated by these icons:\n\n• If neither of the above are true, also gather the Pnakotic Brotherhood and Guardians of Time encounter sets, indicated by these icons:"
+              "text": "Gather all cards from the following encounter sets: The Boundary Beyond, Temporal Flux, and Poison. • If there are 2 or more [cultist] tokens in the chaos bag, also gather the Pnakotic Brotherhood and Dark Cult encounter sets, indicated by these icons:\n\n• If there are 2 or more [tablet] tokens in the chaos bag, also gather the Yig’s Venom and Guardians of Time encounter sets, indicated by these icons:\n\n• If neither of the above are true, also gather the Pnakotic Brotherhood and Guardians of Time encounter sets, indicated by these icons:"
             },
             {
               "text": "Put Metropolitan Cathedral, Zócalo, Temple Ruins, Xochimilco, Chapultepec Park, and Coyoacán into play. Each investigator begins play in either Zócalo or Coyoacán (their choice)."

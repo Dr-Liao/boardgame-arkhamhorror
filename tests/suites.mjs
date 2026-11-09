@@ -37,6 +37,8 @@ export const FAST_TESTS = Object.freeze([
   'tic-scenario-zones-followup.test.mjs',
   'tic-scenarios-middle-setup.test.mjs',
   'tic-flashbacks.test.mjs',
+  'tic-story-format.test.mjs',
+  'story-format-p1.test.mjs',
   'tic-scenario-advanced-followup.test.mjs',
   'tic-scenario-primitives.test.mjs',
   'tic-scenario-extra-primitives.test.mjs',
@@ -155,6 +157,7 @@ export const FAST_TESTS = Object.freeze([
   'direct-damage-presentation.test.mjs',
   'themed-attacks.test.mjs',
   'rules-n3.test.mjs',
+  'limit-defeat-and-harm-log.test.mjs', // 生命/神智上限变化立即判负 + 非攻击自身伤害的时间线 cue（2026-11-09 TFA 实机）
   'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具
   'encounter-resolve-context.test.mjs', // 真实遭遇抽取把所在地点作为第 5 参传给 encounterResolve（01168 崩溃回归）
   'card-fidelity-p0.test.mjs', // 卡牌保真度审计 P0 逐卡行为回归（24 张高严重度）
@@ -224,6 +227,7 @@ export const FAST_TESTS = Object.freeze([
   'core-ledger.test.mjs',
   'campaign-experience.test.mjs',
   'hub-concurrent.test.mjs',
+  'hub-replacement.test.mjs', // 两关直接相邻时阵亡席位在下一关准备窗口重新换人（AI 队友阵亡回归）
   'checkpoint-rewind.test.mjs',
   'flow-n5.test.mjs',
   'dunwich-migration.test.mjs',
@@ -313,6 +317,9 @@ export const FAST_TESTS = Object.freeze([
   'tcu-secret-name.test.mjs', // 万象无终 P8：章节/共享组/账本测试
   'tcu-wages-of-sin.test.mjs', // 万象无终 P8：章节/共享组/账本测试
   'tcu-union-disillusion.test.mjs', // 万象无终 P8：章节/共享组/账本测试
+  'tcu-p0-regressions.test.mjs', // 万象无终全量扫描 P0 修复回归：05130 崩溃/幽灵面线索/变体分组/05201 反应
+  'tcu-p1-regressions.test.mjs', // 万象无终全量扫描 P1 修复回归：标记含义/05095 入场毁灭/05311 裂口
+  'tcu-chapters-smoke.test.mjs', // 万象无终 P1-12：九章真实引擎冒烟（setup 不变量 + 连续合法动作）
   'tde-campaign-parts.test.mjs', // 食梦者 P3 批次 1：双 part 数据模型（纯数据，不建局）
   'tde-primitives-counters.test.mjs', // 食梦者 P3 批次 2：按调查员计数器
   'tde-primitives-swarming.test.mjs', // 食梦者 P3 批次 2：Swarming X 求值

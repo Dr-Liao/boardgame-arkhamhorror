@@ -15,6 +15,7 @@ export function createAssets(deps) {
     blanksTraits,
     cardDef,
     cardName,
+    checkDefeated,
     descriptorOfKind,
     quickEventView,
     distanceToInvestigator,
@@ -22,6 +23,8 @@ export function createAssets(deps) {
     enemyTextBlanked,
     executeDescriptor,
     exilePlayerCard,
+    getMaxHealth,
+    getMaxSanity,
     getThreatEffect,
     info,
     leavesPlayEffect,
@@ -345,18 +348,25 @@ export function createAssets(deps) {
       info(state, events, `「${cardName(asset.code)}」当前不能离场。`)
       return false
     }
+    const healthBefore = getMaxHealth(inv)
+    const sanityBefore = getMaxSanity(inv)
     removeOne(inv.assets, asset)
     if (asset.attachedToAsset) {
       const host = inv.assets.find(item => item.id === asset.attachedToAsset)
       if (host) host.attachments = (host.attachments || []).filter(item => item.id !== asset.id)
     }
-      for (const card of asset.attachments || []) {
-        if (card.assetReference) {
-          const attached = inv.assets.find(item => item.id === card.id)
-          if (attached && leaveAsset(state, inv, attached, events) !== false && !attached.removedFromGame && !attached.returnedToHand) inv.discard.push(attached.code)
-        } else if (card.encounterAttached) state.encounterDiscard.push(card.code)
-        else (state.investigators[card.ownerSeat] || inv).discard.push(card.code)
+    // 被宿主带离场的附属（非「支援上的支援」）：先挂起弃置，等 assetLeavesPlay 反应窗口结算完再按
+    // 「是否被返回手牌/移出游戏」决定去向。旧实现先把它们推进弃牌堆，05152「妥善养护」再把同一张卡
+    // 返回手牌，导致卡牌同时在手牌与弃牌堆（且重复进弃牌堆）。
+    const leavingAttachments = []
+    for (const card of asset.attachments || []) {
+      if (card.assetReference) {
+        const attached = inv.assets.find(item => item.id === card.id)
+        if (attached && leaveAsset(state, inv, attached, events) !== false && !attached.removedFromGame && !attached.returnedToHand) inv.discard.push(attached.code)
+      } else {
+        leavingAttachments.push(card)
       }
+    }
     keysOnExit(state, `asset:${asset.id}`, asset.location || inv.location)
     removeVehicle(state, asset.id)
     releaseChaosTokens(state, asset.id)
@@ -400,6 +410,22 @@ export function createAssets(deps) {
       upgrades: (asset.attachments || []).length,
       prompt: `「${cardName(asset.code)}」离场后`,
     }, events)
+    // 窗口之后再弃置未被返回的附属（05152 返回的已在 putInHand 时标记 returnedToHand）。
+    for (const card of leavingAttachments) {
+      if (card.returnedToHand || card.removedFromGame) continue
+      if (card.encounterAttached) state.encounterDiscard.push(card.code)
+      else (state.investigators[card.ownerSeat] || inv).discard.push(card.code)
+    }
+    // 支援离场可能让生命/神智上限下降（+上限的支援被弃置/换下、神智修正消失等）：
+    // 只有「上限确实下降且已经降到等于伤害/恐惧」时才补一次击败判定，避免在伤害分配
+    // 之类的嵌套结算里提前判负（那会改变既有结算顺序）。被击败调查员的清理流程里
+    // inv.defeated 已置位，checkDefeated 会提前返回。
+    const healthDropped = getMaxHealth(inv) < healthBefore
+    const sanityDropped = getMaxSanity(inv) < sanityBefore
+    if ((healthDropped && inv.damage >= getMaxHealth(inv))
+      || (sanityDropped && inv.horror >= getMaxSanity(inv))) {
+      checkDefeated(state, inv.seat, events)
+    }
   }
 
   function discardRandomAsset(state, inv, events) {

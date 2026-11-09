@@ -153,6 +153,9 @@ export function createTurnFlow(deps) {
       hunter: !!stats.hunter, retaliate: !!stats.retaliate, alert: !!stats.alert,
       elite: !!stats.elite, aloof: !!stats.aloof, massive: !!stats.massive,
       traits: [...(stats.traits || [])], victory: stats.victory || 0, vengeance: 0,
+      // 每调查员生命的剧情敌人（安妮特 4/调查员等）保留声明值，供存档/审计/重现读回；
+      // 结算用 health 已是乘算后的数值。
+      ...(stats.healthPerInvestigator ? { healthPerInvestigator: stats.healthPerInvestigator } : {}),
       damageTaken: 0, exhausted: false, doom: 0, engagedSeat: null, location: locationId,
       ...extra,
     }

@@ -154,7 +154,11 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // 与真实引擎契约修复新增约 1,400 行 behavior.js；实测 33,734，按实测重锁。
 // 这是修复既有章节不可跑的 P0 阻断，不是新章节流程；后续新增关卡流程仍须走
 // content/scenario-declaration.js，只减不增。
-const BUDGET = 33734
+// 2026-11-09 TCU 全量扫描 P0 修复轮：05162/05164 翻面保留线索的数据口径改为「背面未印线索即不声明」
+// （content/campaigns/theCircleUndone/card-data.js，不在 behavior 行数内）；behavior 侧只有
+// 《恶罪报应》分组正/背面归一化（+6 行）与《崇高利益》05201 1a 正面转化反应开局置真（+5 行），
+// 实测 33,745，按实测重锁。仍是修复既有章节崩溃/核心循环的 P0 阻断，不是新章节流程。
+const BUDGET = 33475
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')
@@ -314,7 +318,7 @@ test('web 模块的导入不越出 web/ 挂载目录', () => {
 // 2026-11-08 EOTE P0 修复轮：章节 behavior 补齐真实引擎契约时新增 10 处卡号字面量
 // （诡计/幕行动分派表与剧情键；未新增「按卡号分支」，CONTENT_BRANCH_BASELINE 仍为 0），
 // 实测 1,142，按实测重锁；新增内容仍优先放 definition.js 的 RAW_CODES 表。
-const CONTENT_CARD_CODE_BASELINE = 1142
+const CONTENT_CARD_CODE_BASELINE = 1110
 // 与上面的字面量口径分开统计「规则分支」：DoD 要求内容层 `code === '0xxxx'` 分支归零。
 // 口径包含 content/ 下全部 .js（此前只扫 behavior/encounter-rules/card-data，漏掉
 // later-behaviors.js 这类共享章节文件）。
@@ -352,6 +356,21 @@ function countContentCardBranches() {
   return total
 }
 
+// 卡号表形态（卡号作为对象键 / 分派表 key）：`'05120': handler`，只统计章节 behavior.js
+// （definition.js 的卡号→地点/敌人数据表是合法数据，不属于规则分支）。
+// 它不是 `code === '0xxxx'` 这种分支，但同样是把「逐卡规则」写回 content behavior，
+// 架构守卫必须能看见（否则 ICC 的 LOCATION_HANDLERS/TREACHERY_RESOLVERS 会漏检）。
+// 2026-11-09 实测基线（ICC 的 22 张地点/诡计分派 + 其它循环既有表）——只减不增；
+// 新增按卡规则请写进 encounter-entries 的单卡条目。
+function countContentCardTableEntries() {
+  let total = 0
+  for (const file of contentJsFiles()) {
+    if (!/behavior\.js$/.test(file)) continue
+    total += (read(file).match(/['"]0\d{4}[a-z]?['"]\s*:/g) || []).length
+  }
+  return total
+}
+
 test('内容层章节脚本的卡号字面量只减不增', () => {
   const count = countContentCardCodes()
   assert.ok(count <= CONTENT_CARD_CODE_BASELINE,
@@ -363,4 +382,14 @@ test('内容层按卡号的规则分支只减不增（含 later-behaviors 等共
   assert.ok(count <= CONTENT_BRANCH_BASELINE,
     `content 按卡号分支 ${count} 超过基线 ${CONTENT_BRANCH_BASELINE}：新增了按卡号分支，`
     + '应写进 src/cards/entries/<code>.js 或 src/cards/encounter-entries/<归属>/<code>.js 的条目')
+})
+
+// 卡号表形态的基线：2026-11-09 全量扫描实测值（仅 behavior.js）。ICC 的 16 地点 + 5 诡计分派表
+// 已在 fix-plan P1-16 中迁回/改为数据分派（121→100）；剩余是其它循环的既有表，只减不增。
+const CONTENT_CARD_TABLE_BASELINE = 100
+test('内容层卡号表形态只减不增（卡号作为对象键/分派表 key）', () => {
+  const count = countContentCardTableEntries()
+  assert.ok(count <= CONTENT_CARD_TABLE_BASELINE,
+    `content 卡号表 key ${count} 超过基线 ${CONTENT_CARD_TABLE_BASELINE}：新增按卡规则请写进 `
+    + 'encounter-entries 的单卡条目；既有卡号表只减不增')
 })

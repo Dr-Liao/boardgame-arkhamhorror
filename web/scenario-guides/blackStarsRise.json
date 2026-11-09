@@ -28,7 +28,7 @@
         {
           "children": [
             {
-              "text": "收齐以下遭遇组的所有卡牌: 黑星升起、邪兆、拜亚基、卡尔克萨居民、陌生人、黑暗邪教徒、远古恶魔。这些遭遇组的图标为:注意，黑星升起遭遇组中的部分卡牌有多个版本，其中部分卡牌背面有地底洪流遭遇组图标，而另一部分卡牌背面有空中漩涡遭遇组图标。图标如下:（貌似没有）"
+              "text": "收齐以下遭遇组的所有卡牌: 黑星升起、邪兆、拜亚基、卡尔克萨居民、陌生人、黑暗邪教徒、远古恶魔。注意，黑星升起遭遇组中的部分卡牌有多个版本，其中部分卡牌背面有地底洪流遭遇组图标，而另一部分卡牌背面有空中漩涡遭遇组图标。图标如下:（貌似没有）"
             },
             {
               "text": "根据当前游戏难度，在混乱袋加入1个下列标记，直到剧本结束:\n• 简单: -3\n\n• 普通: -5\n\n• 困难: -6\n\n• 专家: -7"
@@ -36,7 +36,7 @@
             {
               "children": [
                 {
-                  "text": "将以下所有卡牌根据其背面的遭遇组图标，分类摆作两堆：密谋2a—风暴肆虐，密谋2c—悬空之物，圣奥伯特礼拜堂，修道院塔楼。"
+                  "text": "将以下所有卡牌根据其背面的密谋2a—风暴肆虐，密谋2c—悬空之物，圣奥伯特礼拜堂，修道院塔楼。"
                 },
                 {
                   "text": "摆放完毕后应为2堆各4张卡牌。每堆卡牌应有上述列出的每种卡牌各一张。一堆卡牌的背面应为地底洪流遭遇组图标，而另一堆则是空中漩涡遭遇组图标。"
@@ -145,7 +145,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: Black Stars Rise, Evil Portents, Byakhee, Inhabitants of Carcosa, The Stranger, Dark Cult, and Ancient Evils. These sets are indicated by the following icons:Be aware that some cards from the Black Stars Rise encounter set have multiple versions, some with The Flood Below encounter set icon on their reverse side, and some with The Vortex Above encounter set icon on their reverse side. These encounter sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: Black Stars Rise, Evil Portents, Byakhee, Inhabitants of Carcosa, The Stranger, Dark Cult, and Ancient Evils. Be aware that some cards from the Black Stars Rise encounter set have multiple versions, some with The Flood Below encounter set icon on their reverse side, and some with The Vortex Above encounter set icon on their reverse side. "
             },
             {
               "text": "Based on your difficulty level, add the following chaos token(s) to the chaos bag, for the remainder of the campaign:\n• Easy: -3\n\n• Standard: -5\n\n• Hard: -6\n\n• Expert: -7"
@@ -153,7 +153,7 @@
             {
               "children": [
                 {
-                  "text": "Sort each copy of the following cards into two separate piles, based on the encounter set icon on their reverse side: Agenda 2a—Let The Storm Rage, Agenda 2c—The Entity Above, Chapel of St. Aubert, and Abbey Tower."
+                  "text": "Sort each copy of Agenda 2a—Let The Storm Rage, Agenda 2c—The Entity Above, Chapel of St. Aubert, and Abbey Tower."
                 },
                 {
                   "text": "You should have two piles of exactly four cards. Each pile should have one copy of each of the above listed cards. The cards in the first pile should have The Flood Below encounter set icon on their reverse side, and the cards in the second pile should have The Vortex Above encounter set icon on their reverse side."

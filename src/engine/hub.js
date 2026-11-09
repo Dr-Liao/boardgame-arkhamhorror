@@ -439,7 +439,8 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   // 关间替补：死亡/疯狂席位在关间换上的新调查员，0 XP 起始牌组和首关准备一样属于
   // 「可反复调整」的阶段。自动构筑后仍要能手动编辑、从本地卡组库载入或导入 ArkhamDB
   // 清单，直到该席位确认准备（hubSeatDone）为止；已经买过升级就不再退回起始牌组编辑。
-  if (state.uiState === 'interlude' && state.hubReplacementSeats?.[seat]
+  // 两关直接相邻（没有幕间节点）时换人发生在下一关的 scenarioSetup 窗口，与幕间同口径。
+  if (['interlude', 'scenarioSetup'].includes(state.uiState) && state.hubReplacementSeats?.[seat]
     && record?.status === 'active' && hubStartingDeckReady(record)
     && !state.hubSeatDone?.[seat] && !record.upgradeDraft
     && !record.purchases?.length && !record.removedCards?.length) {

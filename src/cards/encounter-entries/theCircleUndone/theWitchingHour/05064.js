@@ -7,6 +7,5 @@ export default {
   code: '05064', scope: 'location', implemented: true,
   // behavior.spawnLocation / enemySpawned 读取本地点（code 05064）：改道 + 生成后攻击。
   locationRule: {
-    redirectSpawnHere: true,
   },
 }

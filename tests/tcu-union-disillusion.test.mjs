@@ -5,6 +5,7 @@
 // 幽灵看守人、混乱标记、诡计、结局记录、存档往返（JSON.stringify + deepEqual）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { zoneApi } from './tcu-zone-api.mjs'
 // 引擎装配点注册全部单卡条目（本章诡计 05268–05272 的规则已回条目）。
 import '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -235,9 +236,8 @@ function apiFor(state, overrides = {}) {
       return overrides.choose(request)
     }
   }
-  return api
+  return { ...zoneApi(state), ...api }
 }
-
 const enemy = (state, code, location = MISKATONIC_RIVER, extra = {}) => {
   const entry = {
     id: `manual${state.enemies.length + 1}`, code, originalCode: code, name: code, location,
@@ -486,7 +486,7 @@ test('幕 2 背面：看守人的攫噬×2 与注视从放在一边洗入遭遇�
   assert.equal(state.encounterDeck.filter(code => code === '05087').length, 2)
 })
 
-test('幕 3（版本四）背面：揭示灵怪陷阱、把岛上的调查员拉进去、生成秘社新信徒/约瑟夫并洗牌', () => {
+test('幕 3（版本四）背面：揭示灵怪陷阱、拉进岛上调查员、仅洗牌+约瑟夫（不生成秘社新信徒）', () => {
   const state = placedState(2, { ...RECORD_COVEN, josefIsAliveAndWell: true })
   const placedIsleIds = state.scenarioFlags.placedIsles.map(code => Object.keys(UNVISITED_ISLES).find(key => UNVISITED_ISLES[key] === code))
   state.investigators[0].location = placedIsleIds[0]
@@ -496,14 +496,26 @@ test('幕 3（版本四）背面：揭示灵怪陷阱、把岛上的调查员拉
   uad.behavior.actReveal(state, v4, api)
   assert.equal(loc(state, 'geistTrap').revealed, true)
   assert.equal(state.investigators[0].location, 'geistTrap', '岛上的调查员被拉进灵怪陷阱')
-  assert.ok(state.enemies.some(entry => entry.code === '05095'))
+  // 05246 印刷背面没有「生成秘社新信徒」句（那是版本三 05245 的规则）：不应串位生成。
+  assert.equal(state.enemies.some(entry => entry.code === '05095'), false, '版本四不生成秘社新信徒')
   assert.ok(state.enemies.some(entry => entry.code === '05085'), '约瑟夫健在 → 生成约瑟夫')
   assert.equal(state.scenarioFlags.noParleyJosef, true)
   assert.ok(state.scenarioZones.setAside.filter(code => code === '05097').length < 2, '银暮秘社卡洗入牌库')
-  // 卡面：把放在一边的银暮秘社组「剩余」卡牌全部洗入——生成过的新信徒不能再留在 setAside。
   const lodgeLeft = state.scenarioZones.setAside.filter(code =>
     ['05095', '05096', '05097'].includes(code))
   assert.deepEqual(lodgeLeft, [], '银暮秘社组剩余卡牌全部洗入，无残留')
+})
+
+test('幕 3（版本三）背面：生成秘社新信徒（3–4 人局 2 张）+ 约瑟夫并洗入剩余银暮秘社', () => {
+  const two = placedState(2, { ...RECORD_COVEN, josefIsAliveAndWell: true })
+  uad.behavior.actReveal(two, ACT_DECKS.v3[2], apiFor(two))
+  assert.equal(two.enemies.filter(entry => entry.code === '05095').length, 1, '2 人局生成 1 张秘社新信徒')
+  assert.ok(two.enemies.some(entry => entry.code === '05085'), '约瑟夫健在 → 生成约瑟夫')
+
+  const four = placedState(4, { ...RECORD_COVEN, josefIsAliveAndWell: false })
+  uad.behavior.actReveal(four, ACT_DECKS.v3[2], apiFor(four))
+  assert.equal(four.enemies.filter(entry => entry.code === '05095').length, 2, '4 人局生成 2 张秘社新信徒')
+  assert.equal(four.enemies.some(entry => entry.code === '05085'), false, '约瑟夫不健在 → 不生成')
 })
 
 function api1(state) {
@@ -519,6 +531,9 @@ test('幕 3（版本一）背面：法术成功 → 安妮特，否则生成学�
   const cast = placedState(2, { ...RECORD_LODGE, theWitchesSpellWasCast: true })
   uad.behavior.actReveal(cast, ACT_DECKS.v1[2], apiFor(cast))
   assert.ok(cast.enemies.some(entry => entry.code === '05057'), '法术成功 → 生成安妮特')
+  const anette = cast.enemies.find(entry => entry.code === '05057')
+  assert.equal(anette.health, 4 * cast.numInvestigators, '安妮特「4[每调查员]生命」= 4×人数')
+  assert.equal(anette.victory, 2, '安妮特胜利点 2（spawnPrinted 不再丢 victory）')
   // 参考 setup：3×05090 学徒 + 1×05091 女祭司 + 安妮特都在 setAside；成功分支生成安妮特后，
   // 剩下的每张女巫敌人（3 学徒 + 女祭司）都要与遭遇弃牌堆一起洗入遭遇牌库。
   assert.deepEqual(cast.scenarioZones.setAside.filter(code => ['05057', '05090', '05091'].includes(code)), [],

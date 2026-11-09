@@ -35,10 +35,10 @@
         {
           "children": [
             {
-              "text": "从以下遭遇组收集所有卡牌：无归之地、地下世界生物、修普诺斯的低语、远古邪恶、食尸鬼，以及惊骇袭击。这些遭遇组由以下图标标示："
+              "text": "从以下遭遇组收集所有卡牌：无归之地、地下世界生物、修普诺斯的低语、远古邪恶、食尸鬼，以及惊骇袭击。"
             },
             {
-              "text": "将以下每个遭遇组放在一边，置于游戏外：深入漆黑、山谷恐怖、阿特拉克·纳克亚的使徒，以及夜魇。这些遭遇组由以下图标标示："
+              "text": "将以下每个遭遇组放在一边，置于游戏外：深入漆黑、山谷恐怖、阿特拉克·纳克亚的使徒，以及夜魇。"
             },
             {
               "text": "将以下地点放入游戏：辛之墓穴、古革巨人之城、卡斯之塔，以及食尸鬼平原。"
@@ -187,10 +187,10 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: Point of No Return, Creatures of the Underworld, Whispers of Hypnos, Ancient Evils, Ghouls, and Striking Fear. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: Point of No Return, Creatures of the Underworld, Whispers of Hypnos, Ancient Evils, Ghouls, and Striking Fear. "
             },
             {
-              "text": "Set each of the following encounter sets aside, out of play: Descent into the Pitch, Terror of the Vale, Agents of Atlach-Nacha, and Nightgaunts. These sets are indicated by the following icons:"
+              "text": "Set each of the following encounter sets aside, out of play: Descent into the Pitch, Terror of the Vale, Agents of Atlach-Nacha, and Nightgaunts. "
             },
             {
               "text": "Put the following locations into play: Vaults of Zin, City of Gugs, Tower of Koth, and Plain of the Ghouls."

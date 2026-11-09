@@ -13,7 +13,7 @@ export default {
   code: '05093',
   scope: 'treachery',
   implemented: true,
-  treacheryRule: { threatArea: true, firstTestStatModifier: -1 },
+  treacheryRule: { firstTestStatModifier: -1 },
   threatAction: {
     rule: 'discardWracked',
     label: '检定意志(3)摆脱崩毁离析',

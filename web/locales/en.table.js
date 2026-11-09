@@ -76,6 +76,10 @@ export default {
   'table.result.success': 'success',
   'table.result.failure': 'failure',
   'table.timeline.move': '{name} · {action}',
+  // Non-attack self harm cues emitted by the engine's applyHarm (see enemies.js).
+  'table.timeline.harmDamage': '{name} takes {damage} damage',
+  'table.timeline.harmHorror': '{name} takes {horror} horror',
+  'table.timeline.harmBoth': '{name} takes {damage} damage and {horror} horror',
   'table.move.draw': 'Draw a card',
   'table.move.resource': 'Gain a resource',
   'table.move.move': 'Move',

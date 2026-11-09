@@ -27,24 +27,19 @@ export default {
     onEnemyPhaseStart(state, enemy, api) {
       if (String(originalOf(enemy)) !== ANETTE) return
       const location = enemy.location
-      const discarded = []
-      for (let index = 0; index < 3; index++) {
-        if (!state.encounterDeck.length) break
-        const code = state.encounterDeck.pop()
-        state.encounterDiscard.push(code)
-        if (isWitchEnemy(code)) discarded.push(code)
-      }
-      for (const code of discarded) {
+      // 弃遭遇牌库顶 3 张（收口到 api；不足 3 张就弃现有的、不洗回）。
+      const discardedCodes = api.discardEncounterTop?.(3, { reshuffle: false }) || []
+      const witches = discardedCodes.filter(code => isWitchEnemy(code))
+      for (const code of witches) {
         // 生成的女巫敌人离开遭遇弃牌堆（它们已被「找出并生成」）。
-        const index = state.encounterDiscard.lastIndexOf(code)
-        if (index >= 0) state.encounterDiscard.splice(index, 1)
+        api.takeEncounterDiscard?.(code)
         api.spawn?.(code, location)
       }
-      if (!discarded.length) {
-        enemy.exhausted = false
+      if (!witches.length) {
+        api.readyEnemy?.(enemy)
         api.info?.('🐐 没有弃出女巫敌人：安妮特·梅森重整。')
       } else {
-        api.info?.(`🕯️ 安妮特·梅森弃出 ${discarded.length} 个女巫敌人并在「${api.locName?.(location) || location}」生成。`)
+        api.info?.(`🕯️ 安妮特·梅森弃出 ${witches.length} 个女巫敌人并在「${api.locName?.(location) || location}」生成。`)
       }
     },
     // 幕 4 目标之一：安妮特被击败记录到剧本标记（章节 checkObjectives 只读标记，不再按卡号分支）。

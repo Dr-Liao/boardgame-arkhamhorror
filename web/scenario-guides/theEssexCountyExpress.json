@@ -19,7 +19,7 @@
         {
           "children": [
             {
-              "text": "将下列遭遇组中，所有遭遇卡找出: 疯狂列车、异世界、恐惧打击、远古恶魔、黑暗异教徒。这些遭遇组的图标为:"
+              "text": "将下列遭遇组中，所有遭遇卡找出: 疯狂列车、异世界、恐惧打击、远古恶魔、黑暗异教徒。"
             },
             {
               "text": "在3张车头中，随机选择一张放置入场，将另外两张同名卡牌移出游戏。然后，将8张车厢卡混洗后，随机移除两张，剩余六张排成一直线放在车头左边。"
@@ -100,7 +100,7 @@
         {
           "children": [
             {
-              "text": "Gather all cards from the following encounter sets: The Essex County Express, The Beyond, Striking Fear, Ancient Evils, Dark Cult. These sets are indicated by the following icons:"
+              "text": "Gather all cards from the following encounter sets: The Essex County Express, The Beyond, Striking Fear, Ancient Evils, Dark Cult. "
             },
             {
               "text": "Put one of the three Engine Car locations into play at random. Remove the other versions of Engine Car from the game. Then, put six of the eight Train Car locations into play at random, in a straight line to the left of the Engine Car. Remove the remaining two Train Car locations from the game."

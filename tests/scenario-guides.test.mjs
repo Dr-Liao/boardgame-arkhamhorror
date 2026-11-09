@@ -17,7 +17,9 @@ test('所有注册关卡随包提供中英完整指南，不依赖参考工程�
     assert.equal(guide.campaignId, scenario.campaignId)
     for (const language of ['zh', 'en']) {
       const sections = guide.locales[language]
-      assert.ok(guideStrings(sections.setup).join('').length > 100, `${scenario.id}/${language} 设置不完整`)
+      // 遭遇组图标句在 P1（guides-0004）已从 setup 中剥离，短章节的 setup 会比之前少十几字；
+      // 80 字仍能区分「有完整布置步骤」与空设置。
+      assert.ok(guideStrings(sections.setup).join('').length > 80, `${scenario.id}/${language} 设置不完整`)
       assert.ok(guideStrings(sections.resolutions).join('').length > 100, `${scenario.id}/${language} 缺少结局与奖励`)
       for (const text of guideStrings(sections)) {
         assert.doesNotMatch(text, /@:[\w.]+|<\/?[a-z][^>]*>|\{\w+\}/i, `${scenario.id}/${language} 有未展开的来源格式`)
@@ -92,3 +94,45 @@ test('没有自带设置文本的关卡用补写的布置步骤', () => {
   assert.match(setup, /展厅/)
   assert.match(scenarioGuide('theEssexCountyExpress').setup, /车头/)
 })
+
+test('P0 中文指南不再残留英文分支指引与分节标签', () => {
+  for (const scenario of contentRegistry.listScenarios()) {
+    const zh = guideStrings(adventureGuide(scenario.id).locales.zh).join('\n')
+    assert.doesNotMatch(zh, /\b(?:Proceed to|Skip to|Continue to|Go to|Read Intro)\b/, `${scenario.id} 仍有英文去向指引`)
+    assert.doesNotMatch(zh, /^[ \t]*(?:Intro|Resolution|No Resolution|Scenario)\s*(?:\d+|[IVX]+)?\s*[:：]/m,
+      `${scenario.id} 仍有英文分节标签`)
+  }
+})
+
+test('P0 TDE 指南整块补全：故事/结局分支收尾不再缺失', () => {
+  const countBlocks = blocks => (blocks || []).reduce((total, block) =>
+    total + 1 + countBlocks(block.children), 0)
+  for (const id of ['whereTheGodsDwell', 'weaverOfTheCosmos']) {
+    const guide = adventureGuide(id)
+    const zhStory = guideStrings(guide.locales.zh.story).join('\n')
+    assert.match(zhStory, /前往〈/, `${id} 故事段仍缺分支去向`)
+    assert.ok(countBlocks(guide.locales.zh.story) >= countBlocks(guide.locales.en.story), `${id} zh 故事块少于 en`)
+    assert.ok(countBlocks(guide.locales.zh.resolutions) >= countBlocks(guide.locales.en.resolutions), `${id} zh 结局块少于 en`)
+  }
+})
+
+test('P1 中文指南无英文连接词/悬空图标句，en 无 [shelterValue]（guides-0003/0004/0006）', () => {
+  for (const scenario of contentRegistry.listScenarios()) {
+    const guide = adventureGuide(scenario.id)
+    const zh = guideStrings(guide.locales.zh).join('\n')
+    const en = guideStrings(guide.locales.en).join('\n')
+    assert.doesNotMatch(zh, /,\s*and\s+/, `${scenario.id} 仍有 ", and" 英文连接词`)
+    assert.doesNotMatch(zh, /遭遇(?:组|牌)[^。\n]*(?:图标|圖標)[^。\n]*[：:]/, `${scenario.id} 仍有悬空遭遇组图标句`)
+    assert.doesNotMatch(en, /\[shelterValue\]/, `${scenario.id} en 指南仍有 [shelterValue]`)
+    assert.doesNotMatch(zh, /\[shelterValue\]/, `${scenario.id} zh 指南仍有 [shelterValue]`)
+  }
+})
+
+test('P1 TDE 梦境条目的职阶图标已补回（guides-0005）', () => {
+  const zhIntro = guideStrings(adventureGuide('beyondTheGatesOfSleep').locales.zh.intro).join('\n')
+  for (const token of ['guardian', 'seeker', 'rogue', 'mystic', 'survivor']) {
+    assert.match(zhIntro, new RegExp(`\\[${token}\\]`), `梦境条目缺少 [${token}] 职阶图标`)
+  }
+})
+
+

@@ -354,6 +354,7 @@ export default {
   'game.vital.health': 'Health',
   'game.vital.sanity': 'Sanity',
   'game.vital.aria': '{label} {current} / {max}',
+  'game.vital.limitMod': ' (max modifier {delta})',
   'game.dock.skillsAria': 'Current investigator stats',
   'game.dock.actionsAria': 'Actions left: {count}',
   'game.dock.actionPoints': 'Actions',

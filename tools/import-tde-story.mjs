@@ -528,8 +528,20 @@ const NARRATION_PATTERN = /^(intro|intro\d+|flavorText(\.|$)|grandDesign\d+|theS
 
 function buildChapters(scrolls) {
   const result = {}
+  const RESOLUTION_LABEL = /^(?:结局|尾声|无结局)\s*\d*\s*[:：]\s*/
+  const stripResolutionLabels = mirror => {
+    const resolutions = mirror?.resolutions
+    if (!resolutions || typeof resolutions !== 'object') return
+    for (const value of Object.values(resolutions)) {
+      if (!value || typeof value !== 'object') continue
+      if (typeof value.body === 'string') value.body = value.body.replace(RESOLUTION_LABEL, '').trim()
+      if (typeof value.text === 'string') value.text = value.text.replace(RESOLUTION_LABEL, '').trim()
+    }
+  }
   for (const chapter of chapters) {
     const mirror = scrolls[chapter.id] || {}
+    // 结局正文段首「结局 N：」由 UI 标题层承载，正文不重复（story-0009）。
+    stripResolutionLabels(mirror)
     const narration = []
     for (const key of Object.keys(mirror)) {
       if (!NARRATION_PATTERN.test(key)) continue
@@ -584,8 +596,14 @@ function buildChapters(scrolls) {
 const asLocaleKeys = (base, scenarios) => {
   const byKey = {}
   const flavor = base.flavorText || {}
+  // 尾声正文段首「尾声 N：」由 UI 标题层承载，正文不重复（story-0009）。
+  const EPILOGUE_LABEL = /^(?:结局|尾声)\s*\d*\s*[:：]\s*/
   for (const [key, value] of Object.entries(flavor)) {
-    byKey[`theDreamEaters.flavorText.${key}`] = { title: value.title || key, body: value.body || value.text || '' }
+    const body = value.body || value.text || ''
+    byKey[`theDreamEaters.flavorText.${key}`] = {
+      title: value.title || key,
+      body: /^epilogue\d+$/i.test(key) && typeof body === 'string' ? body.replace(EPILOGUE_LABEL, '').trim() : body,
+    }
   }
   for (const [key, value] of Object.entries(base.label || {})) byKey[`theDreamEaters.label.${key}`] = value
   for (const [key, value] of Object.entries(base.question || {})) byKey[`theDreamEaters.question.${key}`] = value

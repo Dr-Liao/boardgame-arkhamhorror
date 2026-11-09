@@ -50,30 +50,28 @@ export default {
       api.info?.('魔鬼的笛声：阿撒托斯的吹笛手在场，其所在地点与连接地点的调查员各受到 1 点恐惧。')
       return false // 进遭遇弃牌堆
     }
-    const zones = (state.scenarioZones ||= {})
-    const aside = (zones.agendaAside ||= [])
-    const entry = { id: `${'05089'}:${state.round}:${aside.length}`, code: '05089' }
-    aside.push(entry)
+    // 「放在密谋牌库旁边」：公开区读写走 api（putNextToAgenda / agendaAsideCards / discardAgendaAside）。
+    api.putNextToAgenda?.(card?.code || '05089')
     api.info?.('「魔鬼的笛声」被放到密谋牌库旁边。')
-    const copies = aside.filter(item => item.code === '05089')
+    const copies = (api.agendaAsideCards?.() || []).filter(code => code === '05089')
     if (copies.length < 3) return true // 已放置入场（牌库旁），不进弃牌堆
     // 3 张齐了：弃掉这 3 张，吹笛手与猎物交战生成（从场外任意区域）。
-    zones.agendaAside = aside.filter(item => item.code !== '05089')
-    state.encounterDiscard.push('05089', '05089', '05089')
+    const asideIds = (state.agendaAside || [])
+      .filter(entry => (entry.originalCode || entry.code) === '05089')
+      .map(entry => entry.id)
+    for (const id of asideIds) api.discardAgendaAside?.(id)
+    api.discardEncounterCards?.(['05089', '05089', '05089'])
     const prey = lowestRemainingSanityPrey(state, api)
     if (!prey) {
       api.info?.('没有可成为猎物的调查员，阿撒托斯的吹笛手无法生成。')
       return true
     }
     // 从场外任意区域生成：把它从牌库/弃牌堆/放在一边区移出。
-    for (const pile of [state.encounterDeck, state.encounterDiscard]) {
-      const index = pile.lastIndexOf(PIPER)
-      if (index >= 0) pile.splice(index, 1)
-    }
-    const setAside = state.scenarioZones?.setAside
-    if (Array.isArray(setAside)) state.scenarioZones.setAside = setAside.filter(code => code !== PIPER)
+    api.takeEncounterCard?.(PIPER)
+    api.takeFromSetAside?.(PIPER)
     const spawned = api.spawnEngaged?.(PIPER, prey.location, prey.seat)
-    if (spawned) spawned.preySeat = prey.seat // 参考实现：与「剩余神智最低者」交战并以其为猎物。
+    // 参考实现：与「剩余神智最低者」交战并以其为猎物。
+    if (spawned) api.setEnemyPreySeat?.(spawned, prey.seat)
     api.info?.('三张「魔鬼的笛声」被弃掉：阿撒托斯的吹笛手从场外生成，与其猎物交战！')
     if (!spawned) api.info?.('没有合法生成地点，阿撒托斯的吹笛手无法生成。')
     return true

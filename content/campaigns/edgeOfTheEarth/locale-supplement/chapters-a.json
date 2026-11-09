@@ -258,6 +258,14 @@
       "en": "Gather all cards from the following encounter sets: *Ice and Death*, *Lost in the Night*, *Left Behind*, *Deadly Weather*, *Hazards of Antarctica*, *Silence and Mystery*, *Tekeli-li*, and *Ancient Evils*. These sets are indicated by the following icons:",
       "zh": "收集以下遭遇组中的所有卡牌：*亡命冰原*、*夜半失踪*、*被遗弃者*、*致命天气*、*南极险境*、*寂静与谜团*、*忒咳哩-哩*以及*远古恶魔*。这些遭遇组以下列图标标示：",
       "status": "untranslated"
+    },
+    {
+      "file": "scenarios/iceAndDeath.json",
+      "guide": "iceAndDeathPart1",
+      "path": "part1.intro4.body",
+      "en": "<p><b>Intro 4:</b> As you regain consciousness, intense pain sears through your blistering skin. Through the haze, you can barely hear muffled shouting outside the burning husk of the aeroplane. Somebody grips your arm, pulls you from the wreckage, and hurls you onto the soft snow. More shouts erupt all around you. “There’s another!” “Quickly!” “Grab my hand!”</p><p>You rise to your feet with a world of effort. Miraculously, you are only bruised and winded. Most of the other team members are similarly unharmed, except…</p><p class='basic'>Gather the nine story assets from the Expedition Team encounter set, shuffle them, and choose one of them at random. The chosen character was killed in the plane crash. In the Expedition Team section of the Campaign Log, cross off their name. Record in the Campaign Log (character’s name) was killed in the plane crash.</p><p class='basic'>Find and read the passage in the next column that corresponds to the character killed in the plane crash. Then, proceed to Setup.</p>",
+      "zh": "<p><b>引言 4:</b>当你恢复知觉时，强烈的疼痛灼烧著你起泡的皮肤。你在燃烧的飞机残骸中勉强听到外面透过烟雾传来沉闷的喊声。有人抓住你的胳膊，把你从残骸中拉出来，你摔倒在柔软的雪地上。你周围爆发出更多的喊声。“还有一个！”“快！”“抓住我的手！”</p><p>你竭尽全力站了起来。除了擦伤和有些气喘，你奇迹般地平安无事。大部分其他队员也都安然无恙，除了……</p><p class='basic right'>找到并阅读下一栏中与坠机罹难角色对应的段落。然后，进入冒险设置。</p>",
+      "status": "missing"
     }
   ]
 }

@@ -5599,7 +5599,7 @@
       "tests/tcu-clutches-chaos.test.mjs": "2e12c58331085bbd318592fb41bb3d1c4fbcf09467073eb63dd06f2b41da23ea",
       "tests/tcu-black-throne.test.mjs": "a261af9e9c2776f670413683fe177044ea4b2fdb934c7843810f29ada50ae8d7",
       "tools/import-tcu-story.mjs": "fa69f0287d3a5d1db1dff2fec6534622c530175b8c5620ad705e7b1d081d1b9c",
-      "content/campaigns/theCircleUndone/story-text.js": "efc45073488a072e8d9a18064c1713da9e7d6fc1e3bcf11fdb9c7b3f7969e36a",
+      "content/campaigns/theCircleUndone/story-text.js": "ebffa70439e1194813dae9c2c976b9012fe1c85659b19c96043ec21fc7a12373",
       "tests/tcu-story.test.mjs": "50fb077e6dc971c5fc764dff30f5ad495c727ea49ee7c5622178a3ee391e3527",
       "content/campaigns/theCircleUndone/interludes.js": "d7d0e5e0e2240255bff94c44c2f23e76d474eb7be6ba4c13c2114cfab4fd0cf3",
       "content/campaigns/theCircleUndone/manifest.js": "49bab1c5e12bfb7310bdb81260229568dc2c2ea1b3993e78cf43f4194dc474e9",

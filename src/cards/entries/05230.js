@@ -24,6 +24,9 @@ export default {
   attachTo: { kind: 'asset', trait: 'firearm', handSlots: 2 },
   // 引擎 combat.js 读点：宿主装备上挂有该字段的附属时，不能攻击与你交战的敌人。
   hostCannotAttackEngaged: true,
+  // 引擎 moves.js 读点：没有本地目标时，宿主枪械的攻击仍可激活，
+  // 由 activateFirearmFight 窗口里的本卡反应改指连接地点的非精英敌人。
+  hostAttackConnecting: true,
   abilities: [
     {
       kind: 'reaction',

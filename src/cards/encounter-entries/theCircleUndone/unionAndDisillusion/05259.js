@@ -55,8 +55,8 @@ export default {
         })
         const index = Number(answer)
         if (!Number.isInteger(index) || index < 0 || index >= inv.hand.length) break
-        const [code] = inv.hand.splice(index, 1)
-        inv.discard.push(code)
+        const code = inv.hand[index]
+        api.discardFromHand?.(inv.seat, code)
         icons += Number(ALL_CARDS[code]?.icons?.intellect || 0)
       }
       if (icons < 2) return

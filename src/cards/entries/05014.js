@@ -28,6 +28,11 @@ export default {
       resolve: ({ inv, context, api }) => {
         if (context?.when === 'cardWouldBeDrawn') {
           if (!context?.weakness) return
+          // 05015 等印刷「不能取消」的弱点：窗口仍可能列出本卡，但取消不生效。
+          if (context.cannotCancel) {
+            api.info('「黑暗洞察」：这张弱点印刷了「不能取消」，无法取消。')
+            return
+          }
           context.cancelled = true
           api.info(`🛡️ 「黑暗洞察」取消了抽到的弱点「${api.cardName(context.cardCode)}」，并将其洗回牌库。`)
           return

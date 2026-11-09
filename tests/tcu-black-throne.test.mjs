@@ -3,6 +3,7 @@
 // 混乱标记四难度、结局记录、存档往返与确定性。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { zoneApi } from './tcu-zone-api.mjs'
 import * as bbt from '../content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/index.js'
 import {
   scenario as definition, AZATHOTH, BLACK_THRONE, COSMIC_GATE, COSMIC_INGRESS, COSMOS_DECK_IDS,
@@ -202,7 +203,7 @@ function apiFor(state, options = {}) {
     },
     shuffleEncounterDeck: () => {},
   }
-  return api
+  return { ...zoneApi(state), ...api }
 }
 
 // ---------------------------------------------------------------------------

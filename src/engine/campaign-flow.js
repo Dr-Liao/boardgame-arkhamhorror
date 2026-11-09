@@ -46,10 +46,42 @@ export function createCampaignFlow(deps) {
     walkCampaign,
   } = deps
 
+// 上一关阵亡/疯狂的席位在战役记录里仍是 `killed` / `insane`：它们不能带着旧身份进入下一关，
+// 必须先在准备窗口里挑选替补调查员（全新 0 XP 牌组）。
+//   · 有幕间节点时，关间窗口（下面 interlude 分支）本来就会重置席位确认并开放换人；
+//   · 流程图里两关直接相邻（中间没有幕间节点，例如《失落的时代》久远腹地上/下半、
+//     《万象无终》前几章）时，hubContinue 会从上一关结算直接落到下一关的 scenarioSetup。
+//     若沿用上一轮的 hubReady/hubSeatDone，界面会显示「全队已就绪」，房主点「开始当前关卡」
+//     会在 prepareInvestigator 抛「调查员战役身份不可进入剧本」，而且没有任何入口可以换人。
+// 现役席位视为已确认（不需要为换人重复确认一次），只把阵亡/疯狂的席位挂回待准备。
+// 返回被挂回待准备的调查员（空数组表示无需换人，调用方可据此决定是否提示/重开窗口）。
+function reopenReplacementPreparation(state) {
+  if (!state.hubFlow || state.uiState !== 'scenarioSetup') return []
+  const eliminated = (state.investigators || []).filter(inv => {
+    const status = state.campaign?.investigators?.[inv.seat]?.status
+    return status != null && status !== 'active'
+  })
+  if (!eliminated.length) return []
+  const pending = new Set(eliminated.map(inv => inv.seat))
+  state.hubSeatDone = Object.fromEntries((state.investigators || [])
+    .filter(inv => !pending.has(inv.seat)).map(inv => [inv.seat, true]))
+  // 阵亡席位必须重新走「选择调查员」步骤，不能沿用上一轮已选中的界面标记。
+  if (state.hubSeatSelected) {
+    for (const seat of pending) delete state.hubSeatSelected[seat]
+  }
+  state.hubReady = false
+  state.currentSeat = eliminated[0].seat
+  state.hubUpgradedSeats = {}
+  return eliminated
+}
+
 function progressCampaign(state, events, launch = false, leaveRest = false) {
   const campaign = state.campaign
   const manifest = campaignManifestFor(state)
   const graph = campaignGraph(manifest)
+  // 是否是「上一关结算后直接推进」：幕间分支会自行重置席位；只有从 scenarioResult 直接
+  // 落到 scenario 的准备窗口需要补一次替补席位恢复（旧存档的坏状态由 dispatch 的开始关卡兜底）。
+  const fromScenarioResult = state.uiState === 'scenarioResult'
   if (!campaign.chaosBag) {
     const part = campaign.currentPart ?? null
     const bags = (part && manifest.partChaosBags?.[part]) || manifest.chaosBags || CHAOS_BAGS
@@ -75,6 +107,11 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
     campaign.scenarioIndex = manifest.scenarioIds.indexOf(node.scenarioId)
     state.hubSelectedScenarioId = node.scenarioId
     state.uiState = 'scenarioSetup'; state.phase = 'scenarioSetup'; campaign.phase = 'scenarioSetup'
+    // 两关直接相邻时也要能换掉上一关阵亡/疯狂的席位，否则会带着非现役战役身份开局并抛错。
+    const eliminated = launch || !fromScenarioResult ? [] : reopenReplacementPreparation(state)
+    if (eliminated.length) {
+      info(state, events, `☠️ ${eliminated.map(inv => inv.name).join('、')} 已经阵亡或疯狂：进入下一关前请先挑选替补调查员并确认准备。`)
+    }
     if (launch) { startScenario(state, campaign.scenarioIndex, events); runMulligans(state, events) }
   } else {
     campaign.phase = 'interlude'; state.phase = 'interlude'; state.uiState = 'interlude'
@@ -330,5 +367,5 @@ function applyDefeatTrauma(state, events) {
   }
 }
 
-  return { progressCampaign, restartScenario, finishScenario, applyResolutionEffects, addTrauma, applyDefeatTrauma }
+  return { progressCampaign, restartScenario, finishScenario, applyResolutionEffects, addTrauma, applyDefeatTrauma, reopenReplacementPreparation }
 }
