@@ -156,12 +156,12 @@ test('扩容伴随最低类型要求时，拒绝无法补齐的购买，并为�
   assert.equal(draftDeckStatus(s.campaign.investigators[0]).ready, true)
 })
 
-test('模式入口、三次初始刷新、服务端拒绝绕过选牌和伪造候选', () => {
+test('模式入口、五次初始刷新、服务端拒绝绕过选牌和伪造候选', () => {
   assert.equal(arkham.settingsSpec.find(spec => spec.key === 'deckMode').default, 'standard')
   const s = setup()
   let r = s.campaign.investigators[0]
   assert.equal(r.deck.length, 3, 'only signatures and weaknesses, no starter cards')
-  for (let n = 0; n < 3; n++) play(s, { action: 'hubDraftRefresh' })
+  for (let n = 0; n < 5; n++) play(s, { action: 'hubDraftRefresh' })
   r = s.campaign.investigators[0]
   assert.equal(r.draftMode.freeRerolls, 0)
   assert.ok(validateMove(s, 0, { action: 'hubDraftRefresh' }))

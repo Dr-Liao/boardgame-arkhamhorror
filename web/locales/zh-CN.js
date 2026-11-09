@@ -25,7 +25,7 @@ export default {
 
   "draft.modeLabel": "游戏模式",
   "draft.standardDescription": "自由构筑初始牌组，并按常规规则使用经验升级。",
-  "draft.modeDescription": "通过卡牌三选一构筑与升级牌组。初始可免费刷新三次；混乱袋额外获得 +1 与 0；关后经验为（最终结算经验 +1）×2。",
+  "draft.modeDescription": "通过卡牌三选一构筑与升级牌组。初始可免费刷新五次；混乱袋额外获得 +1 与 0；关后经验为（最终结算经验 +1）×2。",
 
   "draft.standard": "普通模式",
   "draft.title": "选牌模式",

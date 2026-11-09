@@ -25,7 +25,7 @@ export default {
 
   "draft.modeLabel": "Game mode",
   "draft.standardDescription": "Build your starting deck freely and spend experience on upgrades using the standard rules.",
-  "draft.modeDescription": "Build and upgrade your deck by choosing one of three cards. Start with three free rerolls, add +1 and 0 chaos tokens, and earn (final scenario XP + 1) × 2.",
+  "draft.modeDescription": "Build and upgrade your deck by choosing one of three cards. Start with five free rerolls, add +1 and 0 chaos tokens, and earn (final scenario XP + 1) × 2.",
 
   "draft.standard": "Standard mode",
   "draft.title": "Draft mode",
