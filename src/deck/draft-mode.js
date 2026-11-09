@@ -5,6 +5,7 @@ import { deckRules, validateDeckRules } from './deck-rules.js'
 import { randomValue } from '../engine/rules-state.js'
 import { purchaseCard, registerCampaignInvestigator, replacementOptions, applyPermanentPurchaseEffects } from '../campaign/campaign.js'
 
+export const INITIAL_DRAFT_REROLLS = 5
 export const isDraftMode = state => state.deckMode === 'draft'
 const ordinary = code => {
   const card = ALL_CARDS[code]
@@ -82,7 +83,7 @@ export function startInitialDraft(state, seat) {
   if (!record) record = registerCampaignInvestigator(state.campaign, inv, dependencies)
   else record.deck = dependencies
   record.startingDeckReady = false
-  record.draftMode = { phase: 'initial', options: [], freeRerolls: 3, locked: false, round: roundKey(state) }
+  record.draftMode = { phase: 'initial', options: [], freeRerolls: INITIAL_DRAFT_REROLLS, locked: false, round: roundKey(state) }
   generate(state, record, true)
 }
 
@@ -162,6 +163,6 @@ export function validateDraftState(state) {
     if (!['initial', 'ready', 'upgrade', 'refill'].includes(draft.phase) || !Array.isArray(draft.options)
       || ![0, 3].includes(draft.options.length) || draft.options.some(code => code !== null && !ALL_CARDS[code])
       || typeof draft.locked !== 'boolean' || !Number.isSafeInteger(draft.round) || draft.round < 0
-      || (draft.freeRerolls != null && (!Number.isSafeInteger(draft.freeRerolls) || draft.freeRerolls < 0 || draft.freeRerolls > 3))) throw new Error('选牌模式存档损坏')
+      || (draft.freeRerolls != null && (!Number.isSafeInteger(draft.freeRerolls) || draft.freeRerolls < 0 || draft.freeRerolls > INITIAL_DRAFT_REROLLS))) throw new Error('选牌模式存档损坏')
   }
 }

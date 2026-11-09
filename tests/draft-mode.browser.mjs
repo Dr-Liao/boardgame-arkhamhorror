@@ -40,8 +40,8 @@ for (const width of [1440, 390]) test(`三选一高级设置、初始选牌与�
   await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
   const pane = hub.locator('.ah-draft-pane')
   await expect(pane.locator('.ah-draft-option')).toHaveCount(3)
-  await pane.getByRole('button', { name: /刷新（剩余 3 次免费）/ }).click()
-  await expect(pane).toContainText('剩余免费刷新 2 次')
+  await pane.getByRole('button', { name: /刷新（剩余 5 次免费）/ }).click()
+  await expect(pane).toContainText('剩余免费刷新 4 次')
   await page.screenshot({ path: output + `initial-${width}.png`, animations: 'disabled' })
   expect(await pane.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true)
 
