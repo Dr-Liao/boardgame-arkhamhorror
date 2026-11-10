@@ -197,7 +197,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     let playCostWindow = null
     {
       const playCostContext = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
-        cardCode: cardId, playedCardId: cardId, cost, costReduction: 0, costIncrease: 0, playUpgrades: null,
+        cardCode: cardId, playedCardId: cardId, cardType: playedDef?.type || null, cost, costReduction: 0, costIncrease: 0, playUpgrades: null,
         ...(fastSourceId ? { fastSourceId } : {}),
         prompt: `打出「${cardName(cardId)}」的支付前窗口` }
       if (timingSource) {

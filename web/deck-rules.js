@@ -226,6 +226,39 @@ export function myriadUsage(codes, cards) {
 }
 // 地球边缘 P5：陈丽丽的演武选择在构筑校验里镜像（数据在 web/ui-cards.js#deckRules.eoteDisciplineSelection）。
 const EOTE_DISCIPLINE_SELECTION = UI_CARDS.deckRules.eoteDisciplineSelection || {}
+
+// 副职阶选择（Secondary Class / Class Choice）的通用判定：
+// 卡面 deckOptions 用 `faction_select` 声明可选范围；相同范围的选项组代表「需要选定 N 个职阶」
+// （卡森 N=1、查理 N=2）。牌组里命中该选项组的卡牌只能来自这 N 个职阶。
+export function factionSelectGroups(investigator) {
+  const groups = new Map()
+  for (const rule of deckRules(investigator).options) {
+    const allowed = rule.faction_select
+    if (!Array.isArray(allowed) || !allowed.length || rule.not === true) continue
+    const key = [...allowed].map(lower).sort().join('|')
+    if (!groups.has(key)) groups.set(key, { key, allowed: [...new Set(allowed.map(lower))], rules: [] })
+    groups.get(key).rules.push(rule)
+  }
+  return [...groups.values()]
+}
+function cardFactions(card) {
+  return [...new Set([...(card.factions || []), card.klass, card.klass2, card.klass3]
+    .filter(Boolean).map(lower))]
+}
+export function factionSelectErrors(investigator, cards) {
+  const errors = []
+  for (const group of factionSelectGroups(investigator)) {
+    const used = new Set()
+    for (const card of cards) {
+      if (!group.rules.some(rule => matchesCardRule(card, rule, investigator))) continue
+      for (const faction of cardFactions(card)) if (group.allowed.includes(faction)) used.add(faction)
+    }
+    if (used.size > group.rules.length) {
+      errors.push(t('misc.deck.factionSelect', { count: group.rules.length }))
+    }
+  }
+  return errors
+}
 export function validateDeckRules(investigator, codes, cards, { partial = false, disciplines = undefined, xp = 0, draftMode = false } = {}) {
   const rules = deckRules(investigator, codes, cards)
   const errors = validateTraitLimits(codes, cards)
@@ -307,6 +340,7 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
       errors.push(rule.error || t('misc.deck.atleast', { factions: requiredFactions, minimum }))
     }
   }
+  if (!partial) errors.push(...factionSelectErrors(investigator, ordinary))
   return { errors, size: rules.size, count: counted.length, permanent: ordinary.length - counted.length }
 }
 

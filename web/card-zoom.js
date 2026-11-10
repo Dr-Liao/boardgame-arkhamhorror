@@ -73,7 +73,7 @@ export function installCardZoom(h) {
     const { code, face, art: source } = found
     const name = found.name || t('detail.type.card')
     const landscape = source?.classList.contains('ah-table-art-landscape')
-    const art = source?.dataset.imageState === 'displayable' ? source.cloneNode(true) : tableArt(h, code, name, { face, landscape })
+    const art = tableArt(h, code, name, { face, landscape, thumbnail: false })
     const panel = h('div', { className: 'ah-card-zoom-text' }, h('h3', {}, name), h('p', { className: 'ah-card-zoom-loading' }, t('card.zoom.loading')))
     zoom = h('div', { className: 'ah-card-zoom' + (landscape ? ' is-landscape' : ''), role: 'tooltip', 'data-zoom-for': code, 'data-zoom-face': face },
       h('div', { className: 'ah-card-zoom-art' }, art), panel)

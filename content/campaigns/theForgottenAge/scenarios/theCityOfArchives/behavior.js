@@ -1,7 +1,10 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { encounterRules } from '../../encounter-rules.js'
+import { encounterRules, markYithianAllies } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { assetRuleFor } from '../../../../../src/cards/card-rules.js'
+import {
+  applyInvestigatorForm, hasInvestigatorForm,
+} from '../../../../../src/engine/investigator-form.js'
 import {
   CARD_CODES, HALLS_SLOTS, OBSERVER_CODE, REMEMBERED_TASKS, ROOM_CODES, ROOM_SLOTS,
   SET_ASIDE_LOCATIONS, TASK_LABELS, isItemAsset,
@@ -22,6 +25,20 @@ const threatWith = (inv, code) => (inv.threat || []).find(card => original(card)
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
 // 第 114 轮：换身时被放到一边的剧情资产（04051 亚历山卓·维拉）由条目 assetRule 声明。
 const setAsideOnBodySwap = code => assetRuleFor(code)?.setAsideOnBodySwap === true
+// 设置阶段「检查自己的牌库和游戏区域，找出所有独特的[[道具]]支援」：命中后从持有区移出游戏。
+// 返回 true 表示这张卡要离开当前区域；移出的去处记在场景标记里（引擎/存档继续沿用旧字段）。
+function bodySwapRemoval(state, code) {
+  if (!code) return false
+  if (isItemAsset(code) && ALL_CARDS[code]?.unique) {
+    ;(flagsFor(state).removedCards ||= []).push(code)
+    return true
+  }
+  if (setAsideOnBodySwap(code)) {
+    ;(flagsFor(state).setAsideCards ||= []).push(code)
+    return true
+  }
+  return false
+}
 const handLimitBase = 8
 
 // 已经逐条实现印刷效果的本章遭遇卡原卡号（近似或未实现的不要列进来，
@@ -158,8 +175,14 @@ function refreshYithianEnemies(state) {
   for (const enemy of state.enemies) refreshYithianEnemy(state, enemy)
 }
 
-function groupCluesAt(state, locationId) {
-  return state.locations.find(location => location.id === locationId)?.clues || 0
+// 大图书馆的「共同支付线索」花的是调查员**手里已获得**的线索：地点上的线索只是
+// 还没被调查走的标记，不能直接当支付来源。这里的口径必须和引擎 groupPayment 的
+// 可用线索一致（alive 且位于该地点的调查员持有的线索之和），否则行动会先被列为
+// 可用、结算到支付时才抛「符合地点条件的共同线索不足」，整条事务回滚，
+// 对局就会卡在待决选择上（2026-11-10 天机之城实战复现）。
+function payableCluesAt(state, locationId) {
+  return active(state).filter(inv => inv.location === locationId)
+    .reduce((sum, inv) => sum + (inv.clues || 0), 0)
 }
 
 function discardThreat(state, inv, threat) {
@@ -218,22 +241,12 @@ export const behavior = {
     return !item
   },
 
-  // 04244 伊斯人身体：你的每个[[盟友]]支援获得[[伊斯]]特性。
-  assetEntered(state, inv, asset) {
-    if (!inv?.yithianBody) return
-    const traits = ALL_CARDS[asset?.code]?.traits || asset?.traits || []
-    if (traits.some(trait => ['Ally', '盟友'].includes(String(trait)))) asset.yithianTrait = true
-  },
+  // 04244 伊斯人身体：盟友获得[[伊斯]]特性、旧印 +2 抽 1、投入图标翻倍——这三条是身体卡
+  // 自己的印刷文本，读点放在战役级共享规则 encounter-rules.js：换身可能延续到后续章节
+  // （幕间四「困在伊斯人身体里」），不能只写在《天机之城》里。本章只负责「进入身体」。
 
-  // 04244 的旧印：+2，抽 1 张牌（引擎在揭示旧印时读这个钩子）。
-  elderSign(state, inv) {
-    if (!flagsFor(state).yithianBody) return null
-    if (!inv?.yithianBody) return null
-    return { delta: 2, draw: 1 }
-  },
-
-  // 剧情前步骤：写入合作/反抗记录、把调查员换成伊斯人身体、
-  // 并把独特[[道具]]与亚历山卓·维拉移出牌组（Haskell: beforeDrawingOpeningHands*）。
+  // 剧情前步骤：写入合作/反抗记录、把调查员卡替换成伊斯人身体、
+  // 并把独特[[道具]]与亚历山卓·维拉移出牌库与游戏区域（Haskell: beforeDrawingOpeningHands*）。
   preScenarioSetup(state, events, api = {}) {
     const records = recordsFor(state)
     flagsFor(state)
@@ -256,63 +269,50 @@ export const behavior = {
     flagsFor(state).removedCards = []
     flagsFor(state).setAsideCards = []
     for (const inv of state.investigators) {
+      const originalName = inv.name
+      // 卡面身份整体替换：卡号/名字/职业/四项技能/生命与理智印刷值都变成 04244。
+      // 原调查员卡文本因此不可用（规则：「无法使用其调查员的能力」）；牌库/手牌/场上支援保留。
+      applyInvestigatorForm(state, inv, { code: CARD_CODES.bodyOfAYithian, form: 'yithian' })
       inv.yithianBody = true
-      // 04244 伊斯人身体：印刷属性 意志2/智识2/战斗2/敏捷2，生命 7。
-      // prepareInvestigator 每场冒险都会按调查员卡重建，所以这里直接覆盖即可，
-      // 不需要在结算时恢复；旧值只用于日志。
-      flagsFor(state).yithianBodyOriginals ||= {}
-      // 04244 伊斯人身体：印刷属性 意志2/智识2/战斗2/敏捷2，生命 7、神智 7。
-      flagsFor(state).yithianBodyOriginals[inv.seat] = {
-        willpower: inv.willpower, intellect: inv.intellect, combat: inv.combat, agility: inv.agility,
-        maxHealth: inv.maxHealth, baseHealth: inv.baseHealth,
-        maxSanity: inv.maxSanity, baseSanity: inv.baseSanity,
-      }
-      inv.willpower = 2
-      inv.intellect = 2
-      inv.combat = 2
-      inv.agility = 2
-      inv.maxHealth = 7
-      inv.baseHealth = 7
-      inv.maxSanity = 7
-      inv.baseSanity = 7
       // 已在场的盟友也要获得伊斯特性（不只是之后入场的）。
-      for (const asset of inv.assets || []) {
-        const traits = ALL_CARDS[asset?.code]?.traits || asset?.traits || []
-        if (traits.some(trait => ['Ally', '盟友'].includes(String(trait)))) asset.yithianTrait = true
-      }
-      api.info?.(`🧠 ${inv.name} 换上了伊斯人身体：四属性 2，生命 7，神智 7。`)
+      markYithianAllies(inv)
+      api.info?.(`🧠 ${originalName} 换上了伊斯人身体：调查员卡替换为「${inv.name}」，四属性 2，生命 7，神智 7。`)
       for (const zone of ['deck', 'hand', 'discard']) {
-        const kept = []
-        for (const code of inv[zone] || []) {
-          if (isItemAsset(code) && ALL_CARDS[code]?.unique) {
-            flagsFor(state).removedCards.push(code)
-            continue
-          }
-          if (setAsideOnBodySwap(code)) {
-            flagsFor(state).setAsideCards.push(code)
-            continue
-          }
-          kept.push(code)
-        }
-        inv[zone] = kept
+        inv[zone] = (inv[zone] || []).filter(code => !bodySwapRemoval(state, code))
+      }
+      // 印刷设置说的是「检查自己的牌库和游戏区域」：开局的专属独特道具支援已在场，也要移出游戏。
+      if ((inv.assets || []).length) {
+        inv.assets = inv.assets.filter(asset => !bodySwapRemoval(state, asset?.code || asset?.originalCode))
       }
       const record = campaignRecord(state, inv.seat)
-      if (record?.deck) {
-        record.deck = record.deck.filter(code => {
-          if (isItemAsset(code) && ALL_CARDS[code]?.unique) {
-            flagsFor(state).removedCards.push(code)
-            return false
-          }
-          if (setAsideOnBodySwap(code)) {
-            flagsFor(state).setAsideCards.push(code)
-            return false
-          }
-          return true
-        })
-      }
+      if (record?.deck) record.deck = record.deck.filter(code => !bodySwapRemoval(state, code))
     }
     flagsFor(state).preScenarioComplete = true
     return { cooperated: !!records.theInvestigatorsCooperatedWithTheYithians }
+  },
+
+  // 旧存档修复：本次更新前「换身」只改了数值、没换调查员卡。装回卡面身份，并补做设置阶段
+  // 漏掉的「把独特道具支援从游戏区域移出」。
+  saveRepairNote: '补齐《天机之城》的伊斯人身体换身（调查员卡替换为 04244）',
+  needsSaveRepair(state) {
+    if (!state.scenarioFlags?.yithianBody) return false
+    return (state.investigators || []).some(inv => !hasInvestigatorForm(inv)
+      || inv.code !== CARD_CODES.bodyOfAYithian)
+  },
+
+  repairSavedState(state) {
+    if (!state.scenarioFlags?.yithianBody) return
+    for (const inv of state.investigators || []) {
+      if (!hasInvestigatorForm(inv)) {
+        applyInvestigatorForm(state, inv, { code: CARD_CODES.bodyOfAYithian, form: 'yithian' })
+      }
+      inv.yithianBody = true
+      markYithianAllies(inv)
+      // 设置阶段「检查牌库和游戏区域」：旧存档只清了牌库/手牌/弃牌，场上的独特道具支援还在。
+      if ((inv.assets || []).length) {
+        inv.assets = inv.assets.filter(asset => !bodySwapRemoval(state, asset?.code || asset?.originalCode))
+      }
+    }
   },
 
   setupLocations(state, events, helper = {}) {
@@ -413,7 +413,7 @@ export const behavior = {
     }
     // 大图书馆：共同花费 1 线索/人，破译归位程式。
     if (code === CARD_CODES.greatLibrary) {
-      const pooled = groupCluesAt(state, location.id)
+      const pooled = payableCluesAt(state, location.id)
       moves.push({
         action: 'scenarioAction', rule: 'decipherProcess',
         label: `📖 花费${state.numInvestigators}个线索：检定智识(3)破译归位程式`,
@@ -514,8 +514,9 @@ export const behavior = {
       return
     }
     if (move.rule === 'decipherProcess') {
-      if (!location || groupCluesAt(state, location.id) < state.numInvestigators) {
-        api.info?.('大图书馆的线索不足。')
+      const payable = location ? payableCluesAt(state, location.id) : 0
+      if (!location || payable < state.numInvestigators) {
+        api.info?.(`大图书馆的线索不足：需要共同支付 ${state.numInvestigators} 个线索（当前 ${payable}）。`)
         return
       }
       api.payClues(state.numInvestigators, location.id)
@@ -880,17 +881,8 @@ export const behavior = {
     return state.locations.some(location => location.id === target) ? target : fallback
   },
 
-  // 伊斯人身体（04244）：投入一张卡牌时把它的技能图标翻倍（每次检定一次）。
-  // 只对「伊斯人身体持有者自己正在执行、自己投入」的检定生效；别人替他投入的牌不翻倍。
-  commitIconMultiplier(state, inv) {
-    if (!inv?.yithianBody) return 1
-    const test = state.skillTest
-    if (!test || test.seat !== inv.seat || test.tfaYithianIconDoubled) return 1
-    return {
-      multiplier: 2, once: 'tfaYithianIconDoubled', source: 'yithianBody',
-      prompt: '伊斯人身体：是否翻倍刚投入这张牌的技能图标？（每次检定一次）',
-    }
-  },
+  // 伊斯人身体（04244）的投入图标翻倍、旧印与盟友特性读点在战役级共享规则
+  // encounter-rules.js（换身可能延续到后续章节，不能只写在本章）。
 
   describe(state) {
     const remembered = REMEMBERED_TASKS.filter(key => isRemembered(state, key))

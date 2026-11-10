@@ -1,5 +1,6 @@
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { INVESTIGATOR_CODES as EOTE_INVESTIGATOR_CODES, DISCIPLINE_CODES as EOTE_DISCIPLINE_CODES } from '../../content/campaigns/edgeOfTheEarth/shared.js'
+import { INVESTIGATOR_CODES as TSK_INVESTIGATOR_CODES } from '../../content/campaigns/theScarletKeys/shared.js'
 import { TIC_PLAYER_VERIFIED_CODES as TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES } from '../../content/packs/ticPlayer/manifest.js'
 // P6（M2 玩家卡）：地球边缘 115 张一般玩家卡逐卡验收后开放 strict；111 张可构筑，4 张基础弱点只作依赖。
 // 码表来自生成物（src/cards/eote-player-acceptance.js → manifest），这里不手写卡号清单。
@@ -55,6 +56,7 @@ export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   ...TDE_INVESTIGATOR_CODES,
   ...TIC_INVESTIGATOR_CODES,
   ...EOTE_INVESTIGATOR_CODES,
+  ...TSK_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -131,6 +133,13 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '07005': Object.freeze(['07014', '07015', '07016']),
   // P5（地球边缘）：签名卡/专属弱点；陈丽丽的 4 组双面演武由 EOTE_DISCIPLINE_CODES 单独登记，
   // 不写进 deckRequirements.signatureCards（演武由调查员能力在开局/升级时获得）。
+  // P5（八循环）：6 位调查员 + 14 张专属依赖（签名卡/专属弱点）。
+  '09001': Object.freeze(['09002', '09003']),
+  '09004': Object.freeze(['09005', '09006', '09007']),
+  '09008': Object.freeze(['09009', '09010']),
+  '09011': Object.freeze(['09012', '09013', '09014']),
+  '09015': Object.freeze(['09016', '09017']),
+  '09018': Object.freeze(['09019', '09020']),
   '08001': Object.freeze(['08002', '08003']),
   '08004': Object.freeze(['08005', '08006']),
   '08007': Object.freeze(['08008', '08009']),
@@ -159,6 +168,8 @@ const ticSignatures = TIC_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_
 // P5（地球边缘）：专属依赖 = 签名卡/弱点 + 4 组双面演武（演武为常驻资产，只作依赖不入构筑池）。
 const eoteSignatures = EOTE_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 const eoteDisciplineCodes = [...EOTE_DISCIPLINE_CODES]
+// P5（八循环）：六位调查员的 14 张专属依赖（签名卡/专属弱点），只作构筑依赖。
+const tskSignatures = TSK_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
 export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
 export const PLAYER_CARD_CODES = Object.freeze([
@@ -190,7 +201,7 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...TIC_PLAYER_CARD_CODES,
   ...EOTE_PLAYER_CARD_CODES,
   ...EOTE_CAMPAIGN_CARD_CODES,
-  ...eoteSignatures, ...eoteDisciplineCodes,
+  ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -221,6 +232,7 @@ export function getAvailability(code) {
       || tdeSignatures.includes(code)
       || ticSignatures.includes(code)
       || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
+      || tskSignatures.includes(code)
       || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || EOTE_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
@@ -241,6 +253,8 @@ export function getAvailability(code) {
         ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。P10 起食梦者战役已在大厅开放（playable + earlyAccess），玩家卡进入构筑界面与食梦者战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
+      : TSK_INVESTIGATOR_CODES.includes(code) || tskSignatures.includes(code)
+        ? 'P5 绯红密钥六位调查员及 14 张专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与十章仍待 P7–P8。'
       : EOTE_INVESTIGATOR_CODES.includes(code) || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
         ? 'P5 地球边缘五位调查员及专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役仍待 P7–P8。'
       : TIC_INVESTIGATOR_CODES.includes(code) || ticSignatures.includes(code)

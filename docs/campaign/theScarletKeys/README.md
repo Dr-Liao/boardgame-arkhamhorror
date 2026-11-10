@@ -2,9 +2,9 @@
 
 英文名：The Scarlet Keys。战役标识：`theScarletKeys`；本轮工具及审计简称：`tsk`；来源战役编号：`09`。
 
-建立日期：2026-11-03。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。当前处于规划准备阶段，P0 → P8 均未开始，战役、调查员与一般玩家卡保持 `catalog-only`。
+建立日期：2026-11-03。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。**P0（M0 范围与基线）已完成（2026-11-10）**：范围账本 `audit/tsk-scope.json`、原始基线 `audit/tsk-baseline.json`、`scan:tsk:scope:check` / `scan:tsk:baseline:check` 可复算；**P1（机制扫描）已完成（2026-11-10）**：机制扫描账本 `audit/tsk-mechanism-scan.json`、`scan:tsk:check` 可复算，439 条记录全部归类、49 项原语缺口进入 P2；**P2（通用原语）已完成（2026-11-10）**：77 项目录全覆盖（reuse 31 / new 37 / extend 9）、`audit/tsk-primitive-{plan,catalog}.json` 与 `audit/tsk-node-acceptance.json` 可复算；**P3（关键词与规则书）已完成（2026-11-10）**：29 个关键词、17 条双语规则、439 卡文直达、`audit/tsk-rules.json#confirmations` 全 verified、浏览器验收 6/6；**P4（新增交互与界面）已完成（2026-11-10）**：6 组交互事务与摘要面板、投影隐私、`audit/tsk-interactions.json#status = verified`、浏览器验收 16/16 通过；**P5（调查员及专属依赖）已完成（2026-11-10）**：6 位调查员 + 14 张专属依赖、次级职阶构筑、引擎读点接线、`audit/tsk-investigators.json#status = verified`、浏览器验收 12/12（6 人 × 桌面/移动）；`P6 → P8` 未开始，一般玩家卡（09021–09128）与战役（09501+）保持 `catalog-only`。
 
-复算输入计划签入 `audit/tsk-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 `artifacts/migration/tsk/` 保存运行镜像与过程资料，继续忽略，不放开整个目录。
+复算输入计划签入 `audit/tsk-{scope,mechanism-scan,primitive-plan,primitive-catalog,rules,interactions,investigators}.json`；P0–P5 已落地 `scope`、`baseline`、`mechanism-scan`、`primitive-plan`、`primitive-catalog`、`rules`、`interactions`、`investigators` 与 Node/浏览器验收证据。大厅根目录 `artifacts/migration/tsk/` 保存运行镜像与过程资料，继续忽略，不放开整个目录。
 
 ## 1. 依据与打勾规则
 
@@ -49,6 +49,12 @@
 | 叙事生成 | `tools/import-tsk-story.mjs` 与生成后的 `story-text.js` |
 | 完整冒险指南 | 接入 `tools/import-scenario-guides.mjs`，生成 `web/scenario-guides/<scenarioId>.json` 中英正文 |
 | 总审计与专项账本 | `tools/audit-tsk.mjs`、`audit/tsk-migration.json`；按需拆分原语、调查员、玩家卡、章节和逐卡账本 |
+| P0 范围与基线（已落地） | `tools/scan-tsk-scope.mjs` + `audit/tsk-scope.json`、`tools/scan-tsk-baseline.mjs` + `audit/tsk-baseline.json`、`tests/fixtures/replay/tsk-baseline.json`、`tests/tsk-migration.test.mjs` |
+| P1 机制扫描（已落地） | `tools/tsk-mechanisms.mjs`、`tools/tsk-mechanism-primitives.mjs`、`tools/tsk-guide-scan.mjs`、`tools/scan-tsk-mechanisms.mjs` + `audit/tsk-mechanism-scan.json` |
+| P2 通用原语（已落地） | `src/engine/tsk-*.js`（8 个原语模块 + `tsk-primitives.js` 校验汇总）、`tools/tsk-primitive-spec.mjs`、`tools/audit-tsk-primitives.mjs`、`tools/verify-tsk.mjs` + `audit/tsk-primitive-{plan,catalog}.json`、`audit/tsk-node-acceptance.json`、`docs/campaign/theScarletKeys/primitives.md` |
+| P3 关键词与规则书（已落地） | `content/campaigns/theScarletKeys/keywords.js`、`web/tsk-rules.js`（注册进 `web/rulebook-data.js`）、`tools/audit-tsk-rules.mjs`、`tests/tsk-rules.test.mjs`、`tests/tsk-rules.browser.mjs` + `tests/playwright/playwright.tsk.config.mjs` + `audit/tsk-rules.json`、`audit/tsk-browser-acceptance.json`、`docs/campaign/theScarletKeys/rulebook.md` |
+| P4 新增交互与界面（已落地） | `src/engine/tsk-interactions.js`、`src/integration/mechanic-view.js`（tsk 投影/掩码）、`web/mechanic-ui.js` / `mechanic-ui.css` / locale、`tools/audit-tsk-interactions.mjs`、`tools/verify-tsk-regression.mjs`、`tests/tsk-interactions.test.mjs`、`tests/tsk-interactions.browser.mjs`、`tests/tsk-interaction-fixture.mjs` + `tests/playwright/playwright.tsk-p4.config.mjs` + `audit/tsk-interactions{,-browser}.json`、`audit/tsk-regression.json`、`docs/campaign/theScarletKeys/interactions.md` |
+| P5 调查员及专属依赖（已落地） | `src/cards/entries/090{01..20}.js`（6 调查员 + 14 专属依赖）、`content/campaigns/theScarletKeys/investigator-data.js`、`content/packs/tskInvestigators/manifest.js`（playable）、`src/engine/tsk-investigator-support.js`、`tools/audit-tsk-investigators.mjs`、`tests/tsk-investigator-*.test.mjs`、`tests/tsk-investigators.browser.mjs` + `tests/playwright/playwright.tsk-p5.config.mjs` + `audit/tsk-investigators{,-browser}.json`、`docs/campaign/theScarletKeys/investigators.md` |
 | 测试 | `tests/tsk-*.test.mjs`、`tests/tsk-*.browser.mjs`，注册本循环测试与审计脚本 |
 
 运行资料放在**大厅仓库根目录** `artifacts/migration/tsk/`，不与 Mod 下的历史 `artifacts/` 混用。最少包含 `scope.json`、`mechanism-scan.json`、`primitive-plan.json`、`primitive-catalog.json`、`shards.json`、`primitive-requests/`、`workers/`、`reports/` 和 replay 基线。只有干净检出复算所需的最小输入可逐文件加入白名单；截图、日志和执行过程文件不签入。
@@ -61,66 +67,136 @@
 
 ### P0：锁定范围与基线（M0）
 
-- [ ] 扫描候选内容包（`tskp`、`tskc`），输出唯一卡号全集、正反面与双面密钥关联卡、定制卡元数据、重印 canonical 映射及范围外依赖。
-- [ ] 将调查员及专属依赖、一般玩家卡、共享遭遇组（含红色同志会、环球漫游、异界等）和逐章非玩家卡分成无交集集合，保留并集守恒检查。
-- [ ] 逐章锁定来源、真实提示卡号（`09501`–`09694`）、四档混乱符号规则、初始混乱袋、世界地图节点表和完整指南来源，记录相对路径与 SHA-256。
-- [ ] 记录起始提交、工作区已有改动、回归既有失败，以及引擎卡号字面量、`EFFECTS`、逃生原语和 R1/R2/R3 合规基线。
-- [ ] 在行为改动前生成 golden replay 临时基线；登记 `scope.json` 和报告位置。
-- [ ] 接入目录身份和必要的审计骨架；未验收内容保持 `catalog-only`，战役、选人和构筑不因数据收录而开放。
+- [x] 扫描候选内容包（`tskp`、`tskc`），输出唯一卡号全集、正反面与双面密钥关联卡、定制卡元数据、重印 canonical 映射及范围外依赖。证据：`audit/tsk-scope.json`（439 条记录 = 369 主卡 + 70 关联面 / 398 个物理卡位；10 把双面密钥 20 条记录；16 张定制升级卡逐项勾选；6 组同印刷身份含 2 组跨循环重印 `04096↔09587`、`09064↔12049`；范围外依赖 `88045` 与 8 个核心遭遇组），`node tools/scan-tsk-scope.mjs --check` 逐字节复算一致。
+- [x] 将调查员及专属依赖、一般玩家卡、共享遭遇组（含红色同志会、环球漫游、异界等）和逐章非玩家卡分成无交集集合，保留并集守恒检查。证据：三包 311/20/108 无重叠、并集 = 439；四类集合（调查员 20 / 一般玩家卡 108 / 共享组 16 / 章节组 10）守恒；`tests/tsk-migration.test.mjs` 的「三包守恒」「遭遇组分片」用例。
+- [x] 逐章锁定来源、真实提示卡号（`09501`–`09694`）、四档混乱符号规则、初始混乱袋、世界地图节点表和完整指南来源，记录相对路径与 SHA-256。证据：`scope.sources` 427 个来源逐文件 SHA-256；`scope.chapters[*].promptCard` 逐字锁定 Easy/Standard + Hard/Expert 与 `[skull]` 规则、档案编号 `archiveLabelMatched`；`scope.worldMap` 36 节点（连接双向对称、5 绿地、26 初始解锁、起点伦敦、0-1 BFS 距离）；`scope.chaosBags` 四档（16/16/17/18，无 cultist）与状况报告 `α–ω` 阈值/效果；`scope.guideSources` 22 份中英指南。
+- [x] 记录起始提交、工作区已有改动、回归既有失败，以及引擎卡号字面量、`EFFECTS`、逃生原语和 R1/R2/R3 合规基线。证据：`audit/tsk-baseline.json`（`gitHead=fb7d536`；`worktree` 45 条既有 `docs/edgeOfTheEarth/**` 删除；`fastFailures` 4 条既有失败；12 项能力层指标；`complianceBaseline`）。
+- [x] 在行为改动前生成 golden replay 临时基线；登记 `scope.json` 和报告位置。证据：`tests/fixtures/replay/tsk-baseline.json`（13 局 / 797 步，`replaySha256` 内嵌基线）；临时采集镜像 `artifacts/migration/tsk/replay-before.json`；`scope.json` ↔ `artifacts/migration/tsk/scope.json`。
+- [x] 接入目录身份和必要的审计骨架；未验收内容保持 `catalog-only`，战役、选人和构筑不因数据收录而开放。证据：三包 `catalog-only` 注册进 `content/registered.js`；`content/campaigns/theScarletKeys/{shared,chapters,manifest}.js`；战役清单与十章占位不进生产组合根，439 张卡可用性全部 `catalog-only`（不可构筑/不可选人）；`scan:tsk:scope[:check]`、`scan:tsk:baseline[:check]`、`test:tsk` 已登记。
 
 退出门禁：来源可复算，集合无重叠无遗漏，现有 replay 可复现；此后来源漂移必须让 `--check` 失败。
 
+**P0 完成证据（2026-11-10）**
+
+| 项目 | 结果 | 证据 |
+| --- | --- | --- |
+| 范围账本 | 439 条记录 / 398 卡位 / 三包 311·20·108 / 26 遭遇组 / 10 章 / 10 钥匙 / 16 定制卡 | `audit/tsk-scope.json`；`node tools/scan-tsk-scope.mjs --check` |
+| 来源锁 | 427 个参考文件 SHA-256（战役、十章剧本、卡牌定义与实现、中英剧情指南、卡表四份） | `scope.sources`；`--check` 漂移即失败 |
+| 基线 | `gitHead fb7d536`、45 条既有工作区删除、4 条既有 fast 失败、12 项能力层指标 | `audit/tsk-baseline.json`；`node tools/scan-tsk-baseline.mjs --check` |
+| golden replay | 13 局 / 797 步，行为零变化 | `tests/fixtures/replay/tsk-baseline.json`；`replay-fixtures --compare` exit 0 |
+| fast 回归 | P0 前 7056 tests / 7049 pass / 4 fail → P0 后 7061 tests / 7054 pass / 4 fail（新增 5 例全绿；4 条失败与 P0 前完全一致，未修未洗白） | `artifacts/migration/tsk/reports/fast-baseline.log`（sha256 `7c46665…`）与 `fast-after-2.log` |
+| 专项测试 | `test:tsk` 5/5；分层清单与 `node-suite` 一致 | `tests/tsk-migration.test.mjs`；`tests/suites.mjs` |
+| 跨循环缝 | 组合根变更按既有维护口径重签依赖账本：`audit/tde-migration.json` 仅 `content/registered.js` 哈希 1 行变化，`audit-tde --check` 复算一致；TIC/EotE 账本此前已各自漂移，保持既有失败账不重签 | `audit/tde-migration.json`；`artifacts/migration/tsk/reports/` |
+
+P0 期间重跑 README §7 门禁时，以下命令在 P0 前就已失败，已按既有失败冻结在 `audit/tsk-baseline.json#preExistingFailures.otherCommands`，不在本轮修复或重签：`npm run docs:check`（7 条失效链接全部指向 P0 前已删除的 `docs/edgeOfTheEarth/**`）、`npm run presentation:check`（`audit/presentation-report.json` 早于本轮漂移）、`npm run audit:check`（N0 资源基线 `audit/migration-scope.json` 早已漂移）。其余 P0 门禁 `cards:check` / `cards:encounter-check` / `audit:entries` / `cards:audit` / `replay:fixtures` / `images:verify` / `scan:tsk:scope:check` / `scan:tsk:baseline:check` 全部通过。
+
+注意：目录期不把「数据收录」当「规则实现」——`audit/tsk-scope.json` 的 `status` 仍是 `catalog-only`，`audit/tsk-scope.json#pending` 列出的 11 项数据/来源差异（双击密钥数据口径、09606a 单面卡、`09747`–`09749` 无主卡记录、档案编号分布、side story 依赖等）必须在 P1 逐项复核，不得静默带入 P2。
+
 ### P1：扫描新增机制（规范第 1 步）
 
-- [ ] 全量扫描卡面、背面、定制栏、规则、地图密档及每章指南，形成 `mechanism-scan.json`，覆盖 `primitive / keyword / rulebook / interaction / scenario / content`。
-- [ ] 每张范围内卡至少关联一个机制条目；同一机制合并，记录代表卡号、来源、既有实现、缺口与候选原语。
-- [ ] 将 §5 的重点机制逐项分类，核实复用能力与真实缺口；未知机制保持阻断。
-- [ ] 建立十章完整指南及战役地图密档段落清单，单列中文缺译和特别规则，不以“已有剧情正文”代替指南覆盖。
+- [x] 全量扫描卡面、背面、定制栏、规则、地图密档及每章指南，形成 `mechanism-scan.json`，覆盖 `primitive / keyword / rulebook / interaction / scenario / content`。证据：`audit/tsk-mechanism-scan.json`（132 个机制行：primitive 21 / keyword 29 / rulebook 40 / interaction 19 / scenario 10 / content 13；扫描语料 = 正面 + 背面 + 定制栏 + 定制变更 + 特质），`node tools/scan-tsk-mechanisms.mjs --check` 逐字节复算一致。
+- [x] 每张范围内卡至少关联一个机制条目；同一机制合并，记录代表卡号、来源、既有实现、缺口与候选原语。证据：439 条记录全部归类、`unclassified = 0`；每个机制行带 `cards`（代表卡）、`source`、`existing`、`gap`、`candidatePrimitives`；全部卡 `behaviorStatus = pending`（分类不等于逐卡行为验收）。
+- [x] 将 §5 的重点机制逐项分类，核实复用能力与真实缺口；未知机制保持阻断。证据：`keyMechanisms` 8/8（7 项 `reuse+gaps`、已有关键词保持纯 `reuse`）；原语目录 77 项 = 28 reuse + 10 extend + 39 new，49 项缺口全部被机制引用并进入 P2 输入；3 项规则边界未决原语（`new.concealedExposeRange`、`new.crossSeatActionWindow`、`new.hollowCountModifierScope`）标 `blocked` 并进 `pending`；引擎关键词读点明确 patrol / concealed / customizable / shift / hollow 未支持。
+- [x] 建立十章完整指南及战役地图密档段落清单，单列中文缺译和特别规则，不以“已有剧情正文”代替指南覆盖。证据：10 章指南 677 段（覆盖 heading / tokens / setup / intro / interlude / resolutions / specialRules / rules / versions / labels / characters 等层）；14 份地图密档（档案编号 ↔ 地图节点 ↔ 章节／海外幕间）；17 段幕间、8 份状况报告、12 段战役特别规则、81 个记录键；中文缺译 66 处按来源单列（指南 35 / 剧情 19 / 特别规则 12），另有 1 个记录键中文标签缺译进 `pending`。
 
 退出门禁：未分类卡为 0，所有原语缺口进入 P2；扫描阶段不批量写卡。
 
+**P1 完成证据（2026-11-10）**
+
+| 项目 | 结果 | 证据 |
+| --- | --- | --- |
+| 机制扫描 | 439/439 归类；132 机制行六类齐全；8/8 重点机制（7 项有缺口、已有关键词纯复用） | `audit/tsk-mechanism-scan.json`；`npm run scan:tsk:check` |
+| 原语缺口 | 目录 77 项 = 28 reuse + 10 extend + 39 new；49 项 `primitiveGaps` 全部被机制引用 | `primitiveGaps`；3 项 blocked 待 P2 裁决 |
+| 引擎盘点 | EFFECT_PRIMITIVES 56、ctx.api 6 模块（顶点键动态读取）、窗口 113、matcher 39、kind 12、play channels 9、关键词读点 30（P2 新增原语后窗口更新为 116） | `ENGINE_INVENTORY`；`test:tsk`「P1 机制扫描」用例 |
+| 指南/密档 | 10 章 677 段、14 密档、17 幕间、8 状况报告、6 特别规则（12 段）、81 记录键 | `npm run scan:tsk:check`；`test:tsk`「P1 指南与规则来源」用例 |
+| 中文缺译 | 66 处（指南 35 / 剧情 19 / 特别规则 12）+ 1 记录键标签缺译 | `counts.chineseGaps`；`pending#recordKeysMissingZh` |
+| 回归 | `test:tsk` 7/7；扫描不改卡、不改引擎，replay 指纹不变 | `tests/tsk-migration.test.mjs`；`artifacts/migration/tsk/reports/fast-p1.log` |
+
+注意：P1 只登记分类与缺口，`behaviorStatus` 全为 `pending`；P0 `scope#pending` 的 7 个来源/数据差异已结转成 `audit/tsk-mechanism-scan.json#pending` 的 `verify-in-P2`，P2 开工前必须逐项裁决，不得静默带入。
+
 ### P2：拆分并实现通用原语（规范第 2 步）
 
-- [ ] 盘点 `EFFECT_PRIMITIVES`、`ctx.api`、能力 kind、窗口、matcher、目标枚举和 play channels，先复用再新增。
-- [ ] 为阴影与隐匿（Concealed／In the Shadows）、空洞与存在抹除（Hollow／Erased from Existence）、绯红密钥与变换（Scarlet Keys／Shift）、定制升级卡（Customizable）、世界地图与时间预算（Embark／Time）及调查员特殊行动授权建立 `reuse / new / escape` 计划。
-- [ ] 新原语同时交付注册校验、引擎读点、正常及负面路径测试、JSON 存档往返和文档；新状态纳入版本迁移。
-- [ ] 同句规则在第二张出现时提取候选，第三张前完成原语；本阶段先完成通用接口，不批量写卡，`escape` 默认保持为空。
-- [ ] 完成 `primitive-plan.json` 与只读 `primitive-catalog.json`；所有 `new` 项为 `done`，复用项可定位，replay 对比无非预期漂移。
+- [x] 盘点 `EFFECT_PRIMITIVES`、`ctx.api`、能力 kind、窗口、matcher、目标枚举和 play channels，先复用再新增。证据：`audit/tsk-primitive-plan.json#reuse` 31 项（既有 EFFECT_PRIMITIVES 56 / ctx.api 6 模块（P2 后 `mechanics` 顶层 28 组）/ 窗口 116 / matcher 39 / kind 12 / play channels 9）全部给出模块与读点定位，未重复实现。
+- [x] 为阴影与隐匿（Concealed／In the Shadows）、空洞与存在抹除（Hollow／Erased from Existence）、绯红密钥与变换（Scarlet Keys／Shift）、定制升级卡（Customizable）、世界地图与时间预算（Embark／Time）及调查员特殊行动授权建立 `reuse / new / escape` 计划。证据：`plan.p2.new` 37 项、`plan.p2.extend` 9 项、`plan.reclassified` 3 项（`new.allySlotBonus`、`new.allyReadyBonus`、`extend.assetSlots` 复议为 reuse）、`plan.escape = []`；P1 三项 blocked 原语在 `plan.adjudications` 全部裁决。
+- [x] 新原语同时交付注册校验、引擎读点、正常及负面路径测试、JSON 存档往返和文档；新状态纳入版本迁移。证据：`src/engine/tsk-state.js` + `tsk-primitives.js#validateTskState` 接入 `save-migration.js`（旧存档零字节变化）；7 个新模块 + 8 个既有模块扩展；6 份 `tests/tsk-primitives-*.test.mjs` 共 41 用例（正/负路径、JSON 往返、读档校验）；`docs/campaign/theScarletKeys/primitives.md`。
+- [x] 同句规则在第二张出现时提取候选，第三张前完成原语；本阶段先完成通用接口，不批量写卡，`escape` 默认保持为空。证据：P2 未新增/修改任何卡文件（`git status` 无 `src/cards/**` 变化）；`escape: []` 并在 `escapeNote` 说明单卡逻辑留到 P5/P6。
+- [x] 完成 `primitive-plan.json` 与只读 `primitive-catalog.json`；所有 `new` 项为 `done`，复用项可定位，replay 对比无非预期漂移。证据：`audit/tsk-primitive-plan.json`（77 项目录全覆盖：reuse 31 / P2 new 37 + extend 9；`gapsDone 49/49`）、`audit/tsk-primitive-catalog.json`；`tools/verify-tsk.mjs --node` 记录 41/41 pass 且 replay `--compare` exit 0。
 
 退出门禁：原语单测和 `test:fast` 无新增失败；不得留下卡号分支、直写状态或“声明无人读取”的字段。
 
+**P2 完成证据（2026-11-10）**
+
+| 项目 | 结果 | 证据 |
+| --- | --- | --- |
+| 原语目录 | 77 项全覆盖：reuse 31 / P2 new 37 / P2 extend 9；P1 的 49 项缺口 `gapsDone 49/49` | `audit/tsk-primitive-plan.json`、`audit/tsk-primitive-catalog.json`；`npm run audit:tsk:primitives` |
+| 关键裁决 | 3 项 blocked 全部裁决（concealed 攻防范围、跨座位时机、空洞计数口径），分类差异 3 项均有理由 | `plan.adjudications`、`plan.reclassified`；`primitives.md` §3–§4 |
+| 状态容器 | `campaign.tsk` / `scenarioFlags.mechanics.tsk` 可选扩展 `version:1`，旧存档零字节变化 | `src/engine/tsk-state.js`、`src/engine/tsk-primitives.js`、`save-migration.js` |
+| 引擎扩展 | 8 个既有模块加读点：card-counters / modifiers / scenario-decks / physical-faces / map-graph / harm-threat / campaign-flow / observation + windows（3 个新窗口） | `tests/tsk-primitives-*.test.mjs` |
+| 测试 | 41 用例（6 文件）全过；`test:tsk` 8/8 | `npm run verify:tsk:node`、`tests/tsk-migration.test.mjs`「P2 原语计划」 |
+| 回归 | replay 基线 `--compare` exit 0（无漂移）；P2 不写卡、不改关卡 | `audit/tsk-node-acceptance.json`、`tests/fixtures/replay/tsk-baseline.json` |
+| 无卡号分支 | 新引擎模块剥注释后无 `0[89]xxx` 卡号分支（门禁 `noEngineCardCodeBranches`） | `plan.gates`；`npm run audit:tsk:primitives` |
+| fast | `test:fast` 7105 tests / 7098 pass / 4 fail：4 条与 P0 冻结基线逐字相同（无新增失败） | `artifacts/migration/tsk/reports/fast-p2.log` |
+
+注意：P2 只交付通用接口与「存在才校验」的存档迁移，不再需要把 P1 的 `verify-in-P2` 数据差异带进来——这 7 项仍是 P7 内容落地前的数据来源差异，已在 `audit/tsk-mechanism-scan.json#pending` 明确保留，P7 逐章实现时按项关闭。
+
 ### P3：关键词与规则书（规范第 3 步，M4）
 
-- [ ] 对照全部卡面与指南确认隐匿（Concealed X）、巡逻（Patrol）、变换（Shift）、定制（Customizable）及已有关键词在本循环的适用性，逐项登记代表卡号。
-- [ ] 实现并验收隐匿与揭露、空洞化、绯红密钥稳定／动荡翻转、定制勾选项及巡逻移动等规则原语缺口；实际单卡字面行为仍在 P5–P7 验收，机制全链路见 §5。
-- [ ] 完成循环概览、世界地图与时间标记、阴影与隐匿迷你卡、空洞与存在抹除、绯红密钥与定制卡等规则条目及卡文直达链接。
-- [ ] 规则书只描述已实现的规则，补齐中英文、关联 ID 与检索索引，通过桌面 1440／移动 390 阅读和返回验收。
-- [ ] 建立 `confirmations.keywords`、`confirmations.rulebook`；符合条件的条目由审计写入 `verified`。
+- [x] 对照全部卡面与指南确认隐匿（Concealed X）、巡逻（Patrol）、变换（Shift）、定制（Customizable）及已有关键词在本循环的适用性，逐项登记代表卡号。证据：`content/campaigns/theScarletKeys/keywords.js` 29 个关键词，`cardCodes` 与 P1 机制扫描 `type: keyword` 行逐张一致（复算语料 = 卡名 + 副名 + 正文 + 背面 + 定制栏 + 定制变更 + 特质），每个关键词登记全部卡号与规则条目。
+- [x] 实现并验收隐匿与揭露、空洞化、绯红密钥稳定／动荡翻转、定制勾选项及巡逻移动等规则原语缺口；实际单卡字面行为仍在 P5–P7 验收，机制全链路见 §5。证据：P2 已交付 `new.concealed*`、`new.hollow*`、`new.key*`、`new.customizable*`、`new.patrolKeyword` 等原语（`audit/tsk-primitive-plan.json` 全部 `done`）；P3 审计逐关键词核对 `engineBehavior` 与 Node 验收证据。
+- [x] 完成循环概览、世界地图与时间标记、阴影与隐匿迷你卡、空洞与存在抹除、绯红密钥与定制卡等规则条目及卡文直达链接。证据：`web/tsk-rules.js` 17 条双语规则（`tskCampaign`、`tskMap`、`tskStatusReports`、`tskConcealed`、`tskHollow`、`tskKeys`、`tskShift`、`tskCustomizable` 等），注册进 `web/rulebook-data.js`；439/439 卡全部有规则链接（`cardLinks.unlinked = []`），关键词卡与章节参考卡逐张核对。
+- [x] 规则书只描述已实现的规则，补齐中英文、关联 ID 与检索索引，通过桌面 1440／移动 390 阅读和返回验收。证据：每条规则中英正文段数一致、`related` 全部可解析、拼音排序键与中英标题检索通过；`audit/tsk-browser-acceptance.json` 6/6 用例通过（desktop 1440 / mobile 390 × zh-CN/en、卡文直达、无横向滚动），截图在 `artifacts/migration/tsk/reports/screenshots/`。
+- [x] 建立 `confirmations.keywords`、`confirmations.rulebook`；符合条件的条目由审计写入 `verified`。证据：`audit/tsk-rules.json#confirmations`：keywords 29/29 verified、rulebook 17 条 verified，门禁全真；规则正文经 `ENGINEERING_WORDS` 门禁确认不含实现/引擎/验证字样。
 
 退出门禁：本批卡牌所依赖的关键词已验收；未实现机制不能以可用规则条目开放。
 
+**P3 完成证据（2026-11-10）**
+
+| 项目 | 结果 | 证据 |
+| --- | --- | --- |
+| 关键词 | 29 个全部 verified：7 个本循环新增规则条目 + 19 个复用基础条目 + 3 个本循环单独成条（Objective / Resign / Bonded） | `audit/tsk-rules.json#confirmations.keywords`；`content/campaigns/theScarletKeys/keywords.js` |
+| 规则书 | 17 条中英双语规则全部 verified；只写规则本身，不含实现字样 | `web/tsk-rules.js`；`web/rulebook-data.js`；`npm run audit:tsk:rules` |
+| 卡文直达 | 439/439 卡有规则链接；29 个关键词的卡面来源逐张命中对应条目 | `confirmations.rulebook.cardLinks`；`tests/tsk-rules.test.mjs` |
+| 浏览器验收 | 6/6 用例通过（desktop 1440 / mobile 390 × zh-CN/en、目录/搜索/阅读/返回、卡文直达与焦点恢复、无横向滚动） | `audit/tsk-browser-acceptance.json`、`artifacts/migration/tsk/reports/screenshots/` |
+| 确定性 | 规则审计账本逐字节可复算；来源 6 份 SHA-256 全部登记 | `npm run audit:tsk:rules`；`tests/tsk-rules.test.mjs` |
+| 测试 | `node --test tests/tsk-rules.test.mjs` 4/4；`npm run test:tsk` 53/53（迁移 8 + 原语 41 + 规则书 4） | `tests/tsk-rules.test.mjs`；`tests/tsk-migration.test.mjs` |
+| fast | `test:fast` 7109 tests / 7102 pass / 4 fail：4 条与 P0 冻结基线逐字相同（无新增失败） | `artifacts/migration/tsk/reports/fast-p3.log`、`p3-report.md` |
+
+注意：P3 只交付「关键词身份 + 规则条目 + 卡文直达 + 验收证据」；单卡字面行为仍由 P5–P7 逐卡验收，未实现机制不会以可用规则条目开放。
+
 ### P4：新增交互与界面（规范第 4 步）
 
-- [ ] 完成阴影区域展示、地点旁正面朝下隐匿迷你卡的摆放／混洗／目标选择／揭露（Expose）、三位置阴影地点（左／中／右）等扫描确认的新交互。
-- [ ] 完成绯红密钥持有／夺取／稳定与动荡变换（Shift）、空洞区（Hollows）查看与回收、世界地图目的地选择与快捷旅票使用、定制升级卡勾选项面板及卡森跨座位即时行动授权等交互，复用现有组件、CSS 变量和服务端合法动作。
-- [ ] 确认未揭露隐匿迷你卡的真身／诱饵身份、未解锁密档、异界牌库顺序与条件剧情的座位可见性，不向客户端观察投影或演出快照泄露正面身份。
-- [ ] 幕／议程行动正确标记 `scriptCard`，在剧本书对应卡片旁显示，包含不可用原因。
-- [ ] 复用固定“关卡设置”入口：剧本书右侧、混乱提示卡下方；特别规则优先，后续剧情与结局默认折叠。
-- [ ] 桌面 1440／移动 390 覆盖合法、非法、空状态、取消／重试、键盘操作与焦点恢复，保存截图和报告。
+- [x] 完成阴影区域展示、地点旁正面朝下隐匿迷你卡的摆放／混洗／目标选择／揭露（Expose）、三位置阴影地点（左／中／右）等扫描确认的新交互。证据：`src/engine/tsk-interactions.js#concealed`（揭露/轮末重排/范围读点）+ `web/mechanic-ui.js` 摘要（地点·位置·正反面状态，未揭露不显示真身）+ `tests/tsk-interactions.test.mjs`；浏览器用例「隐匿迷你卡揭露与空状态」覆盖合法/非法/取消/空状态。
+- [x] 完成绯红密钥持有／夺取／稳定与动荡变换（Shift）、空洞区（Hollows）查看与回收、世界地图目的地选择与快捷旅票使用、定制升级卡勾选项面板及卡森跨座位即时行动授权等交互，复用现有组件、CSS 变量和服务端合法动作。证据：`interactions.tsk.keys/hollows/map/customizable/crossSeat` 事务 + 摘要面板（`[data-tsk-*]`）+ locale 片段；6 组 × 桌面/移动浏览器用例全过。
+- [x] 确认未揭露隐匿迷你卡的真身／诱饵身份、未解锁密档、异界牌库顺序与条件剧情的座位可见性，不向客户端观察投影或演出快照泄露正面身份。证据：`src/integration/mechanic-view.js#tskView` 只投影位置/可见性、密档只给解锁/已读 key、异界只给张数；`maskMechanicSnapshot` 对他人勾选/授权再掩码；`tests/tsk-interactions.test.mjs`「观察投影与快照掩码」逐项断言。
+- [x] 幕／议程行动正确标记 `scriptCard`，在剧本书对应卡片旁显示，包含不可用原因。证据：通用证据 spec `tests/script-actions-tfa.browser.mjs` 在 P4 配置中桌面/移动各跑一条，`audit/tsk-interactions.json#checks.scriptOwnership` 全真。
+- [x] 复用固定“关卡设置”入口：剧本书右侧、混乱提示卡下方；特别规则优先，后续剧情与结局默认折叠。证据：通用证据 spec `tests/scenario-guides.browser.mjs`（完整指南按需加载、失败重试与键盘焦点），`checks.guidePlacementAndPrivacy` / `guideFailureRetryAndKeyboard` 全真。
+- [x] 桌面 1440／移动 390 覆盖合法、非法、空状态、取消／重试、键盘操作与焦点恢复，保存截图和报告。证据：`audit/tsk-interactions-browser.json` 16/16 用例通过、14 张截图（`artifacts/migration/tsk/p4/screenshots/`）；取消/Escape 焦点恢复由通用机制与用例覆盖。
 
 退出门禁：新增交互已通过浏览器验收，再进入批量卡牌阶段；不得在卡批次中临时拼接界面。
+
+**P4 完成证据（2026-11-10）**
+
+| 项目 | 结果 | 证据 |
+| --- | --- | --- |
+| 交互事务 | 6 组交互（隐匿揭露/密钥变换/空洞回收/地图启程/定制勾选/跨座位授权）+ 转移与执行变体；全部走服务端选择事务，取消零写入、空候选不暂停 | `src/engine/tsk-interactions.js`；`tests/tsk-interactions.test.mjs` |
+| 界面 | 交互摘要面板（`[data-tsk-*]`）+ 选择面板复用既有 `.ah-mechanic-choice`；中英文案齐备 | `web/mechanic-ui.js`、`web/mechanic-ui.css`、`web/locales/{zh-CN,en}.misc.js` |
+| 投影隐私 | 未揭露身份/密档正文/异界牌序/他人勾选与授权不泄露；快照再次掩码 | `src/integration/mechanic-view.js`；Node 隐私用例 |
+| 浏览器验收 | 16/16 通过（6 组交互 × 桌面 1440 / 移动 390，另有两条通用证据 spec）；14 张截图；覆盖矩阵/脚本归属/指南/基线/fast/replay 六类检查全真 | `audit/tsk-interactions-browser.json`、`audit/tsk-interactions.json` |
+| 回归 | replay 精确一致；fast **7118 tests / 7111 pass / 4 fail**：4 条与 P0 冻结基线逐字相同（`additionsSinceInitialBaseline = []`，无新增失败）；`test:tsk` 62/62 | `audit/tsk-regression.json`；`artifacts/migration/tsk/reports/p4-report.md` |
+
+注意：P4 只交付交互与界面，不开放内容；测试夹具只在验收进程内使用，不进生产组合根。完整十章指南与逐章流程仍在 P7。
 
 ### P5：调查员及专属依赖（规范第 5 步，M1）
 
 中文显示名最终以锁定的本项目中文数据为准；此处用卡号及中英文名对照。
 
-- [ ] `09001` Carson Sinclair（卡森·辛克莱）：次级职阶三选一构筑、专属额外行动授权同地点另一调查员立即执行一次行动（每轮每人限一次）、旧印自己与同地点队友触发及专属依赖 `09002`（2 张）、`09003`。
-- [ ] `09004` Vincent Lee（文森特·李）：“治愈伤害”文本匹配构筑、开局按人数场外预置 `09006` 术后恢复、卡牌效果治愈调查员或盟友伤害后发放术后恢复、旧印及专属依赖 `09005`、`09006`、`09007`。
-- [ ] `09008` Kymani Jones（基玛尼·琼斯）：构筑、快速交战横置敌人、躲避已横置非精英敌人时将智力加入技能值且按超过难度至少剩余生命值直接弃置敌人、旧印及专属依赖 `09009`、`09010`。
-- [ ] `09011` Amina Zidane（阿米娜·齐达内）：构筑、每轮一次打出支援减 3 费并带 1 毁灭入场、旧印同地点卡牌间转移全部毁灭及专属依赖 `09012`、`09013`、`09014`。
-- [ ] `09015` Darrell Simmons（达雷尔·西蒙斯）：构筑、开局 `09016` 达雷尔的柯达相机在场、地点/敌人/诡计上的证据收集、检定期间花费 1 证据使难度降低 2（每次检定限一次）、旧印及专属依赖 `09016`、`09017`。
-- [ ] `09018` Charlie Kane（查理·凯恩）：双次级职阶构筑、额外 3 个盟友槽位、检定期间横置受控盟友按基础 `+1` 及匹配图标数加成、旧印重整同地点盟友及专属依赖 `09019`、`09020`。
-- [ ] 六位调查员分别通过初始化、能力、构筑合法／非法、专属依赖、多人窗口和存档恢复；自动／手动构筑共用服务端规则。
+- [x] `09001` Carson Sinclair（卡森·辛克莱）：次级职阶三选一构筑、专属额外行动授权同地点另一调查员立即执行一次行动（每轮每人限一次）、旧印自己与同地点队友触发及专属依赖 `09002`（2 张）、`09003`。证据：受限额外行动 + `api.beginImmediateAction`、每轮每人一次记账、投入他人检定记账；`tests/tsk-investigator-09001.test.mjs`。
+- [x] `09004` Vincent Lee（文森特·李）：“治愈伤害”文本匹配构筑、开局按人数场外预置 `09006` 术后恢复、卡牌效果治愈调查员或盟友伤害后发放术后恢复、旧印及专属依赖 `09005`、`09006`、`09007`。证据：`investigator.setup.setAsideSignature`、`damageHealed` 窗口反应、`zoneReplacement→setAside`；`tests/tsk-investigator-09004.test.mjs`。
+- [x] `09008` Kymani Jones（基玛尼·琼斯）：构筑、快速交战横置敌人、躲避已横置非精英敌人时将智力加入技能值且按超过难度至少剩余生命值直接弃置敌人、旧印及专属依赖 `09009`、`09010`。证据：`freeAction` 快速交战、`testBegins`/`evadeSuccess` 窗口、额外 5 经验；`tests/tsk-investigator-09008.test.mjs`。
+- [x] `09011` Amina Zidane（阿米娜·齐达内）：构筑、每轮一次打出支援减 3 费并带 1 毁灭入场、旧印同地点卡牌间转移全部毁灭及专属依赖 `09012`、`09013`、`09014`。证据：`beforePlayCost`（每轮一次）+ `assetEnteredPlay` 毁灭、旧印全量转移；`tests/tsk-investigator-09011.test.mjs`。
+- [x] `09015` Darrell Simmons（达雷尔·西蒙斯）：构筑、开局 `09016` 达雷尔的柯达相机在场、地点/敌人/诡计上的证据收集、检定期间花费 1 证据使难度降低 2（每次检定限一次）、旧印及专属依赖 `09016`、`09017`。证据：`investigator.startsWith`、`evidence` 具名计数器、`reduceTestDifficulty` + `oncePerTest`；`tests/tsk-investigator-09015.test.mjs`。
+- [x] `09018` Charlie Kane（查理·凯恩）：双次级职阶构筑、额外 3 个盟友槽位、检定期间横置受控盟友按基础 `+1` 及匹配图标数加成、旧印重整同地点盟友及专属依赖 `09019`、`09020`。证据：`investigator.extraSlots`（assets 容量读点）、`freeAction.duringOwnSkillTest` + `api.cardIcons`、`assetExhausted` 窗口；`tests/tsk-investigator-09018.test.mjs`。
+- [x] 六位调查员分别通过初始化、能力、构筑合法／非法、专属依赖、多人窗口和存档恢复；自动／手动构筑共用服务端规则。证据：`tests/tsk-investigator-signatures.test.mjs` + `audit/tsk-investigators.json`（逐人 verified）；浏览器 12/12（6 人 × 桌面 1440 / 移动 390，12 张截图）。
 
 退出门禁：逐位证据完整才开放该调查员；已有同名版本不自动证明本编号与依赖已完成。
 
@@ -263,37 +339,70 @@ npm run images:verify
 npm run docs:check
 ```
 
-本循环计划注册的专项命令如下（随各阶段推进落地，扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线）：
+本循环计划注册的专项命令如下（随各阶段推进落地，扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线）。P0–P2 已落地前十一条：
 
 ```powershell
+# P0（已落地）：范围账本与原始基线；--check 只校验不重写
+npm run scan:tsk:scope
 npm run scan:tsk:scope:check
+npm run scan:tsk:baseline
+npm run scan:tsk:baseline:check
+npm run test:tsk
+
+# P1（已落地）：机制扫描账本与指南/密档来源
+npm run scan:tsk
 npm run scan:tsk:check
-node tools/verify-tsk.mjs --node
+
+# P2（已落地）：原语 Node 验收证据 + 原语计划/只读目录
+npm run verify:tsk:node
+npm run plan:tsk:primitives
+npm run audit:tsk:primitives
+
+# P3（已落地）：关键词与规则书
+npm run plan:tsk:rules
+npm run audit:tsk:rules
+npm run test:tsk:rules:browser
+
+# P4（已落地）：交互事务/投影/界面 + 浏览器与回归证据
+node tools/verify-tsk-regression.mjs
+npm run plan:tsk:interactions
+npm run audit:tsk:interactions
 npm run test:tsk:interactions:browser
+
+# P5（已落地）：调查员与专属依赖 + 浏览器与回归证据
+node --test tests/tsk-investigator-*.test.mjs
+node tools/run-tsk-investigators-browser.mjs
+npm run plan:tsk:investigators
+npm run audit:tsk:investigators
+
+# P6+（计划）
 npm run test:tsk:player
 npm run audit:tsk:player
-npm run plan:tsk:primitives
 npm run audit:tsk
-npm run audit:tsk:primitives
-npm run audit:tsk:interactions
 npm run audit:tsk:investigators
 npm run audit:tsk:check
 ```
 
 ### 阶段总览与证据登记
 
-- [ ] P0 范围与基线完成。
-- [ ] P1 机制扫描完成。
-- [ ] P2 原语完成。
-- [ ] P3 关键词与规则书完成。
-- [ ] P4 交互完成。
-- [ ] P5 调查员及专属依赖完成。
+- [x] P0 范围与基线完成。
+- [x] P1 机制扫描完成。
+- [x] P2 原语完成。
+- [x] P3 关键词与规则书完成。
+- [x] P4 交互完成。
+- [x] P5 调查员及专属依赖完成。
 - [ ] P6 一般玩家卡完成。
 - [ ] P7 十章、世界地图、密档幕间、指南及战役流程完成。
 - [ ] P8 发布验收完成，完整迁移交付。
 
 | 日期 | 项目 | 状态／勾选依据 | 验证结果 | 证据路径 |
 | --- | --- | --- | --- | --- |
-| 2026-11-03 | 规划准备 | 完成规范阅读、来源定位、十章及地图密档路线与清单建立；实现阶段均未勾选 | 文档链接检查通过 | `docs/theScarletKeys/README.md` |
+| 2026-11-03 | 规划准备 | 完成规范阅读、来源定位、十章及地图密档路线与清单建立；实现阶段均未勾选 | 文档链接检查通过 | `docs/campaign/theScarletKeys/README.md` |
+| 2026-11-10 | P0 范围与基线 | 439 条记录三包守恒（311/20/108）、26 遭遇组、10 章、10 双面密钥、16 定制卡；427 来源 SHA-256；三包 `catalog-only` 注册、战役与十章不进生产组合根、439 卡不可构筑/选人 | `scan:tsk:scope:check` 复算一致；`scan:tsk:baseline:check` 复算一致（replay 13 局 / 797 步 `--compare` exit 0）；`test:tsk` 5/5；fast 7056/7049/4（4 条为既有失败） | `audit/tsk-scope.json`、`audit/tsk-baseline.json`、`tests/fixtures/replay/tsk-baseline.json`、`tests/tsk-migration.test.mjs`、`artifacts/migration/tsk/reports/fast-baseline.log` |
+| 2026-11-10 | P1 机制扫描 | 439/439 记录归类（unclassified=0）；132 机制行六类齐全；8/8 重点机制（7 项 reuse+gaps、已有关键词纯复用）；原语目录 77 项 = 28 reuse + 10 extend + 39 new，49 项缺口全部被机制引用；10 章 677 段指南、14 地图密档、17 幕间、8 状况报告、81 记录键、66 处中文缺译单列 | `npm run scan:tsk:check` 复算一致；`test:tsk` 7/7；扫描不改卡/引擎，replay 基线不变 | `audit/tsk-mechanism-scan.json`、`tools/tsk-guide-scan.mjs`、`tests/tsk-migration.test.mjs`、`artifacts/migration/tsk/reports/fast-p1.log` |
+| 2026-11-10 | P2 通用原语 | 77 项目录全覆盖（reuse 31 / P2 new 37 + extend 9）；P1 的 49 项缺口 `gapsDone 49/49`；3 项 blocked 全部裁决、3 项分类差异有理由、`escape=[]`；8 个原语模块 + 8 个既有模块扩展 + 3 个新窗口；`campaign.tsk`/`scenarioFlags.mechanics.tsk` 可选扩展接入存档校验（旧存档零字节变化） | `verify:tsk:node` 41/41 pass 且 replay `--compare` exit 0；`audit:tsk:primitives` 复算一致（16 门禁全真）；`test:tsk` 8/8；P2 未写任何卡 | `audit/tsk-primitive-plan.json`、`audit/tsk-primitive-catalog.json`、`audit/tsk-node-acceptance.json`、`docs/campaign/theScarletKeys/primitives.md`、`tests/tsk-primitives-*.test.mjs`、`artifacts/migration/tsk/reports/p2-report.md` |
+| 2026-11-10 | P3 关键词与规则书 | 29 个关键词全部 verified（cardCodes 与 P1 扫描逐张一致）；17 条中英双语规则全部 verified（只写规则本身）；439/439 卡有规则链接；`confirmations.keywords` 29/29、`confirmations.rulebook` 17 条 verified；浏览器验收 6/6（desktop 1440 / mobile 390 × zh/en、卡文直达、无横向滚动） | `npm run audit:tsk:rules` 复算一致；`node --test tests/tsk-rules.test.mjs` 4/4；浏览器证据 `status: passed` 六项 checks 全真；`test:fast` 无新增失败 | `audit/tsk-rules.json`、`audit/tsk-browser-acceptance.json`、`web/tsk-rules.js`、`content/campaigns/theScarletKeys/keywords.js`、`docs/campaign/theScarletKeys/rulebook.md`、`artifacts/migration/tsk/reports/p3-report.md` |
+| 2026-11-10 | P5 调查员及专属依赖 | 6 位调查员（09001/09004/09008/09011/09015/09018）+ 14 张专属依赖全部注册并逐人 verified（旧印/关键能力/构筑/专属依赖/选人）；次级职阶选择（卡森 1 选、查理 2 选）通用判定 + 基玛尼额外 5 经验；引擎 10 处读点接线（受限额外行动、freeAction.resolve、额外槽、开局场外、damageHealed/assetExhausted 窗口、投入他人检定记账、beforePlayCost cardType）；浏览器 12/12（6 人 × 桌面 1440 / 移动 390，12 张截图） | `npm run audit:tsk:investigators` 复算一致（逐人 verified + Node/浏览器/边界/回归全真）；`node --test tests/tsk-investigator-*.test.mjs` 16/16；replay 零漂移；fast 失败集合 = P0 冻结 4 条 | `audit/tsk-investigators.json`、`audit/tsk-investigators-browser.json`、`audit/tsk-node-acceptance.json`、`audit/tsk-regression.json`、`src/cards/entries/09001–09020.js`、`docs/campaign/theScarletKeys/investigators.md`、`artifacts/migration/tsk/reports/p5-report.md` |
+| 2026-11-10 | P4 新增交互与界面 | 6 组交互事务（隐匿揭露/密钥变换/空洞回收/地图启程/定制勾选/跨座位授权）+ 转移执行变体；摘要面板与选择面板复用既有组件；投影隐私（未揭露身份/密档正文/异界牌序/他人勾选与授权）与快照掩码；浏览器 16/16（6 组 × desktop 1440 / mobile 390 + 两条通用证据 spec）、14 张截图 | `npm run audit:tsk:interactions` 复算一致（`status: verified`，覆盖矩阵/脚本归属/指南/基线/fast/replay 全真）；`node --test tests/tsk-interactions.test.mjs` 9/9；`test:fast` 无新增失败（冻结 4 条除外）；replay 精确一致 | `audit/tsk-interactions.json`、`audit/tsk-interactions-browser.json`、`audit/tsk-regression.json`、`src/engine/tsk-interactions.js`、`src/integration/mechanic-view.js`、`web/mechanic-ui.js`、`docs/campaign/theScarletKeys/interactions.md`、`artifacts/migration/tsk/reports/p4-report.md` |
 
 后续每次推进在此追加记录，并把稳定的逐卡／逐章证据写入 `audit/`。只有代码、来源与验收结果一致时才更新完成勾选。

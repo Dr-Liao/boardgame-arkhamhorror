@@ -21,7 +21,11 @@ test('不可变清单固定核心五人、58玩家卡及完整依赖，严格模
   assert.equal(getAvailability('02001').availability, 'strict')
   assert.equal(getAvailability('03001').availability, 'strict')
   assert.equal(getAvailability('03020').availability, 'strict')
-  for (const code of ['09001', '10001', 'unknown']) assert.equal(getAvailability(code).availability, 'catalog-only')
+  // P5：绯红密钥六位调查员与专属依赖已开放（strict）；未开放循环仍 catalog-only。
+  for (const code of ['09002', '09010']) assert.equal(getAvailability(code).availability, 'strict')
+  for (const code of ['10001', 'unknown']) assert.equal(getAvailability(code).availability, 'catalog-only')
+  // P5 未开放内容：TSK 一般玩家卡与战役卡仍 catalog-only。
+  for (const code of ['09021', '09501']) assert.equal(getAvailability(code).availability, 'catalog-only')
   assert.equal(CORE_UPGRADE_CODES.length, 22)
   assert.ok(CORE_UPGRADE_CODES.every(code => getAvailability(code).upgradeOnly && isCardAvailable(code)))
   assert.equal(isPlayable({ code: 'unimplemented-skill', type: 'skill', icons: { wild: 2 } }), false)

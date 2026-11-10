@@ -51,3 +51,14 @@
   font-size: 1.25em; border: 1px solid var(--ah-theme-edge); border-radius: inherit;
   color: var(--ah-theme-accent);
 }
+
+/* 八循环《绯红密钥》交互摘要（P4）：复用既有面板主题变量与可换行布局，移动端 390 不横向滚动。 */
+.ah-tsk-summary { display: grid; gap: .5em; margin-top: .75em; min-width: 0; }
+.ah-tsk-summary h3 { margin: 0; font-size: .95em; color: var(--ah-theme-accent-strong); }
+.ah-tsk-summary p { margin: 0; overflow-wrap: anywhere; min-width: 0; }
+.ah-tsk-concealed p[data-visible='false'] { color: var(--ah-theme-muted); }
+.ah-tsk-keys p[data-stable='false'] { color: var(--ah-theme-accent); }
+.ah-tsk-keys p[data-holder-type='enemy'] { color: var(--ah-theme-accent-strong); }
+.ah-tsk-map p[data-tsk-map-forced] { color: var(--ah-theme-accent-strong); font-weight: bold; }
+.ah-tsk-dossiers p[data-read='false'] { color: var(--ah-theme-muted); }
+.ah-tsk-cross-seat p { border-left: 2px solid var(--ah-theme-edge); padding-left: .5em; }

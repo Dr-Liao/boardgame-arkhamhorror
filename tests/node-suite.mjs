@@ -4,6 +4,27 @@ import './audit-resources.test.mjs'
 import './tic-migration.test.mjs'
 // P0（七循环 M0）：《地球边缘》范围账本 / 原始基线 / catalog-only 注册 / 遭遇组分片。
 import './eote-migration.test.mjs'
+// P0（八循环 M0）：《绯红密钥》范围账本 / 原始基线 / catalog-only 注册 / 遭遇组与密钥分片；P1 机制扫描。
+import './tsk-migration.test.mjs'
+// P2（八循环通用原语）：七组原语的分层注册；suite-manifest 守卫要求与 tests/suites.mjs 一致。
+import './tsk-primitives-state.test.mjs'
+import './tsk-primitives-concealed.test.mjs'
+import './tsk-primitives-keys-hollow.test.mjs'
+import './tsk-primitives-map.test.mjs'
+import './tsk-primitives-customizable.test.mjs'
+import './tsk-primitives-coterie-investigator.test.mjs'
+// P3（八循环关键词与规则书）：关键词清单、双语规则书、卡文直达与审计账本。
+import './tsk-rules.test.mjs'
+// P4（八循环交互）：6 组交互事务与审计账本。
+import './tsk-interactions.test.mjs'
+// P5（八循环调查员）：六人能力/旧印/构筑 + 14 张专属依赖。
+import './tsk-investigator-09001.test.mjs'
+import './tsk-investigator-09004.test.mjs'
+import './tsk-investigator-09008.test.mjs'
+import './tsk-investigator-09011.test.mjs'
+import './tsk-investigator-09015.test.mjs'
+import './tsk-investigator-09018.test.mjs'
+import './tsk-investigator-signatures.test.mjs'
 // P2（七循环通用原语）：六组原语的分层注册；suite-manifest 守卫要求与 tests/suites.mjs 一致。
 import './eote-primitives-frost.test.mjs'
 import './eote-primitives-campaign.test.mjs'

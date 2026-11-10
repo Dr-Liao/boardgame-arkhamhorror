@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-p5-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/tsk-investigators.browser.mjs"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true
+  },
+  "tests": [
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09001 卡森·辛克莱：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 2551
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09004 文森特·李：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1671
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09008 基玛尼·琼斯：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1484
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09011 阿米娜·齐达内：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1567
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09015 达雷尔·西蒙斯：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1368
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 desktop 09018 查理·凯恩：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1975
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09001 卡森·辛克莱：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1271
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09004 文森特·李：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1381
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09008 基玛尼·琼斯：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1262
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09011 阿米娜·齐达内：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1210
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09015 达雷尔·西蒙斯：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1183
+    },
+    {
+      "file": "tests/tsk-investigators.browser.mjs",
+      "title": "P5 mobile 09018 查理·凯恩：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1568
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09001.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09004.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09008.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09011.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09015.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-desktop-09018.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09001.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09004.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09008.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09011.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09015.png",
+    "artifacts/migration/tsk/p5/screenshots/p5-mobile-09018.png"
+  ]
+}

@@ -43,7 +43,7 @@ function artCandidate(art) {
  * @param options.artId 实例显式指定的美术编号（可选，格式非法则忽略而不猜配）
  * @param options.variant 替代美术偏好（如 'revised'）；该面没有声明变体时保持原画，不推断
  */
-export function imageCandidates(descriptor, { side = 'front', host = DEFAULT_IMAGE_HOST, language = 'zh-cn', artId = null, variant = '' } = {}) {
+export function imageCandidates(descriptor, { side = 'front', host = DEFAULT_IMAGE_HOST, language = 'zh-cn', artId = null, variant = '', thumbnail = false } = {}) {
   const base = normalizeImageHost(host)
   if (!descriptor) return []
   const face = descriptor[side === 'back' ? 'back' : 'front']
@@ -75,7 +75,13 @@ export function imageCandidates(descriptor, { side = 'front', host = DEFAULT_IMA
     if (base) add({ url: `${base}/${remoteImagePath(candidate.path)}`, language: generic ? 'back' : 'en', origin: 'remote', path: candidate.path, source: candidate.source })
     if (candidates.length >= MAX_CANDIDATES) break
   }
-  return candidates.slice(0, MAX_CANDIDATES)
+  const resolved = candidates.slice(0, MAX_CANDIDATES)
+  if (!thumbnail) return resolved
+  return resolved.flatMap(candidate => candidate.origin === 'local' ? [{
+    ...candidate,
+    url: candidate.url.replace(LOCAL_ROOT + '/', LOCAL_ROOT + '/thumbs/').replace(/\.[a-z]+(?=\?|$)/i, '.webp') + (candidate.url.includes('?') ? '&' : '?') + 'source=' + encodeURIComponent(candidate.path.split('.').pop()),
+    thumbnail: true,
+  }, candidate] : [candidate])
 }
 
 /**
@@ -97,7 +103,11 @@ export function createImageCache({ limit = 4000 } = {}) {
     /** 优先已成功过的候选，其次未尝试过的候选；全部失败返回 null，由调用方回退到文字。 */
     next(candidates) {
       const usable = (candidates || []).filter(candidate => results.get(candidate.url) !== false)
-      return usable.find(candidate => results.get(candidate.url) === true) || usable[0] || null
+      const successful = usable.find(candidate => results.get(candidate.url) === true)
+      // Seeing a full-size image in a detail modal must not make all subsequent
+      // small cards use that full-size image instead of their derived thumbnail.
+      const previous = successful && usable[usable.indexOf(successful) - 1]
+      return (previous?.thumbnail ? previous : successful) || usable[0] || null
     },
     clear() { results.clear() },
   }

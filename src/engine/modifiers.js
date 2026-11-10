@@ -42,6 +42,46 @@ import { actsInPlay } from './parallel-acts.js'
 
 const MODIFIER_CACHE = new Map()
 
+// 八循环 P2：外部修正源注册表（数据驱动，引擎不写卡号/内容分支）。
+// 内容层把「定制卡勾选效果 / 调查员减费与槽位授予」注册成 provider，既有读点自动纳入：
+//   kind='playCost' —— 读点 playCostDelta(state, inv, code)，context = { code }
+//   kind='skill'    —— 读点 statPipeline(state, inv, skill)，context = { skill }
+// provider 返回数值修正（nil/非有限数按 0 计）；同一 kind 可注册多个来源（按注册顺序累加）。
+// 旧内容不注册时行为逐字节不变（空表 → 0）。
+const EXTERNAL_MODIFIER_PROVIDERS = new Map([['playCost', []], ['skill', []]])
+export const EXTERNAL_MODIFIER_KINDS = Object.freeze(['playCost', 'skill'])
+
+export function registerModifierProvider(kind, provider, { replace = false } = {}) {
+  if (!EXTERNAL_MODIFIER_KINDS.includes(kind)) throw new TypeError(`未知外部修正种类 ${JSON.stringify(kind)}`)
+  if (typeof provider !== 'function') throw new TypeError('外部修正源必须是函数')
+  const list = EXTERNAL_MODIFIER_PROVIDERS.get(kind)
+  if (replace) list.length = 0
+  if (list.includes(provider)) return list.length
+  list.push(provider)
+  return list.length
+}
+
+export function clearModifierProviders(kind = null) {
+  const kinds = kind == null ? EXTERNAL_MODIFIER_KINDS : [kind]
+  for (const item of kinds) {
+    if (!EXTERNAL_MODIFIER_PROVIDERS.has(item)) throw new TypeError(`未知外部修正种类 ${JSON.stringify(item)}`)
+    EXTERNAL_MODIFIER_PROVIDERS.get(item).length = 0
+  }
+  return true
+}
+
+/** 累加某类外部修正；provider 抛错时向上抛出（不静默吞掉内容错误）。 */
+export function externalModifierTotal(state, inv, kind, context = {}) {
+  const providers = EXTERNAL_MODIFIER_PROVIDERS.get(kind)
+  if (!providers?.length) return 0
+  let total = 0
+  for (const provider of providers) {
+    const value = provider({ state, inv, kind, ...context })
+    if (Number.isFinite(value)) total += value
+  }
+  return total
+}
+
 export const MODIFIER_TARGETS = Object.freeze([
   'skill:willpower', 'skill:intellect', 'skill:combat', 'skill:agility', 'skill:wild', 'skill:*',
   'testValue',
@@ -412,6 +452,7 @@ const remainingSanity = inv => hooks.maxSanity(inv) - (inv?.horror || 0)
 
 export function statPipeline(state, inv, skill) {
   const delta = modifierTotal(state, inv, `skill:${skill}`) + legacyStatDelta(state, inv, skill)
+    + externalModifierTotal(state, inv, 'skill', { skill })
   // 覆盖式「属性下限」：支援把某项属性视为至少 6（如 03018 的 statOverride）。
   const floor = (inv?.assets || []).some(asset => (asset.statOverride || []).includes(skill)) ? 6 : null
   return { delta, floor }
@@ -586,6 +627,8 @@ export function playCostDelta(state, inv, code) {
       total += amountOf(modifier, { state, inv, controller: inv, source, cardCode: code })
     }
   }
+  // 八循环 P2：外部修正源（定制勾选/减费等，数据驱动；未注册时为 0）。
+  total += externalModifierTotal(state, inv, 'playCost', { code })
   return total
 }
 

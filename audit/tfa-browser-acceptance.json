@@ -161,6 +161,34 @@
       "status": "passed"
     },
     {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 印刷的复仇关键词在desktop端卡牌详情可见（04068）",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 印刷的复仇关键词在desktop端卡牌详情可见（04078）",
+      "viewport": "desktop",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 印刷的复仇关键词在mobile端卡牌详情可见（04068）",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
+      "spec": "tests/tfa-rules.browser.mjs",
+      "title": "M4 印刷的复仇关键词在mobile端卡牌详情可见（04078）",
+      "viewport": "mobile",
+      "scenario": null,
+      "status": "passed"
+    },
+    {
       "spec": "tests/tfa-scenarios.browser.mjs",
       "title": "埃兹特里的覆灭 (theDoomOfEztli) 在 desktop 端进入真实章节",
       "viewport": "desktop",
@@ -327,6 +355,38 @@
     {
       "name": "m4-rulebook-mobile",
       "path": "artifacts/tfa-migration/m4-rulebook-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "m4-vengeance-keyword-04068-desktop",
+      "path": "artifacts/tfa-migration/m4-vengeance-keyword-04068-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "m4-vengeance-keyword-04068-mobile",
+      "path": "artifacts/tfa-migration/m4-vengeance-keyword-04068-mobile.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null
+    },
+    {
+      "name": "m4-vengeance-keyword-04078-desktop",
+      "path": "artifacts/tfa-migration/m4-vengeance-keyword-04078-desktop.png",
+      "base": "repo-root",
+      "spec": "tests/tfa-rules.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null
+    },
+    {
+      "name": "m4-vengeance-keyword-04078-mobile",
+      "path": "artifacts/tfa-migration/m4-vengeance-keyword-04078-mobile.png",
       "base": "repo-root",
       "spec": "tests/tfa-rules.browser.mjs",
       "viewport": "mobile",

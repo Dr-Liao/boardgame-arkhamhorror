@@ -2,11 +2,13 @@ import { discardPlayerCards } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { afterHandDiscard } from './hand-discard-window.js'
+import { actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction } from './restricted-actions.js'
 // actions-extra.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 场景/剧情侧的额外行动：谈判、剧情资产、地点能力、威胁与债务等。
 // 这些行动都由「卡面文案 + 剧本数据」触发，读点仍是 applyMove → executeAction 的分派。
 export function createActionsExtra(deps) {
   const {
+    abilityApi,
     EFFECTS,
     LITA_CHANDLER_CODE,
     SEARCHING_FOR_IZZIE_CODE,
@@ -184,6 +186,13 @@ export function createActionsExtra(deps) {
     const inv = state.investigators[seat]
     const skids = investigatorRule(inv.code)
     if (!skids || !skids.freeAction || investigatorTextBlanked(state, inv)) return
+    // P5：主动能力型免费行动可声明 action 费用（按 restrictedKind 优先花受限额度）。
+    const actionCost = Math.max(0, Number(skids.freeAction.cost.action) || 0)
+    if (actionCost) {
+      const kind = skids.freeAction.restrictedKind || null
+      if (restrictedActionsAvailable(inv, kind) < actionCost) return
+      consumeRestrictedAction(inv, actionCost, kind)
+    }
     resourceBank.spendFromPool(inv, skids.freeAction.cost.resources || 0, state)
     if (skids.freeAction.cost.discardHand) {
       const index = requestChoice(state, { kind: 'discard', source: skids.freeAction.id, seat, prompt: '选择弃掉的手牌。',
@@ -195,6 +204,10 @@ export function createActionsExtra(deps) {
     }
     if (!skids.freeAction.repeatable) inv.usedReactions[skids.freeAction.id + ':' + state.turnSerial] = true
     info(state, events, `⚡ ${inv.name} 使用调查员免费能力。`)
+    if (typeof skids.freeAction.resolve === 'function') {
+      skids.freeAction.resolve({ state, inv, seat, events, api: abilityApi(state, events) })
+      return
+    }
     resolveEffect(state, seat, skids.freeAction.effect, makeRuntime(state, events))
   }
 

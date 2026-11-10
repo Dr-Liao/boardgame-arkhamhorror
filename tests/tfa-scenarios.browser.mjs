@@ -100,6 +100,13 @@ for (const shell of shells) {
       const facts = chapterView(shell)
       await openView(page, facts.view)
       await expect(page.locator('.bg-game-title')).toContainText(facts.name.replace(/^失落的时代 · /, ''))
+      // 天机之城：设置阶段把调查员卡替换成 04244「伊斯人身体」。牌桌的可视身份
+      // （头像图 + 名字）必须来自换身后的卡，而不是原调查员。
+      if (shell.chapter.id === 'theCityOfArchives' && viewport === 'desktop') {
+        await expect(page.locator('.ah-dock-name-text')).toContainText('伊斯人身体')
+        await expect(page.locator('.ah-dock-portrait .ah-table-art')).toHaveAttribute('data-art-code', '04244')
+        await expect(page.locator('.ah-roster-identity strong').first()).toContainText('伊斯人身体')
+      }
       await page.getByRole('button', { name: '局势', exact: true }).click()
       const situation = page.getByRole('dialog', { name: '调查局势' })
       await expect(situation).toBeVisible()

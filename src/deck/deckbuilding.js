@@ -1,4 +1,5 @@
 import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
+import { TSK_BONUS_XP } from '../../content/campaigns/theScarletKeys/investigator-data.js'
 // 诡镇奇谈：卡牌版（Arkham Horror LCG）· 牌组构筑引擎
 //
 // Phase 2 · 完整构筑规则：
@@ -273,12 +274,60 @@ function isTraitCard(card, trait) {
   return (card?.traits || []).some(item => String(item).toLowerCase() === String(trait).toLowerCase())
 }
 
+
+// P5：副职阶选择的自动构筑口径——同一 `faction_select` 选项组按卡池份数选出前 N 个职阶，
+// 之后只允许命中该组选项的卡来自这些职阶；手动牌组合法性由 web/deck-rules.js 校验。
+export function factionSelectPlan(invDef, pool) {
+  const plan = {}
+  const groups = new Map()
+  for (const rule of deckRules(invDef).options) {
+    const allowed = rule.faction_select
+    if (!Array.isArray(allowed) || !allowed.length || rule.not === true) continue
+    const key = [...allowed].map(value => String(value).toLowerCase()).sort().join('|')
+    if (!groups.has(key)) groups.set(key, { key, allowed: [...new Set(allowed.map(value => String(value).toLowerCase()))], rules: [] })
+    groups.get(key).rules.push(rule)
+  }
+  for (const group of groups.values()) {
+    const counts = new Map(group.allowed.map(faction => [faction, 0]))
+    for (const card of pool) {
+      if (!group.rules.some(rule => matchesCardRule(card, rule, invDef))) continue
+      for (const faction of new Set([...(card.factions || []), card.klass, card.klass2, card.klass3]
+        .filter(Boolean).map(value => String(value).toLowerCase()))) {
+        if (counts.has(faction)) counts.set(faction, counts.get(faction) + 1)
+      }
+    }
+    plan[group.key] = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, group.rules.length).map(([faction]) => faction)
+  }
+  return plan
+}
+function classChoiceBlocked(invDef, card, plan) {
+  const groups = new Map()
+  for (const rule of deckRules(invDef).options) {
+    const allowed = rule.faction_select
+    if (!Array.isArray(allowed) || !allowed.length || rule.not === true) continue
+    const key = [...allowed].map(value => String(value).toLowerCase()).sort().join('|')
+    if (!groups.has(key)) groups.set(key, { key, allowed: allowed.map(value => String(value).toLowerCase()), rules: [] })
+    groups.get(key).rules.push(rule)
+  }
+  for (const group of groups.values()) {
+    if (!group.rules.some(rule => matchesCardRule(card, rule, invDef))) continue
+    const chosen = plan[group.key] || []
+    const factions = [...new Set([...(card.factions || []), card.klass, card.klass2, card.klass3]
+      .filter(Boolean).map(value => String(value).toLowerCase()))]
+    if (!factions.some(faction => group.allowed.includes(faction) && chosen.includes(faction))) return true
+  }
+  return false
+}
 export function buildDeck(invDef, options = {}) {
   validateInvestigator(invDef)
   const size = deckRules(invDef).size
-  const budget = xpBudget(options)
+  const budget = xpBudget(options) + (Number(TSK_BONUS_XP[invDef?.code]) || 0)
   const rng = mulberry32(hashSeed((options.seed || 'deck') + ':' + invDef.code + ':' + (options.seat ?? 0)))
-  const pool = allowedPlayerPool(options).filter((c) => matchesDeckOptions(invDef, c))
+  const basePool = allowedPlayerPool(options).filter((c) => matchesDeckOptions(invDef, c))
+  const classPlan = factionSelectPlan(invDef, basePool)
+  const pool = basePool.filter(card => !classChoiceBlocked(invDef, card, classPlan))
   const scored = pool.map((c) => ({ card: c, score: scoreCard(c, invDef) + (rng() * 0.6 - 0.3) }))
   scored.sort((a, b) => b.score - a.score)
 
@@ -326,6 +375,7 @@ export function buildDeck(invDef, options = {}) {
   return {
     deck: shuffle(full, rng),
     playerCards: deck,
+    ...(Object.keys(classPlan).length ? { classChoices: classPlan } : {}),
     ...sig,
   }
 }

@@ -81,7 +81,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   const resultName = (s, result) => resultStory(s, result)?.resolutionTitle || outcomeName(result.resolution)
   const nameOf = (g, code) => cardDisplayName(state.session?.state.cards?.[code]) || cardDisplayName(g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)) || t('hub.cardFallback')
-  const art = (code, name) => tableArt(h, code, name)
+  const art = (code, name) => tableArt(h, code, name, { unloadOffscreen: true })
   // 关卡内页面的插图必须带上已选关卡：不传 scenarioId 时只能拿到战役封面。
   const decor = (name, className = '', scenarioId = '') => {
     const campaignId = state.session?.state?.campaign?.id || state.setup?.form?.campaignId
@@ -89,7 +89,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const key = ({ manor: 'hubHero', desk: 'hubDesk', casefile: 'casefile', scene: 'storyDefault' })[name] || name
     return h('img', { className: 'ah-office-decor ' + className, src: assets[key], alt: '', draggable: 'false', 'aria-hidden': 'true' })
   }
-  const portrait = inv => h('div', { className: 'ah-office-portrait' }, art(inv.code, inv.name))
+  const portrait = (inv, { unloadOffscreen = false } = {}) => h('div', { className: 'ah-office-portrait' }, tableArt(h, inv.code, inv.name, { unloadOffscreen }))
   const playerBadge = (s, seat) => {
     const player = s.players.find(item => item.seat === seat)
     const name = player?.name || t('hub.player.name', { seat: seat + 1 }), avatar = player?.avatar || '👤'
@@ -797,7 +797,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             campaign: item.campaignName || item.campaignId || t('hub.saves.unknownCampaign'),
           })),
           item.online ? h('p', {}, t('hub.saves.onlineDetail', { humans: item.humanCount, ais: item.aiCount })) : null,
-          h('div', { className: 'ah-save-portraits' }, item.investigators.map(inv => portrait(inv))),
+          h('div', { className: 'ah-save-portraits' }, item.investigators.map(inv => portrait(inv, { unloadOffscreen: true }))),
           h('div', {}, t('hub.saves.summary', {
             stage: stageLabel(item.uiState), players: item.playerCount,
             names: item.investigators.map(inv => inv.name).join(t('hub.list.separator')),
@@ -1230,7 +1230,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                   h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
                     'aria-label': t('hub.investigators.candidateAria', { move: move.label, class: classLabel(candidate.klass) || candidate.klass || '', pack: packName(pack) }),
                     'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
-                  portrait(candidate), h('span', {}, candidate.name), h('small', {}, classLabel(candidate.klass) || candidate.klass || t('hub.investigator.generic'))),
+                  portrait(candidate, { unloadOffscreen: true }), h('span', {}, candidate.name), h('small', {}, classLabel(candidate.klass) || candidate.klass || t('hub.investigator.generic'))),
                   h('button', { type: 'button', className: 'ah-office-candidate-info', 'data-candidate-info': candidate.code,
                     'aria-label': t('hub.investigator.inspectDossier', { name: candidate.name }), title: t('hub.investigator.dossierTitle', { name: candidate.name }),
                     onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))

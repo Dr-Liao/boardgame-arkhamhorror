@@ -12,6 +12,9 @@ const operations = {
   eoteFrost: 'mechanic.eoteFrost', eotePartner: 'mechanic.eotePartner', eoteSeal: 'mechanic.eoteSeal',
   eoteKey: 'mechanic.eoteKey', eoteTekeli: 'mechanic.eoteTekeli', eoteDeckTop: 'mechanic.eoteDeckTop',
   eoteCrossSeat: 'mechanic.eoteCrossSeat', eoteDiscipline: 'mechanic.eoteDiscipline', eoteSupply: 'mechanic.eoteSupply',
+  // 八循环《绯红密钥》交互操作（P4）：隐匿揭露/密钥变换/空洞回收/世界地图/定制勾选/跨座位即时行动。
+  tskConcealed: 'mechanic.tskConcealed', tskKey: 'mechanic.tskKey', tskHollow: 'mechanic.tskHollow',
+  tskMap: 'mechanic.tskMap', tskCustomizable: 'mechanic.tskCustomizable', tskCrossSeat: 'mechanic.tskCrossSeat',
 }
 // 寒霜标记没有打包卡图时退回 ❄ 字形；其它标记面保持原有 img 行为不变。
 const tokenChip = (h, token) => {
@@ -153,7 +156,7 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
 
 export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
   const model = state.mechanics
-  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote)) return null
+  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote && !model.tsk)) return null
   const water = model.water?.investigators.find(item => item.seat === seat)
   const holderName = holder => {
     const [kind, ...parts] = holder.split(':'), id = parts.join(':')
@@ -180,6 +183,60 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
   const sealPlacement = seal => seal.locationId != null
     ? holderName(`location:${seal.locationId}`)
     : seal.placedBySeat != null ? seatName(seal.placedBySeat) : t('mechanic.eote.seal.unheld')
+  // ── 八循环《绯红密钥》P4 交互摘要（公开/本人可见；未揭露迷你卡不显示真身）──────────────
+  const tsk = model.tsk
+  const positionLabel = position => t({
+    left: 'mechanic.tsk.positionLeft', middle: 'mechanic.tsk.positionMiddle', right: 'mechanic.tsk.positionRight',
+  }[position] || 'mechanic.tsk.positionAtLocation')
+  const keyHolder = holder => holder.type === 'investigator'
+    ? seatName(holder.seat)
+    : holder.type === 'enemy' ? t('mechanic.tsk.holderEnemy') : t('mechanic.tsk.holderNone')
+  const tskSummary = tsk ? h('div', { className: 'ah-tsk-summary' },
+    tsk.concealed?.length ? h('section', { className: 'ah-tsk-concealed', 'aria-label': t('mechanic.tsk.concealed') },
+      h('h3', {}, t('mechanic.tsk.concealed')),
+      h('p', { 'data-tsk-concealed-count': String(tsk.concealed.length), 'data-tsk-concealed-hidden': String(tsk.concealed.filter(card => !card.visible).length) },
+        t('mechanic.tsk.concealedLine', { count: tsk.concealed.length })),
+      tsk.concealed.map((card, index) => h('p', {
+        'data-tsk-concealed': String(index), 'data-location': card.locationId,
+        'data-position': card.position || 'atLocation', 'data-visible': String(card.visible),
+      }, holderName(`location:${card.locationId}`), ' · ', positionLabel(card.position),
+      ' · ', card.visible ? (card.decoy ? t('mechanic.tsk.decoy') : t('mechanic.tsk.realEnemy')) : t('mechanic.tsk.hiddenIdentity')))) : null,
+    tsk.keys?.length ? h('section', { className: 'ah-tsk-keys', 'aria-label': t('mechanic.tsk.keys') },
+      h('h3', {}, t('mechanic.tsk.keys')),
+      tsk.keys.map(key => h('p', {
+        'data-tsk-key': key.id, 'data-stable': String(key.stable), 'data-holder-type': key.holder.type,
+        'data-shifted-this-round': String(key.shiftedThisRound),
+      }, key.id, ' · ', key.stable ? t('mechanic.tsk.face.stable') : t('mechanic.tsk.face.unstable'), ' · ', keyHolder(key.holder),
+      key.shiftedThisRound ? ` · ${t('mechanic.tsk.shifted')}` : ''))) : null,
+    tsk.hollows ? h('section', { className: 'ah-tsk-hollows', 'aria-label': t('mechanic.tsk.hollows') },
+      h('h3', {}, t('mechanic.tsk.hollows')),
+      h('p', { 'data-tsk-hollow-count': String(tsk.hollows.count) }, t('mechanic.tsk.hollowCount', { count: tsk.hollows.count })),
+      (tsk.hollows.cards || []).map(card => h('p', { 'data-tsk-hollow-card': card.code }, t('mechanic.tsk.hollowCard', { code: card.code })))) : null,
+    tsk.map ? h('section', { className: 'ah-tsk-map', 'aria-label': t('mechanic.tsk.map') },
+      h('h3', {}, t('mechanic.tsk.map')),
+      h('p', { 'data-tsk-map-current': tsk.map.current || '', 'data-tsk-map-time': String(tsk.map.time) },
+        t('mechanic.tsk.mapLine', { current: tsk.map.current || '', time: tsk.map.time, unlocked: tsk.map.unlocked.length })),
+      tsk.map.forced ? h('p', { className: 'ah-tcu-note', 'data-tsk-map-forced': tsk.map.forced }, t('mechanic.tsk.mapForced', { destination: tsk.map.forced })) : null) : null,
+    tsk.statusReports ? h('section', { className: 'ah-tsk-status', 'aria-label': t('mechanic.tsk.statusReports') },
+      h('h3', {}, t('mechanic.tsk.statusReports')),
+      h('p', { 'data-tsk-status-pending': String(tsk.statusReports.pending.length) },
+        t('mechanic.tsk.statusLine', { pending: tsk.statusReports.pending.length, triggered: tsk.statusReports.triggered.length }))) : null,
+    tsk.dossiers ? h('section', { className: 'ah-tsk-dossiers', 'aria-label': t('mechanic.tsk.dossiers') },
+      h('h3', {}, t('mechanic.tsk.dossiers')),
+      h('p', { 'data-tsk-dossier-unlocked': String(tsk.dossiers.unlocked.length), 'data-tsk-dossier-read': String(tsk.dossiers.read.length) },
+        t('mechanic.tsk.dossierLine', { unlocked: tsk.dossiers.unlocked.length, read: tsk.dossiers.read.length })),
+      tsk.dossiers.unlocked.map(key => h('p', {
+        'data-tsk-dossier': key, 'data-read': String(tsk.dossiers.read.includes(key)),
+      }, t('mechanic.tsk.dossierItem', { key }), tsk.dossiers.read.includes(key) ? ` · ${t('mechanic.tsk.dossierRead')}` : ''))) : null,
+    tsk.customizations?.length ? h('section', { className: 'ah-tsk-customizations', 'aria-label': t('mechanic.tsk.customizations') },
+      h('h3', {}, t('mechanic.tsk.customizations')),
+      tsk.customizations.map(row => h('p', {
+        'data-tsk-customization': row.code, 'data-level': String(row.level), 'data-checked': String(row.checked.length),
+      }, row.code, ' · ', t('mechanic.tsk.customizationLine', { level: row.level, checked: row.checked.length })))) : null,
+    tsk.crossSeat?.length ? h('section', { className: 'ah-tsk-cross-seat', 'aria-label': t('mechanic.tsk.crossSeat') },
+      h('h3', {}, t('mechanic.tsk.crossSeat')),
+      tsk.crossSeat.map(row => h('p', { 'data-tsk-cross-seat': String(row.targetSeat), 'data-from-seat': String(row.from) },
+        t('mechanic.tsk.crossSeatLine', { from: seatName(row.from), to: seatName(row.targetSeat) })))) : null) : null
   return h('details', { className: 'ah-mechanic-summary ah-tcu-panel' }, h('summary', {}, t('mechanic.summary'),
     water ? h('span', { className: 'ah-mechanic-air', 'data-air-required': String(water.airRequired) },
       floodLabel(water.level), ' · ', water.airRequired ? t('mechanic.airRisk', { damage: water.damage }) : t('mechanic.airSafe')) : null),
@@ -227,5 +284,6 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
         (eote.supplies || []).map(row => h('p', { 'data-eote-supplies': String(row.seat), 'data-supply-count': String(row.count) },
           t('mechanic.eote.suppliesLine', { name: seatName(row.seat), count: row.count }))),
         (eote.droppedSupplies || []).map(row => h('p', { 'data-eote-dropped': row.locationId, 'data-dropped-count': String(row.count) },
-          t('mechanic.eote.droppedSupplies', { location: holderName(`location:${row.locationId}`), count: row.count })))) : null) : null)
+          t('mechanic.eote.droppedSupplies', { location: holderName(`location:${row.locationId}`), count: row.count })))) : null) : null,
+    tskSummary)
 }

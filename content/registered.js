@@ -108,12 +108,20 @@ import * as eoteTheHeartOfMadnessPart1 from './campaigns/edgeOfTheEarth/scenario
 import * as eoteTheHeartOfMadnessPart2 from './campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js'
 import { manifest as eoteInvestigators } from './packs/eoteInvestigators/manifest.js'
 import { manifest as eotePlayer } from './packs/eotePlayer/manifest.js'
+// P0（八循环 M0）：《绯红密钥》只把三个 catalog-only 内容包装进生产组合根，作为「目录身份」。
+// 战役清单与十章占位模块已存在（content/campaigns/theScarletKeys/），但**不进生产组合根**：
+// 战役仍是 catalog-only，目录期不注册就无法被大厅/选人/构筑/音乐/指南流程当成可玩内容。
+// 身份与依赖关系由 tests/tsk-migration.test.mjs 用本地 createContentRegistry 复算，P7 再整体注册。
+import { manifest as tskCampaignPack } from './packs/tskCampaign/manifest.js'
+import { manifest as tskInvestigators } from './packs/tskInvestigators/manifest.js'
+import { manifest as tskPlayer } from './packs/tskPlayer/manifest.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
     carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer,
     tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer,
-    ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer],
+    ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer,
+    tskCampaignPack, tskInvestigators, tskPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
     theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,

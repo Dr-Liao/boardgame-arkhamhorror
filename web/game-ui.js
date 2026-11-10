@@ -1,3 +1,4 @@
+import { disposeImageResources } from './image-lifecycle.js'
 // 诡镇奇谈 · 卡牌版 Mod 的浏览器 UI
 //
 // 由大厅按 /mods/arkhamhorror/catalog.js 动态加载（见 lib/mods.js 的 web 契约）。
@@ -5,7 +6,7 @@
 // 战役选择、卡组构筑、对局界面、卡牌详情与全卡图鉴。
 // 不要把这些逻辑写回大厅的 public/app.js。
 
-import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages,
+import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages, stopScenarioImagePreload,
   cardDisplayName, cardDisplayText, cardDisplayFlavor, cardDisplaySubname, cardDisplayTraits, currentLanguage, setHostLocale } from './catalog.js'
 import { setLocale as setUiLocale, t } from './i18n.js'
 // 第 127 轮：UI 的卡号表现表在 web/ui-cards.js（纯数据表，必须留在浏览器挂载目录内）。
@@ -274,7 +275,7 @@ export function createUI(host) {
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
     onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; state.arkhamDeckLibraryOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
-    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; state.arkhamDeckLibraryOpen = false; tableSession = null },
+    onDeactivate: () => { stopScenarioImagePreload(); disposeImageResources(); musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; state.arkhamDeckLibraryOpen = false; tableSession = null },
     // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
     // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
     onLocaleChange(next) {
@@ -287,7 +288,8 @@ export function createUI(host) {
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
-      if (session.state.hubFlow && ['interlude', 'scenarioSetup'].includes(session.state.uiState)) preloadScenarioImages(session.state.hubSelectedScenarioId)
+      if (!session.state.hubFlow || ['interlude', 'scenarioSetup', 'inScenario'].includes(session.state.uiState)) preloadScenarioImages(session.state.uiState === 'inScenario' || !session.state.hubFlow ? session.state.scenario?.id : session.state.hubSelectedScenarioId, { session })
+      else stopScenarioImagePreload()
       if (session.state.hubFlow && session.state.uiState !== 'inScenario') { tableSession = null; return hubUi.renderGame(session) }
       // P1：每次进局/重连/开关变化时把「反应关」集合同步给房主；房主据此代答任意座位的窗口。
       // 重连/换设备先从视图恢复本座位覆盖，再把本机最新的三态同步给房主。
@@ -952,7 +954,7 @@ function renderCardZoneModal(s) {
           const code = def.originalCode || card.originalCode || card.code
           return h('button', { className: 'ah-card-zone-card', 'data-zone-card': card.code,
             'aria-label': t('game.zone.view', { name }), title: t('game.zone.viewDetail', { name }), onclick: () => openCardDetail(s, def) },
-            h('span', { className: 'ah-card-zone-art' }, tableArt(h, code, name)),
+            h('span', { className: 'ah-card-zone-art' }, tableArt(h, code, name, { unloadOffscreen: true })),
             h('span', { className: 'ah-card-zone-caption' }, h('strong', {}, name),
               victory ? h('small', {}, t('game.kw.victory', { points: def.victory || 0 })) : h('small', {}, t('game.zone.file', { index: String(index + 1).padStart(2, '0') }))))
         })) : h('div', { className: 'ah-card-zone-empty' }, tableIcon(victory ? 'star' : 'supply'),
@@ -1720,7 +1722,7 @@ function renderPlayerDock(s, inv, humanTurn) {
         h('span', {}, t('game.dock.deckSummary', { deck: inv.deckSize ?? inv.deck?.length ?? 0, discard: inv.discard?.length || 0 })))),
     state.arkhamDiscardOpen ? h('section', { className: 'ah-discard-tray', 'aria-label': t('game.dock.discardPile') },
       h('button', { 'aria-label': t('game.dock.closeDiscard'), onclick: () => { state.arkhamDiscardOpen = false; render() } }, t('common.close')),
-      (inv.discard || []).map((code, index) => h('div', { 'data-interaction': index === inv.discard.length - 1 ? 'discard:top' : null }, renderMiniCard(s, code))),
+      (inv.discard || []).map((code, index) => h('div', { 'data-interaction': index === inv.discard.length - 1 ? 'discard:top' : null }, renderMiniCard(s, code, false, { unloadOffscreen: true }))),
       !inv.discard?.length ? h('span', {}, t('game.dock.emptyDiscard')) : null) : null),
     engaged.length ? h('section', { className: 'ah-engagement-zone', 'aria-label': t('game.dock.engagementAria'), 'data-engaged-count': engaged.length, 'data-interaction': 'zone:engage' },
       h('div', { className: 'ah-engagement-heading' }, tableIcon('combat'), h('span', {}, t('game.dock.engaged')), h('b', {}, t('game.dock.enemyCount', { count: engaged.length }))),
@@ -1816,7 +1818,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     ondragstart: event => event.preventDefault(),
     ondragend: draggable ? () => clearCardDrag() : null,
   },
-    tableArt(h, d.originalCode || ahArtCode(s, code), cd.name),
+    tableArt(h, d.originalCode || ahArtCode(s, code), cd.name, { unloadOffscreen: !!opts.unloadOffscreen }),
     renderReactionToggle(s,code),
     h('div', { className: 'ah-minicard-cost' }, cd.cost != null ? cd.cost : ''),
     cd.xp ? h('div', { className: 'ah-minicard-xp' }, '✦' + cd.xp) : null,

@@ -410,10 +410,10 @@
     "status": "pending",
     "summary": {
       "total": 403,
-      "verified": 248,
-      "missing": 127,
-      "blocked": 14,
-      "simplified": 12,
+      "verified": 260,
+      "missing": 141,
+      "blocked": 0,
+      "simplified": 0,
       "campaign": 266,
       "investigators": 22,
       "player": 115
@@ -421,7 +421,7 @@
     "checks": {
       "ledger": false,
       "missing": false,
-      "blocked": false,
+      "blocked": true,
       "partitions": true
     }
   },
@@ -1454,180 +1454,12 @@
     "deferred": 12,
     "escape": 0,
     "requests": {
-      "total": 33,
-      "pending": 33,
+      "total": 0,
+      "pending": 0,
       "done": 0,
       "rejected": 0,
-      "byStatus": {
-        "pending": 33
-      },
-      "pendingItems": [
-        {
-          "id": "p7-shared-08503",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08503.json",
-          "primitive": "locationRule.shroudWhenAttached"
-        },
-        {
-          "id": "p7-shared-08506",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08506.json",
-          "primitive": "locationRule.entryGroupCluesSurcharge"
-        },
-        {
-          "id": "p7-shared-08508",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08508.json",
-          "primitive": "window.locationAttachmentEntered"
-        },
-        {
-          "id": "p7-shared-08515",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08515.json",
-          "primitive": "window.enemyDefeatedAttack"
-        },
-        {
-          "id": "p7-shared-08517",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08517.json",
-          "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation"
-        },
-        {
-          "id": "p7-08544",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08544.json",
-          "primitive": null
-        },
-        {
-          "id": "p7-08546",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08546.json",
-          "primitive": null
-        },
-        {
-          "id": "p7-08560",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08560.json",
-          "primitive": null
-        },
-        {
-          "id": "p7-08587",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08587.json",
-          "primitive": null
-        },
-        {
-          "id": "p7-shared-08649",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08649.json",
-          "primitive": "locationRule.backFaceEntryBan"
-        },
-        {
-          "id": "p7-08673",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08673.json",
-          "primitive": "mistPylonAsEnemy"
-        },
-        {
-          "id": "p7-08679",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08679.json",
-          "primitive": "setAsideEnemyCopiesCounter"
-        },
-        {
-          "id": "p7-08681",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08681.json",
-          "primitive": "doomPlacementReplacement"
-        },
-        {
-          "id": "p7-08682",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08682.json",
-          "primitive": "locationLeaveTest"
-        },
-        {
-          "id": "p7-shared-08691",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08691.json",
-          "primitive": "treacheryRule.tekeliShuffleReplacement"
-        },
-        {
-          "id": "p7-shared-08692",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08692.json",
-          "primitive": "treacheryRule.locationAttachmentRestrictions"
-        },
-        {
-          "id": "p7-shared-08693",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08693.json",
-          "primitive": "treacheryRule.attachmentSkillPenalty"
-        },
-        {
-          "id": "p7-shared-08694",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08694.json",
-          "primitive": "treacheryRule.attachmentTurnEndDirectDamage"
-        },
-        {
-          "id": "p7-shared-08697",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08697.json",
-          "primitive": "api.buffEnemyUntilEndOfRound"
-        },
-        {
-          "id": "p7-shared-08699",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08699.json",
-          "primitive": "treacheryRule.attachmentMoveTest"
-        },
-        {
-          "id": "p7-shared-08702",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08702.json",
-          "primitive": "enemyAttachmentDifficultyBonus"
-        },
-        {
-          "id": "p7-shared-08703",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08703.json",
-          "primitive": "treacheryRule.tekeliliDoubleResolution"
-        },
-        {
-          "id": "p7-shared-08704",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08704.json",
-          "primitive": "api.resolveWeaknessByCode"
-        },
-        {
-          "id": "p7-shared-08706",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08706.json",
-          "primitive": "treacheryRule.supportAttachmentForced"
-        },
-        {
-          "id": "p7-shared-08707",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08707.json",
-          "primitive": "treacheryRule.attachmentTurnEndDirectHorror"
-        },
-        {
-          "id": "p7-shared-08708",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08708.json",
-          "primitive": "enemyRule.locationMoveSurcharge"
-        },
-        {
-          "id": "p7-shared-08710",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08710.json",
-          "primitive": "api.resolveWeaknessByCode"
-        },
-        {
-          "id": "p7-shared-08712",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08712.json",
-          "primitive": "treacheryRule.attachmentClueDiscoveryForced"
-        },
-        {
-          "id": "p7-shared-08715",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08715.json",
-          "primitive": "window.weaknessResolved"
-        },
-        {
-          "id": "p7-shared-08719",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08719.json",
-          "primitive": "enemyRule.cannotAttackThisRound"
-        },
-        {
-          "id": "p7-shared-08721",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08721.json",
-          "primitive": "treacheryRule.blankTextUntilEndOfTurn"
-        },
-        {
-          "id": "p7-shared-08727",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08727.json",
-          "primitive": "api.loseActionNextTurn"
-        },
-        {
-          "id": "p7-shared-08731",
-          "file": "artifacts/migration/eote/primitive-requests/p7-08731.json",
-          "primitive": "searchTopToScenarioDeckBottom"
-        }
-      ]
+      "byStatus": {},
+      "pendingItems": []
     },
     "playerQueue": {
       "total": 35,
@@ -1638,7 +1470,7 @@
     "checks": {
       "plan": true,
       "newDone": true,
-      "requestsAccounted": true,
+      "requestsAccounted": false,
       "playerQueueAccounted": true,
       "pendingDisclosed": true
     }
@@ -1804,7 +1636,7 @@
       ],
       "screenshots": {
         "total": 104,
-        "verified": 104
+        "verified": 0
       }
     },
     "checks": {
@@ -2103,7 +1935,7 @@
             "saveReplay": true,
             "browserAcceptance": true
           },
-          "moduleSha256": "572def2fd2d1b82cc549d9058f97d19bc39c67868c6892c5fed2e66a493349a6",
+          "moduleSha256": "8f6666a5f25341eb64df9ba1c5c733833a9c11b348b77fe09a4c916c9f0ce0aa",
           "sources": [
             {
               "lang": "en",
@@ -2168,7 +2000,7 @@
       ],
       "ledger": {
         "path": "audit/eote-scenario-acceptance.json",
-        "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
+        "sha256": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2"
       },
       "browser": {
         "path": "audit/eote-scenarios-browser.json",
@@ -3000,7 +2832,7 @@
       ],
       "ledger": {
         "path": "audit/eote-rules.json",
-        "sha256": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052"
+        "sha256": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047"
       },
       "evidence": [
         "content/campaigns/edgeOfTheEarth/keywords.js",
@@ -3066,7 +2898,7 @@
   "releaseAcceptance": {
     "status": "pending",
     "equivalenceCertified": false,
-    "equivalenceNote": "行为等价未认证：全卡账本 248 verified / 12 simplified / 127 missing / 14 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
+    "equivalenceNote": "行为等价未认证：全卡账本 260 verified / 0 simplified / 141 missing / 0 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
     "independentAudit": {
       "report": "docs/edgeOfTheEarth/eote-scan/全量扫描报告.md",
       "sections": [
@@ -3081,7 +2913,7 @@
     "required": {
       "launch": true,
       "chapters": true,
-      "scenarios": true,
+      "scenarios": false,
       "allCards": false,
       "investigators": true,
       "playerCards": true,
@@ -3093,423 +2925,9 @@
       "p7Browser": true,
       "p8Browser": true,
       "releaseLedger": false,
-      "primitivesDisclosed": true
+      "primitivesDisclosed": false
     },
     "deferred": [
-      {
-        "id": "primitiveRequest:p7-shared-08503",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08503.json",
-        "status": "pending",
-        "primitive": "locationRule.shroudWhenAttached",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08503.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08506",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08506.json",
-        "status": "pending",
-        "primitive": "locationRule.entryGroupCluesSurcharge",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08506.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08508",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08508.json",
-        "status": "pending",
-        "primitive": "window.locationAttachmentEntered",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08508.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08515",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08515.json",
-        "status": "pending",
-        "primitive": "window.enemyDefeatedAttack",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08515.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08517",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08517.json",
-        "status": "pending",
-        "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08517.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08544",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08544.json",
-        "status": "pending",
-        "primitive": null,
-        "need": "议程「将要推进时」的 scenarioBehavior 钩子（engine 议程推进读点）",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08544.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08546",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08546.json",
-        "status": "pending",
-        "primitive": null,
-        "need": "幕目标/撤退行动的 scenarioBehavior 钩子（engine 幕推进与 scenarioAction 读点）",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08546.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08560",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08560.json",
-        "status": "pending",
-        "primitive": null,
-        "need": "fatalMirage 地点「强制/额外费用」规则的通用 locationRule 读点",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08560.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08587",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08587.json",
-        "status": "pending",
-        "primitive": null,
-        "need": "伙伴（storyAsset 遭遇卡）的 free/reaction 能力在叙事期的可用入口",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08587.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08649",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08649.json",
-        "status": "pending",
-        "primitive": "locationRule.backFaceEntryBan",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08649.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08673",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08673.json",
-        "status": "pending",
-        "primitive": "mistPylonAsEnemy",
-        "need": "「每座已揭示的迷雾高塔可被当作敌人攻击：fight=帷幕、health=线索值；生命为 0 即坍塌（留在场上）」。当前用 scenarioAction + 战斗检定 + P2-D damageTower 原语近似，战斗管线不生成敌人实体，因此敌人阶段/交战/攻击反应卡无法作用于高塔。",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08673.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08679",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08679.json",
-        "status": "pending",
-        "primitive": "setAsideEnemyCopiesCounter",
-        "need": "「无名的疯狂」共 15 份：放一边数量、在场数量、以及「成功攻击/规避后按成功差值重整最近一份已重整副本」需要引擎提供「放一边的同名敌人副本计数」与「按成功差值消耗计数」的通用原语。",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08679.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08681",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08681.json",
-        "status": "pending",
-        "primitive": "doomPlacementReplacement",
-        "need": "「当 1+ 毁灭将被放置时，如果还有放一边的无名的疯狂：改为生成 1 份」。需要引擎在放毁灭前调用 behavior 的替换钩子（类似 crisis 的 doomPlacementReplacement），当前只能放毁灭后提示。",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08681.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-08682",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08682.json",
-        "status": "pending",
-        "primitive": "locationLeaveTest",
-        "need": "泰坦坡道「离开的额外费用：检定 [agility] (X)，失败取消移动；连接地点任意调查员可花 1 线索自动成功」。engine 已有 scenarioBehavior.locationLeaveTest 读点，但需要确认返回契约（skill/difficulty/spendClueAutoSucceed）与「失败取消移动」的接线；当前条目声明数据、behavior 返回契约形状，未在真实移动管线验证。",
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08682.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08691",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08691.json",
-        "status": "pending",
-        "primitive": "treacheryRule.tekeliShuffleReplacement",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08691.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08692",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08692.json",
-        "status": "pending",
-        "primitive": "treacheryRule.locationAttachmentRestrictions",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08692.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08693",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08693.json",
-        "status": "pending",
-        "primitive": "treacheryRule.attachmentSkillPenalty",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08693.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08694",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08694.json",
-        "status": "pending",
-        "primitive": "treacheryRule.attachmentTurnEndDirectDamage",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08694.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08697",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08697.json",
-        "status": "pending",
-        "primitive": "api.buffEnemyUntilEndOfRound",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08697.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08699",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08699.json",
-        "status": "pending",
-        "primitive": "treacheryRule.attachmentMoveTest",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08699.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08702",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08702.json",
-        "status": "pending",
-        "primitive": "enemyAttachmentDifficultyBonus",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08702.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08703",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08703.json",
-        "status": "pending",
-        "primitive": "treacheryRule.tekeliliDoubleResolution",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08703.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08704",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08704.json",
-        "status": "pending",
-        "primitive": "api.resolveWeaknessByCode",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08704.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08706",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08706.json",
-        "status": "pending",
-        "primitive": "treacheryRule.supportAttachmentForced",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08706.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08707",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08707.json",
-        "status": "pending",
-        "primitive": "treacheryRule.attachmentTurnEndDirectHorror",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08707.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08708",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08708.json",
-        "status": "pending",
-        "primitive": "enemyRule.locationMoveSurcharge",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08708.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08710",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08710.json",
-        "status": "pending",
-        "primitive": "api.resolveWeaknessByCode",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08710.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08712",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08712.json",
-        "status": "pending",
-        "primitive": "treacheryRule.attachmentClueDiscoveryForced",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08712.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08715",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08715.json",
-        "status": "pending",
-        "primitive": "window.weaknessResolved",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08715.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08719",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08719.json",
-        "status": "pending",
-        "primitive": "enemyRule.cannotAttackThisRound",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08719.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08721",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08721.json",
-        "status": "pending",
-        "primitive": "treacheryRule.blankTextUntilEndOfTurn",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08721.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08727",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08727.json",
-        "status": "pending",
-        "primitive": "api.loseActionNextTurn",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08727.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "primitiveRequest:p7-shared-08731",
-        "file": "artifacts/migration/eote/primitive-requests/p7-08731.json",
-        "status": "pending",
-        "primitive": "searchTopToScenarioDeckBottom",
-        "need": null,
-        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
-        "evidence": [
-          "artifacts/migration/eote/primitive-requests/p7-08731.json",
-          "audit/eote-player-queue.json"
-        ]
-      },
-      {
-        "id": "allCardSimplified",
-        "count": 12,
-        "status": "simplified",
-        "reason": "已披露近似：全卡账本有 12 条 simplified（行为按现有原语近似实现，逐条见全卡账本 entries），不宣称规则等价。",
-        "evidence": [
-          "audit/eote-all-card-acceptance.json"
-        ]
-      },
-      {
-        "id": "pendingBehaviorRequests",
-        "count": 8,
-        "status": "pending",
-        "reason": "已披露近似：全卡账本登记 8 张卡等待行为原语（p7-08544、p7-08546、p7-08560、p7-08587、p7-08673、p7-08679、p7-08681、p7-08682）——对应请求逐条列在本 deferred 的 primitiveRequest:* 中。",
-        "evidence": [
-          "audit/eote-all-card-acceptance.json"
-        ]
-      },
       {
         "id": "playerQueueRejected",
         "count": 22,
@@ -3529,10 +2947,41 @@
         ]
       },
       {
+        "id": "gate:primitivesDisclosed",
+        "reason": "发布门禁未通过：primitivesDisclosed",
+        "evidence": [
+          "tools/audit-eote.mjs"
+        ]
+      },
+      {
         "id": "gate:releaseAcceptance",
         "reason": "发布门禁未通过：releaseAcceptance",
         "evidence": [
           "tools/audit-eote.mjs"
+        ]
+      },
+      {
+        "id": "gate:confirmations",
+        "reason": "发布门禁未通过：confirmations",
+        "evidence": [
+          "tools/audit-eote.mjs"
+        ]
+      },
+      {
+        "id": "confirmation:scenarios",
+        "reason": "迁移确认未 verified：theHeartOfMadnessPart1",
+        "evidence": [
+          "content/migration-confirmation.js",
+          "audit/eote-scenario-acceptance.json",
+          "audit/eote-scenarios-browser.json",
+          "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+          "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+          "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+          "tests/eote-scenario-fatalMirage.test.mjs",
+          "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+          "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+          "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+          "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
         ]
       }
     ]
@@ -3550,13 +2999,13 @@
     "keywords": true,
     "rulebook": true,
     "storyGuides": true,
-    "primitivesDisclosed": true,
+    "primitivesDisclosed": false,
     "nodeAcceptance": true,
     "regression": true,
     "p7ScenarioBrowser": true,
     "p8ReleaseBrowser": true,
     "releaseAcceptance": false,
-    "confirmations": true,
+    "confirmations": false,
     "pass": false
   },
   "remaining": [
@@ -3568,49 +3017,47 @@
       ]
     },
     {
+      "id": "gate:primitivesDisclosed",
+      "reason": "发布门禁未通过：primitivesDisclosed",
+      "evidence": [
+        "tools/audit-eote.mjs"
+      ]
+    },
+    {
       "id": "gate:releaseAcceptance",
       "reason": "发布门禁未通过：releaseAcceptance",
       "evidence": [
         "tools/audit-eote.mjs"
       ]
+    },
+    {
+      "id": "gate:confirmations",
+      "reason": "发布门禁未通过：confirmations",
+      "evidence": [
+        "tools/audit-eote.mjs"
+      ]
+    },
+    {
+      "id": "confirmation:scenarios",
+      "reason": "迁移确认未 verified：theHeartOfMadnessPart1",
+      "evidence": [
+        "content/migration-confirmation.js",
+        "audit/eote-scenario-acceptance.json",
+        "audit/eote-scenarios-browser.json",
+        "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+        "tests/eote-scenario-iceAndDeathPart2.test.mjs",
+        "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+        "tests/eote-scenario-fatalMirage.test.mjs",
+        "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
+        "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
+        "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
+      ]
     }
   ],
   "evidence": {
     "files": {
-      "artifacts/migration/eote/primitive-requests/p7-08503.json": "a91c308657b41c0044d507bf85edf0fd449dda8fed8ae19a98e6063c79859e5a",
-      "artifacts/migration/eote/primitive-requests/p7-08506.json": "dcb60a361891ad9232e2bc2448329ab5bc043939863fe5e5f5aff52242e17345",
-      "artifacts/migration/eote/primitive-requests/p7-08508.json": "6f753b53286006c7f1788c24e29505db8b560f7568a8f1b233a5d546f71ef39b",
-      "artifacts/migration/eote/primitive-requests/p7-08515.json": "de39c34c77341db2abe01622910de4782ac8f5fa49e966c47c3853040ad66d21",
-      "artifacts/migration/eote/primitive-requests/p7-08517.json": "84128735d2b85b7ad39a61b9b69c5f54cf7100555b1359a6f89a807deb25ab6a",
-      "artifacts/migration/eote/primitive-requests/p7-08544.json": "f8621f863c465d0196a26823d06d15df99f2b5b02c1331af6773733c1152bab5",
-      "artifacts/migration/eote/primitive-requests/p7-08546.json": "8d054ede7e619787844bdb0ba669822591eb54226dd7ef2a7619df8444387363",
-      "artifacts/migration/eote/primitive-requests/p7-08560.json": "cf916a412398cbf621781f7e8c29931e509fd98ec10af853b89bc3d0f92569cb",
-      "artifacts/migration/eote/primitive-requests/p7-08587.json": "4f1d3ac00c8789bff827f11ac96b69928f478c963da26ef0f521c619a7f395c6",
-      "artifacts/migration/eote/primitive-requests/p7-08649.json": "2d11fc77f3bc0bf94b5ac0e4b5d2ab0905b2d9c095b70888ece2eb1e8320d3aa",
-      "artifacts/migration/eote/primitive-requests/p7-08673.json": "ab5768e713f8a91f41774057838b743b94c89664c9e24d931b1daae825b5509d",
-      "artifacts/migration/eote/primitive-requests/p7-08679.json": "1e97d2fe20fa1d03705e0677e8bba2b8c4b6e5507b8d54a79c7e87d4d6084a17",
-      "artifacts/migration/eote/primitive-requests/p7-08681.json": "be56ac1436ddb170660a5d8cf430549e272289eeb1ba5d8e1fd22c2c8cb2986f",
-      "artifacts/migration/eote/primitive-requests/p7-08682.json": "426bce5a197c742e4c5d4a7aa7b9f021d3ab1ed3201f977767f64b812a55d7de",
-      "artifacts/migration/eote/primitive-requests/p7-08691.json": "20c12d2f103cd03e779bbedd2122993ebd169935253be5f11a4f2ee7816042a5",
-      "artifacts/migration/eote/primitive-requests/p7-08692.json": "84604f1445e1c9125f1582533f4dac5d26061728966fcebf8c9b6228d042bae5",
-      "artifacts/migration/eote/primitive-requests/p7-08693.json": "67cb79339b64e3f673c5f653670ebda13bf703acb23a79bb42878a9629955749",
-      "artifacts/migration/eote/primitive-requests/p7-08694.json": "fdecbeb724a6b693954e28edc611efdeb02dcdef4adaad468a7855f2e270061f",
-      "artifacts/migration/eote/primitive-requests/p7-08697.json": "1f0ea56fb96cfa5c2055ff4ccc66591eba31d9336920db326b88cf96668bd5ed",
-      "artifacts/migration/eote/primitive-requests/p7-08699.json": "ec7c74c906887c91fd32f826cfe59c464db463bd072f932db7d70a949b2fcdf4",
-      "artifacts/migration/eote/primitive-requests/p7-08702.json": "3dac24de15e107ce174a5670c64bf9cd7cc7dba07ca161d962346aa6223c2ccc",
-      "artifacts/migration/eote/primitive-requests/p7-08703.json": "6a013e1011d8d4e3e4a4f974eb9688aa721d96e45a2a808f0110b7b7e7f190ca",
-      "artifacts/migration/eote/primitive-requests/p7-08704.json": "be3e98b7efe7ef818d1af1fd459fe118980a5a4179541a43ab058569f2f0589f",
-      "artifacts/migration/eote/primitive-requests/p7-08706.json": "b4c012b53ee8667ef258bce02964eb899de12fc2f336b36ba6ff9b8e1ddacf72",
-      "artifacts/migration/eote/primitive-requests/p7-08707.json": "98a864f65229097da1b9c0412c7fd06f77642ac9f6073108990e2fae8ac92bd4",
-      "artifacts/migration/eote/primitive-requests/p7-08708.json": "8aeb8091215ad060fb4e19c5c134241317d023e1a4ada844d5d676492faee814",
-      "artifacts/migration/eote/primitive-requests/p7-08710.json": "190ddbccfb2b14cdf9f01e47d50c9cbb9fa18792527780629dd8727ed6ed65b9",
-      "artifacts/migration/eote/primitive-requests/p7-08712.json": "0efefee271885552f4f3d57edf7c6891185bffabc32eed6d97ba61288058722e",
-      "artifacts/migration/eote/primitive-requests/p7-08715.json": "69bdc27e0838ad6da6650a7753dfb3f84eaa60ed3d92437addd9f3dd5b3b96a9",
-      "artifacts/migration/eote/primitive-requests/p7-08719.json": "75620fbe699fc3427038d8e9bbfd486c5085e217eb3a75be52d887111f4c4c0b",
-      "artifacts/migration/eote/primitive-requests/p7-08721.json": "29a8513d12d062c36289df606985e990639f1341a9a01afae0c4c3d614afb7df",
-      "artifacts/migration/eote/primitive-requests/p7-08727.json": "0e52132c158cebf75f54072b85d94cac0c771482e5b50a6faee0461e7a3df2ff",
-      "artifacts/migration/eote/primitive-requests/p7-08731.json": "fb9b40101dc8be31747deca13d5cd800b7795910e2a2192faec96e5dfc3825be",
-      "audit/eote-all-card-acceptance.json": "b31f587acdcc544774cc284d30ccfb21adfe0c9df6fd1e699f2a1157a1e1f2ed",
+      "audit/eote-all-card-acceptance.json": "817a71829fce9ae473b0e31ef6d43a34e0cb622aa5bc30a13531cb2e0e24002d",
       "audit/eote-interactions.json": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202",
       "audit/eote-investigators.json": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6",
       "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
@@ -3618,28 +3065,28 @@
       "audit/eote-player-queue.json": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b",
       "audit/eote-primitive-plan.json": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "ed38db6e9c9685b36539d091ada898e30cc2158aa6eae81d8c72577a04054eaa",
+      "audit/eote-release-acceptance.json": "caa257625b2b7c75a20b30bc17a778089cffcb8c53c8093217255e86127209f6",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
-      "audit/eote-rules.json": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052",
+      "audit/eote-rules.json": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047",
       "audit/eote-scenario-acceptance.json": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad",
       "audit/eote-scenarios-browser.json": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567",
       "audit/eote-scope.json": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
-      "content/campaigns/edgeOfTheEarth/story-text.js": "1a057465f72e09110930adafa61fbe7a69d443c19729bcdeddfdb6d77c119b91",
-      "web/scenario-guides/cityOfTheElderThings.json": "9bd8ea234d3348dc748493a6e39cf4f5ab891c175e899764ce60b10ab36a2867",
-      "web/scenario-guides/fatalMirage.json": "85e754d1529099ed7b5b176db55b8d43d658b32f172348e0dc84892ad96b3e54",
-      "web/scenario-guides/iceAndDeathPart1.json": "d5b1b6ba508bda49e4749001ad2c0dd404df18809268e3575b00607d20369963",
-      "web/scenario-guides/iceAndDeathPart2.json": "e2b9d6e530554b1b01377335587938252b3bb22cb69228715b05a0407f01881a",
-      "web/scenario-guides/iceAndDeathPart3.json": "d997736f9c864d60e908adcd5522262d949eea9578fa6f749927b9a91e8af286",
-      "web/scenario-guides/theHeartOfMadnessPart1.json": "97c3a268ecb89f565b51403662021cf326518d528a1502fb6ed48afb6e007401",
-      "web/scenario-guides/theHeartOfMadnessPart2.json": "bf4e4ca0d719de94daa433e1708a40d2dfc79f3960d2756138b25c1c32a5a115",
-      "web/scenario-guides/toTheForbiddenPeaks.json": "9a258a96befe001b2f4fd2082ebe9cd553edbf113908ce5a74c9551a12beda68"
+      "content/campaigns/edgeOfTheEarth/story-text.js": "8df0f285fb61268b885033f501f5613afd08dbdec80a52d22ceb84f56114538d",
+      "web/scenario-guides/cityOfTheElderThings.json": "f8e7f343c01006d7d577d3cd7066008dbbebd830609c495cf763ca8b4e786de0",
+      "web/scenario-guides/fatalMirage.json": "3b3f9d5939cbd2ee1cffc882d0c0e0ee1f27d4372402cb75aca72b4c32c12816",
+      "web/scenario-guides/iceAndDeathPart1.json": "bcbc3a219a517ae74bd53c3e18518b92ea9c6d84b968e293c01a13b62d4ee670",
+      "web/scenario-guides/iceAndDeathPart2.json": "fb56d442c8020a519ae69504a6f4fc876751c2011cf2ec71924025c6362a8f00",
+      "web/scenario-guides/iceAndDeathPart3.json": "e077d8fbb0a78c7bfcf32647d1b482fc9542e3de3dfd5294b9e54b1d9666bdef",
+      "web/scenario-guides/theHeartOfMadnessPart1.json": "4115d13984c9edbbf9be723f18be5487d5ebd5018f1e450b502bfe88ada80e2c",
+      "web/scenario-guides/theHeartOfMadnessPart2.json": "c84467fe7a35624712b36288f9ac53a741d5133c0591e2b7f32027fca1bc51db",
+      "web/scenario-guides/toTheForbiddenPeaks.json": "6ba7c53915d5dd2c56904948a9e4df68ad87d6a8212ee495ce291e28d57bc11c"
     },
     "missingInputs": []
   },
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "c2885ec31be3e2cf0458a23e6e7bbab6d4c92f756ffddff2b5f65c0010be6c8b"
+      "sha256": "dc8c8d7ce739fa7990268fcd4b85a344295432f132ac328197c6a692afe8e339"
     },
     {
       "path": "content/registry.js",
@@ -3659,7 +3106,7 @@
     },
     {
       "path": "content/campaigns/edgeOfTheEarth/story-text.js",
-      "sha256": "1a057465f72e09110930adafa61fbe7a69d443c19729bcdeddfdb6d77c119b91"
+      "sha256": "8df0f285fb61268b885033f501f5613afd08dbdec80a52d22ceb84f56114538d"
     },
     {
       "path": "content/migration-confirmation.js",
@@ -3675,7 +3122,7 @@
     },
     {
       "path": "audit/eote-all-card-acceptance.json",
-      "sha256": "b31f587acdcc544774cc284d30ccfb21adfe0c9df6fd1e699f2a1157a1e1f2ed"
+      "sha256": "817a71829fce9ae473b0e31ef6d43a34e0cb622aa5bc30a13531cb2e0e24002d"
     },
     {
       "path": "audit/eote-investigators.json",
@@ -3687,7 +3134,7 @@
     },
     {
       "path": "audit/eote-rules.json",
-      "sha256": "0b5305e784b54961697eccc847b7eb945f82c77e887d9ca0396570a597458052"
+      "sha256": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047"
     },
     {
       "path": "audit/eote-interactions.json",
@@ -3719,7 +3166,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "ed38db6e9c9685b36539d091ada898e30cc2158aa6eae81d8c72577a04054eaa"
+      "sha256": "caa257625b2b7c75a20b30bc17a778089cffcb8c53c8093217255e86127209f6"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",
@@ -3735,7 +3182,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "72d0a4f36bee1e47220bafbe282540ebbd4ab9cdfa7ad5cc348cef49c1aa9d9e"
+      "sha256": "ec503cc56167d5015c93ff298b83bc2c3341a524c445bec82c6cc1986fa1924d"
     },
     {
       "path": "tools/audit-eote.mjs",
@@ -3748,138 +3195,6 @@
     {
       "path": "tests/eote-migration-ledger.test.mjs",
       "sha256": "ac5ca0501eb3aaa24552a594883930223e07c8a0e4470f5c9387054989b50fd6"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08503.json",
-      "sha256": "a91c308657b41c0044d507bf85edf0fd449dda8fed8ae19a98e6063c79859e5a"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08506.json",
-      "sha256": "dcb60a361891ad9232e2bc2448329ab5bc043939863fe5e5f5aff52242e17345"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08508.json",
-      "sha256": "6f753b53286006c7f1788c24e29505db8b560f7568a8f1b233a5d546f71ef39b"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08515.json",
-      "sha256": "de39c34c77341db2abe01622910de4782ac8f5fa49e966c47c3853040ad66d21"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08517.json",
-      "sha256": "84128735d2b85b7ad39a61b9b69c5f54cf7100555b1359a6f89a807deb25ab6a"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08544.json",
-      "sha256": "f8621f863c465d0196a26823d06d15df99f2b5b02c1331af6773733c1152bab5"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08546.json",
-      "sha256": "8d054ede7e619787844bdb0ba669822591eb54226dd7ef2a7619df8444387363"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08560.json",
-      "sha256": "cf916a412398cbf621781f7e8c29931e509fd98ec10af853b89bc3d0f92569cb"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08587.json",
-      "sha256": "4f1d3ac00c8789bff827f11ac96b69928f478c963da26ef0f521c619a7f395c6"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08649.json",
-      "sha256": "2d11fc77f3bc0bf94b5ac0e4b5d2ab0905b2d9c095b70888ece2eb1e8320d3aa"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08673.json",
-      "sha256": "ab5768e713f8a91f41774057838b743b94c89664c9e24d931b1daae825b5509d"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08679.json",
-      "sha256": "1e97d2fe20fa1d03705e0677e8bba2b8c4b6e5507b8d54a79c7e87d4d6084a17"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08681.json",
-      "sha256": "be56ac1436ddb170660a5d8cf430549e272289eeb1ba5d8e1fd22c2c8cb2986f"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08682.json",
-      "sha256": "426bce5a197c742e4c5d4a7aa7b9f021d3ab1ed3201f977767f64b812a55d7de"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08691.json",
-      "sha256": "20c12d2f103cd03e779bbedd2122993ebd169935253be5f11a4f2ee7816042a5"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08692.json",
-      "sha256": "84604f1445e1c9125f1582533f4dac5d26061728966fcebf8c9b6228d042bae5"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08693.json",
-      "sha256": "67cb79339b64e3f673c5f653670ebda13bf703acb23a79bb42878a9629955749"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08694.json",
-      "sha256": "fdecbeb724a6b693954e28edc611efdeb02dcdef4adaad468a7855f2e270061f"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08697.json",
-      "sha256": "1f0ea56fb96cfa5c2055ff4ccc66591eba31d9336920db326b88cf96668bd5ed"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08699.json",
-      "sha256": "ec7c74c906887c91fd32f826cfe59c464db463bd072f932db7d70a949b2fcdf4"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08702.json",
-      "sha256": "3dac24de15e107ce174a5670c64bf9cd7cc7dba07ca161d962346aa6223c2ccc"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08703.json",
-      "sha256": "6a013e1011d8d4e3e4a4f974eb9688aa721d96e45a2a808f0110b7b7e7f190ca"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08704.json",
-      "sha256": "be3e98b7efe7ef818d1af1fd459fe118980a5a4179541a43ab058569f2f0589f"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08706.json",
-      "sha256": "b4c012b53ee8667ef258bce02964eb899de12fc2f336b36ba6ff9b8e1ddacf72"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08707.json",
-      "sha256": "98a864f65229097da1b9c0412c7fd06f77642ac9f6073108990e2fae8ac92bd4"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08708.json",
-      "sha256": "8aeb8091215ad060fb4e19c5c134241317d023e1a4ada844d5d676492faee814"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08710.json",
-      "sha256": "190ddbccfb2b14cdf9f01e47d50c9cbb9fa18792527780629dd8727ed6ed65b9"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08712.json",
-      "sha256": "0efefee271885552f4f3d57edf7c6891185bffabc32eed6d97ba61288058722e"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08715.json",
-      "sha256": "69bdc27e0838ad6da6650a7753dfb3f84eaa60ed3d92437addd9f3dd5b3b96a9"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08719.json",
-      "sha256": "75620fbe699fc3427038d8e9bbfd486c5085e217eb3a75be52d887111f4c4c0b"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08721.json",
-      "sha256": "29a8513d12d062c36289df606985e990639f1341a9a01afae0c4c3d614afb7df"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08727.json",
-      "sha256": "0e52132c158cebf75f54072b85d94cac0c771482e5b50a6faee0461e7a3df2ff"
-    },
-    {
-      "path": "artifacts/migration/eote/primitive-requests/p7-08731.json",
-      "sha256": "fb9b40101dc8be31747deca13d5cd800b7795910e2a2192faec96e5dfc3825be"
     }
   ],
   "testFiles": [

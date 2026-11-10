@@ -9,7 +9,13 @@ import {
   behavior, completedTasks, handLimit, implementedEncounterCodes,
 } from '../content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
-import { placeLocation } from '../src/engine/engine.js'
+import { applyMove, createGameState, placeLocation, startScenario } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
+import { contentRegistry } from '../content/registered.js'
+import {
+  applyInvestigatorForm, hasInvestigatorForm, restoreInvestigatorForm,
+} from '../src/engine/investigator-form.js'
+import { migrateState } from '../src/engine/save-migration.js'
 
 const clone = value => structuredClone(value)
 
@@ -412,6 +418,32 @@ test('大图书馆：共同花费线索后检定智识(3)记住归位程式', ()
   assert.equal(state.scenarioFlags.remembered.foundTheProcess, true)
 })
 
+// 实战回归（2026-11-10）：大图书馆地点上有 4 个线索、但调查员手里没有线索时，
+// 行动不能因为「地点线索够了」而被列为可用；即使已经提交，也必须安全返回而不是抛错。
+// 之前 actions/performAction 的预检读地点上的线索，引擎 groupPayment 支付读调查员手里的
+// 线索，两者不一致会在支付时抛「符合地点条件的共同线索不足」：整条事务回滚，而对局
+// 卡在同一个待决选择上，每次重试都在同一处抛错（AI 连续两步都失败）。
+test('大图书馆：地点线索不能直接用于共同支付，调查员线索不足时安全返回', () => {
+  const state = prepared()
+  const inv = invAt(state, 'greatLibrary')
+  inv.clues = 0
+  state.investigators[1].clues = 0
+  assert.equal(state.locations.find(location => location.id === 'greatLibrary').clues, 4)
+  const move = behavior.actions(state, inv).find(entry => entry.rule === 'decipherProcess')
+  assert.ok(move)
+  assert.match(String(move.reason), /需要共同支付 2 个线索（当前 0）/)
+  const api = makeApi(state)
+  assert.doesNotThrow(() => behavior.performAction(state, inv, { rule: 'decipherProcess' }, api))
+  assert.equal(api.log.some(entry => entry[0] === 'payClues'), false)
+  assert.equal(api.log.some(entry => entry[0] === 'test'), false)
+  assert.equal((state.scenarioFlags.remembered || {}).foundTheProcess, undefined)
+  // 同一地点另一名调查员手里的线索可以凑够：支付来源是调查员持有的线索。
+  state.investigators[1].location = 'greatLibrary'
+  state.investigators[1].clues = 2
+  const payable = behavior.actions(state, inv).find(entry => entry.rule === 'decipherProcess')
+  assert.equal(payable.reason, null)
+})
+
 test('实验室与解构室：成功记住任务，失败在实验室补线索并提高难度', () => {
   const lab = prepared()
   const inv = invAt(lab, 'laboratory')
@@ -790,7 +822,7 @@ test('伊斯人身体：投入卡牌时技能图标翻倍（每次检定一次�
   state.skillTest.tfaYithianIconDoubled = true
   assert.equal(behavior.commitIconMultiplier(state, inv), 1)
   const human = prepared(undefined, 1)
-  human.investigators[0].yithianBody = false
+  restoreInvestigatorForm(human.investigators[0])
   human.skillTest = { seat: 0 }
   assert.equal(behavior.commitIconMultiplier(human, human.investigators[0]), 1)
 })
@@ -886,7 +918,8 @@ test('04257/04258：记录达成后失去冷漠并获得猎手（动态关键词
 test('04244 图标翻倍只作用于持有者自己执行的检定', () => {
   const state = stateFor(2)
   const inv = state.investigators[0]
-  inv.yithianBody = true
+  // 夹具里的调查员卡号本来就是 04244（换身后）；共享钩子按 inv.form 判断换身状态。
+  inv.form = 'yithian'
   state.skillTest = { seat: 0 }
   assert.equal(behavior.commitIconMultiplier(state, inv).multiplier, 2)
   state.skillTest.tfaYithianIconDoubled = true
@@ -924,3 +957,138 @@ test('04256 看管人：调查阶段开始抽 1 张（每轮一次，不再借�
   assert.ok(draws.length > firstRound, '下一轮重新生效')
   behavior.phaseBegan(state, 'mythos', api)
 })
+
+// ---- 真实引擎：04244「伊斯人身体」的换身与还原 ----
+// 印刷设置（04237）：「将每位玩家的调查员卡牌替换为伊斯人身体调查员卡牌」。
+// 玩家报告：天机之城开局时头像/名字/生命值还是原调查员。这里走真实建局，确认
+// 卡面身份（卡号/名字/职业/生命理智/技能）被替换、原调查员卡文本不可用，并在下一关还原。
+const TFA_SCENARIO_IDS = contentRegistry.getCampaign('theForgottenAge').scenarioIds
+const BODY_CODE = CARD_CODES.bodyOfAYithian
+
+function settleEngine(state, limit = 500) {
+  for (let guard = 0; state.pendingChoice && guard < limit; guard++) {
+    const pending = state.pendingChoice
+    const optionId = ['done', 'skip', 'self', 'cooperate'].find(id => pending.options.some(option => option.id === id))
+      ?? pending.options[0].id
+    applyMove(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId })
+  }
+}
+
+// 从大厅流程直接落到「天机之城」：真实建局（第一关自动开局）→ 补上剧情记录 → 起本章。
+function engineAtCityOfArchives(seed = 'tcoa-form', investigator = '06004') {
+  const state = createGameState({
+    campaignId: 'theForgottenAge', playerInvestigator: investigator, seed, campaignHub: false,
+    seatInvestigators: [investigator, '04002'],
+  }, [{ seat: 0, role: 'human' }, { seat: 1, role: 'human' }])
+  settleEngine(state)
+  state.campaign.records.theInvestigatorsCooperatedWithTheYithians = true
+  startScenario(state, TFA_SCENARIO_IDS.indexOf('theCityOfArchives'), [])
+  settleEngine(state)
+  return state
+}
+
+test('真实引擎：天机之城开局把调查员卡替换成伊斯人身体（卡号/名字/职业/生命理智/技能）', () => {
+  const state = engineAtCityOfArchives()
+  const inv = state.investigators[0]
+  assert.equal(inv.code, BODY_CODE, '调查员卡号换成 04244')
+  assert.equal(inv.name, '伊斯人身体', '卡名换成身体卡')
+  assert.equal(inv.nameEn, 'Body of a Yithian')
+  assert.equal(inv.klass, 'neutral', '职业换成中立')
+  assert.deepEqual([inv.willpower, inv.intellect, inv.combat, inv.agility], [2, 2, 2, 2])
+  assert.equal(inv.maxHealth, 7)
+  assert.equal(inv.maxSanity, 7)
+  assert.equal(inv.health, 7)
+  assert.equal(inv.sanity, 7)
+  assert.equal(hasInvestigatorForm(inv), true)
+  // 原身份留了快照，供关末/下一关还原。
+  assert.equal(inv.formOriginal.code, '06004')
+  assert.equal(inv.formOriginal.name, '卢克·罗宾逊')
+  assert.equal(inv.formOriginal.klass, 'mystic')
+  // 设置阶段「检查牌库和游戏区域」：独特[[道具]]支援（卢克的门之匣 06013）移出游戏。
+  assert.equal((inv.assets || []).some(asset => asset.code === '06013'), false, '场上的独特道具支援被移出游戏')
+  assert.equal([...(inv.deck || []), ...(inv.hand || [])].includes('06013'), false, '牌库/手牌里的门之匣也被移出')
+  // 观察投影：牌桌读到的就是身体卡身份（头像/名字/生命值都来自这里）。
+  const view = viewState(state, 0)
+  const viewInv = view.investigators[0]
+  assert.equal(viewInv.code, BODY_CODE)
+  assert.equal(viewInv.name, '伊斯人身体')
+  assert.equal(viewInv.klass, 'neutral')
+  assert.equal(viewInv.maxHealth, 7)
+  assert.equal(viewInv.maxSanity, 7)
+  // 原调查员卡文本不可用：04244 没有调查员条目，原调查员的旧印/能力读点全部落空。
+  assert.equal(state.investigators[0].yithianBody, true)
+})
+
+test('真实引擎：下一关把调查员卡还原成原调查员；战役记录的持续换身会重新套用', () => {
+  const state = engineAtCityOfArchives('tcoa-form-restore')
+  const nextIndex = TFA_SCENARIO_IDS.indexOf('theCityOfArchives') + 1
+  // 没有战役换身记录：进入下一关时还原成卢克本人。
+  startScenario(state, nextIndex, [])
+  settleEngine(state)
+  const human = state.investigators[0]
+  assert.equal(human.code, '06004', '下一关卡号还原')
+  assert.equal(human.name, '卢克·罗宾逊')
+  assert.equal(human.klass, 'mystic')
+  assert.deepEqual([human.willpower, human.intellect, human.combat, human.agility], [4, 3, 2, 3])
+  assert.equal(human.maxHealth, 5)
+  assert.equal(human.maxSanity, 9)
+  assert.equal(hasInvestigatorForm(human), false)
+  assert.equal(human.formOriginal, undefined)
+
+  // 幕间四：困在伊斯人身体里的调查员在余下战役继续使用 04244。
+  state.campaign.ruleFlags ||= {}
+  state.campaign.ruleFlags.investigatorForms = { 0: { code: BODY_CODE, form: 'yithian' } }
+  startScenario(state, nextIndex, [])
+  settleEngine(state)
+  const again = state.investigators[0]
+  assert.equal(again.code, BODY_CODE)
+  assert.equal(again.name, '伊斯人身体')
+  assert.equal(again.maxHealth, 7)
+  assert.equal(hasInvestigatorForm(again), true)
+  assert.equal(again.formOriginal.code, '06004')
+})
+
+test('旧存档修复：只改了数值没换卡面的天机之城存档，读档时补上换身并移出场上的独特道具', () => {
+  const state = engineAtCityOfArchives('tcoa-form-repair')
+  const inv = state.investigators[0]
+  // 模拟更新前的存档：卡号/名字/职业还是原调查员，只有属性被覆盖成身体卡数值，且没有换身快照。
+  restoreInvestigatorForm(inv)
+  Object.assign(inv, {
+    willpower: 2, intellect: 2, combat: 2, agility: 2,
+    maxHealth: 7, baseHealth: 7, maxSanity: 7, baseSanity: 7,
+    yithianBody: true,
+  })
+  inv.assets.push({ id: 'legacy-gate-box', code: '06013', exhausted: false })
+  state.scenarioFlags.yithianBody = true
+  assert.equal(behavior.needsSaveRepair(state), true, '旧存档需要修复')
+  behavior.repairSavedState(state, {})
+  assert.equal(inv.code, BODY_CODE)
+  assert.equal(inv.name, '伊斯人身体')
+  assert.equal(inv.klass, 'neutral')
+  assert.equal(inv.formOriginal.code, '06004')
+  assert.equal(inv.assets.some(asset => asset.code === '06013'), false, '补做设置阶段的移出游戏')
+  assert.equal(behavior.needsSaveRepair(state), false, '修复后不再重复修复')
+})
+
+test('旧存档读档迁移：migrateState 触发剧本书写修复，把换身装回去且重复迁移无变更', () => {
+  const state = engineAtCityOfArchives('tcoa-form-migrate')
+  const inv = state.investigators[0]
+  // 构造更新前版本的存档状态：调查员卡没换，只有身体卡数值与场景标记。
+  restoreInvestigatorForm(inv)
+  Object.assign(inv, {
+    willpower: 2, intellect: 2, combat: 2, agility: 2,
+    maxHealth: 7, baseHealth: 7, maxSanity: 7, baseSanity: 7,
+    yithianBody: true,
+  })
+  state.scenarioFlags.yithianBody = true
+  const saved = JSON.parse(JSON.stringify(state))
+  const { state: repaired, changes } = migrateState(saved)
+  assert.equal(repaired.investigators[0].code, BODY_CODE, '迁移后调查员卡换成 04244')
+  assert.equal(repaired.investigators[0].name, '伊斯人身体')
+  assert.equal(hasInvestigatorForm(repaired.investigators[0]), true)
+  assert.ok(changes.some(line => line.includes('伊斯人身体')), `迁移变更说明应指出换身修复：${changes.join(' / ')}`)
+  // 已经修复的存档再迁移一次不应再产生变更（幂等，不会重复套用）。
+  const again = migrateState(JSON.parse(JSON.stringify(repaired)))
+  assert.deepEqual(again.changes, [])
+})
+

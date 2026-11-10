@@ -32,12 +32,33 @@ export function createImageAssetCache({
   timeoutMs = 15000,
   maxBytes = MAX_IMAGE_BYTES,
   missTtlMs = 10 * 60 * 1000,
+  thumbnailImpl = async file => {
+    // Native encoder is available in development/build environments. Portable
+    // installs can ship prebuilt thumbnails; without an encoder the UI falls back.
+    const { default: sharp } = await import('sharp')
+    return sharp(file, { limitInputPixels: 40_000_000 }).rotate()
+      .resize({ width: 480, height: 480, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 80 }).toBuffer()
+  },
 } = {}) {
   const root = path.resolve(webRoot)
   const source = new URL(host)
   const sourceBase = source.origin + source.pathname.replace(/\/+$/, '')
   if (source.protocol !== 'https:' || sourceBase !== DEFAULT_IMAGE_HOST) {
     throw new RangeError('按需卡图缓存只允许使用默认 HTTPS CDN')
+  }
+  // Bound native decoding/encoding as well as browser-side preload concurrency.
+  let encoders = 0
+  const encoderQueue = []
+  async function encodeThumbnail(file) {
+    if (encoders >= 2) await new Promise(resolve => encoderQueue.push(resolve))
+    else encoders++
+    try { return await thumbnailImpl(file) }
+    finally {
+      const next = encoderQueue.shift()
+      if (next) next()
+      else encoders--
+    }
   }
   const pending = new Map()
   // 失败记忆：CDN 上没有这张图时，每次界面重绘都会再来问一次，而每次都要等一轮
@@ -59,7 +80,35 @@ export function createImageAssetCache({
     return true
   }
 
-  return async function cacheWebAsset({ relative, searchParams }) {
+  async function cacheWebAsset({ relative, searchParams }) {
+    const thumb = typeof relative === 'string' && /^img\/thumbs\/(?:zh\/)?(?:cards|backs)\/[A-Za-z0-9][A-Za-z0-9_.-]*\.webp$/.test(relative)
+    if (thumb) {
+      const extension = searchParams?.get('source')
+      if (!/^(avif|webp|png|jpe?g|gif)$/.test(extension || '')) return false
+      const original = relative.replace('img/thumbs/', 'img/').replace(/\.webp$/, '.' + extension)
+      const target = path.resolve(root, relative)
+      if (existsSync(target)) return true
+      if (knownMiss(relative)) return false
+      if (pending.has(relative)) return pending.get(relative)
+      const job = (async () => {
+        const temporary = target + '.part-' + randomBytes(6).toString('hex')
+        try {
+          if (!existsSync(path.resolve(root, original)) && !await cacheWebAsset({ relative: original, searchParams })) return false
+          const body = await encodeThumbnail(path.resolve(root, original))
+          if (!isImage(body, '.webp') || body.length > maxBytes) return false
+          await mkdir(path.dirname(target), { recursive: true })
+          await writeFile(temporary, body, { flag: 'wx' })
+          await rename(temporary, target)
+          return true
+        } catch {
+          return false
+        } finally {
+          await rm(temporary, { force: true }).catch(() => {})
+        }
+      })().then(ok => { if (!ok) rememberMiss(relative); return ok }).finally(() => pending.delete(relative))
+      pending.set(relative, job)
+      return job
+    }
     if (searchParams?.getAll('cache').length !== 1 || searchParams.get('cache') !== 'cdn') return false
     if (typeof relative !== 'string' || !SAFE_IMAGE_PATH.test(relative)) return false
     const target = path.resolve(root, ...relative.split('/'))
@@ -104,6 +153,7 @@ export function createImageAssetCache({
     pending.set(relative, job)
     return job
   }
+  return cacheWebAsset
 }
 
 export const cacheWebAsset = createImageAssetCache()

@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "command": "node tools/verify-tsk.mjs --node",
+  "generatedBy": "tools/verify-tsk.mjs",
+  "tests": {
+    "files": [
+      "tests/tsk-primitives-concealed.test.mjs",
+      "tests/tsk-primitives-coterie-investigator.test.mjs",
+      "tests/tsk-primitives-customizable.test.mjs",
+      "tests/tsk-primitives-keys-hollow.test.mjs",
+      "tests/tsk-primitives-map.test.mjs",
+      "tests/tsk-primitives-state.test.mjs"
+    ],
+    "totals": {
+      "tests": 41,
+      "pass": 41,
+      "fail": 0
+    },
+    "pass": true
+  },
+  "investigators": {
+    "files": [
+      {
+        "path": "tests/tsk-investigator-09001.test.mjs",
+        "sha256": "95e9015ed797e734b9afe51dc9e37777ca3386e8eaf909dee195c3a829c9710a"
+      },
+      {
+        "path": "tests/tsk-investigator-09004.test.mjs",
+        "sha256": "ec06209b48476b05a1d19bbe6a0f05071c248a56f8edc143950de691e34f95a9"
+      },
+      {
+        "path": "tests/tsk-investigator-09008.test.mjs",
+        "sha256": "f780bd0881578df240a89cee08fad943b10a6559e1ee50445c36f46997cd1509"
+      },
+      {
+        "path": "tests/tsk-investigator-09011.test.mjs",
+        "sha256": "dc1fd01179e7e18fa7067618ec5435be791aa43dfd2a0154aaafb81f2339cccc"
+      },
+      {
+        "path": "tests/tsk-investigator-09015.test.mjs",
+        "sha256": "15b8fdacf5c7d17e98787044006a8477dc96f1f00e3a6bca59bc7743aa94749b"
+      },
+      {
+        "path": "tests/tsk-investigator-09018.test.mjs",
+        "sha256": "49a681303fd735aa5f9061a475014891b0b4a39d715b17ee96a5f23c07502971"
+      },
+      {
+        "path": "tests/tsk-investigator-signatures.test.mjs",
+        "sha256": "76f966450300765d643bd72eac107a289a36ecb86f6b869a37fc9b2667518b45"
+      }
+    ],
+    "totals": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0
+    },
+    "pass": true,
+    "titles": [
+      "P5 09001 条目/旧印/构筑：注册、旧印 +0 抽牌、专属依赖与职阶选择",
+      "P5 09001 额外受限行动只用于授权能力，并调用立即行动原语",
+      "P5 09001 专属弱点与投入到他人检定的记账口径",
+      "P5 09004 条目/旧印/构筑：治疗旧印、30+签名、场外《术后恢复》",
+      "P5 09004 治疗后把场外《术后恢复》加入手牌（damageHealed 窗口）",
+      "P5 09008 条目/旧印/构筑：额外 5 经验、旧印自动成功、专属依赖",
+      "P5 09008 快速交战已横置敌人",
+      "P5 09008 躲避已横置非精英敌人时加入智识；成功超额弃敌接线",
+      "P5 09011 条目/旧印/构筑：减费反应、旧印 +2、专属依赖",
+      "P5 09011 打支援减费 3 且带 1 毁灭入场（接线与词典）",
+      "P5 09015 条目/旧印/构筑：开局柯达在场、旧印放证据、专属依赖",
+      "P5 09015 fast 花证据降低难度 2（每次检定限一次）",
+      "P5 09018 条目/旧印/构筑：3 个额外盟友槽、双副职阶、专属依赖",
+      "P5 09018 双职阶选择与构筑合法性",
+      "P5 专属依赖 14 张：全部注册为 dependencyOnly，且跟随调查员强制带入",
+      "P5 专属依赖关键机制接线"
+    ]
+  },
+  "replay": {
+    "compareExit": 0,
+    "baseline": "tests/fixtures/replay/tsk-baseline.json",
+    "baselineSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
+    "outputSha256": "58bb96fa3ff05aec6e7df68c7815f8965bb87edd2832fb4888e982386bdb3f6c",
+    "tail": [
+      "  ✔ tfa-untamed-wilds-only               30 步  4536ec2c032c",
+      "  ✔ notz-strict-random-3p                80 步  1ead042eead7",
+      "✔ 与基线逐条一致（行为零变化）"
+    ]
+  },
+  "files": [
+    {
+      "path": "tests/tsk-primitives-concealed.test.mjs",
+      "sha256": "b6d03aa27d3224e60fdc18184aeae2c26d5796bf8afc43e89ef18690725d5fa0"
+    },
+    {
+      "path": "tests/tsk-primitives-coterie-investigator.test.mjs",
+      "sha256": "f28dfb03f4d49364dc235584e439d8e581c23de8a419685a92b50642225a8e3e"
+    },
+    {
+      "path": "tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "path": "tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "4700b66dc85f0dfbcffddf8e2952675377305f271144da027e8b3ecaf6bb9a4b"
+    },
+    {
+      "path": "tests/tsk-primitives-map.test.mjs",
+      "sha256": "e118d4fbee653293cbe076b028329af2f125de237b11598ad7a6207bc910cf5c"
+    },
+    {
+      "path": "tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    }
+  ],
+  "gates": {
+    "testsPassed": true,
+    "replayNoDrift": true
+  }
+}

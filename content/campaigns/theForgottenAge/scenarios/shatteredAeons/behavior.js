@@ -359,6 +359,8 @@ export const behavior = {
   // 之前只有 takeControlOfRelic（要求遗物已附属在无线索地点）会写 seat，
   // 「查找遗物」分支拿到手牌后永远打不出控制，场景 3a 卡死（P2）。
   assetEntered(state, inv, asset, api) {
+    // 本文件覆盖了战役共享的 assetEntered：换身（04244 伊斯人身体）的「盟友获得伊斯特性」仍要生效。
+    encounterRules.assetEntered(state, inv, asset)
     const code = original(asset)
     if (!RELIC_VARIANTS.includes(code)) return
     api?.moveRelicOfAges?.({ code, seat: inv.seat })

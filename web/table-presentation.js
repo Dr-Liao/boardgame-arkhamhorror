@@ -111,7 +111,9 @@ export function presentationChanges(before, after, events = []) {
   return changes
 }
 
-export function createTablePresentation({ art, onChange = () => {}, themeAttributes = null } = {}) {
+export function createTablePresentation({ art: renderArt, onChange = () => {}, themeAttributes = null } = {}) {
+  // Cinematics enlarge card art; never inherit the table's thumbnail defaults.
+  const art = renderArt && ((code, name, options) => renderArt(code, name, { ...options, thumbnail: false, unloadOffscreen: false }))
   preloadChaosTokens()
   let prefs = { sound: true, fast: false }
   try { prefs = { ...prefs, ...JSON.parse(localStorage.getItem('arkham-presentation') || '{}') } } catch { /* optional storage */ }

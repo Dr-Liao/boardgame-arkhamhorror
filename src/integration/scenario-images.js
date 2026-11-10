@@ -30,8 +30,13 @@ export function scenarioCardCodes(scenarioId, registry = contentRegistry) {
 }
 
 export function scenarioImageManifest(scenarioId, registry = contentRegistry) {
+  const manifest = registry.getScenario(scenarioId)
+  const scenario = registry.getScenarioData(scenarioId)
+  const start = manifest.locations.find(location => location.id === (manifest.startLocationId || scenario.startLocationId))
+  const initial = new Set([manifest.referenceCode, scenario.originalCode, scenario.agendas?.[0]?.originalCode,
+    scenario.acts?.[0]?.originalCode, start?.frontCode, start?.backCode].filter(Boolean))
   const cards = scenarioCardCodes(scenarioId, registry)
-    .map(code => ({ code, images: imageDescriptor(code) }))
+    .map(code => ({ code, images: imageDescriptor(code), priority: initial.has(code) ? 'initial' : 'background' }))
     .filter(entry => entry.images)
   return { scenarioId, cards }
 }

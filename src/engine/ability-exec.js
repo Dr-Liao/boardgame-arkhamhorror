@@ -135,6 +135,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   if (cost.exhaust) {
     if (asset.exhausted) return
     asset.exhausted = true
+    reactionWindow(state, 'assetExhausted', { when: 'assetExhausted', seat, assetId: asset.id, assetCode: asset.code, location: inv.location }, events)
   }
   if (cost.uses) {
     if (availableUseCost(state, asset, registeredEntry) < cost.uses) return

@@ -10,7 +10,9 @@
 //
 // 引擎不认卡号：所有计数按 id 读写，条目层用 `api.addCardCounter` / `api.moveCardCounters`。
 
-export const CARD_COUNTER_IDS = Object.freeze(['bounty'])
+// 八循环 P2 扩展：`evidence`（达雷尔的证据）与 `hollow`（空洞卡上的计数）复用同一套具名计数器，
+// 不新增字段形状；counter id 全部走白名单（未知 id 拒绝）。
+export const CARD_COUNTER_IDS = Object.freeze(['bounty', 'evidence', 'hollow'])
 
 export function assertCardCounterId(id) {
   if (!CARD_COUNTER_IDS.includes(id)) {

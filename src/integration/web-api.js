@@ -35,7 +35,7 @@ const VERSIONED_FILES = Object.freeze([
   // 第 128 轮：随浏览器模块一起移入 web/，必须与 web/ 其余文件同源才能被浏览器加载。
   '../../web/ui-cards.js',
   '../../presentation/localized-arts.json', '../../presentation/generated-localized-arts.json', '../../presentation/media-registry.json',
-  '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/supply-picker.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css', '../../web/deck-library.css',
+  '../../web/image-preload.js', '../../web/image-lifecycle.js', '../../web/table-art.js', '../../web/table-presentation.js', '../../web/card-zoom.js', '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/supply-picker.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css', '../../web/deck-library.css',
   '../../web/card-text.js', '../../web/story-reader.js', '../../web/rulebook-data.js', '../../web/rulebook.js', '../../web/style.css',
   '../campaign/story.js', '../../content/campaigns/theDunwichLegacy/story-text.js',
   '../../content/campaigns/thePathToCarcosa/story-text.js',

@@ -7,7 +7,7 @@
   "generatedBy": "tools/scan-eote-mechanisms.mjs",
   "docs": "docs/edgeOfTheEarth/README.md",
   "status": "catalog-only",
-  "scopeSha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
+  "scopeSha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
   "counts": {
     "cards": 403,
     "mechanisms": 110,
@@ -492,7 +492,7 @@
       "scenario"
     ],
     "windows": {
-      "count": 113,
+      "count": 115,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
@@ -502,6 +502,7 @@
         "assetDamageAssigned",
         "assetDefeated",
         "assetEnteredPlay",
+        "assetExhausted",
         "assetHarmPlaced",
         "assetLeavesPlay",
         "attackFail",
@@ -520,6 +521,7 @@
         "committedCard",
         "consecutiveActions",
         "damageAssignedToSelf",
+        "damageHealed",
         "damagePlaced",
         "defeatAtLocation",
         "defeatEnemy",

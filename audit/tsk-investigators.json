@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P5",
+  "generatedBy": "tools/audit-tsk-investigators.mjs",
+  "status": "verified",
+  "items": [
+    {
+      "code": "09001",
+      "name": "卡森·辛克莱",
+      "file": "src/cards/entries/09001.js",
+      "sha256": "3a77336d8fe9e2ff1e7e76ea0b7739190e1379ce0128193694d45d6b254b09a0",
+      "signatures": [
+        {
+          "code": "09002",
+          "name": "“如您所愿”",
+          "file": "src/cards/entries/09002.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "78006d0cda570518141595eee05cdbf8f1687c95c35603c27b82cbcdc858d59a"
+        },
+        {
+          "code": "09003",
+          "name": "无私成疾",
+          "file": "src/cards/entries/09003.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "9f141a2a6fbea315180115dc9cca1f1a1a66955bc5db129478b9cff62d2399cf"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "09004",
+      "name": "文森特·李",
+      "file": "src/cards/entries/09004.js",
+      "sha256": "9e5fa58367a69a4b67ee9c753ae1c769a54040a4c59d62ec57015c269c2d7204",
+      "signatures": [
+        {
+          "code": "09005",
+          "name": "骨锯",
+          "file": "src/cards/entries/09005.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "45201ee184aeff1470286c592753d6dc2ea89da6bf7f12b1c904e2bb5fe0d4a5"
+        },
+        {
+          "code": "09006",
+          "name": "术后恢复",
+          "file": "src/cards/entries/09006.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "2522b1827404f3f96cb072246a400c322a4f50abf11f61280407c97c63b76285"
+        },
+        {
+          "code": "09007",
+          "name": "受伤路人",
+          "file": "src/cards/entries/09007.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "ad339f306016a2346e65dba50a51b7d600dd094ae8d0bbca53dc447da2020689"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "09008",
+      "name": "基玛尼·琼斯",
+      "file": "src/cards/entries/09008.js",
+      "sha256": "4a7ef9180887b4a4bb421cf2d233308652bfddc8d3a180794403f51495e3c0f4",
+      "signatures": [
+        {
+          "code": "09009",
+          "name": "抓钩",
+          "file": "src/cards/entries/09009.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "4abce447f543b9390cbc08e5001fa79c716227060254d5f462f693690db60f79"
+        },
+        {
+          "code": "09010",
+          "name": "特工弗莱彻",
+          "file": "src/cards/entries/09010.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "7e498770d1b1db192a0c1d98d8f16fdc1a56b3ade3f1dfcc1f2f7a81c0a1157c"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "09011",
+      "name": "阿米娜·齐达内",
+      "file": "src/cards/entries/09011.js",
+      "sha256": "fae16e09e07881887bb7188cbb1948f4341e1cfaa08e7e82b2953b9d17788f25",
+      "signatures": [
+        {
+          "code": "09012",
+          "name": "受难真言",
+          "file": "src/cards/entries/09012.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "8238e7312c16229ea00628aa2ace239d0e1652d9acd4b0cf2ba60d5093e6c673"
+        },
+        {
+          "code": "09013",
+          "name": "蒙福真言",
+          "file": "src/cards/entries/09013.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "f77085f7b4354aff910262f1f29a8e261c69b4c6b3e510b77514bd1f85b0ae58"
+        },
+        {
+          "code": "09014",
+          "name": "骤然无声",
+          "file": "src/cards/entries/09014.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "ed100267ff756d0a1d53979ad5207dd3a163ed97518912d1cd33464b78937d72"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "09015",
+      "name": "达雷尔·西蒙斯",
+      "file": "src/cards/entries/09015.js",
+      "sha256": "e6f4ae481c7aaa38de3fa85f498250ab324d9f4281adfcf994b36d1cac70dd06",
+      "signatures": [
+        {
+          "code": "09016",
+          "name": "达雷尔的柯达相机",
+          "file": "src/cards/entries/09016.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "13daba11dec5c850d342a27ccd509c9d9e04d085c30366bfbd96037c664df115"
+        },
+        {
+          "code": "09017",
+          "name": "胶卷损坏",
+          "file": "src/cards/entries/09017.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "a92d00a099f05683dfce590ca61edea401646cce83e6a5c5932eabd83e6566ee"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "09018",
+      "name": "查理·凯恩",
+      "file": "src/cards/entries/09018.js",
+      "sha256": "30ce63eb67318230ee7815270c74dfebcab7b1dd12decdd83a23d487fba175e0",
+      "signatures": [
+        {
+          "code": "09019",
+          "name": "邦妮·沃尔什",
+          "file": "src/cards/entries/09019.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "edb64ee66370f730d7695e40eb6e8ce3360ebe709d7f5ace4daf7d1d8fd74a4f"
+        },
+        {
+          "code": "09020",
+          "name": "领袖重担",
+          "file": "src/cards/entries/09020.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "ecc32b501dd56d7f9724e60d75027375b7f0b1abeea3c5e1ef481f72a308ac25"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/tsk-investigator-*.test.mjs",
+        "audit/tsk-node-acceptance.json",
+        "audit/tsk-investigators-browser.json"
+      ]
+    }
+  ],
+  "checks": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "otherPacksCatalogOnly": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "otherPacksCatalogOnly": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "deliveredInvestigators": [
+    "09001",
+    "09004",
+    "09008",
+    "09011",
+    "09015",
+    "09018"
+  ],
+  "boundary": "P5 只认证 6 位 TSK 调查员与 14 张专属依赖；一般玩家卡（09021–09128）与战役（09501+）仍 catalog-only，AI 随机选人池与既有 replay 行为不变（重采基线原因见 docs/campaign/theScarletKeys/investigators.md）。",
+  "sources": [
+    {
+      "path": "audit/tsk-baseline.json",
+      "sha256": "d728f3b92ed1139c16caaae4f0a42286de591cd9c9f3245265f57a15cf5c4731"
+    },
+    {
+      "path": "audit/tsk-investigators-browser.json",
+      "sha256": "a343575d68f008061ee6665cf7feb5fffdb6665a3513662a38eb1dd703b386c7"
+    },
+    {
+      "path": "audit/tsk-node-acceptance.json",
+      "sha256": "07715eb943b195f7668b41812576c5eee1fc8343903e6e599297f495a75aebad"
+    },
+    {
+      "path": "audit/tsk-regression.json",
+      "sha256": "bb84bdb1292aff7e27e929dc0dc4d059c04225de57d2eb0b3849ebe702c5737a"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/investigator-data.js",
+      "sha256": "06c901b6a382db2ad7cfb00c8ea0779d641e6d87be79d6b60e03dcc27f59c01d"
+    },
+    {
+      "path": "content/packs/tskInvestigators/manifest.js",
+      "sha256": "ccefc41ccb978584e33a8c1fdcfb1d28bbd2f6f4b66406df9e4a62f0e371d5dd"
+    },
+    {
+      "path": "src/cards/entries/09001.js",
+      "sha256": "3a77336d8fe9e2ff1e7e76ea0b7739190e1379ce0128193694d45d6b254b09a0"
+    },
+    {
+      "path": "src/cards/entries/09002.js",
+      "sha256": "78006d0cda570518141595eee05cdbf8f1687c95c35603c27b82cbcdc858d59a"
+    },
+    {
+      "path": "src/cards/entries/09003.js",
+      "sha256": "9f141a2a6fbea315180115dc9cca1f1a1a66955bc5db129478b9cff62d2399cf"
+    },
+    {
+      "path": "src/cards/entries/09004.js",
+      "sha256": "9e5fa58367a69a4b67ee9c753ae1c769a54040a4c59d62ec57015c269c2d7204"
+    },
+    {
+      "path": "src/cards/entries/09005.js",
+      "sha256": "45201ee184aeff1470286c592753d6dc2ea89da6bf7f12b1c904e2bb5fe0d4a5"
+    },
+    {
+      "path": "src/cards/entries/09006.js",
+      "sha256": "2522b1827404f3f96cb072246a400c322a4f50abf11f61280407c97c63b76285"
+    },
+    {
+      "path": "src/cards/entries/09007.js",
+      "sha256": "ad339f306016a2346e65dba50a51b7d600dd094ae8d0bbca53dc447da2020689"
+    },
+    {
+      "path": "src/cards/entries/09008.js",
+      "sha256": "4a7ef9180887b4a4bb421cf2d233308652bfddc8d3a180794403f51495e3c0f4"
+    },
+    {
+      "path": "src/cards/entries/09009.js",
+      "sha256": "4abce447f543b9390cbc08e5001fa79c716227060254d5f462f693690db60f79"
+    },
+    {
+      "path": "src/cards/entries/09010.js",
+      "sha256": "7e498770d1b1db192a0c1d98d8f16fdc1a56b3ade3f1dfcc1f2f7a81c0a1157c"
+    },
+    {
+      "path": "src/cards/entries/09011.js",
+      "sha256": "fae16e09e07881887bb7188cbb1948f4341e1cfaa08e7e82b2953b9d17788f25"
+    },
+    {
+      "path": "src/cards/entries/09012.js",
+      "sha256": "8238e7312c16229ea00628aa2ace239d0e1652d9acd4b0cf2ba60d5093e6c673"
+    },
+    {
+      "path": "src/cards/entries/09013.js",
+      "sha256": "f77085f7b4354aff910262f1f29a8e261c69b4c6b3e510b77514bd1f85b0ae58"
+    },
+    {
+      "path": "src/cards/entries/09014.js",
+      "sha256": "ed100267ff756d0a1d53979ad5207dd3a163ed97518912d1cd33464b78937d72"
+    },
+    {
+      "path": "src/cards/entries/09015.js",
+      "sha256": "e6f4ae481c7aaa38de3fa85f498250ab324d9f4281adfcf994b36d1cac70dd06"
+    },
+    {
+      "path": "src/cards/entries/09016.js",
+      "sha256": "13daba11dec5c850d342a27ccd509c9d9e04d085c30366bfbd96037c664df115"
+    },
+    {
+      "path": "src/cards/entries/09017.js",
+      "sha256": "a92d00a099f05683dfce590ca61edea401646cce83e6a5c5932eabd83e6566ee"
+    },
+    {
+      "path": "src/cards/entries/09018.js",
+      "sha256": "30ce63eb67318230ee7815270c74dfebcab7b1dd12decdd83a23d487fba175e0"
+    },
+    {
+      "path": "src/cards/entries/09019.js",
+      "sha256": "edb64ee66370f730d7695e40eb6e8ce3360ebe709d7f5ace4daf7d1d8fd74a4f"
+    },
+    {
+      "path": "src/cards/entries/09020.js",
+      "sha256": "ecc32b501dd56d7f9724e60d75027375b7f0b1abeea3c5e1ef481f72a308ac25"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "fcc043d9f097f6f5140f8cef357f09e1c4045cf72c54892e5a01d5c2b42d852d"
+    },
+    {
+      "path": "src/deck/deckbuilding.js",
+      "sha256": "6a0a5d98a10df57caf9c5e6ccbe48c543af53ea8a5d54c215854d4043d0cbd60"
+    },
+    {
+      "path": "web/deck-rules.js",
+      "sha256": "0c0068d4841ec9f525a482c55f4f6bbdac025f4cf12f6cdfbfbe705b6eb94585"
+    }
+  ],
+  "evidence": [
+    "audit/tsk-node-acceptance.json",
+    "audit/tsk-investigators-browser.json",
+    "audit/tsk-regression.json",
+    "audit/tsk-baseline.json"
+  ]
+}

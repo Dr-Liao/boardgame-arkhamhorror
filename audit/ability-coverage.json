@@ -6,22 +6,22 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 908,
-    "descriptorAbilities": 1242,
+    "descriptorEntries": 927,
+    "descriptorAbilities": 1269,
     "abilityKinds": 12,
-    "windows": 113,
+    "windows": 115,
     "effectPrimitives": 56,
-    "nonPlayerCards": 277,
-    "behaviorLines": 33475,
+    "nonPlayerCards": 278,
+    "behaviorLines": 33462,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 908,
+    "descriptor": 927,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 87,
+      "enemy": 88,
       "location": 102,
       "storyAsset": 47,
       "treachery": 14,
@@ -303,12 +303,13 @@
       "08735",
       "08736",
       "08738",
+      "09010",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew"
     ],
-    "abilities": 288,
+    "abilities": 289,
     "modifiers": 100
   },
   "declaration": {
@@ -374,7 +375,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 33475,
+    "behaviorLines": 33462,
     "declaredScenarios": 3
   },
   "cards": [
@@ -4941,6 +4942,101 @@
       "code": "08133",
       "channel": "descriptor",
       "descriptors": 2
+    },
+    {
+      "code": "09001",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "09002",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "09003",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "09004",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09005",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "09006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09007",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "09008",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "09009",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09011",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "09012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09014",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09015",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "09016",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "09017",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09018",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "09019",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "09020",
+      "channel": "descriptor",
+      "descriptors": 1
     }
   ]
 }

@@ -5,6 +5,14 @@ import { effectiveFloodLevel } from '../engine/flood.js'
 import { vehicleAccessError, vehicleName } from '../engine/vehicles.js'
 import { FROST_POOL_LIMIT, frostPoolCount } from '../engine/frost.js'
 import { eoteCampaignState, eoteScenarioState } from '../engine/eote-state.js'
+// 八循环《绯红密钥》P4 交互投影（只暴露公开信息与「本人可见」的私有信息）。
+import { concealedProjection } from '../engine/tsk-concealed.js'
+import { hollowCards, hollowCount } from '../engine/tsk-hollow.js'
+import { scarletKeys } from '../engine/tsk-scarlet-keys.js'
+import { forcedDestination } from '../engine/tsk-map.js'
+import { customizationLevel } from '../engine/tsk-customizable.js'
+import { crossSeatActionPending } from '../engine/tsk-investigator.js'
+import { tskCampaignState, tskScenarioState } from '../engine/tsk-state.js'
 
 // 七循环《地球边缘》交互投影：只暴露桌面公开信息与「本人可见」的私有信息。
 // 口径：
@@ -85,10 +93,84 @@ function eoteView(state, data, observer) {
   return eote
 }
 
+// 八循环《绯红密钥》P4 交互投影：
+//   · concealed 只给位置与「是否可见」，未揭露/未合法获知的迷你卡不出现 kind/decoy（真身隐私）；
+//   · keys 是公开信息（持有者与当前面）；hollows 是公开的场外区（卡号不隐藏真身，只登记归属口径）；
+//   · map / statusReports / dossiers 只给公开读数：地图不传图结构，密档只给已解锁/已读 key，绝不传正文；
+//   · customizations 只给 observer 本人（他人勾选属于私有构筑信息）；
+//   · crossSeat 只给被授权的调查员本人；
+//   · 异界牌库顺序永不投影（view.scenarioDecks 只有张数）。
+function tskView(state, observer) {
+  const scenario = tskScenarioState(state)
+  const campaign = tskCampaignState(state)
+  if (!scenario && !campaign) return null
+  const tsk = {}
+  const concealed = concealedProjection(state)
+  if (concealed.length) tsk.concealed = concealed
+  const keys = scarletKeys(state)
+  if (keys.length) {
+    tsk.keys = keys.map(record => ({
+      id: record.id,
+      face: record.stable ? record.stableFace : record.unstableFace,
+      stable: record.stable,
+      holder: { ...record.bearer },
+      shiftedThisRound: record.shiftedRound === (Number.isSafeInteger(state.round) ? state.round : 0),
+    }))
+  }
+  const hollows = hollowCards(state)
+  if (hollows.length) {
+    tsk.hollows = {
+      count: hollowCount(state, { scope: 'team' }),
+      cards: hollows.map(card => ({ code: card.code, scope: card.scope, seat: card.seat })),
+    }
+  }
+  const map = campaign?.map
+  if (map) {
+    tsk.map = {
+      current: map.current,
+      time: map.time,
+      unlocked: [...map.unlocked],
+      forced: forcedDestination(state),
+    }
+  }
+  const status = campaign?.statusReports
+  if (status) {
+    tsk.statusReports = {
+      triggered: [...(status.triggered || [])],
+      pending: [...(status.pending || [])],
+      theta: status.theta ?? null,
+      psi: status.psi ?? null,
+    }
+  }
+  const dossiers = campaign?.dossiers
+  if (dossiers) tsk.dossiers = { unlocked: [...(dossiers.unlocked || [])], read: [...(dossiers.read || [])] }
+  if (Number.isSafeInteger(observer)) {
+    const seatTable = campaign?.customizations?.bySeat?.[observer]
+    if (seatTable && Object.keys(seatTable).length) {
+      tsk.customizations = Object.entries(seatTable).map(([code, checked]) => ({
+        code, checked: [...checked], level: customizationLevel(checked),
+      }))
+    }
+    const pending = crossSeatActionPending(state, observer)
+    if (pending) tsk.crossSeat = [pending]
+    // 授权者本人也看到自己发出的授权（公开的桌面信息：谁授权了谁）。
+    const grants = scenario?.crossSeat?.grants || {}
+    const outgoing = Object.entries(grants).flatMap(([targetKey, entries]) => {
+      const targetSeat = Number(targetKey)
+      if (!Number.isSafeInteger(targetSeat)) return []
+      return (entries || []).filter(entry => !entry.used && entry.from === observer)
+        .map(entry => ({ targetSeat, from: entry.from, round: entry.round, used: false }))
+    })
+    if (outgoing.length) tsk.crossSeat = [...(tsk.crossSeat || []), ...outgoing]
+  }
+  return Object.keys(tsk).length ? tsk : null
+}
+
 export function mechanicView(state, observer = null) {
   const data = mechanicState(state)
   const eote = eoteView(state, data, observer)
-  if (!data && !state.skillTest?.tokenResults?.length && !eote) return null
+  const tsk = tskView(state, observer)
+  if (!data && !state.skillTest?.tokenResults?.length && !eote && !tsk) return null
   const revealed = state.skillTest && (state.skillTest.helpRequested || state.skillTest.seat === observer)
     ? (state.chaos?.revealed || []).flatMap((face, index) => {
       if (index < (state.chaos?.frames?.at(-1) || 0)) return []
@@ -130,6 +212,7 @@ export function mechanicView(state, observer = null) {
       ...(Number(seat) === observer || isPublicBeneath(state, Number(seat), host) ? { codes: [...cards] } : {}) })))
   if (revealed?.length) view.tokens = revealed.map(({ index, face, as, modifier, cancelled }) => ({ index, face, as, modifier, cancelled: !!cancelled }))
   if (eote) view.eote = eote
+  if (tsk) view.tsk = tsk
   return Object.keys(view).length ? view : null
 }
 
@@ -150,6 +233,16 @@ export function maskMechanicSnapshot(model, observer) {
       copy.eote.crossSeat = copy.eote.crossSeat.filter(item => item.seat === observer)
       if (!copy.eote.crossSeat.length) delete copy.eote.crossSeat
     }
+  }
+  // TSK：本人勾选与本人授权不进其他座位的快照；密钥/空洞/地图/密档 key 是公开信息保持原样，
+  // 未揭露迷你卡在投影阶段就已删除身份字段（快照再复制也不会泄露）。
+  if (copy.tsk) {
+    delete copy.tsk.customizations
+    if (Array.isArray(copy.tsk.crossSeat)) {
+      copy.tsk.crossSeat = copy.tsk.crossSeat.filter(item => item.targetSeat === observer)
+      if (!copy.tsk.crossSeat.length) delete copy.tsk.crossSeat
+    }
+    if (!Object.keys(copy.tsk).length) delete copy.tsk
   }
   return copy
 }

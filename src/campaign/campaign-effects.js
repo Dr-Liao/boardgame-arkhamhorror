@@ -310,6 +310,12 @@ function applyOutOfBodyProcess(state, effect, log) {
   if (yithian.length) {
     campaign.ruleFlags ||= {}
     campaign.ruleFlags.yithianBodySeats = yithian
+    // 引擎读点：换身记录。幕间四之后这些调查员在战役余下时间都要使用伊斯人身体调查员卡，
+    // 每一关开局由 startScenario 重新套用（src/engine/setup.js#applyCampaignInvestigatorForms）。
+    if (effect.yithianBody) {
+      campaign.ruleFlags.investigatorForms ||= {}
+      for (const seat of yithian) campaign.ruleFlags.investigatorForms[seat] = { code: effect.yithianBody, form: 'yithian' }
+    }
     if (effect.yithianBody) log(`🧬 这些调查员在本战役余下时间使用「${ALL_CARDS[effect.yithianBody]?.nameZh || effect.yithianBody}」：${yithian.map(seat => recordLabelOf(campaign, seat)).join('、')}。`)
   }
 }

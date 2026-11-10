@@ -154,7 +154,8 @@ function eoteManifest() {
 /** 记录节点类型列表可被内容注册表/文档引用（P2 catalog 的 readPoint）。 */
 test('flows：节点类型清单导出且冻结，EotE 流程图注册通过', () => {
   assert.ok(Object.isFrozen(STRUCTURAL_NODE_TYPES) && Object.isFrozen(BRANCH_NODE_TYPES))
-  assert.deepEqual([...STRUCTURAL_NODE_TYPES], ['scenario', 'story', 'choice', 'branch', 'partGate', 'stepReturn', 'interlude', 'checkpoint', 'end'])
+  // 八循环 TSK P2 扩展：新增 `map` 节点（世界地图启程段，由战役行为接管）；EotE 图形状不变。
+  assert.deepEqual([...STRUCTURAL_NODE_TYPES], ['scenario', 'story', 'choice', 'branch', 'partGate', 'stepReturn', 'interlude', 'checkpoint', 'map', 'end'])
   assert.deepEqual([...BRANCH_NODE_TYPES], ['choice', 'branch', 'partGate'])
   const graph = validateCampaignGraph(eoteManifest())
   assert.equal(graph.start, 'prologue')

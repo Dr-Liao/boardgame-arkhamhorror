@@ -45,6 +45,8 @@ for (const [id, label, kind] of [
   ['enemyReadied', '敌人重整后', 'reaction'],
   ['afterAlarmRaised', '警报等级提高后', 'reaction'],
   ['evadeSuccess', '躲避成功后', 'reaction'],
+  ['assetExhausted', '支援被横置后', 'reaction'],
+  ['damageHealed', '伤害被治疗后', 'reaction'],
   ['evadeFail', '躲避失败后', 'reaction'],
   ['attackFail', '攻击失败后', 'reaction'],
   ['activateFirearmFight', '使用枪械攻击时', 'reaction'],

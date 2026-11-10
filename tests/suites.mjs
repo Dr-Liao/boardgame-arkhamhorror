@@ -95,6 +95,23 @@ export const FAST_TESTS = Object.freeze([
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',
   'tic-migration.test.mjs',
   'eote-migration.test.mjs', // 七循环 P0：范围账本 / 原始基线 / catalog-only 注册 / 遭遇组分片
+  'tsk-migration.test.mjs', // 八循环 P0/P1/P2：范围账本 / 基线 / 机制扫描 / 原语计划
+  // P2（八循环通用原语）：七组原语的正常/负面/JSON 往返/读档校验；只验证原语，不认证卡牌行为。
+  'tsk-primitives-state.test.mjs', 'tsk-primitives-concealed.test.mjs',
+  'tsk-primitives-keys-hollow.test.mjs', 'tsk-primitives-map.test.mjs',
+  'tsk-primitives-customizable.test.mjs', 'tsk-primitives-coterie-investigator.test.mjs',
+  // P3（八循环关键词与规则书）：29 个关键词 / 17 条双语规则 / 439 卡文直达 / 审计账本与浏览器验收。
+  'tsk-rules.test.mjs',
+  // P4（八循环交互）：6 组交互事务的合法/非法/取消/空候选与隐私投影；浏览器验收见 audit/tsk-interactions.json。
+  'tsk-interactions.test.mjs',
+  // P5（八循环调查员）：六人能力/旧印/构筑 + 14 张专属依赖。
+  'tsk-investigator-09001.test.mjs',
+  'tsk-investigator-09004.test.mjs',
+  'tsk-investigator-09008.test.mjs',
+  'tsk-investigator-09011.test.mjs',
+  'tsk-investigator-09015.test.mjs',
+  'tsk-investigator-09018.test.mjs',
+  'tsk-investigator-signatures.test.mjs',
   // P2（七循环通用原语）：六组原语的正常/负面/JSON 往返/注册校验；只验证原语，不认证卡牌行为。
   'eote-primitives-frost.test.mjs', 'eote-primitives-campaign.test.mjs', 'eote-primitives-flow.test.mjs',
   'eote-primitives-geo.test.mjs', 'eote-primitives-travel.test.mjs', 'eote-primitives-investigator.test.mjs',

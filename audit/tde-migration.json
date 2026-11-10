@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "c2885ec31be3e2cf0458a23e6e7bbab6d4c92f756ffddff2b5f65c0010be6c8b"
+      "sha256": "dc8c8d7ce739fa7990268fcd4b85a344295432f132ac328197c6a692afe8e339"
     },
     {
       "path": "content/registry.js",
@@ -1449,7 +1449,7 @@
     },
     {
       "path": "web/rulebook-data.js",
-      "sha256": "5bc1e72d707b4ceb44496f7872fc508eec17f75cf53dc9200ea97aa3a5d93e8c"
+      "sha256": "38f5874a92f33cd3b54d94132e392ce5ff42970dccd502f53a936685083e5b59"
     },
     {
       "path": "web/ui-cards.js",
@@ -1469,7 +1469,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
+      "sha256": "fcc043d9f097f6f5140f8cef357f09e1c4045cf72c54892e5a01d5c2b42d852d"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",

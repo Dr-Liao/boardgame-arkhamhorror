@@ -1,3 +1,4 @@
+import { resetTskTurnTracking } from './tsk-investigator-support.js'
 import { hunterRouteCandidates } from './enemy-routes.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
@@ -508,6 +509,7 @@ function turnBeginningWindow(state, events) {
   if (inv) {
     inv.turnEnded = false
     inv.actionsTakenThisTurn = 0
+    resetTskTurnTracking(state, inv)
     for (const asset of inv.assets) delete asset.restrictedActionSpent
     // 第 5 步 P6：回合开始时清理上一回合的「法术专用额外行动」授权，再按当前毁灭标记重新授权，
     // 资源寄存支援的「放置 4 资源」也在这里结算（都是「在你的回合开始时」）。

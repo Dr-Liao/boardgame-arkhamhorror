@@ -222,7 +222,7 @@ export function createAssets(deps) {
       // 平时打出单手武器不能因为这个惩罚把空着的另一只手当成已满。
       if (s === 'hand' && inv.handPenaltyActive) cap -= inv.handSlotsPenalty || 0
       // 通用额外槽：add:slot / slot:<slot> 修正（如 02158 魅力超凡、05283 安娜的塔罗槽）。
-      cap += slotBonus(inv, s)
+      cap += slotBonus(inv, s) + (Number(registeredEntry(inv.code)?.investigator?.extraSlots?.[s]) || 0)
       // 受限额外槽的唯一读点：restrictedSlots（书位 / 武器位 / 法术位 / 非独特盟友槽）。
       // 容量只给命中谓词的候选；受限占用不占普通槽，因此还要从普通占用里扣掉 occupancy
       // （同时覆盖「候选卡是受限类型」与「在场受限卡可移入受限槽、把普通槽让给候选」）。

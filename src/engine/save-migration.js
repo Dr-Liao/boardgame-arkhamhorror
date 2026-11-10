@@ -8,6 +8,7 @@ import { validateMechanicState } from './mechanic-state.js'
 import { validateInvestigatorMechanics } from './investigator-mechanics.js'
 import { validateEoteState } from './eote-primitives.js'
 import { validateEotePlayerPrimitives } from './effect-state.js'
+import { validateTskState } from './tsk-primitives.js'
 // 存档向下兼容与修复。
 //
 // 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
@@ -302,8 +303,9 @@ function needsCardModelRepair(state) {
 // Repair both the live runtime and its transaction base so a resumed choice cannot restore obsolete physical cards.
 export function repairRuntimeCardModels(state, changes = []) {
   if (scenarioBehavior(state).needsSaveRepair?.(state)) {
+    // 修复说明由剧本提供（例如天机之城的换身补齐）；没有提供时沿用旧文案。
+    changes.push(scenarioBehavior(state).saveRepairNote || '恢复场外全局牌的实际实例与旋转角度')
     scenarioBehavior(state).repairSavedState(state,scenarioRuntime(state,[]))
-    changes.push('恢复场外全局牌的实际实例与旋转角度')
   }
   if (Array.isArray(state.scenarioFlags?.agendaAside) && state.scenarioFlags.agendaAside.length) {
     state.agendaAside ||= []
@@ -424,8 +426,11 @@ export function migrateState(state, { force = false, migrations = STATE_MIGRATIO
   validateEoteState(state)
   // P6：玩家卡原语的纯 JSON 归属记录（跨座位手牌转移等）。
   validateEotePlayerPrimitives(state)
+  // 八循环 P2：TSK 可选扩展（scenarioFlags.mechanics.tsk / campaign.tsk / 既有 mechanicState 的
+  // 场景扩展）。旧存档没有这些键时各校验直接跳过，字节不变。
+  validateTskState(state)
   for (const saved of [state.continuation?.base, ...parallelLaneEntries(state).map(([, lane]) => lane)].filter(Boolean)) {
-    validateDraftState(saved); validateMechanicState(saved); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved)
+    validateDraftState(saved); validateMechanicState(saved); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved); validateTskState(saved)
   }
   const lanes = parallelLaneEntries(state)
   const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))

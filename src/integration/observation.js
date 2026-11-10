@@ -19,6 +19,8 @@ import { campaignProjection } from '../cards/campaign-view.js'
 import { scenarioInteractionsView } from './scenario-interactions.js'
 import { scenarioGuide, scenarioSetupText } from '../../content/scenario-guides.js'
 import { mechanicView } from './mechanic-view.js'
+// 八循环 P2：隐匿迷你卡的观察投影（未翻面/未合法获知时不泄露真身或诱饵身份）。
+import { concealedProjection } from '../engine/tsk-concealed.js'
 // TIC 捕获/押送：被俘是**公开信息**（桌面上把迷你卡侧放），观察投影按座位派生后下发，
 // 不写入 inv（见 src/engine/capture.js 的存储说明）。
 import { capturedLocation, isCaptured } from '../engine/capture.js'
@@ -236,6 +238,9 @@ export function viewState(state, observerSeat = null, options = {}) {
   if (scenarioInteractions) view.scenarioInteractions = scenarioInteractions
   const mechanics = mechanicView(state, observer)
   if (mechanics) view.mechanics = mechanics
+  // 八循环 P2：隐匿迷你卡只投影位置与数量；真身/诱饵身份只有已翻面或合法获知的卡才下发。
+  const concealed = concealedProjection(state)
+  if (concealed.length) view.concealedMiniCards = concealed
   view.scenarioFlagsPublic = Object.fromEntries(PUBLIC_SCENARIO_FLAGS
     .filter(key => state.scenarioFlags?.[key] != null)
     .map(key => [key, state.scenarioFlags[key]]))

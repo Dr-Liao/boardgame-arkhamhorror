@@ -9,7 +9,9 @@ import { cardDef } from './card-lookup.js'
 
 export const MECHANIC_OPERATIONS = Object.freeze(['seal', 'release', 'claimKey', 'giveKeys', 'spendKey', 'enterVehicle', 'leaveVehicle', 'driveVehicle', 'commitOrigin', 'returnCommitment',
   // P4 七循环《地球边缘》交互事务：寒霜 / 伙伴 / 封印 / 城市钥匙 / 忒咳哩-哩 / 牌库顶 / 跨座位代打 / 演武 / 物资。
-  'eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply'])
+  'eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply',
+  // P4 八循环《绯红密钥》交互事务：隐匿揭露 / 密钥变换转移 / 空洞回收 / 世界地图启程 / 定制勾选 / 跨座位即时行动。
+  'tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat'])
 export function selectMechanic(state, seat, { operation, prompt, candidates, min = 1, max = 1, optional = true, source = null, stage = 'items' }) {
   investigatorAt(state, seat)
   if (!MECHANIC_OPERATIONS.includes(operation) || !Array.isArray(candidates)

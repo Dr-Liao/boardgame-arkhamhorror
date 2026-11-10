@@ -18,9 +18,13 @@ import {
   isStoryInvestigator, normalizeStoryInvestigatorConfig, prepareStoryInvestigator,
   restoreStoryInvestigators, selectStoryInvestigators, storyInvestigatorSetupCards,
 } from './story-investigators.js'
+import {
+  applyInvestigatorForm, campaignInvestigatorForms, restoreInvestigatorForms,
+} from './investigator-form.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
+import { runTskInvestigatorSetup } from './tsk-investigator-support.js'
 import { contentRegistry } from '../../content/registered.js'
 import {
   CARD_POOL_SCOPE_LABELS, allowsCard, cardPoolContext, normalizeCardPoolScope,
@@ -355,6 +359,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   }
   // P5 地球边缘：陈丽丽开局演武状态 / 诺曼牌库顶常驻揭示（只对声明者生效）。
   initBeginGameDisciplines(state, inv)
+  runTskInvestigatorSetup(state, inv, { executeDescriptor, events })
   syncPassiveDeckTop(state, inv.seat)
   // 开局就带在身上的支援（签名卡 / 永久卡）也计入额外行动；上一关的资产已在上面清空，
   // 因此这里只会读到本关真实在场的卡。
@@ -385,6 +390,21 @@ function completeStartingHand(state, inv, events) {
   consumeStartingAdjustments(state, inv, events)
   if ((trauma.physical || 0) > 0 || (trauma.mental || 0) > 0) {
     info(state, events, `${inv.name} 因创伤以 ${inv.damage} 点伤害、${inv.horror} 点恐惧开始本关；生命与理智上限不变。`)
+  }
+}
+
+// 战役记录要求「余下时间继续换身」的座位（失落的时代幕间四）：在 prepareInvestigator 按原卡
+// 重建完牌库/属性之后，再把卡面身份换成身体卡。记录由战役效果写进
+// campaign.ruleFlags.investigatorForms，形状见 investigator-form.js。
+function applyCampaignInvestigatorForms(state, events) {
+  const forms = campaignInvestigatorForms(state.campaign)
+  if (!forms) return
+  for (const inv of state.investigators) {
+    const spec = forms[inv.seat]
+    if (!spec || inv.form) continue
+    const originalName = inv.name
+    applyInvestigatorForm(state, inv, spec)
+    info(state, events, `🧠 ${originalName} 仍在「${inv.name}」里：本关继续使用这张调查员卡（原卡文本不可用）。`)
   }
 }
 
@@ -705,6 +725,12 @@ function startScenario(state, index, events) {
   // 放在 returnAllBonded 之后：绑定副本会从 removedFromGame 等区域回收。
   clearScenarioSceneLeftovers(state)
 
+  // 调查员「换身」（04244 伊斯人身体）只在关卡内有效：先把上一关的身体还回原本的调查员，
+  // 再在下面 prepareInvestigator 之后按战役记录重新套用需要延续的换身。
+  // 必须在故事调查员选人之前还原：故事调查员的选人会改写 inv.code/name。
+  const restoredForms = restoreInvestigatorForms(state)
+  if (restoredForms) info(state, events, `🧠 换身结束：${restoredForms} 位调查员的意识回到了原本的身体。`)
+
   // 第 2 步 P2.6：故事调查员——本章声明了就选人（每座位各选一次，其余划掉），
   // 没有声明就换回原本的调查员；两者都必须在 prepareInvestigator 之前完成。
   if (sc.storyInvestigators) {
@@ -741,6 +767,9 @@ function startScenario(state, index, events) {
   for (const inv of state.investigators) {
     prepareInvestigator(state, inv, events, startLoc, { deferOpeningHand:deferOpeningHands })
   }
+  // 战役要求延续的换身（幕间四：困在伊斯人身体里的调查员）：在牌库/属性按原卡重建之后再套用，
+  // 这样牌组仍按战役记录构建，只有卡面身份与技能/生命理智换成身体卡。
+  applyCampaignInvestigatorForms(state, events)
 
   // state.cards 是给前端的派生展示表（不进重放指纹），只在开局/读档时重建；而幕间奖励的
   // 剧情卡（如 02040 亨利·阿米蒂奇博士）是在开局之后才进牌组的。这里不补的话，前端拿不到

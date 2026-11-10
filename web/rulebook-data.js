@@ -2,6 +2,7 @@
 import { UI_CARDS } from './ui-cards.js'
 import { TIC_RULES, ticCardRuleIds } from './tic-rules.js'
 import { EOTE_RULES, eoteCardRuleIds } from './eote-rules.js'
+import { TSK_RULES, tskCardRuleIds } from './tsk-rules.js'
 
 // 规则书正文只写规则本身：基础规则置顶，关键词与战役条目均不写引擎、实现或界面操作。
 // 来源：官方 Learn to Play / Rules Reference（RULE_SOURCES 与 ArkhamDB 规则全文），按当前收录内容整理。
@@ -113,6 +114,7 @@ export const RULES = [
   entry("tdeLocationDoom","地点上的毁灭（Location Doom）","食梦者",["地点上的毁灭","地点毁灭","Location Doom","大网毁灭","毁灭标记"],["《编织宇宙》的大网地点会累积毁灭标记：进入时检定失败、调查阶段结束时、把调查费用换成毁灭、织网者每轮结束，以及部分诡计都会放置毁灭。","地点上的毁灭是毁灭：它计入议程阈值，也可能让当前议程推进。","该章骷髅符号的负值等于场上单个地点上的最高毁灭数（困难与专家改为全部地点毁灭之和）。","石板符号可以移除你所在地点的 1 个毁灭。地点不会因为毁灭而离场，本循环也没有「毁灭达到阈值就移除地点」的规则。","地点离场时，其上的毁灭随地点一起移除，除非卡面另有说明。"],["doom","tdeCampaign","tdeChaos","tdeWebOfDreams"]),
   ...TIC_RULES,
   ...EOTE_RULES,
+  ...TSK_RULES,
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 export const DEFAULT_RULE_ID = 'basics'
@@ -162,6 +164,13 @@ const RULE_PINYIN = {
   eoteBroken:'yanwushuangmian', eoteEidolon:'huanling', eoteAncientOne:'gushen',
   eotePossessed:'fushen', eoteObjective:'mubiao', eoteResign:'chetui',
   eoteMulticlass:'duozhijiegouzhu', eoteDiscipline:'yanwu',
+  tskCampaign:'feihongmiyaozhanyigailan', tskChaos:'hunluandaiyubiaoji',
+  tskMap:'shijieditiyushijianbiaoji', tskStatusReports:'zhuangkuangbaogao',
+  tskConcealed:'yinyingyuyinniminka', tskHollow:'kongdongyucunzaimochu',
+  tskKeys:'feihongmiyao', tskShift:'bianhuan', tskCustomizable:'dingzhishengjika',
+  tskCoterie:'hongsetongzhihui', tskPatrol:'xunluo', tskOtherworld:'yijie',
+  tskDossiers:'ditimidan', tskInvestigator:'diaochayuanteshuxingdongyubiaoji',
+  tskObjective:'mubiao', tskResign:'chetui', tskBonded:'bangding',
 }
 export const RULE_INDEX = RULES.map(rule => ({...rule, sortKey:RULE_PINYIN[rule.id] || rule.sortKey, initial:(RULE_PINYIN[rule.id] || rule.sortKey)[0].toUpperCase()}))
   .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0) || a.sortKey.localeCompare(b.sortKey,'en'))
@@ -209,6 +218,7 @@ function scenarioCardRuleIds(card) {
   if (/^06\d{3}[a-z]?$/.test(code)) return tdeCardRuleIds(card)
   if (/^07\d{3}[a-z]?$/.test(code)) return ticCardRuleIds(card)
   if (/^08\d{3}[a-z]?$/.test(code)) return eoteCardRuleIds(card)
+  if (/^09\d{3}[a-z]?$/.test(code)) return tskCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']

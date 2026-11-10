@@ -105,3 +105,18 @@ export function planAssetFaceFlip(entity,nextCode,{definitionFor,pairs=null}={})
   }
   return planPhysicalFace(entity,nextCode,{kind:'asset',definitionFor:definition})
 }
+
+// 八循环 P2：非在场实体的双面记录（绯红密钥存在战役扩展里，不占 state.assets/enemies）。
+// 只做「这一对印刷面是否被声明为同一张卡的两面」的校验与取反，写入由调用方完成：
+//   nextPrintedFace(state, { from, faces }) —— faces 必须是两个不同的面标识，from 必须是其中之一，
+//   返回另一个面；否则抛错（fail closed，不允许静默翻到未声明面）。
+export function nextPrintedFace(state,{from,faces}={}) {
+  void state
+  if(typeof from!=='string'||!from)throw new TypeError('Printed face flip requires the current face')
+  if(!Array.isArray(faces)||faces.length!==2||faces.some(face=>typeof face!=='string'||!face))throw new TypeError('Printed faces must be a two-string pair')
+  const [a,b]=faces
+  if(a===b)throw new TypeError('Printed face pair must differ')
+  if(from!==a&&from!==b)throw new TypeError('Current face is not part of the declared pair')
+  return from===a?b:a
+}
+

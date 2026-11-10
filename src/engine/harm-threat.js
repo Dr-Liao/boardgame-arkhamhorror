@@ -708,9 +708,35 @@ export function createHarmThreat(deps) {
   //   · owner.threat 里声明 `flags.threatDamageSink` 的威胁卡承接本次治疗
   //     （counters 归零时 removeThreat 并弃掉）；`options.ignoreSink` 可跳过承接；
   //   · 没有承接时按原逻辑扣 target.damage。
+  //   · 八循环 P2：真正治疗 ≥1 点时开 `damageHealed` 窗口（文森特等「伤害被治愈后」读点），
+  //     治疗者可显式指定（healerSeat），同一帧内的追加治疗走 extendHealDamage 不重开窗口。
   // 说明：条目的 `threatDamageSink` 会在注册期被 ability.js 拒绝（白名单暂无该键），
   // 所以本原语的声明口径是通用 `flags.threatDamageSink: true`（flags 本身已白名单透传），
   // worker 只需把字段写进 flags。
+  let damageHealFrame = null
+
+  function extendHealDamage(state, seat, amount, events = []) {
+    const extra = Math.max(0, Math.floor(Number(amount) || 0))
+    if (!damageHealFrame || extra <= 0) return 0
+    if (Number.isInteger(seat) && damageHealFrame.seat !== seat) return 0
+    let healed = 0
+    if (damageHealFrame.useSink && damageHealFrame.sink && (damageHealFrame.sink.counters || 0) > 0) {
+      healed = Math.min(damageHealFrame.sink.counters, extra)
+      damageHealFrame.sink.counters -= healed
+      info(state, events, `💚 追加治疗「${cardName(damageHealFrame.sink.code)}」上的 ${healed} 点伤害。`)
+      if (!damageHealFrame.sink.counters) removeThreat(state, damageHealFrame.owner, damageHealFrame.sink, events)
+    } else if (damageHealFrame.target) {
+      const before = damageHealFrame.target.damage || 0
+      healed = Math.min(before, extra)
+      if (healed > 0) {
+        damageHealFrame.target.damage = before - healed
+        info(state, events, `💚 追加治疗 ${healed} 点伤害。`)
+      }
+    }
+    damageHealFrame.context.amount = (damageHealFrame.context.amount || 0) + healed
+    return healed
+  }
+
   function healDamageFrom(state, target, amount, events, options = {}) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
@@ -718,6 +744,7 @@ export function createHarmThreat(deps) {
     if (isInvestigator && !playerEffectCanAffect(state, target.seat)) return 0
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
+    const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
     const sink = (owner.threat || []).find(card => registeredEntry(card.code)?.flags?.threatDamageSink === true)
     if (sink && !options.ignoreSink && (sink.counters || 0) > 0) {
       const healed = Math.min(sink.counters, healedAmount)
@@ -727,6 +754,7 @@ export function createHarmThreat(deps) {
         removeThreat(state, owner, sink, events)
         if (options.log !== false) info(state, events, `「${cardName(sink.code)}」上的伤害被治愈，弃掉它。`)
       }
+      if (healed > 0) openDamageHealedWindow(state, events, healed, true, { healerSeat, owner, target, sink, isInvestigator, options })
       return healed
     }
     const before = target.damage || 0
@@ -736,7 +764,29 @@ export function createHarmThreat(deps) {
     if (options.log !== false) {
       info(state, events, `💚 ${isInvestigator ? target.name : `${owner.name} 的「${cardName(target.code)}」`} 治疗了 ${healed} 点伤害。`)
     }
+    openDamageHealedWindow(state, events, healed, false, { healerSeat, owner, target, sink: null, isInvestigator, options })
     return healed
+  }
+
+  function openDamageHealedWindow(state, events, amountHealed, usedSink, { healerSeat, owner, target, sink, isInvestigator, options }) {
+    const context = {
+      when: 'damageHealed',
+      seat: healerSeat,
+      cardSeat: healerSeat,
+      location: owner.location,
+      cardCode: options.cardCode ?? state._resolvingCardCode ?? null,
+      healedSeat: owner.seat,
+      assetId: isInvestigator ? null : target.id,
+      amount: amountHealed,
+      prompt: `${owner.name} 的伤害被治疗 ${amountHealed} 点`,
+    }
+    const previousFrame = damageHealFrame
+    damageHealFrame = { seat: healerSeat, owner, target, sink: usedSink ? sink : null, useSink: usedSink, context }
+    try {
+      reactionWindow(state, 'damageHealed', context, events)
+    } finally {
+      damageHealFrame = previousFrame
+    }
   }
 
   function dukeInvestigate(state, seat, events, code = null) {
@@ -751,5 +801,5 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
 }

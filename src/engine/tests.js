@@ -19,6 +19,7 @@ import { nextInstanceId } from './rules-state.js'
 // 07185 的条目级标记读点（floodedAttackExtraTokenRule）是模块级函数，需要 ability.js 的注册表读法。
 import { registeredEntry } from './ability.js'
 import { applyPendingFlipAfterTests, noteRoundEvent, sampleRoundEvents } from './eote-investigator-support.js'
+import { noteCommitToOther } from './tsk-investigator-support.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
@@ -563,6 +564,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       notePromiseEvent(state, item.seat, 'commit', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
       commitProfile(item.code)?.onCommit?.({ state, inv: state.investigators[item.seat], source: item,
         test: state.skillTest, api: abilityApi(state, events) })
+      if (item.seat !== state.skillTest.seat) noteCommitToOther(state, state.investigators[item.seat])
     }
   }
   collectForcedCommitments()

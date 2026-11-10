@@ -22,6 +22,36 @@ export function orthogonalNeighbors(cells, cell) {
   if (![cell?.x, cell?.y].every(Number.isSafeInteger)) throw new TypeError('地图坐标必须为整数')
   return cells.filter(other => Math.abs(other.x - cell.x) + Math.abs(other.y - cell.y) === 1)
 }
+// 八循环 P2（世界地图）：0-1 加权最短距离。节点进入代价由 `enterCost(node)` 给出（绿地 0、普通 1），
+// 用 deque（按代价排序）保证「先扩展低代价」——不同于 shortestPaths 的逐跳口径。
+// 不可达返回 null；from/to 不存在抛 RangeError（不做静默 Infinity）。
+export function weightedDistance(nodes, from, to, enterCost = () => 1) {
+  if (!Array.isArray(nodes)) throw new TypeError('加权距离需要节点数组')
+  if (typeof enterCost !== 'function') throw new TypeError('enterCost 必须是函数')
+  const byId = new Map(nodes.map(node => [node?.id, node]))
+  if (!byId.has(from)) throw new RangeError(`未知加权距离起点 ${JSON.stringify(from)}`)
+  if (!byId.has(to)) throw new RangeError(`未知加权距离终点 ${JSON.stringify(to)}`)
+  const distances = new Map([...byId.keys()].map(id => [id, Infinity]))
+  distances.set(from, 0)
+  const queue = [[from, 0]]
+  while (queue.length) {
+    queue.sort((left, right) => left[1] - right[1])
+    const [current, cost] = queue.shift()
+    if (cost > distances.get(current)) continue
+    if (current === to) return cost
+    for (const next of byId.get(current).connections || []) {
+      if (!byId.has(next)) continue
+      const weight = enterCost(byId.get(next))
+      if (!Number.isFinite(weight) || weight < 0) throw new TypeError('加权距离的进入代价必须是非负有限数')
+      const nextCost = cost + weight
+      if (nextCost < distances.get(next)) {
+        distances.set(next, nextCost)
+        queue.push([next, nextCost])
+      }
+    }
+  }
+  return Number.isFinite(distances.get(to)) ? distances.get(to) : null
+}
 export function roadDistance(locations, from, to) { const path = shortestPaths(locations, from, to)[0]; return path ? path.length - 1 : Infinity }
 export function initializeRoad(state, { deck, detours = [], columns }) {
   if (!Array.isArray(deck) || !Array.isArray(detours) || !columns || typeof columns !== 'object') throw new TypeError('无效道路牌库声明')

@@ -1,0 +1,1252 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "generatedBy": "tools/audit-tsk-primitives.mjs",
+  "readOnly": true,
+  "note": "只读原语目录：来自 P1 机制扫描 + P2 计划；内容层与测试可以引用 id，不得手改本文件。",
+  "entries": {
+    "core.effects": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/effects.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "ctx.api 常规效果（EFFECTS 56 条）"
+    },
+    "core.test": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/tests.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "技能检定管线（含 nextTestDifficultyReduction）"
+    },
+    "core.actions": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/actions.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "行动额度/额外行动"
+    },
+    "core.uses": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/uses.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "uses 账本"
+    },
+    "core.tokens": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/chaos-bag.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "混乱标记抽取/归还"
+    },
+    "core.modifiers": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/modifiers.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "持续修正管线（P2 新增外部修正源读点）"
+    },
+    "core.damageHorror": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/harm-threat.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "伤害/恐惧结算与治疗窗口"
+    },
+    "core.clues": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/api-clue.js",
+        "src/engine/locations.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "线索放置/发现"
+    },
+    "core.deck": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/deck/deckbuilding.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "构筑校验（P2 的 invalidCards 读点由 P6 接入）"
+    },
+    "core.enemy": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/enemies.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "敌人实体/关键词（hunter 等）"
+    },
+    "core.encounter": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/encounter.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "遭遇结算"
+    },
+    "core.victory": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/victory-destination.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "胜利区/胜利点数"
+    },
+    "core.windows": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/windows.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "时机窗口注册表（P2 新增 3 个窗口）"
+    },
+    "core.choices": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/mechanic-choices.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "待决选择事务"
+    },
+    "core.records": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/campaign/campaign.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "战役记录读写"
+    },
+    "core.recordCount": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/campaign/record-sets.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "集合记录（P2 的禁用名单使用战役扩展容器）"
+    },
+    "core.campaignFlow": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/campaign/campaign-flow.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "战役流程图（P2 新增 map 节点类型）"
+    },
+    "core.scenarioDecks": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/scenario-decks.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "剧本牌库（P2 新增顶牌顺序读点）"
+    },
+    "core.hiddenInfo": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/integration/observation.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "观察投影基础设施"
+    },
+    "core.physicalFaces": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/physical-faces.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "双面物理卡换面（P2 新增 nextPrintedFace）"
+    },
+    "core.zones": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/zones.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "区域移动"
+    },
+    "core.markerCount": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/card-counters.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "具名计数器（P2 扩展 evidence/hollow）"
+    },
+    "core.playChannels": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/play-channels.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "打出通道/跨座位代打"
+    },
+    "core.mapGraph": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/map-graph.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "图查询（P2 新增 0-1 加权距离）"
+    },
+    "core.parley": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/parley.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "谈判"
+    },
+    "core.bonded": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/bonded.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "羁绊牌"
+    },
+    "core.investigatorAbility": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/cards/card-rules.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "调查员能力规则读点"
+    },
+    "core.assetSlots": {
+      "kind": "reuse",
+      "phase": "reuse",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/modifiers.js"
+      ],
+      "exports": [],
+      "tests": [],
+      "api": "槽位修正（add:slot / slot:*）"
+    },
+    "extend.cardCounters": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/card-counters.js",
+        "src/engine/tsk-hollow.js",
+        "src/engine/tsk-investigator.js"
+      ],
+      "exports": [
+        "assertCardCounterId",
+        "addCardCounter",
+        "cardCounterOf",
+        "totalCardCounters",
+        "addEvidence",
+        "evidenceOf",
+        "spendEvidence",
+        "totalEvidence"
+      ],
+      "tests": [
+        "tests/tsk-primitives-state.test.mjs",
+        "tests/tsk-primitives-keys-hollow.test.mjs",
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.investigator.evidence* / 既有 api.addCardCounter"
+    },
+    "extend.campaignFlow": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/campaign/campaign-flow.js"
+      ],
+      "exports": [
+        "STRUCTURAL_NODE_TYPES",
+        "validateCampaignGraph",
+        "walkCampaign"
+      ],
+      "tests": [
+        "tests/tsk-primitives-state.test.mjs"
+      ],
+      "api": "战役图 `map` 节点（世界地图启程段）"
+    },
+    "extend.hiddenInfo": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js",
+        "src/integration/observation.js"
+      ],
+      "exports": [
+        "concealedProjection",
+        "viewState",
+        "validateTskConcealed"
+      ],
+      "tests": [
+        "tests/tsk-primitives-state.test.mjs",
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "view.concealedMiniCards / ctx.api.tsk.concealed.projection"
+    },
+    "extend.modifiers": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/modifiers.js"
+      ],
+      "exports": [
+        "registerModifierProvider",
+        "clearModifierProviders",
+        "externalModifierTotal",
+        "playCostDelta",
+        "statPipeline"
+      ],
+      "tests": [
+        "tests/tsk-primitives-customizable.test.mjs"
+      ],
+      "api": "外部修正源（定制勾选/减费等数据驱动注册）"
+    },
+    "extend.costDiscount": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/modifiers.js",
+        "src/engine/tsk-customizable.js"
+      ],
+      "exports": [
+        "playCostDelta",
+        "customizationPlayCostDelta",
+        "registerCustomizationEffects"
+      ],
+      "tests": [
+        "tests/tsk-primitives-customizable.test.mjs"
+      ],
+      "api": "ctx.api.tsk.customizable.playCostDelta / 费用修正读点"
+    },
+    "extend.assetSlots": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/modifiers.js",
+        "src/engine/assets.js"
+      ],
+      "exports": [
+        "slotBonus",
+        "collectGrants"
+      ],
+      "tests": [],
+      "api": "既有 `add:slot` 授予与 slotBonus 读点已足够（查理/盟友槽位在内容层声明）"
+    },
+    "extend.scenarioDecks": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/scenario-decks.js"
+      ],
+      "exports": [
+        "createScenarioDeckApi",
+        "scenarioDeckTop",
+        "scenarioDeckReturnTop",
+        "scenarioDeckTotal"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.scenarioDecks.top/returnTop/total（异界牌库顺序）"
+    },
+    "extend.physicalFaces": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/physical-faces.js",
+        "src/engine/tsk-scarlet-keys.js"
+      ],
+      "exports": [
+        "nextPrintedFace",
+        "shiftKey",
+        "keyFace"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.keys.shift / nextPrintedFace 配对校验"
+    },
+    "extend.records": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-state.js",
+        "src/engine/tsk-coterie.js",
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "tskCampaignState",
+        "coterieSnapshot",
+        "erasedFromExistence",
+        "invalidCampaignCards"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs",
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "campaign.tsk 战役扩展容器（三池/抹除/禁用名单）"
+    },
+    "extend.choices": {
+      "kind": "extend",
+      "phase": "P2",
+      "classification": "extend",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js",
+        "src/engine/tsk-hollow.js",
+        "src/engine/tsk-scarlet-keys.js",
+        "src/engine/tsk-map.js",
+        "src/engine/tsk-coterie.js",
+        "src/engine/tsk-investigator.js"
+      ],
+      "exports": [
+        "concealedProjection",
+        "hollowChoices",
+        "keyChoices",
+        "mapChoices",
+        "patrolChoices",
+        "crossSeatChoices"
+      ],
+      "tests": [
+        "tests/tsk-primitives-state.test.mjs",
+        "tests/tsk-primitives-concealed.test.mjs",
+        "tests/tsk-primitives-keys-hollow.test.mjs",
+        "tests/tsk-primitives-map.test.mjs",
+        "tests/tsk-primitives-customizable.test.mjs",
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.*.choices（合法动作载荷，供 P4 交互面板）"
+    },
+    "new.concealedEntity": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "placeMiniCard",
+        "concealedMiniCards",
+        "concealedAt",
+        "concealedById"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.place/at/byId"
+    },
+    "new.concealedDistribution": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "distributeConcealed"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.distribute"
+    },
+    "new.concealedExpose": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "exposeMiniCard",
+        "flippedMiniCards"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.expose"
+    },
+    "new.concealedExposeRange": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "concealTargetScope"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.targetScope"
+    },
+    "new.shadowPositions": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "setInShadows",
+        "isInShadows",
+        "SHADOW_POSITIONS"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.inShadows/setInShadows"
+    },
+    "new.concealedRoundEnd": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "reshuffleConcealed"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "ctx.api.tsk.concealed.reshuffle"
+    },
+    "new.windowExposed": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js",
+        "src/engine/windows.js"
+      ],
+      "exports": [
+        "concealedProjection"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs"
+      ],
+      "api": "窗口 tskExposed（windows() 注册）"
+    },
+    "new.concealedIdentityProjection": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-concealed.js"
+      ],
+      "exports": [
+        "concealedProjection"
+      ],
+      "tests": [
+        "tests/tsk-primitives-concealed.test.mjs",
+        "tests/tsk-primitives-state.test.mjs"
+      ],
+      "api": "view.concealedMiniCards（真身/诱饵不出服务端）"
+    },
+    "new.hollowZone": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "hollowCard",
+        "hollowCards",
+        "isHollowed"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.hollow/cards"
+    },
+    "new.hollowCount": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "hollowCount"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.count"
+    },
+    "new.hollowCountModifierScope": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "hollowCount"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.count（scope=investigator/team）"
+    },
+    "new.erasedFromExistence": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "eraseFromExistence",
+        "erasedFromExistence",
+        "isErasedFromExistence"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.erase/erased"
+    },
+    "new.hollowRecall": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js"
+      ],
+      "exports": [
+        "recallHollow",
+        "shuffledHollowRecall"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.recall"
+    },
+    "new.scarletKeyEntity": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-scarlet-keys.js"
+      ],
+      "exports": [
+        "initializeScarletKeys",
+        "scarletKeys",
+        "scarletKey",
+        "keyFace"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.keys.initialize/all/get/face"
+    },
+    "new.keyShift": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-scarlet-keys.js"
+      ],
+      "exports": [
+        "shiftKey",
+        "keyShiftedThisRound"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.keys.shift/shiftedThisRound"
+    },
+    "new.keyBinding": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-scarlet-keys.js"
+      ],
+      "exports": [
+        "bindKey",
+        "keysHeldBy"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.keys.bind/heldBy"
+    },
+    "new.keySteal": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-scarlet-keys.js"
+      ],
+      "exports": [
+        "stealKey"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.keys.steal"
+    },
+    "new.worldMap": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "initializeWorldMap",
+        "worldMapState",
+        "currentMapNode",
+        "mapTime",
+        "mapVisited",
+        "mapUnlocked"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.*"
+    },
+    "new.travelTime": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js",
+        "src/engine/map-graph.js"
+      ],
+      "exports": [
+        "travelTimeCost",
+        "weightedDistance"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.travelCost"
+    },
+    "new.embarkChoice": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "embarkOptions",
+        "travelTo"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.embark/travel"
+    },
+    "new.statusReports": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "initializeStatusReports",
+        "setDynamicStatusReport",
+        "statusReportsDue",
+        "queueStatusReports",
+        "resolveStatusReport",
+        "statusReportState"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.statusReports.*"
+    },
+    "new.expeditedTicket": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "useExpeditedTicket"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.expedite"
+    },
+    "new.mapNodeUnlocks": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "unlockMapNode",
+        "forcedDestination",
+        "FORCED_TIME_THRESHOLD"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.unlock/forcedDestination"
+    },
+    "new.sideStories": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "completeSideStory",
+        "completedSideStories"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.sideStories.*"
+    },
+    "new.dossierReading": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-map.js"
+      ],
+      "exports": [
+        "unlockDossier",
+        "readDossier",
+        "dossiers"
+      ],
+      "tests": [
+        "tests/tsk-primitives-map.test.mjs"
+      ],
+      "api": "ctx.api.tsk.map.dossiers.*"
+    },
+    "new.customizableCard": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-customizable.js"
+      ],
+      "exports": [
+        "registerCustomizationOptions",
+        "customizationOptions",
+        "customizationCheckboxCount",
+        "customizationCheckedError",
+        "customizationCheckedCount",
+        "customizationLevel",
+        "customizationXpCost"
+      ],
+      "tests": [
+        "tests/tsk-primitives-customizable.test.mjs"
+      ],
+      "api": "ctx.api.tsk.customizable.options/level/xpCost"
+    },
+    "new.customizationUpgrade": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-customizable.js"
+      ],
+      "exports": [
+        "upgradeCustomization",
+        "customizationChecked",
+        "customizationsOfSeat",
+        "validateTskCustomizations"
+      ],
+      "tests": [
+        "tests/tsk-primitives-customizable.test.mjs"
+      ],
+      "api": "ctx.api.tsk.customizable.upgrade/checked/ofSeat"
+    },
+    "new.patrolKeyword": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-coterie.js"
+      ],
+      "exports": [
+        "patrolDestination",
+        "patrolTargetLocation",
+        "patrolChoices"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.patrol.*"
+    },
+    "new.redCoterie": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-coterie.js"
+      ],
+      "exports": [
+        "initializeCoterie",
+        "coterieSnapshot",
+        "coteriePool",
+        "moveCoterieMember",
+        "defeatedCoterie",
+        "alliedCoterie",
+        "validateTskCoterie"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.coterie.*"
+    },
+    "new.coterieEncounterInjection": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-coterie.js"
+      ],
+      "exports": [
+        "injectCoterieEnemy",
+        "injectedCoterie"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.coterie.inject/injected"
+    },
+    "new.crossSeatAction": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js"
+      ],
+      "exports": [
+        "grantCrossSeatAction",
+        "crossSeatActionPending",
+        "takeCrossSeatAction",
+        "crossSeatChoices",
+        "validateTskCrossSeat"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.investigator.grantAction/actionPending/takeAction"
+    },
+    "new.crossSeatActionWindow": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js",
+        "src/engine/windows.js"
+      ],
+      "exports": [
+        "grantCrossSeatAction"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "窗口 tskCrossSeatAction（windows() 注册）"
+    },
+    "new.healTrigger": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js",
+        "src/engine/harm-threat.js"
+      ],
+      "exports": [
+        "damageHealedContext"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "窗口 damageHealed（harm-threat.js#healDamageFrom 实际触发、extendHealDamage 追加治疗）"
+    },
+    "new.evadeDiscard": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js"
+      ],
+      "exports": [
+        "evadeDiscardPlan"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.investigator.evadeDiscardPlan"
+    },
+    "new.doomDiscount": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js"
+      ],
+      "exports": [
+        "doomDiscountUsed",
+        "doomDiscountPlan",
+        "markDoomDiscountUsed",
+        "validateTskDoomDiscount"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.investigator.doomDiscount*"
+    },
+    "new.evidence": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-investigator.js",
+        "src/engine/card-counters.js"
+      ],
+      "exports": [
+        "addEvidence",
+        "evidenceOf",
+        "spendEvidence",
+        "totalEvidence",
+        "evidenceSpendPlan",
+        "markEvidenceSpent",
+        "validateTskEvidence"
+      ],
+      "tests": [
+        "tests/tsk-primitives-coterie-investigator.test.mjs"
+      ],
+      "api": "ctx.api.tsk.investigator.evidence*"
+    },
+    "new.allySlotBonus": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/modifiers.js"
+      ],
+      "exports": [
+        "slotBonus",
+        "collectGrants"
+      ],
+      "tests": [],
+      "api": "既有 `add:slot` 授予 + slotBonus 读点；P5 查理在内容层声明"
+    },
+    "new.allyReadyBonus": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "reuse",
+      "status": "registered",
+      "modules": [
+        "src/engine/modifiers.js",
+        "src/engine/ability.js"
+      ],
+      "exports": [
+        "modifierTotal",
+        "collectGrants"
+      ],
+      "tests": [],
+      "api": "既有技能图标/技能值修正与 `exhaust` 选择；P5 在内容层声明"
+    },
+    "new.invalidCards": {
+      "kind": "new",
+      "phase": "P2",
+      "classification": "new",
+      "status": "done",
+      "modules": [
+        "src/engine/tsk-hollow.js",
+        "src/deck/deckbuilding.js"
+      ],
+      "exports": [
+        "invalidCampaignCards",
+        "cardInvalidInCampaign"
+      ],
+      "tests": [
+        "tests/tsk-primitives-keys-hollow.test.mjs"
+      ],
+      "api": "ctx.api.tsk.hollow.invalidCards/cardInvalid（P6 构筑过滤读取）"
+    }
+  }
+}

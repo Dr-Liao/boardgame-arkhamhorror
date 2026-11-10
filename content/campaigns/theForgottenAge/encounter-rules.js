@@ -17,6 +17,21 @@ const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card.c
 const attachmentCode = attachment => original(typeof attachment === 'string' ? { code: attachment } : attachment)
 const recordsFor = state => (state.campaign.records ||= {})
 
+// ---- 04244 伊斯人身体（跨章共享）----
+// 换身后引擎把调查员卡整体换成 04244：inv.form = 'yithian'，inv.code/属性/职业都是身体卡
+// （见 src/engine/investigator-form.js），原调查员卡文本因此不可用。
+// 下面三条是身体卡自身印刷文本的读点；因为幕间四可能要求「余下时间继续使用这张卡」，
+// 它们必须在之后每一章都生效，所以放在战役级共享规则里而不是《天机之城》章节里。
+const isYithianForm = inv => inv?.form === 'yithian'
+
+// 「你的每个[[盟友]]支援获得[[伊斯]]特性」：换身时已经在场的盟友也要获得（extra 用于入场瞬间的那张）。
+export function markYithianAllies(inv, extra = null) {
+  for (const asset of [...(inv?.assets || []), ...(extra ? [extra] : [])]) {
+    const traits = (ALL_CARDS[asset?.code]?.traits || asset?.traits || []).map(String)
+    if (traits.some(trait => ['Ally', '盟友'].includes(trait))) asset.yithianTrait = true
+  }
+}
+
 function distance(state, from, to) {
   if (from === to) return 0
   const seen = new Set([from]), queue = [[from, 0]]
@@ -385,6 +400,32 @@ export const encounterRules = {
   },
 
   investigatorEliminated() {},
+
+  // ---- 04244 伊斯人身体：身体卡的印刷文本（换身后跨章生效）----
+  // [elder_sign] 效果：+2，抽 1 张牌。剧本钩子优先于调查员条目，因此换身后原调查员的
+  // 旧印不会结算；换身还原后本钩子返回 null，回到原调查员的旧印。
+  elderSign(state, inv) {
+    if (!isYithianForm(inv)) return null
+    return { delta: 2, draw: 1 }
+  },
+
+  // [reaction] 在你将卡牌投入你正在执行的技能检定后：该卡牌上的技能图标数量翻倍。（每次检定一次）
+  // 只对持有者自己执行、自己投入的检定生效；引擎在 tests.js 的投入结算里询问玩家。
+  commitIconMultiplier(state, inv) {
+    if (!isYithianForm(inv)) return 1
+    const test = state.skillTest
+    if (!test || test.seat !== inv.seat || test.tfaYithianIconDoubled) return 1
+    return {
+      multiplier: 2, once: 'tfaYithianIconDoubled', source: 'yithianBody',
+      prompt: '伊斯人身体：是否翻倍刚投入这张牌的技能图标？（每次检定一次）',
+    }
+  },
+
+  // 你的每个[[盟友]]支援获得[[伊斯]]特性（含之后入场的盟友）。
+  assetEntered(state, inv, asset) {
+    if (!isYithianForm(inv)) return
+    markYithianAllies(inv, asset)
+  },
 
   // 补给被划掉的共享入口（补给短缺等）。
   suppliesUsed(state, inv, name) {

@@ -33,6 +33,19 @@ import * as eotePartners from '../campaign/eote-partners.js'
 import * as eoteSeals from '../campaign/eote-seals.js'
 import * as eoteMemorials from '../campaign/eote-memorials.js'
 import * as eoteSupplies from '../campaign/eote-supplies.js'
+// 八循环 P2：TSK 通用原语域（隐匿/空洞/绯红密钥/世界地图/定制卡/同志会/调查员接口）。
+// 载入本文件即证明各模块存在；语义见 docs/campaign/theScarletKeys/primitives.md。
+import * as tskStateModule from './tsk-state.js'
+import * as tskConcealed from './tsk-concealed.js'
+import * as tskHollow from './tsk-hollow.js'
+import * as tskKeys from './tsk-scarlet-keys.js'
+import * as tskMap from './tsk-map.js'
+import * as tskCustomizable from './tsk-customizable.js'
+import * as tskCoterie from './tsk-coterie.js'
+import * as tskInvestigator from './tsk-investigator.js'
+import { tskStateSummary } from './tsk-primitives.js'
+// 八循环 P4：TSK 交互事务（规则侧选择事务；只在 interactions.tsk 命名空间提供）。
+import { createTskInteractions } from './tsk-interactions.js'
 
 // Composition only. Writes remain in the reusable domain primitives.
 export function createMechanicsApi(state, deps = {}) {
@@ -47,7 +60,7 @@ export function createMechanicsApi(state, deps = {}) {
   return {
     // 七循环 P4：EotE 待决选择事务。`eote` 命名空间完整暴露（keys 等与既有交互同名者只在此处）；
     // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
-    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps) },
+    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps), tsk: createTskInteractions(state, deps) },
     scenarioDecks: deck,
     enemyZones:deps.enemyZones||createEnemyZoneApi(state,{mechanicState}),
     barriers: {
@@ -259,5 +272,130 @@ export function createMechanicsApi(state, deps = {}) {
         dropped: () => eoteSupplies.droppedSupplies(state),
       },
     },
+    // 八循环 P2：TSK 通用原语域。内容层在 P5–P7 只通过本命名空间与既有 ctx.api 改状态；
+        // 引擎模块不写卡号、不写内容分支。读点与形状见 docs/campaign/theScarletKeys/primitives.md。
+        tsk: {
+          state: {
+            summary: () => tskStateSummary(state),
+            campaign: () => tskStateModule.tskCampaignState(state),
+            scenario: () => tskStateModule.tskScenarioState(state),
+          },
+          concealed: {
+            miniCards: () => tskConcealed.concealedMiniCards(state),
+            at: (locationId, position) => tskConcealed.concealedAt(state, locationId, position),
+            byId: id => tskConcealed.concealedById(state, id),
+            inShadows: locationId => tskConcealed.isInShadows(state, locationId),
+            setInShadows: (locationId, inShadows) => tskConcealed.setInShadows(state, locationId, inShadows),
+            place: spec => tskConcealed.placeMiniCard(state, spec),
+            distribute: spec => tskConcealed.distributeConcealed(state, spec),
+            expose: id => tskConcealed.exposeMiniCard(state, id),
+            targetScope: id => tskConcealed.concealTargetScope(state, id),
+            reshuffle: options => tskConcealed.reshuffleConcealed(state, options),
+            projection: options => tskConcealed.concealedProjection(state, options),
+            choices: () => tskConcealed.concealedProjection(state, { revealAll: false }),
+          },
+          hollow: {
+            cards: () => tskHollow.hollowCards(state),
+            hollow: spec => tskHollow.hollowCard(state, spec),
+            count: options => tskHollow.hollowCount(state, options),
+            isHollowed: code => tskHollow.isHollowed(state, code),
+            recall: (code, options) => tskHollow.recallHollow(state, code, options),
+            erase: codes => tskHollow.eraseFromExistence(state, codes),
+            erased: () => tskHollow.erasedFromExistence(state),
+            isErased: code => tskHollow.isErasedFromExistence(state, code),
+            invalidCards: () => tskHollow.invalidCampaignCards(state),
+            cardInvalid: code => tskHollow.cardInvalidInCampaign(state, code),
+            choices: () => tskHollow.hollowChoices(state),
+          },
+          keys: {
+            initialize: specs => tskKeys.initializeScarletKeys(state, specs),
+            all: () => tskKeys.scarletKeys(state),
+            get: id => tskKeys.scarletKey(state, id),
+            face: id => tskKeys.keyFace(state, id),
+            shift: (id, options) => tskKeys.shiftKey(state, id, options),
+            shiftedThisRound: (id, round) => tskKeys.keyShiftedThisRound(state, id, round),
+            bind: (id, bearer) => tskKeys.bindKey(state, id, bearer),
+            steal: (id, bearer) => tskKeys.stealKey(state, id, bearer),
+            heldBy: bearer => tskKeys.keysHeldBy(state, bearer),
+            choices: id => tskKeys.keyChoices(state, id),
+          },
+          map: {
+            initialize: spec => tskMap.initializeWorldMap(state, spec),
+            state: () => tskMap.worldMapState(state),
+            current: () => tskMap.currentMapNode(state),
+            time: () => tskMap.mapTime(state),
+            visited: () => tskMap.mapVisited(state),
+            unlocked: () => tskMap.mapUnlocked(state),
+            travelCost: spec => tskMap.travelTimeCost(spec.graph, spec),
+            forcedDestination: () => tskMap.forcedDestination(state),
+            embark: spec => tskMap.embarkOptions(state, spec),
+            travel: spec => tskMap.travelTo(state, spec),
+            expedite: spec => tskMap.useExpeditedTicket(state, spec),
+            unlock: (id, spec) => tskMap.unlockMapNode(state, id, spec),
+            statusReports: {
+              initialize: spec => tskMap.initializeStatusReports(state, spec),
+              setDynamic: (report, threshold) => tskMap.setDynamicStatusReport(state, report, threshold),
+              due: () => tskMap.statusReportsDue(state),
+              queue: () => tskMap.queueStatusReports(state),
+              resolve: (report, effects) => tskMap.resolveStatusReport(state, report, effects),
+              state: () => tskMap.statusReportState(state),
+            },
+            dossiers: {
+              unlock: key => tskMap.unlockDossier(state, key),
+              read: key => tskMap.readDossier(state, key),
+              state: () => tskMap.dossiers(state),
+            },
+            sideStories: {
+              complete: id => tskMap.completeSideStory(state, id),
+              completed: () => tskMap.completedSideStories(state),
+            },
+            choices: spec => tskMap.mapChoices(state, spec),
+          },
+          customizable: {
+            registerOptions: table => tskCustomizable.registerCustomizationOptions(table),
+            registerEffects: table => tskCustomizable.registerCustomizationEffects(table),
+            options: code => tskCustomizable.customizationOptions(code),
+            checkboxCount: code => tskCustomizable.customizationCheckboxCount(code),
+            level: checked => tskCustomizable.customizationLevel(checked),
+            xpCost: (checked, options) => tskCustomizable.customizationXpCost(checked, options),
+            upgrade: spec => tskCustomizable.upgradeCustomization(state, spec),
+            checked: (seat, code) => tskCustomizable.customizationChecked(state, seat, code),
+            ofSeat: seat => tskCustomizable.customizationsOfSeat(state, seat),
+            playCostDelta: (seat, code, checked) => tskCustomizable.customizationPlayCostDelta(seat, code, checked),
+            registrySize: () => tskCustomizable.customizationRegistrySize(),
+          },
+          coterie: {
+            initialize: spec => tskCoterie.initializeCoterie(state, spec),
+            snapshot: () => tskCoterie.coterieSnapshot(state),
+            pool: pool => tskCoterie.coteriePool(state, pool),
+            move: spec => tskCoterie.moveCoterieMember(state, spec),
+            defeated: () => tskCoterie.defeatedCoterie(state),
+            allied: () => tskCoterie.alliedCoterie(state),
+            inject: options => tskCoterie.injectCoterieEnemy(state, options),
+            injected: () => tskCoterie.injectedCoterie(state),
+          },
+          patrol: {
+            destination: enemy => tskCoterie.patrolDestination(state, enemy),
+            target: patrol => tskCoterie.patrolTargetLocation(state, patrol),
+            choices: enemies => tskCoterie.patrolChoices(state, enemies),
+          },
+          investigator: {
+            grantAction: spec => tskInvestigator.grantCrossSeatAction(state, spec),
+            actionPending: targetSeat => tskInvestigator.crossSeatActionPending(state, targetSeat),
+            takeAction: targetSeat => tskInvestigator.takeCrossSeatAction(state, targetSeat),
+            crossSeatChoices: () => tskInvestigator.crossSeatChoices(state),
+            damageHealedContext: spec => tskInvestigator.damageHealedContext(state, spec),
+            evadeDiscardPlan: enemy => tskInvestigator.evadeDiscardPlan(enemy),
+            doomDiscountUsed: (seat, round) => tskInvestigator.doomDiscountUsed(state, seat, round),
+            doomDiscountPlan: spec => tskInvestigator.doomDiscountPlan(state, spec),
+            markDoomDiscountUsed: (seat, round) => tskInvestigator.markDoomDiscountUsed(state, seat, round),
+            addEvidence: (card, amount) => tskInvestigator.addEvidence(card, amount),
+            evidenceOf: card => tskInvestigator.evidenceOf(card),
+            spendEvidence: (card, amount) => tskInvestigator.spendEvidence(card, amount),
+            totalEvidence: () => tskInvestigator.totalEvidence(state),
+            evidencePlan: spec => tskInvestigator.evidenceSpendPlan(state, spec),
+            markEvidenceSpent: (seat, testKey) => tskInvestigator.markEvidenceSpent(state, seat, testKey),
+          },
+        },
   }
 }

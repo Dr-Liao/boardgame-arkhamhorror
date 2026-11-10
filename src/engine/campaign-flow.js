@@ -7,6 +7,7 @@
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
 import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
+import { restoreInvestigatorForms } from './investigator-form.js'
 
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
@@ -173,6 +174,10 @@ function finishScenario(state, resolutionKey, events) {
   const sc = state.scenario
   const campaign = state.campaign
   if (!Object.hasOwn(sc.resolutions, resolutionKey)) throw new Error('未知剧本结局')
+  // 关卡结束：先还原换身（04244 伊斯人身体等），幕间/关间窗口与后续剧情都回到原本的调查员卡；
+  // 战役要求延续到后续关卡的换身由 campaign.ruleFlags.investigatorForms 记录、下一关开局再套用。
+  const restoredForms = restoreInvestigatorForms(state)
+  if (restoredForms) info(state, events, `🧠 你们的意识回到了自己的身体（${restoredForms} 位调查员）。`)
   const visitId = `${campaign.flow?.nodeId || sc.id}:${campaign.flow?.visits?.[campaign.flow.nodeId] || 1}`
   if (campaign.scenarioResults.some(result => result.visitId === visitId)) throw new Error('本关已经结算')
   const before = structuredClone(campaign.investigators)

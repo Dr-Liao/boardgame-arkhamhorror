@@ -3,6 +3,7 @@ import { eventWindowContext } from './event-window.js'
 import { registeredEntry } from './ability.js'
 import { cardDef } from './card-lookup.js'
 import { canCommitDeckTop, commitDeckTop, validateEoteInvestigatorFields } from './eote-investigator-support.js'
+import { validateTskInvestigatorFields } from './tsk-investigator-support.js'
 
 export function canDiscardControlledAsset(state, inv, asset) {
   const entry = registeredEntry(asset?.code)
@@ -23,7 +24,7 @@ export function createInvestigatorApi(state, events, deps) {
 }
 
 export function validateInvestigatorMechanics(state) {
-  for (const inv of state.investigators || []) validateEoteInvestigatorFields(inv)
+  for (const inv of state.investigators || []) { validateEoteInvestigatorFields(inv); validateTskInvestigatorFields(inv) }
   const test = state.skillTest
   if (test) {
     if (test.target != null && (!['fight', 'evade', 'investigate'].includes(test.actionKind) || !['enemy', 'location'].includes(test.target.kind)
@@ -128,6 +129,40 @@ export function createInvestigatorMechanics(state, deps) {
       }
       if (!codes.includes(code)) throw new Error('替换支援选择已失效')
       if (!playAsset(seat, code, { discount, noAction: true })) throw new Error('替换支援打出失败')
+      return true
+    },
+    // P5（八循环）：卡森「立即行动」授权每轮每人一次 + 文森特场外《术后恢复》读取
+    // + 阿米娜「下一张支援入场带毁灭」标记。状态按调查员字段保存并在存档校验里检查。
+    crossSeatGrantAvailable(giverSeat, targetSeat, round = state.round) {
+      const giver = state.investigators[giverSeat]
+      const mark = giver?.crossSeatGrants
+      return !(mark && mark.round === round && Array.isArray(mark.seats) && mark.seats.includes(targetSeat))
+    },
+    recordCrossSeatGrant(giverSeat, targetSeat, round = state.round) {
+      const giver = state.investigators[giverSeat]
+      if (!giver) return false
+      if (!giver.crossSeatGrants || giver.crossSeatGrants.round !== round) giver.crossSeatGrants = { round, seats: [] }
+      giver.crossSeatGrants.seats.push(targetSeat)
+      return true
+    },
+    setAssetDamage(asset, amount = 0) {
+      if (!asset) return 0
+      const next = Math.max(0, (Number(asset.damage) || 0) + (Number(amount) || 0))
+      asset.damage = next
+      return next
+    },
+    tskSetAside(seat, code) {
+      return (state.setAside || []).filter(card => card.code === code && card.ownerSeat === seat)
+    },
+    noteDoomOnNextAsset(seat) {
+      const inv = state.investigators[seat]
+      if (inv) inv.aminaDoomPending = true
+      return Boolean(inv)
+    },
+    takeDoomOnNextAsset(seat) {
+      const inv = state.investigators[seat]
+      if (!inv || inv.aminaDoomPending !== true) return false
+      delete inv.aminaDoomPending
       return true
     },
     markAbilityBonus(assetId, amount) {

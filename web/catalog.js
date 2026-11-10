@@ -1,3 +1,5 @@
+import { imagePreloadContext, runImagePreloadBatches } from './image-preload.js'
+import { trackImageResource, observeImageViewport } from './image-lifecycle.js'
 import { imageCandidates, createImageCache, DEFAULT_IMAGE_HOST, normalizeImageHost } from './images.js'
 import { objectiveText, renderRulesText } from './card-text.js'
 import { cardRuleIds, matchingRules, ruleLink } from './rulebook-data.js'
@@ -36,6 +38,7 @@ const responseCache = new Map()
 let metadata = null
 let metadataPending = null
 const LEGACY_IMAGE_HOST = 'https://assets.arkhamhorror.app'
+let preloadRun = null
 const preferences = { host: DEFAULT_IMAGE_HOST, language: 'zh-cn', followHall: true, enabled: true, variant: '' }
 try {
   const saved = JSON.parse(localStorage.getItem('arkham.presentation') || 'null')
@@ -186,11 +189,12 @@ export function cardFaceText(card, linkedCard, side, language = currentLanguage(
 }
 
 function savePreferences(next) {
+  stopScenarioImagePreload()
   Object.assign(preferences, next)
   try { localStorage.setItem('arkham.presentation', JSON.stringify(preferences)) } catch {}
 }
 
-export function renderImage(h, descriptor, side = 'front', { compact = false, artId } = {}) {
+export function renderImage(h, descriptor, side = 'front', { compact = false, thumbnail = compact, unloadOffscreen = compact, artId } = {}) {
   const holder = h('figure', { className: 'ah-art' + (compact ? ' ah-art-compact' : ''), 'data-image-state': 'pending' })
   const status = h('figcaption', { className: 'ah-art-status', 'aria-live': compact ? 'off' : 'polite' })
   holder.append(status)
@@ -201,14 +205,27 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   }
   if (!descriptor || !preferences.enabled) { fallback(); return holder }
   let candidates
-  try { candidates = imageCandidates(descriptor, { side, host: preferences.host, language: currentLanguage(), artId, variant: preferences.variant }) } catch { fallback(); return holder }
+  try { candidates = imageCandidates(descriptor, { side, host: preferences.host, language: currentLanguage(), artId, variant: preferences.variant, thumbnail }) } catch { fallback(); return holder }
   const img = h('img', { alt: side === 'back' ? t('card.face.back') : t('card.face.front'), decoding: 'async', referrerpolicy: 'no-referrer' })
   holder.prepend(img)
   let timer
   let current
   let active = false
+  let disposed = false
+  let observer
+  let stopViewport
+  const dispose = trackImageResource(holder, () => {
+    disposed = true
+    clearTimeout(timer)
+    observer?.disconnect()
+    stopViewport?.()
+    img.removeEventListener('error', fail)
+    img.removeEventListener('load', loaded)
+    img.removeAttribute('src')
+  }, () => stopViewport?.refresh?.())
   const attempt = () => {
     clearTimeout(timer)
+    if (disposed || !holder.isConnected) return
     current = imageCache.next(candidates)
     if (!current) { img.removeAttribute('src'); img.hidden = true; fallback(); return }
     holder.dataset.imageState = 'loading'
@@ -219,16 +236,19 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   }
   const fail = () => {
     clearTimeout(timer)
+    if (disposed || !holder.isConnected) { dispose(); return }
+    if (!active) return
     if (!current) return
     imageCache.fail(current.url)
     if (!holder.isConnected) return
     attempt()
   }
   img.addEventListener('error', fail)
-  img.addEventListener('load', () => {
+  const loaded = () => {
     clearTimeout(timer)
-    if (!current || !img.naturalWidth) return
+    if (disposed || !active || !holder.isConnected || !current || !img.naturalWidth) return
     imageCache.succeed(current.url)
+    holder.style.minHeight = ''
     holder.dataset.imageState = 'displayable'
     if (current.localizedSource) holder.dataset.localizedSource = current.localizedSource
     else delete holder.dataset.localizedSource
@@ -238,21 +258,31 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
       : current.source?.startsWith('declared-variant')
       ? t('image.revised')
       : current.language === 'zh' ? t('image.zh') : current.language === 'en' ? t('image.en') : t('image.back')
-  })
-  const start = () => { if (!active) { active = true; attempt() } }
-  if (compact && typeof IntersectionObserver !== 'undefined') {
-    const observer = new IntersectionObserver(entries => {
+  }
+  img.addEventListener('load', loaded)
+  const start = () => { if (!disposed && !active) { active = true; attempt() } }
+  if (unloadOffscreen) {
+    stopViewport = observeImageViewport(holder, { enter: start, exit: () => {
+      active = false
+      clearTimeout(timer)
+      current = null
+      const height = holder.getBoundingClientRect().height
+      if (height > 0) holder.style.minHeight = height + 'px'
+      img.removeAttribute('src')
+      img.hidden = true
+      holder.dataset.imageState = 'suspended'
+      status.textContent = ''
+    } })
+  } else if (compact && typeof IntersectionObserver !== 'undefined') {
+    observer = new IntersectionObserver(entries => {
       if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); start() }
     }, { rootMargin: '100px' })
     observer.observe(holder)
-    setTimeout(() => { if (!holder.isConnected) observer.disconnect() }, 1000)
   } else queueMicrotask(start)
   return holder
 }
 
-const PRELOAD_CONCURRENCY = 4
 const PRELOAD_TIMEOUT_MS = 20000
-let preloadRun = null
 
 /** 该面在本地图库清单中已有可直接展示的文件时不预热；中文偏好下仅有英文本地图而中文图存在时仍预热中文。 */
 function faceIsLocal(face, wantsLocalized) {
@@ -262,7 +292,7 @@ function faceIsLocal(face, wantsLocalized) {
   return candidates.some(candidate => candidate.local)
 }
 
-function preloadOne(candidates, signal) {
+export function preloadOne(candidates, signal) {
   return new Promise(resolve => {
     const attempt = () => {
       const current = signal.aborted ? null : imageCache.next(candidates)
@@ -271,14 +301,18 @@ function preloadOne(candidates, signal) {
       img.decoding = 'async'
       img.referrerPolicy = 'no-referrer'
       img.fetchPriority = 'low'
+      let settled = false
       const done = ok => {
+        if (settled) return
+        settled = true
         clearTimeout(timer)
         signal.removeEventListener('abort', abort)
         img.onload = img.onerror = null
+        img.removeAttribute('src')
         if (ok === null) { resolve(); return }
         if (ok) { imageCache.succeed(current.url); resolve() } else { imageCache.fail(current.url); attempt() }
       }
-      const abort = () => { img.src = ''; done(null) }
+      const abort = () => done(null)
       // 超时不记失败：服务端可能仍在下载，交给正式渲染再试。
       const timer = setTimeout(() => done(null), PRELOAD_TIMEOUT_MS)
       signal.addEventListener('abort', abort, { once: true })
@@ -291,39 +325,63 @@ function preloadOne(candidates, signal) {
 }
 
 /**
- * 局外整备时预热下一关的全部卡图（剧本、密谋、场景、地点、遭遇）。
+ * 整备与关卡内优先预热近期卡面，其余资源在空闲批次补齐。
  * 默认 CDN 下经同源 ?cache=cdn 请求，由大厅落盘到本地图库；自定义主机则预热浏览器缓存。
- * 同一关卡与偏好只执行一次；切换关卡会取消上一轮尚未开始的请求。
+ * 同一关卡、偏好与可见卡面集合只执行一次；上下文变化会取消旧任务。
  */
-export function preloadScenarioImages(scenarioId) {
-  if (!scenarioId || !preferences.enabled || typeof Image === 'undefined') return
-  const language = currentLanguage()
-  const key = JSON.stringify([scenarioId, preferences.host, language, preferences.variant])
-  if (preloadRun?.key === key) return
+export function stopScenarioImagePreload() {
   preloadRun?.controller.abort()
+  preloadRun = null
+}
+
+export function preloadScenarioImages(scenarioId, { session } = {}) {
+  if (!scenarioId || !preferences.enabled || typeof Image === 'undefined') { stopScenarioImagePreload(); return }
+  const language = currentLanguage()
+  const context = imagePreloadContext(session)
+  const key = JSON.stringify([scenarioId, preferences.host, language, preferences.variant, session?.sessionId, context])
+  if (preloadRun?.key === key) return
+  stopScenarioImagePreload()
   const controller = new AbortController()
   preloadRun = { key, controller }
   const { signal } = controller
   ;(async () => {
     const meta = await getCatalogMetadata()
+    if (signal.aborted) return
     const manifest = await request('scenarios/' + encodeURIComponent(scenarioId) + '/images?v=' + encodeURIComponent(meta.resourceVersion))
+    if (signal.aborted) return
     const wantsLocalized = language !== 'en'
-    const queue = []
-    const seen = new Set()
-    for (const { images } of manifest.cards || []) {
-      for (const side of ['front', 'back']) {
-        if (faceIsLocal(images?.[side], wantsLocalized)) continue
-        let candidates
-        try { candidates = imageCandidates(images, { side, host: preferences.host, language, variant: preferences.variant }) } catch { continue }
-        if (!candidates.length || seen.has(candidates[0].url)) continue
-        seen.add(candidates[0].url)
-        queue.push(candidates)
-      }
+    const priority = [], background = [], seen = new Set()
+    const priorityCodes = new Set(context.priority)
+    const queueFace = (images, side, queue, immediate) => {
+      if (!immediate && faceIsLocal(images?.[side], wantsLocalized)) return
+      let candidates
+      try { candidates = imageCandidates(images, { side, host: preferences.host, language, variant: preferences.variant, thumbnail: true }) } catch { return }
+      if (!candidates.length || seen.has(candidates[0].url)) return
+      seen.add(candidates[0].url)
+      queue.push(() => preloadOne(candidates, signal))
     }
-    const worker = async () => {
-      while (queue.length && !signal.aborted) await preloadOne(queue.shift(), signal)
+    const byCode = new Map((manifest.cards || []).map(card => [card.code, card]))
+    const queueCode = (code, queue, immediate) => {
+      const card = byCode.get(code)
+      if (card) { queueFace(card.images, 'front', queue, immediate); return }
+      queue.push(async () => {
+        if (signal.aborted) return
+        try {
+          const entry = await getCardPresentation(code)
+          if (signal.aborted) return
+          const tasks = []
+          queueFace(entry.images || entry.card?.images, 'front', tasks, immediate)
+          for (const task of tasks) if (!signal.aborted) await task()
+        } catch { /* Optional prefetch never blocks play. */ }
+      })
     }
-    await Promise.all(Array.from({ length: PRELOAD_CONCURRENCY }, worker))
+    for (const code of context.priority) queueCode(code, priority, true)
+    for (const card of manifest.cards || []) {
+      if (card.priority === 'initial' && !priorityCodes.has(card.code)) queueFace(card.images, 'front', priority, true)
+    }
+    for (const code of context.deck) queueCode(code, background, true)
+    for (const card of manifest.cards || []) for (const side of ['front', 'back']) queueFace(card.images, side, background, false)
+    await runImagePreloadBatches(priority, background, signal)
   })().catch(() => { if (preloadRun?.controller === controller) preloadRun = null })
 }
 

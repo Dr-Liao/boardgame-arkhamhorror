@@ -59,6 +59,41 @@ test('服务端缓存器拒绝被改造成任意远程代理', () => {
   assert.throws(() => createImageAssetCache({ host: 'http://drliao1.com/arkhamhorror/cards' }), /默认 HTTPS CDN/)
 })
 
+test('缩略图从本地原图生成、限制尺寸并在并发请求之间复用', async t => {
+  const { default: sharp } = await import('sharp')
+  const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-thumbs-'))
+  t.after(() => rm(webRoot, { recursive: true, force: true }))
+  await mkdir(path.join(webRoot, 'img/zh/cards'), { recursive: true })
+  const original = await sharp({ create: { width: 1000, height: 1400, channels: 3, background: '#804020' } }).png().toBuffer()
+  await writeFile(path.join(webRoot, 'img/zh/cards/01001.png'), original)
+  const cache = createImageAssetCache({ webRoot, fetchImpl: () => { throw new Error('本地图不得联网') } })
+  const input = { relative: 'img/thumbs/zh/cards/01001.webp', searchParams: query('source=png') }
+  assert.deepEqual(await Promise.all([cache(input), cache(input)]), [true, true])
+  const bytes = await readFile(path.join(webRoot, input.relative))
+  const meta = await sharp(bytes).metadata()
+  assert.equal(meta.format, 'webp')
+  assert.equal(meta.height, 480)
+  assert.ok(meta.width < 480)
+  assert.deepEqual(await readFile(path.join(webRoot, 'img/zh/cards/01001.png')), original)
+  assert.equal(await cache({ ...input, searchParams: query('source=../../bad') }), false)
+})
+
+test('缩略图下载原图一次，编码失败可回退且不会重复编码', async t => {
+  const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-thumbs-miss-'))
+  t.after(() => rm(webRoot, { recursive: true, force: true }))
+  let downloads = 0, encodes = 0
+  const cache = createImageAssetCache({ webRoot,
+    fetchImpl: async () => { downloads++; return new Response(AVIF) },
+    thumbnailImpl: async () => { encodes++; throw new Error('encoder unavailable') },
+  })
+  const input = { relative: 'img/thumbs/cards/01001.webp', searchParams: query('source=avif&cache=cdn') }
+  assert.equal(await cache(input), false)
+  assert.equal(await cache(input), false)
+  assert.equal(downloads, 1)
+  assert.equal(encodes, 1)
+  assert.deepEqual(await readFile(path.join(webRoot, 'img/cards/01001.avif')), AVIF)
+})
+
 test('CDN 上没有的卡图短期内不再重复下载（避免每次重绘都等一轮往返）', async t => {
   const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-image-miss-'))
   t.after(() => rm(webRoot, { recursive: true, force: true }))

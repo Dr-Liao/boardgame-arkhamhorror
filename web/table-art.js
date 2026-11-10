@@ -1,3 +1,4 @@
+import { trackImageResource } from './image-lifecycle.js'
 import { getCardPresentation, renderImage } from './catalog.js'
 import { t } from './i18n.js'
 
@@ -47,43 +48,50 @@ export function encounterBackArt(h, name, { table = true } = {}) {
 
 // Runtime art is requested only when a card enters the table viewport. The
 // catalog owns language preference, local/remote candidates and failed URLs.
-export function tableArt(h, code, name, { landscape = false, face = 'front' } = {}) {
+export function tableArt(h, code, name, { landscape = false, face = 'front', thumbnail = true, unloadOffscreen = false } = {}) {
   let preference = ''
   try { preference = localStorage.getItem('arkham.presentation') || '' } catch {}
   const holder = h('div', {
     className: 'ah-table-art' + (landscape ? ' ah-table-art-landscape' : ''),
-    'data-art-code': code || '', 'data-art-face': face, 'data-art-preference': preference, 'data-image-state': 'pending',
+    'data-art-code': code || '', 'data-art-face': face, 'data-art-preference': preference + (thumbnail ? ':thumb' : ':full') + (unloadOffscreen ? ':evict' : ''), 'data-image-state': 'pending',
     'aria-label': name || t('detail.type.card'),
   }, h('span', { className: 'ah-table-art-fallback' }, name || t('detail.type.card')))
   if (!code) { holder.dataset.imageState = 'text-fallback'; return holder }
   let requested = false
+  let disposed = false
+  let observer
+  let reflectObserver
+  trackImageResource(holder, () => {
+    disposed = true
+    observer?.disconnect()
+    reflectObserver?.disconnect()
+  })
   const load = async () => {
-    if (requested || !holder.isConnected) return
+    if (disposed || requested || !holder.isConnected) return
     requested = true
     try {
       const entry = await getCardPresentation(code)
-      if (!holder.isConnected) return
-      const image = renderImage(h, entry?.images || entry?.card?.images, face)
+      if (disposed || !holder.isConnected) return
+      const image = renderImage(h, entry?.images || entry?.card?.images, face, { thumbnail, unloadOffscreen })
       holder.prepend(image)
       const reflect = () => { holder.dataset.imageState = image.dataset.imageState || 'pending' }
-      new MutationObserver(reflect).observe(image, { attributes: true, attributeFilter: ['data-image-state'] })
+      reflectObserver = new MutationObserver(reflect)
+      reflectObserver.observe(image, { attributes: true, attributeFilter: ['data-image-state'] })
       reflect()
     } catch { holder.dataset.imageState = 'text-fallback' }
   }
   queueMicrotask(() => {
     // A repaint may already have replaced this placeholder with retained art.
     // Only genuinely new, connected cards allocate an observer.
-    if (!holder.isConnected) return
+    if (disposed || !holder.isConnected) return
     if (typeof IntersectionObserver === 'undefined') { load(); return }
-    const observer = new IntersectionObserver(entries => {
+    observer = new IntersectionObserver(entries => {
       if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); load(); return }
       // 观察者会一直强引用目标节点。整树重绘把占位节点换掉后如果不主动断开，
       // 一局下来会攒下成百上千个观察者和已离屏的卡图节点（越玩越卡）。
       if (!holder.isConnected) observer.disconnect()
     }, { rootMargin: '120px' })
     observer.observe(holder)
-    // 兜底：占位节点在第一次交叉回调之前就被换掉时（重绘频繁发生），上面那条路径不会触发。
-    setTimeout(() => { if (!holder.isConnected) observer.disconnect() }, 2000)
   })
   return holder
 }

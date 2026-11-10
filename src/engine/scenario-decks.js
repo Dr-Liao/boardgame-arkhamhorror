@@ -75,6 +75,10 @@ export function createScenarioDeckApi(state, deps = {}) {
       deps.drawCard(seat, card)
       return card
     },
+    // 八循环 P2 扩展（extend.scenarioDecks）：异界牌库顶牌顺序读点（失败关闭，见文件末尾说明）。
+    top: (id, count = 1) => scenarioDeckTop(state, id, count),
+    returnTop: (id, codes) => scenarioDeckReturnTop(state, id, codes),
+    total: id => scenarioDeckTotal(state, id),
   }
 }
 
@@ -159,6 +163,40 @@ export function returnToScenarioDeckBottom(state, deckId, codes) {
   if (!codes.length) return 0
   target.deck.unshift(...codes)
   return codes.length
+}
+
+// ---------------------------------------------------------------------------
+// 八循环 P2 扩展（extend.scenarioDecks）：异界牌库的「顶牌顺序」读点。
+//
+// 参考 TSK 的异界牌库：牌库顺序对全桌隐藏，但某些效果允许「查看顶 N 张并决定放回顺序」。
+// 这里只提供受信任的引擎读点（不写额外持久字段、不改既有 scenarioDecks 形状）：
+//   · scenarioDeckTop(state, deckId, count)         —— 看顶 N 张（从顶到底）
+//   · scenarioDeckReturnTop(state, deckId, codes)   —— 按给定顺序放回牌库顶（codes[0] 成为新的顶）
+//   · scenarioDeckTotal(state, deckId)              —— 牌库+弃牌+移出总数（结算读数）
+// 失败关闭：张数不足 / 非法 code / 未知牌库一律拒绝且不写入。
+// ---------------------------------------------------------------------------
+
+/** 查看剧本牌库顶 `count` 张（从顶到底），不写入状态。 */
+export function scenarioDeckTop(state, deckId, count = 1) {
+  integer(count, 1)
+  const target = pile(state, deckId)
+  if (target.deck.length < count) return false
+  return target.deck.slice(target.deck.length - count).reverse()
+}
+
+/** 把 `codes` 按给定顺序放回剧本牌库顶：codes[0] 成为新的顶牌。返回张数。 */
+export function scenarioDeckReturnTop(state, deckId, codes) {
+  validateCodes(codes, '剧本牌库 code')
+  const target = pile(state, deckId)
+  if (!codes.length) return 0
+  target.deck.push(...[...codes].reverse())
+  return codes.length
+}
+
+/** 剧本牌库总张数（牌库+弃牌+移出）；异界等「还剩几张」结算读数。 */
+export function scenarioDeckTotal(state, deckId) {
+  const target = pile(state, deckId)
+  return target.deck.length + (target.discard?.length || 0) + (target.removed?.length || 0)
 }
 
 /** 读档校验：既有 `scenarioDecks` 扩展的形状。Lead 在 save-migration 里调用。 */

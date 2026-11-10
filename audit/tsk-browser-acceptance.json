@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tsk-rules.browser.mjs"
+  ],
+  "tests": [
+    {
+      "title": "P3 desktop en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1408
+    },
+    {
+      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1934
+    },
+    {
+      "title": "P3 desktop 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 2275
+    },
+    {
+      "title": "P3 mobile en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1915
+    },
+    {
+      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1906
+    },
+    {
+      "title": "P3 mobile 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 2018
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/tsk/reports/screenshots/desktop-card-link.png",
+    "artifacts/migration/tsk/reports/screenshots/desktop-en.png",
+    "artifacts/migration/tsk/reports/screenshots/desktop-zh-CN.png",
+    "artifacts/migration/tsk/reports/screenshots/mobile-card-link.png",
+    "artifacts/migration/tsk/reports/screenshots/mobile-en.png",
+    "artifacts/migration/tsk/reports/screenshots/mobile-zh-CN.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "zh": true,
+    "en": true,
+    "cardLink": true,
+    "noHorizontalScroll": true
+  }
+}

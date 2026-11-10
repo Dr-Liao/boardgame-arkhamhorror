@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "campaignId": "theScarletKeys",
+  "milestone": "P4",
+  "step": "P4 新增交互与界面",
+  "generatedBy": "tools/audit-tsk-interactions.mjs",
+  "docs": "docs/campaign/theScarletKeys/interactions.md",
+  "status": "verified",
+  "coverage": {
+    "desktop": {
+      "concealed": true,
+      "keys": true,
+      "hollow": true,
+      "map": true,
+      "customizable": true,
+      "crossSeat": true
+    },
+    "mobile": {
+      "concealed": true,
+      "keys": true,
+      "hollow": true,
+      "map": true,
+      "customizable": true,
+      "crossSeat": true
+    }
+  },
+  "checks": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "baselineUnchanged": true,
+    "fastNoNewFailures": true,
+    "replayExact": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "baselineUnchanged": true,
+    "fastNoNewFailures": true,
+    "replayExact": true
+  },
+  "frozenFailures": [
+    "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+    "P8 eote all-cards 两次构建一致且与账本一致",
+    "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+    "已本地化的 UI 文件不再残留用户可见中文"
+  ],
+  "deliveredPrimitives": [
+    "new.concealedExpose",
+    "new.keyShift",
+    "new.hollowRecall",
+    "new.embarkChoice",
+    "new.customizationUpgrade",
+    "new.crossSeatAction"
+  ],
+  "extensions": {
+    "projection": "new.concealedIdentityProjection",
+    "hiddenInfo": "extend.hiddenInfo",
+    "choices": "extend.choices"
+  },
+  "browser": {
+    "present": true,
+    "status": "passed",
+    "specs": [
+      "tests/scenario-guides.browser.mjs",
+      "tests/script-actions-tfa.browser.mjs",
+      "tests/tsk-interactions.browser.mjs"
+    ],
+    "tests": 16,
+    "passed": 16,
+    "screenshots": 14
+  },
+  "contract": {
+    "actions": "Only server legalMoves and requestChoice/selectMechanic; no browser-side rule checks or arbitrary client mechanics commands.",
+    "privacy": "Concealed mini-card identities are projected only after a legal reveal (position/count only otherwise); dossiers are projected as unlocked/read keys without contents; otherworld deck order is never projected; cross-seat grants and customization checks are visible to the owning seat only; snapshots are masked again per observer.",
+    "cancellation": "Optional choices can be cancelled before any mechanics write; mandatory choices have no cancel. Printed action/card costs remain governed by their descriptor.",
+    "guide": "The fixed setup/reference entry is reused. Full ten-chapter TSK scenario guides remain P7.",
+    "release": "The seed/fixture is test-only and confined to tools/tests. P4 opens no content: the campaign, investigators and player cards remain catalog-only.",
+    "fast": "The pre-existing failures frozen in audit/tsk-baseline.json#fastFailures are excluded from the P4 ledger; P4 only requires no new failures."
+  },
+  "evidence": [
+    "audit/tsk-baseline.json",
+    "audit/tsk-interactions-browser.json",
+    "audit/tsk-node-acceptance.json",
+    "audit/tsk-regression.json",
+    "src/engine/tsk-interactions.js",
+    "src/integration/mechanic-view.js",
+    "tests/tsk-interaction-fixture.mjs",
+    "tests/tsk-interactions.browser.mjs",
+    "web/mechanic-ui.js"
+  ],
+  "sources": [
+    {
+      "path": "audit/tsk-interactions-browser.json",
+      "sha256": "666c1a221bc8076ebbc37c3083d8733cf128b6d4e13031622378c8a5d7090c86"
+    },
+    {
+      "path": "audit/tsk-node-acceptance.json",
+      "sha256": "07715eb943b195f7668b41812576c5eee1fc8343903e6e599297f495a75aebad"
+    },
+    {
+      "path": "audit/tsk-regression.json",
+      "sha256": "bb84bdb1292aff7e27e929dc0dc4d059c04225de57d2eb0b3849ebe702c5737a"
+    },
+    {
+      "path": "src/engine/tsk-interactions.js",
+      "sha256": "90e6e61e5f716733e07a0e276a69d7c6178699faa218fbe1e98314fb428bece2"
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "796d4b778840788037aa8418c91e3ae098baf2115559fdbec01706b684be4bd9"
+    },
+    {
+      "path": "tests/tsk-interaction-fixture.mjs",
+      "sha256": "30efbe05806ad29a13b86c570a84941dd243ba0bf74615a3c1b076318895b17c"
+    },
+    {
+      "path": "tests/tsk-interactions.browser.mjs",
+      "sha256": "0a6707286dc1ff84111b420588cf2091b00ba5fe8d5bccb0b47816ed973d1fb7"
+    },
+    {
+      "path": "tests/tsk-interactions.test.mjs",
+      "sha256": "b253cfd55bde193e60635cbc48365dbc693e3f7ba7845c4cd42b712594ef53da"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "b36b83266f04f3dd4c8a90392be293f96ec5d56312105272867aa78a69363610"
+    }
+  ]
+}

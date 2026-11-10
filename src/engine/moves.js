@@ -360,11 +360,18 @@ export function createMoves(deps) {
   // 「预览 = 校验 = 扣费」：付得起但当前无从执行的免费行动不该出现在列表里——否则牌桌会给出
   // 一个点了必被 validateMove 拒绝的死按钮（赛菲娜下方没有事件、皮特没有可重整的支援、
   // 换行动却连一张能弃的手牌都没有）。
-  if (freeAction && !investigatorTextBlanked(state, inv) && availableResources(inv) >= (freeAction.cost.resources || 0)
+  // P5：调查员 freeAction 原语扩展——可声明 cost.action（可配合 restrictedKind 使用受限额度）
+  // 与 resolve（主动能力结算），原有 effect DSL 免费行动（皮特/赛菲娜）不受影响。
+  const freeActionCredit = freeAction?.cost?.action
+    ? actionsAvailable(inv, freeAction.restrictedKind || null) : 0
+  if (freeAction && !investigatorTextBlanked(state, inv)
+    && (!freeAction.duringOwnSkillTest || state.skillTest?.seat === inv.seat)
+    && availableResources(inv) >= (freeAction.cost.resources || 0)
+    && (!freeAction.cost.action || freeActionCredit >= freeAction.cost.action)
     && (!freeAction.cost.discardHand
       || inv.hand.some(code => !isWeaknessCode(code) && canDiscardFromHand(inv, code)))
     && (freeAction.repeatable || !inv.usedReactions[freeAction.id + ':' + state.turnSerial])
-    && !effectError(state, inv, freeAction.effect)) {
+    && (typeof freeAction.resolve === 'function' || !effectError(state, inv, freeAction.effect))) {
     moves.push({ action: 'freeAction', label: freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
   }
 

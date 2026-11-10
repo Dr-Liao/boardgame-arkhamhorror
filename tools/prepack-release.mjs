@@ -1,3 +1,4 @@
+import { buildCardThumbnails } from './build-card-thumbnails.mjs'
 // 发布前处理（由大厅 tools/release/pack-mod.mjs 与 tools/release/stage-games.mjs 调用）：
 //   node tools/prepack-release.mjs <暂存目录>                          商店包 / 免安装程序包
 //   node tools/prepack-release.mjs <暂存目录> --asset-pack=arkham-cards  免安装卡图资源包
@@ -49,3 +50,5 @@ if (fs.existsSync(sourcePath)) {
   fs.writeFileSync(path.join(staging, 'audit', assetPack ? 'local-images.cards.json' : 'local-images.json'), JSON.stringify(inventory, null, 2))
   console.log('prepack: 登记 ' + files.length + ' 张' + (assetPack ? '资源包' : '随包') + '图片')
 }
+
+if (assetPack) console.log('prepack: thumbnails ' + await buildCardThumbnails(staging))

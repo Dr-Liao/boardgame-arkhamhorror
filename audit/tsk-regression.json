@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "generatedBy": "tools/verify-tsk-regression.mjs",
+  "command": {
+    "fast": "node tools/run-tests.mjs fast",
+    "replay": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tsk-baseline.json"
+  },
+  "status": "passed",
+  "fast": {
+    "exitCode": 1,
+    "outputSha256": "122d1c8612e4c246cfe282d2c1d45b71b7e14b1e3ec94f07ddc8984fc4ba3f67",
+    "totals": {
+      "tests": 7138,
+      "pass": 7131,
+      "fail": 4
+    },
+    "failingFiles": [
+      "tests/eote-all-cards.test.mjs",
+      "tests/eote-migration-ledger.test.mjs",
+      "tests/i18n-dict.test.mjs",
+      "tests/tcu-migration.test.mjs"
+    ],
+    "frozenTitles": [
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+      "P8 eote all-cards 两次构建一致且与账本一致",
+      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+      "已本地化的 UI 文件不再残留用户可见中文"
+    ],
+    "baselineFiles": [
+      "tests/eote-all-cards.test.mjs",
+      "tests/eote-migration-ledger.test.mjs",
+      "tests/i18n-dict.test.mjs",
+      "tests/tcu-migration.test.mjs"
+    ],
+    "additionsSinceInitialBaseline": [],
+    "frozenFailureCount": 4,
+    "titles": [
+      "P8 eote all-cards 两次构建一致且与账本一致",
+      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+      "已本地化的 UI 文件不再残留用户可见中文",
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致"
+    ]
+  },
+  "replay": {
+    "baseline": "tests/fixtures/replay/tsk-baseline.json",
+    "expectedSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
+    "actualSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
+    "exitCode": 0,
+    "matches": true,
+    "outputSha256": "d7e15f72c567f5eda001abfd56912fe98cce4b43acd84e8d67d927ff82cbc1a6"
+  },
+  "baseline": {
+    "fastFailures": [
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+      "P8 eote all-cards 两次构建一致且与账本一致",
+      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+      "已本地化的 UI 文件不再残留用户可见中文"
+    ],
+    "fastFailureFiles": [
+      "tests/eote-all-cards.test.mjs",
+      "tests/eote-migration-ledger.test.mjs",
+      "tests/i18n-dict.test.mjs",
+      "tests/tcu-migration.test.mjs"
+    ],
+    "replayFile": "tests/fixtures/replay/tsk-baseline.json",
+    "replaySha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547"
+  }
+}

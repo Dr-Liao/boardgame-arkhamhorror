@@ -68,8 +68,11 @@ test('P4 机制操作表：保留既有 10 个操作并追加 9 个 eote 事务�
   assert.ok(Object.isFrozen(MECHANIC_OPERATIONS))
   assert.deepEqual([...MECHANIC_OPERATIONS.slice(0, 10)],
     ['seal', 'release', 'claimKey', 'giveKeys', 'spendKey', 'enterVehicle', 'leaveVehicle', 'driveVehicle', 'commitOrigin', 'returnCommitment'])
-  assert.deepEqual([...MECHANIC_OPERATIONS.slice(10)],
+  assert.deepEqual([...MECHANIC_OPERATIONS.slice(10, 19)],
     ['eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply'])
+  // 八循环 TSK P4 追加 6 项交互事务；EotE 9 项操作保持冻结。
+  assert.deepEqual([...MECHANIC_OPERATIONS.slice(19)],
+    ['tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat'])
   assert.equal(new Set(MECHANIC_OPERATIONS).size, MECHANIC_OPERATIONS.length)
 })
 

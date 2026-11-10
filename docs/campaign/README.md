@@ -26,7 +26,7 @@
 | 5 | 《食梦者》The Dream Eaters | [`theDreamEaters/`](theDreamEaters/README.md) | `playable` | 8 章（`06xxx`），双线/多模式 |
 | 6 | 《印斯茅斯暗潮》The Innsmouth Conspiracy | [`theInnsmouthConspiracy/`](theInnsmouthConspiracy/README.md) | `playable` | 8 章（`07xxx`） |
 | 7 | 《地球边缘》Edge of the Earth | `docs/edgeOfTheEarth/`（未迁入） | `playable` | 8 章（`08xxx`）；独立全量扫描已完成，见 [`../edgeOfTheEarth/full-scan.md`](../edgeOfTheEarth/full-scan.md) |
-| 8 | 《绯红密钥》The Scarlet Keys | [`theScarletKeys/`](theScarletKeys/README.md) | 未实现（路线图） | 迁移路线图 |
+| 8 | 《绯红密钥》The Scarlet Keys | [`theScarletKeys/`](theScarletKeys/README.md) | `catalog-only`（P0–P5 完成） | 10 章（`09xxx`）；439 条记录范围/基线/机制扫描已锁，77 项原语、29 关键词/17 条双语规则、6 组交互、6 位调查员与 14 张专属依赖已交付，进入 P6 一般玩家卡 |
 | 9 | 《铁杉谷盛宴》The Feast of Hemlock Vale | [`theFeastOfHemlockVale/`](theFeastOfHemlockVale/README.md) | 未实现（路线图） | 迁移路线图 |
 
 ## 相关规范

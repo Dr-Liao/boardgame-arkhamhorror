@@ -11,7 +11,7 @@ import { partFlowCondition, partRecord, partScope, recordInPart } from './campai
 
 const PART_CONDITION_KEYS = Object.freeze(['part', 'parts', 'mode', 'modeIn', 'activeParts'])
 export const STRUCTURAL_NODE_TYPES = Object.freeze([
-  'scenario', 'story', 'choice', 'branch', 'partGate', 'stepReturn', 'interlude', 'checkpoint', 'end',
+  'scenario', 'story', 'choice', 'branch', 'partGate', 'stepReturn', 'interlude', 'checkpoint', 'map', 'end',
 ])
 export const BRANCH_NODE_TYPES = Object.freeze(['choice', 'branch', 'partGate'])
 const PART_IDS = Object.freeze(['A', 'B'])
@@ -412,6 +412,10 @@ export function validateCampaignGraph(manifest) {
     if (node.type === 'end' && node.next != null) throw new Error(`结局节点不能有出口：${id}`)
     if (node.type === 'scenario' && !manifest.scenarioIds.includes(node.scenarioId)) throw new Error(`节点引用未知关卡：${id}`)
     if (node.type === 'partGate' && !node.next) throw new Error(`章对门缺少「两边都完成」的出口：${id}`)
+    // 八循环 P2：`map` 节点表示世界地图启程段（TSK）。走图与旅行由战役行为驱动，
+    // 流程执行器只停下并交出节点，必须声明回到主线/下一幕间的出口。
+    if (node.type === 'map' && !node.next) throw new Error(`世界地图节点缺少出口：${id}`)
+    if (node.type === 'map' && node.options != null) throw new Error(`世界地图节点不能声明选项（由战役行为接管）：${id}`)
     // 引擎只在 interlude/checkpoint 节点上读 `next`（见 src/engine/campaign-flow.js#progressCampaign），
     // 这两类节点写 options 会被静默忽略；非分支节点声明 options 一律在注册期拒绝。
     if (node.options != null && !BRANCH_NODE_TYPES.includes(node.type)) {
@@ -519,7 +523,8 @@ export function walkCampaign(campaign, manifest, choose, applyEffect = () => {},
     // P9.5：声明 `interludeFlow: 'continuous'` 的战役（TDE）在「关间准备结束」后一次读完整个
     // 幕间子图（连续 interlude/story/choice/branch 节点），不再每个节点开一次休息窗；
     // 子图入口仍停在第一个 interlude 节点让全桌做升级准备。
-    if (['scenario', 'interlude', 'checkpoint', 'end'].includes(node.type)) {
+    // 八循环 P2：`map` 节点同样交给战役行为接管（走图/旅行/时间），执行器停下不自动推进。
+    if (['scenario', 'interlude', 'checkpoint', 'end', 'map'].includes(node.type)) {
       if (node.type !== 'interlude' || !continuousInterlude) return { ...node, id }
     }
     let edge = node
