@@ -72,7 +72,10 @@ export function createTskInteractions(state, deps = {}) {
         uiKey: `tsk-concealed:${card.id}`,
       }))
       const id = chooseOne(state, seat, { operation: 'tskConcealed', stage: 'items', prompt: '选择要揭露的隐匿迷你卡', candidates, optional })
-      return id == null ? false : exposeMiniCard(state, id)
+      if (id == null) return false
+      const result = exposeMiniCard(state, id)
+      deps.exposed?.(state, { ...result, location: result.locationId ?? null, seat })
+      return result
     },
     /** 轮末重排：不增删迷你卡，只在其当前地点/位置之间洗混。 */
     reshuffle(seat, { shuffle = undefined } = {}) {
@@ -106,7 +109,13 @@ export function createTskInteractions(state, deps = {}) {
         }
       })
       const chosen = chooseOne(state, seat, { operation: 'tskKey', stage: 'keys', prompt: '选择要变换（翻面）的绯红密钥', candidates, optional })
-      return chosen == null ? false : shiftKey(state, chosen)
+      if (chosen == null) return false
+      const result = shiftKey(state, chosen)
+      deps.keyShifted?.(state, {
+        keyId: result.id, from: result.from, to: result.to, face: result.to,
+        keyStable: result.stable, stable: result.stable, seat,
+      })
+      return result
     },
     /**
      * 转移密钥：把 seat 持有的一把密钥交给另一名调查员（bind）或一名敌人（steal，翻动荡面）。

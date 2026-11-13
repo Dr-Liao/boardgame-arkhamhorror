@@ -8,8 +8,11 @@ import { placePursuitEnemies, totalVengeance } from '../content/campaigns/theFor
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 // P2-6（2026-10-28）：04289 的检定链改用引擎「检定后继续同一次探索」原语，
 // 这里补真实引擎（performTest / doExplore / resumeExplore）的验收。
-import { applyMove, createGameState, legalMoves, placeLocation, startScenario } from '../src/engine/engine.js'
+import { applyMove, createGameState, discoverClueAt, legalMoves, placeLocation, startScenario, scenarioRuntime } from '../src/engine/engine.js'
 import { contentRegistry } from '../content/registered.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
+import { migrateState } from '../src/engine/save-migration.js'
 
 const clone = value => structuredClone(value)
 
@@ -592,7 +595,8 @@ test('结局：r2 写入联结点并累加复仇，r1 按深度给创伤，noRes
   fallen.locations = []
   const trauma = []
   yoth.behavior.resolution(fallen, 'r1', [], {
-    addTrauma: (target, seat, kind, amount) => trauma.push({ seat, kind, amount }),
+    // api.addTrauma 口径与 scenarioRuntime 一致：(seat, kind, amount)（不再传 state）。
+    addTrauma: (seat, kind, amount) => trauma.push({ seat, kind, amount }),
   })
   assert.equal(fallen.campaign.records.theInvestigatorsFellIntoTheDepths, true)
   assert.deepEqual(trauma, [{ seat: 0, kind: 'physical', amount: 2 }, { seat: 1, kind: 'physical', amount: 2 }])
@@ -949,4 +953,102 @@ test('找回了遗物：幽嘶深渊开局把「重拾往昔」版古代遗物�
   const missing = prepared(93, 1, { theRelicIsMissing: true })
   assert.equal(missing.investigators[0].assets.some(asset => asset.code === '04303'), false)
   assert.ok(missing.scenarioZones.setAside.includes('04303'))
+})
+
+// ---------------------------------------------------------------------------
+// 04094 一片漆黑（真实引擎）：放在密谋牌库旁 = state.agendaAside 的实体卡；
+// 每轮每地点最多发现 1 个线索 = 条目声明 treacheryRule.clueDiscoveryLimit 的引擎记账；
+// 轮末弃 1 张 = treacheryRule.discardOneAtRoundEnd 的旁置卡扫描；旧存档按计数补卡。
+// ---------------------------------------------------------------------------
+
+function launchYoth(seed) {
+  const state = createGameState({ campaignId: 'theForgottenAge', campaignHub: true, seed }, [{ seat: 0, role: 'human' }])
+  const scenarioIds = contentRegistry.getCampaign('theForgottenAge').scenarioIds
+  startScenario(state, scenarioIds.indexOf('theDepthsOfYoth'), [])
+  settleChoices(state)
+  return state
+}
+
+// 与引擎 encounter.js 的诡计分支同一入口：场景 behavior.resolveEncounter → 条目 encounterResolve。
+// （直接 drawEncounter 会开遭遇窗口，纯引擎测试里没有大厅代答，所以这里走事务内的同一结算函数。）
+function revealDeepDark(state, seat = 0) {
+  let resolution = null
+  resolveTransaction(state, seat, { action: 'tfaDeepDarkReveal' }, draft => {
+    const inv = draft.investigators[seat]
+    resolution = encounterRules.resolveEncounter(draft, inv, { code: '04094', originalCode: '04094' },
+      scenarioRuntime(draft, [], { type: 'encounter', label: '诡计检定', code: '04094' }),
+      { location: draft.locations.find(location => location.id === inv.location) || null })
+  })
+  return resolution
+}
+
+function endRound(state) {
+  for (let guard = 0; guard < 12; guard++) {
+    const round = state.round
+    for (const inv of state.investigators) inv.actionsLeft = 0
+    const endTurn = legalMoves(state).find(move => move.action === 'endTurn')
+    assert.ok(endTurn, '结束回合应在合法行动里')
+    applyMove(state, endTurn.seat ?? 0, endTurn)
+    settleChoices(state)
+    if (state.round !== round) return
+  }
+  assert.fail('一轮没有结束')
+}
+
+test('04094 一片漆黑：显现放进密谋牌库旁，轮末最多弃掉 1 张', () => {
+  const state = launchYoth('tfa-deep-dark-reveal')
+  assert.deepEqual(revealDeepDark(state), { placed: true })
+  assert.deepEqual((state.agendaAside || []).map(card => card.originalCode || card.code), ['04094'])
+  assert.equal(state.encounterDiscard.includes('04094'), false, '放到场上后不进遭遇弃牌堆')
+  // 第二张放在旁边：轮末只能弃 1 张。
+  assert.deepEqual(revealDeepDark(state), { placed: true })
+  assert.equal((state.agendaAside || []).length, 2)
+  endRound(state)
+  assert.deepEqual((state.agendaAside || []).map(card => card.originalCode || card.code), ['04094'], '每轮最多弃 1 张')
+  assert.equal(state.encounterDiscard.filter(code => code === '04094').length, 1)
+  endRound(state)
+  assert.deepEqual(state.agendaAside || [], [], '下一轮弃掉最后一张')
+  assert.equal(state.encounterDiscard.filter(code => code === '04094').length, 2)
+})
+
+test('04094 一片漆黑：每位调查员每轮从单个地点最多发现 1 个线索', () => {
+  const state = launchYoth('tfa-deep-dark-clues')
+  let inv = state.investigators[0]
+  let location = state.locations.find(entry => entry.id === inv.location)
+  location.clues = 3
+  inv.clues = 0
+  // 没有漆黑时可以一次发现 2 个。
+  assert.equal(discoverClueAt(state, inv, 2, []), true)
+  assert.equal(inv.clues, 2)
+  inv = state.investigators[0]
+  location = state.locations.find(entry => entry.id === inv.location)
+  location.clues = 3
+  inv.clues = 0
+  revealDeepDark(state)
+  // revealDeepDark 走规则事务：状态对象整体替换，必须重新取当前实例再做断言。
+  inv = state.investigators[0]
+  location = state.locations.find(entry => entry.id === inv.location)
+  assert.equal(discoverClueAt(state, inv, 2, []), true)
+  assert.equal(inv.clues, 1, '单次「发现 2 个」被上限压到 1 个')
+  assert.equal(location.clues, 2)
+  assert.equal(discoverClueAt(state, inv, 1, []), false, '同一轮同一地点不能再次发现')
+  assert.equal(inv.clues, 1)
+  state.round += 1
+  assert.equal(discoverClueAt(state, inv, 2, []), true)
+  assert.equal(inv.clues, 2, '下一轮重新获得 1 个额度')
+})
+
+test('04094 一片漆黑：旧存档的 deepDark 计数迁移为密谋牌库旁的实体卡', () => {
+  const state = launchYoth('tfa-deep-dark-migrate')
+  state.scenarioFlags.deepDark = 2
+  state.scenarioFlags.deepDarkClaims = { '3:0:forkedPath': 1 }
+  const { state: migrated, changes } = migrateState(state, { force: true })
+  assert.ok(changes.length, '应报告迁移改动')
+  const copies = (migrated.agendaAside || []).filter(card => (card.originalCode || card.code) === '04094')
+  assert.equal(copies.length, 2, '旧计数补成 2 张真实旁置卡')
+  assert.equal(migrated.scenarioFlags.deepDark, undefined)
+  assert.equal(migrated.scenarioFlags.deepDarkClaims, undefined)
+  // 迁移是幂等的：再次读档不会重复补卡。
+  const again = migrateState(migrated, { force: true })
+  assert.equal((again.state.agendaAside || []).filter(card => (card.originalCode || card.code) === '04094').length, 2)
 })

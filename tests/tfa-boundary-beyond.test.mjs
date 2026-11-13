@@ -602,6 +602,8 @@ test('布置时的战役记录：划掉汽油、亚历山卓的额外资源、�
   state.campaign.records.theInvestigatorsRescuedAlejandro = true
   state.campaign.records.theInvestigatorsFoundTheMissingRelic = true
   state.investigators[1].deck = ['04061', '01020']
+  state.campaign.investigators[1].deck = ['04061', '01020']
+  state.campaign.investigators[1].removedCards = []
   const api = makeApi(state)
   const result = behavior.preScenarioSetup(state, [], api)
   assert.equal(result.outOfGas, false)
@@ -609,6 +611,10 @@ test('布置时的战役记录：划掉汽油、亚历山卓的额外资源、�
   assert.equal(state.investigators[0].resources, 7)
   assert.deepEqual(state.investigators[1].deck, ['04191', '01020'])
   assert.equal(state.relicOfAges.code, '04191')
+  // 战役牌组记录同步：下一关按 record.deck 重建牌库，旧版必须换成新版
+  //（否则 04191 在后续章节会退回 04061，scenarioPlayable 的授予事实也会丢）。
+  assert.deepEqual(state.campaign.investigators[1].deck, ['01020', '04191'])
+  assert.equal(state.campaign.investigators[1].removedCards[0]?.code, '04061')
   // 一张汽油都没有时记下「燃料耗尽」（不能重抽起始手牌）。
   const dry = stateFor()
   dry.campaign.supplies = { 0: ['rope'], 1: [] }

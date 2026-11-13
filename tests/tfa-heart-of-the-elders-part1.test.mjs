@@ -199,8 +199,8 @@ function makeApi(state, options = {}) {
     revealToken: () => options.revealToken ?? '0',
     drawEncounter: () => {},
     addYigsFury: n => { state.campaign.records.yigsFury = Number(state.campaign.records.yigsFury || 0) + n },
-    addTrauma: (target, seat, kind, amount) => {
-      const record = target.campaign.investigators[seat]
+    addTrauma: (seat, kind, amount) => {
+      const record = state.campaign.investigators[seat]
       record.trauma[kind] += amount
     },
     campaignCardChange: (campaign, seat, code) => {

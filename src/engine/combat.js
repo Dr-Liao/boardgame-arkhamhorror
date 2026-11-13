@@ -1,4 +1,5 @@
 import { discardPlayerCards } from './player-zones.js'
+import { sourceCardDef } from './card-lookup.js'
 import { availableResources } from './resource-bank.js'
 import { actionTestSkill } from './skill-substitution.js'
 import { enemyHasLocationKeyword } from './enemy-entry.js'
@@ -93,6 +94,18 @@ function doFight(state, seat, opts, events, noSpend) {
   }
   const invulnSource = enemyRuleFlags(enemy?.code).damageOnlyFrom
   if (invulnSource && opts.assetId !== invulnSource && !enemyTextBlanked(state, enemy)) return
+  // 2026-11-13 P1-8（09124）：「只能用 [[武器]] 支援或 [[策略]] 事件攻击或造成伤害」。
+  const sourceTraitRule = enemyRuleFlags(enemy?.code).damageOnlyFromSourceTraits
+  if (sourceTraitRule && !enemyTextBlanked(state, enemy)) {
+    const sourceDef = sourceCardDef(state, opts.assetId || opts.sourceCode || null)
+    const traitAllowed = sourceDef && (sourceDef.traits || []).some(trait =>
+      (sourceTraitRule.traits || []).some(wanted => String(wanted).toLowerCase() === String(trait).toLowerCase()))
+    const typeAllowed = !sourceTraitRule.sourceTypes || sourceTraitRule.sourceTypes.includes(sourceDef?.type)
+    if (!traitAllowed || !typeAllowed) {
+      info(state, events, `⛔ 「${enemy.name}」只能用[[武器]]支援或[[策略]]事件攻击/造成伤害。`)
+      return
+    }
+  }
   if (opts.requireNotEngagedTarget && enemy?.engagedSeat === seat) { info(state, events, '该武器不能攻击与你交战的敌人。'); return }
   // 2026-10-25 第七轮修复 05230：hostCannotAttackEngaged 必须在扣行动点之前检查。
   {
@@ -401,6 +414,14 @@ function doFight(state, seat, opts, events, noSpend) {
           dmg = Math.max(sourceTraitRule.minimum ?? 1, dmg - sourceTraitRule.amount)
           if (dmg !== before) info(state, events, `🛡️ 「${enemy.name}」只受特定来源的完整伤害，本次攻击伤害从 ${before} 减为 ${dmg}。`)
         }
+      }
+      // 2026-11-13 P1-8（09124）：「从每个来源受到的伤害减 1」（武器/策略来源同样减）。
+      const allSourcesReduction = enemyTextBlanked(state, enemy) ? 0
+        : Number(enemyRuleFlags(enemy.code).damageReductionFromAllSources || 0)
+      if (allSourcesReduction > 0 && dmg > 0) {
+        const before = dmg
+        dmg = Math.max(0, dmg - allSourcesReduction)
+        if (dmg !== before) info(state, events, `➖ 「${enemy.name}」每次受到的伤害 -${allSourcesReduction}（${before} → ${dmg}）。`)
       }
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && opts.assetId !== enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return
       // 「职业杀手」：本回合该敌人下次受到的攻击伤害 +1（一次性）。

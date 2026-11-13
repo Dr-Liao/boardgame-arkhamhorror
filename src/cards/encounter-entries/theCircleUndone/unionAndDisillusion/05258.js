@@ -12,6 +12,7 @@ export default {
   code: '05258',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   modifiers: [{ target: 'skill:combat', amount: 1 }],
   abilities: [{
     kind: 'reaction',

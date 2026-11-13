@@ -277,6 +277,7 @@ export default {
   'hub.investigators.packAria': 'Filter by pack',
   'hub.investigators.classAria': 'Filter investigators by class color',
   'hub.investigators.allClasses': 'All',
+  'hub.investigators.randomClass': 'Random class',
   'hub.investigators.count': '{count} investigators',
   'hub.investigators.candidateAria': '{move}; {class}; {pack}',
   'hub.investigators.empty': 'No investigators available with the current filters',

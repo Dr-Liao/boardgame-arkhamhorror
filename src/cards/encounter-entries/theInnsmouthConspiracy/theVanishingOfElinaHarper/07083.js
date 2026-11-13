@@ -1,6 +1,6 @@
 // 艾莲娜·哈珀：免费能力不算行动；仅本回合第一次实际行动免除借机攻击。
 export default {
-  code: '07083', scope: 'storyAsset', implemented: true, trackActionHistory: true,
+  code: '07083', scope: 'storyAsset', implemented: true, trackActionHistory: true, scenarioPlayable: true,
   modifiers: [
     { target: 'skill:intellect', amount: 1 },
     { target: 'skill:agility', amount: 1 },

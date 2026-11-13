@@ -9,7 +9,9 @@
 //     CONTRACT §3 的合法引擎动作，走与普通行动同一事务 / ScenarioEnded 边界。
 //   · 确定性：固定 seed；不使用 Math.random / 时钟；用例之间各自建局、互不共享可变状态。
 import assert from 'node:assert/strict'
-import { createHash } from 'node:crypto'
+
+// 规范状态指纹（键排序 + 排除派生字段），与 golden replay / 迁移对比同一口径。
+import { stateHash } from '../src/engine/replay.js'
 
 export const CAMPAIGN_ID = 'edgeOfTheEarth'
 export const SCENARIO_IDS = Object.freeze([
@@ -344,7 +346,12 @@ export function openChapter(world, index, {
 // 存档 / 观察 / 校验辅助
 // ---------------------------------------------------------------------------
 
-export const hashState = state => createHash('sha256').update(JSON.stringify(state)).digest('hex')
+// 2026-11-11：逐步骤指纹改用引擎的规范 stateHash（键排序 + 排除派生字段 cards/investigatorDefs 等）。
+// 旧实现是 naive JSON.stringify 整个 state：state.cards 里含有全部 5,930 张卡的派生元数据
+// （含每张卡的 abilities id 列表），因此任何一张卡的能力条数变化（例如 05032/05280 改成单一
+// 快速事件描述子）都会让 EOTE replay 基线看起来「行为变了」，而 EOTE 行为其实零变化。
+// 规范 stateHash 的定义见 src/engine/replay.js 的 REPLAY_HASH_OMITTED。
+export const hashState = state => stateHash(state)
 
 /** 生产存档路径：JSON 序列化（大厅存档就是 JSON）→ migrateState → 返回可继续行动的状态。 */
 export function saveAndRestore(world, state) {

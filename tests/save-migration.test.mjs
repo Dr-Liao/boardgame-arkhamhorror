@@ -250,8 +250,10 @@ test('登记的迁移步骤逐级执行，并在说明中记录版本变化', ()
   assert.deepEqual(calls, [['a', STATE_SCHEMA_VERSION - 2], ['b', STATE_SCHEMA_VERSION - 1]])
   assert.equal(state.schemaVersion, STATE_SCHEMA_VERSION)
   assert.equal(state.rulesVersion, RULES_VERSION)
-  assert.match(changes[0], /第一步/)
-  assert.match(changes[1], /第二步/)
+  // 2026-11-13：修复类变更（回合收尾流程模型）可能排在版本步骤说明之前；逐级顺序按两种说明的位置比较。
+  const firstIndex = changes.findIndex(item => /第一步/.test(item))
+  const secondIndex = changes.findIndex(item => /第二步/.test(item))
+  assert.ok(firstIndex >= 0 && secondIndex >= 0 && firstIndex < secondIndex, changes.join(' / '))
   assert.deepEqual(state.sealedTokens, [], '缺失的空字段按新开局模板补齐')
   assert.ok(changes.some(item => item.includes('sealedTokens')))
   assertPlayable(state)
@@ -267,5 +269,50 @@ test('强制修复补齐缺失字段并重算合法行动', () => {
   assert.deepEqual(state.exiledBySeat, [])
   assert.ok(changes.includes('重算合法行动'))
   assert.deepEqual(state.legalMoves, legalMoves(state))
+  assertPlayable(state)
+})
+
+// 2026-11-13：行动点用尽不再自动结束回合，也不再弹「收尾玩家窗口」。旧存档（turnFlowModel 缺失
+// 或为 1）若停在这个暂停点上，恢复凭据里的窗口答案在续玩时会变成「未消费的选择恢复凭据」；
+// 迁移按「让过窗口」处理，并补上流程模型标记。
+test('旧存档停在已移除的收尾玩家窗口：迁移按让过处理，回到 0 行动空档期', () => {
+  const old = restore(create())
+  delete old.turnFlowModel
+  old.currentSeat = 0
+  old.turnSeat = 0
+  old.investigators[0].actionsLeft = 0
+  old.investigators[0].hand = ['01036']
+  old.investigators[0].resources = 5
+  old.pendingChoice = {
+    id: 'q9-0', kind: 'playerWindow', seat: 0, source: 'investigation.afterAction', canSkip: true,
+    prompt: '回合结束前：可以打出快速卡或使用免费触发能力，或让过。',
+    options: [{ id: 'skip', label: '让过' }, { id: 'fast-card:01036', label: '⚡ 快速打出「心胜于物」' }],
+  }
+  old.continuation = { id: 9, base: restore(old), seat: 0, move: { action: 'draw' }, answers: [], emitted: 0 }
+  old.legalMoves = [
+    { action: 'choose', choiceId: 'q9-0', optionId: 'skip' },
+    { action: 'choose', choiceId: 'q9-0', optionId: 'fast-card:01036' },
+  ]
+  const snapshot = JSON.stringify(old)
+  const { state, changes } = migrateState(old)
+  assert.equal(JSON.stringify(old), snapshot, '迁移不得修改入参')
+  assert.equal(state.turnFlowModel, 2)
+  assert.equal(state.pendingChoice, null, '已移除的收尾窗口不能留成待决选择')
+  assert.equal(state.continuation, undefined, '恢复凭据一并清掉，续玩不会再出现未消费答案')
+  assert.equal(state.turnSeat, undefined)
+  assert.equal(state.currentSeat, 0, '回合交还给行动者，进入 0 行动空档期')
+  assert.ok(changes.some(line => line.includes('回合收尾流程升级')), changes.join(' / '))
+  // 空档期重算合法动作：快速卡与结束回合都是直接行动。
+  assert.ok(state.legalMoves.some(move => move.action === 'endTurn'), '0 行动空档期必须能主动结束回合')
+  assert.ok(state.legalMoves.some(move => move.action === 'play' && move.cardId === '01036'), '快速卡是直接合法行动')
+  assertPlayable(state)
+})
+
+test('普通旧存档也要补上 turnFlowModel=2（不打断正常续玩）', () => {
+  const old = restore(create())
+  delete old.turnFlowModel
+  const { state, changes } = migrateState(old)
+  assert.equal(state.turnFlowModel, 2)
+  assert.ok(changes.some(line => line.includes('回合收尾流程升级')), changes.join(' / '))
   assertPlayable(state)
 })

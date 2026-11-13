@@ -33,6 +33,8 @@ import { afterHandDiscard } from './hand-discard-window.js'
 import { swarmCardsOf, swarmGroup, returnSwarmCard } from './swarm.js'
 import { afterThreatEntered } from './threat-entry.js'
 import { ignoreLocationTrigger } from './location-effect-scope.js'
+import { beginEncounterEffectScope, endEncounterEffectScope } from './resolution-scope.js'
+import { reactionSource } from './reaction-source.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
@@ -170,6 +172,8 @@ export function createScenarioRuntime(deps) {
     locationTraits,
     setLocationShroudMod,
     moveRelicOfAges,
+    // 2026-11-13 P1-13：内容层 api.moveCard 的原语依赖（引擎统一走 deck-ops 的规格归一）。
+    moveCardTo,
     newCardInstance,
     notifyCluesRemoved,
     performTest,
@@ -235,7 +239,10 @@ function scenarioRuntime(state, events, testSource = null) {
       options: [{ id: 'done', cardCode: loc.originalCode || loc.code, label: loc.name }] })
     return true
   }
-  return wrapInvestigatorEffects(state, {
+  const api = wrapInvestigatorEffects(state, {
+    // 2026-11-13 P1-13：`api.tsk` 别名——条目面（ctx.api 摊平 mechanics）与场景运行时看到同一份
+    // 机制视图；09751 等按 `api.tsk.concealed` 读，此前只有 `api.mechanics.tsk` 导致崩溃。
+    get tsk () { return this.mechanics?.tsk || null },
     lookEncounterTop: (seat, count, options = {}) => {
       const cards=state.encounterDeck.slice(-Math.max(0,count)).reverse()
       if (cards.length) requestChoice(state,{kind:'look',source:options.source || 'lookEncounterTop',seat,
@@ -243,6 +250,61 @@ function scenarioRuntime(state, events, testSource = null) {
         options:[{id:'continue',label:'继续',cardCodes:cards}]})
       return cards
     },
+    /**
+     * 2026-11-13 P1-13：查看牌库顶并取若干张（09590a/09583/维多利亚学院等章节点名的原语）。
+     * options: { zone:'deck', count, choose, arrange, returnStrategy:'shuffle'|'top', source }
+     * 返回选中的卡号数组（已放入手牌）。
+     */
+    lookAt: (seat, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv) throw new RangeError(`lookAt 座位无效：${JSON.stringify(seat)}`)
+      if ((options.zone || 'deck') !== 'deck') throw new Error('lookAt 目前只支持牌库')
+      const count = Math.max(0, Math.min(Number(options.count) || 1, inv.deck.length))
+      if (!count) return []
+      const top = inv.deck.splice(inv.deck.length - count, count)
+      const choose = Math.max(0, Math.min(Number(options.choose ?? 0), top.length))
+      const pool = [...top]
+      const chosen = []
+      while (chosen.length < choose && pool.length) {
+        const answer = requestChoice(state, { kind: 'card', seat, source: options.source || 'lookAt',
+          prompt: `查看牌库顶 ${count} 张，选择 ${choose} 张加入手牌（其余返回牌库）。`,
+          options: pool.map((code, index) => ({ id: String(index), label: cardName(code), cardCode: code })) })
+        const index = Number(answer)
+        if (!Number.isInteger(index) || !pool[index]) break
+        chosen.push(pool.splice(index, 1)[0])
+      }
+      for (const code of chosen) putInHand(state, inv, code)
+      const rest = [...pool]
+      if (options.returnStrategy === 'shuffle') {
+        for (const code of rest) inv.deck.push(code)
+        if (typeof shuffle === 'function') shuffle(inv.deck)
+      } else {
+        rest.reverse()
+        for (const code of rest) inv.deck.push(code)
+      }
+      info(state, events, `🔎 ${inv.name} 查看牌库顶 ${count} 张，取走 ${chosen.length} 张。`)
+      return chosen
+    },
+    /**
+     * 2026-11-13 P1-13：内容层通用移卡入口（withoutATrace 空洞/放一边等）。
+     * 规格与引擎 `moveCardTo` 相同；`ownerSeat`/`seat` 是选项（不属于规格），此前章节写进规格会触发严格校验。
+     */
+    moveCard: (rawSpec = {}) => {
+      const { ownerSeat = null, seat = null, ...spec } = rawSpec
+      const inv = state.investigators[ownerSeat ?? seat ?? state.currentSeat ?? 0]
+      if (!inv) throw new RangeError('moveCard 座位无效')
+      return moveCardTo(state, inv, spec, events)
+    },
+    /** 2026-11-13 P1-13：免费打出一张手牌（09683/珠宝匠之路等「按成功点数免费打出」）。 */
+    playCardFromHandFree: (seat, code, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv || !inv.hand.includes(code)) return false
+      doPlay(state, seat, code, events, false, true)
+      info(state, events, `🎁 ${inv.name} 免费打出「${cardName(code)}」。`)
+      return true
+    },
+    /** 2026-11-13 P1-13：在指定卡上放毁灭（09717 等）。 */
+    placeDoomOnCard: (card, amount = 1) => placeDoomOnCard(state, card, amount, events, { silent: true }),
     enemyOutcomes:enemyOutcomePublicApi(state,events),
     enemyZones:enemyZoneApi(state,events),
     mechanics: createMechanicsApi(state, {
@@ -251,6 +313,12 @@ function scenarioRuntime(state, events, testSource = null) {
       drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
       cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
       floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
+      // 2026-11-13 P1-1：与 abilityApi 同一个派发口径（内容层经 api.mechanics.tsk 揭露/变换时开窗）。
+      exposed: (state, context) => reactionWindow(state, 'tskExposed', { when: 'tskExposed', ...context }, events, { allowNested: true }),
+      // 2026-11-13 P1-11：与 abilityApi 同一放置重定向读点（09517）。
+      redirectConcealedLocation: (state, locationId) =>
+        scenarioBehavior(state).redirectConcealedLocation?.(state, locationId) ?? locationId,
+      keyShifted: (state, context) => reactionWindow(state, 'tskKeyShifted', { when: 'tskKeyShifted', ...context }, events, { allowNested: true }),
       entryError: (seat, destination) => deps.mechanicsEntryError?.(state, seat, destination) || null,
       directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
       moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
@@ -588,6 +656,8 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!inv || !(n > 0)) return 0
       const context = reactionWindow(state, 'wouldLoseActions', {
         when: 'wouldLoseActions', seat, amount: n, what: 'actions', location: inv.location,
+        // 来源判定统一走 reaction-source.js（遭遇卡/敌人攻击/其它）；「否定存在」按这个字段决定是否可打出。
+        source: reactionSource(state),
         prompt: `${inv.name} 将要失去 ${n} 个行动`,
       }, events)
       if (context.cancelled) {
@@ -1696,7 +1766,7 @@ function scenarioRuntime(state, events, testSource = null) {
       const pile = state.acts?.[state.actIndex ?? 0]
       if (!pile) return 0
       const want = Math.max(0, Math.floor(Number(amount) || 0))
-      const have = Number(breachesOf(location) || 0)
+      const have = Number(breachOf(location) || 0)
       const moved = Math.min(want, have)
       if (moved <= 0) return 0
       removeBreach(state, locationId, moved)
@@ -1840,6 +1910,20 @@ function scenarioRuntime(state, events, testSource = null) {
     discardRandom: (seat, n) => discardRandomFromHand(state, state.investigators[seat], n, events),
     discardChosen: (seat, n, source = 'encounter') => {
       const inv = state.investigators[seat]
+      if (!inv || !(n > 0) || !(inv.hand || []).length) return 0
+      // 2026-11-11：「选择并弃掉 N 张手牌」与「随机弃手牌」共用同一个按面向取消窗口
+      // （05032/05280「否定存在」）。来源判定统一走 reaction-source.js：剧本内容方法执行期间
+      // 处于 encounterEffectResolving 帧内，窗口因此知道这是遭遇卡效果。
+      const context = reactionWindow(state, 'wouldDiscardFromHand', {
+        when: 'wouldDiscardFromHand', seat, amount: n, what: 'discard', location: inv.location,
+        source: reactionSource(state),
+        prompt: `${inv.name} 将要弃掉 ${n} 张手牌`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了弃掉手牌的效果。`)
+        return 0
+      }
+      let discarded = 0
       for (let i = 0; i < n; i++) {
         const options = inv.hand.flatMap((code, index) => canDiscardFromHand(inv, code)
           ? [{ id: String(index), label: cardName(code) }] : [])
@@ -1850,7 +1934,9 @@ function scenarioRuntime(state, events, testSource = null) {
         const code = inv.hand.splice(index, 1)[0]
         discardPlayerCards(state, inv, code)
         afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
+        discarded += 1
       }
+      return discarded
     },
     drawDiscard: (seat, index) => {
       const inv = state.investigators[seat], code = inv.discard.splice(index, 1)[0]
@@ -2196,7 +2282,27 @@ function scenarioRuntime(state, events, testSource = null) {
           location: state.investigators[context.seat]?.location }, events, { allowNested: true })
     }),
   })
+  return withEncounterEffectScope(api)
 }
 
   return scenarioRuntime
+}
+
+// 剧本内容 api 的「遭遇卡效果作用域」包装（2026-11-11）。
+// 规则书 FAQ 把幕/密谋/地点/敌人/诡计/弱点/场景卡都算遭遇卡；「否定存在」这类只对
+// 「遭遇卡或敌人攻击」生效的取消效果，需要窗口 context.source 能区分来源。剧本内容
+// （地点规则、幕/密谋翻开、敌人脚本、遭遇条目）全部通过本模块的 api 结算，因此在每个
+// 方法执行期间压一个进程内帧即可，不需要每个调用点各传一次来源。
+// 帧只影响窗口 context 的来源标记，不写 state（存档/重放指纹不变）；嵌套调用按计数器恢复。
+function withEncounterEffectScope(api) {
+  const wrapped = {}
+  for (const [key, value] of Object.entries(api)) {
+    wrapped[key] = typeof value === 'function'
+      ? (...args) => {
+          beginEncounterEffectScope()
+          try { return value(...args) } finally { endEncounterEffectScope() }
+        }
+      : value
+  }
+  return wrapped
 }

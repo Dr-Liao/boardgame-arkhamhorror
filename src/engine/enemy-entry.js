@@ -3,6 +3,11 @@ import { registeredEntry } from './ability.js'
 export function enemyCanEnterLocation(state, enemy, destination) {
   const rule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
   const location = state.locations.find(item => item.id === destination)
+  // 梦境之门（06015a/b）：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门」。
+  // FAQ v2.1（2023-08）：敌人不能在梦境之门生成；若有敌人会在卢克位于梦境之门时生成在
+  // 他的地点，改为弃掉该敌人。移动/猎人/追逐/生成校验共用本函数，所以这一处同时覆盖
+  // 「进入」与「生成」两条路径（生成失败由 enemies.js#spawnEnemy 的 spawnFailed 分支弃牌）。
+  if (location?.dreamGate === true) return false
   // 「敌人不能进入本地点」（TIC 07252b 拘禁室）：地点侧的声明。移动/猎人/追逐/生成校验
   // 共用本函数，所以一处声明覆盖「进入」与「生成」两条路径；生成落点的改换由
   // enemies.js#spawnEnemy 读取 locationRule.enemySpawnRedirect 处理。

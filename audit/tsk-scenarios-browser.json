@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-p7-reporter.mjs",
+  "milestone": "P7",
+  "campaignId": "theScarletKeys",
+  "status": "passed",
+  "specs": [
+    "tests/tsk-scenarios.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 desktop 生产大厅启动与关卡设置指南骨架",
+      "status": "passed",
+      "durationMs": 6840,
+      "viewport": "desktop"
+    },
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动绯红密钥战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 89892,
+      "viewport": "desktop",
+      "scenario": "deadHeat"
+    },
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 desktop 真实大厅启动绯红密钥战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 89892,
+      "viewport": "desktop",
+      "scenario": "riddlesAndRain"
+    },
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 mobile 生产大厅启动与关卡设置指南骨架",
+      "status": "passed",
+      "durationMs": 4705,
+      "viewport": "mobile"
+    },
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动绯红密钥战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 90898,
+      "viewport": "mobile",
+      "scenario": "deadHeat"
+    },
+    {
+      "file": "tests/tsk-scenarios.browser.mjs",
+      "title": "P7 mobile 真实大厅启动绯红密钥战役、序幕与首章",
+      "status": "passed",
+      "durationMs": 90898,
+      "viewport": "mobile",
+      "scenario": "riddlesAndRain"
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/tsk/p7/screenshots/desktop-deadHeat-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-deadHeat-table.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-lobby-skeleton.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-riddlesAndRain-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-skeleton-table.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-theGathering-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-tsk-chapters.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-tsk-lobby.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-tsk-scenario-result.png",
+    "artifacts/migration/tsk/p7/screenshots/desktop-tsk-table.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-deadHeat-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-deadHeat-table.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-lobby-skeleton.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-riddlesAndRain-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-skeleton-table.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-theGathering-guide.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-tsk-chapters.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-tsk-lobby.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-tsk-scenario-result.png",
+    "artifacts/migration/tsk/p7/screenshots/mobile-tsk-table.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "scenarios": {
+      "deadHeat": {
+        "desktop": true,
+        "mobile": true
+      },
+      "riddlesAndRain": {
+        "desktop": true,
+        "mobile": true
+      }
+    }
+  }
+}

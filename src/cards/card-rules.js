@@ -248,7 +248,15 @@ export function relicDiscountLocation(code) {
   return entryOf(String(code ?? ''))?.relicDiscountLocation === true
 }
 
-// 剧情资产即使不在常规卡池里，也允许在战役牌组中打出（02040/02061/02080/02140/02217/02218/02219）。
+// 剧情资产即使不在常规卡池里，也允许在战役牌组中打出。
+//
+// 声明：卡条目 `scenarioPlayable: true`；唯一引擎读点：src/engine/stats.js#runtimeCardAvailable
+// （授权事实源 = 战役调查员记录的牌组，由 campaignCardChange / 战役奖励写入）。
+// 新增循环只给已验收的剧情资产补这一行声明，不要在战役 behavior 里再写 canPlayScenarioCard 钩子。
+// 已声明：02040/02061/02080/02140/02217/02218/02219（敦威治）、03143（卡尔克萨）、
+// 04051/04061/04147/04148/04191/04303（失落的时代）、
+// 05150/05228/05258/05259/05260/05261（万象无终）、07083（印斯茅斯）。
+// 永久卡（07151 密教教义）在开局直接入场，不需要这条声明。
 export function scenarioPlayableFor(code) {
   return entryOf(String(code ?? ''))?.scenarioPlayable === true
 }

@@ -1,7 +1,7 @@
 # 全战役剧情 / 冒险指南 / 关卡设置文本中文审计规范（docs/translate）
 
 > 性质：**只读审计 + 可复现扫描**。本轮不修改游戏内容与实现；产物只写 `games/arkhamhorror/docs/translate/**`。
-> 生成日期：2026-11-09。口径借鉴七循环现有的 [`docs/edgeOfTheEarth/translate/_SPEC.md`](../edgeOfTheEarth/translate/_SPEC.md)，本条线把范围扩展到全部 8 个已注册战役。
+> 生成日期：2026-11-09。口径借鉴七循环现有的 `docs/edgeOfTheEarth/translate/_SPEC.md` 归档（未随本仓迁移保留），本条线把范围扩展到全部 8 个已注册战役。
 
 ## 一、审计对象
 

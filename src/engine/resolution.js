@@ -12,7 +12,7 @@ export function setAutoReactionHosted(value = true) { autoReactionHosted = !!val
 // 续算时这些字段取自当前状态而非事务快照：存档迁移只会刷新顶层状态，
 // 若从 base 恢复版本号，旧存档回答待决选择后会退回旧版本而无法继续行动。
 const STATIC_FIELDS = ['cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
-  'schemaVersion', 'rulesVersion', 'resourceVersion']
+  'schemaVersion', 'rulesVersion', 'resourceVersion', 'turnFlowModel']
 const clone = value => JSON.parse(JSON.stringify(value))
 // 事务恢复凭据（continuation.move）只保留语义字段：label/explanation 是展示文案，
 // 没有规则作用，却会随日志进 state、进存档、进状态指纹——改一句卡面文案不该算行为变化。
@@ -39,6 +39,13 @@ class ResolutionCheckpoint extends Error {
 export function resolutionCheckpoint(state, seat, move) {
   if (!state._resolution) throw new Error('检查点必须在规则事务中执行')
   throw new ResolutionCheckpoint(seat, move)
+}
+
+// 内容层的「可选询问」辅助函数只应吞掉普通业务错误；ChoicePause / ResolutionCheckpoint
+// 是引擎用异常表达的控制流，必须原样重抛，否则待决选择会被静默默认或让事务游标失配
+// （2026-11-13 P0：sanguineShadows/dogsOfWar/onThinIce/shadesOfSuffering/congressOfTheKeys）。
+export function isPendingChoice(error) {
+  return error instanceof ChoicePause || error instanceof ResolutionCheckpoint
 }
 
 // `seats` lets several seats race to answer; `seat` stays the primary responder used for replay.

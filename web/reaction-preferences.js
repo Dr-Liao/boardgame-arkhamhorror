@@ -75,8 +75,10 @@ export function reactionDisabledCodes(session, seat) {
     .filter(([, state]) => state === 'skip').map(([code]) => code).slice(0, 256)
 }
 
-// 「⚡ 快速打出」候选的 option id → 卡号。收尾玩家窗口（playerWindow 'investigation.afterAction'）
-// 给手牌快速事件的选项只带 `fast-card:<卡号>`（手牌）或 `fast-card:hunch:<卡号>`（直觉牌库揭示那张），
+// 「⚡ 快速打出」候选的 option id → 卡号。玩家窗口（playerWindow；技能检定/神话后/敌人阶段后与
+// 其它调查员的行动间窗口）给手牌快速事件的选项只带 `fast-card:<卡号>`（手牌）或
+// `fast-card:hunch:<卡号>`（直觉牌库揭示那张）……（2026-11-13 起行动点用尽的空档期不再开窗，
+// 快速卡直接进 legalMoves，不产生这些 option id。）
 // 而 `fast-card:hunch:<卡号>` 只有通道候选才额外带 cardCode（见 encounter.js#playerWindow 的选项负载：
 // 手牌保持旧形状，避免改变既有待决选择）。卡面闪电开关按卡号记忆，必须能从这里反查，
 // 否则「本局不再询问」存了 skip 却过滤不掉选项、也不会整窗自动让过。id 格式与

@@ -12,7 +12,11 @@ test('六循环八关各三首，旧曲复用不超过40%，循环内无重复�
   const campaign = 'theInnsmouthConspiracy'
   const rows = SCENARIO_MUSIC[campaign]
   assert.deepEqual(Object.keys(rows).sort(), chapters.map(ch => ch.id).sort())
-  const old = new Set(Object.entries(SCENARIO_MUSIC).filter(([id]) => id !== campaign).flatMap(([, rows]) => Object.values(rows).flatMap(ch => ch.tracks)))
+  const earlierCampaigns = [
+    'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa',
+    'theForgottenAge', 'theCircleUndone', 'theDreamEaters',
+  ]
+  const old = new Set(earlierCampaigns.flatMap(id => Object.values(SCENARIO_MUSIC[id]).flatMap(ch => ch.tracks)))
   const assigned = []
   for (const ch of chapters) {
     const playlist = campaignPlaylistId({ campaign: { id: campaign }, hubSelectedScenarioId: ch.id, uiState: 'scenarioSetup' })

@@ -619,7 +619,7 @@ export const behavior = {
       }
       for (const inv of state.investigators) {
         if (inv.defeated || inv.resigned) continue
-        if (isPoisoned(inv)) api.addTrauma?.(state, inv.seat, 'mental', 1, events)
+        if (isPoisoned(inv)) api.addTrauma?.(inv.seat, 'mental', 1) // api=(seat, kind, amount)
         else api.campaignCardChange?.(state.campaign, inv.seat, POISONED_WEAKNESS, 'add', state.scenario.id)
       }
     }

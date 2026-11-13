@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../cards/cards-data.js'
-import { registeredEntry } from './ability.js'
+import { cannotLeaveHand, registeredEntry } from './ability.js'
 import { findBondedMain, bondedSetKey } from './bonded.js'
 
 export function replacePlayerZoneCards(state, inv, codes, reason) {
@@ -18,5 +18,13 @@ export function replacePlayerZoneCards(state, inv, codes, reason) {
 
 export function discardPlayerCards(state, inv, ...codes) {
   if (!inv) return 0
-  return inv.discard.push(...replacePlayerZoneCards(state, inv, codes, 'discard'))
+  // 2026-11-13 P1-16（09766）：不能离开手牌的牌即使被前置逻辑移出，也放回手牌而不进弃牌堆。
+  const kept = []
+  const discardable = []
+  for (const code of codes) {
+    if (cannotLeaveHand(code)) kept.push(code)
+    else discardable.push(code)
+  }
+  for (const code of kept) inv.hand.push(code)
+  return inv.discard.push(...replacePlayerZoneCards(state, inv, discardable, 'discard'))
 }

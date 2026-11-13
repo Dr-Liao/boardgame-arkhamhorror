@@ -492,7 +492,7 @@
       "scenario"
     ],
     "windows": {
-      "count": 115,
+      "count": 117,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
@@ -598,6 +598,8 @@
         "treachery",
         "treacheryTestSuccess",
         "treacheryWouldDiscard",
+        "tskExposed",
+        "tskKeyShifted",
         "turnBegins",
         "turnEnded",
         "upkeep.end",

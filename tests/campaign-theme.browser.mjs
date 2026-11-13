@@ -298,7 +298,7 @@ test('调查员选择页的职业筛选与候选卡跟随战役配色', async ({
     st.hubSeatSelected = {}
     st.currentSeat = 0
     st.campaign.scenarioResults = []
-    st.legalMoves = ['01001', '01002', '01003', '01004', '01005']
+    st.legalMoves = ['01001', '01002', '01003', '01004', '01005', '02005']
       .map(code => ({ action: 'hubSelectInvestigator', code, label: '选择调查员：' + code }))
   })
   const nav = hub.getByRole('navigation', { name: '战役局外页面' })
@@ -307,8 +307,10 @@ test('调查员选择页的职业筛选与候选卡跟随战役配色', async ({
   await expect(browser).toBeVisible()
   const pills = browser.locator('.ah-investigator-class-filter')
   await expect(pills).toHaveCount(6)
-  await expect(browser.locator('.ah-office-candidate')).toHaveCount(5)
+  await expect(browser.locator('.ah-office-candidate')).toHaveCount(6)
   await page.setViewportSize({ width: 1440, height: 1000 })
+  const pillRows = () => pills.evaluateAll(buttons => new Set(buttons.map(button => button.offsetTop)).size)
+  expect(await pillRows()).toBe(1)
   await page.evaluate(async () => Promise.all([...document.images].map(img => img.decode().catch(() => {}))))
   await browser.scrollIntoViewIfNeeded()
   await browser.screenshot({ path: shot('campaign-theme-investigators.png'), animations: 'disabled' })
@@ -340,6 +342,23 @@ test('调查员选择页的职业筛选与候选卡跟随战役配色', async ({
   expect(styles.candidateClass.color).toBe('rgb(173, 163, 184)')
   expect(styles.pack).toBe('rgb(199, 182, 214)')
   expect(styles.count).toBe('rgb(173, 163, 184)')
+
+  const random = browser.getByRole('button', { name: '随机职业' })
+  const pack = browser.getByRole('combobox', { name: '筛选扩展包' })
+  await pack.selectOption({ label: '敦威治遗产（1）' })
+  const selectedPack = await pack.inputValue()
+  await random.click()
+  await expect(pills.filter({ hasText: '生存者' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(pack).toHaveValue(selectedPack)
+  await expect(browser.locator('.ah-office-candidate-shell')).toHaveAttribute('data-code', '02005')
+  await expect(random).toBeFocused()
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(await pillRows()).toBe(1)
+  await random.click()
+  const classes = browser.getByRole('group', { name: '按职业颜色筛选调查员' })
+  await classes.getByRole('button', { name: '全部' }).click()
+  await expect(classes.getByRole('button', { name: '全部' })).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('关卡选择页的战役案件卡跟随战役配色', async ({ page }) => {

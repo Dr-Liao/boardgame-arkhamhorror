@@ -1,0 +1,49 @@
+{
+  "entries": [
+    {
+      "file": "scenarios/shadesOfSuffering.json",
+      "path": "label.harvesterOfWoe.cancelDamage",
+      "zh": "取消1点伤害"
+    },
+    {
+      "file": "scenarios/shadesOfSuffering.json",
+      "path": "label.harvesterOfWoe.cancelHorror",
+      "zh": "取消1点恐惧"
+    },
+    {
+      "file": "scenarios/withoutATrace.json",
+      "path": "specialRules.0.title",
+      "zh": "域外之地的地点相邻关系"
+    },
+    {
+      "file": "scenarios/withoutATrace.json",
+      "path": "specialRules.0.body",
+      "zh": "在本剧本中，地点与隐匿迷你卡牌（见下文“阴影中的地点”）按行列布局排列。每个地点都与和它相邻的每个地点相连。\n\n• 相邻地点共用一条边（左、右、上或下）。仅共用一个角的地点不相邻。\n• 在本剧本中，隐匿迷你卡牌也会如上所述放置在紧邻一个或更多地点的位置，而不是像通常那样放置在地点上（见下文“阴影中的地点”）。"
+    },
+    {
+      "file": "scenarios/withoutATrace.json",
+      "path": "specialRules.1.title",
+      "zh": "阴影中的地点"
+    },
+    {
+      "file": "scenarios/withoutATrace.json",
+      "path": "specialRules.1.body",
+      "zh": "在本剧本中，调查员必须穿越域外来客那看似迷宫、实则虚幻的本界。为了表现探索这个异界维度的难度，始终有三张残骸之城地点被放置在阴影中（从异界牌库顶拿取），而隐匿迷你卡牌则排列在紧邻地点的位置，而非放置在地点上。揭露这些隐匿迷你卡牌，是找到穿越这个异界之地的路线的关键。\n\n• 就卡牌能力和游戏规则而言，紧邻某地点的隐匿迷你卡牌视为位于该地点。尝试揭露一张相邻的隐匿迷你卡牌时，使用你当前所在地点的隐蔽值。\n• 当一张残骸之城迷你卡牌被揭露时，将其放在一边，并找出阴影中位置与该迷你卡牌相符的残骸之城地点（L代表左、M代表中、R代表右）。将该地点放入其迷你卡牌原先所在的位置（未揭示面朝上）。\n  • 如果该位置上还有其他隐匿迷你卡牌，则移动它们，尽可能均匀地排列在新放入的残骸之城地点旁的空位上。\n• 当一张残骸之城地点离开阴影后，将异界牌库顶的卡牌放置在阴影中刚才被揭露的残骸之城所在的位置（不要查看其另一面）。然后结算其隐匿关键词，将其每张隐匿迷你卡牌尽可能均匀地排列在刚被揭露的残骸之城地点旁的空位上。\n  • 若有可能，阴影中必须始终存在三张残骸之城地点。\n• 同一个位置上可以有多于一张隐匿迷你卡牌，但任何隐匿迷你卡牌都不能占据已经有地点存在的位置。"
+    },
+    {
+      "file": "scenarios/congressOfTheKeys.json",
+      "path": "intro.nay.count",
+      "zh": "{count}票"
+    },
+    {
+      "file": "scenarios/congressOfTheKeys.json",
+      "path": "intro.yea.count",
+      "zh": "{count}票"
+    },
+    {
+      "file": "scenarios/congressOfTheKeys.json",
+      "path": "version2.setup.removeOtherCoterie",
+      "zh": "将所有其他_同志会_敌人移出游戏。"
+    }
+  ]
+}

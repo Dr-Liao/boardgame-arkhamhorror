@@ -603,23 +603,33 @@ export const behavior = {
     if (fell) records.theInvestigatorsFellIntoTheDepths = true
     else records.theNexusIsNear = true
     if (fell) {
-      // 深度 1：全员阵亡（战役记录也标成 killed，不能还按在役算）。
+      // 结局 1 只会在「每位调查员都已撤退/被击败」后结算，因此这里不能用 active(state)：
+      // 它必然为空，会让深度 1 的阵亡、深度 2/3 的创伤全部落空（结算页显示仍在役、战役却已失败）。
+      // 卡面写的是「每位调查员」：按 state.investigators 全体结算。
       if (depth === 1) {
-        for (const inv of active(state)) {
-          inv.defeated = true
-          inv.defeatCause = 'fellIntoTheDepths'
+        // 深度 1：坠落致命，每位调查员死亡，调查员剧本失败（战役结束）。
+        // 已被击败的调查员保留原本的阵亡原因（如 04289 坠崖），不要改写成坠入深渊。
+        for (const inv of state.investigators) {
+          if (!inv.defeated && !inv.resigned) {
+            inv.defeated = true
+            inv.defeatCause = 'fellIntoTheDepths'
+          }
           const record = state.campaign.investigators?.[inv.seat]
           if (record) record.status = 'killed'
         }
-        if (!state.investigators.some(inv => !inv.defeated && !inv.resigned)) state.campaign.failed = true
+        state.campaign.failed = true
+        api.info?.('☠️ 深度等级 1：坠落是致命的，调查队全员阵亡，战役失败。')
       } else {
         const trauma = depth === 2 ? 2 : depth === 3 ? 1 : 0
-        if (trauma) for (const inv of active(state)) api.addTrauma?.(state, inv.seat, 'physical', trauma, events)
-        // 深度 2：每位幸存调查员再从收藏随机获得一张基础[[伤势]]弱点并洗入牌库。
+        if (trauma) {
+          for (const inv of state.investigators) api.addTrauma?.(inv.seat, 'physical', trauma) // api=(seat, kind, amount)
+          api.info?.(`☠️ 深度等级 ${depth}：坠落令每位调查员承受 ${trauma} 点肉体创伤。`)
+        }
+        // 深度 2：每位调查员再从收藏随机获得一张基础[[伤势]]弱点并洗入牌库。
         if (depth === 2) {
           const pool = Object.values(ALL_CARDS).filter(card =>
             card.subtype === 'weakness' && (card.traits || []).includes('Injury'))
-          for (const inv of active(state)) {
+          for (const inv of state.investigators) {
             const record = state.campaign.investigators?.[inv.seat]
             if (!record) continue
             record.deck ||= []
@@ -628,6 +638,14 @@ export const behavior = {
             const pick = available[Math.floor((api.random?.() ?? 0.5) * available.length)] || available[0]
             record.deck.push(pick.code)
             api.info?.(`🩹 ${inv.name} 从收藏获得基础伤势弱点「${pick.nameZh || pick.name}」并洗入牌库。`)
+          }
+        }
+        // 卡面：如果这一创伤导致所有调查员死亡，调查员失败（战役结束）。
+        if (trauma) {
+          const roster = Object.values(state.campaign.investigators || {})
+          if (roster.length && roster.every(record => record.status === 'killed')) {
+            state.campaign.failed = true
+            api.info?.('☠️ 坠落造成的创伤令所有调查员死亡，战役失败。')
           }
         }
       }

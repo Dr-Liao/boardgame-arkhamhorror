@@ -293,7 +293,7 @@ export function nextMove(state, policy) {
 // `hashes[i]` 是第 i 步之后的状态指纹（`hashes[0]` 是建局状态），长度 = 实际步数 + 1。
 // `onStep(state, index)` 给随机走子器的不变量断言留钩子；`pauseAfter` 用来固化"停在待决选择"的存档形态
 // （`pauseAfter` 之前的待决选择不算暂停，达到步数后才停）。
-export function playGame({ settings, players, policy, steps = 60, onStep = null, pauseAfter = null }) {
+export function playGame({ settings, players, policy, steps = 60, onStep = null, pauseAfter = null, stopAt = null }) {
   const state = createGameState(settings, players.map(player => ({ ...player })))
   const hashes = [stateHash(state)]
   const turns = []
@@ -309,6 +309,9 @@ export function playGame({ settings, players, policy, steps = 60, onStep = null,
     turns.push({ seat, move })
     hashes.push(stateHash(state))
     if (onStep) onStep(state, index + 1)
+    // 2026-11-13：行动点用尽后回合不再自动推进，同一 recipe 的步数变多；需要「停在某个界面阶段」
+    // 的基线（例如敦威治关间 interlude）用显式停点，而不是靠步数恰好落点。
+    if (stopAt && state.uiState === stopAt) break
     if (pauseAfter != null && index + 1 >= pauseAfter && state.pendingChoice) break
   }
   return { state, hashes, turns, log: captureReplayLog(state) }
@@ -350,6 +353,7 @@ const DRIVERS = {
       players,
       policy: createGenericPolicy(recipe.seed),
       steps: recipe.steps ?? 60,
+      stopAt: recipe.stopAt ?? null,
     })
   },
   random(recipe) {
@@ -426,7 +430,9 @@ export const REPLAY_RECIPES = Object.freeze([
   {
     id: 'dunwich-extracurricular-hub',
     note: '《敦威治遗产》第一章：2 人局外准备 → 课外活动，覆盖敦威治专属钩子',
-    driver: 'generic', seed: 'golden-dunwich', steps: 70, players: 2,
+    // 2026-11-13：行动点用尽后回合不再自动推进，每个调查员每回合多一步 endTurn；步数上调，
+    // 并在第一次进入关间（interlude）时停住，保住基线的 interlude 覆盖。
+    driver: 'generic', seed: 'golden-dunwich', steps: 160, players: 2, stopAt: 'interlude',
     settings: { campaignId: 'theDunwichLegacy', playerInvestigator: '02001' },
   },
   {

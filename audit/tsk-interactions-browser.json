@@ -12,97 +12,97 @@
       "file": "tests/scenario-guides.browser.mjs",
       "title": "完整指南按需加载，入口位于剧本右侧提示卡下方；桌面与手机可阅读",
       "status": "passed",
-      "durationMs": 4574
+      "durationMs": 3647
     },
     {
       "file": "tests/scenario-guides.browser.mjs",
       "title": "指南加载失败可重试，键盘可进入折叠的结局说明",
       "status": "passed",
-      "durationMs": 1378
+      "durationMs": 1166
     },
     {
       "file": "tests/script-actions-tfa.browser.mjs",
       "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（desktop）",
       "status": "passed",
-      "durationMs": 4981
+      "durationMs": 5200
     },
     {
       "file": "tests/script-actions-tfa.browser.mjs",
       "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（mobile）",
       "status": "passed",
-      "durationMs": 4837
+      "durationMs": 4640
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 世界地图启程与快捷旅票",
       "status": "passed",
-      "durationMs": 2190
+      "durationMs": 2212
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 定制升级勾选",
       "status": "passed",
-      "durationMs": 2181
+      "durationMs": 2390
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 空洞回收",
       "status": "passed",
-      "durationMs": 2227
+      "durationMs": 2213
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 绯红密钥变换",
       "status": "passed",
-      "durationMs": 2449
+      "durationMs": 2340
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 跨座位即时行动",
       "status": "passed",
-      "durationMs": 2474
+      "durationMs": 2421
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 desktop 隐匿迷你卡揭露与空状态",
       "status": "passed",
-      "durationMs": 3186
+      "durationMs": 3135
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 世界地图启程与快捷旅票",
       "status": "passed",
-      "durationMs": 2330
+      "durationMs": 1920
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 定制升级勾选",
       "status": "passed",
-      "durationMs": 2227
+      "durationMs": 2165
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 空洞回收",
       "status": "passed",
-      "durationMs": 2130
+      "durationMs": 2107
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 绯红密钥变换",
       "status": "passed",
-      "durationMs": 3658
+      "durationMs": 2110
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 跨座位即时行动",
       "status": "passed",
-      "durationMs": 2222
+      "durationMs": 2328
     },
     {
       "file": "tests/tsk-interactions.browser.mjs",
       "title": "P4 mobile 隐匿迷你卡揭露与空状态",
       "status": "passed",
-      "durationMs": 3327
+      "durationMs": 3050
     }
   ],
   "screenshots": [

@@ -4,6 +4,7 @@ import { encounterRules } from '../../encounter-rules.js'
 import { actRuleFor, agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { symbolConnections } from '../../card-data.js'
+import { swapRelicOfAges } from './relic-swap.js'
 import {
   PLAYER_SET_ASIDE, POISON_CODE, CONDITIONAL_DECKS, ANCIENT_LOCATIONS, PRESENT_LOCATIONS,
   EXPLORATION_LOCATIONS, TEMPLO_MAYOR_IDS,
@@ -38,8 +39,6 @@ const HAND_OF_THE_BROTHERHOOD = '04188'
 const WINDOW_TO_ANOTHER_TIME = '04189'
 const TIMELINE_DESTABILIZATION = '04190'
 const HARBINGER = '04062'
-const RELIC_BASE = '04061'
-const RELIC_FUTURE = '04191'
 
 // 探索牌库里各放 1 张的诡计（Haskell 的 treacheries 列表）。
 const EXPLORATION_TREACHERY_CODES = {
@@ -1140,25 +1139,7 @@ export const behavior = {
 }
 
 // 古代遗物：找到失落的遗物后，牌库里的《某种装置》版本换成《阻断未来》版本。
-function swapRelicOfAges(state, api) {
-  for (const inv of state.investigators) {
-    for (const zone of ['deck', 'discard', 'hand']) {
-      const index = (inv[zone] || []).indexOf(RELIC_BASE)
-      if (index < 0) continue
-      inv[zone][index] = RELIC_FUTURE
-      api?.moveRelicOfAges?.({ code: RELIC_FUTURE, seat: inv.seat })
-      api?.info?.('🏺 失落的遗物换成了《古代遗物（阻断未来）》。')
-      return true
-    }
-    const asset = (inv.assets || []).find(entry => (entry.originalCode || entry.code) === RELIC_BASE)
-    if (!asset) continue
-    asset.code = RELIC_FUTURE
-    asset.originalCode = RELIC_FUTURE
-    api?.moveRelicOfAges?.({ code: RELIC_FUTURE, seat: inv.seat })
-    return true
-  }
-  return false
-}
+// 在局区域与战役牌组记录必须一起换（实现见 relic-swap.js；下一关按记录重建牌库）。
 
 // 索卡洛广场：弃掉费用合计至少 5 的手牌。为免每次探索都要逐张询问，按费用从高
 // 到低自动弃牌凑够总额（玩家可以自己先弃牌来改变结果）。

@@ -118,7 +118,27 @@
         "tdeFrozenStar",
         "tdeDreamsBecomeReal",
         "tdeSpiderEyes",
-        "tdeSoporific"
+        "tdeSoporific",
+        "tskNightOnTheDocksSax",
+        "tskNoGoodLayabout",
+        "tskTabuk",
+        "tskDesertCity",
+        "tskTangoDeManzana",
+        "tskBassWalker",
+        "tskIntrepid",
+        "tskDhaka",
+        "tskNoFrillsComparsa",
+        "tskNoFrillsSalsa",
+        "tskNorthernGlade",
+        "tskLongNoteFour",
+        "tskNilesBlues",
+        "tskKillers",
+        "tskGhostpocalypse6CrossingTheThreshold",
+        "tskTrepidation",
+        "tskGhostpocalypse1Departure",
+        "tskNightmareMachine",
+        "tskNightVigil",
+        "tskMovementProposition"
       ],
       "includeCustom": true
     },
@@ -813,6 +833,121 @@
         "ticTheDescent",
         "ticStormfront",
         "thunderDreams"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys": {
+      "tracks": [
+        "tskNightOnTheDocksSax",
+        "tskNoGoodLayabout",
+        "darkWalk",
+        "tskTabuk",
+        "tskDesertCity",
+        "ticOppressiveGloom",
+        "tskTangoDeManzana",
+        "tskBassWalker",
+        "chasePulse",
+        "tskIntrepid",
+        "tskDhaka",
+        "penumbra",
+        "tskNoFrillsComparsa",
+        "tskNoFrillsSalsa",
+        "eveningOfChaos",
+        "tskNorthernGlade",
+        "tskLongNoteFour",
+        "tdeFrozenStar",
+        "tskNilesBlues",
+        "tskKillers",
+        "ticClashDefiant",
+        "tskGhostpocalypse6CrossingTheThreshold",
+        "tskTrepidation",
+        "tcuAnguish",
+        "tskGhostpocalypse1Departure",
+        "tskNightmareMachine",
+        "tcuSymmetry",
+        "tskNightVigil",
+        "tskMovementProposition",
+        "tcuFinalBattleOfTheDarkWizards"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/riddlesAndRain": {
+      "tracks": [
+        "tskNightOnTheDocksSax",
+        "tskNoGoodLayabout",
+        "darkWalk"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/deadHeat": {
+      "tracks": [
+        "tskTabuk",
+        "tskDesertCity",
+        "ticOppressiveGloom"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/sanguineShadows": {
+      "tracks": [
+        "tskTangoDeManzana",
+        "tskBassWalker",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/dealingsInTheDark": {
+      "tracks": [
+        "tskIntrepid",
+        "tskDhaka",
+        "penumbra"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/dancingMad": {
+      "tracks": [
+        "tskNoFrillsComparsa",
+        "tskNoFrillsSalsa",
+        "eveningOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/onThinIce": {
+      "tracks": [
+        "tskNorthernGlade",
+        "tskLongNoteFour",
+        "tdeFrozenStar"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/dogsOfWar": {
+      "tracks": [
+        "tskNilesBlues",
+        "tskKillers",
+        "ticClashDefiant"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/shadesOfSuffering": {
+      "tracks": [
+        "tskGhostpocalypse6CrossingTheThreshold",
+        "tskTrepidation",
+        "tcuAnguish"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/withoutATrace": {
+      "tracks": [
+        "tskGhostpocalypse1Departure",
+        "tskNightmareMachine",
+        "tcuSymmetry"
+      ],
+      "includeCustom": true
+    },
+    "theScarletKeys/congressOfTheKeys": {
+      "tracks": [
+        "tskNightVigil",
+        "tskMovementProposition",
+        "tcuFinalBattleOfTheDarkWizards"
       ],
       "includeCustom": true
     }

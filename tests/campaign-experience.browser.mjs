@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { fileURLToPath } from 'node:url'
 import { midnightConclusion, move } from './fixtures/midnight-story.mjs'
 import { viewState } from '../src/integration/observation.js'
-const output=fileURLToPath(new URL('../../../artifacts/arkham-polish',import.meta.url))
+const output=fileURLToPath(new URL('../../../artifacts/arkham-polish/',import.meta.url))
 async function start(page) {
   await page.goto('/index.html');await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()
   const setup=page.getByRole('dialog',{name:'调查准备设置'})
@@ -67,6 +67,70 @@ for(const width of [1440,390]) test(`午夜结局2与第三章导入在关间纪
   await nav.getByRole('button',{name:/导入.*地底噬魔/}).click()
   await expect(story).toContainText('最后谜团的钥匙')
   expect(await story.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true)
+})
+for(const width of [1440,390]) test(`调查纪事长目录限高滚动并自动定位当前章节 ${width}`,async({page})=>{
+  await page.setViewportSize({width,height:width===390?844:1000})
+  const {state}=midnightConclusion()
+  const chapters=Array.from({length:16},(_,i)=>({id:`intro:chapter-${i+1}`,kind:i%5===4?'interlude':'intro',scenarioId:'theGathering',title:`第 ${i+1} 章 · ${i%5===4?'幕间':'导入'}记录`,paragraphs:[`第 ${i+1} 章的记录正文。`]}))
+  chapters[11]={...chapters[11],id:'intro:current',title:'当前章节 · 正在阅读'}
+  let session
+  await page.route('**/api/start',async route=>{
+    const response=await route.fetch(),body=await response.json()
+    session=body.session
+    session.state=viewState(state,0)
+    session.state.campaignStory={currentId:'intro:current',entries:chapters}
+    session.events=[]
+    await route.fulfill({response,json:body})
+  })
+  await page.route('**/api/session?*',route=>route.fulfill({json:{ok:true,session}}))
+  const hub=await start(page)
+  const story=hub.getByRole('region',{name:'战役故事'}),nav=story.getByRole('navigation',{name:'故事章节'})
+  await expect(nav.getByRole('button')).toHaveCount(chapters.length)
+  const current=nav.getByRole('button',{name:/当前章节/})
+  await expect(current).toHaveAttribute('aria-current','page')
+  // 目录自身是一个限高滚动区：桌面纵向、移动端横向，都不再把页面撑长。
+  const rail=await nav.evaluate(el=>{const style=getComputedStyle(el);return{overflowX:style.overflowX,overflowY:style.overflowY,maxHeight:style.maxHeight,clientHeight:el.clientHeight,scrollHeight:el.scrollHeight,clientWidth:el.clientWidth,scrollWidth:el.scrollWidth,scrollTop:el.scrollTop,scrollLeft:el.scrollLeft}})
+  if(width===1440){
+    expect(rail.overflowY).toBe('auto');expect(rail.scrollHeight).toBeGreaterThan(rail.clientHeight+80);expect(rail.clientHeight).toBeLessThanOrEqual(700);expect(rail.scrollTop).toBeGreaterThan(0)
+    // 限高后的目录与右侧正文一起落在首屏内，不再把整页撑长。
+    const box=await nav.boundingBox();expect(box.y+box.height).toBeLessThanOrEqual(1000)
+  }else{
+    expect(rail.overflowX).toBe('auto');expect(rail.overflowY).toBe('hidden');expect(rail.maxHeight).toBe('none');expect(rail.scrollWidth).toBeGreaterThan(rail.clientWidth+80);expect(rail.scrollLeft).toBeGreaterThan(0)
+  }
+  // 常驻滚动指示条：系统 overlay 滚动条静止时不可见，此时由目录自绘；经典滚动条系统不重复画。
+  const indicator=await nav.evaluate(el=>{
+    const track=el.parentElement.querySelector('.ah-story-nav-scroll')
+    if(!track) return {missing:true}
+    const box=track.getBoundingClientRect(),thumb=track.firstElementChild.getBoundingClientRect()
+    const native=el.offsetWidth-el.clientWidth-(parseFloat(getComputedStyle(el).borderLeftWidth)||0)-(parseFloat(getComputedStyle(el).borderRightWidth)||0)
+    return {native,display:getComputedStyle(track).display,trackWidth:box.width,trackHeight:box.height,thumbWidth:thumb.width,thumbHeight:thumb.height}
+  })
+  expect(indicator.missing).not.toBe(true)
+  if(indicator.native>0) expect(indicator.display).toBe('none')
+  else {
+    expect(indicator.display).toBe('block')
+    if(width===1440){expect(indicator.trackHeight).toBe(rail.clientHeight);expect(indicator.thumbHeight).toBeGreaterThan(20)}
+    else {expect(indicator.trackWidth).toBe(rail.clientWidth);expect(indicator.thumbWidth).toBeGreaterThan(20)}
+    // 指示条的滑块随目录滚动偏移，而不是永远停在起点。
+    const thumbTravel=()=>nav.evaluate((el,vertical)=>{
+      const track=el.parentElement.querySelector('.ah-story-nav-scroll')
+      const box=track.getBoundingClientRect(),thumb=track.firstElementChild.getBoundingClientRect()
+      return vertical?thumb.top-box.top:thumb.left-box.left
+    },width===1440)
+    await expect.poll(thumbTravel).toBeGreaterThan(0)
+  }
+  // 当前章节自动滚进可视区（不必等玩家自己翻目录）。
+  const inRail=()=>current.evaluate(el=>{const a=el.parentElement.getBoundingClientRect(),b=el.getBoundingClientRect();return b.top>=a.top-1&&b.bottom<=a.bottom+1&&b.left>=a.left-1&&b.right<=a.right+1})
+  await expect.poll(inRail).toBe(true)
+  await page.screenshot({path:output+`story-long-journal-${width}.png`,animations:'disabled'})
+  // 切走再切回仍回到当前章节所在位置。
+  await hub.getByRole('button',{name:'战役总览',exact:true}).click()
+  await hub.getByRole('button',{name:'调查纪事',exact:true}).click()
+  await expect(story.locator('.ah-story-page h1')).toHaveText('当前章节 · 正在阅读')
+  await expect.poll(inRail).toBe(true)
+  // 目录内滚动点选其它章节仍可切换正文。
+  await nav.getByRole('button',{name:/第 2 章 · 导入记录/}).click()
+  await expect(story.locator('.ah-story-page h1')).toHaveText('第 2 章 · 导入记录')
 })
 for(const width of [1440,390]) test(`自动构筑保存后载入手动编辑，预览卡图与详情 ${width}`,async({page})=>{
   await page.setViewportSize({width,height:1000})

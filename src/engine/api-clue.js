@@ -62,7 +62,14 @@ export function createClueApi(state, events, deps) {
       return true
     },
     drawEncounter: seat => drawEncounter(state, state.investigators[seat], events),
-    endTurn: seat => doEndTurn(state, seat ?? state.currentSeat, events),
+    // 卡面「如果现在是你的回合，结束你的回合」。2026-11-13 起行动点用尽不再自动推进回合，
+    // 所以这里必须和 scenario-runtime 的同名原语一样打上 turnEnded 标记，dispatch 尾部才会
+    // 真正 advanceInvestigator（否则玩家会停在 0 行动空档期，需要再手动点结束回合）。
+    endTurn: seat => {
+      const target = state.investigators[seat ?? state.currentSeat]
+      if (target && state.currentSeat === target.seat) target.turnEnded = true
+      return doEndTurn(state, seat ?? state.currentSeat, events)
+    },
     // 支援自身的恐惧/充能（不是调查员的）：03112/03271 这类"放在自己身上的计数"。
     addAssetHorror: (card, amount = 1) => {
       if (!card) return 0

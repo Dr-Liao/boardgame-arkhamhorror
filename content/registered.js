@@ -115,6 +115,18 @@ import { manifest as eotePlayer } from './packs/eotePlayer/manifest.js'
 import { manifest as tskCampaignPack } from './packs/tskCampaign/manifest.js'
 import { manifest as tskInvestigators } from './packs/tskInvestigators/manifest.js'
 import { manifest as tskPlayer } from './packs/tskPlayer/manifest.js'
+// P7（八循环 M3）：《绯红密钥》战役 + 十章逐章行为验收后进生产组合根（playable）。
+import { manifest as tskCampaignManifest } from './campaigns/theScarletKeys/manifest.js'
+import * as tskRiddlesAndRain from './campaigns/theScarletKeys/scenarios/riddlesAndRain/index.js'
+import * as tskDeadHeat from './campaigns/theScarletKeys/scenarios/deadHeat/index.js'
+import * as tskSanguineShadows from './campaigns/theScarletKeys/scenarios/sanguineShadows/index.js'
+import * as tskDealingsInTheDark from './campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js'
+import * as tskDancingMad from './campaigns/theScarletKeys/scenarios/dancingMad/index.js'
+import * as tskOnThinIce from './campaigns/theScarletKeys/scenarios/onThinIce/index.js'
+import * as tskDogsOfWar from './campaigns/theScarletKeys/scenarios/dogsOfWar/index.js'
+import * as tskShadesOfSuffering from './campaigns/theScarletKeys/scenarios/shadesOfSuffering/index.js'
+import * as tskWithoutATrace from './campaigns/theScarletKeys/scenarios/withoutATrace/index.js'
+import * as tskCongressOfTheKeys from './campaigns/theScarletKeys/scenarios/congressOfTheKeys/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
@@ -123,7 +135,7 @@ let bundle = {
     ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer,
     tskCampaignPack, tskInvestigators, tskPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
-    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest],
+    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -137,7 +149,9 @@ let bundle = {
     tdeDarkSideOfTheMoon, tdePointOfNoReturn, tdeWhereTheGodsDwell, tdeWeaverOfTheCosmos,
     ticThePitOfDespair, ticTheVanishingOfElinaHarper, ticInTooDeep, ticDevilReef, ticHorrorInHighGear,
     ticALightInTheFog, ticTheLairOfDagon, ticIntoTheMaelstrom,
-    eoteIceAndDeathPart1, eoteIceAndDeathPart2, eoteIceAndDeathPart3, eoteFatalMirage, eoteToTheForbiddenPeaks, eoteCityOfTheElderThings, eoteTheHeartOfMadnessPart1, eoteTheHeartOfMadnessPart2],
+    eoteIceAndDeathPart1, eoteIceAndDeathPart2, eoteIceAndDeathPart3, eoteFatalMirage, eoteToTheForbiddenPeaks, eoteCityOfTheElderThings, eoteTheHeartOfMadnessPart1, eoteTheHeartOfMadnessPart2,
+    tskRiddlesAndRain, tskDeadHeat, tskSanguineShadows, tskDealingsInTheDark, tskDancingMad,
+    tskOnThinIce, tskDogsOfWar, tskShadesOfSuffering, tskWithoutATrace, tskCongressOfTheKeys],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

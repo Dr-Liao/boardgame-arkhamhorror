@@ -1,8 +1,25 @@
 /* Shared brass-and-ink treatment for the journal, workshop and rulebook. */
 .ah-office .ah-story-reader { padding: 28px; }
 .ah-story-reader > header small { letter-spacing: 3px; color: #b6a477; }
-.ah-story-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
-.ah-story-layout > nav { display: grid; gap: 8px; }
+.ah-story-layout { position: relative; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
+/* 纪事的章节目录会随战役推进不断变长。把目录限制在一个视口高度内并在目录内部滚动，
+   否则右侧正文会被整页的长目录推到很下面；当前章节目录项由 story-reader.js 自动滚进视野。
+   滚动指示条由 story-reader.js 绘制：系统 overlay 滚动条静止时是隐藏的，Windows 上会
+   看不出目录可滚；系统提供经典滚动条时沿用下面 ::-webkit-scrollbar 的窄条样式。 */
+.ah-story-layout > nav {
+  display: grid; gap: 8px;
+  max-height: 520px;
+  max-height: clamp(300px, calc(100dvh - 430px), 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+}
+.ah-story-layout > nav::-webkit-scrollbar { width: 8px; }
+.ah-story-layout > nav::-webkit-scrollbar-track { background: #0b1c1680; border-radius: 4px; }
+.ah-story-layout > nav::-webkit-scrollbar-thumb { background: #9c895c99; border-radius: 4px; }
+.ah-story-layout > nav::-webkit-scrollbar-thumb:hover { background: #c2a86f; }
+.ah-story-nav-scroll { display: none; position: absolute; z-index: 2; border-radius: 4px; background: #9c895c2b; pointer-events: none; }
+.ah-story-nav-scroll > i { display: block; position: absolute; border-radius: 3px; background: #b9a06b; }
 .ah-story-layout > nav button { display: flex; gap: 12px; align-items: center; padding: 16px; color: #c8bc95; background: #0b1c16; border: 1px solid #9c895c44; text-align: left; }
 .ah-story-layout > nav button[aria-current] { background: #304334; border-color: #d0b776; color: #ffe1a1; }
 .ah-story-layout > nav span { display: grid; gap: 6px; }.ah-story-layout > nav small { font-size: 11px; opacity: .7; }
@@ -135,7 +152,7 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
   .ah-rule-index-group.ah-rule-index-pinned { padding-bottom: 0; border-bottom: 0; }
   .ah-office .ah-office-upgrade-seat .ah-hub-actions { display: block; }.ah-office .ah-office-upgrade-gallery { display: flex; max-height: none; overflow-x: auto; }.ah-office .ah-upgrade-workbench { padding: 15px 0 0; border-left: 0; border-top: 1px solid #aa97584d; }
   .ah-upgrade-actions { align-items: stretch; flex-direction: column; margin-top: 16px; }.ah-upgrade-actions > div:last-child { justify-content: stretch; }.ah-upgrade-actions .bg-btn { flex: 1 1 100%; width: 100%; }
-  .ah-story-layout { grid-template-columns: minmax(0,1fr); gap: 18px; }.ah-story-layout > nav { display: flex; overflow-x: auto; }.ah-story-layout > nav button { flex: 0 0 150px; padding: 12px; }.ah-story-page { min-height: 340px; padding: 32px 24px; }.ah-office .ah-story-page .ah-story-prose { font-size: 15px; line-height: 2; }
+  .ah-story-layout { grid-template-columns: minmax(0,1fr); gap: 18px; }.ah-story-layout > nav { display: flex; max-height: none; overflow-x: auto; overflow-y: hidden; padding: 0 0 2px; }.ah-story-layout > nav::-webkit-scrollbar { height: 6px; }.ah-story-layout > nav button { flex: 0 0 150px; padding: 12px; }.ah-story-page { min-height: 340px; padding: 32px 24px; }.ah-office .ah-story-page .ah-story-prose { font-size: 15px; line-height: 2; }
   .ah-upgrade-comparison { gap: 8px; grid-template-columns: minmax(0,1fr) 78px minmax(0,1fr); }.ah-upgrade-card-art { width: 100%; }.ah-upgrade-comparison .ah-upgrade-card-art .ah-table-art { width: 100%; height: auto; aspect-ratio: 5/7; }.ah-upgrade-comparison strong { font-size: 11px; }.ah-upgrade-cost b { font-size: 20px; }
   .ah-rulebook-backdrop { padding: 8px; }.ah-rulebook { max-height: 96dvh; }.ah-rulebook > header { padding: 14px; }.ah-rulebook h2 { font-size: 21px; }.ah-rulebook-layout { display: flex; flex-direction: column; }.ah-rulebook aside { flex: 0 0 auto; border-right: 0; border-bottom: 1px solid #bda06455; padding: 10px; }.ah-rulebook nav { display: flex; gap: 5px; overflow-x: auto; overflow-y: hidden; margin-top: 8px; }.ah-rulebook nav button { flex: 0 0 auto; font-size: 12px; }.ah-rulebook nav small { display: none; }.ah-rulebook-article { padding: 20px; }.ah-rulebook-article h1 { font-size: 25px; }.ah-rulebook-article p { font-size: 14px; }.ah-rulebook-launcher { right: 10px; top: 10px; bottom: auto; padding: 7px; font-size: 11px; }
 }
@@ -178,3 +195,54 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
 @media (max-width: 900px) {
   .ah-hub-interlude { width: calc(100% - 24px); padding: 15px 16px; }.ah-hub-interlude-prose { font-size: 14px; }
 }
+
+/* P8（八循环《绯红密钥》）：世界地图启程面板。与幕间羊皮纸同一材料语言，目的地按钮按两列/单列收放。 */
+.ah-hub-world-map { width: calc(100% - 64px); max-width: 1280px; margin: 16px auto 0; padding: 18px 24px; border: 1px solid #bda675; color: var(--ah-material-paper-ink, #000);
+  background: radial-gradient(ellipse at top left, #e9ddb688, transparent 70%), linear-gradient(100deg, #a99767 0, #dfd0a4 3%, #e4d5ac 97%, #ac9864);
+  box-shadow: 0 10px 26px #0004, inset 0 0 24px #79613b28; }
+.ah-hub-world-map h2 { margin: 0 0 8px; font-size: 20px; letter-spacing: 2px; }
+.ah-hub-world-map > p { margin: 6px 0; font-size: 14px; line-height: 1.7; }
+.ah-hub-world-map-forced { font-weight: 700; color: #7a1f1f; }
+.ah-hub-world-map-destinations { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin-top: 10px; }
+.ah-hub-world-map-destinations .bg-btn { width: 100%; text-align: left; }
+.ah-hub-world-map-note { opacity: .8; font-size: 12px; }
+@media (max-width: 900px) {
+  .ah-hub-world-map { width: calc(100% - 24px); padding: 14px 14px; }
+  .ah-hub-world-map-destinations { grid-template-columns: 1fr; }
+}
+
+/* P8（八循环《绯红密钥》）：构筑期/关间的定制升级卡面板。
+   与幕间/世界地图同一羊皮纸材料语言；选项行是「名称 + 已勾/总格 + 勾选按钮」的两列网格，
+   移动端 900px 以下收成一列，按钮整行宽，避免 390px 横向溢出。 */
+.ah-hub-customization { width: calc(100% - 64px); max-width: 1280px; margin: 16px auto 0; padding: 16px 22px; border: 1px solid #bda675;
+  color: var(--ah-material-paper-ink, #000);
+  background: radial-gradient(ellipse at top right, #eee1bc88, transparent 70%), linear-gradient(100deg, #a99767 0, #dfd0a4 3%, #e4d5ac 97%, #ac9864);
+  box-shadow: 0 10px 26px #0004, inset 0 0 24px #79613b28;
+  /* 局外页头部/页签是吸顶的：滚动定位时给它们留出高度，避免面板被遮住。 */
+  scroll-margin-top: 170px; }
+.ah-hub-customization h2,
+.ah-office .ah-hub-pane .ah-hub-customization h2,
+/* 主题里 `.ah-theme.ah-theme .ah-hub-pane h2` 会把页签标题染成主题高亮色；
+   羊皮纸面板与幕间/世界地图一致改用纸面墨色（同 campaign-theme.css 对 ah-hub-interlude 的做法）。 */
+.ah-theme.ah-theme .ah-hub-pane .ah-hub-customization h2 {
+  margin: 0 0 6px; font-size: 20px; letter-spacing: 2px; font-weight: 700;
+  color: var(--ah-material-paper-ink, #1b1408);
+}
+.ah-hub-customization-line { margin: 0 0 10px; font-size: 13px; line-height: 1.6; }
+.ah-hub-customization-list { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+.ah-hub-customization-card { padding: 12px 14px; border: 1px solid #8f7b4d66; border-radius: 6px; background: #fbf2d733; }
+.ah-hub-customization-card > header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 6px; }
+.ah-hub-customization-card > header strong { font-size: 16px; letter-spacing: 1px; }
+.ah-hub-customization-card > header small { font-size: 12px; opacity: .85; }
+.ah-hub-customization-card ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; grid-template-columns: minmax(0, 1fr); }
+.ah-hub-customize-option { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 12px;
+  padding: 6px 8px; border-top: 1px solid #8f7b4d33; }
+.ah-hub-customize-option span { font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+.ah-hub-customize-option .bg-btn { max-width: 100%; white-space: normal; text-align: left; }
+@media (max-width: 900px) {
+  .ah-hub-customization { width: calc(100% - 24px); padding: 13px 12px; scroll-margin-top: 265px; }
+  .ah-hub-customization-card { padding: 10px; }
+  .ah-hub-customize-option { grid-template-columns: minmax(0, 1fr); }
+  .ah-hub-customize-option .bg-btn { width: 100%; }
+}
+

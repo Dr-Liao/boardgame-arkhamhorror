@@ -8,6 +8,8 @@ import { STORY_TEXT as innsmouthStory } from '../content/campaigns/theInnsmouthC
 import { chapters as eoteChapters } from '../content/campaigns/edgeOfTheEarth/shared.js'
 import { EOTE_STORY_META, EOTE_STORY_TEXT } from '../content/campaigns/edgeOfTheEarth/story-text.js'
 import { TDE_STORY_TEXT } from '../content/campaigns/theDreamEaters/story-text.js'
+import { chapters as tskChapters } from '../content/campaigns/theScarletKeys/shared.js'
+import { TSK_STORY_META, TSK_STORY_TEXT } from '../content/campaigns/theScarletKeys/story-text.js'
 
 const source = new URL('../../../参考资源/ArkhamHorror-main/frontend/src/locales/', import.meta.url)
 const destination = new URL('../web/scenario-guides/', import.meta.url)
@@ -303,6 +305,56 @@ export function buildEoteGuide(chapterId) {
   return guide
 }
 
+/** TSK：story-text 保留参考 locale 原始 HTML/占位符；生成指南前按语言清洗成可读文本。 */
+function cleanGuideTree(node, language) {
+  if (typeof node === 'string') return guideText(node, language)
+  if (Array.isArray(node)) return node.map(child => cleanGuideTree(child, language))
+  if (node && typeof node === 'object') {
+    return Object.fromEntries(Object.entries(node).map(([key, child]) => [key, cleanGuideTree(child, language)]))
+  }
+  return node
+}
+
+function tskCategoryOf(key) {
+  if (key === 'resolutions') return 'resolutions'
+  if (/intro/i.test(key)) return 'intro'
+  if (key === 'setup' || /^versions?\d*$/i.test(key)) return 'setup'
+  if (['specialRules', 'rules', 'trackingTime', 'key', 'locations', 'tokens'].includes(key)) return 'specialRules'
+  return 'story'
+}
+
+export function buildTskGuide(chapterId) {
+  const chapter = tskChapters.find(entry => entry.id === chapterId)
+  if (!chapter) throw new RangeError(`未知《绯红密钥》章节 ${chapterId}`)
+  const story = TSK_STORY_TEXT.chapters[chapterId]
+  if (!story) throw new Error(`story-text 缺少章节 ${chapterId}（先运行 node tools/import-tsk-story.mjs --write）`)
+  const guide = {
+    id: chapterId,
+    campaignId: 'theScarletKeys',
+    sourceKind: TSK_STORY_META?.sourceKind || 'reference-project-zh-locale',
+    officialChinese: false,
+    chineseStatus: TSK_STORY_META?.status || 'generated',
+    chineseGaps: story.chineseGaps,
+    sectionCount: story.summary?.total ?? null,
+    guideKeyCount: story.summary?.total ?? null,
+    sources: TSK_STORY_META?.sources || [],
+    locales: {},
+  }
+  const cleanEn = cleanGuideTree(story.sectionsEn, 'en')
+  const cleanZh = cleanGuideTree(story.sections, 'zh')
+  for (const language of ['zh', 'en']) {
+    const sections = { intro: [], setup: [], specialRules: [], story: [], resolutions: [] }
+    for (const key of Object.keys(story.sectionsEn)) {
+      if (skipped.has(key)) continue
+      sections[tskCategoryOf(key)].push(...eoteBlocks(cleanEn[key], cleanZh[key], [], key, language))
+    }
+    sections.specialRules = sections.specialRules.filter((block, index, all) =>
+      all.findIndex(other => JSON.stringify(other) === JSON.stringify(block)) === index)
+    guide.locales[language] = sections
+  }
+  return guide
+}
+
 export async function buildScenarioGuides() {
   const registeredScenarios = contentRegistry.listScenarios()
   // P7：《地球边缘》八章单元（catalog 阶段未进生产注册表，但指南 UI 依赖其 id 加载）。
@@ -313,8 +365,11 @@ export async function buildScenarioGuides() {
   const eoteScenarioEntries = eoteChapters
     .filter(chapter => !knownIds.has(chapter.id))
     .map(chapter => ({ id: chapter.id, campaignId: 'edgeOfTheEarth', eoteChapter: chapter }))
+  const tskScenarioEntries = tskChapters
+    .filter(chapter => !knownIds.has(chapter.id))
+    .map(chapter => ({ id: chapter.id, campaignId: 'theScarletKeys', tskChapter: chapter }))
   const scenarios = [...registeredScenarios, ...innsmouthChapters.filter(ch => !registeredScenarios.some(s => s.id === ch.id))
-    .map(ch => ({ ...ch, campaignId: 'theInnsmouthConspiracy' })), ...eoteScenarioEntries]
+    .map(ch => ({ ...ch, campaignId: 'theInnsmouthConspiracy' })), ...eoteScenarioEntries, ...tskScenarioEntries]
   const documents = {}
   const translations = await json(new URL('../content/scenario-guide-translations.json', import.meta.url))
   const dreamTranslations = {}
@@ -381,6 +436,10 @@ export async function buildScenarioGuides() {
   for (const scenario of scenarios) {
     if (scenario.campaignId === 'edgeOfTheEarth') {
       results.set(`${scenario.id}.json`, `${JSON.stringify(buildEoteGuide(scenario.id), null, 2)}\n`)
+      continue
+    }
+    if (scenario.campaignId === 'theScarletKeys') {
+      results.set(`${scenario.id}.json`, `${JSON.stringify(buildTskGuide(scenario.id), null, 2)}\n`)
       continue
     }
     const guide = { id: scenario.id, campaignId: scenario.campaignId, sourceKind: 'bundled-reference-with-self-translated-supplements', officialChinese: false, locales: {} }

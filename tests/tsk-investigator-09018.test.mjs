@@ -21,7 +21,8 @@ test(`P5 ${CODE} 条目/旧印/构筑：3 个额外盟友槽、双副职阶、�
   assert.equal(canEquip(inv, ALL_CARDS['09019']), false, '4 名盟友已占满 4 个盟友槽，不能再装备盟友')
   void buddies
   const effect = elderSignEffect(state, inv)
-  assert.equal(effect.delta, 1)
+  // 卡面「[elder_sign] 效果：+3」（cards-data/中文卡面/参考文本一致），旧断言 +1 是错误实现。
+  assert.equal(effect.delta, 3)
 })
 
 test(`P5 ${CODE} 双职阶选择与构筑合法性`, () => {
@@ -31,8 +32,11 @@ test(`P5 ${CODE} 双职阶选择与构筑合法性`, () => {
   assert.deepEqual(deck.signatureCards, ['09019'])
   assert.deepEqual(deck.signatureWeaknesses, ['09020'])
   assert.deepEqual(validateDeckRules(INVESTIGATORS[CODE], deck.playerCards, ALL_CARDS).errors, [])
-  // fast 横置盟友的加成能力 & 邦妮重整反应。
-  assert.equal(registeredEntry(CODE).investigator.freeAction.duringOwnSkillTest, true)
+  // fast 横置盟友的加成能力（P1-6：检定期 [fast] 改走 abilities free 描述子才可达）& 邦妮重整反应。
+  const free = registeredEntry(CODE).abilities.find(descriptor => descriptor.kind === 'free')
+  assert.ok(free, '必须声明检定期 [fast] 的 free 描述子（playerWindow 只枚举 abilities）')
+  assert.deepEqual(free.trigger, ['test.beforeCommit', 'test.afterCommit'])
+  assert.equal(free.duringOwnSkillTest, true)
   assert.ok(registeredEntry('09019').abilities.some(descriptor => [].concat(descriptor.trigger).includes('assetExhausted')))
   assert.ok(registeredEntry('09020').abilities.some(descriptor => descriptor.kind === 'weakness'))
 })

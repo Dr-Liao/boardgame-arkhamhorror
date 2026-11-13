@@ -26,6 +26,7 @@ export default {
   code: '05259',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   modifiers: [{ target: 'skill:intellect', amount: 1 }],
   abilities: [{
     kind: 'reaction',

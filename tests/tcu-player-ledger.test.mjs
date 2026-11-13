@@ -145,16 +145,17 @@ test('P7 availability：87 张 strict、85 张可构筑、基础弱点只作依�
   for (const code of scope) assert.equal(PLAYER_CARD_CODES.includes(code), false, `默认池混入 ${code}`)
 })
 
-test('P7 campaign：TCU 升级池只对 05 调查员记录可见，既有循环记录看不到', () => {
+test('全量开放：TCU 升级池对全部调查员记录可见，不再按所属循环收窄', () => {
   const tcuRecord = recordFor('05001')
   // 05020（拷问）是守护者 0 级事件：05 记录里应能作为升级购入。
   const visible = replacementOptions(tcuRecord, '05020', null)
   assert.ok(visible.length > 0, '05 调查员记录应能看到 TCU 玩家卡的升级候选')
   assert.ok(TCU_PLAYER_BUILDABLE_CODES.includes('05020'))
-  // 既有循环（核心 01001）的记录仍然只看得到原有池，TCU 卡不会出现在升级候选里。
+  // 全量开放（P10/P8 之后）：升级池不再按调查员所属循环收窄，既有循环（核心 01001）的记录
+  // 也能购入 TCU 卡；跨循环可见性只由开局「卡牌范围」设置在 filterCardCodes 一层统一处理。
   const coreRecord = recordFor('01001')
-  assert.deepEqual(replacementOptions(coreRecord, '05020', null), [], '既有循环记录不得看到 TCU 卡')
-  assert.deepEqual(replacementOptions(coreRecord, '05109', null), [], '既有循环记录不得看到 TCU 资产')
+  assert.ok(replacementOptions(coreRecord, '05020', null).length > 0, '全量开放后 01 记录也能看到 TCU 卡')
+  assert.ok(replacementOptions(coreRecord, '05109', null).length > 0, '全量开放后 01 记录也能看到 TCU 资产')
   // 基础弱点永远不能作为升级目标。
   assert.deepEqual(replacementOptions(tcuRecord, '05041', null), [])
   assert.deepEqual(replacementOptions(tcuRecord, '05042', null), [])

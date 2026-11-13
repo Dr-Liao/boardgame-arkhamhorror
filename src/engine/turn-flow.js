@@ -10,6 +10,10 @@ import { weaknessOwnerSeat } from './card-lookup.js'
 import { locationAttachmentTotal } from './location-attachments.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { vehicleOf } from './vehicles.js'
+import { reactionSource } from './reaction-source.js'
+// 2026-11-13：行动点用尽后的空档期，behavior.fastActions 的 [fast] 行动按条目自带的
+// `actions: 0` 计费（它们不在 behavior.actions() 里，原读点找不到就落到默认 1）。
+import { gapFastActionMoves } from './gap-actions.js'
 // turn-flow.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 调查员回合内的推进与代价：advanceInvestigator（行动/结束回合的推进）、
 // 打出费用与折扣、旧印结算、反应规格与条件评估、以及「支付/选择」的共用小函数。
@@ -25,6 +29,7 @@ export function createTurnFlow(deps) {
     actionKind,
     advanceAct,
     aliveInvestigators,
+    applyDamage,
     applyHorror,
     assetEffect,
     autoEngageAt,
@@ -315,7 +320,7 @@ export function createTurnFlow(deps) {
       const amount = inv.hand.length - limit()
       const context = reactionWindow(state, 'wouldDiscardFromHand', {
         when: 'wouldDiscardFromHand', seat: inv.seat, amount, what: 'discard', location: inv.location,
-        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+        source: reactionSource(state),
         prompt: `${inv.name} 将要弃 ${amount} 张手牌（手牌上限）`,
       }, events)
       if (context.cancelled) {
@@ -341,7 +346,7 @@ export function createTurnFlow(deps) {
     // 遭遇卡/敌人攻击来源；本函数也被手牌上限等调用，故窗口只提供事实）。
     const context = reactionWindow(state, 'wouldDiscardFromHand', {
       when: 'wouldDiscardFromHand', seat: inv.seat, amount: count, what: 'discard', location: inv.location,
-      source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+      source: reactionSource(state),
       prompt: `${inv.name} 将要弃掉 ${count} 张手牌`,
     }, events)
     if (context.cancelled) {
@@ -404,11 +409,16 @@ export function createTurnFlow(deps) {
         const heal = assetEffect(inv, asset)?.healSelfHorrorAfterTurn || 0
         if (heal && (asset.horror || 0) > 0) asset.horror = Math.max(0, asset.horror - heal)
       }
+      // 留在手牌中的弱点：回合结束时揭示并结算条目声明的恐惧/伤害（09125 量子悖论、09126 该付账了）。
       for (const code of inv.hand.slice()) {
-        const horror = registeredEntry(code)?.endTurnInHandHorror
-        if (!horror) continue
-        info(state, events, `🌑 ${inv.name} 回合结束时揭示「${cardName(code)}」，受到 ${horror} 恐惧，卡牌留在手中。`)
-        applyHorror(state, inv, horror, events)
+        const entry = registeredEntry(code)
+        const horror = entry?.endTurnInHandHorror
+        const damage = entry?.endTurnInHandDamage
+        if (!horror && !damage) continue
+        const effects = [horror ? `${horror} 恐惧` : null, damage ? `${damage} 伤害` : null].filter(Boolean).join('、')
+        info(state, events, `🌑 ${inv.name} 回合结束时揭示「${cardName(code)}」，受到 ${effects}，卡牌留在手中。`)
+        if (horror) applyHorror(state, inv, horror, events)
+        if (damage) applyDamage(state, inv, damage, events)
       }
       inv.tomeActionUsed = true
       inv.ignoreChaosThisTurn = false
@@ -462,7 +472,9 @@ export function createTurnFlow(deps) {
     const matching = firstRule?.traits?.map(trait => trait.toLowerCase()) || []
     const firstDiscount = firstRule && (def.traits || []).some(trait => matching.includes(trait.toLowerCase()))
       && !(inv.playedCardsHistory?.round === state.round && inv.playedCardsHistory.traits.some(trait => matching.includes(trait))) ? firstRule.amount : 0
-    const locationIncrease = loc?.playCostIncrease || 0
+    // 2026-11-13 P1-11：剧本层的「在此地点打出每张支援费用 +N」读点（TSK 09532 废弃版杰马广场）。
+    const locationIncrease = (loc?.playCostIncrease || 0)
+      + (scenarioBehavior(state).playCostIncrease?.(state, inv) || 0)
     // 04142 珍品店：位于此处时打出每个 [[遗物]] 支援的费用 -2。
     const relicDiscount = loc && relicDiscountLocation(loc.originalCode || loc.code)
       && def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'relic') ? 2 : 0
@@ -556,6 +568,8 @@ export function createTurnFlow(deps) {
   function actionCost(state, inv, move, applyTome = true) {
     if (move.action === 'play' && move.fastSourceId && playTimingSource(state, inv, cardDef(move.cardId), move.fastSourceId)) return 0
     if (['endTurn', 'advanceAct', 'shortcutMove', 'extraEvade'].includes(move.action)) return 0
+    // 2026-11-13 P1-2：绯红密钥的 Shift/移交是 [fast] 触发，不消耗行动、不引发借机攻击。
+    if (['shiftKey', 'transferKey'].includes(move.action)) return 0
     if (move.action === 'freeAction') return investigatorRule(inv.code)?.freeAction?.actionCost || 0
     let cost = 1
     const investigateLoc = state.locations.find(loc => loc.id === (move.locationId || inv.location))
@@ -572,7 +586,13 @@ export function createTurnFlow(deps) {
     // 步行额外行动费用（见 movementActionSurcharge）：只加在基础移动行动上。
     if (move.action === 'move') cost += movementActionSurcharge(state, inv, move)
     if (move.action === 'hiddenAction') cost = hiddenRule(state, move.cardId)?.discard?.actions ?? 1
-    if (move.action === 'scenarioAction') cost = scenarioBehavior(state).actions?.(state, inv).find(m => m.rule === move.rule && !m.reason)?.actions ?? 1
+    // 2026-11-13：behavior.fastActions 的 [fast] 行动不在 actions() 里，费用改读空档期条目自带的
+    // `actions` 声明（0 = 不消耗行动），否则会被当成默认 1 行动、在 0 行动空档期被校验拒绝。
+    if (move.action === 'scenarioAction') {
+      const declared = scenarioBehavior(state).actions?.(state, inv).find(m => m.rule === move.rule && !m.reason)
+        ?? gapFastActionMoves(state, inv, scenarioBehavior(state)).find(m => m.rule === move.rule)
+      cost = declared?.actions ?? 1
+    }
     if (move.action === 'encounterAction') cost = scenarioBehavior(state).encounterActions?.(state, inv).find(m => m.rule === move.rule && !m.reason)?.actions ?? 1
     let kind = actionKind(state, inv, move)
     if (move.action === 'discardThreat') {

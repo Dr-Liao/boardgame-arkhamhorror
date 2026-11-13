@@ -14,6 +14,7 @@ export default {
   code: '05150',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   passive: { stats: { willpower: 1, intellect: 1 } },
   // 潜在减费上限：黑书未横置时 = min(该牌印刷费用, 剩余恐惧)。
   // 引擎读点签名：(state, inv, playedDef, sourceAsset)。

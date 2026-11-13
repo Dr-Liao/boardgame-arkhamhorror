@@ -25,8 +25,8 @@
 | 4 | 《万象无终》The Circle Undone | [`theCircleUndone/`](theCircleUndone/README.md) | `playable` | 9 章（`05xxx`）；本轮独立全量扫描对象 |
 | 5 | 《食梦者》The Dream Eaters | [`theDreamEaters/`](theDreamEaters/README.md) | `playable` | 8 章（`06xxx`），双线/多模式 |
 | 6 | 《印斯茅斯暗潮》The Innsmouth Conspiracy | [`theInnsmouthConspiracy/`](theInnsmouthConspiracy/README.md) | `playable` | 8 章（`07xxx`） |
-| 7 | 《地球边缘》Edge of the Earth | `docs/edgeOfTheEarth/`（未迁入） | `playable` | 8 章（`08xxx`）；独立全量扫描已完成，见 [`../edgeOfTheEarth/full-scan.md`](../edgeOfTheEarth/full-scan.md) |
-| 8 | 《绯红密钥》The Scarlet Keys | [`theScarletKeys/`](theScarletKeys/README.md) | `catalog-only`（P0–P5 完成） | 10 章（`09xxx`）；439 条记录范围/基线/机制扫描已锁，77 项原语、29 关键词/17 条双语规则、6 组交互、6 位调查员与 14 张专属依赖已交付，进入 P6 一般玩家卡 |
+| 7 | 《地球边缘》Edge of the Earth | `docs/edgeOfTheEarth/`（未迁入） | `playable` | 8 章（`08xxx`）；独立全量扫描与 P8 发布验收已完成，见 `audit/eote-release-acceptance.json` |
+| 8 | 《绯红密钥》The Scarlet Keys | [`theScarletKeys/`](theScarletKeys/README.md) | `playable`（P0–P8 迁移完成；2026-11-12 独立全量扫描发现 P0/高危缺陷，**2026-11-13 7 项 P0 全部修复：14/14 冻结门禁、633/633 TSK 测试通过**，见 `full-scan.md` / `fix-plan.md`） | 10 章（`09xxx`）；439 条记录逐卡账本 missing=0（verified 160 / disclosed-simplified 121 / scenario-data 148 / 章节参考卡 10），29 关键词/17 条双语规则、6 组交互、6 位调查员与 14 张专属依赖、108 张一般玩家卡（103 可构筑 + 5 基础弱点）、311 张战役卡（301 需条目卡全部覆盖），十章与世界地图启程/逐章推进/状况报告/密档幕间/快捷旅票/通古斯卡终章/尾声均可在真实大厅完成；`confirmations.scenarios/keywords/rulebook` 三组 verified，P8 发布验收账本见 `audit/tsk-migration.json`；**独立全量扫描**（439 卡逐卡 + 真实引擎探针）发现 7 项 P0 与大量 high 偏差，P0 已修复并有 `tests/tsk-p0-regressions.test.mjs` 真实引擎回归，剩余 P1/P2 见 [`fix-plan.md`](theScarletKeys/fix-plan.md)（P1 已完成 17/17 组主体（第二轮 13 组 + 第三轮 P1-11/12/14/15 与 P1-16 单卡批，2026-11-13）） |
 | 9 | 《铁杉谷盛宴》The Feast of Hemlock Vale | [`theFeastOfHemlockVale/`](theFeastOfHemlockVale/README.md) | 未实现（路线图） | 迁移路线图 |
 
 ## 相关规范

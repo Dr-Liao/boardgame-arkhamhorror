@@ -286,13 +286,41 @@ export function createMechanicsApi(state, deps = {}) {
             byId: id => tskConcealed.concealedById(state, id),
             inShadows: locationId => tskConcealed.isInShadows(state, locationId),
             setInShadows: (locationId, inShadows) => tskConcealed.setInShadows(state, locationId, inShadows),
-            place: spec => tskConcealed.placeMiniCard(state, spec),
-            distribute: spec => tskConcealed.distributeConcealed(state, spec),
-            expose: id => tskConcealed.exposeMiniCard(state, id),
+            place: spec => tskConcealed.placeMiniCard(state, {
+              ...spec,
+              locationId: deps.redirectConcealedLocation?.(state, spec.locationId) ?? spec.locationId,
+            }),
+            distribute: spec => tskConcealed.distributeConcealed(state, {
+              ...spec,
+              placements: spec.placements.map(entry => ({
+                ...entry,
+                locationId: deps.redirectConcealedLocation?.(state, entry.locationId) ?? entry.locationId,
+              })),
+            }),
+            // 2026-11-13 P1-1：揭露后派发 `tskExposed` 窗口（此前 18 张条目的强制/反应能力永不触发）。
+            // 这是唯一派发点；内容层统一经本包装器揭露（直接调原语会漏窗口）。
+            // 上下文同时给 `locationId` 与引擎窗口惯例的 `location`（09749a/09750 等按 context.location 过滤来源）。
+            expose: (id, options = {}) => {
+              // 2026-11-13 P1-16（09740）：每位调查员每轮最多揭露 N 张（N 由密谋旁的卡声明）。
+              const seat = options?.seat ?? null
+              const limit = tskConcealed.exposeLimitPerInvestigator(state)
+              if (limit > 0 && Number.isSafeInteger(seat)
+                && tskConcealed.exposuresThisRound(state, seat) >= limit) {
+                throw new Error(`本轮 ${state.investigators?.[seat]?.name || '该调查员'} 已揭露 ${limit} 张隐匿迷你卡，不能再揭露。`)
+              }
+              const result = tskConcealed.exposeMiniCard(state, id)
+              tskConcealed.recordExposure(state, seat)
+              deps.exposed?.(state, {
+                ...result, location: result.locationId ?? null, seat,
+              })
+              return result
+            },
             targetScope: id => tskConcealed.concealTargetScope(state, id),
             reshuffle: options => tskConcealed.reshuffleConcealed(state, options),
             projection: options => tskConcealed.concealedProjection(state, options),
             choices: () => tskConcealed.concealedProjection(state, { revealAll: false }),
+            // 2026-11-13 P1-15：按座位标记「合法看过这一面」（观察投影只对对应座位可见）。
+            markKnown: (id, seats) => tskConcealed.markMiniKnownFor(state, id, seats),
           },
           hollow: {
             cards: () => tskHollow.hollowCards(state),
@@ -312,7 +340,16 @@ export function createMechanicsApi(state, deps = {}) {
             all: () => tskKeys.scarletKeys(state),
             get: id => tskKeys.scarletKey(state, id),
             face: id => tskKeys.keyFace(state, id),
-            shift: (id, options) => tskKeys.shiftKey(state, id, options),
+            // 2026-11-13 P1-1：变换后派发 `tskKeyShifted` 窗口（09752 等「变换后」能力此前永不触发）。
+            // 上下文契约：{ keyId, from, to, face, keyStable, seat }。唯一派发点；内容层统一经本包装器。
+            shift: (id, options = {}) => {
+              const result = tskKeys.shiftKey(state, id, options)
+              deps.keyShifted?.(state, {
+                keyId: result.id, from: result.from, to: result.to, face: result.to,
+                keyStable: result.stable, stable: result.stable, seat: options?.seat ?? null,
+              })
+              return result
+            },
             shiftedThisRound: (id, round) => tskKeys.keyShiftedThisRound(state, id, round),
             bind: (id, bearer) => tskKeys.bindKey(state, id, bearer),
             steal: (id, bearer) => tskKeys.stealKey(state, id, bearer),

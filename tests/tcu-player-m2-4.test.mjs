@@ -9,8 +9,8 @@ import assert from 'node:assert/strict'
 
 import { fixture, move, settle, asset, enemy, validateMove, legalMoves } from './core-fixture.mjs'
 import {
-  applyHarm, baseStatValue, createGameState, enemyEvadeValue, enemyFightValue, enemyHealth, getHandSize, getStat,
-  performTest, reactionWindow, returnAssetToHand,
+  applyHarm, baseStatValue, createGameState, discardRandomFromHand, enemyEvadeValue, enemyFightValue, enemyHealth,
+  getHandSize, getStat, performTest, reactionWindow, returnAssetToHand, scenarioRuntime,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { expireEffects } from '../src/engine/effect-state.js'
@@ -355,6 +355,77 @@ test(`TCU 05280 ${nameOf('05280')} 忽略遭遇卡造成的恐惧并反向治愈
     return pending.options.find(option => option.cardCode === '05280')?.id ?? null
   })
   assert.equal(me(state).horror, 0, '忽略 2 点恐惧后反向治愈 1 点旧恐惧')
+})
+
+test(`TCU 05280 ${nameOf('05280')} 同时受到 2 伤害 2 恐惧时整项二选一，并反向治愈所选面向`, () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.hand = ['05280']
+  inv.damage = 1
+  inv.horror = 1
+  let harmLabels = null
+  run(state, current => {
+    current._treacheryResolving = 'test-treachery'
+    applyHarm(current, current.investigators[0], 2, 2, [], false, null)
+  }, pending => {
+    const card = pending.kind === 'reaction' ? pending.options.find(option => option.cardCode === '05280')?.id : null
+    if (card) return card
+    if (pending.kind === 'harm') {
+      harmLabels = pending.options.map(option => option.label)
+      return pending.options.find(option => /伤害/.test(String(option.label)))?.id ?? null
+    }
+    return null
+  })
+  assert.deepEqual(harmLabels, ['忽略这 2 点伤害，改为治愈 2 点伤害', '忽略这 2 点恐惧，改为治愈 2 点恐惧'],
+    '伤害/恐惧只能整项二选一（升级版附带反向治愈）')
+  const after = me(state)
+  assert.equal(after.damage, 0, '忽略 2 点伤害并反向治愈原有 1 点伤害')
+  assert.equal(after.horror, 3, '另一个面向（恐惧 1+2）照常结算')
+})
+
+test(`TCU 05280 ${nameOf('05280')} 忽略弃手牌并反向抽等量牌`, () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.hand = ['05280', '01088', '01089']
+  run(state, current => {
+    current._treacheryResolving = 'test-treachery'
+    try { discardRandomFromHand(current, current.investigators[0], 2, []) }
+    finally { delete current._treacheryResolving }
+  }, pending => pending.options.find(option => option.cardCode === '05280')?.id ?? null)
+  const after = me(state)
+  assert.equal(after.hand.length, 4, '弃 2 张被忽略，反向抽 2 张（3-1 打出 +2）')
+  assert.deepEqual(after.hand, ['01088', '01089', '01088', '01088'], '原手牌保留并抽 2 张')
+  assert.deepEqual(after.discard, ['05280'], '只有事件本身进弃牌堆')
+})
+
+test(`TCU 05280 ${nameOf('05280')} 忽略失去资源并反向获得等量资源`, () => {
+  const state = fixture('01001')
+  me(state).hand = ['05280']
+  run(state, current => { scenarioRuntime(current, []).loseResources(0, 2) },
+    pending => pending.options.find(option => option.cardCode === '05280')?.id ?? null)
+  assert.equal(me(state).resources, 32, '失去 2 资源被忽略，反向获得 2 资源（30-0+2）')
+})
+
+test(`TCU 05280 ${nameOf('05280')} 忽略失去行动并反向获得等量额外行动`, () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.hand = ['05280']
+  inv.actionsLeft = 3
+  run(state, current => { scenarioRuntime(current, []).loseActions(0, 1) },
+    pending => pending.options.find(option => option.cardCode === '05280')?.id ?? null)
+  assert.equal(me(state).actionsLeft, 4, '失去 1 行动被忽略，反向获得 1 额外行动（3+1）')
+})
+
+test(`TCU 05280 ${nameOf('05280')} 弱点显现（妄想症）的失去全部资源可忽略并反向获得`, () => {
+  const state = fixture('01001')
+  me(state).hand = ['05280']
+  me(state).deck = ['01097']
+  const before = me(state).resources
+  move(state, { action: 'draw' })
+  settle(state, pending => pending.options.find(option => option.cardCode === '05280')?.id ?? null)
+  const after = me(state)
+  assert.equal(after.resources, before * 2, '失去全部资源被忽略，反向获得等量资源')
+  assert.ok(after.discard.includes('05280'))
 })
 
 // ---------------------------------------------------------------------------

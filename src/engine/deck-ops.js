@@ -18,6 +18,7 @@ import { capabilityBlocked } from './modifiers.js'
 import { hiddenEnemiesAttackFromHand } from './hidden-enemy.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { afterThreatEntered } from './threat-entry.js'
+import { reactionSource } from './reaction-source.js'
 
 export function createDeckOps(deps) {
   const {
@@ -462,7 +463,10 @@ function searchDeck(state, seat, rawOptions, events) {
 // ---------------------------------------------------------------------------
 
 function moveCardTo(state, inv, rawSpec, events) {
-  const spec = rawSpec?.to ? rawSpec : normalizeCardMove(rawSpec)
+  // 2026-11-13 P0：目标区别名（如 'deck' → 'deckTop'）必须在所有调用路径归一。
+  // 旧实现在 rawSpec.to 已存在时跳过 normalizeCardMove，导致内容层写 to:'deck' 时直接落到
+  // default 分支抛「未知目标区域 deck」；规格校验/别名统一以 zones.js 为唯一事实源。
+  const spec = normalizeCardMove(rawSpec, 'moveCard')
   const seat = inv?.seat ?? null
   const found = findZoneCard(state, inv, spec)
   if (!found) {
@@ -681,8 +685,8 @@ function discardRandomFromHand(state, inv, n, events) {
   // 2026-10-25：05280「否决存在：忽略弃掉手牌的效果」的按面向取消窗口。
   const context = reactionWindow(state, 'wouldDiscardFromHand', {
     when: 'wouldDiscardFromHand', seat: inv.seat, amount: n, what: 'discard', location: inv.location,
-    // 2026-10-25 第六轮修复 05032：窗口来源标记（enemyAttack/encounter/other）。
-    source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+    // 来源判定统一走 reaction-source.js（遭遇卡/敌人攻击/其它）；「否定存在」按这个字段决定是否可打出。
+    source: reactionSource(state),
     prompt: `${inv.name} 将要随机弃 ${n} 张手牌`,
   }, events)
   if (context.cancelled) {

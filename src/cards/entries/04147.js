@@ -8,6 +8,7 @@
 
 export default {
   code: '04147',
+  scenarioPlayable: true,
   exhaustOnEnemyDefeatedHealHorror: 1,
   bonusVsVictoryCombat: 1,
   bonusVsVengeanceAgility: 1,

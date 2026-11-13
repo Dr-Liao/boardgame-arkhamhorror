@@ -41,19 +41,19 @@
   }
  ],
  "scope": {
-  "entries": 2487,
-  "player": 914,
-  "encounter": 1573,
+  "entries": 2916,
+  "player": 1042,
+  "encounter": 1874,
   "cycles01to05": 1341
  },
  "counts": {
-  "directStateWrite": 113,
+  "directStateWrite": 112,
   "singleCardField": 21,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
-  "testWrapper": 22,
-  "revelationTestCards": 81,
-  "selfCodeInstanceLookup": 19
+  "testWrapper": 24,
+  "revelationTestCards": 87,
+  "selfCodeInstanceLookup": 23
  },
  "baseline": {
   "directStateWrite": [
@@ -147,7 +147,6 @@
    "04073",
    "04092",
    "04093",
-   "04094",
    "04096",
    "04122b",
    "04130b",
@@ -283,7 +282,9 @@
    "07297",
    "08688",
    "08698",
-   "08713"
+   "08713",
+   "09719",
+   "09736"
   ],
   "revelationTestWrappers": [
    "01167",
@@ -335,7 +336,10 @@
    "08658",
    "08688",
    "08698",
-   "08713"
+   "08713",
+   "09608",
+   "09719",
+   "09736"
   ],
   "revelationTestStubs": [
    "01162",
@@ -368,7 +372,10 @@
    "08612",
    "08613",
    "08644",
-   "08645"
+   "08645",
+   "09543",
+   "09561",
+   "09633"
   ],
   "selfCodeInstanceLookup": [
    {
@@ -684,6 +691,78 @@
       "text": "&& !(item.attachments || []).some(card => card.code === '08082'))"
      }
     ]
+   },
+   {
+    "code": "09002",
+    "file": "src/cards/entries/09002.js",
+    "hits": [
+     {
+      "line": 23,
+      "text": "return Boolean(test) && test.seat !== inv.seat"
+     },
+     {
+      "line": 24,
+      "text": "&& (test.committed || []).some(item => item.code === '09002' && item.seat === inv.seat)"
+     },
+     {
+      "line": 37,
+      "text": "return Boolean(test) && test.seat !== inv.seat"
+     },
+     {
+      "line": 38,
+      "text": "&& (test.committed || []).some(item => item.code === '09002' && item.seat === inv.seat)"
+     }
+    ]
+   },
+   {
+    "code": "09007",
+    "file": "src/cards/entries/09007.js",
+    "hits": [
+     {
+      "line": 32,
+      "text": "if (!(Number(context?.damage) > 0) || context?.direct === true) return false"
+     },
+     {
+      "line": 33,
+      "text": "const asset = (inv.assets || []).find(item => item.code === '09007')"
+     },
+     {
+      "line": 37,
+      "text": "resolve: ({ inv, context, api }) => {"
+     },
+     {
+      "line": 38,
+      "text": "const asset = (inv.assets || []).find(item => item.code === '09007')"
+     }
+    ]
+   },
+   {
+    "code": "09016",
+    "file": "src/cards/entries/09016.js",
+    "hits": [
+     {
+      "line": 37,
+      "text": "resolve: ({ state, inv, context, api }) => {"
+     },
+     {
+      "line": 38,
+      "text": "const kodak = (inv.assets || []).find(asset => asset.code === '09016')"
+     }
+    ]
+   },
+   {
+    "code": "09019",
+    "file": "src/cards/entries/09019.js",
+    "hits": [
+     {
+      "line": 15,
+      "text": "resolve: ({ inv, api }) => {"
+     },
+     {
+      "line": 16,
+      "text": "const allies = (inv.assets || []).filter(asset => asset.code !== '09019' && asset.exhausted"
+     }
+    ]
    }
   ]
  },
@@ -919,7 +998,6 @@
    "03215",
    "03218",
    "04070",
-   "04094",
    "04130b",
    "04137b",
    "04165",

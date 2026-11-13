@@ -10,6 +10,7 @@ export default {
   code: '05261',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   modifiers: [{ target: 'skill:agility', amount: 1 }],
   abilities: [{
     kind: 'reaction',

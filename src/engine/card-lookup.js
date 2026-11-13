@@ -28,13 +28,37 @@ for (const sc of Object.values(SCENARIO_DATA)) {
   Object.assign(ALL_STORY_ASSETS, sc.storyAssets || {})
 }
 
+// 2026-11-13 P1-8：把「伤害/攻击来源」解析为卡牌定义。source 可能是 5 位卡号（事件、
+// 直接来源）或场上支援实例 id；解析失败返回 null（来源特质的读点据此 fail-closed）。
+export function sourceCardDef(state, source) {
+  if (source == null) return null
+  const key = typeof source === 'object' ? (source.code ?? source.assetId ?? null) : String(source)
+  if (!key) return null
+  const direct = cardDef(key)
+  if (direct) return direct
+  for (const inv of state?.investigators || []) {
+    const found = [...(inv.assets || []), ...(inv.threat || [])].find(card => card.id === key)
+    if (found) return cardDef(found.code)
+  }
+  const story = (state?.storyAssets || []).find(card => card.id === key)
+  return story ? cardDef(story.code) : null
+}
+
 export function cardDef(code) {
   const rule = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || ALL_STORY_ASSETS[code]
   if (rule) {
     const metadata = ALL_CARDS[rule.originalCode || code]
     return { ...metadata, ...rule, code, type: ALL_STORY_ASSETS[code] ? 'asset' : metadata?.type || rule.type }
   }
-  return Object.hasOwn(ALL_CARDS, code) ? ALL_CARDS[code] : null
+  if (Object.hasOwn(ALL_CARDS, code)) return ALL_CARDS[code]
+  // P8：双面物理卡在数据里可能只登记 a/b 面（如 TSK 绯红密钥 09519/09519a/09519b）。
+  // 基础卡号按正面解析，避免存档迁移把合法的双面卡基础号判成未知卡；返回副本保持 code 为查询值。
+  for (const faceCode of [`${code}a`, `${code}b`, `${code}c`]) {
+    if (Object.hasOwn(ALL_CARDS, faceCode)) {
+      return { ...ALL_CARDS[faceCode], code, linkedCardCode: faceCode, originalCode: ALL_CARDS[faceCode].originalCode || faceCode }
+    }
+  }
+  return null
 }
 
 export function cardName(code) {

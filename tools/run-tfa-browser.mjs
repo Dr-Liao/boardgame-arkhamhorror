@@ -6,7 +6,8 @@ import { loadMods } from '../../../lib/mods.js'
 const packageRoot = fileURLToPath(new URL('../', import.meta.url))
 const playwrightCli = fileURLToPath(new URL('../../../node_modules/@playwright/test/cli.js', import.meta.url))
 const specs = process.argv.slice(2).length ? process.argv.slice(2)
-  : ['tfa-rules.browser.mjs', 'tfa-scenarios.browser.mjs',
+  : ['tfa-rules.browser.mjs', 'tfa-scenarios.browser.mjs', 'tfa-agenda-aside.browser.mjs',
+    'tfa-relic-attachments.browser.mjs',
     'tfa-release.browser.mjs', 'tfa-online.browser.mjs', 'tfa-supplies.browser.mjs']
 const mods = (await loadMods({ userDir: null })).filter(mod => mod.id === 'arkhamhorror')
 const server = createServer({ mods, persist: false })

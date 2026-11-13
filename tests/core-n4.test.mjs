@@ -114,6 +114,9 @@ test('N4 黛西第三个普通行动打出书后仍可用书籍额外行动，�
   assert.deepEqual(clone(state), restored)
   assert.equal(state.investigators[0].tomeActionUsed, true)
   assert.equal(state.investigators[0].actionsLeft, 0)
+  // 2026-11-13：行动点用尽后不再自动推进回合，需要玩家提交 endTurn。
+  assert.equal(state.currentSeat, 0, '书籍额外行动结算后仍停在当前调查员的空档期')
+  move(state, { action: 'endTurn' }); settle(state)
   assert.equal(state.currentSeat, 1)
 })
 

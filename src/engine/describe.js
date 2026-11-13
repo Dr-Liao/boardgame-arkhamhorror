@@ -293,8 +293,13 @@ export function createDescribeState(deps) {
     tail.push('')
     // 当前剩余行动点直接写在段首：模型不必回到【回合进度】里反查，也不会把「结束回合」
     // 当成没有代价的收尾。待决选择窗口不是自己的行动回合，不展示。
+    // 2026-11-13：行动点用尽后回合不会自动结束，模型必须先处理完快速卡/[free] 能力再提交 endTurn；
+    // 不写明的话模型容易停在原地等自动推进。
     const actionsLeftNote = !state.pendingChoice && Number.isFinite(me?.actionsLeft)
-      ? `本回合剩余 ${me.actionsLeft} 个行动点；` : ''
+      ? me.actionsLeft > 0
+        ? `本回合剩余 ${me.actionsLeft} 个行动点；`
+        : '本回合行动点已用尽（不会自动结束回合：先用手牌快速卡/[free] 能力，再提交 endTurn）；'
+      : ''
     tail.push(`【可执行行动】（${actionsLeftNote}从下列选择一项，用其 JSON 表示；⚠ = 结算前会先被借机攻击，✅ = 该行动不引发借机攻击，[N行动] = 消耗行动点）`)
     legal.forEach((m, i) => {
       // 风险直接贴在行动旁，避免 AI 只在末尾 actionCosts 里自己推算。
@@ -311,8 +316,10 @@ export function createDescribeState(deps) {
       const safe = opportunityAttackersNow.length && preview?.actions > 0 && m.action !== 'endTurn' && !attacks.length
         ? ' ✅安全' : ''
       // 结束回合会吞掉剩余行动点：明写浪费几个，免得 AI 在还能行动时提前收手。
+      // 行动点用尽时反过来标出「必须提交」：回合不会自动结束。
       const wasted = m.action === 'endTurn' && me?.actionsLeft > 0 ? ` [结束会浪费 ${me.actionsLeft} 个行动点]` : ''
-      tail.push(`${i + 1}. ${m.label}${risk}${cost}${safe}${wasted}  →  ${JSON.stringify(stripLabel(m))}`)
+      const mustEnd = m.action === 'endTurn' && me?.actionsLeft <= 0 ? ' [行动点已用尽：提交以结束本回合]' : ''
+      tail.push(`${i + 1}. ${m.label}${risk}${cost}${safe}${wasted}${mustEnd}  →  ${JSON.stringify(stripLabel(m))}`)
     })
   }
 

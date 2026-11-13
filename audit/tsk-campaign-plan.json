@@ -1,0 +1,2808 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P7",
+  "generatedBy": "tools/plan-tsk-campaign.mjs",
+  "status": "planned",
+  "gates": {
+    "chapterCount": true,
+    "sharedGroupCount": true,
+    "noOverlap": true,
+    "coversCampaignCards": true,
+    "scenarioCardsExcluded": true,
+    "noUnassigned": true,
+    "entriesCovered": true,
+    "chapterScenariosPresent": true,
+    "chapterTestsPresent": true,
+    "guidesPresent": true,
+    "storyComplete": true
+  },
+  "summary": {
+    "campaignCards": 311,
+    "scenarioReferenceCards": 10,
+    "assignedCards": 301,
+    "chapters": [
+      {
+        "id": "riddlesAndRain",
+        "cards": 19,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "deadHeat",
+        "cards": 27,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "sanguineShadows",
+        "cards": 22,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "dealingsInTheDark",
+        "cards": 27,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "dancingMad",
+        "cards": 19,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "onThinIce",
+        "cards": 28,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "dogsOfWar",
+        "cards": 28,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "shadesOfSuffering",
+        "cards": 31,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "withoutATrace",
+        "cards": 12,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      },
+      {
+        "id": "congressOfTheKeys",
+        "cards": 21,
+        "missingEntries": 0,
+        "scenarioImplemented": true,
+        "test": true,
+        "guide": true
+      }
+    ],
+    "sharedGroups": [
+      {
+        "id": "agentsOfTheOutside",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "agentsOfYuggoth",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "beyondTheBeyond",
+        "cards": 9,
+        "missingEntries": 0
+      },
+      {
+        "id": "cleanupCrew",
+        "cards": 5,
+        "missingEntries": 0
+      },
+      {
+        "id": "crimsonConspiracy",
+        "cards": 4,
+        "missingEntries": 0
+      },
+      {
+        "id": "darkVeiling",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "globetrotting",
+        "cards": 12,
+        "missingEntries": 0
+      },
+      {
+        "id": "mysteriesAbound",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "outsiders",
+        "cards": 3,
+        "missingEntries": 0
+      },
+      {
+        "id": "redCoterie",
+        "cards": 10,
+        "missingEntries": 0
+      },
+      {
+        "id": "scarletSorcery",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "secretWar",
+        "cards": 3,
+        "missingEntries": 0
+      },
+      {
+        "id": "shadowOfADoubt",
+        "cards": 2,
+        "missingEntries": 0
+      },
+      {
+        "id": "spatialAnomaly",
+        "cards": 3,
+        "missingEntries": 0
+      },
+      {
+        "id": "spreadingCorruption",
+        "cards": 3,
+        "missingEntries": 0
+      },
+      {
+        "id": "strangeHappenings",
+        "cards": 2,
+        "missingEntries": 0
+      }
+    ],
+    "entriesMissing": 0,
+    "entriesExpected": 301,
+    "workspace": {
+      "scenarioDirs": [
+        "content/campaigns/theScarletKeys/scenarios/riddlesAndRain",
+        "content/campaigns/theScarletKeys/scenarios/deadHeat",
+        "content/campaigns/theScarletKeys/scenarios/sanguineShadows",
+        "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark",
+        "content/campaigns/theScarletKeys/scenarios/dancingMad",
+        "content/campaigns/theScarletKeys/scenarios/onThinIce",
+        "content/campaigns/theScarletKeys/scenarios/dogsOfWar",
+        "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering",
+        "content/campaigns/theScarletKeys/scenarios/withoutATrace",
+        "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys"
+      ],
+      "entryRoot": "src/cards/encounter-entries/theScarletKeys"
+    }
+  },
+  "scenarioCards": [
+    "09501",
+    "09520",
+    "09545",
+    "09566",
+    "09591",
+    "09609",
+    "09635",
+    "09660",
+    "09681",
+    "09694"
+  ],
+  "unassigned": [],
+  "nodes": [
+    {
+      "kind": "chapter",
+      "id": "riddlesAndRain",
+      "name": "谜雨",
+      "nameEn": "Riddles and Rain",
+      "referenceCode": "09501",
+      "encounterCode": "riddles_and_rain",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain",
+      "testFile": "tests/tsk-scenario-riddlesAndRain.test.mjs",
+      "guideFile": "web/scenario-guides/riddlesAndRain.json",
+      "cards": [
+        "09502",
+        "09503",
+        "09504",
+        "09505",
+        "09506",
+        "09507",
+        "09508",
+        "09509",
+        "09510",
+        "09511",
+        "09512",
+        "09513",
+        "09514",
+        "09515",
+        "09516",
+        "09517",
+        "09518",
+        "09519a",
+        "09519b"
+      ],
+      "entries": [
+        {
+          "code": "09502",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09502.js",
+          "exists": true
+        },
+        {
+          "code": "09503",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09503.js",
+          "exists": true
+        },
+        {
+          "code": "09504",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09504.js",
+          "exists": true
+        },
+        {
+          "code": "09505",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09505.js",
+          "exists": true
+        },
+        {
+          "code": "09506",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09506.js",
+          "exists": true
+        },
+        {
+          "code": "09507",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09507.js",
+          "exists": true
+        },
+        {
+          "code": "09508",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09508.js",
+          "exists": true
+        },
+        {
+          "code": "09509",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09509.js",
+          "exists": true
+        },
+        {
+          "code": "09510",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09510.js",
+          "exists": true
+        },
+        {
+          "code": "09511",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09511.js",
+          "exists": true
+        },
+        {
+          "code": "09512",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09512.js",
+          "exists": true
+        },
+        {
+          "code": "09513",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09513.js",
+          "exists": true
+        },
+        {
+          "code": "09514",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09514.js",
+          "exists": true
+        },
+        {
+          "code": "09515",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09515.js",
+          "exists": true
+        },
+        {
+          "code": "09516",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09516.js",
+          "exists": true
+        },
+        {
+          "code": "09517",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09517.js",
+          "exists": true
+        },
+        {
+          "code": "09518",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09518.js",
+          "exists": true
+        },
+        {
+          "code": "09519a",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09519a.js",
+          "exists": true
+        },
+        {
+          "code": "09519b",
+          "path": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09519b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 19,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/riddlesAndRain.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-riddlesAndRain.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 45,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 45,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "deadHeat",
+      "name": "死亡酷暑",
+      "nameEn": "Dead Heat",
+      "referenceCode": "09520",
+      "encounterCode": "dead_heat",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/deadHeat",
+      "testFile": "tests/tsk-scenario-deadHeat.test.mjs",
+      "guideFile": "web/scenario-guides/deadHeat.json",
+      "cards": [
+        "09521",
+        "09522",
+        "09523",
+        "09524",
+        "09525",
+        "09526",
+        "09527",
+        "09528",
+        "09529",
+        "09530",
+        "09531",
+        "09532",
+        "09533",
+        "09534",
+        "09535",
+        "09536",
+        "09536b",
+        "09537",
+        "09537b",
+        "09538",
+        "09539",
+        "09540",
+        "09541",
+        "09542",
+        "09543",
+        "09544a",
+        "09544b"
+      ],
+      "entries": [
+        {
+          "code": "09521",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09521.js",
+          "exists": true
+        },
+        {
+          "code": "09522",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09522.js",
+          "exists": true
+        },
+        {
+          "code": "09523",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09523.js",
+          "exists": true
+        },
+        {
+          "code": "09524",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09524.js",
+          "exists": true
+        },
+        {
+          "code": "09525",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09525.js",
+          "exists": true
+        },
+        {
+          "code": "09526",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09526.js",
+          "exists": true
+        },
+        {
+          "code": "09527",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09527.js",
+          "exists": true
+        },
+        {
+          "code": "09528",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09528.js",
+          "exists": true
+        },
+        {
+          "code": "09529",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09529.js",
+          "exists": true
+        },
+        {
+          "code": "09530",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09530.js",
+          "exists": true
+        },
+        {
+          "code": "09531",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09531.js",
+          "exists": true
+        },
+        {
+          "code": "09532",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09532.js",
+          "exists": true
+        },
+        {
+          "code": "09533",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09533.js",
+          "exists": true
+        },
+        {
+          "code": "09534",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09534.js",
+          "exists": true
+        },
+        {
+          "code": "09535",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09535.js",
+          "exists": true
+        },
+        {
+          "code": "09536",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09536.js",
+          "exists": true
+        },
+        {
+          "code": "09536b",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09536b.js",
+          "exists": true
+        },
+        {
+          "code": "09537",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09537.js",
+          "exists": true
+        },
+        {
+          "code": "09537b",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09537b.js",
+          "exists": true
+        },
+        {
+          "code": "09538",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09538.js",
+          "exists": true
+        },
+        {
+          "code": "09539",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09539.js",
+          "exists": true
+        },
+        {
+          "code": "09540",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09540.js",
+          "exists": true
+        },
+        {
+          "code": "09541",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09541.js",
+          "exists": true
+        },
+        {
+          "code": "09542",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09542.js",
+          "exists": true
+        },
+        {
+          "code": "09543",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09543.js",
+          "exists": true
+        },
+        {
+          "code": "09544a",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09544a.js",
+          "exists": true
+        },
+        {
+          "code": "09544b",
+          "path": "src/cards/encounter-entries/theScarletKeys/deadHeat/09544b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 27,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/deadHeat/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/deadHeat/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/deadHeat/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/deadHeat/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/deadHeat/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/deadHeat.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-deadHeat.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 63,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 63,
+        "specialRules": 6
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "sanguineShadows",
+      "name": "血色阴影",
+      "nameEn": "Sanguine Shadows",
+      "referenceCode": "09545",
+      "encounterCode": "sanguine_shadows",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/sanguineShadows",
+      "testFile": "tests/tsk-scenario-sanguineShadows.test.mjs",
+      "guideFile": "web/scenario-guides/sanguineShadows.json",
+      "cards": [
+        "09546",
+        "09547",
+        "09548",
+        "09549",
+        "09550",
+        "09551",
+        "09552",
+        "09553",
+        "09554",
+        "09555",
+        "09556",
+        "09557",
+        "09557b",
+        "09558",
+        "09559",
+        "09560",
+        "09561",
+        "09562",
+        "09563",
+        "09564",
+        "09565a",
+        "09565b"
+      ],
+      "entries": [
+        {
+          "code": "09546",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09546.js",
+          "exists": true
+        },
+        {
+          "code": "09547",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09547.js",
+          "exists": true
+        },
+        {
+          "code": "09548",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09548.js",
+          "exists": true
+        },
+        {
+          "code": "09549",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09549.js",
+          "exists": true
+        },
+        {
+          "code": "09550",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09550.js",
+          "exists": true
+        },
+        {
+          "code": "09551",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09551.js",
+          "exists": true
+        },
+        {
+          "code": "09552",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09552.js",
+          "exists": true
+        },
+        {
+          "code": "09553",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09553.js",
+          "exists": true
+        },
+        {
+          "code": "09554",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09554.js",
+          "exists": true
+        },
+        {
+          "code": "09555",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09555.js",
+          "exists": true
+        },
+        {
+          "code": "09556",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09556.js",
+          "exists": true
+        },
+        {
+          "code": "09557",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09557.js",
+          "exists": true
+        },
+        {
+          "code": "09557b",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09557b.js",
+          "exists": true
+        },
+        {
+          "code": "09558",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09558.js",
+          "exists": true
+        },
+        {
+          "code": "09559",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09559.js",
+          "exists": true
+        },
+        {
+          "code": "09560",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09560.js",
+          "exists": true
+        },
+        {
+          "code": "09561",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09561.js",
+          "exists": true
+        },
+        {
+          "code": "09562",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09562.js",
+          "exists": true
+        },
+        {
+          "code": "09563",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09563.js",
+          "exists": true
+        },
+        {
+          "code": "09564",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09564.js",
+          "exists": true
+        },
+        {
+          "code": "09565a",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09565a.js",
+          "exists": true
+        },
+        {
+          "code": "09565b",
+          "path": "src/cards/encounter-entries/theScarletKeys/sanguineShadows/09565b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 22,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/sanguineShadows.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-sanguineShadows.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 62,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 62,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "dealingsInTheDark",
+      "name": "暗中交易",
+      "nameEn": "Dealings in the Dark",
+      "referenceCode": "09566",
+      "encounterCode": "dealings_in_the_dark",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark",
+      "testFile": "tests/tsk-scenario-dealingsInTheDark.test.mjs",
+      "guideFile": "web/scenario-guides/dealingsInTheDark.json",
+      "cards": [
+        "09567",
+        "09568",
+        "09569",
+        "09570",
+        "09571",
+        "09571b",
+        "09572",
+        "09573",
+        "09574",
+        "09575",
+        "09576",
+        "09577",
+        "09578",
+        "09579",
+        "09580",
+        "09581",
+        "09582",
+        "09583",
+        "09585",
+        "09586a",
+        "09586b",
+        "09586c",
+        "09587",
+        "09588",
+        "09589",
+        "09590a",
+        "09590b"
+      ],
+      "entries": [
+        {
+          "code": "09567",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09567.js",
+          "exists": true
+        },
+        {
+          "code": "09568",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09568.js",
+          "exists": true
+        },
+        {
+          "code": "09569",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09569.js",
+          "exists": true
+        },
+        {
+          "code": "09570",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09570.js",
+          "exists": true
+        },
+        {
+          "code": "09571",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09571.js",
+          "exists": true
+        },
+        {
+          "code": "09571b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09571b.js",
+          "exists": true
+        },
+        {
+          "code": "09572",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09572.js",
+          "exists": true
+        },
+        {
+          "code": "09573",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09573.js",
+          "exists": true
+        },
+        {
+          "code": "09574",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09574.js",
+          "exists": true
+        },
+        {
+          "code": "09575",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09575.js",
+          "exists": true
+        },
+        {
+          "code": "09576",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09576.js",
+          "exists": true
+        },
+        {
+          "code": "09577",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09577.js",
+          "exists": true
+        },
+        {
+          "code": "09578",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09578.js",
+          "exists": true
+        },
+        {
+          "code": "09579",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09579.js",
+          "exists": true
+        },
+        {
+          "code": "09580",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09580.js",
+          "exists": true
+        },
+        {
+          "code": "09581",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09581.js",
+          "exists": true
+        },
+        {
+          "code": "09582",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09582.js",
+          "exists": true
+        },
+        {
+          "code": "09583",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09583.js",
+          "exists": true
+        },
+        {
+          "code": "09585",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09585.js",
+          "exists": true
+        },
+        {
+          "code": "09586a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09586a.js",
+          "exists": true
+        },
+        {
+          "code": "09586b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09586b.js",
+          "exists": true
+        },
+        {
+          "code": "09586c",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09586c.js",
+          "exists": true
+        },
+        {
+          "code": "09587",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09587.js",
+          "exists": true
+        },
+        {
+          "code": "09588",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09588.js",
+          "exists": true
+        },
+        {
+          "code": "09589",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09589.js",
+          "exists": true
+        },
+        {
+          "code": "09590a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09590a.js",
+          "exists": true
+        },
+        {
+          "code": "09590b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dealingsInTheDark/09590b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 27,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/dealingsInTheDark.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-dealingsInTheDark.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 74,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 74,
+        "specialRules": 4
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "dancingMad",
+      "name": "疯星乱舞",
+      "nameEn": "Dancing Mad",
+      "referenceCode": "09591",
+      "encounterCode": "dancing_mad",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/dancingMad",
+      "testFile": "tests/tsk-scenario-dancingMad.test.mjs",
+      "guideFile": "web/scenario-guides/dancingMad.json",
+      "cards": [
+        "09592",
+        "09593",
+        "09594",
+        "09595",
+        "09596",
+        "09597",
+        "09598",
+        "09599",
+        "09600a",
+        "09600b",
+        "09601",
+        "09602",
+        "09603",
+        "09604",
+        "09605",
+        "09606a",
+        "09607a",
+        "09607b",
+        "09608"
+      ],
+      "entries": [
+        {
+          "code": "09592",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09592.js",
+          "exists": true
+        },
+        {
+          "code": "09593",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09593.js",
+          "exists": true
+        },
+        {
+          "code": "09594",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09594.js",
+          "exists": true
+        },
+        {
+          "code": "09595",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09595.js",
+          "exists": true
+        },
+        {
+          "code": "09596",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09596.js",
+          "exists": true
+        },
+        {
+          "code": "09597",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09597.js",
+          "exists": true
+        },
+        {
+          "code": "09598",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09598.js",
+          "exists": true
+        },
+        {
+          "code": "09599",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09599.js",
+          "exists": true
+        },
+        {
+          "code": "09600a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09600a.js",
+          "exists": true
+        },
+        {
+          "code": "09600b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09600b.js",
+          "exists": true
+        },
+        {
+          "code": "09601",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09601.js",
+          "exists": true
+        },
+        {
+          "code": "09602",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09602.js",
+          "exists": true
+        },
+        {
+          "code": "09603",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09603.js",
+          "exists": true
+        },
+        {
+          "code": "09604",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09604.js",
+          "exists": true
+        },
+        {
+          "code": "09605",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09605.js",
+          "exists": true
+        },
+        {
+          "code": "09606a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09606a.js",
+          "exists": true
+        },
+        {
+          "code": "09607a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09607a.js",
+          "exists": true
+        },
+        {
+          "code": "09607b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09607b.js",
+          "exists": true
+        },
+        {
+          "code": "09608",
+          "path": "src/cards/encounter-entries/theScarletKeys/dancingMad/09608.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 19,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dancingMad/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dancingMad/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dancingMad/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dancingMad/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dancingMad/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/dancingMad.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-dancingMad.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 50,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 50,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "onThinIce",
+      "name": "如履薄冰",
+      "nameEn": "On Thin Ice",
+      "referenceCode": "09609",
+      "encounterCode": "on_thin_ice",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/onThinIce",
+      "testFile": "tests/tsk-scenario-onThinIce.test.mjs",
+      "guideFile": "web/scenario-guides/onThinIce.json",
+      "cards": [
+        "09610",
+        "09611",
+        "09612",
+        "09613",
+        "09614",
+        "09615a",
+        "09615b",
+        "09616",
+        "09617",
+        "09618",
+        "09619",
+        "09620",
+        "09621",
+        "09622",
+        "09623",
+        "09624",
+        "09625a",
+        "09625b",
+        "09626",
+        "09627",
+        "09628",
+        "09629",
+        "09630",
+        "09631",
+        "09632",
+        "09633",
+        "09634a",
+        "09634b"
+      ],
+      "entries": [
+        {
+          "code": "09610",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09610.js",
+          "exists": true
+        },
+        {
+          "code": "09611",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09611.js",
+          "exists": true
+        },
+        {
+          "code": "09612",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09612.js",
+          "exists": true
+        },
+        {
+          "code": "09613",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09613.js",
+          "exists": true
+        },
+        {
+          "code": "09614",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09614.js",
+          "exists": true
+        },
+        {
+          "code": "09615a",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09615a.js",
+          "exists": true
+        },
+        {
+          "code": "09615b",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09615b.js",
+          "exists": true
+        },
+        {
+          "code": "09616",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09616.js",
+          "exists": true
+        },
+        {
+          "code": "09617",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09617.js",
+          "exists": true
+        },
+        {
+          "code": "09618",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09618.js",
+          "exists": true
+        },
+        {
+          "code": "09619",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09619.js",
+          "exists": true
+        },
+        {
+          "code": "09620",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09620.js",
+          "exists": true
+        },
+        {
+          "code": "09621",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09621.js",
+          "exists": true
+        },
+        {
+          "code": "09622",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09622.js",
+          "exists": true
+        },
+        {
+          "code": "09623",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09623.js",
+          "exists": true
+        },
+        {
+          "code": "09624",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09624.js",
+          "exists": true
+        },
+        {
+          "code": "09625a",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09625a.js",
+          "exists": true
+        },
+        {
+          "code": "09625b",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09625b.js",
+          "exists": true
+        },
+        {
+          "code": "09626",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09626.js",
+          "exists": true
+        },
+        {
+          "code": "09627",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09627.js",
+          "exists": true
+        },
+        {
+          "code": "09628",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09628.js",
+          "exists": true
+        },
+        {
+          "code": "09629",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09629.js",
+          "exists": true
+        },
+        {
+          "code": "09630",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09630.js",
+          "exists": true
+        },
+        {
+          "code": "09631",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09631.js",
+          "exists": true
+        },
+        {
+          "code": "09632",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09632.js",
+          "exists": true
+        },
+        {
+          "code": "09633",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09633.js",
+          "exists": true
+        },
+        {
+          "code": "09634a",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09634a.js",
+          "exists": true
+        },
+        {
+          "code": "09634b",
+          "path": "src/cards/encounter-entries/theScarletKeys/onThinIce/09634b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 28,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/onThinIce/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/onThinIce/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/onThinIce/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/onThinIce/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/onThinIce/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/onThinIce.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-onThinIce.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 40,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 40,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "dogsOfWar",
+      "name": "战争疮痍",
+      "nameEn": "Dogs of War",
+      "referenceCode": "09635",
+      "encounterCode": "dogs_of_war",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/dogsOfWar",
+      "testFile": "tests/tsk-scenario-dogsOfWar.test.mjs",
+      "guideFile": "web/scenario-guides/dogsOfWar.json",
+      "cards": [
+        "09636",
+        "09637",
+        "09638",
+        "09639",
+        "09640",
+        "09641",
+        "09642",
+        "09643",
+        "09644",
+        "09645",
+        "09646",
+        "09647",
+        "09648",
+        "09649",
+        "09650",
+        "09651",
+        "09652",
+        "09653a",
+        "09653b",
+        "09654a",
+        "09654b",
+        "09655a",
+        "09655b",
+        "09656",
+        "09657",
+        "09658",
+        "09659a",
+        "09659b"
+      ],
+      "entries": [
+        {
+          "code": "09636",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09636.js",
+          "exists": true
+        },
+        {
+          "code": "09637",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09637.js",
+          "exists": true
+        },
+        {
+          "code": "09638",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09638.js",
+          "exists": true
+        },
+        {
+          "code": "09639",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09639.js",
+          "exists": true
+        },
+        {
+          "code": "09640",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09640.js",
+          "exists": true
+        },
+        {
+          "code": "09641",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09641.js",
+          "exists": true
+        },
+        {
+          "code": "09642",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09642.js",
+          "exists": true
+        },
+        {
+          "code": "09643",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09643.js",
+          "exists": true
+        },
+        {
+          "code": "09644",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09644.js",
+          "exists": true
+        },
+        {
+          "code": "09645",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09645.js",
+          "exists": true
+        },
+        {
+          "code": "09646",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09646.js",
+          "exists": true
+        },
+        {
+          "code": "09647",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09647.js",
+          "exists": true
+        },
+        {
+          "code": "09648",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09648.js",
+          "exists": true
+        },
+        {
+          "code": "09649",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09649.js",
+          "exists": true
+        },
+        {
+          "code": "09650",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09650.js",
+          "exists": true
+        },
+        {
+          "code": "09651",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09651.js",
+          "exists": true
+        },
+        {
+          "code": "09652",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09652.js",
+          "exists": true
+        },
+        {
+          "code": "09653a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09653a.js",
+          "exists": true
+        },
+        {
+          "code": "09653b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09653b.js",
+          "exists": true
+        },
+        {
+          "code": "09654a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09654a.js",
+          "exists": true
+        },
+        {
+          "code": "09654b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09654b.js",
+          "exists": true
+        },
+        {
+          "code": "09655a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09655a.js",
+          "exists": true
+        },
+        {
+          "code": "09655b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09655b.js",
+          "exists": true
+        },
+        {
+          "code": "09656",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09656.js",
+          "exists": true
+        },
+        {
+          "code": "09657",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09657.js",
+          "exists": true
+        },
+        {
+          "code": "09658",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09658.js",
+          "exists": true
+        },
+        {
+          "code": "09659a",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09659a.js",
+          "exists": true
+        },
+        {
+          "code": "09659b",
+          "path": "src/cards/encounter-entries/theScarletKeys/dogsOfWar/09659b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 28,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/dogsOfWar.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-dogsOfWar.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 91,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 91,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "shadesOfSuffering",
+      "name": "苦痛之影",
+      "nameEn": "Shades of Suffering",
+      "referenceCode": "09660",
+      "encounterCode": "shades_of_suffering",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering",
+      "testFile": "tests/tsk-scenario-shadesOfSuffering.test.mjs",
+      "guideFile": "web/scenario-guides/shadesOfSuffering.json",
+      "cards": [
+        "09661",
+        "09662",
+        "09663",
+        "09664",
+        "09665",
+        "09666",
+        "09667",
+        "09668",
+        "09669",
+        "09670",
+        "09671",
+        "09672",
+        "09673",
+        "09674a",
+        "09674b",
+        "09674c",
+        "09674d",
+        "09675a",
+        "09675b",
+        "09675c",
+        "09675d",
+        "09676a",
+        "09676b",
+        "09676c",
+        "09676d",
+        "09677",
+        "09678",
+        "09679a",
+        "09679b",
+        "09680a",
+        "09680b"
+      ],
+      "entries": [
+        {
+          "code": "09661",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09661.js",
+          "exists": true
+        },
+        {
+          "code": "09662",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09662.js",
+          "exists": true
+        },
+        {
+          "code": "09663",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09663.js",
+          "exists": true
+        },
+        {
+          "code": "09664",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09664.js",
+          "exists": true
+        },
+        {
+          "code": "09665",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09665.js",
+          "exists": true
+        },
+        {
+          "code": "09666",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09666.js",
+          "exists": true
+        },
+        {
+          "code": "09667",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09667.js",
+          "exists": true
+        },
+        {
+          "code": "09668",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09668.js",
+          "exists": true
+        },
+        {
+          "code": "09669",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09669.js",
+          "exists": true
+        },
+        {
+          "code": "09670",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09670.js",
+          "exists": true
+        },
+        {
+          "code": "09671",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09671.js",
+          "exists": true
+        },
+        {
+          "code": "09672",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09672.js",
+          "exists": true
+        },
+        {
+          "code": "09673",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09673.js",
+          "exists": true
+        },
+        {
+          "code": "09674a",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09674a.js",
+          "exists": true
+        },
+        {
+          "code": "09674b",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09674b.js",
+          "exists": true
+        },
+        {
+          "code": "09674c",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09674c.js",
+          "exists": true
+        },
+        {
+          "code": "09674d",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09674d.js",
+          "exists": true
+        },
+        {
+          "code": "09675a",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09675a.js",
+          "exists": true
+        },
+        {
+          "code": "09675b",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09675b.js",
+          "exists": true
+        },
+        {
+          "code": "09675c",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09675c.js",
+          "exists": true
+        },
+        {
+          "code": "09675d",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09675d.js",
+          "exists": true
+        },
+        {
+          "code": "09676a",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09676a.js",
+          "exists": true
+        },
+        {
+          "code": "09676b",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09676b.js",
+          "exists": true
+        },
+        {
+          "code": "09676c",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09676c.js",
+          "exists": true
+        },
+        {
+          "code": "09676d",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09676d.js",
+          "exists": true
+        },
+        {
+          "code": "09677",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09677.js",
+          "exists": true
+        },
+        {
+          "code": "09678",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09678.js",
+          "exists": true
+        },
+        {
+          "code": "09679a",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09679a.js",
+          "exists": true
+        },
+        {
+          "code": "09679b",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09679b.js",
+          "exists": true
+        },
+        {
+          "code": "09680a",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09680a.js",
+          "exists": true
+        },
+        {
+          "code": "09680b",
+          "path": "src/cards/encounter-entries/theScarletKeys/shadesOfSuffering/09680b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 31,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/shadesOfSuffering.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-shadesOfSuffering.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 61,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 61,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "withoutATrace",
+      "name": "不留痕迹",
+      "nameEn": "Without a Trace",
+      "referenceCode": "09681",
+      "encounterCode": "without_a_trace",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/withoutATrace",
+      "testFile": "tests/tsk-scenario-withoutATrace.test.mjs",
+      "guideFile": "web/scenario-guides/withoutATrace.json",
+      "cards": [
+        "09682",
+        "09683",
+        "09684",
+        "09685",
+        "09686",
+        "09687",
+        "09688",
+        "09689",
+        "09690",
+        "09691",
+        "09692",
+        "09693"
+      ],
+      "entries": [
+        {
+          "code": "09682",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09682.js",
+          "exists": true
+        },
+        {
+          "code": "09683",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09683.js",
+          "exists": true
+        },
+        {
+          "code": "09684",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09684.js",
+          "exists": true
+        },
+        {
+          "code": "09685",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09685.js",
+          "exists": true
+        },
+        {
+          "code": "09686",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09686.js",
+          "exists": true
+        },
+        {
+          "code": "09687",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09687.js",
+          "exists": true
+        },
+        {
+          "code": "09688",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09688.js",
+          "exists": true
+        },
+        {
+          "code": "09689",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09689.js",
+          "exists": true
+        },
+        {
+          "code": "09690",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09690.js",
+          "exists": true
+        },
+        {
+          "code": "09691",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09691.js",
+          "exists": true
+        },
+        {
+          "code": "09692",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09692.js",
+          "exists": true
+        },
+        {
+          "code": "09693",
+          "path": "src/cards/encounter-entries/theScarletKeys/withoutATrace/09693.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 12,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/withoutATrace/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/withoutATrace/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/withoutATrace/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/withoutATrace/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/withoutATrace.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-withoutATrace.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 54,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 54,
+        "specialRules": 4
+      }
+    },
+    {
+      "kind": "chapter",
+      "id": "congressOfTheKeys",
+      "name": "钥匙议会",
+      "nameEn": "Congress of the Keys",
+      "referenceCode": "09694",
+      "encounterCode": "congress_of_the_keys",
+      "scenarioDir": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys",
+      "testFile": "tests/tsk-scenario-congressOfTheKeys.test.mjs",
+      "guideFile": "web/scenario-guides/congressOfTheKeys.json",
+      "cards": [
+        "09695",
+        "09696",
+        "09697",
+        "09698",
+        "09699",
+        "09700",
+        "09701",
+        "09702",
+        "09703",
+        "09704",
+        "09705",
+        "09706",
+        "09707",
+        "09708",
+        "09709",
+        "09710",
+        "09711",
+        "09712",
+        "09713",
+        "09714",
+        "09715"
+      ],
+      "entries": [
+        {
+          "code": "09695",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09695.js",
+          "exists": true
+        },
+        {
+          "code": "09696",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09696.js",
+          "exists": true
+        },
+        {
+          "code": "09697",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09697.js",
+          "exists": true
+        },
+        {
+          "code": "09698",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09698.js",
+          "exists": true
+        },
+        {
+          "code": "09699",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09699.js",
+          "exists": true
+        },
+        {
+          "code": "09700",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09700.js",
+          "exists": true
+        },
+        {
+          "code": "09701",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09701.js",
+          "exists": true
+        },
+        {
+          "code": "09702",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09702.js",
+          "exists": true
+        },
+        {
+          "code": "09703",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09703.js",
+          "exists": true
+        },
+        {
+          "code": "09704",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09704.js",
+          "exists": true
+        },
+        {
+          "code": "09705",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09705.js",
+          "exists": true
+        },
+        {
+          "code": "09706",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09706.js",
+          "exists": true
+        },
+        {
+          "code": "09707",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09707.js",
+          "exists": true
+        },
+        {
+          "code": "09708",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09708.js",
+          "exists": true
+        },
+        {
+          "code": "09709",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09709.js",
+          "exists": true
+        },
+        {
+          "code": "09710",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09710.js",
+          "exists": true
+        },
+        {
+          "code": "09711",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09711.js",
+          "exists": true
+        },
+        {
+          "code": "09712",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09712.js",
+          "exists": true
+        },
+        {
+          "code": "09713",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09713.js",
+          "exists": true
+        },
+        {
+          "code": "09714",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09714.js",
+          "exists": true
+        },
+        {
+          "code": "09715",
+          "path": "src/cards/encounter-entries/theScarletKeys/congressOfTheKeys/09715.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 21,
+      "implemented": true,
+      "scenarioFiles": [
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/definition.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/layout.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/behavior.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/chaos.js",
+          "exists": true
+        },
+        {
+          "file": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/index.js",
+          "exists": true
+        }
+      ],
+      "scenarioImplemented": true,
+      "guide": {
+        "path": "web/scenario-guides/congressOfTheKeys.json",
+        "exists": true
+      },
+      "test": {
+        "path": "tests/tsk-scenario-congressOfTheKeys.test.mjs",
+        "exists": true
+      },
+      "story": {
+        "total": 137,
+        "missing": 0,
+        "untranslated": 0,
+        "present": 137,
+        "specialRules": 0
+      }
+    },
+    {
+      "kind": "shared",
+      "id": "agentsOfTheOutside",
+      "encounterCode": "agents_of_the_outside",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09737",
+        "09738"
+      ],
+      "entries": [
+        {
+          "code": "09737",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/agents_of_the_outside/09737.js",
+          "exists": true
+        },
+        {
+          "code": "09738",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/agents_of_the_outside/09738.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "agentsOfYuggoth",
+      "encounterCode": "agents_of_yuggoth",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09739",
+        "09740"
+      ],
+      "entries": [
+        {
+          "code": "09739",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/agents_of_yuggoth/09739.js",
+          "exists": true
+        },
+        {
+          "code": "09740",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/agents_of_yuggoth/09740.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "beyondTheBeyond",
+      "encounterCode": "beyond_the_beyond",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09747a",
+        "09747b",
+        "09747c",
+        "09748a",
+        "09748b",
+        "09749a",
+        "09749b",
+        "09750",
+        "09751"
+      ],
+      "entries": [
+        {
+          "code": "09747a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09747a.js",
+          "exists": true
+        },
+        {
+          "code": "09747b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09747b.js",
+          "exists": true
+        },
+        {
+          "code": "09747c",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09747c.js",
+          "exists": true
+        },
+        {
+          "code": "09748a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09748a.js",
+          "exists": true
+        },
+        {
+          "code": "09748b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09748b.js",
+          "exists": true
+        },
+        {
+          "code": "09749a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09749a.js",
+          "exists": true
+        },
+        {
+          "code": "09749b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09749b.js",
+          "exists": true
+        },
+        {
+          "code": "09750",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09750.js",
+          "exists": true
+        },
+        {
+          "code": "09751",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/beyond_the_beyond/09751.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 9,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "cleanupCrew",
+      "encounterCode": "cleanup_crew",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09726a",
+        "09726b",
+        "09727a",
+        "09727b",
+        "09728"
+      ],
+      "entries": [
+        {
+          "code": "09726a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/cleanup_crew/09726a.js",
+          "exists": true
+        },
+        {
+          "code": "09726b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/cleanup_crew/09726b.js",
+          "exists": true
+        },
+        {
+          "code": "09727a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/cleanup_crew/09727a.js",
+          "exists": true
+        },
+        {
+          "code": "09727b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/cleanup_crew/09727b.js",
+          "exists": true
+        },
+        {
+          "code": "09728",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/cleanup_crew/09728.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 5,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "crimsonConspiracy",
+      "encounterCode": "crimson_conspiracy",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09716a",
+        "09716b",
+        "09716c",
+        "09717"
+      ],
+      "entries": [
+        {
+          "code": "09716a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/crimson_conspiracy/09716a.js",
+          "exists": true
+        },
+        {
+          "code": "09716b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/crimson_conspiracy/09716b.js",
+          "exists": true
+        },
+        {
+          "code": "09716c",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/crimson_conspiracy/09716c.js",
+          "exists": true
+        },
+        {
+          "code": "09717",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/crimson_conspiracy/09717.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 4,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "darkVeiling",
+      "encounterCode": "dark_veiling",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09724",
+        "09725"
+      ],
+      "entries": [
+        {
+          "code": "09724",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/dark_veiling/09724.js",
+          "exists": true
+        },
+        {
+          "code": "09725",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/dark_veiling/09725.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "globetrotting",
+      "encounterCode": "globetrotting",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09762",
+        "09763",
+        "09764",
+        "09765",
+        "09766",
+        "09767",
+        "09768a",
+        "09768b",
+        "09769a",
+        "09769b",
+        "09770a",
+        "09770b"
+      ],
+      "entries": [
+        {
+          "code": "09762",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09762.js",
+          "exists": true
+        },
+        {
+          "code": "09763",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09763.js",
+          "exists": true
+        },
+        {
+          "code": "09764",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09764.js",
+          "exists": true
+        },
+        {
+          "code": "09765",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09765.js",
+          "exists": true
+        },
+        {
+          "code": "09766",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09766.js",
+          "exists": true
+        },
+        {
+          "code": "09767",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09767.js",
+          "exists": true
+        },
+        {
+          "code": "09768a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09768a.js",
+          "exists": true
+        },
+        {
+          "code": "09768b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09768b.js",
+          "exists": true
+        },
+        {
+          "code": "09769a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09769a.js",
+          "exists": true
+        },
+        {
+          "code": "09769b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09769b.js",
+          "exists": true
+        },
+        {
+          "code": "09770a",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09770a.js",
+          "exists": true
+        },
+        {
+          "code": "09770b",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/globetrotting/09770b.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 12,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "mysteriesAbound",
+      "encounterCode": "mysteries_abound",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09720",
+        "09721"
+      ],
+      "entries": [
+        {
+          "code": "09720",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/mysteries_abound/09720.js",
+          "exists": true
+        },
+        {
+          "code": "09721",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/mysteries_abound/09721.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "outsiders",
+      "encounterCode": "outsiders",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09731",
+        "09732",
+        "09733"
+      ],
+      "entries": [
+        {
+          "code": "09731",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/outsiders/09731.js",
+          "exists": true
+        },
+        {
+          "code": "09732",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/outsiders/09732.js",
+          "exists": true
+        },
+        {
+          "code": "09733",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/outsiders/09733.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 3,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "redCoterie",
+      "encounterCode": "red_coterie",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09752",
+        "09753",
+        "09754",
+        "09755",
+        "09756",
+        "09757",
+        "09758",
+        "09759",
+        "09760",
+        "09761"
+      ],
+      "entries": [
+        {
+          "code": "09752",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09752.js",
+          "exists": true
+        },
+        {
+          "code": "09753",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09753.js",
+          "exists": true
+        },
+        {
+          "code": "09754",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09754.js",
+          "exists": true
+        },
+        {
+          "code": "09755",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09755.js",
+          "exists": true
+        },
+        {
+          "code": "09756",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09756.js",
+          "exists": true
+        },
+        {
+          "code": "09757",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09757.js",
+          "exists": true
+        },
+        {
+          "code": "09758",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09758.js",
+          "exists": true
+        },
+        {
+          "code": "09759",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09759.js",
+          "exists": true
+        },
+        {
+          "code": "09760",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09760.js",
+          "exists": true
+        },
+        {
+          "code": "09761",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/red_coterie/09761.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 10,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "scarletSorcery",
+      "encounterCode": "scarlet_sorcery",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09729",
+        "09730"
+      ],
+      "entries": [
+        {
+          "code": "09729",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/scarlet_sorcery/09729.js",
+          "exists": true
+        },
+        {
+          "code": "09730",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/scarlet_sorcery/09730.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "secretWar",
+      "encounterCode": "secret_war",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09734",
+        "09735",
+        "09736"
+      ],
+      "entries": [
+        {
+          "code": "09734",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/secret_war/09734.js",
+          "exists": true
+        },
+        {
+          "code": "09735",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/secret_war/09735.js",
+          "exists": true
+        },
+        {
+          "code": "09736",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/secret_war/09736.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 3,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "shadowOfADoubt",
+      "encounterCode": "shadow_of_a_doubt",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09722",
+        "09723"
+      ],
+      "entries": [
+        {
+          "code": "09722",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/shadow_of_a_doubt/09722.js",
+          "exists": true
+        },
+        {
+          "code": "09723",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/shadow_of_a_doubt/09723.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "spatialAnomaly",
+      "encounterCode": "spatial_anomaly",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09741",
+        "09742",
+        "09743"
+      ],
+      "entries": [
+        {
+          "code": "09741",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spatial_anomaly/09741.js",
+          "exists": true
+        },
+        {
+          "code": "09742",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spatial_anomaly/09742.js",
+          "exists": true
+        },
+        {
+          "code": "09743",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spatial_anomaly/09743.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 3,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "spreadingCorruption",
+      "encounterCode": "spreading_corruption",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09744",
+        "09745",
+        "09746"
+      ],
+      "entries": [
+        {
+          "code": "09744",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spreading_corruption/09744.js",
+          "exists": true
+        },
+        {
+          "code": "09745",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spreading_corruption/09745.js",
+          "exists": true
+        },
+        {
+          "code": "09746",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/spreading_corruption/09746.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 3,
+      "implemented": true
+    },
+    {
+      "kind": "shared",
+      "id": "strangeHappenings",
+      "encounterCode": "strange_happenings",
+      "testFile": "tests/tsk-shared-encounters-a.test.mjs",
+      "cards": [
+        "09718",
+        "09719"
+      ],
+      "entries": [
+        {
+          "code": "09718",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/strange_happenings/09718.js",
+          "exists": true
+        },
+        {
+          "code": "09719",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/strange_happenings/09719.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 2,
+      "implemented": true
+    },
+    {
+      "kind": "sharedStory",
+      "id": "dealings_in_the_dark",
+      "encounterCode": "dealings_in_the_dark",
+      "cards": [
+        "09584"
+      ],
+      "entries": [
+        {
+          "code": "09584",
+          "path": "src/cards/encounter-entries/theScarletKeys/_shared/dealings_in_the_dark/09584.js",
+          "exists": true
+        }
+      ],
+      "missingEntries": [],
+      "entryCount": 1,
+      "implemented": true
+    }
+  ],
+  "queue": []
+}

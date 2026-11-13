@@ -7,7 +7,7 @@
   "generatedBy": "tools/scan-tsk-mechanisms.mjs",
   "docs": "docs/campaign/theScarletKeys/README.md",
   "status": "catalog-only",
-  "scopeSha256": "4864904d1420ba560e373307149fc6bdaec385450ab9a1439c0408311620bbee",
+  "scopeSha256": "c8fb0ebe529fafa7bd6c989c453eb719faaa2831181b39b9c3d661d11e22e884",
   "guideLayers": [
     "heading",
     "tokens",
@@ -599,7 +599,7 @@
       "scenario"
     ],
     "windows": {
-      "count": 117,
+      "count": 118,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
@@ -707,6 +707,7 @@
         "treacheryWouldDiscard",
         "tskCrossSeatAction",
         "tskExposed",
+        "tskKeyShifted",
         "turnBegins",
         "turnEnded",
         "upkeep.end",

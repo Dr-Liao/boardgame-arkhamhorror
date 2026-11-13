@@ -15,8 +15,8 @@ import { fixture, move, asset, enemy, settle, use, decisionSeat, legalMoves, val
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry, descriptorsInEntry } from '../src/engine/ability.js'
 import {
-  actionPreview, applyHarm, commitIcons, descriptorUsable, drawCards, enterOpeningHandCards, executeDescriptor,
-  getMaxHealth, getMaxSanity, getStat, performTest,
+  actionPreview, applyHarm, commitIcons, descriptorUsable, discardRandomFromHand, drawCards, enemyAttack,
+  enterOpeningHandCards, executeDescriptor, getMaxHealth, getMaxSanity, getStat, performTest, scenarioRuntime,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { tarotSlotUsage, TAROT_SLOT } from '../src/engine/tarot-slot.js'
@@ -518,40 +518,101 @@ test('TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（
 })
 
 // ---------------------------------------------------------------------------
-// 05032 否决存在（显式简化：只实现伤害/恐惧的取消）
+// 05032 否决存在（快速。遭遇卡或敌人攻击将要导致弃手牌/失资源/失行动/受伤/受恐惧时打出：
+// 选择一项整体忽略。规则书 FAQ：幕/密谋/地点/敌人/诡计/弱点/场景卡都是遭遇卡。）
 // ---------------------------------------------------------------------------
 
-test('TCU 05032 否决存在 遭遇卡伤害/恐惧可取消', () => {
+test('TCU 05032 否决存在 同时受到 2 伤害 2 恐惧时只能整体忽略一项（不提供拆分点数）', () => {
   const state = fixture('01001')
   state.investigators[0].hand = ['05032']
+  let harmLabels = null
   runTest(state, draft => {
     draft._treacheryResolving = '01165'
-    try { applyHarm(draft, draft.investigators[0], 2, 1, []) } finally { delete draft._treacheryResolving }
+    try { applyHarm(draft, draft.investigators[0], 2, 2, []) } finally { delete draft._treacheryResolving }
   }, pending => {
     const cardOption = pending.options.find(item => item.cardCode === '05032')
     if (cardOption) return cardOption.id
-    const cancel = pending.options.find(item => /取消 2 伤害、1 恐惧/.test(String(item.label)))
-    return cancel ? cancel.id : null
+    if (pending.kind === 'harm') {
+      harmLabels = pending.options.map(option => option.label)
+      return pending.options.find(option => /伤害/.test(String(option.label)))?.id ?? null
+    }
+    return null
   })
+  assert.deepEqual(harmLabels, ['忽略 2 点伤害', '忽略 2 点恐惧'],
+    '2 伤害 + 2 恐惧只能整项二选一，不能自由拆分点数')
   const inv = state.investigators[0]
-  assert.equal(inv.damage, 0, '取消刚受到的 2 点伤害')
-  assert.equal(inv.horror, 0, '取消刚受到的 1 点恐惧')
-  assert.ok(inv.discard.includes('05032'))
+  assert.equal(inv.damage, 0, '选中的 2 点伤害被整体忽略')
+  assert.equal(inv.horror, 2, '另一个面向（恐惧）如常结算')
+  assert.ok(inv.discard.includes('05032'), '事件打出后进弃牌堆')
 })
 
-test('TCU 05032 否决存在 敌人攻击的伤害可取消', () => {
+test('TCU 05032 否决存在 只有单项伤害时直接整体忽略', () => {
   const state = fixture('01001')
   state.investigators[0].hand = ['05032']
+  let harmAsked = false
   runTest(state, draft => {
-    draft._enemyAttackResolving = true
-    try { applyHarm(draft, draft.investigators[0], 2, 0, []) } finally { delete draft._enemyAttackResolving }
+    draft._treacheryResolving = '01165'
+    try { applyHarm(draft, draft.investigators[0], 2, 0, []) } finally { delete draft._treacheryResolving }
   }, pending => {
     const cardOption = pending.options.find(item => item.cardCode === '05032')
     if (cardOption) return cardOption.id
-    const cancel = pending.options.find(item => /取消 2 伤害/.test(String(item.label)))
-    return cancel ? cancel.id : null
+    if (pending.kind === 'harm') harmAsked = true
+    return null
   })
-  assert.equal(state.investigators[0].damage, 0, '敌人攻击的伤害被取消')
+  assert.equal(harmAsked, false, '只有一项可忽略时不需要二选一')
+  assert.equal(state.investigators[0].damage, 0, '2 点伤害被整体忽略')
+})
+
+test('TCU 05032 否决存在 遭遇卡使随机弃手牌时可忽略', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05032', '01088', '01089']
+  runTest(state, draft => {
+    draft._treacheryResolving = '01165'
+    try { discardRandomFromHand(draft, draft.investigators[0], 2, []) } finally { delete draft._treacheryResolving }
+  }, pending => pending.options.find(item => item.cardCode === '05032')?.id ?? null)
+  const inv = state.investigators[0]
+  assert.deepEqual(inv.hand, ['01088', '01089'], '手牌没有被弃掉')
+  assert.ok(inv.discard.includes('05032'), '事件打出后进弃牌堆')
+  assert.equal(inv.discard.includes('01088'), false, '被忽略的弃牌没有进弃牌堆')
+})
+
+test('TCU 05032 否决存在 敌人攻击时弃手牌（伊斯观察者「攻击时随机弃 1 张」）可忽略', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05032', '01088', '01089']
+  const foe = enemy(state, { id: 'deny-05032-yith', code: '01177', name: '伊斯观察者',
+    damage: 0, horror: 1, engagedSeat: 0 })
+  runTest(state, draft => { enemyAttack(draft, foe, draft.investigators[0], [], '') },
+    pending => pending.options.find(item => item.cardCode === '05032')?.id ?? null)
+  const inv = state.investigators[0]
+  assert.equal(inv.damage, 0)
+  assert.equal(inv.horror, 1, '只忽略弃手牌；攻击的恐惧照常结算（其他效果如常结算）')
+  assert.deepEqual(inv.hand, ['01088', '01089'], '攻击附加的弃手牌被忽略')
+})
+
+test('TCU 05032 否决存在 遭遇卡使失去资源/失去行动时可忽略', () => {
+  // 两条都走剧本运行时（= 遭遇卡内容）的 api，与地点/幕/敌人脚本同一入口。
+  for (const [kind, apply] of [
+    ['失去资源', draft => scenarioRuntime(draft, []).loseResources(0, 2)],
+    ['失去行动', draft => { draft.investigators[0].actionsLeft = 3; scenarioRuntime(draft, []).loseActions(0, 1) }],
+  ]) {
+    const state = fixture('01001')
+    state.investigators[0].hand = ['05032']
+    runTest(state, draft => { apply(draft) }, pending => pending.options.find(item => item.cardCode === '05032')?.id ?? null)
+    const inv = state.investigators[0]
+    if (kind === '失去资源') assert.equal(inv.resources, 30, '失去 2 资源被忽略')
+    else assert.equal(inv.actionsLeft, 3, '失去 1 行动被忽略')
+  }
+})
+
+test('TCU 05032 否决存在 弱点显现（失忆）的弃手牌可忽略', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05032', '01088', '01089']
+  state.investigators[0].deck = ['01096']
+  move(state, { action: 'draw' })
+  settle(state, pending => pending.options.find(item => item.cardCode === '05032')?.id ?? null)
+  const inv = state.investigators[0]
+  assert.deepEqual(inv.hand, ['01088', '01089'], '失忆的弃手牌被忽略')
+  assert.ok(inv.discard.includes('05032'))
 })
 
 test('TCU 05032 否决存在 玩家卡自伤不能取消（source=other）', () => {

@@ -9,10 +9,17 @@ import { eoteCampaignState, eoteScenarioState } from '../engine/eote-state.js'
 import { concealedProjection } from '../engine/tsk-concealed.js'
 import { hollowCards, hollowCount } from '../engine/tsk-hollow.js'
 import { scarletKeys } from '../engine/tsk-scarlet-keys.js'
-import { forcedDestination } from '../engine/tsk-map.js'
-import { customizationLevel } from '../engine/tsk-customizable.js'
+import { forcedDestination, embarkOptions } from '../engine/tsk-map.js'
+import {
+  customizationLevel, customizationOptions, customizationsOfSeat,
+} from '../engine/tsk-customizable.js'
+// P8：关间/构筑期的定制升级卡面板需要卡名与 exceptional 判定（只读卡表，不复制规则）。
+import { cardDef, cardName } from '../engine/card-lookup.js'
+import { upgradeRecord } from '../campaign/campaign.js'
 import { crossSeatActionPending } from '../engine/tsk-investigator.js'
 import { tskCampaignState, tskScenarioState } from '../engine/tsk-state.js'
+// P8：地图目的地投影的展示名/图结构由战役清单提供（内容层 flow extras；投影不 import 剧情正文）。
+import { contentRegistry } from '../../content/registered.js'
 
 // 七循环《地球边缘》交互投影：只暴露桌面公开信息与「本人可见」的私有信息。
 // 口径：
@@ -100,12 +107,55 @@ function eoteView(state, data, observer) {
 //   · customizations 只给 observer 本人（他人勾选属于私有构筑信息）；
 //   · crossSeat 只给被授权的调查员本人；
 //   · 异界牌库顺序永不投影（view.scenarioDecks 只有张数）。
+//
+// P8（大厅定制升级卡）：新增 `customizationHub`——构筑期/关间的**本人**定制勾选面板投影。
+//   · 只在关间窗口（scenarioSetup / interlude / campaignHub）出现；场景内仍用 P4 的 `customizations`；
+//   · 条目 = observer 战役牌组里「已登记定制选项」的卡（数据来自 tsk-customizable 原语注册表，
+//     引擎不认战役 id：没有登记过定制卡的战役不会产生条目，因此实际只在《绯红密钥》出现）；
+//   · availableXp 与大厅 hubPurchase 同口径（upgradeRecord 的未花费 XP）；canUpgrade 只在 interlude
+//     且 XP ≥ 1 时真——初始构筑期只展示 0 勾选，不伪造经验；
+//   · xpPerCheck 按卡面 exceptional 判定（本循环 16 张定制卡均为 1 XP/格；原语已支持 2）。
+const CUSTOMIZATION_HUB_STATES = Object.freeze(['scenarioSetup', 'interlude', 'campaignHub'])
+
+function customizationHubView(state, observer) {
+  const record = state.campaign?.investigators?.[observer]
+  if (!record) return null
+  const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
+  const checkedTable = customizationsOfSeat(state, observer)
+  const deck = Array.isArray(record.deck) ? record.deck : []
+  const entries = [...new Set(deck)].flatMap(code => {
+    const optionList = customizationOptions(code)
+    if (!optionList) return []
+    const checked = checkedTable[code] || []
+    const counts = new Map()
+    for (const index of checked) counts.set(index, (counts.get(index) || 0) + 1)
+    return [{
+      code,
+      name: cardName(code),
+      checked,
+      level: customizationLevel(checked),
+      options: optionList.map((option, index) => ({
+        index, name: option.name, checks: option.checks, checkedCount: counts.get(index) || 0,
+      })),
+      xpPerCheck: cardDef(code)?.exceptional === true ? 2 : 1,
+      canUpgrade: state.uiState === 'interlude' && availableXp >= 1,
+    }]
+  })
+  return entries.length ? { availableXp, entries } : null
+}
+
 function tskView(state, observer) {
   const scenario = tskScenarioState(state)
   const campaign = tskCampaignState(state)
-  if (!scenario && !campaign) return null
+  // P8：首章前的 scenarioSetup 还没有 `campaign.tsk` 容器（世界地图由序幕初始化），
+  // 但定制升级卡面板必须照样可见——面板数据来自战役牌组 + 原语注册表，不依赖 TSK 容器。
+  const hubPanel = Number.isSafeInteger(observer) && CUSTOMIZATION_HUB_STATES.includes(state.uiState)
+    ? customizationHubView(state, observer) : null
+  if (!scenario && !campaign && !hubPanel) return null
   const tsk = {}
-  const concealed = concealedProjection(state)
+  if (hubPanel) tsk.customizationHub = hubPanel
+  // 2026-11-13 P1-15：按观察者座位投影（knownBy 只对合法看过的座位可见）。
+  const concealed = concealedProjection(state, { observerSeat: Number.isSafeInteger(observer) ? observer : null })
   if (concealed.length) tsk.concealed = concealed
   const keys = scarletKeys(state)
   if (keys.length) {
@@ -131,6 +181,33 @@ function tskView(state, observer) {
       time: map.time,
       unlocked: [...map.unlocked],
       forced: forcedDestination(state),
+    }
+    // P8：目的地投影（embarkOptions 的公开字段）。名字来自 manifest.mapNodeNames（story-text
+    // locations.<id>.name，缺省回退 id）；不投影图结构、不投影节点正文/密档正文。
+    // canEmbark 只在「流程停在 map 节点 + uiState interlude」时为真，供大厅判断是否显示启程面板。
+    // 注意 `campaign` 这里是 campaign.tsk 容器；战役清单要按 state.campaign.id 查。
+    const manifest = state.campaign?.id ? contentRegistry.getCampaign(state.campaign.id) : null
+    const graph = manifest?.worldMapGraph
+    if (graph?.nodes?.length && map.current) {
+      try {
+        const options = embarkOptions(state, { graph })
+        const names = manifest.mapNodeNames || {}
+        tsk.map.destinations = options.options.map(option => ({
+          destination: option.destination,
+          name: names[option.destination] || option.destination,
+          cost: option.cost,
+          unlocked: option.unlocked,
+          sideStory: option.sideStory,
+          forcedBlocked: option.forcedBlocked,
+        }))
+        const flowNode = state.campaign.flow?.nodeId ? manifest.flow?.nodes?.[state.campaign.flow.nodeId] : null
+        if (flowNode?.type === 'map' && state.uiState === 'interlude') {
+          tsk.map.canEmbark = true
+          tsk.map.phase = 'embark'
+        }
+      } catch {
+        // 地图状态不完整（旧存档/未初始化）时保留基础投影；观察投影不得因扩展失败中断。
+      }
     }
   }
   const status = campaign?.statusReports
@@ -162,6 +239,34 @@ function tskView(state, observer) {
         .map(entry => ({ targetSeat, from: entry.from, round: entry.round, used: false }))
     })
     if (outgoing.length) tsk.crossSeat = [...(tsk.crossSeat || []), ...outgoing]
+  }
+  // 2026-11-13 P1-12：章节公开状态摘要——与 `observation.js#projectPublicScenarioFlags`
+  // 读同一份「战役清单声明」（manifest.publicScenarioFlags），只投影计数/位置/布尔，不含正文。
+  const campaignManifest = state.campaign?.id ? contentRegistry.getCampaign(state.campaign.id) : null
+  const declaredFlags = Array.isArray(campaignManifest?.publicScenarioFlags) ? campaignManifest.publicScenarioFlags : []
+  if (declaredFlags.length) {
+    const flags = state.scenarioFlags || {}
+    const readPath = path => String(path || '').split('.').reduce((value, key) => (value == null ? undefined : value[key]), flags)
+    const locationNameOf = id => state.locations?.find(location => location.id === id)?.name || id
+    const formatValue = (entry, value) => {
+      if (value == null) return null
+      if (entry.kind === 'map' && value && typeof value === 'object') {
+        return Object.entries(value).filter(([, item]) => Number(item) > 0 || item === true)
+          .map(([key, item]) => `${locationNameOf(key)}:${item}`).join('、')
+      }
+      if (entry.kind === 'list' && Array.isArray(value)) return value.length
+      if (typeof value === 'boolean') return value ? '是' : '否'
+      if (value && typeof value === 'object') return JSON.stringify(value)
+      return value
+    }
+    const rows = declaredFlags.flatMap(entry => {
+      const path = typeof entry === 'string' ? entry : entry?.path
+      const value = formatValue(entry, readPath(path))
+      if (value == null || value === '') return []
+      return [{ key: path, label: entry.label || path, labelEn: entry.labelEn || entry.label || path,
+        kind: entry.kind || 'text', value }]
+    })
+    if (rows.length) tsk.scenarioFlags = rows
   }
   return Object.keys(tsk).length ? tsk : null
 }
@@ -238,6 +343,9 @@ export function maskMechanicSnapshot(model, observer) {
   // 未揭露迷你卡在投影阶段就已删除身份字段（快照再复制也不会泄露）。
   if (copy.tsk) {
     delete copy.tsk.customizations
+    // 关间定制面板同样只属于本人（快照的观察者是本次技能检定的座位，正常不会在关间产生，
+    // 这里保持与 customizations 同一个隐私口径）。
+    delete copy.tsk.customizationHub
     if (Array.isArray(copy.tsk.crossSeat)) {
       copy.tsk.crossSeat = copy.tsk.crossSeat.filter(item => item.targetSeat === observer)
       if (!copy.tsk.crossSeat.length) delete copy.tsk.crossSeat

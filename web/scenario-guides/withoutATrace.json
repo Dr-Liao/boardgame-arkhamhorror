@@ -1,0 +1,292 @@
+{
+  "id": "withoutATrace",
+  "campaignId": "theScarletKeys",
+  "sourceKind": "reference-project-zh-locale",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 54,
+  "guideKeyCount": 54,
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/campaign.json",
+      "entries": 19
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-a.json",
+      "entries": 26
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-b.json",
+      "entries": 9
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/base.json",
+      "sha256": "129bc1039ea5d9815dc032aa00be52ee790cb9cee4f930b2721a4aded00e43d4"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+      "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+      "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+      "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+      "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+      "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+      "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+      "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+      "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+      "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+      "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "档案#56–Y: 不留痕迹",
+          "children": [
+            {
+              "text": "尽管基金会的资源任你取用，但要想搞一艘船穿越魔鬼三角还是得连哄带骗，尤其是你并不载货，也不让其他乘客上船，还说是为了他们的安全着想。毕竟，要是你的理论无误，这艘船的目的地在地图上是找不到的，而且可能有去无回。奎因特工说服她的同事亲自掌舵，以免让平民身临险境。你们往三角中心进发，心都提到了嗓子眼。\n\n“专员现在应该已经得到消息了。”奎因和你一起站在船舱旁。“我敢打赌这份工作我是干到头了。”她眺望着远方的地平线，太阳刚刚落入波涛之下。尽管这么说着，她的表情还是坚定无比，毫不后悔。“我只是希望咱们能找到答案。”你不无惊惧地承认，自己恨不得找不到答案才好。一想到自己会和其他人一样被抓走——你就脊背生寒。“唔，但现在也回不了头了。要动手吗？”她说着指向你脖子上系着的白鸦哨。你取了下来，握在手心，思虑再三。\n\n调查员队长必须决定(选择一项)：\n\n• 吹响哨子，召唤艾里奇。\n\n• 扔掉哨子，独自前行。"
+            },
+            {
+              "text": "你不情不愿地将哨子举到唇边吹响，异界的颤音穿越海洋、穿越彼端。风骤起，你脊梁一个寒颤。不多时，红色腰带的女孩就出现了，站在你们的甲板上，仿佛一直在此。她说着科普特语，声音在呼啸的风中模糊。“她说谢谢你。”奎因翻译道，“谢谢你信任她。”倒也不必如此。但她似乎对去处比你了解的更多，而你需要每一点帮助才能活下来。风骤息，恰如风起时一样突然。艾里奇·奥佩勒曲亚转向船头，凝视着前方。那里只有黑暗的波涛和暗夜中昏暗的地平线。\n\n在剧本日志中，记录下特别小组吹响哨子。"
+            },
+            {
+              "text": "你想了想，将哨子扔进大西洋黑黢黢的波涛之中。奎因惊恐地看着它被海洋吞没：“你都干了什么？她兴许能帮上我们的！”你跟她解释说同志会不值得信任，而且现在——既然跟他们合作的证据已经灭失——泰勒大概还会让奎因留在基金会自己的位子上。“你做这些……是为了我？”奎因惊讶地喘不上气，“好吧……看在咱俩的份上，但愿你知道自己做了什么。我们去的地方需要一切可能的帮助。”她望向船头，你好奇自己是否真的会前往另一个国度，还是仅仅看到地平线。\n\n• 在剧本日志中，记录下奎因特工护你左右。任意一位调查员可以将阿丽·奎因特工剧情支援加入其牌库。这张卡牌不计入其牌库卡牌张数。这张卡牌可以在环球漫游• 在剧本日志中，记录下特别小组扔掉哨子。"
+            },
+            {
+              "text": "大西洋上云层笼聚，海面却突然比之前平静了不少。“看那儿。”奎因说着指向海面，“没有鱼、没有浪花，连船经过的涟漪都没有。”一阵懊悔涌上心头，你冲到船头，看向远方。空气中闪耀着什么——不过是一点扭曲——不过是障眼法——突然，没有一点预警，船被整个吞了下去。云层炸开。光与色占据了你，一条条宇宙辐射穿过玄奥的迷雾。这景色震撼人心，令人迷醉，萦绕不去。纵使你闭上眼，色彩依然在你的眼睑下激荡。终于，仿佛是过了一个永恒那么久，你肩膀上有什么拍了一下。你睁开眼睛。你眼前的景象前所未见。\n\n艾里奇是对的——倘若消失的事物真是被夺走，那他们都来了这里。眼前的城市混乱超乎想象，建筑全部扭曲，里面的技术看着既像是外星而来，又有几分熟悉。这个本不该出现的地方，储藏了一切失落遗忘之物。天上弥漫的病态紫色在纠缠的塔楼和旋转的塑像间穿行，照亮了蒸汽和无色的辐射。\n\n你惊得说不出话来，只是呆呆望着眼前恐怖又壮观的地平线。这里没有海洋，没有人类，没有生命。你的调查终究指向了虚无的真相：域外之地。\n\n进入冒险设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌：不留痕迹、域外使徒、彼界彼端、域外来客、秘密战争、腐败扩散。"
+            },
+            {
+              "text": "将域外来客之廷地点放置入场。"
+            },
+            {
+              "text": "每位调查员从域外来客之廷开始游戏。"
+            },
+            {
+              "text": "检查剧本日志。如果特别小组吹响哨子，选择一位调查员控制艾里奇·佐尼·奥佩勒曲亚剧情支援。否则，将她从游戏中移除。"
+            },
+            {
+              "text": "将下列卡牌放在一边，位于场外：戴红手套的男子剧情支援、拟态克星敌人、原生质重组者敌人、天启噩兆敌人。"
+            },
+            {
+              "text": "执行下列步骤准备异界牌库："
+            },
+            {
+              "text": "找到域外来客之巢和全部两张疯狂峭壁地点。将这些地点混洗，未揭示面朝上，形成一个牌库。这个牌库就是异界牌库。"
+            },
+            {
+              "text": "找出剩下七张残骸之城地点。将这些地点混洗，未揭示面朝上。如果游戏中正好有两位调查员，在这些地点中随机将一张从游戏中移除，不要查看。如果游戏中只有一位调查员，在这些地点中随机将两张从游戏中移除，不要查看。将剩余的卡牌放在异界牌库顶上。"
+            },
+            {
+              "text": "将异界牌库放在冒险参考卡牌旁。"
+            },
+            {
+              "text": "拿取异界牌库顶的三张卡牌，放入阴影中，从左到右排成一行(不要查看另一面)。"
+            },
+            {
+              "text": "收齐每张诱饵迷你卡牌和三张残骸之城(左、中、右)迷你卡牌。将这些卡牌放在一边，位于场外。"
+            },
+            {
+              "text": "拿取一张诱饵迷你卡牌和三张残骸之城(左、中、右)迷你卡牌，正面朝下混洗，环绕域外来客之廷上、下、左、右摆放。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员被击败):“这就是最后的了。”哈德逊特工说着在费用报告上盖了戳，“我理解需要保密，但我还是要再次请求雇佣更多的助手完成秘书工作，专员。”他将文件交给坐在深黑书桌后面，表情一脸凝重的泰勒。\n\n“人越多就越容易泄密。我们节制人手不是平白无故的，哈德逊。别忘了重要的事情。”她翻了一会儿文件，皱起了眉头。“关于支援32-J的特别小组的报告呢？”\n\n“32-J？”男子从后袋里掏出一本小小的笔记，翻到中间一页。“没有这样的代号。”\n\n泰勒皱着眉：“不，有的，就是……我们在伦敦遇到的。你在那儿呢……”过了一会儿，她摇摇头，疑惑极了。“哈，怪了，我不记得他们是谁了。”\n\n“您工作太辛苦了。”特工微微笑着回道，“休息休息，专员。您休假一周我们也能把事情办好的。”\n\n• 在剧本日志中，记录下特别小组成为空洞。\n\n• 调查员剧本失败。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 你在甲板上醒来，脑海里飘忽着如梦似幻的记忆和异界的幻象。一只红手套将你拉了起来，拍拍你肩上的灰尘，你这才明白自己所见俱是真实，而非完全的梦魇。艾里奇站在附近无言地望着，表情一片茫然。奎因特工也才刚刚站稳。你的视线正适应全新的维度，整个世界都在摇晃。“跟我们来。”这男人的声音比你记忆中要平滑自然许多。\n\n你追问答案：他在伦敦干什么，这地狱般的地方到底在哪里，他又为什么在那儿？“伦敦？”他嗤笑道，“我近来就没去过伦敦。我也不认识你。”你大惑不解。这肯定就是你在伦敦见过的男人——不是吗？“至于那地方，我只有个大概的印象，但我确实不知道是什么把我带到了那儿，又过了多久。那个东西……”他抬起帽沿，扶着前额，手抖个不停。“它在……刺探、研究、学习。”\n\n艾里奇终于说话了，奎因也开始翻译。“她说这些怪物不只是夺走了东西，还在……该用什么词呢……”她拼命保持冷静的时候，艾里奇又换了语言。“调整、模拟。”\n\n你突然意识过来，一阵冰冷。这就是艾里奇害怕的事情——这就是为什么她要找你帮忙。你眼前的男人并非在伦敦见到的那位。那是赝品，是它们之中的一员。“看来我欠你很多。”男子说着伸出一只戴着红手套的手。“不巧的是，我还有很多事要忙。倘若这些怪物真的渗透了同志会，那就没人可以相信了，尤其是我。要是我们再次见面，麻烦先假定那不是我。值此期间，我会一查到底，等候时机，带着我的发现与其他人碰头。”你点点头，握了握他的手。这比你想的更加凶险。你们得齐心协力，才能查个水落石出。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 每位调查员取得1点奖励经验值，因为其对全球奇异的失踪事件有了洞见。\n\n• 在剧本日志中，记录如下：\n• 特别小组了解了同志会的真相。\n\n• 艾里奇站在你这一边。\n\n• 在剧本日志中记3时间。\n\n• 你可以启程(从百慕大、宜博市或圣胡安)。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 你在甲板上醒来，脑海里飘忽着如梦似幻的记忆和异界的幻象。一只红手套将你拉了起来，拍拍你肩上的灰尘，你这才明白自己所见俱是真实，而非完全的夜魇。奎因特工也才刚刚站稳。你的视线正适应全新的维度，整个世界都在摇晃。“跟我们来。”这男人的声音比你记忆中要平滑自然许多。\n\n你追问答案：他在伦敦干什么，这地狱般的地方到底在哪里，他又为什么在那儿？“伦敦？”他嗤笑道，“我近来就没去过伦敦。我也不认识你。”你大惑不解。这肯定就是你在伦敦见过的男人——不是吗？“至于那地方，我只有个大概的印象，但我确实不知道是什么把我带到了那儿，又过了多久。那个东西……”他抬起帽沿，扶着前额，手抖个不停。“它在……刺探、研究、学习。\n\n这真的是你在伦敦见到的男人吗？你不禁想问那个实体到底为什么要绑架他，它又在寻找什么样的讯息呢？“无论如何，我欠你很多。”男子说着伸出一只戴着红手套的手。“不巧的是，我还有很多事要忙。你说在伦敦见过我，那肯定是个赝品。要是我们再次见面，麻烦先假定那不是我。值此期间，我会一查到底，等候时机，带着我的发现与其他人碰头。”你点点头，握了握他的手。“话说……我有点好奇。你是怎么知道要到哪儿找我的？”\n\n“你们中的一员。”奎因特工答道，“奥佩勒曲亚。看来她的直觉是对的。”\n\n“明白了。”他愁眉不展，“那么……看来我欠下两笔债了。你可以放心……我有债必偿。”\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 每位调查员取得1点奖励经验值，因为其对全球奇异的失踪事件有了洞见。\n\n• 在剧本日志中，记录如下：\n• 特别小组了解了同志会的真相。\n\n• 你和艾里奇之间恩怨未了。\n\n• 在剧本日志中记2时间。\n\n• 你可以启程(从百慕大、宜博市或圣胡安)。"
+                }
+              ]
+            },
+            {
+              "title": "结局3",
+              "children": [
+                {
+                  "text": "结局3: 你在甲板上醒来，脑海里飘忽着如梦似幻的记忆和异界的幻象。艾里奇将你拉了起来，表情茫然，你这才明白自己所见俱是真实，而非完全的夜魇。你的视线正适应全新的维度，整个世界都在来回摇晃。奎因特工也才刚刚站稳，一拳打在船舱门上。“妈的，都那么接近了！”她喊道。\n\n你徒劳地想要理解自己在另一个世界都遭遇了什么。答案可能已经无迹可寻，但能再次站在熟悉的土地上，还是让人松了口气。“那地方……就和你想的一样。”奎因对艾里奇说道，瞪大了眼睛，既是敬畏，又是害怕。“所有失去的，所有遗忘的，都在那儿。它们就是要干这个？偷走我们的世界？”\n\n艾里奇终于说话了，奎因也开始翻译。“她说这些怪物不只是偷走了东西，还在……该用什么词呢……”她拼命保持冷静的时候，艾里奇又换了语言。“调整、模拟。”\n\n夜幕笼罩了大西洋，万籁俱寂之中，你思考这意味着什么。这就是艾里奇害怕的事情——这就是为什么她要找你帮忙。但你还是不能确定那个世界的实体到底想从你身上夺走什么，它对红色同志会又意味着什么。艾里奇又开口了，奎因翻译道：“她谢谢你的帮助，即便我们没能得知真相。她还说自己会在恰当的时机报恩。”\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下艾里奇站在你这一边。\n\n• 在剧本日志中记2时间。\n\n• 你可以启程(从百慕大、宜博市或圣胡安)。"
+                }
+              ]
+            },
+            {
+              "title": "结局4",
+              "children": [
+                {
+                  "text": "结局4: 你在甲板上醒来，脑海里飘忽着如梦似幻的记忆和异界的幻象。奎因特工站起来的时候也拉了你一把，你这才明白自己所见俱是真实，而非完全的夜魇。你的视线正适应全新的维度，整个世界都在摇晃。\n\n“什么鬼地方。”奎因呼吸急促，“什么鬼地方。”你徒劳地想要理解自己在另一个世界都遭遇了什么。答案可能已经无迹可寻，但能再次站在熟悉的土地上，还是让人松了口气。“那地方……就和艾里奇想的一样。”奎因瞪大了眼睛，既是敬畏，又是害怕。“所有失去的，所有遗忘的，都在那儿。它们就是要干这个？偷走我们的世界？”\n\n夜幕笼罩了大西洋，万籁俱寂之中，你思考这意味着什么。这就是艾里奇害怕的事情——这就是为什么她要找你帮忙。但你还是不能确定那个世界的实体到底想从你身上夺走什么，它对红色同志会又意味着什么。“我们现在该怎么办？我都不知道该怎么跟专员汇报。即便是对我们而言，这也太难以置信了。更何况我们还没有证据……”\n\n你摇摇头，远眺地平线。你身边的空寂，有多少是那些怪物和地球联系的残存？要是不阻止他们的秘密战争，又有多少还能剩下？但至少你现在知道了这场威胁有多大的规模……\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下你和艾里奇之间恩怨未了。\n\n• 在剧本日志中记1时间。\n\n• 你可以启程(从百慕大、宜博市或圣胡安)。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "File #56–Y: Without a Trace",
+          "children": [
+            {
+              "text": "Intro 1: Even with the Foundation’s resources at your beck and call, it takes some finagling to charter a ship across the Devil’s Triangle, especially given you have no cargo to speak of and refuse to allow any other passengers on board, for their safety. After all, if your theory is correct, this ship’s destination does not exist on any map, and for all you know, it might be a one-way journey. Agent Quinn has convinced one of her colleagues to helm the ship, so as to not endanger a civilian, and together you set off for the center of the triangle, hearts in throats.\n\n“The commissioner will have gotten word by now,” Quinn says, standing with you at the helm of the ship. “Probably the end of my career, I would wager.” She stares off at the horizon as the sun dips just below the waves. Despite her words, her expression is steadfast, without even a hint of regret. “I just hope we find answers.” You concede, with a bit of trepidation, that you almost hope you don’t. The idea of ending up just like the people who have been snatched—it chills you to the core. “Well, no turning back now. Care to do the honors?” she asks, motioning toward the white raven whistle which hangs from a cord around your neck. You pull it off and clutch it in your palm, considering your options.\n\nThe lead investigator must decide (choose one):\n\n• Blow the whistle and summon Aliki to your side. Proceed to Intro 2.\n\n• Dispose of the whistle and do this alone. Skip to Intro 3."
+            },
+            {
+              "text": "Intro 2: Reluctantly, you put the whistle to your lips and send its shrill, otherworldly warble across the ocean and perhaps beyond. A shudder creeps up your spine as the wind picks up. Within moments, the girl with the red sash has appeared, standing on the deck of your ship as though she had always been there. She speaks in Coptic, her words muffled by whistling wind. “She says thank you,” Quinn translates, “ for trusting her.” You wouldn’t go that far. But she seems to know more about where you’re going than you do, and you need every bit of help you can get if you are to survive. Then, just as the wind begins to die down, Aliki Uperetria turns and points over the bow of the ship, seemingly at nothing at all but dark, choppy waves and the dim evening horizon.\n\nIn your Campaign Log, record the cell blew the whistle. Skip to Intro 4."
+            },
+            {
+              "text": "Intro 3: After a moment of consideration, you hurl the whistle into the dark waves of the Atlantic. Quinn watches with horror as the ocean swallows it. “What did you do that for? She could have helped us!” You explain that the Coterie is not to be trusted, and that perhaps now—with the evidence of their cooperation disposed of—Taylor will allow Quinn to keep her position in the Foundation. “You did that…for me?” she says under her breath, stunned. “Well…I hope for our sake you know what you are doing. Where we are headed, we are going to need all the help we can get.” She glances over the bow of the ship, and you wonder if you are truly headed to another realm, or if you will simply greet the horizon.\n\n• In your Campaign Log, record Agent Quinn has your back. Any one investigator may choose to add the Agent Ari Quinn story asset to their deck. It does not count toward their deck size. This card can be found in the Globetrotting encounter set, indicated by • In your Campaign Log, record the cell threw away the whistle.\n\n• Proceed to Intro 4."
+            },
+            {
+              "text": "Intro 4: Clouds hang still over the Atlantic, the ocean suddenly calmer than you have ever seen it before. “Look at that,” Quinn says, pointing at the surface of the water. “No fish, no waves, not even a ripple from the ship.” A feeling of regret in your throat, you rush to the bow of the ship and look out into the distance. Something in the air shimmers—a slight distortion, nothing more— just a trick of the eye—and then, without a moment of warning, the ship is swallowed whole. The clouds burst. Light and color and luster overtakes you, cosmic radiance swathed in transcendental mist. The sight is marvelous and awful, mesmerizing and haunting all at once. You shut your eyes, but colors wash behind your eyelids over and over and over again. Then, finally, what feels like an eternity later, you feel a tap on your shoulder and open your eyes. The sight that greets you is unlike anything you have ever seen.\n\nAliki was right—if the things that disappeared were taken, this is surely where they ended up: an impossibly jumbled city of twisting architecture and technology both alien and familiar, an unearthly repository for everything that has ever been forgotten and forsaken. A range of sickly purples span the sky above, and snaking throughout the tangled towers and effigies are swirling, shimmering entities of vapor and colorless radiance.\n\nStunned into silence, you simply stare at the horrifying, awe-inspiring horizon before you, devoid of ocean, devoid of humanity, devoid of life. This is the barren truth to which your investigation has led: The Outside.\n\nProceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Without a Trace, Agents of the Outside, Beyond the Beyond, Outsiders, Secret War, and Spreading Corruption."
+            },
+            {
+              "text": "Put the Court of the Outsiders location into play."
+            },
+            {
+              "text": "Each investigator begins play at Court of the Outsiders."
+            },
+            {
+              "text": "Check the Campaign Log. If the cell blew the whistle, choose an investigator to take control of the Aliki Zoni Uperetria story asset. Otherwise, remove her from the game."
+            },
+            {
+              "text": "Set the following cards aside, out of play: The Red-Gloved Man story asset, the Mimetic Nemesis enemy, the Protoplasmic Reassembler enemy, and the Apocalyptic Presage enemy."
+            },
+            {
+              "text": "Prepare the Otherworld deck. This is done by performing the following steps:"
+            },
+            {
+              "text": "Find the Outsiders’ Lair and both copies of the Cliffs of Insanity locations. Shuffle these locations together, with their unrevealed sides faceup, to form a deck. This deck is called the Otherworld deck."
+            },
+            {
+              "text": "Find the remaining seven City of Remnants locations. Shuffle these locations together, with their unrevealed sides faceup. If there are exactly two investigators in the game, remove one of those locations from the game at random, without looking at it. If there is only one investigator, remove two of those locations from the game at random, without looking at them. Place the rest on top of the Otherworld deck."
+            },
+            {
+              "text": "Place the Otherworld deck near the scenario reference card."
+            },
+            {
+              "text": "Take the top three locations in the Otherworld deck and place them in the shadows, arranged in a straight line from left to right (without looking at their other sides)."
+            },
+            {
+              "text": "Gather each decoy mini-card and the three City of Remnants (L, M and R) mini-cards. Set them aside, out of play."
+            },
+            {
+              "text": "Take one decoy mini-card and the three City of Remnants (L, M and R) mini-cards, shuffle them facedown, and arrange them around the Court of the Outsiders as follows: One to its left, one to its right, one above, and one below."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached because each investigator was defeated: “There, that is the last of them,” Agent Hudson says as he slams his stamp down onto the expense report. “I understand the need for secrecy, but I must once again request we hire assistants for this secretarial work, Commissioner.” He hands the bundle of documents to Taylor, who sits behind her stark black desk, wearing a grave expression.\n\n“More eyes means more leaks. We keep this crew tight for a reason, Hudson. Do not lose sight of what is important.” She flips through the documents for a moment, furrowing her brows. “Where is the report on asset 32–J’s cell?”\n\n“32–J?” the man pulls a small notebook from his back pocket and flips to a page near the middle. “No such designation exists.”\n\nTaylor grimaces. “No, that’s not right. There was…we met them in London. You were there…” After a moment, she shakes her head in utter confusion. “Hm. Strange. I don’t remember who they were.”\n\n“You have been working too hard,” the agent replies with a small grin. “Take some time off, Commissioner. We can handle things without you for a week or so.”\n\n• In your Campaign Log, record the cell was hollowed.\n\n• The investigators lose the campaign."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You awaken on the ship’s deck, dreamlike memories and otherworldly visions swimming in your mind. The only sign that what you saw was real and not a mere nightmare is a red‑gloved grip as a man pulls you to your feet and dusts off your shoulders. Nearby, Aliki watches wordlessly, her expression blank. Agent Quinn rises steadily to her feet as well. The world wobbles as your vision settles over a new dimension. “Stay with us,” the man says, his voice smoother and more natural than you remember.\n\nYou demand answers: what was he doing in London, what was that hellish place, and why was he there? “London?” He scoffs. “I haven’t been to London lately. I don’t even know who you are.” You reel. This is for sure the same man you saw in London—isn’t it? “As for that place, I have only a vague sense, but I have no idea what brought me there or how long I have been gone. That thing… ” He lifts the brim of his fedora and clutches his forehead so hard his hands shake. “It was…prying. Searching. Learning.”\n\nAliki finally speaks, with Quinn once again translating. “She says that the creatures are not just taking things, they are…what would be the right word…” she struggles to retain her composure as Aliki once again switches languages. “…adapting. Mimicking.”\n\nCold realization washes over you. This is what Aliki had been afraid of—why she had come to you for help. The man you saw in London was not the same as the man before you now. It was an imposter. It was one of them.”It seems I am in your debt,” the man says, extending a red-gloved hand. “But unfortunately, I have much to do. If these creatures have infiltrated the Coterie, none can be trusted, myself most especially. If you see me again, assume it is not me. In the meantime, I will get to the bottom of this and confront the others with my findings when the time is right.” You nod and shake his hand. There is more at stake here than you ever realized, and you can only get to the heart of it by working together.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Each investigator earns 1 bonus experience, as they gain insight into the strange happenings around the world.\n\n• In your Campaign Log, record the following:\n• The cell knows the true nature of the Coterie.\n\n• Aliki is on your side.\n\n• Mark 3 time in your Campaign Log.\n\n• You may embark (from Bermuda, Ybor City or San Juan)."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: You awaken on the ship’s deck, dreamlike memories and otherworldly visions swimming in your mind. The only sign that what you saw was real and not a mere nightmare is a red‑gloved grip as a man pulls you to your feet and dusts off your shoulders. Agent Quinn rises steadily to her feet as well. The world wobbles as your vision settles over a new dimension. “Stay with us,” the man says, his voice smoother and more natural than you remember.\n\nYou demand answers: what was he doing in London, what was that hellish place, and why was he there? “London?” He scoffs. “I haven’t been to London lately. I don’t even know who you are.” You reel. This is for sure the same man you saw in London—isn’t it? “As for that place, I have only a vague sense, but I have no idea what brought me there or how long I have been gone. That thing… ” He lifts the brim of his fedora and clutches his forehead so hard his hands shake. “It was…prying. Searching. Learning.”\n\nIs this even the same man you saw in London? You wonder what purpose the entity had in kidnapping him. What kind of information was it looking for? “In any event, I am in your debt,” the man says, extending a red-gloved hand. “But unfortunately, I have much to do. If you claim to have seen me in London, then there must be an imposter afoot. If you see me again, assume it is not me. In the meantime, I will get to the bottom of this and confront the others with my findings when the time is right.” You nod and shake his hand. “By the way…I am curious. How did you know where to find me?”\n\n“One of your own,” Agent Quinn replies. “Uperetria. She had a hunch. Seems she was right.”\n\n“I see,” he says with a scowl. “Well then…it appears I have two favors to repay, then. And rest assured… I always pay my debts.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Each investigator earns 1 bonus experience, as they gain insight into the strange happenings around the world.\n\n• In your Campaign Log, record the following:\n• The cell knows the true nature of the Coterie.\n\n• You haven’t seen the last of Aliki Zoni Uperetria.\n\n• Mark 2 time in your Campaign Log.\n\n• You may embark (from Bermuda, Ybor City, or San Juan)."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: You awaken on the ship’s deck, dreamlike memories and otherworldly visions swimming in your mind. The only sign that what you saw was real and not a mere nightmare is the gentle grip of Aliki as she pulls you to your feet, her expression blank. The world wobbles to and fro as your vision settles over a new dimension. Agent Quinn rises steadily to her feet as well, pounding her fist against the door to the cabin. “Dammit. We were so close!” she exclaims.\n\nYou struggle in vain to comprehend what you experienced in that other world. Answers may have eluded you, but it’s a relief to stand once more in a place that feels familiar to you. “That place…it is just as you thought,” Quinn says to Aliki, her eyes wide with both awe and horror. “Everything that is missing. Everything that is forgotten. It’s all there. Is that what they are doing? Stealing our world?”\n\nAliki finally speaks, with Quinn once again translating. “She says that the creatures are not just stealing things, they are…what would be the right word…” she struggles to retain her composure as Aliki once again switches languages. “…adapting. Mimicking.”\n\nYou ponder what all of this could mean in silence as night falls over the Atlantic. This is what Aliki had been afraid of—why she had come to you for help. But you are still uncertain what the entities from that reality truly want with yours, and what it might mean for the Red Coterie. “She thanks us for helping her, even if we were unable to learn the truth,” Quinn translates as Aliki speaks up once more. “And she says she will repay the favor when the time comes.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record Aliki is on your side.\n\n• Mark 2 time in your Campaign Log.\n\n• You may embark (from Bermuda, Ybor City, or San Juan)."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 4",
+              "children": [
+                {
+                  "text": "Resolution 4: You awaken on the ship’s deck, dreamlike memories and otherworldly visions swimming in your mind. The only sign that what you saw was real and not a mere nightmare is the pained groans of Agent Quinn as she rises steadily to her feet and pulls you up. The world wobbles as your vision settles over a new dimension.\n\n“What the hell,” Quinn utters under her breath. “What the hell.” You struggle in vain to comprehend what you experienced in that other world. Answers may have eluded you, but it’s a relief to stand once more in a place that feels familiar to you. “That place…it is just as Aliki thought,” Quinn says aloud, her eyes wide with both awe and horror. “Everything that is missing. Everything that is forgotten. It’s all there. Is that what they are doing? Stealing our world?”\n\nYou ponder what all of this could mean in silence as night falls over the Atlantic. This is what Aliki had been afraid of—why she had come to you for help. But you are still uncertain what the entities from that reality truly want with yours, and what it might mean for the Red Coterie. “What do we do now? I don’t even know how I would report this to the Commissioner. Even for us, it’s almost too far-fetched to believe. And we have nothing to show for it…”\n\nYou shake your head and ponder the horizon. How much of the emptiness around you is but the remnants of these creatures’ contact with Earth? How much will be left if their secret war is not stopped? At least now, you know the true scale of this threat…\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record you haven’t seen the last of Aliki Zoni Uperetria.\n\n• Mark 1 time in your Campaign Log.\n\n• You may embark (from Bermuda, Ybor City, or San Juan)."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

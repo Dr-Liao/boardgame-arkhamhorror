@@ -36,6 +36,7 @@ import { performedActionKinds } from './action-history.js'
 import { hasWindowListener } from './window-listeners.js'
 import { createTurnFlow } from './turn-flow.js'
 import { dispatchVehicleEvent } from './road-hazards.js'
+import { dreamGateEntryError } from './dream-gate.js'
 import { createHiddenRules } from './hidden-rules.js'
 import { createCardDefs } from './card-defs.js'
 import { createCardOps } from './card-ops.js'
@@ -87,7 +88,7 @@ import {
   commitProfile, entersPlayEffect, leavesPlayEffect, playedEffect, playFlag, weaknessProfile,
 } from './lifecycle.js'
 import {
-  abilityShim, descriptorOfKind, descriptorsForWindow, descriptorsInEntry, elderSignDescriptor, limitUsed, markLimitUsed,
+  abilityShim, cannotLeaveHand, descriptorOfKind, descriptorsForWindow, descriptorsInEntry, elderSignDescriptor, limitUsed, markLimitUsed,
   modifiersFor, quickEventView, registeredCodes, registeredEntry, registerCardAbilities, weaknessDescriptor,
   // Phase 3（D1）：非玩家卡通道的枚举点。
   hasNonPlayerBehavior,
@@ -621,6 +622,10 @@ export function investigatorEntryError(state, locationId, seat = state.currentSe
   const location = state.locations.find(loc => loc.id === locationId)
   if (!location) return '目标地点未入场'
   const inv = state.investigators[seat]
+  // 梦境之门（06015a/b）：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门」。
+  // 行动移动（moves.js）与脚本/卡牌效果的移动（movement.js → 本函数）共用同一读点。
+  const gateError = dreamGateEntryError(inv, location)
+  if (gateError) return gateError
   if (inv?.steamImmobileRound === state.round) return '本轮受到蒸汽之爪影响，不能移动'
   if (inv && state.enemies.some(enemy => enemyRuleFlags(enemy.code).blocksMovementWhileEngaged && enemy.engagedSeat === seat && !enemyTextBlanked(state, enemy))) return '与攫取恐怖交战时不能移动'
   // 地点条目的 entryError / beforeEnter 是未揭示面文字。地点一旦揭示，这面失效，
@@ -903,6 +908,8 @@ function exilePlayerCard(state, inv, code, events) {
 function discardableHandCards(inv, requiredIcon = null) {
   return inv.hand.map((code, index) => ({ code, index })).filter(({ code }) =>
     !isWeaknessCode(code) && canDiscardFromHand(inv, code)
+      // 2026-11-13 P1-16：不能离开手牌的牌（09766）不能成为弃牌候选。
+      && !cannotLeaveHand(code)
       && (!requiredIcon || Number(cardDef(code)?.icons?.[requiredIcon] || 0) > 0))
 }
 
@@ -1376,6 +1383,13 @@ function abilityApi(state, events) {
     drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
     cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
     floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
+    // 2026-11-13 P1-1：TSK 两个内容时机窗口的唯一派发点（api-mechanics 的 concealed.expose / keys.shift）。
+    // 上下文由包装器组成：暴露 = {id, kind, decoy, locationId, position, seat}；变换 = {keyId, from, to, keyStable, seat}。
+    exposed: (state, context) => reactionWindow(state, 'tskExposed', { when: 'tskExposed', ...context }, events, { allowNested: true }),
+    // 2026-11-13 P1-11：09517「隐匿迷你卡要进入其它地点时改为进入伦敦塔监狱」的唯一放置重定向读点。
+    redirectConcealedLocation: (state, locationId) =>
+      scenarioBehavior(state).redirectConcealedLocation?.(state, locationId) ?? locationId,
+    keyShifted: (state, context) => reactionWindow(state, 'tskKeyShifted', { when: 'tskKeyShifted', ...context }, events, { allowNested: true }),
     sealedChanged: () => abilityApi(state, events).resolveEmptyUses(),
     directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
     moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
@@ -1954,6 +1968,8 @@ export function scenarioRuntime(state, events, testSource = null) {
   enemyFace: enemy => faceOf(enemy),
   enemyFaces: enemy => enemyFacesOf(enemy),
   ...commonDeps,
+  // 2026-11-13 P1-13：内容层 api.moveCard 依赖（规格归一在 deck-ops#moveCardTo，events 由运行时注入）。
+  moveCardTo,
   // TIC 捕获/押送：剧本运行时把 api.scenario.capture/freeCaptured 转发到 capture.js 的唯一写入口。
   captureSeat,
   freeCapturedSeat,

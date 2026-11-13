@@ -31,8 +31,10 @@ test(`P5 ${CODE} 条目/旧印/构筑：开局柯达在场、旧印放证据、�
 
 test(`P5 ${CODE} fast 花证据降低难度 2（每次检定限一次）`, () => {
   const entry = registeredEntry(CODE)
-  const free = entry.investigator.freeAction
-  assert.ok(free, '必须声明检定期间的 fast 能力')
-  assert.equal(free.duringOwnSkillTest, true)
+  // P1-6：检定期 [free] 改走 abilities 描述子（playerWindow 只枚举 abilities，不读 investigator.freeAction）。
+  const free = entry.abilities.find(descriptor => descriptor.kind === 'free')
+  assert.ok(free, '必须声明检定期 [free] 能力的 free 描述子')
+  assert.deepEqual(free.trigger, ['test.beforeCommit', 'test.afterCommit'])
+  assert.equal(free.limit?.scope, 'perTest', '卡面「每次检定限一次」走 generic perTest 上限')
   assert.ok(registeredEntry('09017').abilities.some(descriptor => descriptor.kind === 'weakness'))
 })

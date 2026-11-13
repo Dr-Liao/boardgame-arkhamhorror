@@ -178,6 +178,103 @@ test('快速能力询问：同名副本共用一份候选，两张手牌都能�
   expect(errors).toEqual([])
 })
 
+// 2026-11-13：行动点用尽后的空档期不再弹收尾窗口。手牌快速卡是普通合法行动（点牌即打出、
+// 不再高亮成 ah-fast-prompt），底栏状态提示「行动点已用完」，玩家必须点「结束回合」才结束。
+async function spentFixture(page) {
+  let session
+  const submitted = []
+  await page.route('**/api/start', async route => {
+    const response = await route.fetch({
+      postData: JSON.stringify({ modId: 'arkhamhorror', settings: { legacyAutoStart: true, playerCount: 1, playerInvestigator: '01001', seed: 'spent-actions-gap' } }),
+    })
+    const payload = await response.json()
+    session = payload.session
+    const st = session.state
+    st.pendingChoice = null
+    st.timingWindow = null
+    st.currentSeat = 0
+    st.phase = 'investigation'
+    Object.assign(st.cards, {
+      '02022': { code: '02022', name: '捷径', nameZh: '捷径', nameEn: 'Shortcut', type: 'event', cost: 2, klass: 'seeker', hasReactionPrompt: true },
+      '01518': { code: '01518', name: '巡警', nameZh: '巡警', nameEn: 'Beat Cop', type: 'asset', cost: 4, klass: 'guardian', slots: ['ally'], hasReactionPrompt: true },
+    })
+    st.investigators[0].hand = ['02022']
+    st.investigators[0].assets = [{ id: 'cop', code: '01518', exhausted: false }]
+    st.investigators[0].resources = 5
+    st.investigators[0].actionsLeft = 0
+    st.legalMoves = [
+      { action: 'play', cardId: '02022', label: '🃏 打出「捷径」(2 资源)' },
+      { action: 'ability', assetId: 'cop', abilityIndex: 0, label: '⚡免费 弃掉：对同地点 1 个敌人造成 1 伤害' },
+      { action: 'endTurn', label: '⏭️ 结束回合' },
+    ]
+    await route.fulfill({ response, json: payload })
+  })
+  await page.route('**/api/session?*', route => route.fulfill({ json: { ok: true, busy: false, session } }))
+  await page.route('**/api/move', async route => {
+    const request = route.request().postDataJSON()
+    submitted.push(request)
+    const action = request?.move?.action
+    session.state.revision++
+    session.state.legalMoves = (session.state.legalMoves || []).filter(move => move.action !== action)
+    session.state.pendingChoice = null
+    await route.fulfill({ json: { ok: true, session } })
+  })
+  const errors = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.addInitScript(() => localStorage.setItem('arkham-presentation', JSON.stringify({ sound: false, fast: true })))
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/index.html')
+  await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+  await page.getByRole('button', { name: '开始新游戏' }).click()
+  await expect(page.locator('.ah-player-board')).toBeVisible({ timeout: 30_000 })
+  const skipScene = page.getByRole('button', { name: '跳过演出' })
+  if (await skipScene.count()) await skipScene.first().click()
+  return { submitted, errors, card: page.locator('.ah-hand-card[data-interaction="hand:0:0"]') }
+}
+
+for (const [viewport, width, height] of [['desktop', 1440, 950], ['mobile', 390, 844]]) {
+  test(`行动点用尽：不弹收尾窗口，点手牌直接打出，点「结束回合」才结束（${viewport} ${width}）`, async ({ page }) => {
+    await page.setViewportSize({ width, height })
+    const { submitted, errors, card } = await spentFixture(page)
+    // 没有待决窗口：牌桌直接显示普通行动区与状态栏提示。
+    await expect(page.locator('.ah-choice')).toHaveCount(0)
+    await expect(page.locator('.ah-fast-prompt-hint')).toHaveCount(0)
+    await expect(page.locator('.bg-game-status')).toContainText('行动点已用完')
+    await expect(card).toBeVisible()
+    await expect(card).toHaveClass(/ah-card-ready/)
+    await expect(card).not.toHaveClass(/ah-fast-prompt/)
+    const endTurn = page.locator('.ah-actions .ah-action').filter({ hasText: '结束回合' })
+    await expect(endTurn).toBeVisible()
+    await screenshot(page, `spent-actions-gap-${viewport}`)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    // 点手牌（选中）→ 点发光出牌区 = 提交普通 play；不打开详情、不出现待决窗口。
+    await card.click()
+    const playSurface = page.locator('[data-interaction="zone:play"]').first()
+    await expect(playSurface).toBeVisible()
+    await expect(playSurface).toHaveClass(/ah-drop-valid/)
+    await playSurface.dispatchEvent('click')
+    await expect.poll(() => submitted.length).toBe(1)
+    expect(submitted[0].move).toMatchObject({ action: 'play', cardId: '02022' })
+    await expect(page.locator('.ah-carddetail-modal')).toHaveCount(0)
+    // 场上支援的 [free] 能力同样是空档期的直接行动：点支援 → 动作浮层点按钮即提交 ability。
+    const asset = page.locator('[data-interaction="asset:cop"]').first()
+    await expect(asset).toBeVisible()
+    await asset.dispatchEvent('click')
+    const popover = page.locator('.ah-card-action-popover')
+    await expect(popover).toBeVisible()
+    await popover.locator('.ah-action').first().dispatchEvent('click')
+    await expect.poll(() => submitted.length).toBe(2)
+    expect(submitted[1].move).toMatchObject({ action: 'ability', assetId: 'cop' })
+    // 再点「结束回合」才提交 endTurn。
+    const endTurnAfterPlay = page.locator('.ah-actions .ah-action').filter({ hasText: '结束回合' })
+    await expect(endTurnAfterPlay).toBeVisible()
+    await endTurnAfterPlay.dispatchEvent('click')
+    await expect.poll(() => submitted.length).toBe(3)
+    expect(submitted[2].move).toMatchObject({ action: 'endTurn' })
+    expect(errors).toEqual([])
+  })
+}
+
 test('快速能力询问：「本局不再询问」关闭唯一快速卡后窗口自动让过（desktop 1440）', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 950 })
   const { submitted, errors, card } = await fixture(page)

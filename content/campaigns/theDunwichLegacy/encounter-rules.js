@@ -2,7 +2,7 @@
 // engine adapter and participate in its replayable choices and skill tests.
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
-  cluesFromSurvivorsFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, enemySpawnRuleFor, scenarioPlayableFor, threatEffectFor, assetRuleFor, treacheryRuleFor,
+  cluesFromSurvivorsFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, enemySpawnRuleFor, threatEffectFor, assetRuleFor, treacheryRuleFor,
   resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
 import { registeredEntry } from '../../../src/engine/ability.js'
@@ -13,9 +13,8 @@ const original = card => card?.originalCode || card?.code
 const hasThreatFlag = (inv, flag) => (inv?.threat || []).some(item => threatEffectFor(original(item))?.[flag] === true)
 
 export const encounterRules = {
-  canPlayScenarioCard(state, inv, code) {
-    return scenarioPlayableFor(code) && state.campaign.investigators[inv.seat]?.deck.includes(code)
-  },
+  // 剧情资产（02040/02061/…）在战役牌组中可打出：统一读点已收口到引擎
+  // （src/engine/stats.js#runtimeCardAvailable + 条目 `scenarioPlayable`），战役层不再保留钩子。
   assetEntered(state, inv, asset) {
     const survivors = cluesFromSurvivorsFor(asset.code)
     if (survivors.length) asset.clues = survivors

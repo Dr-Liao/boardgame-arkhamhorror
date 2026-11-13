@@ -268,8 +268,14 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
         const testListener = windowId === 'testEnds'
           && sources.some(({ entry }) => (entry.abilities || []).some(descriptor => descriptor.trigger?.includes('testEnds')))
         const testIdentity = testListener && state.skillTest ? `st:${state.skillTest.publicLog?.length ?? 0}` : ''
+        // 2026-11-13 P0：带目标卡的窗口（doomPlaced / 伤害分配等）必须把目标卡 id 计入实例键。
+        // 否则「本轮/本阶段内先在 A 上放毁灭、后在 B 上放毁灭」会被当成同一个窗口实例，
+        // 第二张卡的强制能力被静默跳过（09571「彰显」：第一个异教徒之后的毁灭都不翻线索面）。
+        // 只在 context 真的带目标卡时追加，保证无卡窗口的实例键逐字不变（不改既有重放指纹）。
+        const targetIdentity = context.card?.id ?? context.cardId ?? ''
         const instanceKey = [windowId, state.round, state.phase, state.turnSerial ?? 0, state.moveCount ?? 0,
           context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? '', context.windowInstance ?? '',
+          ...(targetIdentity ? [`card:${targetIdentity}`] : []),
           ...(testIdentity ? [testIdentity] : [])].join('|')
         for (const { source, entry } of sources) {
           if (entityBlanked(source)) continue

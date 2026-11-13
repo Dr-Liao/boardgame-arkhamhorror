@@ -12,6 +12,10 @@ import {
   SHATTERED_AGES_TREACHERY, SHATTERED_LOCATIONS, TEMPORAL_DEVOURER, TIMELOCK,
   WRACKED_BY_TIME, YIGS_MERCY,
 } from './definition.js'
+import {
+  prepareRelicForScenario, relicControlledBy, relicHolderFromAssets, relicInPlay, relicPublicAttachments,
+  relicSearchUnavailableReason, relicTakeUnavailableReason, relicVersion, takeControlOfRelic,
+} from './relic.js'
 
 // 本章已逐条结算印刷效果的敌人/诡计原卡号（迁移审计用）。共享遭遇组的效果写在
 // ../encounter-rules.js（implementedEnemies / implementedTreacheries），这里列出在本章
@@ -156,63 +160,6 @@ function doomAtNexus(state) {
     for (const asset of inv.assets || []) total += asset.doom || 0
   }
   return total
-}
-
-// 「古代遗物」的三个版本：时光涌流（04343，本关放在一边）、重拾往昔（04303，→ 结局 5）、
-// 以及从埃兹特里带出来的 04061。
-function relicVersion(state) {
-  return flagsFor(state).relicCode || state.relicOfAges?.code || '04061'
-}
-
-function relicControlledBy(state) {
-  const relic = state.relicOfAges
-  if (!relic || relic.seat == null) return null
-  const inv = state.investigators[relic.seat]
-  if (!inv || inv.defeated || inv.resigned) return null
-  return inv
-}
-
-// 兜底：relicOfAges.seat 可能还没写上（例如把 04343/04061 当资产打出），
-// 这时以「哪位调查员场上有遗物资产」作为控制者（P2：04320 的卡面条件）。
-function relicHolderFromAssets(state) {
-  for (const inv of state.investigators) {
-    if (!inv || inv.defeated || inv.resigned) continue
-    if ((inv.assets || []).some(asset => RELIC_VARIANTS.includes(original(asset)))) return inv
-  }
-  return null
-}
-
-// 卡面「控制古代遗物」：遗物在场上且被一位在场调查员控制。
-function relicInPlay(state) {
-  const relic = state.relicOfAges
-  if (relic?.seat != null && relicControlledBy(state)) return true
-  if (relic && relic.seat == null && relic.location && byId(state, relic.location)) return true
-  return !!relicHolderFromAssets(state)
-}
-
-function relicInAnyDeck(state) {
-  return state.investigators.some(inv => [...(inv.deck || []), ...(inv.discard || [])]
-    .some(code => RELIC_VARIANTS.includes(code)))
-}
-
-function relicAttachedToSocket(state) {
-  const relic = state.relicOfAges
-  if (!relic || relic.seat != null || !relic.location) return null
-  const location = byId(state, relic.location)
-  if (!location) return null
-  return (location.clues || 0) === 0 ? location : null
-}
-
-function takeControlOfRelic(state, inv, api) {
-  const location = relicAttachedToSocket(state)
-  if (!location) return null
-  const code = state.relicOfAges?.code || relicVersion(state)
-  if (api.moveRelicOfAges) api.moveRelicOfAges({ code, seat: inv.seat })
-  else state.relicOfAges = { code, location: inv.location, seat: inv.seat }
-  if (!(inv.assets || []).some(asset => original(asset) === code)) api.giveAsset?.(inv.seat, code)
-  flagsFor(state).relicWasControlled = true
-  api.info?.(`🏺 ${inv.name} 控制了「古代遗物」（${ALL_CARDS[code]?.subnameZh || code}）。`)
-  return code
 }
 
 function replaceActFour(state, code, api) {
@@ -368,6 +315,9 @@ export const behavior = {
     api?.info?.(`🏺 ${inv.name} 控制了古代遗物（${ALL_CARDS[code]?.nameZh || code}）。`)
   },
 
+  // 4a 的附属地点由观察投影挂回古代遗物支援（见 relic.js）。
+  publicAttachments: relicPublicAttachments,
+
   // 04320 背面：遗物因任何原因离场时，清掉控制标记并让 checkObjectives 把场景
   // 重置到 3a（含「支援实例离场」这条以前检测不到的路径）。
   assetLeftPlay(state, inv, asset, api) {
@@ -396,6 +346,9 @@ export const behavior = {
   setupLocations(state, events, helper = {}) {
     const plan = setupPlan(state, helper)
     const flags = flagsFor(state)
+    // preScenarioSetup 先跑，已经按调查员实际携带的版本写好 relicCode（04061/04191/04303）；
+    // 这里必须保留，否则会把「重拾往昔」（结局 5）当成默认版本。
+    const retainedRelicCode = state.relicOfAges?.code || flags.relicCode
     const zones = zonesFor(state)
     zones.setAside = [
       RELIC_AGES_UNLEASH,
@@ -410,7 +363,7 @@ export const behavior = {
     state.explorationDeck = [...plan.explorationDeck]
     state.explorationDiscard = []
     Object.assign(flags, {
-      relicCode: state.relicOfAges?.code
+      relicCode: retainedRelicCode
         || (recordsFor(state).theRelicIsMissing ? RELIC_AGES_UNLEASH : '04061'),
       relicUnderneath: [],
       relicWasControlled: false,
@@ -454,29 +407,11 @@ export const behavior = {
     if (records.theInvestigatorsFoundTheMissingRelic) {
       say('🏺 遗物在你们手中：石门上的凹痕随着它的嗡鸣亮起。')
     } else if (records.theRelicIsMissing) {
-      flags.relicCode = RELIC_AGES_UNLEASH
       say('🏺 遗物已丢失：只能使用放在一边的古代遗物（时光涌流）。')
     }
-    // 古代遗物只有一份：按剧本日志决定用哪个版本，把其余版本的卡从牌库/手牌/弃牌/
-    // 支援里拿掉（此前可能同时持有 04061 与 04343 两份遗物）。
-    const keepRelic = records.theInvestigatorsFoundTheMissingRelic ? '04061' : RELIC_AGES_UNLEASH
-    const purged = []
-    for (const inv of state.investigators || []) {
-      for (const pile of ['hand', 'deck', 'discard']) {
-        inv[pile] = (inv[pile] || []).filter(code => {
-          const drop = RELIC_VARIANTS.includes(code) && code !== keepRelic
-          if (drop) purged.push(code)
-          return !drop
-        })
-      }
-      inv.assets = (inv.assets || []).filter(asset => {
-        const code = asset?.originalCode || asset?.code
-        const drop = RELIC_VARIANTS.includes(code) && code !== keepRelic
-        if (drop) purged.push(code)
-        return !drop
-      })
-    }
-    if (purged.length) say(`🏺 只保留一份古代遗物（${keepRelic === '04061' ? '你们找回的那份' : '时光涌流'}）。`)
+    // 古代遗物只有一份，用哪个印刷版本由剧本日志/牌组决定（细节见 relic.js 的
+    // prepareRelicForScenario；旧实现按日志硬编码保留 04061，会误删 04191/04303 导致卡关）。
+    prepareRelicForScenario(state, say)
     // 检查剧本日志：伊格之怒每满 10 次，队长牌库顶的 1 张牌移出游戏并进入胜利区
     // （Haskell：take (yigsFury `div` 10) leadDeck → RemovePlayerCardFromGame + VengeanceCard）。
     const fury = Number(records.yigsFury || 0)
@@ -572,23 +507,30 @@ export const behavior = {
     locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
     // 04342 黑暗隐伏的 [action][action] 只由 encounterActions() 提供（附件式行动），
     // 避免 scenarioAction 与 encounterAction 双入口重复列出同一行动。
+    // 幕 3a/4a 的行动条目始终列出（不可执行时带 reason）：
+    // 剧本行动面板是玩家发现「场景主动」的唯一入口；只在条件全部满足时才出现，
+    // 会让玩家以为这一关没有可用的场景行动（玩家报告：没有交互入口）。
     if (actCode === ACT_TYPES.relic) {
-      if (relicInAnyDeck(state)) moves.push({
+      moves.push({
         action: 'scenarioAction', rule: 'searchRelic',
         label: '🔍 查找你的牌库和弃牌堆，找出古代遗物并加入手牌',
+        reason: relicSearchUnavailableReason(state, inv),
       })
-      if (relicAttachedToSocket(state)?.id === inv.location) moves.push({
+      moves.push({
         action: 'scenarioAction', rule: 'takeRelic',
         label: '🏺 控制附属在你所在地点的古代遗物',
+        reason: relicTakeUnavailableReason(state, inv),
       })
     }
-    if ([MEND_THE_SHATTER, PARADISE_LOST, TIMELOCK].includes(actCode) && isShattered(location)) {
-      const remaining = location.clues || 0
+    if ([MEND_THE_SHATTER, PARADISE_LOST, TIMELOCK].includes(actCode)) {
+      const shattered = isShattered(location)
+      const remaining = location?.clues || 0
       moves.push({
         action: 'scenarioAction', rule: 'attachLocation',
         label: '🧵 检定意志(3)或智识(3)：把此地点附属到古代遗物',
-        reason: remaining > 0 ? `需要先取走此地点上的线索（还有 ${remaining} 个）`
-          : !relicInPlay(state) ? '需要先让古代遗物在场' : null,
+        reason: !shattered ? '需要位于破碎地点'
+          : remaining > 0 ? `需要先取走此地点上的线索（还有 ${remaining} 个）`
+            : !relicInPlay(state) ? '需要先让古代遗物在场' : null,
       })
     }
     for (const enemy of state.enemies) {
@@ -1132,8 +1074,8 @@ export const behavior = {
       // 卡面是「每位调查员」：已被击败/撤退的也有战役记录，同样受 2/2 创伤（P2）。
       for (const inv of state.investigators) {
         if (!state.campaign?.investigators?.[inv.seat]) continue
-        api.addTrauma?.(state, inv.seat, 'physical', 2, events)
-        api.addTrauma?.(state, inv.seat, 'mental', 2, events)
+        api.addTrauma?.(inv.seat, 'physical', 2) // api=(seat, kind, amount)
+        api.addTrauma?.(inv.seat, 'mental', 2)
       }
       return { award: true, bonus: 5 }
     }

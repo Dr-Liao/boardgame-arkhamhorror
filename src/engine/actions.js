@@ -643,9 +643,15 @@ function runInvestigate(state, seat, opts, events, noSpend) {
         + (opts.successByClueEvery ? Math.floor(successBy / opts.successByClueEvery) : 0)) * (r.rewardMultiplier || 1)
       info(state, events, `${inv.name} 调查成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}）。`)
       triggerReaction(state, seat, 'investigateSuccess', events, { seat, location: loc.id, successBy: r.value - difficulty })
+      // 2026-11-13 P1-8：调查成功也要开反应窗口（09067 等「成功后快速打出」的手牌快速事件
+      // 只在 reactionWindow 的候选枚举里；triggerReaction 只结算旧式反应）。
+      reactionWindow(state, 'investigateSuccess', {
+        when: 'investigateSuccess', seat, location: loc.id, successBy: r.value - difficulty,
+        prompt: '调查成功后',
+      }, events, { allowNested: true })
       if (loc.flipAfterInvestigate) {
         const next = placeDreamGate(state, loc.flipAfterInvestigate, {
-          connectToRevealed: true, ownerCode: loc.dreamGateOwner,
+          connectToRevealed: true, ownerCode: loc.dreamGateOwner, ownerSeat: loc.dreamGateOwnerSeat,
         })
         if (inv.location === loc.id) inv.location = next.id
       }
@@ -666,7 +672,9 @@ function runInvestigate(state, seat, opts, events, noSpend) {
           const dualLoc = state.locations.find(l => l.id === dual.locationId)
           info(state, events, `🔎 ${inv.name} 同时在「${dualLoc?.name || dual.locationId}」调查，线索在该地点也被发现。`)
         } else if ((loc.clues || 0) > 0) {
-          discoverClueAt(state, inv, gain, events, { investigation: true })
+          // 2026-11-13 P1-8：线索必须放在**被调查的地点**（09059 Surveil 调查相邻/任意地点时
+          // 此前默认放到调查员所在地，位置错位）。
+          discoverClueAt(state, inv, gain, events, { locationId: loc.id, investigation: true })
         } else {
           // 2026-11-06 规则修正：零线索地点的成功调查不发现线索（不触发「发现线索」窗口），
           // 但上面的 investigateSuccess / 地点成功调查窗口已经正常结算（06015b 梦境之门在此翻面）。

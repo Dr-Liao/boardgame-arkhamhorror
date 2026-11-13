@@ -9,10 +9,10 @@
   "status": "passed",
   "fast": {
     "exitCode": 1,
-    "outputSha256": "122d1c8612e4c246cfe282d2c1d45b71b7e14b1e3ec94f07ddc8984fc4ba3f67",
+    "outputSha256": "8825c2a1d0e5712c757c15253cff80d624d369cfecd2149353c50dc25e1178f4",
     "totals": {
-      "tests": 7138,
-      "pass": 7131,
+      "tests": 7720,
+      "pass": 7713,
       "fail": 4
     },
     "failingFiles": [
@@ -44,11 +44,11 @@
   },
   "replay": {
     "baseline": "tests/fixtures/replay/tsk-baseline.json",
-    "expectedSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
-    "actualSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
+    "expectedSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
+    "actualSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
     "exitCode": 0,
     "matches": true,
-    "outputSha256": "d7e15f72c567f5eda001abfd56912fe98cce4b43acd84e8d67d927ff82cbc1a6"
+    "outputSha256": "b09a950ebab8f5b4187afb4f627154f10fe7f655a181d7a2287d4244d5e20a1d"
   },
   "baseline": {
     "fastFailures": [
@@ -64,6 +64,6 @@
       "tests/tcu-migration.test.mjs"
     ],
     "replayFile": "tests/fixtures/replay/tsk-baseline.json",
-    "replaySha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547"
+    "replaySha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688"
   }
 }

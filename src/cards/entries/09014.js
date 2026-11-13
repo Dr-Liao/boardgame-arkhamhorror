@@ -11,7 +11,7 @@ export default {
       resolve: ({ inv, api }) => {
         const sources = (inv.assets || []).filter(asset => (Number(asset.doom) || 0) > 0)
         if (!sources.length) {
-          api.moveCard({ code: '09014', from: 'discard', to: 'deck', ownerSeat: inv.seat })
+          api.moveCard({ code: '09014', from: 'discard', to: 'deckTop', ownerSeat: inv.seat })
           api.shuffleDeck(inv.seat)
           api.info('「震耳欲聋的寂静」被洗回牌库。')
           return

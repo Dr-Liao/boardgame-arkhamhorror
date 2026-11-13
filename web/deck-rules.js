@@ -376,6 +376,8 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theInnsmouthConspiracy: 7,
   // P7（战役层）：地球边缘 08 段是第八循环，已注册进生产组合根并在大厅可启动。
   edgeOfTheEarth: 8,
+  // P7（八循环 M3 战役）：绯红密钥 09 段是第九循环，已注册进生产组合根并在大厅可启动。
+  theScarletKeys: 9,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

@@ -3,6 +3,26 @@ import { SCENARIO_MUSIC, SCENARIO_PLAYLISTS } from './scenario-music.js'
 import { subscribeLocaleChange, t } from './i18n.js'
 
 export const MUSIC_TRACKS = [
+  {"id":"tskNightOnTheDocksSax","title":"Night on the Docks - Sax","mood":"伦敦雨夜、街巷追踪、初见红衣人","file":"common/night-on-the-docks-sax.mp3","isrc":"USUAN1100137"},
+  {"id":"tskNoGoodLayabout","title":"No Good Layabout","mood":"伦敦雨夜、街巷追踪、初见红衣人","file":"common/no-good-layabout.mp3","isrc":"USUAN1100131"},
+  {"id":"tskTabuk","title":"Tabuk","mood":"马拉喀什、灼热集市、死者苏醒","file":"common/tabuk.mp3","isrc":"USUAN1100818"},
+  {"id":"tskDesertCity","title":"Desert City","mood":"马拉喀什、灼热集市、死者苏醒","file":"common/desert-city.mp3","isrc":"USUAN1100564"},
+  {"id":"tskTangoDeManzana","title":"Tango de Manzana","mood":"布宜诺斯艾利斯、探戈、屋顶追逐","file":"common/tango-de-manzana.mp3","isrc":"USUAN1100404"},
+  {"id":"tskBassWalker","title":"Bass Walker","mood":"布宜诺斯艾利斯、探戈、屋顶追逐","file":"common/bass-walker.mp3","isrc":"USUAN1200071"},
+  {"id":"tskIntrepid","title":"Intrepid","mood":"君士坦丁堡、夜市接头、追查货物","file":"common/intrepid.mp3","isrc":"USUAN1500062"},
+  {"id":"tskDhaka","title":"Dhaka","mood":"君士坦丁堡、夜市接头、追查货物","file":"common/dhaka.mp3","isrc":"USUAN1400003"},
+  {"id":"tskNoFrillsComparsa","title":"No Frills Comparsa","mood":"哈瓦那、舞台与后台、潜入失控","file":"common/no-frills-comparsa.mp3","isrc":"USUAN1100285"},
+  {"id":"tskNoFrillsSalsa","title":"No Frills Salsa","mood":"哈瓦那、舞台与后台、潜入失控","file":"common/no-frills-salsa.mp3","isrc":"USUAN1100133"},
+  {"id":"tskNorthernGlade","title":"Northern Glade","mood":"安克雷奇、冰原追猎、暴风雪","file":"common/northern-glade.mp3","isrc":"USUAN1800017"},
+  {"id":"tskLongNoteFour","title":"Long Note Four","mood":"安克雷奇、冰原追猎、暴风雪","file":"common/long-note-four.mp3","isrc":"USUAN1100467"},
+  {"id":"tskNilesBlues","title":"Nile's Blues","mood":"亚历山大港、阵营交锋、要塞突围","file":"common/niles-blues.mp3","isrc":"USUAN1100610"},
+  {"id":"tskKillers","title":"Killers","mood":"亚历山大港、阵营交锋、要塞突围","file":"common/killers.mp3","isrc":"USUAN1600024"},
+  {"id":"tskGhostpocalypse6CrossingTheThreshold","title":"Ghostpocalypse - 6 Crossing the Threshold","mood":"吉隆坡、雨夜幽魂、红伞旧怨","file":"common/ghostpocalypse-6-crossing-the-threshold.mp3","isrc":"USUAN1100663"},
+  {"id":"tskTrepidation","title":"Trepidation","mood":"吉隆坡、雨夜幽魂、红伞旧怨","file":"common/trepidation.mp3","isrc":"USUAN1100034"},
+  {"id":"tskGhostpocalypse1Departure","title":"Ghostpocalypse - 1 Departure","mood":"百慕大、异界漂流、寻找失踪者","file":"common/ghostpocalypse-1-departure.mp3","isrc":"USUAN1100668"},
+  {"id":"tskNightmareMachine","title":"Nightmare Machine","mood":"百慕大、异界漂流、寻找失踪者","file":"common/nightmare-machine.mp3","isrc":"USUAN1700048"},
+  {"id":"tskNightVigil","title":"Night Vigil","mood":"通古斯卡、密钥审判、异界决战","file":"common/night-vigil.mp3","isrc":"USUAN1900047"},
+  {"id":"tskMovementProposition","title":"Movement Proposition","mood":"通古斯卡、密钥审判、异界决战","file":"common/movement-proposition.mp3","isrc":"USUAN1100778"},
   {"id":"eoteDespairAndTriumph","title":"Despair and Triumph","mood":"坠机冰原、寻找庇护、极地求生","file":"common/despair-and-triumph.mp3","isrc":"USUAN1400012"},
   {"id":"eoteMoorland","title":"Moorland","mood":"坠机冰原、寻找庇护、极地求生","file":"common/moorland.mp3","isrc":"USUAN1200106"},
   {"id":"eoteSpacialWinds","title":"Spacial Winds","mood":"风雪寻人、失踪伙伴、冰隙低语","file":"common/spacial-winds.mp3","isrc":"USUAN1100203"},
@@ -131,6 +151,7 @@ export const MUSIC_PLAYLISTS = Object.freeze({
   theDreamEaters: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDreamEaters).flatMap(chapter => chapter.tracks))]),
   theInnsmouthConspiracy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theInnsmouthConspiracy).flatMap(chapter => chapter.tracks))]),
   edgeOfTheEarth: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.edgeOfTheEarth).flatMap(chapter => chapter.tracks))]),
+  theScarletKeys: Object.freeze(Object.values(SCENARIO_MUSIC.theScarletKeys).flatMap(chapter => chapter.tracks)),
   ...SCENARIO_PLAYLISTS,
 })
 export function musicTracksForPlaylist(id) {

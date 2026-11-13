@@ -14,6 +14,8 @@ import { allSkillModifiers } from './_shared.js'
 export default {
   code: '04051',
   simplified: true,
+  // 剧情资产：由战役效果加入牌组后可在牌组中打出（统一原语，见 stats.runtimeCardAvailable）。
+  scenarioPlayable: true,
   // 第 114 轮：「伊斯人身体」换身准备时，这张剧情资产要放到一边（原 theCityOfArchives 的卡号分支）。
   assetRule: { setAsideOnBodySwap: true },
   modifiers: allSkillModifiers(1, {

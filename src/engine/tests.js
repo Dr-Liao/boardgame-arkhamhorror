@@ -144,6 +144,18 @@ export function createPerformTest(deps) {
 
 // 第 59 轮：地点卡自己的「检定失败」规则（02133/02135/02136、02056 等）由条目声明。
 // 引擎在内容层 afterTest 之后统一派发，避免每个章节 behavior 手写一遍。
+// 2026-11-13 P1-6：同地点、条目声明 flags.testWindowObserver 的调查员（09015）也参与
+// test.beforeCommit/afterCommit 窗口——卡面是「你所在地点的技能检定期间」而不是「你执行」。
+function testWindowSeats(state, seat) {
+  const performer = state.investigators?.[seat]
+  if (!performer) return null
+  const extra = aliveInvestigators(state)
+    .filter(other => other.seat !== seat && other.location === performer.location
+      && registeredEntry(other.code)?.flags?.testWindowObserver === true)
+    .map(other => other.seat)
+  return extra.length ? [seat, ...extra] : null
+}
+
 function runLocationTestFail(state, inv, result, events) {
   if (result.success) return
   const loc = state.locations.find(item => item.id === inv.location)
@@ -175,15 +187,34 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   // 只在「章节开启 eventWindowInstances」的 TIC 写实例 id：其它战役的 skillTest 形状与
   // 重放指纹逐字不变（id 会出现在暂停中的检定状态里，属于基线指纹的一部分）。
   const enableTestInstance = state.scenario?.eventWindowInstances === true
+  // 2026-11-13 P1-6：perTest 上限（limits.js#scopeKey）读 skillTest.id。此前只有声明
+  // eventWindowInstances 的剧本才有 id，其余剧本退化为 round:turnSerial，同一回合的两次检定
+  // 会被误判为同一次。这里始终提供唯一 id：启用的剧本仍持久化（旧口径），其余用瞬态
+  // _testSerial（_ 前缀不进重放指纹）并写成非枚举属性。
+  const transientTestSerial = (Number(state._testSerial) || 0) + 1
+  state._testSerial = transientTestSerial
+  const testInstanceId = enableTestInstance ? nextInstanceId(state, 'test') : `transienttest${transientTestSerial}`
   state.skillTest = { seat, skill: skillContext, difficulty: Math.max(0, difficulty), stage: 'ST.1', committed: [], publicLog: [...state.log],
-    ...(enableTestInstance ? { id: nextInstanceId(state, 'test') } : {}),
+    ...(enableTestInstance ? { id: testInstanceId } : {}),
     ...(typedTarget ? { actionKind: options.actionKind || typedTarget.actionKind, target: { kind: typedTarget.kind, id: typedTarget.id } } : {}),
     ...(options.actionKind ? { actionKind: String(options.actionKind) } : {}),
     ...(options.basicAction ? { basicAction: options.basicAction } : {}),
     ...(options.iconWeights ? { iconWeights: { ...options.iconWeights } } : {}),
     ...(options.blockCommitSeats ? { blockCommitSeats: [...options.blockCommitSeats] } : {}),
     source: options.source || { type: 'effect', label: '卡牌效果检定', name: skillLabel + '检定' } }
+  if (!enableTestInstance) {
+    Object.defineProperty(state.skillTest, 'id', { value: testInstanceId, enumerable: false, writable: true, configurable: true })
+  }
   const scenarioTestFrame = state.skillTest
+  // 2026-11-13 P1-8：检定来源的权威字段。09023「用附属枪械攻击」等条件读
+  // skillTest.assetSourceId（此前全仓没有写入点，只有描述子路径顺带压 _resolvingAssetId）；
+  // 09105/09108 等「难度 0 的某类检定/揭示标记前」需要 actionKind 与目标敌人。
+  // 这些是**运行时元数据**：用非枚举属性写入（不进入存档与重放指纹，避免只加字段就全量指纹漂移）。
+  const defineMeta = (key, value) => Object.defineProperty(state.skillTest, key,
+    { value, enumerable: false, writable: true, configurable: true })
+  if (options.source?.assetId != null) defineMeta('assetSourceId', options.source.assetId)
+  if (!state.skillTest.actionKind && options.source?.actionKind) defineMeta('actionKind', String(options.source.actionKind))
+  if (!state.skillTest.target && options.source?.enemyId != null) defineMeta('target', { kind: 'enemy', id: options.source.enemyId })
   const inv = state.investigators[seat]
   const events = []
   difficulty = Math.max(0, difficulty)
@@ -314,7 +345,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   value += continuousTestValue
   if (continuousTestValue) state.skillTest.value = value
   // A personal test stays with its owner until they explicitly ask for help.
-  playerWindow(state, 'test.beforeCommit', events, seat)
+  playerWindow(state, 'test.beforeCommit', events, seat, { onlySeats: testWindowSeats(state, seat) })
   if (!state.skillTest.resourceSkill && JSON.stringify(state.skillTest.skill) !== JSON.stringify(skillContext)) {
     const oldTotal = statReference
     skillList = normalizeTestSkills(state.skillTest.skill)
@@ -373,6 +404,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         // 2026-10-25 本循环修复 05042：按「手牌所有者」判定，而不是只查检定发起者——
         // 卡面「你不能在技能检定投入卡牌」不区分是谁的检定（本人/协助/远程投入都受限）。
         .filter(() => !handCommitBlocker(owner, registeredEntry))
+        // 2026-11-13 P1-16（09766）：不能离开手牌的牌也不能投入（投入后进入检定堆）。
+        .filter(item => registeredEntry(item.code)?.cannotLeaveHand !== true)
         .filter(item => {
           const rule = hiddenRule(state, item.code)
           if (hasHiddenCard(owner, item.code)) return rule?.allowCommit === true
@@ -588,7 +621,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     defiedToken = requestChoice(state, { kind: 'token', source: defied.code, seat, prompt: `${cardName(defied.code)}：选择本次检定要忽略的混乱符号。`,
       options: ['skull', 'cultist', 'tablet', 'elderthing'].map(id => ({ id, label: tokenLabel(id) })) })
   }
-  playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null)
+  playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null,
+    { onlySeats: testWindowSeats(state, seat) })
   value += state.skillTest.pendingBonus || 0
   state.skillTest.pendingBonus = 0
   value += applyFreeTriggers(state, inv, skillContext, events)
@@ -1028,8 +1062,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     if (['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token) && !ignoreSymbolEffects) {
       const symbolContext = { seat, token, location: inv.location, testBonus: 0 }
+      // 2026-11-13 修复「第六感等符号反应被连问多次」：上面第 1024 行的 reactionWindow 已经打开过
+      // symbolRevealed 的能力窗口（声明式反应/强制都走它）；这里只补旧式 reactions（02029/02269 等）
+      // 与 testBonus。不传 skipAbilityWindow 时，triggerReaction 的尾部会再调 openAbilityWindow，
+      // 且本循环按「同地点每位调查员」各调一次 → 同一张 05158/05157 会被连问 N+1 次
+      //（N = 与检定者同地点的调查员数；跳过第一次询问时 limit 不记账，所以每次都会重新问）。
+      // 与 enemies.js enemySpawn / defeatEnemy、combat.js evadeSuccess 的既有口径一致。
       for (const owner of aliveInvestigators(state).filter(owner => owner.location === inv.location))
-        triggerReaction(state, owner.seat, 'symbolRevealed', events, symbolContext)
+        triggerReaction(state, owner.seat, 'symbolRevealed', events, symbolContext, { skipAbilityWindow: true })
       value += symbolContext.testBonus || 0
     }
     if (token === defiedToken) {

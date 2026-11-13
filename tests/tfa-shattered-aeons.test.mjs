@@ -7,7 +7,8 @@ import * as shattered from '../content/campaigns/theForgottenAge/scenarios/shatt
 import {
   ALTERNATE_ACTS, BETWEEN_WORLDS, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
   FORMLESS_SPAWN, ICHTACA, ALEJANDRO, MEND_THE_SHATTER, NEXUS, PARADISE_LOST, POCKET,
-  RELIC_AGES_UNLEASH, SHATTERED_LOCATIONS, TEMPORAL_DEVOURER, TIMELOCK,
+  RELIC_AGES_UNLEASH, RELIC_DEVICE_OF_SOME_SORT, RELIC_FORESTALLING_THE_FUTURE,
+  RELIC_REPOSSESS_THE_PAST, RELIC_VARIANTS, SHATTERED_LOCATIONS, TEMPORAL_DEVOURER, TIMELOCK,
 } from '../content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js'
 
 const clone = value => structuredClone(value)
@@ -200,7 +201,7 @@ function makeApi(state, overrides = {}) {
       state.status = 'finished'
       state.resolution = key
     },
-    addTrauma: (target, seat, kind, amount) => {
+    addTrauma: (seat, kind, amount) => {
       calls.info.push(`trauma:${seat}:${kind}:${amount}`)
     },
   }
@@ -435,6 +436,33 @@ test('幕 4 修补裂痕：检定成功把破碎地点附属到遗物，凑够�
   const victoryCodes = state.victoryDisplay.map(card => card.originalCode)
   assert.deepEqual(victoryCodes.sort(), ['04332', '04334', '04335'],
     '带胜利点的附属地点进入胜利区（姆大陆 1、纳克特 1、瓦卢西亚 1）')
+})
+
+test('幕 4 附属地点在观察投影里挂回古代遗物支援（牌桌/详情显示数量）', () => {
+  const state = placed(stateFor(2))
+  shattered.behavior.setupLocations(state, [], setupApi(23))
+  state.actIndex = 3
+  state.relicOfAges = { code: '04061', seat: 0, location: 'mu' }
+  state.investigators[0].location = 'mu'
+  state.investigators[0].assets.push({ id: 'relic', code: '04061', originalCode: '04061' })
+  byId(state, 'mu').clues = 0
+  const api = makeApi(state)
+  const attach = shattered.behavior.actions(state, state.investigators[0]).find(move => move.rule === 'attachLocation')
+  shattered.behavior.performAction(state, state.investigators[0], attach, api)
+  const before = JSON.stringify(state)
+  const attachments = shattered.behavior.publicAttachments(state)
+  assert.deepEqual(attachments.assets.relic.map(entry => entry.code), ['04332'])
+  assert.deepEqual(attachments.assets.relic.map(entry => entry.facedown), [true])
+  assert.deepEqual(attachments.assets.relic.map(entry => entry.name), ['姆大陆'])
+  // 公开投影只读：视图/演出快照生成期间不得改权威状态（不创建 scenarioFlags）。
+  assert.equal(JSON.stringify(state), before)
+  // 遗物支援实例不在场时没有宿主可挂：返回空表而不是报错。
+  state.investigators[0].assets = []
+  assert.deepEqual(shattered.behavior.publicAttachments(state).assets, {})
+  // 没有附属地点时同样不生成展示数据。
+  state.investigators[0].assets.push({ id: 'relic', code: '04061', originalCode: '04061' })
+  state.scenarioFlags.relicUnderneath = []
+  assert.deepEqual(shattered.behavior.publicAttachments(state).assets, {})
 })
 
 test('幕 4 背面：控制「重拾往昔」的遗物时进入结局 5', () => {
@@ -901,7 +929,7 @@ registerContentBundle({
   }],
 })
 
-const { createGameState, applyMove, legalMoves } = await import('../src/engine/engine.js')
+const { createGameState, applyMove, legalMoves, startScenario, scriptActionHints } = await import('../src/engine/engine.js')
 
 function settle(state) {
   for (let guard = 0; state.pendingChoice; guard++) {
@@ -944,6 +972,43 @@ test('真实引擎：破碎永世开局后可探索、推进场景 1，并保持
   assert.deepEqual(restored.explorationDeck, state.explorationDeck)
   assert.deepEqual(restored.scenarioFlags, state.scenarioFlags)
   assert.deepEqual(restored.locations.map(location => location.id), state.locations.map(location => location.id))
+})
+
+test('真实引擎：从战役带入 04303 进入破碎永世，幕 3a 提供「查找遗物」行动', () => {
+  // 玩家报告的卡关路径：幕间五「终末黎明」把牌组里的旧遗物换成 04303，
+  // 布置时旧实现按剧本日志硬编码保留 04061，把 04303 删掉 → 幕 3a 没有可用行动。
+  const state = createGameState({
+    campaignId: 'theForgottenAge', seed: 'tfa-shattered-relic-entry', playerInvestigator: '04001',
+  }, [{ seat: 0 }])
+  settle(state)
+  Object.assign(state.campaign.records, {
+    theInvestigatorsFoundTheMissingRelic: true,
+    theInvestigatorsRecoveredTheRelicOfAges: true,
+    youAreForgingYourOwnWay: true,
+  })
+  const record = state.campaign.investigators[0]
+  record.deck = record.deck.filter(code => !RELIC_VARIANTS.includes(code))
+  record.deck.push(RELIC_REPOSSESS_THE_PAST)
+  startScenario(state, 8, [])
+  settle(state)
+  assert.equal(state.scenario.id, 'shatteredAeons')
+  assert.equal(state.scenarioFlags.relicCode, RELIC_REPOSSESS_THE_PAST, '记录实际携带的版本')
+  const inv = state.investigators[0]
+  assert.ok([...inv.hand, ...inv.deck, ...inv.discard].includes(RELIC_REPOSSESS_THE_PAST),
+    '遗物没有被布置清掉')
+  // 把遗物放回牌库（起始手牌可能已经抽到），检查幕 3a 的行动入口。
+  for (const pile of ['hand', 'deck', 'discard']) {
+    inv[pile] = inv[pile].filter(code => !RELIC_VARIANTS.includes(code))
+  }
+  inv.deck.push(RELIC_REPOSSESS_THE_PAST)
+  state.actIndex = 2
+  state.currentSeat = 0
+  state.legalMoves = legalMoves(state)
+  const search = scriptActionHints(state, 0).find(hint => hint.rule === 'searchRelic')
+  assert.ok(search, '幕 3a 的「查找遗物」出现在剧本行动里')
+  assert.equal(search.scriptCard, 'act')
+  assert.equal(search.reason, null, '遗物在牌库里时可以执行')
+  assert.ok(legalMoves(state).some(move => move.action === 'scenarioAction' && move.rule === 'searchRelic'))
 })
 
 test('真实引擎：本章四张诡计都能被引擎结算而不抛错', () => {  for (const code of ['04339', '04340', '04341', '04342']) {
@@ -1105,17 +1170,136 @@ test('04324/04330 的节点探索：复用引擎 explore 并临时忽略地点�
   assert.equal(state.scenarioFlags.ignoreNodeHazard, undefined, '结束后清理标记')
 })
 
-test('04061 古代遗物只保留一个版本', () => {
+test('古代遗物保留玩家实际携带的版本：04303 不会被布置清掉', () => {
   const state = placed(stateFor(1))
   state.campaign.records.theInvestigatorsFoundTheMissingRelic = true
+  state.campaign.records.theInvestigatorsRecoveredTheRelicOfAges = true
+  state.campaign.records.youAreForgingYourOwnWay = true
   const inv = state.investigators[0]
-  inv.deck = ['04061', '04343']
-  inv.hand = ['04303']
-  inv.assets = [{ id: 'relic', code: '04343', originalCode: '04343' }]
+  inv.deck = [RELIC_REPOSSESS_THE_PAST]
   shattered.behavior.preScenarioSetup(state, [], { info: () => {} })
-  assert.deepEqual(inv.deck, ['04061'], '保留找回的那份')
+  shattered.behavior.setupLocations(state, [], setupApi(105))
+  assert.deepEqual(inv.deck, [RELIC_REPOSSESS_THE_PAST], '玩家携带的版本要保留')
+  assert.equal(state.scenarioFlags.relicCode, RELIC_REPOSSESS_THE_PAST,
+    'relicCode 记录实际版本（幕 4 背面据此进入结局 5）')
+  state.actIndex = 2
+  const search = shattered.behavior.actions(state, inv).find(move => move.rule === 'searchRelic')
+  assert.ok(search, '幕 3a 提供「查找你的牌库和弃牌堆」行动')
+  assert.equal(search.reason, null)
+})
+
+test('04191（阻断未来）同样算古代遗物：可被搜索、可被控制、可推进幕 3a', () => {
+  assert.ok(RELIC_VARIANTS.includes(RELIC_FORESTALLING_THE_FUTURE))
+  const state = placed(stateFor(1))
+  state.campaign.records.theInvestigatorsFoundTheMissingRelic = true
+  state.campaign.records.theInvestigatorsRecoveredTheRelicOfAges = true
+  const inv = state.investigators[0]
+  inv.deck = [RELIC_FORESTALLING_THE_FUTURE]
+  shattered.behavior.preScenarioSetup(state, [], { info: () => {} })
+  assert.deepEqual(inv.deck, [RELIC_FORESTALLING_THE_FUTURE])
+  assert.equal(state.scenarioFlags.relicCode, RELIC_FORESTALLING_THE_FUTURE)
+  state.actIndex = 2
+  const api = makeApi(state)
+  const search = shattered.behavior.actions(state, inv).find(move => move.rule === 'searchRelic')
+  assert.equal(search.reason, null)
+  shattered.behavior.performAction(state, inv, search, api)
+  assert.ok(inv.hand.includes(RELIC_FORESTALLING_THE_FUTURE), '遗物进入手牌')
+  // 当资产打出 → 写入控制者 → 推进幕 3a。
+  const asset = { id: 'relic-04191', code: RELIC_FORESTALLING_THE_FUTURE, originalCode: RELIC_FORESTALLING_THE_FUTURE }
+  inv.assets.push(asset)
+  state.relicOfAges = { code: RELIC_FORESTALLING_THE_FUTURE, location: inv.location, seat: inv.seat }
+  const advanced = []
+  shattered.behavior.checkObjectives(state, makeApi(state, {
+    advanceAct: () => { advanced.push(state.actIndex); state.actIndex += 1 },
+  }))
+  assert.deepEqual(advanced, [2], '控制遗物后推进幕 3a')
+})
+
+test('古代遗物已丢失：清掉调查员区域里的残留版本，场上那份来自时光涌流', () => {
+  const state = placed(stateFor(1))
+  state.campaign.records.theRelicIsMissing = true
+  const inv = state.investigators[0]
+  inv.deck = [RELIC_DEVICE_OF_SOME_SORT]
+  inv.hand = [RELIC_REPOSSESS_THE_PAST]
+  inv.assets = [{ id: 'leftover', code: RELIC_AGES_UNLEASH, originalCode: RELIC_AGES_UNLEASH }]
+  shattered.behavior.preScenarioSetup(state, [], { info: () => {} })
+  assert.deepEqual(inv.deck, [])
   assert.deepEqual(inv.hand, [])
-  assert.equal(inv.assets.some(asset => asset.code === '04343'), false)
+  assert.equal(inv.assets.length, 0)
+  assert.equal(state.scenarioFlags.relicCode, RELIC_AGES_UNLEASH, '本关使用放在一边的时光涌流')
+})
+
+test('旧存档同时留下多个遗物版本时只保留最新的一份', () => {
+  const state = placed(stateFor(1))
+  state.campaign.records.theInvestigatorsFoundTheMissingRelic = true
+  // 点燃火盆：跳过「起始手牌 -2」的移牌，单独验证去重口径。
+  state.campaign.records.theBraziersAreLit = true
+  const inv = state.investigators[0]
+  inv.deck = [RELIC_DEVICE_OF_SOME_SORT, RELIC_AGES_UNLEASH]
+  inv.hand = [RELIC_REPOSSESS_THE_PAST]
+  inv.assets = [{ id: 'relic', code: RELIC_AGES_UNLEASH, originalCode: RELIC_AGES_UNLEASH }]
+  shattered.behavior.preScenarioSetup(state, [], { info: () => {} })
+  assert.deepEqual(inv.deck, [])
+  assert.deepEqual(inv.hand, [RELIC_REPOSSESS_THE_PAST], '保留推进最靠后的版本')
+  assert.equal(inv.assets.some(asset => asset.code === RELIC_AGES_UNLEASH), false)
+  assert.equal(state.scenarioFlags.relicCode, RELIC_REPOSSESS_THE_PAST)
+})
+
+test('幕 3a 的两个场景行动始终有条目：未满足条件时给出可读原因', () => {
+  const state = placed(stateFor(1))
+  shattered.behavior.setupLocations(state, [], setupApi(107))
+  state.actIndex = 2
+  const inv = state.investigators[0]
+  const actions = () => shattered.behavior.actions(state, inv)
+  // 遗物不在手里：搜索行动有条目但带原因；控制行动说明遗物还没附属到地点。
+  let search = actions().find(move => move.rule === 'searchRelic')
+  let take = actions().find(move => move.rule === 'takeRelic')
+  assert.ok(search, '即使不可执行也要有「查找遗物」入口')
+  assert.match(search.reason, /不在你的牌库或弃牌堆/)
+  assert.match(take.reason, /没有附属在任何地点/)
+  // 遗物附属到时间之窗：搜索/控制行动告诉玩家遗物在哪里、还差几个线索。
+  const pocket = state.locations.find(entry => entry.id === POCKET)
+  state.relicOfAges = { code: RELIC_AGES_UNLEASH, location: POCKET, seat: null }
+  pocket.clues = 1
+  inv.location = NEXUS
+  take = actions().find(move => move.rule === 'takeRelic')
+  assert.match(take.reason, /时间之窗/)
+  search = actions().find(move => move.rule === 'searchRelic')
+  assert.match(search.reason, /附属在「时间之窗」/)
+  inv.location = POCKET
+  pocket.clues = 1
+  take = actions().find(move => move.rule === 'takeRelic')
+  assert.match(take.reason, /还有 1 个/)
+  pocket.clues = 0
+  take = actions().find(move => move.rule === 'takeRelic')
+  assert.equal(take.reason, null, '站在无线索的时间之窗时可以控制遗物')
+  // 遗物在手里：搜索行动提示直接打出。
+  inv.hand.push(RELIC_REPOSSESS_THE_PAST)
+  search = actions().find(move => move.rule === 'searchRelic')
+  assert.match(search.reason, /手牌/)
+})
+
+test('幕 4a 的场景行动始终有条目：不在破碎地点/线索未取完时说明条件', () => {
+  const state = placed(stateFor(1))
+  shattered.behavior.setupLocations(state, [], setupApi(109))
+  state.actIndex = 3
+  const inv = state.investigators[0]
+  inv.location = NEXUS
+  state.relicOfAges = { code: RELIC_DEVICE_OF_SOME_SORT, location: NEXUS, seat: 0 }
+  inv.assets.push({ id: 'relic', code: RELIC_DEVICE_OF_SOME_SORT, originalCode: RELIC_DEVICE_OF_SOME_SORT })
+  let attach = shattered.behavior.actions(state, inv).find(move => move.rule === 'attachLocation')
+  assert.ok(attach, '没有破碎地点时也要有「附属地点」入口')
+  assert.match(attach.reason, /破碎地点/)
+  const mu = state.locations.find(entry => entry.id === 'mu')
+  inv.location = 'mu'
+  mu.clues = 2
+  attach = shattered.behavior.actions(state, inv).find(move => move.rule === 'attachLocation')
+  assert.match(attach.reason, /还有 2 个/)
+  mu.clues = 0
+  attach = shattered.behavior.actions(state, inv).find(move => move.rule === 'attachLocation')
+  assert.equal(attach.reason, null)
+  assert.ok(shattered.behavior.actions(state, inv)
+    .some(move => move.rule === 'attachLocation' && !move.reason))
 })
 
 test('04342 黑暗隐伏：可在联结点用火把或意志检定弃掉', () => {

@@ -24,7 +24,7 @@ import {
   RESTRICTED_ACTION_KINDS, clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
 } from './restricted-actions.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
-import { dreamGateEntryError, setDreamGatesAside } from './dream-gate.js'
+import { atDreamGate, dreamGateEntryError, setDreamGatesAside } from './dream-gate.js'
 import { swarmGroup } from './swarm.js'
 import {
   clearAttackHistory, clearExpiredFlipAfterTestMarkers, resetRoundEvents, syncAllPassiveDeckTops,
@@ -399,6 +399,9 @@ function hunterStep(state, enemy, options = {}) {
       prompt: `选择「${enemy.name}」向诱饵移动的路线。`, options: pool.map(id => ({ id, label: locName(state, id) })) })
   }
   let targets = options.targets || aliveInvestigators(state).filter(i => enemy.prey !== 'bearer' || i.seat === enemy.bearerSeat)
+  // 梦境之门（06015a/b）+ FAQ v2.1（2023-08）：「在梦境之门时，卢克·罗宾逊不能被选为
+  // 敌人移动的目标」。猎手不把门里的人计入最近目标，敌人照常朝其余调查员移动。
+  targets = targets.filter(inv => !atDreamGate(state, inv))
   // Phase 2（C1）：ignore:hunter —— 声明「敌人不把你当作猎手目标」的调查员不参与猎物计算。
   if (!options.targets) targets = targets.filter(i => !ruleIgnored(state, i, 'hunter'))
   if (!targets.length) return null

@@ -9,11 +9,11 @@
   "sources": [
     {
       "path": "audit/tsk-mechanism-scan.json",
-      "sha256": "e978edda8e918ac25d5e21eff17b1ebef3ebfa590fbcd0e17bf3cc9635f4519f"
+      "sha256": "e0ef587311ca8cd0ce3a312a1f6b3611bd6fd58e423b2953365d06f372c691ae"
     },
     {
       "path": "audit/tsk-primitive-plan.json",
-      "sha256": "883fad879c45e5e848a1e94c3a9c27b7aa26bf40ec66c55d53f005f19d363913"
+      "sha256": "2f3f80f68ec45de8ac55aac358d522573b52a0ab1831d259361a57d4532dd13e"
     },
     {
       "path": "web/tsk-rules.js",
@@ -25,7 +25,7 @@
     },
     {
       "path": "audit/tsk-node-acceptance.json",
-      "sha256": "07715eb943b195f7668b41812576c5eee1fc8343903e6e599297f495a75aebad"
+      "sha256": "58fe7e7acf5996348e4dd5f8c9e3a1a5399e0e5744d7da7f198d40eb1cb52251"
     },
     {
       "path": "audit/tsk-browser-acceptance.json",

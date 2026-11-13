@@ -18,7 +18,7 @@ import { hasWindowListener } from './window-listeners.js'
 //   enemyHealth / enemyFightValue / enemyEvadeValue —— 敌人数值读点
 //   enemyAttack —— 敌人攻击流程（反应窗口、修正、结算）
 import { enemySpawnRuleFor } from '../cards/card-rules.js'
-import { weaknessOwnerSeat } from './card-lookup.js'
+import { sourceCardDef, weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { capturedActionError } from './capture.js'
@@ -34,6 +34,7 @@ import { checkAssetDefeated } from './asset-defeat.js'
 // P5 地球边缘：调查员专属记账（攻击历史 / 回合事件）—— 只对条目声明 tracksAttacks /
 // roundEvents 的调查员写入，旧对局与回放指纹不变。
 import { noteEnemyAttackOnInvestigator, noteRoundEvent } from './eote-investigator-support.js'
+import { reactionSource } from './reaction-source.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
 //
 // 它们被几乎所有 do* 与剧本运行时调用，拆出来后 engine.js 只剩状态机与「动作编排」。
@@ -250,80 +251,81 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     }, events)
     return false
   }
-  let extraDamage = 0
-  let extraHorror = 0
-  if (!enemyTextBlanked(state, enemy)) scenarioBehavior(state).enemyAttackStarted?.(state, enemy, inv, scenarioRuntime(state, events), attack)
-  const attackBonus = scenarioBehavior(state).enemyAttackModifier?.(state, enemy, inv) || {}
-  extraDamage += attackBonus.damage || 0
-  extraHorror += attackBonus.horror || 0
-  // Phase 5（5a-13）：敌人卡面的特殊攻击规则在 card-rules.js 的 ENEMY_RULE_FLAGS 里。
-  if (!enemyTextBlanked(state, enemy)
-    && (enemyRuleFlags(enemy.code).discardRandomOnAttack || enemyRuleFlags(enemy.ruleId).discardRandomOnAttack)) {
-    if (inv.hand.length) discardRandomFromHand(state, inv, 1, events)
-    else { extraDamage = 1; extraHorror = 1; info(state, events, `🧠 ${inv.name} 无手牌可弃，「${enemy.name}」的伤害和恐惧各 +1。`) }
-  }
-  const adjusted = scenarioBehavior(state).beforeEnemyHarm?.(state, enemy, inv,
-    { damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror }, scenarioRuntime(state, events))
-  if (adjusted?.damage != null) extraDamage = adjusted.damage - enemy.damage
-  if (adjusted?.horror != null) extraHorror = adjusted.horror - enemy.horror
-  // 「如果你不在载具上：其本次攻击造成 +N 伤害」（07213 追击快车）：
-  // 声明在 `enemyRule.attackDamageBonus = { amount, unlessTargetInVehicle }`。
-  // 放在 beforeEnemyHarm **之后**：章节内容钩子会把伤害改写成「印刷值 + 额外」，
-  // 规则级加成必须在它之后叠加，否则会被内容层的绝对值覆盖。
-  const bonusRule = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.attackDamageBonus
-  if (bonusRule && Number.isFinite(Number(bonusRule.amount))) {
-    const inVehicle = vehicleOf(state, inv.seat) != null
-    if (!(bonusRule.unlessTargetInVehicle === true && inVehicle)) extraDamage += Number(bonusRule.amount)
-  }
-  // 「在 X 攻击时：本次攻击 +1 伤害和 +1 恐惧。弃掉本卡」（07259 尽腥尽力）：附属在敌人身上的
-  // 诡计声明 `treacheryRule.attackBonus = { damage, horror, discardOnAttack }`，攻击宣言时叠加并弃置。
-  for (const attachment of (enemy.attachments || []).slice()) {
-    const attackBonus = registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attackBonus
-    if (!attackBonus) continue
-    extraDamage += Number(attackBonus.damage) || 0
-    extraHorror += Number(attackBonus.horror) || 0
-    if (attackBonus.discardOnAttack === true) {
-      enemy.attachments.splice(enemy.attachments.indexOf(attachment), 1)
-      state.encounterDiscard.push(attachment.originalCode || attachment.code)
-    }
-  }
-  attack.plannedDamage = enemy.damage + extraDamage
-  attack.plannedHorror = enemy.horror + extraHorror
-  const attackText = label || `🗡️ 「${enemy.name}」攻击 ${inv.name}：${enemy.damage + extraDamage} 点伤害、${enemy.horror + extraHorror} 点恐惧。`
-  const presentationOrigin = { ...enemyAttackStyle(enemy, enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code),
-    name:enemy.name, enemyId:enemy.id, code:enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }
-  info(state, events, attackText, { kind: 'attack', direction: 'incoming', phase: state.phase, round: state.round,
-    ...presentationOrigin, presentationStage:'threat',
-    attackKind: attack.kind,
-    code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code, name: enemy.name, text: attackText,
-    effect: 'attack', seat: inv.seat, enemyId: enemy.id, location: inv.location, damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror })
-  const damageBefore = inv.damage || 0
-  const horrorBefore = inv.horror || 0
-  // 「如果哈斯塔的攻击造成的恐惧超出你的神智值，你还受到 1 点伤害」（03332/03334）。
-  const excessHorrorDamage = !enemyTextBlanked(state, enemy)
-    && enemyRuleFlags(enemy.code).excessHorrorDamage === true
-  const remainingSanityBefore = excessHorrorDamage ? getMaxSanity(inv) - (inv.horror || 0) : 0
-  // 2026-10-25 第六轮修复 05032：敌人攻击期间打开 wouldDiscardFromHand/wouldLoseResources/
-  // wouldLoseActions 窗口时，context.source 可标出来源（enemyAttack）。
-  const previousEnemyAttackResolving = state._enemyAttackResolving
+  // 2026-11-11：敌人攻击期间**所有**窗口的 context.source 都要能标成 enemyAttack。
+  // 卡面「攻击时随机弃手牌」发生在伤害之前，旧实现只包住 applyHarm，弃手牌窗口会被误标成
+  // other；「否定存在」因此打不出。攻击结束恢复外层值（可能来自嵌套的敌人攻击）。
+  const previousAttackSource = state._enemyAttackResolving
   state._enemyAttackResolving = { enemy, inv, kind: attack.kind }
   try {
+    let extraDamage = 0
+    let extraHorror = 0
+    if (!enemyTextBlanked(state, enemy)) scenarioBehavior(state).enemyAttackStarted?.(state, enemy, inv, scenarioRuntime(state, events), attack)
+    const attackBonus = scenarioBehavior(state).enemyAttackModifier?.(state, enemy, inv) || {}
+    extraDamage += attackBonus.damage || 0
+    extraHorror += attackBonus.horror || 0
+    // Phase 5（5a-13）：敌人卡面的特殊攻击规则在 card-rules.js 的 ENEMY_RULE_FLAGS 里。
+    if (!enemyTextBlanked(state, enemy)
+      && (enemyRuleFlags(enemy.code).discardRandomOnAttack || enemyRuleFlags(enemy.ruleId).discardRandomOnAttack)) {
+      if (inv.hand.length) discardRandomFromHand(state, inv, 1, events)
+      else { extraDamage = 1; extraHorror = 1; info(state, events, `🧠 ${inv.name} 无手牌可弃，「${enemy.name}」的伤害和恐惧各 +1。`) }
+    }
+    const adjusted = scenarioBehavior(state).beforeEnemyHarm?.(state, enemy, inv,
+      { damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror }, scenarioRuntime(state, events))
+    if (adjusted?.damage != null) extraDamage = adjusted.damage - enemy.damage
+    if (adjusted?.horror != null) extraHorror = adjusted.horror - enemy.horror
+    // 「如果你不在载具上：其本次攻击造成 +N 伤害」（07213 追击快车）：
+    // 声明在 `enemyRule.attackDamageBonus = { amount, unlessTargetInVehicle }`。
+    // 放在 beforeEnemyHarm **之后**：章节内容钩子会把伤害改写成「印刷值 + 额外」，
+    // 规则级加成必须在它之后叠加，否则会被内容层的绝对值覆盖。
+    const bonusRule = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.attackDamageBonus
+    if (bonusRule && Number.isFinite(Number(bonusRule.amount))) {
+      const inVehicle = vehicleOf(state, inv.seat) != null
+      if (!(bonusRule.unlessTargetInVehicle === true && inVehicle)) extraDamage += Number(bonusRule.amount)
+    }
+    // 「在 X 攻击时：本次攻击 +1 伤害和 +1 恐惧。弃掉本卡」（07259 尽腥尽力）：附属在敌人身上的
+    // 诡计声明 `treacheryRule.attackBonus = { damage, horror, discardOnAttack }`，攻击宣言时叠加并弃置。
+    for (const attachment of (enemy.attachments || []).slice()) {
+      const attackBonus = registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attackBonus
+      if (!attackBonus) continue
+      extraDamage += Number(attackBonus.damage) || 0
+      extraHorror += Number(attackBonus.horror) || 0
+      if (attackBonus.discardOnAttack === true) {
+        enemy.attachments.splice(enemy.attachments.indexOf(attachment), 1)
+        state.encounterDiscard.push(attachment.originalCode || attachment.code)
+      }
+    }
+    attack.plannedDamage = enemy.damage + extraDamage
+    attack.plannedHorror = enemy.horror + extraHorror
+    const attackText = label || `🗡️ 「${enemy.name}」攻击 ${inv.name}：${enemy.damage + extraDamage} 点伤害、${enemy.horror + extraHorror} 点恐惧。`
+    const presentationOrigin = { ...enemyAttackStyle(enemy, enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code),
+      name:enemy.name, enemyId:enemy.id, code:enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }
+    info(state, events, attackText, { kind: 'attack', direction: 'incoming', phase: state.phase, round: state.round,
+      ...presentationOrigin, presentationStage:'threat',
+      attackKind: attack.kind,
+      code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code, name: enemy.name, text: attackText,
+      effect: 'attack', seat: inv.seat, enemyId: enemy.id, location: inv.location, damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror })
+    const damageBefore = inv.damage || 0
+    const horrorBefore = inv.horror || 0
+    // 「如果哈斯塔的攻击造成的恐惧超出你的神智值，你还受到 1 点伤害」（03332/03334）。
+    const excessHorrorDamage = !enemyTextBlanked(state, enemy)
+      && enemyRuleFlags(enemy.code).excessHorrorDamage === true
+    const remainingSanityBefore = excessHorrorDamage ? getMaxSanity(inv) - (inv.horror || 0) : 0
     if (!inv.defeated && !tryAquinnahRedirect(state, enemy, inv, events, extraDamage, extraHorror)) {
       // 08003 黑帮暴徒：本敌人攻击造成的伤害/恐惧视为直接伤害/直接恐惧（不可分配给支援）。
       applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events,
         enemyRuleFlags(enemy.code).attackHarmDirect === true, tagAttackHarm({ enemy, location: inv.location }, presentationOrigin),
         false, enemyRuleFlags(enemy.code).harmStrategy || null)
     }
+    // 实际落到调查员身上的伤害/恐惧（被取消、被防止或转移时为 0）。
+    attack.damage = Math.max(0, (inv.damage || 0) - damageBefore)
+    attack.horror = Math.max(0, (inv.horror || 0) - horrorBefore)
+    if (excessHorrorDamage && attack.horror > remainingSanityBefore && !inv.defeated && !inv.resigned) {
+      info(state, events, `💥 「${enemy.name}」造成的恐惧超出 ${inv.name} 的神智值，额外受到 1 点伤害。`)
+      applyHarm(state, inv, 1, 0, events, undefined, null, false, null, presentationOrigin)
+    }
   } finally {
-    if (previousEnemyAttackResolving === undefined) delete state._enemyAttackResolving
-    else state._enemyAttackResolving = previousEnemyAttackResolving
-  }
-  // 实际落到调查员身上的伤害/恐惧（被取消、被防止或转移时为 0）。
-  attack.damage = Math.max(0, (inv.damage || 0) - damageBefore)
-  attack.horror = Math.max(0, (inv.horror || 0) - horrorBefore)
-  if (excessHorrorDamage && attack.horror > remainingSanityBefore && !inv.defeated && !inv.resigned) {
-    info(state, events, `💥 「${enemy.name}」造成的恐惧超出 ${inv.name} 的神智值，额外受到 1 点伤害。`)
-    applyHarm(state, inv, 1, 0, events, undefined, null, false, null, presentationOrigin)
+    if (previousAttackSource === undefined) delete state._enemyAttackResolving
+    else state._enemyAttackResolving = previousAttackSource
   }
   scenarioBehavior(state).enemyAttackResolved?.(state, enemy, inv, scenarioRuntime(state, events), attack)
   // P5：攻击历史记账（丹妮拉旧印「本轮被攻击过」、扳手「上个回合结束后攻击过你的敌人」）。
@@ -417,6 +419,8 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
       const farthest = []
       let best = -1
       for (const candidate of state.locations) {
+        // 梦境之门（06015a/b）：敌人不能进入/生成，候选池里也不该出现（否则会把敌人弃掉）。
+        if (candidate.dreamGate) continue
         let nearest = Infinity
         for (const inv of alive) {
           const distance = buildDistance(state, inv.location, candidate.id)
@@ -439,8 +443,8 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
   // 剧本用 api.spawn(..., ignoreSpawn=true) 指定的剧情生成点优先。已揭示地点之间并列时由
   // 领队选择（与「距离最远」同一套询问形状）。
   if (!override && !ignoreSpawn && registeredEntry(code)?.spawnMostClues) {
-    const revealed = state.locations.filter(location => location.revealed !== false)
-    const pool = revealed.length ? revealed : state.locations
+    const revealed = state.locations.filter(location => location.revealed !== false && !location.dreamGate)
+    const pool = revealed.length ? revealed : state.locations.filter(location => !location.dreamGate)
     const best = Math.max(...pool.map(location => Number(location.clues) || 0))
     const candidates = pool.filter(location => (Number(location.clues) || 0) === best)
     if (candidates.length) {
@@ -481,7 +485,7 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
   // 「生成 - 任意无人地点（如可能，生成在[[古代]]地点）」（04086）。
   if (!override && !ignoreSpawn && registeredEntry(code)?.spawnAncientFirst) {
     const active = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
-    const empty = state.locations.filter(loc => !active.some(inv => inv.location === loc.id))
+    const empty = state.locations.filter(loc => !loc.dreamGate && !active.some(inv => inv.location === loc.id))
     const ancient = empty.filter(loc => (cardDef(loc.originalCode || loc.code)?.traits || [])
       .some(trait => String(trait).toLowerCase() === 'ancient'))
     const pool = ancient.length ? ancient : empty
@@ -784,6 +788,16 @@ function canDamageEnemy(state, enemy, seat = null, source = null) {
   // Phase 5（5a-23）：02255 只能被特定来源伤害（规则表 damageOnlyFrom）。
   const damageRule = enemyRuleFlags(enemy?.code)
   if (damageRule.damageOnlyFrom && source !== damageRule.damageOnlyFrom && !enemyTextBlanked(state, enemy)) return false
+  // 2026-11-13 P1-8（09124）：伤害来源必须是 [[武器]] 支援或 [[策略]] 事件（来源特质读点）。
+  if (damageRule.damageOnlyFromSourceTraits && !enemyTextBlanked(state, enemy)) {
+    const sourceDef = sourceCardDef(state, source)
+    const traitAllowed = sourceDef && (sourceDef.traits || []).some(trait =>
+      (damageRule.damageOnlyFromSourceTraits.traits || []).some(wanted =>
+        String(wanted).toLowerCase() === String(trait).toLowerCase()))
+    const typeAllowed = !damageRule.damageOnlyFromSourceTraits.sourceTypes
+      || damageRule.damageOnlyFromSourceTraits.sourceTypes.includes(sourceDef?.type)
+    if (!traitAllowed || !typeAllowed) return false
+  }
   if (!enemyTextBlanked(state, enemy)
     && (entityRuleActive(state, enemy, 'cannot:beDamaged')
       || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, source, seat) === false)) return false
@@ -792,6 +806,11 @@ function canDamageEnemy(state, enemy, seat = null, source = null) {
 
 function damageEnemy(state, enemy, amount, seat, events, source = null, presentation = {}) {
   if (!(amount > 0) || !canDamageEnemy(state, enemy, seat, source)) return false
+  // 2026-11-13 P1-8（09124）：「从每个来源受到的伤害减 1」。
+  const allSourcesReduction = enemyTextBlanked(state, enemy) ? 0
+    : Number(enemyRuleFlags(enemy.code).damageReductionFromAllSources || 0)
+  if (allSourcesReduction > 0) amount = Math.max(0, amount - allSourcesReduction)
+  if (!(amount > 0)) return false
   // 「职业杀手」：本回合该敌人下次受到的伤害 +1（一次性）。
   let total = amount + campaignState.consumeDamageBonus(enemy, state)
   const adjusted = scenarioBehavior(state).enemyDamageAmount?.(state,enemy,total,scenarioRuntime(state,events),seat,source)
@@ -886,8 +905,8 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   state.lastHarmContext = { seat: inv.seat, damage: damage || 0, horror: horror || 0, direct: !!direct,
     round: state.round, turnSerial: state.turnSerial ?? null }
   const harmContext = reactionWindow(state, 'harmDealt', { when: 'harmDealt', seat: inv.seat, location: inv.location,
-    // 2026-10-25 第七轮修复 05032：伤害/恐惧来源标记（遭遇 / 敌人攻击 / 其它）。
-    source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+    // 来源判定统一走 reaction-source.js（遭遇卡/敌人攻击/其它）；「否定存在」按这个字段决定是否可打出。
+    source: reactionSource(state),
     damage: damage || 0, horror: horror || 0, direct: !!direct, attack, prompt: `${inv.name} 将受到伤害或恐惧` }, events)
   damage = Math.max(0, harmContext.damage || 0)
   horror = Math.max(0, harmContext.horror || 0)

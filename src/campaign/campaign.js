@@ -1,28 +1,19 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
-import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, TCU_PLAYER_BUILDABLE_CODES, TDE_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
+import { canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
 import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
-import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed, DRAFT_PLAYER_CARD_CODES } from '../deck/deckbuilding.js'
+import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed, DRAFT_PLAYER_CARD_CODES, UPGRADE_PLAYER_CARD_CODES } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote, deckRules, draftCardLimit } from '../deck/deck-rules.js'
 import { registeredEntry } from '../engine/ability.js'
 import { partScopedView } from './campaign-parts.js'
-import { TIC_PLAYER_BUILDABLE_CODES } from '../deck/availability.js'
 
-const playerPool = [...PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES]
-const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
-const tfaPoolSet = new Set(tfaPool)
-const tcuPool = [...TCU_PLAYER_BUILDABLE_CODES]
-const tcuPoolSet = new Set(tcuPool)
-// P7（食梦者 M2）：06 记录能看到「原有池 + 食梦者 83 张可构筑玩家卡」；01–05 记录看不到 06 卡。
-// 与 TCU/失落的时代同一口径：新卡池不改变既有循环的升级候选与 AI 推荐结果。
-const tdePool = [...TDE_PLAYER_BUILDABLE_CODES]
-const tdePoolSet = new Set(tdePool)
-const ticPool = [...TIC_PLAYER_BUILDABLE_CODES], ticPoolSet = new Set(ticPool)
+// P10/P8 全量开放后：关间升级候选 = 全部已验收、可入牌组的玩家卡（含核心包仅升级卡）。
+// 跨循环可见性只由开局设置的「卡牌范围」（cardPoolScope）在 filterCardCodes(context) 一层统一收窄；
+// 迁移期按调查员所属循环硬编码的分池限制（04/05/06/07 各自只看本循环）已经移除——
+// 它与构筑界面、全量发布口径以及「全部=不限制卡牌来源」的设置说明都不一致。
+const upgradePoolSet = new Set(UPGRADE_PLAYER_CARD_CODES)
 const poolFor = (record, context = null) => filterCardCodes(
-  record?.draftMode ? DRAFT_PLAYER_CARD_CODES : [...(record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool]
-    : record && /^05\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tcuPool]
-      : record && /^06\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tdePool]
-        : playerPool), ...(record && (/^07\d{3}$/.test(String(record.code || '')) || record.deck?.some(code => ticPoolSet.has(code))) ? ticPool : [])], context)
-const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code) || tcuPoolSet.has(code) || tdePoolSet.has(code) || ticPoolSet.has(code)
+  record?.draftMode ? DRAFT_PLAYER_CARD_CODES : UPGRADE_PLAYER_CARD_CODES, context)
+const ordinary = code => upgradePoolSet.has(code)
 const ordinaryFor = record => code => record.draftMode ? DRAFT_PLAYER_CARD_CODES.includes(code) : ordinary(code)
 // 第 123 轮（第 8 批）：升级前置记录、开局经验、永久资产身份、同名去重全部由条目声明：
 // `researchRequirement` / `startingXp` / `shrewdAnalysis` / `arcaneResearch` / `uniqueInDeck`。
@@ -59,7 +50,7 @@ const shrewdAnalysisEligible = (record, removedCode, context = null) => {
   if (!removedDef || !UNRESOLVED_SUBTITLE.test(String(removedDef.subnameZh || removedDef.subname || ''))) return []
   const inv = INVESTIGATORS[record.code]
   if (!deckCardWithFlag(record, 'shrewdAnalysis')) return []
-  return filterCardCodes([...playerPool, ...tfaPool], context).filter(code => {
+  return filterCardCodes(UPGRADE_PLAYER_CARD_CODES, context).filter(code => {
     const def = ALL_CARDS[code]
     if (!def || def.name !== removedDef.name || (def.xp || 0) === 0) return false
     if (!isCardAvailable(code) || !isPlayable(def) || !matchesDeckOptions(inv, def)) return false
@@ -280,6 +271,8 @@ export function replacementAnalysis(record, addedCode, campaignRecords = null, c
   const result = { allowed: false, removals: [], blocked: [] }
   const added = ALL_CARDS[addedCode]
   const inv = INVESTIGATORS[record.code]
+  // 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单不得进入牌组。
+  if (context?.invalidCards?.includes(addedCode)) return result
   if (!added || record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
     || !isPlayable(added) || !matchesDeckOptions(inv, added, [...record.deck, addedCode]) || added.signatureFor || added.subtype) return result
   const requiredResearch = researchRequirementFor(addedCode)

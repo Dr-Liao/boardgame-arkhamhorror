@@ -282,6 +282,19 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
       deck = shuffle(record.deck, () => randomValue(state))
     }
   }
+  // 旧存档修复：v0.4.0 及更早的《天机之城》换身还原只照抄了「先把四属性覆盖成伊斯人身体
+  // (2/2/2/2)、之后才拍」的身份快照，于是卡号/名字是本人、四属性却留在 2。检查点续执行的
+  // continuation.base 里同样可能是这份污染状态。开局重建时按战役记录里的调查员卡把卡面
+  // 身份对齐（生命/理智在下面按创伤重算；仍在换身中的卡不处理，由 campaignInvestigatorForms 套用）。
+  if (!story && record && !inv.form && inv.code === record.code && def) {
+    inv.name = def.nameZh || def.name
+    inv.nameEn = def.name
+    inv.klass = def.klass
+    inv.willpower = def.willpower
+    inv.intellect = def.intellect
+    inv.combat = def.combat
+    inv.agility = def.agility
+  }
   const trauma = story ? { physical: 0, mental: 0 } : state.campaign.trauma[inv.seat]
   if (record) inv.campaignId = record.id
   inv.baseHealth = def.health
@@ -513,6 +526,11 @@ function createGameState(settings, players) {
   const state = {
     schemaVersion: STATE_SCHEMA_VERSION,
     rulesVersion: RULES_VERSION,
+    // 2026-11-13：回合收尾流程模型。2 = 行动点用尽后不再自动结束回合、不弹收尾玩家窗口，
+    // 快速卡/免费能力是 legalMoves 的直接行动，玩家必须主动 endTurn（实现读点见 dispatch.js 尾部）。
+    // 1 = 旧流程（行动点用尽自动推进 + 收尾窗口）。旧存档由 save-migration.js 的
+    // upgradeTurnFlowModel 升到 2；该字段随 continuation 续算保留（resolution.js 的 STATIC_FIELDS）。
+    turnFlowModel: 2,
     revision: 0,
     seed,
     // 建局参数快照：重放（src/engine/replay.js）需要它才能重建同一局。
@@ -793,6 +811,9 @@ function startScenario(state, index, events) {
   if (deferOpeningHands) {
     scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
     for (const inv of state.investigators) completeStartingHand(state,inv,events)
+    // 起始手牌之后、进入调查阶段之前的剧本钩子。天机之城用它把调查员卡换成伊斯人身体
+    // （04237：换身发生在起始手牌之后，否则 04244 会让塞菲娜/戴安娜这类「起始手牌」能力失效）。
+    scenarioBehavior(state).afterOpeningHands?.(state, events, scenarioRuntime(state, events))
   }
 
   state.currentSeat = firstAliveSeat(state)
@@ -833,7 +854,11 @@ function scenarioStartLocation(state, sc) {
 }
 
 function setupScenarioLocations(state, events) {
-  const placed = scenarioBehavior(state).setupLocations?.(state, events, { randomValue, shuffle, info })
+  // `api` 是完整的场景运行时（choose/putInHand/info…）：少数章节的设置钩子必须在布置之前
+  // 询问并写记录（例如天机之城的「合作/反抗」决定 1 号会谈间卡面与观测者去向），
+  // setupLocations 会在开头转调 preScenarioSetup（见该章 behavior）。
+  const placed = scenarioBehavior(state).setupLocations?.(state, events,
+    { randomValue, shuffle, info, api: scenarioRuntime(state, events) })
     || [state.scenario.startLocation]
   for (const id of placed) placeLocation(state, id, events)
 }

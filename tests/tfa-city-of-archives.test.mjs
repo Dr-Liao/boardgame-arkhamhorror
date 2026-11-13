@@ -9,9 +9,13 @@ import {
   behavior, completedTasks, handLimit, implementedEncounterCodes,
 } from '../content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
-import { applyMove, createGameState, placeLocation, startScenario } from '../src/engine/engine.js'
+import {
+  applyMove, createGameState, finishScenario, investigatorEntryError, legalMoves, placeLocation, relocateEnemy, relocateInvestigator, spawnEnemy, startScenario,
+} from '../src/engine/engine.js'
 import { viewState } from '../src/integration/observation.js'
 import { contentRegistry } from '../content/registered.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { placeDreamGate } from '../src/engine/dream-gate.js'
 import {
   applyInvestigatorForm, hasInvestigatorForm, restoreInvestigatorForm,
 } from '../src/engine/investigator-form.js'
@@ -218,6 +222,9 @@ function prepared(records = { theInvestigatorsCooperatedWithTheYithians: true },
   behavior.preScenarioSetup(state, [], makeApi(state))
   behavior.setupLocations(state, [], setupHelper(9))
   placeFromSetup(state)
+  // 真实引擎的 setupBeforeOpeningHands 分支：preScenarioSetup（放到一边）→ 起始手牌 →
+  // afterOpeningHands（换身）。夹具按同一顺序补上第二步，后面的用例才看得到 04244。
+  behavior.afterOpeningHands(state, [], makeApi(state))
   return state
 }
 
@@ -316,6 +323,8 @@ test('开场：合作时观测者在 1 号会谈间，反抗时进胜利区，�
   })
   assert.deepEqual(spawned, [{ code: '01177', location: 'interviewRoom1', seat: null }])
   assert.equal(cooperate.enemies[0].aloof, true, '场景 1a：伊斯观测者获得冷漠')
+  // 冷漠是场景授予的，必须记在 grantedAloof 上，否则引擎在敌人移动后会按印刷关键词重算掉。
+  assert.equal(cooperate.enemies[0].grantedAloof, true, '剧本授予的冷漠记在 grantedAloof')
 
   const resist = stateFor(2, { theInvestigatorsResistedCaptivity: true })
   behavior.preScenarioSetup(resist, [], makeApi(resist))
@@ -330,20 +339,32 @@ test('开场：合作时观测者在 1 号会谈间，反抗时进胜利区，�
   assert.equal(deck.filter(code => code === '01177').length, 1)
 })
 
-test('剧情前：写入合作记录，并清掉独特道具与亚历山卓·维拉', () => {
+test('起始手牌前：写入合作记录，并把独特道具与亚历山卓放到一边（不改战役牌组）', () => {
   const state = stateFor(2)
   state.investigators[0].deck = ['01041', '01020', '04051', '01001']
+  // 起始手牌在「放到一边」之后才抽：设置阶段不检查手牌（旧实现会连手牌一起清掉）。
   state.investigators[0].hand = ['01041']
   state.campaign.investigators[0].deck = ['01041', '04051', '01020']
   const api = makeApi(state, { choose: () => 'cooperate' })
   behavior.preScenarioSetup(state, [], api)
   assert.equal(state.campaign.records.theInvestigatorsCooperatedWithTheYithians, true)
   assert.deepEqual(state.investigators[0].deck, ['01020', '01001'])
-  assert.deepEqual(state.investigators[0].hand, [])
-  assert.deepEqual(state.campaign.investigators[0].deck, ['01020'])
+  assert.deepEqual(state.investigators[0].hand, ['01041'], '设置阶段不动手牌')
+  // 04237：这些卡只在本关「放在一边，位于场外」，下一关按战役牌组记录重建时回收。
+  assert.deepEqual(state.campaign.investigators[0].deck, ['01041', '04051', '01020'],
+    '战役牌组记录保持完整（旧实现会从记录里永久删掉）')
   assert.ok(state.scenarioFlags.removedCards.includes('01041'))
   assert.ok(state.scenarioFlags.setAsideCards.includes('04051'))
+  assert.deepEqual(state.setAside.map(card => card.code).sort(), ['01041', '04051'])
+  // 夹具的调查员卡号本来就是 04244；换身是否套上以 inv.form 快照为准。
+  assert.equal(state.investigators[1].form, undefined, '换身在起始手牌之后（afterOpeningHands）')
+
+  behavior.afterOpeningHands(state, [], makeApi(state))
+  assert.equal(state.investigators[1].form, 'yithian')
   assert.equal(state.investigators[1].yithianBody, true)
+  // 幂等：setupBeforeOpeningHands 引擎路径里 setupLocations 和 defer 分支都可能触发钩子。
+  behavior.preScenarioSetup(state, [], api)
+  assert.deepEqual(state.investigators[0].deck, ['01020', '01001'])
 
   const resisting = stateFor(1)
   behavior.preScenarioSetup(resisting, [], makeApi(resisting, { choose: () => 'resist' }))
@@ -360,13 +381,14 @@ test('密谋 1a：调查员不能放置道具支援，推进后解除', () => {
 
 test('场景 1b：放置 5 处地点并随机安置看管人，观测者失去冷漠', () => {
   const state = prepared()
-  state.enemies.push({ id: 'e1', code: '01177', originalCode: '01177', location: 'hallsEastern', aloof: true })
+  state.enemies.push({ id: 'e1', code: '01177', originalCode: '01177', location: 'hallsEastern', aloof: true, grantedAloof: true })
   const api = makeApi(state, { seed: 21 })
   behavior.actReveal(state, state.acts[0], api)
   for (const id of SET_ASIDE_LOCATIONS) assert.ok(state.locations.some(location => location.id === id), id)
   assert.deepEqual(state.storyAssets.map(asset => asset.code), [CARD_CODES.custodian])
   assert.ok(SET_ASIDE_LOCATIONS.includes(state.storyAssets[0].location))
   assert.equal(state.enemies[0].aloof, false)
+  assert.equal(state.enemies[0].grantedAloof, false, '1b 撤掉 1a 授予的冷漠')
 })
 
 test('场景 2 的目标：六项条件满足三项即推进；2b 本卡进胜利区', () => {
@@ -401,6 +423,7 @@ test('场景 3 的目标：幸存者人手 10 张手牌推进，3b 直接进入�
   assert.equal(api.log.some(entry => entry[0] === 'finish' && entry[1] === 'r1'), true)
   assert.equal(observer.hunter, true)
   assert.equal(observer.aloof, false)
+  assert.equal(observer.grantedAloof, false, '3b 前已由 1b 撤掉剧本冷漠')
 })
 
 test('大图书馆：共同花费线索后检定智识(3)记住归位程式', () => {
@@ -902,8 +925,8 @@ test('04237 混乱标记：困难面石板按差值弃牌、异教徒成功也�
 test('04257/04258：记录达成后失去冷漠并获得猎手（动态关键词）', () => {
   const state = prepared({}, 1)
   const api = makeApi(state)
-  const keeper = { id: 'k', code: '04257', originalCode: '04257', name: '监守人', location: 'greatLibrary', aloof: true, hunter: false }
-  const scientist = { id: 's', code: '04258', originalCode: '04258', name: '科学家', location: 'laboratory', aloof: true, hunter: false }
+  const keeper = { id: 'k', code: '04257', originalCode: '04257', name: '监守人', location: 'greatLibrary', aloof: true, printedAloof: true, hunter: false }
+  const scientist = { id: 's', code: '04258', originalCode: '04258', name: '科学家', location: 'laboratory', aloof: true, printedAloof: true, hunter: false }
   state.enemies.push(keeper, scientist)
   behavior.enemySpawned(state, keeper, api)
   assert.equal(keeper.hunter, false, '记录未达成时仍是冷漠') 
@@ -913,6 +936,10 @@ test('04257/04258：记录达成后失去冷漠并获得猎手（动态关键词
   assert.equal(keeper.hunter, true)
   assert.equal(scientist.aloof, false)
   assert.equal(scientist.hunter, true)
+  // 引擎在敌人移动后会按 printedAloof 重算 aloof；剧本永久取消冷漠时必须一起改掉基值，
+  // 否则猎手移动后冷漠会复位，敌人不会自动交战。
+  assert.equal(keeper.printedAloof, false, '监守人的印刷冷漠基值被取消')
+  assert.equal(scientist.printedAloof, false, '科学家的印刷冷漠基值被取消')
 })
 
 test('04244 图标翻倍只作用于持有者自己执行的检定', () => {
@@ -974,6 +1001,22 @@ function settleEngine(state, limit = 500) {
   }
 }
 
+// 大厅的真实开局路径在规则事务里执行（设置阶段的 choose 才合法）。直接调 startScenario 的
+// 用例都预置了合作记录；需要走「合作/反抗」选择的用例用这个外壳，按事务模型重放到完成。
+function startCityOfArchivesInTransaction(state) {
+  const index = TFA_SCENARIO_IDS.indexOf('theCityOfArchives')
+  const execute = current => startScenario(current, index, [])
+  resolveTransaction(state, 0, { action: 'tfaCityStart' }, execute)
+  for (let guard = 0; state.pendingChoice && guard < 100; guard++) {
+    const pending = state.pendingChoice
+    const optionId = ['done', 'skip', 'self', 'cooperate', '0']
+      .find(id => pending.options.some(option => option.id === id)) ?? pending.options[0].id
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, execute)
+  }
+  settleEngine(state)
+  return state
+}
+
 // 从大厅流程直接落到「天机之城」：真实建局（第一关自动开局）→ 补上剧情记录 → 起本章。
 function engineAtCityOfArchives(seed = 'tcoa-form', investigator = '06004') {
   const state = createGameState({
@@ -1004,9 +1047,17 @@ test('真实引擎：天机之城开局把调查员卡替换成伊斯人身体�
   assert.equal(inv.formOriginal.code, '06004')
   assert.equal(inv.formOriginal.name, '卢克·罗宾逊')
   assert.equal(inv.formOriginal.klass, 'mystic')
-  // 设置阶段「检查牌库和游戏区域」：独特[[道具]]支援（卢克的门之匣 06013）移出游戏。
-  assert.equal((inv.assets || []).some(asset => asset.code === '06013'), false, '场上的独特道具支援被移出游戏')
-  assert.equal([...(inv.deck || []), ...(inv.hand || [])].includes('06013'), false, '牌库/手牌里的门之匣也被移出')
+  // 设置阶段「检查牌库和游戏区域」：独特[[道具]]支援（卢克的门之匣 06013）放到一边，
+  // 位于场外——不是移出游戏，也不动战役牌组记录（下一关按记录重建牌组时回收）。
+  assert.equal((inv.assets || []).some(asset => asset.code === '06013'), false, '场上的独特道具支援不再留在场上')
+  assert.equal([...(inv.deck || []), ...(inv.hand || [])].includes('06013'), false, '牌库/手牌里的门之匣也放到一边')
+  assert.ok(state.setAside.some(card => card.code === '06013'), '门之匣进入「放到一边」区')
+  assert.ok(state.campaign.investigators[0].deck.includes('06013'), '战役牌组记录保留门之匣（旧实现会永久删除）')
+  assert.ok(state.campaign.investigators[0].deck.includes('06014'), '弱点不设置阶段被拿走')
+  assert.ok(state.log.some(entry => {
+    const text = typeof entry === 'string' ? entry : JSON.stringify(entry)
+    return text.includes('门之匣') && text.includes('放在一边')
+  }), '设置阶段要有「放到一边」的日志')
   // 观察投影：牌桌读到的就是身体卡身份（头像/名字/生命值都来自这里）。
   const view = viewState(state, 0)
   const viewInv = view.investigators[0]
@@ -1015,8 +1066,36 @@ test('真实引擎：天机之城开局把调查员卡替换成伊斯人身体�
   assert.equal(viewInv.klass, 'neutral')
   assert.equal(viewInv.maxHealth, 7)
   assert.equal(viewInv.maxSanity, 7)
+  // 「放到一边」面板要能看到这些玩家卡（否则玩家会以为卡被吞了）。
+  assert.ok((view.setAsideCards || []).some(card => card.code === '06013'), '放到一边面板显示门之匣')
   // 原调查员卡文本不可用：04244 没有调查员条目，原调查员的旧印/能力读点全部落空。
   assert.equal(state.investigators[0].yithianBody, true)
+})
+
+test('真实引擎：「合作/反抗」在布置之前决定，1 号会谈间与观测者按选择入场', () => {
+  // 回归（2026-11-11）：换身/放到一边改成「起始手牌前」之后，preScenarioSetup 曾被推迟到
+  // setupLocations 之后，导致会谈间卡面与观测者按「没有记录」的反抗分支布置。
+  const state = createGameState({
+    campaignId: 'theForgottenAge', playerInvestigator: '06004', seed: 'tcoa-fresh-choice',
+    campaignHub: false, seatInvestigators: ['06004', '04002'],
+  }, [{ seat: 0, role: 'human' }, { seat: 1, role: 'human' }])
+  settleEngine(state)
+  assert.ok(!state.campaign.records.theInvestigatorsCooperatedWithTheYithians)
+  startCityOfArchivesInTransaction(state)
+  assert.equal(state.campaign.records.theInvestigatorsCooperatedWithTheYithians, true, '选择被记录')
+  const room1 = state.locations.find(location => location.id === 'interviewRoom1')
+  assert.equal(room1.originalCode, ROOM_CODES.arrival, '合作的 1 号会谈间是抵达室')
+  assert.ok(state.enemies.some(enemy => enemy.code === '01177'), '合作的观测者已生成在会谈间')
+  assert.equal(state.investigators[0].code, BODY_CODE, '换身仍按起始手牌之后的顺序完成')
+})
+
+test('真实引擎：换身发生在起始手牌之后（塞菲娜的 13 张起始手牌照常抽满）', () => {
+  // 04237 的换身对应规则书 Setup 的第 10 步（起始手牌之后）。若先换身再抽手牌，
+  // 04244 没有调查员条目，塞菲娜的 openingHandSize=13 会退回默认 5 张。
+  const state = engineAtCityOfArchives('tcoa-selina-timing', '03003')
+  const inv = state.investigators[0]
+  assert.equal(inv.code, BODY_CODE, '仍然换成伊斯人身体')
+  assert.equal(inv.hand.length, 13, '13 张起始手牌在换身之前抽完')
 })
 
 test('真实引擎：下一关把调查员卡还原成原调查员；战役记录的持续换身会重新套用', () => {
@@ -1034,6 +1113,10 @@ test('真实引擎：下一关把调查员卡还原成原调查员；战役记�
   assert.equal(human.maxSanity, 9)
   assert.equal(hasInvestigatorForm(human), false)
   assert.equal(human.formOriginal, undefined)
+  // 「放在一边，位于场外」只在本关生效：下一关按战役牌组记录重建牌组，门之匣回到场上
+  // （06004「你以门之匣在场上开始游戏」）。旧实现把 06013 从记录里删掉，这里会永久缺卡。
+  assert.ok(human.assets.some(asset => asset.code === '06013'), '下一关门之匣重新入场')
+  assert.ok(state.campaign.investigators[0].deck.includes('06013'), '战役牌组记录始终保留门之匣')
 
   // 幕间四：困在伊斯人身体里的调查员在余下战役继续使用 04244。
   state.campaign.ruleFlags ||= {}
@@ -1090,5 +1173,197 @@ test('旧存档读档迁移：migrateState 触发剧本书写修复，把换身�
   // 已经修复的存档再迁移一次不应再产生变更（幂等，不会重复套用）。
   const again = migrateState(JSON.parse(JSON.stringify(repaired)))
   assert.deepEqual(again.changes, [])
+})
+
+test('旧存档修复：旧实现从战役牌组误删的独特道具/亚历山卓补回牌组，并投影到「放到一边」', () => {
+  // 实战复现（2026-11-11）：卢克在天机之城开局后再也拿不到门之匣——旧实现把
+  // 「独特的道具支援」从当前牌库/场上拿走后，连 campaign.investigators[].deck 也一起过滤了。
+  // 修复后的存档不能再被改记录；已经被改坏的旧存档按场景标记 + 牌组快照找回持有者补回。
+  const state = engineAtCityOfArchives('tcoa-aside-repair')
+  const flags = state.scenarioFlags
+  const codes = [...new Set([...(flags.removedCards || []), ...(flags.setAsideCards || [])])]
+  assert.ok(codes.length > 0, '设置阶段应记录了放到一边的卡')
+  // 模拟旧存档：上一关的牌组快照 + 记录里被永久删掉这些卡 + 本关放到一边区为空。
+  state.campaign.scenarioResults = [{
+    scenarioId: 'heartOfTheEldersPart2',
+    investigators: Object.values(state.campaign.investigators)
+      .map(record => ({ seat: record.seat, deck: [...record.deck] })),
+  }]
+  for (const record of Object.values(state.campaign.investigators)) {
+    record.deck = record.deck.filter(code => !codes.includes(code))
+  }
+  state.setAside = []
+  assert.equal(behavior.needsSaveRepair(state), true, '旧存档需要修复')
+  const { state: repaired, changes } = migrateState(JSON.parse(JSON.stringify(state)))
+  assert.ok(changes.some(line => line.includes('放到一边') || line.includes('战役牌组')), changes.join(' / '))
+  const lukeRecord = repaired.campaign.investigators[0]
+  assert.ok(lukeRecord.deck.includes('06013'), '门之匣回到卢克的战役牌组')
+  assert.ok(lukeRecord.deck.length > state.campaign.investigators[0].deck.length, '补回的卡确实变多了')
+  assert.ok((repaired.setAside || []).some(card => card.code === '06013'), '门之匣投影到放到一边')
+  assert.ok((viewState(repaired, 0).setAsideCards || []).some(card => card.code === '06013'),
+    '放到一边面板显示补回的门之匣')
+  // 幂等：再次迁移不应再产生修复。
+  const again = migrateState(JSON.parse(JSON.stringify(repaired)))
+  assert.deepEqual(again.changes, [])
+})
+
+test('梦境之门：换身后按座位认主，其他伊斯人不能进入（行动与效果移动同一读点）', () => {
+  // 06015a/b：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门」。
+  // 天机之城换身后全队卡号都是 04244：只比卡号会让其他伊斯人也能进门，因此门记所有者座位。
+  // 行动移动走 moves.js 的 dreamGateEntryError；脚本/卡牌效果的移动走 movement.js →
+  // investigatorEntryError，两处都要拦住（后者此前没有读点）。
+  const state = engineAtCityOfArchives('tcoa-gate-entry')
+  const luke = state.investigators[0]
+  const other = state.investigators[1]
+  assert.equal(luke.code, other.code, '前提：换身后两张调查员卡同号')
+  placeDreamGate(state, '06015a', { connectToRevealed: true, ownerCode: luke.code, ownerSeat: luke.seat })
+  const gate = state.locations.find(location => location.dreamGate)
+  assert.ok(gate)
+  assert.equal(investigatorEntryError(state, gate.id, luke.seat), null, '卢克可以进入自己的梦境之门')
+  assert.match(investigatorEntryError(state, gate.id, other.seat), /梦境之门/, '同号的其他伊斯人不能进入')
+  const before = other.location
+  relocateInvestigator(state, other.seat, gate.id, [])
+  assert.equal(other.location, before, '脚本/卡牌效果的移动同样被拦住')
+})
+
+test('真实引擎：换身状态下门之匣放置的梦境之门按座位认主', () => {
+  // 06013 在条目里把 ownerSeat 传给引擎；否则换身后门只记卡号 04244，全队都能进。
+  const state = engineAtCityOfArchives('tcoa-gate-owner')
+  state.investigators[0].assets.push({ id: 'gate-box', code: '06013', uses: 3, usesType: 'charges', exhausted: false })
+  state.pendingChoice = null
+  state.investigators[0].location = 'interviewRoom1'
+  const lukeSeat = state.investigators[0].seat
+  const otherSeat = state.investigators[1].seat
+  const ability = legalMoves(state, lukeSeat)
+    .find(move => move.action === 'ability' && move.assetId === 'gate-box')
+  assert.ok(ability, '门之匣的快速能力可用')
+  applyMove(state, lukeSeat, { action: 'ability', assetId: 'gate-box', abilityIndex: ability.abilityIndex })
+  settleEngine(state)
+  // applyMove 走规则事务，状态对象被整体替换：断言要重新取当前实例。
+  const luke = state.investigators[lukeSeat]
+  const gate = state.locations.find(location => location.dreamGate)
+  assert.ok(gate, '梦境之门入场')
+  assert.equal(gate.dreamGateOwnerSeat, lukeSeat, '门的所有者按座位记录')
+  assert.equal(luke.location, gate.id, '卢克移动到门上')
+  assert.match(investigatorEntryError(state, gate.id, otherSeat), /梦境之门/, '同号的其他伊斯人仍不能进入')
+})
+
+test('真实引擎：04258 失去冷漠后，猎手移动进调查员所在地点会自动交战', () => {
+  const state = engineAtCityOfArchives('tcoa-scientist-aloof')
+  if (!state.locations.some(location => location.id === 'laboratory')) placeLocation(state, 'laboratory', [])
+  settleEngine(state)
+  const scientist = spawnEnemy(state, '04258', 'laboratory')
+  settleEngine(state)
+  assert.ok(scientist, '科学家应能生成')
+  assert.equal(scientist.aloof, true, '任务未完成时按印刷冷漠入场')
+  assert.equal(scientist.printedAloof, true)
+  // 另一位调查员离开起点：猎手移动后自动交战会遇到「猎物并列选择」，本测试只验证
+  // 「失去冷漠后会不会交战」，因此让目标唯一（并列选择由别的用例覆盖）。
+  state.investigators[1].location = 'hallsWestern'
+  state.scenarioFlags = state.scenarioFlags || {}
+  state.scenarioFlags.remembered = { activatedTheDevice: true }
+  behavior.checkObjectives(state, { info() {} })
+  assert.equal(scientist.aloof, false, '达成「启动了设备」后失去冷漠')
+  assert.equal(scientist.hunter, true, '并获得猎手')
+
+  // 引擎在敌人每次移动后都会重算 aloof（turn-flow#processPlayerEnemyEntry）。
+  // 修复前这一步会把 aloof 复位成 true，敌人移动进调查员所在地点也不会交战。
+  const inv = state.investigators[0]
+  for (const step of ['hallsNorthern', 'hallsEastern', inv.location]) {
+    relocateEnemy(state, scientist, step, [], { cause: 'hunter', routeSelected: true })
+  }
+  assert.equal(scientist.location, inv.location)
+  assert.equal(scientist.aloof, false, '移动后不会重新获得冷漠')
+  assert.equal(scientist.engagedSeat, inv.seat, '移动进调查员所在地点后自动交战')
+  assert.ok(inv.engaged.includes(scientist.id), '调查员的交战列表里有科学家')
+})
+
+// 模拟 finishScenario 写下的本关结算记录（visitId 口径与引擎一致）。
+function markScenarioSettled(state) {
+  const flow = state.campaign.flow
+  const flowNodeId = flow?.nodeId || state.scenario.id
+  const visit = flow?.visits?.[flowNodeId] || 1
+  state.campaign.scenarioResults ||= []
+  state.campaign.scenarioResults.push({
+    scenarioId: state.scenario.id, visitId: `${flowNodeId}:${visit}`, resolution: 'r1', investigators: [],
+  })
+}
+
+test('旧存档修复：天机之城已结算的幕间/出发准备存档不会被重新换身', () => {
+  // 2026-11-11 实战复现：幽嘶深渊的出发准备页显示两名调查员都变成了「伊斯人身体」。
+  // finishScenario 已经先还原身体、再写本关结算记录，但关末/幕间窗口里 state.scenario 仍是
+  // 天机之城、scenarioFlags.yithianBody 也还没被下一关开局清空。旧修复只看这个标记，读档时
+  // 把「已经回到自己身体」的调查员重新换成 04244。
+  const state = engineAtCityOfArchives('tcoa-settled-repair')
+  for (const inv of state.investigators) restoreInvestigatorForm(inv)
+  markScenarioSettled(state)
+  assert.equal(state.scenarioFlags.yithianBody, true, '前提：关末仍残留换身标记')
+  assert.equal(behavior.needsSaveRepair(state), true, '残留标记需要清理')
+  const { state: repaired, changes } = migrateState(JSON.parse(JSON.stringify(state)))
+  assert.equal(repaired.investigators[0].code, '06004', '不能重新换成身体卡')
+  assert.equal(repaired.investigators[1].code, '04002')
+  assert.equal(hasInvestigatorForm(repaired.investigators[0]), false)
+  assert.equal(repaired.investigators[0].name, '卢克·罗宾逊')
+  assert.equal(repaired.scenarioFlags.yithianBody, undefined, '关末残留标记被清掉')
+  assert.ok(changes.some(line => line.includes('已结算')), `迁移说明应指出已结算：${changes.join(' / ')}`)
+  // 幂等：清理后再迁移无变更。
+  const again = migrateState(JSON.parse(JSON.stringify(repaired)))
+  assert.deepEqual(again.changes, [])
+})
+
+test('旧存档修复：被误换成伊斯人身体的关末存档，读档时还原成原调查员', () => {
+  // 已被旧修复写坏的关末存档：本关已结算，但调查员还带着 form/04244（出发准备页显示身体卡）。
+  const state = engineAtCityOfArchives('tcoa-settled-corrupt')
+  assert.equal(hasInvestigatorForm(state.investigators[0]), true, '前提：进行中的身体形态')
+  // 实测存档里旧实现先把 inv.yithianBody 置真再拍快照，还原时这个旧标记会被快照带回身上。
+  state.investigators[0].formOriginal.yithianBody = true
+  // 更关键：v0.4.0 的实现先把四属性覆盖成身体卡数值（全 2）才拍快照，
+  // 快照里的「原身份」四属性因此也是 2，只按快照还原会留下 2/2/2/2。
+  for (const inv of state.investigators) {
+    Object.assign(inv.formOriginal, { willpower: 2, intellect: 2, combat: 2, agility: 2 })
+  }
+  markScenarioSettled(state)
+  const { state: repaired, changes } = migrateState(JSON.parse(JSON.stringify(state)))
+  assert.equal(repaired.investigators[0].code, '06004', '还原成卢克本人')
+  assert.equal(repaired.investigators[0].name, '卢克·罗宾逊')
+  assert.equal(repaired.investigators[1].code, '04002')
+  assert.equal(hasInvestigatorForm(repaired.investigators[0]), false)
+  assert.equal(repaired.investigators[0].formOriginal, undefined, '原身份快照被消费掉')
+  assert.equal(repaired.investigators[0].yithianBody, undefined, '旧换身标记也一并清掉')
+  assert.equal(repaired.scenarioFlags.yithianBody, undefined)
+  // 四属性必须按战役记录里的原调查员卡重建，而不是被污染的快照。
+  assert.deepEqual([repaired.investigators[0].willpower, repaired.investigators[0].intellect,
+    repaired.investigators[0].combat, repaired.investigators[0].agility], [4, 3, 2, 3], '卢克 4/3/2/3')
+  assert.deepEqual([repaired.investigators[1].willpower, repaired.investigators[1].intellect,
+    repaired.investigators[1].combat, repaired.investigators[1].agility], [3, 4, 1, 4], '厄休拉 3/4/1/4')
+  assert.ok(changes.some(line => line.includes('已结算')), changes.join(' / '))
+  const again = migrateState(JSON.parse(JSON.stringify(repaired)))
+  assert.deepEqual(again.changes, [])
+})
+
+test('关卡进行中（未结算）的坏存档仍按原逻辑补装换身', () => {
+  // 回归保护：上面的「已结算还原」不能拦住在关卡中途读档的旧存档补装换身。
+  const state = engineAtCityOfArchives('tcoa-mid-repair')
+  const inv = state.investigators[0]
+  restoreInvestigatorForm(inv)
+  inv.yithianBody = true
+  state.scenarioFlags.yithianBody = true
+  assert.equal(behavior.needsSaveRepair(state), true, '未结算：仍要补装换身')
+  const { state: repaired } = migrateState(JSON.parse(JSON.stringify(state)))
+  assert.equal(repaired.investigators[0].code, BODY_CODE, '关卡中读档仍补成身体卡')
+  assert.equal(hasInvestigatorForm(repaired.investigators[0]), true)
+})
+
+test('真实引擎：天机之城结局结算还原身体并清掉换身场景标记', () => {
+  const state = engineAtCityOfArchives('tcoa-finish-clear')
+  assert.equal(hasInvestigatorForm(state.investigators[0]), true)
+  assert.equal(state.scenarioFlags.yithianBody, true)
+  let ended = null
+  try { finishScenario(state, 'r1', []) } catch (error) { ended = error }
+  assert.equal(ended?.constructor?.name, 'ScenarioEnded', `结算应正常结束本关：${ended?.message}`)
+  assert.equal(state.investigators[0].code, '06004', '结算时身体被还原')
+  assert.equal(hasInvestigatorForm(state.investigators[0]), false)
+  assert.equal(state.scenarioFlags.yithianBody, undefined, '关末清掉换身标记')
+  assert.equal(behavior.needsSaveRepair(state), false, '正常的关末状态不需要修复')
 })
 

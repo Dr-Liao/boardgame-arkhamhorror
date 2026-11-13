@@ -15,6 +15,7 @@ const CIRCLE = `${ROOT}/img/campaigns/theCircleUndone`
 const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
 const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
 const EARTH_EDGE = `${ROOT}/img/campaigns/edgeOfTheEarth`
+const SCARLET_KEYS = `${ROOT}/img/campaigns/theScarletKeys`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -38,6 +39,25 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  theScarletKeys: Object.freeze({
+    id: 'theScarletKeys',
+    palette: Object.freeze({
+      background: '#1a1117', panel: '#291923', header: '#100a0e',
+      accent: '#e4a0a5', accentStrong: '#ffced0', muted: '#c0a9ae', edge: '#cc737c66',
+    }),
+    assets: Object.freeze({
+      hubHero: `${SCARLET_KEYS}/hub/scarlet-dossier.webp`,
+      tableOverlay: `${SCARLET_KEYS}/table/investigation-desk.webp`,
+      storyDefault: `${SCARLET_KEYS}/hub/scarlet-dossier.webp`,
+    }),
+    musicPlaylist: 'theScarletKeys',
+    scenarios: Object.freeze(Object.fromEntries([
+      'riddlesAndRain', 'deadHeat', 'sanguineShadows', 'dealingsInTheDark', 'dancingMad',
+      'onThinIce', 'dogsOfWar', 'shadesOfSuffering', 'withoutATrace', 'congressOfTheKeys',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${SCARLET_KEYS}/scenarios/${id}/scene.webp`,
+    }) })]))),
+  }),
   edgeOfTheEarth: Object.freeze({
     id: 'edgeOfTheEarth',
     palette: Object.freeze({

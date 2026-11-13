@@ -78,7 +78,8 @@ test('揭露：翻面并取出；真身/诱饵结果可信；重复揭露与未�
   const state = plain()
   const mini = placeMiniCard(state, { kind: 'TheRedGlovedMan', decoy: false, locationId: 'locA' })
   const result = exposeMiniCard(state, mini.id)
-  assert.deepEqual(result, { id: mini.id, kind: 'TheRedGlovedMan', decoy: false })
+  // 2026-11-13 P1-1/P1-4：返回值补充 locationId/position/code（窗口上下文与跨章身份契约）。
+  assert.deepEqual(result, { id: mini.id, kind: 'TheRedGlovedMan', code: null, decoy: false, locationId: 'locA', position: null })
   assert.equal(concealedById(state, mini.id), null)
   assert.equal(concealedMiniCards(state).length, 0)
   assert.throws(() => exposeMiniCard(state, mini.id), /未知隐匿迷你卡/)

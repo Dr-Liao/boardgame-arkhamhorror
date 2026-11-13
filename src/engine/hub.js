@@ -11,11 +11,158 @@ import { contentRegistry } from '../../content/registered.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 // P5 批次 2：四模式开局（纯策略在 src/campaign/campaign-modes.js）。
 import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from '../campaign/campaign-modes.js'
+// P8：世界地图启程（《绯红密钥》）——只读地图原语；图/目的地/阈值全部由 manifest 传入。
+import { embarkOptions, forcedDestination, mapTime, statusReportState } from './tsk-map.js'
+// P8：定制升级卡（Customizable）的关间勾选候选（勾选/经验结算仍走 tsk-customizable 原语）。
+import { customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
+// 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单必须参与升级池过滤；
+// 名单来自战役扩展 `campaign.tsk.invalidCards` + `erased`（tsk-hollow 的唯一读点）。
+import { invalidCampaignCards } from './tsk-hollow.js'
+
+/** 升级/换牌共用的卡池上下文：在牌池范围之上叠加本战役禁用卡名单（无战役扩展时零变化）。 */
+function upgradePoolContext (state) {
+  const context = cardPoolContext(state)
+  if (!context) return context
+  const invalid = invalidCampaignCards(state)
+  if (invalid.length) context.invalidCards = invalid
+  return context
+}
 
 // Phase 6（6d-29）：contentRegistry 是 `let`（registerContentBundle 会重新赋值），
 // SCENARIOS 是从它派生的表（registerCampaignScenarios 会往里写）。它们必须走 import 的
 // live binding，不能进依赖表——否则拿到的是首次调用时的快照，后注册的战役查不到。
 // SCENARIOS 由 engine 注入：registerCampaignScenarios 会往里写，setup.js 要读到同一份。
+
+// 世界地图启程窗口的显示字母（状况报告 id → 规则书里的希腊字母；id 由 tsk-map 原语定义）。
+const STATUS_REPORT_LETTERS = Object.freeze({
+  alpha: 'α', epsilon: 'ε', beta: 'β', zeta: 'ζ', gamma: 'γ', theta: 'θ', psi: 'ψ', omega: 'ω',
+})
+const MAP_WINDOW_STATES = Object.freeze(['interlude', 'scenarioSetup'])
+
+const reportLetter = report => STATUS_REPORT_LETTERS[report] || String(report || '').toUpperCase()
+
+/**
+ * 战役流程是否停在 `map` 节点（世界地图启程窗口）。
+ * 内容数据驱动：节点类型来自清单 flow；没有 flow/worldMapGraph 的战役（既有循环）恒为 null。
+ */
+function worldMapPhaseManifest (state, manifest) {
+  if (!MAP_WINDOW_STATES.includes(state.uiState)) return null
+  const nodeId = state.campaign?.flow?.nodeId
+  if (!nodeId) return null
+  const node = manifest?.flow?.nodes?.[nodeId]
+  if (!node || node.type !== 'map') return null
+  const nodes = manifest?.worldMapGraph?.nodes
+  if (!Array.isArray(nodes) || !nodes.length) return null
+  return manifest
+}
+
+/** 目的地展示名（manifest 给 story-text 名字；缺省回退地图节点 id，不写死文案）。 */
+function mapNodeName (manifest, id) {
+  return manifest.mapNodeNames?.[id] || id
+}
+
+/** 强制启程目的地：地图原语（时间 ≥ 强制阈值时返回 forcedNode）优先，清单阈值兜底。 */
+function forcedMapDestination (state, manifest) {
+  const forced = forcedDestination(state)
+  if (forced) return forced
+  const limit = Number.isSafeInteger(manifest.forcedEndgameTime) ? manifest.forcedEndgameTime : null
+  if (limit != null && mapTime(state) >= limit) return manifest.forcedEndgameNode || null
+  return null
+}
+
+/**
+ * 快捷旅票是否可用：道具是「永久」剧情卡，真实路线由幕间 26 放进战役牌组；
+ * 场景内它在场上（assets），关间窗口读战役记录牌组。这里三处都查，优先给出持票座位。
+ */
+function expeditedTicketHolder (state, manifest) {
+  const code = manifest.expeditedTicketCode
+  if (!code) return null
+  for (const record of Object.values(state.campaign?.investigators || {})) {
+    if (record?.status && record.status !== 'active') continue
+    if (Array.isArray(record?.deck) && record.deck.includes(code)) return { seat: record.seat, source: 'deck' }
+  }
+  for (const inv of state.investigators || []) {
+    if (Array.isArray(inv.hand) && inv.hand.includes(code)) return { seat: inv.seat, source: 'hand' }
+    if (Array.isArray(inv.assets) && inv.assets.some(asset => asset?.code === code)) return { seat: inv.seat, source: 'assets' }
+  }
+  if (Number(state.campaign?.records?.expeditedTickets) > 0) return { seat: state.campaign?.leadSeat ?? 0, source: 'record' }
+  return null
+}
+
+/**
+ * 地图窗口的房主合法动作：优先结算到期待处理的状况报告；否则给出全部可去的已解锁目的地
+ * （以及持票时的快捷旅票候选：1 时间、可去未解锁节点）。
+ * 「被迫启程」时只给强制目的地（时间 ≥ 清单阈值），与 `tsk-map#forcedDestination` 同口径。
+ */
+function worldMapMoves (state, manifest) {
+  const graph = manifest.worldMapGraph
+  let options
+  try {
+    options = embarkOptions(state, { graph })
+  } catch {
+    return []
+  }
+  const { from, time } = options
+  const forced = forcedMapDestination(state, manifest)
+  const pending = statusReportState(state)?.pending || []
+  if (forced) {
+    const option = options.options.find(item => item.destination === forced)
+    const cost = option?.cost ?? null
+    return [{
+      action: 'hubEmbark',
+      destination: forced,
+      cost,
+      from,
+      time,
+      label: `启程：${mapNodeName(manifest, forced)}（被迫启程 · 耗时 ${cost ?? '?'} 时间）`,
+      explanation: `时间已达 ${manifest.forcedEndgameTime ?? ''}，只能启程前往${mapNodeName(manifest, forced)}。`,
+    }]
+  }
+  const moves = []
+  if (pending.length) {
+    const report = pending[0]
+    moves.push({
+      action: 'hubAdvanceReport',
+      report,
+      nodeId: manifest.statusReportNodes?.[report] || null,
+      label: `阅读状况报告 ${reportLetter(report)}`,
+      explanation: '先结算到期的状况报告，再选择启程目的地。',
+    })
+  }
+  const blocked = pending.length
+    ? { disabled: true, explanation: `先结算状况报告 ${reportLetter(pending[0])}，再启程。` }
+    : {}
+  const ticket = expeditedTicketHolder(state, manifest)
+  for (const option of options.options) {
+    if (option.destination === from || option.forcedBlocked) continue
+    if (!option.reachable || !option.unlocked) continue
+    moves.push({
+      action: 'hubEmbark',
+      destination: option.destination,
+      cost: option.cost,
+      from,
+      time,
+      label: `启程：${mapNodeName(manifest, option.destination)}（耗时 ${option.cost} 时间）`,
+      ...blocked,
+    })
+  }
+  if (ticket) {
+    for (const option of options.options) {
+      if (option.destination === from || option.forcedBlocked || !option.reachable) continue
+      moves.push({
+        action: 'hubEmbark',
+        destination: option.destination,
+        cost: 1,
+        from,
+        time,
+        expedite: true,
+        label: `启程：${mapNodeName(manifest, option.destination)}（快捷旅票·1 时间）`,
+        ...blocked,
+      })
+    }
+  }
+  return moves
+}
 
 export function createHub(deps) {
   const {
@@ -90,7 +237,7 @@ function runInterlude(state, nextIndex, events) {
   const campaign = state.campaign
   campaign.phase = 'interlude'
   state.phase = 'interlude'
-  const poolContext = cardPoolContext(state)
+  const poolContext = upgradePoolContext(state)
   const eliminated = state.investigators.filter(inv => campaign.investigators[inv.seat].status !== 'active')
   if (replacementCandidates(campaign, poolContext).length < eliminated.length) {
     campaign.failed = true
@@ -285,6 +432,48 @@ function seatPartMoves(state) {
   return moves
 }
 
+// P8（八循环大厅）：定制升级卡的勾选候选。
+//   · 编制口径：owned = 该座位战役牌组里的卡（`record.deck`），选项/格数来自 tsk-customizable
+//     注册表（内容层逐卡声明，引擎不解析卡文）；每格 1 XP（exceptional 由 dispatch/原语按 2 计）。
+//   · 预算口径与 hubPurchase 完全相同：`upgradeRecord(record).xp`（暂存草稿优先），不足 1 时不给候选；
+//   · 关间（interlude，且战役允许升级、座位没有未保存的升级草稿）逐选项给候选；
+//   · 初始构筑期（首章前的 scenarioSetup）只在「初始可用经验 > 0」时给候选（P8 口径：初始为 0 格，
+//     不伪造经验）；正常情况下不产生候选，面板只展示 0 勾选。
+//   · 定制升级由房主代全桌执行（与 hubEmbark/hubContinue 的房主口径一致）；非房主不产生候选。
+function customizationMoves(state, seat, record) {
+  if (seat !== 0 || !record || record.status !== 'active') return []
+  const uiState = state.uiState
+  const initial = uiState === 'scenarioSetup' && !state.campaign.scenarioResults?.length
+  const interlude = uiState === 'interlude'
+  if (!initial && !interlude) return []
+  if (interlude && state.campaign.upgradesAllowed === false) return []
+  // 未保存的升级草稿把经验暂存在 record.upgradeDraft.record 上；此时勾选会把两套账算重，
+  // 因此先让玩家保存/撤销升级方案（dispatch 用同一条错误口径兜底）。
+  if (record.upgradeDraft) return []
+  const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
+  if (availableXp < 1) return []
+  const deck = [...new Set((record.deck || []).filter(code => customizationOptions(code)))]
+  if (!deck.length) return []
+  const checkedTable = customizationsOfSeat(state, seat)
+  const moves = []
+  for (const code of deck) {
+    const optionList = customizationOptions(code)
+    const checked = checkedTable[code] || []
+    const counts = new Map()
+    for (const index of checked) counts.set(index, (counts.get(index) || 0) + 1)
+    for (const [optionIndex, option] of optionList.entries()) {
+      const filled = counts.get(optionIndex) || 0
+      if (filled >= option.checks) continue
+      const label = `定制：${cardName(code)} · ${option.name}（第 ${filled + 1} 格 / 1 XP）`
+      const explanation = `${option.name}：已勾选 ${filled}/${option.checks} 格；剩余 ${availableXp} XP。`
+      moves.push(initial
+        ? { action: 'hubCustomize', code, optionIndex, initial: true, label, explanation }
+        : { action: 'hubCustomize', code, optionIndex, cost: 1, availableXp, label, explanation })
+    }
+  }
+  return moves
+}
+
 function hubLegalMoves(state, seat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
   if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
@@ -300,6 +489,14 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   const humans = state.humanSeats || [0]
   const leaderMoves = humans.includes(seat) ? humans.map(leadSeat => ({ action: 'hubSetLeader', leadSeat,
     label: `队长：${state.investigators[leadSeat].name}` })) : []
+  // P8：世界地图启程窗口（流程停在 `map` 节点、uiState 为 interlude/scenarioSetup）。
+  // 启程由房主决定；升级/关间准备已在幕间节点完成，因此这里不再生成
+  // 「准备下一关 / 开始当前关卡 / 选择当前关卡」等推进动作（避免误触后原地推进）。
+  const mapManifest = worldMapPhaseManifest(state, campaignManifestFor(state))
+  if (mapManifest) {
+    if (seat !== 0) return []
+    return [...worldMapMoves(state, mapManifest), ...leaderMoves]
+  }
   if (state.uiState === 'campaignHub') {
     if (seat !== 0) return []
     moves.push(...HUB_DIFFICULTIES.map(difficulty => ({ action: 'hubSetDifficulty', difficulty,
@@ -418,7 +615,7 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   }
   if (state.uiState === 'interlude' && record?.status === 'active' && state.campaign.upgradesAllowed !== false) {
     const effective = upgradeRecord(record)
-    const poolContext = cardPoolContext(state)
+    const poolContext = upgradePoolContext(state)
     for (const added of availablePurchases(effective, state.campaign.records, poolContext)) {
       for (const option of replacementOptions(effective, added, state.campaign.records, poolContext)) moves.push({ action: 'hubPurchase', added, removed: option.code,
         label: `购入 ${cardName(added)}，${option.code ? '替换 ' + cardName(option.code) : '加入永久卡'}（${option.cost} XP）`, explanation: option.explanation })
@@ -427,6 +624,8 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
       moves.push({ action: 'hubAutoUpgrade', label: '自动选择一次合法升级' })
     }
   }
+  // P8：定制升级卡的关间勾选（与 hubPurchase 同一预算口径；初始构筑期仅在初始 XP > 0 时给候选）。
+  moves.push(...customizationMoves(state, seat, record))
   if (record?.upgradeDraft) {
     moves.push({ action: 'hubConfirmUpgrades', label: '保存升级方案' }, { action: 'hubCancelUpgrades', label: '撤销本轮升级' })
   }

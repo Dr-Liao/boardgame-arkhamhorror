@@ -22,6 +22,7 @@ export default {
   code: '05228',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   transferOnControllerDefeat: true,
   abilities: [{
     kind: 'action',

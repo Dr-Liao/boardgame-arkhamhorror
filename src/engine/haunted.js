@@ -275,8 +275,16 @@ export function createHaunted(deps) {
         api.info(`👻 闹鬼：${inv.name} 失去 ${clause.amount} 个行动。`)
         return true
       case 'loseResource': {
-        const lost = Math.min(inv.resources || 0, clause.amount)
-        inv.resources -= lost
+        // 2026-11-11：失去资源优先走 api 统一入口（含「将要失去资源」取消窗口，05280/05032）。
+        // 闹鬼是地点（= 遭遇卡，见规则书 FAQ）的强制能力；窗口来源由剧本运行时帧标成 encounter。
+        // 旧测试 stub 没有 loseResources 时保留原直写口径（兼容只验证闹鬼顺序的单元夹具）。
+        const lost = typeof api.loseResources === 'function'
+          ? api.loseResources(seat, clause.amount)
+          : (() => {
+              const n = Math.min(inv.resources || 0, clause.amount)
+              inv.resources -= n
+              return n
+            })()
         if (lost) api.info(`👻 闹鬼：${inv.name} 失去 ${lost} 点资源。`)
         if (clause.overflowHorror) {
           const missing = clause.amount - lost

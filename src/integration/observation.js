@@ -7,7 +7,7 @@ import { campaignView, replacementBlockers, upgradeRecord } from '../campaign/ca
 import { cardPoolContext } from '../deck/card-pool.js'
 import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints, abilityUsage } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
-import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
+import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, attachCardAttachments, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
 import { campaignPartsManifest } from '../campaign/campaign-modes.js'
 import { traitLabels } from '../cards/trait-labels.js'
@@ -42,9 +42,31 @@ const PUBLIC_STATE_FIELDS = [
   'cardPoolScope', 'allowRollback', 'deckMode',
 ]
 
-// 剧本标记里可以公开给所有座位的键（深度、石柱、漆黑）。其余标记属于剧本内部状态，
+// 剧本标记里可以公开给所有座位的键（深度、石柱）。其余标记属于剧本内部状态，
 // 直接全量下发会泄露尚未揭示的内容。
-const PUBLIC_SCENARIO_FLAGS = Object.freeze(['depthLevel', 'pillars', 'deepDark'])
+const PUBLIC_SCENARIO_FLAGS = Object.freeze(['depthLevel', 'pillars'])
+// 2026-11-13 P1-12：战役清单可以声明自己的公开子键（点路径），如 TSK 的
+// `sanguineShadows.referenceTargets` / `withoutATrace.shadows`。声明即投影，未声明不投影。
+function readFlagPath (flags, path) {
+  if (!flags || typeof path !== 'string' || !path) return undefined
+  return path.split('.').reduce((value, key) => (value == null ? undefined : value[key]), flags)
+}
+function projectPublicScenarioFlags (state) {
+  if (!state?.scenarioFlags) return {}
+  const campaignId = state?.campaign?.id || state?.campaignId || null
+  const declared = campaignId ? contentRegistry.getCampaign(campaignId)?.publicScenarioFlags : null
+  const out = {}
+  for (const key of PUBLIC_SCENARIO_FLAGS) {
+    if (state.scenarioFlags[key] != null) out[key] = structuredClone(state.scenarioFlags[key])
+  }
+  for (const entry of Array.isArray(declared) ? declared : []) {
+    const path = typeof entry === 'string' ? entry : entry?.path
+    const value = readFlagPath(state.scenarioFlags, path)
+    if (value == null) continue
+    out[path] = structuredClone(value)
+  }
+  return out
+}
 
 // P1.4：两张公共静态表由大厅的会话级缓存单独下发（mod.staticTables），精简视图里不出现。
 const STATIC_STATE_FIELDS = Object.freeze(['cards', 'investigatorDefs'])
@@ -124,6 +146,10 @@ function publicSetAsideCards(state) {
     ]
     for (const reference of visible) consume(reference)
   }
+  // 玩家卡「放到一边」（state.setAside）：例如天机之城设置阶段放到一边的独特道具支援
+  // （门之匣、佐伊的十字架、古代遗物）。这些卡平放在桌面上，属于公开信息，与剧本区
+  // 一起投影到「放到一边」面板，玩家能看到卡去了哪里（下一关按战役牌组重建时自动回收）。
+  for (const card of state.setAside || []) add(card)
   return [...counts].filter(([, count]) => count > 0).map(([code, count]) => ({ code, count }))
 }
 
@@ -239,11 +265,10 @@ export function viewState(state, observerSeat = null, options = {}) {
   const mechanics = mechanicView(state, observer)
   if (mechanics) view.mechanics = mechanics
   // 八循环 P2：隐匿迷你卡只投影位置与数量；真身/诱饵身份只有已翻面或合法获知的卡才下发。
-  const concealed = concealedProjection(state)
+  const concealed = concealedProjection(state, { observerSeat: observer })
   if (concealed.length) view.concealedMiniCards = concealed
-  view.scenarioFlagsPublic = Object.fromEntries(PUBLIC_SCENARIO_FLAGS
-    .filter(key => state.scenarioFlags?.[key] != null)
-    .map(key => [key, state.scenarioFlags[key]]))
+  // 2026-11-13 P1-12：公开剧本标记按「硬编码两条 + 战役清单声明」投影（TSK 各章计数/位置）。
+  view.scenarioFlagsPublic = projectPublicScenarioFlags(state)
   // 时间线（年代）：场上地点里有多少张是[[古代]]面、多少张是[[现代]]面。
   // 这两类特性都印在卡面上、地点也在桌面上，汇总不会泄露未揭示信息。
   view.timeline = timelineSummary(state)
@@ -298,6 +323,16 @@ export function viewState(state, observerSeat = null, options = {}) {
     deck: [],
     deckSize: inv.deck.length,
   }))
+  // 剧本钩子声明的公开附属（如破碎永世：正面朝下附属在「古代遗物」下的地点）挂回宿主
+  // 实例：牌桌角标与卡牌详情据此显示「附属 N 张」与清单。规则读取仍走剧本标记。
+  if (Object.keys(attachments.assets || {}).length) {
+    view.investigators = view.investigators.map(inv => ({
+      ...inv,
+      assets: attachCardAttachments(inv.assets, attachments.assets),
+      threat: attachCardAttachments(inv.threat, attachments.assets),
+    }))
+    view.storyAssets = attachCardAttachments(view.storyAssets || [], attachments.assets)
+  }
   // 展示表 cards 是开局/读档时的派生快照：幕间奖励、剧本效果中途加入的卡可能不在里面。
   // 只要场上或自己的手牌里有前端拿不到定义的卡，就补一份——否则前端读不到它的 slots，
   // 会把占着槽位的支援画进「其他资产」（典型：02040 亨利·阿米蒂奇博士占了盟友槽）。
@@ -308,6 +343,9 @@ export function viewState(state, observerSeat = null, options = {}) {
   }
   for (const item of mechanicView(state, observer)?.beneath || []) for (const code of item.codes || []) visibleCodes.add(code)
   for (const card of [...(state.storyAssets || []), ...(state.victoryDisplay || [])]) visibleCodes.add(card.code)
+  // 「放在密谋牌库旁」的卡（state.agendaAside）与剧情资产/胜利区一样公开在桌面上；
+  // 卡面定义必须随视图下发，否则前端只能显示卡号，详情也加载不出规则文本。
+  for (const card of state.agendaAside || []) if (card?.code) visibleCodes.add(card.code)
   // P1.4：精简视图拿不到 view.cards，用大厅传入的公共表（publicCards，只读）判断缺哪些卡面。
   const publicCards = slim && options.publicCards && typeof options.publicCards === 'object' ? options.publicCards : null
   const publicCardCodes = slim && !publicCards && options.publicCardCodes instanceof Set ? options.publicCardCodes : null

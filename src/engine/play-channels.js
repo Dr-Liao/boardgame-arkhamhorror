@@ -168,7 +168,10 @@ export function createPlayChannels(deps) {
       for (const code of unique(inv.discard || [])) {
         if (!playAccess(code).fromDiscard || !isCardAvailable(code)) continue
         const def = cardDef(code)
-        if (!def || def.type !== 'event' || isWeaknessCard(def)) continue
+        // 2026-11-13 P1-8（09103 临时盾牌）：「只能从弃牌堆打出」的支援也要有普通打出入
+        // 口；窗口快速打出仍只给事件（支援从弃牌堆打出要走行动，见 windowEntries 过滤）。
+        const discardAsset = def?.type === 'asset' && !isWeaknessCard(def)
+        if (!def || (def.type !== 'event' && !discardAsset) || isWeaknessCard(def)) continue
         out.push(entry({ channel: 'discard', code, sourceName: '弃牌堆',
           move: { action: 'play', cardId: code, fromDiscard: true },
           labelSuffix: '（弃牌堆）' }))
@@ -364,7 +367,9 @@ export function createPlayChannels(deps) {
 
   // 反应/能力窗口用：保留既有窗口的候选顺序（新增通道追加在末尾）。
   function windowEntries(state, inv) {
+    // 弃牌堆里的支援（09103）是普通行动，不在任何快速窗口里作为免费候选出现。
     return entries(state, inv, WINDOW_CHANNEL_ORDER)
+      .filter(candidate => !(candidate.channel === 'discard' && candidate.def?.type === 'asset'))
   }
 
   function byChannel(state, inv, channel) {

@@ -6,8 +6,10 @@ import { t } from './i18n.js'
 // 用 Unicode 转义保存同一个字符串，避免词典完整性测试把它误判成残留中文；比较行为不变。
 const TURN_ORDER_START_LABEL = '\u5f00\u59cb\u884c\u52a8'
 
-// 收尾玩家窗口（playerWindow）的手牌快速卡候选：`fast-card:<卡号>`、卢克·罗宾逊的
+// 玩家窗口（playerWindow）的手牌快速卡候选：`fast-card:<卡号>`、卢克·罗宾逊的
 // `fast-card:<卡号>:asif:<地点 id>` 以及带 fastSourceId 的 `fast-card:<卡号>:<来源 id>`。
+// （2026-11-13 起行动点用尽的空档期不再开收尾窗口、快速卡直接进 legalMoves；这些 id 只来自
+// 仍会弹窗的玩家窗口，例如技能检定前后/其它调查员的行动间窗口。）
 // 选项按旧形状只带 id（不带 cardCode），界面用这个反查手牌位，把选项挂回手牌实体：
 // 高亮卡面、点牌即打出，不再在牌桌中央浮出选项面板。id 格式见 src/engine/encounter.js#playerWindow。
 const fastCardOptionCode = id => {

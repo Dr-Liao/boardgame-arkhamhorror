@@ -19,7 +19,7 @@
     "verified": 333,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 387
+    "testsPassed": 388
   },
   "testFiles": [
     {
@@ -28,7 +28,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
-      "sha256": "b6c5996b59df05aa7dc039071ec6980c6430ec8025038446b8f7de33567bd4cb"
+      "sha256": "750d79ebda92e8c00ad045bf7fc8da6f074611c270b171e082c496467ea5fd70"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
@@ -1369,6 +1369,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
           "test": "Dunwich 02108 探路者 印刷效果行为验收"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02108 探路者 印刷效果行为验收（不是自己的回合时玩家窗口不提供）"
         },
         {
           "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",

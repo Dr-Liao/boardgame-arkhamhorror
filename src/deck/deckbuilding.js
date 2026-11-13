@@ -24,10 +24,12 @@ import {
   PLAYABLE_INVESTIGATOR_CODES,
   SELECTABLE_INVESTIGATOR_CODES,
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
+  TFA_PLAYER_BUILDABLE_CODES,
   TCU_PLAYER_BUILDABLE_CODES,
   TDE_PLAYER_BUILDABLE_CODES,
   TIC_PLAYER_BUILDABLE_CODES,
   EOTE_PLAYER_BUILDABLE_CODES,
+  TSK_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -48,14 +50,32 @@ const TDE_DECK_CARD_CODES = Object.freeze(TDE_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
+// M2（失落的时代）：四循环玩家卡早已逐卡验收，但此前只接进「04 记录的关间升级池」，
+// 漏了开放玩家池——构筑界面的扩展包筛选项因此看不到 04 卡，04 战役的起始牌组
+// （corePlayerPool 的 campaignDeckbuildingCodes 与 expandedPlayablePool 取交集）也拿不到。
+// 这里与 TCU/TDE/TIC/EOTE/TSK 同一口径补齐：默认池 PLAYER_CARD_CODES 仍不变。
+const TFA_DECK_CARD_CODES = Object.freeze(TFA_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
 // P6（M2 地球边缘）：111 张可构筑玩家卡进入开放玩家池（4 张基础弱点不进）。
 // 默认池 PLAYER_CARD_CODES 不变：既有循环自动牌组产出保持基线。
 const EOTE_DECK_CARD_CODES = Object.freeze(EOTE_PLAYER_BUILDABLE_CODES.filter(code => {
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES])
-export const DRAFT_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])])
+// P6（M2 绯红密钥）：103 张可构筑玩家卡进入开放玩家池（5 张基础弱点不进）。
+// 默认池 PLAYER_CARD_CODES 不变：既有循环自动牌组产出保持基线。
+const TSK_DECK_CARD_CODES = Object.freeze(TSK_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES])
+// 关间升级候选/普通卡判定 = 全部已开放玩家卡 + 核心包仅升级卡（`CORE_UPGRADE_CODES`）。
+// 与 `web/deck-rules.js` 的 `cardPoolScope` 口径一致：跨循环可见性由开局设置
+// （全部 / 渐进式）在 `filterCardCodes(context)` 一层统一收窄，不再按调查员所属循环硬编码。
+export const UPGRADE_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])])
+export const DRAFT_PLAYER_CARD_CODES = UPGRADE_PLAYER_CARD_CODES
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
 const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
@@ -430,9 +450,12 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
     // P8：TCU 的 05042《高塔·XVI》是**资产**型基础弱点（占塔罗槽），构筑规则允许它作为
     // 随机基础弱点候选；旧校验只认 treachery/enemy，会把整包合法候选判成非法。
     const weaknessTypeOk = ['treachery', 'enemy'].includes(def?.type) || PLAYER_TYPES.has(def?.type)
+    // P8：战役清单显式列入 basicWeaknessCodes 的卡（如 TSK 09124–09128）即获许可，
+    // 即便它们因 dependencyOnly 不是构筑可选卡；候选池本身只由 core + 战役清单产生。
+    const licensedByCampaignPool = implementation(code)?.implemented === true
     if (!ALL_BASIC_WEAKNESS_CODES.includes(code) || !def || def.code !== code || def.subtype !== 'basicweakness'
       || def.dataStatus === 'quarantined' || def.signatureFor || !weaknessTypeOk
-      || (def.type !== 'enemy' && !isPlayable(def))) {
+      || (def.type !== 'enemy' && !isPlayable(def) && !licensedByCampaignPool)) {
       throw new Error('基础弱点依赖缺失或未获许可：' + code)
     }
   }
@@ -559,7 +582,12 @@ export function deckBuilderData() {
     }
   })
 
-  const cardPool = pool.map((c) => ({
+  // 这张卡表同时服务「起始牌组构筑」与「关间升级」两个界面：零经验构筑池里没有核心包升级卡
+  // （`CORE_UPGRADE_CODES` 只能升级购入），但升级候选里会出现它们。元数据缺了 name/pack 时，
+  // 前端 `card-filters.js` 只能把卡归到「未标注来源」，还会顶掉扩展包下拉的空白选项，
+  // 所以元数据表 = 关间升级可用的全部玩家卡（`UPGRADE_PLAYER_CARD_CODES`）。
+  const cardPool = UPGRADE_PLAYER_CARD_CODES
+    .map((code) => ALL_CARDS[code]).filter(Boolean).map((c) => ({
     code: c.code, name: c.nameZh, nameEn: c.name, klass: c.klass, type: c.type,
     pack: c.pack || null, campaignCode: c.campaignCode || null,
     cost: c.cost, xp: c.xp ?? 0, icons: c.icons || {}, slot: c.slot || null, slots: c.slots || [],

@@ -10,6 +10,7 @@ export default {
   code: '05260',
   scope: 'storyAsset',
   implemented: true,
+  scenarioPlayable: true,
   modifiers: [{ target: 'skill:willpower', amount: 1 }],
   abilities: [{
     kind: 'reaction',

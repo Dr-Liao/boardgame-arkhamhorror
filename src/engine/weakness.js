@@ -123,13 +123,22 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     return
   }
   if (eff.weakness.type === 'outOfBody') {
-    // 离体体验（04264）：所有手牌洗回牌库并抽取等量，然后把本卡洗回牌库。
+    // 离体体验（04264）：显现结算时本卡自己也属于「你所有手牌」——
+    // 洗入牌库的张数与「抽取等量」的张数都要把本卡算进去（2026-11-12 用户裁决）。
+    // 否则空手抽到它时张数为 0：它既不洗牌也不抽牌，结算后又洗回牌库，
+    // 形成「抽到 → 无事发生 → 洗回」的无限抽牌循环，游戏永远不前进。
+    //
+    // 实现顺序：先按 hand+1 抽牌，结算结束后再由 shuffleWeaknessAfterResolution 把本卡洗回牌库。
+    // 本卡在抽牌期间不在牌库中，因此不会被自己发起的抽牌再次抽到并递归触发显现
+    // （真要把本卡也放进牌库再抽，空牌库时它会抽到自己，形成真正的死循环）；
+    // 整副牌张数守恒，本卡只洗回一次，不会复制进牌库。
     const hand = [...(inv.hand || [])]
+    const drawCount = hand.length + 1
     inv.hand = []
     if (hand.length) inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...hand], () => randomValue(state)), 'shuffle')
     inv.shuffleWeaknessAfterResolution = def.code
-    info(state, events, `「${cardName(def.code)}」：${inv.name} 把 ${hand.length} 张手牌洗回牌库并重抽。`)
-    if (hand.length) texts.push(...drawCards(state, inv, hand.length, events))
+    info(state, events, `「${cardName(def.code)}」：${inv.name} 把 ${hand.length} 张手牌洗回牌库，连同本卡共重抽 ${drawCount} 张。`)
+    texts.push(...drawCards(state, inv, drawCount, events))
     return
   }
   if (eff.weakness.type === 'priceOfFailure') {
@@ -282,8 +291,18 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     if (registeredEntry(def.code)?.weaknessExhaustsAssets) for (const asset of inv.assets) asset.exhausted = true
     const healthBefore = getMaxHealth(inv)
     const sanityBefore = getMaxSanity(inv)
-    inv.assets.push(newCardInstance(state, def.code, { doom: 0 }))
+    const weaknessInstance = newCardInstance(state, def.code, { doom: 0 })
+    inv.assets.push(weaknessInstance)
     info(state, events, `⚠️ 「${cardName(def.code)}」进入 ${inv.name} 的支援区域。`)
+    // 2026-11-13 P1-6（09007）：弱点以支援形态入场时也要结算 entries 的 entersPlay 描述子
+    // （标准出牌路径在 actions.js 做同一件事；此前 push 之后直接 return，入场伤害永不发生）。
+    const entersPlayDescriptor = descriptorOfKind(def.code, 'entersPlay')
+    if (entersPlayDescriptor?.resolve) {
+      executeDescriptor(state, {
+        inv, source: weaknessInstance, descriptor: entersPlayDescriptor, events, silent: true,
+        context: { seat: inv.seat },
+      })
+    }
     // 支援区的生命/神智上限修正入场即生效：只有上限确实下调且已经降到等于伤害/恐惧时才补判负。
     if ((getMaxHealth(inv) < healthBefore && inv.damage >= getMaxHealth(inv))
       || (getMaxSanity(inv) < sanityBefore && inv.horror >= getMaxSanity(inv))) {

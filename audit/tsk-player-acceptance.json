@@ -1,0 +1,5811 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P6",
+  "generatedBy": "tools/audit-tsk-player.mjs",
+  "profile": {
+    "id": "tsk-player-p6",
+    "basis": "原始印刷卡文、本地锁定参考实现与四份分片测试的实跑逐卡行为证据；不声称穷举跨循环组合。verified 仅表示有逐卡测试证据，条目自述的近似逐条计入 simplified/simplification，不声称与印刷文本等价。"
+  },
+  "status": "verified",
+  "gates": {
+    "batchTestsPassed": true,
+    "everyCardVerified": true,
+    "simplificationDisclosed": true,
+    "shardsExact": true,
+    "noPendingRequests": true,
+    "browserDesktopAndMobile": true
+  },
+  "summary": {
+    "total": 108,
+    "verified": 108,
+    "missing": 0,
+    "simplified": 61,
+    "simplifiedDisclosed": 61,
+    "buildable": 103,
+    "dependencyOnly": 5,
+    "basicWeaknesses": 5,
+    "testsPassed": 127
+  },
+  "shards": [
+    {
+      "id": "M2-1",
+      "worker": "w-m2-1",
+      "codes": [
+        "09021",
+        "09022",
+        "09023",
+        "09024",
+        "09025",
+        "09026",
+        "09027",
+        "09028",
+        "09029",
+        "09030",
+        "09031",
+        "09032",
+        "09033",
+        "09034",
+        "09035",
+        "09036",
+        "09037",
+        "09038",
+        "09039",
+        "09040",
+        "09041",
+        "09042",
+        "09043",
+        "09044",
+        "09045",
+        "09046",
+        "09047"
+      ]
+    },
+    {
+      "id": "M2-2",
+      "worker": "w-m2-2",
+      "codes": [
+        "09048",
+        "09049",
+        "09050",
+        "09051",
+        "09052",
+        "09053",
+        "09054",
+        "09055",
+        "09056",
+        "09057",
+        "09058",
+        "09059",
+        "09060",
+        "09061",
+        "09062",
+        "09063",
+        "09064",
+        "09065",
+        "09066",
+        "09067",
+        "09068",
+        "09069",
+        "09070",
+        "09071",
+        "09072",
+        "09073",
+        "09074"
+      ]
+    },
+    {
+      "id": "M2-3",
+      "worker": "w-m2-3",
+      "codes": [
+        "09075",
+        "09076",
+        "09077",
+        "09078",
+        "09079",
+        "09080",
+        "09081",
+        "09082",
+        "09083",
+        "09084",
+        "09085",
+        "09086",
+        "09087",
+        "09088",
+        "09089",
+        "09090",
+        "09091",
+        "09092",
+        "09093",
+        "09094",
+        "09095",
+        "09096",
+        "09097",
+        "09098",
+        "09099",
+        "09100",
+        "09101"
+      ]
+    },
+    {
+      "id": "M2-4",
+      "worker": "w-m2-4",
+      "codes": [
+        "09102",
+        "09103",
+        "09104",
+        "09105",
+        "09106",
+        "09107",
+        "09108",
+        "09109",
+        "09110",
+        "09111",
+        "09112",
+        "09113",
+        "09114",
+        "09115",
+        "09116",
+        "09117",
+        "09118",
+        "09119",
+        "09120",
+        "09121",
+        "09122",
+        "09123",
+        "09124",
+        "09125",
+        "09126",
+        "09127",
+        "09128"
+      ]
+    }
+  ],
+  "queue": {
+    "path": "audit/tsk-player-queue.json",
+    "total": 108,
+    "verified": 108,
+    "blockedRequests": [],
+    "deferredRequests": [
+      {
+        "code": "09021",
+        "file": "09021.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09023",
+        "file": "09023.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09024",
+        "file": "09024.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09025",
+        "file": "09025.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09027",
+        "file": "09027.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09029",
+        "file": "09029.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09032",
+        "file": "09032.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09035",
+        "file": "09035.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09039",
+        "file": "09039.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09040",
+        "file": "09040.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09041",
+        "file": "09041.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09042",
+        "file": "09042.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09043",
+        "file": "09043.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09045",
+        "file": "09045.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09051.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09055.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09058.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09060.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09061.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09063.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09065.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09068.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09071.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09072.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09074.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09076.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09077.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09079.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09080.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09081.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09086.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09087.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09088.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09090.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09091.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09092.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09099.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09100.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": null,
+        "file": "09101.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09103",
+        "file": "09103.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09105",
+        "file": "09105.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09106",
+        "file": "09106.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09107",
+        "file": "09107.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09109",
+        "file": "09109.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09110",
+        "file": "09110.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09111",
+        "file": "09111.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09115",
+        "file": "09115.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09118",
+        "file": "09118.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09119",
+        "file": "09119.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09120",
+        "file": "09120.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09123",
+        "file": "09123.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09124",
+        "file": "09124.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09125",
+        "file": "09125.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09126",
+        "file": "09126.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09127",
+        "file": "09127.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09128",
+        "file": "09128.json",
+        "status": "deferred",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+      },
+      {
+        "code": "09511",
+        "file": "09511.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09517",
+        "file": "09517.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09518",
+        "file": "09518.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09519a",
+        "file": "09519a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09536",
+        "file": "09536.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09537",
+        "file": "09537.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09537b",
+        "file": "09537b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09538",
+        "file": "09538.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09539",
+        "file": "09539.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09541",
+        "file": "09541.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09542",
+        "file": "09542.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09544a",
+        "file": "09544a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09544b",
+        "file": "09544b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09545",
+        "file": "09545.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09557b",
+        "file": "09557b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09558",
+        "file": "09558.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09560",
+        "file": "09560.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09566",
+        "file": "09566.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09571",
+        "file": "09571.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09571b",
+        "file": "09571b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09572",
+        "file": "09572.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09577",
+        "file": "09577.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09578",
+        "file": "09578.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09582",
+        "file": "09582.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09584",
+        "file": "09584.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09590b",
+        "file": "09590b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09591",
+        "file": "09591.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09592",
+        "file": "09592.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09594",
+        "file": "09594.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09625a",
+        "file": "09625a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09625b",
+        "file": "09625b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09626",
+        "file": "09626.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09627",
+        "file": "09627.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09629",
+        "file": "09629.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09630",
+        "file": "09630.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09631",
+        "file": "09631.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09632",
+        "file": "09632.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09633",
+        "file": "09633.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09634a",
+        "file": "09634a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09634b",
+        "file": "09634b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09642.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09646.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09649.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09653a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09654b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09658.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09659a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "09659b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09681",
+        "file": "09681.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09689",
+        "file": "09689.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09690",
+        "file": "09690.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09691",
+        "file": "09691.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09692",
+        "file": "09692.json",
+        "status": "deferred",
+        "reason": null
+      },
+      {
+        "code": "09694",
+        "file": "09694.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09715",
+        "file": "09715.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09716a",
+        "file": "09716a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09716b",
+        "file": "09716b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09716c",
+        "file": "09716c.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09717",
+        "file": "09717.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09720",
+        "file": "09720.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09721",
+        "file": "09721.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09722",
+        "file": "09722.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09723",
+        "file": "09723.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09726a",
+        "file": "09726a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09726b",
+        "file": "09726b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09727a",
+        "file": "09727a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09727b",
+        "file": "09727b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09728",
+        "file": "09728.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09729",
+        "file": "09729.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09731",
+        "file": "09731.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09732",
+        "file": "09732.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09733",
+        "file": "09733.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09735",
+        "file": "09735.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09736",
+        "file": "09736.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09737",
+        "file": "09737.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09738",
+        "file": "09738.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09739",
+        "file": "09739.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09740",
+        "file": "09740.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09743",
+        "file": "09743.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09745",
+        "file": "09745.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09746",
+        "file": "09746.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09747a",
+        "file": "09747a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09747b",
+        "file": "09747b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09747c",
+        "file": "09747c.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09748a",
+        "file": "09748a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09748b",
+        "file": "09748b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09749a",
+        "file": "09749a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09749b",
+        "file": "09749b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09750",
+        "file": "09750.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09751",
+        "file": "09751.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09752",
+        "file": "09752.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09753",
+        "file": "09753.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09754",
+        "file": "09754.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09755",
+        "file": "09755.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09756",
+        "file": "09756.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09757",
+        "file": "09757.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09758",
+        "file": "09758.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09759",
+        "file": "09759.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09760",
+        "file": "09760.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09761",
+        "file": "09761.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09762",
+        "file": "09762.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09763",
+        "file": "09763.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09764",
+        "file": "09764.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09765",
+        "file": "09765.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09766",
+        "file": "09766.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09767",
+        "file": "09767.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09768a",
+        "file": "09768a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09768b",
+        "file": "09768b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09769a",
+        "file": "09769a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09769b",
+        "file": "09769b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09770a",
+        "file": "09770a.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": "09770b",
+        "file": "09770b.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "campaign-flow-trauma.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "extend-enemy-story-face-flip.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "extend-scarlet-key-charges.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "key-taken-offscreen.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "map-advance-time.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "new-enemy-movement-restriction.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "new-scenario-group-clue-cost.json",
+        "status": "deferred",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+      },
+      {
+        "code": null,
+        "file": "remaining.json",
+        "status": "unknown",
+        "reason": null
+      }
+    ]
+  },
+  "primitiveBacklog": [
+    "09021",
+    "09023",
+    "09024",
+    "09025",
+    "09027",
+    "09029",
+    "09032",
+    "09035",
+    "09039",
+    "09040",
+    "09041",
+    "09042",
+    "09043",
+    "09045",
+    "09103",
+    "09105",
+    "09106",
+    "09107",
+    "09109",
+    "09110",
+    "09111",
+    "09115",
+    "09118",
+    "09119",
+    "09120",
+    "09123",
+    "09124",
+    "09125",
+    "09126",
+    "09127",
+    "09128",
+    "09511",
+    "09517",
+    "09518",
+    "09519a",
+    "09536",
+    "09537",
+    "09537b",
+    "09538",
+    "09539",
+    "09541",
+    "09542",
+    "09544a",
+    "09544b",
+    "09545",
+    "09557b",
+    "09558",
+    "09560",
+    "09566",
+    "09571",
+    "09571b",
+    "09572",
+    "09577",
+    "09578",
+    "09582",
+    "09584",
+    "09590b",
+    "09591",
+    "09592",
+    "09594",
+    "09625a",
+    "09625b",
+    "09626",
+    "09627",
+    "09629",
+    "09630",
+    "09631",
+    "09632",
+    "09633",
+    "09634a",
+    "09634b",
+    "09681",
+    "09689",
+    "09690",
+    "09691",
+    "09692",
+    "09694",
+    "09715",
+    "09716a",
+    "09716b",
+    "09716c",
+    "09717",
+    "09720",
+    "09721",
+    "09722",
+    "09723",
+    "09726a",
+    "09726b",
+    "09727a",
+    "09727b",
+    "09728",
+    "09729",
+    "09731",
+    "09732",
+    "09733",
+    "09735",
+    "09736",
+    "09737",
+    "09738",
+    "09739",
+    "09740",
+    "09743",
+    "09745",
+    "09746",
+    "09747a",
+    "09747b",
+    "09747c",
+    "09748a",
+    "09748b",
+    "09749a",
+    "09749b",
+    "09750",
+    "09751",
+    "09752",
+    "09753",
+    "09754",
+    "09755",
+    "09756",
+    "09757",
+    "09758",
+    "09759",
+    "09760",
+    "09761",
+    "09762",
+    "09763",
+    "09764",
+    "09765",
+    "09766",
+    "09767",
+    "09768a",
+    "09768b",
+    "09769a",
+    "09769b",
+    "09770a",
+    "09770b"
+  ],
+  "implementationFiles": [
+    {
+      "path": "src/cards/entries/09021.js",
+      "sha256": "9ccb1cacf0cdfc4f1b595cd58622c37b7abd26af78419593b5e73b146008e1d2"
+    },
+    {
+      "path": "src/cards/entries/09022.js",
+      "sha256": "9efbd397b36e6e1706861dff2f702ffbf6798dadc91f8109dbda7cf458c1c701"
+    },
+    {
+      "path": "src/cards/entries/09023.js",
+      "sha256": "8fae030cd55bba32a99d8eb4c0571fd52cb37cbff88b5664e3b2876ca88081bf"
+    },
+    {
+      "path": "src/cards/entries/09024.js",
+      "sha256": "f0045d5cb1692e6457eb828b88131dfb31c133b36b6a6462dedc86e6cbd27c9e"
+    },
+    {
+      "path": "src/cards/entries/09025.js",
+      "sha256": "62487e0e4a690e7fbde1cdd2bc51704a3cd27ae29f37d46efb01fe6e1427a418"
+    },
+    {
+      "path": "src/cards/entries/09026.js",
+      "sha256": "b75a88fd0b98050d95852edb99633e2f977cb60827d122b7efa287b7f5a32007"
+    },
+    {
+      "path": "src/cards/entries/09027.js",
+      "sha256": "8d43cf784d51c31ae15873f5ba74981a828d73066e2ec5ebdba2a7abacc4646b"
+    },
+    {
+      "path": "src/cards/entries/09028.js",
+      "sha256": "f0bee1e983627f344f1a562751b099a7c8901d76a969801f984c6d4734c69be4"
+    },
+    {
+      "path": "src/cards/entries/09029.js",
+      "sha256": "d298df3935c71ca0e578787f2c5002d4544b8c91126d73cb6d72a5765601e626"
+    },
+    {
+      "path": "src/cards/entries/09030.js",
+      "sha256": "6e8db7eb0c8263f2c38859373f3b0a888b3662a7484d4b39e834c92d06577e81"
+    },
+    {
+      "path": "src/cards/entries/09031.js",
+      "sha256": "a662810a2effd1cc3abadfdb3976c8cabece1f0e0698d553afeccc62029901f1"
+    },
+    {
+      "path": "src/cards/entries/09032.js",
+      "sha256": "08c4b193bec570f7e6781f48e4954cb54175263809868f5e26134e4ee8c5fdf7"
+    },
+    {
+      "path": "src/cards/entries/09033.js",
+      "sha256": "6cca734e85d20f6afde3d30fc631c546108ab54b19f52ed3056837ab7ab51726"
+    },
+    {
+      "path": "src/cards/entries/09034.js",
+      "sha256": "16d51396386085b16de34b63bf84b145d2685db9632048808a33836995a24560"
+    },
+    {
+      "path": "src/cards/entries/09035.js",
+      "sha256": "0e35aab30420506cac15a1e5bf716bda644184af16d7af0a4bc31dd44b4422eb"
+    },
+    {
+      "path": "src/cards/entries/09036.js",
+      "sha256": "dbf340b88df61ab127f949fccb0c712173c91fa89fb4016d77f943372c7d72b1"
+    },
+    {
+      "path": "src/cards/entries/09037.js",
+      "sha256": "274bcf91f47be07b8252cc4b086deda0f66ede0cf3755b957ff8069d7bb1a186"
+    },
+    {
+      "path": "src/cards/entries/09038.js",
+      "sha256": "1093a0f9218a5aad26e3fbac4af72cb29a88e1baab8dbf89f0629835124f636b"
+    },
+    {
+      "path": "src/cards/entries/09039.js",
+      "sha256": "bea5c66fdb896d159a1f43aa130190b79031dd7a4c12f0402dca7881ac645924"
+    },
+    {
+      "path": "src/cards/entries/09040.js",
+      "sha256": "52598ad156f3daeac2241b39df915d03add1ce65b10aad2863714388b72219da"
+    },
+    {
+      "path": "src/cards/entries/09041.js",
+      "sha256": "21d0e1cf8c837e99a7e7d1097f062755037284896bb793be5f2999467566ed62"
+    },
+    {
+      "path": "src/cards/entries/09042.js",
+      "sha256": "a962c201cd640a456ca8aa46bde03defd89e29968dbf0adaeaae9b3725a2d6da"
+    },
+    {
+      "path": "src/cards/entries/09043.js",
+      "sha256": "49167d29febc34a2aadcafcc78a444a79813aeff57cd2ce037df452df0eacbcb"
+    },
+    {
+      "path": "src/cards/entries/09044.js",
+      "sha256": "035819ed0757fe0dae7988a6f1c3ae05d00eea46462c92d63de2b8805c1cf3fb"
+    },
+    {
+      "path": "src/cards/entries/09045.js",
+      "sha256": "8e191d074097ed3dcac53850d7699623702c2f5257b1445d70f954fba370d924"
+    },
+    {
+      "path": "src/cards/entries/09046.js",
+      "sha256": "89a8020b7105aa41fd16bd7fe6a230190060cf4be02f7b21a43f759bcd1b3d78"
+    },
+    {
+      "path": "src/cards/entries/09047.js",
+      "sha256": "95b0aa8beea37bbe4e1330a33f7de6e610aab8dc9dd267faf05f2cc26978366a"
+    },
+    {
+      "path": "src/cards/entries/09048.js",
+      "sha256": "46299b3a826eacc77a239b93cb2a6420e3b15b32ab2b24b0c2a60561d61c5be8"
+    },
+    {
+      "path": "src/cards/entries/09049.js",
+      "sha256": "9c71714959b43d1c27cdf7fb2e448f49473bd370c793cb7b72dfdb03440126b9"
+    },
+    {
+      "path": "src/cards/entries/09050.js",
+      "sha256": "5410d9c2b91852b8d1d625947218f9a503f04a1fccc02fe4276c72cd36d654b9"
+    },
+    {
+      "path": "src/cards/entries/09051.js",
+      "sha256": "ed34f2f45f79f849dcacd6e77ab48143fef01b6a5665bae7ad2b0f77020f0be6"
+    },
+    {
+      "path": "src/cards/entries/09052.js",
+      "sha256": "bedb4f18a0be5bca5a48c774ccb6799e10c7253d09a8ec422d246fff655af77a"
+    },
+    {
+      "path": "src/cards/entries/09053.js",
+      "sha256": "811103fd8b7e68d1b303e5e20c87df9b9fd4f90704c9f0998da686d70dfac02d"
+    },
+    {
+      "path": "src/cards/entries/09054.js",
+      "sha256": "71d9dac2b3f973ba04bccac2992b962577e4e971d7ea9f832a705c05ee56b1d9"
+    },
+    {
+      "path": "src/cards/entries/09055.js",
+      "sha256": "66f8b5293ad5b5ceece4ab4f1dd514911ac10c788f3ffba016eefec0bcc2fb89"
+    },
+    {
+      "path": "src/cards/entries/09056.js",
+      "sha256": "561458aa0c96583325fc092587abe93229baad019bb3ceb23d9d2b48365790ee"
+    },
+    {
+      "path": "src/cards/entries/09057.js",
+      "sha256": "9976af1b6295cd8cf6b979ddd33bbd3672df79b12594de83aa7deb94bf4d4eab"
+    },
+    {
+      "path": "src/cards/entries/09058.js",
+      "sha256": "3f13d9edfc5a6f3e2fce52de3799d7a9118151c10b160a078dd586b3ea64c3c9"
+    },
+    {
+      "path": "src/cards/entries/09059.js",
+      "sha256": "c071655a881f54082f42cd9c9fc9cdba829120589967475899e96cfc0fab691e"
+    },
+    {
+      "path": "src/cards/entries/09060.js",
+      "sha256": "bdf75245c6125bb3fa542aab885a96e0838222634cd0b44beab2218fb3be4a89"
+    },
+    {
+      "path": "src/cards/entries/09061.js",
+      "sha256": "6ead46b97eb95c8b00ac1d7a10e5ec828afe3a26bb26f525d5a1f1870bb64a57"
+    },
+    {
+      "path": "src/cards/entries/09062.js",
+      "sha256": "fff1738a84e80f338250dab954a09a604a20aed14c34a066ba70822af330263c"
+    },
+    {
+      "path": "src/cards/entries/09063.js",
+      "sha256": "2bcf630e6e5df2bf6e86abdf1c8eb345d18da4ae813f1a4afa3d61dc1ff1d42a"
+    },
+    {
+      "path": "src/cards/entries/09064.js",
+      "sha256": "fbd5638dae432cd4131967dd8f718f935c875a9ca363f7296571535174c0fa2d"
+    },
+    {
+      "path": "src/cards/entries/09065.js",
+      "sha256": "4ae105a744a77bd0c21392ca257a6aae828a7d0c539c59877ec68986d27d512e"
+    },
+    {
+      "path": "src/cards/entries/09066.js",
+      "sha256": "0b364b946b68a9ba067c6cd78941430a916e379fc680487992bee9edbd923f26"
+    },
+    {
+      "path": "src/cards/entries/09067.js",
+      "sha256": "2635ed510e4a66171df8f7ebbde13c8ea64f81e64e9e9ff3e09e9585e484c212"
+    },
+    {
+      "path": "src/cards/entries/09068.js",
+      "sha256": "b25d6ce695073f52f0971044fd9873127487a26186cef443aa86c1581d54d0df"
+    },
+    {
+      "path": "src/cards/entries/09069.js",
+      "sha256": "c156600f0fea049b927806465998143ac24c157ebf94d0e3dbcdf0e00a159f66"
+    },
+    {
+      "path": "src/cards/entries/09070.js",
+      "sha256": "cc06167c44888029a7bf97f3b4cde95b0d128aeebc9b1e610a74ac0e586bbd4f"
+    },
+    {
+      "path": "src/cards/entries/09071.js",
+      "sha256": "e75081e3274ed657ade66820eff2a207bac89e0f1df41a285c0b398c4b8a2a5c"
+    },
+    {
+      "path": "src/cards/entries/09072.js",
+      "sha256": "91cb41785c620edac067b59cd85dc4d8fe8c479c9b51b65e463209d8cde15181"
+    },
+    {
+      "path": "src/cards/entries/09073.js",
+      "sha256": "f8e4f2d1fd37e5bfac0403129dc26bdfac5becc84d6e1e23a1f78695111b382d"
+    },
+    {
+      "path": "src/cards/entries/09074.js",
+      "sha256": "779e789ed144e23f3dc5645794eaf55a694c0b937a2e6c6d1c7f6aa0040bb00a"
+    },
+    {
+      "path": "src/cards/entries/09075.js",
+      "sha256": "a0b192157cc00451db13731e7b837feb44e7895aa118d4d54d5cf5a54f94c9b9"
+    },
+    {
+      "path": "src/cards/entries/09076.js",
+      "sha256": "d4fee660c7f561286c82c1601d63819dde5d9f46be1bdc4f98a9b1089e580c74"
+    },
+    {
+      "path": "src/cards/entries/09077.js",
+      "sha256": "e1235e8e34b0cfd3b4c47ce8dd9d99ea27fd23442240f778ec33dc4a5bb5bb04"
+    },
+    {
+      "path": "src/cards/entries/09078.js",
+      "sha256": "38c0d8c710c06b1674e0e73c5b16d95b91ee61e16f3c7f299dbeb9a29d268fef"
+    },
+    {
+      "path": "src/cards/entries/09079.js",
+      "sha256": "692d2f44bef2f353615dc5b65ad2a6f6a3ca58b378442546cb15fcb227cea65e"
+    },
+    {
+      "path": "src/cards/entries/09080.js",
+      "sha256": "9f5213df09917e74ada292309f743b61ba1ea2983ad72c2601d68b8e84a268a3"
+    },
+    {
+      "path": "src/cards/entries/09081.js",
+      "sha256": "bed3f1f6e433f46aff9bde4c1fb7d6e7b431d12303feb614b60312ccf780ea27"
+    },
+    {
+      "path": "src/cards/entries/09082.js",
+      "sha256": "558a1ef55d24e13fd3f973e37740bb9dfee2c729269818a5e180511eb68137c8"
+    },
+    {
+      "path": "src/cards/entries/09083.js",
+      "sha256": "eb6d695ca3fe054189760cc060a02514fcebb3ed684ada6ac464a3854bb7e141"
+    },
+    {
+      "path": "src/cards/entries/09084.js",
+      "sha256": "7f44439318983efe4c4b1b59e4c7d5536b3e12a7e4878a7e7cc9e15dfc4b9b34"
+    },
+    {
+      "path": "src/cards/entries/09085.js",
+      "sha256": "0684436ec98441192d3e1c3a1e29c73728f624078f16cd409e6f5db44f21c7d7"
+    },
+    {
+      "path": "src/cards/entries/09086.js",
+      "sha256": "75c4d3cc396fdbffce68a4dcee553f83120a80f04223ffb9686ff6f722c22ce9"
+    },
+    {
+      "path": "src/cards/entries/09087.js",
+      "sha256": "31a85e388b0eed0774c88653e425438f68e3e092ade8e75ecf6bf52ce5703a50"
+    },
+    {
+      "path": "src/cards/entries/09088.js",
+      "sha256": "f28d241f4b78a3569499ccd1b65884f0f41edb56567c072110824499b1487007"
+    },
+    {
+      "path": "src/cards/entries/09089.js",
+      "sha256": "fb565e82686815efe307509540a767bf841f1457dff2ae230ce1f618c7e88d8d"
+    },
+    {
+      "path": "src/cards/entries/09090.js",
+      "sha256": "4a72dd2c40f7864954fd3dbd2dde7814618144b538b7b8adc36fedc9b68e8345"
+    },
+    {
+      "path": "src/cards/entries/09091.js",
+      "sha256": "8e50f543790688ba7788ca6c3af81c0902cfacf2c206dd576dea99c9a3159841"
+    },
+    {
+      "path": "src/cards/entries/09092.js",
+      "sha256": "0add49be692a58a18e174208bb25f443f1784b2bebe36b50eb4172228858d40f"
+    },
+    {
+      "path": "src/cards/entries/09093.js",
+      "sha256": "581a515617f4afb58a46d26c3549645990edd6b0837437b4137c31eb16f62ced"
+    },
+    {
+      "path": "src/cards/entries/09094.js",
+      "sha256": "10278b59a1648e7ffb4f4994a40959bdc33356622905bae26351309ba0286fb1"
+    },
+    {
+      "path": "src/cards/entries/09095.js",
+      "sha256": "107795dec4201b70bf2efdc6e55a2e603f9346c392275a2d3b6a3f1214215e33"
+    },
+    {
+      "path": "src/cards/entries/09096.js",
+      "sha256": "d08798e37ef6ea4b44482eb8200c044602f8e2764dc4e0ccf62ce82ceb77cac6"
+    },
+    {
+      "path": "src/cards/entries/09097.js",
+      "sha256": "d660e8ce17f2f7923a422e7b6fc915937df9b920877b43c6acefb463c0448928"
+    },
+    {
+      "path": "src/cards/entries/09098.js",
+      "sha256": "1f2a240b9f00f49863bacc690ca80a6a7907003a9af176219bc7f17d055c56a0"
+    },
+    {
+      "path": "src/cards/entries/09099.js",
+      "sha256": "0142f421ec6eb272e47f55539ed4cc5689b9956f980a08d2da3b0fcdfbb41e06"
+    },
+    {
+      "path": "src/cards/entries/09100.js",
+      "sha256": "c376e33861ff7f88e21e4c7b9b5c18e5537e025b858d0058b883e99c15548918"
+    },
+    {
+      "path": "src/cards/entries/09101.js",
+      "sha256": "654b5444d447aa841521bc9cb270ad7431843ae4865b053ec70b6f55d33487bb"
+    },
+    {
+      "path": "src/cards/entries/09102.js",
+      "sha256": "3b2e61e9c5690651ebcd64ddcb228a20248ef126fa5a5e792dffad2beb753c5e"
+    },
+    {
+      "path": "src/cards/entries/09103.js",
+      "sha256": "ae9a6f065d70e1ff9f03ca547def10f68f17bb8f359cedd46b401d48cfb495b2"
+    },
+    {
+      "path": "src/cards/entries/09104.js",
+      "sha256": "99441ea1448e973d5b7bc6f19204d3d862b1b50b86ad2acdd6b1f89cf5177055"
+    },
+    {
+      "path": "src/cards/entries/09105.js",
+      "sha256": "e84fe5c4126bf60b24bbacba3b15f8c980dc3d58229b9fb5b82462bade4f6222"
+    },
+    {
+      "path": "src/cards/entries/09106.js",
+      "sha256": "04e56b9db402152bf205426736922f2b6196f4b5e7000de0162ba21e60198113"
+    },
+    {
+      "path": "src/cards/entries/09107.js",
+      "sha256": "3e8b62436de87730e7b652a0c4b78ba23f8ecf72edf4dcaeb36825fffd4d6b62"
+    },
+    {
+      "path": "src/cards/entries/09108.js",
+      "sha256": "8c3090d78e8d0dbdc16759560d4c772ce57a666b5aa852dec1e3df7a3ae2e987"
+    },
+    {
+      "path": "src/cards/entries/09109.js",
+      "sha256": "06b4822447a8f9b4bfc5c9de8b22f903c54185f1e6af44045bf40bf5559288e7"
+    },
+    {
+      "path": "src/cards/entries/09110.js",
+      "sha256": "7b7aaf451969eb96f37f91c2d9b529faadaaa73b7f8d18a6caf5f504b18aae78"
+    },
+    {
+      "path": "src/cards/entries/09111.js",
+      "sha256": "1f28e2d27c8a3f59513290495593b9be414e768c229f472c64aa372fec06f889"
+    },
+    {
+      "path": "src/cards/entries/09112.js",
+      "sha256": "997507923968b882c0e2717990a11a5675a6a27d2efb98ca317ce85e9f8894b6"
+    },
+    {
+      "path": "src/cards/entries/09113.js",
+      "sha256": "f17f92e83c472669bff14ac01a5d10d7db17b9929a9ed1cf97a402ec71107477"
+    },
+    {
+      "path": "src/cards/entries/09114.js",
+      "sha256": "3ffa0eeb6445a5fde9ff00a93029b52330fccd150a094748cd7c34160f5f150e"
+    },
+    {
+      "path": "src/cards/entries/09115.js",
+      "sha256": "92743762a4fc5ffc2bd74b69881bebe400071279ccc91e93ee7150c60d2604d7"
+    },
+    {
+      "path": "src/cards/entries/09116.js",
+      "sha256": "c6188857665630287c81bd10de3153dcc77c1c512498ad50bfcde5c0d71aef12"
+    },
+    {
+      "path": "src/cards/entries/09117.js",
+      "sha256": "688941cfdaa8df3f33493d7cc34defad46b1d6f970c0e2392bc36aef9fafbc14"
+    },
+    {
+      "path": "src/cards/entries/09118.js",
+      "sha256": "57cccf7f1c344b8c7670a29d822a7dd2b8a431bf1aa6e27bcbbe20ec88a4c8d5"
+    },
+    {
+      "path": "src/cards/entries/09119.js",
+      "sha256": "c6c21bf453ec486e2eff324dae9bf4929fd5fbc4c9f1c81b2dd84fff373874d3"
+    },
+    {
+      "path": "src/cards/entries/09120.js",
+      "sha256": "25e82fcef3a792bddefe129d340af562559c2fa549177e8ec24b07ae4280d1b7"
+    },
+    {
+      "path": "src/cards/entries/09121.js",
+      "sha256": "edbabf9dee6c29fb6d3b8e1a9ca1095e6318eebb45ea94a1c5de30dd9d4adee8"
+    },
+    {
+      "path": "src/cards/entries/09122.js",
+      "sha256": "67c5ca3834d8dc5e468bdd48a3c506b6a1b96666218a7b6de7ba07e9ab8eb34d"
+    },
+    {
+      "path": "src/cards/entries/09123.js",
+      "sha256": "2c1512cfd68539d22713f373d12ea803ea38e6930e2e40be283371f19cecc091"
+    },
+    {
+      "path": "src/cards/entries/09124.js",
+      "sha256": "d1005b224225620a320a6b6dd0483e607a056dceb2e1c43a1fd23c648858a332"
+    },
+    {
+      "path": "src/cards/entries/09125.js",
+      "sha256": "97eeda6181411de478004c75b8994d645592684c342c27b1ca233d54afc58aea"
+    },
+    {
+      "path": "src/cards/entries/09126.js",
+      "sha256": "e7ce53e8f06e3d38b58d47f43d72cee1f21d093dc969acf343824c13de0a9197"
+    },
+    {
+      "path": "src/cards/entries/09127.js",
+      "sha256": "5e217d0f7ad15a6602a52e237325b4d0d9f36c158d2b311091c8d34ef6f7e5f5"
+    },
+    {
+      "path": "src/cards/entries/09128.js",
+      "sha256": "0a2f8f30ad02bbcace595c2ccbd4294ac9036bb3798d306907ed0051e52b4aa2"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09021",
+      "name": "猎人护甲",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: Enchanted 未改槽位（只授予 Relic）；Durable/Hallowed 的 +2 生命/+2 神智与 Protective Runes 的跨调查员承接未实现（缺实例级读点，见 primitive-requests/09021.json）"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation：① Enchanted 的「改占奥秘槽而非身体槽」没有实例级槽位改写读点（槽位只认"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//   card-defs 的印刷 slots），只实现特性授予；② Durable/Hallowed 的「+2 生命 / +2 神智」没有"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "//   支援实例生命/神智修正读点（assetCapacityValue 只读 cardDef），未实现；③ Protective Runes 的"
+          }
+        ]
+      },
+      "implementation": "9ccb1cacf0cdfc4f1b595cd58622c37b7abd26af78419593b5e73b146008e1d2",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 145,
+          "test": "P6 09021 猎人护甲 定制面板 7 项契约；轻量刻印 -1 费用；伤害优先分配给护甲"
+        }
+      ]
+    },
+    {
+      "code": "09022",
+      "name": "符文斧",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "comment",
+            "line": 19,
+            "detail": "// approximation：Glory 的「治愈 1 点伤害/恐惧」由 api.healDamage/healHorror 结算（目标限定自己，"
+          }
+        ]
+      },
+      "implementation": "9efbd397b36e6e1706861dff2f702ffbf6798dadc91f8109dbda7cf458c1c701",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 163,
+          "test": "P6 09022 符文斧 攻击 +1[combat]；花 1 充能灌注精准再 +2；每轮开始补满 1 充能"
+        }
+      ]
+    },
+    {
+      "code": "09023",
+      "name": "定制改良",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 8,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 仅实现「附属到枪械」与「取消并重抽混乱标记」；Notched Sight / Extended Stock / Counterbalance / Leather Grip 的快速 / Extended Magazine / Quicksilver Bullets 缺条目读点未实现（见 primitive-requests/09023.json）"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "// approximation（逐项披露，缺读点见 primitive-requests/09023.json）："
+          },
+          {
+            "source": "comment",
+            "line": 21,
+            "detail": "//     ① Notched Sight（未命中不造成伤害）没有「攻击失败不造成伤害」的条目读点，未实现；"
+          },
+          {
+            "source": "comment",
+            "line": 22,
+            "detail": "//     ② Extended Stock（+2[combat]）需要「攻击使用某支援期间」的条件修正读点，未实现；"
+          },
+          {
+            "source": "comment",
+            "line": 23,
+            "detail": "//     ③ Counterbalance（附着其他[[升级]]后抽牌）缺「升级附着」窗口，未实现；"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "//     ④ Leather Grip 的「获得快速」无法按勾选条件改条目 fast 字段，只实现 -1 费用；"
+          },
+          {
+            "source": "comment",
+            "line": 25,
+            "detail": "//     ⑤ Extended Magazine（其他事件花/加弹药后补 1 弹药）缺弹药花费窗口，未实现；"
+          },
+          {
+            "source": "comment",
+            "line": 26,
+            "detail": "//     ⑥ Quicksilver Bullets（成功 ≥3 时 +1 伤害）需要在攻击结算中途写伤害，未实现。"
+          }
+        ]
+      },
+      "implementation": "8fae030cd55bba32a99d8eb4c0571fd52cb37cbff88b5664e3b2876ca88081bf",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 188,
+          "test": "P6 09023 定制改良 附属到[[枪械]]支援；攻击时揭示标记可取消并重抽"
+        }
+      ]
+    },
+    {
+      "code": "09024",
+      "name": "黑曜石手串",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "note"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「只可以分配诡计效果造成的伤害/恐惧」缺按来源过滤的承接读点（passive.assignHarmAtLocation 为无条件声明），只实现「可承接同地点其他调查员的伤害/恐惧」"
+          }
+        ]
+      },
+      "implementation": "f0045d5cb1692e6457eb828b88131dfb31c133b36b6a6462dedc86e6cbd27c9e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 209,
+          "test": "P6 09024 黑曜石手串 同地点其他调查员的伤害可以分配给本卡"
+        }
+      ]
+    },
+    {
+      "code": "09025",
+      "name": "绊脚索",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「附属敌人移动后横置」缺玩家卡附敌的窗口来源（enemy attachments 只枚举非玩家条目），改为依附时横置并在附属上记录；-1 躲避值用 addEnemyStatModifier 永久修正（Bolas 离场不撤销）"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "//     scope），因此改用「附着时立即横置 + 附属说明」的近似：参见 note 与 primitive-requests/09025.json。"
+          },
+          {
+            "source": "comment",
+            "line": 47,
+            "detail": "// 近似「移动后横置」：附着时先横置一次，并在附属上留下说明字段供界面显示。"
+          }
+        ]
+      },
+      "implementation": "62487e0e4a690e7fbde1cdd2bc51704a3cd27ae29f37d46efb01fe6e1427a418",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 223,
+          "test": "P6 09025 绊脚索 用[combat]躲避；成功且非精英时附属，敌人躲避值 -1 且横置"
+        }
+      ]
+    },
+    {
+      "code": "09026",
+      "name": "强势破门",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b75a88fd0b98050d95852edb99633e2f977cb60827d122b7efa287b7f5a32007",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 244,
+          "test": "P6 09026 强势破门 检定[combat](1)：成功附属到地点，超难度每点放 1 迹象并使隐藏值 -1"
+        }
+      ]
+    },
+    {
+      "code": "09027",
+      "name": "深度伤痛",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 轮末 1 点伤害只结算当前轮 1 次（玩家卡附属到敌人不是窗口来源）；打出条件无法校验「刚用近战支援成功攻击」（见 primitive-requests/09027.json）"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation：① 「被附属的敌人每轮结束都受 1 点伤害」只实现当前轮的轮末 1 次：玩家卡附属到敌人"
+          }
+        ]
+      },
+      "implementation": "8d43cf784d51c31ae15873f5ba74981a828d73066e2ec5ebdba2a7abacc4646b",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 259,
+          "test": "P6 09027 深度伤痛 附属到非精英敌人；轮末对附属敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09028",
+      "name": "励志演讲",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "comment",
+            "line": 4,
+            "detail": "// approximation：其他调查员的手牌折扣打出现在没有统一入口；本人用 playCard({discount:3})，"
+          }
+        ]
+      },
+      "implementation": "f0bee1e983627f344f1a562751b099a7c8901d76a969801f984c6d4734c69be4",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 274,
+          "test": "P6 09028 励志演讲 谈判：同地点一位调查员以 -3 费用从手牌打出[[盟友]]支援"
+        }
+      ]
+    },
+    {
+      "code": "09029",
+      "name": "还剩一枪",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「下一次使用该支援的攻击 +3」实现为本轮结束前的 +3[combat]（缺单次攻击加值的消费读点）"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation：+3 按「本轮结束前」生效、且不限定该支援的下一次攻击（缺单次攻击加值的消费读点），"
+          }
+        ]
+      },
+      "implementation": "d298df3935c71ca0e578787f2c5002d4544b8c91126d73cb6d72a5765601e626",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 288,
+          "test": "P6 09029 还剩一枪 给打空弹药的[[枪械]]补 1 发；本轮攻击 +3 技能值"
+        }
+      ]
+    },
+    {
+      "code": "09030",
+      "name": "战斗课程",
+      "type": "skill",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6e8db7eb0c8263f2c38859373f3b0a888b3662a7484d4b39e834c92d06577e81",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 303,
+          "test": "P6 09030 战斗课程 只能投入攻击/躲避检定；任意地点调查员的检定可投入"
+        }
+      ]
+    },
+    {
+      "code": "09031",
+      "name": "援助之手",
+      "type": "skill",
+      "klass": "guardian",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a662810a2effd1cc3abadfdb3976c8cabece1f0e0698d553afeccc62029901f1",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 317,
+          "test": "P6 09031 援助之手 可投入任意检定且每次限 1 张；其他投入卡的图标翻倍"
+        }
+      ]
+    },
+    {
+      "code": "09032",
+      "name": "鼓舞决心",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 图标与检定技能不匹配的卡无法走 commitCards（引擎按技能匹配过滤），改用 moveCard + addCommittedCardIcons 补齐全部图标；这类卡不进 committed 列表"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation：图标不匹配的卡不进 committed 列表（少「投入后」窗口），见 note。"
+          }
+        ]
+      },
+      "implementation": "08c4b193bec570f7e6781f48e4954cb54175263809868f5e26134e4ee8c5fdf7",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 338,
+          "test": "P6 09032 鼓舞决心 技能检定开始时花 1 充能：把一张非弱点手牌投入检定（图标视为[wild]）"
+        }
+      ]
+    },
+    {
+      "code": "09033",
+      "name": "外勤特工",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6cca734e85d20f6afde3d30fc631c546108ab54b19f52ed3056837ab7ab51726",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 357,
+          "test": "P6 09033 外勤特工 +1[智力]；横置并受 1 点恐惧：发现所在地点 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "09034",
+      "name": "看门狗",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "16d51396386085b16de34b63bf84b145d2685db9632048808a33836995a24560",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 372,
+          "test": "P6 09034 看门狗 横置与同地点敌人交战并让它攻击你；受攻击伤害后反咬 1 点"
+        }
+      ]
+    },
+    {
+      "code": "09035",
+      "name": "手铐",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「附属的非精英敌人不能在其上放置毁灭标记」缺按来源禁止放毁灭的持续读点，未实现（不能重整已由 preventEnemyReady 实现）"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation： 「不能在其上放置毁灭标记」没有「按来源禁止放毁灭」的持续读点，未实现（见 note）。"
+          }
+        ]
+      },
+      "implementation": "0e35aab30420506cac15a1e5bf716bda644184af16d7af0a4bc31dd44b4422eb",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 388,
+          "test": "P6 09035 手铐 用[combat]躲避[[类人]]敌人：成功清空其毁灭并附属，非精英不能重整"
+        }
+      ]
+    },
+    {
+      "code": "09036",
+      "name": "最坏的打算",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "dbf340b88df61ab127f949fccb0c712173c91fa89fb4016d77f943372c7d72b1",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 407,
+          "test": "P6 09036 最坏的打算 从牌库顶 9 张找出[[武器]]支援加入手牌并混洗牌库"
+        }
+      ]
+    },
+    {
+      "code": "09037",
+      "name": "殉道者护臂",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "274bcf91f47be07b8252cc4b086deda0f66ede0cf3755b957ff8069d7bb1a186",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 420,
+          "test": "P6 09037 殉道者护臂 显现结算时 +1 技能值；把同地点队友抽到的非险境遭遇改由你结算"
+        }
+      ]
+    },
+    {
+      "code": "09038",
+      "name": "吉里什·卡达贾",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "1093a0f9218a5aad26e3fbac4af72cb29a88e1baab8dbf89f0629835124f636b",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 436,
+          "test": "P6 09038 吉里什·卡达贾 承接同地点他人的伤害；横置令本次检定 +2，成功治愈自身 1 点"
+        }
+      ]
+    },
+    {
+      "code": "09039",
+      "name": "时刻警惕",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "comment",
+            "line": 4,
+            "detail": "// approximation：只实现「本调查员最多以 -1 费打出 4 张手牌支援」；其他玩家座位的手牌打出现在"
+          }
+        ]
+      },
+      "implementation": "bea5c66fdb896d159a1f43aa130190b79031dd7a4c12f0402dca7881ac645924",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 453,
+          "test": "P6 09039 时刻警惕 依次以 -1 费用打出最多 4 张手牌支援"
+        }
+      ]
+    },
+    {
+      "code": "09040",
+      "name": "炼金蒸馏",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: Enlightening 的「充能或秘密」按充能结算（api.addUses(asset,1)），秘密类支援不区分标记类型"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// 未实现：Enlightening 的「充能或秘密」二选一按充能处理（api.addUses(asset,1)），见 note。"
+          }
+        ]
+      },
+      "implementation": "52598ad156f3daeac2241b39df915d03add1ce65b10aad2863714388b72219da",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 468,
+          "test": "P6 09040 炼金蒸馏 花 1 补给：检定[智力](1) 成功让调查员抽 2 张；精炼入场 +2 补给"
+        }
+      ]
+    },
+    {
+      "code": "09041",
+      "name": "实证假设",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；四项定制判据、Peer Review/Research Grant/Irrefutable Proof/Alternative Hypothesis 未实现（见 primitive-requests/09041.json）"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation：自定义判据（Pessimistic Outlook 等 4 项）与 Peer Review / Research Grant /"
+          }
+        ]
+      },
+      "implementation": "21d0e1cf8c837e99a7e7d1097f062755037284896bb793be5f2999467566ed62",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 490,
+          "test": "P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证据；花 1 证据抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "09042",
+      "name": "鸦翎羽毛笔",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 只实现「附属到已指定的书籍/法术支援」与 Energy Sap 的移标记；撤退/游戏结束的勾选与升级经验 -1、以及另 5 项定制效果缺读点未实现（见 primitive-requests/09042.json）"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation：撤退/游戏结束没有玩家卡可用的窗口，且「升级经验 -1」属于战役升级报价层"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "//   （campaign-flow 的 XP 计算），本条目未实现；Living Quill / Spectral Binding / Mystic Vane /"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "//   Interwoven Ink / Supernatural Record 缺「按勾选条件改槽位/改检定值/改触发」的读点，未实现。"
+          }
+        ]
+      },
+      "implementation": "a962c201cd640a456ca8aa46bde03defd89e29968dbf0adaeaae9b3725a2d6da",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 512,
+          "test": "P6 09042 鸦翎羽毛笔 附属到你控制的[[书籍]]支援；墨力汲取把 1 充能移给所附属支援"
+        }
+      ]
+    },
+    {
+      "code": "09043",
+      "name": "解剖工具",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「3+ 证据 +1 神智」缺条件化 maxSanity 修正读点（getMaxSanity 不读 modifiers 管线），未实现"
+          },
+          {
+            "source": "comment",
+            "line": 12,
+            "detail": "// approximation：maxSanity 的读点（stats.js#getMaxSanity）只读 passive.sanityBonus 与实例"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// sanityModifier，不读 modifiers 管线，所以「3+ 证据 +1 神智」无法按证据数条件生效，未实现"
+          }
+        ]
+      },
+      "implementation": "49167d29febc34a2aadcafcc78a444a79813aeff57cd2ce037df452df0eacbcb",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 530,
+          "test": "P6 09043 解剖工具 同地点敌人被击败后放 1 证据；1/2 证据分别 +1[敏捷]/+1[战斗]"
+        }
+      ]
+    },
+    {
+      "code": "09044",
+      "name": "凄惨传略",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "035819ed0757fe0dae7988a6f1c3ae05d00eea46462c92d63de2b8805c1cf3fb",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 550,
+          "test": "P6 09044 凄惨传略 花 1 秘密调查 +2[智力]；成功超过 2 点抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "09045",
+      "name": "研究笔记",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「玩家卡能力把线索放到你所在地点后放等量证据」缺线索放置窗口，反应能力未实现（见 primitive-requests/09045.json）"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation：「玩家卡能力把线索放到地点后」没有对应窗口（location.clues 的写入点"
+          }
+        ]
+      },
+      "implementation": "8e191d074097ed3dcac53850d7699623702c2f5257b1445d70f954fba370d924",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 569,
+          "test": "P6 09045 研究笔记 检定[智力](0)：成功每超出 1 点可花 1 证据发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "09046",
+      "name": "诡异诊断",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "89a8020b7105aa41fd16bd7fe6a230190060cf4be02f7b21a43f759bcd1b3d78",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 586,
+          "test": "P6 09046 诡异诊断 把 1 个线索放到所在地点，然后治愈同地点调查员 3 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09047",
+      "name": "震撼发现",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "95b0aa8beea37bbe4e1330a33f7de6e610aab8dc9dd267faf05f2cc26978366a",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-1.test.mjs",
+          "line": 599,
+          "test": "P6 09047 震撼发现 查找牌库顶 6 张：放 1 个线索从查找牌里取 2 张入手并混洗"
+        }
+      ]
+    },
+    {
+      "code": "09048",
+      "name": "地区测绘",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "46299b3a826eacc77a239b93cb2a6420e3b15b32ab2b24b0c2a60561d61c5be8",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 134,
+          "test": "P6 09048 地区测绘：调查成功改为附属到地点，并使该地点所有技能检定难度 -1"
+        }
+      ]
+    },
+    {
+      "code": "09049",
+      "name": "分析法",
+      "type": "skill",
+      "klass": "seeker",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "9c71714959b43d1c27cdf7fb2e448f49473bd370c793cb7b72dfdb03440126b9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 160,
+          "test": "P6 09049 分析法：把 1 个线索放到所在地点，取消揭示的标记并重抽"
+        }
+      ]
+    },
+    {
+      "code": "09050",
+      "name": "实验室外套",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "5410d9c2b91852b8d1d625947218f9a503f04a1fccc02fe4276c72cd36d654b9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 183,
+          "test": "P6 09050 实验室外套：以 1 点及以内失败的[探寻者]卡检定改为成功且等于难度（横置）"
+        }
+      ]
+    },
+    {
+      "code": "09051",
+      "name": "俄耳甫斯教信条",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 只实现「选择诡计 + 花费 1 秘密 + 本轮持续记录」，印刷文本清空需要 new.blankCardText 读点（primitive-requests/09051.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 引擎还没有「把一张在场诡计的印刷文本框清空」的读点（敌人有 entityBlanked/"
+          },
+          {
+            "source": "comment",
+            "line": 18,
+            "detail": "//   近似后的真实行为：秘密减少、效果记录带当选卡号与 endOfRound。"
+          }
+        ]
+      },
+      "implementation": "ed34f2f45f79f849dcacd6e77ab48143fef01b6a5665bae7ad2b0f77020f0be6",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 219,
+          "test": "P6 09051 俄耳甫斯教信条：花 1 秘密指定一个诡计，本轮记录其文本框视为空白"
+        }
+      ]
+    },
+    {
+      "code": "09052",
+      "name": "存在之谜",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "bedb4f18a0be5bca5a48c774ccb6799e10c7253d09a8ec422d246fff655af77a",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 243,
+          "test": "P6 09052 存在之谜：谈判检定成功后自动躲避、附属并让敌人获得冷漠"
+        }
+      ]
+    },
+    {
+      "code": "09053",
+      "name": "指导",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "811103fd8b7e68d1b303e5e20c87df9b9fd4f90704c9f0998da686d70dfac02d",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 259,
+          "test": "P6 09053 指导：同地点另一位调查员本轮技能 +1 并获得额外一次行动"
+        }
+      ]
+    },
+    {
+      "code": "09054",
+      "name": "威廉·T·马尔森博士",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "71d9dac2b3f973ba04bccac2992b962577e4e971d7ea9f832a705c05ee56b1d9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 277,
+          "test": "P6 09054 威廉·T·马尔森博士：横置并把线索放到地点，2 选 1 取消另一张遭遇卡"
+        }
+      ]
+    },
+    {
+      "code": "09055",
+      "name": "媒体通行证",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 以 clueDiscovered 窗口覆盖「花费线索或放置线索后」；花费线索的独立窗口见 primitive-requests/09055.json。"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation: 卡面的触发还包括「花费线索」；引擎对 spendClues 没有窗口（api.spendClues 直接记账），"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "// 因此这里以「发现/放置线索后」的窗口近似，另写原语请求 primitive-requests/09055.json"
+          },
+          {
+            "source": "comment",
+            "line": 12,
+            "detail": "// （new.cluesSpentWindow）。测试断言近似后的真实行为：横置 + 本回合额外行动 / 非本回合改为下回合额外行动。"
+          }
+        ]
+      },
+      "implementation": "66f8b5293ad5b5ceece4ab4f1dd514911ac10c788f3ffba016eefec0bcc2fb89",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 310,
+          "test": "P6 09055 媒体通行证：发现线索后横置，本回合（或下个回合）额外一次行动"
+        }
+      ]
+    },
+    {
+      "code": "09056",
+      "name": "外科手术工具",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "561458aa0c96583325fc092587abe93229baad019bb3ceb23d9d2b48365790ee",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 332,
+          "test": "P6 09056 外科手术工具：治愈后花补给追加治疗；[action][action] 治愈 3 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09057",
+      "name": "指纹采集工具",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "9976af1b6295cd8cf6b979ddd33bbd3672df79b12594de83aa7deb94bf4d4eab",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 359,
+          "test": "P6 09057 指纹采集工具：横置花 1 补给调查（+2[智力]），成功额外发现 2 个线索"
+        }
+      ]
+    },
+    {
+      "code": "09058",
+      "name": "格雷氏解剖学",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 5,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 逐点选择 + 本轮持续记录由条目实现；「下一治疗/受伤 +N」的伤害管线读点见 primitive-requests/09058.json。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: 引擎没有「下一治疗/受伤 +N」的读点（harm-threat 只有限定在本次结算内的"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "//   测试断言近似后的真实行为：检定成功点数 = 询问次数、上限 +3、记录带当选卡号与 endOfRound。"
+          }
+        ]
+      },
+      "implementation": "3f13d9edfc5a6f3e2fce52de3799d7a9118151c10b160a078dd586b3ea64c3c9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 378,
+          "test": "P6 09058 格雷氏解剖学：检定[智力](1)后按超过点数逐项记录本轮效果（上限 +3）"
+        }
+      ]
+    },
+    {
+      "code": "09059",
+      "name": "关键证言",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c071655a881f54082f42cd9c9fc9cdba829120589967475899e96cfc0fab691e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 402,
+          "test": "P6 09059 关键证言：横置指证任意地点的敌人，成功后花 1 证据额外发现其地点的线索；定制 Fabricated Evidence 入场多 2 证据"
+        }
+      ]
+    },
+    {
+      "code": "09060",
+      "name": "狐朋狗友",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 特性在首次打出时补选并写入战役记录；Bolstering/Prompt 无逐实例读点、Clever 只保留原顺序（primitive-requests/09060.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//     （构筑期还没有写入时，打出本卡时补选一次并记录，见下方 approximation）。"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "// approximation: ①「购买时记录特性」由首次打出时补选并写入战役记录（构筑期接口在 src/campaign，"
+          },
+          {
+            "source": "comment",
+            "line": 19,
+            "detail": "//   只实现「不洗牌、按原顺序留在牌库顶」。"
+          }
+        ]
+      },
+      "implementation": "bdf75245c6125bb3fa542aab885a96e0838222634cd0b44beab2218fb3be4a89",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 434,
+          "test": "P6 09060 狐朋狗友：查看牌库顶 6 张，花 1 资源把具有所选特性的牌加入手牌，其余洗回"
+        }
+      ]
+    },
+    {
+      "code": "09061",
+      "name": "敏锐直觉",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 只实现「检定成功超过 3 点」的打出条件；幕/密谋推进条件与 5 个追加条件缺读点（primitive-requests/09061.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "// approximation: ①「密谋或场景推进后」目前没有引擎记录（agenda/act 推进不带事后窗口），因此只实现"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "//   用「本阶段 +2 技能值」的持续效果近似（卡面限定在那次行动内）。"
+          }
+        ]
+      },
+      "implementation": "6ead46b97eb95c8b00ac1d7a10e5ec828afe3a26bb26f525d5a1f1870bb64a57",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 452,
+          "test": "P6 09061 敏锐直觉：检定超过 3 点后才可打出，每轮一次并立刻进行一次行动"
+        }
+      ]
+    },
+    {
+      "code": "09062",
+      "name": "易容术",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fff1738a84e80f338250dab954a09a604a20aed14c34a066ba70822af330263c",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 468,
+          "test": "P6 09062 易容术：花 1 补给躲避（+2[敏捷]），非精英敌人下个补给阶段不重整"
+        }
+      ]
+    },
+    {
+      "code": "09063",
+      "name": "非分之财",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 卡上资源用实例 uses 保存；撤退/游戏结束改为主动结算的 free 能力并写战役记录（primitive-requests/09063.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "//     见下方 approximation 与原语请求）。移动走 api.spendResources + api.addUses（都是统一记账）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: ①卡面「资源」本应放在 asset.resources，但引擎的资源寄存原语只服务「家族遗产」"
+          }
+        ]
+      },
+      "implementation": "2bcf630e6e5df2bf6e86abdf1c8eb345d18da4ae813f1a4afa3d61dc1ff1d42a",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 486,
+          "test": "P6 09063 非分之财：横置把最多 2 资源从资源池移到卡上；结算时按每 2 资源写下个冒险奖励"
+        }
+      ]
+    },
+    {
+      "code": "09064",
+      "name": "扒手行窃工具",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fbd5638dae432cd4131967dd8f718f935c875a9ca363f7296571535174c0fa2d",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 503,
+          "test": "P6 09064 扒手行窃工具：花 1 补给用[敏捷]调查，成功后获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "09065",
+      "name": "暗袋",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 只实现「快速 + 只能在自己回合 + 附属到[[服装]]支援」；宿主额外的手部/饰品受限槽缺读点（primitive-requests/09065.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 12,
+            "detail": "// approximation: 引擎的「附属给宿主额外槽位」只有 assetRule.hostExtraSlot，且注册期只接受 'arcane'"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//   见 primitive-requests/09065.json（extend.attachmentHostSlot）。测试断言近似后的真实行为："
+          }
+        ]
+      },
+      "implementation": "4ae105a744a77bd0c21392ca257a6aae828a7d0c539c59877ec68986d27d512e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 518,
+          "test": "P6 09065 暗袋：快速、只能自己回合，附属目标只认[[服装]]/[[护甲]]支援"
+        }
+      ]
+    },
+    {
+      "code": "09066",
+      "name": "连打带跑",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "0b364b946b68a9ba067c6cd78941430a916e379fc680487992bee9edbd923f26",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 535,
+          "test": "P6 09066 连打带跑：把手中[[盟友]]放置入场，回合结束时返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "09067",
+      "name": "“我收下了！”",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "2635ed510e4a66171df8f7ebbde13c8ea64f81e64e9e9ff3e09e9585e484c212",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 553,
+          "test": "P6 09067 “我收下了！”：成功调查后以 -X 费用打出[[道具]]支援并附属，该支援获得[[违法]]"
+        }
+      ]
+    },
+    {
+      "code": "09068",
+      "name": "直捣蜂窝",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: cards-data 没有[[精英]]标志，查找阶段不过滤精英；生成后按实例 elite 复核并写日志（primitive-requests/09068.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: cards-data 没有精英标志（精英信息在关卡数据里），因此「非[[精英]]」在生成后按"
+          }
+        ]
+      },
+      "implementation": "b25d6ce695073f52f0971044fd9873127487a26186cef443aa86c1581d54d0df",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 587,
+          "test": "P6 09068 直捣蜂窝：查找遭遇牌库顶 9 张的敌人并与之交战，发现 1 个线索并获得等于其生命值的资源"
+        }
+      ]
+    },
+    {
+      "code": "09069",
+      "name": "逃生通道",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c156600f0fea049b927806465998143ac24c157ebf94d0e3dbcdf0e00a159f66",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 605,
+          "test": "P6 09069 逃生通道：敌人攻击时躲避，成功后取消这次攻击"
+        }
+      ]
+    },
+    {
+      "code": "09070",
+      "name": "风险精算",
+      "type": "skill",
+      "klass": "rogue",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "cc06167c44888029a7bf97f3b4cde95b0d128aeebc9b1e610a74ac0e586bbd4f",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 628,
+          "test": "P6 09070 风险精算：每执行一个行动获得 1 个[wild]图标；检定结束后结束回合"
+        }
+      ]
+    },
+    {
+      "code": "09071",
+      "name": "时髦大衣",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 缺「获得资源后」窗口，改为主动结算的 free 能力（primitive-requests/09071.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 9,
+            "detail": "// approximation: 引擎没有「获得资源后」的窗口（resource-bank.js 的 gainResource 不开窗），"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "//   见 primitive-requests/09071.json（new.resourcesGainedWindow）。测试断言近似后的真实行为："
+          }
+        ]
+      },
+      "implementation": "e75081e3274ed657ade66820eff2a207bac89e0f1df41a285c0b398c4b8a2a5c",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 644,
+          "test": "P6 09071 时髦大衣：横置获得额外 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "09072",
+      "name": "查克·费格斯",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 第三项「事件结算期间 +2 技能值」用本阶段 skill:* +2 持续效果近似（引擎没有事件结算窗口的加值读点）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "//   · 「+2 技能值」没有「事件结算期间」的读点，用本阶段的 skill:* +2 持续效果近似（见 note）。"
+          }
+        ]
+      },
+      "implementation": "91cb41785c620edac067b59cd85dc4d8fe8c479c9b51b65e463209d8cde15181",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 654,
+          "test": "P6 09072 查克·费格斯：打出[[策略]]/[[技巧]]事件时横置，选择使其获得快速或 -2 费用"
+        }
+      ]
+    },
+    {
+      "code": "09073",
+      "name": "痛下黑手",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "f8e4f2d1fd37e5bfac0403129dc26bdfac5becc84d6e1e23a1f78695111b382d",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 697,
+          "test": "P6 09073 痛下黑手：攻击/谈判/躲避已横置敌人 +2 技能值；躲避后横置追击"
+        }
+      ]
+    },
+    {
+      "code": "09074",
+      "name": "破门而入",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation:「回合结束时返回手牌」实现为结算后立即返回手牌（事件卡延迟去向缺读点，primitive-requests/09074.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "//   · 「回合结束时返回手牌」→ 没有延迟效果读点时，用「结算后返回手牌」近似（条目 keepOnPlay"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 卡面写「你回合结束时」返回；引擎对事件卡没有延迟去向读点，因此本实现是"
+          }
+        ]
+      },
+      "implementation": "779e789ed144e23f3dc5645794eaf55a694c0b937a2e6c6d1c7f6aa0040bb00a",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-2.test.mjs",
+          "line": 724,
+          "test": "P6 09074 破门而入：加入[敏捷]调查，成功超过 1 点自动躲避敌人，超过 3 点返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "09075",
+      "name": "扒手行窃工具",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a0b192157cc00451db13731e7b837feb44e7895aa118d4d54d5cf5a54f94c9b9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 93,
+          "test": "P6 09075 扒手行窃工具：花 1 补给用敏捷调查，成功按差值获得 1~2 资源"
+        }
+      ]
+    },
+    {
+      "code": "09076",
+      "name": "职业枪手",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09076.json（附属能力的「基础技能值 4」缺少描述子级 baseValue 覆盖，未实现）"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "// approximation:"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//   · 「视为在场」用真实放置入场近似（附属支援会占用槽位；引擎没有「场外但在场」形状）。"
+          }
+        ]
+      },
+      "implementation": "d4fee660c7f561286c82c1601d63819dde5d9f46be1bdc4f98a9b1089e580c74",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 115,
+          "test": "P6 09076 职业枪手：入场后把手中违法支援附属到场，并能免费结算其攻击行动"
+        }
+      ]
+    },
+    {
+      "code": "09077",
+      "name": "地下市场",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09077.json（市场牌库与起始手牌前选 10 张未实现，每回合用牌库顶 2 张近似）"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "// approximation（已写 primitive-request/09077.json）："
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "//     这里用玩家牌库顶 2 张近似「市场牌库顶 2 张」，其余按要求放回牌库底。"
+          }
+        ]
+      },
+      "implementation": "e1235e8e34b0cfd3b4c47ce8dd9d99ea27fd23442240f778ec33dc4a5bb5bb04",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 141,
+          "test": "P6 09077 地下市场：牌库 +10；回合开始揭示 2 张，花 1 资源抽 1 张其余放底"
+        }
+      ]
+    },
+    {
+      "code": "09078",
+      "name": "全身而退",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "38c0d8c710c06b1674e0e73c5b16d95b91ee61e16f3c7f299dbeb9a29d268fef",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 160,
+          "test": "P6 09078 全身而退：每个横置的非蜂拥敌人给出一个不同选项"
+        }
+      ]
+    },
+    {
+      "code": "09079",
+      "name": "传神佳墨",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 6,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09079.json（购买时所选技能近似为意志；Shifting Ink 的运行时控制权切换与灌墨的槽位替换未实现）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09079.json）："
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "//   · 「购买时圈选技能」没有构筑期选择读点。基础所选技能按意志近似；Eldritch Ink（第 4/5 项）"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//     当前字段是静态布尔，未实现（note）。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "//   · Imbued Ink 的「改为占用法术槽」没有实例级槽位覆盖读点，仅实现额外 2 充能（note）。"
+          }
+        ]
+      },
+      "implementation": "692d2f44bef2f353615dc5b65ad2a6f6a3ca58b378442546cb15fcb227cea65e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 178,
+          "test": "P6 09079 传神佳墨：3 充能、回合开始移除 1 充能并在耗尽时弃掉；所选技能 +1"
+        }
+      ]
+    },
+    {
+      "code": "09080",
+      "name": "召来的仆从",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 额外费用在 entersPlay 里用 api.discardAsset 支付（引擎打出费用管线未读 cost.discardControlledAsset，声明式 cost 待主进程接线）；支援无独立 location，用附属到地点近似移动；槽位覆盖/返回手牌费用/共享行动预算/Armored Carapace/Jaws 忽略警戒未实现，见 primitive-request/09080.json"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation（已写 primitive-request/09080.json）："
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "//     近似（移动后它不再作为支援参与能力枚举）。"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "//   · Armored Carapace（3 生命 + 替同地点调查员承受伤害）与 Jaws「忽略警戒」没有对应读点，未实现"
+          }
+        ]
+      },
+      "implementation": "9f5213df09917e74ada292309f743b61ba1ea2983ad72c2601d68b8e84a268a3",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 193,
+          "test": "P6 09080 召来的仆从：行动把它移动到已揭示的连接地点；定制面板声明 8 项"
+        }
+      ]
+    },
+    {
+      "code": "09081",
+      "name": "号令真言",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09081.json（不真正附属到敌人：打出时对所选非精英敌人一次性下命令；持续谈判与 Greater Control/Bonded/Thrice Spoken 未实现）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09081.json）："
+          }
+        ]
+      },
+      "implementation": "bed3f1f6e433f46aff9bde4c1fb7d6e7b431d12303feb614b60312ccf780ea27",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 208,
+          "test": "P6 09081 号令真言：对同地点非精英敌人下「蹲下」命令使其横置"
+        }
+      ]
+    },
+    {
+      "code": "09082",
+      "name": "仪式镰刀",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "558a1ef55d24e13fd3f973e37740bb9dfee2c729269818a5e180511eb68137c8",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 222,
+          "test": "P6 09082 仪式镰刀：横置放毁灭换 +1 技能值与 +1 伤害；击败敌人移除 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09083",
+      "name": "寻龙尺",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "eb6d695ca3fe054189760cc060a02514fcebb3ed684ada6ac464a3854bb7e141",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 252,
+          "test": "P6 09083 寻龙尺：横置放毁灭移动到连接地点，发现最后线索时移除毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09084",
+      "name": "圣杯",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7f44439318983efe4c4b1b59e4c7d5536b3e12a7e4878a7e7cc9e15dfc4b9b34",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 284,
+          "test": "P6 09084 圣杯：横置放毁灭治疗 2 点；治疗 1 点完全治愈时移除毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09085",
+      "name": "缟玛瑙五芒星",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "0684436ec98441192d3e1c3a1e29c73728f624078f16cd409e6f5db44f21c7d7",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 312,
+          "test": "P6 09085 缟玛瑙五芒星：横置放毁灭可躲避连接地点敌人；成功 2 点移除毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09086",
+      "name": "惊悚皈依",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09086.json（引擎无槽位容量读数，基础法术槽按 2 计，其它卡授予的额外法术槽未计入）"
+          },
+          {
+            "source": "comment",
+            "line": 7,
+            "detail": "// approximation（已写 primitive-request/09086.json）：引擎没有公开的「槽位容量读数」API，"
+          }
+        ]
+      },
+      "implementation": "75c4d3cc396fdbffce68a4dcee553f83120a80f04223ffb9686ff6f722c22ce9",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 343,
+          "test": "P6 09086 惊悚皈依：每个法术槽抽 1 张；每个被占用的法术槽弃 1 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "09087",
+      "name": "爆炸结界",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09087.json（「打出前弃法术槽」在 X 选择之后结算；槽位容量按 2 计）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09087.json）："
+          }
+        ]
+      },
+      "implementation": "31a85e388b0eed0774c88653e425438f68e3e092ade8e75ecf6bf52ce5703a50",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 359,
+          "test": "P6 09087 爆炸结界：X 对交战的非精英敌人造成伤害，X 受空法术槽限制"
+        }
+      ]
+    },
+    {
+      "code": "09088",
+      "name": "诅咒连连",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09088.json（敌方「本轮不能受到伤害」缺少持续实体规则读点，未实现）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09088.json）：敌方「本轮不能受到伤害」没有"
+          }
+        ]
+      },
+      "implementation": "f28d241f4b78a3569499ccd1b65884f0f41edb56567c072110824499b1487007",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 377,
+          "test": "P6 09088 诅咒连连：按毁灭标记击败敌人并获得等量资源；或自动躲避并发现线索"
+        }
+      ]
+    },
+    {
+      "code": "09089",
+      "name": "束敌宝罐",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fb565e82686815efe307509540a767bf841f1457dff2ae230ce1f618c7e88d8d",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 403,
+          "test": "P6 09089 束敌宝罐：罐底每个敌人 +1 法术槽；可取消有相同特性敌人的攻击"
+        }
+      ]
+    },
+    {
+      "code": "09090",
+      "name": "恐灵附身",
+      "type": "skill",
+      "klass": "mystic",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09090.json（第二选项在投入窗口立即结算，未等待检定成功）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09090.json）："
+          }
+        ]
+      },
+      "implementation": "4a72dd2c40f7864954fd3dbd2dde7814618144b538b7b8adc36fedc9b68e8345",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 431,
+          "test": "P6 09090 恐灵附身：投入后放毁灭换 2 图标，或移除毁灭/补半使用"
+        }
+      ]
+    },
+    {
+      "code": "09091",
+      "name": "星界映射",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09091.json（「额外行动只能用于打出手部槽位支援」用每回合一次免行动打出近似）"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "// approximation（已写 primitive-request/09091.json）：引擎没有「额外行动只能用于 X」的行动预算"
+          }
+        ]
+      },
+      "implementation": "8e50f543790688ba7788ca6c3af81c0902cfacf2c206dd576dea99c9a3159841",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 455,
+          "test": "P6 09091 星界映射：每个空法术槽 +1 手槽；额外行动打出手中手部槽位支援"
+        },
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 471,
+          "test": "P6 09091 星界映射：不是自己的回合时玩家窗口不提供额外行动"
+        }
+      ]
+    },
+    {
+      "code": "09092",
+      "name": "艾勒·鲁巴什",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09092.json（「附属支援 1 个毁灭不计入密谋阈值」缺少 agendaDoom 排除读点；宿主仅支持 1 个附属支援）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09092.json）："
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "//   · 「附属支援上的 1 个毁灭不计入密谋阈值」没有 agendaDoom 的排除读点，未实现（不伪造）。"
+          },
+          {
+            "source": "comment",
+            "line": 12,
+            "detail": "//   · 引擎的支援宿主同一时刻只支持 1 个 attachedToAsset；「仅限附属 2 个支援」按 1 个近似。"
+          }
+        ]
+      },
+      "implementation": "0add49be692a58a18e174208bb25f443f1784b2bebe36b50eb4172228858d40f",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 491,
+          "test": "P6 09092 艾勒·鲁巴什：把带毁灭支援附属到自身，并在其技能检定上 +1"
+        }
+      ]
+    },
+    {
+      "code": "09093",
+      "name": "月光仪式",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "581a515617f4afb58a46d26c3549645990edd6b0837437b4137c31eb16f62ced",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 506,
+          "test": "P6 09093 月光仪式：移除同地点非精英卡牌上所有毁灭标记"
+        }
+      ]
+    },
+    {
+      "code": "09094",
+      "name": "食罪者",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "10278b59a1648e7ffb4f4994a40959bdc33356622905bae26351309ba0286fb1",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 517,
+          "test": "P6 09094 食罪者：把支援上的 1 毁灭移到自身并重整它；行动清空自身毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09095",
+      "name": "解锢灵魂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "107795dec4201b70bf2efdc6e55a2e603f9346c392275a2d3b6a3f1214215e33",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 535,
+          "test": "P6 09095 解锢灵魂：弃掉法术支援，从手牌打出法术卡并减 3 费"
+        }
+      ]
+    },
+    {
+      "code": "09096",
+      "name": "仪式镰刀",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d08798e37ef6ea4b44482eb8200c044602f8e2764dc4e0ccf62ce82ceb77cac6",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 552,
+          "test": "P6 09096 仪式镰刀（4 级）：击败敌人后重整并移除所有毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09097",
+      "name": "寻龙尺",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d660e8ce17f2f7923a422e7b6fc915937df9b920877b43c6acefb463c0448928",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 570,
+          "test": "P6 09097 寻龙尺（4 级）：移动并 +2 技能值；发现最后线索后重整清毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09098",
+      "name": "缟玛瑙五芒星",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 4,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "1f2a240b9f00f49863bacc690ca80a6a7907003a9af176219bc7f17d055c56a0",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 604,
+          "test": "P6 09098 缟玛瑙五芒星（4 级）：躲避连接地点敌人；成功 2 点重整清毁灭"
+        }
+      ]
+    },
+    {
+      "code": "09099",
+      "name": "便携万能工具",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09099.json（Detachable 跨座位使用与 Spring-Loaded 的失败时点改写未实现，其余勾选项已实现）"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation（已写 primitive-request/09099.json）："
+          }
+        ]
+      },
+      "implementation": "0142f421ec6eb272e47f55539ed4cc5689b9956f980a08d2da3b0fcdfbb41e06",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 635,
+          "test": "P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值；勾选尖刀再 +1"
+        }
+      ]
+    },
+    {
+      "code": "09100",
+      "name": "简易陷阱",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09100.json（地点附属敌方修正/远程布置/束网/静态快速未实现；陷阱按随你的场上卡近似）"
+          },
+          {
+            "source": "comment",
+            "line": 10,
+            "detail": "// approximation（已写 primitive-request/09100.json）："
+          },
+          {
+            "source": "comment",
+            "line": 12,
+            "detail": "//     当作随你移动的场上卡，「附属地点敌人 -1 攻击/-1 躲避」与远程布置/束网未实现（note）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "//   · Simple（获得快速）是静态关键字，定制项无法在运行期开关，未实现。"
+          }
+        ]
+      },
+      "implementation": "c376e33861ff7f88e21e4c7b9b5c18e5537e025b858d0058b883e99c15548918",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 676,
+          "test": "P6 09100 简易陷阱：以 2 计时入场，每轮结束移除 1 计时，耗尽后弃掉"
+        }
+      ]
+    },
+    {
+      "code": "09101",
+      "name": "饱经风霜",
+      "type": "skill",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "flag",
+          "note"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；Nemesis/Mythos-Hardened/Always Prepared 未实现）"
+          },
+          {
+            "source": "comment",
+            "line": 9,
+            "detail": "// approximation（已写 primitive-request/09101.json）："
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "//     「与诡计一起加入胜利区」「弃牌堆回手」的条目级读点，未实现（逐项 note）。"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "// 占位的购买时所选特性（见文件头 approximation）。"
+          }
+        ]
+      },
+      "implementation": "654b5444d447aa841521bc9cb270ad7431843ae4865b053ec70b6f55d33487bb",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-3.test.mjs",
+          "line": 693,
+          "test": "P6 09101 饱经风霜：对遭遇卡的检定每个匹配的所选特性获得双百搭图标"
+        }
+      ]
+    },
+    {
+      "code": "09102",
+      "name": "死神偶像",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "3b2e61e9c5690651ebcd64ddcb228a20248ef126fa5a5e792dffad2beb753c5e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 144,
+          "test": "P6 09102 死神偶像：受到伤害时横置并弃 2 张手牌，取消 2 点伤害"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 157,
+          "test": "P6 09102 死神偶像：没有手牌时不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "09103",
+      "name": "临时盾牌",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: legalMoves 的弃牌堆通道目前只枚举事件（play-channels.js#discard），"
+          }
+        ]
+      },
+      "implementation": "ae9a6f065d70e1ff9f03ca547def10f68f17bb8f359cedd46b401d48cfb495b2",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 175,
+          "test": "P6 09103 临时盾牌：被击败时洗回牌库而不是弃掉"
+        }
+      ]
+    },
+    {
+      "code": "09104",
+      "name": "道路尽头",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "99441ea1448e973d5b7bc6f19204d3d862b1b50b86ad2acdd6b1f89cf5177055",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 196,
+          "test": "P6 09104 道路尽头：最终密谋在场时打出，抽 1、+1 资源、+1 行动"
+        }
+      ]
+    },
+    {
+      "code": "09105",
+      "name": "直击弱点",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 自动成功之后本次攻击/躲避的通常效果仍会结算（引擎没有「取代检定通常效果」写点）；精英分支因此可能多结算一次攻击伤害。"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "// approximation: 引擎没有「替换本次检定的通常效果」的写点——自动成功之后攻击/躲避的通常效果仍会"
+          }
+        ]
+      },
+      "implementation": "e84fe5c4126bf60b24bbacba3b15f8c980dc3d58229b9fb5b82462bade4f6222",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 225,
+          "test": "P6 09105 直击弱点：难度 0 的攻击检定自动成功并弃掉非精英敌人"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 236,
+          "test": "P6 09105 直击弱点：精英改为自动躲避并造成 3 点伤害；难度不为 0 时不可用"
+        }
+      ]
+    },
+    {
+      "code": "09106",
+      "name": "整装待发",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；「直到调查阶段结束」用 endOfPhase 到期。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: ①「每轮最多 2 张[[抉择]]」是特质作用域上限，条目只能声明本卡每轮 2 次；"
+          }
+        ]
+      },
+      "implementation": "04e56b9db402152bf205426736922f2b6196f4b5e7000de0162ba21e60198113",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 255,
+          "test": "P6 09106 整装待发：显现选择两项技能，所有调查员所选 +1、其余 -1"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 269,
+          "test": "P6 09106 整装待发：从牌库抽到时自动结算显现（真实 cardDrawn 窗口）"
+        }
+      ]
+    },
+    {
+      "code": "09107",
+      "name": "猎人还是猎物",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；平局按地点 id 排序。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似；平局的最短/最远分支按地点 id 排序取第一个。"
+          }
+        ]
+      },
+      "implementation": "3e8b62436de87730e7b652a0c4b78ba23f8ecf72edf4dcaeb36825fffd4d6b62",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 286,
+          "test": "P6 09107 猎人还是猎物：场上没有敌人时抽 1 张"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 297,
+          "test": "P6 09107 猎人还是猎物：未交战非精英敌人朝最近的调查员移动一次"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 310,
+          "test": "P6 09107 猎人还是猎物：调查员解除交战并远离最近的敌人移动一次"
+        }
+      ]
+    },
+    {
+      "code": "09108",
+      "name": "拨云见日",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 额外线索在打出时立即发现（自动成功保证原检定成功，结果等价）。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 两次「额外线索」在打出时立即发现（自动成功已保证原检定成功，结果等价）；"
+          }
+        ]
+      },
+      "implementation": "8c3090d78e8d0dbdc16759560d4c772ce57a666b5aa852dec1e3df7a3ae2e987",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 330,
+          "test": "P6 09108 拨云见日：难度 0 的调查检定自动成功，两个地点各额外发现 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "09109",
+      "name": "抉择时刻",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「下个回合失去 1 个行动」改为立刻失去 1 个行动（缺下回合行动数写点）；「每轮最多 2 张抉择」按本卡每轮 2 次近似。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: ①「每轮最多 2 张抉择」按本卡每轮 2 次近似；②「下个回合失去 1 个行动」没有"
+          }
+        ]
+      },
+      "implementation": "06b4822447a8f9b4bfc5c9de8b22f903c54185f1e6af44045bf40bf5559288e7",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 350,
+          "test": "P6 09109 抉择时刻：所选调查员失去 1 行动并抽 3 张"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 362,
+          "test": "P6 09109 抉择时刻：立即进行一次行动后随机弃 1 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "09110",
+      "name": "救生索",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: X（本回合失败检定次数）按 1 结算；印刷时机「回合将要结束」近似为自己回合内的快速打出。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 引擎没有「本回合技能检定失败次数」读点（history 未交付），X 近似按 1 结算；"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "//   印刷时机「回合将要结束」用「自己回合内快速打出」近似（不能在他人回合结束窗口打出）。"
+          }
+        ]
+      },
+      "implementation": "7b7aaf451969eb96f37f91c2d9b529faadaaa73b7f8d18a6caf5f504b18aae78",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 378,
+          "test": "P6 09110 救生索：获得 1 个额外行动并放逐；每回合只能打出 1 张"
+        }
+      ]
+    },
+    {
+      "code": "09111",
+      "name": "野兽本性",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；重复卡号按同码实体处理。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似；重复卡号按「同码任一实体」处理。"
+          }
+        ]
+      },
+      "implementation": "1f28e2d27c8a3f59513290495593b9be414e768c229f472c64aa372fec06f889",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 398,
+          "test": "P6 09111 野兽本性：揭示遭遇牌库顶 3 张，抽 1 张、弃其余，并发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "09112",
+      "name": "主动出击",
+      "type": "skill",
+      "klass": "survivor",
+      "xp": 1,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "997507923968b882c0e2717990a11a5675a6a27d2efb98ca317ce85e9f8894b6",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 416,
+          "test": "P6 09112 主动出击：可投入任意检定，并使本次检定难度 -2"
+        }
+      ]
+    },
+    {
+      "code": "09113",
+      "name": "棒球棒",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 返回/弃置的选择在伤害结算前完成（印刷为攻击后）；失败时不提供该选择。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 印刷要求「攻击后」再选择返回/弃置，这里在成功结算的对话里先选择（仍是本次攻击内、"
+          }
+        ]
+      },
+      "implementation": "f17f92e83c472669bff14ac01a5d10d7db17b9929a9ed1cf97a402ec71107477",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 436,
+          "test": "P6 09113 棒球棒：+2 战斗 +1 伤害；骷髅时选择额外 +1 伤害并弃掉"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 450,
+          "test": "P6 09113 棒球棒：没有骷髅/自动失败时只造成 +1 伤害，棒球棒留在场上"
+        }
+      ]
+    },
+    {
+      "code": "09114",
+      "name": "卡蒂亚·伊斯特班克",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 反应挂在抽牌后的 cardDrawn 窗口（非弱点牌没有抽牌时效果，结果等价）。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 非弱点牌抽到时没有「结算效果前」的独立时机，反应挂在抽牌后的 cardDrawn 窗口"
+          }
+        ]
+      },
+      "implementation": "3ffa0eeb6445a5fde9ff00a93029b52330fccd150a094748cd7c34160f5f150e",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 467,
+          "test": "P6 09114 卡蒂亚：抽到非弱点牌时横置，把该牌放到她底下并抽 1 张替代"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 480,
+          "test": "P6 09114 卡蒂亚：[action] 抽取她底下的任意一张卡牌"
+        }
+      ]
+    },
+    {
+      "code": "09115",
+      "name": "随心而动",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；移出游戏记入 exiled 账本。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似；被移出游戏的牌记入 state.exiled"
+          }
+        ]
+      },
+      "implementation": "92743762a4fc5ffc2bd74b69881bebe400071279ccc91e93ee7150c60d2604d7",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 497,
+          "test": "P6 09115 随心而动：三堆选一堆，每位调查员抽取该堆自己的牌，其余移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "09116",
+      "name": "修旧利废",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 2,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c6188857665630287c81bd10de3153dcc77c1c512498ad50bfcde5c0d71aef12",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 513,
+          "test": "P6 09116 修旧利废：把弃牌堆的[[道具]]支援移出游戏并获得等于其费用的资源"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 525,
+          "test": "P6 09116 修旧利废：支付费用打出弃牌堆的[[道具]]支援"
+        }
+      ]
+    },
+    {
+      "code": "09117",
+      "name": "陈旧的钥匙圈",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "688941cfdaa8df3f33493d7cc34defad46b1d6f970c0e2392bc36aef9fafbc14",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 541,
+          "test": "P6 09117 陈旧的钥匙圈：调查隐藏值 -2，成功后移除 1 钥匙，难度 0 额外发现 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "09118",
+      "name": "命运无常",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似。"
+          }
+        ]
+      },
+      "implementation": "57cccf7f1c344b8c7670a29d822a7dd2b8a431bf1aa6e27bcbbe20ec88a4c8d5",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 561,
+          "test": "P6 09118 命运无常：放置 1 毁灭，每位调查员治愈 3 伤害与 3 恐惧"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 576,
+          "test": "P6 09118 命运无常：移除 1 毁灭，每位调查员受到 1 直接伤害与 1 直接恐惧，本卡移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "09119",
+      "name": "超自然发射器",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 当前形态用 untilLeavesPlay 持续效果记账（缺实例级形态字段）；定位变换的位移在躲避检定后结算；注能配置只加在具象检定的技能值上。"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "// approximation: ①「当前形态」用持续效果记账（缺实例级形态字段）；②定位变换的位移在躲避检定之后结算"
+          }
+        ]
+      },
+      "implementation": "c6c21bf453ec486e2eff324dae9bf4929fd5fbc4c9f1c81b2dd84fff373874d3",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 596,
+          "test": "P6 09119 超自然发射器：已解锁形态可切换，轨道射击具象攻击 +1 伤害"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 613,
+          "test": "P6 09119 超自然发射器：以太连接（勾选）入场时额外 +2 以太"
+        }
+      ]
+    },
+    {
+      "code": "09120",
+      "name": "工具带",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 附属支援的文本框空白与「解除附属」未实现（缺宿主级空白读点与 detach 写点，见 primitive-request 09120.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 13,
+            "detail": "// approximation: ①「附属支援文本框视为空白」没有宿主级空白读点（引擎只有整卡空白与逐卡"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "//   blankHostExceptForced 字段），未实现；②「解除附属」没有 api（attachOrSwapControlledAsset 只能"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "//   挂上/换下），未实现。两项见 primitive-request 09120.json。"
+          }
+        ]
+      },
+      "implementation": "25e82fcef3a792bddefe129d340af562559c2fa549177e8ec24b07ae4280d1b7",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 632,
+          "test": "P6 09120 工具带：附属的[[工具]]支援不占用槽位"
+        }
+      ]
+    },
+    {
+      "code": "09121",
+      "name": "精益求精",
+      "type": "event",
+      "klass": "neutral",
+      "xp": 0,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "edbabf9dee6c29fb6d3b8e1a9ca1095e6318eebb45ea94a1c5de30dd9d4adee8",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 649,
+          "test": "P6 09121 精益求精：额外花 1 行动，立刻勾选定制卡的一个方框"
+        }
+      ]
+    },
+    {
+      "code": "09122",
+      "name": "手电筒",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "67c5ca3834d8dc5e468bdd48a3c506b6a1b96666218a7b6de7ba07e9ab8eb34d",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 669,
+          "test": "P6 09122 手电筒：调查检定开始时花费 1 补给，难度 -2"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 680,
+          "test": "P6 09122 手电筒：非调查/躲避检定不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "09123",
+      "name": "灵魂封圣",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 3,
+      "level": null,
+      "basicWeakness": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「超量治愈 → 放置贡品」缺治疗溢出读点（primitive-request 09123.json）；「花费 1 贡品 +2 技能值」已实现。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 「治愈超过当前伤害/恐惧的点数额外放置贡品」没有读点——引擎治疗一律截断到"
+          }
+        ]
+      },
+      "implementation": "2c1512cfd68539d22713f373d12ea803ea38e6930e2e40be283371f19cecc091",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 698,
+          "test": "P6 09123 灵魂封圣：检定期间花费 1 贡品，本次检定 +2 技能值"
+        }
+      ]
+    },
+    {
+      "code": "09124",
+      "name": "暗处潜伏者",
+      "type": "enemy",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "// approximation: ①「只能用[[武器]]支援或[[策略]]事件攻击/造成伤害」没有来源特性过滤的攻击/伤害写点"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "//   （enemyRule.damageOnlyFrom 只接受单个卡号），未实现；②「从每个来源受到的伤害减少 1 点」在"
+          }
+        ]
+      },
+      "implementation": "d1005b224225620a320a6b6dd0483e607a056dceb2e1c43a1fd23c648858a332",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 714,
+          "test": "P6 09124 暗处潜伏者：显现时在任意连接地点生成，猎手关键词生效"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 732,
+          "test": "P6 09124 暗处潜伏者：只能被武器支援/策略事件攻击（徒手攻击被来源限制阻止）"
+        }
+      ]
+    },
+    {
+      "code": "09125",
+      "name": "量子悖论",
+      "type": "event",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「弃掉 4 张其它手牌」在结算时支付（playCondition 已按手牌 ≥5 预检）。"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "// approximation: 额外费用在结算时支付（而非支付前预检），条件已按「手牌 ≥5」预检。"
+          }
+        ]
+      },
+      "implementation": "97eeda6181411de478004c75b8994d645592684c342c27b1ca233d54afc58aea",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 758,
+          "test": "P6 09125 量子悖论：弱点留在手中，回合结束时揭示并受到 1 点恐惧"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 772,
+          "test": "P6 09125 量子悖论：手牌 ≥5 时可打出并额外弃 4 张"
+        }
+      ]
+    },
+    {
+      "code": "09126",
+      "name": "该付账了",
+      "type": "event",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 2,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 额外行动费用只提供「用满档位」（最多 2 个额外行动）并在打出后扣除。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "// approximation: 「花费任意数量额外行动」简化为「用满可用档位」（最多 2 个额外行动），"
+          }
+        ]
+      },
+      "implementation": "e7ce53e8f06e3d38b58d47f43d72cee1f21d093dc969acf343824c13de0a9197",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 793,
+          "test": "P6 09126 该付账了：用额外行动把 10 费降到 0 后打出"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 808,
+          "test": "P6 09126 该付账了：回合结束时若在手牌，揭示并受到 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09127",
+      "name": "恐怖异灵",
+      "type": "enemy",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 空法术槽按「基础 1 槽 - 占用数」近似（缺容量读点，额外法术槽不计）。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "// approximation: 「法术槽位无支援」的**容量**没有读点（槽位容量只在 canEquip/slotUsage 内部），"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "//   近似为「基础 1 个法术槽 - 当前占用法术槽的支援数」，额外法术槽（add:slot）不计。"
+          }
+        ]
+      },
+      "implementation": "5e217d0f7ad15a6602a52e237325b4d0d9f36c158d2b311091c8d34ef6f7e5f5",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 823,
+          "test": "P6 09127 恐怖异灵：弱点在本地点生成并交战，空法术槽额外揭示标记"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 841,
+          "test": "P6 09127 恐怖异灵：没有空法术槽时不额外揭示"
+        }
+      ]
+    },
+    {
+      "code": "09128",
+      "name": "准备不足",
+      "type": "event",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "note"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "note",
+            "path": "note",
+            "detail": "approximation: 「在手牌中使投入卡图标 -1」缺手牌来源的全局投入图标削减读点，未实现（primitive-request 09128.json）；打出条件与弃掉已实现。"
+          },
+          {
+            "source": "comment",
+            "line": 11,
+            "detail": "//     没有 Revelation 的事件弱点抽到后不能进弃牌堆或触发未实现分支；"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "// approximation: 「在手牌中时投入卡图标 -1」没有读点——commitIconBonus 只对**控制中的支援**生效，"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "//   手牌来源的全局图标削减需要新原语；本卡只实现可打出的部分，见 primitive-request 09128.json。"
+          }
+        ]
+      },
+      "implementation": "0a2f8f30ad02bbcace595c2ccbd4294ac9036bb3798d306907ed0051e52b4aa2",
+      "evidence": [
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 860,
+          "test": "P6 09128 准备不足：只有这一张手牌且恰好 1 资源时才能打出"
+        },
+        {
+          "file": "tsk-player-m2-4.test.mjs",
+          "line": 874,
+          "test": "P6 09128 准备不足：支付 1 资源打出以弃掉它"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    "tests/tsk-player-m2-1.test.mjs",
+    "tests/tsk-player-m2-2.test.mjs",
+    "tests/tsk-player-m2-3.test.mjs",
+    "tests/tsk-player-m2-4.test.mjs",
+    "audit/tsk-player-shards.json",
+    "audit/tsk-player-queue.json",
+    "audit/tsk-player-browser.json"
+  ]
+}

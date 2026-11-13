@@ -14,9 +14,11 @@
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-pips i { flex: 1 1 0; height: 7px; border-radius: 1px; background: #ad907055; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-doom .ah-page-pips i.is-filled { background: #e08b78; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-clue .ah-page-pips i.is-filled { background: #e6c56d; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-relic .ah-page-pips i.is-filled { background: #a9c9a0; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-count { flex: none; min-width: 1.2em; font-weight: 700; text-align: right; text-shadow: 0 1px 1px #000a; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-doom { color: #f3b5a2; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-clue { color: #f6e3b0; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-relic { color: #d6e8cf; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress.is-over { color: #ffd8cc; }
 /* Cards attached to the current act/agenda hang from the bottom edge of the page. */
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-script-attachments { position: absolute; z-index: 2; left: 6px; right: 6px; bottom: -13px; display: flex; justify-content: center; gap: 4px; pointer-events: none; }
@@ -25,6 +27,18 @@
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-script-attachment > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-script-attachment:hover { filter: brightness(1.2); }
 .ah-table.ah-calm.ah-noir .ah-story-book .ah-script-attachment:focus-visible { outline: 2px solid #f7d698; outline-offset: 2px; }
+/* Cards in play beside the agenda deck (state.agendaAside): a compact stack hangs from the
+   bottom-left edge of the story book, opposite the centered attachment pills. Clicking it
+   opens the public-zone modal that lists every card. */
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside { position: absolute; z-index: 3; left: 6px; bottom: -13px; display: flex; pointer-events: none; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card { pointer-events: auto; display: inline-flex; align-items: center; gap: 4px; min-width: 0; max-width: 172px; height: 26px; padding: 0 7px 0 2px; border: 1px solid #b48ac2; border-radius: 3px; background: #241a2af2; color: #f0e2f6; font: inherit; font-size: 11px; line-height: 1; cursor: pointer; box-shadow: 0 3px 7px #000a, inset 0 0 6px #8c6ab755; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card .ah-table-art { position: relative; flex: 0 0 17px; width: 17px; height: 22px; border: 0; border-radius: 2px; overflow: hidden; transform: none; box-shadow: none; background: #2a1620; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card > b { flex: none; font-weight: 700; color: #e6c8f4; }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card:hover { filter: brightness(1.18); }
+.ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card:focus-visible { outline: 2px solid #e6c8f4; outline-offset: 2px; }
+/* Keep the centered attachment strip clear of the aside stack when both exist. */
+.ah-table.ah-calm.ah-noir .ah-story-book.has-agenda-aside .ah-script-attachments { left: 128px; }
 .ah-detail-attachments { margin-top: 10px; }.ah-detail-attachments > button { margin: 4px 6px 0 0; }
 .ah-reference-card { position: relative; flex: 0 0 88px; align-self: center; height: 145px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0; background: none; border: 0; color: #e0cfa8; cursor: pointer; }
 .ah-table.ah-calm.ah-noir .ah-reference-card .ah-table-art { width: 76px; height: 108px; flex: 0 0 108px; border: 1px solid #b8a27388; border-radius: 3px; box-shadow: 0 4px 9px #0008; }
@@ -84,6 +98,8 @@
   .ah-script-action small { justify-self: start; font-size: 8px; padding: 0 3px; }
   .ah-script-action-reason { font-size: 8px; }
   .ah-table.ah-calm.ah-noir .ah-story-book .ah-page-progress { font-size: 13px; }
+  .ah-table.ah-calm.ah-noir .ah-story-book .ah-agenda-aside-card { max-width: 120px; font-size: 10px; }
+  .ah-table.ah-calm.ah-noir .ah-story-book.has-agenda-aside .ah-script-attachments { left: 96px; }
   .ah-table.ah-calm.ah-noir .ah-script-status { flex: 1 0 100%; display: flex; flex-direction: row; min-height: 20px; justify-content: flex-end; align-items: center; gap: 12px; padding-right: 3px; }
   .ah-table.ah-calm.ah-noir .ah-doom-track { gap: 3px; }.ah-table.ah-calm.ah-noir .ah-doom-track i { width: 8px; }
   .ah-table.ah-calm.ah-noir .ah-doom-clocks { flex-direction: row; gap: 8px; align-items: flex-end; }

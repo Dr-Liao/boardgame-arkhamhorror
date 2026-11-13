@@ -124,10 +124,19 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       h('span', {}, tableIcon('doom'), t('situation.doom.progress', { doom: count, threshold: limit ?? '?' })),
       h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
         Array.from({ length: Math.min(12, limit || 6) }, (_, i) => h('i', { className: i < count ? 'is-filled' : '' }))))
-    const actProgress = h('div', { className: 'ah-situ-progress is-clue' + (costsClues && clues >= required ? ' is-ready' : '') },
-      h('span', {}, tableIcon('clue'), costsClues ? t('situation.clue.progress', { clues, required }) : t('situation.objective.complete')),
-      costsClues ? h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
-        Array.from({ length: Math.min(12, required || 0) }, (_, i) => h('i', { className: i < clues ? 'is-filled' : '' }))) : null)
+    // 内容层给出的非线索目标进度（破碎永世 4a：附属到古代遗物的地点数），与牌桌剧本卡
+    // 顶沿共用同一份公开投影；没有自定义进度时沿用线索目标口径。
+    const custom = st.actObjectiveProgress
+    const actProgress = custom
+      ? h('div', { className: 'ah-situ-progress is-clue is-relic' + (custom.current >= custom.target ? ' is-ready' : '') },
+        h('span', {}, tableIcon('book'),
+          t('situation.objective.progress', { current: custom.current, target: custom.target })),
+        h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
+          Array.from({ length: Math.min(12, custom.target || 0) }, (_, i) => h('i', { className: i < custom.current ? 'is-filled' : '' }))))
+      : h('div', { className: 'ah-situ-progress is-clue' + (costsClues && clues >= required ? ' is-ready' : '') },
+        h('span', {}, tableIcon('clue'), costsClues ? t('situation.clue.progress', { clues, required }) : t('situation.objective.complete')),
+        costsClues ? h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
+          Array.from({ length: Math.min(12, required || 0) }, (_, i) => h('i', { className: i < clues ? 'is-filled' : '' }))) : null)
     const bsr = st.blackStarsRise
     const agendaFace = id => {
       const deck = bsr?.decks?.[id]
@@ -322,6 +331,20 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
   }
 
   // 失落的时代独有的公开剧本状态：复仇合计、伊格之怒、深度、石柱、漆黑、探索牌库与遗物位置。
+  // 破碎永世 4a：遗物下正面朝下附属的地点也计数展示（旧投影只有持有人/位置，玩家数不出进度）。
+  const relicAttachmentValue = relic => {
+    const objective = relic.objective
+    const current = relic.attachments?.length || 0
+    if (objective?.kind === 'count') {
+      return t('situation.tfa.relicAttachmentsCount', { current, needed: objective.needed })
+    }
+    if (objective?.kind === 'location') {
+      const location = objective.name || objective.location
+      return t(objective.met ? 'situation.tfa.relicAttachmentsMet' : 'situation.tfa.relicAttachmentsNeed',
+        { current, location })
+    }
+    return t('situation.tfa.relicAttachmentsPlain', { current })
+  }
   const tfaStatusPanel = st => {
     const cp = st.campaign
     if (cp?.id !== 'theForgottenAge') return null
@@ -340,6 +363,10 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
     const destinationNames = (threads?.destinations || [])
       .map(id => (st.locations || []).find(location => location.id === id)?.name || id)
     const depths = st.depths
+    // 一片漆黑在场上以「密谋牌库旁的实体卡」表示（state.agendaAside）；
+    // 旧的 scenarioFlags.deepDark 计数已由存档修复迁移，这里不再读它。
+    const deepDarkCopies = (st.agendaAside || [])
+      .filter(card => (card.originalCode || card.code) === '04094').length
     const rows = [
       [t('situation.tfa.vengeance'), String(st.vengeance ?? 0), 'combat'],
       [t('situation.tfa.yigsFury'), String(st.yigsFury ?? 0), 'doom'],
@@ -352,10 +379,15 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       ...(flags.pillars != null ? [[t('situation.tfa.pillars'), t('situation.tfa.marks', { count: flags.pillars }), 'star']] : []),
       ...(st.timeline && (st.timeline.ancient || st.timeline.modern)
         ? [[t('situation.tfa.timelineLabel'), t('situation.tfa.timeline', { ancient: st.timeline.ancient, modern: st.timeline.modern }), 'action']] : []),
-      ...(flags.deepDark ? [[t('situation.tfa.deepDark'), t('situation.tfa.places', { count: flags.deepDark }), 'eye']] : []),
+      ...(deepDarkCopies ? [[t('situation.tfa.deepDark'), t('situation.tfa.cards', { count: deepDarkCopies }), 'eye']] : []),
       [t('situation.tfa.explorationLabel'), t('situation.tfa.exploration', { deck: exploration.deck, discard: exploration.discard.length }), 'clue'],
       ...(relic ? [[t('situation.tfa.relic'), holder ? t('situation.tfa.carriedBy', { name: holder })
         : place ? t('situation.tfa.atLocation', { location: place }) : t('situation.tfa.notInPlay'), 'book']] : []),
+      ...(relic && (relic.attachments?.length || relic.objective)
+        ? [[t('situation.tfa.relicAttachments'), relicAttachmentValue(relic), 'book',
+            relic.attachments?.length
+              ? relic.attachments.map(entry => entry.name || entry.code).join(separator()) : null]]
+        : []),
       ...(alejandro
         ? [[t('situation.tfa.alejandro'), alejandro.enemyId ? t('situation.tfa.takenByEnemy')
           : alejandroPlace ? t('situation.tfa.atLocation', { location: alejandroPlace }) : t('situation.tfa.unknown'), 'book']]
@@ -365,7 +397,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
     ]
     return h('div', { className: 'ah-campaign-tfa', role: 'group', 'aria-label': t('situation.tfa.aria') },
       h('h4', {}, tableIcon('tarot'), t('situation.tfa.title')),
-      h('ul', {}, rows.map(([label, value, icon]) => h('li', {},
+      h('ul', {}, rows.map(([label, value, icon, title]) => h('li', { title: title || null },
         h('span', {}, tableIcon(icon), label), h('strong', {}, value)))))
   }
 

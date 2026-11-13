@@ -22,6 +22,21 @@ import { storyInvestigatorProjection } from '../engine/story-investigators.js'
 import { projectHunch } from '../engine/hunch-deck.js'
 import { resourceBankProjection } from '../engine/resource-bank.js'
 
+// 破碎永世 4a 的非线索目标进度：关卡在 definition 里声明哪几张幕按「附属到古代遗物的
+// 地点数」推进（修补裂痕：开局调查员人数 + 1）。牌桌进度标记与局势面板共用这一份口径；
+// 卡号只出现在关卡声明里，投影不认战役/关卡 id。观察者无关（都是桌面公开信息）。
+export function publicActObjectiveProgress(state) {
+  const spec = state.scenario?.relicAttachmentObjective
+  if (!spec) return null
+  const actCode = state.acts?.[state.actIndex]?.originalCode
+  if (!(spec.countActs || []).includes(actCode)) return null
+  return {
+    kind: 'relic',
+    current: (state.scenarioFlags?.relicUnderneath || []).length,
+    target: Number(state.numInvestigators || state.investigators?.length || 1) + 1,
+  }
+}
+
 export function campaignProjection(state) {
   const out = {}
   // 直觉牌库（第 5 步 P6）：牌库张数与已揭示的那张是桌面公开信息，顺序不投影。
@@ -45,14 +60,42 @@ export function campaignProjection(state) {
   // 绑定（第四循环 P2.8）：场外集合是桌面公开信息，只投影有集合的关卡。
   const bonded = bondedSetProjection(state)
   if (Object.keys(bonded).length) out.bonded = bonded
-  // 古代遗物：位置与持有人都是桌上的公开信息。
-  out.relicOfAges = state.relicOfAges
-    ? {
-        code: state.relicOfAges.code,
-        location: state.relicOfAges.location ?? null,
-        seat: state.relicOfAges.seat ?? null,
+  // 古代遗物：位置、持有人与「正面朝下附属在遗物下的地点」都是桌面公开信息
+  // （破碎永世 4a：玩家必须能数出已附属几处、离目标还差几处；旧投影只有持有人/位置）。
+  const relic = state.relicOfAges
+  if (relic) {
+    const underneath = (state.scenarioFlags?.relicUnderneath || []).map(entry => ({
+      id: entry.id ?? null, code: entry.code, name: entry.name, victory: Number(entry.victory) || 0,
+    }))
+    const spec = state.scenario?.relicAttachmentObjective
+    const actCode = state.acts?.[state.actIndex]?.originalCode
+    let objective = null
+    if ((spec?.countActs || []).includes(actCode)) {
+      objective = {
+        kind: 'count', current: underneath.length,
+        needed: Number(state.numInvestigators || state.investigators?.length || 1) + 1,
       }
-    : null
+    } else if (spec?.locationActs?.[actCode]) {
+      const wanted = spec.locationActs[actCode]
+      objective = {
+        kind: 'location', location: wanted,
+        name: state.scenario?.locations?.[wanted]?.name || wanted,
+        current: underneath.length, met: underneath.some(entry => entry.id === wanted),
+      }
+    }
+    out.relicOfAges = {
+      code: relic.code,
+      location: relic.location ?? null,
+      seat: relic.seat ?? null,
+      attachments: underneath,
+      ...(objective ? { objective } : {}),
+    }
+  } else {
+    out.relicOfAges = null
+  }
+  // 当前幕的自定义目标进度（非线索）：牌桌剧本卡顶沿与局势面板直接读这份公开投影。
+  const actProgress = publicActObjectiveProgress(state)
+  if (actProgress) out.actObjectiveProgress = actProgress
   // 命运之线：亚历山卓的位置、伊塔卡的猎物与目的地都是公开信息（卡在桌上/记录里）。
   if (state.scenario?.id === 'threadsOfFate') {
     const flags = state.scenarioFlags || {}

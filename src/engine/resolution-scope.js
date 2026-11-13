@@ -60,6 +60,26 @@ export function endInvestigationFrame() {
   investigationFrame = investigationStack.length ? investigationStack.pop() : null
 }
 
+// 2026-11-11：遭遇卡效果作用域。
+// 「否定存在」这类卡只对「遭遇卡或敌人攻击」造成的效果生效；而规则书 FAQ 明确
+// 幕/密谋/地点/敌人/诡计/弱点/场景卡都属于遭遇卡（见 arkhamdb 02312 官方 FAQ）。
+// 剧本内容（地点规则、幕/密谋翻开、敌人脚本、遭遇条目）拿到的是 scenarioRuntime 的
+// api；在 runtime 方法执行期间压一个进程内帧，窗口 context 就能把来源标成 encounter，
+// 不需要每个调用点各传一次来源。进程内帧不写 state，存档/重放指纹不变。
+let encounterEffectDepth = 0
+
+export function beginEncounterEffectScope() {
+  encounterEffectDepth += 1
+}
+
+export function endEncounterEffectScope() {
+  if (encounterEffectDepth > 0) encounterEffectDepth -= 1
+}
+
+export function encounterEffectResolving() {
+  return encounterEffectDepth > 0
+}
+
 // 取消记账的「本次描述子结算」帧：避免在 state 上放临时标记（会改存档指纹）。
 let cancelNoteFrame = false
 

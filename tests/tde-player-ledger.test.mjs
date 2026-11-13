@@ -175,15 +175,16 @@ test('P7 availability：87 条 strict、72 张可入牌组、15 张只作依赖�
   assert.equal(expandedPlayablePool().filter(card => card.code.startsWith('06')).length, 72)
 })
 
-test('P7 campaign：06 记录的升级池含食梦者玩家卡，既有循环看不到；基础弱点不可购买', () => {
+test('全量开放：06 记录的升级池含食梦者玩家卡，其它循环记录同样能看到全部已开放玩家卡；基础弱点不可购买', () => {
   const tdeRecord = recordFor('06002', 20)
   // 06021 一瓣缟玛瑙是探求者 1 级资产：06 探求者记录应能作为升级购入。
   assert.ok(replacementOptions(tdeRecord, '06021', null).length > 0, '06 记录应能看到食梦者玩家卡的升级候选')
   assert.ok(TDE_PLAYER_BUILDABLE_CODES.includes('06021'))
-  // 既有循环（核心 01001）的记录仍然只看得到原有池，06 卡不会出现在升级候选里。
+  // 全量开放（P10/P8 之后）：升级池不再按调查员所属循环收窄，既有循环（核心 01001）的记录
+  // 也能购入 06 卡；跨循环可见性只由开局「卡牌范围」设置在 filterCardCodes 一层统一处理。
   const coreRecord = recordFor('01001', 20)
-  assert.deepEqual(replacementOptions(coreRecord, '06021', null), [], '既有循环记录不得看到 06 卡')
-  assert.deepEqual(replacementOptions(coreRecord, '06020', null), [], '既有循环记录不得看到 06 资产')
+  assert.ok(replacementOptions(coreRecord, '06021', null).length > 0, '全量开放后 01 记录也能看到 06 玩家卡')
+  assert.ok(replacementOptions(coreRecord, '06020', null).length > 0, '全量开放后 01 记录也能看到 06 资产')
   // 基础弱点永远不能作为升级目标。
   for (const code of BASIC) assert.deepEqual(replacementOptions(tdeRecord, code, null), [], code)
 })

@@ -21,7 +21,7 @@ export default {
         && !(state.investigators[inv.seat]?.committedToOtherThisTurn?.round === state.round)],
       resolve: ({ inv, api }) => {
         api.harm(inv.seat, { horror: 1 })
-        api.moveCard({ code: '09003', from: 'threat', to: 'deck', ownerSeat: inv.seat })
+        api.moveCard({ code: '09003', from: 'threat', to: 'deckTop', ownerSeat: inv.seat })
         api.shuffleDeck(inv.seat)
         api.info('「自私的错」被洗回卡森的牌库。')
       },

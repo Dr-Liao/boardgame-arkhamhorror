@@ -9,7 +9,7 @@
       "code": "09001",
       "name": "卡森·辛克莱",
       "file": "src/cards/entries/09001.js",
-      "sha256": "3a77336d8fe9e2ff1e7e76ea0b7739190e1379ce0128193694d45d6b254b09a0",
+      "sha256": "68a374ac2e38ddea6515bf8ce4c2347e27fc77a853c4e440d72218c0c5df1c1d",
       "signatures": [
         {
           "code": "09002",
@@ -27,7 +27,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "9f141a2a6fbea315180115dc9cca1f1a1a66955bc5db129478b9cff62d2399cf"
+          "sha256": "32ea984d940955697bfa3f685ce9df75c6fb1dda8e885a646b878aebb850e45c"
         }
       ],
       "checks": {
@@ -52,7 +52,7 @@
       "code": "09004",
       "name": "文森特·李",
       "file": "src/cards/entries/09004.js",
-      "sha256": "9e5fa58367a69a4b67ee9c753ae1c769a54040a4c59d62ec57015c269c2d7204",
+      "sha256": "a06e85bdfef11b9e028b0783345481c9b97de56aa802c65c57c51cb8fe5cfd64",
       "signatures": [
         {
           "code": "09005",
@@ -79,7 +79,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "ad339f306016a2346e65dba50a51b7d600dd094ae8d0bbca53dc447da2020689"
+          "sha256": "b03c38b239ea31ecb3594ac002ba05c934017abb4d09d478e42b6bed8c3f3d57"
         }
       ],
       "checks": {
@@ -156,7 +156,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "8238e7312c16229ea00628aa2ace239d0e1652d9acd4b0cf2ba60d5093e6c673"
+          "sha256": "744ad177055c76977b6b26b65675e76b0ee6cda05dfc2dd2f6f44d714988a063"
         },
         {
           "code": "09013",
@@ -165,7 +165,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "f77085f7b4354aff910262f1f29a8e261c69b4c6b3e510b77514bd1f85b0ae58"
+          "sha256": "848ee02ca35591a03823d7020b563b3078c080f9abdc68868234226ef20216f4"
         },
         {
           "code": "09014",
@@ -174,7 +174,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "ed100267ff756d0a1d53979ad5207dd3a163ed97518912d1cd33464b78937d72"
+          "sha256": "4c10c541f2eb3e37dc5596dd8cf551c83b568cb6f011c7a2c95abda0911158af"
         }
       ],
       "checks": {
@@ -199,7 +199,7 @@
       "code": "09015",
       "name": "达雷尔·西蒙斯",
       "file": "src/cards/entries/09015.js",
-      "sha256": "e6f4ae481c7aaa38de3fa85f498250ab324d9f4281adfcf994b36d1cac70dd06",
+      "sha256": "ad6ff39089fb4c6e3a6c0e1d22fb4e8bc000adb62e5f0c3164c59e23bddbd75a",
       "signatures": [
         {
           "code": "09016",
@@ -208,7 +208,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "13daba11dec5c850d342a27ccd509c9d9e04d085c30366bfbd96037c664df115"
+          "sha256": "64911f7768d84e6dc9ae90045805b7f5c69d3d955065d61359529fc03b42cc00"
         },
         {
           "code": "09017",
@@ -217,7 +217,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "a92d00a099f05683dfce590ca61edea401646cce83e6a5c5932eabd83e6566ee"
+          "sha256": "71503ea63d5cbc426cb110d2042eba6d440e83709a431eb3a744678c6b75f799"
         }
       ],
       "checks": {
@@ -242,7 +242,7 @@
       "code": "09018",
       "name": "查理·凯恩",
       "file": "src/cards/entries/09018.js",
-      "sha256": "30ce63eb67318230ee7815270c74dfebcab7b1dd12decdd83a23d487fba175e0",
+      "sha256": "f4fdb054033fcfea6e06bf9198ac903da0bfb9e952d593289f5d6b6b8344480f",
       "signatures": [
         {
           "code": "09019",
@@ -251,7 +251,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "edb64ee66370f730d7695e40eb6e8ce3360ebe709d7f5ace4daf7d1d8fd74a4f"
+          "sha256": "2511c8527611c0cd388e4d1b457da425799a1bd3d98fad8d365be5d1a4fb38bf"
         },
         {
           "code": "09020",
@@ -260,7 +260,7 @@
           "registered": true,
           "dependencyOnly": true,
           "implemented": true,
-          "sha256": "ecc32b501dd56d7f9724e60d75027375b7f0b1abeea3c5e1ef481f72a308ac25"
+          "sha256": "ff2169214eabe314e12d2ed9cfdcf44d8e15bbb0c3a5ce93254a2f417855737a"
         }
       ],
       "checks": {
@@ -316,7 +316,7 @@
   "sources": [
     {
       "path": "audit/tsk-baseline.json",
-      "sha256": "d728f3b92ed1139c16caaae4f0a42286de591cd9c9f3245265f57a15cf5c4731"
+      "sha256": "9fb0beb031f3a5c0e63bdd8a895a4bb120ba9a845ef10ef2fe7eae7dda47cfd0"
     },
     {
       "path": "audit/tsk-investigators-browser.json",
@@ -324,11 +324,11 @@
     },
     {
       "path": "audit/tsk-node-acceptance.json",
-      "sha256": "07715eb943b195f7668b41812576c5eee1fc8343903e6e599297f495a75aebad"
+      "sha256": "58fe7e7acf5996348e4dd5f8c9e3a1a5399e0e5744d7da7f198d40eb1cb52251"
     },
     {
       "path": "audit/tsk-regression.json",
-      "sha256": "bb84bdb1292aff7e27e929dc0dc4d059c04225de57d2eb0b3849ebe702c5737a"
+      "sha256": "e903c8721f787f277c2a502dea3da3d00c487119b6fdf29eae0271ee9c88633b"
     },
     {
       "path": "content/campaigns/theScarletKeys/investigator-data.js",
@@ -340,7 +340,7 @@
     },
     {
       "path": "src/cards/entries/09001.js",
-      "sha256": "3a77336d8fe9e2ff1e7e76ea0b7739190e1379ce0128193694d45d6b254b09a0"
+      "sha256": "68a374ac2e38ddea6515bf8ce4c2347e27fc77a853c4e440d72218c0c5df1c1d"
     },
     {
       "path": "src/cards/entries/09002.js",
@@ -348,11 +348,11 @@
     },
     {
       "path": "src/cards/entries/09003.js",
-      "sha256": "9f141a2a6fbea315180115dc9cca1f1a1a66955bc5db129478b9cff62d2399cf"
+      "sha256": "32ea984d940955697bfa3f685ce9df75c6fb1dda8e885a646b878aebb850e45c"
     },
     {
       "path": "src/cards/entries/09004.js",
-      "sha256": "9e5fa58367a69a4b67ee9c753ae1c769a54040a4c59d62ec57015c269c2d7204"
+      "sha256": "a06e85bdfef11b9e028b0783345481c9b97de56aa802c65c57c51cb8fe5cfd64"
     },
     {
       "path": "src/cards/entries/09005.js",
@@ -364,7 +364,7 @@
     },
     {
       "path": "src/cards/entries/09007.js",
-      "sha256": "ad339f306016a2346e65dba50a51b7d600dd094ae8d0bbca53dc447da2020689"
+      "sha256": "b03c38b239ea31ecb3594ac002ba05c934017abb4d09d478e42b6bed8c3f3d57"
     },
     {
       "path": "src/cards/entries/09008.js",
@@ -384,51 +384,51 @@
     },
     {
       "path": "src/cards/entries/09012.js",
-      "sha256": "8238e7312c16229ea00628aa2ace239d0e1652d9acd4b0cf2ba60d5093e6c673"
+      "sha256": "744ad177055c76977b6b26b65675e76b0ee6cda05dfc2dd2f6f44d714988a063"
     },
     {
       "path": "src/cards/entries/09013.js",
-      "sha256": "f77085f7b4354aff910262f1f29a8e261c69b4c6b3e510b77514bd1f85b0ae58"
+      "sha256": "848ee02ca35591a03823d7020b563b3078c080f9abdc68868234226ef20216f4"
     },
     {
       "path": "src/cards/entries/09014.js",
-      "sha256": "ed100267ff756d0a1d53979ad5207dd3a163ed97518912d1cd33464b78937d72"
+      "sha256": "4c10c541f2eb3e37dc5596dd8cf551c83b568cb6f011c7a2c95abda0911158af"
     },
     {
       "path": "src/cards/entries/09015.js",
-      "sha256": "e6f4ae481c7aaa38de3fa85f498250ab324d9f4281adfcf994b36d1cac70dd06"
+      "sha256": "ad6ff39089fb4c6e3a6c0e1d22fb4e8bc000adb62e5f0c3164c59e23bddbd75a"
     },
     {
       "path": "src/cards/entries/09016.js",
-      "sha256": "13daba11dec5c850d342a27ccd509c9d9e04d085c30366bfbd96037c664df115"
+      "sha256": "64911f7768d84e6dc9ae90045805b7f5c69d3d955065d61359529fc03b42cc00"
     },
     {
       "path": "src/cards/entries/09017.js",
-      "sha256": "a92d00a099f05683dfce590ca61edea401646cce83e6a5c5932eabd83e6566ee"
+      "sha256": "71503ea63d5cbc426cb110d2042eba6d440e83709a431eb3a744678c6b75f799"
     },
     {
       "path": "src/cards/entries/09018.js",
-      "sha256": "30ce63eb67318230ee7815270c74dfebcab7b1dd12decdd83a23d487fba175e0"
+      "sha256": "f4fdb054033fcfea6e06bf9198ac903da0bfb9e952d593289f5d6b6b8344480f"
     },
     {
       "path": "src/cards/entries/09019.js",
-      "sha256": "edb64ee66370f730d7695e40eb6e8ce3360ebe709d7f5ace4daf7d1d8fd74a4f"
+      "sha256": "2511c8527611c0cd388e4d1b457da425799a1bd3d98fad8d365be5d1a4fb38bf"
     },
     {
       "path": "src/cards/entries/09020.js",
-      "sha256": "ecc32b501dd56d7f9724e60d75027375b7f0b1abeea3c5e1ef481f72a308ac25"
+      "sha256": "ff2169214eabe314e12d2ed9cfdcf44d8e15bbb0c3a5ce93254a2f417855737a"
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "fcc043d9f097f6f5140f8cef357f09e1c4045cf72c54892e5a01d5c2b42d852d"
+      "sha256": "3929fd00249c222ded17233647e3ff3435575172d56a141d84877b86a3c44276"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "6a0a5d98a10df57caf9c5e6ccbe48c543af53ea8a5d54c215854d4043d0cbd60"
+      "sha256": "250afbe3b0a59d3125cedbbc6ccb41381399f1d8e40310a5113d8d761c5d3dc5"
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "0c0068d4841ec9f525a482c55f4f6bbdac025f4cf12f6cdfbfbe705b6eb94585"
+      "sha256": "dc3fc8f88567c342b5fc2aa1c9762828424b71c9106e49cbfef807020985eeb2"
     }
   ],
   "evidence": [

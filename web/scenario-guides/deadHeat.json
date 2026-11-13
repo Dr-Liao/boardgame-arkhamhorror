@@ -1,0 +1,402 @@
+{
+  "id": "deadHeat",
+  "campaignId": "theScarletKeys",
+  "sourceKind": "reference-project-zh-locale",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 63,
+  "guideKeyCount": 63,
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/campaign.json",
+      "entries": 19
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-a.json",
+      "entries": 26
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-b.json",
+      "entries": 9
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/base.json",
+      "sha256": "129bc1039ea5d9815dc032aa00be52ee790cb9cee4f930b2721a4aded00e43d4"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+      "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+      "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+      "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+      "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+      "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+      "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+      "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+      "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+      "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+      "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "档案#11–B: (死亡酷暑)",
+          "children": [
+            {
+              "text": "流逝的时间小于15"
+            },
+            {
+              "text": "流逝的时间为15到24"
+            },
+            {
+              "text": "流逝的时间大于等于25"
+            },
+            {
+              "text": "你被一阵车轮的吱嘎声震醒，原来是火车突然停了。尽管现在还没到早晨，初露锋芒的阳光却已在闷热的步道上卷起暑浪，将马拉喀什包裹在一阵异界般的微光中。你头痛起来。整座城市就像在摩洛哥沙漠中摇曳的海市蜃楼。\n\n检查剧本日志中已经流逝了多少时间。"
+            },
+            {
+              "text": "你在火车站附近一家小小咖啡馆的顶上见到了自己的联络人。他的身形看上去还有几分稚嫩，但一嘴的灰胡子却修剪得很好，正挡住了深深的笑纹。“你肯定是基金会派来的。”他向你伸出了手，“我叫拉蒂夫。请坐。你肯定已经饿了。”\n\n桌上盆碗齐备，装满了鸡蛋、橄榄、厚芝士，再配上薄馕和热热的摩纳哥薄荷茶。你正大快朵颐的时候，拉蒂夫将一摞报纸放在桌上。“我不想坏了你的胃口，朋友。但这座城市里正有邪念作祟。”他指着三则不同的头条：\n\n神秘的盗墓案\n橄榄园突然枯萎\n麦地那众人失踪\n\n一阵刺鼻的暖风吹过，报纸沙沙作响。拉蒂夫神神秘秘地低语：“我想你已经看过密档了。那个自称‘苋’的女人在这儿出现了，我相信这一切都和她有关。”桌对面的中年男子递来一张相片，上面是位二十岁左右的靓女，黑裙黑手套，耳边别着一朵俗艳的大花。\n\n“就在昨晚，我派出联络人去收集一切和她有关的信息，他没有回来。我担心最坏的事情已经发生了。”拉蒂夫目光沮丧，“我想这就是你为什么在这儿了！专员总是会派这么……”他看了看你，好似在斟酌话语，“独一无二的人。”\n\n你向拉蒂夫保证，虽然你和基金会共事的时间不长，但你肯定能搞定眼前的情况。\n\n“我也非常希望如此。”拉蒂夫痛饮了一口薄荷茶，“这里发生了怪事。我兄弟说他看到我们已经过世的祖父披着裹尸布在街上游荡。我说他肯定是在做梦，但类似的故事我也听过。现在晚上走在街上也不安全咯。我相信这肯定是某种可怕的巫术，某种反常的力量。基金会干嘛要把他们的密档搞得那么神秘！”\n\n你早上接下来的时间都在检阅拉蒂夫收集的报刊和公文。第一起“盗墓案”的墓主是一位16世纪的哲学家和数学家拉辛·法瑞。“传闻他就是红色同志会的开创元老之一。”拉蒂夫告诉你。你试图将这些信息拼凑在一起，大脑飞速运转：苋是在寻找另一个钥匙吗？\n\n“无论发生了什么，我们都不能再空等了。”拉蒂夫说道。\n\n进入冒险设置。"
+            },
+            {
+              "text": "火车站外没有出租车，你不得不步行前往几近无人的咖啡馆，在顶上和联络人碰头。跟你打招呼的人身形看上去还有几分稚嫩，但一嘴的灰胡子却修剪得很好，正挡住了深深的笑纹。但他现在可没有笑。“你迟到了。”他严肃地说，“我给基金会发了电报请求帮助。可以说，我们现在是有大麻烦了。”\n\n你向他道歉，说自己已经尽力了。他焦急地皱起了眉头。“抱歉，你来了是很好，但恐怕事情已经发生了。发生的事情我们既没有时间，也无力阻止了。”他示意你坐下，“我叫拉蒂夫。请坐，我要说的可不是什么好消息。”\n\n桌上摆着诱人的当地美食。但从剩下的情况来看，拉蒂夫用餐的时候并没什么兴致。他转而递给你几份报纸，头版详细列举的事情都是坟墓遭到亵渎、农作物死去，还有许多人失踪。就在他向你传达这些严重讯息的时候，你闻到风中有一阵恶心的气息。你眺望全城，发现建筑立面上爬着墨色的藤蔓。远远望去，就像死尸上突起的筋脉。\n\n“朋友？”拉蒂夫的话音打断了你的沉思。你向他道歉，又问起那些藤蔓。中年男子叹了口气：“那看来是另一件怪事了。昨夜在巴希尔宫外有一场骚乱。失声尖叫、磨牙吮血。我派了一个线人去调查，但他没有回来。很快，奇怪的黑花就开了，长满了所有的墙壁和里面。不仅恶臭，还长出了可怕的尖刺。我都不敢碰。”\n\n“就在这怪事开始前，我兄弟说他看到我们已经过世的祖父披着裹尸布在街上游荡。我可以不信，但类似的故事有那么多。现在步履缓慢、一言不发的死人就在街上游荡。他们眼神空洞，但肚皮可不空。”拉蒂夫愤愤说着喝完了最后一点茶。\n\n“我相信这一切都和那个自称‘苋’的女人有关。你兴许从基金会的密档里认出来了。他们真有本事，在给我们的公文里漏掉了最重要的细节！”拉蒂夫递来一张相片，上面是位二十岁左右的靓女，黑裙黑手套，耳边别着一朵俗艳的大花。\n\n“我另一个线人说他在巴希尔宫花园见到了这个‘苋’。怪事迫近，而她定是罪魁祸首。要我说，咱们到宫里去，管她计划什么，都给拦下。不过这一去遇到什么都有可能。”\n\n你闻到风中传来熟悉的气味，低头看向咖啡馆屋顶的边缘。一根黑色卷须已经缠上了这栋建筑。藤蔓顶端长出一颗球状的黑色花苞。你不确定是因为迫近中午的阳光造成了错觉，还是真有什么怪事已经发生，但你可以发誓自己看到花苞上闪烁着绿色的磷光，它的运动清晰可辨——尽管此时并没有风。\n\n进入冒险设置。"
+            },
+            {
+              "text": "你刚下火车，所见的都是烟雾和腐败。月台空空如也，下车的人寥寥无几，其中有你。附近的建筑上爬满了干枯的黑色藤蔓，顶上长着狂乱的红花。一切都静得诡异。\n\n你去找自己的线人，经过一群彼此分散、步履蹒跚丑陋的路人。你避开他们，其中却有几个朝你伸出了手。你看到他们的表皮干枯，长满黄疸，而他们的眼神也很空洞。一群苍蝇闻着嗡嗡不停。你来到自己应该和“拉蒂夫”碰头的咖啡馆，却毫不意外地发现这里的门都封死了\n\n柏油一般的死亡之花开满了墙上和店面——这些地方都给匆匆堵了起来。板条间有恐惧的眼神望着你。马拉喀什已经毁了。你在城中来回，发现巴希尔宫已成齑粉，这里就是古怪黑藤发源的地方。你在藤蔓疯长的花园里找到了神秘仪式的残余，但已经无法找出是谁举行了仪式。\n\n跳到结局5。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌：死亡酷暑、猩红巫术、腐败扩散、食尸鬼、恐惧打击。"
+            },
+            {
+              "text": "将全部5张马拉喀什地点放置入场，只使用其非废弃版本。将废弃版本的每张地点放在一边。"
+            },
+            {
+              "text": "每位调查员从马拉喀什火车站开始游戏。"
+            },
+            {
+              "text": "在场上每个地点放置资源，数量等于调查员人数+1，作为平民(见下文“平民”)。然后，检查剧本日志："
+            },
+            {
+              "text": "如果流逝的时间小于等于10，不作改动。"
+            },
+            {
+              "text": "如果流逝的时间为11到17，在场上所有地点中尽可能均匀地选择总计1[per_investigator]个平民，这些平民遭到杀害。"
+            },
+            {
+              "text": "如果流逝的时间为18到24，在场上所有地点中尽可能均匀地选择总计2[per_investigator]个平民，这些平民遭到杀害。"
+            },
+            {
+              "text": "将下列卡牌放在一边，位于场外：双面的苋敌人、拉辛·法瑞敌人、哈立德敌人、全部两张古代劫掠者敌人、未绽之花附属，以及双面的“拯救平民/后果”剧情卡牌。"
+            },
+            {
+              "text": "检查剧本日志，对应组成场景和/或密谋牌库。"
+            },
+            {
+              "text": "如果流逝的时间小于15，不作改动。"
+            },
+            {
+              "text": "如果流逝的时间为15到24，将场景1从游戏中移除，游戏从场景2a开始。在密谋1上放置等同于玩家人数的毁灭标记。将苋(腐败潜伏)生成在巴希尔宫花园，并将未绽之花附属在她上面。将放在一边的拯救平民剧情卡牌放置入场。将哈立德敌人洗入遭遇牌库。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "平民",
+              "children": [
+                {
+                  "text": "在本剧本中，地点上的资源代表马拉喀什的无辜平民，他们正处于极度危险之中。\n\n• 就敌人移动和敌人攻击而言，敌人将平民视同调查员。（敌人不会与平民交战，但可以攻击其所在地点的平民，如同与其交战。）如果平民遭到攻击，他们会自动被杀害。\n• 地点被揭示时，平民仍留在该地点。\n• 当一位平民被杀害时，将其放到冒险参考卡牌上，以记录已被杀害的平民数量。"
+                }
+              ]
+            },
+            {
+              "title": "选择随机地点",
+              "children": [
+                {
+                  "text": "在本剧本中，你经常会受到指示选择一个随机地点。此时应将当前不在场上的5个地点（即场上每个地点当前未使用的那些版本）洗混，随机抽取1个。"
+                }
+              ]
+            },
+            {
+              "title": "替换地点",
+              "children": [
+                {
+                  "text": "在本剧本中，你可能会受到指示，将放在一边的地点与已有的地点进行替换。当一个地点与已在场上的地点替换时，它取代后者的位置。原地点上的所有标记、附属物、调查员、敌人及其他卡牌，均视为现在位于新地点（例如，附属于地点的卡牌仍保持附属状态）。在此类替换过程中，不视为任何游戏元素发生了移动。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员撤退或者被击败):你恐惧地看着阴伏的藤蔓占据了城市的废墟。剩余的平民也都落入苋的仆从虎口。你看着眼前的惨状，真希望自己能多出一份力。"
+                },
+                {
+                  "text": "场上剩余的所有平民遭到杀害。如果仍是场景1，抽取放在一边的拯救平民剧情卡牌并结算其后果面。"
+                },
+                {
+                  "text": "检查场上的敌人。"
+                },
+                {
+                  "text": "拉辛·法瑞在场上"
+                },
+                {
+                  "text": "并非上述情况"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 你意识到自己的处境有多么危险，赶忙逃到城市外围，敲响家家户户的房门。你掏出钱来，还有手上能拿出的一切，只为求得性命。但你每次停留都遭到了拒绝。终于，有个满脸皱纹的老妇人怜悯了你，请你进屋。你这一夜都心惊胆战，不住打颤。到了早上出门的时候，城市已是一片废墟。可怕的黑色藤蔓覆盖了一切。如此惨状，肯定能满足真爱的代价。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 苋拥有未绽之花，相应更新在剧本日志中。\n\n• 在剧本日志中，记录下情人重聚。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 你意识到自己的处境有多么危险，赶忙逃到城市外围，敲响家家户户的房门。你掏出钱来，还有手上能拿出的一切，只为求得性命。但你每次停留都遭到了拒绝。终于，有个满脸皱纹的老妇人怜悯了你，请你进屋。你这一夜都心惊胆战，不住打颤。到了早上出门的时候，城市已是一片废墟。可怕的黑色藤蔓覆盖了一切。你不禁想知道，苋到底想要什么，才不惜招致这样的惨状。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 苋拥有未绽之花，相应更新在剧本日志中。\n\n• 在剧本日志中，记录下你和苋之间恩怨未了。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局3",
+              "children": [
+                {
+                  "text": "结局3: 你俯视着自称为“苋”的女子，呼唤起她的真名：“艾琳……科奇温？”她面红耳赤，以手覆面。你看到她记起了自己的前生，眼睛瞪大。她看着在你手中翻滚的未绽之花，发出一声恐怖的尖叫。“我有过最可怕的梦。”她说道，“我梦到自己是至高的暴君，统治的国度尽是缄默的臣民。”想到自己都做了什么，她这番转变更是违和。过去冷酷无情的女子现在在你脚下哭泣。\n\n显然艾琳的举止是受外物支配。你安慰了她，将她和其他幸存者都带到安全的地方，告诉她你会好好保管未绽之花，不让“苋”再寻找新的宿主。“再不会了。”她重复着你的话，“再不会了。”就在你离开的时候，手中的花朵还在张合，仿佛就是在找新的宿主。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 选择一位调查员拥有未绽之花，相应更新在剧本日志中。\n\n• 在剧本日志中，记录苋离开同志会。\n\n• 在剧本日志中记2时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局4",
+              "children": [
+                {
+                  "text": "结局4: 你将未绽之花握在手心，苋倒在你面前，一阵抽搐。美丽的少女吐出一阵黑色的脓水，她向你张牙舞爪，仿佛一只受惊的动物，然后一下子沿着狭窄的街道溜了。你试图追上，但逃跑的市民和疯长的植物留下一片混乱，你还是跟丢了。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 选择一位调查员拥有未绽之花，相应更新在剧本日志中。\n\n• 在剧本日志中，记录下你和苋之间恩怨未了。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局5",
+              "children": [
+                {
+                  "text": "结局5: 马拉喀什经历着劫后的余波，你在不计其数的死者清单上找到了许多的“拉蒂夫”。你没去找线人，而是评估当前的情况，又读了一遍密档。这无疑是同志会干的好事。苋夺走了几千条人命，她倾泄的毁灭规模之大，绝非你能料到。无论什么原因，她显然能有能力造成这样末日级别的灾祸。\n\n马拉喀什的人民开始悲痛地清点生还者，你花了些时间帮他们重建城市。接下来的许多日子里，可怕的藤蔓干枯成灰，被风吹走，而死者则被清理包裹，纷纷下葬。尽管历经了这样的磨难，这座城市还是有希望恢复过去的荣光，甚至更胜往日。你带着沉重的心情准备离开。\n\n• 在剧本日志中，记录下你和苋之间恩怨未了。\n\n• 每位调查员承受1点精神创伤，因为其查看了马拉喀什的废墟。\n\n• 每位调查员取得3点奖励经验值，因为其帮助了幸存者重建城市。\n\n• 苋拥有未绽之花，相应更新在剧本日志中。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "File #11–B: Dead Heat",
+          "children": [
+            {
+              "text": "If fewer than 15 time has passed, proceed to Intro 2."
+            },
+            {
+              "text": "If 15 to 24 time has passed, skip to Intro 3."
+            },
+            {
+              "text": "If 25 or more time has passed, skip to Intro 4."
+            },
+            {
+              "text": "Intro 1: You are jolted awake by the sound of screeching wheels as your train shudders to a stop. Although it is barely morning, the heat from the sun rises in shimmering waves from the sweltering pavement to veil Marrakesh in an otherworldly glimmer. Your head pounds. The city wavers like a mirage in the middle of the Moroccan desert.\n\nCheck how much time has passed in the Campaign Log."
+            },
+            {
+              "text": "Intro 2: You meet your contact on the rooftop of a small cafe not far from the railway station. The man’s boyish frame is offset by a well-kempt grey beard that covers deep laugh lines. “You must be with the Foundation,” he extends a hand to shake. “I am Latif. Please, sit. You must be hungry.”\n\nThe table is laden with bowls and dishes heaped with eggs, olives, and rich cheese served with flat bread and hot atay. As you eat, Latif spreads a stack of newspapers on the table between you. “I don’t want to ruin your appetite, my friends, but there is some wicked purpose at work in the city.” He points out three different headlines:\n\nMYSTERIOUS TOMB ROBBERY\nSUDDEN BLIGHT DEVASTATES OLIVE GROVE\nDOZENS MISSING IN MEDINA\n\nA warm, pungent breeze wafts over you, rustling the newspaper. Latif whispers conspiratorially, “I assume you read the dossier. The one who calls herself Amaranth was seen here, and I believe she is responsible.” Looking over his shoulder, the middle-aged man produces a crisp photo of a beautiful 20-something woman in a black dress and matching gloves, a gaudy blossom tucked behind her ear.\n\n“Just last night, I sent my contact to gather any information he could on her whereabouts. He hasn’t returned. I fear the worst,” Latif says, looking downcast. “But that is why you’re here, I suppose! The commissioner always sends such…” he looks at you as if considering his words. “Unique people.”\n\nYou assure Latif that you may be new to the Foundation, but that you are more than capable of handling the situation.\n\n“I truly hope so,” says Latif, drinking deep from his cup of hot mint tea. “There is something strange happening here. My brother told me he saw our late grandfather walking the street in his burial shroud. I told him that he must have been dreaming, but I have heard similar stories. It is not safe to walk the streets at night anymore. I believe there is some terrible sorcery at work. Some unnatural influence. If only the Foundation did not redact their own missives!”\n\nYou spend the rest of the morning reviewing the bundle of newspapers and scrivenings Latif has collected. The first “tomb robbery” reported in the recent string of events was of Razin Farhi, a 16th-century philosopher and mathematician. “It is rumored that he was one of the founding members of the Red Coterie,” Latif tells you. Your mind races as you try to piece the information together: is Amaranth after another Key?\n\n“Whatever is happening, we cannot afford to wait idly,” Latif says.\n\nProceed to Setup."
+            },
+            {
+              "text": "Intro 3: There are no cabs to hail outside the railway station, so you walk to meet your contact on the rooftop of a near-empty cafe. The man who greets you has a boyish frame offset by a well-kempt beard that covers deep laugh lines. However, he is not smiling. “You’re late,” he says gravely. “I sent a telegram to the Foundation requesting assistance. We are in dire straits, as you say.”\n\nYou apologize and tell him you’ve done the best you can, and he rubs his brow worriedly. “I am sorry. It is good you are here, but I fear that things are set in motion already. Things we no longer have the time nor power to stop.” He gestures for you to sit. “I am Latif. Please. You will want to sit down for this.”\n\nA spread of tempting local delicacies has been laid out on the table, but judging from the spare remnants, Latif ate most of it due to nerves. He shows you several newspapers in turn with headlines detailing desecrated tombs, dying crops, and numerous missing persons reports. As he relays these sobering events to you, you catch a scent of something foul on the wind. Looking out across the city, you see a pattern of inky black vines that run across building façades. At a distance, they look like raised veins on a dying body.\n\n“My friend?” Latif ’s voice breaks through your reverie. You apologize, and ask him about the vines. The middle-aged man sighs. “Yet another mystery, it seems. Last night, there was a great commotion outside Bahia Palace. Screaming and gnashing teeth. I sent one of my informants to investigate and he never returned. Soon after, the strange black blooms appeared, growing on every wall and surface. They stink of rot and produce awful, sharp thorns. I wouldn’t dare touch them.”\n\n“Before this strange business began, my brother told me he saw our late grandfather walking the street in his burial shroud. I would have dismissed it but for the dozens of similar stories. There are now crowds of slow‑moving, silent people walking the streets. Their eyes are empty, though their bellies are not,” Latif says bitterly, then drains the rest of his teacup.\n\n“I believe the one who calls herself Amaranth is responsible. You might recognize her from the Foundation’s dossier. How helpful that they blot out the most important details in their own missives!” Latif produces a crisp photo of a beautiful 20-something woman in a black dress and matching gloves, a gaudy blossom tucked behind her ear.\n\n“Another of my informants said he saw this ‘Amaranth’ at the Bahia Palace Gardens. Some strange work is afoot, and she is at the center of it. I say we go to the palace and put a stop to whatever awful plans she has in place, but be ready for anything.”\n\nYou catch a now-familiar scent of rot on the wind, and look down to the lip of the rooftop cafe. A single, black tendril has crept up the side of the building. At the end of the vine, a bulbous, black fruiting body has begun to develop. You aren’t sure if it is a trick of the late morning sun, or if there is some other strange process at work, but you could swear you see a shimmer of phosphorescent green flash along the body, and a noticeable movement, though there is no wind.\n\nProceed to Setup."
+            },
+            {
+              "text": "Intro 4: A scent of smoke and decay greets you as you step off the train. You are one of just a handful of people to emerge onto the empty platform of the railway station. Black, dessicated vines climb up the sides of the surrounding buildings and end in riotous red flowers. An eerie silence hangs over everything.\n\nOn your way to meet your contact, you pass a few, scattered people who walk with a halting, awkward gait. Several of them reach out to you as you keep a wide berth, and you see their skin is jaundiced and dry, and their eyes have a hollow, empty look. A cloud of flies follows in their wake, buzzing incessantly. You are hardly surprised when you find the door to the cafe where you were supposed to meet a “Latif ” boarded up.\n\nTarry death blooms on the walls and storefronts, all hastily barricaded. Fearful eyes peer out at you from between slatted boards. Marrakesh is in utter ruin. After wandering the city, you find the epicenter of the strange black vines lies in the pulverized remains of Bahia Palace. In the overgrown gardens, you find the remnants of a strange ritual, but no trace of those who conducted it.\n\nSkip to Resolution 5."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Dead Heat, Scarlet Sorcery, Spreading Corruption, Ghouls, and Striking Fear."
+            },
+            {
+              "text": "Put all 5 Marrakesh locations into play, using only their non‑Abandoned versions. Set aside the Abandoned version of each location."
+            },
+            {
+              "text": "Each investigator begins play at Marrakesh Railway Station."
+            },
+            {
+              "text": "For each location in play, place resources on it equal to one more than the number of investigators, as civilians (see “Civilians,”below). Then, check the Campaign Log:"
+            },
+            {
+              "text": "If 10 or fewer time has passed, no change is made."
+            },
+            {
+              "text": "If 11–17 time has passed, choose 1 [per_investigator] civilians as evenly as possible among all locations in play. Those civilians are slain."
+            },
+            {
+              "text": "If 18–24 time has passed, choose 2 [per_investigator] civilians as evenly as possible among all locations in play. Those civilians are slain."
+            },
+            {
+              "text": "Set the following cards aside, out of play: the double-sided Amaranth enemy, the Razin Farhi enemy, the Khalid enemy, both copies of the Ancient Raider enemy, The Last Blossom key, and the double-sided “Save the Civilians / Aftermath” story card."
+            },
+            {
+              "text": "Check the Campaign Log and build the act and/or agenda decks accordingly."
+            },
+            {
+              "text": "If fewer than 15 time has passed, no change is made."
+            },
+            {
+              "text": "If 15 to 24 time has passed, remove act 1 from the game. The game begins at act 2a. Place doom equal to the number of players on agenda 1. Spawn Amaranth (Lurking Corruption) at Bahia Palace Garden, and attach The Last Blossom to her. Put the setaside Save the Civilians story card into play. Shuffle the Khalid enemy into the encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "children": [
+            {
+              "title": "Civilians",
+              "children": [
+                {
+                  "text": "In this scenario, resources on locations represent the innocent civilians of Marrakesh, who are in grave danger.\n\n• For the purposes of enemy movement and enemy attacks, enemies treat civilians as if they were investigators. (Enemies do not engage civilians, but may attack civilians at their location as if they were engaged.) If a civilian is attacked, they are automatically slain.\n\n• Civilians remain present on a location when it is revealed.\n\n• When a civilian is slain, place it on the scenario reference card, to track how many civilians have been slain."
+                }
+              ]
+            },
+            {
+              "title": "Choosing a Random Location",
+              "children": [
+                {
+                  "text": "During this scenario, you will often be instructed to choose a random location. This should be done by shuffling together the 5 locations not currently in play (the versions of each location in play not currently being used) and drawing 1 at random."
+                }
+              ]
+            },
+            {
+              "title": "Replacing Locations",
+              "children": [
+                {
+                  "text": "Throughout this scenario, you may be instructed to swap set-aside locations with existing ones. When a location is swapped with one that is already in play, it takes its place. All tokens, attachments, investigators, enemies, and other cards at the former location are considered to now be at the new location (attached cards remain attached, for example). No game element is considered to have moved during such a swap."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): You watch in horror as the remnants of the city are overtaken by the insidious vines. The remaining civilians are devoured by Amaranth’s servants. As you watch the devastation unfold, you wish you could have done more."
+                },
+                {
+                  "text": "Each civilian remaining in play is slain. If it is still Act 1, draw the set-aside Save the Civilians story card and resolve the Aftermath side."
+                },
+                {
+                  "text": "Check which enemies are in play."
+                },
+                {
+                  "text": "If Razin Farhi is in play, skip to Resolution 1."
+                },
+                {
+                  "text": "If the above is not true, skip to Resolution 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: Realizing the peril of your situation, you make for the outskirts of town and knock on every door you see. Pleading for your life, you offer money or whatever you have on hand, only to be turned away at every stop. Eventually, a wrinkled old woman takes pity on you and welcomes you inside. You spend the night trembling in fear and trepidation, and when you emerge in the morning, the city is in ruins. Awful black vines envelop everything. This devastation was apparently a worthwhile price to pay for true love.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Amaranth is the bearer of The Last Blossom. Update the Campaign Log accordingly.\n\n• In your Campaign Log, record the lovers are reunited.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Realizing the peril of your situation, you make for the outskirts of town and knock on every door you see. Pleading for your life, you offer money or whatever you have on hand, only to be turned away at every stop. Eventually, a wrinkled old woman takes pity on you and welcomes you inside. You spend the night trembling in fear and trepidation, and when you emerge in the morning, the city is in ruins. Awful black vines envelop everything. You wonder what was so important to Amaranth that she would cause such devastation.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Amaranth is the bearer of The Last Blossom. Update the Campaign Log accordingly.\n\n• In your Campaign Log, record you haven’t seen the last of Amaranth.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: Looking down at the woman who called herself Amaranth, you call her by her true name. “Eryn…Cochwyn?” She holds her hand to her cheek as her cheeks flush. You see her eyes dilate as she begins to remember her former life. As her gaze passes over the Last Blossom writhing in your hand, she lets out a cry of horror. “I had the most terrible dream,” she says. “I dreamt I was a great and terrible queen, and that I ruled over a kingdom of silent subjects.” Realizing what she has done, the change in Eryn’s demeanor is jarring. The woman who seemed so heartless and cruel now lies before you, weeping.\n\nIt is clear to you that Eryn’s actions were not her own. You console her and lead her to safety along with the rest of the survivors, telling her that you will keep the blossom safe and prevent ‘Amaranth’ from taking another host ever again. “Never again,” she echoes your words. “Never again.” As you depart, the blossom furls and unfurls, as if searching for another host.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Choose an investigator to be the bearer of The Last Blossom and update the Campaign Log accordingly.\n\n• In your Campaign Log, record Amaranth has left the Coterie.\n\n• Mark 2 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 4",
+              "children": [
+                {
+                  "text": "Resolution 4: As you hold the Last Blossom in your hand, Amaranth convulses on the ground before you. Spitting black ichor, the beautiful young woman claws at you like a frightened animal, then bolts away down a narrow street. Although you try to follow her, you eventually lose her trail in the confusion of fleeing civilians and shriveling overgrowth.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Choose an investigator to be the bearer of The Last Blossom and update the Campaign Log accordingly.\n\n• In your Campaign Log, record you haven’t seen the last of Amaranth.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 5",
+              "children": [
+                {
+                  "text": "Resolution 5: You find many “Latif ”s listed among the innumerable dead as the city reckons with its losses. Rather than try to find your contact, you take stock of the situation and read over the dossier. You have little doubt that this was the work of the Coterie. What Amaranth did here claimed thousands of lives and wreaked havoc on a scale you could have scarcely foreseen. Whatever her reasons, she apparently has the ability to bring calamity on an apocalyptic scale.\n\nAs the people of Marrakesh carry out the grim arithmetic of counting survivors, you use what time you have to help the civilians rebuild. Over the course of many days, the awful vines dessicate and blow away as ash, and the dead are cleansed and wrapped for burial. Despite the devastation, there is hope for the city to become what it once was, if not even better. With a heavy heart, you prepare to leave.\n\n• In your Campaign Log, record you haven’t seen the last of Amaranth.\n\n• Each investigator suffers 1 mental trauma as they survey the ruins of Marrakesh.\n\n• Each investigator earns 3 bonus experience as they help the survivors of the city rebuild.\n\n• Amaranth is the bearer of The Last Blossom. Update the Campaign Log accordingly.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

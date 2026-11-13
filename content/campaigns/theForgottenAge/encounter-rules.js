@@ -16,6 +16,8 @@ const hasTrait = (card, trait) => traits(card).includes(String(trait).toLowerCas
 const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card.code)) || inv?.poisoned === true
 const attachmentCode = attachment => original(typeof attachment === 'string' ? { code: attachment } : attachment)
 const recordsFor = state => (state.campaign.records ||= {})
+// 04094 一片漆黑：放在密谋牌库旁（旧存档曾只用 scenarioFlags.deepDark 计数）。
+const DEEP_DARK_CODE = '04094'
 
 // ---- 04244 伊斯人身体（跨章共享）----
 // 换身后引擎把调查员卡整体换成 04244：inv.form = 'yithian'，inv.code/属性/职业都是身体卡
@@ -257,21 +259,11 @@ export const encounterRules = {
 
   canDiscoverClues(state, inv) {
     // 「力量真言」（04097）：与带毁灭的敌人同地点时不能发现线索。
+    // 04094 一片漆黑「每位调查员每轮从单个地点最多发现 1 个线索」由条目声明
+    // `treacheryRule.clueDiscoveryLimit`，引擎 locations.js 统一记账（旁置卡读点）。
     if (threatHasFlag(inv, 'blockCluesHere')
       && state.enemies.some(enemy => (enemy.doom || 0) > 0 && enemy.location === inv.location)) return false
-    const count = Number(state.scenarioFlags?.deepDark || 0)
-    if (!count) return true
-    inv.tfaCluesRound ||= {}
-    const claimed = inv.tfaCluesRound[state.round] || []
-    return !claimed.includes(inv.location)
-  },
-
-  cluesGained(state, inv, amount) {
-    const count = Number(state.scenarioFlags?.deepDark || 0)
-    if (!count) return
-    inv.tfaCluesRound ||= {}
-    const claimed = inv.tfaCluesRound[state.round] || (inv.tfaCluesRound[state.round] = [])
-    if (!claimed.includes(inv.location)) claimed.push(inv.location)
+    return true
   },
 
   // 伊格的獠牙（04098）：与中毒调查员交战时，该调查员不能打出卡牌，也不能在
@@ -383,20 +375,35 @@ export const encounterRules = {
       if (entombed) delete entombed.difficultyReduction
       delete inv.tfaExploredThisTurn
     }
-    const count = Number(state.scenarioFlags?.deepDark || 0)
-    if (count > 0) {
-      state.scenarioFlags.deepDark = count - 1
-      if (!state.scenarioFlags.deepDark) {
-        delete state.scenarioFlags.deepDark
-        api.info?.('一片漆黑全部被弃掉，线索限制解除。')
-      }
-    }
+    // 04094 一片漆黑「强制 - 轮末从场上弃掉 1 张」由条目声明
+    // `treacheryRule.discardOneAtRoundEnd`，引擎 phases.js 的旁置卡轮末扫描结算。
     for (const location of state.locations) {
       for (const attachment of attachmentsWithCode(location, '04076').slice()) {
         // 疯狂生长只在探索限制期间持续；不自动弃掉。
         void attachment
       }
     }
+  },
+
+  // ---- 旧存档修复：一片漆黑 ----
+  // 2026-11 之前「放在密谋牌库旁」只写了 state.scenarioFlags.deepDark 计数，场上没有实体卡，
+  // 于是牌桌（以及卡牌详情/局势）都看不到它。读档时按计数补出真实旁置实例并清掉旧记账字段。
+  needsSaveRepair(state) {
+    return Number(state.scenarioFlags?.deepDark || 0) > 0
+  },
+
+  saveRepairNote: '把「一片漆黑」恢复为密谋牌库旁的真实卡牌',
+
+  repairSavedState(state, api) {
+    const copies = Math.max(0, Number(state.scenarioFlags?.deepDark || 0))
+    const existing = (state.agendaAside || []).filter(card => original(card) === DEEP_DARK_CODE).length
+    for (let index = existing; index < copies; index++) api.putNextToAgenda(DEEP_DARK_CODE)
+    if (state.scenarioFlags) {
+      delete state.scenarioFlags.deepDark
+      delete state.scenarioFlags.deepDarkClaims
+    }
+    // 旧记账方式（inv.tfaCluesRound）也不再使用；只在旧存档里出现过，一并清掉。
+    for (const inv of state.investigators || []) delete inv.tfaCluesRound
   },
 
   investigatorEliminated() {},

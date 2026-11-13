@@ -1,13 +1,36 @@
-// 绯红密钥 · 战役内容包（P0/M0 catalog-only）。
+// 绯红密钥 · 战役内容包（P7：311 条战役记录 playable）。
 //
-// 归属规则（与 audit/tsk-scope.json 的 tskCampaign 分区一致）：
-//   · 卡表 pack=tskc 的 311 条印刷记录（10 张剧本参考卡 + 幕/议程/地点/敌人/诡计/剧情/
-//     双面绯红密钥 + 关联面）全部归战役包；
-//   · 26 个遭遇组（10 章节组 + 16 共享组）在清单里登记 id，供 P7 逐章接线；
-//   · P5–P8 验收前 rulesImplemented=false、deckbuilding=false，战役不可启动。
-import { catalogPack } from '../../campaigns/theScarletKeys/shared.js'
+// 逐章行为由 10 个章节单元（content/campaigns/theScarletKeys/scenarios/**）与共享遭遇条目
+// （src/cards/encounter-entries/theScarletKeys/**）交付；本清单只登记身份与开放状态。
+import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { CONTENT_SCHEMA_VERSION } from '../../schema.js'
+import { CARD_PARTITIONS, ENCOUNTER_GROUPS } from '../../campaigns/theScarletKeys/shared.js'
 
-export const manifest = catalogPack('tskCampaign', '绯红密钥 · 战役内容', [
-  { from: '09501', to: '09770' },
-  { from: '09519a', to: '09770b' },
-])
+export const CAMPAIGN_CARD_CODES = Object.freeze([...CARD_PARTITIONS.tskCampaign])
+
+export const manifest = Object.freeze({
+  schemaVersion: CONTENT_SCHEMA_VERSION,
+  id: 'tskCampaign',
+  name: '绯红密钥 · 战役内容',
+  contentVersion: '1.0.0',
+  minRulesVersion: 'n6.0',
+  status: 'playable',
+  dependencies: ['core'],
+  description: 'P7 311 条战役记录（10 章 + 26 个遭遇组）逐章实现并经 Node/指南/浏览器验收；战役自 P7 起可在大厅启动。',
+  cardRanges: [{ from: '09501', to: '09770' }, { from: '09501a', to: '09770z' }],
+  cards: CAMPAIGN_CARD_CODES.map(code => {
+    const card = ALL_CARDS[code]
+    const type = ['enemy', 'treachery'].includes(card.type) ? 'encounter' : 'other'
+    return Object.freeze({
+      code,
+      name: card.nameZh || card.name,
+      type,
+      cataloged: true,
+      imageAvailable: !!card.imagesrc,
+      rulesImplemented: true,
+      deckbuilding: false,
+    })
+  }),
+  encounterGroupIds: Object.freeze([...ENCOUNTER_GROUPS]),
+  behaviorIds: Object.freeze([...ENCOUNTER_GROUPS].map(group => `tskEncounterGroup${group}`)),
+})

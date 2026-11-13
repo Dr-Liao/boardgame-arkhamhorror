@@ -7,7 +7,7 @@ import { disposeImageResources } from './image-lifecycle.js'
 // 不要把这些逻辑写回大厅的 public/app.js。
 
 import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages, stopScenarioImagePreload,
-  cardDisplayName, cardDisplayText, cardDisplayFlavor, cardDisplaySubname, cardDisplayTraits, currentLanguage, setHostLocale } from './catalog.js'
+  cardDisplayName, cardDisplayText, cardDisplayFlavor, cardDisplaySubname, cardDisplayTraits, currentLanguage, setHostLocale, typeLabel } from './catalog.js'
 import { setLocale as setUiLocale, t } from './i18n.js'
 // 第 127 轮：UI 的卡号表现表在 web/ui-cards.js（纯数据表，必须留在浏览器挂载目录内）。
 import { UI_CARDS } from './ui-cards.js'
@@ -263,7 +263,13 @@ export function createUI(host) {
     themeAttributes: () => state.session?.state ? presentationAttributes(state.session.state) : null,
   })
   const openChaosBag = () => { if (state.session) chaosBagView.open(state.session.sessionId) }
-  tableRegions = createTableRegions(h, { openDetail: (def, options) => openCardDetailDef(def, options), openChaosBag })
+  // 「放在密谋牌库旁」的公开区域：与胜利区/放在一边同一种弹窗，入口是剧本书下沿的卡堆。
+  const openAgendaAside = () => {
+    if (!state.session) return
+    state.arkhamZoneOpen = { sessionId: state.session.sessionId, kind: 'agendaAside' }
+    render()
+  }
+  tableRegions = createTableRegions(h, { openDetail: (def, options) => openCardDetailDef(def, options), openChaosBag, openAgendaAside })
   situationView ||= createSituationView(h, { render: () => render(), openChaosBag: () => openChaosBag(),
     effStat: (s, inv, skill) => ahEffStat(s, inv, skill), mySeat: s => mySeat(s),
     openDetail: (def, options) => openCardDetailDef(def, options), openCard: (s, reference) => openCardDetail(s, reference),
@@ -442,6 +448,19 @@ function scriptAttachmentCards(s, codes = []) {
     const resolved = def.name ? def : Object.values(s.state.cards || {}).find(item => item.originalCode === code) || def
     return { ...resolved, code, originalCode: resolved.originalCode || code }
   })
+}
+
+// 「放在密谋牌库旁」的公开卡（state.agendaAside）：服务端只下发卡号与实例 id，
+// 这里按当前牌局的卡面表补出名字/图片/规则文本，供牌桌卡堆与公开区域弹窗使用。
+// 卡面表里没有（旧存档/中途加入的遭遇卡）时退回卡号，详情仍能打开（runtime 缺失时按卡号加载图鉴）。
+function agendaAsideCards(s, cards = []) {
+  return (cards || []).map(card => {
+    const code = card?.originalCode || card?.code
+    if (!code) return null
+    const def = ahCardDef(s, code)
+    const resolved = def.name ? def : Object.values(s.state.cards || {}).find(item => item.originalCode === code) || def
+    return { ...resolved, ...card, code, originalCode: code, type: resolved.type || 'treachery' }
+  }).filter(Boolean)
 }
 
 function runtimeAttachmentCards(s, card = {}) {
@@ -916,6 +935,8 @@ function renderCardDetailModal(detail) {
 }
 
 function zoneCards(s, kind) {
+  // 「放在密谋牌库旁」的公开卡：保留实例（可能同名多张），卡面由 agendaAsideCards 补全。
+  if (kind === 'agendaAside') return agendaAsideCards(s, s.state.agendaAside)
   // 复仇点数用虚拟卡记在胜利区；弹窗只列真实卡牌，复仇合计单独显示。
   if (kind === 'victory') {
     return (s.state.victoryDisplay || [])
@@ -926,26 +947,42 @@ function zoneCards(s, kind) {
     Array.from({ length: Math.max(0, card.count || 1) }, () => ({ ...card, count: undefined })))
 }
 
+// 三种「桌面公开区域」弹窗的文案/图标集中一张表，避免在渲染函数里堆三元表达式。
+const ZONE_MODAL_META = {
+  victory: { titleKey: 'table.victory', icon: 'star', kicker: 'SCENARIO / VICTORY DISPLAY',
+    emptyTitleKey: 'game.zone.emptyVictory', emptyHintKey: 'game.zone.emptyVictoryHint', footerKey: 'game.zone.victoryFooter' },
+  aside: { titleKey: 'game.zone.asideTitle', icon: 'supply', kicker: 'SCENARIO / SET ASIDE',
+    emptyTitleKey: 'game.zone.emptyAside', emptyHintKey: 'game.zone.emptyAsideHint', footerKey: 'game.zone.asideFooter' },
+  // 04094 一片漆黑、07185 类「放在密谋牌库旁」的遭遇卡：牌桌卡堆点开的公开区域。
+  agendaAside: { titleKey: 'table.agendaAside.label', icon: 'eye', kicker: 'SCENARIO / NEXT TO AGENDA DECK',
+    emptyTitleKey: 'game.zone.emptyAgendaAside', emptyHintKey: 'game.zone.emptyAgendaAsideHint', footerKey: 'game.zone.agendaAsideFooter' },
+}
+
 function renderCardZoneModal(s) {
   const opened = state.arkhamZoneOpen
   if (!opened || opened.sessionId !== s.sessionId) return null
-  const victory = opened.kind === 'victory'
-  const cards = zoneCards(s, opened.kind)
-  const title = victory ? t('table.victory') : t('game.zone.asideTitle')
+  const kind = ZONE_MODAL_META[opened.kind] ? opened.kind : 'aside'
+  const meta = ZONE_MODAL_META[kind]
+  const victory = kind === 'victory'
+  const agendaAside = kind === 'agendaAside'
+  const cards = zoneCards(s, kind)
+  const title = t(meta.titleKey)
   const close = () => { state.arkhamZoneOpen = null; render() }
   const points = victory ? cards.reduce((sum, card) => sum + (card.victory ?? ahCardDefRaw(s, card.code).victory ?? 0), 0) : 0
   const vengeance = victory
     ? (s.state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
     : 0
+  const summary = victory
+    ? t('game.zone.victorySummary', { count: cards.length, points }) + (vengeance ? t('game.zone.vengeance', { points: vengeance }) : '')
+    : agendaAside ? t('game.zone.agendaAsideSummary', { count: cards.length })
+      : t('game.zone.asideSummary', { count: cards.length })
   return h('div', { className: 'bg-backdrop ah-card-zone-backdrop', onclick: close },
-    h('section', { className: 'ah-card-zone-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': title,
+    h('section', { className: 'ah-card-zone-modal is-' + kind, role: 'dialog', 'aria-modal': 'true', 'aria-label': title,
       onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
       h('header', {},
-        h('div', {}, h('small', {}, victory ? 'SCENARIO / VICTORY DISPLAY' : 'SCENARIO / SET ASIDE'),
-          h('h2', {}, tableIcon(victory ? 'star' : 'supply'), title),
-          h('p', {}, victory
-            ? t('game.zone.victorySummary', { count: cards.length, points }) + (vengeance ? t('game.zone.vengeance', { points: vengeance }) : '')
-            : t('game.zone.asideSummary', { count: cards.length }))),
+        h('div', {}, h('small', {}, meta.kicker),
+          h('h2', {}, tableIcon(meta.icon), title),
+          h('p', {}, summary)),
         h('button', { className: 'ah-card-zone-close', 'aria-label': t('game.zone.closeAria', { title }), onclick: close }, t('common.close'))),
       cards.length ? h('div', { className: 'ah-card-zone-grid', role: 'group', 'aria-label': t('game.zone.cardsAria', { title }) },
         cards.map((card, index) => {
@@ -956,12 +993,15 @@ function renderCardZoneModal(s) {
             'aria-label': t('game.zone.view', { name }), title: t('game.zone.viewDetail', { name }), onclick: () => openCardDetail(s, def) },
             h('span', { className: 'ah-card-zone-art' }, tableArt(h, code, name, { unloadOffscreen: true })),
             h('span', { className: 'ah-card-zone-caption' }, h('strong', {}, name),
-              victory ? h('small', {}, t('game.kw.victory', { points: def.victory || 0 })) : h('small', {}, t('game.zone.file', { index: String(index + 1).padStart(2, '0') }))))
-        })) : h('div', { className: 'ah-card-zone-empty' }, tableIcon(victory ? 'star' : 'supply'),
-          h('strong', {}, victory ? t('game.zone.emptyVictory') : t('game.zone.emptyAside')),
-          h('span', {}, victory ? t('game.zone.emptyVictoryHint') : t('game.zone.emptyAsideHint'))),
-      h('footer', {}, victory ? t('game.zone.victoryFooter') : t('game.zone.asideFooter'))))
+              victory ? h('small', {}, t('game.kw.victory', { points: def.victory || 0 }))
+                : agendaAside ? h('small', {}, t('game.zone.agendaAsideCaption', { type: typeLabel(def.type || 'treachery') }))
+                  : h('small', {}, t('game.zone.file', { index: String(index + 1).padStart(2, '0') }))))
+        })) : h('div', { className: 'ah-card-zone-empty' }, tableIcon(meta.icon),
+          h('strong', {}, t(meta.emptyTitleKey)),
+          h('span', {}, t(meta.emptyHintKey))),
+      h('footer', {}, t(meta.footerKey))))
 }
+
 
 async function cardMove(move, displayedSession, options = {}) {
   const session = state.session
@@ -1448,6 +1488,8 @@ function renderScryOrder(s, humanTurn) {
 
 function renderActAdvance(s, humanTurn) {
   const st = s.state, act = st.acts[st.actIndex], objective = act?.objective
+  // 内容层给出的非线索目标进度（破碎永世 4a：附属到古代遗物的地点数）。
+  const custom = st.actObjectiveProgress
   const costsClues = ['clues', 'actClues'].includes(objective?.type)
   const required = costsClues ? (objective.perInvestigator || 0) * st.numInvestigators : null
   const available = objective?.type === 'actClues' ? st.actClues || 0 : st.investigators
@@ -1457,13 +1499,16 @@ function renderActAdvance(s, humanTurn) {
   const enough = required == null || available >= required
   const disabled = !move || !humanTurn || state.busy || !enough
   const location = objective?.atLocation && st.locations.find(loc => loc.id === objective.atLocation)?.name
-  const reason = !act ? t('game.act.ended') : !costsClues ? t('game.act.advanceHint') : !enough
+  const reason = !act ? t('game.act.ended') : custom ? t('game.act.autoAdvanceHint')
+    : !costsClues ? t('game.act.advanceHint') : !enough
     ? (location ? t('game.act.notEnoughCluesAt', { count: required - available, location }) : t('game.act.notEnoughClues', { count: required - available }))
     : !humanTurn ? t('game.act.waitTurn') : !move ? t('game.act.waitWindow') : t('game.act.payToAdvance', { count: required })
   return h('button', { className: 'ah-act-advance' + (!disabled ? ' is-ready' : ''), disabled,
     'aria-label': t('game.act.advance'), title: reason, onclick: () => move && cardMove(move, s) },
     h('strong', {}, tableIcon('book'), t('game.act.advance')),
-    h('span', {}, tableIcon('clue'), costsClues ? t('game.act.cluesProgress', { available, required }) : t('game.act.objectiveDone')),
+    h('span', {}, tableIcon(custom ? 'book' : 'clue'), custom
+      ? t('game.act.objectiveProgress', { current: custom.current, target: custom.target })
+      : costsClues ? t('game.act.cluesProgress', { available, required }) : t('game.act.objectiveDone')),
     h('small', {}, location ? t('game.act.onlyAt', { location }) : costsClues ? (!enough ? t('game.act.needMore', { count: required - available }) : move ? t('game.act.ready') : t('game.act.waitWindowShort')) : t('game.act.byCard')))
 }
 
@@ -1525,8 +1570,11 @@ function renderCardGame(s, autoPassing = false) {
         : t('game.status.waitingAnswer', { name: inv?.name || current?.name || t('game.status.aiTeammate') })
   } else {
     const inv = st.investigators[st.currentSeat]
+    // 2026-11-13：行动点用尽后回合不再自动结束，状态栏直接告诉玩家「先处理快速卡，再点结束回合」，
+    // 否则玩家会以为卡在结算里。
+    const spent = inv && !st.pendingChoice && Number(inv.actionsLeft) <= 0
     statusText = humanTurn
-      ? (inv && inv.name ? t('game.status.yourTurnNamed', { name: inv.name, actions: inv.actionsLeft }) : t('game.status.yourTurn', { actions: inv ? inv.actionsLeft : 0 }))
+      ? (spent && inv.name ? t('game.status.yourTurnSpent', { name: inv.name }) : inv && inv.name ? t('game.status.yourTurnNamed', { name: inv.name, actions: inv.actionsLeft }) : t('game.status.yourTurn', { actions: inv ? inv.actionsLeft : 0 }))
       : activity.presenting ? t('game.status.presenting', { name: current ? current.name : '' }) : activity.processing ? t('game.status.thinking', { name: current ? current.name : 'AI' }) : t('game.status.waitingNext', { name: current ? current.name : '' })
   }
   if (!over && humanFinished && !humanTurn) statusText = t('game.status.turnEnded', { status: statusText })
@@ -1536,7 +1584,8 @@ function renderCardGame(s, autoPassing = false) {
     act: scriptAttachmentCards(s, st.scriptAttachments?.act), agenda: scriptAttachmentCards(s, st.scriptAttachments?.agenda) },
     h('button', { type: 'button', className: 'ah-scenario-setup-button', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
       'aria-expanded': String(scenarioSetupView.opened), title: t('table.setup.title'),
-      onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')))
+      onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')),
+    agendaAsideCards(s, st.agendaAside))
   const map = tableRegions.map(renderLocationMap(s, humanTurn))
   const player = tableRegions.player(human ? renderPlayerDock(s, human, humanTurn) : null)
   const visibleChoice = st.pendingChoice && !autoPassing
@@ -1596,7 +1645,13 @@ function renderCardGame(s, autoPassing = false) {
       canAct: canAct(s, decisionSeatOf(s)),
       submit: move => cardMove(move, s),
     }),
-    renderMechanicSummary(h, st, { seat: mySeat(s) }),
+    renderMechanicSummary(h, st, {
+      seat: mySeat(s),
+      // 2026-11-13 P1-2：密钥面板的 Shift/移交按钮直接提交 legalMoves 里的引擎动作。
+      moves: st.legalMoves || [],
+      canAct: canAct(s, decisionSeatOf(s)),
+      submit: move => cardMove(move, s),
+    }),
     h('div', { className: 'bg-game-body ah-table-viewport' }, body),
     renderCardActionPopover(s, humanTurn)
   )

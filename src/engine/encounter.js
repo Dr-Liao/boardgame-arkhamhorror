@@ -215,7 +215,8 @@ function drawEncounter(state, inv, events, options = {}) {
       loc = candidates.length === 1 ? candidates[0].id : chooseAmong(state, { kind: 'spawn', source: { type: 'enemy', code }, seat: resolvingInv.seat,
         prompt: '选择敌人的生成地点。', options: candidates.map(location => ({ id: location.id, label: location.name })) })
     } else if (def.spawnAnyEmpty || enemyRuleFlags(code).spawnAnyEmpty) {
-      const empty = state.locations.filter((l) => !state.enemies.some((e) => e.location === l.id)
+      // 梦境之门（06015a/b）不参与「任意无人地点」候选：敌人不能进入/生成在那里。
+      const empty = state.locations.filter((l) => !l.dreamGate && !state.enemies.some((e) => e.location === l.id)
         && !aliveInvestigators(state).some(i => i.location === l.id))
       let picked = empty.length ? chooseAmong(state, {
         kind: 'spawn', source: { type: 'enemy', code }, seat: leadDecisionSeat(state),
@@ -517,9 +518,10 @@ function triggerReaction(state, seat, when, events, context = {}, options={}) {
   if(!options.skipAbilityWindow)openAbilityWindow(state, when, context, events)
 }
 
-// 行动点用尽后的收尾窗口里仍然可以打出的快速卡。
-// 候选直接复用 legalMoves（手牌与「如同手牌」通道都在同一份列表里），保证打出条件、资源、
-// 槽位与「快速」判定和普通出牌同源；通道条目附带来源信息，执行时统一走 takeToHand。
+// 玩家窗口里的 0 行动快速卡候选。候选直接复用 legalMoves（手牌与「如同手牌」通道都在同一份列表里），
+// 保证打出条件、资源、槽位与「快速」判定和普通出牌同源；通道条目附带来源信息，执行时统一走 takeToHand。
+// 2026-11-13：行动点用尽后的收尾窗口已移除（快速卡进 legalMoves 直接行动），本函数现在只服务仍会
+// 弹窗的玩家窗口（技能检定前后/神话后/敌人阶段后/其它调查员的行动间窗口）与直接调用方。
 function fastHandPlays(state, inv, opts = {}) {
   const helpers = playConditionHelpers(state)
   return legalMoves({ ...state, currentSeat: inv.seat })
@@ -544,9 +546,17 @@ function fastHandPlays(state, inv, opts = {}) {
 
 // 玩家窗口（免费触发能力）。行动点花完时（opts.fastCards）额外列出 0 费的快速卡：
 // 手牌里的「快速。只能在你回合期间打出」不能因为回合推进而失去唯一的打出时机。
+// 2026-11-13：行动点用尽后 dispatch 不再给行动者本人开收尾窗口（快速卡改为 legalMoves 的直接
+// 行动，玩家主动点牌）；这个窗口只留给其他调查员的「任意玩家窗口」能力，用 excludeSeats 排除行动者。
+// fastCards 选项保留给直接调用方（测试/其它窗口），引擎收尾路径不再传。
 function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
   state.timingWindow = timing
-  const participants = aliveInvestigators(state).filter(inv => restrictedSeat == null || inv.seat === restrictedSeat)
+  const excludedSeats = Array.isArray(opts.excludeSeats) ? opts.excludeSeats : []
+  const onlySeats = Array.isArray(opts.onlySeats) ? opts.onlySeats : null
+  const participants = aliveInvestigators(state)
+    .filter(inv => restrictedSeat == null || inv.seat === restrictedSeat
+      || (onlySeats && onlySeats.includes(inv.seat)))
+    .filter(inv => !excludedSeats.includes(inv.seat))
   const fastCardSeat = opts.fastCards === true ? state.currentSeat : null
   // 打不出去的快速卡只记一次，避免选项反复出现把窗口卡死。
   const blockedFast = new Set()

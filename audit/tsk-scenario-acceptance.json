@@ -1,0 +1,856 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P7",
+  "generatedBy": "tools/audit-tsk-scenarios.mjs",
+  "status": "verified",
+  "gates": {
+    "scenarioTestsPassed": true,
+    "chaptersAllVerified": true,
+    "chapterCardsAssigned": true,
+    "guidesCoverage": true,
+    "guideChineseMarked": true,
+    "encounterCardsCovered": true,
+    "sharedGroupsRegistered": true,
+    "campaignRegisteredPlayable": true,
+    "campaignFlowDeclared": true,
+    "recordsDeclared": true,
+    "browserDesktopAndMobile": true,
+    "storyGenerationRecomputable": true
+  },
+  "summary": {
+    "chapters": 10,
+    "verified": 10,
+    "pending": [],
+    "campaignCards": 311,
+    "scenarioReferenceCards": 10,
+    "expectedEntries": 301,
+    "coveredEntries": 301,
+    "missingEntries": 0,
+    "testsPassed": 262,
+    "guides": 10
+  },
+  "chapters": [
+    {
+      "id": "riddlesAndRain",
+      "name": "谜雨",
+      "nameEn": "Riddles and Rain",
+      "referenceCode": "09501",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/index.js",
+      "cardCodes": [
+        "09502",
+        "09503",
+        "09504",
+        "09505",
+        "09506",
+        "09507",
+        "09508",
+        "09509",
+        "09510",
+        "09511",
+        "09512",
+        "09513",
+        "09514",
+        "09515",
+        "09516",
+        "09517",
+        "09518",
+        "09519a",
+        "09519b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/riddlesAndRain.json",
+        "exists": true,
+        "guideKeyCount": 45,
+        "scopeGuideKeyCount": 45
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+          "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/riddlesAndRain.json",
+          "sha256": "626dd8028dd08424297c970a4e263589b4a2bcebb913e5b7bcda879c96d49dd6"
+        }
+      ]
+    },
+    {
+      "id": "deadHeat",
+      "name": "死亡酷暑",
+      "nameEn": "Dead Heat",
+      "referenceCode": "09520",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/deadHeat/index.js",
+      "cardCodes": [
+        "09521",
+        "09522",
+        "09523",
+        "09524",
+        "09525",
+        "09526",
+        "09527",
+        "09528",
+        "09529",
+        "09530",
+        "09531",
+        "09532",
+        "09533",
+        "09534",
+        "09535",
+        "09536",
+        "09536b",
+        "09537",
+        "09537b",
+        "09538",
+        "09539",
+        "09540",
+        "09541",
+        "09542",
+        "09543",
+        "09544a",
+        "09544b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/deadHeat.json",
+        "exists": true,
+        "guideKeyCount": 63,
+        "scopeGuideKeyCount": 63
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+          "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/deadHeat.json",
+          "sha256": "54bfa66223cfb0d023fcf9f5577c7bc6ff8c835ee6d94b9837638d4c443e4d9f"
+        }
+      ]
+    },
+    {
+      "id": "sanguineShadows",
+      "name": "血色阴影",
+      "nameEn": "Sanguine Shadows",
+      "referenceCode": "09545",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/index.js",
+      "cardCodes": [
+        "09546",
+        "09547",
+        "09548",
+        "09549",
+        "09550",
+        "09551",
+        "09552",
+        "09553",
+        "09554",
+        "09555",
+        "09556",
+        "09557",
+        "09557b",
+        "09558",
+        "09559",
+        "09560",
+        "09561",
+        "09562",
+        "09563",
+        "09564",
+        "09565a",
+        "09565b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/sanguineShadows.json",
+        "exists": true,
+        "guideKeyCount": 62,
+        "scopeGuideKeyCount": 62
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+          "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/sanguineShadows.json",
+          "sha256": "9b47e98a50854c063b1ff938b240eb14dd986e7856c6393b36bc9b97ce17e919"
+        }
+      ]
+    },
+    {
+      "id": "dealingsInTheDark",
+      "name": "暗中交易",
+      "nameEn": "Dealings in the Dark",
+      "referenceCode": "09566",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js",
+      "cardCodes": [
+        "09567",
+        "09568",
+        "09569",
+        "09570",
+        "09571",
+        "09571b",
+        "09572",
+        "09573",
+        "09574",
+        "09575",
+        "09576",
+        "09577",
+        "09578",
+        "09579",
+        "09580",
+        "09581",
+        "09582",
+        "09583",
+        "09585",
+        "09586a",
+        "09586b",
+        "09586c",
+        "09587",
+        "09588",
+        "09589",
+        "09590a",
+        "09590b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/dealingsInTheDark.json",
+        "exists": true,
+        "guideKeyCount": 74,
+        "scopeGuideKeyCount": 74
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+          "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/dealingsInTheDark.json",
+          "sha256": "fbccde87f4a10adce8110f0859d7bd0180591b5c43fcfa098096834f44520277"
+        }
+      ]
+    },
+    {
+      "id": "dancingMad",
+      "name": "疯星乱舞",
+      "nameEn": "Dancing Mad",
+      "referenceCode": "09591",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/dancingMad/index.js",
+      "cardCodes": [
+        "09592",
+        "09593",
+        "09594",
+        "09595",
+        "09596",
+        "09597",
+        "09598",
+        "09599",
+        "09600a",
+        "09600b",
+        "09601",
+        "09602",
+        "09603",
+        "09604",
+        "09605",
+        "09606a",
+        "09607a",
+        "09607b",
+        "09608"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/dancingMad.json",
+        "exists": true,
+        "guideKeyCount": 50,
+        "scopeGuideKeyCount": 50
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+          "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/dancingMad.json",
+          "sha256": "4382b6a9339095753e3af3a3bc2a2ea49eaedfd75a8e57ecaf146fc1a9fadc1c"
+        }
+      ]
+    },
+    {
+      "id": "onThinIce",
+      "name": "如履薄冰",
+      "nameEn": "On Thin Ice",
+      "referenceCode": "09609",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/onThinIce/index.js",
+      "cardCodes": [
+        "09610",
+        "09611",
+        "09612",
+        "09613",
+        "09614",
+        "09615a",
+        "09615b",
+        "09616",
+        "09617",
+        "09618",
+        "09619",
+        "09620",
+        "09621",
+        "09622",
+        "09623",
+        "09624",
+        "09625a",
+        "09625b",
+        "09626",
+        "09627",
+        "09628",
+        "09629",
+        "09630",
+        "09631",
+        "09632",
+        "09633",
+        "09634a",
+        "09634b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/onThinIce.json",
+        "exists": true,
+        "guideKeyCount": 40,
+        "scopeGuideKeyCount": 40
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+          "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/onThinIce.json",
+          "sha256": "f152dfe3423664a36c95185cbdb6333f532fe204d147911a161e3f7623be871b"
+        }
+      ]
+    },
+    {
+      "id": "dogsOfWar",
+      "name": "战争疮痍",
+      "nameEn": "Dogs of War",
+      "referenceCode": "09635",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/index.js",
+      "cardCodes": [
+        "09636",
+        "09637",
+        "09638",
+        "09639",
+        "09640",
+        "09641",
+        "09642",
+        "09643",
+        "09644",
+        "09645",
+        "09646",
+        "09647",
+        "09648",
+        "09649",
+        "09650",
+        "09651",
+        "09652",
+        "09653a",
+        "09653b",
+        "09654a",
+        "09654b",
+        "09655a",
+        "09655b",
+        "09656",
+        "09657",
+        "09658",
+        "09659a",
+        "09659b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/dogsOfWar.json",
+        "exists": true,
+        "guideKeyCount": 91,
+        "scopeGuideKeyCount": 91
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+          "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/dogsOfWar.json",
+          "sha256": "c2d1ef9f2c03b09056a57ec2f3e8ac376dcb118a7c797254756de7c50f4131cd"
+        }
+      ]
+    },
+    {
+      "id": "shadesOfSuffering",
+      "name": "苦痛之影",
+      "nameEn": "Shades of Suffering",
+      "referenceCode": "09660",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/index.js",
+      "cardCodes": [
+        "09661",
+        "09662",
+        "09663",
+        "09664",
+        "09665",
+        "09666",
+        "09667",
+        "09668",
+        "09669",
+        "09670",
+        "09671",
+        "09672",
+        "09673",
+        "09674a",
+        "09674b",
+        "09674c",
+        "09674d",
+        "09675a",
+        "09675b",
+        "09675c",
+        "09675d",
+        "09676a",
+        "09676b",
+        "09676c",
+        "09676d",
+        "09677",
+        "09678",
+        "09679a",
+        "09679b",
+        "09680a",
+        "09680b"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/shadesOfSuffering.json",
+        "exists": true,
+        "guideKeyCount": 61,
+        "scopeGuideKeyCount": 61
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+          "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/shadesOfSuffering.json",
+          "sha256": "cab9ded5fc9d684ad54cbf014956025cc99b75fb3cf2951908b0a16159231c3d"
+        }
+      ]
+    },
+    {
+      "id": "withoutATrace",
+      "name": "不留痕迹",
+      "nameEn": "Without a Trace",
+      "referenceCode": "09681",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/withoutATrace/index.js",
+      "cardCodes": [
+        "09682",
+        "09683",
+        "09684",
+        "09685",
+        "09686",
+        "09687",
+        "09688",
+        "09689",
+        "09690",
+        "09691",
+        "09692",
+        "09693"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/withoutATrace.json",
+        "exists": true,
+        "guideKeyCount": 54,
+        "scopeGuideKeyCount": 54
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+          "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/withoutATrace.json",
+          "sha256": "aa1c23aa56bd92c4a69b00c853fbce95b5771bd4f2eb5b5694f9043d4a0b8c1f"
+        }
+      ]
+    },
+    {
+      "id": "congressOfTheKeys",
+      "name": "钥匙议会",
+      "nameEn": "Congress of the Keys",
+      "referenceCode": "09694",
+      "modulePath": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/index.js",
+      "cardCodes": [
+        "09695",
+        "09696",
+        "09697",
+        "09698",
+        "09699",
+        "09700",
+        "09701",
+        "09702",
+        "09703",
+        "09704",
+        "09705",
+        "09706",
+        "09707",
+        "09708",
+        "09709",
+        "09710",
+        "09711",
+        "09712",
+        "09713",
+        "09714",
+        "09715"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "layout": true,
+        "behavior": true,
+        "encounterGroups": true,
+        "guide": true,
+        "guideChineseMarked": true,
+        "tests": true,
+        "cardEntries": true
+      },
+      "guide": {
+        "path": "web/scenario-guides/congressOfTheKeys.json",
+        "exists": true,
+        "guideKeyCount": 137,
+        "scopeGuideKeyCount": 137
+      },
+      "status": "verified",
+      "sources": [
+        {
+          "lang": "en",
+          "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+          "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+        },
+        {
+          "lang": "zh",
+          "path": "frontend/src/locales/zh/theScarletKeys/scenarios/congressOfTheKeys.json",
+          "sha256": "1b93f99c7eeee1a657441eb26d296c22f5097f38bfd6070d5806874601ec11eb"
+        }
+      ]
+    }
+  ],
+  "sharedGroups": [
+    {
+      "id": "agentsOfTheOutside",
+      "encounterCode": "agents_of_the_outside",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "agentsOfYuggoth",
+      "encounterCode": "agents_of_yuggoth",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "beyondTheBeyond",
+      "encounterCode": "beyond_the_beyond",
+      "cards": 9,
+      "missing": 0
+    },
+    {
+      "id": "cleanupCrew",
+      "encounterCode": "cleanup_crew",
+      "cards": 5,
+      "missing": 0
+    },
+    {
+      "id": "crimsonConspiracy",
+      "encounterCode": "crimson_conspiracy",
+      "cards": 4,
+      "missing": 0
+    },
+    {
+      "id": "darkVeiling",
+      "encounterCode": "dark_veiling",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "globetrotting",
+      "encounterCode": "globetrotting",
+      "cards": 12,
+      "missing": 0
+    },
+    {
+      "id": "mysteriesAbound",
+      "encounterCode": "mysteries_abound",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "outsiders",
+      "encounterCode": "outsiders",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "redCoterie",
+      "encounterCode": "red_coterie",
+      "cards": 10,
+      "missing": 0
+    },
+    {
+      "id": "scarletSorcery",
+      "encounterCode": "scarlet_sorcery",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "secretWar",
+      "encounterCode": "secret_war",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "shadowOfADoubt",
+      "encounterCode": "shadow_of_a_doubt",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "spatialAnomaly",
+      "encounterCode": "spatial_anomaly",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "spreadingCorruption",
+      "encounterCode": "spreading_corruption",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "strangeHappenings",
+      "encounterCode": "strange_happenings",
+      "cards": 2,
+      "missing": 0
+    }
+  ],
+  "flow": [
+    {
+      "file": "content/campaigns/theScarletKeys/flow.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theScarletKeys/prologue.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theScarletKeys/interludes.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theScarletKeys/records.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theScarletKeys/epilogue.js",
+      "exists": true
+    }
+  ],
+  "evidence": [
+    "tests/tsk-scenario-<chapterId>.test.mjs",
+    "tests/tsk-shared-encounters-a.test.mjs",
+    "tests/tsk-shared-encounters-b.test.mjs",
+    "tests/tsk-campaign-flow.test.mjs",
+    "tests/tsk-story.test.mjs",
+    "audit/tsk-campaign-plan.json",
+    "audit/tsk-scenarios-browser.json",
+    "web/scenario-guides/<chapterId>.json",
+    "content/campaigns/theScarletKeys/story-text.js"
+  ],
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/manifest.js",
+      "sha256": "c46a51dedb71df6a1912ca89428cc4ed50b6a36fb1d991e0c4fd2f17985f9379"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/records.js",
+      "sha256": "4472244be94d24a264cc0c296413831cbcfe4a74951f9f2ae0d2afcec4964d9a"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/flow.js",
+      "sha256": "63a26a9be16d8b1bd21a98be4f72c0636d50f62e7ec781a24b70f5b84f189774"
+    },
+    {
+      "path": "tools/import-tsk-story.mjs",
+      "sha256": "982a8676c0582543ada8ad174ab08a7f4d241b8d6addba179bf46d12527743f6"
+    },
+    {
+      "path": "tools/import-scenario-guides.mjs",
+      "sha256": "44e4882dc8a1bfe25d161064466b1e416abe540cdec217501967c93782b456a3"
+    },
+    {
+      "path": "tools/plan-tsk-campaign.mjs",
+      "sha256": "ed5ce2a25a11b354c2ce49706271e65a98ab34359c5d93e7e8944165226f8f7b"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/index.js",
+      "sha256": "f8dbc1174395380f4dede165b401852c27248077704d35895135f9d5006c1fbd"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/deadHeat/index.js",
+      "sha256": "9cf1bf6e4f8512173cf7618cedb3e302134790dc96233b6a63b0aa8acb5735fc"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/sanguineShadows/index.js",
+      "sha256": "9afb842f7c3e6956904df2bba10a6f1dffd246508dfc3a57482da1e78ffae395"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js",
+      "sha256": "04b2f65bf8426de3996dad0e3e07333867fc87ce0a2061d87f9173b1cb54bd72"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/dancingMad/index.js",
+      "sha256": "4f3165dbf429ea3f909f05af4e9dcd9103c711a02c255432614b18cd7aa38d00"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/onThinIce/index.js",
+      "sha256": "e452144a523804887fc703b4b86d4189d8c36fc094e4b3645369a3c5e876e32d"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/dogsOfWar/index.js",
+      "sha256": "f86a8954b7ee1c492c7a1fadd22bf8002cc12cb23f128cda4b8fd1ae6d28a2f6"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/index.js",
+      "sha256": "0ea7e375d804da5c2fe36688fda28625b990a3c279694b93c766ff7c811f1b09"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/withoutATrace/index.js",
+      "sha256": "6fd787d6de7f19dd7ca41a1659dd8c03b4afeda2152fd18b9809256004fbda75"
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/index.js",
+      "sha256": "240ad54ad97192a205d8fa11c21f924d300e2dfd357dc8e4bae4a8281a450f99"
+    }
+  ]
+}

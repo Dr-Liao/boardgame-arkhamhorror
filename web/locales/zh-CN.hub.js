@@ -277,6 +277,7 @@ export default {
   'hub.investigators.packAria': '筛选扩展包',
   'hub.investigators.classAria': '按职业颜色筛选调查员',
   'hub.investigators.allClasses': '全部',
+  'hub.investigators.randomClass': '随机职业',
   'hub.investigators.count': '{count} 位调查员',
   'hub.investigators.candidateAria': '{move}；{class}；{pack}',
   'hub.investigators.empty': '当前筛选下没有可选调查员',

@@ -10,6 +10,7 @@
 
 export default {
   code: '03143',
+  scenarioPlayable: true,
   passive: { sanityBonus: -1, conditionalStats: { remainingSanityAtMost: 3,
   stats: { willpower: 1, combat: 1, agility: 1 } } },
   abilities: [

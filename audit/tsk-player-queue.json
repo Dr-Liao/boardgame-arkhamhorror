@@ -1,0 +1,2514 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P6",
+  "generatedBy": "tools/plan-tsk-player.mjs",
+  "items": [
+    {
+      "id": "09021",
+      "code": "09021",
+      "name": "猎人护甲",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09021.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "enemyAttack",
+          "hunter",
+          "resourceEconomy",
+          "rules.customizable",
+          "rules.keywords"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09022",
+      "code": "09022",
+      "name": "符文斧",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09022.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "enemyAttack",
+          "movement",
+          "resourceEconomy",
+          "rules.customizable",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09023",
+      "code": "09023",
+      "name": "定制改良",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09023.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "crossSeatAction",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "enemyAttack",
+          "fast",
+          "resourceEconomy",
+          "rules.chaosBag",
+          "rules.customizable",
+          "tokenPool",
+          "tokenResolution",
+          "uses"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09024",
+      "code": "09024",
+      "name": "黑曜石手串",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09024.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "damageHorror"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09025",
+      "code": "09025",
+      "name": "绊脚索",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09025.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09026",
+      "code": "09026",
+      "name": "强势破门",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09026.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09027",
+      "code": "09027",
+      "name": "深度伤痛",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09027.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "elite",
+          "enemyAttack",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09028",
+      "code": "09028",
+      "name": "励志演讲",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09028.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "parley",
+          "parleyNegotiation",
+          "resourceEconomy",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09029",
+      "code": "09029",
+      "name": "还剩一枪",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09029.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "content.traits",
+          "enemyAttack",
+          "fast",
+          "uses"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09030",
+      "code": "09030",
+      "name": "战斗课程",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09030.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "enemyAttack",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09031",
+      "code": "09031",
+      "name": "援助之手",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09031.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09032",
+      "code": "09032",
+      "name": "鼓舞决心",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09032.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "fast",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09033",
+      "code": "09033",
+      "name": "外勤特工",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09033.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "clueDiscovery",
+          "content.playerCards",
+          "damageHorror",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09034",
+      "code": "09034",
+      "name": "看门狗",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09034.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "content.playerCards",
+          "damageHorror",
+          "enemyAttack",
+          "fast",
+          "rules.sideStories"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09035",
+      "code": "09035",
+      "name": "手铐",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09035.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "content.traits",
+          "doomClock",
+          "doomToken",
+          "elite",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09036",
+      "code": "09036",
+      "name": "最坏的打算",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09036.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09037",
+      "code": "09037",
+      "name": "殉道者护臂",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09037.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "crossSeatAction",
+          "encounterDeck",
+          "hiddenInformation",
+          "peril",
+          "revelation",
+          "rules.keywords"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09038",
+      "code": "09038",
+      "name": "吉里什·卡达贾",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09038.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "content.playerCards",
+          "damageHorror",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09039",
+      "code": "09039",
+      "name": "时刻警惕",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09039.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "namedCounters",
+          "resourceEconomy",
+          "rules.time"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09040",
+      "code": "09040",
+      "name": "炼金蒸馏",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09040.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.customizationText",
+          "content.playerCards",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "hiddenInformation",
+          "movement",
+          "rules.customizable",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09041",
+      "code": "09041",
+      "name": "实证假设",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09041.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.customizationText",
+          "content.playerCards",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "evidenceSpend",
+          "fast",
+          "namedCounters",
+          "resourceEconomy",
+          "rules.customizable",
+          "rules.investigatorAbilities"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09042",
+      "code": "09042",
+      "name": "鸦翎羽毛笔",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09042.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choices",
+          "content.customizationText",
+          "content.playerCards",
+          "content.records",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "enemyAttack",
+          "fast",
+          "hiddenInformation",
+          "movement",
+          "recordCounters",
+          "resign",
+          "resourceEconomy",
+          "rules.customizable",
+          "testResolution",
+          "uses"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09043",
+      "code": "09043",
+      "name": "解剖工具",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09043.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "evidenceSpend",
+          "namedCounters",
+          "resourceEconomy",
+          "rules.investigatorAbilities"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09044",
+      "code": "09044",
+      "name": "凄惨传略",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09044.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "content.playerCards",
+          "hiddenInformation",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09045",
+      "code": "09045",
+      "name": "研究笔记",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09045.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "clueDiscovery",
+          "content.playerCards",
+          "evidenceSpend",
+          "namedCounters",
+          "rules.investigatorAbilities"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09046",
+      "code": "09046",
+      "name": "诡异诊断",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09046.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09047",
+      "code": "09047",
+      "name": "震撼发现",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09047.js",
+        "test": "tests/tsk-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09048",
+      "code": "09048",
+      "name": "地区测绘",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09048.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09049",
+      "code": "09049",
+      "name": "分析法",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09049.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "rules.chaosBag",
+          "testResolution",
+          "tokenPool"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09050",
+      "code": "09050",
+      "name": "实验室外套",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09050.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09051",
+      "code": "09051",
+      "name": "俄耳甫斯教信条",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09051.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "fast",
+          "hiddenInformation",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09052",
+      "code": "09052",
+      "name": "存在之谜",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09052.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "aloof",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "parley",
+          "parleyNegotiation",
+          "rules.keywords",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09053",
+      "code": "09053",
+      "name": "指导",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09053.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "crossSeatAction",
+          "enemyAttack"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09054",
+      "code": "09054",
+      "name": "威廉·T·马尔森博士",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09054.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "content.playerCards",
+          "encounterDeck"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09055",
+      "code": "09055",
+      "name": "媒体通行证",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09055.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09056",
+      "code": "09056",
+      "name": "外科手术工具",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09056.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "cardFlow",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09057",
+      "code": "09057",
+      "name": "指纹采集工具",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09057.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09058",
+      "code": "09058",
+      "name": "格雷氏解剖学",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09058.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "namedCounters",
+          "rules.time"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09059",
+      "code": "09059",
+      "name": "关键证言",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09059.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "elite",
+          "evidenceSpend",
+          "exposeFlow",
+          "namedCounters",
+          "rules.concealed",
+          "rules.customizable",
+          "rules.investigatorAbilities",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09060",
+      "code": "09060",
+      "name": "狐朋狗友",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09060.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.customizationText",
+          "content.playerCards",
+          "content.records",
+          "content.traits",
+          "crossSeatAction",
+          "customizable",
+          "customizationPanel",
+          "fast",
+          "recordCounters",
+          "resourceEconomy",
+          "rules.customizable"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09061",
+      "code": "09061",
+      "name": "敏锐直觉",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09061.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.customizationText",
+          "content.playerCards",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "fast",
+          "namedCounters",
+          "resourceEconomy",
+          "rules.customizable",
+          "rules.time",
+          "setAsideRemoval",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09062",
+      "code": "09062",
+      "name": "易容术",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09062.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09063",
+      "code": "09063",
+      "name": "非分之财",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09063.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "choices",
+          "content.playerCards",
+          "fast",
+          "movement",
+          "resign",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09065",
+      "code": "09065",
+      "name": "暗袋",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09065.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "fast",
+          "hidden",
+          "hiddenInformation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09066",
+      "code": "09066",
+      "name": "连打带跑",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09066.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "content.playerCards",
+          "content.traits",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09067",
+      "code": "09067",
+      "name": "“我收下了！”",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09067.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "content.traits",
+          "fast",
+          "resourceEconomy",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09068",
+      "code": "09068",
+      "name": "直捣蜂窝",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09068.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "clueDiscovery",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "encounterDeck",
+          "enemyAttack",
+          "spawn"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09069",
+      "code": "09069",
+      "name": "逃生通道",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09069.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "enemyAttack",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09070",
+      "code": "09070",
+      "name": "风险精算",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09070.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09071",
+      "code": "09071",
+      "name": "时髦大衣",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09071.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09072",
+      "code": "09072",
+      "name": "查克·费格斯",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09072.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09073",
+      "code": "09073",
+      "name": "痛下黑手",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09073.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "aloof",
+          "content.playerCards",
+          "enemyAttack",
+          "parleyNegotiation",
+          "rules.keywords"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09074",
+      "code": "09074",
+      "name": "破门而入",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09074.js",
+        "test": "tests/tsk-player-m2-2.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "content.playerCards",
+          "enemyAttack",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09075",
+      "code": "09075",
+      "name": "扒手行窃工具",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09075.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "resourceEconomy",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09076",
+      "code": "09076",
+      "name": "职业枪手",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09076.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "content.playerCards",
+          "content.traits",
+          "fast",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09077",
+      "code": "09077",
+      "name": "地下市场",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09077.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "exceptional",
+          "permanent",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09078",
+      "code": "09078",
+      "name": "全身而退",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09078.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards",
+          "damageHorror",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09079",
+      "code": "09079",
+      "name": "传神佳墨",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09079.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.customizationText",
+          "content.playerCards",
+          "crossSeatAction",
+          "customizable",
+          "customizationPanel",
+          "rules.customizable",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09080",
+      "code": "09080",
+      "name": "召来的仆从",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09080.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "alert",
+          "allyReady",
+          "aloof",
+          "cardFlow",
+          "content.customizationText",
+          "content.playerCards",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "enemyAttack",
+          "movement",
+          "resourceEconomy",
+          "retaliate",
+          "rules.customizable",
+          "rules.keywords",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09081",
+      "code": "09081",
+      "name": "号令真言",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09081.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "bonded",
+          "choices",
+          "clueDiscovery",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "elite",
+          "fast",
+          "parley",
+          "parleyNegotiation",
+          "rules.customizable",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09082",
+      "code": "09082",
+      "name": "仪式镰刀",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09082.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "doomClock",
+          "doomToken",
+          "enemyAttack",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09083",
+      "code": "09083",
+      "name": "寻龙尺",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09083.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "movement",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09084",
+      "code": "09084",
+      "name": "圣杯",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09084.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "doomClock",
+          "doomToken"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09085",
+      "code": "09085",
+      "name": "缟玛瑙五芒星",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09085.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09086",
+      "code": "09086",
+      "name": "惊悚皈依",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09086.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09087",
+      "code": "09087",
+      "name": "爆炸结界",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09087.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "elite",
+          "enemyAttack"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09088",
+      "code": "09088",
+      "name": "诅咒连连",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09088.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "doomClock",
+          "doomToken",
+          "elite",
+          "parley",
+          "parleyNegotiation",
+          "resourceEconomy",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09089",
+      "code": "09089",
+      "name": "束敌宝罐",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09089.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "enemyAttack",
+          "hiddenInformation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09090",
+      "code": "09090",
+      "name": "恐灵附身",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09090.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09091",
+      "code": "09091",
+      "name": "星界映射",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09091.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09092",
+      "code": "09092",
+      "name": "艾勒·鲁巴什",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09092.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09093",
+      "code": "09093",
+      "name": "月光仪式",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09093.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "content.traits",
+          "doomClock",
+          "doomToken",
+          "elite",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09094",
+      "code": "09094",
+      "name": "食罪者",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09094.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choices",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "exceptional",
+          "fast",
+          "movement",
+          "permanent",
+          "uses"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09095",
+      "code": "09095",
+      "name": "解锢灵魂",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09095.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "content.playerCards",
+          "content.traits",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09096",
+      "code": "09096",
+      "name": "仪式镰刀",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09096.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "doomClock",
+          "doomToken",
+          "enemyAttack",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09097",
+      "code": "09097",
+      "name": "寻龙尺",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09097.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "movement",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09098",
+      "code": "09098",
+      "name": "缟玛瑙五芒星",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09098.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "doomClock",
+          "doomToken",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09099",
+      "code": "09099",
+      "name": "便携万能工具",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09099.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.customizationText",
+          "content.playerCards",
+          "customizable",
+          "customizationPanel",
+          "enemyAttack",
+          "fast",
+          "rules.customizable",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09100",
+      "code": "09100",
+      "name": "简易陷阱",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09100.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "elite",
+          "enemyAttack",
+          "fast",
+          "movement",
+          "namedCounters",
+          "rules.customizable",
+          "rules.time",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09101",
+      "code": "09101",
+      "name": "饱经风霜",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09101.js",
+        "test": "tests/tsk-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.customizationText",
+          "content.playerCards",
+          "content.records",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "encounterDeck",
+          "parleyNegotiation",
+          "recordCounters",
+          "rules.customizable",
+          "testResolution",
+          "victoryKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09102",
+      "code": "09102",
+      "name": "死神偶像",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09102.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "content.playerCards",
+          "damageHorror",
+          "namedCounters",
+          "rules.time"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09103",
+      "code": "09103",
+      "name": "临时盾牌",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09103.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "content.playerCards"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09104",
+      "code": "09104",
+      "name": "道路尽头",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09104.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "content.playerCards",
+          "fast",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09105",
+      "code": "09105",
+      "name": "直击弱点",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09105.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "cardFlow",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "elite",
+          "enemyAttack",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09106",
+      "code": "09106",
+      "name": "整装待发",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09106.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09107",
+      "code": "09107",
+      "name": "猎人还是猎物",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09107.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "elite",
+          "enemyAttack",
+          "prey",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09108",
+      "code": "09108",
+      "name": "拨云见日",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09108.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "allyReady",
+          "clueDiscovery",
+          "content.playerCards",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09109",
+      "code": "09109",
+      "name": "抉择时刻",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09109.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09110",
+      "code": "09110",
+      "name": "救生索",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09110.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "fast",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09111",
+      "code": "09111",
+      "name": "野兽本性",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09111.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.playerCards",
+          "content.traits",
+          "encounterDeck",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09112",
+      "code": "09112",
+      "name": "主动出击",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09112.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09113",
+      "code": "09113",
+      "name": "棒球棒",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09113.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "enemyAttack",
+          "rules.chaosBag",
+          "testResolution",
+          "tokenResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09114",
+      "code": "09114",
+      "name": "卡蒂亚·伊斯特班克",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09114.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "allyReady",
+          "cardFlow",
+          "content.playerCards",
+          "hiddenInformation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09115",
+      "code": "09115",
+      "name": "随心而动",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09115.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09116",
+      "code": "09116",
+      "name": "修旧利废",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09116.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09117",
+      "code": "09117",
+      "name": "陈旧的钥匙圈",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09117.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "clueDiscovery",
+          "content.playerCards",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09118",
+      "code": "09118",
+      "name": "命运无常",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09118.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "doomClock",
+          "doomToken",
+          "revelation"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09119",
+      "code": "09119",
+      "name": "超自然发射器",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09119.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "clueDiscovery",
+          "content.customizationText",
+          "content.playerCards",
+          "content.traits",
+          "customizable",
+          "customizationPanel",
+          "damageHorror",
+          "elite",
+          "enemyAttack",
+          "fast",
+          "movement",
+          "resourceEconomy",
+          "rules.customizable",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": true
+      }
+    },
+    {
+      "id": "09120",
+      "code": "09120",
+      "name": "工具带",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09120.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "content.traits",
+          "fast"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09121",
+      "code": "09121",
+      "name": "精益求精",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09121.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09122",
+      "code": "09122",
+      "name": "手电筒",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09122.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "rules.sideStories",
+          "testResolution",
+          "uses",
+          "usesKeyword"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09123",
+      "code": "09123",
+      "name": "灵魂封圣",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/09123.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "damageHorror",
+          "exceptional",
+          "fast",
+          "permanent",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09124",
+      "code": "09124",
+      "name": "暗处潜伏者",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/09124.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.enemies",
+          "content.playerCards",
+          "content.traits",
+          "damageHorror",
+          "enemyAttack",
+          "hunter",
+          "rules.keywords",
+          "spawn"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09125",
+      "code": "09125",
+      "name": "量子悖论",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/09125.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cardFlow",
+          "choiceProjection",
+          "choices",
+          "content.playerCards",
+          "damageHorror",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09126",
+      "code": "09126",
+      "name": "该付账了",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/09126.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actionEconomy",
+          "content.playerCards",
+          "damageHorror",
+          "resourceEconomy"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09127",
+      "code": "09127",
+      "name": "恐怖异灵",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/09127.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.enemies",
+          "content.playerCards",
+          "damageHorror",
+          "hunter",
+          "namedCounters",
+          "rules.keywords",
+          "rules.time"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09128",
+      "code": "09128",
+      "name": "准备不足",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/09128.js",
+        "test": "tests/tsk-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.playerCards",
+          "resourceEconomy",
+          "testResolution"
+        ],
+        "primitives": [],
+        "customizable": false
+      }
+    },
+    {
+      "id": "09064",
+      "code": "09064",
+      "name": "扒手行窃工具",
+      "shard": "M2-2",
+      "status": "alias",
+      "kind": "reprint-alias",
+      "canonicalCode": "09064",
+      "note": "跨循环重印：只保留 09064 的实现，本卡号走 card-identity 别名，不新建条目。"
+    }
+  ]
+}

@@ -27,10 +27,19 @@ export const CREEPING_DARKNESS = '04342'
 export const ANCIENT_EVILS = '01166'
 export const YIGS_MERCY = '04325b'
 export const ANOTHER_WAY = '04326b'
-// 三张「古代遗物」原卡：重拾往昔（04303）决定结局 5，时光涌流（04343）是本关放在
-// 一边的那一张，04061 是埃兹特里带出来的旧版本。
+// 「古代遗物」的四张印刷版本（同名《Relic of Ages》，按战役推进顺序换版）：
+//   04061 某种装置（《埃兹特里的覆灭》找回）→ 04191 阻断未来（《界限彼端》换版）
+//   → 04303 重拾往昔（幕间五「终末黎明」）→ 04343 时光涌流（本关放在一边，
+//   只在遗物已丢失时由幕 2 背面附属到时间之窗）。
+// 幕 3a 的「查找你的牌库和弃牌堆」按卡名匹配所有版本，不能只认其中一版。
+export const RELIC_DEVICE_OF_SOME_SORT = '04061'
+export const RELIC_FORESTALLING_THE_FUTURE = '04191'
 export const RELIC_REPOSSESS_THE_PAST = '04303'
-export const RELIC_VARIANTS = ['04061', '04303', '04343']
+// 调查员实际携带的版本（不含本关放在一边的 04343），越靠后越新。
+export const CARRIED_RELIC_VARIANTS = [
+  RELIC_DEVICE_OF_SOME_SORT, RELIC_FORESTALLING_THE_FUTURE, RELIC_REPOSSESS_THE_PAST,
+]
+export const RELIC_VARIANTS = [...CARRIED_RELIC_VARIANTS, RELIC_AGES_UNLEASH]
 // 4a 幕的三个版本：修补裂痕/失乐园/锁定时间。
 export const MEND_THE_SHATTER = '04321'
 export const PARADISE_LOST = '04322'
@@ -164,6 +173,15 @@ export const scenario = {
     takeRelic: { card: 'act', codes: ['04320'] },
     attachLocation: { card: 'act', codes: ['04321', '04322', '04323'] },
   } },
+  // 4a 幕的目标都靠「附属到古代遗物的地点」。观察投影据此显示牌桌进度与局势面板
+  // （玩家报告：遗物牌上看不到已经附属了几处地点）。数据放关卡声明里，投影/前端只读，
+  // 不在 web 或 src 里写死幕卡号：
+  //   · 修补裂痕：附属数达到「开局调查员人数 + 1」时推进；
+  //   · 失乐园 / 锁定时间：只要瓦卢西亚 / 纳克特已经附属即可推进。
+  relicAttachmentObjective: {
+    countActs: [MEND_THE_SHATTER],
+    locationActs: { [PARADISE_LOST]: 'valusia', [TIMELOCK]: 'pnakotus' },
+  },
   ...definitions,
   storyAssets: storyCards([RELIC_AGES_UNLEASH, YIGS_MERCY, ANOTHER_WAY]),
   encounterDeck: deckCodes,

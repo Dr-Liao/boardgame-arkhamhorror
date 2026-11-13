@@ -19,6 +19,7 @@
 //   · 迷你卡不是卡表卡号：不与 state.enemies/state.locations 混用，出场由内容层解析后完成。
 //   · 轮末混洗只在「同一批迷你卡」之间重排 location/position，不增删（fail closed）。
 import { randomValue } from './rules-state.js'
+import { registeredEntry } from './ability.js'
 import { registerWindow } from './windows.js'
 import { locationAt } from './mechanic-state.js'
 import { assertTskFields, assertTskObject, tskScenarioState } from './tsk-state.js'
@@ -30,6 +31,25 @@ export const EXPOSED_WINDOW = 'tskExposed'
 registerWindow(EXPOSED_WINDOW, { label: '揭露隐匿迷你卡后', kind: 'reaction', order: 410 })
 
 const KIND_PATTERN = /^[A-Za-z][A-Za-z0-9]{0,63}$/
+
+// 迷你卡附加字段 `code`（2026-11-13 P1-4 跨条目标识契约）：印刷卡号（敌人/地点），
+// 由内容层在生成时给出；引擎只存/读，不解释。跨章条目按 code 判身份，不再依赖各章自造的 kind 名。
+const CARD_CODE_PATTERN = /^\d{5}[a-z]?$/
+// 2026-11-13 P1-15：`knownBy` 按座位记录「谁合法看过这一面」。
+// `known` 仍是公开可见的旧口径（内容层可整体公开），`knownBy` 只影响对应座位的投影。
+function normalizeKnownBy(value) {
+  if (value == null) return []
+  if (!Array.isArray(value) || value.some(seat => !Number.isSafeInteger(seat) || seat < 0)) {
+    throw new TypeError('迷你卡 knownBy 必须是座位号数组')
+  }
+  return [...new Set(value)]
+}
+
+function normalizeMiniCode(code) {
+  if (code == null) return null
+  if (typeof code !== 'string' || !CARD_CODE_PATTERN.test(code)) throw new TypeError('迷你卡 code 必须是印刷卡号或 null')
+  return code
+}
 
 function stateOf(state, create = false) {
   const data = tskScenarioState(state, create)
@@ -76,7 +96,7 @@ export function setInShadows(state, locationId, inShadows = true) {
  */
 export function placeMiniCard(state, spec) {
   assertTskObject(spec, '迷你卡')
-  assertTskFields(spec, ['kind', 'decoy', 'locationId', 'position', 'known'], '迷你卡')
+  assertTskFields(spec, ['kind', 'decoy', 'locationId', 'position', 'known', 'knownBy', 'code'], '迷你卡')
   if (typeof spec.kind !== 'string' || !KIND_PATTERN.test(spec.kind)) throw new TypeError('迷你卡 kind 非法')
   const locationId = spec.locationId
   locationAt(state, locationId)
@@ -87,11 +107,13 @@ export function placeMiniCard(state, spec) {
   const card = {
     id: `tskconcealed${container.nextId++}`,
     kind: spec.kind,
+    code: normalizeMiniCode(spec.code),
     decoy: spec.decoy === true,
     locationId,
     position,
     flipped: false,
     known: spec.known === true,
+    knownBy: normalizeKnownBy(spec.knownBy),
   }
   container.miniCards.push(card)
   return { ...card }
@@ -121,10 +143,10 @@ export function distributeConcealed(state, spec) {
   if (total !== spec.cards.length) throw new TypeError(`分配数量 ${total} 与迷你卡数 ${spec.cards.length} 不一致`)
   const ordered = spec.cards.map((card, index) => {
     assertTskObject(card, '迷你卡定义')
-    assertTskFields(card, ['kind', 'decoy'], '迷你卡定义')
+    assertTskFields(card, ['kind', 'decoy', 'code', 'knownBy'], '迷你卡定义')
     if (typeof card.kind !== 'string' || !KIND_PATTERN.test(card.kind)) throw new TypeError(`迷你卡 #${index} kind 非法`)
     if (card.decoy != null && typeof card.decoy !== 'boolean') throw new TypeError(`迷你卡 #${index} decoy 必须是布尔值`)
-    return { kind: card.kind, decoy: card.decoy === true }
+    return { kind: card.kind, code: normalizeMiniCode(card.code), decoy: card.decoy === true, knownBy: normalizeKnownBy(card.knownBy) }
   })
   if (spec.shuffle != null && typeof spec.shuffle !== 'function') throw new TypeError('shuffle 必须是函数')
   const shuffled = (spec.shuffle || (cards => fisherYates(state, cards)))(ordered.map(card => ({ ...card })))
@@ -138,11 +160,13 @@ export function distributeConcealed(state, spec) {
       const mini = {
         id: `tskconcealed${container.nextId++}`,
         kind: card.kind,
+        code: card.code,
         decoy: card.decoy === true,
         locationId: placement.locationId,
         position,
         flipped: false,
         known: false,
+        knownBy: card.knownBy,
       }
       container.miniCards.push(mini)
       created.push({ ...mini })
@@ -162,7 +186,7 @@ function fisherYates(state, cards) {
 
 function validateShuffle(original, shuffled) {
   if (!Array.isArray(shuffled) || shuffled.length !== original.length) throw new TypeError('shuffle 回调必须返回同一数量的迷你卡')
-  const key = card => `${card.kind}:${card.decoy ? 1 : 0}`
+  const key = card => `${card.kind}:${card.code ?? '-'}:${card.decoy ? 1 : 0}`
   const left = original.map(key).sort().join('|')
   const right = shuffled.map(card => {
     assertTskObject(card, 'shuffle 结果')
@@ -183,7 +207,46 @@ export function exposeMiniCard(state, id) {
   const card = container.miniCards[index]
   if (card.flipped) throw new Error('该隐匿迷你卡已翻面')
   container.miniCards.splice(index, 1)
-  return { id: card.id, kind: card.kind, decoy: card.decoy }
+  // locationId/position 一并返回：内容层用它组成 tskExposed 窗口上下文（是否入场由内容层决定）。
+  return { id: card.id, kind: card.kind, code: card.code ?? null, decoy: card.decoy, locationId: card.locationId, position: card.position }
+}
+
+/** 已经翻面的迷你卡（记录保留在容器外的场景不适用；本原语揭露即取出，因此恒为空）。 */
+// 2026-11-13 P1-16（09740 阴霾日食）：场上/密谋旁声明
+// `treacheryRule.exposeLimitPerInvestigatorPerRound` 的卡，限制每位调查员每轮揭露数。
+// 账本写在 concealed 容器的 `exposeRound: { round, bySeat }`（随存档持久化，按轮清零）。
+export function exposeLimitPerInvestigator(state) {
+  let limit = 0
+  for (const card of state.agendaAside || []) {
+    const declared = registeredEntry(card?.originalCode || card?.code || card)
+      ?.treacheryRule?.exposeLimitPerInvestigatorPerRound
+    if (Number.isSafeInteger(declared) && declared > 0) {
+      limit = limit ? Math.min(limit, declared) : declared
+    }
+  }
+  return limit
+}
+
+function exposeLedger(state, create = false) {
+  const container = stateOf(state, create)
+  if (!container) return null
+  const round = Number(state.round) || 0
+  if (!container.exposeRound || container.exposeRound.round !== round) {
+    if (!create) return { round, bySeat: {} }
+    container.exposeRound = { round, bySeat: {} }
+  }
+  return container.exposeRound
+}
+
+export function exposuresThisRound(state, seat) {
+  if (!Number.isSafeInteger(seat)) return 0
+  return Number(exposeLedger(state)?.bySeat?.[seat]) || 0
+}
+
+export function recordExposure(state, seat) {
+  if (!Number.isSafeInteger(seat)) return
+  const ledger = exposeLedger(state, true)
+  ledger.bySeat[seat] = (Number(ledger.bySeat[seat]) || 0) + 1
 }
 
 /** 已经翻面的迷你卡（记录保留在容器外的场景不适用；本原语揭露即取出，因此恒为空）。 */
@@ -228,32 +291,48 @@ export function reshuffleConcealed(state, { shuffle } = {}) {
  * 观察投影：未翻面且未被合法获知的迷你卡只暴露「数量/位置」，不泄露 kind 与 decoy。
  * flipped/known 的卡才给出 kind/decoy（由内容层标明哪些座位合法获知）。
  */
-export function concealedProjection(state, { revealAll = false } = {}) {
+export function concealedProjection(state, { revealAll = false, observerSeat = null } = {}) {
   return concealedMiniCards(state).map(card => {
     const visible = revealAll || card.flipped || card.known
+      || (Number.isSafeInteger(observerSeat) && (card.knownBy || []).includes(observerSeat))
     return {
       locationId: card.locationId,
       position: card.position,
       visible,
-      ...(visible ? { id: card.id, kind: card.kind, decoy: card.decoy } : {}),
+      ...(visible ? { id: card.id, kind: card.kind, code: card.code ?? null, decoy: card.decoy } : {}),
     }
   })
+}
+
+/**
+ * 标记某些座位「合法看过」这张迷你卡（09889/09545 的「查看已揭示面（不揭露）」等）。
+ * 只改观察投影可见性；不改变 flipped/decoy 等身份字段。返回更新后的副本。
+ */
+export function markMiniKnownFor(state, id, seats) {
+  const container = stateOf(state, true)
+  const card = container.miniCards.find(item => item.id === id)
+  if (!card) throw new RangeError(`未知隐匿迷你卡 ${JSON.stringify(id)}`)
+  const merged = normalizeKnownBy([...(card.knownBy || []), ...(Array.isArray(seats) ? seats : [seats])])
+  card.knownBy = merged
+  return { ...card }
 }
 
 /** 读档校验：concealed 容器的形状（存在才校验；地点必须已入场）。 */
 export function validateTskConcealed(state, value = stateOf(state)) {
   if (value == null) return true
-  assertTskFields(value, ['version', 'nextId', 'miniCards', 'shadows'], '隐匿迷你卡状态')
+  assertTskFields(value, ['version', 'nextId', 'miniCards', 'shadows', 'exposeRound'], '隐匿迷你卡状态')
   if (value.version !== CONCEALED_STATE_VERSION) throw new TypeError(`不支持的隐匿迷你卡版本 ${value.version}`)
   if (!Number.isSafeInteger(value.nextId) || value.nextId < 1) throw new TypeError('隐匿迷你卡序号无效')
   if (!Array.isArray(value.miniCards)) throw new TypeError('隐匿迷你卡列表无效')
   const ids = new Set()
   for (const card of value.miniCards) {
-    assertTskFields(card, ['id', 'kind', 'decoy', 'locationId', 'position', 'flipped', 'known'], '隐匿迷你卡记录')
+    assertTskFields(card, ['id', 'kind', 'code', 'decoy', 'locationId', 'position', 'flipped', 'known', 'knownBy'], '隐匿迷你卡记录')
     if (typeof card.id !== 'string' || !card.id || ids.has(card.id)) throw new TypeError('隐匿迷你卡 id 重复或无效')
     ids.add(card.id)
     if (typeof card.kind !== 'string' || !KIND_PATTERN.test(card.kind)) throw new TypeError('隐匿迷你卡 kind 无效')
+    normalizeMiniCode(card.code ?? null)
     if (typeof card.decoy !== 'boolean' || typeof card.flipped !== 'boolean' || typeof card.known !== 'boolean') throw new TypeError('隐匿迷你卡标记无效')
+    normalizeKnownBy(card.knownBy ?? null)
     locationAt(state, card.locationId)
     if (card.position !== null && !SHADOW_POSITIONS.includes(card.position)) throw new TypeError('隐匿迷你卡位置无效')
   }

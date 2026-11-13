@@ -3,8 +3,11 @@
 //       [free]在你回合期间，横置远古海图并花费1秘密：以任意顺序选择并执行以下两个行动(移动、躲避或调查)。
 //
 // 读点同 08098：移动/躲避/调查都走不消耗行动的免费执行入口；本卡执行两轮选择。
+// 「在你回合期间」= criteria: [ownTurn()]，与 08098/02108 同一口径（玩家窗口不筛回合）。
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
+
+import { ownTurn } from '../../engine/matcher.js'
 
 const performAction = (inv, state, api) => {
   const engaged = state.enemies.filter(enemy => inv.engaged.includes(enemy.id) && !enemy.exhausted && !enemy.defeated)
@@ -34,6 +37,7 @@ export default {
   usesType: 'secrets',
   abilities: [
     { kind: 'free', label: '横置并花费 1 秘密：执行两个移动/躲避/调查行动', cost: { action: false, exhaust: true, uses: 1 },
+      criteria: [ownTurn()],
       resolve: ({ inv, state, api }) => {
         performAction(inv, state, api)
         performAction(inv, state, api)

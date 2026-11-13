@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, move, settle, answer, asset, enemy, play, use, validateMove, legalMoves, decisionSeat } from './core-fixture.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { performTest, getStat, createGameState } from '../src/engine/engine.js'
+import { performTest, getStat, createGameState, playerWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { campaignCardChange } from '../src/campaign/campaign.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -178,6 +178,27 @@ test(title('02108') + '（与敌人交战时不能用）', () => {
   // 卡面条件：未与任何敌人交战才能这样移动。
   assert.ok(validateMove(s, 0, { action: 'ability', assetId: a.id, abilityIndex: 0 }))
   assert.ok(!legalMoves(s).some(item => item.action === 'ability' && item.assetId === a.id))
+})
+
+test(title('02108') + '（不是自己的回合时玩家窗口不提供）', () => {
+  const s = fixture('01001', 2)
+  const a = asset(s, '02108', {}, 0)
+  s.locations[0].connections = ['next']
+  s.locations.push({ id: 'next', name: '相邻', revealed: true, clues: 0, connections: [s.locations[0].id] })
+  // 卡面「[free]在你回合期间」：免费能力窗口会向所有调查员询问，漏 criteria 时别人回合也能触发
+  // （实机复现：佐伊的回合里给卢克弹出「探路者」，移动后揭示地点，再轮到佐伊行动）。
+  const openWindow = draft => playerWindow(draft, 'investigation.afterAction', [], null, {})
+  s.currentSeat = 1
+  resolveTransaction(s, 1, { action: 'gapProbeOtherTurn' }, openWindow)
+  const offTurnLabels = (s.pendingChoice?.options || []).map(item => String(item.label))
+  assert.equal(offTurnLabels.some(label => label.includes('探路者')), false, '不是自己的回合不能触发探路者')
+
+  // 自己回合的同一窗口仍然提供（只由 criteria 开关，不改变回合内的可用性）。
+  s.currentSeat = 0
+  resolveTransaction(s, 0, { action: 'gapProbeOwnTurn' }, openWindow)
+  const ownTurnLabels = (s.pendingChoice?.options || []).map(item => String(item.label))
+  assert.ok(ownTurnLabels.some(label => label.includes('探路者')), '自己的回合仍然可以触发探路者')
+  assert.equal(s.investigators[0].assets.find(item => item.id === a.id).exhausted, false, '仅打开窗口，未自动结算')
 })
 
 test(title('02110'), () => {

@@ -166,6 +166,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 - 先盘点已有原语：`src/engine/effects.js` 的 `EFFECT_PRIMITIVES`、`ctx.api` 的 `api-*.js`、`ability.js` 的 `kind`、`matcher.js` 组合子、`targets.js` 的目标枚举、`play-condition.js` 的打出条件。能在现有原语里组合出来的，不新增。
 - 「牌不在手牌里、但可以当作手牌打出/投入」这类效果不必逐卡逐窗口实现：统一原语是 `src/engine/play-channels.js`（通道的枚举 / 门控 / 折扣 / 取牌 / `uiKey` 挂载只在这一处声明）。新增存储形状只在通道表加一条，新增窗口只遍历 `entries()`；契约、现有通道清单（弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方/直觉牌库）与 `uiKey` 协议见 `docs/card-model.md` §7.1，验收护栏 `tests/play-channels.test.mjs`。
+- 「战役发放的剧情资产可以在牌组中打出」已有统一原语（2026-11-11 收口，见 `docs/card-model.md` §5.1）：卡条目声明 `scenarioPlayable: true`，引擎唯一读点 `src/engine/stats.js#runtimeCardAvailable` 同时要求「战役牌组记录里有这张卡」。新增循环只给已验收的剧情资产补声明；**不得**再在战役 behavior 写 `canPlayScenarioCard` 钩子，也**不得**用整包战役卡塞进 `availability` 白名单来代替逐卡声明（历史循环的整包白名单保留、不再扩散）。换印刷版本时用 `campaignCardChange` 同步 `record.deck`，否则下一关重建牌组会丢新版本。验收护栏 `tests/campaign-story-asset-playable.test.mjs`。
 - 需要新增时，一个原语只做一件事：动词 + 参数 + 目标 + 持续时间 + 成功/失败分支；不要把整张卡的规则塞进一个 `carcosaPlayer` 式大原语。
 - 每个新原语必须同时具备：
   1. 通用实现（`effects.js` / `api-*.js` / `ability.js` / `modifiers.js` 等，按所属层）；

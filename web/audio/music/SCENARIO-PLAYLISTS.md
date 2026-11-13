@@ -105,3 +105,20 @@
 | 古老者之城 | 极地古城、异星遗迹、远古机关 | ★ Spacial Harvest → ★ Shadowlands 3 - Machine → Truth in the Stones |
 | 疯狂之心 I | 冰下设施、探索封印、黑暗深处 | ★ SCP-x2x (Unseen Presence) → ★ SCP-x4x (Mind Leech) → Orion 300XB |
 | 疯狂之心 II | 邪雾苏醒、封印中枢、最后逃离 | ★ Black Vortex → ★ The Complex → Thunder Dreams |
+
+## 绯红密钥（八循环）
+
+十关各三首，共 30 首不同曲目。20 首新增、10 首复用，按播放位置和独立曲目数计算的旧曲复用率均为 **33.3%**，循环内重复率为 0%。新增曲目来自 Kevin MacLeod 的 Incompetech 官方曲库，按 CC BY 4.0 署名，以 44.1 kHz、128 kbps MP3 存入 common/。逐曲来源、ISRC 和校验值见 [sources.json](sources.json)，署名见 [CREDITS.txt](CREDITS.txt)。
+
+| 关卡 | 场景风格 | 播放顺序（★为新增） |
+| --- | --- | --- |
+| 谜雨 | 伦敦雨夜、街巷追踪、初见红衣人 | ★ Night on the Docks - Sax → ★ No Good Layabout → Dark Walk |
+| 死亡酷暑 | 马拉喀什、灼热集市、死者苏醒 | ★ Tabuk → ★ Desert City → Oppressive Gloom |
+| 血色阴影 | 布宜诺斯艾利斯、探戈、屋顶追逐 | ★ Tango de Manzana → ★ Bass Walker → Chase Pulse |
+| 暗中交易 | 君士坦丁堡、夜市接头、追查货物 | ★ Intrepid → ★ Dhaka → Penumbra |
+| 疯星乱舞 | 哈瓦那、舞台与后台、潜入失控 | ★ No Frills Comparsa → ★ No Frills Salsa → Evening of Chaos |
+| 如履薄冰 | 安克雷奇、冰原追猎、暴风雪 | ★ Northern Glade → ★ Long Note Four → Frozen Star |
+| 战争疮痍 | 亚历山大港、阵营交锋、要塞突围 | ★ Nile's Blues → ★ Killers → Clash Defiant |
+| 苦痛之影 | 吉隆坡、雨夜幽魂、红伞旧怨 | ★ Ghostpocalypse - 6 Crossing the Threshold → ★ Trepidation → Anguish |
+| 不留痕迹 | 百慕大、异界漂流、寻找失踪者 | ★ Ghostpocalypse - 1 Departure → ★ Nightmare Machine → Symmetry |
+| 钥匙议会 | 通古斯卡、密钥审判、异界决战 | ★ Night Vigil → ★ Movement Proposition → Final Battle of the Dark Wizards |

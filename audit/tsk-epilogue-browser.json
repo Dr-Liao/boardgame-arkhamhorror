@@ -1,0 +1,549 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-epilogue-reporter.mjs",
+  "evidenceCommand": "node tools/run-tsk-epilogue-browser.mjs",
+  "milestone": "P8",
+  "campaignId": "theScarletKeys",
+  "status": "passed",
+  "complete": true,
+  "sourceStableDuringRun": true,
+  "sourceDrift": [],
+  "expectedSpecs": [
+    "tests/tsk-epilogue.browser.mjs"
+  ],
+  "expectedTests": 2,
+  "specs": [
+    "tests/tsk-epilogue.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/tsk-epilogue.browser.mjs",
+      "title": "P8 desktop 尾声：时间 ≥35 被迫启程通古斯卡 → 钥匙议会 → 尾声 → 战役终章",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "epilogue"
+        },
+        {
+          "type": "scenario",
+          "description": "congressOfTheKeys"
+        },
+        {
+          "type": "debugJump",
+          "description": "host-only POST /api/debug（真实 debugCommand 解析 + 正常事务提交）「结束这关 resolution2」（谜雨）与「结束这关 resolution1」（钥匙议会）：只做跨章/终章的关末结算（finishScenario/结局/XP/记录），章内不做夹具、不写 session.state。终章本身仍由真实世界地图时间累积到 35 后唯一被迫启程进入。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-lobby.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-hub.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅准备：座位 0=09001 卡森·辛克莱；座位 1（AI）=01001 罗兰·班克斯"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-first-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "调试关末结算（已披露）：首章谜雨 → /api/debug「结束这关 resolution2」→ scenarioResult；scenarioResults=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-first-result.png"
+        },
+        {
+          "type": "evidence",
+          "description": "首章结算后世界地图：current=London time=2"
+        },
+        {
+          "type": "timeTrace",
+          "description": "[2,3,5,6,8,8,9,11,11,12,14,15,15,17,18,20,20,21,23,24,24,26,27,29,30,32,33,35]"
+        },
+        {
+          "type": "timeAcceleration",
+          "description": "P8 披露：世界地图时间由真实 /api/move hubEmbark 累积（London↔Bermuda，触发幕间 27/20），共 22 次旅行、5 份真实状况报告（alpha/epsilon/beta/zeta/gamma）；时间轨迹 [2,3,5,6,8,8,9,11,11,12,14,15,15,17,18,20,20,21,23,24,24,26,27,29,30,32,33,35]。未写 session.state/records.time，未 page.route 改写接口。"
+        },
+        {
+          "type": "evidence",
+          "description": "时间累积：start=2 final=35 travels=22 reports=alpha/epsilon/beta/zeta/gamma current=London unlocked=32"
+        },
+        {
+          "type": "claim",
+          "description": "forcedEndgame"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-worldmap-forced.png"
+        },
+        {
+          "type": "evidence",
+          "description": "被迫启程：time 35→37（cost=2） current=Tunguska node=congressOfTheKeys"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-departure.png"
+        },
+        {
+          "type": "evidence",
+          "description": "钥匙议会牌桌：time=37 current=Tunguska hand=5 locations=4 acts=4 agendas=3"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "调试关末结算（已披露）：钥匙议会 → /api/debug「结束这关 resolution1」→ scenarioResult；scenarioResults=2"
+        },
+        {
+          "type": "claim",
+          "description": "congressTerminal"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-result.png"
+        },
+        {
+          "type": "claim",
+          "description": "epilogue"
+        },
+        {
+          "type": "evidence",
+          "description": "campaignResult：outcome=permanentPosition result=victory trust=1 deception=0 chapters=2 keysHeld=1 erased=0 time=37"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-epilogue-story.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-campaign-result.png"
+        }
+      ],
+      "phase": "epilogue",
+      "claims": [
+        "forcedEndgame",
+        "congressTerminal",
+        "epilogue"
+      ]
+    },
+    {
+      "file": "tests/tsk-epilogue.browser.mjs",
+      "title": "P8 mobile 尾声：时间 ≥35 被迫启程通古斯卡 → 钥匙议会 → 尾声 → 战役终章",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "epilogue"
+        },
+        {
+          "type": "scenario",
+          "description": "congressOfTheKeys"
+        },
+        {
+          "type": "debugJump",
+          "description": "host-only POST /api/debug（真实 debugCommand 解析 + 正常事务提交）「结束这关 resolution2」（谜雨）与「结束这关 resolution1」（钥匙议会）：只做跨章/终章的关末结算（finishScenario/结局/XP/记录），章内不做夹具、不写 session.state。终章本身仍由真实世界地图时间累积到 35 后唯一被迫启程进入。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-lobby.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-hub.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅准备：座位 0=09001 卡森·辛克莱；座位 1（AI）=01001 罗兰·班克斯"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-first-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "调试关末结算（已披露）：首章谜雨 → /api/debug「结束这关 resolution2」→ scenarioResult；scenarioResults=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-first-result.png"
+        },
+        {
+          "type": "evidence",
+          "description": "首章结算后世界地图：current=London time=2"
+        },
+        {
+          "type": "timeTrace",
+          "description": "[2,3,5,6,8,8,9,11,11,12,14,15,15,17,18,20,20,21,23,24,24,26,27,29,30,32,33,35]"
+        },
+        {
+          "type": "timeAcceleration",
+          "description": "P8 披露：世界地图时间由真实 /api/move hubEmbark 累积（London↔Bermuda，触发幕间 27/20），共 22 次旅行、5 份真实状况报告（alpha/epsilon/beta/zeta/gamma）；时间轨迹 [2,3,5,6,8,8,9,11,11,12,14,15,15,17,18,20,20,21,23,24,24,26,27,29,30,32,33,35]。未写 session.state/records.time，未 page.route 改写接口。"
+        },
+        {
+          "type": "evidence",
+          "description": "时间累积：start=2 final=35 travels=22 reports=alpha/epsilon/beta/zeta/gamma current=London unlocked=32"
+        },
+        {
+          "type": "claim",
+          "description": "forcedEndgame"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-worldmap-forced.png"
+        },
+        {
+          "type": "evidence",
+          "description": "被迫启程：time 35→37（cost=2） current=Tunguska node=congressOfTheKeys"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-departure.png"
+        },
+        {
+          "type": "evidence",
+          "description": "钥匙议会牌桌：time=37 current=Tunguska hand=5 locations=4 acts=4 agendas=3"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "调试关末结算（已披露）：钥匙议会 → /api/debug「结束这关 resolution1」→ scenarioResult；scenarioResults=2"
+        },
+        {
+          "type": "claim",
+          "description": "congressTerminal"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-result.png"
+        },
+        {
+          "type": "claim",
+          "description": "epilogue"
+        },
+        {
+          "type": "evidence",
+          "description": "campaignResult：outcome=permanentPosition result=victory trust=1 deception=0 chapters=2 keysHeld=1 erased=0 time=37"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-epilogue-story.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-campaign-result.png"
+        }
+      ],
+      "phase": "epilogue",
+      "claims": [
+        "forcedEndgame",
+        "congressTerminal",
+        "epilogue"
+      ]
+    }
+  ],
+  "checks": {
+    "forcedEndgame": {
+      "desktop": true,
+      "mobile": true
+    },
+    "congressTerminal": {
+      "desktop": true,
+      "mobile": true
+    },
+    "epilogue": {
+      "desktop": true,
+      "mobile": true
+    }
+  },
+  "screenshots": [
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-campaign-result.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 853191,
+      "sha256": "8f82291d862ecd70f605fb5d76b5b6a1b6aadcb637b1de28af3685fcc39893fc"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-departure.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 287567,
+      "sha256": "b86a4f56ede47479f0d5fb277009c3ad39b5b90164034b8eccecfc6545540ca7"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-result.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 646649,
+      "sha256": "24ea3426cbd9940cc9efd3936ac102b2c463761b67091220eb471fab8582edc5"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-congress-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 959864,
+      "sha256": "1c8af301d3dd8fe22963c32dc369e79d8dbfc826d7aa83fc877d768fc1861072"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-epilogue-story.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 574794,
+      "sha256": "cf1df5e51c99e000fc419b0f7385d57514601cc86a31e43e1193bab2602b8329"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-first-result.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 636732,
+      "sha256": "eb16e034f993a2c525b321376855bd7d6f8a4769ee80193df170b4db561393a5"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-first-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 928147,
+      "sha256": "0e763682f768d90182860b77f1090836215180b6b5c919795ae5ad61cfe17574"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-hub.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 863994,
+      "sha256": "4d4f3679d513d1b83fcb94acd62238fef1b2a82f532ccd7c3ecfa0deb9166f34"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-lobby.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 894242,
+      "sha256": "b030095f2753f3e825e3ddff17c6336a51f4696f68396cc6f2bdf3e0eb7d6912"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-desktop-worldmap-forced.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "epilogue",
+      "bytes": 409364,
+      "sha256": "60f6a8b511ea156e2a998ccd92ff94df26b6906ee445b5fb1c2abead7914be43"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-campaign-result.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 204673,
+      "sha256": "73280451553ce75d8c534f165a184133e9bd3fa5b72a03241ea5793b4bff959a"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-departure.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 119195,
+      "sha256": "28ed58d5b2f7dc097397839fdb161eafd2c5a18edec62d5e9b0e337e4eccab74"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-result.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 137774,
+      "sha256": "1769f5f644fd0db9e0fd5f19d607a0788620968904a4e97277d8b868968df269"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-congress-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 232329,
+      "sha256": "0e2a05528a72a83b95e1a326194b6c59aaa9e8f45540dea3355e70943b6f66a7"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-epilogue-story.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 133795,
+      "sha256": "bf58451891278e89a4379ba977de8cebeba187dd816ca574c2815bd2fcff5fbc"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-first-result.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 138332,
+      "sha256": "c3621941de34675df53e8ca86e5535f6e162ce985c6e155a8003c50c4e6e5d32"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-first-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 220493,
+      "sha256": "a820b01544215b4b2ad95dd40227c1d4f4f38c0f82dcd095a00f7c2de6110071"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-hub.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 206803,
+      "sha256": "cfab21ccef6e548ca97482d569140e4943787fc5906bcd63238417a48024f243"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-lobby.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 181786,
+      "sha256": "d39fe28e0abd105656983775a2b92a49fb881f7b4d3513dfedff1bffcb468334"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/epilogue-mobile-worldmap-forced.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "epilogue",
+      "bytes": 151276,
+      "sha256": "071480bc1974747ab141b4ea5ef4aafa01e87e3ca92164ce15bd64777816fa96"
+    }
+  ],
+  "screenshotsMissing": [],
+  "sourceFiles": [
+    {
+      "path": "content/campaigns/theScarletKeys/epilogue.js",
+      "sha256": "1018a33f141ba405b34459d4eb33b812e7a5b2adc835b293c29620d1c3c0405d",
+      "bytes": 9250
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/flow.js",
+      "sha256": "a79507db725a16119f38231601b7fa2f6f162c0ee0c488673489e0da12480c32",
+      "bytes": 21168
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/interludes.js",
+      "sha256": "51d4be59b711727c416833dd0a9037f71f1608fc4b6e8e35095be26d9927b41c",
+      "bytes": 74027
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/manifest.js",
+      "sha256": "c46a51dedb71df6a1912ca89428cc4ed50b6a36fb1d991e0c4fd2f17985f9379",
+      "bytes": 4197
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/parts.js",
+      "sha256": "6cc1bf859bdeabf4e3a9cdb2109b1154fd993c5e5bfd8d08d87e198e99eab834",
+      "bytes": 20819
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/shared.js",
+      "sha256": "ffcdbfc6aa3c515a8996053cda31ee26c8f58f5a95570add2b566baa0c180c81",
+      "bytes": 22444
+    },
+    {
+      "path": "src/campaign/campaign-flow.js",
+      "sha256": "b004901911938eede947688f7ed71f94663fb1c7d8e79a645096e8d1b7beae67",
+      "bytes": 34549
+    },
+    {
+      "path": "src/campaign/story.js",
+      "sha256": "e34d171aaca555f2a1e0b6f62e52a998b67c9abed559e564679380bd191a1e01",
+      "bytes": 41752
+    },
+    {
+      "path": "src/engine/campaign-flow.js",
+      "sha256": "442d0c28e906108d6d332d4fe78841f2992cf9c387ecd6fe0917ed17a9fc4b8d",
+      "bytes": 22352
+    },
+    {
+      "path": "src/engine/dispatch.js",
+      "sha256": "4dcab5e4ef1d7073261e420742a49c18abe556af9f23c81476da5524bee3173f",
+      "bytes": 56994
+    },
+    {
+      "path": "src/engine/hub.js",
+      "sha256": "b50bd3c1506e3b45a197aeb3d3725cff307947aa38582fde4941b5d5fd03bd28",
+      "bytes": 33744
+    },
+    {
+      "path": "src/engine/tsk-map.js",
+      "sha256": "a00f1b0c67c20f3a5620276f73d883813ac1b0df3b8fdbb61696aa0a64c69764",
+      "bytes": 20170
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "017ee8c1ae6daa697c615e2a8f0bee4f641c6331ede9989cfb4dce745f5c463e",
+      "bytes": 18476
+    },
+    {
+      "path": "src/integration/observation.js",
+      "sha256": "d51c27e7446f2071caff4722b3f6717d9f1192c5719e8a4a9cb90c0c0108ec4d",
+      "bytes": 30787
+    },
+    {
+      "path": "tests/playwright/playwright.tsk-epilogue.config.mjs",
+      "sha256": "63dde90919eda36f05b0d13102d0e0455fa7c9637ea492c76820d594abae14b5",
+      "bytes": 2052
+    },
+    {
+      "path": "tests/tsk-browser-helpers.mjs",
+      "sha256": "65d7d45ce9116b304d37115f4c520961c150cc11e2f0f473e216a3aae5cb71b5",
+      "bytes": 25852
+    },
+    {
+      "path": "tests/tsk-epilogue.browser.mjs",
+      "sha256": "7af7cda762c3429d699ea4eca74cc3b8cbe40da88d62bcce8fd8f37ada03f44c",
+      "bytes": 36419
+    },
+    {
+      "path": "tools/playwright-tsk-epilogue-reporter.mjs",
+      "sha256": "fbe3f47bb211960e6818cac544535795389f6783e258043bb1127b7822cdcd4a",
+      "bytes": 10903
+    },
+    {
+      "path": "tools/run-tsk-epilogue-browser.mjs",
+      "sha256": "4b48e8320dd0c8ec5ae99a6f56bddb5b87644b3f6ca357967c0b4358853062f8",
+      "bytes": 5535
+    },
+    {
+      "path": "web/hub.js",
+      "sha256": "8cfed99f98a37c51335b7df1458cd15bf30274a5dd31cbe508e509e21eba801b",
+      "bytes": 166776
+    },
+    {
+      "path": "web/story-reader.js",
+      "sha256": "8a3bdcd44cab670828a2a8535a5f3223cb44de14a2dd3e1953543f79bbba855f",
+      "bytes": 3856
+    }
+  ],
+  "sourceFilesMissing": []
+}

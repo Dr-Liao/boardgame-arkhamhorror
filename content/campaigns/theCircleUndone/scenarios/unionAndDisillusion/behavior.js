@@ -955,8 +955,16 @@ export const behavior = {
       return
     }
     if (flags.onEngageLoseTwoResources) {
-      inv.resources = Math.max(0, (inv.resources || 0) - 2)
-      api?.info?.(`${enemy.name}与你交战：失去 2 个资源。`)
+      // 敌人（= 遭遇卡）的交战强制：失去资源走统一 api 的「将要失去资源」窗口
+      // （05280/05032「否定存在」）。旧夹具没有这个 api 时保留直写口径。
+      let lost = 0
+      if (typeof api?.loseResources === 'function') {
+        lost = api.loseResources(inv.seat, 2)
+      } else {
+        lost = Math.min(2, inv.resources || 0)
+        inv.resources = Math.max(0, (inv.resources || 0) - 2)
+      }
+      if (lost > 0) api?.info?.(`${enemy.name}与你交战：失去 ${lost} 个资源。`)
       return
     }
     // 05267 幽灵乌鸦的交战二选一在条目的 enemyScript.onEngaged（共享 enemyEngaged 已派发）。

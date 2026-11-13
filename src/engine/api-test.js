@@ -78,9 +78,10 @@ export function createTestApi(state, events, deps) {
     // 统一扣减 state.skillTest.difficultyReduction。
     reduceTestDifficulty: (amount = 1) => {
       if (!state.skillTest) return 0
+      // 2026-11-13 P1-6：只登记 difficultyReduction，唯一扣减点在 tests.js 的 ST.6；
+      // 此前这里同时预扣一次，导致同一次「难度 -N」被扣两次。
       state.skillTest.difficultyReduction = (state.skillTest.difficultyReduction || 0) + amount
-      state.skillTest.difficulty = Math.max(0, (state.skillTest.difficulty || 0) - amount)
-      return state.skillTest.difficulty
+      return Math.max(0, (state.skillTest.difficulty || 0) - state.skillTest.difficultyReduction)
     },
     // Phase 2（B2）：伤害/恐惧的统一入口，可以指定分配策略。
     //   strategy: 'distribute'（默认，逐点询问）| 'self' | 'assetsFirst' | 'assetsOnly'

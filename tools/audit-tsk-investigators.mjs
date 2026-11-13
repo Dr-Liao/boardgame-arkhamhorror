@@ -91,8 +91,12 @@ export function buildInvestigatorAudit() {
       && investigatorManifest.cards.length === 20
       && investigatorManifest.cards.every(card => card.cataloged === true && card.rulesImplemented === true && card.deckbuilding === false)
       && investigatorManifest.cards.every(card => card.investigator === true || card.dependencyOnly === true),
-    otherPacksCatalogOnly: campaignManifest.status === 'catalog-only' && playerManifest.status === 'catalog-only'
-      && [...campaignManifest.cards, ...playerManifest.cards].every(card => card.rulesImplemented === false && card.deckbuilding === false),
+    // P6 起一般玩家卡包 playable（108 条全部逐卡实现）；P7 起战役包随十章验收升 playable
+    // （311 条规则全真、不可构筑）——本门禁约束的是「调查员包之外的包不得越界进入选人/构筑」。
+    otherPacksCatalogOnly: campaignManifest.status === 'playable'
+      && campaignManifest.cards.every(card => card.rulesImplemented === true && card.deckbuilding === false)
+      && playerManifest.status === 'playable'
+      && playerManifest.cards.every(card => card.rulesImplemented === true),
     originalBaselinePreserved: Boolean(baselineReplaySha) && currentReplaySha === baselineReplaySha,
     replayZeroDrift: regression?.status === 'passed' && regression?.replay?.matches === true,
     fastNoNewFailures: additions.length === 0 && fastTitles.length === frozen.length

@@ -941,6 +941,79 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         primary))
   }
 
+  // P8（八循环《绯红密钥》）：世界地图启程面板。数据来自观察投影 mechanism-view#tsk.map；
+  // 只渲染服务端给出的 hubEmbark/hubAdvanceReport 合法动作（不在前端复制地图规则）。
+  function worldMapPanel(s) {
+    const st = s.state
+    const map = st.mechanics?.tsk?.map
+    if (!map?.canEmbark) return null
+    const reportMoves = legal(s, 'hubAdvanceReport')
+    const embarkMoves = legal(s, 'hubEmbark')
+    if (!reportMoves.length && !embarkMoves.length) return null
+    const nameOf = destination => (map.destinations || []).find(item => item.destination === destination)?.name || destination
+    return h('section', { className: 'ah-hub-world-map', 'data-hub-world-map': 'true', 'aria-label': t('hub.worldMap.aria') },
+      h('h2', {}, t('hub.worldMap.title')),
+      h('p', { 'data-tsk-map-current': map.current, 'data-tsk-map-time': String(map.time) },
+        t('hub.worldMap.line', { current: nameOf(map.current), time: map.time, unlocked: (map.unlocked || []).length })),
+      map.forced
+        ? h('p', { className: 'ah-hub-world-map-forced', role: 'status', 'data-tsk-map-forced': map.forced }, t('hub.worldMap.forced'))
+        : h('p', { className: 'ah-hub-world-map-hint' }, t('hub.worldMap.hint')),
+      reportMoves.map(move => action(s, move, t('hub.worldMap.report', { report: String(move.report || '').toUpperCase() }))),
+      h('div', { className: 'ah-hub-world-map-destinations' }, embarkMoves.map(move => h('button', {
+        type: 'button', className: 'bg-btn secondary', disabled: locked(s) || !!move.disabled,
+        title: move.explanation || '', 'data-hub-embark': move.destination,
+        'data-expedite': move.expedite === true ? 'true' : 'false',
+        onclick: () => { if (!move.disabled && !locked(s)) submitMove(move, s) },
+      }, move.label))),
+      embarkMoves.some(move => move.expedite) ? h('p', { className: 'ah-hub-world-map-note' }, t('hub.worldMap.expedite')) : null)
+  }
+
+  // P8（八循环《绯红密钥》）：构筑期/关间的定制升级卡面板。
+  // 数据全部来自观察投影 state.mechanics.tsk.customizationHub（本人座位）；
+  // 按钮直接提交服务端给出的 hubCustomize 合法动作（label/cost/availableXp 都由引擎决定，
+  // 前端不复制勾选上限、经验扣减或等级规则）；初始构筑期只展示 0 勾选，不渲染按钮。
+  function customizationPanel(s) {
+    const model = s.state.mechanics?.tsk?.customizationHub
+    if (!model || !Array.isArray(model.entries) || !model.entries.length) return null
+    const initial = s.state.uiState !== 'interlude'
+    const moves = legal(s, 'hubCustomize')
+    return h('section', {
+      className: 'ah-hub-customization', 'data-hub-customization': 'true',
+      'data-hub-customize-state': initial ? 'initial' : 'interlude',
+      'data-hub-customize-xp': String(model.availableXp),
+      'aria-label': t('hub.customize.aria'),
+    },
+    h('h2', {}, t('hub.customize.title')),
+    h('p', { className: 'ah-hub-customization-line' },
+      initial ? t('hub.customize.initialHint') : t('hub.customize.xpLine', { xp: model.availableXp })),
+    h('div', { className: 'ah-hub-customization-list' },
+      model.entries.map(entry => {
+        const total = entry.options.reduce((sum, option) => sum + option.checks, 0)
+        return h('article', { className: 'ah-hub-customization-card', 'data-hub-customize-card': entry.code },
+          h('header', {},
+            h('strong', {}, entry.name),
+            h('small', { 'data-hub-customize-level': String(entry.level) },
+              t('hub.customize.level', { level: entry.level, checked: entry.checked.length, total })),
+            h('small', { 'data-hub-customize-card-xp': String(model.availableXp) },
+              t('hub.customize.cardXp', { xp: model.availableXp }))),
+          h('ul', {}, entry.options.map(option => {
+            const move = moves.find(item => item.code === entry.code && item.optionIndex === option.index)
+            return h('li', { className: 'ah-hub-customize-option' },
+              h('span', {}, t('hub.customize.option', {
+                name: option.name, checked: option.checkedCount, checks: option.checks,
+              })),
+              move
+                ? h('button', {
+                  type: 'button', className: 'bg-btn secondary', disabled: locked(s) || !!move.disabled,
+                  title: move.explanation || '',
+                  'data-hub-customize-option': `${entry.code}:${option.index}`,
+                  onclick: () => { if (!locked(s) && !move.disabled) submitMove(move, s) },
+                }, move.label)
+                : null)
+          })))
+      })))
+  }
+
   function preparationProgress(s) {
     const pending = state.arkhamHubPending
     if (!pending || pending.sessionId !== s.sessionId) return null
@@ -1172,6 +1245,10 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const selectedPack = packs.includes(state.arkhamInvestigatorPack) ? state.arkhamInvestigatorPack : 'all'
     const packName = pack => packLabel(pack, candidates.find(item => packOf(item) === pack)?.investigator.packName)
     const packOptions = [['all', t('hub.investigators.allPacks')], ...packs.map(pack => [pack, t('hub.investigators.packOption', { pack: packName(pack), count: counts[pack] })])]
+    const classes = Object.keys(CLASS_KEYS).filter(key => key !== 'neutral')
+    const availableClasses = classes.filter(key => candidates.some(item =>
+      item.investigator.klass === key && (selectedPack === 'all' || packOf(item) === selectedPack)))
+    const selectClass = key => { state.arkhamInvestigatorClass = key; render() }
     const groups = Object.entries(classCandidates
       .filter(item => selectedPack === 'all' || packOf(item) === selectedPack)
       .reduce((result, item) => {
@@ -1216,11 +1293,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                   h('select', { 'aria-label': t('hub.investigators.packAria'), 'data-focus-key': 'investigator:pack',
                     onchange: event => { state.arkhamInvestigatorPack = event.target.value; render() },
                   }, packOptions.map(([value, label]) => h('option', { value, selected: value === selectedPack }, label)))),
-                h('div', { className: 'ah-investigator-class-filters', 'aria-label': t('hub.investigators.classAria') },
-                  [['all', t('hub.investigators.allClasses')], ...Object.keys(CLASS_KEYS).filter(key => key !== 'neutral').map(key => [key, classLabel(key)])].map(([key, label]) => h('button', {
-                    className: `ah-investigator-class-filter is-${key}`, 'aria-pressed': String(selectedClass === key),
-                    onclick: () => { state.arkhamInvestigatorClass = key; render() },
-                  }, key === 'all' ? null : tableIcon(classIcon(key)), label))))),
+                h('button', { type: 'button', className: 'ah-investigator-filter-button',
+                  'data-focus-key': 'investigator:random-class', disabled: !availableClasses.length,
+                  onclick: () => selectClass(availableClasses[Math.floor(Math.random() * availableClasses.length)]),
+                }, t('hub.investigators.randomClass'))),
+              h('div', { className: 'ah-investigator-class-filters', role: 'group', 'aria-label': t('hub.investigators.classAria') },
+                [['all', t('hub.investigators.allClasses')], ...classes.map(key => [key, classLabel(key)])].map(([key, label]) => h('button', {
+                  type: 'button', className: `ah-investigator-filter-button ah-investigator-class-filter is-${key}`,
+                  'aria-pressed': String(selectedClass === key), 'data-focus-key': `investigator:class:${key}`,
+                  onclick: () => selectClass(key),
+                }, key === 'all' ? null : tableIcon(classIcon(key)), label)))),
             groups.length ? groups.map(([pack, entries]) => h('section', { className: 'ah-investigator-pack', 'data-pack': pack },
               h('header', {}, h('h4', {}, packName(pack)), h('small', {}, t('hub.investigators.count', { count: entries.length }))),
               h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) =>
@@ -1279,6 +1361,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const libraryButton = () => h('button', { className: 'bg-btn secondary', 'data-hub-action': 'deck-library', disabled: state.busy,
       onclick: () => openLibraryModal({ s, g, returnFocus: 'deck-library' }) }, tableIcon('book'), t('hub.deck.library'))
     return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.tab.deck')),
+      customizationPanel(s),
       h('div', { className: 'ah-office-deck-heading' }, portrait(s.state.investigators[s.mySeat ?? 0]), h('div', {},
         h('h3', {}, s.state.investigators[s.mySeat ?? 0].name),
         saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: deckCodes.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
@@ -1347,6 +1430,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       'data-zoom-code': code, 'data-zoom-name': name(code), onclick: () => inspectCard(code),
     }, art(code, name(code)))
     return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.upgrade.title')),
+      customizationPanel(s),
       st.uiState !== 'interlude' ? h('p', {}, t('hub.upgrade.interludeOnly')) : null,
       st.investigators.map(inv => h('article', { className: 'ah-hub-seat ah-office-upgrade-seat' },
         h('div', { className: 'ah-office-deck-heading' }, portrait(inv), h('strong', {}, `${inv.name} · ${st.campaign.investigators[inv.seat]?.xp || 0} XP`)),
@@ -1591,6 +1675,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           tableIcon(TAB_ICONS[id] || 'star'), label,
           id === 'departure' ? h('small', {}, canDepart(s) ? t('hub.game.ready') : t('hub.game.pending')) : null))),
       workflowGuide(s, activeTab),
+      worldMapPanel(s),
       preparationProgress(s),
       s.state.uiState === 'interlude' && !s.state.pendingChoice ? interludeBriefing(s) : null,
       s.state.pendingChoice ? pendingChoicePane(s)

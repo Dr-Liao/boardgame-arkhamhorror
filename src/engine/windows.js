@@ -63,6 +63,10 @@ define('assetLeavesPlay', '支援离场后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
 define('handCardDiscarded', '一张手牌被弃掉后', 'reaction')
 define('treacheryWouldDiscard', '诡计结算后将要弃掉时', 'interrupt')
+// 八循环《绯红密钥》P7：隐匿揭露后 / 密钥变换后。内容条目按这两个时机声明强制能力；
+// 在此登记后 audit-abilities 的 unknownTriggers 归零（派发点随 P8 原语队列补齐）。
+define('tskExposed', '揭露隐匿迷你卡后', 'reaction')
+define('tskKeyShifted', '密钥变换面后', 'reaction')
 define('wouldLoseResources', '将要失去资源时', 'interrupt')
 define('wouldLoseActions', '将要失去行动时', 'interrupt')
 // 2026-10-25 第六轮新增窗口（05036/05119/05014/05237/05324）。

@@ -1576,6 +1576,307 @@ import e08617 from './edgeOfTheEarth/toTheForbiddenPeaks/08617.js'
 import e08618 from './edgeOfTheEarth/toTheForbiddenPeaks/08618.js'
 import e08619 from './edgeOfTheEarth/toTheForbiddenPeaks/08619.js'
 import e08620 from './edgeOfTheEarth/toTheForbiddenPeaks/08620.js'
+import e09726a from './theScarletKeys/_shared/cleanup_crew/09726a.js'
+import e09726b from './theScarletKeys/_shared/cleanup_crew/09726b.js'
+import e09727a from './theScarletKeys/_shared/cleanup_crew/09727a.js'
+import e09727b from './theScarletKeys/_shared/cleanup_crew/09727b.js'
+import e09728 from './theScarletKeys/_shared/cleanup_crew/09728.js'
+import e09724 from './theScarletKeys/_shared/dark_veiling/09724.js'
+import e09725 from './theScarletKeys/_shared/dark_veiling/09725.js'
+import e09720 from './theScarletKeys/_shared/mysteries_abound/09720.js'
+import e09721 from './theScarletKeys/_shared/mysteries_abound/09721.js'
+import e09729 from './theScarletKeys/_shared/scarlet_sorcery/09729.js'
+import e09730 from './theScarletKeys/_shared/scarlet_sorcery/09730.js'
+import e09734 from './theScarletKeys/_shared/secret_war/09734.js'
+import e09735 from './theScarletKeys/_shared/secret_war/09735.js'
+import e09736 from './theScarletKeys/_shared/secret_war/09736.js'
+import e09722 from './theScarletKeys/_shared/shadow_of_a_doubt/09722.js'
+import e09723 from './theScarletKeys/_shared/shadow_of_a_doubt/09723.js'
+import e09718 from './theScarletKeys/_shared/strange_happenings/09718.js'
+import e09719 from './theScarletKeys/_shared/strange_happenings/09719.js'
+import e09737 from './theScarletKeys/_shared/agents_of_the_outside/09737.js'
+import e09738 from './theScarletKeys/_shared/agents_of_the_outside/09738.js'
+import e09739 from './theScarletKeys/_shared/agents_of_yuggoth/09739.js'
+import e09740 from './theScarletKeys/_shared/agents_of_yuggoth/09740.js'
+import e09747a from './theScarletKeys/_shared/beyond_the_beyond/09747a.js'
+import e09747b from './theScarletKeys/_shared/beyond_the_beyond/09747b.js'
+import e09747c from './theScarletKeys/_shared/beyond_the_beyond/09747c.js'
+import e09748a from './theScarletKeys/_shared/beyond_the_beyond/09748a.js'
+import e09748b from './theScarletKeys/_shared/beyond_the_beyond/09748b.js'
+import e09749a from './theScarletKeys/_shared/beyond_the_beyond/09749a.js'
+import e09749b from './theScarletKeys/_shared/beyond_the_beyond/09749b.js'
+import e09750 from './theScarletKeys/_shared/beyond_the_beyond/09750.js'
+import e09751 from './theScarletKeys/_shared/beyond_the_beyond/09751.js'
+import e09716a from './theScarletKeys/_shared/crimson_conspiracy/09716a.js'
+import e09716b from './theScarletKeys/_shared/crimson_conspiracy/09716b.js'
+import e09716c from './theScarletKeys/_shared/crimson_conspiracy/09716c.js'
+import e09717 from './theScarletKeys/_shared/crimson_conspiracy/09717.js'
+import e09762 from './theScarletKeys/_shared/globetrotting/09762.js'
+import e09763 from './theScarletKeys/_shared/globetrotting/09763.js'
+import e09764 from './theScarletKeys/_shared/globetrotting/09764.js'
+import e09765 from './theScarletKeys/_shared/globetrotting/09765.js'
+import e09766 from './theScarletKeys/_shared/globetrotting/09766.js'
+import e09767 from './theScarletKeys/_shared/globetrotting/09767.js'
+import e09768a from './theScarletKeys/_shared/globetrotting/09768a.js'
+import e09768b from './theScarletKeys/_shared/globetrotting/09768b.js'
+import e09769a from './theScarletKeys/_shared/globetrotting/09769a.js'
+import e09769b from './theScarletKeys/_shared/globetrotting/09769b.js'
+import e09770a from './theScarletKeys/_shared/globetrotting/09770a.js'
+import e09770b from './theScarletKeys/_shared/globetrotting/09770b.js'
+import e09731 from './theScarletKeys/_shared/outsiders/09731.js'
+import e09732 from './theScarletKeys/_shared/outsiders/09732.js'
+import e09733 from './theScarletKeys/_shared/outsiders/09733.js'
+import e09752 from './theScarletKeys/_shared/red_coterie/09752.js'
+import e09753 from './theScarletKeys/_shared/red_coterie/09753.js'
+import e09754 from './theScarletKeys/_shared/red_coterie/09754.js'
+import e09755 from './theScarletKeys/_shared/red_coterie/09755.js'
+import e09756 from './theScarletKeys/_shared/red_coterie/09756.js'
+import e09757 from './theScarletKeys/_shared/red_coterie/09757.js'
+import e09758 from './theScarletKeys/_shared/red_coterie/09758.js'
+import e09759 from './theScarletKeys/_shared/red_coterie/09759.js'
+import e09760 from './theScarletKeys/_shared/red_coterie/09760.js'
+import e09761 from './theScarletKeys/_shared/red_coterie/09761.js'
+import e09741 from './theScarletKeys/_shared/spatial_anomaly/09741.js'
+import e09742 from './theScarletKeys/_shared/spatial_anomaly/09742.js'
+import e09743 from './theScarletKeys/_shared/spatial_anomaly/09743.js'
+import e09744 from './theScarletKeys/_shared/spreading_corruption/09744.js'
+import e09745 from './theScarletKeys/_shared/spreading_corruption/09745.js'
+import e09746 from './theScarletKeys/_shared/spreading_corruption/09746.js'
+import e09606a from './theScarletKeys/dancingMad/09606a.js'
+import e09607a from './theScarletKeys/dancingMad/09607a.js'
+import e09607b from './theScarletKeys/dancingMad/09607b.js'
+import e09608 from './theScarletKeys/dancingMad/09608.js'
+import e09536 from './theScarletKeys/deadHeat/09536.js'
+import e09536b from './theScarletKeys/deadHeat/09536b.js'
+import e09537 from './theScarletKeys/deadHeat/09537.js'
+import e09537b from './theScarletKeys/deadHeat/09537b.js'
+import e09538 from './theScarletKeys/deadHeat/09538.js'
+import e09539 from './theScarletKeys/deadHeat/09539.js'
+import e09540 from './theScarletKeys/deadHeat/09540.js'
+import e09541 from './theScarletKeys/deadHeat/09541.js'
+import e09542 from './theScarletKeys/deadHeat/09542.js'
+import e09543 from './theScarletKeys/deadHeat/09543.js'
+import e09544a from './theScarletKeys/deadHeat/09544a.js'
+import e09544b from './theScarletKeys/deadHeat/09544b.js'
+import e09518 from './theScarletKeys/riddlesAndRain/09518.js'
+import e09519a from './theScarletKeys/riddlesAndRain/09519a.js'
+import e09519b from './theScarletKeys/riddlesAndRain/09519b.js'
+import e09557 from './theScarletKeys/sanguineShadows/09557.js'
+import e09557b from './theScarletKeys/sanguineShadows/09557b.js'
+import e09558 from './theScarletKeys/sanguineShadows/09558.js'
+import e09559 from './theScarletKeys/sanguineShadows/09559.js'
+import e09560 from './theScarletKeys/sanguineShadows/09560.js'
+import e09561 from './theScarletKeys/sanguineShadows/09561.js'
+import e09563 from './theScarletKeys/sanguineShadows/09563.js'
+import e09564 from './theScarletKeys/sanguineShadows/09564.js'
+import e09565a from './theScarletKeys/sanguineShadows/09565a.js'
+import e09565b from './theScarletKeys/sanguineShadows/09565b.js'
+import e09571 from './theScarletKeys/dealingsInTheDark/09571.js'
+import e09571b from './theScarletKeys/dealingsInTheDark/09571b.js'
+import e09584 from './theScarletKeys/_shared/dealings_in_the_dark/09584.js'
+import e09585 from './theScarletKeys/dealingsInTheDark/09585.js'
+import e09586a from './theScarletKeys/dealingsInTheDark/09586a.js'
+import e09586b from './theScarletKeys/dealingsInTheDark/09586b.js'
+import e09586c from './theScarletKeys/dealingsInTheDark/09586c.js'
+import e09587 from './theScarletKeys/dealingsInTheDark/09587.js'
+import e09588 from './theScarletKeys/dealingsInTheDark/09588.js'
+import e09589 from './theScarletKeys/dealingsInTheDark/09589.js'
+import e09590a from './theScarletKeys/dealingsInTheDark/09590a.js'
+import e09590b from './theScarletKeys/dealingsInTheDark/09590b.js'
+import e09715 from './theScarletKeys/congressOfTheKeys/09715.js'
+import e09653a from './theScarletKeys/dogsOfWar/09653a.js'
+import e09653b from './theScarletKeys/dogsOfWar/09653b.js'
+import e09654a from './theScarletKeys/dogsOfWar/09654a.js'
+import e09654b from './theScarletKeys/dogsOfWar/09654b.js'
+import e09655a from './theScarletKeys/dogsOfWar/09655a.js'
+import e09655b from './theScarletKeys/dogsOfWar/09655b.js'
+import e09656 from './theScarletKeys/dogsOfWar/09656.js'
+import e09657 from './theScarletKeys/dogsOfWar/09657.js'
+import e09658 from './theScarletKeys/dogsOfWar/09658.js'
+import e09659a from './theScarletKeys/dogsOfWar/09659a.js'
+import e09659b from './theScarletKeys/dogsOfWar/09659b.js'
+import e09625a from './theScarletKeys/onThinIce/09625a.js'
+import e09625b from './theScarletKeys/onThinIce/09625b.js'
+import e09626 from './theScarletKeys/onThinIce/09626.js'
+import e09627 from './theScarletKeys/onThinIce/09627.js'
+import e09628 from './theScarletKeys/onThinIce/09628.js'
+import e09629 from './theScarletKeys/onThinIce/09629.js'
+import e09630 from './theScarletKeys/onThinIce/09630.js'
+import e09631 from './theScarletKeys/onThinIce/09631.js'
+import e09632 from './theScarletKeys/onThinIce/09632.js'
+import e09633 from './theScarletKeys/onThinIce/09633.js'
+import e09634a from './theScarletKeys/onThinIce/09634a.js'
+import e09634b from './theScarletKeys/onThinIce/09634b.js'
+import e09674a from './theScarletKeys/shadesOfSuffering/09674a.js'
+import e09674b from './theScarletKeys/shadesOfSuffering/09674b.js'
+import e09674c from './theScarletKeys/shadesOfSuffering/09674c.js'
+import e09674d from './theScarletKeys/shadesOfSuffering/09674d.js'
+import e09675a from './theScarletKeys/shadesOfSuffering/09675a.js'
+import e09675b from './theScarletKeys/shadesOfSuffering/09675b.js'
+import e09675c from './theScarletKeys/shadesOfSuffering/09675c.js'
+import e09675d from './theScarletKeys/shadesOfSuffering/09675d.js'
+import e09676a from './theScarletKeys/shadesOfSuffering/09676a.js'
+import e09676b from './theScarletKeys/shadesOfSuffering/09676b.js'
+import e09676c from './theScarletKeys/shadesOfSuffering/09676c.js'
+import e09676d from './theScarletKeys/shadesOfSuffering/09676d.js'
+import e09677 from './theScarletKeys/shadesOfSuffering/09677.js'
+import e09678 from './theScarletKeys/shadesOfSuffering/09678.js'
+import e09679a from './theScarletKeys/shadesOfSuffering/09679a.js'
+import e09679b from './theScarletKeys/shadesOfSuffering/09679b.js'
+import e09680a from './theScarletKeys/shadesOfSuffering/09680a.js'
+import e09680b from './theScarletKeys/shadesOfSuffering/09680b.js'
+import e09690 from './theScarletKeys/withoutATrace/09690.js'
+import e09691 from './theScarletKeys/withoutATrace/09691.js'
+import e09692 from './theScarletKeys/withoutATrace/09692.js'
+import e09693 from './theScarletKeys/withoutATrace/09693.js'
+import e09695 from './theScarletKeys/congressOfTheKeys/09695.js'
+import e09696 from './theScarletKeys/congressOfTheKeys/09696.js'
+import e09697 from './theScarletKeys/congressOfTheKeys/09697.js'
+import e09698 from './theScarletKeys/congressOfTheKeys/09698.js'
+import e09699 from './theScarletKeys/congressOfTheKeys/09699.js'
+import e09700 from './theScarletKeys/congressOfTheKeys/09700.js'
+import e09701 from './theScarletKeys/congressOfTheKeys/09701.js'
+import e09702 from './theScarletKeys/congressOfTheKeys/09702.js'
+import e09703 from './theScarletKeys/congressOfTheKeys/09703.js'
+import e09704 from './theScarletKeys/congressOfTheKeys/09704.js'
+import e09705 from './theScarletKeys/congressOfTheKeys/09705.js'
+import e09706 from './theScarletKeys/congressOfTheKeys/09706.js'
+import e09707 from './theScarletKeys/congressOfTheKeys/09707.js'
+import e09708 from './theScarletKeys/congressOfTheKeys/09708.js'
+import e09709 from './theScarletKeys/congressOfTheKeys/09709.js'
+import e09710 from './theScarletKeys/congressOfTheKeys/09710.js'
+import e09711 from './theScarletKeys/congressOfTheKeys/09711.js'
+import e09712 from './theScarletKeys/congressOfTheKeys/09712.js'
+import e09713 from './theScarletKeys/congressOfTheKeys/09713.js'
+import e09714 from './theScarletKeys/congressOfTheKeys/09714.js'
+import e09592 from './theScarletKeys/dancingMad/09592.js'
+import e09593 from './theScarletKeys/dancingMad/09593.js'
+import e09594 from './theScarletKeys/dancingMad/09594.js'
+import e09595 from './theScarletKeys/dancingMad/09595.js'
+import e09596 from './theScarletKeys/dancingMad/09596.js'
+import e09597 from './theScarletKeys/dancingMad/09597.js'
+import e09598 from './theScarletKeys/dancingMad/09598.js'
+import e09599 from './theScarletKeys/dancingMad/09599.js'
+import e09600a from './theScarletKeys/dancingMad/09600a.js'
+import e09600b from './theScarletKeys/dancingMad/09600b.js'
+import e09601 from './theScarletKeys/dancingMad/09601.js'
+import e09602 from './theScarletKeys/dancingMad/09602.js'
+import e09603 from './theScarletKeys/dancingMad/09603.js'
+import e09604 from './theScarletKeys/dancingMad/09604.js'
+import e09605 from './theScarletKeys/dancingMad/09605.js'
+import e09521 from './theScarletKeys/deadHeat/09521.js'
+import e09522 from './theScarletKeys/deadHeat/09522.js'
+import e09523 from './theScarletKeys/deadHeat/09523.js'
+import e09524 from './theScarletKeys/deadHeat/09524.js'
+import e09525 from './theScarletKeys/deadHeat/09525.js'
+import e09526 from './theScarletKeys/deadHeat/09526.js'
+import e09527 from './theScarletKeys/deadHeat/09527.js'
+import e09528 from './theScarletKeys/deadHeat/09528.js'
+import e09529 from './theScarletKeys/deadHeat/09529.js'
+import e09530 from './theScarletKeys/deadHeat/09530.js'
+import e09531 from './theScarletKeys/deadHeat/09531.js'
+import e09532 from './theScarletKeys/deadHeat/09532.js'
+import e09533 from './theScarletKeys/deadHeat/09533.js'
+import e09534 from './theScarletKeys/deadHeat/09534.js'
+import e09535 from './theScarletKeys/deadHeat/09535.js'
+import e09567 from './theScarletKeys/dealingsInTheDark/09567.js'
+import e09568 from './theScarletKeys/dealingsInTheDark/09568.js'
+import e09569 from './theScarletKeys/dealingsInTheDark/09569.js'
+import e09570 from './theScarletKeys/dealingsInTheDark/09570.js'
+import e09572 from './theScarletKeys/dealingsInTheDark/09572.js'
+import e09573 from './theScarletKeys/dealingsInTheDark/09573.js'
+import e09574 from './theScarletKeys/dealingsInTheDark/09574.js'
+import e09575 from './theScarletKeys/dealingsInTheDark/09575.js'
+import e09576 from './theScarletKeys/dealingsInTheDark/09576.js'
+import e09577 from './theScarletKeys/dealingsInTheDark/09577.js'
+import e09578 from './theScarletKeys/dealingsInTheDark/09578.js'
+import e09579 from './theScarletKeys/dealingsInTheDark/09579.js'
+import e09580 from './theScarletKeys/dealingsInTheDark/09580.js'
+import e09581 from './theScarletKeys/dealingsInTheDark/09581.js'
+import e09582 from './theScarletKeys/dealingsInTheDark/09582.js'
+import e09583 from './theScarletKeys/dealingsInTheDark/09583.js'
+import e09636 from './theScarletKeys/dogsOfWar/09636.js'
+import e09637 from './theScarletKeys/dogsOfWar/09637.js'
+import e09638 from './theScarletKeys/dogsOfWar/09638.js'
+import e09639 from './theScarletKeys/dogsOfWar/09639.js'
+import e09640 from './theScarletKeys/dogsOfWar/09640.js'
+import e09641 from './theScarletKeys/dogsOfWar/09641.js'
+import e09642 from './theScarletKeys/dogsOfWar/09642.js'
+import e09643 from './theScarletKeys/dogsOfWar/09643.js'
+import e09644 from './theScarletKeys/dogsOfWar/09644.js'
+import e09645 from './theScarletKeys/dogsOfWar/09645.js'
+import e09646 from './theScarletKeys/dogsOfWar/09646.js'
+import e09647 from './theScarletKeys/dogsOfWar/09647.js'
+import e09648 from './theScarletKeys/dogsOfWar/09648.js'
+import e09649 from './theScarletKeys/dogsOfWar/09649.js'
+import e09650 from './theScarletKeys/dogsOfWar/09650.js'
+import e09651 from './theScarletKeys/dogsOfWar/09651.js'
+import e09652 from './theScarletKeys/dogsOfWar/09652.js'
+import e09610 from './theScarletKeys/onThinIce/09610.js'
+import e09611 from './theScarletKeys/onThinIce/09611.js'
+import e09612 from './theScarletKeys/onThinIce/09612.js'
+import e09613 from './theScarletKeys/onThinIce/09613.js'
+import e09614 from './theScarletKeys/onThinIce/09614.js'
+import e09615a from './theScarletKeys/onThinIce/09615a.js'
+import e09615b from './theScarletKeys/onThinIce/09615b.js'
+import e09616 from './theScarletKeys/onThinIce/09616.js'
+import e09617 from './theScarletKeys/onThinIce/09617.js'
+import e09618 from './theScarletKeys/onThinIce/09618.js'
+import e09619 from './theScarletKeys/onThinIce/09619.js'
+import e09620 from './theScarletKeys/onThinIce/09620.js'
+import e09621 from './theScarletKeys/onThinIce/09621.js'
+import e09622 from './theScarletKeys/onThinIce/09622.js'
+import e09623 from './theScarletKeys/onThinIce/09623.js'
+import e09624 from './theScarletKeys/onThinIce/09624.js'
+import e09502 from './theScarletKeys/riddlesAndRain/09502.js'
+import e09503 from './theScarletKeys/riddlesAndRain/09503.js'
+import e09504 from './theScarletKeys/riddlesAndRain/09504.js'
+import e09505 from './theScarletKeys/riddlesAndRain/09505.js'
+import e09506 from './theScarletKeys/riddlesAndRain/09506.js'
+import e09507 from './theScarletKeys/riddlesAndRain/09507.js'
+import e09508 from './theScarletKeys/riddlesAndRain/09508.js'
+import e09509 from './theScarletKeys/riddlesAndRain/09509.js'
+import e09510 from './theScarletKeys/riddlesAndRain/09510.js'
+import e09511 from './theScarletKeys/riddlesAndRain/09511.js'
+import e09512 from './theScarletKeys/riddlesAndRain/09512.js'
+import e09513 from './theScarletKeys/riddlesAndRain/09513.js'
+import e09514 from './theScarletKeys/riddlesAndRain/09514.js'
+import e09515 from './theScarletKeys/riddlesAndRain/09515.js'
+import e09516 from './theScarletKeys/riddlesAndRain/09516.js'
+import e09517 from './theScarletKeys/riddlesAndRain/09517.js'
+import e09546 from './theScarletKeys/sanguineShadows/09546.js'
+import e09547 from './theScarletKeys/sanguineShadows/09547.js'
+import e09548 from './theScarletKeys/sanguineShadows/09548.js'
+import e09549 from './theScarletKeys/sanguineShadows/09549.js'
+import e09550 from './theScarletKeys/sanguineShadows/09550.js'
+import e09551 from './theScarletKeys/sanguineShadows/09551.js'
+import e09552 from './theScarletKeys/sanguineShadows/09552.js'
+import e09553 from './theScarletKeys/sanguineShadows/09553.js'
+import e09554 from './theScarletKeys/sanguineShadows/09554.js'
+import e09555 from './theScarletKeys/sanguineShadows/09555.js'
+import e09556 from './theScarletKeys/sanguineShadows/09556.js'
+import e09562 from './theScarletKeys/sanguineShadows/09562.js'
+import e09661 from './theScarletKeys/shadesOfSuffering/09661.js'
+import e09662 from './theScarletKeys/shadesOfSuffering/09662.js'
+import e09663 from './theScarletKeys/shadesOfSuffering/09663.js'
+import e09664 from './theScarletKeys/shadesOfSuffering/09664.js'
+import e09665 from './theScarletKeys/shadesOfSuffering/09665.js'
+import e09666 from './theScarletKeys/shadesOfSuffering/09666.js'
+import e09667 from './theScarletKeys/shadesOfSuffering/09667.js'
+import e09668 from './theScarletKeys/shadesOfSuffering/09668.js'
+import e09669 from './theScarletKeys/shadesOfSuffering/09669.js'
+import e09670 from './theScarletKeys/shadesOfSuffering/09670.js'
+import e09671 from './theScarletKeys/shadesOfSuffering/09671.js'
+import e09672 from './theScarletKeys/shadesOfSuffering/09672.js'
+import e09673 from './theScarletKeys/shadesOfSuffering/09673.js'
+import e09682 from './theScarletKeys/withoutATrace/09682.js'
+import e09683 from './theScarletKeys/withoutATrace/09683.js'
+import e09684 from './theScarletKeys/withoutATrace/09684.js'
+import e09685 from './theScarletKeys/withoutATrace/09685.js'
+import e09686 from './theScarletKeys/withoutATrace/09686.js'
+import e09687 from './theScarletKeys/withoutATrace/09687.js'
+import e09688 from './theScarletKeys/withoutATrace/09688.js'
+import e09689 from './theScarletKeys/withoutATrace/09689.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -3151,6 +3452,307 @@ export const NON_PLAYER_ENTRY_LIST = [
   e08618,
   e08619,
   e08620,
+  e09726a,
+  e09726b,
+  e09727a,
+  e09727b,
+  e09728,
+  e09724,
+  e09725,
+  e09720,
+  e09721,
+  e09729,
+  e09730,
+  e09734,
+  e09735,
+  e09736,
+  e09722,
+  e09723,
+  e09718,
+  e09719,
+  e09737,
+  e09738,
+  e09739,
+  e09740,
+  e09747a,
+  e09747b,
+  e09747c,
+  e09748a,
+  e09748b,
+  e09749a,
+  e09749b,
+  e09750,
+  e09751,
+  e09716a,
+  e09716b,
+  e09716c,
+  e09717,
+  e09762,
+  e09763,
+  e09764,
+  e09765,
+  e09766,
+  e09767,
+  e09768a,
+  e09768b,
+  e09769a,
+  e09769b,
+  e09770a,
+  e09770b,
+  e09731,
+  e09732,
+  e09733,
+  e09752,
+  e09753,
+  e09754,
+  e09755,
+  e09756,
+  e09757,
+  e09758,
+  e09759,
+  e09760,
+  e09761,
+  e09741,
+  e09742,
+  e09743,
+  e09744,
+  e09745,
+  e09746,
+  e09606a,
+  e09607a,
+  e09607b,
+  e09608,
+  e09536,
+  e09536b,
+  e09537,
+  e09537b,
+  e09538,
+  e09539,
+  e09540,
+  e09541,
+  e09542,
+  e09543,
+  e09544a,
+  e09544b,
+  e09518,
+  e09519a,
+  e09519b,
+  e09557,
+  e09557b,
+  e09558,
+  e09559,
+  e09560,
+  e09561,
+  e09563,
+  e09564,
+  e09565a,
+  e09565b,
+  e09571,
+  e09571b,
+  e09584,
+  e09585,
+  e09586a,
+  e09586b,
+  e09586c,
+  e09587,
+  e09588,
+  e09589,
+  e09590a,
+  e09590b,
+  e09715,
+  e09653a,
+  e09653b,
+  e09654a,
+  e09654b,
+  e09655a,
+  e09655b,
+  e09656,
+  e09657,
+  e09658,
+  e09659a,
+  e09659b,
+  e09625a,
+  e09625b,
+  e09626,
+  e09627,
+  e09628,
+  e09629,
+  e09630,
+  e09631,
+  e09632,
+  e09633,
+  e09634a,
+  e09634b,
+  e09674a,
+  e09674b,
+  e09674c,
+  e09674d,
+  e09675a,
+  e09675b,
+  e09675c,
+  e09675d,
+  e09676a,
+  e09676b,
+  e09676c,
+  e09676d,
+  e09677,
+  e09678,
+  e09679a,
+  e09679b,
+  e09680a,
+  e09680b,
+  e09690,
+  e09691,
+  e09692,
+  e09693,
+  e09695,
+  e09696,
+  e09697,
+  e09698,
+  e09699,
+  e09700,
+  e09701,
+  e09702,
+  e09703,
+  e09704,
+  e09705,
+  e09706,
+  e09707,
+  e09708,
+  e09709,
+  e09710,
+  e09711,
+  e09712,
+  e09713,
+  e09714,
+  e09592,
+  e09593,
+  e09594,
+  e09595,
+  e09596,
+  e09597,
+  e09598,
+  e09599,
+  e09600a,
+  e09600b,
+  e09601,
+  e09602,
+  e09603,
+  e09604,
+  e09605,
+  e09521,
+  e09522,
+  e09523,
+  e09524,
+  e09525,
+  e09526,
+  e09527,
+  e09528,
+  e09529,
+  e09530,
+  e09531,
+  e09532,
+  e09533,
+  e09534,
+  e09535,
+  e09567,
+  e09568,
+  e09569,
+  e09570,
+  e09572,
+  e09573,
+  e09574,
+  e09575,
+  e09576,
+  e09577,
+  e09578,
+  e09579,
+  e09580,
+  e09581,
+  e09582,
+  e09583,
+  e09636,
+  e09637,
+  e09638,
+  e09639,
+  e09640,
+  e09641,
+  e09642,
+  e09643,
+  e09644,
+  e09645,
+  e09646,
+  e09647,
+  e09648,
+  e09649,
+  e09650,
+  e09651,
+  e09652,
+  e09610,
+  e09611,
+  e09612,
+  e09613,
+  e09614,
+  e09615a,
+  e09615b,
+  e09616,
+  e09617,
+  e09618,
+  e09619,
+  e09620,
+  e09621,
+  e09622,
+  e09623,
+  e09624,
+  e09502,
+  e09503,
+  e09504,
+  e09505,
+  e09506,
+  e09507,
+  e09508,
+  e09509,
+  e09510,
+  e09511,
+  e09512,
+  e09513,
+  e09514,
+  e09515,
+  e09516,
+  e09517,
+  e09546,
+  e09547,
+  e09548,
+  e09549,
+  e09550,
+  e09551,
+  e09552,
+  e09553,
+  e09554,
+  e09555,
+  e09556,
+  e09562,
+  e09661,
+  e09662,
+  e09663,
+  e09664,
+  e09665,
+  e09666,
+  e09667,
+  e09668,
+  e09669,
+  e09670,
+  e09671,
+  e09672,
+  e09673,
+  e09682,
+  e09683,
+  e09684,
+  e09685,
+  e09686,
+  e09687,
+  e09688,
+  e09689,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

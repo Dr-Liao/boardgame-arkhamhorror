@@ -213,6 +213,8 @@ export function createTableDecisions(deps) {
     if (capabilityBlocked(state, inv, 'play')) return '当前效果禁止你打出卡牌'
     // Phase 5（5c-20）：条目的同名字段优先（迁移后可删旧 DSL 条目），读点只有一个。
     const entry = def?.code ? registeredEntry(def.code) : null
+    // 2026-11-13 P1-16（09766）：不能离开手牌的牌也不能被打出（打出会离开手牌）。
+    if (entry?.cannotLeaveHand === true) return `「${def.name || def.code}」不能离开你的手牌`
     const restriction = entry?.playRestriction
     if (restriction === 'noReadyEnemy'
       && state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted && !enemy.defeated)) {

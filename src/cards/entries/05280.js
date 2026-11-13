@@ -1,79 +1,40 @@
-// 05280 否决存在
+// 05280 否决存在（5）
 // 卡面：快速。在遭遇卡牌或敌人攻击将要导致你执行以下一项(选择一项)时打出：弃掉手牌、失去资源、失去行动、受到伤害、受到恐惧。
 // 卡面：你忽略该效果的影响。然后，对应地执行与之相反的效果(抽取卡牌、获得资源、获得额外行动、治愈伤害、治愈恐惧)。
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05280 否决存在：挂在 harmDealt 窗口上的快速事件，只处理「受到伤害 / 受到恐惧」两个分支：
-// 选择要忽略的那一项（把窗口上下文里的该分量清零），再执行相反效果（治愈等量伤害/恐惧）。
-// 弃手牌 / 失资源 / 失行动三个分支未实现（需要遭遇卡结算前的「按面向取消」原语），见 note。
+// 实现口径（2026-11-11 修正，与 05032 共用 _shared.js 的窗口口径）：
+//   · 单一「快速事件统一通道」描述子（reaction + fromHand + quickEvent）覆盖四个窗口；
+//     旧实现两个 reaction+fromHand 描述子没有 quickEvent，quickEventView 只能看到第一个，
+//     而且伤害/恐惧与三个非伤害窗口的候选来源不一致。
+//   · 伤害/恐惧整体二选一（同 05032），并由 cancelHarm 的 heal 模式执行反向治疗。
+//   · 弃手牌/失资源/失行动由 ignoreWouldEffect(reverse) 反向：抽牌/获得资源/获得额外行动。
+import { denyExistenceCandidate, ignoreWouldEffect } from './_shared.js'
 
 export default {
   code: '05280',
-  note: '',
   abilities: [
     {
       kind: 'reaction',
-      trigger: ['wouldDiscardFromHand', 'wouldLoseResources', 'wouldLoseActions'],
       fromHand: true,
-      label: '忽略弃手牌/失资源/失行动的效果，并执行相反效果',
-      criteria: ctx => {
-        const context = ctx.context || {}
-        if (context.seat !== ctx.inv?.seat) return false
-        if (context.cancelled) return false
-        // 卡面限定「遭遇卡牌或敌人攻击」：引擎窗口 context.source.kind 区分来源。
-        if (!['encounter', 'enemyAttack'].includes(context.source?.kind)) return false
-        return ['discard', 'resources', 'actions'].includes(context.what)
-      },
-      resolve: ({ inv, context, api }) => {
-        context.cancelled = true
-        const amount = Math.max(0, Number(context.amount) || 0)
-        if (context.what === 'discard') {
-          api.info(`${inv.name} 用「否决存在」忽略弃掉手牌的效果，改为抽 ${amount} 张。`)
-          api.drawCards(inv.seat, amount)
-        } else if (context.what === 'resources') {
-          api.info(`${inv.name} 用「否决存在」忽略失去资源的效果，改为获得 ${amount} 资源。`)
-          api.gainResources(inv.seat, amount)
-        } else if (context.what === 'actions') {
-          api.info(`${inv.name} 用「否决存在」忽略失去行动的效果，改为获得 ${amount} 次额外行动。`)
-          api.gainAction(inv.seat, amount)
-        }
-        // 显式记 cardCancelled 事实（05004 黛安娜的「取消或忽略」反应读点）。
-        api.noteCancelled?.('05280')
-      },
-    },
-    {
-      kind: 'reaction',
-      trigger: 'harmDealt',
-      fromHand: true,
-      label: '忽略这次伤害/恐惧并反向治愈',
-      criteria: ctx => {
-        const context = ctx.context || {}
-        if (context.seat !== ctx.inv?.seat) return false
-        if (!((context.damage || 0) > 0 || (context.horror || 0) > 0)) return false
-        // 只对「敌人攻击」或「遭遇卡」造成的伤害/恐惧生效（引擎窗口 context.source.kind）。
-        return ['encounter', 'enemyAttack'].includes(context.source?.kind)
-      },
+      quickEvent: true,
+      trigger: ['harmDealt', 'wouldDiscardFromHand', 'wouldLoseResources', 'wouldLoseActions'],
+      label: '否决存在：忽略这次遭遇/攻击造成的伤害、恐惧、弃手牌、失资源或失行动',
+      criteria: [denyExistenceCandidate],
       resolve: ({ inv, api, context }) => {
-        const damage = Math.max(0, context?.damage || 0)
-        const horror = Math.max(0, context?.horror || 0)
-        const aspects = []
-        if (damage > 0) aspects.push({ id: 'damage', label: `忽略这 ${damage} 点伤害，改为治愈 ${damage} 点伤害` })
-        if (horror > 0) aspects.push({ id: 'horror', label: `忽略这 ${horror} 点恐惧，改为治愈 ${horror} 点恐惧` })
-        if (!aspects.length) return
-        const pick = aspects.length === 1 ? aspects[0].id : api.choice({ kind: 'effect', source: '05280', seat: inv.seat,
-          prompt: '「否决存在」：选择要忽略的那一项效果。', options: aspects })
-        if (pick === 'damage') {
-          context.damage = 0
-          api.info(`${inv.name} 用「否决存在」忽略了 ${damage} 点伤害。`)
-          api.healDamage(inv.seat, damage)
-        } else {
-          context.horror = 0
-          api.info(`${inv.name} 用「否决存在」忽略了 ${horror} 点恐惧。`)
-          api.healHorror(inv.seat, horror)
+        if (context?.when === 'harmDealt') {
+          // 整体忽略伤害或恐惧中的一项，并治愈等量同类伤害/恐惧。
+          api.cancelHarm(inv.seat, {
+            whole: true,
+            heal: true,
+            source: '05280',
+            prompt: '「否决存在」：选择要忽略的那一项效果。',
+          })
+          return
         }
-        api.noteCancelled?.('05280')
+        ignoreWouldEffect({ inv, api, context, reverse: true })
       },
     },
   ],

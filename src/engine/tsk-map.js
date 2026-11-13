@@ -82,6 +82,18 @@ export function worldMapState(state) {
 }
 
 /** 当前所在地图节点；未初始化返回 null。 */
+/**
+ * P8：把外部来源的时间（章节结局奖励写在 campaign.records.time）并入地图时间轴。
+ * worldMapState() 返回只读副本，写时间必须走本入口（内部 mapState 是权威存储）。
+ * 返回合并后的时间。
+ */
+export function mergeMapTime(state, candidate = 0) {
+  const stored = mapState(state, true)
+  const merged = Math.max(Number(stored.time) || 0, Number(candidate) || 0)
+  stored.time = merged
+  return merged
+}
+
 export function currentMapNode(state) {
   return mapState(state)?.current ?? null
 }
@@ -175,7 +187,17 @@ export function travelTo(state, { graph, destination } = {}) {
   map.current = destination
   map.time += cost
   if (!map.visited.includes(destination)) map.visited.push(destination)
-  return { from, to: destination, requested: destination, cost, time: map.time, forced: forced != null }
+  // 2026-11-13 P1-17：**旅行后**复查强制阈值。参考实现 markTime 在时间跨过 35 时强制改成
+  // 终章节点（此前只在出发前判断，时间 33 + 旅行 2 会照常进入普通章节，跳过通古斯卡）。
+  const crossedThreshold = map.time >= FORCED_TIME_THRESHOLD && Boolean(map.forcedNode) && map.current !== map.forcedNode
+  if (crossedThreshold) {
+    map.current = map.forcedNode
+    if (!map.visited.includes(map.forcedNode)) map.visited.push(map.forcedNode)
+  }
+  return {
+    from, to: map.current, requested: destination, cost, time: map.time,
+    forced: forced != null || crossedThreshold, crossedThreshold,
+  }
 }
 
 /**
@@ -199,7 +221,13 @@ export function useExpeditedTicket(state, { graph, destination } = {}) {
   map.unlocked ||= []
   if (!map.unlocked.includes(destination)) map.unlocked.push(destination)
   if (!map.visited.includes(destination)) map.visited.push(destination)
-  return { from, to: destination, cost: 1, time: map.time }
+  // 2026-11-13 P1-17：快捷旅票同样可能把时间跨过 35 → 强制改去终章节点（与 travelTo 同口径）。
+  const crossedThreshold = map.time >= FORCED_TIME_THRESHOLD && Boolean(map.forcedNode) && map.current !== map.forcedNode
+  if (crossedThreshold) {
+    map.current = map.forcedNode
+    if (!map.visited.includes(map.forcedNode)) map.visited.push(map.forcedNode)
+  }
+  return { from, to: map.current, requested: destination, cost: 1, time: map.time, forced: crossedThreshold, crossedThreshold }
 }
 
 // ---------------------------------------------------------------------------

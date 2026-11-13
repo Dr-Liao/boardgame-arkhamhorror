@@ -28,6 +28,10 @@ import { dreamGateEntryError } from './dream-gate.js'
 import { investigatorConnections } from './location-connections.js'
 import { enemyEffectAllowed } from './effect-provenance.js'
 import { capturedActionError } from './capture.js'
+// 2026-11-13 P1-2：绯红密钥玩家动作（Shift/移交）的合法性与枚举共用同一读点。
+import { keyShiftedThisRound, keysHeldBy, scarletKey } from './tsk-scarlet-keys.js'
+// 2026-11-13：行动点用尽后的空档期——剧本 behavior.fastActions 的 [fast] 行动也进合法行动。
+import { gapFastActionMoves, sameScenarioAction } from './gap-actions.js'
 
 export function createMoves(deps) {
   const {
@@ -238,6 +242,12 @@ export function createMoves(deps) {
     move.locationId || move.scriptCard ? move : { ...move, locationId: inv.location }))
   moves.push(...(scenarioBehavior(state).encounterActions?.(state, inv) || []).filter(move => !move.reason)
     .map(move => ownedMove(state, move)))
+  // 2026-11-13：行动点用尽后的空档期，任意玩家窗口的剧本 [fast] 行动（behavior.fastActions）也要有
+  // 直接入口（原先只由收尾玩家窗口提供）。有行动点时仍走行动后的玩家窗口，这里不重复。
+  for (const fastMove of gapFastActionMoves(state, inv, scenarioBehavior(state))) {
+    if (moves.some(item => item.action === 'scenarioAction' && sameScenarioAction(item, fastMove))) continue
+    moves.push(ownedMove(state, fastMove))
+  }
   for (const attachment of state.playerLocationAttachments || []) {
     if (!registeredEntry(attachment.code)?.grantsShortcutMove || attachment.location !== inv.location || attachment.exhausted) continue
     for (const destination of new Set(loc?.connections || [])) {
@@ -264,6 +274,21 @@ export function createMoves(deps) {
     } else {
       moves.push({ action: 'hiddenAction', cardId: code,
         label: `弃掉隐私牌「${cardName(code)}」${discard.resources ? `（支付${discard.resources}资源）` : ''}` })
+    }
+  }
+
+  // 2026-11-13 P1-2：绯红密钥的玩家入口（Shift 变换 / 移交给其他调查员）。
+  // 规则：持钥调查员在任意玩家窗口可变换密钥（每轮每把一次）；这里按当前行动座位枚举，
+  // 与 validateMove 共用同一份判定（真正限制在引擎 tsk-scarlet-keys#shiftKey）。
+  for (const keyId of keysHeldBy(state, { type: 'investigator', seat })) {
+    const record = scarletKey(state, keyId)
+    const face = record.stable ? '稳定面' : '动荡面'
+    if (!keyShiftedThisRound(state, keyId)) {
+      moves.push({ action: 'shiftKey', keyId, label: `变换绯红密钥（${face}）` })
+    }
+    for (const other of aliveInvestigators(state)) {
+      if (other.seat === seat) continue
+      moves.push({ action: 'transferKey', keyId, toSeat: other.seat, label: `把绯红密钥移交给${other.name}` })
     }
   }
 
@@ -390,6 +415,21 @@ export function createMoves(deps) {
   const emptyInvestigate = loc && loc.clues <= 0 && !loc.locked
     && (loc.investigateWithoutClues === true
       || scenarioBehavior(state).investigateWithoutClues?.(state, inv, loc) === true)
+  // 2026-11-13 P1-16：Concealed 规则「成功攻击或躲避它（如同它是一名已交战的敌人）」——
+  // 攻击/躲避一张与本调查员同地点、未揭开的隐匿迷你卡，难度 = 地点隐蔽值 + 地点条目声明的
+  // concealedFightEvadeBonus（09577/09747a-c）。成功揭露由 dispatch 统一走 tsk-concealed.expose。
+  if (loc && loc.revealed !== false && !investigatorTextBlanked(state, inv)) {
+    const concealedMinis = (state.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || [])
+      .filter(card => card.locationId === inv.location && card.flipped !== true)
+    const bonus = Number(registeredEntry(loc.originalCode || loc.code)?.locationRule?.concealedFightEvadeBonus || 0)
+    const miniDifficulty = Math.max(0, Number(loc.shroud) || 0) + bonus
+    for (const mini of concealedMinis) {
+      moves.push({ action: 'fightConcealed', miniId: mini.id, locationId: mini.locationId,
+        label: `⚔️ 攻击隐匿迷你卡（战斗 vs ${miniDifficulty}）` })
+      moves.push({ action: 'evadeConcealed', miniId: mini.id, locationId: mini.locationId,
+        label: `💨 躲避隐匿迷你卡（敏捷 vs ${miniDifficulty}）` })
+    }
+  }
   if (loc && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
     const skill = scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
@@ -666,7 +706,12 @@ export function createMoves(deps) {
       // 剧本行动的校验不能只看「规则名存在」：带 enemyId / deckId 的行动还要确认该目标在
       // actions() 里被列出。执行时才选目标的行动（actions() 不给这些字段）留给 performAction。
       const offered = scenarioBehavior(state).actions?.(state, inv) || []
-      const matches = offered.filter(m => m.rule === move.rule && !m.reason)
+      let matches = offered.filter(m => m.rule === move.rule && !m.reason)
+      if (!matches.length) {
+        // 2026-11-13：行动点用尽后的空档期，behavior.fastActions 的 [fast] 行动也直接提交
+        // （原先只经玩家窗口的 scenario-fast 选项执行）。
+        matches = gapFastActionMoves(state, inv, scenarioBehavior(state)).filter(m => m.rule === move.rule)
+      }
       if (!matches.length) return '当前不能执行此剧本行动'
       if (move.enemyId != null) {
         const targeted = matches.find(m => m.enemyId === move.enemyId)
@@ -773,6 +818,21 @@ export function createMoves(deps) {
       if (availableResources(inv) < (discard.resources || 0)) return '资源不足'
       if (discard.damageInvestigator && !state.investigators.some(other => other.seat === move.targetSeat
         && !other.defeated && !other.resigned && other.location === inv.location)) return '隐私牌没有合法的伤害目标'
+      return null
+    }
+    case 'shiftKey': {
+      // 2026-11-13 P1-2：持钥调查员每轮每把密钥只能变换一次；非法 id 一律拒绝（不抛原始 RangeError）。
+      if (!state.campaign?.tsk?.keys) return '本战役没有绯红密钥'
+      if (!keysHeldBy(state, { type: 'investigator', seat }).includes(move.keyId)) return '你没有持有该绯红密钥'
+      if (keyShiftedThisRound(state, move.keyId)) return '该绯红密钥本轮已经变换过'
+      return null
+    }
+    case 'transferKey': {
+      if (!state.campaign?.tsk?.keys) return '本战役没有绯红密钥'
+      if (!keysHeldBy(state, { type: 'investigator', seat }).includes(move.keyId)) return '你没有持有该绯红密钥'
+      const target = state.investigators.find(other => other.seat === move.toSeat)
+      if (!target || target.defeated || target.resigned) return '移交目标不在场'
+      if (move.toSeat === seat) return '不能把密钥移交给自己'
       return null
     }
     case 'parley': {
@@ -903,6 +963,30 @@ export function createMoves(deps) {
       const loc = state.locations.find(item => item.id === inv.location)
       if (loc?.searchingForIzzieSeat == null) return '此处没有伊兹'
       if (loc.locked) return '地点被上锁的门封锁'
+      return null
+    }
+    case 'fightConcealed':
+    case 'evadeConcealed': {
+      // 2026-11-13 P1-16：目标必须是同地点、未揭开的隐匿迷你卡（不是敌人、不交战）。
+      if (capabilityBlocked(state, inv, move.action === 'evadeConcealed' ? 'evade' : 'fight')) return '当前效果禁止你行动'
+      const minis = state.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || []
+      const mini = minis.find(card => card.id === move.miniId)
+      if (!mini) return '未找到该隐匿迷你卡'
+      if (mini.flipped) return '该隐匿迷你卡已揭开'
+      const here = state.locations.find(location => location.id === inv.location)
+      if (!here || mini.locationId !== inv.location) return '该隐匿迷你卡不在你所在地点'
+      return null
+    }
+    case 'fightConcealed':
+    case 'evadeConcealed': {
+      // 2026-11-13 P1-16：目标必须是同地点、未揭开的隐匿迷你卡（不是敌人、不交战）。
+      if (capabilityBlocked(state, inv, move.action === 'evadeConcealed' ? 'evade' : 'fight')) return '当前效果禁止你行动'
+      const minis = state.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || []
+      const mini = minis.find(card => card.id === move.miniId)
+      if (!mini) return '未找到该隐匿迷你卡'
+      if (mini.flipped) return '该隐匿迷你卡已揭开'
+      const here = state.locations.find(location => location.id === inv.location)
+      if (!here || mini.locationId !== inv.location) return '该隐匿迷你卡不在你所在地点'
       return null
     }
     case 'fight': {

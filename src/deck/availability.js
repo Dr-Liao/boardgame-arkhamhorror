@@ -1,6 +1,11 @@
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { INVESTIGATOR_CODES as EOTE_INVESTIGATOR_CODES, DISCIPLINE_CODES as EOTE_DISCIPLINE_CODES } from '../../content/campaigns/edgeOfTheEarth/shared.js'
 import { INVESTIGATOR_CODES as TSK_INVESTIGATOR_CODES } from '../../content/campaigns/theScarletKeys/shared.js'
+// P6：一般玩家卡 108 条记录的验证/可构筑码表来自 tools/audit-tsk-player.mjs 的生成物（初始为空占位）。
+import {
+  PLAYER_CARD_CODES as TSK_PLAYER_CARD_CODES,
+  TSK_PLAYER_BASIC_WEAKNESS_CODES, TSK_PLAYER_BUILDABLE_CODES, TSK_PLAYER_VERIFIED_CODES,
+} from '../../content/packs/tskPlayer/manifest.js'
 import { TIC_PLAYER_VERIFIED_CODES as TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES } from '../../content/packs/ticPlayer/manifest.js'
 // P6（M2 玩家卡）：地球边缘 115 张一般玩家卡逐卡验收后开放 strict；111 张可构筑，4 张基础弱点只作依赖。
 // 码表来自生成物（src/cards/eote-player-acceptance.js → manifest），这里不手写卡号清单。
@@ -10,8 +15,12 @@ import {
 } from '../../content/packs/eotePlayer/manifest.js'
 // P7（M3 战役）：地球边缘 266 条战役记录开放 strict 可用性（只作战役内容，不进构筑/选人池）。
 import { CAMPAIGN_CARD_CODES as EOTE_CAMPAIGN_CARD_CODES } from '../../content/packs/eoteCampaign/manifest.js'
+// P7（M3 战役）：绯红密钥 311 条战役记录开放 strict 可用性（只作战役内容，不进构筑/选人池）。
+import { CAMPAIGN_CARD_CODES as TSK_CAMPAIGN_CARD_CODES } from '../../content/packs/tskCampaign/manifest.js'
 export { TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES }
 export { EOTE_PLAYER_CARD_CODES, EOTE_PLAYER_BUILDABLE_CODES, EOTE_PLAYER_BASIC_WEAKNESS_CODES }
+// P6（M2 绯红密钥）：一般玩家卡码表与可构筑表向构筑引擎/账本导出。
+export { TSK_PLAYER_CARD_CODES, TSK_PLAYER_VERIFIED_CODES, TSK_PLAYER_BUILDABLE_CODES, TSK_PLAYER_BASIC_WEAKNESS_CODES }
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
 import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
@@ -81,6 +90,9 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...TIC_PLAYER_BASIC_WEAKNESS_CODES,
   // P6：地球边缘 4 张基础弱点只作随机基础弱点依赖候选。
   ...EOTE_PLAYER_BASIC_WEAKNESS_CODES,
+  // P8：绯红密钥 5 张基础弱点（09124–09128）只作随机基础弱点依赖候选；
+  // P6 已从 tskPlayer 清单导入码表但漏加入 ALL_BASIC_WEAKNESS_CODES，导致手动构筑必失败。
+  ...TSK_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -184,6 +196,8 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   ...TIC_PLAYER_BUILDABLE_CODES,
   // P6：地球边缘 111 张可入牌组玩家卡（4 张基础弱点不进构筑池）。
   ...EOTE_PLAYER_BUILDABLE_CODES,
+  // P6：绯红密钥 103 张可入牌组玩家卡（09124–09128 基础弱点只作依赖）。
+  ...TSK_PLAYER_BUILDABLE_CODES,
 ])
 // P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
 // catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
@@ -201,7 +215,8 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...TIC_PLAYER_CARD_CODES,
   ...EOTE_PLAYER_CARD_CODES,
   ...EOTE_CAMPAIGN_CARD_CODES,
-  ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures,
+  ...TSK_CAMPAIGN_CARD_CODES,
+  ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures, ...TSK_PLAYER_VERIFIED_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -233,6 +248,7 @@ export function getAvailability(code) {
       || ticSignatures.includes(code)
       || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
       || tskSignatures.includes(code)
+      || TSK_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || EOTE_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
@@ -244,6 +260,8 @@ export function getAvailability(code) {
         ? 'P6 地球边缘一般玩家卡已完成逐卡行为验收（111 张可入牌组；08130–08133 基础弱点只作依赖），进入构筑界面与玩家卡池；战役仍待 P7–P8。'
       : EOTE_CAMPAIGN_CARD_CODES.includes(code)
         ? 'P7 地球边缘战役卡已完成逐章行为验收；只作战役内容，不进入构筑或选人池。'
+      : TSK_CAMPAIGN_CARD_CODES.includes(code)
+        ? 'P7 绯红密钥战役卡（26 个遭遇组/十章）已完成逐章行为验收；只作战役内容，不进入构筑或选人池。'
       : TIC_PLAYER_CARD_CODES.includes(code) ? 'P6 印斯茅斯暗潮一般玩家卡已完成逐卡行为验收；基础弱点只作依赖，战役仍待 P7–P8。'
       : tfaPlayerCardVerified(code)
         ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
@@ -253,6 +271,8 @@ export function getAvailability(code) {
         ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。P10 起食梦者战役已在大厅开放（playable + earlyAccess），玩家卡进入构筑界面与食梦者战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
+      : TSK_PLAYER_CARD_CODES.includes(code)
+        ? 'P6 绯红密钥一般玩家卡已完成逐卡主要印刷效果验收（103 张可入牌组；09124–09128 基础弱点只作依赖），进入构筑界面与玩家卡池；战役与十章仍待 P7–P8。'
       : TSK_INVESTIGATOR_CODES.includes(code) || tskSignatures.includes(code)
         ? 'P5 绯红密钥六位调查员及 14 张专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与十章仍待 P7–P8。'
       : EOTE_INVESTIGATOR_CODES.includes(code) || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)

@@ -12,7 +12,7 @@ export default {
         const allies = (inv.assets || []).filter(asset => (api.cardTraits(asset.code) || [])
           .some(trait => String(trait).toLowerCase() === 'ally'))
         if (!allies.length) {
-          api.moveCard({ code: '09020', from: 'discard', to: 'deck', ownerSeat: inv.seat })
+          api.moveCard({ code: '09020', from: 'discard', to: 'deckTop', ownerSeat: inv.seat })
           api.shuffleDeck(inv.seat)
           api.info('「领导的重担」被洗回牌库。')
           return

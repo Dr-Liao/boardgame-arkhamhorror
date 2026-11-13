@@ -400,10 +400,11 @@ function banishUnfinishedBusiness(state, storyCode, api, enemy = null) {
 const FORCED_APPLY = Object.freeze({
   horror: (state, inv, api, amount) => api.horror(inv.seat, amount),
   damage: (state, inv, api, amount) => api.damage(inv.seat, amount),
+  // 失去资源走统一 api（含「将要失去资源」取消窗口：05280/05032「否定存在」）。
+  // 取消时 api 自己写「忽略了失去资源的效果」，这里不再补一行；实际失去数用返回值。
   resources: (state, inv, api, amount) => {
-    const lose = Math.min(amount, Number(inv.resources) || 0)
-    inv.resources -= lose
-    api.info?.(`💸 ${inv.name} 失去 ${lose} 点资源。`)
+    const lost = api.loseResources(inv.seat, amount)
+    if (lost > 0) api.info?.(`💸 ${inv.name} 失去 ${lost} 点资源。`)
   },
   discard: (state, inv, api, amount) => api.discardChosen(inv.seat, amount, '未了之事'),
 })

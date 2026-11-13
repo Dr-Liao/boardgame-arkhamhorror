@@ -1,0 +1,140 @@
+{
+  "campaignId": "theScarletKeys",
+  "created": "2026-11-12",
+  "source": "Original artwork generated using the OpenAI built-in image_gen tool.",
+  "palette": "charcoal, burgundy, aged brass and location-specific environmental colors",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "绯红密钥",
+      "file": "hub/scarlet-dossier.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. Campaign key art. A rainy 1920s London rooftop seen over a shadowed figure in a crimson coat, facing impossible fragments of distant skylines and thin scarlet threads spanning the cloudy sky like an intelligence network. A brass key glints in the foreground, broad composition with cinematic depth.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 295632,
+      "sha256": "1b5bc56b90cb97a287ef981f263e7e55d01e99a849cff77e63005f1cad5864b0",
+      "original": "artifacts/tsk-media/originals/hub-scarlet-dossier.png"
+    },
+    {
+      "id": "table",
+      "title": "调查牌桌",
+      "file": "table/investigation-desk.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. Strict orthographic overhead flat lay for a playable tabletop background. Continuous charcoal burgundy worn leather desk pad dominates 85% of the canvas, centered, uniformly dark and very low contrast for card legibility. Only in the outermost corners, partial 1920s red wax-sealed dossier, tarnished brass key, cropped old map and pencil. Edge lighting only, no objects across central or bottom play space.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 113454,
+      "sha256": "e765ccd31ee908e27fe01837b080650297ae36b0a270e82541c0f60a61edeaf0",
+      "original": "artifacts/tsk-media/originals/table-investigation-desk.png"
+    },
+    {
+      "id": "riddlesAndRain",
+      "title": "谜雨",
+      "file": "scenarios/riddlesAndRain/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. Rain-soaked London at night, 1920s Westminster alley opening toward the Thames, gaslights mirrored on wet cobbles, a distant slender red-coated figure turning into fog, black umbrellas and silhouettes only.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 309686,
+      "sha256": "50fa758cce355548c760bdfdbcb5a0ebdd137ccade56de76bb488ed5b86d57ca",
+      "original": "artifacts/tsk-media/originals/scenarios-riddlesAndRain-scene.png"
+    },
+    {
+      "id": "deadHeat",
+      "title": "死亡酷暑",
+      "file": "scenarios/deadHeat/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Marrakesh medina in brutal late-afternoon heat, ochre rammed earth and a tiled courtyard, drifting dust, extinguished market lanterns and long unnatural shadows slanting toward a dark doorway.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 355552,
+      "sha256": "7522a870a7d95b1cbaa537923da3ada189d92398e13111867f3feb7128560560",
+      "original": "artifacts/tsk-media/originals/scenarios-deadHeat-scene.png"
+    },
+    {
+      "id": "sanguineShadows",
+      "title": "血色阴影",
+      "file": "scenarios/sanguineShadows/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Buenos Aires at night, narrow European-style stone street and wrought iron balconies, distant lit theatre doorway, a crimson thief's cape disappearing across a rooftop, smoky shadows and wine-red highlights.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 262502,
+      "sha256": "a38c5644109323297b4fe6227d2421f01202d7442fe12a4e86214ef46e17d62a",
+      "original": "artifacts/tsk-media/originals/scenarios-sanguineShadows-scene.png"
+    },
+    {
+      "id": "dealingsInTheDark",
+      "title": "暗中交易",
+      "file": "scenarios/dealingsInTheDark/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Constantinople, interior of a covered bazaar after closing, endless arches and dark shuttered stalls, scattered brass lanterns, two dim silhouettes disappearing past a side passage, cool ink shadows.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 310290,
+      "sha256": "5977b0ba99aaaacc7066d7635ba2b76f3ac9f9f7026498e1a0fdf031aeb88f9e",
+      "original": "artifacts/tsk-media/originals/scenarios-dealingsInTheDark-scene.png"
+    },
+    {
+      "id": "dancingMad",
+      "title": "疯星乱舞",
+      "file": "scenarios/dancingMad/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Havana theatre, view from the stage wings toward art nouveau balconies and the glowing backstage passage, curtains in muted scarlet, warm spotlight beams cutting tobacco smoke and a disturbing empty stage.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 263992,
+      "sha256": "a4cdb0eb9a5b024580e69e7208f93c22f65a5a98bdddbff4875b88f9e9d2b41b",
+      "original": "artifacts/tsk-media/originals/scenarios-dancingMad-scene.png"
+    },
+    {
+      "id": "onThinIce",
+      "title": "如履薄冰",
+      "file": "scenarios/onThinIce/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. Winter in 1920s Alaska near Anchorage, a fissure winding through a frozen river under snow-heavy spruce, boot tracks abruptly ending near a distant uncanny shadow, steel-blue dusk and faint warm lantern.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 291134,
+      "sha256": "7be1a704a8c2183e87537fdbd7cdff704fda8c81eb8865d2a7412b524788f294",
+      "original": "artifacts/tsk-media/originals/scenarios-onThinIce-scene.png"
+    },
+    {
+      "id": "dogsOfWar",
+      "title": "战争疮痍",
+      "file": "scenarios/dogsOfWar/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Alexandria, Egyptian harbor and old fortification above the seawall at blue hour, two small groups of shadowy figures across opposing stairways, warm lights on water, an atmosphere of tense competing factions.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 345072,
+      "sha256": "99d5fc33106100c5020eeea65119bdc31f1c1dc83b3bb73d1d7e99867b74266f",
+      "original": "artifacts/tsk-media/originals/scenarios-dogsOfWar-scene.png"
+    },
+    {
+      "id": "shadesOfSuffering",
+      "title": "苦痛之影",
+      "file": "scenarios/shadesOfSuffering/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. 1920s Kuala Lumpur after a tropical downpour, layered shophouses and tiled roofs, reflected lantern light, abandoned crimson parasol on a stone walkway, blurred ghostlike presences merging with the humid air.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 380444,
+      "sha256": "e7e7531422866eeb616c1203bd0a487a9f949024d18cc855e1845c3c611c0eaf",
+      "original": "artifacts/tsk-media/originals/scenarios-shadesOfSuffering-scene.png"
+    },
+    {
+      "id": "withoutATrace",
+      "title": "不留痕迹",
+      "file": "scenarios/withoutATrace/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. An otherworldly region accessed through the Bermuda Triangle, inky ocean giving way to broken floating islands of stone and fragments of architecture under warped horizon, distant missing ship silhouette, unsettling empty spaces.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 256912,
+      "sha256": "fb11e062e274f0c804d0f6af8319a6723cb76707591eb9cca7bcdca91ea44d25",
+      "original": "artifacts/tsk-media/originals/scenarios-withoutATrace-scene.png"
+    },
+    {
+      "id": "congressOfTheKeys",
+      "title": "钥匙议会",
+      "file": "scenarios/congressOfTheKeys/scene.webp",
+      "prompt": "Use case: stylized-concept. Original premium tabletop cosmic horror game asset for The Scarlet Keys. Landscape 3:2 (1536 by 1024), full bleed edge to edge. Realistic hand-painted pulp noir with fine oil-brush texture, restrained dramatic lighting, palette anchored by charcoal, warm aged brass, muted scarlet and local environmental colors. No title, no legible text, no logos, no watermark, no frame, no interface elements. Remote 1920s Tunguska at night, a covert congress assembled within a dark taiga clearing and crude timber hall, distant silhouettes below a red interdimensional fracture, frost, blackened spruce and slate-blue mist.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 277058,
+      "sha256": "ba66ca6e84575902928ac06d51069b49a9b4e4dcdc15a416032b07097a995d9b",
+      "original": "artifacts/tsk-media/originals/scenarios-congressOfTheKeys-scene.png"
+    }
+  ]
+}

@@ -3,12 +3,13 @@ import { contentRegistry } from '../../content/registered.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
 import { bondedPoolMain, bondedCardList } from './bonded.js'
-import { ALL_CARDS } from '../cards/cards-data.js'
+import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { validateMechanicState } from './mechanic-state.js'
 import { validateInvestigatorMechanics } from './investigator-mechanics.js'
 import { validateEoteState } from './eote-primitives.js'
 import { validateEotePlayerPrimitives } from './effect-state.js'
 import { validateTskState } from './tsk-primitives.js'
+import { discardDreamGateIntruders } from './dream-gate.js'
 // 存档向下兼容与修复。
 //
 // 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
@@ -237,6 +238,29 @@ function needsCachedLegalMoves(runtime) {
   return !!runtime?.pendingChoice && !Array.isArray(runtime.legalMoves)
 }
 
+// 2026-11-13：回合收尾流程模型从 1（旧：行动点用尽自动推进 + 收尾玩家窗口）升到 2
+// （行动点用尽后停在空档期，快速卡/[free] 能力是 legalMoves 直接行动，玩家必须主动 endTurn）。
+// 旧存档若正好停在已移除的「收尾玩家窗口」暂停点上，恢复凭据里的窗口答案会在续玩时变成
+// 「未消费的选择恢复凭据」并报错；这里按「玩家让过收尾窗口」处理：清掉暂停、把回合交还给行动者。
+// 返回变更说明；无需升级时返回 null。
+function upgradeTurnFlowModel(state, { silent = false } = {}) {
+  if (!state || state.turnFlowModel === 2) return null
+  state.turnFlowModel = 2
+  const choice = state.pendingChoice
+  if (choice && choice.kind === 'playerWindow' && choice.source === 'investigation.afterAction') {
+    const actorSeat = state.turnSeat ?? state.currentSeat
+    const actor = state.investigators?.[actorSeat]
+    if (actor && ((actor.actionsLeft || 0) <= 0 || actor.turnEnded === true)) {
+      state.pendingChoice = null
+      delete state.continuation
+      state.currentSeat = actorSeat
+      delete state.turnSeat
+      return silent ? null : '回合收尾流程升级：已移除的收尾玩家窗口按让过处理（行动点用尽后需主动结束回合）'
+    }
+  }
+  return silent ? null : '回合收尾流程升级：行动点用尽后不会自动结束回合，需主动提交「结束回合」'
+}
+
 // 以同一战役新开局的状态为模板，只补齐缺失且模板值为空的字段（[]、{}、null、0、false）。
 function fillMissingFields(state, changes) {
   const players = (state.investigators || []).map(inv => ({ seat: inv.seat, role: state.humanSeats?.includes(inv.seat) ? 'human' : 'ai' }))
@@ -294,18 +318,126 @@ function parallelLaneEntries(state) {
 }
 
 const scenarioBehavior = state => state.scenario?.id ? contentRegistry.getBehavior(state.scenario.id) || {} : {}
+
+// ---------------------------------------------------------------------------
+// 旧存档修复：调查员卡面属性被《天机之城》换身还原污染成 2/2/2/2。
+//
+// v0.4.0 及更早的换身还原直接照抄身份快照，而快照是「先把四属性覆盖成伊斯人身体 04244 的
+// 2/2/2/2、之后才拍」的污染快照：还原后卡号/名字/牌组都回到本人，四属性却留在 2，且不再带
+// 任何换身标记。检查点的 continuation.base（关卡开局事务基座）也会留这份污染，从检查点重新
+// 开始时开局重建沿用基座，就把两名调查员都变成 2/2/2/2。
+// 修复口径与 content/.../body-swap.js#reapplyCampaignIdentity 一致：按战役记录里的调查员卡号
+// 重建卡面身份；仍在换身中的卡（form/formOriginal/yithianBody）不动，由内容层换身钩子处理。
+// ---------------------------------------------------------------------------
+function investigatorCardDefinition(code) {
+  if (!code) return null
+  if (INVESTIGATORS[code]) return INVESTIGATORS[code]
+  const card = ALL_CARDS[code]
+  return card?.type === 'investigator' ? card : null
+}
+
+function campaignInvestigatorRecord(state, seat) {
+  const list = state.campaign?.investigators
+  return Array.isArray(list) ? list[seat] : list?.[seat]
+}
+
+function investigatorIdentityNeedsRepair(state) {
+  for (const inv of state.investigators || []) {
+    if (!inv || inv.form || inv.formOriginal || inv.yithianBody) continue
+    const record = campaignInvestigatorRecord(state, inv.seat)
+    if (!record?.code || record.code !== inv.code) continue
+    const def = investigatorCardDefinition(record.code)
+    if (!def) continue
+    if (inv.willpower !== def.willpower || inv.intellect !== def.intellect
+      || inv.combat !== def.combat || inv.agility !== def.agility) return true
+  }
+  return false
+}
+
+const INVESTIGATOR_IDENTITY_REPAIR_NOTE = '按战役记录重建调查员卡面属性（旧版《天机之城》换身还原残留的 2/2/2/2）'
+
+function repairInvestigatorIdentity(state, changes) {
+  let repaired = 0
+  for (const inv of state.investigators || []) {
+    if (!inv || inv.form || inv.formOriginal || inv.yithianBody) continue
+    const record = campaignInvestigatorRecord(state, inv.seat)
+    if (!record?.code || record.code !== inv.code) continue
+    const def = investigatorCardDefinition(record.code)
+    if (!def) continue
+    const identity = {
+      name: def.nameZh || def.name,
+      nameEn: def.name,
+      klass: def.klass,
+      willpower: def.willpower,
+      intellect: def.intellect,
+      combat: def.combat,
+      agility: def.agility,
+    }
+    let changed = false
+    for (const [key, value] of Object.entries(identity)) {
+      if (inv[key] === value) continue
+      inv[key] = value
+      changed = true
+    }
+    if (changed) repaired += 1
+  }
+  if (repaired && !changes.includes(INVESTIGATOR_IDENTITY_REPAIR_NOTE)) changes.push(INVESTIGATOR_IDENTITY_REPAIR_NOTE)
+  return repaired
+}
+
+// ---------------------------------------------------------------------------
+// 旧存档修复：敌人与调查员不在同一地点却仍处于交战。
+//
+// 已知成因（2026-11-13 实机）：卢克·罗宾逊（06004）「如同位于连接地点打出事件」期间新生成的
+// 敌人会与卢克交战——例如在梦境之门「如同位于」打出「飞蛾扑火」（01064）时抽到没有生成指令
+// 的敌人。事件结束后卢克已回到梦境之门/原地点，旧版 as-if-location.js#endAsIf 只解除开局接管
+// 的那批敌人，这只新敌人仍留着 engagedSeat：敌方阶段按「交战」隔着地点攻击，卢克走到哪都挨打。
+// 官方 FAQ（ArkhamDB › Luke Robinson）口径：事件结束后敌人留在那个连接地点、不能继续与卢克
+// 交战。这里按同一口径只解除交战（不移动敌人）；只处理仍活着的调查员，避免误改已退场数据。
+// ---------------------------------------------------------------------------
+function crossLocationEngagedEnemies(state) {
+  const alive = new Map((state.investigators || [])
+    .filter(inv => inv && Number.isInteger(inv.seat) && !inv.defeated && !inv.resigned)
+    .map(inv => [inv.seat, inv]))
+  return (state.enemies || []).filter(enemy => enemy && Number.isInteger(enemy.engagedSeat)
+    && alive.has(enemy.engagedSeat)
+    && enemy.location !== alive.get(enemy.engagedSeat).location)
+}
+
+function repairCrossLocationEngagements(state, changes) {
+  const broken = crossLocationEngagedEnemies(state)
+  if (!broken.length) return 0
+  const codes = []
+  for (const enemy of broken) {
+    const inv = state.investigators[enemy.engagedSeat]
+    enemy.engagedSeat = null
+    if (Array.isArray(inv?.engaged)) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
+    codes.push(enemy.originalCode || enemy.code || enemy.name || '?')
+  }
+  const note = `解除 ${broken.length} 个跨地点交战（敌人不在调查员所在地点；${codes.join('、')}）`
+  if (!changes.includes(note)) changes.push(note)
+  return broken.length
+}
+
 function needsCardModelRepair(state) {
   return scenarioBehavior(state).needsSaveRepair?.(state) || (state.scenarioFlags?.agendaAside || []).length>0 || (state.enemies || []).some(host => !host.hostId && (host.swarmCards || []).some(card =>
     !card.defeated && (card.ownerSeat == null || !state.enemies.some(enemy => enemy.id === card.id && enemy.hostId === host.id))))
     || Object.keys(state.bondedSets || {}).some(key => bondedPoolMain(key.split('@')[0]) !== key.split('@')[0])
+    || investigatorIdentityNeedsRepair(state)
 }
 
 // Repair both the live runtime and its transaction base so a resumed choice cannot restore obsolete physical cards.
 export function repairRuntimeCardModels(state, changes = []) {
-  if (scenarioBehavior(state).needsSaveRepair?.(state)) {
+  repairInvestigatorIdentity(state, changes)
+  const behavior = scenarioBehavior(state)
+  if (behavior.needsSaveRepair?.(state)) {
     // 修复说明由剧本提供（例如天机之城的换身补齐）；没有提供时沿用旧文案。
-    changes.push(scenarioBehavior(state).saveRepairNote || '恢复场外全局牌的实际实例与旋转角度')
-    scenarioBehavior(state).repairSavedState(state,scenarioRuntime(state,[]))
+    // 允许 saveRepairNoteFor(state) 覆盖固定文案（已结算关卡只做还原，与「补装换身」区分）。
+    // 运行时与 continuation.base 会各修复一次，说明只记一条。
+    const note = behavior.saveRepairNoteFor?.(state) || behavior.saveRepairNote
+      || '恢复场外全局牌的实际实例与旋转角度'
+    if (!changes.includes(note)) changes.push(note)
+    behavior.repairSavedState(state, scenarioRuntime(state, []))
   }
   if (Array.isArray(state.scenarioFlags?.agendaAside) && state.scenarioFlags.agendaAside.length) {
     state.agendaAside ||= []
@@ -367,9 +499,17 @@ export function repairRuntimeCardModels(state, changes = []) {
 
 function runtimeNeedsWork(runtime, force) {
   if ([runtime, runtime.continuation?.base].filter(Boolean).some(needsCardModelRepair)) return true
+  // 旧存档里可能有敌人落在梦境之门上（06015a/b 禁止敌人进入/生成）。修复口径见
+  // dream-gate.js#discardDreamGateIntruders：按 FAQ v2.1 改为弃掉该敌人。
+  if ([runtime, runtime.continuation?.base].filter(Boolean).some(saved => (saved.enemies || []).some(enemy =>
+    (saved.locations || []).some(location => location.id === enemy.location && location.dreamGate === true)))) return true
+  // 旧存档里可能有「敌人不在调查员所在地点却仍交战」（卢克「如同位于」旧 bug）。修复见下方
+  // repairCrossLocationEngagements：按官方 FAQ 解除交战，不移动敌人。
+  if ([runtime, runtime.continuation?.base].filter(Boolean).some(saved => crossLocationEngagedEnemies(saved).length > 0)) return true
   if ([runtime, runtime.continuation?.base].filter(Boolean).some(saved => saved.investigators?.some(inv => investigatorRule(inv.code)?.resourceBank && inv.resourceBankModel !== 2) || saved.scenarioFlags?.dancerVoidCell)) return true
   return !!force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime)
     || needsCachedLegalMoves(runtime)
+    || runtime.turnFlowModel !== 2
     || !!stateCompatibilityError(runtime, META.resourceVersion)
 }
 
@@ -380,6 +520,13 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
   const local = []
   for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) repairRuntimeCardModels(saved, local)
+  // 梦境之门（06015a/b）：旧存档里非法生成/进入的敌人按 FAQ v2.1 改为弃掉。
+  for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) {
+    const intruders = discardDreamGateIntruders(saved)
+    if (intruders.length) local.push(`梦境之门：弃掉 ${intruders.length} 个非法进入的敌人（敌人不能进入/生成在梦境之门；${intruders.join('、')}）`)
+  }
+  // 跨地点交战（卢克「如同位于」旧 bug）：事件结束后敌人留在原地、解除交战（官方 FAQ）。
+  for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) repairCrossLocationEngagements(saved, local)
   for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) for (const inv of saved.investigators || []) {
     if (!investigatorRule(inv.code)?.resourceBank || inv.resourceBankModel === 2) continue
     if (investigatorRule(inv.code)?.resourceBank) {
@@ -404,6 +551,12 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   migrateVersions(runtime, migrations, local)
   upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime))
   fillMissingFields(runtime, local)
+  // 2026-11-13：回合收尾流程模型升级放在「补齐缺失字段」之后——旧存档清理收尾窗口暂停点时要删掉
+  // turnSeat，而新开局模板的 turnSeat=0 会被 fillMissingFields 加回来。continuation.base 只补字段、
+  // 不报变更（静态字段在续算时从 runtime 合并，见 resolution.js 的 STATIC_FIELDS）。
+  const turnFlowNote = upgradeTurnFlowModel(runtime)
+  if (turnFlowNote) local.push(turnFlowNote)
+  if (runtime.continuation?.base) upgradeTurnFlowModel(runtime.continuation.base, { silent: true })
   if (playable) {
     const moves = legalMoves(runtime)
     if (JSON.stringify(moves) !== JSON.stringify(runtime.legalMoves)) {

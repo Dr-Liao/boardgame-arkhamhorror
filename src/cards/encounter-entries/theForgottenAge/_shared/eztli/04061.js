@@ -6,4 +6,4 @@
 //
 // 第 8 批：古代遗物的剧情角色（引擎不再写死 04061）。
 
-export default { code: '04061', scope: 'storyAsset', storyRole: 'relicOfAges' }
+export default { code: '04061', scope: 'storyAsset', storyRole: 'relicOfAges', scenarioPlayable: true }

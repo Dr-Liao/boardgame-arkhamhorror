@@ -36,7 +36,7 @@ const SKIPPED_GUIDE_KEYS = new Set(['heading', 'tokens', 'label', 'tooltips', 'r
 const STATUSES = ['present-needs-review', 'untranslated', 'missing']
 const CHAPTER_STATUSES = [...STATUSES, 'mixed']
 
-// 生成指南（含全部 62 个已注册/迁移关卡）；顶部只跑一次，测试内复用。
+// 生成指南（含全部 72 个已注册/迁移关卡：54 既有 + 8 EotE + 10 TSK）；顶部只跑一次，测试内复用。
 const BUILT_GUIDES = await buildScenarioGuides()
 
 /** 嵌套正文树 → 叶子数组 `[{ path, text }]`。 */
@@ -315,7 +315,7 @@ test('P7 story story-access API：章节/战役/扁平化/段落读取', () => {
 
 test('P7 guides 文件：8 章 json 存在、结构字段齐全（id/campaignId/locales 五段）', () => {
   const guides = BUILT_GUIDES
-  assert.equal(guides.size, 62, '应在既有 54 个关卡之外新增 8 个《地球边缘》章节')
+  assert.equal(guides.size, 72, '应在既有 54 个关卡之外新增 8 个《地球边缘》与 10 个《绯红密钥》章节')
   for (const [index, id] of SCENARIO_IDS.entries()) {
     const relative = GUIDE_FILES[index]
     assert.ok(existsSync(`${ROOT}${relative}`), `缺少 ${relative}`)
@@ -396,5 +396,5 @@ test('P7 guides 幂等：buildScenarioGuides 两次一致、磁盘文件逐字�
   }
   const result = spawnSync(process.execPath, ['tools/import-scenario-guides.mjs'], { cwd: ROOT, encoding: 'utf8' })
   assert.equal(result.status, 0, result.stderr || result.stdout)
-  assert.match(result.stdout, /62 scenarios verified/)
+  assert.match(result.stdout, /72 scenarios verified/)
 })

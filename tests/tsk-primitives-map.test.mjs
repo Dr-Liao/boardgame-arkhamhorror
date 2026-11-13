@@ -81,7 +81,8 @@ test('旅行：未解锁/强制目标未达时拒绝；到达后累计时间与�
   const state = plain()
   initializeWorldMap(state, { graph: graph(), start: 'hub', unlocked: ['a'], forcedNode: 'far' })
   const first = travelTo(state, { graph: graph(), destination: 'a' })
-  assert.deepEqual(first, { from: 'hub', to: 'a', requested: 'a', cost: 1, time: 1, forced: false })
+  // 2026-11-13 P1-17：返回值补充 crossedThreshold（旅行后跨过强制阈值时同一个动作内改去 forcedNode）。
+  assert.deepEqual(first, { from: 'hub', to: 'a', requested: 'a', cost: 1, time: 1, forced: false, crossedThreshold: false })
   assert.equal(currentMapNode(state), 'a')
   assert.equal(mapTime(state), 1)
   assert.throws(() => travelTo(state, { graph: graph(), destination: 'b' }), /尚未解锁/)

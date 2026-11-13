@@ -1043,8 +1043,10 @@ const gates = {
   // 每次阶段提升只允许该阶段声明的包改变；其余包仍需 catalogOnly 且 rulesImplemented=false。
   packsRegistered: packs.length === 3
     && packs.every(pack => ['catalog-only', 'playable'].includes(pack.status))
-    && packs.every(pack => (pack.id === 'tskInvestigators'
-      ? pack.status === 'playable' && pack.rulesImplemented === true
+    // 阶段口径（P6 起）：调查员包与一般玩家卡包 playable，且包内逐卡 rulesImplemented 全真；
+    // 战役包仍 catalog-only（P7–P8 才开放）。
+    && packs.every(pack => (pack.id === 'tskInvestigators' || pack.id === 'tskPlayer' || pack.id === 'tskCampaign'
+      ? pack.status === 'playable' && pack.rulesImplemented === true && pack.catalogOnly === false
       : pack.status === 'catalog-only' && pack.catalogOnly && pack.rulesImplemented === false))
     && packs.every(pack => pack.cards.length === EXPECTED.packRecords[pack.id] && pack.partitionSize === EXPECTED.packRecords[pack.id])
     && packs.every(pack => pack.cards.join('|') === stableSort(CARD_PARTITIONS[pack.id]).join('|'))

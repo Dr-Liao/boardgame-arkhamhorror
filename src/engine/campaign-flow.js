@@ -178,6 +178,13 @@ function finishScenario(state, resolutionKey, events) {
   // 战役要求延续到后续关卡的换身由 campaign.ruleFlags.investigatorForms 记录、下一关开局再套用。
   const restoredForms = restoreInvestigatorForms(state)
   if (restoredForms) info(state, events, `🧠 你们的意识回到了自己的身体（${restoredForms} 位调查员）。`)
+  // 换身标记属于本关：结算时随身体还原一起清掉。否则幕间/出发准备窗口的存档仍带着
+  // scenarioFlags.yithianBody（state.scenario 也要等下一关开局才换），读档修复会把
+  // 已经回到自己身体的调查员再次换成伊斯人身体（2026-11-11 幽嘶深渊出发准备页实战复现）。
+  if (state.scenarioFlags) {
+    delete state.scenarioFlags.yithianBody
+    delete state.scenarioFlags.yithianBodyOriginals
+  }
   const visitId = `${campaign.flow?.nodeId || sc.id}:${campaign.flow?.visits?.[campaign.flow.nodeId] || 1}`
   if (campaign.scenarioResults.some(result => result.visitId === visitId)) throw new Error('本关已经结算')
   const before = structuredClone(campaign.investigators)
@@ -294,7 +301,15 @@ function applyResolutionEffects(state, resolutionKey, events) {
   const campaign = state.campaign
   const result = scenarioBehavior(state).resolution?.(
     state, resolutionKey, events,
-    { ...scenarioRuntime(state,events), addLitaToCampaign, addTrauma, originalCardCode, basicWeaknessPool,
+    // P8 修复：兼容两种结局钩子口径——
+    //   · 旧内容（TDE《众神所居之处》等）直接调用 raw 签名 (state, seat, kind, amount, events)；
+    //   · 新内容（TSK 十章）按 api 口径调用 (seat, kind, amount)（scenarioRuntime 原本即提供该包装）。
+    // 旧实现把 raw addTrauma 覆盖到 api 上，TSK 内容会把 state 当座位崩溃；只改新口径又会破坏旧内容。
+    { ...scenarioRuntime(state,events), addLitaToCampaign,
+      addTrauma: (...args) => (args[0] && typeof args[0] === 'object' && args[0].campaign
+        ? addTrauma(...args)
+        : addTrauma(state, args[0], args[1], args[2], events)),
+      originalCardCode, basicWeaknessPool,
       ALL_CARDS, campaignCardChange, randomValue,
       // P2：结局钩子也能要求玩家做选择（04059 结局 3「回到遗迹深处 / 摧毁此处」），
       // 以及「重演本场冒险」的剧本重开原语（04059 结局 4）。

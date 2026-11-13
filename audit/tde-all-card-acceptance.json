@@ -4,7 +4,7 @@
   "profile": {
     "id": "dream-eaters-all-cards-2026-11",
     "scope": "食梦者原始循环 388 条印刷记录：352 张主卡（战役 249 / 调查员 16 / 玩家 87）与 36 个关联面（34 战役面 + 2 调查员面 06015a/b）。",
-    "basis": "逐卡运行测试：283 条战役记录（249 主卡 + 34 关联面）的卡面印刷数据与 8 章 definition/index 逐字段对照（tests/tde-campaign-card-acceptance.test.mjs 283 例逐卡证据）、87 张玩家卡 4 个分片（tests/tde-player-m2-{1..4}.test.mjs 105 例）、18 条调查员记录 M1 逐人验收（tests/tde-investigators.test.mjs 32 例，文件级）；证据只从实跑 node --test 的 test:pass 事件归集。",
+    "basis": "逐卡运行测试：283 条战役记录（249 主卡 + 34 关联面）的卡面印刷数据与 8 章 definition/index 逐字段对照（tests/tde-campaign-card-acceptance.test.mjs 283 例逐卡证据）、87 张玩家卡 4 个分片（tests/tde-player-m2-{1..4}.test.mjs 105 例）、18 条调查员记录 M1 逐人验收（tests/tde-investigators.test.mjs 35 例，文件级）；证据只从实跑 node --test 的 test:pass 事件归集。",
     "partitionPolicy": "包分区 campaign 283（249 主 + 34 面）/ investigator 18（16 主 + 2 面）/ player 87，合计 388；形态分区 main 352 + face 36，合计 388；两套各自守恒。34 战役面按 linkedCardCode/linkedToCode 反查归正面（06169a/b 成对互链）；06015a/b 归调查员包（UNOWNED_FACE_OVERRIDES）。",
     "pendingPolicy": "目录存在、卡号被源码引用、rulesPending:false 或文本非空都不构成通过；未被逐卡 test 标记「已验收」/未被 manifest verified 的卡保持 pending 并计入 summary.pending（当前 0）。",
     "notePolicy": "本轮完成旧简化的规则补全；当前显式简化必须为零。旧备注与逐项实现证据保存在 audit/tde-completion-review.json。",
@@ -63,13 +63,13 @@
       "encounter-entry": 273,
       "linked-face": 2
     },
-    "testsPassed": 426,
+    "testsPassed": 429,
     "testFiles": 6
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
-      "sha256": "0a7a61e97590143f28761c7308408546e45a11b56f616cadb157b31c2d91007e"
+      "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
@@ -112,7 +112,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -136,7 +136,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -160,7 +160,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -184,7 +184,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -208,7 +208,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -232,7 +232,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -256,7 +256,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -280,7 +280,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -304,7 +304,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -328,7 +328,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -352,7 +352,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -376,7 +376,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -400,7 +400,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -424,7 +424,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -449,7 +449,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -474,7 +474,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -498,7 +498,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -522,7 +522,7 @@
         {
           "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
           "profile": "dream-eaters-investigators-2026-10",
-          "tests": 32,
+          "tests": 35,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]

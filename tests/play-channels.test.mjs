@@ -142,9 +142,12 @@ test('温蒂的护身符（01014）弃牌堆顶事件进入收尾快速卡窗口
 })
 
 // ---------------------------------------------------------------------------
-// 能力窗口：宿主附属里的 fromHand 反应描述子（收敛前只枚举手牌/下方/直觉牌库）
+// 快速事件通道：宿主附属里的 fromHand 快速事件（收敛前只枚举手牌/下方/直觉牌库）
+// 2026-11-11：05032/05280 改成「快速事件统一通道」（reaction+fromHand+quickEvent）后，
+// 附属通道改由 reactionWindow 的快速事件候选入口枚举（与手牌快速事件同一执行器），
+// 仍然要支付宿主附加费、打出后留在原处。
 // ---------------------------------------------------------------------------
-test('宿主附属（05279）里的 fromHand 快速事件进入能力窗口，并支付宿主附加费', () => {
+test('宿主附属（05279）里的快速事件（否决存在）进入快速事件候选，并支付宿主附加费', () => {
   const state = baseState()
   const host = asset(state, '05279')
   host.uses = 2
@@ -157,7 +160,7 @@ test('宿主附属（05279）里的 fromHand 快速事件进入能力窗口，�
   const execute = current => reactionWindow(current, 'wouldLoseResources', context, [])
   const pending = openWindow(state, execute)
   const option = pending.options.find(item => item.cardCode === '05032')
-  assert.ok(option, '宿主附属通道必须进入能力窗口')
+  assert.ok(option, '宿主附属通道必须进入快速事件候选')
   assert.match(option.label, /宿主附属/)
   assert.equal(option.uiKey, `asset:${host.id}`)
   answerWindow(state, execute, option.id)

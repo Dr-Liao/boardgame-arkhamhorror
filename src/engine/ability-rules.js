@@ -362,6 +362,9 @@ export function createAbilityRules(deps) {
     // 没有 parallelActs 时 actsInPlay 退化为 [当前幕]，与旧的单点读法逐字一致。
     for (const act of actsInPlay(state)) push(act)
     push((state.agendas || [])[state.agendaIndex])
+    // 2026-11-13 P1-16：放在密谋牌库旁的遭遇卡（09735/09740「放在密谋牌库旁」）也是
+    // 窗口里的强制/反应来源；此前 agendaAside 完全不在枚举里，这些卡的 forced 永不派发。
+    for (const aside of state.agendaAside || []) push(aside)
     for (const asset of state.storyAssets || []) {
       if (!asset.uncontrolled) push(asset)
       // 附属在剧情支援上的遭遇卡（07099 机械故障）同样作为窗口来源。

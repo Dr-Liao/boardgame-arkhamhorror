@@ -52,7 +52,7 @@ function makeGate(state, code) {
 }
 
 /** 放置指定一面。已有梦境之门时先撤下旧的，并把站在上面的人挪到新地点。 */
-export function placeDreamGate(state, code, { connectToRevealed = false, asideHorror = 0, ownerCode = null, flipAfterInvestigate = null } = {}) {
+export function placeDreamGate(state, code, { connectToRevealed = false, asideHorror = 0, ownerCode = null, ownerSeat = null, flipAfterInvestigate = null } = {}) {
   const existing = dreamGateInPlay(state, code)
   if (existing) return existing
   const previous = dreamGates(state)
@@ -62,6 +62,8 @@ export function placeDreamGate(state, code, { connectToRevealed = false, asideHo
   const gate = makeGate(state, code)
   gate.asideHorror = asideHorror
   gate.dreamGateOwner = ownerCode
+  // 持有者按座位记：天机之城换身后所有调查员卡号都是 04244，只比卡号会让其他伊斯人也能进门。
+  gate.dreamGateOwnerSeat = Number.isInteger(ownerSeat) ? ownerSeat : null
   gate.flipAfterInvestigate = flipAfterInvestigate
   if (connectToRevealed) {
     for (const other of state.locations) {
@@ -82,8 +84,43 @@ export function flipOrPlaceDreamGate(state, options) {
 }
 
 export function dreamGateEntryError(inv, location) {
-  if (!location?.dreamGate || !location.dreamGateOwner) return null
+  if (!location?.dreamGate) return null
+  // 新放置的门记座位（换身后卡号会重名）；旧存档只有卡号时退回卡号比较。
+  if (Number.isInteger(location.dreamGateOwnerSeat)) {
+    return inv?.seat === location.dreamGateOwnerSeat ? null : '除该调查员外不能进入梦境之门'
+  }
+  if (!location.dreamGateOwner) return null
   return inv?.code === location.dreamGateOwner ? null : '除该调查员外不能进入梦境之门'
+}
+
+/** 调查员当前是否位于梦境之门（梦境之门是卢克的绑定地点）。 */
+export function atDreamGate(state, inv) {
+  if (!inv?.location) return false
+  return dreamGates(state).some(gate => gate.id === inv.location)
+}
+
+/**
+ * 清退梦境之门上的敌人（旧存档/非法状态修复）。
+ *
+ * 卡面：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门。」FAQ v2.1（2023-08）：
+ * 敌人不能在梦境之门生成；若有敌人会在卢克位于梦境之门时生成在他的地点，改为**弃掉该敌人**。
+ * 修复按同一口径：从场上移出、解除交战、把遭遇卡放进遭遇弃牌堆，返回被清退的卡号。
+ */
+export function discardDreamGateIntruders(state) {
+  const gates = new Set(dreamGates(state).map(gate => gate.id))
+  if (!gates.size || !(state.enemies || []).some(enemy => gates.has(enemy.location))) return []
+  const removed = []
+  for (const enemy of [...state.enemies]) {
+    if (!gates.has(enemy.location)) continue
+    const engaged = state.investigators?.[enemy.engagedSeat]
+    if (engaged?.engaged) engaged.engaged = engaged.engaged.filter(id => id !== enemy.id)
+    state.enemies = state.enemies.filter(item => item !== enemy)
+    const code = enemy.originalCode || enemy.code
+    state.encounterDiscard ||= []
+    state.encounterDiscard.push(code)
+    removed.push(code)
+  }
+  return removed
 }
 
 /**
@@ -95,7 +132,10 @@ export function setDreamGatesAside(state, { choose, applyHorror, info } = {}) {
   if (!gates.length) return []
   const removed = []
   for (const gate of gates) {
-    const luke = (state.investigators || []).find(inv => gate.dreamGateOwner && inv.code === gate.dreamGateOwner && inv.location === gate.id && !inv.defeated)
+    const ownsGate = inv => Number.isInteger(gate.dreamGateOwnerSeat)
+      ? inv.seat === gate.dreamGateOwnerSeat
+      : !!(gate.dreamGateOwner && inv.code === gate.dreamGateOwner)
+    const luke = (state.investigators || []).find(inv => ownsGate(inv) && inv.location === gate.id && !inv.defeated)
     stripLinks(state, gate)
     state.locations = state.locations.filter(location => location !== gate)
     removed.push(gate.id)

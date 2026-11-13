@@ -16,13 +16,16 @@ import assert from 'node:assert/strict'
 
 import { fixture, move, settle, enemy as testEnemy } from './core-fixture.mjs'
 import {
-  applyDamage, applyMove, createGameState, decisionSeat, disengageAll, getHandSize, getStat, legalMoves, lookAt,
-  payAbilityCost, performTest, placeLocation, validateMove,
+  applyDamage, applyMove, createGameState, decisionSeat, disengageAll, getHandSize, getStat, hunterStep, legalMoves, lookAt,
+  payAbilityCost, performTest, placeLocation, relocateEnemy, spawnEnemy, validateMove,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { investigatorRule } from '../src/cards/card-rules.js'
+import { enemyCanEnterLocation } from '../src/engine/enemy-entry.js'
+import { discardDreamGateIntruders, placeDreamGate } from '../src/engine/dream-gate.js'
+import { migrateState } from '../src/engine/save-migration.js'
 import {
   TDE_INVESTIGATOR_CODES, canSelectInvestigator, getAvailability, SIGNATURES_BY_INVESTIGATOR,
 } from '../src/deck/availability.js'
@@ -677,8 +680,7 @@ test('P6 派翠丝专属弱点：秘密进手牌，成功则弃掉，牌库耗�
 })
 
 // 只给条目层「直接调 resolve」用的窄 api（与引擎的 abilityApi 同形，不含断言）。
-function makeApi(state) {
-  const actual = state
+function makeApi(state) {  const actual = state
   return {
     choice: () => 'resource',
     info: () => {},
@@ -700,3 +702,78 @@ function makeApi(state) {
     moveHarm: () => ({ damage: 0, horror: 0 }),
   }
 }
+
+// ---------------------------------------------------------------------------
+// 11. 梦境之门（06015a/b）：敌人不能进入 / 生成 / 被选为移动目标
+// ---------------------------------------------------------------------------
+
+// 三格走廊 + 梦境之门：A—B—C，门与所有已揭示地点相连（06015a）。
+// 卢克在门上、另一位调查员在 C 时，敌人（A 处）的真实最近目标是门——这正是实战 bug。
+function dreamGateFixture() {
+  const state = fixture('01001', 2)
+  state.locations = [
+    { id: 'locA', code: 'locA', name: '甲', revealed: true, clues: 0, connections: ['locB'] },
+    { id: 'locB', code: 'locB', name: '乙', revealed: true, clues: 0, connections: ['locA', 'locC'] },
+    { id: 'locC', code: 'locC', name: '丙', revealed: true, clues: 0, connections: ['locB'] },
+  ]
+  state.investigators[0].location = 'locA'
+  state.investigators[1].location = 'locC'
+  const gate = placeDreamGate(state, '06015a', { connectToRevealed: true, ownerCode: '06004' })
+  return { state, gate }
+}
+
+test('梦境之门：敌人不能进入或生成，按 FAQ 改为弃掉遭遇卡，普通地点不受影响', () => {
+  const { state, gate } = dreamGateFixture()
+  assert.equal(enemyCanEnterLocation(state, { code: '01177' }, gate.id), false, '敌人不能进入梦境之门')
+  const blocked = spawnEnemy(state, '01177', gate.id, 0)
+  assert.equal(blocked, null, '敌人不能在梦境之门生成')
+  assert.equal(state.encounterDiscard.at(-1), '01177', '遭遇卡按 FAQ 改为弃掉')
+  assert.equal(state.enemies.some(enemy => enemy.location === gate.id), false)
+  // 普通地点照常生成，确认拦截只对梦境之门生效。
+  const ok = spawnEnemy(state, '01177', 'locB', null)
+  assert.ok(ok)
+  assert.equal(ok.location, 'locB')
+  // 引擎的移动路径同样拦住（再补一道，防止脚本效果把敌人挪上去）。
+  relocateEnemy(state, ok, gate.id, [], { cause: 'effect' })
+  assert.equal(ok.location, 'locB', '敌人不能移动进梦境之门')
+})
+
+test('梦境之门：卢克在门上时不能被敌人选为移动目标（猎手目标排除）', () => {
+  const { state, gate } = dreamGateFixture()
+  const enemy = { id: 'e-hunter', code: '01177', originalCode: '01177', name: '猎手', location: 'locA',
+    hunter: true, aloof: false, exhausted: false }
+  state.enemies.push(enemy)
+  // 卢克进门：作为唯一目标时，猎手没有可移动方向（FAQ v2.1「不能被选为敌人移动的目标」）。
+  state.investigators[0].location = gate.id
+  assert.equal(hunterStep(state, enemy, { targets: [state.investigators[0]] }), null,
+    '门上的卢克不能当选移动目标')
+  // 卢克离开门后恢复正常：唯一目标仍能给出朝该调查员的下一步。
+  state.investigators[0].location = 'locB'
+  assert.equal(hunterStep(state, enemy, { targets: [state.investigators[0]] }), 'locB')
+})
+
+test('旧存档修复：梦境之门上的敌人被清退并弃到遭遇弃牌堆', () => {
+  const { state, gate } = dreamGateFixture()
+  state.investigators[0].location = gate.id
+  state.enemies.push({
+    id: 'e-illegal', code: '01177', originalCode: '01177', name: '伊斯观测者',
+    location: gate.id, engagedSeat: 0, aloof: false, hunter: false,
+  })
+  state.investigators[0].engaged.push('e-illegal')
+  assert.deepEqual(discardDreamGateIntruders(state), ['01177'])
+  assert.equal(state.enemies.length, 0, '非法敌人移出场上')
+  assert.deepEqual(state.investigators[0].engaged, [], '交战列表一并清理')
+  assert.equal(state.encounterDiscard.at(-1), '01177')
+
+  // 读档迁移自动修复（旧存档里可能已经留下这种敌人）。
+  const saved = dreamGateFixture()
+  saved.state.investigators[0].location = saved.gate.id
+  saved.state.enemies.push({
+    id: 'e-illegal', code: '01177', originalCode: '01177', name: '伊斯观测者',
+    location: saved.gate.id, engagedSeat: null, aloof: false, hunter: false,
+  })
+  const { state: repaired, changes } = migrateState(JSON.parse(JSON.stringify(saved.state)))
+  assert.equal(repaired.enemies.some(entry => entry.location === saved.gate.id), false)
+  assert.ok(changes.some(line => line.includes('梦境之门')), changes.join(' / '))
+  assert.deepEqual(migrateState(JSON.parse(JSON.stringify(repaired))).changes, [], '修复幂等')
+})

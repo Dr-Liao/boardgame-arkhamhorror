@@ -1,6 +1,19 @@
 // Curated by setting and pacing. Track files remain shared; playlists never copy audio.
 const chapter = (name, mood, tracks) => Object.freeze({ name, mood, tracks: Object.freeze(tracks) })
 export const SCENARIO_MUSIC = Object.freeze({
+  // 八循环：20 首新曲 + 10 首旧曲（33.3%），30 个位置无循环内重复。
+  theScarletKeys: Object.freeze({
+    riddlesAndRain: chapter("谜雨", "伦敦雨夜、街巷追踪、初见红衣人", ["tskNightOnTheDocksSax","tskNoGoodLayabout","darkWalk"]),
+    deadHeat: chapter("死亡酷暑", "马拉喀什、灼热集市、死者苏醒", ["tskTabuk","tskDesertCity","ticOppressiveGloom"]),
+    sanguineShadows: chapter("血色阴影", "布宜诺斯艾利斯、探戈、屋顶追逐", ["tskTangoDeManzana","tskBassWalker","chasePulse"]),
+    dealingsInTheDark: chapter("暗中交易", "君士坦丁堡、夜市接头、追查货物", ["tskIntrepid","tskDhaka","penumbra"]),
+    dancingMad: chapter("疯星乱舞", "哈瓦那、舞台与后台、潜入失控", ["tskNoFrillsComparsa","tskNoFrillsSalsa","eveningOfChaos"]),
+    onThinIce: chapter("如履薄冰", "安克雷奇、冰原追猎、暴风雪", ["tskNorthernGlade","tskLongNoteFour","tdeFrozenStar"]),
+    dogsOfWar: chapter("战争疮痍", "亚历山大港、阵营交锋、要塞突围", ["tskNilesBlues","tskKillers","ticClashDefiant"]),
+    shadesOfSuffering: chapter("苦痛之影", "吉隆坡、雨夜幽魂、红伞旧怨", ["tskGhostpocalypse6CrossingTheThreshold","tskTrepidation","tcuAnguish"]),
+    withoutATrace: chapter("不留痕迹", "百慕大、异界漂流、寻找失踪者", ["tskGhostpocalypse1Departure","tskNightmareMachine","tcuSymmetry"]),
+    congressOfTheKeys: chapter("钥匙议会", "通古斯卡、密钥审判、异界决战", ["tskNightVigil","tskMovementProposition","tcuFinalBattleOfTheDarkWizards"]),
+  }),
   // 七循环：16 首新曲 + 8 首旧曲（33.3%），24 个位置无循环内重复。
   edgeOfTheEarth: Object.freeze({
     iceAndDeathPart1: chapter("亡命冰原 I", "坠机冰原、寻找庇护、极地求生", ["eoteDespairAndTriumph","eoteMoorland","tdeFrozenStar"]),

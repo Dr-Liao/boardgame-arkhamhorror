@@ -3,7 +3,7 @@
 > 性质：**只读审计**（不改游戏内容/实现），覆盖当前已注册的 **8 战役 × 62 关**的剧情文本、冒险指南（关卡设置面板）、关卡设置文本。
 > 口径见 [`_SPEC.md`](_SPEC.md)；结构化结论见 [`findings.json`](findings.json)（36 条 finding，high 10 / medium 15 / low 11）；修复顺序见 [`fix-plan.md`](fix-plan.md)；扫描器见 [`tools/`](tools/README.md)，原始候选见 [`scan/`](scan/)。
 > **状态（2026-11-09）**：P0 的 10 条 high 与 P1 的 10 项 medium 已修复，见 [`fix-report-P0.md`](fix-report-P0.md)、[`fix-report-P1.md`](fix-report-P1.md)；本报告的 finding 计数与证据为**修复前审计基线**，`scan/` 下候选已在修复后重跑（前后快照见 [`scan/after-fix-p0/`](scan/after-fix-p0/)、[`scan/after-fix-p1/`](scan/after-fix-p1/)），P2 仍按 [`fix-plan.md`](fix-plan.md) 执行。
-> 与 EOTE 既有审计的关系：七循环《地球边缘》另有专项翻译审计（[`../edgeOfTheEarth/translate/README.md`](../edgeOfTheEarth/translate/README.md)，2026-11-09 已修复批次）；本报告复核了其当前状态（`chineseGaps=0`、8 章 469/469 段有中文），只记录其残留问题（story-0011/0012、guides-0006）。
+> 与 EOTE 既有审计的关系：七循环《地球边缘》另有专项翻译审计（`docs/edgeOfTheEarth/translate/` 归档，2026-11-09 已修复批次）；本报告复核了其当前状态（`chineseGaps=0`、8 章 469/469 段有中文），只记录其残留问题（story-0011/0012、guides-0006）。
 
 ## 0. 一句话结论
 
@@ -195,7 +195,7 @@ EOTE 复核（与既有审计一致）：8 章 `sections` 中文/英文叶子 **
 
 ## 8. 相关文档
 
-- 七循环既有专项审计：[`docs/edgeOfTheEarth/translate/README.md`](../edgeOfTheEarth/translate/README.md)、[`fix-batch.md`](../edgeOfTheEarth/translate/fix-batch.md)
+- 七循环既有专项审计：`docs/edgeOfTheEarth/translate/` 归档（README 与 fix-batch 未随本仓迁移保留）
 - 关卡指南生成器与门槛：[`docs/scenario-guides.md`](../scenario-guides.md)、[`docs/arkham-content-migration.md`](../arkham-content-migration.md) §4.5.2
 - 卡面中文与上游来源：[`docs/card-image-translation.md`](../card-image-translation.md)
 - 本轮扫描器说明：[`tools/README.md`](tools/README.md)

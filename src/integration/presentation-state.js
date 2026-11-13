@@ -7,6 +7,7 @@ import { grantedTraitsOf } from '../engine/location-traits.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 import { investigatorConnections } from '../engine/location-connections.js'
 import { mechanicSnapshot, maskMechanicSnapshot } from './mechanic-view.js'
+import { publicActObjectiveProgress } from '../cards/campaign-view.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
 // adjacency or pending choices. Only project the resulting public restriction.
@@ -33,6 +34,8 @@ export function locationEntryErrors(state) {
 
 // Cards attached to the current act/agenda or to locations by scenario rules
 // live in scenario-private zones; project only their public card codes.
+// 2026-11-12：破碎永世 4a 的「正面朝下附属到古代遗物的地点」也是公开区：
+// 内容层用 assets 钩子把附属挂回场上支援实例（卡号/卡名/胜利点），投影只做展示。
 export function publicAttachments(state) {
   const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
   const found = behavior?.publicAttachments?.(state) || {}
@@ -46,15 +49,25 @@ export function publicAttachments(state) {
     if (registeredEntry(attachment.code)?.grantsShortcutMove) visible.markerAction = 'shortcutMove'
     ;(locations[attachment.location] ||= []).push(visible)
   }
-  return { act: [...(found.act || [])], agenda: [...(found.agenda || [])], locations }
+  const assets = Object.fromEntries(Object.entries(found.assets || {}).map(([id, cards]) => [id, [...cards]]))
+  return { act: [...(found.act || [])], agenda: [...(found.agenda || [])], locations, assets }
 }
 export function attachLocationCards(locations, byLocation = {}) {
   return locations.map(loc => byLocation[loc.id]?.length
     ? { ...loc, attachments: [...(loc.attachments || []), ...byLocation[loc.id]] } : loc)
 }
+// 投影侧挂公开附属：宿主按实例 id 命中（如古代遗物支援），只改视图副本，权威状态不动。
+export function attachCardAttachments(cards = [], byCard = {}) {
+  return (cards || []).map(card => {
+    const extra = card?.id != null ? byCard[card.id] : null
+    return extra?.length ? { ...card, attachments: [...(card.attachments || []), ...extra] } : card
+  })
+}
 
 // Display checkpoints contain no deck order, RNG, transaction or future choices.
-const FIELDS = ['status','currentSeat','turnSeat','moveCount','round','phase','actIndex','agendaIndex','doom','clues','actClues','victory','locations','enemies','storyAssets','encounterDiscard','turnsTaken','log']
+// agendaAside（放在密谋牌库旁的卡）是桌面公开区：演出重绘快照必须带着它，否则
+// 演出期间这张卡会从牌桌消失一瞬。
+const FIELDS = ['status','currentSeat','turnSeat','moveCount','round','phase','actIndex','agendaIndex','doom','clues','actClues','victory','locations','enemies','storyAssets','agendaAside','encounterDiscard','turnsTaken','log']
 const INV_FIELDS = ['seat','code','name','nameEn','klass','willpower','intellect','combat','agility','health','sanity','baseHealth','baseSanity','maxHealth','damage','horror','resources','clues','actionsLeft','discard','assets','threat','location','engaged','defeated','resigned','testBonus','phaseStatBonus']
 const pick = (value, keys) => Object.fromEntries(keys.filter(k => Object.hasOwn(value, k)).map(k => [k, structuredClone(value[k])]))
 export function publicCardInstance(card) {
@@ -174,9 +187,14 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
         + (state.fogMod || 0) + (behavior?.locationShroudModifier?.(state, source) || 0),
     }
   }
+  // 演出重绘也要显示「附属到古代遗物的地点」数量/进度：与 viewState 同一份公开投影。
+  const progress = publicActObjectiveProgress(state)
+  const base = pick(state, FIELDS)
   return {
-    ...pick(state, FIELDS), locations: maskHiddenLocations(attachLocationCards(structuredClone(state.locations || []), attachments.locations), state).map(projectLocation),
+    ...base, storyAssets: attachCardAttachments(base.storyAssets || [], attachments.assets),
+    locations: maskHiddenLocations(attachLocationCards(structuredClone(state.locations || []), attachments.locations), state).map(projectLocation),
     ...(mechanics ? { mechanics } : {}),
+    ...(progress ? { actObjectiveProgress: progress } : {}),
     scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({
       ...structuredClone(enemy),
       health: healthOf ? healthOf(state, enemy) : enemyHealthValue(state, enemy, behavior),
@@ -190,8 +208,8 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
     agendaDoom: agendaDoom(state),
     totalDoom: totalDoom(state),
     investigators: state.investigators.map(inv => ({ ...pick(inv, INV_FIELDS),
-      assets: (inv.assets || []).map(publicCardInstance),
-      threat: (inv.threat || []).map(publicCardInstance),
+      assets: attachCardAttachments((inv.assets || []).map(publicCardInstance), attachments.assets),
+      threat: attachCardAttachments((inv.threat || []).map(publicCardInstance), attachments.assets),
       hand: [...inv.hand], handSize: inv.hand.length, deck: [], deckSize: inv.deck.length,
       // 压在调查员底下的牌（黛安娜／赛菲娜）与手牌同为本人私有区：演出快照里必须带走，
       // 否则 applyStep 用中间态渲染时整排「下方」栏会消失一瞬，drain 结束才恢复。

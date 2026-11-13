@@ -1294,37 +1294,37 @@
         {
           "text": "快速。在遭遇卡牌或敌人攻击将要导致你执行以下一项（选择一项）时打出",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:15-20 sourceAllowed（优先读 context.source.kind，encounter/enemyAttack 通过）；三面向 would* 窗口 R6 已带 source（src/engine/deck-ops.js:412-420、api-misc.js:121-153、turn-flow.js）；伤害/恐惧面 harmDealt 带 source（src/engine/enemies.js:517-533）；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:20-31（「快速事件统一通道」单一描述子 reaction+fromHand+quickEvent 覆盖四个窗口；trigger=[harmDealt,wouldDiscardFromHand,wouldLoseResources,wouldLoseActions]；criteria 走 src/cards/entries/_shared.js:108 denyExistenceCandidate）；来源判定 src/engine/reaction-source.js:16（enemyAttack/encounter/other，进程内帧不写 state）；窗口调用点 deck-ops/resource-loss/turn-flow/skill-effects/scenario-runtime/enemies 均改读同一来源；tests/tcu-player-m2-1.test.mjs:525-537"
         },
         {
           "text": "（选择一项）弃掉手牌",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:47-55 wouldDiscardFromHand reaction 置 context.cancelled；src/engine/deck-ops.js:412-420 取消读点；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:41 + src/cards/entries/_shared.js:124 ignoreWouldEffect（置 context.cancelled；自动记 cardCancelled）；窗口 src/engine/deck-ops.js discardRandomFromHand、src/engine/turn-flow.js discardHandTo/discardChosenCards、src/engine/scenario-runtime.js discardChosen；tests/tcu-player-m2-1.test.mjs:566-577、579-590"
         },
         {
           "text": "（选择一项）失去资源",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:47-55 wouldLoseResources reaction；src/engine/api-misc.js:121-153 取消读点；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:41 + src/cards/entries/_shared.js:124；窗口 src/engine/resource-loss.js（api 与剧本运行时共用）、src/engine/skill-effects.js:264（效果 DSL）；tests/tcu-player-m2-1.test.mjs:592-605"
         },
         {
           "text": "（选择一项）失去行动",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:47-55 wouldLoseActions reaction；src/engine/api-misc.js:139-153 取消读点；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:41 + src/cards/entries/_shared.js:124；窗口 src/engine/api-misc.js loseActions、src/engine/scenario-runtime.js:592、src/engine/skill-effects.js:281；tests/tcu-player-m2-1.test.mjs:592-605"
         },
         {
           "text": "（选择一项）受到伤害",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:27-40 played+harmDealt + criteria（本人/来源/当次伤害>0）+ api.cancelHarm；src/engine/enemies.js:517-536 harmDealt 上下文；tests/tcu-player-m2-1.test.mjs:516-533（遭遇/敌人攻击可取消、自伤不可）"
+          "evidence": "src/cards/entries/05032.js:33-39 api.cancelHarm(whole:true)（整项忽略，不提供拆分点数）；src/engine/api-misc.js:1336-1390 whole 分支只列整项选项；src/engine/enemies.js:889 harmDealt context.source；tests/tcu-player-m2-1.test.mjs:525-547（2/2 二选一、单项直接忽略）"
         },
         {
           "text": "（选择一项）受到恐惧",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:27-40 同上（context.horror）；src/engine/enemies.js:530-536；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:33-39 同上（whole 模式对恐惧分支同一实现）；tests/tcu-player-m2-1.test.mjs:525-547（选择「忽略 2 点恐惧」后伤害照常结算）"
         },
         {
           "text": "你忽略该效果的影响。（所有其他效果如常结算。）",
           "status": "implemented",
-          "evidence": "src/cards/entries/05032.js:35-45 只把本次 harm 的 damage/horror 归零（api.cancelHarm）；would* 三项各自只置对应 context.cancelled，其它窗口/其它效果独立结算；tests/tcu-player-m2-1.test.mjs:516-533"
+          "evidence": "src/cards/entries/05032.js:33-41 二选一只把被选面向整体归零（context.damage 或 context.horror 之一），另一面向保留；三面向窗口只置对应 context.cancelled；tests/tcu-player-m2-1.test.mjs:525-537（另一面向照常结算）、579-590（攻击的其他效果如常）"
         }
       ],
       "batch": "player:m2-1#1"
@@ -8311,27 +8311,27 @@
         {
           "text": "快速。在遭遇卡牌或敌人攻击将要导致你弃掉手牌时打出：你忽略该效果",
           "status": "implemented",
-          "evidence": "src/cards/entries/05280.js:27（what 分支 + source.kind 限定）；src/engine/api-misc.js:162-163,180-181,369（wouldLoseResources/wouldLoseActions context.source.kind=encounter|enemyAttack|other + api.noteCancelled）；src/engine/deck-ops.js:422-425（wouldDiscardFromHand source.kind）；src/engine/turn-flow.js:278-303（手牌上限/支付等窗口 source.kind）"
+          "evidence": "src/cards/entries/05280.js:15-25（「快速事件统一通道」单一描述子 reaction+fromHand+quickEvent 覆盖四个窗口；criteria 走 src/cards/entries/_shared.js:108）；来源判定 src/engine/reaction-source.js:16；窗口来源在 reactionWindow 的快速事件候选入口（src/engine/encounter.js）与各 api 调用点统一；tests/tcu-player-m2-4.test.mjs:329-358"
         },
         {
           "text": "在遭遇卡牌或敌人攻击将要导致你失去资源时打出：你忽略该效果",
           "status": "implemented",
-          "evidence": "src/cards/entries/05280.js:33（wouldLoseResources 分支：context.cancelled + 反向获得资源）；src/engine/api-misc.js:162-163（wouldLoseResources context.source.kind）；src/engine/api-misc.js:180-181（wouldLoseActions）；src/engine/api-misc.js:369（api.noteCancelled）"
+          "evidence": "src/cards/entries/05280.js:37 + src/cards/entries/_shared.js:124 ignoreWouldEffect(reverse)（置 cancelled + 反向抽等量牌）；tests/tcu-player-m2-4.test.mjs:386-399"
         },
         {
           "text": "在遭遇卡牌或敌人攻击将要导致你失去行动时打出：你忽略该效果",
           "status": "implemented",
-          "evidence": "src/cards/entries/05280.js:36（wouldLoseActions 分支：context.cancelled + 反向获得额外行动）；src/engine/api-misc.js:180-181（wouldLoseActions context.source.kind + cancelled）；src/engine/api-misc.js:369（api.noteCancelled）"
+          "evidence": "src/cards/entries/05280.js:37 + src/cards/entries/_shared.js:124（反向获得等量资源）；窗口 src/engine/resource-loss.js；tests/tcu-player-m2-4.test.mjs:401-407、419-427（弱点妄想症）"
         },
         {
           "text": "在遭遇卡牌或敌人攻击将要导致你受到伤害或恐惧时打出：你忽略该效果",
           "status": "implemented",
-          "evidence": "src/cards/entries/05280.js:56（harmDealt 判定改 source.kind）；src/engine/enemies.js:532（harmDealt context.source.kind）；tests/tcu-player-m2-4.test.mjs:258（敌人攻击伤害 ignore+反向治愈）、274（遭遇恐惧 ignore+反向治愈）"
+          "evidence": "src/cards/entries/05280.js:37 + src/cards/entries/_shared.js:124（反向获得等量额外行动）；窗口 src/engine/scenario-runtime.js:592；tests/tcu-player-m2-4.test.mjs:409-417"
         },
         {
           "text": "对应地执行与之相反的效果（抽牌/获得资源/获得额外行动/治愈伤害/治愈恐惧）",
           "status": "implemented",
-          "evidence": "src/cards/entries/05280.js:30（前三分支置 cancelled + 反向效果）；:68（伤害/恐惧归零 + 反向治愈）；:43（忽略后显式记 cardCancelled，供 05004 读）；tests/tcu-player-m2-4.test.mjs:258、274"
+          "evidence": "src/cards/entries/05280.js:28-35 api.cancelHarm(whole:true, heal:true)：伤害/恐惧整项二选一 + 反向治愈；src/engine/api-misc.js:1336-1390 whole/heal 分支；忽略后 cardCancelled 由 executeDescriptor 自动补记（src/engine/reveal.js:352-356）；tests/tcu-player-m2-4.test.mjs:329-384、tcu-investigators.test.mjs（黛安娜 05280 联动）"
         }
       ],
       "batch": "player:m2-4#1"

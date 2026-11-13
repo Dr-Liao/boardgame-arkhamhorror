@@ -1121,6 +1121,30 @@ test('TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开
   assert.equal(state.locations.find(location => location.id === study.id).clues, 1, '原地点线索未被发现')
 })
 
+test('TCU 05158 第六感 符号窗口跳过询问后不再重复询问（同地点两名调查员也只问一次）', () => {
+  // 修复前：tests.js 的符号窗口先 reactionWindow 开一次能力窗口，随后又按「同地点每位调查员」
+  // 各调一次 triggerReaction，尾部再各开一次能力窗口；跳过询问不会写 limit 账，
+  // 所以同一张第六感会被连问 N+1 次（单人 2 次、同地点两人 3 次）——实机表现为「连续弹很多次」。
+  const state = fixture('01001', 2)
+  asset(state, '05158')
+  const study = state.locations[0]
+  study.clues = 1
+  study.shroud = 1
+  addLocation(state, 'attic') // 已揭示的连接地点：满足第六感「可改为在彼处调查」
+  state.investigators[1].location = study.id
+  state.chaosBag = ['skull']
+  let offers = 0
+  move(state, { action: 'ability', assetId: me(state).assets[0].id, abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.options.some(item => item.cardCode === '05158')) {
+      offers += 1
+      return 'skip'
+    }
+    return null
+  })
+  assert.equal(offers, 1, '同一符号窗口只询问一次第六感；跳过即结束')
+})
+
 // ---------------------------------------------------------------------------
 // 05159 险中求胜
 // ---------------------------------------------------------------------------

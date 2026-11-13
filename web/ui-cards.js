@@ -101,6 +101,17 @@ export const UI_CARDS = Object.freeze({
     cityOfTheElderThings: '08621',
     theHeartOfMadnessPart1: '08648',
     theHeartOfMadnessPart2: '08648',
+    // 八循环《绯红密钥》：十章剧本参考卡（简单/普通看正面，困难/专家看背面）。
+    riddlesAndRain: '09501',
+    deadHeat: '09520',
+    sanguineShadows: '09545',
+    dealingsInTheDark: '09566',
+    dancingMad: '09591',
+    onThinIce: '09609',
+    dogsOfWar: '09635',
+    shadesOfSuffering: '09660',
+    withoutATrace: '09681',
+    congressOfTheKeys: '09694',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',

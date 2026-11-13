@@ -356,9 +356,10 @@ test('「如同手牌」通道快速事件：关闭=整窗跳过，auto 档不�
   setReactionState(session.sessionId,0,'01022',null)
 })
 
-test('「快速。只能在你回合期间打出」的事件也有开关：01050 收尾窗口按卡号过滤/整窗让过',()=>{
-  // 这类快速事件没有固定触发时机，只会作为收尾玩家窗口（investigation.afterAction）的
-  // 「⚡ 快速打出」候选出现；卡面同样要有闪电开关，关闭后候选从窗口消失（唯一候选时整窗自动让过）。
+test('「快速。只能在你回合期间打出」的事件也有开关；2026-11-13 起它是 0 行动空档期的直接合法行动',()=>{
+  // 这类快速事件没有固定触发时机，只在「行动点用尽、回合尚未结束」的空档期出现。
+  // 2026-11-13 起不再弹收尾玩家窗口：它直接进 legalMoves（点手牌即打出），闪电开关保留给
+  // 仍会弹窗的反应/玩家窗口；这里守住「凡快速事件描述子都要生成卡面开关」的既有口径。
   // 判定收敛在 card-rules.js#entryNeedsReactionPrompt：凡快速事件（played + fast）都要有开关。
   const defs=allCardDefs({runtimeOnly:true})
   assert.equal(defs['01050'].hasReactionPrompt,true,'逃避隐藏要有快速反应开关')
@@ -372,24 +373,20 @@ test('「快速。只能在你回合期间打出」的事件也有开关：01050
   }
   assert.deepEqual(missing,[],'凡快速事件描述子都要生成卡面开关')
 
-  // 真实收尾窗口：手牌 01050、行动点已用完。
+  // 真实空档期：手牌 01050、行动点已用完 → 不弹窗，而是直接合法行动。
   const st=fixture('01001')
   st.investigators[0].hand=['01050']
-  st.investigators[0].actionsLeft=0
+  st.investigators[0].resources=10
+  st.investigators[0].actionsLeft=1
+  move(st,{action:'draw'})
+  assert.equal(st.investigators[0].actionsLeft,0)
+  assert.equal(st.pendingChoice,null,'空档期不再主动弹窗询问')
+  const play=legalMoves(st).find(move=>move.action==='play'&&move.cardId==='01050')
+  assert.ok(play,'01050 在空档期是直接合法行动')
+  move(st,play)
+  assert.ok(st.investigators[0].discard.includes('01050'),'点牌即打出并正常进弃牌堆')
+  assert.equal(st.round,1,'打完仍在本回合，由玩家决定何时结束')
   move(st,{action:'endTurn'})
-  assert.equal(st.pendingChoice?.kind,'playerWindow')
-  assert.ok(st.pendingChoice.options.some(option=>option.id==='fast-card:01050'),JSON.stringify(st.pendingChoice.options))
-  const session={sessionId:'closing-window-fast',state:st}
-  assert.deepEqual(reactionChoices(st).map(item=>item.code),['01050'],'手牌快速打出候选能映射回卡号')
-  assert.equal(reactionChoices(st)[0]?.move?.optionId,'fast-card:01050')
-  // 关：候选从窗口消失，只剩「让过」→ 已是唯一可选项，整窗自动让过。
-  setReactionState(session.sessionId,0,'01050','skip')
-  assert.deepEqual(reactionView(session).state.legalMoves.map(move=>move.optionId),['skip'])
-  assert.equal(reactionAutoPlan(session,0,true)?.move?.optionId,'skip')
-  // 开（ask）：保持询问。
-  setReactionState(session.sessionId,0,'01050','ask')
-  assert.equal(reactionAutoPlan(session,0,true),null)
-  setReactionState(session.sessionId,0,'01050',null)
 })
 
 test('通道里的快速事件收尾候选（fast-card:hunch:<卡号>）同样能按卡号过滤',()=>{

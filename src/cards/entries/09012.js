@@ -24,7 +24,7 @@ export default {
         if ((inv.discard || []).includes('09013')) {
           if (api.choice({ kind: 'target', source: '09012', seat: inv.seat, prompt: '是否将「福言之语」洗回牌库？',
             options: [{ id: 'yes', label: '是' }, { id: 'no', label: '否' }] }) === 'yes') {
-            api.moveCard({ code: '09013', from: 'discard', to: 'deck', ownerSeat: inv.seat })
+            api.moveCard({ code: '09013', from: 'discard', to: 'deckTop', ownerSeat: inv.seat })
             api.shuffleDeck(inv.seat)
           }
         }

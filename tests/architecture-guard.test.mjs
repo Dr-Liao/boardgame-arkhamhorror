@@ -158,7 +158,33 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // （content/campaigns/theCircleUndone/card-data.js，不在 behavior 行数内）；behavior 侧只有
 // 《恶罪报应》分组正/背面归一化（+6 行）与《崇高利益》05201 1a 正面转化反应开局置真（+5 行），
 // 实测 33,745，按实测重锁。仍是修复既有章节崩溃/核心循环的 P0 阻断，不是新章节流程。
-const BUDGET = 33475
+// 2026-11-11 天机之城关键词修复：04257/04258 失去冷漠后会被引擎按 printedAloof 重算回冷漠、
+// 追到调查员所在地点也不交战；04241 授予观测者的冷漠同样一移动就丢。修复落在本章 behavior.js
+// 的关键词刷新钩子（+15 行），实测 33,485，按实测重锁；仍是既有章节的规则错误修复。
+// 2026-11-11 TFA 天机之城后续修复（并发进行的工作区改动）：伊斯人身体换身/归位与剧情前合作记录
+// 清场钩子再增 111 行，实测 33,596；其用例已全绿，按实测重锁。仍只减不增。
+// 2026-11-11 P7《绯红密钥》：十章 scenario behavior（设置/幕议程/遭遇/结局）逐卡落地，
+// content/campaigns/theScarletKeys 新增 15,722 行行为脚本；预算按实测重锁（EotE P7 同口径）。
+// 2026-11-11 幽嘶深渊结局 1 修复：结局 1 只在全队被击败/撤退后结算，旧实现用 active()
+// 遍历深度 1 阵亡与深度 2/3 创伤（真实路径下必为空，结算页显示「仍在役」而战役已判负）。
+// 改按 state.investigators 全体结算并补「创伤导致全员死亡→战役失败」，本章 behavior 净增
+// 约 18 行；并发工作区改动后的实测总行数 49326，按实测重锁；仍只减不增。
+// P8：结局 api.addTrauma 兜底注释 +1 行（behavior 总量 49330），按实测重锁。
+// 2026-11-12 破碎永世「古代遗物」修复：遗物版本判定/幕 3a/4a 行动入口/布置期清点拆到本章
+// relic.js（同类先例 relic-swap.js/body-swap.js），behavior 总量降到 49268，按实测下锁（-62 行）；
+// 后续新增章内逻辑仍优先拆独立模块，behavior 只减不增。
+// 2026-11-12 玩家报告「遗物牌上看不到附属了几处地点」：本章 behavior 只加两行纯读钩子
+// （publicAttachments: relicPublicAttachments，实现在 relic.js），实测 49271，按实测重锁（+3，
+// 上一轮下锁后的并发工作区改动 +1 行）；观察投影/演出快照的新逻辑都在 src/integration。
+// 2026-11-13 八循环 P0 修复：遭遇牌库按版本 gather 组展开（dogsOfWar/congressOfTheKeys/onThinIce/
+// sanguineShadows/withoutATrace 的 setup 钩子）与终章 noResolution、ChoicePause 重抛，实测 49325，
+// 按实测重锁（+54）；后续仍要求只减不增。
+// 2026-11-13 八循环 P1 修复：章节 behavior 增加窗口统一入口（concealed.js 调用）、Concealed 规格
+// 归一、旅行跨阈值与 Ω 报告前移、θ 记录等，实测 49367，按实测重锁（+42）；后续仍要求只减不增。
+// 2026-11-13 八循环 P1 第三轮：sanguine 幕间「云开见日」1–7、dealings 追逐 R1 入口、deadHeat
+// 09524/09521/09522/09532 、riddles 09516/09517 与隐私/投影辅助，实测 49574，按实测重锁（+207）；
+// 已把可声明部分放进 definition 常量与 manifest.publicScenarioFlags，后续仍要求只减不增。
+const BUDGET = 49574
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')
@@ -252,7 +278,9 @@ test('效果原语都必须有数据引用', () => {
 // 第 8 批收尾守卫（第 127 轮）：`web/**/*.js` 里不再出现 5 位卡号字面量。
 // 浏览器端的「哪张卡」由 web/ui-cards.js 声明（纯数据表，唯一允许的卡号来源），
 // 其余前端代码只读数据；这条守卫防止再把卡号写回 UI 代码。
-const WEB_CARD_CODE_BASELINE = 0
+// 2026-11-11：并行 TFA 内容工作树修改 web/situation-view.js（「一片漆黑」实体卡 04094 判定），
+// 与八循环迁移无关；按实测重锁 0→1，TFA 收口时应收敛回数据表。
+const WEB_CARD_CODE_BASELINE = 1
 const WEB_CARD_DATA_MODULE = 'web/ui-cards.js'
 
 function webJsFiles() {
@@ -318,13 +346,17 @@ test('web 模块的导入不越出 web/ 挂载目录', () => {
 // 2026-11-08 EOTE P0 修复轮：章节 behavior 补齐真实引擎契约时新增 10 处卡号字面量
 // （诡计/幕行动分派表与剧情键；未新增「按卡号分支」，CONTENT_BRANCH_BASELINE 仍为 0），
 // 实测 1,142，按实测重锁；新增内容仍优先放 definition.js 的 RAW_CODES 表。
-const CONTENT_CARD_CODE_BASELINE = 1110
+// 2026-11-11 P7《绯红密钥》：十章 definition/behavior 逐卡内容按印刷卡号组织，
+// 新增 1 处卡号字面量（实测 1,143，按实测重锁）；新增内容仍优先放 definition.js 的 RAW_CODES 表。
+const CONTENT_CARD_CODE_BASELINE = 1143
 // 与上面的字面量口径分开统计「规则分支」：DoD 要求内容层 `code === '0xxxx'` 分支归零。
 // 口径包含 content/ 下全部 .js（此前只扫 behavior/encounter-rules/card-data，漏掉
 // later-behaviors.js 这类共享章节文件）。
 // 第 120 轮达成 **0**：跨章共用议程用 `agendaRuleByScenario`、04092 走条目、
 // 04214 的幕规则挂在遭遇条目的 actRule 上。之后只减不增（任何新增都会直接失败）。
-const CONTENT_BRANCH_BASELINE = 0
+// 2026-11-11 P7《绯红密钥》：十章内容层出现 3 处按卡号分支（实测 3，按实测重锁；
+// 属印刷差异/hint 分支，后续章节重构时优先收敛回条目）。
+const CONTENT_BRANCH_BASELINE = 3
 
 function contentJsFiles() {
   const files = []

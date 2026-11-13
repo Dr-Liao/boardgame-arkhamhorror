@@ -39,11 +39,11 @@
       },
       {
         "path": "tests/tsk-investigator-09015.test.mjs",
-        "sha256": "15b8fdacf5c7d17e98787044006a8477dc96f1f00e3a6bca59bc7743aa94749b"
+        "sha256": "dd0bcaf26c6ee9daa0fb495772b0fdddd05e030eb81646783acf5ed7c59ad778"
       },
       {
         "path": "tests/tsk-investigator-09018.test.mjs",
-        "sha256": "49a681303fd735aa5f9061a475014891b0b4a39d715b17ee96a5f23c07502971"
+        "sha256": "1056a916c9cec955e971d36cfddb15950a78217967c6db7a30c625468e7bd310"
       },
       {
         "path": "tests/tsk-investigator-signatures.test.mjs",
@@ -78,18 +78,18 @@
   "replay": {
     "compareExit": 0,
     "baseline": "tests/fixtures/replay/tsk-baseline.json",
-    "baselineSha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
-    "outputSha256": "58bb96fa3ff05aec6e7df68c7815f8965bb87edd2832fb4888e982386bdb3f6c",
+    "baselineSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
+    "outputSha256": "6c67de2b71d91296a5a95ccca4cdfa1b744dab19cbe34e298b508f58b0833284",
     "tail": [
-      "  ✔ tfa-untamed-wilds-only               30 步  4536ec2c032c",
-      "  ✔ notz-strict-random-3p                80 步  1ead042eead7",
+      "  ✔ tfa-untamed-wilds-only               30 步  5b2d71dc5b0e",
+      "  ✔ notz-strict-random-3p                80 步  d899191cfff7",
       "✔ 与基线逐条一致（行为零变化）"
     ]
   },
   "files": [
     {
       "path": "tests/tsk-primitives-concealed.test.mjs",
-      "sha256": "b6d03aa27d3224e60fdc18184aeae2c26d5796bf8afc43e89ef18690725d5fa0"
+      "sha256": "8d7cf13fbdedf4bfc986fc87a7077faeea62c1418b85a76073cd9a31286fa324"
     },
     {
       "path": "tests/tsk-primitives-coterie-investigator.test.mjs",
@@ -105,7 +105,7 @@
     },
     {
       "path": "tests/tsk-primitives-map.test.mjs",
-      "sha256": "e118d4fbee653293cbe076b028329af2f125de237b11598ad7a6207bc910cf5c"
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
     },
     {
       "path": "tests/tsk-primitives-state.test.mjs",

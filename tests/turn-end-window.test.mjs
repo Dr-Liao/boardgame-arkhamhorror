@@ -1,10 +1,12 @@
-// 回合收尾窗口：行动点用尽（0 行动）之后，「快速。只能在你回合期间打出」的手牌
-// 仍然可以在「行动结束」玩家窗口里打出；「将要被击败」的救命卡也不会因为结算
-// 已经处在一张快速卡/反应内部而被吞掉。
+// 回合收尾（2026-11-13 行为调整）：
+//   · 行动点用尽后不再自动开「收尾玩家窗口」、也不再自动推进回合；手牌/通道里的 0 行动快速卡与
+//     [free] 能力改为 legalMoves 的直接行动（玩家主动点牌/按钮），必须点「结束回合」才真正结束。
+//   · 剧本 behavior.fastActions 的 [fast] 剧本行动在空档期同样进入合法行动（gap-actions.js）。
+//   · 「将要被击败」的救命卡窗口不受影响：致命伤害发生在快速卡/反应内部时不能被吞掉。
 //
-// 回归的是两个真实症状：
-//   1. 用完最后一个行动 → applyMoveUnchecked 立刻 advanceInvestigator，
-//      手牌里的快速卡永远没有打出的时机（旧窗口只列装备上的免费能力）。
+// 回归的两个真实症状（旧实现的问题，保留在这个文件里）：
+//   1. 用完最后一个行动 → 旧实现 applyMoveUnchecked 立刻 advanceInvestigator，
+//      手牌里的快速卡永远没有打出的时机；
 //   2. 致命伤害发生在快速卡结算内部时，reactionWindow 的嵌套保护直接返回，
 //      调查员被直接判定击败并结束回合，来不及打出「死里逃生」这类救命卡。
 //
@@ -12,49 +14,59 @@
 // （01022 证据！等）同样必须出现在反应窗口/收尾窗口里，并按 -2 费用结算。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, asset, enemy, answer, move, legalMoves, settle } from './core-fixture.mjs'
+import { fixture, asset, enemy, answer, move, legalMoves, validateMove, settle } from './core-fixture.mjs'
 import { checkDefeated, playerWindow, reactionWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { gapFastActionMoves, sameScenarioAction, inGapPeriod } from '../src/engine/gap-actions.js'
 
 const me = state => state.investigators[0]
 
-test('行动点用尽后，收尾窗口仍可打出「只能在你回合期间打出」的快速卡', () => {
+test('行动点用尽后：快速卡直接打出、打完仍停在本回合，点「结束回合」后才推进', () => {
   const state = fixture('01001')
   me(state).actionsLeft = 1
   me(state).hand = ['01036']
   me(state).resources = 5
   move(state, { action: 'draw' })
-  assert.equal(me(state).actionsLeft, 0)
-  assert.equal(state.pendingChoice?.kind, 'playerWindow')
-  const option = state.pendingChoice.options.find(option => option.id === 'fast-card:01036')
-  assert.ok(option, '收尾窗口必须列出 0 费的快速卡')
-  answer(state, option.id)
+  assert.equal(state.pendingChoice, null)
+  assert.equal(state.currentSeat, 0, '行动点用尽不等于回合结束')
+  assert.ok(legalMoves(state).some(move => move.action === 'play' && move.cardId === '01036'),
+    '快速卡是直接合法行动（不再靠收尾窗口询问）')
+  assert.ok(legalMoves(state).some(move => move.action === 'endTurn'), '结束回合必须由玩家主动提交')
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01036' }), null)
+  move(state, { action: 'play', cardId: '01036' })
   assert.ok(!me(state).hand.includes('01036'))
   assert.ok(me(state).discard.includes('01036'), '快速事件打出后正常进弃牌堆')
-  assert.equal(state.round, 2, '打完快速卡后窗口没有剩余选项，回合正常结束进入下一轮')
+  assert.equal(me(state).actionsLeft, 0, '快速事件不消耗行动点')
+  assert.equal(state.pendingChoice, null)
+  assert.equal(state.round, 1, '打完快速卡仍停在本回合，等待玩家结束回合')
+  assert.equal(state.currentSeat, 0)
+  move(state, { action: 'endTurn' })
+  assert.equal(state.round, 2, '点结束回合后才真正推进回合')
 })
 
-test('收尾窗口在一张快速卡打完后会再次列出其余快速卡', () => {
+test('0 行动空档期：一张快速卡打完后其余快速卡仍在合法行动里', () => {
   const state = fixture('01001')
   me(state).actionsLeft = 1
   me(state).hand = ['01036', '02017']
   me(state).resources = 5
   move(state, { action: 'draw' })
-  answer(state, 'fast-card:01036')
-  assert.equal(state.pendingChoice?.kind, 'playerWindow')
-  assert.ok(state.pendingChoice.options.some(option => option.id === 'fast-card:02017'))
-  answer(state, 'fast-card:02017')
+  assert.equal(state.pendingChoice, null)
+  move(state, { action: 'play', cardId: '01036' })
+  assert.ok(legalMoves(state).some(move => move.action === 'play' && move.cardId === '02017'),
+    '其余快速卡仍是直接合法行动')
+  move(state, { action: 'play', cardId: '02017' })
   assert.deepEqual([...me(state).discard].sort(), ['01036', '02017'])
+  assert.equal(state.round, 1)
 })
 
-test('普通牌与付不起的快速卡不会出现在收尾窗口', () => {
+test('0 行动空档期：普通牌与付不起的快速卡都不是合法行动', () => {
   const ordinary = fixture('01001')
   me(ordinary).actionsLeft = 1
   me(ordinary).hand = ['01088'] // 「获得 3 资源」是普通事件：要花 1 行动
   me(ordinary).resources = 5
   move(ordinary, { action: 'draw' })
-  assert.equal(ordinary.pendingChoice, null)
-  assert.equal(ordinary.round, 2)
+  assert.ok(!legalMoves(ordinary).some(move => move.action === 'play' && move.cardId === '01088'))
+  assert.match(validateMove(ordinary, 0, { action: 'play', cardId: '01088' }), /行动点/)
   assert.ok(me(ordinary).hand.includes('01088'))
 
   const poor = fixture('01001')
@@ -62,37 +74,83 @@ test('普通牌与付不起的快速卡不会出现在收尾窗口', () => {
   me(poor).hand = ['01036']
   me(poor).resources = 0
   move(poor, { action: 'draw' })
-  assert.equal(poor.pendingChoice, null)
-  assert.equal(poor.round, 2)
-  assert.ok(me(poor).hand.includes('01036'), '付不起的快速卡不能被窗口打出去')
+  assert.ok(!legalMoves(poor).some(move => move.action === 'play' && move.cardId === '01036'))
+  assert.match(validateMove(poor, 0, { action: 'play', cardId: '01036' }), /资源不足/)
 })
 
-test('免费触发能力与快速卡并列在同一个收尾窗口', () => {
+test('0 行动空档期：免费触发能力与快速卡并列在合法行动里', () => {
   const state = fixture('01001')
-  asset(state, '01518')
-  // P2-4：巡警的免费能力带必需目标（同地点 1 个敌人）；可行性检查与 legalMoves 同源，
-  // 同地点没有敌人时窗口不列它（见 phase1-state B1）。这里放一个敌人代表可结算局面。
+  asset(state, '01518') // 巡警：带 [free] 能力的支援
+  // P2-4：巡警的免费能力带必需目标（同地点 1 个敌人）；可行性检查与 legalMoves 同源。
   enemy(state, { fight: 1, evade: 1, health: 3, engagedSeat: null })
   me(state).actionsLeft = 1
   me(state).hand = ['01036']
   me(state).resources = 5
   move(state, { action: 'draw' })
-  const labels = state.pendingChoice.options.map(option => option.label)
-  assert.ok(labels.some(label => label.includes('巡警')), '装备上的免费能力仍然照旧列出')
-  assert.ok(labels.some(label => label.includes('心胜于物')), '快速卡与免费能力共用同一个窗口')
+  assert.equal(state.pendingChoice, null)
+  const legal = legalMoves(state)
+  const labels = legal.map(move => move.label).join('|')
+  assert.ok(legal.some(move => move.action === 'ability'), '装备上的免费能力是直接合法行动')
+  assert.ok(legal.some(move => move.action === 'play' && move.cardId === '01036'), '快速卡与免费能力并列')
+  assert.match(labels, /心胜于物/)
 })
 
-test('主动结束回合时同样会打开快速卡窗口', () => {
+test('主动点「结束回合」直接结束本回合（不再弹快速卡询问）', () => {
   const state = fixture('01001')
   me(state).hand = ['01036']
   me(state).resources = 5
   me(state).actionsLeft = 3
   move(state, { action: 'endTurn' })
-  assert.equal(state.pendingChoice?.kind, 'playerWindow')
-  assert.ok(state.pendingChoice.options.some(option => option.id === 'fast-card:01036'))
-  answer(state, 'skip')
+  assert.equal(state.pendingChoice, null, '结束回合不再打开快速卡窗口')
+  assert.ok(me(state).hand.includes('01036'), '手牌原样保留（玩家没选择打出）')
   assert.equal(state.round, 2)
 })
+
+test('0 行动空档期：触发式快速事件仍只能在对应反应窗口打出', () => {
+  // 01022 证据！/ 01080 运气好！/ 01065 守护结界 都是「有触发时机」的快速事件：只能在
+  // 击败敌人 / 检定失败 / 抽到诡计等反应窗口打出，不能作为空档期的普通行动。
+  const state = fixture('01001')
+  me(state).actionsLeft = 1
+  me(state).hand = ['01022', '01080', '01065']
+  me(state).resources = 10
+  move(state, { action: 'draw' })
+  for (const code of ['01022', '01080', '01065']) {
+    assert.ok(!legalMoves(state).some(move => move.action === 'play' && move.cardId === code), code)
+    assert.match(validateMove(state, 0, { action: 'play', cardId: code }), /反应窗口/, code)
+  }
+})
+
+test('0 行动空档期：behavior.fastActions 的 [fast] 剧本行动进入合法行动（gap-actions）', () => {
+  const inv = { seat: 0, actionsLeft: 0 }
+  const state = { phase: 'investigation', currentSeat: 0, pendingChoice: null }
+  const behavior = {
+    fastActions: (s, i, timing) => {
+      assert.equal(timing, 'investigation.afterAction')
+      return [
+        { action: 'scenarioAction', rule: 'peek', actions: 0, fast: true, label: '快速看一眼' },
+        { action: 'scenarioAction', rule: 'slow', actions: 1, fast: false },
+        { action: 'scenarioAction', rule: 'blocked', actions: 0, fast: true, reason: '本回合已用' },
+      ]
+    },
+  }
+  assert.equal(inGapPeriod(state, inv), true)
+  assert.deepEqual(gapFastActionMoves(state, inv, behavior).map(move => move.rule), ['peek'])
+  // 有行动点时不由空档期补（仍由行动结算后的玩家窗口提供）。
+  assert.deepEqual(gapFastActionMoves(state, { ...inv, actionsLeft: 1 }, behavior), [])
+  // 有待决选择 / 不是本回合时不补。
+  assert.deepEqual(gapFastActionMoves({ ...state, pendingChoice: { seat: 0 } }, inv, behavior), [])
+  assert.deepEqual(gapFastActionMoves({ ...state, currentSeat: 1 }, inv, behavior), [])
+  // 剧本钩子异常不阻断基础合法性。
+  assert.deepEqual(gapFastActionMoves(state, inv, { fastActions: () => { throw new Error('boom') } }), [])
+  // 去重口径：规则名 + 可选目标。
+  assert.equal(sameScenarioAction({ rule: 'parley', enemyId: 'e1' }, { rule: 'parley', enemyId: 'e1' }), true)
+  assert.equal(sameScenarioAction({ rule: 'parley', enemyId: 'e1' }, { rule: 'parley', enemyId: 'e2' }), false)
+  assert.equal(sameScenarioAction({ rule: 'peek' }, { rule: 'peek' }), true)
+})
+
+// ---------------------------------------------------------------------------
+// 致命伤害 / 救命卡的窗口不受收尾调整影响
+// ---------------------------------------------------------------------------
 
 test('致命伤害先开「将受到伤害」窗口，取消牌可以救命', () => {
   const state = fixture('01001')
@@ -226,26 +284,26 @@ test('直觉牌库揭示的快速事件按 -2 费用通过资源校验（01037 �
   assert.equal(inv.clues, before + 1, '「专业的直觉」结算发现 1 个线索')
 })
 
-test('收尾窗口可打出直觉牌库揭示的快速卡（-2 费、清标记、正常弃置）', () => {
+test('0 行动空档期可打出直觉牌库揭示的快速卡（-2 费、清标记、正常弃置、回合不自动结束）', () => {
   const state = joeState('01037')
   const before = me(state).clues
-  me(state).actionsLeft = 0
-  let offered = null
-  runTransaction(state, current => {
-    playerWindow(current, 'investigation.afterAction', [], null, { fastCards: true })
-  }, pending => {
-    if (pending.kind !== 'playerWindow') return null
-    const option = pending.options.find(item => item.id === 'fast-card:hunch:01037')
-    if (option) { offered = option; return option.id }
-    return null
-  })
-  assert.ok(offered, '收尾窗口必须列出直觉牌库揭示的快速卡')
-  assert.match(offered.label, /直觉牌库/)
+  me(state).actionsLeft = 1
+  // 用完最后一个行动（hunchFastTest 是测试里直接调用的，这里用真实 move 走一次抽牌）。
+  move(state, { action: 'draw' })
+  assert.equal(me(state).actionsLeft, 0)
+  assert.equal(state.pendingChoice, null, '不再弹收尾窗口')
+  const play = legalMoves(state).find(move => move.action === 'play'
+    && move.fromHunch === true && move.cardId === '01037')
+  assert.ok(play, '空档期直接合法行动里必须列出直觉牌库揭示的快速卡')
+  assert.match(play.label, /0 资源/)
+  move(state, play)
   const inv = me(state)
   assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记')
   assert.equal(inv.resources, 0, '2 - 2 = 0')
   assert.ok(inv.discard.includes('01037'), '打出的快速事件正常进弃牌堆')
   assert.equal(inv.clues, before + 1, '「专业的直觉」结算发现 1 个线索')
+  assert.equal(state.round, 1, '快速卡结算完仍在本回合（由玩家点结束回合）')
+  move(state, { action: 'endTurn' })
 })
 
 test('能力层写法（fromHand 反应描述子）的直觉牌库快速事件同样能打出（05025 串联线索）', () => {
@@ -278,4 +336,3 @@ test('能力层写法（fromHand 反应描述子）的直觉牌库快速事件�
   assert.equal(low.clues, 0, '「串联线索」发现低帷幕地点的 2 个线索')
   assert.equal(inv.clues, before + 2)
 })
-

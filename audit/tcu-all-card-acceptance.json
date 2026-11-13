@@ -31,7 +31,7 @@
     "constructible": 85,
     "deckable": 83,
     "simplified": 0,
-    "testsPassed": 542,
+    "testsPassed": 552,
     "testFiles": 6
   },
   "testFiles": [
@@ -41,11 +41,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-      "sha256": "d5c0525187aea470a109cdfa419d4976c46852c83f6942021f60f354acee5c01"
+      "sha256": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "37b6da333f976ea79819aa530b9282abf6efe299b8e3241158cf971ea205429c"
+      "sha256": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "49453680c34be70398a49af7d039a13120dcbd01ca494992505ace3897cbe7d4"
+      "sha256": "777ef47ea0544cf4b1613826567792d5c439b6f65160151a6fa1c69ff266af46"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
@@ -639,17 +639,37 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 524,
-          "test": "TCU 05032 否决存在 遭遇卡伤害/恐惧可取消"
+          "line": 525,
+          "test": "TCU 05032 否决存在 同时受到 2 伤害 2 恐惧时只能整体忽略一项（不提供拆分点数）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 542,
-          "test": "TCU 05032 否决存在 敌人攻击的伤害可取消"
+          "line": 549,
+          "test": "TCU 05032 否决存在 只有单项伤害时直接整体忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 557,
+          "line": 566,
+          "test": "TCU 05032 否决存在 遭遇卡使随机弃手牌时可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "line": 579,
+          "test": "TCU 05032 否决存在 敌人攻击时弃手牌（伊斯观察者「攻击时随机弃 1 张」）可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "line": 592,
+          "test": "TCU 05032 否决存在 遭遇卡使失去资源/失去行动时可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "line": 607,
+          "test": "TCU 05032 否决存在 弱点显现（失忆）的弃手牌可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "line": 618,
           "test": "TCU 05032 否决存在 玩家卡自伤不能取消（source=other）"
         }
       ]
@@ -666,17 +686,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 574,
+          "line": 635,
           "test": "TCU 05033 恐怖灵感 取消凋零术的符号效果"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 598,
+          "line": 659,
           "test": "TCU 05033 恐怖灵感 让凋零术的符号效果再结算一次"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 628,
+          "line": 689,
           "test": "TCU 05033 恐怖灵感 auto_fail 窗口也能打出（凋零术不因 auto_fail 产生修正）"
         }
       ]
@@ -727,7 +747,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 655,
+          "line": 716,
           "test": "TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移动到连接地点"
         }
       ]
@@ -744,12 +764,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 680,
+          "line": 741,
           "test": "TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害，成功获得 X 资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 697,
+          "line": 758,
           "test": "TCU 05037 绝望之举 从手牌弃掉手部道具：获得 +X 战斗但不返还资源"
         }
       ]
@@ -800,7 +820,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 716,
+          "line": 777,
           "test": "TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2"
         }
       ]
@@ -817,12 +837,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 749,
+          "line": 810,
           "test": "TCU 05041 第十三幻象 显现进入威胁区域并用[action][action]弃掉"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 765,
+          "line": 826,
           "test": "TCU 05041 第十三幻象 技能值等于难度时检定改为失败（本人 + 同地点队友）"
         }
       ]
@@ -2811,12 +2831,12 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1209,
+          "line": 1233,
           "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1237,
+          "line": 1261,
           "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密"
         }
       ]
@@ -2943,6 +2963,11 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
           "line": 1096,
           "test": "TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 1124,
+          "test": "TCU 05158 第六感 符号窗口跳过询问后不再重复询问（同地点两名调查员也只问一次）"
         }
       ]
     },
@@ -2958,7 +2983,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1128,
+          "line": 1152,
           "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
         }
       ]
@@ -2975,12 +3000,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1158,
+          "line": 1182,
           "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1179,
+          "line": 1203,
           "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
         }
       ]
@@ -5030,7 +5055,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1025,
+          "line": 1096,
           "test": "TCU 05276 苦心钻研 永久卡让起始手牌多 1 张"
         }
       ]
@@ -5079,7 +5104,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1014,
+          "line": 1085,
           "test": "TCU 05278 干一天活计拿一天钱 永久卡在开局多给 2 资源"
         }
       ]
@@ -5135,6 +5160,31 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
           "line": 345,
           "test": "TCU 05280 否决存在 忽略遭遇卡造成的恐惧并反向治愈"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 360,
+          "test": "TCU 05280 否决存在 同时受到 2 伤害 2 恐惧时整项二选一，并反向治愈所选面向"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 386,
+          "test": "TCU 05280 否决存在 忽略弃手牌并反向抽等量牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 401,
+          "test": "TCU 05280 否决存在 忽略失去资源并反向获得等量资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 409,
+          "test": "TCU 05280 否决存在 忽略失去行动并反向获得等量额外行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 419,
+          "test": "TCU 05280 否决存在 弱点显现（妄想症）的失去全部资源可忽略并反向获得"
         }
       ]
     },
@@ -5150,7 +5200,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 364,
+          "line": 435,
           "test": "TCU 05281 勇闯火线 把选定技能的基础值设为 5 直到回合结束"
         }
       ]
@@ -5167,27 +5217,27 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 387,
+          "line": 458,
           "test": "TCU 05282 偷梁换柱 修复：没有可躲避的敌人时打不出"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 394,
+          "line": 465,
           "test": "TCU 05282 偷梁换柱 躲避交战敌人成功后把它移到连接地点"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 408,
+          "line": 479,
           "test": "TCU 05282 偷梁换柱 躲避连接地点的非精英敌人并交换地点"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 427,
+          "line": 498,
           "test": "TCU 05282 偷梁换柱 选项 B 走真实躲避（含躲避支援加值/evadeSuccess 窗口）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 445,
+          "line": 516,
           "test": "TCU 05282 偷梁换柱 打出按「躲避」结算，不引发借机攻击"
         }
       ]
@@ -5204,17 +5254,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 460,
+          "line": 531,
           "test": "TCU 05283 安娜·卡斯洛 额外 2 个塔罗槽位"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 467,
+          "line": 538,
           "test": "TCU 05283 安娜·卡斯洛 入场后检索一张塔罗支援并放置入场"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 479,
+          "line": 550,
           "test": "TCU 05283 安娜·卡斯洛 游戏开始时从起始手牌放置入场"
         }
       ]
@@ -5690,12 +5740,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 497,
+          "line": 568,
           "test": "TCU 05313 圣化之镜 入场检索 3 张舒缓旋律（1 张入手，其余洗回牌库）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1037,
+          "line": 1108,
           "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合（含其他调查员区域与场外区域）"
         }
       ]
@@ -5712,12 +5762,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 525,
+          "line": 596,
           "test": "TCU 05314 舒缓旋律 两点治疗可分配给伤害/恐惧并抽 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 542,
+          "line": 613,
           "test": "TCU 05314 舒缓旋律 恐惧与盟友支援同样是治疗目标"
         }
       ]
@@ -5734,7 +5784,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 562,
+          "line": 633,
           "test": "TCU 05315 “我见过更糟的……” 取消最多 2 点伤害并换成同等资源"
         }
       ]
@@ -5751,12 +5801,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 510,
+          "line": 581,
           "test": "TCU 05316 密教辞典 入场检索 3 张鲜血仪式（1 张入手，其余洗回牌库）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1061,
+          "line": 1132,
           "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合（含其他调查员区域与移出游戏区）"
         }
       ]
@@ -5773,12 +5823,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 586,
+          "line": 657,
           "test": "TCU 05317 鲜血仪式 抽 2 张、弃 1 张换资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 604,
+          "line": 675,
           "test": "TCU 05317 鲜血仪式 弃牌后可花 1 资源对敌人造成伤害"
         }
       ]
@@ -5795,7 +5845,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 627,
+          "line": 698,
           "test": "TCU 05318 窥看不思议之事 非弱点手牌洗回牌库并补抽到手牌上限、自身移出游戏"
         }
       ]
@@ -5812,22 +5862,22 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 648,
+          "line": 719,
           "test": "TCU 05319 “你欠我一次” 打出另一位调查员手牌并双方各抽 1"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 670,
+          "line": 741,
           "test": "TCU 05319 “你欠我一次” 打出对方手牌中的支援后置于自己控制之下"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 692,
+          "line": 763,
           "test": "TCU 05319 “你欠我一次” 对方手里有同名两张时只拿走一张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 710,
+          "line": 781,
           "test": "TCU 05319 “你欠我一次” 技能/弱点/付不起的卡不作为可打出候选"
         }
       ]
@@ -5844,12 +5894,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1089,
+          "line": 1160,
           "test": "TCU 05320 超级加倍 打出一张事件后横置自身再次打出该事件"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1108,
+          "line": 1179,
           "test": "TCU 05320 超级加倍 再次打出时支付该事件自己的费用（2 费事件结算两次）"
         }
       ]
@@ -5866,27 +5916,27 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 732,
+          "line": 803,
           "test": "TCU 05321 凋零术 用意志代替战斗攻击并 +2 意志"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 744,
+          "line": 815,
           "test": "TCU 05321 凋零术 攻击揭示符号标记后敌人本回合 -1 攻/-1 血/-1 躲（最低 1）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 772,
+          "line": 843,
           "test": "TCU 05321 凋零术 先减生命再结算伤害，2 点生命的敌人会被本次攻击击败"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 783,
+          "line": 854,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可取消符号窗口里的凋零术效果"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 807,
+          "line": 878,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可让符号窗口里的凋零术效果再结算一次"
         }
       ]
@@ -5903,27 +5953,27 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 838,
+          "line": 909,
           "test": "TCU 05322 第六感 用意志代替智力调查并 +2 意志"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 866,
+          "line": 937,
           "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（新隐藏值分支）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 896,
+          "line": 967,
           "test": "TCU 05322 第六感 符号后双地点调查可选原隐藏值分支"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 917,
+          "line": 988,
           "test": "TCU 05322 第六感 没有 2 次连接内的已揭示地点时符号窗口不提供双地点调查"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 946,
+          "line": 1017,
           "test": "TCU 05322 第六感 未揭示符号标记时不做双地点调查"
         }
       ]
@@ -5940,12 +5990,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 968,
+          "line": 1039,
           "test": "TCU 05323 诱敌深人 附属到地点：敌人阶段朝附属地点移动、轮末恰好弃 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 992,
+          "line": 1063,
           "test": "TCU 05323 诱敌深人 多诱饵取最近：两个地点附属时猎手走向最近的一个"
         }
       ]
@@ -5962,7 +6012,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1129,
+          "line": 1200,
           "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时取消并改为旧印"
         }
       ]

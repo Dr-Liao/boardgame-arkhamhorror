@@ -1,0 +1,1154 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-p8-reporter.mjs",
+  "evidenceCommand": "node tools/run-tsk-p8-browser.mjs",
+  "milestone": "P8",
+  "campaignId": "theScarletKeys",
+  "status": "passed",
+  "complete": true,
+  "sourceStableDuringRun": true,
+  "sourceDrift": [],
+  "expectedSpecs": [
+    "tests/tsk-release.browser.mjs"
+  ],
+  "expectedTests": 6,
+  "specs": [
+    "tests/tsk-release.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 desktop 发布：真实大厅启动绯红密钥战役、世界地图启程与首章",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "release"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关」：把首章推进到真实关末结算，以便在世界地图相位验证启程面板/候选按钮并真实启程 deadHeat；章内动作仍全部经由真实 /api/move 与 UI。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-lobby-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-hub-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅准备：座位 0=09001 卡森·辛克莱；座位 1（AI）=01001 罗兰·班克斯；hubReady=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-prepared-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-departure-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-table-after-move-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-desktop-riddlesAndRain-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-result-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-interlude-choice-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-worldmap-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "世界地图（发布）：current=London time=3 destinations=36；deadHeat 目的地 Marrakesh cost=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-embarked-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-deadheat-table-desktop.png"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "evidence",
+          "description": "控制台 error 2 条；404 资源 2 个：[\"/mods/arkhamhorror/img/thumbs/cards/09537.webp?cache=cdn&source=avif\",\"/mods/arkhamhorror/img/cards/09537.avif?cache=cdn\"]"
+        }
+      ],
+      "phase": "release",
+      "claims": []
+    },
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 desktop 联机/隐私/权限/断线：双人真实开局",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "online"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（联机房主专用通道 action=debug）「结束这关」一次：把双人首章推进到真实结算，以便在世界地图相位验证非房主不能启程（hubEmbark 权限边界）；其余全部真实 /api/online/command move。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-hub.png"
+        },
+        {
+          "type": "claim",
+          "description": "privacy"
+        },
+        {
+          "type": "evidence",
+          "description": "隐私：座位 0 手牌=5 / 座位 1 视图座位 0 手牌=0；隐匿迷你卡 0 张（未揭露 0）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-host-table.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-guest-table.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-reconnect.png"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "evidence",
+          "description": "权限：座位 1 被拒绝 hubBeginScenario / hubContinue / hubEmbark；房主真实启程 Marrakesh（cost=1 time=3→4）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-embarked.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-guest-embarked.png"
+        }
+      ],
+      "phase": "online",
+      "claims": [
+        "privacy",
+        "disconnect",
+        "permission"
+      ]
+    },
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 desktop 逐章推进：真实关末结算 → 世界地图选目的地 → 下一章",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "progression"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关」三次：riddlesAndRain / deadHeat / dealingsInTheDark 的关末结算。跨章加速原语，章内夹具为 0；每次结算后仍由真实 /api/move + 真实局外页按钮推进。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-riddlesAndRain-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-result-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-interlude-choice-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "首章结算后世界地图：current=London time=2"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap1-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-departure-desktop.png"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-desktop-deadHeat-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-table-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "deadHeat 牌桌：time=3 current=Marrakesh hand=5 locations=5"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap2-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-departure-desktop.png"
+        },
+        {
+          "type": "scenario",
+          "description": "dealingsInTheDark"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-desktop-dealingsInTheDark-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-table-desktop.png"
+        },
+        {
+          "type": "scenario",
+          "description": "dealingsInTheDark"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "启程循环：时间 2→6；visited=[\"London\",\"Marrakesh\",\"Constantinople\"]；scenarioResults=3；records.currentLocation=Constantinople"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-candidates-desktop.png"
+        }
+      ],
+      "phase": "progression",
+      "claims": []
+    },
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 mobile 发布：真实大厅启动绯红密钥战役、世界地图启程与首章",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "release"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关」：把首章推进到真实关末结算，以便在世界地图相位验证启程面板/候选按钮并真实启程 deadHeat；章内动作仍全部经由真实 /api/move 与 UI。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-lobby-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-hub-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅准备：座位 0=09001 卡森·辛克莱；座位 1（AI）=01001 罗兰·班克斯；hubReady=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-prepared-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-departure-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-table-after-move-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-mobile-riddlesAndRain-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-result-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-interlude-choice-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-worldmap-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "世界地图（发布）：current=London time=3 destinations=36；deadHeat 目的地 Marrakesh cost=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-embarked-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-release-deadheat-table-mobile.png"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "evidence",
+          "description": "控制台 error 2 条；404 资源 2 个：[\"/mods/arkhamhorror/img/thumbs/cards/09537.webp?cache=cdn&source=avif\",\"/mods/arkhamhorror/img/cards/09537.avif?cache=cdn\"]"
+        }
+      ],
+      "phase": "release",
+      "claims": []
+    },
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 mobile 联机/隐私/权限/断线：双人真实开局",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "online"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（联机房主专用通道 action=debug）「结束这关」一次：把双人首章推进到真实结算，以便在世界地图相位验证非房主不能启程（hubEmbark 权限边界）；其余全部真实 /api/online/command move。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-hub.png"
+        },
+        {
+          "type": "claim",
+          "description": "privacy"
+        },
+        {
+          "type": "evidence",
+          "description": "隐私：座位 0 手牌=5 / 座位 1 视图座位 0 手牌=0；隐匿迷你卡 0 张（未揭露 0）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-host-table.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-guest-table.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-reconnect.png"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "evidence",
+          "description": "权限：座位 1 被拒绝 hubBeginScenario / hubContinue / hubEmbark；房主真实启程 Marrakesh（cost=1 time=2→3）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-embarked.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-guest-embarked.png"
+        }
+      ],
+      "phase": "online",
+      "claims": [
+        "privacy",
+        "disconnect",
+        "permission"
+      ]
+    },
+    {
+      "file": "tests/tsk-release.browser.mjs",
+      "title": "P8 mobile 逐章推进：真实关末结算 → 世界地图选目的地 → 下一章",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "progression"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关」三次：riddlesAndRain / deadHeat / dealingsInTheDark 的关末结算。跨章加速原语，章内夹具为 0；每次结算后仍由真实 /api/move + 真实局外页按钮推进。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-riddlesAndRain-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-result-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-interlude-choice-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "首章结算后世界地图：current=London time=2"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap1-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-departure-mobile.png"
+        },
+        {
+          "type": "scenario",
+          "description": "deadHeat"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-mobile-deadHeat-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-table-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "deadHeat 牌桌：time=3 current=Marrakesh hand=5 locations=5"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap2-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-departure-mobile.png"
+        },
+        {
+          "type": "scenario",
+          "description": "dealingsInTheDark"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-mobile-dealingsInTheDark-guide.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-table-mobile.png"
+        },
+        {
+          "type": "scenario",
+          "description": "dealingsInTheDark"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "启程循环：时间 2→8；visited=[\"London\",\"Marrakesh\",\"Constantinople\"]；scenarioResults=3；records.currentLocation=Constantinople"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-candidates-mobile.png"
+        }
+      ],
+      "phase": "progression",
+      "claims": []
+    }
+  ],
+  "checks": {
+    "release": {
+      "desktop": true,
+      "mobile": true
+    },
+    "progression": {
+      "desktop": true,
+      "mobile": true
+    },
+    "online": {
+      "desktop": true,
+      "mobile": true
+    },
+    "privacy": {
+      "desktop": true,
+      "mobile": true
+    },
+    "permissionBoundary": true,
+    "disconnectRecovery": true
+  },
+  "screenshots": [
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-desktop-deadHeat-guide.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 470252,
+      "sha256": "206268c03ac27fec9653ee66dae97ea0a8dba68a1d3066786c421d03671f9597"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-desktop-dealingsInTheDark-guide.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 460472,
+      "sha256": "92171aa16ba1e78612364589ba452d4859f5ce0911c85168784f0d13dcbbd004"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-desktop-riddlesAndRain-guide.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 460609,
+      "sha256": "75ecc110d01785c469a63b0e4ce99a3e3de34c30dcf5e26bff03da266e380a0d"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-mobile-deadHeat-guide.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 154509,
+      "sha256": "8ad293a6bfc9bdf7f1201b45bd639413c7f06f544e20d82ee27a868c8305b51f"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-mobile-dealingsInTheDark-guide.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 151263,
+      "sha256": "b7e1b7ec5b2d4761c52f869dd53de216aa175d8758e047b6e3a71ca802996377"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-mobile-riddlesAndRain-guide.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 138509,
+      "sha256": "db1dbd20eff52a6ea2ea584b8ca48e98546467deb3ad161e6273eca7318698b3"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-embarked.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 327106,
+      "sha256": "c8c595e6556a29fa4fac41701e376d735c543714b19fe43848773183a8553ca1"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-guest-embarked.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 326990,
+      "sha256": "63af28c5782a54b07e505890b4f4c23ca45a61e645cb777957d2f82046f1fdc6"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-guest-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 911939,
+      "sha256": "32b98dbd149ee64fe43b3f80f4a8986dbe82f979e8d75ed03d120f9fd2225bd4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-host-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 939883,
+      "sha256": "e90675b48219c626932c7252599fdf13fd60fb42ba461228e0b4476f726f4932"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-hub.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 867934,
+      "sha256": "f81f67e1576215f4abc40322a7810e17ec22b6a577f9b35aae415d0496c4e8e1"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-desktop-reconnect.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 911939,
+      "sha256": "32b98dbd149ee64fe43b3f80f4a8986dbe82f979e8d75ed03d120f9fd2225bd4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-embarked.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 128198,
+      "sha256": "8a8696938f10972ea143c4a1bf5a42f91e273cb6c962fcb8ca6244e6aa7f1b4d"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-guest-embarked.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 128159,
+      "sha256": "abadd8139d1ff7210a582f84501f029c51fbb6be4d83773685b378eb4bd6d045"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-guest-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 225912,
+      "sha256": "da3b1e01f250e9a916605cb9fd5acf63ee2b3f6b96cb76296e41a85e1badabcf"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-host-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 240568,
+      "sha256": "05f73dde59a27ed482af1b1a2c8fc770033cf7a51d922ff1bb50e3bbe72671dd"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-hub.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 207916,
+      "sha256": "851870c5a52bd90a7b6a467c0ff82fc8131d7a32843688619ba1792fea8dd4cb"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-online-mobile-reconnect.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 225912,
+      "sha256": "da3b1e01f250e9a916605cb9fd5acf63ee2b3f6b96cb76296e41a85e1badabcf"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 316573,
+      "sha256": "d3b6d56f2d93e8a9ea5fbb236a6e68d9e363d5293dc104cf03b16ded04c946aa"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 126007,
+      "sha256": "d9d82ef990356dccbf75afacb794a72f93d1b23dfc944dc886c20b21c2e3d856"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 904608,
+      "sha256": "7d12e94c9d526b52d161965d0e3ba72197d6bcd1b7ab44c9eb2bf6d501428de1"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-deadHeat-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 225976,
+      "sha256": "f1d2962056deeffcab5182f423761131ee7c3c44959a9d9e9990198f047fd0e7"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 316573,
+      "sha256": "d3b6d56f2d93e8a9ea5fbb236a6e68d9e363d5293dc104cf03b16ded04c946aa"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 126091,
+      "sha256": "7b093100b6b077302c2499f1bb7e18fa2319478960ceb252d725c965fe3fe175"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 910862,
+      "sha256": "33a3ba2b3e9f533faa7ae313af5cc3eb6df436c52aa614451fbe32beb54f76ae"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-dealingsInTheDark-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 243308,
+      "sha256": "d59ea14984141bb600b4b9837b9260cfeaf2cd5903cf4a2c0acd417d108254b3"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-interlude-choice-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 794972,
+      "sha256": "e042b280c7b064d64268e963b6b5d79f23f90188f44e14f12b73ead33fe44b27"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-interlude-choice-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 189055,
+      "sha256": "a3b831a21aa09766b820ce979f292523cc2ebea59281777482528601a3f4cd75"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-result-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 642783,
+      "sha256": "9b6f7d85ada52d95ee6caad2cf1a849ec56f056ad0ca21705d8a40903603fe54"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-result-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 138601,
+      "sha256": "91d6fd39cd20d06b5a0ed3fa444a083961be477ad8309f929da617b0a1b746c8"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-riddlesAndRain-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 934030,
+      "sha256": "1ae61dd529dacfcffb2140afc52c6ae3fc678eb8f375cadf9b51e1c77bb4121b"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-riddlesAndRain-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 234452,
+      "sha256": "54e36fa62e010a8f1d395ee8566bb852e84379aa5aad214089458c10ac63d5bb"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap1-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 493471,
+      "sha256": "b409b48751b322763119100bd9d089566d91906f678f1bdd5e8903f7eda713e7"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap1-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 176424,
+      "sha256": "2dfa605e10157ff74f4a0a192a1b6d7bcbc8bb7090c3d45468bdd26a8b49bec8"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap2-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 481689,
+      "sha256": "4b3233af7d385814425ede2bb968cbbeb654ca0a8ebeda8f5c90cfec29752e6b"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap2-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 184961,
+      "sha256": "c4a2eab15874d0293794503f26fef79204e1a8bddc3cb62ea38a08d1dfe17c76"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-candidates-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 481575,
+      "sha256": "e47e278e7cc7fd1e551b7061806a6549efd99138ec1f64eb52d2ee986be78db4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-candidates-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 186408,
+      "sha256": "df9510125583e6b819a1c7743f95abe1923a7ef372502d40a4c901bf4b0fc2d6"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 481575,
+      "sha256": "e47e278e7cc7fd1e551b7061806a6549efd99138ec1f64eb52d2ee986be78db4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-progression-worldmap3-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 186408,
+      "sha256": "df9510125583e6b819a1c7743f95abe1923a7ef372502d40a4c901bf4b0fc2d6"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-deadheat-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 892641,
+      "sha256": "d5a4f683e6cad71c48ac80680ff5211277436f6686097995b202170a87beb0d4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-deadheat-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 223816,
+      "sha256": "07badb660185c8438027648ff894faca531650a47140746cd9e945ce2e7cbec8"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 294706,
+      "sha256": "5ce3b867b5f8b27a516f59078b5d89ed2795c940d4ef9aee471c40d520593d3c"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 113514,
+      "sha256": "729de66a1f75fdd0fa964b621dc497435582ad4c1324c95f569312c87a764470"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-embarked-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 316597,
+      "sha256": "33196380805c1272b5472daed9e084ec8f894f861e48a4b1fd03fee5bfa7c5e8"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-embarked-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 126056,
+      "sha256": "1148b192769106bd6ff8d47fd322e630517b75e0e86c275cc06e6eefa8bd4d22"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-hub-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 864122,
+      "sha256": "b4430c683bdc40481dfe722ff822f78f5e196d93378b335b686243d3bd68cf77"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-hub-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 206803,
+      "sha256": "cfab21ccef6e548ca97482d569140e4943787fc5906bcd63238417a48024f243"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-interlude-choice-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 795119,
+      "sha256": "9e8a01c173579d955130963192ccd9cbbc4264088c6b8dca965f522aa8494a2d"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-interlude-choice-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 189129,
+      "sha256": "52f4ac7e7bf89d52d766e0e7a929012df4f7a6d90d0b6600d5e95ee433e8c634"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-lobby-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 894242,
+      "sha256": "b030095f2753f3e825e3ddff17c6336a51f4696f68396cc6f2bdf3e0eb7d6912"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-lobby-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 181786,
+      "sha256": "d39fe28e0abd105656983775a2b92a49fb881f7b4d3513dfedff1bffcb468334"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-prepared-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 294706,
+      "sha256": "5ce3b867b5f8b27a516f59078b5d89ed2795c940d4ef9aee471c40d520593d3c"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-prepared-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 113514,
+      "sha256": "729de66a1f75fdd0fa964b621dc497435582ad4c1324c95f569312c87a764470"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-result-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 639495,
+      "sha256": "a5c33d9b6833b42bdc46e1614fc3481e2934385fd2cae268c6e653bc17f2efab"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-result-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 138183,
+      "sha256": "a032573d2c87fa77c25a670918548927871d2da092f34c055d27fe1b25d57b31"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-table-after-move-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 768870,
+      "sha256": "8c687638689b202006354b202694d098aa6ce1eb997e15e1c014a2cddf1d96fc"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-table-after-move-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 235968,
+      "sha256": "5c94a844303ea26d38072d02cb8c49dd8bdedbeca7cfb47490a3f3f085583f44"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 916303,
+      "sha256": "0d93239b2bca3b0b6691c5ede326054db8b937aad48c2c60d9d9aec16c032ff1"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 221713,
+      "sha256": "11f9d68c99cd789df0f9661117cd920a21eb1937e9c1774f9e3092ab4384dbf9"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-worldmap-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 493529,
+      "sha256": "9c660d0dc1a90a396d342d2b4bee9aebf7f49f0c3419bc3c37b7e28d49525d14"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/p8-release-worldmap-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 176507,
+      "sha256": "8e18736d732319683d976dbc47a12309cb1c8273c3e39b2b6c13f9894c94abf0"
+    }
+  ],
+  "screenshotsMissing": [],
+  "sourceFiles": [
+    {
+      "path": "content/campaigns/theScarletKeys/flow.js",
+      "sha256": "a79507db725a16119f38231601b7fa2f6f162c0ee0c488673489e0da12480c32",
+      "bytes": 21168
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/interludes.js",
+      "sha256": "51d4be59b711727c416833dd0a9037f71f1608fc4b6e8e35095be26d9927b41c",
+      "bytes": 74027
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/manifest.js",
+      "sha256": "c46a51dedb71df6a1912ca89428cc4ed50b6a36fb1d991e0c4fd2f17985f9379",
+      "bytes": 4197
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/parts.js",
+      "sha256": "6cc1bf859bdeabf4e3a9cdb2109b1154fd993c5e5bfd8d08d87e198e99eab834",
+      "bytes": 20819
+    },
+    {
+      "path": "src/engine/dispatch.js",
+      "sha256": "4dcab5e4ef1d7073261e420742a49c18abe556af9f23c81476da5524bee3173f",
+      "bytes": 56994
+    },
+    {
+      "path": "src/engine/hub.js",
+      "sha256": "b50bd3c1506e3b45a197aeb3d3725cff307947aa38582fde4941b5d5fd03bd28",
+      "bytes": 33744
+    },
+    {
+      "path": "src/engine/tsk-map.js",
+      "sha256": "a00f1b0c67c20f3a5620276f73d883813ac1b0df3b8fdbb61696aa0a64c69764",
+      "bytes": 20170
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "017ee8c1ae6daa697c615e2a8f0bee4f641c6331ede9989cfb4dce745f5c463e",
+      "bytes": 18476
+    },
+    {
+      "path": "src/integration/observation.js",
+      "sha256": "d51c27e7446f2071caff4722b3f6717d9f1192c5719e8a4a9cb90c0c0108ec4d",
+      "bytes": 30787
+    },
+    {
+      "path": "tests/playwright/playwright.tsk-p8.config.mjs",
+      "sha256": "9a2eab32d00e4cb4fc9ee86f4af4086893b9db0326c71532020789fd66273543",
+      "bytes": 2207
+    },
+    {
+      "path": "tests/tsk-browser-helpers.mjs",
+      "sha256": "65d7d45ce9116b304d37115f4c520961c150cc11e2f0f473e216a3aae5cb71b5",
+      "bytes": 25852
+    },
+    {
+      "path": "tests/tsk-release.browser.mjs",
+      "sha256": "3efade0556eb7d4a00c78db23be39de6036ff8802073c947de66244027c46936",
+      "bytes": 60968
+    },
+    {
+      "path": "tools/playwright-tsk-p8-reporter.mjs",
+      "sha256": "221c874f31870db42a8d159e770434e47575d666a7023c36a6deca549afa344f",
+      "bytes": 11989
+    },
+    {
+      "path": "tools/run-tsk-p8-browser.mjs",
+      "sha256": "8402263d049417a6af59890218c15d1ec101d891441f80d35e5ccc80e90c7816",
+      "bytes": 5546
+    },
+    {
+      "path": "web/hub.js",
+      "sha256": "8cfed99f98a37c51335b7df1458cd15bf30274a5dd31cbe508e509e21eba801b",
+      "bytes": 166776
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "b36b83266f04f3dd4c8a90392be293f96ec5d56312105272867aa78a69363610",
+      "bytes": 23643
+    }
+  ],
+  "sourceFilesMissing": []
+}

@@ -1,0 +1,134 @@
+{
+  "entries": [
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.civilians.title",
+      "zh": "平民"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.civilians.body",
+      "zh": "在本剧本中，地点上的资源代表马拉喀什的无辜平民，他们正处于极度危险之中。\n\n• 就敌人移动和敌人攻击而言，敌人将平民视同调查员。（敌人不会与平民交战，但可以攻击其所在地点的平民，如同与其交战。）如果平民遭到攻击，他们会自动被杀害。\n• 地点被揭示时，平民仍留在该地点。\n• 当一位平民被杀害时，将其放到冒险参考卡牌上，以记录已被杀害的平民数量。"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.choosingARandomLocation.title",
+      "zh": "选择随机地点"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.choosingARandomLocation.body",
+      "zh": "在本剧本中，你经常会受到指示选择一个随机地点。此时应将当前不在场上的5个地点（即场上每个地点当前未使用的那些版本）洗混，随机抽取1个。"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.replacingLocations.title",
+      "zh": "替换地点"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "rules.replacingLocations.body",
+      "zh": "在本剧本中，你可能会受到指示，将放在一边的地点与已有的地点进行替换。当一个地点与已在场上的地点替换时，它取代后者的位置。原地点上的所有标记、附属物、调查员、敌人及其他卡牌，均视为现在位于新地点（例如，附属于地点的卡牌仍保持附属状态）。在此类替换过程中，不视为任何游戏元素发生了移动。"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.0.title",
+      "zh": "平民"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.0.body",
+      "zh": "在本剧本中，地点上的资源代表马拉喀什的无辜平民，他们正处于极度危险之中。\n\n• 就敌人移动和敌人攻击而言，敌人将平民视同调查员。（敌人不会与平民交战，但可以攻击其所在地点的平民，如同与其交战。）如果平民遭到攻击，他们会自动被杀害。\n• 地点被揭示时，平民仍留在该地点。\n• 当一位平民被杀害时，将其放到冒险参考卡牌上，以记录已被杀害的平民数量。"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.1.title",
+      "zh": "选择随机地点"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.1.body",
+      "zh": "在本剧本中，你经常会受到指示选择一个随机地点。此时应将当前不在场上的5个地点（即场上每个地点当前未使用的那些版本）洗混，随机抽取1个。"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.2.title",
+      "zh": "替换地点"
+    },
+    {
+      "file": "scenarios/deadHeat.json",
+      "path": "specialRules.2.body",
+      "zh": "在本剧本中，你可能会受到指示，将放在一边的地点与已有的地点进行替换。当一个地点与已在场上的地点替换时，它取代后者的位置。原地点上的所有标记、附属物、调查员、敌人及其他卡牌，均视为现在位于新地点（例如，附属于地点的卡牌仍保持附属状态）。在此类替换过程中，不视为任何游戏元素发生了移动。"
+    },
+    {
+      "file": "scenarios/sanguineShadows.json",
+      "path": "ui.lastKnownLocation",
+      "zh": "最后已知地点"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "specialRules.0.title",
+      "zh": "大巴扎的地点相邻关系"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "specialRules.0.body",
+      "zh": "本剧本的4个起始地点按上图所示排列，并通过其连接符号相连。在剧本进行到后面时，调查员会受到指示将大巴扎地点放入场上。每个大巴扎地点都与和它相邻的每个大巴扎地点相连。\n\n• 相邻地点共用一条边（左、右、上或下）。仅共用一个角的地点不相邻。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "specialRules.1.title",
+      "zh": "祭司的隐匿迷你卡牌"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "specialRules.1.body",
+      "zh": "本剧本的第一张议程会使每个异教徒敌人（包括核心套装中的那些）获得隐匿关键词。由于核心套装中的三位祭司没有标注A、B和C，在结算它们的隐匿关键词时，使用任意一张祭司(任意)迷你卡牌及其诱饵。同样，当一张“祭司(任意)”迷你卡牌被揭露时，揭露该迷你卡牌的调查员可以选择阴影中的任意一位祭司与其交战。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.title",
+      "zh": "第2幕设置"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.instructions",
+      "zh": "_当你在第1幕b中受到此指示时，按照以下说明为第2幕设置游戏区域。_"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.setAsideLocations",
+      "zh": "将当前的每个地点放在一边，不要弃掉那些地点上的任何卡牌或标记。那些地点（连同其上的卡牌和标记）在第2幕期间不视为在场上，但之后会以相同的状态重新进入场上。（*在此过程中，调查员不会被击败。*）"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.shuffleGrandBazaar",
+      "zh": "将七张大巴扎地点洗混，随机将其中一张移出游戏，不要查看它。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.revealToken",
+      "zh": "从混乱袋中随机揭示一个标记，并找出与所揭示混乱标记对应的图表（如果没有对应的图表，则重试）。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.putIntoPlay",
+      "zh": "将剩余的六张大巴扎地点放入场上，按照随机选出的图表以行列布局排列。注意，其中一张地点被指定为“入口”，另一张被指定为“东门”。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.moveToEntrance",
+      "zh": "将每位调查员移动到随机选出的图表中标记为“入口”的大巴扎地点。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.divideMiniCards",
+      "zh": "将第1幕四个地点上的所有隐匿迷你卡牌洗混，并尽可能均匀地分配到场上的大巴扎地点中。"
+    },
+    {
+      "file": "scenarios/dealingsInTheDark.json",
+      "path": "act2Setup.proceed",
+      "zh": "你现在可以进入第2幕了。"
+    }
+  ]
+}

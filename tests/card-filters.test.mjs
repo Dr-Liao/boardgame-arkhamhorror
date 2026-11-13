@@ -20,6 +20,13 @@ test('按战役合并后续小包，保留精确扩展筛选并支持未知扩�
   assert.equal(cardSource(cards[3]).name,'未来扩展')
   assert.equal(cardSource(cards[1]).packName,'敦威治遗产')
   assert.equal(cardSource(cards[4]).packName,'卡尔克萨之路')
+  // 缺来源元数据的卡（如卡表里拿不到 pack 的核心升级卡）带 unknown 哨兵：
+  // 空串会与「所有战役 / 系列」「所有扩展包」占位选项撞 value，把占位文案顶成「未标注来源」。
+  const missing = cardSource({ code: '01040', name: '缺来源升级卡', type: 'asset' })
+  assert.equal(missing.pack, 'unknown')
+  assert.equal(missing.id, 'unknown')
+  assert.equal(missing.name, '未标注来源')
+  assert.equal(missing.packName, '未标注来源')
 })
 test('共用筛选取交集，支持中文特性、多职业、零费用及清除恢复',()=>{
   assert.deepEqual(filterCards(cards,{campaign:'dwl',klass:'guardian',type:'asset',cost:'4+',search:'工具'}).map(c=>c.code),['b'])

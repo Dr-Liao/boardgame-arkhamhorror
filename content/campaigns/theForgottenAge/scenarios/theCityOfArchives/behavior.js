@@ -1,10 +1,9 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { encounterRules, markYithianAllies } from '../../encounter-rules.js'
+import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
-import { assetRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
-  applyInvestigatorForm, hasInvestigatorForm,
-} from '../../../../../src/engine/investigator-form.js'
+  applyBodyOfAYithian, bodySwapRepairNote, needsBodySwapRepair, repairBodySwapState, setAsideBodySwapCards,
+} from './body-swap.js'
 import {
   CARD_CODES, HALLS_SLOTS, OBSERVER_CODE, REMEMBERED_TASKS, ROOM_CODES, ROOM_SLOTS,
   SET_ASIDE_LOCATIONS, TASK_LABELS, isItemAsset,
@@ -23,22 +22,6 @@ const hasTrait = (card, trait) => traitsOf(card)
 const isYithian = card => hasTrait(card, 'Yithian') || card?.yithianTrait === true
 const threatWith = (inv, code) => (inv.threat || []).find(card => original(card) === code)
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
-// 第 114 轮：换身时被放到一边的剧情资产（04051 亚历山卓·维拉）由条目 assetRule 声明。
-const setAsideOnBodySwap = code => assetRuleFor(code)?.setAsideOnBodySwap === true
-// 设置阶段「检查自己的牌库和游戏区域，找出所有独特的[[道具]]支援」：命中后从持有区移出游戏。
-// 返回 true 表示这张卡要离开当前区域；移出的去处记在场景标记里（引擎/存档继续沿用旧字段）。
-function bodySwapRemoval(state, code) {
-  if (!code) return false
-  if (isItemAsset(code) && ALL_CARDS[code]?.unique) {
-    ;(flagsFor(state).removedCards ||= []).push(code)
-    return true
-  }
-  if (setAsideOnBodySwap(code)) {
-    ;(flagsFor(state).setAsideCards ||= []).push(code)
-    return true
-  }
-  return false
-}
 const handLimitBase = 8
 
 // 已经逐条实现印刷效果的本章遭遇卡原卡号（近似或未实现的不要列进来，
@@ -49,11 +32,6 @@ export const implementedEncounterCodes = [
   '01163', '01164', '01165', '01167', '01168', '01174', '01177', '01178', // 核心遭遇卡：由共享解析器处理
   '04257', '04258', '04259', '04260', '04261', '04262', '04263',
 ]
-
-function campaignRecord(state, seat) {
-  const list = state.campaign?.investigators
-  return Array.isArray(list) ? list[seat] : list?.[seat]
-}
 
 function mix(state, helper, list) {
   if (helper?.shuffle && helper?.randomValue) {
@@ -143,30 +121,45 @@ function yithianEnemyAt(state, locationId) {
   return state.enemies.some(enemy => enemy.location === locationId && isYithian(enemy))
 }
 
+// 引擎在敌人入场和每次移动后，都会按「印刷冷漠（printedAloof）/藏身处/剧本授予」重算
+// enemy.aloof（turn-flow.js#processPlayerEnemyEntry）。所以关键词不能只改实例布尔：
+//   · 剧本**授予**的冷漠（04241「每个伊斯观测者获得冷漠」）记在 grantedAloof 上，
+//     否则观测者一移动就被按印刷关键词重算掉；
+//   · 卡面印着冷漠、但剧本判定「不再冷漠」的敌人（04257/04258）必须同时改掉
+//     printedAloof，否则猎手移动后 aloof 会被复位成 true，移动进调查员所在地点也不会
+//     自动交战（2026-11-11 实战复现：科学家失去冷漠后只追不咬）。
+function loseAloofAndGainHunter(enemy) {
+  if (enemy.printedAloof === undefined) enemy.printedAloof = enemy.aloof === true
+  enemy.printedAloof = false
+  enemy.aloof = false
+  enemy.hunter = true
+}
+
 // 伊斯观测者、监守人、科学家三张卡的关键词随场景/任务进度变化。
 function refreshYithianEnemy(state, enemy) {
   const code = original(enemy)
   if (code === OBSERVER_CODE) {
     const act = original(state.acts?.[state.actIndex])
     if (act === CARD_CODES.act1) {
+      // 04241：每个伊斯观测者获得冷漠（场景持续授予，移动后仍保留）。
+      enemy.grantedAloof = true
       enemy.aloof = true
     } else if (act === CARD_CODES.act3) {
-      enemy.aloof = false
-      enemy.hunter = true
+      // 04243：每个伊斯观测者获得猎手；1b 的注意已取消冷漠。
+      enemy.grantedAloof = false
+      loseAloofAndGainHunter(enemy)
     }
     return
   }
   if (code === CARD_CODES.keeper) {
     if (isRemembered(state, 'foundTheProcess') || isRemembered(state, 'realizedWhatYearItIs')) {
-      enemy.aloof = false
-      enemy.hunter = true
+      loseAloofAndGainHunter(enemy)
     }
     return
   }
   if (code === CARD_CODES.scientist) {
     if (isRemembered(state, 'activatedTheDevice') || isRemembered(state, 'dissectedAnOrgan')) {
-      enemy.aloof = false
-      enemy.hunter = true
+      loseAloofAndGainHunter(enemy)
     }
   }
 }
@@ -220,7 +213,9 @@ export function setupPlan(state, helper = {}) {
 export const behavior = {
   ...encounterRules,
   id: 'theCityOfArchives',
-  // 本章所有地点入场时都按「已揭示」面入场（规则书默认），布置即带线索。
+  // 04237：独特[[道具]]支援/亚历山卓·维拉的搜索「在抽取起始手牌之前」；换伊斯人身体
+  // 在起始手牌之后（afterOpeningHands）。见 setup.js 的 setupBeforeOpeningHands 分支。
+  setupBeforeOpeningHands: true,  // 本章所有地点入场时都按「已揭示」面入场（规则书默认），布置即带线索。
   locationsStartRevealed: true,
 
   setupPlan,
@@ -245,11 +240,17 @@ export const behavior = {
   // 自己的印刷文本，读点放在战役级共享规则 encounter-rules.js：换身可能延续到后续章节
   // （幕间四「困在伊斯人身体里」），不能只写在《天机之城》里。本章只负责「进入身体」。
 
-  // 剧情前步骤：写入合作/反抗记录、把调查员卡替换成伊斯人身体、
-  // 并把独特[[道具]]与亚历山卓·维拉移出牌库与游戏区域（Haskell: beforeDrawingOpeningHands*）。
+  // 04237 设置：起始手牌之前把独特道具支援/亚历山卓放到一边，起始手牌之后才换伊斯人身体。
+  // 本钩子由 setupLocations 在布置之前转调（带 helper.api 的完整运行时），因此「合作/反抗」
+  // 记录先定下来、再决定会谈间卡面与观测者去向；起始手牌在 defer 分支里抽（见 setup.js）。
+  // 换身放在 afterOpeningHands：04244 的卡面会让「在自己调查员卡上」的起始手牌能力失效
+  // （例如塞菲娜的 13 张起始手牌、戴安娜的额外卡），而规则书里换身发生在起始手牌之后。
   preScenarioSetup(state, events, api = {}) {
     const records = recordsFor(state)
     flagsFor(state)
+    if (flagsFor(state).preScenarioComplete) {
+      return { cooperated: !!records.theInvestigatorsCooperatedWithTheYithians }
+    }
     if (!records.theInvestigatorsCooperatedWithTheYithians
       && !records.theInvestigatorsResistedCaptivity) {
       const answer = api.choose?.({
@@ -269,54 +270,41 @@ export const behavior = {
     flagsFor(state).removedCards = []
     flagsFor(state).setAsideCards = []
     for (const inv of state.investigators) {
-      const originalName = inv.name
-      // 卡面身份整体替换：卡号/名字/职业/四项技能/生命与理智印刷值都变成 04244。
-      // 原调查员卡文本因此不可用（规则：「无法使用其调查员的能力」）；牌库/手牌/场上支援保留。
-      applyInvestigatorForm(state, inv, { code: CARD_CODES.bodyOfAYithian, form: 'yithian' })
-      inv.yithianBody = true
-      // 已在场的盟友也要获得伊斯特性（不只是之后入场的）。
-      markYithianAllies(inv)
-      api.info?.(`🧠 ${originalName} 换上了伊斯人身体：调查员卡替换为「${inv.name}」，四属性 2，生命 7，神智 7。`)
-      for (const zone of ['deck', 'hand', 'discard']) {
-        inv[zone] = (inv[zone] || []).filter(code => !bodySwapRemoval(state, code))
-      }
-      // 印刷设置说的是「检查自己的牌库和游戏区域」：开局的专属独特道具支援已在场，也要移出游戏。
-      if ((inv.assets || []).length) {
-        inv.assets = inv.assets.filter(asset => !bodySwapRemoval(state, asset?.code || asset?.originalCode))
-      }
-      const record = campaignRecord(state, inv.seat)
-      if (record?.deck) record.deck = record.deck.filter(code => !bodySwapRemoval(state, code))
+      // 印刷顺序：「检查自己的牌库和游戏区域，找出所有独特的道具支援」→ 亚历山卓 →
+      // （引擎）抽起始手牌 → 换伊斯人身体。这里只做前两步，牌库/场上的卡进「放到一边」。
+      setAsideBodySwapCards(state, inv, text => api.info?.(text))
     }
     flagsFor(state).preScenarioComplete = true
     return { cooperated: !!records.theInvestigatorsCooperatedWithTheYithians }
   },
 
-  // 旧存档修复：本次更新前「换身」只改了数值、没换调查员卡。装回卡面身份，并补做设置阶段
-  // 漏掉的「把独特道具支援从游戏区域移出」。
-  saveRepairNote: '补齐《天机之城》的伊斯人身体换身（调查员卡替换为 04244）',
+  // 起始手牌抽完之后的换身（04237：「将每位玩家的调查员卡牌替换为伊斯人身体调查员卡牌」）。
+  afterOpeningHands(state, events, api = {}) {
+    for (const inv of state.investigators || []) applyBodyOfAYithian(state, inv, text => api.info?.(text))
+  },
+
+  // 旧存档修复：补装换身、把旧版误从战役牌组删掉的独特道具放回牌组、补写梦境之门的
+  // 持有者座位（换身后全队卡号都是 04244）。细节见 body-swap.js。
+  // 关卡结算后的幕间/出发准备窗口只做「还原误套的身体 + 清掉关末残留标记」，不能补换身：
+  // finishScenario 已经还原过身体，但 state.scenario 仍指向本关直到下一关开局。
+  saveRepairNote: '补齐《天机之城》的伊斯人身体换身，并把旧版误从战役牌组删除的独特道具放回牌组',
+  saveRepairNoteFor(state) {
+    return bodySwapRepairNote(state)
+  },
   needsSaveRepair(state) {
-    if (!state.scenarioFlags?.yithianBody) return false
-    return (state.investigators || []).some(inv => !hasInvestigatorForm(inv)
-      || inv.code !== CARD_CODES.bodyOfAYithian)
+    return needsBodySwapRepair(state)
   },
 
   repairSavedState(state) {
-    if (!state.scenarioFlags?.yithianBody) return
-    for (const inv of state.investigators || []) {
-      if (!hasInvestigatorForm(inv)) {
-        applyInvestigatorForm(state, inv, { code: CARD_CODES.bodyOfAYithian, form: 'yithian' })
-      }
-      inv.yithianBody = true
-      markYithianAllies(inv)
-      // 设置阶段「检查牌库和游戏区域」：旧存档只清了牌库/手牌/弃牌，场上的独特道具支援还在。
-      if ((inv.assets || []).length) {
-        inv.assets = inv.assets.filter(asset => !bodySwapRemoval(state, asset?.code || asset?.originalCode))
-      }
-    }
+    repairBodySwapState(state)
   },
 
   setupLocations(state, events, helper = {}) {
-    if (!flagsFor(state).preScenarioComplete) behavior.preScenarioSetup(state, events, helper)
+    // 引擎在布置地点之前转调 preScenarioSetup（helper.api 是完整场景运行时，带 choose）。
+    // 剧情记录「合作/反抗」必须在这里先定下来：会谈间卡面与观测者去向都按它决定。
+    if (!flagsFor(state).preScenarioComplete) {
+      behavior.preScenarioSetup(state, events, helper.api || helper)
+    }
     const plan = setupPlan(state, helper)
     state.scenarioZones ||= {}
     state.scenarioZones.setAside = [
@@ -715,8 +703,9 @@ export const behavior = {
       const pool = placed.length ? placed : [...SET_ASIDE_LOCATIONS]
       const spawnAt = pickRandom(api, pool)
       if (spawnAt) api.storyAsset(CARD_CODES.custodian, spawnAt)
-      // 1b 的注意：伊斯观测者不再具有冷漠。
+      // 1b 的注意：伊斯观测者不再具有冷漠（同时撤掉 1a 的剧本授予）。
       for (const enemy of state.enemies.filter(entry => original(entry) === OBSERVER_CODE)) {
+        enemy.grantedAloof = false
         enemy.aloof = false
       }
       return
@@ -733,8 +722,8 @@ export const behavior = {
     }
     if (code === CARD_CODES.act3) {
       for (const enemy of state.enemies.filter(entry => original(entry) === OBSERVER_CODE)) {
-        enemy.aloof = false
-        enemy.hunter = true
+        enemy.grantedAloof = false
+        loseAloofAndGainHunter(enemy)
       }
       // 3b：（→ 结局 1）
       api.finish('r1')

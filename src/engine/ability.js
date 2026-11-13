@@ -48,6 +48,7 @@ import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { reprintAliasesFor } from '../cards/card-identity.js'
 import { registerDeckCardRule } from '../../web/deck-rules.js'
+import { customizationOptions as registeredCustomizationOptions, registerCustomizationEffects, registerCustomizationOptions } from './tsk-customizable.js'
 import { validateTokenCost } from './token-cost.js'
 // Phase 2（C4）：上限的作用域与归属从 ability.js 搬进 limits.js，这里只保留再导出，
 // 引擎与测试的 import 位置因此不需要改（引擎仍从 ability.js 取 limitUsed）。
@@ -127,6 +128,10 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
   // 第 2 步 P2.9：塔罗的开局入场 / 手牌封锁 / 不能换掉（只有布尔值，无行为代码）。
   'entersPlayFromOpeningHand', 'blocksCommitWhileInHand', 'cannotMulliganAway',
+  // 八循环 TSK P6：定制升级卡的勾选面板契约。选项与运行时效果由条目静态声明
+  // （数据来自 cards-data 的 customizationText），注册期统一登记到 tsk-customizable 原语；
+  // 读点：web 定制面板/升级校验（api.interactions.tsk.customizable）与 modifiers 的 playCost 修正。
+  'customizationOptions', 'customizationEffects',
   'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags', 'additionalTokenCost', 'playCostModifier', 'playTimingProvider',
   // P2-4：重印别名条目（注册期由 canonical 克隆生成）记录 canonical 卡号，供指标/审计去重。
   'reprintOf',
@@ -313,7 +318,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'rerollTokenCost',
   'exileForAutoSuccess',
   // Phase 5（5a-22）：抽到后留在手里的弱点（黑暗回忆）。
-  'weaknessStaysInHand',
+  'weaknessStaysInHand', 'cannotLeaveHand',
   'hiddenEnemyInHand',
   'asIfEvent',
   // P0：留在手牌时的提示文案（03142 黑玛瑙扣环）。
@@ -373,7 +378,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'removeFromGameWhenEmpty',
   // Phase 6（6e-16）：最后一批规则字段 —— 敌人弱点数据、可打出的弱点、手牌 Horror、
   // 非法物的快速/费用优惠、幸存者事件折扣、每人张数限制。
-  'enemyWeakness', 'playableWeakness', 'endTurnInHandHorror', 'fastForIllicit',
+  'enemyWeakness', 'playableWeakness', 'endTurnInHandHorror', 'endTurnInHandDamage', 'fastForIllicit',
   'survivorEventDiscount', 'limitPerInvestigator', 'limitPerLocation', 'engageNoOpportunityAttack',
   // 第 5 步 M1 调查员批次（P6）：三个只有卡面语义的布尔标记。
   // - `threatHorrorSink`：威胁卡上的恐惧优先被治疗，其他卡牌的恐惧不能被治疗（05008 理性思考）；
@@ -764,6 +769,25 @@ export function registerCardAbilities(entries) {
     }
     // 攻击来源特性减伤（07094「除[[远程]]/[[枪械]]/[[法术]]外每次攻击伤害 -1，最低 1」）：
     // 读点在 combat.js 的攻击伤害段，与既有 damageReductionWhileExhausted 同一位置。
+    // 2026-11-13 P1-8（09124 暗处潜伏者）：「只能用 [[武器]] 支援或 [[策略]] 事件攻击/造成伤害」
+    // 与「从每个来源受到的伤害减 1」两个声明式规则。
+    if (entry.enemyRule?.damageOnlyFromSourceTraits != null) {
+      const rule = entry.enemyRule.damageOnlyFromSourceTraits
+      if (!rule || typeof rule !== 'object' || Array.isArray(rule)) throw new TypeError('enemyRule.damageOnlyFromSourceTraits 必须是对象')
+      assertKnownKeys(rule, new Set(['traits', 'sourceTypes']), 'enemyRule.damageOnlyFromSourceTraits')
+      if (!Array.isArray(rule.traits) || !rule.traits.length
+        || rule.traits.some(trait => typeof trait !== 'string' || !trait)) {
+        throw new TypeError('enemyRule.damageOnlyFromSourceTraits.traits 必须是非空字符串数组')
+      }
+      if (rule.sourceTypes != null && (!Array.isArray(rule.sourceTypes)
+        || rule.sourceTypes.some(type => !['asset', 'event'].includes(type)))) {
+        throw new TypeError('enemyRule.damageOnlyFromSourceTraits.sourceTypes 只能是 asset/event')
+      }
+    }
+    if (entry.enemyRule?.damageReductionFromAllSources != null) {
+      const amount = entry.enemyRule.damageReductionFromAllSources
+      if (!Number.isSafeInteger(amount) || amount < 0) throw new TypeError('enemyRule.damageReductionFromAllSources 必须是非负整数')
+    }
     if (entry.enemyRule?.damageReductionExceptSourceTraits != null) {
       const rule = entry.enemyRule.damageReductionExceptSourceTraits
       if (typeof rule !== 'object' || Array.isArray(rule)) throw new TypeError('Invalid attack source damage reduction')
@@ -949,6 +973,7 @@ export function registerCardAbilities(entries) {
       rerollTokenCost: entry.rerollTokenCost ?? null,
       exileForAutoSuccess: entry.exileForAutoSuccess === true,
       weaknessStaysInHand: entry.weaknessStaysInHand === true,
+      cannotLeaveHand: entry.cannotLeaveHand === true,
       hiddenEnemyInHand: entry.hiddenEnemyInHand === true,
       asIfEvent: entry.asIfEvent === true,
       weaknessHandNote: entry.weaknessHandNote ? String(entry.weaknessHandNote) : null,
@@ -1161,6 +1186,7 @@ export function registerCardAbilities(entries) {
       upgradesFrom: entry.upgradesFrom || null,
       playableWeakness: entry.playableWeakness === true,
       endTurnInHandHorror: entry.endTurnInHandHorror ?? null,
+      endTurnInHandDamage: entry.endTurnInHandDamage ?? null,
       fastForIllicit: entry.fastForIllicit === true,
       survivorEventDiscount: entry.survivorEventDiscount === true,
       limitPerInvestigator: entry.limitPerInvestigator === true,
@@ -1178,6 +1204,11 @@ export function registerCardAbilities(entries) {
       failTies: entry.failTies === true,
       // 2026-10-25 第四轮修复 05012：游戏结束时手牌中的创伤读点（campaign-flow.finishScenario）。
       traumaAtGameEndWhenInHand: entry.traumaAtGameEndWhenInHand === true,
+      // 八循环 TSK P6：定制升级卡的勾选面板/运行时效果（读点在 tsk-customizable 原语）。
+      customizationOptions: entry.customizationOptions
+        ? Object.freeze(entry.customizationOptions.map(option => Object.freeze({ ...option })))
+        : null,
+      customizationEffects: entry.customizationEffects ? Object.freeze({ ...entry.customizationEffects }) : null,
       // 条目级的「简化声明」：审计把 simplified + note 汇总进 remaining，不静默放过。
       simplified: entry.simplified === true,
       // P2-4：重印别名条目的 canonical 卡号（null = 自己就是唯一实现）。
@@ -1188,6 +1219,12 @@ export function registerCardAbilities(entries) {
     }
     REGISTRY.set(entry.code, normalized)
     registerDeckCardRule(entry.code, normalized.deckConstruction)
+    // TSK P6：定制升级卡把勾选面板契约挂到 tsk-customizable 原语上（重复注册守卫：
+    // 测试夹具可能二次 registerCardAbilities，同一卡号只登记一次）。
+    if (normalized.customizationOptions && !registeredCustomizationOptions(entry.code)) {
+      registerCustomizationOptions({ [entry.code]: normalized.customizationOptions })
+    }
+    if (normalized.customizationEffects) registerCustomizationEffects({ [entry.code]: normalized.customizationEffects })
   }
   // P2-4：重印别名注册（015xx → 01xx，数据在 src/cards/reprint-aliases.js）。
   // canonical 条目已经在本次批量里注册、且别名号没有自己的条目文件时，生成「只改 code」的别名条目；
@@ -1204,6 +1241,11 @@ export function registerCardAbilities(entries) {
     }
   }
   return list.length + (aliasEntries.length ? registerCardAbilities(aliasEntries) : 0)
+}
+
+// 2026-11-13 P1-16（09766 基金会情报）：「不能离开手牌」的唯一读点 helper。
+export function cannotLeaveHand(code) {
+  return registeredEntry(code)?.cannotLeaveHand === true
 }
 
 export function registeredEntry(code) {

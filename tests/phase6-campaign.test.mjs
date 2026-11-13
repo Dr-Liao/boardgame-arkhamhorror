@@ -31,12 +31,50 @@ test('战役投影：古代遗物 / 领队 / 复仇 / 伊格之怒字段名与�
     victoryDisplay: [{ vengeance: 2 }, { vengeance: 0 }],
     campaign: { id: 'theForgottenAge', records: { yigsFury: 5 } },
   })
-  assert.deepEqual(view.relicOfAges, { code: '04061', location: 'chamberOfTime', seat: null })
+  // 遗物投影在旧字段（位置/持有人）之外补了公开的附属地点清单（破碎永世 4a）。
+  assert.deepEqual(view.relicOfAges, { code: '04061', location: 'chamberOfTime', seat: null, attachments: [] })
   assert.equal(view.expeditionLeaderSeat, 2)
   assert.equal(view.vengeance, 2)
   assert.equal(view.yigsFury, 5)
   // 领队回落到战役记录（旧存档只有 campaign.expeditionLeader）
   assert.equal(campaignProjection({ campaign: { expeditionLeader: 1 } }).expeditionLeaderSeat, 1)
+})
+
+test('战役投影：破碎永世 4a 的遗物附属地点与目标进度都是公开信息', () => {
+  const state = {
+    campaign: { id: 'theForgottenAge', records: {} },
+    scenario: {
+      id: 'shatteredAeons',
+      relicAttachmentObjective: { countActs: ['04321'], locationActs: { '04322': 'valusia' } },
+      locations: { valusia: { id: 'valusia', name: '瓦卢西亚' } },
+    },
+    acts: [{ originalCode: '04318' }, { originalCode: '04319' }, { originalCode: '04320' }, { originalCode: '04321' }],
+    actIndex: 3,
+    numInvestigators: 2,
+    relicOfAges: { code: '04303', location: null, seat: 0 },
+    scenarioFlags: {
+      relicUnderneath: [
+        { id: 'mu', code: '04332', name: '姆大陆', victory: 1 },
+        { id: 'valusia', code: '04335', name: '瓦卢西亚', victory: 1 },
+      ],
+    },
+  }
+  const view = campaignProjection(state)
+  assert.deepEqual(view.relicOfAges.attachments.map(entry => entry.id), ['mu', 'valusia'])
+  assert.equal(view.relicOfAges.attachments[0].name, '姆大陆')
+  // 修补裂痕：附属数达到「开局调查员人数 + 1」推进。
+  assert.deepEqual(view.relicOfAges.objective, { kind: 'count', current: 2, needed: 3 })
+  assert.deepEqual(view.actObjectiveProgress, { kind: 'relic', current: 2, target: 3 })
+  // 失乐园：目标是「瓦卢西亚已附属」，没有数量进度标记。
+  state.acts[3] = { originalCode: '04322' }
+  const alternate = campaignProjection(state)
+  assert.deepEqual(alternate.relicOfAges.objective,
+    { kind: 'location', location: 'valusia', name: '瓦卢西亚', current: 2, met: true })
+  assert.equal(alternate.actObjectiveProgress, undefined)
+  // 不在 4a 的幕不投影自定义进度；没有遗物时仍是 null。
+  state.acts[3] = { originalCode: '04320' }
+  assert.equal(campaignProjection(state).actObjectiveProgress, undefined)
+  assert.equal(campaignProjection({ campaign: {} }).relicOfAges, null)
 })
 
 test('战役投影：两个剧本的公开标记只在对应关卡出现', () => {

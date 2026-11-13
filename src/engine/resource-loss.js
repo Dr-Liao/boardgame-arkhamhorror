@@ -1,6 +1,7 @@
 // 失去资源：玩家卡 api 与剧本遭遇 api 共用的唯一实现（05280 的 wouldLoseResources 窗口）。
 // 从 api-misc.js 抽出（P2-6，2026-10-28），避免 04082 等遭遇卡再写一遍「扣资源」。
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
+import { reactionSource } from './reaction-source.js'
 
 export function loseResources(state, inv, amount, { reactionWindow, events, info }) {
   inv = effectRecipient(state, inv)
@@ -8,7 +9,8 @@ export function loseResources(state, inv, amount, { reactionWindow, events, info
   if (!inv || !(amount > 0)) return 0
   const context = reactionWindow(state, 'wouldLoseResources', {
     when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
-    source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+    // 来源判定统一走 reaction-source.js（遭遇卡/敌人攻击/其它）；「否定存在」按这个字段决定是否可打出。
+    source: reactionSource(state),
     prompt: `${inv.name} 将要失去 ${amount} 资源`,
   }, events)
   if (context.cancelled) {

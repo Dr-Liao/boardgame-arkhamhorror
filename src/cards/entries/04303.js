@@ -6,6 +6,7 @@
 
 export default {
   code: '04303',
+  scenarioPlayable: true,
   abilities: [
     {
       kind: 'free', label: '横置：意志/智识(4)，成功移除任一卡牌上的 1 毁灭',

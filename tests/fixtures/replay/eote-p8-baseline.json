@@ -18,25 +18,25 @@
   "steps": [
     {
       "label": "create",
-      "hash": "cc8c2fca9fc4b5c693d2af9a6c136cc9aa7927291f1b697de799aaf934965195",
+      "hash": "d3095218321182c1197f7a9eff1a79e8b2061e744d5f77ee88478b154b2e6415",
       "uiState": "campaignHub",
       "scenarioId": null
     },
     {
       "label": "chapter1:start",
-      "hash": "bbd00f8b5f11a949537f812f3d6f8f6373a26f05f0e36b4555a13f92c560ea91",
+      "hash": "1435f9468ee3e871aa69a935d8ac31876c8f4086ff53c86d3d1821a1adcb3f1b",
       "uiState": "inScenario",
       "scenarioId": "iceAndDeathPart1"
     },
     {
       "label": "chapter1:result",
-      "hash": "0284ed04e0151a35128dc627730d956a02c22a0d67c4e6a3ae702f023cc363bd",
+      "hash": "6b622fb6b048c207e09a22b1c902cfe95debf45d5ee032546cfd1eb210ce6d4a",
       "uiState": "scenarioResult",
       "scenarioId": "iceAndDeathPart1"
     },
     {
       "label": "chapter1:continue",
-      "hash": "719aaae4760c679e51eb34c61d83b96aa598bc94d0933335b80a3587cc861cfc",
+      "hash": "a30704f0e5f11c06b7f0f3377e9c19627e0ac479bb4ae943a5a4df94a97a5d46",
       "uiState": "scenarioSetup",
       "scenarioId": "iceAndDeathPart1",
       "nodes": [
@@ -45,19 +45,19 @@
     },
     {
       "label": "chapter1:next",
-      "hash": "44b7308c5152b2dfa36e1a93a2d7e06eee89f6863c9f7ef25b8f2fe86d95776d",
+      "hash": "11a4b001b36cb1115f49fc0ca23cc334bce7724268288e9d9a6a90da329243cd",
       "uiState": "inScenario",
       "scenarioId": "iceAndDeathPart2"
     },
     {
       "label": "chapter2:result",
-      "hash": "258e14edfeb99deac0c8d4c48d3d6964235cb9bc56bd823b861137536925b23e",
+      "hash": "cde4f9e72635b2323c0787dbcc4e26cd51914528797735174aed2479a52ae989",
       "uiState": "scenarioResult",
       "scenarioId": "iceAndDeathPart2"
     },
     {
       "label": "chapter2:continue",
-      "hash": "161e3d2cd112547d16531c17f31971a129502819785a5dab5eb2167739d0a4ac",
+      "hash": "42b47efbaa35eae05e5937370215beae69a831a9fcd3e7380486fac1ca40b7d0",
       "uiState": "scenarioSetup",
       "scenarioId": "iceAndDeathPart2",
       "nodes": [
@@ -66,19 +66,19 @@
     },
     {
       "label": "chapter2:next",
-      "hash": "9e54033db7618c4c407d6f1cd11323eb3b3b7ca0aaa098a95c1132c3335ae0c8",
+      "hash": "f363c7e6831eee316ecd217d4eaa73f9eee9436fe3c5bf16cc1a46999abb16c6",
       "uiState": "inScenario",
       "scenarioId": "iceAndDeathPart3"
     },
     {
       "label": "chapter3:result",
-      "hash": "97300d7ed23325e371033f54862451ef5b23dea63f8f337a6ff5f6e70f29ef83",
+      "hash": "f2f7ab76d0c96f8ad27628a56e7cf82cb7c1ed95260af8ecd0fd0cba78a18137",
       "uiState": "scenarioResult",
       "scenarioId": "iceAndDeathPart3"
     },
     {
       "label": "chapter3:continue",
-      "hash": "3a5a2a075378f4e9c92462d699b71b445c8d5039712c9da48b45df4f8f609a64",
+      "hash": "94e4f4f2d64cbdd2126fff6c07c28fd510c0b6a9f3fe5306242d06cf47db7003",
       "uiState": "scenarioSetup",
       "scenarioId": "iceAndDeathPart3",
       "nodes": [

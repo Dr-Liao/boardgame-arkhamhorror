@@ -40,7 +40,7 @@ const clueAmounts = (state, act) => {
   return { current: available, max: required }
 }
 
-export function createTableRegions(h, { openDetail, openChaosBag }) {
+export function createTableRegions(h, { openDetail, openChaosBag, openAgendaAside }) {
   const section = (className, label, ...children) => h('section', { className, 'aria-label': label }, ...children)
   // 附着卡压在场景/密谋卡下方，只露出上沿，点击查看卡面。
   const attachedStrip = (cards, label, type) => cards.length ? h('div', { className: 'ah-script-attachments', role: 'group', 'aria-label': t('table.attachment.aria', { label }) },
@@ -53,6 +53,36 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
         onkeydown: event => event.stopPropagation(),
       }, tableArt(h, card.originalCode || card.code, name), h('span', {}, name))
     })) : null
+  // 「放在密谋牌库旁」的公开卡（state.agendaAside）：挂在剧本书下沿的卡堆，与附属卡同一
+  // 套「压在书页下沿」的视觉语言，但用独立颜色与图标表示它不是当前幕/密谋的附属。
+  // 点开由 game-ui 的公开区域弹窗列出全部卡面（与「放在一边」同一种弹窗）。
+  const agendaAsideStrip = (cards = []) => {
+    if (!cards.length) return null
+    const byCode = new Map()
+    for (const card of cards) {
+      const code = card?.originalCode || card?.code
+      if (!code) continue
+      const entry = byCode.get(code)
+      if (entry) entry.count += 1
+      else byCode.set(code, { card: { ...card, originalCode: code, code }, count: 1 })
+    }
+    if (!byCode.size) return null
+    const entries = [...byCode.values()]
+    const total = entries.reduce((sum, entry) => sum + entry.count, 0)
+    // 只有一种卡时直接写卡名（如「一片漆黑 ×1」）；多种卡时写区域名 + 总张数。
+    const single = entries.length === 1
+    const name = single ? (cardDisplayName(entries[0].card) || entries[0].card.code) : t('table.agendaAside.label')
+    const title = t('table.agendaAside.title', { count: total })
+    const first = entries[0].card
+    return h('div', { className: 'ah-agenda-aside', role: 'group', 'aria-label': title },
+      h('button', { type: 'button', className: 'ah-agenda-aside-card', 'data-agenda-aside': String(total),
+        'data-card-code': first.code, 'aria-haspopup': 'dialog', title, 'aria-label': title,
+        onclick: event => { event.stopPropagation(); openAgendaAside?.() },
+        onkeydown: event => event.stopPropagation() },
+      tableArt(h, first.originalCode || first.code, name),
+      h('span', {}, name),
+      total > 1 ? h('b', {}, t('table.agendaAside.count', { count: total })) : null))
+  }
   const sceneCard = (item, type, label, attached = [], interaction = null, progress = null) => h('div', {
     className: 'ah-script-card' + (attached.length ? ' has-attachments' : ''), role: 'button', tabindex: 0,
     'aria-label': progress ? `${label} · ${progress.getAttribute('aria-label')}` : label, title: item?.name || label, 'data-interaction': item ? (interaction || `${type}:current`) : null,
@@ -130,6 +160,11 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
   }
   const clueMark = (state, act) => {
     if (!act) return null
+    // 内容层投影的自定义目标进度（破碎永世 4a：附属到古代遗物的地点数 N / 人数+1）。
+    // 没有自定义进度时沿用线索目标口径。
+    const custom = state.actObjectiveProgress
+    if (custom) return pageProgress(h, custom.kind || 'clue', custom.current, custom.target,
+      text => t('table.progress.actAria', { value: text }))
     const amounts = clueAmounts(state, act)
     return pageProgress(h, 'clue', amounts.current, amounts.max, text => t('table.progress.clueAria', { value: text }))
   }
@@ -148,7 +183,8 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
   }
   return {
     // 剧本区从左到右：剧本书（密谋/场景）→ 提示卡 → 当前场景/密谋的可执行操作。
-    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}, setupButton = null) => {
+    // agendaAside：放在密谋牌库旁的公开卡（state.agendaAside），画成挂在剧本书下沿的卡堆。
+    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}, setupButton = null, agendaAside = []) => {
       const dual = dualStory(state, act, attachments)
       const pages = dual ? dual.pages.map(page => sceneCard(page.item, page.type, page.label, page.attached, page.interaction,
         page.type === 'act' ? clueMark(state, act) : doomMark(state, page)))
@@ -156,10 +192,11 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
           sceneCard(agenda, 'agenda', t('table.script.agenda'), attachments.agenda || [], null, doomMark(state, { item: agenda })),
           sceneCard(act, 'act', t('table.script.act'), attachments.act || [], null, clueMark(state, act)),
         ]
+      const aside = agendaAsideStrip(agendaAside)
       return section('ah-table-script' + (scriptActions ? ' has-script-actions' : ''), t('table.region.script'),
       h('div', { className: 'ah-story-group' },
-        h('div', { className: 'ah-script-cards ah-story-book', role: 'group', 'data-story-pages': dual ? 'agendas' : 'agenda-act', 'aria-label': dual ? dual.aria : t('table.script.booksAria') },
-          ...pages),
+        h('div', { className: 'ah-script-cards ah-story-book' + (aside ? ' has-agenda-aside' : ''), role: 'group', 'data-story-pages': dual ? 'agendas' : 'agenda-act', 'aria-label': dual ? dual.aria : t('table.script.booksAria') },
+          ...pages, aside),
         h('div', { className: 'ah-scenario-reference' }, referenceCard(state), setupButton), scriptActions),
       h('div', { className: 'ah-command-deck' },
       h('div', { className: 'ah-command-resources', role: 'group', 'aria-label': t('table.resources.aria') },

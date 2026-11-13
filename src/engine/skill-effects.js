@@ -4,6 +4,7 @@ import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 ﻿import { investigatorRule } from '../cards/card-rules.js'
 import { noteCardCancelled } from './cancel-note.js'
+import { reactionSource } from './reaction-source.js'
 // 技能检定效果（applyTokenFx / applySkillOnSuccess / makeRuntime）从 engine.js 拆出的模块
 // （Phase 6 · 6d-24）。
 //
@@ -263,6 +264,7 @@ function makeRuntime(state, events) {
       if (!inv || !(amount > 0)) return 0
       const context = reactionWindow(state, 'wouldLoseResources', {
         when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
+        source: reactionSource(state),
         prompt: `${inv.name} 将要失去 ${amount} 资源`,
       }, events)
       if (context.cancelled) {
@@ -279,6 +281,7 @@ function makeRuntime(state, events) {
       if (!inv || !(amount > 0)) return 0
       const context = reactionWindow(state, 'wouldLoseActions', {
         when: 'wouldLoseActions', seat: inv.seat, amount, what: 'actions', location: inv.location,
+        source: reactionSource(state),
         prompt: `${inv.name} 将要失去 ${amount} 个行动`,
       }, events)
       if (context.cancelled) {

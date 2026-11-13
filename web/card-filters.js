@@ -20,11 +20,17 @@ const SERIES = [
 const packSeries = new Map(SERIES.flatMap(([id,key,packs])=>packs.split(' ').map(pack=>[pack,{id,key}])))
 const packNameKeys = {core:'filter.pack.core',rcore:'filter.pack.rcore',core_2026:'filter.pack.core_2026'}
 export function cardSource(card) {
-  const pack = card.pack || card.packCode || ''
-  const series = packSeries.get(pack), seriesName = series ? t(series.key) : ''
-  return { pack, packName:(packNameKeys[pack] ? t(packNameKeys[pack]) : '') || (series?.id===pack ? seriesName : '') || card.packName || pack || t('filter.source.unknown'),
-    id:card.campaignCode || series?.id || pack || 'unknown',
-    name:card.campaignName || seriesName || card.packName || pack || t('filter.source.unknown') }
+  const rawPack = card.pack || card.packCode || ''
+  const series = packSeries.get(rawPack), seriesName = series ? t(series.key) : ''
+  // 缺来源的卡（例如只存在于升级候选、卡表里拿不到 pack 的卡）不要再返回空串：
+  // 空串会与「所有战役 / 系列」「所有扩展包」的占位选项撞同一个 value，把占位文案顶成「未标注来源」。
+  const unknown = !rawPack
+  const pack = rawPack || 'unknown'
+  const packFallback = unknown ? t('filter.source.unknown') : pack
+  return { pack,
+    packName:(packNameKeys[pack] ? t(packNameKeys[pack]) : '') || (series?.id===pack ? seriesName : '') || card.packName || packFallback,
+    id:card.campaignCode || series?.id || pack,
+    name:card.campaignName || seriesName || card.packName || packFallback }
 }
 const factions = card=>card.factions || [card.klass,card.klass2,card.klass3,card.faction2,card.faction3].filter(Boolean)
 export function filterCards(cards, filters={}) {

@@ -41,6 +41,7 @@
   fast: true,                    // 可选：资产/调查员的「快速」关键字（事件卡写在 played 描述子上）
   noOpportunityAttack: true,     // 可选：打出不引发借机攻击（同上）
   playCondition: [ ... ],        // 可选：能不能打出（见 §5）
+  scenarioPlayable: true,        // 可选：战役发放的剧情资产，在战役牌组中可打出（见 §5.1）
   modifiers: [ ... ],            // 可选：常驻修正（见 §4）
   abilities: [ ... ],            // 可选：生命周期钩子（见 §3）
   elderSign: { resolve(ctx) {} } // 可选：调查员旧印（kind 固定为 investigator）
@@ -233,6 +234,42 @@ api.addEffect({
 `LEGACY_RULES` 表翻译成同样的 predicate，文案逐字保留；引擎只调用 `playConditionError()` / `playAccess()`，
 不再逐字段读取。**不得再新增同类散字段**。
 
+### 5.1 战役发放的剧情资产（`scenarioPlayable`）
+
+剧情资产（02040 亨利·阿米蒂奇、04051 亚历山卓·维拉、05150 黑书……）不在常规卡池里，
+`isCardAvailable()` 恒为 false；但战役效果会通过 `campaignCardChange` / 战役奖励把它们加入调查员的
+战役牌组。允许它们从手牌打出的是同一条规则：
+
+- **声明**：卡条目 `scenarioPlayable: true`（读点 `src/cards/card-rules.js#scenarioPlayableFor`）。
+- **引擎唯一读点**：`src/engine/stats.js#runtimeCardAvailable`——声明为真 **且** 该调查员的战役牌组记录
+  （`state.campaign.investigators[seat].deck`）包含这张卡时才放行。没获得的剧情资产仍然不能打出。
+- **授予事实源 = 战役牌组记录**：内容层把剧情卡交给调查员时走 `campaignCardChange`；换印刷版本
+  （如失落的时代 04061 → 04191）必须在同一次执行里同步 `record.deck`，不能只改在局区域，否则下一关
+  按记录重建牌组时新版本会丢。
+- **不做的事**：不得再给单个战役写 `canPlayScenarioCard` 钩子；新循环也不要用「整包战役卡塞进
+  `availability` 白名单」来代替逐卡声明（2026-11-11 原语收口；敦威治钩子已删除）。
+- 永久卡（`permanent: true`，如 07151 密教教义）开局直接入场，不需要该声明。
+- 回归：`tests/campaign-story-asset-playable.test.mjs`；升级/构筑仍由 deck 层判定，声明不改变
+  `getAvailability()` 的 `catalog-only` 状态。
+
+### 5.2 抽到后留在手牌的弱点（无 Revelation 的事件弱点）
+
+没有显现效果、抽到后留在手牌、由「回合结束/持续被动」规则约束的事件弱点，**不写 weakness 描述子**，
+用条目级数据字段声明（引擎唯一读点，勿新增同类散字段）：
+
+| 字段 | 类型 | 引擎读点 | 语义 |
+| --- | --- | --- | --- |
+| `weaknessStaysInHand` | boolean | `src/engine/deck-ops.js#drawCards` 弱点分支 | 抽到后进手牌而不是结算进弃牌堆 |
+| `weaknessHandNote` | string | 同上（提示文案） | 留手时给玩家的说明 |
+| `endTurnInHandHorror` | number | `src/engine/turn-flow.js#advanceInvestigator` 手牌扫描 | 回合结束时若仍在手牌：揭示并受到 N 恐惧 |
+| `endTurnInHandDamage` | number | 同上（2026-11-13 新增，与 Horror 同族） | 回合结束时若仍在手牌：揭示并受到 N 伤害 |
+| `playableWeakness` | boolean | `src/engine/play-condition.js#LEGACY_RULES` | 弱点可被打出（通常配 `played` 描述子弃掉） |
+| `blocksCommitWhileInHand` | boolean | `src/engine/tarot-slot.js` / 投入校验 | 在手牌时禁止投入任何卡 |
+
+例子：09125 量子悖论（留手 + 回合结束 1 恐惧）、09126 该付账了（留手 + 回合结束 1 伤害 +
+`playCostModifier` 减费）、09128 准备不足（留手 + 打出条件）。不得再用「`forced` + `fromHand` +
+`turnEnded`」写法——手牌来源的强制能力没有派发点，真实对局里不会触发。
+
 ---
 
 ## 6. 内容来源（谁可以声明能力）
@@ -353,12 +390,30 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 | `asset.attachments` | 05279 黛雅娜·艾丝帕伦斯（`playAttachedEvents`）、05230 | 扫 | 同上 | 同上 |
 | `inv.beneath` | 05004 黛安娜、03003 赛菲娜、03012 画中世界、05013 银暮匕首（`beneathPlayAsIfInHand`） | 只给本人 | 本人 `beneath: string[]`，全桌 `beneathCount: number` | 牌桌「下方」行 + 调查员详情「下方卡牌」+ 银暮匕首弹出「从底下打出」 |
 | `inv.hunchDeck` / `inv.hunchRevealed` | 05002 乔·戴蒙德（`investigator.hunchDeck`，规则在 `hunch-deck.js`） | 牌库只给本人；已揭示那张给全桌 | `view.hunch[] = { seat, deck, revealed }`（顺序不外泄） | 牌桌「直觉 N」行 + 揭示那张的「从直觉牌库打出」 |
+| `state.agendaAside` | 04094 一片漆黑、07095/07107/07185、09735/09740、06194/06233 等「放在密谋牌库旁」 | 扫 | `view.agendaAside[]`（公开实例，含卡号/实例 id） | 剧本书下沿的「密谋牌库旁」卡堆 + 公开区域弹窗（`renderCardZoneModal` 的 `agendaAside` 区域）+ 详情 |
 | `inv.discard` / `inv.threat` | `playableFromDiscard`（临时武器/温蒂的护身符）、`playableFromThreat`（05010 悬案） | 公开 | 弃牌堆/威胁区本来就公开 | 弃牌堆入口 / 威胁区小卡 |
 
 其余相关位置：`state.locations[].attachments`、`state.enemies[].attachments`、
 `state.playerLocationAttachments`（玩家卡附属到地点，如 03199）与 `state.bondedSets[].cards`（场外绑定集合）
 都按公开信息带卡面；`inv.hiddenCards`（隐私牌）是**手牌上的标记**，牌本身仍在 `inv.hand` 里，
 因此前端照常按手牌显示，不需要第二个区域。
+
+「放在密谋牌库旁」（`state.agendaAside`）的规则读点（2026-11 收口）：
+
+- **写入/弃置**：`api.putNextToAgenda` / `api.discardAgendaAside` / `api.removeAgendaAside` /
+  `api.agendaAsideCards`（`src/engine/scenario-runtime.js` 唯一写点）。卡条目的 `encounterResolve`
+  放回 `{ placed: true }` 表示这张遭遇卡已在场，不进遭遇弃牌堆。
+- **轮末弃置**：条目声明 `treacheryRule.discardOneAtRoundEnd`（印刷「从场上弃掉 1 张…每轮最多一次」，
+  同轮最多弃 1 张同名副本）或 `treacheryRule.discardAtRoundEnd`（印刷「弃掉这张卡」，全部同名副本），
+  引擎 `phases.js` 的旁置卡扫描统一结算。
+- **发现线索上限**：条目声明 `treacheryRule.clueDiscoveryLimit: N`（印刷「每位调查员每轮从单个地点
+  最多发现 N 个线索」），引擎 `locations.js` 的 `canDiscoverClueAt` / `discoverClueAt` 共用一份
+  `state.scenarioFlags.clueDiscoveryClaims` 记账（键 = 卡号:轮:座位:地点；同一卡号多张副本不叠加）。
+- **旧存档**：2026-11 之前 04094 只写 `scenarioFlags.deepDark` 计数、场上没有实体卡；战役内容层的
+  `needsSaveRepair` / `repairSavedState` 在读档时按计数补出真实旁置实例并清掉旧键。
+- **前端**：卡面定义随 `view.cards` 下发（`observation.js` 把 `state.agendaAside` 的卡号并入
+  `visibleCodes`），牌桌挂「密谋牌库旁」卡堆并打开公开区域弹窗；演出快照
+  （`presentation-state.js` 的 `FIELDS`）同样带 `agendaAside`，否则演出期间这张卡会消失一瞬。
 
 食梦者的共用读点：`playableOnlyFromDiscard` 阻止手牌出牌候选与校验，`returnToHandAfterPlay`
 决定事件结算后的去向；`connectsAttachedLocations` 让同卡号地点附件为调查员提供双向连接，
@@ -385,7 +440,9 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    - 普通行动：`moves.js` 枚举 → `validateMove`（`entryOf` 还原通道）→ `dispatch.js`（`actionTake`）；
    - 快速事件反应窗口：`encounter.js` 的 `reactionWindow`（`windowEntries`）+ `assets.js` 的
      `playReactionCard`（牌已在手牌里的执行器；付费/结算/去向与手牌快速事件同源）；
-   - 收尾玩家窗口：`encounter.js` 的 `playerWindow`（`fastHandPlays` 复用 legalMoves 的通道候选）；
+   - 玩家窗口：`encounter.js` 的 `playerWindow`（`fastHandPlays` 复用 legalMoves 的通道候选；
+     2026-11-13 起只用于技能检定/神话后/敌人阶段后等窗口以及其它调查员的行动间窗口，
+     行动点用尽后的空档期不再开窗，见下方「回合收尾」）；
    - 能力层 fromHand 窗口与技能检定投入：`ability-rules.js`（`descriptorSources` 的 `fromChannel`、
      `descriptorUsable` 的通道折扣）、`ability-exec.js`（`openAbilityWindow` + `takeToHand`）、
      `reveal.js`（`executeDescriptor` 的 `channelDiscount`）、`tests.js`（`commitEntries` / `takeCommit`）。
@@ -413,11 +470,12 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    手牌、直觉区与其它通道的快速事件同一处理；非事件反应（场上支援/调查员能力）的 auto 档不变。
    **所有快速事件都要有开关**（2026-10-31）：开关口径收敛在 `card-rules.js#entryNeedsReactionPrompt`
    ——`explicitReactionPrompt`（条目级 read point 窗口，如 02305/01071）以及所有 `played + fast`
-   描述子。没有固定触发时机的「快速。只能在你回合期间打出」事件（01050 逃避隐藏等 27 张）只会在
-   收尾玩家窗口（`investigation.afterAction` 的 `fastHandPlays`）以「⚡ 快速打出」候选出现，
-   选项 id 是 `fast-card:<卡号>` / `fast-card:hunch:<卡号>`；`reactionChoices` 从 id 反查卡号，
-   关闭开关就过滤掉该候选、唯一候选时整窗自动让过。存档迁移用同一口径检测内嵌卡面缺
-   `hasReactionPrompt` 的旧存档并强制刷新（`save-migration.js#needsReactionPromptFlags`）。
+   描述子。没有固定触发时机的「快速。只能在你回合期间打出」事件（01050 逃避隐藏等 27 张）在
+   行动点用尽后的空档期是 `legalMoves` 的直接 `play` 行动（点手牌即打出，见下方「回合收尾」）；
+   仍会弹窗的其它玩家窗口里则以「⚡ 快速打出」候选出现（`fast-card:<卡号>` / `fast-card:hunch:<卡号>`），
+   `reactionChoices` 从 id 反查卡号，关闭开关就过滤掉该候选、唯一候选时整窗自动让过。
+   存档迁移用同一口径检测内嵌卡面缺 `hasReactionPrompt` 的旧存档并强制刷新
+   （`save-migration.js#needsReactionPromptFlags`）。
    **手牌快速卡询问直接挂回手牌（2026-11-06）**：`choicePresentation()` 把玩家窗口里的
    `fast-card:<卡号>`（以及卢克·罗宾逊的 `fast-card:<卡号>:asif:<地点 id>`、牌桌来源的
    `fast-card:<卡号>:<fastSourceId>` 变体）按卡号反查手牌位，挂成 `hand:<座位>:<下标>`，
@@ -428,6 +486,20 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    回归护栏：`tests/card-interactions.test.mjs`（合成选项 + 真实引擎的卢克玩家窗口投影断言）、
    `tests/fast-card-prompt.browser.mjs`（桌面 1440 / 移动 390，截图写入
    `artifacts/arkham-polish/fast-card-prompt-*.png`）。
+
+   **回合收尾：行动点用尽不再自动结束回合（2026-11-13）**。旧的「收尾玩家窗口」把 0 行动快速卡
+   和 [free] 能力塞进弹窗、玩家让过后 `dispatch.js` 立刻 `advanceInvestigator`；现在改成：
+   - 行动点在结算后归零时**不**开收尾窗口、**不**自动推进，调查员停在本回合的「0 行动空档期」；
+   - 空档期里 0 行动快速卡（手牌与「如同手牌」通道）是 `legalMoves` 的直接 `play` 行动，
+     [free] 能力是直接的 `ability` 行动，剧本 `behavior.fastActions` 的 [fast] 行动由
+     `src/engine/gap-actions.js` 折进 `legalMoves` / `validateMove` / `actionCost`（只在空档期，
+     有行动点时仍由行动后的玩家窗口提供）；玩家点牌/按钮主动结算，不弹「要不要打」的询问；
+   - 只有提交 `endTurn`、效果强制结束回合（`turnEnded`）或调查员离场才调用 `advanceInvestigator`；
+   - 其它调查员的「任意玩家窗口」能力仍开窗，但用 `excludeSeats` 排除行动者本人，避免再问行动者；
+   - 回归护栏：`tests/turn-end-window.test.mjs`（空档期直接合法行动 / 主动 endTurn / 救命卡窗口）、
+     `tests/reaction-preferences.test.mjs`（快速事件开关口径）。
+   实现读点：`dispatch.js#applyMoveUnchecked` 尾部、`moves.js#legalMoves` 的空档期补全、
+   `encounter.js#playerWindow` 的 `excludeSeats`、`gap-actions.js`、`describe.js` 的 AI 提示。
 3. **新增通道或新增窗口都只改一处**：新增通道 = 在 `play-channels.js` 的 `entriesOf` /
    `CHANNEL_ORDER` / `WINDOW_CHANNEL_ORDER` 加一条并补 `entryError`/`takeToHand`/`actionTake` 的
    switch 分支；新增窗口 = 遍历 `entries()` / `windowEntries()`。窗口、validate、dispatch、UI 不需要

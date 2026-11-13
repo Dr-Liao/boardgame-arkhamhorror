@@ -277,7 +277,8 @@ test('TDE completion: Essence of the Dream replaces hand discard and a shuffle w
   assert.ok(!s.investigators[0].discard.includes('06113'))
   assert.equal(Object.values(s.bondedSets).flatMap(set=>set.cards).filter(code=>code==='06113').length,1)
   s.investigators[0].hand=['06113']
-  run(s,current=>withApi(current,api=>{api.moveCard({seat:0,code:'06113',from:'hand',to:'deckTop'});api.shuffleDeck(0)}))
+  // 座位属于 options（moveCard 规格对象只收 zones.js#MOVE_KEYS；2026-11-13 起严格校验）。
+  run(s,current=>withApi(current,api=>{api.moveCard({code:'06113',from:'hand',to:'deckTop'},{seat:0});api.shuffleDeck(0)}))
   assert.ok(!s.investigators[0].deck.includes('06113'))
   assert.equal(Object.values(s.bondedSets).flatMap(set=>set.cards).filter(code=>code==='06113').length,2)
 })

@@ -703,39 +703,41 @@ test('P6 08059 掉进兔子洞：真实关间计价（前 2 次升级 -1 经验�
   assert.deepEqual(flags.upgradeDiscount, { first: 2, amount: 1 }, '条目声明前 2 次升级 -1 经验')
   assert.equal(flags.purchaseCostDelta, 1, '条目声明新购卡 +1 经验')
 
-  const built = buildDeck(INVESTIGATORS['01001'], { seed: 'eote-08004' })
+  const built = buildDeck(INVESTIGATORS['01004'], { seed: 'eote-08004' })
   const deck = ['08059', ...built.playerCards]
-  const record = { id: 'inv0', seat: 0, code: '01001', name: 'Roland', deck: [...deck],
+  const record = { id: 'inv0', seat: 0, code: '01004', name: 'Agnes', deck: [...deck],
     currentScenarioIndex: 0, xp: 20, earnedXp: 20, spentXp: 0, trauma: { physical: 0, mental: 0 },
     status: 'active', purchases: [], removedCards: [] }
   const campaign = { phase: 'interlude', scenarioIndex: 1, investigators: { 0: record },
     records: {}, trauma: { 0: { physical: 0, mental: 0 } }, xp: 20 }
 
-  // 第 1 次升级（01028 = 2 XP）：2 - 1 = 1 XP；第 2 次升级（01029 = 4 XP）：4 - 1 = 3 XP。
-  const upgrade1 = replacementAnalysis(record, '01028').removals.find(option => option.code)
+  // 08059 是神秘者永久卡，只有神秘者牌组能合法容纳它：全量放开玩家卡后，08 段牌也按
+  // 普通卡口径参与牌组合法性校验（旧实现把 08 卡排除在裁量之外，Roland 才能塞进它）。
+  // 第 1 次升级（01069 = 2 XP）：2 - 1 = 1 XP；第 2 次升级（01071 = 4 XP）：4 - 1 = 3 XP。
+  const upgrade1 = replacementAnalysis(record, '01069').removals.find(option => option.code)
   assert.ok(upgrade1, '第 1 次升级有合法替换选项')
-  const purchase1 = purchaseCard(campaign, 0, '01028', upgrade1.code, null)
+  const purchase1 = purchaseCard(campaign, 0, '01069', upgrade1.code, null)
   assert.equal(purchase1.cost, 1, '第 1 次升级 -1 经验')
   assert.equal(purchase1.upgradeDiscount, 1, '购买记录标记升级减免')
-  const upgrade2 = replacementAnalysis(record, '01029').removals.find(option => option.code)
-  const purchase2 = purchaseCard(campaign, 0, '01029', upgrade2.code, null)
+  const upgrade2 = replacementAnalysis(record, '01071').removals.find(option => option.code)
+  const purchase2 = purchaseCard(campaign, 0, '01071', upgrade2.code, null)
   assert.equal(purchase2.cost, 3, '第 2 次升级 -1 经验')
   assert.equal(record.upgradeDiscountUsed, 2, '前 2 次升级优惠已用完')
 
   // 第 3 次升级不再减免；新购卡 +1 经验（牌组出现空位才能「不替换直接购入」）。
-  const upgrade3 = replacementAnalysis(record, '01027').removals.find(option => option.code)
-  assert.equal(upgrade3.cost, 2, '第 3 次升级无减免')
+  const upgrade3 = replacementAnalysis(record, '01070').removals.find(option => option.code)
+  assert.equal(upgrade3.cost, 3, '第 3 次升级无减免')
   assert.equal(upgrade3.upgradeDiscount, undefined, '第 3 次升级不带减免标记')
   record.deck.splice(record.deck.findIndex(code => code !== '08059'), 1)
-  const newPurchase = replacementAnalysis(record, '01027').removals.find(option => option.code === null)
-  assert.equal(newPurchase.cost, 3, '新购卡 2 XP + 1 = 3 XP')
+  const newPurchase = replacementAnalysis(record, '01070').removals.find(option => option.code === null)
+  assert.equal(newPurchase.cost, 4, '新购卡 3 XP + 1 = 4 XP')
   assert.equal(newPurchase.purchaseCostDelta, 1, '新购选项带加价标记')
 
   // 关间入口（refreshArcaneResearch 同一刷新点）重置已用次数。
   refreshArcaneResearch(campaign)
   assert.equal(record.upgradeDiscountUsed, 0, '每个关间重置已用次数')
-  const upgrade4 = replacementAnalysis(record, '01027').removals.find(option => option.code)
-  assert.equal(upgrade4.cost, 1, '新关间第 1 次升级重新享受 -1 经验')
+  const upgrade4 = replacementAnalysis(record, '01070').removals.find(option => option.code)
+  assert.equal(upgrade4.cost, 2, '新关间第 1 次升级重新享受 -1 经验')
 })
 
 test('P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一次基础行动', () => {

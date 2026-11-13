@@ -1,0 +1,360 @@
+{
+  "id": "dancingMad",
+  "campaignId": "theScarletKeys",
+  "sourceKind": "reference-project-zh-locale",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 50,
+  "guideKeyCount": 50,
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/campaign.json",
+      "entries": 19
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-a.json",
+      "entries": 26
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-b.json",
+      "entries": 9
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/base.json",
+      "sha256": "129bc1039ea5d9815dc032aa00be52ee790cb9cee4f930b2721a4aded00e43d4"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+      "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+      "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+      "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+      "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+      "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+      "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+      "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+      "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+      "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+      "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "档案#28-I: 疯星乱舞",
+          "children": [
+            {
+              "text": "在这趟古巴之旅中，找出红色同志会在哈瓦那的行动实在是再简单不过了。根据情报，欧瓦瑞兹先生经常一整晚都待在月下餐厅——这地方不仅当地人爱去，指望逃脱禁酒令铁律的美国游客也很热衷。这家店几乎通宵营业，摆出的酒种类之多，连最老道的私酒贩子看了也会瞪大眼睛。这里已是哈瓦那最火爆的酒吧了。\n\n你在高峰时刻抵达，希望借助人潮混进去。据悉，已经有人警告欧瓦瑞兹先生你来了。你刚到店门口，就看到里面亮如白昼，顾客之多，水泄不通。店里传出现场演奏的爵士乐，许多人已经舞动狂欢起来——甚至还没进去就开始了。门口穿黑条纹西装的保安招呼了你，打量了你一番，但并不费心上手检查，也没有向你索要口令——所有合众国那些地下酒吧常见的进门试炼，这里都没有。\n\n你一进门，就直奔酒保，费了好一番工夫才搭上话。你点了杯喝的，以作掩饰。你一提到自己在找德西德柔·欧瓦瑞兹先生，酒保的表情就变了。\n\n他怀疑地眯起了眼睛，但还是朝屋后面点了点头，那里用绳索隔开了一条走廊，还有两个西装保镖护卫。你走了过去，保镖没有拦你，只是跟着你进去了。看来这就是店里的VIP区。在烟雾缭绕的昏暗房间里，坐着的可不就是“西装浸血的男子”——这外号可能是因为他红黑配色的穿搭——也可能只是一种隐喻。他打量着你，缓缓吸了一口指间的香烟。他旁边还坐着两个人：一位穿着红色西装背心的古巴老绅士，正吐出一大口烟圈；还有一位面露凶相的红衣女士，小抿了一口马提尼。他们三个的眼神冷冷透着杀机。\n\n“这傻瓜是谁？”欧瓦瑞兹先生朝你身边护送的保镖问道。\n\n“他们说想跟你谈谈，德西。”保镖支吾起来。\n\n“噢，那给人家来点烈的，好吗？别傻站着。”护送你的人迅速点点头出去了，只留你在里面，面前三个人显然都是同志会的特工。“来，请坐。”你礼貌地拒绝了各种香烟，在桌边坐下。“所以，找我有什么事？”\n\n你点点头，告诉欧瓦瑞兹先生他关系到你的调查。你知道他常来这家店，希望能简单地问他几个问题。红衣女子一下子不知从哪里抽出一柄长刀。但穿西装的男子伸出手来，她就把刀塞回刀带，用裙子盖住了。"
+            },
+            {
+              "text": "仅当有调查员具备警察或执法特性才能阅读：男子露出一个友善的笑容。“请原谅我的朋友。她对警察有点……紧张。我相信你肯定能理解。”你解释说尽管自己看起来像是执法人员，但却不是来追踪任何违法案件的。这次绝对不是。“是啊，我觉得这都这么明显了。”他说道，“不。我想我其实还知道你为什么会来这儿……”"
+            },
+            {
+              "text": "“首先，叫我德西就行。大家都这么叫。我不喜欢搞得太正式。”他挥挥手，仿佛是要扇走房间里紧张的气氛。“其次，我不是‘常来’月下餐厅，这家店就是我的。发生了一次……管理权置换，几个月前的事了。我猜你的情报有点滞后了，嗯？”他笑了一声，在烟灰缸里拧灭了烟，然后马上掏出打火机，又点了一根。“那么，你为什么要跟我提到你的调查呢？”\n\n你强调说自己只为找寻钥匙的位置，对德西在干的好事轻描淡写。\n\n他的表情严肃起来，锐利得像生硬的石头。“这样。‘钥匙’，嗯？就为了这？好吧，那我们兴许可以互相帮助……”\n\n检查剧本日志中已经流逝了多少时间。"
+            },
+            {
+              "text": "流逝的时间小于20"
+            },
+            {
+              "text": "流逝的时间大于等于20"
+            },
+            {
+              "text": "德西叹了口气，对你和盘托出，这倒出乎他两个同伴的预料。“有什么盯上了我在哈瓦那的手下。一开始是几个新人，突然就不见了。接着就是几个跟了我很久的老手了，就那么消失不见了。”他说着打了个响指，“起初，我还以为是几个自大的对头想要扩张势力，不知道我究竟是谁的蠢货，这帮杂种会把整座城都毁了。”他灭掉香烟，盯着烟灰，仿佛里面能看出什么名堂。“奇怪的是，我不记得这些人的名字了。没人记得，这听起来是挺怪的，嗯？我从来不会忘记名字，从不。”他盯着你，冷若冰霜。“现在我不得不怀疑发生了更糟的事情。也就是你们这种人在处理的事情。”\n\n你说自己也想知道，这种事情不正应该是他们这种人在处理吗。\n\n“别把我跟他们混在一起。”他骂了一句，“我有自己的目的。现在——你有两个选择。要么帮我解决这个小问题，要么我跟我这儿的朋友把你解决了。你选哪一个？”\n\n你想了一想，告诉德西你可以帮忙，但前提是他如果知道钥匙在哪，就得告诉你；如果他自己就有，也不能隐瞒。另两个同志会的特工死死盯着德西，但这是徒劳，他已经做了决定。\n\n他伸出了手：“成交，但我也来，咱们一起干。没人能动了我的手下还全身而退。明晚再来——老时间，老地方。”你点点头走了，在哈瓦那老城的广场酒店订了个房间，好好休息了一番，准备明天的调查。\n\n在剧本日志中，记录下特别小组与德西达成交易。\n进入冒险设置(版本一)。"
+            },
+            {
+              "text": "德西站起来踱着步子，明显是在考虑什么。“我的手下出事了。”他那位年长的同伴面色冷峻，一言不发，令人不安；而女士的表情则和德西一样焦急。“开始是几个人失踪了。我们还以为是被本地帮派或者类似的人做掉了。这帮杂种会把整座城都毁了。但是现在……”他摇摇头，前额挤出了担忧的皱纹。“我不记得他们是谁了。没人记得。每天都有更多的人消失。每次都——嘣——”他打了个响指——“没了，连记忆都没了。只依稀有点印象，他们在这儿过，现在却不在了。”他紧紧地盯着你，“听着耳熟吗？”\n\n你点了点头。这场景相似得吓人。你告诉德西，可以帮他找出事件的原因，但前提是他如果知道钥匙在哪，就得告诉你；如果他自己就有，也不能隐瞒。女子咬着嘴唇，盯着德西，想知道他会不会答应。\n\n长者则依然沉默，眼神还是一样的冷峻而朦胧，十分诡异。\n\n德西和你握了握手，点了点头：“成交，但我也来，咱们一起干。没人能动了我的手下还全身而退。明晚再来——老时间，老地方。”你点点头走了，在哈瓦那老城的广场酒店订了个房间，好好休息了一番，准备明天的调查。"
+            },
+            {
+              "text": "第二夜，你回到了月下餐厅，准备再次游过人潮，到德西的VIP室去。但你抵达的时候，却发现店关门了。你觉得德西肯定是歇店一夜，这样你们就能不受打扰地规划调查，于是试着拉开门把手。门轻易地开了，证实了你的猜测。你进了店，往后面的房间走去。整家店都是一片昏暗和寂静，颇为诡异。\n\n你见过这里通常的样子，乐声鼎沸、游客熙攘，现在不免有些紧张。你的脚步声回荡在寂静的舞池里，传遍了整座店。附近有张凳子吱嘎作响。\n\n太安静了。\n\n你都来不及考虑自己是否身陷危局。这个念头刚闪过你的脑海，周围就爆发出一阵枪声。伏击！你本能地伏在地上，护住脸和耳朵。这阵骚动震耳欲聋。建筑前面的窗子都碎了，玻璃洒在了舞池里。子弹撕裂了吧台、餐桌和凳子。没有一件家具能够幸免。你只有几秒钟的反应时间——\n\n在剧本日志中，记录下特别小组遭到伏击！\n进入冒险设置(版本二)。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "text": "收齐以下遭遇组的所有卡牌：疯星乱舞、域外使徒、扫荡团伙、猩红阴谋、秘密战争、重重疑云。"
+                },
+                {
+                  "text": "仅使用场景1和2的(版本一)，以及场景3创建场景牌库。将场景1和2的(版本二)从游戏中移除。"
+                },
+                {
+                  "text": "将月下餐厅地点放置入场，(追忆堡垒)面朝上。"
+                },
+                {
+                  "text": "每位调查员从月下餐厅(追忆堡垒)开始游戏。"
+                },
+                {
+                  "text": "将剩下的六张地点放置入场。"
+                },
+                {
+                  "text": "找出两张德西德柔·戴佳多·欧瓦瑞兹敌人。其中一张另一面为剧情支援版本，而另一张则有标准的遭遇卡牌牌背。"
+                },
+                {
+                  "text": "将遭遇卡牌牌背的版本放在一边，位于场外。"
+                },
+                {
+                  "text": "将另一版本翻至剧情支援面。"
+                },
+                {
+                  "text": "选择一位调查员控制德西德柔·戴佳多·欧瓦瑞兹剧情支援。"
+                },
+                {
+                  "text": "将扫荡团伙和猩红阴谋遭遇组放在一边，位于场外。"
+                },
+                {
+                  "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：德西德柔·戴佳多·欧瓦瑞兹、同志会特工(A、B和C)、同志会刺客(A和B)和同志会打手(A和B)。将这些卡牌放在一边，位于场外。"
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "收齐以下遭遇组的所有卡牌：疯星乱舞、域外使徒、扫荡团伙、猩红阴谋、秘密战争、重重疑云。"
+                },
+                {
+                  "text": "仅使用场景1和2的(版本二)，以及场景3创建场景牌库。将场景1和2的(版本一)从游戏中移除。"
+                },
+                {
+                  "text": "将月下餐厅地点放置入场，(同志会据点)面朝上。"
+                },
+                {
+                  "text": "每位调查员从月下餐厅(同志会据点)开始游戏。"
+                },
+                {
+                  "text": "将其他所有地点放在一边，位于场外。"
+                },
+                {
+                  "text": "找出两张德西德柔·戴佳多·欧瓦瑞兹敌人。其中一张另一面为剧情支援版本，而另一张则有标准的遭遇卡牌牌背。将这两张卡牌都放在一边，位于场外。"
+                },
+                {
+                  "text": "将全部四张域外敌人放在一边，位于场外(2张异界仿体、2张常态颠扑者)。"
+                },
+                {
+                  "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：德西德柔·戴佳多·欧瓦瑞兹、同志会特工(A、B和C)、同志会刺客(A和B)和同志会打手(A和B)。将这些卡牌放在一边，位于场外。"
+                },
+                {
+                  "text": "如下将敌人生成在阴影中："
+                },
+                {
+                  "text": "找出放在一边的遭遇卡牌牌背的德西德柔·戴佳多·欧瓦瑞兹敌人。调查员队长抽取该敌人，结算其隐匿关键词。"
+                },
+                {
+                  "text": "按照玩家顺序，其他每位调查员依次从遭遇牌顶弃掉卡牌，直到弃掉一张不同的同志会敌人。每位调查员抽取其弃掉的敌人，结算其隐匿关键词。将弃掉的其他每张卡牌混洗入遭遇牌库。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员撤退或者被击败): 管他什么交易，你在哈瓦那都呆不下去了。你逃出城去，逃离枪林弹雨和扭曲的空间，逃离瓢泼大雨和翻滚的乌云，逃离每个街角皮囊和眉眼熟悉的仿体。终于，你不知靠了什么办法，成功逃出街道，在哈瓦那港征收了一条船，即刻开出。\n\n等到心跳恢复正常，思维开始运转，你思考自己的所见，不禁担心起来。就此逃离确实谨慎，却可能会对未来有不利的影响。你既没有拿到钥匙，也没有找到什么蛛丝马迹。不过，纵使千钧一发，你还是活下来了，并且没被忘记——这肯定意味着什么。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下特别小组没有发现哈瓦那的真相。\n\n• 在剧本日志中，记录下你和德西之间恩怨未了。\n\n• 德西德柔·戴佳多·欧瓦瑞兹拥有镜刃，相应更新在剧本日志中。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 德西召集剩余的手下开了一场临时会议，你简单陈述了今夜发生的事情。“我得好好把这件事理一理。”他对你懊恼地说道，“事实是他们会……嗯……你懂的，要是考虑这个，就不知道谁能信任了。”他看上去确实已经恢复正常。你做出的决定想必没错。只是……你又想到了在哈瓦那的雨街追着你不放的德西，想到了枪响和天上的扭曲。你不禁再次检查德西的眼神，想要找到任何迹象——任何——能看出他并非真正的德西。但你一无所获。是不是仿态在皮下待了太久，已经知道他举止如何？“唔。”他打断了你的思绪，“现在该是我履行交易了。‘黑鸟孤鸫’。”\n\n你困惑地眨眨眼。“‘黑鸟孤鸫’，”他又重复了一遍，“只是在宜博市藏身点的一个口令。我每次派手下过去，都会轮换口令。这其实……不太常见。即便是同志会的其他成员也不知道怎么进去。\n\n他们认为那不过是一处非法交易的窝点。我想他们之中大多数人并不明白我晚上都在干些什么。”他好像意识到了你的下一个问题，唇边缓缓扬起一个微笑，“当然是，清理城市。”他将香烟弹入水塘，似乎没意识到这有多么讽刺，“无论如何——第7大道。那家已经废弃的老卷烟厂。你肯定能找到。里面就有你在追逐的东西。过上一两周，等他们知道新的口令。那就是你的了。”德西随即给自己的汤姆逊装上一发新弹夹。“现在，要是你不介意，我得处理掉一些冒牌货。”你决定还是快走，免得被迫看到他要做的事。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录德西欠你一笔。\n\n• 在剧本日志中，记录你知道了口令。\n\n• 在剧本日志中，“流逝的时间”下方，从当前时间起往后数6格。在该格写下“Θ”。(在你到达该格时，进入剧本手册中，状况报告部分的状况报告西塔Θ。)如果“流逝的时间”下已不足6格，则改为在最后一格写下“Θ”。\n\n• 在你收拾游戏时，记住不要查看德西德柔·戴佳多·欧瓦瑞兹的另一面。\n\n• 在剧本日志中记2时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 尽管危险渐渐远去，但你的忧虑随着时间流逝、记忆失去却不减反增。你是跟谁来这儿的……？你见了谁……？这在你脑子里全是一团浆糊。你回想起了一些事情，足以知道那些失去之人所必然遭受的命运。不，不只是人——还有追遍你全城的扭曲云朵——在呼吸的墙壁，变换莫测的人行道，光中的眼睛，乐声中的耳朵——\n\n你猛吸一口气，仿佛被夜色扼住了喉咙一般。这听起来绝无可能，但这就是真相：他们夺走了一切。偷走了墙壁、天空，和整座城市。你的思绪天旋地转，慌忙逃出雨街，仿佛后面有什么不可思议的恐怖正追逐着你。你冲上第一艘离港的船，绝不回头看。你不敢呼吸，直到确认天空不会将你吞没才松了口气。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下特别小组没有发现哈瓦那的真相。\n\n• 在剧本日志中，记录下你和德西之间恩怨未了。\n\n• 德西德柔·戴佳多·欧瓦瑞兹拥有镜刃，相应更新在剧本日志中。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "File #28–I: Dancing Mad",
+          "children": [
+            {
+              "text": "Intro 1: As it turns out, finding the Red Coterie operating out of Havana is the easiest part of your trip to Cuba. According to your intel, Mr. Álvarez can often be seen spending his nights at Café Luna—a hot spot among the locals and American tourists looking to escape the iron jaws of Prohibition. Open at nearly all hours of the night and serving a variety of liquors that would make even the most seasoned bootlegger’s eyes bulge, the bar has become one of the most popular in all of Havana.\n\nYou arrive at peak hours, hoping to use the crowd to blend in. For all you know, Mr. Álvarez may have been warned of your approach. As soon as you arrive, you are greeted by an array of bright lights and a crowd almost too thick to squeeze past. Live jazz resounds from within the club, and many are dancing and reveling—some before they even get inside. A bouncer in a black pinstripe suit greets you at the door, giving you the once-over but not bothering to pat you down, ask for a password, or any of the usual hoops you might have to jump through back in the speakeasies hidden throughout the States.\n\nOnce inside, you head straight for the bartender and struggle to get his attention. You order a drink as a cover, but his expression changes the moment you say that you’re looking for a Mr. Desiderio Álvarez.\n\nEyes narrow with suspicion, he nonetheless nods in the direction of a roped- off hallway in the back corner of the room, guarded by two more suits. Both of them flank you as you approach, and follow you into what you can only assume to be the club’s VIP section. There, in a dim, smoky back room, sits none other than the “man in the blood-soaked suit,” so named for the red accents adorning his otherwise black suit—or perhaps it is simply a metaphor. He inhales slowly from a cigarette hanging loosely from his lips as he appraises you. Across from him sit two others, an elderly Cuban gent in a red suit vest, puffing on a thick cigar, and a dangerous-looking woman in a red dress who sips from a martini glass. All three of them have murder in their eyes.\n\n“Who are these idiotas?” Mr. Álvarez asks one of the guards escorting you.\n\n“They asked to speak with you, Desi,” the man stammers.\n\n“Oh. Well, pour ‘em something hard, will you? Don’t just stand there.” After a quick nod, your escort jaunts out of the room, leaving you with the three apparent Coterie agents. “Come, sit.” You politely turn down a variety of smokes and take a seat at the table. “So you were looking for me?”\n\nYou nod and inform Mr. Álvarez that he is a person of interest in your investigation, that you knew he often frequented this very bar, and that you were hoping to simply ask him a few questions. Without hesitation, the woman in red pulls a long knife from out of seemingly nowhere. But the man in the suit holds out his hand, and she slides the blade back into her garter belt, covering it with the fabric of her dress."
+            },
+            {
+              "text": "Read only if an investigator has the Police or Detective trait: The man gives you a disarming smile. “You’ll have to forgive my friend here. She tends to be a bit…jumpy…around policía. I’m sure you understand.” You explain that despite what it looks like, you’re not here to crack down on anything illegal. This time. “Yeah, that much is pretty obvious, I think,” he says. “No, I’m guessing I know what you’re really here for…”"
+            },
+            {
+              "text": "“First off, you can just call me Desi. Everyone else does. I’m not a big fan of formalities.” He waves his hand as if to fan away the tension in the room. “Secondly, I don’t just ‘frequent’ Café Luna, I own it. There was a…change of management a few months back. I guess your intel is a bit outdated, eh?” He chuckles, crushes the stub of his cigarette in a nearby ashtray, and immediately flicks open his lighter to light a new one. “So. Why don’t you tell me about this investigation of yours?”\n\nYou do, emphasizing that you are only after the location of Keys, and not whatever operation Desi has going on here.\n\nHis expression sharpens into angular stone. “Right. ‘Keys,’ eh. Is that all? All right, then. We might be able to help each other out…”\n\nCheck how much time has passed in the Campaign Log."
+            },
+            {
+              "text": "If fewer than 20 time has passed, proceed to Intro 2."
+            },
+            {
+              "text": "If 20 or more time has passed, proceed to Intro 3."
+            },
+            {
+              "text": "Intro 2: Desi sighs and opens up to you, much to the chagrin of his two companions, who look on with surprise. “Something’s been after my crew in Havana. Started with some new blood who went off-grid all of a sudden. Then a couple longtimers. Just gone,” he says with a snap of his fingers. “At first, I thought it was just some uppity rivals looking to expand their territory. Fools who don’t know who I really am. The kinda scum who’d run this city into the ground.” He ashes his cigarette, staring into the ashes like there is some greater meaning inside to sift through. “Weird part is, I don’t remember their names. Nobody does. Sounds weird, right? I never forget a name. Never.” His gaze locks with yours, cold as stone. “Now I’m starting to suspect something worse. The kinda thing your people deal with.”\n\nYou wonder aloud if this is the kind of thing his people are also supposed to be dealing with.\n\n“Don’t lump me in with the rest of them,” he chides. “I’ve got other fish on my menu. Now—you got two choices. You either help me out with my little problem, or me and my buddies here throw you to the curb. Which is it gonna be?”\n\nAfter a moment of thought, you tell Desi that you’ll help if he gives you the location of any known Keys and relinquishes any he might have in his possession. The other two Coterie agents lock eyes with Desi in vain, but he has already made up his mind.\n\nHe extends his hand. “Deal. But I want in. We’ll do this together. Nobody messes with my crew and gets away with it. Come back here tomorrow night—same time, same place.” You nod and depart, booking a room at the Plaza Hotel in Old Havana and getting some much-needed rest before tomorrow’s investigation.\n\nIn your Campaign Log, record the cell made a deal with Desi.\nProceed to Setup (v. I)."
+            },
+            {
+              "text": "Intro 3: Desi stands and paces, clearly worked up about something. “There’s something going on with my crew.” His elderly companion watches in cold, unnerving silence, but the woman wears a worrying expression to match Desi’s. “It started with just a few of ‘em going missing. Thought they were bumped off by local gangs or the like. The kinda scum who’d run this city into the ground. But now…” He shakes his head, forehead wrinkled with worry. “I don’t remember who they were. Nobody does. And it’s more of ‘em every day. And every time, boom,” he snaps his fingers, “gone, no memory of them existing, only the faintest recollection that they were here and now they’re not.” He locks narrow eyes with you. “Sound familiar?”\n\nYou nod. This is all awfully familiar. You tell Desi that you’ll help him figure out what’s going on if he gives you the location of any known Keys and relinquishes any he might have in his possession. The woman bites her lip and glances at Desi, wondering if he will agree.\n\nThe elderly man once more remains eerily silent, watching with cold, hazy eyes.\n\nDesi shakes your hand and nods. “Deal. But I want in. We’ll do this together. Nobody messes with my crew and gets away with it. Come back here tomorrow night—same time, same place.” You nod and depart, booking a room at the Plaza Hotel in Old Havana and getting some much-needed rest before tomorrow’s investigation.\n\nProceed to Intro 4."
+            },
+            {
+              "text": "Intro 4: The next night, you go back to Café Luna, ready to once more sift through the stifling crowd to reach Desi’s VIP room, but when you arrive you find the club closed. Thinking that Desi must have shut the place down for the night so you and his crew could plan your investigation without being disturbed, you try the handle. Confirming your suspicions, the door opens without any trouble, and you head inside.\n\nThe bar is eerily dim and quiet as you make your way to the back room. Having seen what the place looks like during a typical night, full of live music and reveling tourists, you feel a bit unnerved. Your steps echo quietly over the dance floor across from the bar. A nearby stool creaks.\n\nIt is too quiet.\n\nYou have no time to process whether you’re in danger. The moment the thought crosses your mind, a hail of gunfire erupts all around you. An ambush! You drop instinctively to the floor, guard your face and cover your ears. The ruckus is deafening. Windows along the front face of the building shatter and send an eruption of jagged glass over the dance floor. The bullets tear through the bar, the booths, the stools; every piece of furniture is ripped apart. You have only seconds to react—\n\nIn your Campaign Log, record the cell has been ambushed!\nProceed to Setup (v. II)."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: Dancing Mad, Agents of the Outside, Cleanup Crew, Crimson Conspiracy, Secret War, Shadow of a Doubt."
+                },
+                {
+                  "text": "Build the act deck using only (v. I) of acts 1 and 2, along with act 3. Remove (v. II) of acts 1 and 2 from the game."
+                },
+                {
+                  "text": "Put the Café Luna location into play, (Bastion of Remembrance) side faceup."
+                },
+                {
+                  "text": "Each investigator begins play at Café Luna (Bastion of Remembrance)."
+                },
+                {
+                  "text": "Put all six remaining locations into play"
+                },
+                {
+                  "text": "Find both copies of the Desiderio Delgado Álvarez enemy. One has a story asset version on its other side, and one has a standard encounter card back."
+                },
+                {
+                  "text": "Set the version with the encounter card back aside, out of play."
+                },
+                {
+                  "text": "Flip the other version to its story asset side."
+                },
+                {
+                  "text": "Choose an investigator to take control of the Desiderio Delgado Álvarez story asset."
+                },
+                {
+                  "text": "Set the Cleanup Crew and Crimson Conspiracy encounter sets aside, out of play."
+                },
+                {
+                  "text": "Gather each decoy mini-card and each of the following mini-cards: Desiderio Delgado Álvarez, Coterie Agents (A, B and C), Coterie Assassins (A and B), and Coterie Enforcers (A and B). Set them aside, out of play."
+                }
+              ]
+            },
+            {
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: Dancing Mad, Agents of the Outside, Cleanup Crew, Crimson Conspiracy, Secret War, Shadow of a Doubt."
+                },
+                {
+                  "text": "Build the act deck using only (v. II) of acts 1 and 2, along with act 3. Remove (v. I) of acts 1 and 2 from the game."
+                },
+                {
+                  "text": "Put the Café Luna location into play, (Coterie Haunt) side faceup."
+                },
+                {
+                  "text": "Each investigator begins play at Café Luna (Coterie Haunt)."
+                },
+                {
+                  "text": "Set each other location aside, out of play."
+                },
+                {
+                  "text": "Find both copies of the Desiderio Delgado Álvarez enemy. One has a story asset version on its other side, and one has a standard encounter card back. Set both of them aside, out of play."
+                },
+                {
+                  "text": "Set each of the four Outsider enemies aside, out of play (2x Otherworldly Mimic and 2x Paradigm Effacer)."
+                },
+                {
+                  "text": "Gather each decoy mini-card and each of the following mini-cards: Desiderio Delgado Álvarez, Coterie Agents (A, B and C), Coterie Assassins (A and B), and Coterie Enforcers (A and B). Set them aside, out of play."
+                },
+                {
+                  "text": "Spawn enemies in the shadows, as follows:"
+                },
+                {
+                  "text": "Find the set-aside Desiderio Delgado Álvarez enemy with the encounter card back. The lead investigator draws that enemy, resolving his concealed keyword."
+                },
+                {
+                  "text": "One at a time, in player order, each other investigator discards cards from the top of the encounter deck until they discard a different Coterie enemy. Each investigator draws the enemy they discarded, resolving its concealed keyword. Shuffle each other discarded card back into the encounter deck."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated): Deal or not, you can’t stay in Havana any longer. Your escape from the city is a blur of gunfire and fractured space, of pounding rain and roiling clouds, of imposters in familiar skin and eyes on every street corner. Eventually, somehow, you make it off the streets, commandeering a boat moored in Havana Harbor and setting off at once.\n\nAs your heart finally settles and your mind sets to work deciphering the things you’ve seen, you worry that your escape, while prudent, might have consequences for you in the future. And you have no new Keys or leads to show for it, either. But, despite the close call, you survived and are remembered—that must count for something.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record the cell didn’t discover the truth in Havana.\n\n• In your Campaign Log, record you haven’t seen the last of Desiderio Delgado Álvarez.\n\n• Desiderio Delgado Álvarez is the bearer of The Mirroring Blade. Update the Campaign Log accordingly.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: You recap the night’s events in your head as Desi calls an impromptu meeting with the rest of his crew. “I have to sort through this,” he mutters to you in frustration. “The fact that any of them could be…y’know…well, it puts things into perspective. Not sure who to trust.” He certainly seems to be back to normal. You must have made the right choice. Then again… your mind wanders to the version of Desi who stalked you through the rainy Havana streets, to gunshots and distortions in the sky. You can’t help but continue to scan Desi’s eyes for any sign—any at all—that he is not who he claims to be. You find none. Or perhaps the mimic simply knows how to act now that it has been in his skin for so long? “Well,” he interrupts your thoughts, “I guess I owe you my end of the bargain. ‘Blackbird Solitaire.’”\n\nYou blink in confusion. “‘Blackbird Solitaire,’” he repeats. “It’s one of the passphrases for my hideout in Ybor City. We rotate passphrases whenever I grant someone in my crew access, which is…rare. Not even the rest of the Coterie knows how to get in. They think it’s just a front, anyway. I think most of ‘em don’t understand what I’m really up to most nights.” As if sensing your next question, a smile crawls along his lips. “Cleaning up the city, that is.” He flicks his cigarette into a wet puddle, not seeming to understand the irony in the act. “Anyway—7th Avenue. Old condemned cigar factory. You can’t miss it. Got at least one of those things you’re after stored inside. Just give it a week or two before they get the message about the new passphrase. Then it’s all yours.” Then Desi loads a new magazine into his Thompson and turns to address his crew. “Now if you’ll excuse me, I have some imposters to root out.” You decide to leave before you’re forced to know exactly how he plans to do that.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record Desi is in your debt.\n\n• In your Campaign Log, record you know the passphrase.\n\n• In your Campaign Log, under “Time Passed,” find the 6th spot from the current time. Under that spot, write “Θ.” (When you reach that spot on the time track, proceed to status report theta Θ in the Status Reports section of the Campaign Guide.) If there is fewer than 6 time remaining under “Time Passed,” write “Θ” under the final spot, instead.\n\n• Remember not to look at the other side of Desiderio Delgado Álvarez when you clean up.\n\n• Mark 2 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: Though the danger seems to have receded, your worry only grows with each passing minute and each lost memory. Who did you come here with…? Who did you meet…? It all seems to blur together in your mind. You recall enough to know the fate that must have befallen those lost. No, not just the people—the distorted cloud chasing you throughout the city—the breathing walls, the shifting pavement, eyes in the lights, ears in the music—\n\nYou gasp for air as though choked by the night itself. It sounds impossible, but it must be: They took everything. Stole the walls, the sky, the city itself. Mind reeling, you flee through the rainy streets as though chased by horrors unimaginable. You push your way onto the first boat leaving the harbor and never look back. You don’t breathe easy until you know for sure the sky itself cannot devour you.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record the cell didn’t discover the truth in Havana.\n\n• In your Campaign Log, record you haven’t seen the last of Desi.\n\n• Desiderio Delgado Álvarez is the bearer of The Mirroring Blade. Update the Campaign Log accordingly.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

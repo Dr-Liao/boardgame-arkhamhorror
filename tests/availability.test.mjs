@@ -24,8 +24,14 @@ test('不可变清单固定核心五人、58玩家卡及完整依赖，严格模
   // P5：绯红密钥六位调查员与专属依赖已开放（strict）；未开放循环仍 catalog-only。
   for (const code of ['09002', '09010']) assert.equal(getAvailability(code).availability, 'strict')
   for (const code of ['10001', 'unknown']) assert.equal(getAvailability(code).availability, 'catalog-only')
-  // P5 未开放内容：TSK 一般玩家卡与战役卡仍 catalog-only。
-  for (const code of ['09021', '09501']) assert.equal(getAvailability(code).availability, 'catalog-only')
+  // P6 开放一般玩家卡（strict + 可构筑）；P7 开放绯红密钥战役卡（strict，不进入构筑/选人池）。
+  for (const code of ['09021', '09064', '09128']) assert.equal(getAvailability(code).availability, 'strict')
+  assert.equal(getAvailability('09021').deckbuilding, true)
+  assert.equal(getAvailability('09128').deckbuilding, false)
+  for (const code of ['09501', '09520', '09770a']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 战役卡应开放严格验收`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 战役卡不得进入构筑池`)
+  }
   assert.equal(CORE_UPGRADE_CODES.length, 22)
   assert.ok(CORE_UPGRADE_CODES.every(code => getAvailability(code).upgradeOnly && isCardAvailable(code)))
   assert.equal(isPlayable({ code: 'unimplemented-skill', type: 'skill', icons: { wild: 2 } }), false)
@@ -130,14 +136,20 @@ test('界面构筑元数据与服务端清单一致', () => {
   assert.deepEqual(SELECTABLE_INVESTIGATOR_CODES.slice(0, PLAYABLE_INVESTIGATOR_CODES.length), PLAYABLE_INVESTIGATOR_CODES)
   // P10（M5 全量开放）：构筑界面卡池 = 默认池 + 83 张 05 可入牌组的卡；
   // P6（地球边缘 M2）：再加 111 张 08 可入牌组的卡（4 张基础弱点只作随机基础弱点依赖，不进池）。
-  // 绑定卡副本 05314/05317（deckLimit=0）不在牌组里，只作为已验收目录卡存在。
-  assert.deepEqual(data.cardPool.map(card => card.code), EXPANDED_PLAYER_CARD_CODES)
-  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 83 + 72 + 90 + 111)
+  // P6（绯红密钥 M2）：再加 103 张 09 可入牌组的卡（5 张基础弱点 09124–09128 不进池）。
+  // M2（失落的时代）：补齐 86 张 04 可入牌组的卡（此前只接进 04 记录的升级池、漏了构筑界面）。
+  // 升级界面复用同一张卡表：这里还要带上 22 张核心包仅升级卡，否则升级候选会归到「未标注来源」。
+  assert.deepEqual(data.cardPool.map(card => card.code), [...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])
+  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 86 + 83 + 72 + 90 + 111 + 103)
+  assert.equal(data.cardPool.filter(card => card.code.startsWith('04')).length, 86)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('05')).length, 83)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('06')).length, 72)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('07')).length, 90)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('08')).length, 111)
+  assert.equal(data.cardPool.filter(card => card.code.startsWith('09')).length, 103)
   assert.ok(data.cardPool.every(card => card.deckLimit > 0), '构筑卡池不得包含 deckLimit=0 的场外绑定副本')
+  assert.ok(data.cardPool.every(card => card.pack), '每张卡都必须带来源扩展包，否则升级筛选会归到「未标注来源」')
+  for (const code of CORE_UPGRADE_CODES) assert.ok(data.cardPool.some(card => card.code === code && card.xp > 0), `核心升级卡 ${code} 必须有关间升级所需的元数据`)
   assert.equal(data.size, 30)
   const roland = data.investigators.find(inv => inv.code === '01001')
   assert.equal(roland.pack, 'core')

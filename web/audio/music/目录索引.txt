@@ -1,5 +1,35 @@
 关卡自定义歌曲目录（相对于本文件）
 
+谜雨
+  campaigns/theScarletKeys/riddlesAndRain/
+
+死亡酷暑
+  campaigns/theScarletKeys/deadHeat/
+
+血色阴影
+  campaigns/theScarletKeys/sanguineShadows/
+
+暗中交易
+  campaigns/theScarletKeys/dealingsInTheDark/
+
+疯星乱舞
+  campaigns/theScarletKeys/dancingMad/
+
+如履薄冰
+  campaigns/theScarletKeys/onThinIce/
+
+战争疮痍
+  campaigns/theScarletKeys/dogsOfWar/
+
+苦痛之影
+  campaigns/theScarletKeys/shadesOfSuffering/
+
+不留痕迹
+  campaigns/theScarletKeys/withoutATrace/
+
+钥匙议会
+  campaigns/theScarletKeys/congressOfTheKeys/
+
 亡命冰原 I
   campaigns/edgeOfTheEarth/iceAndDeathPart1/
 

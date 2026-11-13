@@ -6,6 +6,7 @@
 
 export default {
   code: '04148',
+  scenarioPlayable: true,
   passive: {"extraActionExploreOnly":1},
   abilities: [
 

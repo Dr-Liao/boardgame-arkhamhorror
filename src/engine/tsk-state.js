@@ -3,7 +3,8 @@
 // 设计口径与 TIC/TDE/EotE 相同：**不提升顶层存档 schema 版本**，把本循环的新状态放进既有的
 // 可选 JSON 扩展里，并带 `version`：
 //   · 战役级（跨关持久）：`state.campaign.tsk = { version: 1, keys?, map?, statusReports?,
-//     coterie?, erased?, dossiers?, sideStories?, customizations?, invalidCards? }`
+//     coterie?, erased?, dossiers?, sideStories?, customizations?, invalidCards?, outsideEncounterDeck? }`
+//     （`outsideEncounterDeck` 是《钥匙议会》v.I 的第二遭遇牌库，跨「幕 1 推进」保留到换牌库为止）。
 //   · 场景级（单关/单章节）：`state.scenarioFlags.mechanics.tsk = { version: 1, concealed?,
 //     hollows?, otherworld?, crossSeat?, doomDiscount?, patrol? }`
 //
@@ -18,6 +19,7 @@ import { mechanicState } from './mechanic-state.js'
 export const TSK_STATE_VERSION = 1
 export const TSK_CAMPAIGN_KEYS = Object.freeze([
   'keys', 'map', 'statusReports', 'coterie', 'erased', 'dossiers', 'sideStories', 'customizations', 'invalidCards',
+  'outsideEncounterDeck',
 ])
 export const TSK_SCENARIO_KEYS = Object.freeze([
   'concealed', 'hollows', 'otherworld', 'crossSeat', 'doomDiscount', 'patrol', 'evidence',
@@ -55,6 +57,12 @@ export function validateTskContainers(state) {
   if (campaign) {
     assertTskFields(campaign, ['version', ...TSK_CAMPAIGN_KEYS], '战役 TSK 扩展')
     if (campaign.version !== TSK_STATE_VERSION) throw new TypeError(`不支持的 TSK 战役扩展版本 ${campaign.version}`)
+    if (campaign.outsideEncounterDeck != null) assertCodeList(campaign.outsideEncounterDeck, '第二遭遇牌库')
+    // 2026-11-13 P1-17：战役禁用卡名单（内容层在战役开局写入；构筑/升级读点见 campaign.js）。
+    if (campaign.invalidCards != null) {
+      if (!Array.isArray(campaign.invalidCards)) throw new TypeError('战役禁用卡登记必须是卡号数组')
+      assertCodeList(campaign.invalidCards, '战役禁用卡登记')
+    }
   }
   const scenario = tskScenarioState(state)
   if (scenario) {

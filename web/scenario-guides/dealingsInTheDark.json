@@ -1,0 +1,460 @@
+{
+  "id": "dealingsInTheDark",
+  "campaignId": "theScarletKeys",
+  "sourceKind": "reference-project-zh-locale",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 74,
+  "guideKeyCount": 74,
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/campaign.json",
+      "entries": 19
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-a.json",
+      "entries": 26
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-b.json",
+      "entries": 9
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/base.json",
+      "sha256": "129bc1039ea5d9815dc032aa00be52ee790cb9cee4f930b2721a4aded00e43d4"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+      "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+      "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+      "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+      "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+      "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+      "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+      "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+      "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+      "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+      "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "档案#21-F: 暗中交易",
+          "children": [
+            {
+              "text": "你在海鸥的鸣叫声中跨越加拉塔大桥：还有多少人能把当年的君士坦丁堡和如今的加拉塔、贝伊奥卢、希什利、哈比耶这些城区联系起来呢？这里现在成了无数异国游商和外交官生活工作的地方。你知道自己要去哪里。时间紧迫，保密要紧，所以你决定不雇翻译，直接前往苏莱曼尼耶建筑群，那里就是你调查的目标——一位名叫艾婕·萨辛的女士——可能工作的地方。\n\n萨辛女士在多个学术领域都很知名，尤其是古物学和艺术史。根据你的情报，她正在新成立的土耳其与穆斯林艺术博物馆担任馆长。但你惊讶的是，自己手上的档案居然还有许多萨辛女士的其他信息，从学校一直追溯到早年生活。这一切都说明，她要么和同志会的其他成员不一样，没有伪装；要么这些都是她精心设计的伪装。\n\n据你所知，萨辛女士已经和基金会有过接触，发来过介绍。这可能是个陷阱。但要是她真想会面，你可不能错过这么好的机会。所幸她的办公室并不难找，门上还用土耳其语和好几种语言写了她的名字和头衔全称。你敲了门，她请你进去。你小心翼翼地进屋，眼神本能地扫过屋内每个角落，探寻一切可能的藏身之处。\n\n这间屋子暖洋洋，富丽堂皇。墙上挂着华美的绣帷和各种风格的绘画，从几百年前，到非常新近的时期都有。架子装满了色彩斑斓的陶瓷、玻璃和老旧发霉的文献，都要溢出来了。“欢迎。”萨辛女士露出一个温暖的微笑，仿佛照亮了整个房间。她还算年轻，深色皮肤，有一双深褐色的眼睛，纤细的身材，一看就知道毕生精力都花在了学术上。“有何贵干？”\n\n你告诉萨辛女士，自己收到了她的“先期联络”，知道她想和你会面。她想了一想，瞪大了眼睛：\n\n“噢！所以你是——”她清清喉咙，没有说完。“我懂了，那么，请坐。我们有许多要谈。”\n\n你告诉萨辛女士，她可以先说说自己和同志会的关系。你注意到她一听到组织的名字，就在位子上不安地扭了扭。\n\n“正如你所知，同志会和全世界许多事情都有瓜葛。”她斟酌着每个用词，“但他们的——我们的——目标，和你其实并无不同。我花了许多年为组织研究，和你们的人研究一样的东西。这些奥术力量之物可以用于保护人类免遭我们不可见的威胁。”"
+            },
+            {
+              "text": "仅当有调查员绑定了钥匙才能阅读：你将自己的钥匙掏给萨辛女士看，问这是不是就是她提到的神器。“看来你已经有这样的东西了。你是从哪获得的？”\n\n你告诉萨辛女士你赶在她的同事造成进一步危害前回收了钥匙。\n\n“钥匙？你是这么称呼它的？有趣，但也不意外。在人类历史上，许多人用不同的名字称呼过它们。你提出的术语倒是很好。它们确实是钥匙，可以解锁其他世界的力量。这力量足以拯救世界，也可以毁灭世界。”"
+            },
+            {
+              "text": "或者控制人类——你将这想法脱口而出。\n\n萨辛女士叹了口气：“你说的没错。但我向你保证，同志会里并不是人人都有这样的目的。也有人就像我一样，只想用钥匙造福他人。”\n\n你问萨辛女士，既然同志会在世界其他地方为非作歹，自己又为什么要相信她。\n\n“我们的组织并没有领袖或是等级。”她解释道，“我们独立行动，只是目标一致。但有的人……”她艰辛地吞了口口水，打了个寒战。“有的人用的方法我并不能赞成。这些方法不仅恶心，而且，说实话，也让我害怕。”\n\n你依然不知道萨辛女士是否坦诚，但要是不听她说完就没意义了。你问她君士坦丁堡现在是什么情况，她又为什么要和基金会接触。“伊斯坦布尔。”她纠正你，“伊斯坦布尔的人民已经不用那个名字称呼这座城市了。”你暗暗记下，以后只叫这里伊斯坦布尔。“你追寻的遗物中有一个就在伊斯坦布尔。这个我也找了很多年。这个护身符绑定了一个强大的实体，有人会称之为‘魔神’，就是你在《阿拉丁》的故事里见到的那个。一般来说，这是唯一一种有自由意志的非人类实体。”\n\n她萨辛女士面无表情，你问她是否真的相信这些。“魔神？不，我倒是不相信这个护身符会跟魔神有关。我相信它的主宰是某种更为强大的非人存在。某种不属于地球的东西。而且盯上它的绝不仅仅只有我们。大战之后，奥斯曼帝国解体，许多记录失于混沌，更多的重现于世，其中就有些和这块护身符有关。另一群在找的人……他们为了获得这样的知识所做的事情……”她脸色惨白，努力保持镇定。“他们不择手段，谋杀和酷刑也司空见惯。要是这群疯人最终得手，会发生什么样的惨剧，我都不敢想。最坏的是，我相信我有一位同志正是幕后黑手。我已经很接近了，但要是他们先得手……”\n\n你现在明白萨辛女士为什么来找你了——要是同志会里有人操纵着邪恶的教派，她当然不能用这样的信息去找他们。你脑海中依然盘旋着疑虑。“拜托。”她恳求了你，“赶在邪恶的教徒前面找到护身符。我可不想看到他们崇拜的到底是什么。要是你能帮我取得护身符，我将竭尽所能地回报。我保证决不让其他……组织里更危险的人物染指它。在我的看管下，它会是安全无害的。要是你亲自持有，我就不敢保证了。拜托。我们目标一致，我保证。”\n\n调查员必须决定(选择一项)：\n\n• “好的，我们会找到它，交给你保管。”\n\n• “好的，我们会找到它，交给你保管。”(你在撒谎。)\n\n• “我们会找到这个护身符，但是要自行保管。”"
+            },
+            {
+              "text": "艾婕长长地舒了口气，明显是放松了下来。“谢谢。我得承认，我之前并不确认能否相信你。在这种性命攸关的时刻，得知我们的组织能通力合作，真是让人松了口气。毕竟我们的目标一致。”她站起来和你握手。\n\n你问萨辛女士自己应该从哪里入手。“记载护身符存在的最后一份书面报告出现在15世纪，这座城市被征服的时候。随后记录就藏了起来，可能是为了不让入侵的奥斯曼人找到。之后许多年都销声匿迹，成了闲言碎语刻意隐瞒的传说。但最近……好吧，要是协约国军队入驻突然对它有了兴趣，我也不会奇怪。但现在不要沉迷于揣测了。我会从占领军没有洗劫的地方开始。大学也可能有些资源派的上用场。如果事情发展到动武那一步，别指望我能帮上忙。但我会用自己的方式提供帮助。”\n\n在剧本日志中，记录下特别小组与艾婕合作。\n\n• 从混乱袋中移除1个[elder_thing]标记。加入1个[tablet]标记(如果已有4个，改为每位调查员取得1点经验值)。\n\n进入冒险设置。"
+            },
+            {
+              "text": "艾婕长长地舒了口气，明显是放松了下来。“谢谢。我得承认，我之前并不确认能否相信你。在这种性命攸关的时刻，得知我们的组织能通力合作，真是让人松了口气。毕竟我们的目标一致。”她站起来和你握手。这么骗她让你有种罪恶感，但你不能让钥匙落入其他人手中。萨辛女士可能还是一只披着羊皮的狼。\n\n你问她自己应该从哪里入手。“记载护身符存在的最后一份书面报告出现在15世纪，这座城市被征服的时候。随后记录就藏了起来，可能是为了不让入侵的奥斯曼人找到。之后许多年都销声匿迹，成了闲言碎语刻意隐瞒的传说。但最近……好吧，要是协约国军队入驻突然对它有了兴趣，我也不会奇怪。但现在不要沉迷于揣测了。我会从奥斯曼军队没有洗劫过的地方开始。大学也可能有些资源派的上用场。如果事情发展到动武那一步，别指望我能帮上忙。但我会用自己的方式提供帮助。”\n\n你点点头，发现她正盯着你。她是否怀疑你的真意？是不是因此她才要与你同行？这不重要——木已成舟。剩下的就是找到钥匙了。\n\n• 在剧本日志中，记录下特别小组欺骗艾婕。\n\n• 从混乱袋中移除1个 [tablet] 标记。加入1个 [elder_thing] 标记(如果已有4个，改为每位调查员取得1点经验值)。\n\n进入冒险设置。"
+            },
+            {
+              "text": "“明白了。”艾婕脸色一沉，垂头丧气。“我还指望咱们的组织能通力合作呢。毕竟我们的目标一致。但是……”她叹了口气，“我还是要感谢你的诚实。在那么多的勾心斗角之后，我还是欣赏这种品质。”\n\n你问她既然这样，你们之间又会如何，一边希望这不会让你们就此大战一场。“说实话，我只是不希望护身符落入那些意图危害人类的奸恶手中。我希望能信任正确的人，但要是你不愿让我妥善看顾它……”她烦躁地转起笔，“据我所知，你来这里和他们的目的一样。我不会挡你的道……但要是你执意留着钥匙，不受监管，那我也不会帮你。”\n\n你想反对，却发现自己根本站不住脚。你没有相信她，那她不信你也是公平。你当然只会用钥匙保护人类，但你也拿不出真凭实据。“你最好从奥斯曼人15世纪入侵时没洗劫的地方开始。大学也可能有些资源对你派的上用场。”\n\n她站起来送你出门，祝你好运。门在你背后关上了，再没言语。\n\n在剧本日志中，记录下特别小组拒绝了艾婕的提议.\n\n进入冒险设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "收齐以下遭遇组的所有卡牌：暗中交易、犹格斯星使徒、黑暗笼罩、远古恶魔、黑暗异教徒、上锁的门、午夜假面。在收齐午夜假面遭遇组时，只收齐五张诡计卡牌(2张错误指示和3张追猎鬼影)。不要收齐该遭遇组中的地点、场景、密谋和冒险参考卡牌。"
+            },
+            {
+              "text": "将双面的“彰显/解封”剧情卡牌放置入场，放在冒险参考卡牌旁，彰显面朝上。"
+            },
+            {
+              "text": "检查剧本日志中已经流逝了多少时间。"
+            },
+            {
+              "text": "如果流逝的时间小于等于10，不作改动。"
+            },
+            {
+              "text": "如果流逝的时间为11到17，在彰显上放置数量等于调查员人数一半的线索(向上取整)。"
+            },
+            {
+              "text": "如果流逝的时间为18到24，在彰显上放置数量等于调查员人数的线索。"
+            },
+            {
+              "text": "如果流逝的时间大于等于25，在彰显上放置数量等于调查员人数两倍的线索。"
+            },
+            {
+              "text": "将以下地点放置入场：圣索菲亚、伊斯坦布尔大学、狄奥多西方尖碑、加拉塔。圣索菲亚必须位于游戏区域的右侧。"
+            },
+            {
+              "text": "每位调查员从圣索菲亚开始游戏。"
+            },
+            {
+              "text": "检查剧本日志。"
+            },
+            {
+              "text": "如果特别小组与艾婕合作，或特别小组欺骗艾婕，将艾婕·萨辛剧情支援放置入场，由任意一位调查员控制。"
+            },
+            {
+              "text": "如果特别小组拒绝了艾婕的提议，将艾婕·萨辛剧情支援从游戏中移除。"
+            },
+            {
+              "text": "将下列卡牌放在一边，位于场外：所有七张大巴扎地点、幽影预示者敌人、犹格斯星的密使敌人、加拉塔码头地点、扭曲反棱镜钥匙、追逐场景/密谋卡牌。"
+            },
+            {
+              "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：3张祭司(任意)、密会巫师、邪恶野心家(A、B、C)、犹格斯星的密使。将这些卡牌放在一边，位于场外。"
+            },
+            {
+              "text": "按玩家顺序，每位调查员依次从遭遇牌库顶弃掉卡牌，直到弃掉一张异教徒敌人。每位调查员抽取其弃掉的敌人，结算其(由密谋1a获得的)隐匿关键词。在所有调查员都执行了此步骤后，将弃掉的其他每张卡牌混洗回遭遇牌库。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [
+        {
+          "title": "第2幕设置",
+          "children": [
+            {
+              "text": "当你在第1幕b中受到此指示时，按照以下说明为第2幕设置游戏区域。"
+            },
+            {
+              "text": "将当前的每个地点放在一边，不要弃掉那些地点上的任何卡牌或标记。那些地点（连同其上的卡牌和标记）在第2幕期间不视为在场上，但之后会以相同的状态重新进入场上。（在此过程中，调查员不会被击败。）"
+            },
+            {
+              "text": "将七张大巴扎地点洗混，随机将其中一张移出游戏，不要查看它。"
+            },
+            {
+              "text": "从混乱袋中随机揭示一个标记，并找出与所揭示混乱标记对应的图表（如果没有对应的图表，则重试）。"
+            },
+            {
+              "text": "将剩余的六张大巴扎地点放入场上，按照随机选出的图表以行列布局排列。注意，其中一张地点被指定为“入口”，另一张被指定为“东门”。"
+            },
+            {
+              "text": "将每位调查员移动到随机选出的图表中标记为“入口”的大巴扎地点。"
+            },
+            {
+              "text": "将第1幕四个地点上的所有隐匿迷你卡牌洗混，并尽可能均匀地分配到场上的大巴扎地点中。"
+            },
+            {
+              "text": "你现在可以进入第2幕了。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "text": "检查剧本日志"
+            },
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局(每位调查员被击败)且是场景1或2：事实证明，找到护身符的位置比你所想的更危险——更致命。艾婕是对的：教派会不惜一切夺取钥匙，你担心自己已经不能阻止他们。你希望基金会有朝一日能重夺护身符，阻止它绑定的实体继续为害，但在那之前……你打了个寒战，将这个想法抛之脑后。要是艾婕说的没错，真有她的同志在背后主宰教派的举动，那你肯定还会见到护身符的。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 戴红手套的男子拥有扭曲反棱镜，相应更新在剧本日志中。\n\n• 在剧本日志中记1时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "未达成任何结局",
+              "children": [
+                {
+                  "text": "如果未达成任何结局（每位调查员撤退或者被击败）且是场景3：事实证明，找到护身符的位置比你所想的更危险——更致命。艾婕是对的：教派会不惜一切夺取钥匙，你担心自己已经不能阻止他们……\n\n• 跳到结局6。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1: 你和艾婕才刚刚安全出城，你就将护身符封回容器，念出真言束缚住它的力量。天空中蔓延的离奇日食随即消散。"
+                },
+                {
+                  "text": "特别小组拒绝了艾婕的提议"
+                },
+                {
+                  "text": "特别小组与艾婕合作或如果特别小组欺骗艾婕"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2: 日光重又洒下，你远眺海面，不禁赞叹这浪花轻拂、波光粼粼的美景。你远离伊斯坦布尔，又重燃了一点希望。也许你可以多信任艾婕一点的，但……你摇摇脑袋，严肃地坚定决心。不——这件遗物你必须亲自保卫。别人可能用它为非作歹。至少在你手里的时候，你知道它是安全的。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 选择一位调查员拥有扭曲反棱镜，相应更新在剧本日志中。\n\n• 在剧本日志中记2时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局3",
+              "children": [
+                {
+                  "text": "结局3: 艾婕叹了口气，并不十分坚定，脸上依然焦急。“唉，他们可能已经看到我了，我还是暂时离开伊斯坦布尔一会儿吧。我得给博物馆请个假了。与此同时……”她转向你，扬起了眉毛。“我们的协议……？”"
+                },
+                {
+                  "text": "特别小组与艾婕合作"
+                },
+                {
+                  "text": "特别小组欺骗艾婕"
+                }
+              ]
+            },
+            {
+              "title": "结局4",
+              "children": [
+                {
+                  "text": "结局4: 你将护身符交出，相信艾婕能如约妥善保管。她舒了口气，如释重负，将宝物安全放入袋中。“谢谢，谢谢你信任我。”她说道，“我会一直随身带着的。”日光重又洒下，你远眺海面，不禁赞叹这浪花轻拂、波光粼粼的美景。末了，你问艾婕她现在要去哪里。毕竟她在伊斯坦布尔的位置已经受到了牵连。“同志会有一个秘密碰头的地方。去那里细究……重要事项。我们不常碰头，但我相信现在发生的事情需要开次会了。我会召集其他人出席。”她悄咪咪地朝你这儿望了一眼，“也许，等到那时候，我们还会再见。”你远离伊斯坦布尔，又重燃了一点希望。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下艾婕信任特别小组。\n\n• 艾婕·萨辛拥有扭曲反棱镜，相应更新在剧本日志中。\n\n• 在剧本日志中记3时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局5",
+              "children": [
+                {
+                  "text": "结局5: 你盯着艾婕，向她道歉，说自己不能把这东西给她，尤其是现在，你见识了它解封之后会爆发怎样的灾祸。她的表情变得冷酷而愤怒。“我懂了。”她眯起眼睛，“……你从来都没有想过要给我。”她猜对了。你试着解释，却被她打断：“不，我懂的。真的，都懂的。”她退后一步，摆出了警觉的防御姿势。“你和他们都一样。为了钥匙，你会不惜一切手段，不是吗？”你反对——你并不是为了自己求取钥匙，你只不过是想要严加看管。钥匙在你手中才更安全，才会用来保护人类。“你觉得他们是怎么说的？”她吼道，“朱？范？欧瓦瑞兹？一模一样。‘是为了人类的利益。’他们也这么说。为了这样的目的，就不择手段。”她转身离开，最后的话语盘桓不去：“你倒是很配同志会。”你离开伊斯坦布尔，反思自己的决定，封印的容器在手中翻来覆去。你知道自己做了正确的事情，但依然无法摆脱艾婕的话语。也许你们还能重归于好……要是她能听得进去。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 在剧本日志中，记录下艾婕不信任特别小组。\n\n• 选择一位调查员拥有扭曲反棱镜，相应更新在剧本日志中。\n\n• 在剧本日志中记3时间。你可以启程。"
+                }
+              ]
+            },
+            {
+              "title": "结局6",
+              "children": [
+                {
+                  "text": "结局6: 你成功找到了护身符的所在，但教派捷足先登，将其夺走。他们趁你发觉之前就逃出城去，封印也已解除。这世界将因其遭受怎样的恐怖，只有天知道了。你希望基金会有朝一日能重夺护身符，阻止它绑定的实体继续为害，但在那之前……你打了个寒战，将这个想法抛之脑后。要是艾婕说的没错，真有她的同志在背后主宰教派的举动，那你肯定还会见到护身符的。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n\n• 戴红手套的男子拥有扭曲反棱镜，相应更新在剧本日志中。\n\n• 在剧本日志中记2时间。你可以启程。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "File #21–F: Dealings in the Dark",
+          "children": [
+            {
+              "text": "Intro 1: Gulls cry out as you cross the Galata Bridge: what many would call the link between the traditional city of Constantinople, and the districts of Galata, Beyoğlu, Şişli and Harbiye, where a large proportion of foreign merchants and diplomats live and work. Since you know where you are headed, and time and secrecy are of the essence, you decide against hiring a translator, and head directly to the Süleymaniye Complex, where the target of your investigation—a Ms. Ece Şahin—supposedly works.\n\nMs. Şahin has made a name for herself in several fields of academia, specifically in the fields of antiquity and art history. According to your intel, she works as a curator in the recently established Turkish and Islamic Arts Museum, but to your surprise, your case files include a wealth of other information about Ms. Şahin, from her schooling all the way back to her early life. All of this points to one of two conclusions: either she is not in hiding like the other members of the Coterie, or she has crafted an extensive cover story.\n\nAccording to your intel, Ms. Şahin has already reached out to the Foundation by way of an offer of introduction. It could be a trap, but if she truly wishes to meet, you can’t turn down such an opportunity. Thankfully, her office is not difficult to find, the door marked with her name and full title in Turkish and several other languages. You knock and she bids you to enter, which you do with much caution, eyes instinctively darting to every one of the room’s corners and hiding places.\n\nThe room is warm and richly decorated, the walls covered in beautiful tapestries and paintings of many styles ranging from hundreds of years old to very recent, and shelves filled to the brim with a variety of colorful ceramics, glassware, and old, musty texts. “Greetings,” Ms. Şahin says with a warm smile that seems to brighten the room. She is a young woman with dark tan skin, hazel eyes, and the wispy figure of one who has spent her entire life in academia. “What can I do for you?”\n\nYou inform Ms. Şahin that you received her “earlier communication” and her desire to meet with you, which she takes a moment to interpret before her eyes go wide.\n\n“Oh! So you are—” she clears her throat and does not finish that train of thought. “I see. Then, in that case, please, sit down. We have much to discuss.”\n\nYou tell Ms. Şahin that she can start by explaining her involvement with the Coterie. Your eyes catch her shifting uncomfortably in her seat at the mention of the organization’s name.\n\n“The Coterie is involved with a great many things all over the world, as you likely already know,” she says, choosing each word delicately, “but their— our—goals are not so different from your own. I have spent many years as a researcher for the organization, searching for the very same things your employers seek. Objects of arcane power that can be used to defend humanity from the threats we cannot see.”"
+            },
+            {
+              "text": "Read only if at least 1 key is bound to an investigator: You reveal your Key and show it to Ms. Şahin, wondering if this is one of these artifacts she speaks of. “I see you are already in possession of one such object. Where did you acquire this?”\n\nYou tell Ms. Şahin that you recovered this Key before one of her colleagues could cause further harm with it.\n\n“Key? Is that what you call them? Interesting. But not surprising. They have been called many things by many people throughout human history. Your terminology is apropos. They are the key to unlock power from other realms. Power enough to save the world, or to doom it.”"
+            },
+            {
+              "text": "Or to control humanity, you note aloud.\n\nMs. Şahin sighs. “You are not wrong. But I assure you not all of us within the Coterie would use them for such purposes. There are those, like myself, who wish only to use them for the good of others.”\n\nYou ask Ms. Şahin why you should trust her, given the actions of the Coterie in other places around the world.\n\n“Ours is not an organization with a leader or a hierarchy,” she explains. “We operate independently in furtherance of a unified goal. But some…” she swallows hard with a shudder. “Some employ methods I do not agree with. Methods which disgust and, if I am being wholly honest, terrify me.”\n\nYou still don’t know if Ms. Şahin is telling the truth, but there’s no point in not hearing her out. You ask her what the situation in Constantinople is, and why she has sought an audience with the Foundation. “Istanbul,” she corrects you. “The people of Istanbul no longer refer to this city by that name.” You make a note to yourself to refer to the city only as Istanbul from here on out. “One of the relics you have been searching for is here, in Istanbul. It is one I have been seeking for many years, a talisman bound to a powerful entity, what some might call a ‘ jinni.’ Or in the traditional sense, the only kind of non-human entity with the capability to exercise free will.”\n\nJudging from Ms. Şahin’s clinical definition, you wonder aloud if Ms. Şahin believes this to be true. “A jinni? No, I do not believe this talisman is bound to a jinni. I suspect its master is something even more powerful and inhuman. Something not of Earth at all. And the two of us are not the only ones looking for it. After the Great War and the dismantling of the Ottoman Empire, many records were thrown into chaos, but many more emerged from obscurity, including those pertaining to this talisman. The other group searching for it…the things they have done in search of this knowledge…” her face pales, and she struggles to keep her composure. “They’ll do anything to get their hands on it. Murder and torture are just tools to them. I hate to think of what sort of heinous acts these villains would commit if they managed to obtain it. And the worst part is, I believe one of my cohorts may be the one pulling the strings. I am so close to finding it, but if they find it first…”\n\nYou understand now why Ms. Şahin came to you—if one of the Coterie is behind this cult’s actions, she could not go to them with this information. Still, lingering doubt toils in your mind. “Please,” she pleads with you. “Find the talisman before this cult does. I do not wish to see what entity it is they worship. I’ll do what I can to help you if you place the talisman into my care afterward. In return, I promise never to relinquish it to the control of the other…more dangerous members of my organization. It will remain safe and tethered in my control. I cannot guarantee the same should you wield it yourself. Please, we are on the same side, I assure you.”\n\nThe investigators must decide (choose one):\n\n• “All right. We will find it and place it in your care.” Proceed to Intro 2.\n\n• “All right. We will find it and place it in your care.” (You are lying.) Skip to Intro 3.\n\n• “We will track down this talisman, but we will be taking it into our custody.” Skip to Intro 4."
+            },
+            {
+              "text": "Intro 2: Ece lets out a long breath, visibly relieved. “Thank you. I will admit, I wasn’t sure if I could trust you. It is a comfort to know that our two organizations can work together when lives are at stake. After all, we share the same goal.” She rises to her feet and shakes your hand.\n\nYou ask Ms. Şahin where you should begin searching. “The last written account of the talisman’s existence was during the city’s conquest in the 15th century. It was likely hidden in order to keep the invading Ottomans from finding it. After that, it remained hidden for many long years. It was naught but a fable, spoken of in hushed voices and whispers. But due to recent events…well, it would not surprise me if the recent Allied occupation of the city had something to do with this sudden interest in finding it. But let us not get buried in conjecture. I would begin looking in places that were not sacked by the conquering army. The university may also be a useful resource for you. As for me, I am not particularly helpful in a fight, if it comes to that. But I can provide you with aid, in my own way.”\n\nIn your Campaign Log, record the cell is working with Ece.\n\n• Remove 1 [elder_thing] token from the chaos bag. Add 1 [tablet] token (if there are already 4, each investigator earns 1 experience instead).\n\nProceed to Setup."
+            },
+            {
+              "text": "Intro 3: Ece lets out a long breath, visibly relieved. “Thank you. I will admit, I wasn’t sure if I could trust you. It is a comfort to know that our two organizations can work together when lives are at stake. After all, we share the same goal.” She rises to her feet and shakes your hand. You feel a pang of guilt for deceiving her, but you can’t allow the Key to land in the hands of anyone else. Ms. Şahin may yet still be a wolf in sheep’s clothing.\n\nYou ask her where you should begin searching. “The last written account of the talisman’s existence was during the city’s conquest in the 15th century. It was likely hidden in order to keep the invading Ottomans from finding it. After that, it remained hidden for many long years. It was naught but a fable, spoken of in hushed voices and whispers. But due to recent events… well, it would not surprise me if the recent Allied occupation of the city had something to do with this sudden interest in finding it. But let us not get buried in conjecture. I would begin looking in places that were not sacked by the Ottomans. The university may also be a useful resource for you. As for me, I am not particularly helpful in a fight, if it comes to that. But I can provide you with aid, in my own way.”\n\nYou nod, feeling her eyes fixed upon you. Does she suspect your true intentions? Is that why she wishes to travel alongside you? It matters not— what’s done is done. All that’s left is to find the Key.\n\n• In your Campaign Log, record the cell is deceiving Ece.\n\n• Remove 1 [tablet] token from the chaos bag. Add 1 [elder_thing] token (if there are already 4, each investigator earns 1 experience instead).\n\nProceed to Setup."
+            },
+            {
+              "text": "Intro 4: “I see.” Ece’s face falls, downcast. “I was truly hoping our two organizations could work together. After all, we share the same goal. But…” she sighs. “I suppose your honesty is still appreciated. After all the scheming and plotting, I prefer that to the alternative.”\n\nYou ask where this puts the two of you, hoping you won’t have to fight a war on two fronts. “Look. I was telling you the truth. I only want to prevent the talisman from falling into the hands of those who would use it to harm humanity. I hope that I put my trust in the right people, but if you’re unwilling to keep it in my protective custody…” She fidgets with her pen. “For all I know, you’re here for the same reasons they are. I won’t get in your way, but…I cannot in good faith help you if you intend to keep the Key without supervision.”\n\nYou try to protest, but you don’t have much of a leg to stand on. You chose not to trust her, so her decision not to trust you is equally valid. Of course you would only use the Keys you acquire to protect humanity, but you have nothing other than your word to give her. “Your best bet is to start your search in places that were not sacked when the Ottomans invaded the city in the 15th century. The university may also be a useful resource for you.”\n\nShe stands and escorts you to the door, wishing you luck. The door shuts behind you without another word.\n\nIn your Campaign Log, record the cell refused Ece’s offer.\n\nProceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "text": "Gather all cards from the following encounter sets: Dealings in the Dark, Agents of Yuggoth, Dark Veiling, Ancient Evils, Dark Cult, Locked Doors, and The Midnight Masks. When gathering The Midnight Masks encounter set, only gather the five treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather the locations, acts, agendas, and scenario reference cards from that set."
+            },
+            {
+              "text": "Put the double-sided “The Unveiling / The Unsealing” story card into play next to the scenario reference card, The Unveiling side faceup."
+            },
+            {
+              "text": "Check how much time has passed in the Campaign Log."
+            },
+            {
+              "text": "If 10 or fewer time has passed, no changes are made."
+            },
+            {
+              "text": "If 11–17 time has passed, place clues on The Unveiling equal to half the number of investigators (rounded up)."
+            },
+            {
+              "text": "If 18–24 time has passed, place clues on The Unveiling equal to the number of investigators."
+            },
+            {
+              "text": "If 25 or more time has passed, place clues on The Unveiling equal to twice the number of investigators."
+            },
+            {
+              "text": "Put the following locations into play: Hagia Sophia, Istanbul University, Obelisk of Theodosius, and Galata. Hagia Sophia must be on the right hand side of the play area."
+            },
+            {
+              "text": "Each investigator begins play at the Hagia Sophia."
+            },
+            {
+              "text": "Check the Campaign Log."
+            },
+            {
+              "text": "If the cell is working with Ece, or if the cell is deceiving Ece, put the Ece Şahin story asset into play under any investigator’s control."
+            },
+            {
+              "text": "If the cell refused Ece’s offer, remove the Ece Şahin story asset from the game."
+            },
+            {
+              "text": "Set each of the following cards aside, out of play: Each of the seven Grand Bazaar locations, the Umbral Harbinger enemy, the Emissary from Yuggoth enemy, the Galata Docks location, the Twisted Antiprism key, and The Chase act/agenda card."
+            },
+            {
+              "text": "Gather each decoy mini-card and each of the following mini- cards: 3x Acolyte (any), Wizard of the Order, Sinister Aspirants (A, B and C), and Emissary from Yuggoth. Set them aside, out of play."
+            },
+            {
+              "text": "One at a time, in player order, each investigator discards cards from the top of the encounter deck until they discard a Cultist enemy. Each investigator draws the enemy they discarded, resolving its concealed keyword (as granted by agenda 1a). After all investigators have performed this step, shuffle each other discarded card back into the encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [
+        {
+          "title": "Act 2 Setup",
+          "children": [
+            {
+              "text": "When you are instructed to do so during act 1b, follow these instructions to set up the play area for act 2."
+            },
+            {
+              "text": "Set each of the current locations aside, without discarding any cards or tokens at those locations. Those locations (along with cards and tokens at those locations) are not considered to be in play during act 2, but will re-enter play later in the same state. (Investigators are not defeated during this process.)"
+            },
+            {
+              "text": "Shuffle the seven Grand Bazaar locations and remove one of them from the game at random, without looking at it."
+            },
+            {
+              "text": "Reveal a random token from the chaos bag, and find the diagram that matches the revealed chaos token (if none match, retry)."
+            },
+            {
+              "text": "Put the remaining six Grand Bazaar locations into play, arranged in a pattern of rows and columns according to the randomly chosen diagram. Note that one of these locations is designated as the “entrance” and one is designated as the “east gate.”"
+            },
+            {
+              "text": "Move each investigator to the Grand Bazaar location marked in the randomly chosen diagram as the “entrance.”"
+            },
+            {
+              "text": "Shuffle together each of the concealed mini-cards on the four locations from act 1, and divide them as evenly as possible among the Grand Bazaar locations in play."
+            },
+            {
+              "text": "You are now ready to proceed to act 2."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "text": "Check the Campaign Log."
+            },
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached because each investigator was defeated, and it is act 1 or 2: Finding the location of the talisman proved to be more difficult—and more deadly—than you thought. Ece was right: these cultists will stop at nothing to get their hands on the Key, and you worry there is nothing you can do to stop them. You hope that some day the Foundation may be able to recover the talisman and prevent whatever entity it binds from causing too much harm, but until then…you shudder and put such thoughts away for the time being. If Ece was right about one of her cohorts being behind this cult’s actions, you’ll surely see the talisman again.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• The Red-Gloved Man is the bearer of The Twisted Antiprism. Update the Campaign Log accordingly.\n\n• Mark 1 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "No Resolution",
+              "children": [
+                {
+                  "text": "If no resolution was reached (each investigator resigned or was defeated) and it is act 3: Finding the location of the talisman proved to be more difficult—and more deadly—than you thought. Ece was right: these cultists will stop at nothing to get their hands on the Key, and you worry there is nothing you can do to stop them…\n\n• Skip to Resolution 6."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: Once you and Ece are safely out of the city, you seal the talisman back in its case, speaking the proper words to contain its power. As you do, the uncanny eclipse looming over the city comes to a swift end."
+                },
+                {
+                  "text": "If the cell refused Ece’s offer, skip to Resolution 2."
+                },
+                {
+                  "text": "If the cell is working with Ece or if the cell is deceiving Ece, skip to Resolution 3"
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: You take a moment to look out over the sea and appreciate the beauty in the gentle waves, glimmering with the reflection of the now-shining sun. As you leave Istanbul behind, you allow yourself a bit of hope. Perhaps you could have trusted Ece more, but…you shake your head, filled with grim resolve. No—this relic is something you must protect yourself. Someone else might use it for ill. At least in your hands, you know it’s safe.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• Choose an investigator to be the bearer of The Twisted Antiprism and update the Campaign Log accordingly.\n\n• Mark 2 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 3",
+              "children": [
+                {
+                  "text": "Resolution 3: Ece breathes an unsure sigh, worry still etched in her expression. “Well, in case they saw me, I should probably leave Istanbul for a short while. I’ll have to put in a leave of absence at the museum. In the meantime…” she turns to face you, eyebrows raised. “As for our agreement…?”"
+                },
+                {
+                  "text": "If the cell is working with Ece, proceed to Resolution 4."
+                },
+                {
+                  "text": "If the cell is deceiving Ece, proceed to Resolution 5."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 4",
+              "children": [
+                {
+                  "text": "Resolution 4: You hand over the talisman, trusting that Ece will keep it safe in her possession as promised. She breathes a sigh of relief as she stores it safely in her side pack. “Thank you. For trusting me,” she says. “I’ll keep it on my person at all times.” You take a moment to look out over the sea and appreciate the beauty in the gentle waves, glimmering with the reflection of the now-shining sun. Finally, you ask Ece where she will go now that her position in Istanbul is compromised. “There is a place where the Coterie meets in secret. To go over…important happenings. We do not consort often, but I believe these events warrant a caucus. I will have to call the rest to assemble.” She sneaks a furtive glance in your direction. “Perhaps, when that times comes, we will meet again.” As you leave Istanbul behind, you allow yourself a bit of hope.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record Ece trusts the cell.\n\n• Ece Şahin is the bearer of The Twisted Antiprism. Update the Campaign Log accordingly.\n\n• Mark 3 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 5",
+              "children": [
+                {
+                  "text": "Resolution 5: You lock eyes with Ece and apologize, explaining that you cannot give it to her. Especially after seeing the havoc it could wreak when unsealed. Her expression sours into cold anger. “I see.” She narrows her eyes. “…you had no intention of ever giving it to me,” she guesses correctly. You try to explain, but she stops you. “No, I understand. Really, I do.” She takes a step back, her posture wary, defensive. “You’re just like the others. You’ll do anything to get your hands on the Keys, won’t you?” You protest—it’s not that you want them for yourself, it’s just that you need to keep watch over them. In your possession, they’ll be safe, and only ever used to protect humanity. “And what do you suppose the rest of them say?” She barks. “Tzu? Amaranth? Álvarez? The very same. ‘It’s for the good of humanity,’ they claim, and to that end, all means are justified.” She turns and departs, her final words lingering in the air: “You would fit in nicely with the Coterie.” As you leave Istanbul behind, you reflect on your decision, turning the sealed case over and over in your hands. You know it was the right thing to do, but still, Ece’s words haunt you. Perhaps you’ll be able to reconcile some other time…if she’ll even hear you out.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• In your Campaign Log, record Ece does not trust the cell.\n\n• Choose an investigator to be the bearer of The Twisted Antiprism and update the Campaign Log accordingly.\n\n• Mark 3 time in your Campaign Log. You may embark."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 6",
+              "children": [
+                {
+                  "text": "Resolution 6: You managed to find the location of the talisman, but the cult was one step ahead of you, swooping in and snatching it for themselves. Before you knew it, they had escaped the city with the entity unsealed. Who knows what horrors they’ve unleashed upon the world. You hope that some day the Foundation may be able to recover the talisman and prevent whatever entity it binds from causing too much harm, but until then…you shudder and put such thoughts away for the time being. If Ece was right about one of her cohorts being behind this cult’s actions, you’ll surely see the talisman again.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n\n• The Red-Gloved Man is the bearer of The Twisted Antiprism. Update the Campaign Log accordingly.\n\n• Mark 2 time in your Campaign Log. You may embark."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -4,8 +4,12 @@
 //
 // 读点：api.moveDestinations/api.moveInvestigator（移动）、api.evade（躲避）、api.investigate（调查）
 // 都是不消耗行动的免费执行入口；费用走 cost { action:false, exhaust:true, uses:1 }。
+// 「在你回合期间」= criteria: [ownTurn()]：玩家窗口会向所有调查员询问免费能力，
+// 缺 criteria 时这张卡在别人的回合里也会被列出来（与 02108 探路者同一类漏网）。
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
+
+import { ownTurn } from '../../engine/matcher.js'
 
 const chooseAction = (inv, state, api) => {
   const engaged = state.enemies.filter(enemy => inv.engaged.includes(enemy.id) && !enemy.exhausted && !enemy.defeated)
@@ -36,6 +40,7 @@ export default {
   usesType: 'secrets',
   abilities: [
     { kind: 'free', label: '横置并花费 1 秘密：执行一个移动/躲避/调查行动', cost: { action: false, exhaust: true, uses: 1 },
+      criteria: [ownTurn()],
       resolve: ({ inv, state, api }) => { chooseAction(inv, state, api) } },
   ],
   modifiers: [],

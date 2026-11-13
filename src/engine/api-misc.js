@@ -13,6 +13,7 @@ import { availableResources } from './resource-bank.js'
 // 依赖注入同前几批；doFight 是工厂产物，用惰性 thunk 注入避免 TDZ。
 
 import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
+import { reactionSource } from './reaction-source.js'
 import { syncSpellCredit } from './spell-actions.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
@@ -305,7 +306,8 @@ export function createMiscApi(state, events, deps) {
       if (!inv || !(amount > 0)) return 0
       const context = reactionWindow(state, 'wouldLoseActions', {
         when: 'wouldLoseActions', seat: inv.seat, amount, what: 'actions', location: inv.location,
-        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
+        // 来源判定统一走 reaction-source.js（遭遇卡/敌人攻击/其它）；「否定存在」按这个字段决定是否可打出。
+        source: reactionSource(state),
         prompt: `${inv.name} 将要失去 ${amount} 个行动`,
       }, events)
       if (context.cancelled) {
@@ -525,7 +527,16 @@ export function createMiscApi(state, events, deps) {
     },
     exhaust: card => {
       if (state.enemies.includes(card)) return scenarioRuntime(state, events).exhaustEnemy(card)
-      if (card) card.exhausted = true
+      if (!card || card.exhausted) return
+      card.exhausted = true
+      // 2026-11-13 P1-6（09019 邦妮）：任何来源横置一张支援都要开 assetExhausted 窗口。
+      // 此前唯一派发点是旧 DSL 支援自身 cost.exhaust，`api.exhaust` 与能力支付都不派发。
+      const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
+      if (!owner) return
+      reactionWindow(state, 'assetExhausted', {
+        when: 'assetExhausted', seat: owner.seat, assetId: card.id, assetCode: card.code,
+        location: owner.location, prompt: `「${cardName(card.code)}」被横置后`,
+      }, events, { allowNested: true })
     },
     ready: card => {
       if (state.enemies.includes(card)) return scenarioRuntime(state, events).readyEnemy(card)
@@ -846,10 +857,15 @@ export function createMiscApi(state, events, deps) {
     // Phase 5（5c）：治愈支援自身承受的伤害/恐惧（「急救」这类卡）。
     healAsset: (card, spec = {}) => {
       if (!card) return card
-      card.damage = Math.max(0, (card.damage || 0) - (spec.damage || 0))
+      const owner = spec.owner || state.investigators[spec.ownerSeat ?? state.currentSeat]
+      if (spec.damage) {
+        // 2026-11-13 P1-6（09004）：盟友被卡牌效果治愈伤害也要走统一治疗入口，
+        // 这样 damageHealed 窗口带 assetId（此前直接扣 card.damage，反应永不触发）。
+        if (owner) healDamageFrom(state, card, spec.damage, events, { ...spec, owner })
+        else card.damage = Math.max(0, (card.damage || 0) - spec.damage)
+      }
       if (spec.horror) {
         // 第 5 步 P6：支援上的恐惧同样走统一入口；owner 由调用方（描述子上下文）给出。
-        const owner = spec.owner || state.investigators[spec.ownerSeat ?? state.currentSeat]
         if (owner) healHorrorFrom(state, card, spec.horror, events, { ...spec, owner })
         else card.horror = Math.max(0, (card.horror || 0) - spec.horror)
       }
@@ -1337,6 +1353,47 @@ export function createMiscApi(state, events, deps) {
       const context = state._reaction
       const owner = state.investigators[seat]
       if (!context || !owner || context.when !== 'harmDealt') return null
+      // 2026-11-11：「否定存在」口径 —— 卡面「造成以下一项（选择一项）……你忽略该效果的影响」，
+      // 伤害与恐惧是两次独立的效果面向：只能整体忽略其中一项（2 伤害 + 2 恐惧 → 二选一），
+      // 不能像“我见过更糟的/吉人天相”那样自由拆分点数（那些卡写的是“最多 N 点”，走下面的
+      // maximum 分支）。whole 模式只提供整项选项；只有一项可忽略时直接结算不询问。
+      if (options.whole === true) {
+        const damage = Math.max(0, Number(context.damage) || 0)
+        const horror = Math.max(0, Number(context.horror) || 0)
+        const aspects = []
+        if (damage > 0) aspects.push({ id: 'damage', damage, horror: 0 })
+        if (horror > 0) aspects.push({ id: 'horror', damage: 0, horror })
+        if (!aspects.length) return null
+        const labelOf = aspect => {
+          const amount = aspect.damage || aspect.horror
+          const what = aspect.damage > 0 ? '伤害' : '恐惧'
+          return options.heal === true
+            ? `忽略这 ${amount} 点${what}，改为治愈 ${amount} 点${what}`
+            : `忽略 ${amount} 点${what}`
+        }
+        const answer = aspects.length === 1 ? aspects[0].id : requestChoice(state, {
+          kind: 'harm', source: options.source || 'cancelHarm', seat,
+          prompt: options.prompt || '选择要忽略的那一项效果。',
+          options: aspects.map(aspect => ({ id: aspect.id, label: labelOf(aspect) })),
+        })
+        const chosen = aspects.find(aspect => aspect.id === answer)
+        if (!chosen) return null
+        context.damage = Math.max(0, damage - chosen.damage)
+        context.horror = Math.max(0, horror - chosen.horror)
+        const amount = chosen.damage || chosen.horror
+        const what = chosen.damage > 0 ? '伤害' : '恐惧'
+        // 05280 的反向效果：忽略多少就治愈多少（伤害/恐惧各自对应；实际治愈量受当前伤害/恐惧限制）。
+        let healed = 0
+        if (options.heal === true) {
+          healed = chosen.damage > 0
+            ? healDamageFrom(state, owner, chosen.damage, events, { log: false })
+            : healHorrorFrom(state, owner, chosen.horror, events, { log: false })
+        }
+        info(state, events, `${owner.name} 忽略了 ${amount} 点${what}`
+          + (options.heal === true ? `，并治愈了 ${healed} 点${what}。` : '。'))
+        noteCardCancelled(reactionWindow, state, events, { seat, what: 'harm' })
+        return { damage: chosen.damage, horror: chosen.horror }
+      }
       const maximum = options.maximum ?? 5
       const cap = Math.min(maximum, (context.damage || 0) + (context.horror || 0))
       const choices = []

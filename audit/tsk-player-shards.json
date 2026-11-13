@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P6",
+  "generatedBy": "tools/plan-tsk-player.mjs",
+  "status": "planned",
+  "summary": {
+    "total": 108,
+    "shards": [
+      {
+        "id": "M2-1",
+        "worker": "w-m2-1",
+        "count": 27
+      },
+      {
+        "id": "M2-2",
+        "worker": "w-m2-2",
+        "count": 27
+      },
+      {
+        "id": "M2-3",
+        "worker": "w-m2-3",
+        "count": 27
+      },
+      {
+        "id": "M2-4",
+        "worker": "w-m2-4",
+        "count": 27
+      }
+    ],
+    "buildable": 103,
+    "basicWeaknesses": 5,
+    "customizable": 16,
+    "reprintAliases": 1,
+    "byClass": {
+      "guardian": 19,
+      "mystic": 20,
+      "neutral": 10,
+      "rogue": 20,
+      "seeker": 19,
+      "survivor": 20
+    },
+    "byType": {
+      "asset": 54,
+      "enemy": 2,
+      "event": 45,
+      "skill": 7
+    },
+    "byXp": {
+      "0": 61,
+      "1": 11,
+      "2": 18,
+      "3": 10,
+      "4": 7,
+      "5": 1
+    },
+    "tests": [
+      "tests/tsk-player-m2-1.test.mjs",
+      "tests/tsk-player-m2-2.test.mjs",
+      "tests/tsk-player-m2-3.test.mjs",
+      "tests/tsk-player-m2-4.test.mjs"
+    ]
+  },
+  "gates": {
+    "scopePartition": true,
+    "shardsExact": true,
+    "noOverlapNoGap": true,
+    "mechanismClassified": true,
+    "basicWeaknessesClassified": true,
+    "customizationsClassified": true,
+    "reprintsCanonical": true,
+    "testFilesDeclared": true
+  },
+  "shards": [
+    {
+      "id": "M2-1",
+      "worker": "w-m2-1",
+      "name": "玩家卡 M2-1（09021–09047，27 张）",
+      "testFile": "tests/tsk-player-m2-1.test.mjs",
+      "codes": [
+        "09021",
+        "09022",
+        "09023",
+        "09024",
+        "09025",
+        "09026",
+        "09027",
+        "09028",
+        "09029",
+        "09030",
+        "09031",
+        "09032",
+        "09033",
+        "09034",
+        "09035",
+        "09036",
+        "09037",
+        "09038",
+        "09039",
+        "09040",
+        "09041",
+        "09042",
+        "09043",
+        "09044",
+        "09045",
+        "09046",
+        "09047"
+      ]
+    },
+    {
+      "id": "M2-2",
+      "worker": "w-m2-2",
+      "name": "玩家卡 M2-2（09048–09074，27 张）",
+      "testFile": "tests/tsk-player-m2-2.test.mjs",
+      "codes": [
+        "09048",
+        "09049",
+        "09050",
+        "09051",
+        "09052",
+        "09053",
+        "09054",
+        "09055",
+        "09056",
+        "09057",
+        "09058",
+        "09059",
+        "09060",
+        "09061",
+        "09062",
+        "09063",
+        "09064",
+        "09065",
+        "09066",
+        "09067",
+        "09068",
+        "09069",
+        "09070",
+        "09071",
+        "09072",
+        "09073",
+        "09074"
+      ]
+    },
+    {
+      "id": "M2-3",
+      "worker": "w-m2-3",
+      "name": "玩家卡 M2-3（09075–09101，27 张）",
+      "testFile": "tests/tsk-player-m2-3.test.mjs",
+      "codes": [
+        "09075",
+        "09076",
+        "09077",
+        "09078",
+        "09079",
+        "09080",
+        "09081",
+        "09082",
+        "09083",
+        "09084",
+        "09085",
+        "09086",
+        "09087",
+        "09088",
+        "09089",
+        "09090",
+        "09091",
+        "09092",
+        "09093",
+        "09094",
+        "09095",
+        "09096",
+        "09097",
+        "09098",
+        "09099",
+        "09100",
+        "09101"
+      ]
+    },
+    {
+      "id": "M2-4",
+      "worker": "w-m2-4",
+      "name": "玩家卡 M2-4（09102–09128，27 张）",
+      "testFile": "tests/tsk-player-m2-4.test.mjs",
+      "codes": [
+        "09102",
+        "09103",
+        "09104",
+        "09105",
+        "09106",
+        "09107",
+        "09108",
+        "09109",
+        "09110",
+        "09111",
+        "09112",
+        "09113",
+        "09114",
+        "09115",
+        "09116",
+        "09117",
+        "09118",
+        "09119",
+        "09120",
+        "09121",
+        "09122",
+        "09123",
+        "09124",
+        "09125",
+        "09126",
+        "09127",
+        "09128"
+      ]
+    }
+  ]
+}

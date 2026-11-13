@@ -154,7 +154,7 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
   return panel
 }
 
-export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
+export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct = false, submit = null } = {}) {
   const model = state.mechanics
   if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote && !model.tsk)) return null
   const water = model.water?.investigators.find(item => item.seat === seat)
@@ -203,11 +203,22 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
       ' · ', card.visible ? (card.decoy ? t('mechanic.tsk.decoy') : t('mechanic.tsk.realEnemy')) : t('mechanic.tsk.hiddenIdentity')))) : null,
     tsk.keys?.length ? h('section', { className: 'ah-tsk-keys', 'aria-label': t('mechanic.tsk.keys') },
       h('h3', {}, t('mechanic.tsk.keys')),
-      tsk.keys.map(key => h('p', {
-        'data-tsk-key': key.id, 'data-stable': String(key.stable), 'data-holder-type': key.holder.type,
-        'data-shifted-this-round': String(key.shiftedThisRound),
-      }, key.id, ' · ', key.stable ? t('mechanic.tsk.face.stable') : t('mechanic.tsk.face.unstable'), ' · ', keyHolder(key.holder),
-      key.shiftedThisRound ? ` · ${t('mechanic.tsk.shifted')}` : ''))) : null,
+      tsk.keys.map(key => {
+        const mine = key.holder.type === 'investigator' && key.holder.seat === seat
+        const shiftMove = mine && canAct ? moves.find(move => move.action === 'shiftKey' && move.keyId === key.id) : null
+        const transferMoves = mine && canAct ? moves.filter(move => move.action === 'transferKey' && move.keyId === key.id) : []
+        return h('p', {
+          'data-tsk-key': key.id, 'data-stable': String(key.stable), 'data-holder-type': key.holder.type,
+          'data-shifted-this-round': String(key.shiftedThisRound),
+        }, key.id, ' · ', key.stable ? t('mechanic.tsk.face.stable') : t('mechanic.tsk.face.unstable'), ' · ', keyHolder(key.holder),
+        key.shiftedThisRound ? ` · ${t('mechanic.tsk.shifted')}` : '',
+        shiftMove ? h('button', { type: 'button', className: 'bg-btn', 'data-tsk-key-shift': key.id,
+          disabled: !submit, onclick: () => submit?.(shiftMove) }, t('mechanic.tsk.shift')) : null,
+        ...transferMoves.map(move => h('button', { type: 'button', className: 'bg-btn secondary',
+          'data-tsk-key-transfer': key.id, 'data-to-seat': String(move.toSeat),
+          disabled: !submit, onclick: () => submit?.(move) },
+        t('mechanic.tsk.transfer', { seat: seatName(move.toSeat) }))))
+      })) : null,
     tsk.hollows ? h('section', { className: 'ah-tsk-hollows', 'aria-label': t('mechanic.tsk.hollows') },
       h('h3', {}, t('mechanic.tsk.hollows')),
       h('p', { 'data-tsk-hollow-count': String(tsk.hollows.count) }, t('mechanic.tsk.hollowCount', { count: tsk.hollows.count })),
@@ -217,6 +228,11 @@ export function renderMechanicSummary(h, state, { seat = 0 } = {}) {
       h('p', { 'data-tsk-map-current': tsk.map.current || '', 'data-tsk-map-time': String(tsk.map.time) },
         t('mechanic.tsk.mapLine', { current: tsk.map.current || '', time: tsk.map.time, unlocked: tsk.map.unlocked.length })),
       tsk.map.forced ? h('p', { className: 'ah-tcu-note', 'data-tsk-map-forced': tsk.map.forced }, t('mechanic.tsk.mapForced', { destination: tsk.map.forced })) : null) : null,
+    // 2026-11-13 P1-12：章节公开状态摘要（计数/位置/布尔；数据来自 mechanic-view 的声明式投影）。
+    tsk.scenarioFlags?.length ? h('section', { className: 'ah-tsk-scenario-flags', 'aria-label': t('mechanic.tsk.scenarioFlags') },
+      h('h3', {}, t('mechanic.tsk.scenarioFlags')),
+      tsk.scenarioFlags.map(row => h('p', { 'data-tsk-flag': row.key, 'data-flag-kind': row.kind },
+        `${row.label}：${row.value}`))) : null,
     tsk.statusReports ? h('section', { className: 'ah-tsk-status', 'aria-label': t('mechanic.tsk.statusReports') },
       h('h3', {}, t('mechanic.tsk.statusReports')),
       h('p', { 'data-tsk-status-pending': String(tsk.statusReports.pending.length) },

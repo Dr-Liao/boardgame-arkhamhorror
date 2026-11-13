@@ -578,5 +578,105 @@
     "id": "tdeSoporific",
     "title": "Soporific",
     "file": "common/soporific.mp3"
+  },
+  {
+    "id": "tskNightOnTheDocksSax",
+    "title": "Night on the Docks - Sax",
+    "file": "common/night-on-the-docks-sax.mp3"
+  },
+  {
+    "id": "tskNoGoodLayabout",
+    "title": "No Good Layabout",
+    "file": "common/no-good-layabout.mp3"
+  },
+  {
+    "id": "tskTabuk",
+    "title": "Tabuk",
+    "file": "common/tabuk.mp3"
+  },
+  {
+    "id": "tskDesertCity",
+    "title": "Desert City",
+    "file": "common/desert-city.mp3"
+  },
+  {
+    "id": "tskTangoDeManzana",
+    "title": "Tango de Manzana",
+    "file": "common/tango-de-manzana.mp3"
+  },
+  {
+    "id": "tskBassWalker",
+    "title": "Bass Walker",
+    "file": "common/bass-walker.mp3"
+  },
+  {
+    "id": "tskIntrepid",
+    "title": "Intrepid",
+    "file": "common/intrepid.mp3"
+  },
+  {
+    "id": "tskDhaka",
+    "title": "Dhaka",
+    "file": "common/dhaka.mp3"
+  },
+  {
+    "id": "tskNoFrillsComparsa",
+    "title": "No Frills Comparsa",
+    "file": "common/no-frills-comparsa.mp3"
+  },
+  {
+    "id": "tskNoFrillsSalsa",
+    "title": "No Frills Salsa",
+    "file": "common/no-frills-salsa.mp3"
+  },
+  {
+    "id": "tskNorthernGlade",
+    "title": "Northern Glade",
+    "file": "common/northern-glade.mp3"
+  },
+  {
+    "id": "tskLongNoteFour",
+    "title": "Long Note Four",
+    "file": "common/long-note-four.mp3"
+  },
+  {
+    "id": "tskNilesBlues",
+    "title": "Nile's Blues",
+    "file": "common/niles-blues.mp3"
+  },
+  {
+    "id": "tskKillers",
+    "title": "Killers",
+    "file": "common/killers.mp3"
+  },
+  {
+    "id": "tskGhostpocalypse6CrossingTheThreshold",
+    "title": "Ghostpocalypse - 6 Crossing the Threshold",
+    "file": "common/ghostpocalypse-6-crossing-the-threshold.mp3"
+  },
+  {
+    "id": "tskTrepidation",
+    "title": "Trepidation",
+    "file": "common/trepidation.mp3"
+  },
+  {
+    "id": "tskGhostpocalypse1Departure",
+    "title": "Ghostpocalypse - 1 Departure",
+    "file": "common/ghostpocalypse-1-departure.mp3"
+  },
+  {
+    "id": "tskNightmareMachine",
+    "title": "Nightmare Machine",
+    "file": "common/nightmare-machine.mp3"
+  },
+  {
+    "id": "tskNightVigil",
+    "title": "Night Vigil",
+    "file": "common/night-vigil.mp3"
+  },
+  {
+    "id": "tskMovementProposition",
+    "title": "Movement Proposition",
+    "file": "common/movement-proposition.mp3"
   }
 ]

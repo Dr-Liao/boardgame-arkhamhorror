@@ -17,7 +17,8 @@ export default {
       cost: { action: false, exhaust: true, uses: 1 },
       resolve: ({ inv, api }) => {
         api.disengageAll(inv.seat)
-        const gate = api.placeDreamGate('06015a', { connectToRevealed: true, ownerCode: inv.code })
+        // 门的所有者按座位记：天机之城换身后全队卡号都是 04244，只记卡号会让其他伊斯人也能进门。
+        const gate = api.placeDreamGate('06015a', { connectToRevealed: true, ownerCode: inv.code, ownerSeat: inv.seat })
         if (gate) api.moveInvestigator(inv.seat, gate.id)
         api.info(`${inv.name} 通过「门之匣」进入梦境之门。`)
       },

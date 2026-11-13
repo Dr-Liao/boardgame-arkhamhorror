@@ -2185,7 +2185,7 @@
   "packs": [
     {
       "id": "tskCampaign",
-      "status": "catalog-only",
+      "status": "playable",
       "cards": [
         "09501",
         "09502",
@@ -2505,8 +2505,8 @@
           "to": "09770"
         },
         {
-          "from": "09519a",
-          "to": "09770b"
+          "from": "09501a",
+          "to": "09770z"
         }
       ],
       "encounterGroupIds": [
@@ -2537,8 +2537,8 @@
         "strangeHappenings",
         "withoutATrace"
       ],
-      "rulesImplemented": false,
-      "catalogOnly": true,
+      "rulesImplemented": true,
+      "catalogOnly": false,
       "partitionSize": 311
     },
     {
@@ -2579,7 +2579,7 @@
     },
     {
       "id": "tskPlayer",
-      "status": "catalog-only",
+      "status": "playable",
       "cards": [
         "09021",
         "09022",
@@ -2697,8 +2697,8 @@
         }
       ],
       "encounterGroupIds": [],
-      "rulesImplemented": false,
-      "catalogOnly": true,
+      "rulesImplemented": true,
+      "catalogOnly": false,
       "partitionSize": 108
     }
   ],
@@ -20545,7 +20545,6 @@
         "04073",
         "04092",
         "04093",
-        "04094",
         "04096",
         "04122b",
         "04130b",
@@ -20628,7 +20627,7 @@
       " D docs/edgeOfTheEarth/translate/tools/verify-fix-batch.mjs"
     ],
     "replayFile": "tests/fixtures/replay/tsk-baseline.json",
-    "replaySha256": "9b7166d7f804de101a03236e7810f505c33f46e4d699afb5ff1b1bb7ee745547",
+    "replaySha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
     "replaySummary": [
       {
         "id": "notz-gathering-hub-victory-r1",
@@ -20647,13 +20646,13 @@
       },
       {
         "id": "notz-gathering-resign",
-        "moves": 60,
-        "hashes": 61
+        "moves": 66,
+        "hashes": 67
       },
       {
         "id": "notz-midnight-masks",
-        "moves": 157,
-        "hashes": 158
+        "moves": 172,
+        "hashes": 173
       },
       {
         "id": "notz-midnight-masks-only",
@@ -20677,8 +20676,8 @@
       },
       {
         "id": "dunwich-extracurricular-hub",
-        "moves": 70,
-        "hashes": 71
+        "moves": 122,
+        "hashes": 123
       },
       {
         "id": "tfa-untamed-wilds-hub",
@@ -20701,13 +20700,13 @@
       "effectsEntries": 0,
       "effectsTopLevelFields": 0,
       "escapeCards": 0,
-      "descriptorEntries": 927,
-      "descriptorAbilities": 1269,
+      "descriptorEntries": 1034,
+      "descriptorAbilities": 1487,
       "abilityKinds": 12,
-      "windows": 115,
+      "windows": 117,
       "effectPrimitives": 56,
-      "nonPlayerCards": 278,
-      "behaviorLines": 33462,
+      "nonPlayerCards": 335,
+      "behaviorLines": 49574,
       "declaredScenarios": 3
     },
     "preExistingFailures": {

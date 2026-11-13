@@ -308,7 +308,7 @@ test('04148 探险日志：每回合额外一次只能探索的行动', async ()
     '探索真的翻开了地点')
 })
 
-test('04264 离体体验：手牌洗回牌库重抽，本卡洗回牌库而不是弃掉', async () => {
+test('04264 离体体验：本卡也算作手牌，手牌洗回牌库后重抽「手牌数+1」张', async () => {
   const { fixture, move } = await import('./core-fixture.mjs')
   const state = fixture('01001')
   const inv = state.investigators[0]
@@ -318,8 +318,36 @@ test('04264 离体体验：手牌洗回牌库重抽，本卡洗回牌库而不�
   move(state, { action: 'draw' })
   const after = state.investigators[0]
   assert.equal(after.discard.includes('04264'), false, '不能被弃掉')
-  assert.equal(after.hand.length, 2, '洗回后重抽等量手牌')
+  assert.equal(after.hand.length, 3, '本卡算 1 张手牌：2 张手牌洗完要重抽 3 张')
+  assert.equal(after.deck.filter(code => code === '04264').length, 1, '本卡只洗回牌库一次，不能被复制')
   assert.equal(after.hand.length + after.deck.length + after.discard.length, 5, '牌没有丢')
+})
+
+test('04264 离体体验：空手抽到也要算本卡，至少重抽 1 张（不会空转无限抽牌）', async () => {
+  const { fixture, move } = await import('./core-fixture.mjs')
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  inv.hand = []
+  inv.deck = ['01020', '01021', '04264']
+  inv.discard = []
+  move(state, { action: 'draw' })
+  const after = state.investigators[0]
+  assert.equal(after.hand.length, 1, '空手时本卡也是 1 张手牌，要洗回 1 张并重抽 1 张')
+  assert.equal(after.deck.filter(code => code === '04264').length, 1, '本卡洗回牌库且只有 1 张')
+  assert.equal(after.hand.length + after.deck.length + after.discard.length, 3, '牌没有丢也没有复制')
+})
+
+test('04264 离体体验：牌库只剩它自己时结算也能终止（不会被自己的抽牌递归重抽）', async () => {
+  const { fixture, move } = await import('./core-fixture.mjs')
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  inv.hand = []
+  inv.deck = ['04264']
+  inv.discard = []
+  move(state, { action: 'draw' })
+  const after = state.investigators[0]
+  assert.equal(after.hand.length, 0, '牌库已空且弃牌堆为空，抽不到牌')
+  assert.equal(after.deck.filter(code => code === '04264').length, 1, '本卡仍在牌库，没有丢也没有复制')
 })
 
 test('「不能被击败」的敌人不会被击败判定移除（04209b）', async () => {

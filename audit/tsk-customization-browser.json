@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-tsk-customization-reporter.mjs",
+  "evidenceCommand": "node tools/run-tsk-customization-browser.mjs",
+  "milestone": "P8",
+  "campaignId": "theScarletKeys",
+  "status": "passed",
+  "complete": true,
+  "sourceStableDuringRun": true,
+  "sourceDrift": [],
+  "expectedSpecs": [
+    "tests/tsk-customization.browser.mjs"
+  ],
+  "expectedTests": 2,
+  "specs": [
+    "tests/tsk-customization.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/tsk-customization.browser.mjs",
+      "title": "P8 定制卡 desktop：真实大厅构筑期 0 勾选 → 幕间用 XP 勾选一格 → 刷新保留",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "customization"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "investigator",
+          "description": "02002 雷克斯·墨菲"
+        },
+        {
+          "type": "card",
+          "description": "09042 鸦翎羽毛笔"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）两次：「结束这关」把首章推进到真实关末结算；「给 3 经验」经真实 awardExperience 发放幕间经验（首章 0 胜利点自然结算为 0 XP）。选人/自动构筑/勾选/刷新全部经由真实 UI 与 /api/move。"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-lobby-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-initial-desktop.png"
+        },
+        {
+          "type": "check",
+          "description": "initial"
+        },
+        {
+          "type": "evidence",
+          "description": "首章前：座位 0=02002 雷克斯·墨菲；牌组合 09042 鸦翎羽毛笔；定制勾选 [[]]；hubReady=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-departure-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-interlude-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-interlude-upgraded-desktop.png"
+        },
+        {
+          "type": "check",
+          "description": "upgrade"
+        },
+        {
+          "type": "evidence",
+          "description": "幕间勾选：09042 鸦翎羽毛笔 第 1 格；bySeat={\"09042\":[0]}；剩余 XP=2；level=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-refresh-desktop.png"
+        },
+        {
+          "type": "check",
+          "description": "refresh"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新恢复：revision 11→11；勾选仍为 [0]；剩余 XP=2"
+        }
+      ],
+      "phase": "customization",
+      "checks": [
+        "initial",
+        "upgrade",
+        "refresh"
+      ]
+    },
+    {
+      "file": "tests/tsk-customization.browser.mjs",
+      "title": "P8 定制卡 mobile：真实大厅构筑期 0 勾选 → 幕间用 XP 勾选一格 → 刷新保留",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "customization"
+        },
+        {
+          "type": "scenario",
+          "description": "riddlesAndRain"
+        },
+        {
+          "type": "investigator",
+          "description": "02002 雷克斯·墨菲"
+        },
+        {
+          "type": "card",
+          "description": "09042 鸦翎羽毛笔"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）两次：「结束这关」把首章推进到真实关末结算；「给 3 经验」经真实 awardExperience 发放幕间经验（首章 0 胜利点自然结算为 0 XP）。选人/自动构筑/勾选/刷新全部经由真实 UI 与 /api/move。"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-lobby-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-initial-mobile.png"
+        },
+        {
+          "type": "check",
+          "description": "initial"
+        },
+        {
+          "type": "evidence",
+          "description": "首章前：座位 0=02002 雷克斯·墨菲；牌组合 09042 鸦翎羽毛笔；定制勾选 [[]]；hubReady=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-departure-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-interlude-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-interlude-upgraded-mobile.png"
+        },
+        {
+          "type": "check",
+          "description": "upgrade"
+        },
+        {
+          "type": "evidence",
+          "description": "幕间勾选：09042 鸦翎羽毛笔 第 1 格；bySeat={\"09042\":[0]}；剩余 XP=2；level=1"
+        },
+        {
+          "type": "screenshot",
+          "description": "G:\\boardgame-hall-ai\\artifacts\\migration\\tsk\\p8\\screenshots\\custom-refresh-mobile.png"
+        },
+        {
+          "type": "check",
+          "description": "refresh"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新恢复：revision 11→11；勾选仍为 [0]；剩余 XP=2"
+        }
+      ],
+      "phase": "customization",
+      "checks": [
+        "initial",
+        "upgrade",
+        "refresh"
+      ]
+    }
+  ],
+  "checks": {
+    "customization": {
+      "desktop": true,
+      "mobile": true
+    },
+    "initialSelection": {
+      "desktop": true,
+      "mobile": true
+    },
+    "interludeUpgrade": {
+      "desktop": true,
+      "mobile": true
+    },
+    "refreshRecovery": {
+      "desktop": true,
+      "mobile": true
+    }
+  },
+  "screenshots": [
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 283646,
+      "sha256": "537f6606f01c78222a059fd6b10e37b7a574215e8c45b2530885cf9abd72d600"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 108490,
+      "sha256": "7b52d543ce1651869603b754ccb1928aff2b33e206c427e37d08922384eaee04"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-initial-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 431096,
+      "sha256": "34d6883fc01961ccdd9859a4b1518b8c503788bea0ae83821493e72b371bbb9e"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-initial-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 178936,
+      "sha256": "6c506a8b9cb617930a1facd7c967aec753061cf62bfcf2441aa95c06aaee5fb6"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 530211,
+      "sha256": "81ead4b40ace8506262b7e1f60eceb0c97da58cc2b9e4b9e11be18447623fabb"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 227025,
+      "sha256": "c51766fe388aaaaf8659ae6f628b1f8821e14dabedcf53fccfad8e6d8dd4c9c4"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-upgraded-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 520049,
+      "sha256": "8ec32531879e7d31763be519fa10ecb7cd02e846d224759e5523fcdc999e6ccd"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-upgraded-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 225720,
+      "sha256": "b85d3074c3d80b6cb591a8c2b85ad0df73584375175095fed8d6f75070746246"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-lobby-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 894242,
+      "sha256": "b030095f2753f3e825e3ddff17c6336a51f4696f68396cc6f2bdf3e0eb7d6912"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-lobby-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 181786,
+      "sha256": "d39fe28e0abd105656983775a2b92a49fb881f7b4d3513dfedff1bffcb468334"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-refresh-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "customization",
+      "bytes": 520049,
+      "sha256": "8ec32531879e7d31763be519fa10ecb7cd02e846d224759e5523fcdc999e6ccd"
+    },
+    {
+      "path": "artifacts/migration/tsk/p8/screenshots/custom-refresh-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "customization",
+      "bytes": 225720,
+      "sha256": "b85d3074c3d80b6cb591a8c2b85ad0df73584375175095fed8d6f75070746246"
+    }
+  ],
+  "screenshotsMissing": [],
+  "sourceFiles": [
+    {
+      "path": "src/campaign/campaign.js",
+      "sha256": "36c735c581a73f7696c309b2539d2a8877dc02d080875f6e6bbfdd194541a6d2",
+      "bytes": 26030
+    },
+    {
+      "path": "src/engine/dispatch.js",
+      "sha256": "4dcab5e4ef1d7073261e420742a49c18abe556af9f23c81476da5524bee3173f",
+      "bytes": 56994
+    },
+    {
+      "path": "src/engine/hub.js",
+      "sha256": "b50bd3c1506e3b45a197aeb3d3725cff307947aa38582fde4941b5d5fd03bd28",
+      "bytes": 33744
+    },
+    {
+      "path": "src/engine/table-decisions.js",
+      "sha256": "73df43c69185f50b054593b259d582042fb18e83a0128771f2a7e37d2ca61bf3",
+      "bytes": 28499
+    },
+    {
+      "path": "src/engine/tsk-customizable.js",
+      "sha256": "941cdd9ba30dec77a1b13344df1647a98fad2d05314b8af7119a7cf06e9ab4a9",
+      "bytes": 9810
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "017ee8c1ae6daa697c615e2a8f0bee4f641c6331ede9989cfb4dce745f5c463e",
+      "bytes": 18476
+    },
+    {
+      "path": "tests/playwright/playwright.tsk-customization.config.mjs",
+      "sha256": "44f00b3d30f08d6212541338522c9f88b3869f454a6aca7476c72e916d28769a",
+      "bytes": 1944
+    },
+    {
+      "path": "tests/tsk-browser-helpers.mjs",
+      "sha256": "65d7d45ce9116b304d37115f4c520961c150cc11e2f0f473e216a3aae5cb71b5",
+      "bytes": 25852
+    },
+    {
+      "path": "tests/tsk-customization.browser.mjs",
+      "sha256": "62e9231bf34a3acadb583fa5e1e95308413fa437f17f211ac9c178a0ba232df9",
+      "bytes": 21375
+    },
+    {
+      "path": "tests/tsk-p8-customization.test.mjs",
+      "sha256": "aeb8c572d8f7e57b678535545ac54f8ef5c140dccc4df78367681bed96051126",
+      "bytes": 18740
+    },
+    {
+      "path": "tools/playwright-tsk-customization-reporter.mjs",
+      "sha256": "c0704389b9820ad93e06f1e212389e80ea834d6a6ad2fda3511b708cebc119b7",
+      "bytes": 11805
+    },
+    {
+      "path": "tools/run-tsk-customization-browser.mjs",
+      "sha256": "f006f90fc3437060c31166068603e95cca29aae697e1ad88c05a8c9c99b999b2",
+      "bytes": 5735
+    },
+    {
+      "path": "web/campaign-experience.css",
+      "sha256": "ceaa60633e364373c4eb3c4fe36e78520b4860028317113a8f3f214894adbdca",
+      "bytes": 27656
+    },
+    {
+      "path": "web/hub.js",
+      "sha256": "8cfed99f98a37c51335b7df1458cd15bf30274a5dd31cbe508e509e21eba801b",
+      "bytes": 166776
+    },
+    {
+      "path": "web/locales/en.core.js",
+      "sha256": "994b630ab2c3b0ddf4629d3015d2b2444de2e44f2571335aeddfad4e57a58ce4",
+      "bytes": 9187
+    },
+    {
+      "path": "web/locales/zh-CN.core.js",
+      "sha256": "4fdbc9834298de270fa02633707f549154dacca525a0938ca7911c6da4c43a72",
+      "bytes": 9047
+    }
+  ],
+  "sourceFilesMissing": []
+}

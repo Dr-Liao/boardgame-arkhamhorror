@@ -19,6 +19,9 @@
 .ah-theme .bg-btn:hover:not(:disabled),.ah-theme button[aria-pressed='true'] { border-color: var(--ah-theme-accent-strong); }
 .ah-theme .ah-hub-pane { background-color: color-mix(in srgb,var(--ah-theme-panel) 76%,transparent); }
 .ah-table.ah-theme .ah-table-shell { background-color: var(--ah-theme-bg); }
+.ah-table.ah-theme {
+  scrollbar-color: color-mix(in srgb, var(--ah-theme-accent) 65%, var(--ah-theme-panel)) var(--ah-theme-header);
+}
 
 /* ---------------------------------------------------------------------------
  * Theme-aware chrome.
@@ -223,12 +226,12 @@
 .ah-theme.ah-theme .ah-investigator-pack-filter { color: var(--ah-theme-muted); }
 .ah-theme.ah-theme .ah-investigator-browser-head h3 { color: var(--ah-theme-accent-strong); }
 .ah-theme.ah-theme .ah-investigator-browser-head p { color: var(--ah-theme-muted); }
-.ah-theme.ah-theme .ah-investigator-class-filter {
+.ah-theme.ah-theme .ah-investigator-filter-button {
   border-color: var(--ah-theme-edge);
   background: color-mix(in srgb,var(--ah-theme-panel) 62%,transparent);
   color: var(--ah-theme-muted);
 }
-.ah-theme.ah-theme .ah-investigator-class-filter:hover { border-color: var(--ah-theme-accent); color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-investigator-filter-button:hover:not(:disabled) { border-color: var(--ah-theme-accent); color: var(--ah-theme-accent-strong); }
 .ah-theme.ah-theme .ah-investigator-class-filter[aria-pressed='true'] {
   border-color: var(--ah-theme-accent);
   background: color-mix(in srgb,var(--ah-theme-accent) 20%,var(--ah-theme-panel));
@@ -379,6 +382,13 @@
   background: color-mix(in srgb,var(--ah-theme-accent) 22%,var(--ah-theme-panel));
   color: var(--ah-theme-accent-strong);
 }
+/* The chapter rail scrolls inside itself; tint its drawn scroll indicator with
+   the active cycle accent so it belongs to the themed pane, not the base brass. */
+.ah-theme.ah-theme .ah-story-layout > nav::-webkit-scrollbar-track { background: color-mix(in srgb,var(--ah-theme-panel) 62%,transparent); }
+.ah-theme.ah-theme .ah-story-layout > nav::-webkit-scrollbar-thumb { background: color-mix(in srgb,var(--ah-theme-accent) 55%,transparent); }
+.ah-theme.ah-theme .ah-story-layout > nav::-webkit-scrollbar-thumb:hover { background: var(--ah-theme-accent); }
+.ah-theme.ah-theme .ah-story-nav-scroll { background: color-mix(in srgb,var(--ah-theme-accent) 24%,transparent); }
+.ah-theme.ah-theme .ah-story-nav-scroll > i { background: color-mix(in srgb,var(--ah-theme-accent) 82%,transparent); }
 
 /* The journal parchment is a paper prop, not a themed surface: its titles and
    prose stay ink-black even though the hub pane headings around it take the

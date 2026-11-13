@@ -15,7 +15,11 @@ export default {
       weakness: { type: 'custom' },
       resolve: ({ inv, api }) => {
         api.disengageAll(inv.seat)
-        const gate = api.flipOrPlaceDreamGate({ from: '06015a', to: '06015b', asideHorror: 2, ownerCode: inv.code, flipAfterInvestigate: '06015a' })
+        // 与 06013 同口径：所有者按座位记（换身后卡号会重名）。
+        const gate = api.flipOrPlaceDreamGate({
+          from: '06015a', to: '06015b', asideHorror: 2, ownerCode: inv.code, ownerSeat: inv.seat,
+          flipAfterInvestigate: '06015a',
+        })
         if (gate) api.moveInvestigator(inv.seat, gate.id)
         api.info(`「脱离现实」：${inv.name} 进入梦境之门。`)
       },

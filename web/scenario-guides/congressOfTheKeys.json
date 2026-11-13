@@ -1,0 +1,860 @@
+{
+  "id": "congressOfTheKeys",
+  "campaignId": "theScarletKeys",
+  "sourceKind": "reference-project-zh-locale",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 137,
+  "guideKeyCount": 137,
+  "sources": [
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/campaign.json",
+      "entries": 19
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-a.json",
+      "entries": 26
+    },
+    {
+      "path": "content/campaigns/theScarletKeys/locale-supplement/chapters-b.json",
+      "entries": 9
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/base.json",
+      "sha256": "129bc1039ea5d9815dc032aa00be52ee790cb9cee4f930b2721a4aded00e43d4"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/riddlesAndRain.json",
+      "sha256": "8a070c0db992d0380ca634759673c8ba9724c8d3b718758478f4d64ed6ad4c7d"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/deadHeat.json",
+      "sha256": "e690c25b39c3185d18910b5e04898e0088098ebf3c92485068e34811e51e663b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/sanguineShadows.json",
+      "sha256": "6fa7022cce492c704241fd3d5686858feb86bb6be14ff877878d2cfb25d965d2"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dealingsInTheDark.json",
+      "sha256": "555e4e95ab673e340679009b012d7f309373a6d1d3f65f96ff12a08b402e6029"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dancingMad.json",
+      "sha256": "111369b4ae3a44cb09b7e2ca0a2f78f7f15774ca3df6d4340ea2859dbf7a1fb5"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/onThinIce.json",
+      "sha256": "027857d7c6c77eca13b70e5b219afa3108905f3a4b02a2c5967230452091382b"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/dogsOfWar.json",
+      "sha256": "3dd3c445f32c39419105c519bb6bcab00d5bf438ae858dd6e061bbe5b8d0d762"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/shadesOfSuffering.json",
+      "sha256": "da1c839197e6a5a90ad277cab5622377a1794c7bb62f9c5d34160052278822e7"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/withoutATrace.json",
+      "sha256": "d9ebb9ed384a0e7f0ce7f7bf819c5a269adaddc51f824f167a57293a691fdcc8"
+    },
+    {
+      "path": "frontend/src/locales/en/theScarletKeys/scenarios/congressOfTheKeys.json",
+      "sha256": "dc78f35dbc14a5e23f3e8a0b7059116fc6af3b004e9af817c60db56e035ec443"
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "档案#59–Z(终幕): 钥匙议会",
+          "children": [
+            {
+              "text": "取决于你如何到达此处……"
+            },
+            {
+              "text": "你因状况报告(由于时间耗尽)到达此处"
+            },
+            {
+              "text": "你自行前往通古斯卡"
+            },
+            {
+              "text": "你在黑暗中醒来。头上的麻袋已经被取下，扔到一边。有人用力捏你的脸，打了你一两巴掌。“醒醒。”一个邪恶的声音命令道。你眨眨眼，恢复了意识，不无惊恐地意识到自己和同伴被人绑在了椅子上。嘴里塞了东西，你叫不出声，只能发出呜咽。\n\n等到你的眼睛终于适应了昏暗的光线，你发觉自己肯定是在地下。这间巨大的厅堂没有窗子，石壁打磨光滑，由水银蒸汽灯略微照亮。墙上挂着猩红的织毯，还有几架玻璃柜子，里面装着古老的遗物和历史上的神器。一张巨大的桌子占据了房间中央，上面精巧地刻画着线条和圆环的纹样。桌旁围绕着一圈身影，有的你熟悉，有的并认不出。它们身上都有红色。你的心跳到了嗓子眼。“你被带到此处，清算你对同志会犯下的罪行。”那个声音宣言道，“如果议会同意，也可能会嘉奖你的功绩。我们将清点有谁将为你辩护，又有谁要指控你。”\n\n进入审判。"
+            },
+            {
+              "text": "要不是有泰勒专员的情报，你怕是永远也找不到红色同志会在这里的秘密藏身处。这栋建筑就在西伯利亚核心地带的地下。离此处不远有一个神秘的火山口，标记了著名的通古斯卡事件——那次爆炸，抑或是撞击？其中真相已经被掩埋在迷雾中超过十年了。也许这起诡异的事件还和同志会有着联系——不，自从你知道同志会拥有的危险神器，早就不怀疑这一点了。问题只是：是谁先来的？\n\n大雪掩盖了遥远荒野的入口，但你最终还是找到了——雪丘上有一扇未加标记的铁门，从远处几乎不可能看到。你惊讶地发现门居然没锁……但你一进去，同志会的守卫就迎了上来。他们带着怀疑的眼神，穿着熟悉的红衣。“我们一直在等你。”其中一个狞笑着说道，“来吧，议会就要开始了。”\n\n你别无选择，只能跟上。守卫领你一路往下，越走越深。狭窄的阶梯两旁石壁打磨得非常光滑，漫长的走道黑咕隆咚，十分单调。终于，你来到一间巨大的厅室，这里没有窗子，由水银蒸汽灯略微照亮。墙上挂着猩红的织毯，还有几架玻璃柜子，里面装着古老的遗物和历史上的神器。一张巨大的桌子占据了房间中央，上面精巧地刻画着线条和圆环的纹样。桌旁围绕着一圈身影，有的你熟悉，有的并认不出。它们身上都有红色。你背后的门猛地关上，你的心跳到了嗓子眼。“你来得正好。”同志会众人中传出一个声音，“我们刚要开始投票。”\n\n你问这次投票是为了什么，嘴巴不由得发干。你总觉得来这里只是为了亲眼见证自己的毁灭。“这是一场召集的会议。清算你对同志会犯下的罪行。如果议会同意，也可能会嘉奖你的功绩。我们将清点有谁将为你辩护，又有谁要指控你。”你感到背后突然有人将你绑住，嘴里也塞了东西。“只是走个流程，我保证。”守卫奸笑着慢慢说道。\n\n进入审判。"
+            },
+            {
+              "text": "审判：同志会投票决定你的命运。\n\n阅读下列每个部分的相关文本，按顺序记录所有的投票。每个“赞成”票表示该同志会成员想要看你去死。每个“反对”票表示该同志会成员想要护你周全。弃权票或沉默既非赞成也非反对。"
+            },
+            {
+              "title": "反对",
+              "children": [
+                {
+                  "text": "[count]票"
+                }
+              ]
+            },
+            {
+              "title": "赞成",
+              "children": [
+                {
+                  "text": "[count]票"
+                }
+              ]
+            },
+            {
+              "text": "如果特别小组援助了骑士：亚历山大年长的“骑士”迈步向前，吸引了房间里所有人的注意力。“我尊敬的同道啊。我们面前的几位，尽管……所忠非人……但确实值得我们的尊重和认可。要是没有他们的帮助，我们在亚历山大的圣堂就要陷落。我不得不说，还是陷落在自己人手里。我相信这已经足以彰显他们的价值。”其他几位点点头同意。聚集的会员环顾四周，但并没有人出来反驳。也许恶兽还在养伤。\n\n暗红骑士投票“反对”。\n深红斗篷的恶兽默认弃权。"
+            },
+            {
+              "text": "如果特别小组未能阻挡恶兽：深红斗篷遮蔽下的恶兽发出隆隆的叫声。“血。”它的声明非常简单。这凶煞的声音吓得你退缩，脊背发颤。“必须要见血。”你环顾四周，寻找亚历山大年长的骑士，希望他能说服其他人冷静……但他不在这里。\n\n暗红骑士默认弃权。\n深红斗篷的恶兽投票“赞成”。"
+            },
+            {
+              "text": "如果你和暗红骑士之间恩怨未了：“应该采取什么措施，一目了然。”来自亚历山大，仪表堂堂的年长“骑士”宣称道，“这些人不值得信任，还意图颠覆我们的控制。必须予以消灭。”在桌子另一端，骑士的敌人，深红长袍笼罩的阴影吼道：“我们终于有一次意见一致。”他隆隆的声音凶狠而粗野。骑士的眼睛眯了起来。“别自以为是了。”他警告道。\n\n暗红骑士投票“赞成”。\n深红斗篷的恶兽投票“赞成”。"
+            },
+            {
+              "text": "如果大战打响：你和聚集起来的同志会成员环顾四周，寻找亚历山大的两位代表，但得到的只有一片寂静。“看来我们中有两位决定不出席了。”同志会中的一员声明道。你不禁好奇他们是否还活着。兴许他们之间的冲突把自己都搭了进去。你一想到亚历山大的情况就不寒而栗。\n\n暗红骑士默认弃权。\n深红斗篷的恶兽默认弃权。"
+            },
+            {
+              "text": "如果均非上述情况：“我不想要暴力。”一位衣冠楚楚、身披红色的长者说道。“我相信面前的人能成为可靠的支援。”就在桌子对面，一个深红长袍下的身影隆隆道：“这就是你为什么这么弱。”它阴影中的面容转过来朝着你。你在昏暗的灯光中只能看到滴着涎水的可怕獠牙。“必须流血。”\n\n暗红骑士投票“反对”。\n深红斗篷的恶兽投票“赞成”。\n\n抛硬币并如下更新剧本日志的钥匙部分：如果正面朝上，“暗红骑士”拥有法罗斯之光；如果背面朝上，“深红斗篷的恶兽”拥有法罗斯之光。"
+            },
+            {
+              "text": "如果艾婕信任特别小组：艾婕上前一步，清清嗓子：“我曾经和基金会联络，因为藏在伊斯珀布尔的扭曲反棱镜有被第三方发现的危险。这些就是响应我的特工。他们没有将神器留下，而是选择交给我保管。我相信他们值得信赖，而且，不像我们中的某些人，还很有道德。”\n\n艾婕·萨辛投票“反对”。"
+            },
+            {
+              "text": "如果艾婕不信任特别小组：桌旁其他人看向艾婕，她垂下了眼睛。“我……”她结结巴巴，“我厌恶暴力，不像我们中的某些人一样乐在其中，因此拒绝参与这种事。”她若有所指，激怒了其中几位。但她渐渐抬起头，一脸的悲伤和坚毅，眼神对上了你。“但这些人不能相信，我也不能宽恕其罪过。”她静静地深呼吸：“我很抱歉。”\n\n艾婕·萨辛弃权。"
+            },
+            {
+              "text": "如果均非上述情况：“如果我们想要建立一个名正言顺的组织，”朱红头巾的女子礼貌地指出，“我们就不能见到挡路的就杀。我们的进步需要理解与合作。并且，我厌恶暴力。我们应该跟这些人合作，而非作对。”\n\n艾婕·萨辛投票“反对”。"
+            },
+            {
+              "text": "如果你和苋之间恩怨未了：苋露出病态的狞笑望着你：“噢，我等这一刻可真是太久了。”她拉长声音说着，眼里闪着光。“惹麻烦的蠢货，你难道以为自己干扰我们的计划还能不受惩罚？”\n\n苋狂热地投票“赞成”。"
+            },
+            {
+              "text": "如果情人重聚：苋和拉辛·法瑞保存完好的活尸彼此迷恋的对视实在叫人恶心，但他们间或还是睥睨你一眼。“你怎么想，最亲爱的拉辛？我们要不要饶了这些挡路的蠢货？”苋问道，“还是我们给他们上一课？”拉辛嘶哑地回道：“吾爱。没人能挡我们的路。把他除掉，以后也不会有人挡我们的路了。”\n\n苋投票“赞成”。\n拉辛·法瑞投票“赞成”。"
+            },
+            {
+              "text": "如果苋离开同态会：“苋哪儿去了？”同志会里有人大声问道，众人的窃窃私语越来越大声。“她从不缺席会议。”你虽然被封了口，但还是笑了。至少艾琳最终可以摆脱同态会的控制，用自己的身份活下去。\n\n苋默认弃权。"
+            },
+            {
+              "text": "如果均非上述情况：接下来发言的是一个美丽的女子，她皮肤苍白，一身黑裙。她身上唯一的色彩就是头顶盛开的大花。“我们秘密行事自有原因，不是吗？”她样貌虽美，说话的语调音色却惹人厌恶。“这些人知道的太多了。杀了他们，就翻篇了。”\n\n苋投票“赞成”。\n苋拥有未绽之花，相应更新在剧本日志中。"
+            },
+            {
+              "text": "如果你和索恩之间恩怨未了：索恩整了整自己长大衣下正装衬衫的袖口：“基金会阻碍我们的计划，不值得信任。我们应当消灭这个特别小组，继续谈收藏的事情。”索恩对上你的眼神，坚定如初，毫不动摇：“我警告过你别挡我们的路，嗯？”\n\n索恩投票“赞成”。"
+            },
+            {
+              "text": "如果特别小组与索恩达成交易：名为索恩之人向前一步：“我们海量的任务在全球各地都需要广泛合作。研究者、当局、罪犯。眼前这些也不例外。他们证明了自己派的上用场，在安克雷奇帮过我们；并且将钥匙交给我们妥善保管，也足见其智慧。”\n\n索恩投票“反对”。"
+            },
+            {
+              "text": "如果索恩消失：你惊讶地发现索恩居然也在人群中。可是你们上次见面的时候，索恩在安克雷奇北部完全消失。而现在，这人一言不发，绝口不提你们之间发生了什么。\n\n索恩诡异地沉默着。"
+            },
+            {
+              "text": "如果均非上述情况：下一位发言的人戴着红色长巾，铂金色头发，雪白的皮肤。“我跟眼前这些人没打过交道。”此人指着你说，“未能直接了解其能力，是否可靠也不曾检验，这样盲目投票实属不智。因此，我坐观其变。”\n\n索恩弃权。\n索恩拥有玄丧之镜，相应更新在剧本日志中。"
+            },
+            {
+              "text": "如果艾里奇站在你这一边：艾里奇·佐尼·奥佩勒曲亚走出阴影，背上带鞘的剑金光闪闪，眼神十分缥缈。虽然无风，她红色的腰带却依然飘扬。她一如既往，用失落的韵文轻声低语。同志会有人翻译道：“奥佩勒曲亚声称……”译员惊讶地抬高了眉毛，“我们眼前之人确是大业的忠仆，亦如吾等。”你周围爆发出一阵窃窃私语。\n\n艾里奇投票“反对”。"
+            },
+            {
+              "text": "如果你和艾里奇之间恩怨未了：“别忘了奥佩勒曲亚的一票。”有个声音嘟囔道。“她在这儿？”另一人问道，“我们都试着联系她几周了。”聚集的同志会成员都转向房间的角落，你惊讶地发现幽灵般寂静的少女就在那里，远离众人。屋内寂静得诡异。要不是她的腰带还在一片寂静中缓缓飘动，你俨然已将她当作一尊雕像。\n\n艾里奇诡异地沉默着。"
+            },
+            {
+              "text": "如果均非上述情况：阴影里走出一个缥缈的身影。她一身白衣，背上带鞘的剑金光闪闪，乌黑的头发遮住了眼睛。虽然无风，她红色的腰带却依然飘扬。先是一声柔和颤动的哨音，接着她用一种你从没听过的语言开口。同志会里似乎有人能懂她的话，将这记作是对你的指控。\n\n艾里奇投票“赞成”。"
+            },
+            {
+              "text": "在结算下列任意选项前，如果德西欠你一笔：找出你之前放在安全位置的那张德西德柔·戴佳多·欧瓦瑞兹，查看另一面。然后，继续。"
+            },
+            {
+              "text": "如果德西德柔·戴佳多·欧瓦瑞兹的另一面是剧情支援：突然一阵火光，是德西点亮了香烟。“这些家伙没问题。”他说，“现在可有更恶心的麻烦事呢。我在哈瓦那的时候，被那个你们知道是什么的鬼东西抓住了。是他们救了我——我还有什么可说的？所以，我挺他们。”\n\n德西德柔·戴佳多·欧瓦瑞兹投票“反对”。"
+            },
+            {
+              "text": "如果你和德西之间恩怨未了，或如果德西德柔·戴佳多·欧瓦瑞兹的另一面是遭遇卡牌牌背：你盯着德西，希望他能为你说话。但他只是点燃一根烟，望着你背后的墙壁。\n\n德西德柔·戴佳多·欧瓦瑞兹诡异地沉默着。"
+            },
+            {
+              "text": "如果均非上述情况：“我该知道这帮人他妈的是谁吗？”一个打着红领带的西装男点燃一根烟，长吐了一口。烟雾漂浮在黑暗的桌上。“浪费时间。难道你们一直都不知道要消除未知因素吗？把他们解决了，我们专心处理真正重要的事情吧。”\n\n德西德柔·戴佳多·欧瓦瑞兹投票“赞成”。\n德西德柔·戴佳多·欧瓦瑞兹拥有镜刃，相应更新在剧本日志中。"
+            },
+            {
+              "text": "如果特别小组介入了阿巴冉的事务：突然，仪表堂堂、身材魁梧的阿巴冉·阿里戈利阿伽科一拳打在屋正中的仪式桌上。“这些入侵者！竟想毁了我！竟想夺走我的好运，我选中的宝物！”他气得发抖，脸涨红了，骨节发白。“我要亲自处罚入侵者！我要把他们分筋扒皮！我要——”他又吼了好一阵，怒火才消了点儿。\n\n阿巴冉·阿里戈利阿伽科投票“赞成”。"
+            },
+            {
+              "text": "如果并非上述情况：下一个说话的男人你并不认识。他仪表堂堂、身材魁梧，但更为夺目的，还是他右手食指上那颗巨大的红宝石。“时运眷顾，我们又一次得享巨福。”他洪亮的声音吸引了所有的注意。“现在我们的敌人就在面前受缚？为什么要拒绝这样一份大礼？要想继续我们的大业，怎能不好好盘问一番？兴许我们还能将其用作手段。是的，手段……”他的声音渐渐小了下去，唇边扬起邪恶的微笑。你恨不得他还是投票杀了你的好。\n\n阿巴冉·阿里戈利阿伽科弃权。"
+            },
+            {
+              "text": "无论如何：你看不见戴红手套男子的脸，但你能想象他恐怖的微笑。\n\n戴红手套的男子诡异地沉默着。"
+            },
+            {
+              "text": "如果特别小组了解了同志会的真相，立即跳转，不记录其余投票。"
+            },
+            {
+              "text": "否则，如果有至少3位同志会成员诡异地沉默着，立即跳转，不记录其余投票。"
+            },
+            {
+              "text": "如果均非上述情况，如常继续。"
+            },
+            {
+              "text": "如果你和红衣女郎之间恩怨未了：你几乎没注意到藏在黑暗中的红衣女郎，她就站在另外两位同志会成员中间。她倾斜帽沿，盖过眼睛，脸上露出玩味的笑容。“这群人还说警察和探员一样，以为能对付我呢。”桌对面另一个戴着红眼镜的苍白男子站起来反驳她：“他们干涉了同志会的行动。”他吼道。“不。”女郎回道，“他们只是干涉了私人恩怨。要是你跟我有矛盾，红眼镜，冲我来，别冲他们。”\n\n红衣女郎弃权。\n血色监视者投票“赞成”。"
+            },
+            {
+              "text": "如果你和血色监视者之间恩怨未了：突然，有一顶系着红带子的宽沿帽掉到了桌上，红衣女郎从阴影中现身。“基金会并不是我们最大的敌人，最大的敌人就在我们之中。这位特工身上可能并不戴红，但我保证他比我们里面一半人自称的都要正直。”桌对面，血色监视者用一块血红的布料擦了擦自己的红眼镜，露出的眼窝是一对骇人的空洞。“傻姑娘。”他的语气恶毒无比，“想最后再引人注目一次？”女郎怒视着他，抓着自己帽子中央，用劲之大，都抓皱了起来。“你们中有人知道这个恶心的杂种都干了什么吗？你们中真的有人在乎吗？”\n\n红衣女郎投票“反对”。\n血色监视者投票“赞成”。"
+            },
+            {
+              "text": "如果血色监视者造成的苦难未止：红衣女郎从房间昏暗的角落里现身，她那顶熟悉的宽沿帽遮住了眼睛：“我在布宜诺斯艾利斯对付了自己人，那人的作为有碍我们的崇高利益。”她介绍道，“这些特工看到那里究竟发生了什么，还努力帮助了我。他们身上可能并不戴红，但我保证他们比我们里面一半人自称的都要正直。”人群中另一个声音问女郎她指的究竟是谁。“我们那位没有眼睛的‘朋友’。”她怒吼道，“我想他还在布宜诺斯艾利斯为害呢。但你们中真的有人在乎吗？”\n\n红衣女郎投票“反对”。\n血色监视者默认弃权。"
+            },
+            {
+              "text": "如果均非上述情况：下一个发言的是个秃头男人，戴着红色小框眼镜，他伸出一只瘦长歪曲的指头，指着同志会人群中的另外一人。“为什么是这些家伙在审判席上，而不是她这个叛徒？”他叫道。被他指着的女子向前一步，她的表情被宽沿帽边缘挡住了。帽子上还系着一根红色的带子。“你说我是叛徒？错了。”她扬起帽沿，人人都能见她眯起暗棕色的眼睛，盯着戴眼镜的男人。“只有你是叛徒。你和这儿有的人一样，以为自己戴了红就可以四处兴风作浪。”这两人彼此憎恶地对视，压根不关注你，直到议程继续。两人看来都不关心你的死活。\n\n红衣女郎弃权。\n血色监视者弃权。\n\n血色监视者拥有恸哭女士，相应更新在剧本日志中。"
+            },
+            {
+              "text": "如果你和朱三娘之间恩怨未了：看到朱三娘也在周围的人群中，你倒是一点也不意外。侥幸逃脱的人之后可能会抓住机会，夹紧尾巴做人，但这不是她的作风。“噢，好吧，这些捣乱的害虫。”她的言语中全是杀戮，说话的语调却还是那么轻快动听。“他们搅了我的局。有此大罪，万死难赎。”\n\n朱三娘狂热地投票“赞成”。"
+            },
+            {
+              "text": "如果朱三娘支配了你：朱三娘向你走来，每一次呼吸都迷惑着你。你的心提到了嗓子眼。那股帮助她、服侍她的冲动又一次占据了你。“啊，我的宠物。”她把阳伞往地上轻轻敲了敲，在你面前俯下身子。“你兴许能从我身边溜走，但你永远逃不出我的掌心。你知道的，不是吗？”你万般不情愿地低了点头。你咬紧嘴里塞的东西，但发颤冲动难以抑制。朱三娘娇笑道：“为什么你不自己告诉大家，想得到什么样的处置呢？”她轻声说着取走了塞在你嘴里的东西。你挣扎着不要出声，气喘吁吁，大汗淋漓，拒绝着、否认着，但那些话还是从你的唇间钻了出来。她达到了自己的目的，将手上的东西又塞回你嘴里，手指轻轻拂过你的头发，回到了她在同志会的位置。你厌恶地一阵颤抖。\n\n调查员队长代表朱三娘投票“赞成”。"
+            },
+            {
+              "text": "如果朱三娘受你支配：同志会的发言中出现了一阵尴尬的沉默。“谁见到朱三娘了吗？”有人问道。你先是一阵罪恶感，随即又是一股满足。她就不在这里。\n\n朱三娘默认弃权。"
+            },
+            {
+              "text": "如果均非上述情况：下一个发言的是位举着红伞的女子。她的声音十分迷人。“不好意思。”她一开口，魅力就征服了所有的听众。“可是我们为什么要在这样一件小事上浪费时间？”你心中涌起一阵绝望，她或许会讲道理。“把他们干掉就完事了。”她甚至没有朝你这边看一眼。你的希望破灭了。\n\n朱三娘投票“赞成”\n\n朱三娘拥有影穑，相应更新在剧本日志中。"
+            },
+            {
+              "text": "如果特瓦耶·马萨伊站在你这一边：马萨伊教授走出阴影，厚厚的红眼镜上闪着光。他上下打量着你，仿佛是第一次见面。“我只是听说过此人的事迹。但传言也说明他能理解、同情我们。我建议以此相报。”\n\n特瓦耶·马萨伊投票“反对”。"
+            },
+            {
+              "text": "如果并非上述情况：阴影中走出一个身材颀长，轮廓分明的男子。他皮肤黝黑，带着的红眼镜十分醒目。“整个仪式真是小孩子在过家家。我认为同志会的任何威胁都应该迅速人道地处理掉。太危险了，不能让他们逃了。”\n\n特瓦耶·马萨伊投票“赞成”。"
+            },
+            {
+              "text": "根据投票结果，如下继续：\n\n• 如果投票结果为平局，或“赞成”居多，你被判处有罪。\n\n• 如果“反对”居多……\n• ……且红衣女郎、艾婕·萨辛、德西德柔·戴佳多·欧瓦瑞兹都投票“反对”，你可以试图说服他们颠覆同志会。\n\n• ……且索恩、特瓦耶·马萨伊、暗红骑士都投票“反对”，你可以尝试加入同志会。\n\n• 如果均非上述情况，同志会认为你是可用的工具。"
+            },
+            {
+              "text": "投票结束，你被推到了地上。你挣扎着想要解脱束缚，却无济于事。更何况，你也寡不敌众。看来是没有逃脱的希望了。你脖子上抵着冷冰冰的刀刃。“你试图为害同志会的大业，被指控对同志会犯下多项罪行。”某人的声明严肃又骇人。利刃刺透了你的皮肤，你的脖子上滴下血来。“在此宣判你死刑。愿你留下的红污洗刷殆尽。”你闭上眼，绷紧身子。\n\n随即爆发出一阵巨响。尖叫和战斗的声音在屋内炸开，枪林弹雨，刀剑纷飞。本想处决你的人被不知何处的敌人击倒，你也天旋地转起来。你奋力挣扎，摆脱束缚，但还是无功而返……直到稍后有人将你拖出了房间，解去了你的束缚。拉你站起来的正是朱红头巾的女士，艾婕领你一路走下长廊，在战斗的喧嚣中对你低语道：“我们得从这儿出去。”另有几个戴红的人跟着你们，一路上不断回头。\n\n你问到底发生了什么，又一阵轰隆响彻走廊。“那个戴红手套的，他……”她抓着你臂膀的手不住颤抖，声音也矮了下去。“他不是我们以为的那个人。他总是吓我一跳——让我不由得想——我们怎么能不知道——？”\n\n你放慢速度，又问了她一遍。“他攻击了我们。”她终于对上了你的眼神。你们正俯身走进一间寂静的大厅，四周的墙上挂着猩红的织毯。“其他人在抵抗他。但……他身上有哪里不对劲。他不是人类，已经完全是别的东西了。它偷了好多工具逃了，就像……”她打了个寒战，“就像我们要摧毁的家伙一样。”\n\n你脑海里涌起一个想法。要是戴红手套的男子——或者无论它到底是什么——目标正是剩余的钥匙，那你必须不惜一切代价阻止。你抛下艾婕，大步回头。“你要干什么？”她喊道，“其他人不会对你心慈手软的，知道吗。”但你意已决。\n\n“要是你去追那个东西。”有人对你说着，“那我们也去。”\n\n• 在剧本日志中，记录下特别小组逃离红色同志会。\n\n• 进入冒险设置(版本一)。"
+            },
+            {
+              "text": "同志会成员里一阵窃窃私语，唇枪舌剑。有人取走了你口中的东西，解去了你的束缚。尽管有人并不情愿，你还是被带到仪式桌前，有机会为自己辩护。你的眼神寻找着同志会中你知道真心为善的人。屋内寂静下来，你呼唤他们的正义感。太久太久，红色同志会一直坐视其成员引发灾祸、招致痛苦，而动机全是为了私心。太久太久，他们一直用自己敛集的力量为害人类，而非保护人类。就在你发言的时候，几个你之前见过的成员点头同意。“说的没错。”红色大衣的女孩指着几个冷笑的成员说道，“你们说自己的目标是对人类尽责，可是你们却不断容忍那些只会为恶的人。要是这个组织就是这样，那我也不想待下去了。”\n\n艾婕一并点头：“我同意。这已经不是个正派的组织了。”她和另几个人加入了红衣女郎一边，其中还有德西。他朝你拍拍帽沿，微微眨了眨眼。\n\n“我受够了跟在后面清理街上的渣滓。”他说着眯起了眼睛，“看来是时候清理这儿了。”屋内的沉默十分紧张，两方彼此怒视，但显然你们这边人数更多。有那么一刻，你担心自己活不过之后的混乱。\n\n但幸运的是，他们并未开战。你的对手觉得此刻还是走为上计，小心翼翼地从屋内出去，一边嘟囔低语着恶毒的话，嘘声一片。“你们或许戴着红。”其中一人呼道，“但没有我们，你们不可能抵御即将到来的一切。你们太弱了。你们会把我们全毁了。”\n\n艾婕从人群中走出，摇了摇头：“不。弱的是你们。清理你们，我们只会更强大。”\n\n• 在剧本日志中，记录下特别小组颠覆了红色同志会。"
+            },
+            {
+              "text": "同志会成员里一阵窃窃私语，唇枪舌剑。有人取走了你口中的东西，解去了你的束缚。尽管有人并不情愿，你还是被带到仪式桌前，有机会为自己辩护。你的眼神寻找着同志会中近距离看到你潜力的人。屋内寂静下来，你呼唤他们的理性。你已经证明自己对红色同志会提供的支援饶有价值。况且，你还有基金会的经验，可以促成两方进一步合作。你们有着一样的目标，一样的敌人——它们从彼端而来，意图消除人类存在。要想阻止这样的威胁，你们必须通力合作。就在你发言的时候，几个成员点头同意。“这，确实，没错。”马萨伊教授为你说话了，“我们被蝇头小利牵着鼻子走太久了，湮灭的威胁已经降临。”\n\n有几人面带嫌恶，但更多的人在为你说话。“我们也未尝没接纳过更糟的人加入。”名字很多的骑士说道，“这些人已在多个方面证明了自己，我们需要一切可能的盟友。”\n\n“同意，”索恩的声音平静如常，“这些人与其是‘敌人’，倒更不如说是‘放心的伙伴’。”索恩对上了你的眼神，微微一笑。但你知道这样的笑容下藏着的本性依然狠毒。索恩为了得到自己想要的什么都做得出，而现在想要的就是你。\n\n跟你有过节的同志会成员严词拒绝，咒骂叫嚷，但他们明显只是一小撮。屋内的沉默十分紧张，两方彼此怒视。有那么一刻，你还担心这里会大打出手。“你兴许能戴上红。”其中一人呼道，“但你永远成不了我们中的一员。”\n\n“要是你不想再在组织里待了。”马萨伊教授声明，“你知道门在哪里。”这群你的人怀恨在心，闷坐不响。议程继续。骑士唤你上前，为你的加入举行了一场漫长严肃的仪式。“吾等为红系，”他郑重地诵道，“因红吾为一。吾亲吾识俱红中。”他让你放弃自己的过去，拥抱新生，这一切都是为了人类的进步和启蒙。你回想此生，想到领你至此的种种，想到你珍视的一切，想到你抛下的许多。你默然接受。\n\n• 每位调查员选择自己插画上的一件服饰，密教玄仪将你的钥匙与这件凡俗之物绑定起来。它的颜色至此变为猩红，直到永远。\n\n• 在剧本日志中，记录下特别小组加入了红色同志会。"
+            },
+            {
+              "text": "同志会成员里一阵窃窃私语，唇枪舌剑。有人取走了你口中的东西，解去了你的束缚。尽管有人并不情愿，你还是被带到仪式桌。议会向你陈述，告诉你的罪行已经宽恕，只要你立誓不再干扰他们的任务。你别无选择，只能同意。跟你有过节的同志会成员坚决抗议，但他们明显只是一小撮。\n\n• 在剧本日志中，记录下红色同志会饶恕了特别小组。"
+            },
+            {
+              "text": "就在下一个成员发言之前，从戴红手套的男子背后冒出一个身影，一个小小的、鸟类的东西抵在了前者的脑门后面。你耳边一阵炸响，枪声在屋内响起。男子的脸没有炸开，反而涌出一阵扭曲的气雾，盖过了他已经空洞的身体。你看到一个无数触手的螺旋虚影，仿佛是这个异星存在将一整个星系所有的现实空间都环绕着吸入自己。而戴红手套的男子先前穿着的衣服已经在地上裂成碎片，空无一物。\n\n同志会其余的成员都抽出了自己的武器，攻击这个实体。但它迅速地溜出房间，在众目睽睽之下重组了自己的虚影。有几件事同时发生：先前形体的盛装已经瘫软在地上，空无一物；而阴影中钻出了戴红手套男子的本尊。“它们就在这儿。”他的语气平静得叫人诧异，一边还给武器重新装了弹。“就在我们之中。要是你们专心自己的任务，早就该发现了。”他给你一个会心的眼神，悄悄挤出了一个顽劣的笑容。“我能回到这里，多亏了‘受控’的这些人。要是没有他们，你们全都死了。审判结束了。”再没有人敢多争论。\n\n有人取走了你口中的东西，解去了你的束缚。你被带到仪式桌前，站在男人身边。“它们是为了什么？你去哪儿了？”同志会中有人问道。\n\n“它们想要我们的整个世界。兴许是每一个世界。”他说着拉紧了自己的红手套。“但现在，我们反击的机会来了。跟着它们，前往老巢，就可以一劳永逸地解决这个威胁。”周围的人群不停点头，响起阵阵认可的低语。\n\n• 在剧本日志中，记录下红色同志会饶恕了特别小组。\n\n• 进入冒险设置(版本三)。"
+            },
+            {
+              "text": "下一个成员正准备说话，戴红手套的男子伸出手来——他的手变得如此之长，仿佛是异界物质形成的长线——惊人的力量抓住了此人头骨。头骨在他手中粉碎，染得手套更是一片猩红。尸体瘫倒在地，混乱随之爆发。\n\n你恐惧地看着越来越多的同志会成员扭曲变形，伏击周围的人，留下一片惨象。屋内顿时一片惨叫，刀剑纷飞，枪林弹雨。每个遇害的议会成员都被完全抹除了。你的看守也从现实中被抹去了，顺道还将你掀翻在地。混战继续，你在地上匍匐前进，终于找到一片碎玻璃解开了自己的束缚。你刚站起身，救出自己的同伴，那些实体都已不见。你最后只瞥见戴红手套的男子拉长失形的残骸从你来的门溜走了。\n\n你评估现场受损的情况。但出乎意料的是，其实并没有多少可看的。只有几件被人落下、遗忘的红色配饰。除此之外，屋内一无所有。\n\n你惊恐地发现，自己居然完全想不起他们的名字或是绰号。一个也不例外。\n\n• 在剧本日志中，记录下红色同志会由内部被毁。\n\n• 进入冒险设置(版本三)。"
+            },
+            {
+              "text": "审判结束，议会终于开始谈论别的事项。“还有关于域外来客的事情。”同志会的一员宣称，“我们已经集结力量，以备不测。但我们怎么确定自己的维度会受它们关注呢？我们不能指望会理解这些抽象的存在。”\n\n你插了句嘴，告诉议会你游历期间所见的一切，还有你在基金会干的活：全球各地奇异的失踪事件只会越来越频繁，你有理由相信它们有智能、心怀恶意——而非盲目痴愚、不可理解。更有甚者，它们和其他人一样，也在追猎钥匙。\n\n“要是它们蠢蠢欲动，准备开战，”另一个同志会的成员说道，“那我们也得这么干。我们这里的人拥有组织发现的最为强大的神器。让我们将其用于正途，一劳永逸地解决这个威胁。”周围的人群不停点头，响起阵阵认可的低语。\n\n“但要是真如我们的新朋友所说，这些东西是智能的存在，它们又怎么可能如此了解我们的内部运作？”有人提出质疑。你脑海中闪过一个恐怖的直觉。你环顾屋内，发现议会中有一人不见了。其余人跟随你的眼神，还有几个站了起来，更加仔细地搜查房间。其中一个举起一只红手套，证实了你的怀疑。这只手套被人落下，遗忘，仿佛一文不值。\n\n朱红头巾的女士第一个明白你的思路。“散开。”她的叫声在颤抖，“找到他。找到他去哪儿了。做好准备，一切都有可能。”\n\n你们没多久就发现他逃走的路线——一道多维能量的次元门闪闪发光，其中惊骇的力量正在衰退。“它要关上了。”另有人指出。确实，次元门一边稳定地旋转，一边也在收缩，很快就要消失了。“我们没多少时间了。”\n\n• 进入冒险设置(版本二)。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "title": "冒险设置(版本一)",
+              "children": [
+                {
+                  "text": "收齐以下遭遇组的所有卡牌：钥匙议会、红色同志会、猩红巫术、空间异常、腐败扩散、上锁的门。"
+                },
+                {
+                  "text": "将巢穴版本的猩红走廊和三张同志会圣所地点放置入场。"
+                },
+                {
+                  "text": "将这些地点的圣堂版本从游戏中移除。"
+                },
+                {
+                  "text": "每位调查员从猩红走廊开始游戏。"
+                },
+                {
+                  "text": "仅使用场景1a“秘密与谎言(版本一)”创建场景牌库。将其他版本的每张场景1a从游戏中移除。"
+                },
+                {
+                  "text": "找出红色同志会遭遇组中所有投票“赞成”的同志会敌人，以及戴红手套的男子。该"
+                },
+                {
+                  "text": "不要收齐此组中任何投票“反对”、弃权或诡异地沉默着(戴红手套的男子不算在内)的同志会敌人。"
+                },
+                {
+                  "text": "调查员队长将戴红手套的男子生成在阴影中，并结算其(由场景1a获得的)隐匿关键词。"
+                },
+                {
+                  "text": "混洗收齐的剩余同志会敌人。按玩家顺序，除调查员队长外的每位调查员依次抽取其中1张，如常生成。"
+                },
+                {
+                  "text": "将收齐的剩余(未在上一步骤中抽取)的同志会敌人混洗入遭遇牌库。"
+                },
+                {
+                  "text": "注意下列角色可能投票“赞成”，但在本遭遇组中没有其敌人卡牌：特瓦耶·马萨伊、阿巴冉·阿里戈利阿伽科、拉辛·法瑞。"
+                },
+                {
+                  "text": "找出每个投票“反对”的同志会成员的同谋剧情支援版本，放置入场，由任意调查员控制。"
+                },
+                {
+                  "text": "注意特瓦耶·马萨伊可能投票“反对”，但并没有同谋剧情支援。"
+                },
+                {
+                  "text": "将钥匙议会遭遇组的三张异界地点和拟态克星敌人放在一边，位于场外。"
+                },
+                {
+                  "text": "现在如下创建第二个遭遇牌库。收齐以下遭遇组的所有卡牌：域外使徒、彼界彼端、域外来客、秘密战争、远古恶魔、恐惧打击。在收齐恐惧打击遭遇组时，只收齐下列卡牌(2张呆若木鸡和2张刺耳之声)。不要收齐此组中3张腐烂的尸体。"
+                },
+                {
+                  "text": "找出彼界彼端遭遇组中所有九张残骸之城地点。将这些地点混洗，未揭示面朝上，形成一个牌库。这个牌库就是异界牌库。将这个牌库放在冒险参考卡牌旁。"
+                },
+                {
+                  "text": "将这些收齐的遭遇组中剩下的遭遇卡牌一起混洗，组成第二个遭遇牌库。目前将这个牌库放在一边，位于场外。"
+                },
+                {
+                  "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：残骸之城(左、中、右)、拟态克星、戴红手套的男子。将这些卡牌放在一边，位于场外。"
+                },
+                {
+                  "text": "在进行本场冒险前，确保已经阅读(或复习过)“域外之地的地点相邻关系”和“阴影中的地点”规则。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "冒险设置(版本二)",
+              "children": [
+                {
+                  "text": "收齐以下遭遇组的所有卡牌：钥匙议会、域外使徒、彼界彼端、域外来客、红色同志会、秘密战争、腐败扩散、远古恶魔、恐惧打击。在收齐恐惧打击遭遇组时，只收齐下列卡牌(2张呆若木鸡和2张刺耳之声)。不要收齐此组中3张腐烂的尸体。"
+                },
+                {
+                  "text": "找出彼界彼端遭遇组中所有九张残骸之城地点。将这些地点混洗，未揭示面朝上，形成一个牌库。这个牌库就是异界牌库。将这个牌库放在冒险参考卡牌旁。"
+                },
+                {
+                  "text": "将圣堂版本的猩红走廊和三张同志会圣所地点放置入场。"
+                },
+                {
+                  "text": "将这些地点的巢穴版本从游戏中移除。"
+                },
+                {
+                  "text": "每位调查员从猩红走廊开始游戏。"
+                },
+                {
+                  "text": "仅使用场景1a“秘密与谎言(版本二)”创建场景牌库。将其他版本的每张场景1a从游戏中移除。"
+                },
+                {
+                  "text": "找出红色同志会遭遇组中所有投票“赞成”的同志会敌人，以及戴红手套的男子。将所有这些敌人放在一边，位于场外。该"
+                },
+                {
+                  "text": "将所有其他同志会敌人移出游戏。"
+                },
+                {
+                  "text": "注意下列角色可能投票“赞成”，但在本遭遇组中没有其敌人卡牌：特瓦耶·马萨伊、阿巴冉·阿里戈利阿伽科、拉辛·法瑞。"
+                },
+                {
+                  "text": "找出每个投票“反对”的同志会成员的同谋剧情支援版本，放置入场，由任意调查员控制。"
+                },
+                {
+                  "text": "注意特瓦耶·马萨伊可能投票“反对”，但并没有同谋剧情支援。"
+                },
+                {
+                  "text": "将钥匙议会遭遇组的三张异界地点和拟态克星敌人放在一边，位于场外。"
+                },
+                {
+                  "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：残骸之城(左、中、右)、拟态克星。将这些卡牌放在一边，位于场外。"
+                },
+                {
+                  "text": "在进行本场冒险前，确保已经阅读(或复习过)“域外之地的地点相邻关系”和“阴影中的地点”规则。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "冒险设置(版本三)",
+              "children": [
+                {
+                  "text": "收齐以下遭遇组的所有卡牌：钥匙议会、域外使徒、彼界彼端、域外来客、红色同志会、秘密战争、腐败扩散、远古恶魔、恐惧打击。在收齐恐惧打击遭遇组时，只收齐下列卡牌(2张呆若木鸡和2张刺耳之声)。不要收齐此组中3张腐烂的尸体。"
+                },
+                {
+                  "text": "找出彼界彼端遭遇组中所有九张残骸之城地点。将这些地点混洗，未揭示面朝上，形成一个牌库。这个牌库就是异界牌库。将这个牌库放在冒险参考卡牌旁。"
+                },
+                {
+                  "text": "将圣堂版本的猩红走廊和三张同志会圣所地点放置入场。"
+                },
+                {
+                  "text": "将这些地点的巢穴版本从游戏中移除。"
+                },
+                {
+                  "text": "每位调查员从猩红走廊开始游戏。"
+                },
+                {
+                  "text": "仅使用场景1a“秘密与谎言(版本三)”形成场景牌堆。从游戏中移除其他版本的场景1a。"
+                },
+                {
+                  "text": "找出红色同志会遭遇组中所有诡异地沉默着的同志会敌人。该"
+                },
+                {
+                  "text": "不要收齐此组中任何投票“赞成”、“反对”或弃权的同志会敌人。"
+                },
+                {
+                  "text": "调查员队长将戴红手套的男子生成在阴影中，并结算其(由场景1a获得的)隐匿关键词。"
+                },
+                {
+                  "text": "混洗收齐的剩余同志会敌人。按玩家顺序，除调查员队长外的每位调查员依次抽取其中1张，如常生成。"
+                },
+                {
+                  "text": "将收齐的剩余(未在上一步骤中抽取的)同志会敌人混洗入遭遇牌库。"
+                },
+                {
+                  "text": "检查剧本日志。如果红色同志会饶恕了特别小组，找出戴红手套的男子，以及所有未在上一步骤期间收齐的同志会其他成员的同谋剧情支援版本。将他们全员放置入场，由任意调查员控制。"
+                },
+                {
+                  "text": "在本场冒险的剩余时间内，忽略两个版本的戴红手套的男子的独特符号。(如果戴红手套的男子拥有任何钥匙，则只附属到他的敌人版本。)"
+                },
+                {
+                  "text": "注意：可能出现的同谋剧情支援如下：暗红骑士、艾婕·萨辛、索思、艾里奇·佐尼·奥佩勒曲亚、德西德柔·戴佳多·欧瓦瑞兹、红衣女郎、戴红手套的男子。"
+                },
+                {
+                  "text": "将钥匙议会遭遇组的三张异界地点和拟态克星敌人放在一边，位于场外。"
+                },
+                {
+                  "text": "收齐每张诱饵迷你卡牌和下列每张迷你卡牌：残骸之城(左、中、右)、拟态克星、戴红手套的男子。将这些卡牌放在一边，位于场外。"
+                },
+                {
+                  "text": "在进行本场冒险前，确保已经阅读(或复习过)“域外之地的地点相邻关系”和“阴影中的地点”规则。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "调查员被击败",
+              "children": [
+                {
+                  "text": "在结算其他任何结局前，如果有调查员被击败：被击败的调查员首先阅读调查员被击败。\n\n调查员被击败：再无维度供你的身体留存，你每分每寸都被撕碎殆尽。你的记忆和思想已经落入无尽的湮灭，万劫不复。但你的意识居然还在。陷入虚无的永恒囚笼。\n\n• 每位被击败的调查员发疯，从此音讯全无。有关这些调查员的所有记忆都从现实中清除。\n\n• 如果未达成任何结局(每位调查员被击败)：前往结局2。"
+                }
+              ]
+            },
+            {
+              "title": "结局1",
+              "children": [
+                {
+                  "text": "结局1(每位被击败的调查员必须先结算调查员被击败)：你落在坚实的地面，但在不同世界之间被拽来拽去的感觉可没那么容易消散。尽管你疲惫的身体已经抗议，但你还是挣扎着站了起来，环顾四周，准备应对一切情况。但等你意识到自己在哪里，你震惊地发现……\n\n• 将世界地图在平面上展开。每位调查员抛一枚硬币或混乱标记，落在地图上。落在的地方就是该调查员剧本结束位置。(如果落在海洋上，则是偶然落在船只上。)\n\n你花了几周时间才联系上自己的特别小组在域外来客世界崩解中幸存的其他成员。看来它们的阴谋已经瓦解，至少现在是的。也许该安排长假休假了，但还有一件事要先处理……\n\n• 在剧本日志中，记录下域外来客遭到阻止。\n\n• 每位调查员承受2点肉体创伤和2点精神创伤，因为其从未真正从超维之劫中恢复过来。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。每位调查员取得5点奖励经验值，因为其拯救了自己的维度，使其免遭可怕的厄运。\n\n• 调查员剧本胜利！\n\n• 进入尾声。"
+                }
+              ]
+            },
+            {
+              "title": "结局2",
+              "children": [
+                {
+                  "text": "结局2(每位被击败的调查员应先结算调查员被击败)：“这就是最后的了。”哈德逊特工说着在费用报告上签了字。“我理解需要保密，但我还是要再次请求雇佣更多的助手完成秘书工作，专员。”他将文件交给坐在深黑书桌后面，表情一脸凝重的泰勒。\n\n“人越多就越容易泄密。我们节制人手不是平白无故的，哈德逊。别忘了重要的事情。”她翻了一会儿文件，皱起了眉头。“关于支援32-J的特别小组的报告呢？”\n\n“‘32-J’？”男子从口袋里掏出一本小小的笔记，翻到中间一页。“没有这样的代号。”\n\n泰勒撇撇嘴：“不，有的，就是……我们在伦敦遇到的。你在那儿呢……”过了一会儿，她摇摇头，疑惑极了。“唔，怪了，我不记得他们是谁了。”\n\n“您工作太辛苦了。”特工微笑着回道，“休息休息，专员。您休假一周我们也能把事情办好的。”\n\n• 在剧本日志中，记录下特别小组成为空洞。\n\n• 调查员剧本失败。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "File #59–Z (Finale): Congress of the Keys",
+          "children": [
+            {
+              "text": "Depending on how you got here…"
+            },
+            {
+              "text": "If you have arrived at this finale due to a status report (because time ran out), proceed to Intro 1."
+            },
+            {
+              "text": "If you traveled to Tunguska of your own accord, skip to Intro 2."
+            },
+            {
+              "text": "Intro 1: You awaken in darkness. A sack is removed from your head and cast aside, and your cheek is squeezed and struck once or twice for good measure. “Wake up,” a sinister voice commands. You blink unconsciousness away and realize, with some panic, that you and your partners are bound to chairs. A gag prevents you from making any noise louder than a muffled cry.\n\nAs your eyes adjust to the dim light, you realize you must be underground. The large, windowless chamber is made of clean, worked stone, lit faintly by mercury vapor lamps. Scarlet tapestries line the walls, along with several glass cases and shelves containing old relics and historical artifacts. Dominating the room is an enormous central table, an elaborate pattern of lines and rings carved meticulously along its surface. Standing around this central table are a host of figures, some familiar to you, others unrecognizable. All of them bear red. Your heart surges in your throat. “You have been brought here to account for your crimes against the Coterie,” the voice states, “or to be commended, if that is the will of the Congress. We will now entertain any who wish to speak on your behalf, or against you.”\n\nProceed to The Trial 1."
+            },
+            {
+              "text": "Intro 2: You would never have found the secret hideout of the Red Coterie without the intel Commissioner Taylor sent you. The compound lies deep underground in the heart of Siberia, not far from the mysterious crater that marks the site of the notorious Tunguska event—a blast, or perhaps impact, the true nature of which has been shrouded in mystery for over a decade. Maybe there is a connection between this strange event and the Coterie’s presence—no, knowing the kind of dangerous artifacts the Coterie possesses, there is no doubt in your mind. The question is: which came first?\n\nThe compound’s entrance is masked by heavy snow and remote wilderness, but eventually, you find it—an unmarked steel door embedded in the side of a snowy hilltop, almost impossible to see from afar. You are surprised to find the door unlocked…but the moment you enter, you are set upon by Coterie guards with suspicious eyes and familiar red clothing. “We’ve been expecting you,” one of them says with a wicked grin. “Come. The Congress is about to begin.”\n\nYou have little choice but to follow. The guards lead you deeper and deeper into the complex, down steep, narrow stairways of worked stone and through dark, drab corridors, until finally you reach a large, windowless chamber lit faintly by mercury vapor lamps. Scarlet tapestries line the walls, along with several glass cases and shelves containing old relics and historical artifacts. Dominating the room is an enormous central table, an elaborate pattern of lines and rings carved meticulously along its surface. Standing around this central table are a host of figures, some familiar to you, others unrecognizable. All of them bear red. The door leading into the chamber slams shut behind you, and your heart surges in your throat. “Your timing is impeccable,” a voice among the gathered Coterie states. “We were just about to begin the vote.”\n\nYou inquire as to the nature of this vote, your mouth suddenly dry. You cannot shake the feeling that you have come here merely to look your own doom in the eyes. “A meeting has been called. To account for your crimes against the Coterie, or to be commended, if that is the will of the Congress. We will now entertain any who wish to speak on your behalf, or against you.” From behind, you are suddenly restrained and a gag is placed over your mouth. “Just a formality, I promise you,” the guard drawls with a grin.\n\nProceed to The Trial 1."
+            },
+            {
+              "text": "The Trial 1: The Coterie casts votes to determine your fate.\n\nRead the relevant passage from each of the following sections, in order, and tally all of the votes received. Each “yea” vote represents a Coterie member who wishes to see you disposed of. Each “nay” vote represents a Coterie member who wishes to keep you safe. An abstaining vote, or a vote of silence, is neither a yea or a nay."
+            },
+            {
+              "title": "Nay",
+              "children": [
+                {
+                  "text": "[count]"
+                }
+              ]
+            },
+            {
+              "title": "Yea",
+              "children": [
+                {
+                  "text": "[count]"
+                }
+              ]
+            },
+            {
+              "text": "If the cell aided the knight: The elderly “knight” from Alexandria steps forward, commanding the attention of the entire chamber. “My esteemed associates. The individuals gathered here before us, despite their…unfortunate affiliation…are indeed worthy of our respect and recognition. Were it not for their assistance, our sanctum in Alexandria might have fallen. To one of our own, I might add. I believe this demonstrates their value.” Some of the others nod in agreement. The assembled members look around for a rebuttal, but none arrives. Perhaps the Beast is nursing its wounds.\n\nThe Claret Knight votes “nay.”\nThe Beast in a Cowl of Crimson abstains by default."
+            },
+            {
+              "text": "If the cell failed to fend off the Beast: A rumbling voice emanates from the shrouded beast in its crimson hood. “Blood,” it simply states. You wince at the feral sound, a shiver worming up your spine. “There must be blood.” You scan for the elderly knight from Alexandria, hoping he might steer the rest to reason…but he is not present.\n\nThe Claret Knight abstains by default.\nThe Beast in a Cowl of Crimson votes “yea.”"
+            },
+            {
+              "text": "If you haven’t seen the last of the Claret Knight: “The course of action is clear,” the elderly, well-dressed “knight” from Alexandria states. “They are untrustworthy and aim to wrench control away from us. They must be disposed of.” On the opposite end of the table, the hooded, crimson-shrouded figure of the knight’s enemy growls. “For once, we agree on something,” it rumbles, its voice feral and inelegant. The knight’s eyes narrow. “Do not let it go to your head,” he warns.\n\nThe Claret Knight votes “yea.”\nThe Beast in a Cowl of Crimson votes “yea.”"
+            },
+            {
+              "text": "If the dogs are at war: There is a moment of silence as you and the gathered Coterie members scan their numbers for the two operating in Alexandria. “It seems two among us have decided not to attend,” one member states. You wonder if either one of them is even still alive. Perhaps their conflict consumed the both of them. You shudder to think of the state of Alexandria.\n\nThe Claret Knight abstains by default.\nThe Beast in a Cowl of Crimson abstains by default."
+            },
+            {
+              "text": "If none of the above are true: “I do not take pleasure in violence,” says an elderly, well-dressed man in red. “I believe these before us might be valuable assets.” On the opposite end of the table, a crimson-hooded figure rumbles, “That is why you are weak.” Its countenance, shrouded in shadow, turns to acknowledge you. In the dim light, all you see is a set of terrible, dripping fangs. “Blood must flow.”\n\nThe Claret Knight votes “nay.”\nThe Beast in a Cowl of Crimson votes “yea.”\n\nFlip a coin and update the Keys section of your Campaign Log as follows: If it is heads, the bearer of The Light of Pharos is “The Claret Knight;” if it is tails, it is “The Beast in a Cowl of Crimson.”"
+            },
+            {
+              "text": "If Ece trusts the cell: Ece steps forward and clears her throat. “I reached out to the Foundation because the Twisted Antiprism hidden in Istanbul was in danger of being found by a third party. These are the agents who responded. Rather than take the artifact for themselves, they chose to hand it over to my custody. I believe them to be trustworthy and, unlike some of our members, morally upstanding individuals.”\n\nEce Şahin votes “nay.”"
+            },
+            {
+              "text": "If Ece does not trust the cell: Ece’s eyes are downcast as the rest of the table turn to face her. “I…” she begins, stammering. “I abhor violence, and therefore refuse to participate in the kind of despicable acts some of our members seem to enjoy,” she says pointedly, ruffling a few of the other members’ feathers. But then her eyes snap up to meet yours, sadness and resolve hardening her face. “But the individuals before us cannot be trusted. And so I find myself unable to exonerate their actions.” Then quieter, she breathes, “I’m sorry.”\n\nEce Şahin abstains."
+            },
+            {
+              "text": "If neither of the above are true: “If we purport to be a morally righteous organization,” the woman in the vermillion veil articulates politely, “we cannot destroy each and every thing that stands in our way. Progress requires understanding and cooperation. And I abhor violence. We should be working with these individuals, not against them.”\n\nEce Şahin votes “nay.”"
+            },
+            {
+              "text": "If you haven’t seen the last of Amaranth: Amaranth grins wickedly as her eyes fall on you. “Oh, I have been waiting for this moment,” she drawls, her eyes flashing. “Meddlesome fools. Did you think your interference in our plans would go unpunished?”\n\nAmaranth enthusiastically votes “yea.”"
+            },
+            {
+              "text": "If the lovers are reunited: Standing together, Amaranth and the preserved living corpse of Razin Farhi leer sparingly at you between sickeningly adoring glances at one another. “What do you think, Razin dearest? Do we spare the fools who stood in our way?” Amaranth asks. “Or do we make a lesson of them?” Razin croaks in response: “My love. None could stand in our way. And with them gone, none ever will.”\n\nAmaranth votes “yea.”\nRazin Farhi votes “yea.”"
+            },
+            {
+              "text": "If Amaranth has left the Coterie: “Where is Amaranth?” one of the others says aloud, causing a murmur to rise among the Coterie. “She has never missed a meeting.” Under your gag, you allow yourself to smile. At least Eryn was finally able to get away from the Coterie’s grasp and assume her real identity at last.\n\nAmaranth abstains by default."
+            },
+            {
+              "text": "If none of the above are true: Next to speak is a beautiful, pale- skinned woman in a black dress. The blooming, red flower adorning her hair is the only splash of color gracing her outfit. “We operate in secrecy for a reason, do we not?” Her beauty belies her vile tone and harsh tongue. “They know too much. Kill them and get it over with.”\n\nAmaranth votes “yea.”\nAmaranth is the bearer of The Last Blossom. Update the Campaign Log accordingly"
+            },
+            {
+              "text": "If you haven’t seen the last of Thorne: Thorne adjusts the cuffs of the dress shirt under their long coat. “The Foundation has earned our mistrust by interfering with our plans. We should eliminate this cell and move forward with the collection.” They meet your gaze, steady and unwavering. “I warned you not to get in our way, did I not?”\n\nThorne votes “yea.”"
+            },
+            {
+              "text": "If the cell made a deal with Thorne: The one known as Thorne steps forward. “Our extensive operations require that we collaborate with many across the globe. Researchers. Local authorities. Criminals. These before us are no different. And they have proven themselves to be quite useful. They aided our efforts in Anchorage, and even saw the wisdom in keeping the Key there safe in our custody.”\n\nThorne votes “nay.”"
+            },
+            {
+              "text": "If Thorne disappeared: You are surprised to count Thorne among those gathered here. Last you saw of them, they had simply vanished north of Anchorage, and yet here they are, completely silent despite what the two of you went through.\n\nThorne remains eerily silent."
+            },
+            {
+              "text": "If none of the above are true: The one wearing a red cravat, with platinum-blonde hair to match their sheet-white skin, speaks next. “I have had no dealings with these before us,” they say, gesturing toward you. “It would be foolish of me to vote one way or another without knowing firsthand of their capabilities and truthworthiness. As such, I will sit this one out.”\n\nThorne abstains.\nThorne is the bearer of The Sable Glass. Update the Campaign Log accordingly"
+            },
+            {
+              "text": "If Aliki is on your side: With ethereal grace, Aliki Zoni Uperetria steps out of the shadows, a golden-hued blade sheathed on her back. Her scarlet sash drifts along a breezeless wind. She whispers something soft and quiet in her usual lexicon of forgotten prose. One of the assembled Coterie translates: “Uperetria states that…” they skew their eyesbrows up in surprise. “…that those assembled before us are truly loyal servants to the cause, as we are.” Murmurs erupt around you.\n\nAliki votes “nay.”"
+            },
+            {
+              "text": "If you haven’t seen the last of Aliki: “Do not forget Uperetria’s vote,” a voice murmurs. “She is here?” another asks. “We have been attempting to contact her for weeks now.” To your surprise, the gathered members indeed turn to regard the ghostly-quiet girl who stands in the corner of the room, apart from the rest. An uncanny silence permeates the chamber. You would think she were a statue, were it not for her sash drifting lazily in the stillness.\n\nAliki remains eerily silent."
+            },
+            {
+              "text": "If none of the above are true: From the shadows emerges a gossamer figure, dressed in white, a golden-hued blade sheathed on her back and a veil of raven hair over her eyes. Her scarlet sash drifts along a breezeless wind. Her words are heralded by a shrill, muted whistling, and she speaks in a language you have never before heard. One of the Coterie who seems to understand her tallies this as a vote against you.\n\nAliki votes “yea.”"
+            },
+            {
+              "text": "Before resolving any of the below options, If Desi is in your debt: Find the copy of Desiderio Delgado Álvarez you stored in a safe place and look at its other side. Then, proceed."
+            },
+            {
+              "text": "If the other side of Desiderio Delgado Álvarez is his story asset version: There is the sudden flare of a match as Desi lights a cigarette. “These ones are all right,” he says. “There’s bigger shit goin’ on here. Almost got snatched by you-know-what back in Havana. They helped me out—not that I needed it or anything. Point is, they had my back.”\n\nDesiderio Delgado Álvarez votes “nay.”"
+            },
+            {
+              "text": "If you haven’t seen the last of Desiderio Delgado Álvarez, or if the other side of Desiderio Delgado Álvarez is an encounter card back: Your eyes snap over to Desi, hoping he will speak on your behalf. But he merely lights a cigarette and gazes into the wall behind you.\n\nDesiderio Delgado Álvarez remains eerily silent."
+            },
+            {
+              "text": "If none of the above are true: “Should I know who the hell these people are?” a man in a suit with a red tie says, lighting a cigarette and taking a long puff. The smoke wafts into the darkness above the table. “This is a waste of time. Aren’t you all always goin’ on about eliminating unknown factors? Get rid of ‘em so we can focus on what really matters.”\n\nDesiderio Delgado Álvarez votes “yea.”\nDesiderio Delgado Álvarez is the bearer of The Mirroring Blade. Update the Campaign Log accordingly"
+            },
+            {
+              "text": "If the cell meddled in Abarran’s affairs: Suddenly, the large, imposing figure of Abarran Arrigorriagakoa slams his fist on the ceremonial table in the center of the chamber. “These interlopers! They tried to ruin me! Tried to take away my fortune, my chosen!” His face is flushed red and trembling with rage, his knuckles white. “I will punish them myself! I will rip them limb from limb! I will—” the man continues his rant for some time before his rage simmers to indignation.\n\nAbarran Arrigorriagakoa votes “yea.”"
+            },
+            {
+              "text": "If the above is not true: A man you do not recognize speaks next. His large, imposing frame is dwarfed only by the luster of the enormous ruby ring adorning his left index finger. “As Fortune’s Chosen, we have once more been given a great and illustrious boon,” he states, his thundering voice commanding the attention of all. “Our enemies, bound before us? Why dispose of such a gift? What better way to learn how to continue our great work than to question them? Perhaps we may even use them as leverage…yes, leverage…” he trails off, a sinister grin on his face. You almost wish he had voted to kill you.\n\nAbarran Arrigorriagakoa abstains."
+            },
+            {
+              "text": "No matter what: You cannot see the Red-Gloved Man’s face, but you imagine a great and terrible smile.\n\nThe Red-Gloved Man remains eerily silent."
+            },
+            {
+              "text": "If the cell knows the true nature of the Coterie, immediately skip to The Trial 6 without tallying any further votes."
+            },
+            {
+              "text": "Otherwise, if 3 or more Coterie members are eerily silent, immediately skip to The Trial 7 without tallying any further votes."
+            },
+            {
+              "text": "If neither of the above are true, proceed as normal."
+            },
+            {
+              "text": "If you haven’t seen the last of La Chica Roja: You almost didn’t notice La Chica Roja standing between two of the other Coterie members, enshrined in darkness. She tips the rim of her hat over her eyes, but a smirk plays on her lips. “These ones thought they could catch me. Just like the coppers and the feds.” Another voice on the opposite of the table, belonging to a balding man with small red spectacles, rises to challenge hers. “They were interfering with Coterie business,” he growls. “Nah,” she replies, “they were interfering with a personal grudge. If you got a problem with me, red-eyes, take it up with me, not them.”\n\nLa Chica Roja abstains.\nThe Sanguine Watcher votes “yea.”"
+            },
+            {
+              "text": "If you haven’t seen the last of the Sanguine Watcher: Suddenly, a wide-brimmed hat with a scarlet band slams onto the table, and La Chica Roja emerges from the shadows. “The Foundation’s not our biggest enemy. That title belongs to some of us. These agents might not wear red, but I guarantee they’re more righteous than half of us claim to be.” Standing on the other side of the table, the Sanguine Watcher takes off his ruby spectacles and cleans them with a blood-red cloth. Behind them, his eye sockets are gruesomely hollow. “Foolish girl,” he utters, his words dripping with venom. “A last play for attention?” She scowls at him, gripping the crown of her hat so hard, it crumples beneath her fingers. “Do any of you have any idea what kinds of things this sick bastardo has been up to? Do any of you even care?”\n\nLa Chica Roja votes “nay.”\nThe Sanguine Watcher votes “yea.”"
+            },
+            {
+              "text": "If the Sanguine Watcher’s torment continues: From a dark corner of the room, La Chica Roja emerges, her familiar wide-brimmed hat covering her eyes as she speaks. “I was dealing with one of our own in Buenos Aires. One who was acting against our best interests,” she explains. “These agents here saw the truth of the situation and tried to aid me. They may not wear red, but I guarantee they’re more righteous than half of us claim to be.” Another voice from the assembled few asks whom of their number the woman speaks of. “Our ‘friend’ with no eyes,” she says with a scowl. “He’s still tormenting Buenos Aires, I imagine. But do any of you even care?”\n\nLa Chica Roja votes “nay.”\nThe Sanguine Watcher abstains by default"
+            },
+            {
+              "text": "If none of the above are true: A balding man with small ruby spectacles is next to speak, pointing a wiry, jagged finger at another of the assembled Coterie. “Why are these ones on trial here when it is she who has been acting against us?” he cries. The woman steps forward, hiding her countenance from view by the brim of a wide-brimmed hat with a scarlet hatband. “Acting against us, you say? Wrong.” She tips the brim of her hat up so everyone can see her dark brown eyes narrowing directly at the bespectacled man. “Just you. You and the others gathered here who wear red just as an excuse to cause chaos.” The two stare hatefully at one another for some time, taking the attention off you, before the proceedings continue. Neither one seems to pay you any further heed.\n\nLa Chica Roja abstains.\nThe Sanguine Watcher abstains.\n\nThe Sanguine Watcher is the bearer of The Weeping Lady. Update the Campaign Log accordingly"
+            },
+            {
+              "text": "If you haven’t seen the last of Tzu San Niang: You are not surprised to see Tzu San Niang counted among those gathered before you. One who feels fear might take the chance to lay low after their escape, but not someone like her. “Ah, yes, these meddlesome insects.” Her melodic voice is delightfully charming despite the violence behind her words. “They interfered with my business. For these transgressions, no punishment is harsh enough.”\n\nTzu San Niang enthusiastically votes “yea.”"
+            },
+            {
+              "text": "If Tzu San Niang has you under her sway: Your heart leaps into your throat as Tzu San Niang approaches you, mesmerizing you with every breath. The compulsion to aid her, to serve her, rises within you once more. “Ah, my pets.” She taps her parasol on the ground and kneels in front of you. “You may have fled me, but you will never escape me. You know this, do you not?” You head nods, despite yourself. You bite into your gag, but the compulsion is overwhelming. Tzu grins. “Why don’t you tell everyone what we should do with you?” She coos, and removes the gag from your mouth. You struggle to remain silent, panting, sweating, refusing, denying, but the words worm their way out of your lips anyway. Her point made, she wraps the gag around you once more and runs her fingers delicately through your hair before returning to her place among the Coterie. You shudder in revulsion.\n\nThe lead investigator votes “yea” in Tzu San Niang’s stead."
+            },
+            {
+              "text": "If Tzu San Niang is under your sway: There is an awkward pause as the Coterie confer. “Has anyone seen Tzu San Niang?” someone asks. You feel a pang of guilt, followed by satisfaction. She was never here.\n\nTzu San Niang abstains by default."
+            },
+            {
+              "text": "If neither of the above are true: A woman holding a red parasol over her head speaks next, with a charming, alluring voice. “I am sorry,” she begins, her glamour captivating the entire audience, “but why are we wasting our time with such a paltry matter?” Hope rises in your heart that she might speak reason. “Just end them and be done with it,” she says without even gazing your way. Your hopes shatter.\n\nTzu San Niang votes “yea.”\n\nTzu San Niang is the bearer of The Shade Reaper. Update the Campaign Log accordingly."
+            },
+            {
+              "text": "If Tuwile Masai is on your side: Professor Masai steps out of the shadows, light glinting on his thick red spectacles. He looks you up and down as if seeing you for the first time. “I know them only by reputation. But that reputation suggests that they have shown some measure of mercy and understanding to us. I recommend we respond in kind.”\n\nTuwile Masai votes “nay.”"
+            },
+            {
+              "text": "If the above is not true: A thin, clean-cut gentleman with dark skin and striking red glasses steps out of the shadows. “While this entire ritual smacks of boarding school antics, I believe that any threat to the Coterie should be dealt with swiftly and humanely. They are too dangerous to let go.”\n\nTuwile Masai votes “yea.”"
+            },
+            {
+              "text": "Depending on how votes were cast, proceed as follows:\n\n• If it is a tie, or if the “yeas” have it, you have been deemed a liability. Proceed to The Trial 2.\n\n• If the “nays” have it…\n• …and La Chica Roja, Ece Şahin, and Desiderio Delgado Álvarez all voted “nay,” you may try to convince them to overthrow the Coterie. If you do, skip to The Trial 3.\n\n• …and Thorne, Tuwile Masai, and The Claret Knight all voted “nay,” you may attempt to join the Coterie. If you do, skip to The Trial 4.\n\n• Otherwise, you have been deemed an asset. Skip to The Trial 5."
+            },
+            {
+              "text": "The Trial 2: With the voting complete, you are shoved to the floor. You struggle against your bonds, but are unable to free yourself, and vastly outnumbered, besides. There is no hope of escape. A cold blade is placed at the edge of your neck. “You who seek to harm our noble cause have been accused and charged with numerous crimes against the Coterie,” a voice states with dreadful gravity. The blade bites against your skin. A trail of blood trickles down your neck. “The punishment is death. May the crimson stain of your legacy be washed away.” You close your eyes and brace yourself.\n\nJust then: a crash. Shouting and sounds of battle erupt throughout the room, a storm of clashing steel and gunfire. You are sent reeling as your would-be executioner is attacked by an unseen foe. You struggle again to free yourself, but are unable…until moments later, when you are dragged out of the chamber. Your bonds are cut, and you are brought to your feet by none other than the woman in the vermillion veil herself. Ece ushers you down the hall, whispering over the chaos of the battle. “We have to get out of here.” Several of the others who wear red follow in your wake, looking over their shoulders the entire time.\n\nYou ask what is going on as another rumble shudders throughout the halls. “The one with the red gloves, he…” she trails off, her hand trembling as she grips your arm. “He’s not what we thought he was. That man always creeped me out, but—to think—how could we have not known—?”\n\nYou ask her to start again, slower. “He attacked us,” she says, meeting your gaze as you duck into a quiet hall filled with scarlet tapestries. “The others fought him off, but…there was something strange about him. He was not human. It was something else entirely. It stole as many implements as it could and escaped, like…” she shudders. “…just like one of the creatures we seek to destroy.”\n\nThoughts run unbidden through your mind. If the man with the red gloves—or whatever it truly is—is after the remaining Keys, you have to stop it, at any cost. You pull away from Ece and begin marching back. “What are you doing?” she calls out. “The rest of them won’t show you any mercy, you know.” But your intentions are clear.\n\n“If you’re going after that thing,” one of the others says to you, “then we’re coming, too.”\n\n• In your Campaign Log, record the cell escaped the Red Coterie.\n\n• Proceed to Setup (v. I)."
+            },
+            {
+              "text": "The Trial 3: Murmuring and debate erupt throughout the assembled Congress. The gag is taken out of your mouth, and your bindings are cut. With some reluctance, you are brought before the ceremonial table and given the chance to speak on your behalf. Your eyes seek out the members of the Coterie you know to be genuinely good, and as soon as the room is silent, you appeal to their sense of justice. For too long, the Red Coterie has allowed its members to wreak havoc and spread misery among the people simply to further their own ends. For too long, they have used their collected power not to guard humanity, but to plague it. As you speak, several of the people you have met nod amongst themselves. “They’re right,” the girl in the red coat announces, gesturing at several of the others who look on with sneers. “You all say you are motivated by a duty to humanity, yet you tolerate the presence of those who only do others harm. If this is the kind of organization you really are, I no longer wish to be a part of it.”\n\nEce nods along. “I agree. This is no longer a righteous organization.” She joins La Chica Roja’s side, along with several others. Among them is Desi, who simply tips the brim of his hat in your direction and slips you a subtle wink.\n\n“Cleaning up the streets of scum has been my life’s work,” he declares, his eyes narrowing. “Maybe it’s time I start cleaning this place up, too.” A tense silence lingers in the chamber as the two sides stare one another down, but it’s clear that your side outnumbers the other. For a moment, you fear that the ensuing chaos will be impossible to survive.\n\nLuckily, no such battle erupts. Seeing the wisdom in flight, your foes carefully filter out of the room, whispering, mumbling and hissing with vitriol. “You may wear red,” one of them spits, “but you will never be strong enough to stop what is coming without us. You are weak. You will be the doom of us all.”\n\nEce steps in front of the rest, shaking her head. “No. It is you who are weak. And by purging you from our ranks, we have only become stronger.”\n\n• In your Campaign Log, record the cell overthrew the Red Coterie.\n\n• Skip to The Trial 8."
+            },
+            {
+              "text": "The Trial 4: Murmuring and debate erupt throughout the assembled Congress. The gag is taken out of your mouth, and your bindings are cut. With some reluctance, you are brought before the ceremonial table and given the chance to speak on your behalf. Your eyes seek out the members of the Coterie who have seen your potential up close, and as soon as the room is silent, you appeal to their sense of logic and reason. You have been nothing but a valuable asset to the Red Coterie, and what’s more, you bring experience with the Foundation and the potential for both organizations to cooperate further. You seek the same goals as they do, and as your enemies from beyond gather to erase humanity from existence, only by working together can you stop this threat. As you speak, several of the people you have met nod in agreement. “They are, of course, correct,” Professor Masai speaks on your behalf. “We have let ourselves be motivated too long by petty desires while the threat of annihilation looms over us.”\n\nSeveral of the others look on with disgust as more speak up. “We have inducted far worse into our ranks,” says the knight with many names. “These before us have proven themselves in more ways than one, and we need every ally we can get.”\n\n“Agreed,” Thorne states, their voice level and calm as always. “I would call those on trial ‘trustworthy partners’ before I call them foes.” Their gaze meets yours, a meticulous smile hiding the vicious nature you know them to possess. Thorne would do anything to get what they want, and right now, what they want is you.\n\nThe members of the Coterie you have wronged shout and curse in bitter protest, but they are clearly outnumbered. A tense silence lingers in the chamber as the two sides stare one another down. For a moment, you fear it may even come to blows. “You may seek to wear red,” one of them spits, “but you will never be one of us.”\n\n“If you no longer wish to be a part of this organization,” Professor Masai states, “You know where the door is.” Your detractors sit in hateful silence as the proceedings continue. The knight beckons you forward and inducts you into their order in a lengthy, solemn ritual. “With red we are bound,” he recites with gravitas, “through red we are one. Thus in red do we embrace our kin and our ken.” You are told to forsake your old life to take up a new one, for the betterment and guidance of all humanity. You think on your life, on the events that led you to this place, on those you hold dear and the many things you will leave behind. Then, you acquiesce.\n\n• Each investigator chooses an article of clothing depicted in their investigator art. Your keys are now bound through this mundane implement through occult esoterica. Its color becomes scarlet-red from now until the end of time.\n\n• In your Campaign Log, record the cell joined the Red Coterie.\n\n• Skip to The Trial 8."
+            },
+            {
+              "text": "The Trial 5: Murmuring and debate erupts throughout the assembled members of the Coterie. The gag is taken out of your mouth, and your bindings are cut. With some reluctance, you are brought before the ceremonial table and addressed by the Congress, who tell you that you will be spared so long as you declare your intent to aid and never again interfere in their mission. Given the alternative, you have no choice but to agree. The members of the Coterie you have wronged exclaim in protest, but it is clear they are outnumbered.\n\n• In your Campaign Log, record the Red Coterie spared the cell.\n\n• Skip to The Trial 8."
+            },
+            {
+              "text": "The Trial 6: Before the next member is even given the chance to speak, a figure emerges from behind the man with the red gloves, and something small and dark is placed against the base of his skull. There is a thunder in your ears as the gunshot rings out across the chamber. The man’s face explodes not in grotesquerie, but in a flood of distorted mist that crests outward and reforms above the man’s hollowed body. It takes the vague shape of a many-armed spiral, like a galaxy of stars pinching all of reality around its otherworldly form. The clothes the Red-Gloved Man previously wore crumple to the ground, empty.\n\nThe rest of the assembled Coterie draw their weapons and attack the entity, but it quickly escapes the chamber, reassembling its ectoplasmic form before your very eyes on its way out. Several more of the things follow suit, the attire of their previous forms falling, limp and hollow, to the floor. From the shadows emerges the true figure of the Red-Gloved Man. “They are here,” he states with surprising nonchalance, reloading his sidearm. “Among us. Perhaps the rest of you might have noticed, had you kept your gaze on our mission.” He shares with you a knowing glance and the barest hint of an impish grin. “These ‘accused’ are to thank for my return to this realm. Without them, you might all be dead. This trial is over.” There is no debate whatsoever.\n\nThe gag is taken out of your mouth, and your bindings are cut. You are brought before the ceremonial table, standing by the man’s side. “What are they after? Where have you been?” one of the Coterie asks.\n\n“They are after our world. Perhaps every world,” he replies, pulling his scarlet gloves taut around his hands. “But now is our chance to strike back. To follow them to their home and end this threat, once and for all.” Nods and murmurs of consent ripple throughout the assembly.\n\n• In your Campaign Log, record the Red Coterie spared the cell.\n\n• Proceed to Setup (v. III)."
+            },
+            {
+              "text": "The Trial 7: Before the next member is even given the chance to speak, the Red-Gloved Man reaches out to grip their skull with uncanny strength, his arms lengthening into spindly wires of ectomatter. He crushes their skull inside the palm of his hands, staining his gloves a deeper crimson than ever before. The body slumps to the ground, and chaos ensues.\n\nYou watch in horror as more of the assembly begin to contort and reshape themselves, ambushing everyone around them in a macabre display. A storm of shouting, clashing steel, and gunfire erupts throughout the room. Each slain member of the Congress is erased in their entirety. You are sent reeling as your captors, too, are expunged from reality. You crawl along the ground as the fray rages on, eventually finding a shard of glass upon which to cut your bonds. By the time you free your companions and rise to your feet, the entities have fled. The last thing you see is the shapeless elongated remnants of the Red-Gloved Man escaping out the door you came from.\n\nYou survey the damage, but surprisingly, there isn’t much to look at. Save for you and a few articles of discarded and forgotten red attire, the chamber is completely empty.\n\nTo your horror, you recall none of their names or monikers. Not a single one.\n\n• In your Campaign Log, record the Red Coterie was destroyed from within.\n\n• Proceed to Setup (v. III)."
+            },
+            {
+              "text": "The Trial 8: With the trial proceedings over, the Congress finally reaches other affairs. “There is still the matter of the Outsiders,” one among them states. “We have assembled our strength in order to prepare for the inevitable, but how can we be certain our dimension is of any interest to them? We cannot seek to understand such abstruse entities.”\n\nYou chime in, telling the Congress of everything you have seen during your travels and your operations with the Foundation: the strange happenings across the globe have only grown in frequency, and you have reason to believe they are intelligent and malicious—not mindless and incomprehensible. What’s worse, they appear to be after the very same keys as everyone else.\n\n“If they are stirring, preparing for war,” another member declares, “then we must do the same. We have among our assembly bearers of the most powerful artufacts this order has uncovered. Let us put them to good use and exterminate this threat once and for all.” Nods and murmurs of consent ripple throughout the assembly.\n\n“But if they are intelligent entities as our new friends claim they are, how could they possibly know so much of our inner workings?” Your detractor argues. A dreadful hunch stirs in your mind. You scan the room and remark that one among the Congress is missing. The rest of the assembly follows your gaze, with several of them standing to search the chamber more thoroughly. One of them confirms your suspicions by raising a single red glove, discarded and forgotten as though mundane, immaterial.\n\nThe woman in the vermillion veil is the first to understand your thread of logic. “Spread out,” she shouts, her voice warbling. “Find him. Learn where he is headed. And be ready for anything.”\n\nIt doesn’t take long before the doorway is found—a shimmering portal of extradimensional energy, ebbing with eldritch power. “It’s closing,” one of the others observes. Indeed, the doorway seems to be shrinking as it steadily swirls, and soon enough there will be nothing left of it. “We don’t have much time.”\n\n• Proceed to Setup (v. II)."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "children": [
+            {
+              "title": "Setup (v. I)",
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: Congress of the Keys, Red Coterie, Scarlet Sorcery, Spatial Anomaly, Spreading Corruption, Locked Doors."
+                },
+                {
+                  "text": "Put the Lair versions of Scarlet Halls and the three Coterie Sanctuary locations into play."
+                },
+                {
+                  "text": "Remove the Sanctum versions of these locations from the game."
+                },
+                {
+                  "text": "Each investigator begins play at Scarlet Halls."
+                },
+                {
+                  "text": "Build the act deck using only Act 1a—”Secrets and Lies (v. I).” Remove each other version of Act 1a from the game."
+                },
+                {
+                  "text": "Find each Coterie enemy from the Red Coterie encounter set who voted “yea,” along with The Red-Gloved Man. This set is indicated by the following icon:"
+                },
+                {
+                  "text": "Do not gather any of the Coterie enemies from this set who voted “nay,” abstained, or were eerily silent (not counting The Red-Gloved Man)."
+                },
+                {
+                  "text": "The lead investigator spawns The Red-Gloved Man in the shadows and resolves its concealed keyword (as granted by act 1a)."
+                },
+                {
+                  "text": "Shuffle the rest of the gathered Coterie enemies. One at a time, in player order, each investigator other than the lead investigator draws 1 of them, spawning them as normal."
+                },
+                {
+                  "text": "Shuffle the rest of the gathered Coterie enemies (those not drawn in the previous step) into the encounter deck."
+                },
+                {
+                  "text": "Note that the following characters may vote “yea,” but do not have enemy cards in this encounter set: Tuwile Masai, Abarran Arrigorriagakoa, and Razin Farhi."
+                },
+                {
+                  "text": "For each member of the Coterie who voted “nay,” find their Conspirator story asset version and put them into play under any investigator’s control. (Note: These story assets are scattered across various encounter sets. Some of them are on the reverse sides of enemy cards.)"
+                },
+                {
+                  "text": "Note that Tuwile Masai may vote “nay,” but does not have a Conspirator story asset."
+                },
+                {
+                  "text": "Set the three Otherworld locations from the Congress of the Keys encounter set and the Mimetic Nemesis enemy aside, out of play."
+                },
+                {
+                  "text": "Now create the second encounter deck, as follows. Gather all cards from the following encounter sets: Agents of the Outside, Beyond the Beyond, Outsiders, Secret War, Ancient Evils, and Striking Fear. When gathering the Striking Fear encounter set, only gather the following cards (2x Frozen in Fear and 2x Dissonant Voices). Do not gather 3x Rotting Remains from that set."
+                },
+                {
+                  "text": "Find each of the nine City of Remnants locations from the Beyond the Beyond encounter set. Shuffle these locations together, with their unrevealed sides faceup, to form a deck. This deck is called the Otherworld deck. Place this deck near the scenario reference card."
+                },
+                {
+                  "text": "Shuffle the remaining encounter cards from these gathered sets together to form a second encounter deck. Keep this deck set aside, out of play, for now."
+                },
+                {
+                  "text": "Gather each decoy mini-card and each of the following mini-cards: City of Remnants (L, M, and R), Mimetic Nemesis, and The Red-Gloved Man. Set them aside, out of play."
+                },
+                {
+                  "text": "The rules for “Location Adjacency in the Realm of the Outsiders” and “Locations in the Shadows” can be found on page 57. Make sure to read (or refresh yourself on) these rules before playing this scenario."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "Setup (v. II)",
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: Congress of the Keys, Agents of the Outside, Beyond the Beyond, Outsiders, Red Coterie, Secret War, Spreading Corruption, Ancient Evils, and Striking Fear. When gathering the Striking Fear encounter set, only gather the following cards (2x Frozen in Fear and 2x Dissonant Voices). Do not gather 3x Rotting Remains from that set."
+                },
+                {
+                  "text": "Find each of the nine City of Remnants locations from the Beyond the Beyond encounter set. Shuffle these locations together, with their unrevealed sides faceup, to form a deck. This deck is called the Otherworld deck. Place this deck near the scenario reference card."
+                },
+                {
+                  "text": "Put the Sanctum versions of Scarlet Halls and the three Coterie Sanctuary locations into play."
+                },
+                {
+                  "text": "Remove the Lair versions of these locations from the game."
+                },
+                {
+                  "text": "Each investigator begins play at Scarlet Halls."
+                },
+                {
+                  "text": "Build the act deck using only Act 1a—”Secrets and Lies (v. II).” Remove each other version of Act 1a from the game."
+                },
+                {
+                  "text": "Find each Coterie enemy from the Red Coterie encounter set who voted “yea,” along with The Red-Gloved Man, and set each of those enemies aside, out of play. This set is indicated by the following icon:"
+                },
+                {
+                  "text": "Remove all other Coterie enemies from the game."
+                },
+                {
+                  "text": "Note that the following characters may vote “yea,” but do not have enemy cards in this encounter set: Tuwile Masai, Abarran Arrigorriagakoa, and Razin Farhi."
+                },
+                {
+                  "text": "For each member of the Coterie who voted “nay,” find their Conspirator story asset version and put them into play under any investigator’s control. (Note: These story assets are scattered across various encounter sets. Some of them are on the reverse sides of enemy cards.)"
+                },
+                {
+                  "text": "Note that Tuwile Masai may vote “nay,” but does not have a Conspirator story asset."
+                },
+                {
+                  "text": "Set the three Otherworld locations from the Congress of the Keys: encounter set and the Mimetic Nemesis enemy aside, out of play."
+                },
+                {
+                  "text": "Gather each decoy mini-card and each of the following mini-cards: City of Remnants (L, M, and R) and Mimetic Nemesis. Set them aside, out of play."
+                },
+                {
+                  "text": "The rules for “Location Adjacency in the Realm of the Outsiders” and “Locations in the Shadows” can be found on page 57. Make sure to read (or refresh yourself on) these rules before playing this scenario."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "children": [
+            {
+              "title": "Setup (v. III)",
+              "children": [
+                {
+                  "text": "Gather all cards from the following encounter sets: Congress of the Keys, Agents of the Outside, Beyond the Beyond, Outsiders, Red Coterie, Secret War, Spreading Corruption, Ancient Evils, and Striking Fear. When gathering the Striking Fear encounter set, only gather the following cards (2x Frozen in Fear and 2x Dissonant Voices). Do not gather 3x Rotting Remains from that set."
+                },
+                {
+                  "text": "Find each of the nine City of Remnants locations from the Beyond the Beyond encounter set. Shuffle these locations together, with their unrevealed sides faceup, to form a deck. This deck is called the Otherworld deck. Place this deck near the scenario reference card."
+                },
+                {
+                  "text": "Put the Sanctum versions of Scarlet Halls and the three Coterie Sanctuary locations into play."
+                },
+                {
+                  "text": "Remove the Lair versions of these locations from the game."
+                },
+                {
+                  "text": "Each investigator begins play at Scarlet Halls."
+                },
+                {
+                  "text": "Build the act deck using only Act 1a—”Secrets and Lies (v. III).” Remove each other version of Act 1a from the game."
+                },
+                {
+                  "text": "Find each Coterie enemy from the Red Coterie encounter set who was eerily silent. This set is indicated by the following icon:"
+                },
+                {
+                  "text": "Do not gather any of the Coterie enemies from this set who voted “yea,” “nay,” or abstained."
+                },
+                {
+                  "text": "The lead investigator spawns The Red-Gloved Man in the shadows and resolves its concealed keyword (as granted by act 1a)."
+                },
+                {
+                  "text": "Shuffle the rest of the gathered Coterie enemies. One at a time, in player order, each investigator other than the lead investigator draws 1 of them, spawning them as normal."
+                },
+                {
+                  "text": "Shuffle the rest of the gathered Coterie enemies (those not drawn in the previous step) into the encounter deck."
+                },
+                {
+                  "text": "Check the Campaign Log. If the Red Coterie spared the cell, find the Conspirator story asset version of The Red-Gloved Man, along with each other member of the Coterie who was not gathered during the above step. Put each of them into play under any investigator’s control. (Note: These story assets are scattered across various encounter sets. Some of them are on the reverse sides of enemy cards.)"
+                },
+                {
+                  "text": "For the remainder of this scenario, ignore the unique symbol on both versions of The Red-Gloved Man. (If The Red-Gloved Man is the bearer of any keys, attach them only to his enemy version.)"
+                },
+                {
+                  "text": "Note: The list of possible Conspirator story assets is as follows: The Claret Knight, Ece Şahin, Thorne, Aliki Zoni Uperetria, Desiderio Delgado Álvarez, La Chica Roja, and The Red-Gloved Man."
+                },
+                {
+                  "text": "Set the three Otherworld locations from the Congress of the Keys encounter set and the Mimetic Nemesis enemy aside, out of play."
+                },
+                {
+                  "text": "Gather each decoy mini-card and each of the following mini-cards: City of Remnants (L, M, and R), Mimetic Nemesis, and The Red- Gloved Man. Set them aside, out of play."
+                },
+                {
+                  "text": "The rules for “Location Adjacency in the Realm of the Outsiders” and “Locations in the Shadows” can be found on page 57. Make sure to read (or refresh yourself on) these rules before playing this scenario."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [],
+      "story": [],
+      "resolutions": [
+        {
+          "children": [
+            {
+              "title": "Investigator Defeat",
+              "children": [
+                {
+                  "text": "Before resolving any other resolution, if at least 1 investigator was defeated: The defeated investigators read Investigator Defeat first.\n\nInvestigator Defeat: With no dimension left for your body to exist within, every fiber of your being is torn apart. Your memories and thoughts drip through endless oblivion from now until the end of all things. But your consciousness, your awareness, remains. An infinite, eternal prison of nothingness.\n\n• Each investigator who was defeated is driven insane and is never seen or heard from again. All memory of their existence is purged from reality.\n\n• If another resolution was reached, the remaining investigators proceed to that resolution.\n\n• If no resolution was reached (each investigator was defeated): Go to Resolution 2."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 1",
+              "children": [
+                {
+                  "text": "Resolution 1: The feeling of being flung across worlds does not cease until you strike solid ground. Though your weary body protests, you scamper to your feet and scan your surroundings, ready for anything. But when you realize where you are, you are shocked to find…\n• Lay out the world map on a flat surface. Each investigator tosses a coin or chaos token onto the map. Wherever it lands, that is where that investigator ended up. (If it lands in an ocean, they ended up by chance on a random boat.)\n\nIt takes several weeks for you to contact the other members of your cell who survived the collapsing of the Outsiders’ realm. It seems that, at least for now, their scheme has been dismantled. Perhaps a long-earned vacation is in order, but first there is one last order of business to resolve…\n\n• In your Campaign Log, record that the Outsiders were stopped.\n\n• Each investigator suffers 2 physical trauma and 2 mental trauma, as they may never truly recover from their paradimensional ordeal.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 5 bonus experience, having saved their dimension from a terrible fate.\n\n• The investigators win the campaign!\n\n• Proceed to Epilogue."
+                }
+              ]
+            },
+            {
+              "title": "Resolution 2",
+              "children": [
+                {
+                  "text": "Resolution 2: “There, that is the last of them,” Agent Hudson says as he slams his stamp down onto the expense report. “I understand the need for secrecy, but I must once again request we hire assistants for this secretarial work, Commissioner.” He hands the bundle of documents to Taylor, who sits behind her stark black desk, wearing a grave expression.\n\n“More eyes means more leaks. We keep this crew tight for a reason, Hudson. Do not lose sight of what is important.” She flips through the documents for a moment, furrowing her brow. “Where is the report on asset 32–J’s cell?”\n\n“32–J?” the man pulls a small notebook from his back pocket and flips to a page near the middle. “No such designation exists.”\n\nTaylor grimaces. “No, that’s not right. There was…we met them in London. You were there…” After a moment, she shakes her head in utter confusion. “Hm. Strange. I don’t remember who they were.”\n\n“You have been working too hard,” the agent replies with a small grin. “Take some time off, Commissioner. We can handle things without you for a week or so.”\n\n• In your Campaign Log, record the cell was hollowed.\n\n• The investigators lose the campaign."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

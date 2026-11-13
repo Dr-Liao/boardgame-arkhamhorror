@@ -354,10 +354,35 @@ function locationClueDiscoveryBlocked(state, loc) {
   return floodLevel(state, loc.id) >= 1
 }
 
+// 「放在密谋牌库旁」的卡可以限制每轮发现线索的数量（04094 一片漆黑：每位调查员每轮
+// 从单个地点最多发现 1 个线索）。条目只声明 `treacheryRule.clueDiscoveryLimit`，
+// 引擎做通用记账，不按卡号分支；同一卡号的多张副本不叠加（上限相同）。
+// 记账是纯 JSON，放 state.scenarioFlags.clueDiscoveryClaims，键 = 卡号:轮:座位:地点。
+function asideClueDiscoveryLimits(state) {
+  const limits = new Map()
+  for (const card of state.agendaAside || []) {
+    const code = card?.originalCode || card?.code
+    if (!code || limits.has(code)) continue
+    const limit = registeredEntry(code)?.treacheryRule?.clueDiscoveryLimit
+    if (Number.isInteger(limit) && limit >= 0) limits.set(code, limit)
+  }
+  return limits
+}
+function clueDiscoveryClaimKey(state, code, inv, locationId) {
+  return `${code}:${state.round}:${inv.seat}:${locationId}`
+}
+function clueDiscoveryClaims(state) {
+  state.scenarioFlags ||= {}
+  return (state.scenarioFlags.clueDiscoveryClaims ||= {})
+}
+
 function canDiscoverClueAt(state, inv, loc) {
   if (!loc || loc.clues <= 0) return false
   if (locationClueDiscoveryBlocked(state, loc)) return false
-  if (state.scenarioFlags?.deepDark && (state.scenarioFlags.deepDarkClaims?.[`${state.round}:${inv.seat}:${loc.id}`] || 0) >= 1) return false
+  for (const [code, limit] of asideClueDiscoveryLimits(state)) {
+    const claimed = Number(state.scenarioFlags?.clueDiscoveryClaims?.[clueDiscoveryClaimKey(state, code, inv, loc.id)] || 0)
+    if (claimed >= limit) return false
+  }
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // 交战中的「不能发现线索」敌人（影子特工）跟着调查员走，与目标地点无关。
   if (state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)
@@ -388,14 +413,18 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
     info(state, events, `${inv.name} 与${clueBlockerName(state, clueBlocker)}交战，不能发现线索。`)
     return false
   }
-  // 04094 一片漆黑：每位调查员每轮从单个地点最多发现 1 个线索（硬上限）。
-  if (state.scenarioFlags?.deepDark) {
-    state.scenarioFlags.deepDarkClaims ||= {}
-    const key = `${state.round}:${inv.seat}:${targetId}`
-    const claims = state.scenarioFlags.deepDarkClaims
-    if ((claims[key] || 0) >= 1) return false
-    claims[key] = (claims[key] || 0) + 1
-    amount = Math.min(amount, 1)
+  // 「放在密谋牌库旁的卡」声明的每轮发现上限（04094 一片漆黑）：先按已记账数量
+  // 判定被阻止的发现，再把本次发现量压到剩余额度并记账（多张不同卡各记一条）。
+  const discoveryLimits = asideClueDiscoveryLimits(state)
+  if (discoveryLimits.size) {
+    const claims = clueDiscoveryClaims(state)
+    for (const [code, limit] of discoveryLimits) {
+      const key = clueDiscoveryClaimKey(state, code, inv, targetId)
+      const remaining = Math.max(0, limit - Number(claims[key] || 0))
+      if (!remaining) return false
+      amount = Math.min(amount, remaining)
+      claims[key] = Number(claims[key] || 0) + amount
+    }
   }
   if (!state._discoveringClue) {
     state._discoveringClue = true

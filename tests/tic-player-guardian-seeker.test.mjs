@@ -123,7 +123,10 @@ test('P6 07190 Blessing of Isis treats the second physical bless as the performi
 
 test('P6 07108 Riot Whistle grants exactly one real engage action after ordinary actions run out',()=>{
  const s=fixture('07001',2,{seatInvestigators:['07001','01001']});asset(s,'07108');s.investigators[0].hand=['07024'];s.investigators[0].actionsLeft=0;const e=enemy(s,{engagedSeat:null});
- const m=legalMoves(s).find(m=>m.action==='engage'&&m.enemyId===e.id);assert.ok(m);assert.equal(legalMoves(s).some(m=>m.action==='resource'),false);assert.equal(validateMove(s,0,m),null);applyMove(s,0,m);coreSettle(s);assert.equal(s.enemies.find(x=>x.id===e.id).engagedSeat,0);assert.equal(s.investigators[0].actionsLeft,0);assert.ok(s.investigators[0].actionHistory.entries.some(x=>x.includes('engage')));assert.equal(owned(s,'07108').restrictedActionSpent,true);assert.equal(s.currentSeat,1)
+ const m=legalMoves(s).find(m=>m.action==='engage'&&m.enemyId===e.id);assert.ok(m);assert.equal(legalMoves(s).some(m=>m.action==='resource'),false);assert.equal(validateMove(s,0,m),null);applyMove(s,0,m);coreSettle(s);assert.equal(s.enemies.find(x=>x.id===e.id).engagedSeat,0);assert.equal(s.investigators[0].actionsLeft,0);assert.ok(s.investigators[0].actionHistory.entries.some(x=>x.includes('engage')));assert.equal(owned(s,'07108').restrictedActionSpent,true);
+ // 2026-11-13：额外交战用完最后行动后不再自动推进回合，需要显式结束回合。
+ assert.equal(s.currentSeat,0,'0 行动空档期仍属于行动者');
+ applyMove(s,0,{action:'endTurn'});coreSettle(s);assert.equal(s.currentSeat,1)
 })
 test('P6 07110 Sacred Covenant immediately returns chosen bless and ignores that modifier',()=>{
  const s=fixture('07001');asset(s,'07110');s.chaosBag=['bless','0'];s.rngState=0;run(s,d=>performTest(d,0,'willpower',0,{}),c=>desc(c)||(c.source==='returnRevealed'?c.options.find(o=>o.id!=='done')?.id:null));assert.equal(owned(s,'07110').exhausted,true);assert.ok(s.chaosBag.includes('bless'));assert.equal(s.lastTestResult.value,s.lastTestResult.baseValue)

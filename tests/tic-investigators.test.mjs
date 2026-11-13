@@ -332,7 +332,10 @@ test('P5 戴克斯特不能弃永久或他人支援；塞壬呼唤在恰好两�
   const t = setup('07005'); t.investigators[0].threat.push({ id: 'call', code: '07016' })
   t.investigators[0].actionsLeft = 1; assert.equal(legalMoves(t, 0).some(m => m.assetId === 'call'), false)
   t.investigators[0].actionsLeft = 2; const mv = legalMoves(t, 0).find(m => m.assetId === 'call'); move(t, mv); settle(t)
-  assert.equal(t.round, 2, '恰好花完行动后正常进入下一轮'); assert.equal(t.investigators[0].threat.some(card => card.code === '07016'), false)
+  assert.equal(t.investigators[0].threat.some(card => card.code === '07016'), false, '恰好花完行动时移除塞壬呼唤')
+  // 2026-11-13：行动点用尽不再自动推进回合，需要玩家显式结束回合后才进入下一轮。
+  move(t, { action: 'endTurn' }); settle(t)
+  assert.equal(t.round, 2, '结束回合后正常进入下一轮')
 })
 
 test('P5 赛拉斯收回仅技能：图标及成功奖励一起移除，祝福追加揭示只用一次；旧印弃牌技能检定后回手', () => {

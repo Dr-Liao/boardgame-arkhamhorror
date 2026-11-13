@@ -137,6 +137,10 @@ export function createHarmThreat(deps) {
         })
         .map(asset => ({ asset, owner: other })))
     let locked = null
+    // 2026-11-13 P1-6：09007「非直接伤害至少 1 点必须分配给受伤的旁观者」——
+    // 旧实现只把 composureDamage 支援列入 mandatory 并去掉「由调查员承受」选项，玩家仍可
+    // 把第 1 点分给其它支援/同地点承接者。这里强制第 1 点先落到该支援（多张 mandatory 时才询问目标）。
+    let composureDamageSatisfied = false
     for (let i = 0; i < amount; i++) {
       // 「先把一张卡填满再分配下一张」（03088 毕宿五的野兽）。
       if (strategy === 'fillOne' && locked) {
@@ -160,12 +164,19 @@ export function createHarmThreat(deps) {
       // 声明放在条目 `flags.composureDamage: true`（flags 是注册表白名单里的通用透传字段，
       // 不新造状态字段；命中后伤害与恐惧都进入 mandatory 分配，必须在该支援填满后才轮到调查员）。
       const composureDamage = asset => registeredEntry(asset.code)?.flags?.composureDamage === true
+      // 2026-11-13 P1-6：09007「非直接伤害至少 1 点必须分配给受伤的旁观者」。第 1 点只提供
+      // composureDamage 支援作为候选（不提供 self / 其它支援）；其余点数恢复正常分配。
+      const forcedFirst = kind === 'damage' && !direct && !composureDamageSatisfied
+        ? inv.assets.filter(asset => composureDamage(asset)
+          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+        : []
+      if (forcedFirst.length) assets = forcedFirst
       const mandatory = assets.filter(asset => (kind === 'horror' && (assetEffect(inv, asset)?.composure
         || (assetEffect(inv, asset)?.redirectOneHorrorToSelf && !(assignments.get(asset) > 0))))
         || (kind === 'damage' && composureDamage(asset)))
       // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
-        const availableSoaks = soaks.filter(({ asset }) => assetCapacityValue(asset, capacity)
+        const availableSoaks = (forcedFirst.length ? [] : soaks).filter(({ asset }) => assetCapacityValue(asset, capacity)
           > (asset[kind] || 0) + (assignments.get(asset) || 0))
         const candidates = assets.length || availableSoaks.length
         ? requestChoice(state, { kind: 'assign-' + kind, source: 'harm', seat: inv.seat,
@@ -177,6 +188,7 @@ export function createHarmThreat(deps) {
       const recipient = candidates === 'self' ? inv
           : assets.find(item => item.id === candidates) || availableSoaks.find(item => item.asset.id === candidates)?.asset
       assignments.set(recipient, (assignments.get(recipient) || 0) + 1)
+      if (forcedFirst.length) composureDamageSatisfied = true
       if (strategy === 'fillOne') locked = recipient
     }
     return assignments

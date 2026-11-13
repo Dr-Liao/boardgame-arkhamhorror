@@ -1,4 +1,4 @@
-import { investigatorRule } from '../cards/card-rules.js'
+import { investigatorRule, scenarioPlayableFor } from '../cards/card-rules.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
@@ -121,6 +121,23 @@ export function createStats(deps) {
     return role
   }
 
+  // 2026-11-11「原语收口」：战役发放的剧情资产可打出。
+  //
+  // 剧情资产（如 04051 亚历山卓、05150 黑书）不在常规卡池里，`isCardAvailable` 恒为 false，
+  // 但战役效果会把它们加入调查员的战役牌组。声明只有一个：条目上的 `scenarioPlayable: true`
+  // （读点 card-rules.js#scenarioPlayableFor）；授予事实源只有一处：战役牌组记录
+  // （`campaignCardChange` / 战役奖励写入 record.deck）。两者同时满足才放行，所以
+  // 「没有获得这张剧情资产」的玩家仍然不能打出它。
+  //
+  // 这里取代了原先「每个战役在 behavior 里写 canPlayScenarioCard」的逐战役钩子：同一条规则
+  // 只允许一个引擎读点，新增循环只需给卡条目加声明，不再复制战役层代码。
+  function scenarioAssetPlayable(state, inv, code) {
+    if (!scenarioPlayableFor(code)) return false
+    const records = state?.campaign?.investigators
+    const record = Array.isArray(records) ? records[inv?.seat] : records?.[inv?.seat]
+    return Array.isArray(record?.deck) && record.deck.includes(code)
+  }
+
   function runtimeCardAvailable(state, inv, code) {
     const signatures = cardDef(code)?.signatureFor || []
     // P2-4：重印别名号与 canonical 是同一张印刷卡（cards-data 的 duplicateOfCode）。
@@ -129,7 +146,7 @@ export function createStats(deps) {
     if (cardDef(code)?.type === 'investigator') return code === inv.code || canonical === inv.code
     return isCardAvailable(code) || (canonical != null && isCardAvailable(canonical))
       || signatures.includes(inv.code)
-      || scenarioBehavior(state).canPlayScenarioCard?.(state, inv, code) === true
+      || scenarioAssetPlayable(state, inv, code)
   }
 
   // 2026-10-25 第五轮修复（05281）：「把某项基础技能值设为 X」的临时覆盖（替换印刷基值，再走修正管线）。

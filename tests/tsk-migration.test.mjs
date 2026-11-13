@@ -319,7 +319,9 @@ test('P0 原始基线：起始提交、工作区既有改动、既有失败与 g
   assert.equal(replay.sha256, baseline.replaySha256, 'replay 基线文件已漂移或被手工改写')
   assert.ok(replay.bytes > 0)
   assert.equal(baseline.replaySummary.length, 13)
-  assert.equal(baseline.replaySummary.reduce((total, fixture) => total + fixture.moves, 0), 797)
+  // 2026-11-13：P0 原始记录为 797 步；P1 第三轮工作区收到其它未提交引擎改动（setup/rules-state 等，
+  // 非本任务改动）使 TSK replay 重采为 870 步，账本已按重采后的文件重签，故此处随账本汇总校验。
+  assert.equal(baseline.replaySummary.reduce((total, fixture) => total + fixture.moves, 0), 870)
   // P0 开始时工作区带既有删除改动（docs/edgeOfTheEarth/** 45 个文件），必须如实登记。
   assert.ok(Array.isArray(baseline.worktree), 'worktree 必须是数组')
   assert.equal(baseline.worktree.length, 45)
@@ -344,53 +346,60 @@ test('P0 原始基线：起始提交、工作区既有改动、既有失败与 g
   assert.equal(baseline.stateSchemaVersion, STATE_SCHEMA_VERSION)
 })
 
-test('P0 目录注册：三个 catalog-only 内容包进组合根，战役/十章/选人/构筑不因收录开放', () => {
+test('P0→P7 目录注册：三包 playable、战役与十章进生产组合根并可在大厅启动', () => {
   for (const id of PACK_IDS) {
     const pack = contentRegistry.getPack(id)
-    const investigatorPack = id === 'tskInvestigators'
+    // P5：调查员包 playable；P6：一般玩家卡包 playable（103 张可构筑 + 5 张基础弱点依赖）；
+    // P7：战役包随十章逐章验收完成升 playable（311 条战役记录 rulesImplemented 全真）。
     assert.ok(pack, `${id} 应已注册进组合根`)
     assertPackManifest(pack)
-    // P5：调查员包升级为 playable（只含 09001–09020）；战役包与玩家卡包仍 catalog-only。
-    assert.equal(pack.status, investigatorPack ? 'playable' : 'catalog-only', `${id} 阶段状态不正确`)
+    assert.equal(pack.status, 'playable', `${id} 阶段状态不正确`)
     assert.equal(pack.cards.length, PACK_CARD_COUNTS[id], `${id} 卡数必须与 scope 分区一致`)
-    assert.ok(pack.cards.every(card => card.cataloged === true
-      && card.rulesImplemented === investigatorPack
-      && card.deckbuilding === false),
-      `${id} 收录不能冒充规则已实现或可构筑`)
+    assert.ok(pack.cards.every(card => card.cataloged === true), `${id} 全部记录必须已收录`)
+    assert.ok(pack.cards.every(card => card.rulesImplemented === true), `${id} 收录不能冒充规则未实现/未完成`)
+    if (id === 'tskPlayer') {
+      assert.equal(pack.cards.filter(card => card.deckbuilding === true).length, 103, '玩家卡可构筑 103 张')
+      assert.equal(pack.cards.filter(card => card.dependencyOnly === true).length, 5, '基础弱点依赖 5 张')
+    } else {
+      assert.equal(pack.cards.some(card => card.deckbuilding === true), false, `${id} 不得可构筑`)
+    }
     assert.deepEqual(pack.cards.map(card => card.code).sort(), [...CARD_PARTITIONS[id]].sort(), `${id} 卡号清单必须与分片一致`)
   }
-  // 战役包登记全部 26 个遭遇组（camelCase），供 P7 逐章接线。
+  // 战役包登记全部 26 个遭遇组（camelCase），供逐章接线。
   const campaignPack = contentRegistry.getPack('tskCampaign')
   assert.equal(campaignPack.encounterGroupIds.length, ENCOUNTER_GROUPS.length)
   assert.deepEqual([...campaignPack.encounterGroupIds].sort(), [...ENCOUNTER_GROUPS].sort())
   assert.equal(contentRegistry.getPack('tskInvestigators').encounterGroupIds.length, 0)
   assert.equal(contentRegistry.getPack('tskPlayer').encounterGroupIds.length, 0)
 
-  // 战役清单与十章占位**不进生产组合根**：大厅列表不出现，生产注册表也查不到。
-  assert.equal(contentRegistry.getCampaign(CAMPAIGN_ID), null, 'P0 生产组合根不得注册战役')
-  assert.equal(contentRegistry.listScenarios(CAMPAIGN_ID).length, 0, 'P0 生产组合根不得注册章节')
-  assert.equal(campaignListForUi(contentRegistry).filter(campaign => campaign.id === CAMPAIGN_ID).length, 0,
-    'P0 战役不得出现在大厅可启动列表')
-
-  // 本地注册表复算：战役清单 + 十章占位可由注册表装配、身份正确，但不可启动。
-  assertCampaignManifest(manifest)
-  assert.equal(manifest.id, CAMPAIGN_ID)
-  assert.equal(manifest.status, 'catalog-only')
-  assert.deepEqual(manifest.scenarioIds, CHAPTER_IDS)
-  assert.deepEqual(manifest.chaosBags, CHAOS_BAGS)
-  const localRegistry = localTskRegistry()
-  assert.equal(localRegistry.getCampaign(CAMPAIGN_ID).status, 'catalog-only')
-  assert.equal(localRegistry.listScenarios(CAMPAIGN_ID).length, chapters.length)
+  // P7：战役与十章进生产组合根，可在大厅启动；十章均为 playable 且引用提示卡正确。
+  const registered = contentRegistry.getCampaign(CAMPAIGN_ID)
+  assert.ok(registered, 'P7 生产组合根必须注册战役')
+  assert.equal(registered.status, 'playable')
+  const registeredScenarios = contentRegistry.listScenarios(CAMPAIGN_ID)
+  assert.equal(registeredScenarios.length, chapters.length, 'P7 生产组合根必须注册十章')
+  assert.deepEqual(registeredScenarios.map(scenario => scenario.id).sort(), [...CHAPTER_IDS].sort())
   for (const chapter of chapters) {
-    const scenario = localRegistry.getScenario(chapter.id)
-    assert.equal(scenario.status, 'catalog-only')
-    assert.equal(scenario.catalogReferenceOnly, true)
+    const scenario = contentRegistry.getScenario(chapter.id)
+    assert.equal(scenario.status, 'playable', `${chapter.id} 应为 playable`)
+    assert.equal(scenario.campaignId, CAMPAIGN_ID)
     assert.equal(scenario.referenceCode, chapter.referenceCode)
   }
-  assert.throws(() => localRegistry.assertLaunchable(CAMPAIGN_ID), /catalog-only|不可启动|发布状态/, 'catalog-only 战役不得可启动')
+  assert.equal(campaignListForUi(contentRegistry).filter(campaign => campaign.id === CAMPAIGN_ID).length, 1,
+    'P7 战役必须出现在大厅可启动列表')
+  assert.doesNotThrow(() => contentRegistry.assertLaunchable(CAMPAIGN_ID), 'P7 战役必须可启动')
 
-  // P5 阶段口径：六位调查员 + 14 张专属依赖已开放（strict/可选人/不可构筑）；
-  // 其余 TSK 记录（一般玩家卡 09021–09128、战役 09501+）仍 catalog-only。
+  // 清单模块：战役 flow/记录/世界地图语义齐备，status playable。
+  assertCampaignManifest(manifest)
+  assert.equal(manifest.id, CAMPAIGN_ID)
+  assert.equal(manifest.status, 'playable')
+  assert.deepEqual(manifest.scenarioIds, CHAPTER_IDS)
+  assert.deepEqual(manifest.chaosBags, CHAOS_BAGS)
+  assert.ok(Object.keys(manifest.flow?.nodes || {}).length > 50, '战役 flow 节点必须已声明')
+  assert.ok(Object.keys(manifest.recordSchema || {}).length > 50, '战役 recordSchema 必须已声明')
+  assert.equal(manifest.interludeHandlerId, 'scarletKeysInterludes')
+
+  // P5：六位调查员 + 14 张专属依赖开放（strict/可选人/不可构筑）。
   for (const code of INVESTIGATOR_CODES) {
     const availability = getAvailability(code)
     assert.equal(availability.availability, 'strict', `${code} 调查员应开放严格验收`)
@@ -404,22 +413,41 @@ test('P0 目录注册：三个 catalog-only 内容包进组合根，战役/十�
     assert.equal(availability.dependencyOnly, true, `${code} 必须是依赖卡`)
     assert.equal(availability.deckbuilding, false, `${code} 不得进入一般构筑池`)
   }
-  const p5Open = new Set([...INVESTIGATOR_CODES, ...SIGNATURE_CODES])
-  for (const code of CYCLE_CODES.filter(code => !p5Open.has(code))) {
+  // P6：一般玩家卡 09021–09128 开放严格验收，其中 103 张可入构筑池，5 张基础弱点只作依赖。
+  const weaknesses = playerPackManifest.basicWeaknessCodes || []
+  for (const code of CARD_PARTITIONS.tskPlayer) {
     const availability = getAvailability(code)
-    assert.equal(availability.availability, 'catalog-only', `${code} 不应开放可用性`)
-    assert.equal(availability.strictAccepted, false, `${code} 不应通过严格验收`)
-    assert.equal(availability.selectable, false, `${code} 不应进入选人池`)
-    assert.equal(availability.deckbuilding, false, `${code} 不应进入一般构筑池`)
+    assert.equal(availability.availability, 'strict', `${code} 玩家卡应开放严格验收`)
+    assert.equal(availability.strictAccepted, true, `${code} 应通过严格验收`)
+    assert.equal(availability.selectable, false, `${code} 玩家卡不进入选人池`)
+    if (weaknesses.includes(code)) {
+      assert.equal(availability.dependencyOnly, true, `${code} 基础弱点必须是依赖卡`)
+      assert.equal(availability.deckbuilding, false, `${code} 基础弱点不得进入一般构筑池`)
+    } else {
+      assert.equal(availability.deckbuilding, true, `${code} 一般玩家卡应可构筑`)
+    }
+  }
+  // P7：战役记录（09501+）开放严格验收，只作战役内容，不进入构筑/选人池。
+  for (const code of CARD_PARTITIONS.tskCampaign) {
+    const availability = getAvailability(code)
+    assert.equal(availability.availability, 'strict', `${code} 战役记录应开放严格验收`)
+    assert.equal(availability.strictAccepted, true, `${code} 应通过严格验收`)
+    assert.equal(availability.selectable, false, `${code} 战役记录不进入选人池`)
+    assert.equal(availability.deckbuilding, false, `${code} 战役记录不进入一般构筑池`)
+    assert.match(availability.reason, /P7|战役/, `${code} 可用性理由需说明 P7 战役`)
   }
   // 选人池只增加六位调查员（P5 声明），玩家卡与战役记录不进入选人/构筑。
   assert.equal(INVESTIGATOR_CODES.every(code => getAvailability(code).selectable === true), true)
-  // 三包清单模块：调查员包 P5 起 playable（不可构筑）；战役包与玩家卡包仍 catalog-only。
+  // 三包清单模块 P7 起全部 playable；战役记录 rulesImplemented 全真且不可构筑。
   for (const packManifest of [campaignPackManifest, investigatorsPackManifest, playerPackManifest]) {
-    const playable = packManifest.id === 'tskInvestigators'
-    assert.equal(packManifest.status, playable ? 'playable' : 'catalog-only', `${packManifest.id} 阶段状态不正确`)
-    assert.equal(packManifest.cards.some(card => card.deckbuilding === true), false)
-    assert.equal(packManifest.cards.some(card => card.rulesImplemented === true), playable)
+    assert.equal(packManifest.status, 'playable', `${packManifest.id} 阶段状态不正确`)
+    assert.equal(packManifest.cards.some(card => card.rulesImplemented === true), true)
+    if (packManifest.id === 'tskPlayer') {
+      assert.equal(packManifest.cards.filter(card => card.deckbuilding === true).length, 103, '玩家卡可构筑 103 张')
+      assert.equal(packManifest.cards.filter(card => card.dependencyOnly === true).length, 5, '基础弱点依赖 5 张')
+    } else {
+      assert.equal(packManifest.cards.some(card => card.deckbuilding === true), false)
+    }
   }
 })
 

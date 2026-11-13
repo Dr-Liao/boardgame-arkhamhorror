@@ -11,7 +11,7 @@ import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, settle, move } from './core-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { executeDescriptor, getStat, leaveAsset, performTest } from '../src/engine/engine.js'
+import { executeDescriptor, getStat, leaveAsset, performTest, playerWindow } from '../src/engine/engine.js'
 import { cardCounterOf } from '../src/engine/card-counters.js'
 import entries08079 from '../src/cards/entries/08079.js'
 import entries08080 from '../src/cards/entries/08080.js'
@@ -319,6 +319,25 @@ test('P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行�
   fire(s2, '08100', descriptors('08100', 'free')[0], {}, c => (c.options.some(o => o.id === 'move') ? 'move' : null))
   assert.equal(inv(s2).location, 'study')
   assert.equal(inv(s2).assets.find(card => card.code === '08100').uses, 2)
+})
+
+test('P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供', () => {
+  // 卡面「[free]在你回合期间」：免费能力窗口会向所有调查员询问，漏 criteria 时别人回合也能触发
+  //（与 02108 探路者同一类漏网）。
+  for (const code of ['08098', '08100']) {
+    const s = fixture('01001', 2)
+    asset(s, code)
+    const openWindow = draft => playerWindow(draft, 'investigation.afterAction', [], null, {})
+    s.currentSeat = 1
+    resolveTransaction(s, 1, { action: 'eoteP6OtherTurn' }, openWindow)
+    const offTurnLabels = (s.pendingChoice?.options || []).map(option => String(option.label))
+    assert.equal(offTurnLabels.some(label => label.includes('远古海图')), false, `${code} 不是自己的回合不能触发`)
+    // 自己回合的同一窗口仍然提供（只由 criteria 开关，回合内可用性不变）。
+    s.currentSeat = 0
+    resolveTransaction(s, 0, { action: 'eoteP6OwnTurn' }, openWindow)
+    const ownTurnLabels = (s.pendingChoice?.options || []).map(option => String(option.label))
+    assert.ok(ownTurnLabels.some(label => label.includes('远古海图')), `${code} 自己的回合仍然可以触发`)
+  }
 })
 
 test('P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点', () => {

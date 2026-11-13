@@ -87,3 +87,57 @@ export function healWithTrauma(state, inv, api, kind) {
   else api.healHorror(target.seat, amount)
   api.info(`${target.name} 治疗 ${amount} 点${kind === 'damage' ? '伤害' : '恐惧'}。`)
 }
+
+// ---------------------------------------------------------------------------
+// 05032 / 05280「否决存在」共用的窗口口径（两版印刷触发条件相同）。
+//
+// 卡面：快速。在遭遇卡牌或敌人攻击将要导致你执行以下一项（选择一项）时打出：
+//   弃掉手牌、失去资源、失去行动、受到伤害、受到恐惧。你忽略该效果的影响。
+//   （05280 升级版追加：然后对应地执行相反效果。）
+//
+// 规则书 FAQ 把幕/密谋/地点/敌人/诡计/弱点/场景卡都算遭遇卡，因此窗口 context.source.kind
+// 由引擎的 reaction-source.js 统一标成 encounter/enemyAttack/other；卡文件只读这个字段。
+// ---------------------------------------------------------------------------
+
+export function denyExistenceSourceAllowed(context) {
+  const kind = context?.source?.kind
+  return kind === 'encounter' || kind === 'enemyAttack'
+}
+
+// 窗口候选是否可用：本人、来源合法、确有可忽略的分量。
+export function denyExistenceCandidate({ inv, context }) {
+  if (!context || context.seat !== inv?.seat) return false
+  if (!denyExistenceSourceAllowed(context)) return false
+  if (context.when === 'harmDealt') {
+    return (Number(context.damage) || 0) > 0 || (Number(context.horror) || 0) > 0
+  }
+  if (context.when === 'wouldDiscardFromHand' || context.when === 'wouldLoseResources' || context.when === 'wouldLoseActions') {
+    // 三个「将要……」窗口本身只在确有该效果时打开；不额外要求 amount 字段（旧窗口调用点不一定带）。
+    return context.cancelled !== true
+  }
+  return false
+}
+
+// 「弃掉手牌 / 失去资源 / 失去行动」三个面向的取消结算。
+// reverse=true 是 05280 的反向效果：抽等量牌 / 获得等量资源 / 获得等量额外行动。
+// 取消事实（cardCancelled）由 executeDescriptor 的自动记账统一处理，这里不重复写。
+export function ignoreWouldEffect({ inv, api, context, reverse = false }) {
+  const what = context?.what
+  const amount = Math.max(0, Number(context?.amount) || 0)
+  context.cancelled = true
+  const label = what === 'discard' ? '弃掉手牌' : what === 'resources' ? '失去资源' : '失去行动'
+  if (!reverse) {
+    api.info(`🛡️ 「否决存在」：${inv.name} 忽略了这次${label}的效果。`)
+    return
+  }
+  if (what === 'discard') {
+    api.info(`${inv.name} 用「否决存在」忽略${label}的效果，改为抽 ${amount} 张牌。`)
+    api.drawCards(inv.seat, amount)
+  } else if (what === 'resources') {
+    api.info(`${inv.name} 用「否决存在」忽略${label}的效果，改为获得 ${amount} 资源。`)
+    api.gainResources(inv.seat, amount)
+  } else {
+    api.info(`${inv.name} 用「否决存在」忽略${label}的效果，改为获得 ${amount} 次额外行动。`)
+    api.gainAction(inv.seat, amount)
+  }
+}

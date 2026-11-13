@@ -555,7 +555,7 @@
   "sources": [
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
+      "sha256": "ec503cc56167d5015c93ff298b83bc2c3341a524c445bec82c6cc1986fa1924d"
     },
     {
       "path": "artifacts/migration/tcu/mechanism-scan.json",
@@ -582,8 +582,8 @@
     "rulesVersion": "n6.0",
     "goldenReplay": {
       "fixtures": 13,
-      "steps": 797,
-      "hashes": 810
+      "steps": 870,
+      "hashes": 883
     },
     "gitHead": null,
     "gitNote": "本机 PATH 没有 git；基线以规则版本 + golden replay 计数 + 来源哈希固定，具体提交由审阅者补记。"

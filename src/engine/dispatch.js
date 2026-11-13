@@ -13,12 +13,23 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 
 import { isParleyDescriptor } from './parley.js'
+// P8：世界地图启程 / 状况报告（《绯红密钥》）的局外动作。
+// 引擎不 import 内容模块：地图图结构、目的地→流程节点、节点 id 与强制终点都从战役清单读；
+// 记录同步通过重演 `map` 节点声明的 embark 效果完成（内容层 syncMapRecords + 排队状况报告）。
+import { enterCampaignNode } from '../campaign/campaign-flow.js'
+import { applyCampaignEffect } from '../campaign/campaign-effects.js'
+import { FORCED_TIME_THRESHOLD, forcedDestination, mapTime, mergeMapTime, statusReportState, travelTo, useExpeditedTicket, worldMapState } from './tsk-map.js'
+// P8：定制升级卡（Customizable）的关间勾选。勾选校验/经验结算完全复用 tsk-customizable 原语，
+// dispatch 只负责「房主 + 相位 + 牌组归属」的越权校验、经验扣减与日志（与 hubPurchase 同口径）。
+import { customizationOptions, customizationsOfSeat, upgradeCustomization } from './tsk-customizable.js'
+// 暂存升级草稿时的「有效记录」口径与 campaign.js#upgradeRecord 一致（不在这里重写一遍）。
+import { upgradeRecord } from '../campaign/campaign.js'
 // 第 5 步 P6：法术专用额外行动的算术在 spell-actions.js（纯函数，无依赖）。
 // P6（食梦者）：受限行动的算术与 kind 判定分别在 restricted-actions.js / table-decisions.js。
 import { spellOnlyActionsOf } from './spell-actions.js'
 import { discardRevealedDeckTopWeakness, sampleRoundEvents } from './eote-investigator-support.js'
 import {
-  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction, availableEngageCredit,
+  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction,
 } from './restricted-actions.js'
 
 import { MODE_LABELS, assignSeatPart, campaignPartsManifest, defaultPartLeads, describeModePlan, laneBalance, modePlan } from '../campaign/campaign-modes.js'
@@ -28,11 +39,167 @@ import { enterLaneRuntime, leaveLaneRuntime } from './lane-runtime.js'
 import { createEffect } from './effect-state.js'
 import { nextInstanceId } from './rules-state.js'
 import { flipVeiledLocation } from './veiled.js'
-import { cardDef } from './card-lookup.js'
+import { cardDef, cardName } from './card-lookup.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
 import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from './hidden-enemy.js'
 import { recordPerformedAction } from './action-history.js'
 import { preparePlayAttempt } from './play-attempt.js'
+// ---------------------------------------------------------------------------
+// P8：世界地图启程 / 状况报告（战役级 hub 动作）
+// ---------------------------------------------------------------------------
+// 与参考实现 `CampaignSpecificStep "embark"` / `CampaignSpecific "travel"` / `"statusReport"` 同顺序：
+//   选择目的地 → 校验（强制终点 / 解锁 / 快捷旅票）→ 记时间与当前位置 → 进入目的地的流程节点
+//   → 由 `progressCampaign` 停在章节准备（scenarioSetup）或幕间（interlude）。
+// 近似逐条披露（approximation）：
+//   1. 快捷旅票（清单 `expeditedTicketCode`）是「永久」剧情卡：真实路线由幕间把卡放进战役牌组，
+//      场景内它在场上（assets）。hub 窗口没有 `state.scenario`，因此不使用卡条目的
+//      `scenarioFlags.tskExpeditedTicketUsed` 能力，而是按同一规则从战役牌组/手牌/场上移除该卡并
+//      递减 `records.expeditedTickets`；场景内的条目能力路径保持不变。
+//   2. 时间/当前位置/已访问记录不复制内容层逻辑：旅行后重演 `map` 节点声明的 `embark` 效果
+//      （`applyCampaignEffect` → 内容处理器 `syncMapRecords` + `queueStatusReports`）。
+//   3. 时间达到强制阈值时，只允许启程前往清单的 `forcedEndgameNode`（与 `tsk-map#travelTo` 一致）。
+//   4. 状况报告正文与效果仍由内容处理器的 statusReport 节点结算；dispatch 只负责进入清单映射的
+//      节点并推进流程（不复制任何报告效果）。
+const MAP_WINDOW_STATES = Object.freeze(['interlude', 'scenarioSetup'])
+
+/** 校验「房主 + 地图窗口 + 当前 flow 节点 = 清单 map 节点」。 */
+function requireWorldMapPhase (state, seat, manifest) {
+  if (seat !== 0) throw new Error('只有房主可以决定世界地图启程')
+  if (!MAP_WINDOW_STATES.includes(state.uiState)) throw new Error('当前不在世界地图启程窗口')
+  const nodeId = state.campaign?.flow?.nodeId
+  if (!nodeId) throw new Error('当前战役流程不在世界地图节点')
+  if (manifest.mapNodeId && manifest.mapNodeId !== nodeId) throw new Error('当前战役流程不在世界地图节点')
+  const node = manifest.flow?.nodes?.[nodeId]
+  if (!node || node.type !== 'map') throw new Error('当前战役流程节点不是世界地图')
+  if (!Array.isArray(manifest.worldMapGraph?.nodes) || !manifest.worldMapGraph.nodes.length) {
+    throw new Error('战役没有可用的世界地图图结构')
+  }
+  return node
+}
+
+/** 强制目的地：地图原语 + 清单阈值/节点兜底（阈值由内容声明，不在引擎写死 35）。 */
+function forcedMapDestination (state, manifest) {
+  const forced = forcedDestination(state)
+  if (forced) return forced
+  const limit = Number.isSafeInteger(manifest.forcedEndgameTime) ? manifest.forcedEndgameTime : null
+  if (limit != null && mapTime(state) >= limit) return manifest.forcedEndgameNode || null
+  return null
+}
+
+/** 持票座位（战役牌组 / 手牌 / 场上 / 记录计数，与 hub.js 同口径）。 */
+function expeditedTicketHolder (state, manifest) {
+  const code = manifest.expeditedTicketCode
+  if (!code) return null
+  for (const record of Object.values(state.campaign?.investigators || {})) {
+    if (record?.status && record.status !== 'active') continue
+    if (Array.isArray(record?.deck) && record.deck.includes(code)) return { seat: record.seat, source: 'deck' }
+  }
+  for (const inv of state.investigators || []) {
+    if (Array.isArray(inv.hand) && inv.hand.includes(code)) return { seat: inv.seat, source: 'hand' }
+    if (Array.isArray(inv.assets) && inv.assets.some(asset => asset?.code === code)) return { seat: inv.seat, source: 'assets' }
+  }
+  if (Number(state.campaign?.records?.expeditedTickets) > 0) return { seat: state.campaign?.leadSeat ?? 0, source: 'record' }
+  return null
+}
+
+/** 放逐快捷旅票：从牌组/手牌/场上移除该卡并递减战役记录计数（见上方 approximation 1）。 */
+function exileExpeditedTicket (state, manifest, events, info) {
+  const code = manifest.expeditedTicketCode
+  const campaign = state.campaign
+  let removedFrom = null
+  for (const record of Object.values(campaign?.investigators || {})) {
+    if (!Array.isArray(record?.deck)) continue
+    const index = record.deck.indexOf(code)
+    if (index < 0) continue
+    record.deck.splice(index, 1)
+    if (Array.isArray(record.removedCards)) {
+      record.removedCards.push({ code, reason: '启程（快捷旅票）', scenarioIndex: campaign.scenarioIndex })
+    }
+    removedFrom = 'deck'
+    break
+  }
+  if (!removedFrom) {
+    for (const inv of state.investigators || []) {
+      const hand = Array.isArray(inv.hand) ? inv.hand : []
+      const handIndex = hand.indexOf(code)
+      if (handIndex >= 0) {
+        hand.splice(handIndex, 1)
+        removedFrom = 'hand'
+        break
+      }
+      const assets = Array.isArray(inv.assets) ? inv.assets : []
+      const assetIndex = assets.findIndex(asset => asset?.code === code)
+      if (assetIndex >= 0) {
+        assets.splice(assetIndex, 1)
+        removedFrom = 'assets'
+        break
+      }
+    }
+  }
+  const records = campaign?.records
+  if (records && Number(records.expeditedTickets) > 0) {
+    records.expeditedTickets = Number(records.expeditedTickets) - 1
+  }
+  const where = removedFrom === 'deck' ? '战役牌组' : removedFrom === 'hand' ? '手牌' : removedFrom === 'assets' ? '场上' : null
+  info(state, events, where
+    ? `🎫 快捷旅票已放逐（${where}）：本次启程在剧本日志记 1 时间。`
+    : '🎫 快捷旅票已放逐：本次启程在剧本日志记 1 时间。')
+}
+
+/**
+ * 旅行后同步战役记录并排队状况报告：重演 `map` 节点声明的效果（不复制内容层逻辑）。
+ * 内容层没声明 effects 时只记录一条提示，不静默丢失记录同步。
+ */
+function afterWorldMapTravel (state, manifest, events, info) {
+  const mapNode = manifest.flow?.nodes?.[manifest.mapNodeId]
+  const effects = Array.isArray(mapNode?.effects) ? mapNode.effects : []
+  if (!effects.length) {
+    info(state, events, '🌍 世界地图已移动，但战役清单没有声明 map 节点效果：记录未同步。')
+    return
+  }
+  for (const effect of effects) {
+    applyCampaignEffect(state, effect, text => info(state, events, text))
+  }
+}
+
+/**
+ * 进入目的地对应的流程节点并推进到下一个停点（章节准备 / 幕间 / 尾声）。
+ * 目的地→节点映射由清单 `travelNodes` 提供；终章入口用 `endgameApproachNodeId` 兜底。
+ */
+function enterWorldMapDestination (state, manifest, destination, events, progressCampaign) {
+  const campaign = state.campaign
+  const target = manifest.travelNodes?.[destination]
+    || (destination === manifest.forcedEndgameNode ? manifest.endgameApproachNodeId : null)
+  if (!target) throw new Error(`地图节点 ${destination} 没有对应的战役流程节点`)
+  if (!manifest.flow?.nodes?.[target]) throw new Error(`地图节点 ${destination} 的流程节点 ${target} 不存在`)
+  delete campaign.pendingNode
+  delete campaign.pendingNextIndex
+  enterCampaignNode(campaign, manifest, target)
+  progressCampaign(state, events, false)
+  settleCampaignHubWindow(state, manifest)
+}
+
+/**
+ * 与 `hubContinue` 的后处理同口径：重新打开该停点的准备/幕间窗口。
+ * 章节停点回到 scenarioSetup（各座位确认后房主开始关卡）；幕间/地图停点回到 interlude。
+ */
+function settleCampaignHubWindow (state, manifest) {
+  if (state.status !== 'playing') return
+  const campaign = state.campaign
+  const stage = campaign.flowStage
+  if (!['interlude', 'checkpoint', 'scenario', 'map'].includes(stage)) return
+  const scenarioSetup = stage === 'scenario'
+  campaign.phase = scenarioSetup ? 'scenarioSetup' : 'interlude'
+  state.uiState = campaign.phase
+  state.phase = campaign.phase
+  state.currentSeat = 0
+  state.hubReady = false
+  state.hubSeatDone = {}
+  state.hubUpgradedSeats = {}
+  delete state.hubReplacementSeats
+  state.hubSelectedScenarioId = manifest.scenarioIds?.[campaign.scenarioIndex] ?? state.hubSelectedScenarioId
+}
+
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
@@ -332,7 +499,7 @@ function executePaidAction(state, seat, move, events) {
     if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !scenarioNoAoOAll
       && !ruleIgnored(state, inv, 'opportunityAttack')
       && !jakeSkipsOpportunityAttack(state, inv, kind)
-      && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)) {
+      && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind) && !['fightConcealed', 'evadeConcealed'].includes(move.action)) {
       const scenarioExempt = enemy => scenarioNoAoOFrom.includes(String(enemy.originalCode || enemy.code))
         || scenarioNoAoOFrom.includes(String(enemy.code))
       const pending = enemiesEngagedWith(state, inv).filter(enemy => !enemy.exhausted
@@ -562,6 +729,41 @@ function executeHubMove(state, seat, move, events) {
       info(state, events, `${state.investigators[seat].name} 暂存升级（${purchase.cost} XP），等待确认。`)
       break
     }
+    case 'hubCustomize': {
+      // P8：定制升级卡的一格勾选（房主代全桌执行，与 hubContinue/hubEmbark 同一房主口径）。
+      // 越权/相位校验在这里；勾选合法性、经验充分性与写入由 tsk-customizable 原语负责。
+      if (seat !== 0) throw new Error('只有房主可以执行定制升级')
+      if (state.uiState !== 'interlude'
+        && !(state.uiState === 'scenarioSetup' && !campaign.scenarioResults?.length)) {
+        throw new Error('定制升级只能在关间或首章前的构筑准备中进行')
+      }
+      if (campaign.upgradesAllowed === false) throw new Error('本次关间不允许升级')
+      const record = campaign.investigators[seat]
+      if (!record || record.status !== 'active') throw new Error('当前座位没有可升级的调查员')
+      // 未保存的升级草稿把经验暂存在草稿记录上；先保存/撤销，避免两套账重复扣减。
+      if (record.upgradeDraft) throw new Error('请先保存或撤销本轮升级方案，再进行定制升级')
+      const code = typeof move.code === 'string' ? move.code : ''
+      const optionList = customizationOptions(code)
+      if (!optionList) throw new Error(`卡牌 ${code || '?'} 没有注册定制选项`)
+      if (!(record.deck || []).includes(code)) throw new Error(`「${cardName(code)}」不在该调查员的战役牌组中`)
+      const optionIndex = Number(move.optionIndex)
+      if (!Number.isSafeInteger(optionIndex) || optionIndex < 0 || optionIndex >= optionList.length) {
+        throw new Error(`定制选项下标无效：${String(move.optionIndex)}`)
+      }
+      const option = optionList[optionIndex]
+      const checked = [...(customizationsOfSeat(state, seat)[code] || [])]
+      const filled = checked.filter(index => index === optionIndex).length
+      if (filled >= option.checks) throw new Error(`「${option.name}」已经勾满 ${option.checks} 格`)
+      checked.push(optionIndex)
+      const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
+      // 原语只校验/结算，不写 `record.xp`；这里扣一次（hubPurchase 经 purchaseCard 扣一次，同一口径）。
+      const result = upgradeCustomization(state, { seat, code, checked, availableXp, costPerCheck: 1 })
+      record.xp -= result.xpCost
+      record.spentXp = (record.spentXp || 0) + result.xpCost
+      campaign.xp = Object.values(campaign.investigators).reduce((sum, item) => sum + item.xp, 0)
+      info(state, events, `定制升级：${cardName(code)} · ${option.name} 第 ${filled + 1} 格（-${result.xpCost} XP）`)
+      break
+    }
     case 'hubConfirmUpgrades': finishUpgradeDraft(campaign, seat, true); break
     case 'hubCancelUpgrades': finishUpgradeDraft(campaign, seat, false); break
     case 'hubAutoUpgrade': {
@@ -645,6 +847,83 @@ function executeHubMove(state, seat, move, events) {
       state.hubSelectedScenarioId = CAMPAIGN.scenarioOrder[campaign.scenarioIndex]
       break
     }
+    case 'hubEmbark': {
+      // P8：世界地图启程（房主）。目的地→流程节点走清单 travelNodes；时间/位置记录由 map 节点的
+      // embark 效果同步（内容层），dispatch 只负责校验、旅行与推进流程。
+      requireWorldMapPhase(state, seat, CAMPAIGN)
+      const graph = CAMPAIGN.worldMapGraph
+      const destination = typeof move.destination === 'string' ? move.destination : ''
+      if (!destination) throw new Error('启程需要目的地')
+      if (move.expedite !== undefined && typeof move.expedite !== 'boolean') throw new Error('expedite 必须是布尔值')
+      const expedite = move.expedite === true
+      const forced = forcedMapDestination(state, CAMPAIGN)
+      const pending = statusReportState(state)?.pending || []
+      if (forced != null) {
+        if (expedite) throw new Error('被迫启程不能使用快捷旅票')
+        if (destination !== forced) throw new Error(`时间已达强制终局阈值，只能启程前往 ${forced}`)
+      } else if (pending.length) {
+        throw new Error(`请先结算状况报告 ${String(pending[0]).toUpperCase()}`)
+      }
+      // P8：章节结局的时间奖励写在 records.time（战役记录），地图时间只随旅行累加。
+      // 启程前先把两者归并成同一时间轴，再累计本次旅行耗时；否则章节奖励会在回地图时被覆盖。
+      {
+        const merged = mergeMapTime(state, campaign.records?.time ?? 0)
+        if (campaign.records) campaign.records.time = merged
+      }
+      let travel
+      if (expedite) {
+        if (!expeditedTicketHolder(state, CAMPAIGN)) throw new Error('没有可用的快捷旅票')
+        // 内容条目必须声明启程能力（flags/assetRule.expeditedTicket），放逐才不是凭空删卡；
+        // 时间 1 与 `tsk-map#useExpeditedTicket` 同一原语（卡面规则），见文件头 approximation 1。
+        const ticketEntry = registeredEntry(CAMPAIGN.expeditedTicketCode)
+        if (!ticketEntry?.flags?.expeditedTicket && !ticketEntry?.assetRule?.expeditedTicket) {
+          throw new Error('快捷旅票条目未声明启程能力（flags/assetRule.expeditedTicket）')
+        }
+        travel = useExpeditedTicket(state, { graph, destination })
+        exileExpeditedTicket(state, CAMPAIGN, events, info)
+      } else {
+        travel = travelTo(state, { graph, destination })
+      }
+      const arrived = travel?.to || destination
+      afterWorldMapTravel(state, CAMPAIGN, events, info)
+      // 2026-11-13 P1-17：时间跨过 35（或出发前已到点）强制启程时，先把排队中的状况报告结算掉，
+      // 尤其是 Ω——此前 hub 只给强制启程、跳过 pending 校验，Ω 永远留队（终章少 1 枚 cultist、
+      // 正文不可见）。参考 Helpers.hs#markTime：先播达到阈值的报告，再强制启程进终章（同一动作内完成）。
+      if (travel?.forced === true) {
+        for (let guard = 0; guard < 4; guard += 1) {
+          const pendingReports = statusReportState(state)?.pending || []
+          const report = pendingReports.find(id => CAMPAIGN.statusReportNodes?.[id])
+          if (!report) break
+          delete campaign.pendingNode
+          delete campaign.pendingNextIndex
+          enterCampaignNode(campaign, CAMPAIGN, CAMPAIGN.statusReportNodes[report])
+          info(state, events, `📻 时间到达 ${FORCED_TIME_THRESHOLD}：先阅读状况报告 ${String(report).toUpperCase()}。`)
+          progressCampaign(state, events, false)
+          settleCampaignHubWindow(state, CAMPAIGN)
+        }
+      }
+      info(state, events, `🧳 启程：${arrived}（耗时 ${travel?.cost ?? '?'} 时间，当前时间 ${travel?.time ?? '?'}）。`)
+      enterWorldMapDestination(state, CAMPAIGN, arrived, events, progressCampaign)
+      break
+    }
+    case 'hubAdvanceReport': {
+      // P8：结算一份到期待处理的状况报告。进入清单映射的 statusReport 节点，由内容处理器的
+      // statusReport 效果结算（正文/混乱袋/解锁/夺钥），随后 walkCampaign 回到 worldMap。
+      requireWorldMapPhase(state, seat, CAMPAIGN)
+      const pending = statusReportState(state)?.pending || []
+      const report = typeof move.report === 'string' && move.report ? move.report : pending[0]
+      if (!report) throw new Error('没有待处理的状况报告')
+      if (!pending.includes(report)) throw new Error(`状况报告 ${report} 不在待处理队列`)
+      const nodeId = (typeof move.nodeId === 'string' && move.nodeId) || CAMPAIGN.statusReportNodes?.[report]
+      if (!nodeId || !CAMPAIGN.flow?.nodes?.[nodeId]) throw new Error(`状况报告 ${report} 没有对应的流程节点`)
+      delete campaign.pendingNode
+      delete campaign.pendingNextIndex
+      enterCampaignNode(campaign, CAMPAIGN, nodeId)
+      info(state, events, `📻 阅读状况报告 ${String(report).toUpperCase()}。`)
+      progressCampaign(state, events, false)
+      settleCampaignHubWindow(state, CAMPAIGN)
+      break
+    }
     default: throw new Error('未知局外操作')
   }
   state.legalMoves = legalMoves(state)
@@ -666,6 +945,21 @@ function applyMoveUnchecked(state, seat, move, events) {
   const m = move || {}
   switch (m.action) {
     case 'advanceAct': payAndAdvanceAct(state, events); break
+    // 2026-11-13 P1-2：绯红密钥玩家动作。变换必须走机制面包装器（派发 tskKeyShifted 窗口）；
+    // 移交只改持有者（Shift/夺取的翻面规则由内容层敌人行动负责，玩家移交不翻面）。
+    case 'shiftKey': {
+      const shifted = abilityApi(state, events).tsk?.keys?.shift?.(m.keyId, { seat })
+      if (!shifted) throw new Error('密钥变换失败')
+      info(state, events, `🔑 ${inv.name} 变换了绯红密钥（${shifted.from} → ${shifted.to}）。`)
+      break
+    }
+    case 'transferKey': {
+      const previous = abilityApi(state, events).tsk?.keys?.bind?.(m.keyId, { type: 'investigator', seat: m.toSeat })
+      if (!previous) throw new Error('密钥移交失败')
+      const target = state.investigators.find(other => other.seat === m.toSeat)
+      info(state, events, `🔑 ${inv.name} 把绯红密钥移交给${target?.name || '另一名调查员'}。`)
+      break
+    }
     case 'scenarioAction': scenarioBehavior(state).performAction(state, inv, m, scenarioRuntime(state, events)); break
     case 'shortcutMove': doShortcutMove(state, seat, m, events); break
     case 'detachLocationAttachment': doDetachLocationAttachment(state, seat, m, events); break
@@ -756,6 +1050,37 @@ function applyMoveUnchecked(state, seat, move, events) {
       }
       break
     }
+    case 'fightConcealed':
+    case 'evadeConcealed': {
+      // 2026-11-13 P1-16：攻击/躲避隐匿迷你卡——成功即揭露（该效果取代标准效果：
+      // 不造成伤害/不躲避敌人；揭露后的真身入场由章节行为或通用回退处理）。
+      const mini = (state.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || [])
+        .find(card => card.id === m.miniId)
+      if (!mini || mini.locationId !== inv.location || mini.flipped) break
+      const loc = state.locations.find(location => location.id === inv.location)
+      const bonus = Number(registeredEntry(loc?.originalCode || loc?.code)?.locationRule?.concealedFightEvadeBonus || 0)
+      const miniDifficulty = Math.max(0, Number(loc?.shroud) || 0) + bonus
+      const skill = m.action === 'evadeConcealed' ? 'agility' : 'combat'
+      performTest(state, seat, skill, miniDifficulty, {
+        source: { label: m.action === 'evadeConcealed' ? '躲避隐匿迷你卡' : '攻击隐匿迷你卡', miniId: mini.id },
+        resolve: result => {
+          if (!result.success) return
+          let exposed = null
+          try {
+            exposed = abilityApi(state, events).tsk?.concealed?.expose(mini.id, { seat })
+          } catch (error) {
+            info(state, events, `⚠️ 揭露失败：${error.message}`)
+            return
+          }
+          if (!exposed) return
+          info(state, events, m.action === 'evadeConcealed'
+            ? `💨 ${inv.name} 成功躲避并揭露了一张隐匿迷你卡。`
+            : `⚔️ ${inv.name} 成功攻击并揭露了一张隐匿迷你卡。`)
+          scenarioBehavior(state).concealedCombatResolved?.(state, exposed, seat, m.action, scenarioRuntime(state, events))
+        },
+      })
+      break
+    }
     case 'endTurn': doEndTurn(state, seat, events); break
     default: break
   }
@@ -770,17 +1095,25 @@ function applyMoveUnchecked(state, seat, move, events) {
   expireEffects(state, 'endOfAction')
 
   if (state.status === 'playing') {
-    // 行动点已经用完（或刚点了结束回合）时，收尾窗口里仍然可以打出快速卡：
-    // 否则「快速。只能在你回合期间打出」的手牌会随回合推进失去唯一的时机。
+    // 2026-11-13 行为调整（回合收尾不再自动询问）：
+    //   · 行动点用尽后**不**自动推进回合，也**不**给行动者本人弹「回合结束前：可以打出快速卡」窗口；
+    //     手牌/通道的 0 行动快速卡与 [free] 能力已经是 legalMoves 的直接行动，玩家主动点牌即用；
+    //     玩家必须提交 endTurn（或效果强制结束回合 / 离场）才会真正 advanceInvestigator。
+    //   · 其他调查员的「任意玩家窗口」能力仍需要窗口（否则行动者 0 行动时队友再无时机），
+    //     只给其他座位、行动者本人不参与。
     const acting = state.investigators[seat]
     const closingTurn = !acting || acting.actionsLeft <= 0 || acting.turnEnded || acting.defeated || acting.resigned
     if (state.immediateAction?.seat === seat) return events
-    playerWindow(state, 'investigation.afterAction', events, null, { fastCards: closingTurn, betweenActions: true })
-    const cur = state.investigators[seat]
-    const canEngage = availableEngageCredit(cur) > 0 && legalMoves(state).some(move => move.action === 'engage' && !move.reason)
-    if (cur.actionsLeft <= 0 && !canEngage || cur.turnEnded || cur.defeated || cur.resigned) {
-      advanceInvestigator(state, seat, events)
+    if (closingTurn) {
+      playerWindow(state, 'investigation.afterAction', events, null, { betweenActions: true, excludeSeats: [seat] })
+    } else {
+      playerWindow(state, 'investigation.afterAction', events, null, { betweenActions: true })
     }
+    const cur = state.investigators[seat]
+    // 只有「结束回合」的显式意图、效果强制结束回合（turnEnded）或调查员离场才推进回合；
+    // 行动点花完本身只是进入 0 行动空档期，由玩家自己决定何时点「结束回合」。
+    const forcedEnd = !cur || cur.defeated || cur.resigned || cur.turnEnded || move.action === 'endTurn'
+    if (forcedEnd) advanceInvestigator(state, seat, events)
   }
 
   if (state.status === 'playing') {

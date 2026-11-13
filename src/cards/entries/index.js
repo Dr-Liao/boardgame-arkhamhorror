@@ -935,6 +935,114 @@ import e09017 from './09017.js'
 import e09018 from './09018.js'
 import e09019 from './09019.js'
 import e09020 from './09020.js'
+import e09021 from './09021.js'
+import e09022 from './09022.js'
+import e09023 from './09023.js'
+import e09024 from './09024.js'
+import e09025 from './09025.js'
+import e09026 from './09026.js'
+import e09027 from './09027.js'
+import e09028 from './09028.js'
+import e09029 from './09029.js'
+import e09030 from './09030.js'
+import e09031 from './09031.js'
+import e09032 from './09032.js'
+import e09033 from './09033.js'
+import e09034 from './09034.js'
+import e09035 from './09035.js'
+import e09036 from './09036.js'
+import e09037 from './09037.js'
+import e09038 from './09038.js'
+import e09039 from './09039.js'
+import e09040 from './09040.js'
+import e09041 from './09041.js'
+import e09042 from './09042.js'
+import e09043 from './09043.js'
+import e09044 from './09044.js'
+import e09045 from './09045.js'
+import e09046 from './09046.js'
+import e09047 from './09047.js'
+import e09048 from './09048.js'
+import e09049 from './09049.js'
+import e09050 from './09050.js'
+import e09051 from './09051.js'
+import e09052 from './09052.js'
+import e09053 from './09053.js'
+import e09054 from './09054.js'
+import e09055 from './09055.js'
+import e09056 from './09056.js'
+import e09057 from './09057.js'
+import e09058 from './09058.js'
+import e09075 from './09075.js'
+import e09076 from './09076.js'
+import e09077 from './09077.js'
+import e09059 from './09059.js'
+import e09060 from './09060.js'
+import e09061 from './09061.js'
+import e09062 from './09062.js'
+import e09063 from './09063.js'
+import e09064 from './09064.js'
+import e09065 from './09065.js'
+import e09066 from './09066.js'
+import e09067 from './09067.js'
+import e09068 from './09068.js'
+import e09069 from './09069.js'
+import e09070 from './09070.js'
+import e09071 from './09071.js'
+import e09072 from './09072.js'
+import e09073 from './09073.js'
+import e09074 from './09074.js'
+import e09078 from './09078.js'
+import e09079 from './09079.js'
+import e09080 from './09080.js'
+import e09081 from './09081.js'
+import e09082 from './09082.js'
+import e09083 from './09083.js'
+import e09084 from './09084.js'
+import e09085 from './09085.js'
+import e09086 from './09086.js'
+import e09087 from './09087.js'
+import e09088 from './09088.js'
+import e09089 from './09089.js'
+import e09090 from './09090.js'
+import e09091 from './09091.js'
+import e09092 from './09092.js'
+import e09093 from './09093.js'
+import e09094 from './09094.js'
+import e09095 from './09095.js'
+import e09096 from './09096.js'
+import e09097 from './09097.js'
+import e09098 from './09098.js'
+import e09099 from './09099.js'
+import e09100 from './09100.js'
+import e09101 from './09101.js'
+import e09102 from './09102.js'
+import e09103 from './09103.js'
+import e09104 from './09104.js'
+import e09105 from './09105.js'
+import e09106 from './09106.js'
+import e09107 from './09107.js'
+import e09108 from './09108.js'
+import e09109 from './09109.js'
+import e09110 from './09110.js'
+import e09111 from './09111.js'
+import e09112 from './09112.js'
+import e09113 from './09113.js'
+import e09114 from './09114.js'
+import e09115 from './09115.js'
+import e09116 from './09116.js'
+import e09117 from './09117.js'
+import e09118 from './09118.js'
+import e09119 from './09119.js'
+import e09120 from './09120.js'
+import e09121 from './09121.js'
+import e09122 from './09122.js'
+import e09123 from './09123.js'
+import e09124 from './09124.js'
+import e09125 from './09125.js'
+import e09126 from './09126.js'
+import e09127 from './09127.js'
+import e09128 from './09128.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -1871,6 +1979,114 @@ export const CARD_ENTRY_LIST = [
   e09018,
   e09019,
   e09020,
+  e09021,
+  e09022,
+  e09023,
+  e09024,
+  e09025,
+  e09026,
+  e09027,
+  e09028,
+  e09029,
+  e09030,
+  e09031,
+  e09032,
+  e09033,
+  e09034,
+  e09035,
+  e09036,
+  e09037,
+  e09038,
+  e09039,
+  e09040,
+  e09041,
+  e09042,
+  e09043,
+  e09044,
+  e09045,
+  e09046,
+  e09047,
+  e09048,
+  e09049,
+  e09050,
+  e09051,
+  e09052,
+  e09053,
+  e09054,
+  e09055,
+  e09056,
+  e09057,
+  e09058,
+  e09075,
+  e09076,
+  e09077,
+  e09059,
+  e09060,
+  e09061,
+  e09062,
+  e09063,
+  e09064,
+  e09065,
+  e09066,
+  e09067,
+  e09068,
+  e09069,
+  e09070,
+  e09071,
+  e09072,
+  e09073,
+  e09074,
+  e09078,
+  e09079,
+  e09080,
+  e09081,
+  e09082,
+  e09083,
+  e09084,
+  e09085,
+  e09086,
+  e09087,
+  e09088,
+  e09089,
+  e09090,
+  e09091,
+  e09092,
+  e09093,
+  e09094,
+  e09095,
+  e09096,
+  e09097,
+  e09098,
+  e09099,
+  e09100,
+  e09101,
+  e09102,
+  e09103,
+  e09104,
+  e09105,
+  e09106,
+  e09107,
+  e09108,
+  e09109,
+  e09110,
+  e09111,
+  e09112,
+  e09113,
+  e09114,
+  e09115,
+  e09116,
+  e09117,
+  e09118,
+  e09119,
+  e09120,
+  e09121,
+  e09122,
+  e09123,
+  e09124,
+  e09125,
+  e09126,
+  e09127,
+  e09128,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

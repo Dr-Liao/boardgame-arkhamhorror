@@ -10,6 +10,7 @@
 
 export default {
   code: '04191',
+  scenarioPlayable: true,
   abilities: [
     {
       kind: 'free', label: '横置：检定意志或智识(4)，成功移除密谋 1 毁灭',

@@ -15,6 +15,7 @@ import { floodLevel } from '../../engine/flood.js'
 // 2026-11-04 P7 剩余：道路议程（07199–07201）读 mechanicState.road.columns（列号 = 最后方顺序）。
 import { mechanicState } from '../../engine/mechanic-state.js'
 import { ALL_CARDS } from '../cards-data.js'
+import { entryByCode } from './_lookup.js'
 import { traitLabel } from '../trait-labels.js'
 
 export { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard }
@@ -1359,3 +1360,22 @@ export function chaseAgendaEntry({ code, onReveal }) {
 }
 
 
+
+// 2026-11-13 P1-16：red_coterie 9 张敌人共用的「变换身上附属的每个钥匙」（同一句卡文）。
+// 持有者持有敌人身上的钥匙时，不会翻回稳定面（基础规则书 Keys 一节）；稳定面先结算该面
+// 印刷效果，再强制翻到动荡面。内容层只提交卡表来源，本 helper 只调 api.tsk.keys。
+export function shiftAttachedKeys(source, { api, inv = null, state = null } = {}, times = 1) {
+  const held = api.tsk.keys.heldBy({ type: 'enemy', enemyId: source.id })
+  let resolved = 0
+  for (const id of held) {
+    for (let count = 0; count < times; count += 1) {
+      const record = api.tsk.keys.get(id)
+      if (!record) break
+      const face = record.stable ? record.stableFace : record.unstableFace
+      entryByCode(String(face))?.assetRule?.keyShift?.resolve?.({ state, api, inv, keyId: id, enemyId: source.id })
+      if (record.stable) api.tsk.keys.shift(id, { force: true })
+      resolved += 1
+    }
+  }
+  return resolved
+}

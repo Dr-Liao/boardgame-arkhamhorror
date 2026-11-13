@@ -112,6 +112,33 @@ export const FAST_TESTS = Object.freeze([
   'tsk-investigator-09015.test.mjs',
   'tsk-investigator-09018.test.mjs',
   'tsk-investigator-signatures.test.mjs',
+  // P6（八循环一般玩家卡）：四份分片逐卡行为验收（108 条记录 / 126 例）。
+  'tsk-player-m2-1.test.mjs',
+  'tsk-player-m2-2.test.mjs',
+  'tsk-player-m2-3.test.mjs',
+  'tsk-player-m2-4.test.mjs',
+  // P7（八循环战役）：剧情/指南生成物与战役分片计划结构性验收（场景测试在 P7 完成时统一注册）。
+  'tsk-story.test.mjs',
+  'tsk-campaign-plan.test.mjs',
+  // P7（八循环战役）：十章设置/幕议程/遭遇/结局逐章测试 + 26 个遭遇组 + 战役流程/幕间。
+  'tsk-scenario-riddlesAndRain.test.mjs',
+  'tsk-scenario-deadHeat.test.mjs',
+  'tsk-scenario-sanguineShadows.test.mjs',
+  'tsk-scenario-dealingsInTheDark.test.mjs',
+  'tsk-scenario-dancingMad.test.mjs',
+  'tsk-scenario-onThinIce.test.mjs',
+  'tsk-scenario-dogsOfWar.test.mjs',
+  'tsk-scenario-shadesOfSuffering.test.mjs',
+  'tsk-scenario-withoutATrace.test.mjs',
+  'tsk-scenario-congressOfTheKeys.test.mjs',
+  // P0 回归（2026-11-13 全量扫描修复）：真实引擎入口覆盖 7 项 P0。
+  'tsk-p0-regressions.test.mjs',
+  // P1 回归（2026-11-13）：窗口/密钥/Concealed/遭遇 api/四档标记/运行时原语/战役流程。
+  'tsk-p1-regressions.test.mjs',
+  'tsk-shared-encounters-a.test.mjs',
+  'tsk-shared-encounters-b.test.mjs',
+  'tsk-campaign-flow.test.mjs',
+  'tsk-interludes.test.mjs',
   // P2（七循环通用原语）：六组原语的正常/负面/JSON 往返/注册校验；只验证原语，不认证卡牌行为。
   'eote-primitives-frost.test.mjs', 'eote-primitives-campaign.test.mjs', 'eote-primitives-flow.test.mjs',
   'eote-primitives-geo.test.mjs', 'eote-primitives-travel.test.mjs', 'eote-primitives-investigator.test.mjs',
@@ -290,11 +317,13 @@ export const FAST_TESTS = Object.freeze([
   'tfa-heart-of-the-elders-part2.test.mjs',
   'tfa-city-of-archives.test.mjs',
   'tfa-depths-of-yoth.test.mjs',
+  'tfa-depths-of-yoth-ending.test.mjs', // 幽嘶深渊结局 1 深度结算：全队被击败后仍标阵亡/创伤
   'tfa-shattered-aeons.test.mjs',
   'tfa-turn-back-time.test.mjs',
   'tfa-story.test.mjs',
   'tfa-rules.test.mjs',
   'tfa-supply-picker.test.mjs',
+  'campaign-story-asset-playable.test.mjs', // 2026-11-11 原语收口：战役发放的剧情资产在牌组中可打出
   'tcu-primitives-haunted.test.mjs', // 万象无终第 2 步原语 P2.1（闹鬼）
   'tcu-primitives-spectral-deck.test.mjs', // 第 2 步原语 P2.2（幽灵界第二遭遇牌堆）
   'tcu-primitives-spectral-location.test.mjs', // 第 2 步原语 P2.3（幽灵地点与翻面）
@@ -359,6 +388,7 @@ export const FAST_TESTS = Object.freeze([
   'tde-parallel.test.mjs', // 食梦者 P5 批次 3：并行双运行时管线（container/路由/投影/存档/屏障）
   'tde-mode-panel.test.mjs', // 食梦者 P5 批次 3：开局模式面板模型（模式/置灰原因/座位分线）
   'tde-investigators.test.mjs', // 食梦者 P6：五位调查员 + 11 张专属卡 + 13 条记录的逐人验收
+  'dream-gate-asif-fix.test.mjs', // 卢克「如同位于」+ 梦境之门：事件结算期间生成的敌人不带走交战（官方 FAQ）+ 旧存档跨地点交战修复
   'tde-player-m2-1.test.mjs', // 食梦者 P7：M2-1 玩家卡 06018–06110 逐卡行为
   'tde-player-m2-2.test.mjs', // 食梦者 P7：M2-2 玩家卡 06111–06195 逐卡行为
   'tde-player-m2-3.test.mjs', // 食梦者 P7：M2-3 玩家卡 06196–06245 逐卡行为
@@ -391,6 +421,12 @@ export const FAST_TESTS = Object.freeze([
 ])
 
 export const SLOW_TESTS = Object.freeze([
+  // P8（八循环发布验收）：世界地图启程/逐章推进、逐卡账本、发布总账本自检、结局/时间回归。
+  'tsk-p8-campaign.test.mjs',
+  'tsk-p8-fixes.test.mjs',
+  'tsk-p8-customization.test.mjs', // P8：定制卡构筑期初始勾选 + 关间升级（真实 hub/dispatch/投影）
+  'tsk-all-cards.test.mjs',
+  'tsk-p8-migration.test.mjs',
   'campaign-n4.test.mjs', // N4 战役快速回归（升级/回滚/结局/创伤/牌组迁移）
   'campaign-n4-purchase-stress.test.mjs', // 连续取消购卡压测：默认 50 轮，N4_CANCEL_LOOPS=300 跑原深度
   'campaign-n4-matrix.test.mjs', // /2/4 人整局合法走子矩阵（原 7 组含难度，难度差异由混沌袋用例覆盖）
@@ -407,6 +443,7 @@ export const SLOW_TESTS = Object.freeze([
 ])
 
 export const ASSET_TESTS = Object.freeze([
+  'tsk-media.test.mjs',
   'eote-media.test.mjs',
   'audit-resources.test.mjs',
   'import-cards.test.mjs',
