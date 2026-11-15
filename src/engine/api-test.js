@@ -6,6 +6,8 @@ import { replacePlayerZoneCards } from './player-zones.js'
 // 与前三批相同的工厂形状（createXxxApi(state, events, deps)）。
 
 import { canCommitToTest, payCommitResourceCost } from './commit-rules.js'
+import { drawChaosToken } from './chaos-bag.js'
+import { rankedBagTokens } from './chaos-token-pool.js'
 
 export function createTestApi(state, events, deps) {
   const {
@@ -55,6 +57,13 @@ export function createTestApi(state, events, deps) {
       return true
     },
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
+    revealRankedTokenInstead: (context, face, faces, options = {}) => {
+      if (!state.skillTest || state.skillTest.stage !== 'ST.3' || context?.when !== 'beforeChaosTokenReveal'
+        || context.seat !== state.skillTest.seat || context.replacementToken) return false
+      if (!rankedBagTokens(state, faces, { ...options, requireAvailable: true }).includes(face)) return false
+      context.replacementToken = drawChaosToken(state, face)
+      return context.replacementToken != null
+    },
     replaceTokenEffect: (context, replacement) => {
       if (!state.skillTest || context?.when !== 'tokenEffectWouldResolve' || !Number.isFinite(replacement?.delta)) return false
       context.replacementEffect = { ...replacement }

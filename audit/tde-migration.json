@@ -1457,7 +1457,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "ec503cc56167d5015c93ff298b83bc2c3341a524c445bec82c6cc1986fa1924d"
+      "sha256": "1f0d2d15776cba1023c4efb00c537c3d61f02ce318706dfa6c98262d17ce8279"
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
@@ -1481,7 +1481,7 @@
     },
     {
       "path": "tools/audit-tde.mjs",
-      "sha256": "92f0a0886f858a493bd0c8531030ecacd7e4440baa0bcccb6b44ee9fd548f16a"
+      "sha256": "5c7ce248db25475a552ced0c84b04f441b29d682f08b0ca699a2c68a8f05d871"
     },
     {
       "path": "tests/playwright/playwright.tde.config.mjs",
@@ -1493,7 +1493,7 @@
     },
     {
       "path": "audit/tde-parallel-acceptance.json",
-      "sha256": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674"
+      "sha256": "a74f33953f9a7041714d0642076d2c2e5e7c8a99c10a31aee882c0c0f7130d20"
     },
     {
       "path": "tests/tde-p95-interludes.test.mjs",
@@ -2482,8 +2482,9 @@
       "audit/tde-all-card-acceptance.json": "31b93a2d5f6b0ab0b8fe150f166cc2dc1aa1648c89e5521ef6ba654fe75a5059",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
       "audit/tde-investigators.json": "a77e06689b5fa33b7528cd4fe52cb54880d5219633d245770d57aa8c8414373e",
-      "audit/tde-parallel-acceptance.json": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674",
+      "audit/tde-parallel-acceptance.json": "a74f33953f9a7041714d0642076d2c2e5e7c8a99c10a31aee882c0c0f7130d20",
       "audit/tde-player-acceptance.json": "ec65a592c603d735935123d2bbd1c54b923d02e5bbd96e877297630abd6a5e82",
+      "audit/tde-primitive-requests.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
       "audit/tde-rules.json": "556a40680796b6ddc89380028597e753ebebfaba330e51e051c7038a66415d72",
       "audit/tde-scenario-acceptance.json": "0a559cc27213ee39896178deb74cf27fcbff5d5f57976206cebec184bb1fbf78",
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
@@ -3230,7 +3231,7 @@
       "filesFresh": true,
       "ledger": {
         "path": "audit/tde-parallel-acceptance.json",
-        "sha256": "7a9e25d21c1b0aa81157bdd3729d106ec9aa9c1300c2dbb9be8484273e0d9674"
+        "sha256": "a74f33953f9a7041714d0642076d2c2e5e7c8a99c10a31aee882c0c0f7130d20"
       },
       "pass": true
     },

@@ -1,6 +1,6 @@
 import { integer, investigatorAt } from './mechanic-state.js'
 import { assetTextBlankedExceptForced } from './card-text.js'
-const normalize = value => String(value || '').toLowerCase().replace(/s$/, '')
+const normalize = value => String(value || '').toLowerCase().replace(/supplies$/, 'supply').replace(/s$/, '')
 function controlled(state, id) {
   for (const owner of state.investigators || []) {
     const card = (owner.assets || []).find(asset => asset.id === id)
@@ -34,20 +34,32 @@ export function spendSharedUses(state, seat, assetId, type, count, providers = [
 
 export function useCostSources(state, card, registeredEntry) {
   const owner = state.investigators.find(inv => inv.assets.includes(card))
-  if (normalize(card?.usesType) !== 'secret' || !owner) return [card]
-  return [card, ...state.investigators.filter(inv => inv.location === owner.location && !inv.defeated && !inv.resigned)
+  if (!owner) return [card]
+  const type = normalize(card.usesType)
+  if (type === 'secret') return [card, ...state.investigators.filter(inv => inv.location === owner.location && !inv.defeated && !inv.resigned)
     .flatMap(inv => inv.assets).filter(source => source !== card && !assetTextBlankedExceptForced(source) && registeredEntry(source.code)?.assetRule?.sharedUses === 'secrets')]
+  if (!['supply', 'ammo'].includes(type)) return [card]
+  return [card, ...owner.assets.filter(source => source !== card && normalize(source.usesType) === 'supply'
+    && !assetTextBlankedExceptForced(source) && registeredEntry(source.code)?.assetRule?.shareSuppliesAs?.includes(type))]
 }
 export function availableUseCost(state, card, registeredEntry) {
   return useCostSources(state, card, registeredEntry).reduce((total, source) => total + (source?.uses || 0), 0)
 }
-export function payUseCost(state, seat, card, count, registeredEntry, choose) {
-  if (availableUseCost(state, card, registeredEntry) < count) return false
+export function payUseCost(state, seat, card, count, registeredEntry, choose, onSubstitution) {
+  integer(count)
+  const pool = useCostSources(state, card, registeredEntry)
+  if (pool.reduce((sum, source) => sum + (source?.uses || 0), 0) < count) return false
+  const payments = new Map()
   for (let i = 0; i < count; i++) {
-    const sources = useCostSources(state, card, registeredEntry).filter(source => source.uses > 0)
+    const sources = pool.filter(source => source.uses > (payments.get(source) || 0))
     const source = sources.length === 1 ? sources[0] : sources[Number(choose({ kind: 'effect', seat, source: card.id,
       prompt: '选择支付使用次数的来源。', options: sources.map((source, index) => ({ id: String(index), cardCode: source.code, label: source.code })) }))]
-    source.uses--
+    if (!source) return false
+    payments.set(source, (payments.get(source) || 0) + 1)
+  }
+  for (const [source, amount] of payments) source.uses -= amount
+  for (const [source, amount] of payments) {
+    if (source !== card && normalize(source.usesType) === 'supply') onSubstitution?.(source, amount)
   }
   return true
 }

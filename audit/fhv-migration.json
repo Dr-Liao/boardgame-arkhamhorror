@@ -1,0 +1,405 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theFeastOfHemlockVale",
+  "status": "catalog-only",
+  "playable": false,
+  "earlyAccess": false,
+  "evidence": {
+    "scope": "audit/fhv-scope.json",
+    "baseline": "audit/fhv-baseline.json",
+    "mechanisms": "audit/fhv-mechanism-scan.json",
+    "reports": "artifacts/migration/fhv/reports/"
+  },
+  "mechanismScan": {
+    "complete": true,
+    "counts": {
+      "cards": 441,
+      "ruleUnits": 1195,
+      "mechanisms": 69,
+      "byType": {
+        "primitive": 41,
+        "keyword": 6,
+        "rulebook": 3,
+        "interaction": 4,
+        "scenario": 12,
+        "content": 3
+      },
+      "guides": 12,
+      "files": 9,
+      "guideLeaves": 1462,
+      "codexGroups": 132,
+      "codexLeaves": 447,
+      "primitiveGaps": 28,
+      "blocked": 0
+    }
+  },
+  "primitivePlan": {
+    "file": "audit/fhv-primitive-plan.json",
+    "status": "done",
+    "pending": []
+  },
+  "confirmations": {
+    "scenarios": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "welcomeToHemlockVale",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "writtenInRock",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "hemlockHouse",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "theSilentHeath",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "theLostSister",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "theThingInTheDepths",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "theTwistedHollow",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "dawnOfTheSecondDay",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "theLongestNight",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "dawnOfTheFinalDay",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "preludeTheFinalEvening",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        },
+        {
+          "id": "fateOfTheVale",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "audit/fhv-scope.json"
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "elusive",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        },
+        {
+          "id": "dayNight",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        },
+        {
+          "id": "codex",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        },
+        {
+          "id": "patrol",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        },
+        {
+          "id": "alert",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        },
+        {
+          "id": "blessCurse",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "audit/fhv-mechanism-scan.json"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "pending",
+      "checks": {
+        "campaignOverview": false,
+        "scenarioMechanics": false,
+        "keywordEntries": false,
+        "cardLinks": false,
+        "desktopBrowser": false,
+        "mobileBrowser": false
+      },
+      "evidence": []
+    }
+  },
+  "releaseAcceptance": {
+    "status": "pending",
+    "deferred": []
+  }
+}

@@ -98,6 +98,7 @@ export const FAST_TESTS = Object.freeze([
   'tsk-migration.test.mjs', // 八循环 P0/P1/P2：范围账本 / 基线 / 机制扫描 / 原语计划
   // P2（八循环通用原语）：七组原语的正常/负面/JSON 往返/读档校验；只验证原语，不认证卡牌行为。
   'tsk-primitives-state.test.mjs', 'tsk-primitives-concealed.test.mjs',
+  'fhv-primitives.test.mjs',
   'tsk-primitives-keys-hollow.test.mjs', 'tsk-primitives-map.test.mjs',
   'tsk-primitives-customizable.test.mjs', 'tsk-primitives-coterie-investigator.test.mjs',
   // P3（八循环关键词与规则书）：29 个关键词 / 17 条双语规则 / 439 卡文直达 / 审计账本与浏览器验收。

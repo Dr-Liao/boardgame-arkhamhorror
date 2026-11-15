@@ -27,7 +27,7 @@ export function createEnemyZoneApi(state, deps) {
   const contains = id => Object.values(all()).some(zone => zone.some(record => record.enemy.id === id))
   const store = (enemy, zone, { clearTokens = true, ready = true } = {}) => {
     validateZone(zone)
-    if (!enemy?.id || state.enemies.some(e => e.id === enemy.id) || contains(enemy.id)
+    if (!enemy?.id || enemy.enemyLocation || state.enemies.some(e => e.id === enemy.id) || contains(enemy.id)
       || state.victoryDisplay?.some(card => card.id === enemy.id)) return null
     const lastLocation = enemy.location || null
     if (clearTokens) clearEnemyTokensForZone(enemy)
@@ -48,7 +48,7 @@ export function createEnemyZoneApi(state, deps) {
     enter(enemyOrId, zone, options = {}) {
       validateZone(zone)
       const enemy = state.enemies.find(e => e.id === (typeof enemyOrId === 'string' ? enemyOrId : enemyOrId?.id))
-      if (!enemy || contains(enemy.id)) return null
+      if (!enemy || enemy.enemyLocation || contains(enemy.id)) return null
       // Parent extracts one common leave-play operation from existing cleanup.
       // It releases seals, disposes player attachments, disengages and removes
       // from active enemies. It must honor preserveKeys for effect -> depths.

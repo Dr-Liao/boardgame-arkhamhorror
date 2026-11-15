@@ -17,7 +17,18 @@
 // 组合子：all / any / none。裸函数、数组、undefined 都会被规范化，
 // 所以内容层可以写 criteria: [here(), engagedWithMe()] 或单个函数。
 
+import { scenarioPeriod } from './scenario-calendar.js'
+
 const isPredicate = value => typeof value === 'function'
+
+export function duringPeriod(period) {
+  if (!['day', 'night'].includes(period)) throw new TypeError('无效昼夜条件')
+  return ({ state, source, inv }) => {
+    const location = typeof source?.location === 'string' ? source.location
+      : state.locations?.includes(source) ? source.id : inv?.location
+    return scenarioPeriod(state, location ?? null) === period
+  }
+}
 
 function flatten(criteria) {
   if (criteria == null) return []

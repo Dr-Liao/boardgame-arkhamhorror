@@ -12,7 +12,7 @@ import { availableResources } from './resource-bank.js'
 
 import { NON_PLAYER_SCOPES } from './ability.js'
 import { actionEntityById, entityActionDescriptors, parleyTargetError, entityAbilityInRange } from './parley.js'
-import { afterUsesSpent } from './uses.js'
+import { afterSuppliesSubstituted, afterUsesSpent } from './uses.js'
 import { availableUseCost, payUseCost } from './use-transfer.js'
 
 export function createAbilityExecution(deps) {
@@ -139,7 +139,8 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   }
   if (cost.uses) {
     if (availableUseCost(state, asset, registeredEntry) < cost.uses) return
-    payUseCost(state, seat, asset, cost.uses, registeredEntry, spec => requestChoice(state, spec))
+    if (!payUseCost(state, seat, asset, cost.uses, registeredEntry, spec => requestChoice(state, spec),
+      (provider, count) => afterSuppliesSubstituted(state, inv, asset, provider, count, events, deps))) return
   }
   if (cost.resources) {
     if (availableResources(inv) < cost.resources) return

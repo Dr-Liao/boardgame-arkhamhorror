@@ -1,6 +1,9 @@
 import { ALL_CARDS } from '../../src/cards/cards-data.js'
 import { getAvailability } from '../../src/deck/availability.js'
 import { CONTENT_SCHEMA_VERSION } from '../schema.js'
+import { manifest as fhvCampaign } from './fhvCampaign/manifest.js'
+import { manifest as fhvInvestigators } from './fhvInvestigators/manifest.js'
+import { manifest as fhvPlayer } from './fhvPlayer/manifest.js'
 
 const encounterTypes = new Set(['enemy', 'treachery'])
 const playerTypes = new Set(['investigator', 'asset', 'event', 'skill'])
@@ -40,4 +43,5 @@ export const packs = Object.freeze([
     cards: allCoreCodes.filter(notzCode).map(cardEntry),
     encounterGroupIds: ['theGathering', 'theMidnightMasks', 'theDevourerBelow'], behaviorIds: [],
   },
+  fhvCampaign, fhvInvestigators, fhvPlayer,
 ])

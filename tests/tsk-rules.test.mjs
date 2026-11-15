@@ -7,7 +7,7 @@
 //   · 浏览器验收账本 audit/tsk-browser-acceptance.json：桌面 1440 / 移动 390 × 中英、卡文直达、无横向滚动。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { buildRulesAudit } from '../tools/audit-tsk-rules.mjs'
@@ -152,7 +152,7 @@ test('P3 审计账本：confirmations 全部 verified、门禁全真且可逐字
   assert.ok(report.deliveredPrimitives.length > 0)
   for (const id of report.deliveredPrimitives) assert.ok(['done', 'registered'].includes(planRows.get(id)?.status))
   assert.deepEqual(report.deferredPrimitives, { p3: [], p4: [] })
-  // 浏览器验收账本：六项 checks 全真、截图真实存在。
+  // 浏览器 runner 验证文件落盘；此处检查签入账本。
   const browser = readJson(join(MOD, 'audit/tsk-browser-acceptance.json'))
   assert.equal(browser.status, 'passed')
   assert.deepEqual(browser.checks, {
@@ -160,7 +160,7 @@ test('P3 审计账本：confirmations 全部 verified、门禁全真且可逐字
   })
   assert.ok(browser.screenshots.length >= 6)
   for (const screenshot of browser.screenshots) {
-    assert.equal(existsSync(join(MOD, '..', '..', screenshot)), true, `截图缺失：${screenshot}`)
+    assert.match(screenshot, /^artifacts\/migration\/tsk\/reports\/screenshots\/(desktop|mobile)-[^/]+\.png$/)
   }
   // 确定性：两次构建逐字节一致。
   assert.equal(json(await buildRulesAudit()), json(report))

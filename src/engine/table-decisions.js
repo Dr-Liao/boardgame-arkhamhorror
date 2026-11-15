@@ -303,8 +303,8 @@ export function createTableDecisions(deps) {
     // 打出时照样引发借机攻击。现在与 action 能力走同一读点。
     if (move.action === 'play') {
       const playedDescriptor = (registeredEntry(move.copyCode || move.cardId)?.abilities || [])
-        .find(descriptor => descriptor.kind === 'played' && descriptor.countsAs)
-      if (playedDescriptor) return playedDescriptor.countsAs
+        .find(descriptor => descriptor.kind === 'played' && (descriptor.countsAs || descriptor.actionKind === 'parley'))
+      if (playedDescriptor) return playedDescriptor.actionKind === 'parley' ? 'parley' : playedDescriptor.countsAs
     }
     // Phase 5：描述子用 resolve 实现时没有 effect 数据体，「按哪种行动结算」写在 countsAs 上
     // （旧式能力写在 effect.kind 上，见「意志闪避」）。
@@ -326,6 +326,7 @@ export function createTableDecisions(deps) {
     if (!inv || !move) return null
     const kind = actionKind(state, inv, move)
     if (kind === 'engage' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
+    if (kind === 'parley' && inv.parleyOnlyActions > 0) return 'parley'
     if (isSpellAction(state, inv, move)) return 'spell'
     // 地球边缘 P5（08014a 陈丽丽）：免费战斗/躲避额度（grantFreeActions 发放）。
     if ((inv.fightEvadeOnlyActions || 0) > 0 && ['fight', 'evade'].includes(kind)) return 'fightEvade'
@@ -391,6 +392,10 @@ export function createTableDecisions(deps) {
     // 幕间可能禁止下一场冒险换起始手牌（例如没有汽油 / 没有粉笔）。
     const noMulligan = consumeMulliganBlock(state)
     for (const inv of state.investigators) {
+      if (inv.surveyOpening) {
+        delete inv.surveyOpening
+        continue
+      }
       // 第 2 步 P2.6：无牌组故事调查员没有起始手牌，直接跳过换牌。
       if (inv.storyInvestigator) continue
       if ((noMulligan || inv.cannotMulligan) && !investigatorRule(inv.code)?.openingHandSize) {

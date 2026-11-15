@@ -5,7 +5,7 @@
 // 不把账本里的结论当输入再复制一遍。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildReleaseAcceptance } from '../tools/audit-eote-release.mjs'
@@ -161,15 +161,10 @@ test('P8 eote migration ledger · releaseAcceptance 无未披露 remaining（每
   const migration = readLedger(MIGRATION_LEDGER)
   const { deferred, remaining, status } = migration.releaseAcceptance
   // pending 原语请求必须逐条出现在 deferred（「已披露近似」）。
-  const requestDir = join(MOD, 'artifacts/migration/eote/primitive-requests')
-  const requestFiles = existsSync(requestDir)
-    ? readdirSync(requestDir).filter(name => name.endsWith('.json')).sort()
-    : []
-  for (const file of requestFiles) {
-    const request = readLedger(`artifacts/migration/eote/primitive-requests/${file}`)
+  for (const request of readLedger('audit/eote-primitive-requests.json')) {
     if (request.status !== 'pending') continue
-    assert.ok(deferred.some(entry => entry.id === `primitiveRequest:${request.id ?? file.replace(/\.json$/, '')}`),
-      `pending 原语请求 ${file} 未披露到 deferred`)
+    assert.ok(deferred.some(entry => entry.id === 'primitiveRequest:' + request.id),
+      'pending 原语请求 ' + request.file + ' 未披露到 deferred')
   }
   for (const entry of deferred) {
     assert.ok(typeof entry.id === 'string' && entry.id.length > 0)

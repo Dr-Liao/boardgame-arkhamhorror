@@ -1,0 +1,1062 @@
+{
+  "source": "P6 historical player acceptance archive",
+  "deferredRequests": [
+    {
+      "code": "09021",
+      "file": "09021.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09023",
+      "file": "09023.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09024",
+      "file": "09024.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09025",
+      "file": "09025.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09027",
+      "file": "09027.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09029",
+      "file": "09029.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09032",
+      "file": "09032.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09035",
+      "file": "09035.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09039",
+      "file": "09039.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09040",
+      "file": "09040.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09041",
+      "file": "09041.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09042",
+      "file": "09042.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09043",
+      "file": "09043.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09045",
+      "file": "09045.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09051.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09055.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09058.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09060.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09061.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09063.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09065.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09068.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09071.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09072.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09074.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09076.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09077.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09079.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09080.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09081.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09086.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09087.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09088.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09090.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09091.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09092.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09099.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09100.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": null,
+      "file": "09101.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09103",
+      "file": "09103.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09105",
+      "file": "09105.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09106",
+      "file": "09106.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09107",
+      "file": "09107.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09109",
+      "file": "09109.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09110",
+      "file": "09110.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09111",
+      "file": "09111.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09115",
+      "file": "09115.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09118",
+      "file": "09118.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09119",
+      "file": "09119.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09120",
+      "file": "09120.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09123",
+      "file": "09123.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09124",
+      "file": "09124.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09125",
+      "file": "09125.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09126",
+      "file": "09126.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09127",
+      "file": "09127.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09128",
+      "file": "09128.json",
+      "status": "deferred",
+      "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。"
+    },
+    {
+      "code": "09511",
+      "file": "09511.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09517",
+      "file": "09517.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09518",
+      "file": "09518.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09519a",
+      "file": "09519a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09536",
+      "file": "09536.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09537",
+      "file": "09537.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09537b",
+      "file": "09537b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09538",
+      "file": "09538.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09539",
+      "file": "09539.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09541",
+      "file": "09541.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09542",
+      "file": "09542.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09544a",
+      "file": "09544a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09544b",
+      "file": "09544b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09545",
+      "file": "09545.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09557b",
+      "file": "09557b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09558",
+      "file": "09558.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09560",
+      "file": "09560.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09566",
+      "file": "09566.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09571",
+      "file": "09571.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09571b",
+      "file": "09571b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09572",
+      "file": "09572.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09577",
+      "file": "09577.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09578",
+      "file": "09578.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09582",
+      "file": "09582.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09584",
+      "file": "09584.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09590b",
+      "file": "09590b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09591",
+      "file": "09591.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09592",
+      "file": "09592.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09594",
+      "file": "09594.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09625a",
+      "file": "09625a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09625b",
+      "file": "09625b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09626",
+      "file": "09626.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09627",
+      "file": "09627.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09629",
+      "file": "09629.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09630",
+      "file": "09630.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09631",
+      "file": "09631.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09632",
+      "file": "09632.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09633",
+      "file": "09633.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09634a",
+      "file": "09634a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09634b",
+      "file": "09634b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09642.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09646.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09649.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09653a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09654b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09658.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09659a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "09659b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09681",
+      "file": "09681.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09689",
+      "file": "09689.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09690",
+      "file": "09690.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09691",
+      "file": "09691.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09692",
+      "file": "09692.json",
+      "status": "deferred",
+      "reason": null
+    },
+    {
+      "code": "09694",
+      "file": "09694.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09715",
+      "file": "09715.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09716a",
+      "file": "09716a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09716b",
+      "file": "09716b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09716c",
+      "file": "09716c.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09717",
+      "file": "09717.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09720",
+      "file": "09720.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09721",
+      "file": "09721.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09722",
+      "file": "09722.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09723",
+      "file": "09723.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09726a",
+      "file": "09726a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09726b",
+      "file": "09726b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09727a",
+      "file": "09727a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09727b",
+      "file": "09727b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09728",
+      "file": "09728.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09729",
+      "file": "09729.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09731",
+      "file": "09731.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09732",
+      "file": "09732.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09733",
+      "file": "09733.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09735",
+      "file": "09735.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09736",
+      "file": "09736.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09737",
+      "file": "09737.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09738",
+      "file": "09738.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09739",
+      "file": "09739.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09740",
+      "file": "09740.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09743",
+      "file": "09743.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09745",
+      "file": "09745.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09746",
+      "file": "09746.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09747a",
+      "file": "09747a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09747b",
+      "file": "09747b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09747c",
+      "file": "09747c.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09748a",
+      "file": "09748a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09748b",
+      "file": "09748b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09749a",
+      "file": "09749a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09749b",
+      "file": "09749b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09750",
+      "file": "09750.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09751",
+      "file": "09751.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09752",
+      "file": "09752.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09753",
+      "file": "09753.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09754",
+      "file": "09754.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09755",
+      "file": "09755.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09756",
+      "file": "09756.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09757",
+      "file": "09757.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09758",
+      "file": "09758.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09759",
+      "file": "09759.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09760",
+      "file": "09760.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09761",
+      "file": "09761.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09762",
+      "file": "09762.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09763",
+      "file": "09763.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09764",
+      "file": "09764.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09765",
+      "file": "09765.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09766",
+      "file": "09766.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09767",
+      "file": "09767.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09768a",
+      "file": "09768a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09768b",
+      "file": "09768b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09769a",
+      "file": "09769a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09769b",
+      "file": "09769b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09770a",
+      "file": "09770a.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": "09770b",
+      "file": "09770b.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "campaign-flow-trauma.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "extend-enemy-story-face-flip.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "extend-scarlet-key-charges.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "key-taken-offscreen.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "map-advance-time.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "new-enemy-movement-restriction.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "new-scenario-group-clue-cost.json",
+      "status": "deferred",
+      "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。"
+    },
+    {
+      "code": null,
+      "file": "remaining.json",
+      "status": "unknown",
+      "reason": null
+    }
+  ],
+  "blockedRequests": []
+}

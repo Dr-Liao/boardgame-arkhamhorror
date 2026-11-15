@@ -4,7 +4,7 @@ import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves, 
 import { isAutomaticReward, EFFECTS } from '../src/cards/card-effects.js'
 import { investigatorRule } from '../src/cards/investigator-abilities.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
-import { requestChoice, resolveTransaction, setAutoReactionHosted } from '../src/engine/resolution.js'
+import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan, reactionAutoPlan, setReactionState } from '../web/reaction-preferences.js'
 import { investigatorHoldsCard } from '../web/card-interactions.js'
 import { fixture, move } from './core-fixture.mjs'
@@ -312,18 +312,15 @@ test('安全口径的纯收益反应会默认 auto（新增卡也不能漏）',(
 })
 
 test('托管模式下旧式反应窗口带 autoTriggerOptionId/cardCode，且不默认 auto',()=>{
-  setAutoReactionHosted(true)
-  try{
-    const st={revision:0,currentSeat:0,phase:'investigation',humanSeats:[0],cards:{}}
-    resolveTransaction(st,0,{action:'test'},draft=>requestChoice(draft,{
-      kind:'reaction',source:'rolandClue',seat:0,canSkip:true,
-      autoTriggerOptionId:'trigger',cardCode:'01001',
-      options:[{id:'skip'},{id:'trigger'}],
-    }))
-    assert.equal(st.pendingChoice.autoTriggerOptionId,'trigger')
-    assert.equal(st.pendingChoice.cardCode,'01001')
-    assert.equal(st.pendingChoice.autoOptionId,undefined,'罗兰不是默认自动奖励')
-  }finally{setAutoReactionHosted(false)}
+  const st={revision:0,currentSeat:0,phase:'investigation',humanSeats:[0],cards:{},autoReactionHosted:true}
+  resolveTransaction(st,0,{action:'test'},draft=>requestChoice(draft,{
+    kind:'reaction',source:'rolandClue',seat:0,canSkip:true,
+    autoTriggerOptionId:'trigger',cardCode:'01001',
+    options:[{id:'skip'},{id:'trigger'}],
+  }))
+  assert.equal(st.pendingChoice.autoTriggerOptionId,'trigger')
+  assert.equal(st.pendingChoice.cardCode,'01001')
+  assert.equal(st.pendingChoice.autoOptionId,undefined,'罗兰不是默认自动奖励')
 })
 
 test('「如同手牌」通道快速事件：关闭=整窗跳过，auto 档不代打（2026-10-28）',()=>{

@@ -5,6 +5,7 @@ import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed, DRAFT_P
 import { validateDeckRules, upgradeQuote, deckRules, draftCardLimit } from '../deck/deck-rules.js'
 import { registeredEntry } from '../engine/ability.js'
 import { partScopedView } from './campaign-parts.js'
+import { spendPurchaseDiscount, temporaryPurchaseDiscount } from './purchase-discount.js'
 
 // P10/P8 全量开放后：关间升级候选 = 全部已验收、可入牌组的玩家卡（含核心包仅升级卡）。
 // 跨循环可见性只由开局设置的「卡牌范围」（cardPoolScope）在 filterCardCodes(context) 一层统一收窄；
@@ -259,6 +260,9 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
       }
     }
   }
+  const purchaseDiscount = temporaryPurchaseDiscount(record, added, removed, pricedQuote.cost)
+  if (purchaseDiscount) pricedQuote = { ...pricedQuote, cost: pricedQuote.cost - purchaseDiscount, purchaseDiscount,
+    explanation: `${pricedQuote.explanation}（临时减免 ${purchaseDiscount} 经验）` }
   if (pricedQuote.cost > record.xp) return { ok: false, reason: `经验不足：这次替换需要 ${pricedQuote.cost} XP，当前只有 ${record.xp} XP。` }
   return { ok: true, quote: pricedQuote, adaptable }
 }
@@ -332,6 +336,10 @@ export function purchaseCard(campaign, seat, addedCode, removedCode, context = n
   record.purchases.push(purchase)
   // 升级减免的已用次数（每个关间前 N 次，refreshArcaneResearch 在关间入口重置）。
   if (option.upgradeDiscount) record.upgradeDiscountUsed = permanentPricingUsed(record) + 1
+  if (option.purchaseDiscount) {
+    spendPurchaseDiscount(record)
+    purchase.purchaseDiscount = option.purchaseDiscount
+  }
   // 「奥术研究」：优惠只对下一张法术升级生效一次。
   if (record.arcaneResearchDiscount
     && (ALL_CARDS[addedCode]?.traits || []).some(trait => String(trait).toLowerCase() === 'spell')) {

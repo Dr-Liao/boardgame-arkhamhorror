@@ -10,7 +10,7 @@
   "docs": "docs/arkham-content-migration.md",
   "scope": {
     "path": "audit/eote-scope.json",
-    "sha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9"
+    "sha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370"
   },
   "baseline": {
     "path": "audit/eote-baseline.json",
@@ -410,10 +410,10 @@
     "status": "pending",
     "summary": {
       "total": 403,
-      "verified": 260,
-      "missing": 141,
-      "blocked": 0,
-      "simplified": 0,
+      "verified": 232,
+      "missing": 118,
+      "blocked": 23,
+      "simplified": 28,
       "campaign": 266,
       "investigators": 22,
       "player": 115
@@ -421,7 +421,7 @@
     "checks": {
       "ledger": false,
       "missing": false,
-      "blocked": true,
+      "blocked": false,
       "partitions": true
     }
   },
@@ -1454,12 +1454,183 @@
     "deferred": 12,
     "escape": 0,
     "requests": {
-      "total": 0,
-      "pending": 0,
+      "total": 68,
+      "pending": 33,
       "done": 0,
-      "rejected": 0,
-      "byStatus": {},
-      "pendingItems": []
+      "rejected": 22,
+      "byStatus": {
+        "rejected": 22,
+        "implemented": 11,
+        "partial": 2,
+        "pending": 33
+      },
+      "pendingItems": [
+        {
+          "id": "p7-shared-08503",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "locationRule.shroudWhenAttached"
+        },
+        {
+          "id": "p7-shared-08506",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "locationRule.entryGroupCluesSurcharge"
+        },
+        {
+          "id": "p7-shared-08508",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "window.locationAttachmentEntered"
+        },
+        {
+          "id": "p7-shared-08515",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "window.enemyDefeatedAttack"
+        },
+        {
+          "id": "p7-shared-08517",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation"
+        },
+        {
+          "id": "p7-08544",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08546",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08560",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-08587",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": null
+        },
+        {
+          "id": "p7-shared-08649",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "locationRule.backFaceEntryBan"
+        },
+        {
+          "id": "p7-08673",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "mistPylonAsEnemy"
+        },
+        {
+          "id": "p7-08679",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "setAsideEnemyCopiesCounter"
+        },
+        {
+          "id": "p7-08681",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "doomPlacementReplacement"
+        },
+        {
+          "id": "p7-08682",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "locationLeaveTest"
+        },
+        {
+          "id": "p7-shared-08691",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.tekeliShuffleReplacement"
+        },
+        {
+          "id": "p7-shared-08692",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.locationAttachmentRestrictions"
+        },
+        {
+          "id": "p7-shared-08693",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.attachmentSkillPenalty"
+        },
+        {
+          "id": "p7-shared-08694",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.attachmentTurnEndDirectDamage"
+        },
+        {
+          "id": "p7-shared-08697",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "api.buffEnemyUntilEndOfRound"
+        },
+        {
+          "id": "p7-shared-08699",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.attachmentMoveTest"
+        },
+        {
+          "id": "p7-shared-08702",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "enemyAttachmentDifficultyBonus"
+        },
+        {
+          "id": "p7-shared-08703",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.tekeliliDoubleResolution"
+        },
+        {
+          "id": "p7-shared-08704",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "api.resolveWeaknessByCode"
+        },
+        {
+          "id": "p7-shared-08706",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.supportAttachmentForced"
+        },
+        {
+          "id": "p7-shared-08707",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.attachmentTurnEndDirectHorror"
+        },
+        {
+          "id": "p7-shared-08708",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "enemyRule.locationMoveSurcharge"
+        },
+        {
+          "id": "p7-shared-08710",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "api.resolveWeaknessByCode"
+        },
+        {
+          "id": "p7-shared-08712",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.attachmentClueDiscoveryForced"
+        },
+        {
+          "id": "p7-shared-08715",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "window.weaknessResolved"
+        },
+        {
+          "id": "p7-shared-08719",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "enemyRule.cannotAttackThisRound"
+        },
+        {
+          "id": "p7-shared-08721",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "treacheryRule.blankTextUntilEndOfTurn"
+        },
+        {
+          "id": "p7-shared-08727",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "api.loseActionNextTurn"
+        },
+        {
+          "id": "p7-shared-08731",
+          "file": "audit/eote-primitive-requests.json",
+          "primitive": "searchTopToScenarioDeckBottom"
+        }
+      ]
     },
     "playerQueue": {
       "total": 35,
@@ -1470,7 +1641,7 @@
     "checks": {
       "plan": true,
       "newDone": true,
-      "requestsAccounted": false,
+      "requestsAccounted": true,
       "playerQueueAccounted": true,
       "pendingDisclosed": true
     }
@@ -1636,7 +1807,7 @@
       ],
       "screenshots": {
         "total": 104,
-        "verified": 0
+        "verified": 104
       }
     },
     "checks": {
@@ -1935,7 +2106,7 @@
             "saveReplay": true,
             "browserAcceptance": true
           },
-          "moduleSha256": "8f6666a5f25341eb64df9ba1c5c733833a9c11b348b77fe09a4c916c9f0ce0aa",
+          "moduleSha256": "572def2fd2d1b82cc549d9058f97d19bc39c67868c6892c5fed2e66a493349a6",
           "sources": [
             {
               "lang": "en",
@@ -2000,7 +2171,7 @@
       ],
       "ledger": {
         "path": "audit/eote-scenario-acceptance.json",
-        "sha256": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2"
+        "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
       },
       "browser": {
         "path": "audit/eote-scenarios-browser.json",
@@ -2898,7 +3069,7 @@
   "releaseAcceptance": {
     "status": "pending",
     "equivalenceCertified": false,
-    "equivalenceNote": "行为等价未认证：全卡账本 260 verified / 0 simplified / 141 missing / 0 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
+    "equivalenceNote": "行为等价未认证：全卡账本 232 verified / 28 simplified / 118 missing / 23 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
     "independentAudit": {
       "report": "docs/edgeOfTheEarth/eote-scan/全量扫描报告.md",
       "sections": [
@@ -2913,7 +3084,7 @@
     "required": {
       "launch": true,
       "chapters": true,
-      "scenarios": false,
+      "scenarios": true,
       "allCards": false,
       "investigators": true,
       "playerCards": true,
@@ -2925,9 +3096,423 @@
       "p7Browser": true,
       "p8Browser": true,
       "releaseLedger": false,
-      "primitivesDisclosed": false
+      "primitivesDisclosed": true
     },
     "deferred": [
+      {
+        "id": "primitiveRequest:p7-shared-08503",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "locationRule.shroudWhenAttached",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08506",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "locationRule.entryGroupCluesSurcharge",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08508",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "window.locationAttachmentEntered",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08515",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "window.enemyDefeatedAttack",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08517",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08544",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "议程「将要推进时」的 scenarioBehavior 钩子（engine 议程推进读点）",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08546",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "幕目标/撤退行动的 scenarioBehavior 钩子（engine 幕推进与 scenarioAction 读点）",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08560",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "fatalMirage 地点「强制/额外费用」规则的通用 locationRule 读点",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08587",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": null,
+        "need": "伙伴（storyAsset 遭遇卡）的 free/reaction 能力在叙事期的可用入口",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08649",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "locationRule.backFaceEntryBan",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08673",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "mistPylonAsEnemy",
+        "need": "「每座已揭示的迷雾高塔可被当作敌人攻击：fight=帷幕、health=线索值；生命为 0 即坍塌（留在场上）」。当前用 scenarioAction + 战斗检定 + P2-D damageTower 原语近似，战斗管线不生成敌人实体，因此敌人阶段/交战/攻击反应卡无法作用于高塔。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08679",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "setAsideEnemyCopiesCounter",
+        "need": "「无名的疯狂」共 15 份：放一边数量、在场数量、以及「成功攻击/规避后按成功差值重整最近一份已重整副本」需要引擎提供「放一边的同名敌人副本计数」与「按成功差值消耗计数」的通用原语。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08681",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "doomPlacementReplacement",
+        "need": "「当 1+ 毁灭将被放置时，如果还有放一边的无名的疯狂：改为生成 1 份」。需要引擎在放毁灭前调用 behavior 的替换钩子（类似 crisis 的 doomPlacementReplacement），当前只能放毁灭后提示。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-08682",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "locationLeaveTest",
+        "need": "泰坦坡道「离开的额外费用：检定 [agility] (X)，失败取消移动；连接地点任意调查员可花 1 线索自动成功」。engine 已有 scenarioBehavior.locationLeaveTest 读点，但需要确认返回契约（skill/difficulty/spendClueAutoSucceed）与「失败取消移动」的接线；当前条目声明数据、behavior 返回契约形状，未在真实移动管线验证。",
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08691",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.tekeliShuffleReplacement",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08692",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.locationAttachmentRestrictions",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08693",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentSkillPenalty",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08694",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentTurnEndDirectDamage",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08697",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "api.buffEnemyUntilEndOfRound",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08699",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentMoveTest",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08702",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "enemyAttachmentDifficultyBonus",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08703",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.tekeliliDoubleResolution",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08704",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "api.resolveWeaknessByCode",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08706",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.supportAttachmentForced",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08707",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentTurnEndDirectHorror",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08708",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "enemyRule.locationMoveSurcharge",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08710",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "api.resolveWeaknessByCode",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08712",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.attachmentClueDiscoveryForced",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08715",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "window.weaknessResolved",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08719",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "enemyRule.cannotAttackThisRound",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08721",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "treacheryRule.blankTextUntilEndOfTurn",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08727",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "api.loseActionNextTurn",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "primitiveRequest:p7-shared-08731",
+        "file": "audit/eote-primitive-requests.json",
+        "status": "pending",
+        "primitive": "searchTopToScenarioDeckBottom",
+        "need": null,
+        "reason": "已披露近似：原语未实现，相关卡片以现有原语/近似实现（见请求 JSON 的 need/approximation 与对应卡条目头注释）；不宣称规则等价，P8 不阻塞发布但登记为后续硬化候选。",
+        "evidence": [
+          "audit/eote-primitive-requests.json",
+          "audit/eote-player-queue.json"
+        ]
+      },
+      {
+        "id": "allCardSimplified",
+        "count": 28,
+        "status": "simplified",
+        "reason": "已披露近似：全卡账本有 28 条 simplified（行为按现有原语近似实现，逐条见全卡账本 entries），不宣称规则等价。",
+        "evidence": [
+          "audit/eote-all-card-acceptance.json"
+        ]
+      },
+      {
+        "id": "pendingBehaviorRequests",
+        "count": 33,
+        "status": "pending",
+        "reason": "已披露近似：全卡账本登记 33 张卡等待行为原语（p7-08544、p7-08546、p7-08560、p7-08587、p7-08673、p7-08679、p7-08681、p7-08682、p7-shared-08503、p7-shared-08506、p7-shared-08508、p7-shared-08515、p7-shared-08517、p7-shared-08649、p7-shared-08691、p7-shared-08692、p7-shared-08693、p7-shared-08694、p7-shared-08697、p7-shared-08699、p7-shared-08702、p7-shared-08703、p7-shared-08704、p7-shared-08706、p7-shared-08707、p7-shared-08708、p7-shared-08710、p7-shared-08712、p7-shared-08715、p7-shared-08719、p7-shared-08721、p7-shared-08727、p7-shared-08731）——对应请求逐条列在本 deferred 的 primitiveRequest:* 中。",
+        "evidence": [
+          "audit/eote-all-card-acceptance.json"
+        ]
+      },
       {
         "id": "playerQueueRejected",
         "count": 22,
@@ -2947,41 +3532,10 @@
         ]
       },
       {
-        "id": "gate:primitivesDisclosed",
-        "reason": "发布门禁未通过：primitivesDisclosed",
-        "evidence": [
-          "tools/audit-eote.mjs"
-        ]
-      },
-      {
         "id": "gate:releaseAcceptance",
         "reason": "发布门禁未通过：releaseAcceptance",
         "evidence": [
           "tools/audit-eote.mjs"
-        ]
-      },
-      {
-        "id": "gate:confirmations",
-        "reason": "发布门禁未通过：confirmations",
-        "evidence": [
-          "tools/audit-eote.mjs"
-        ]
-      },
-      {
-        "id": "confirmation:scenarios",
-        "reason": "迁移确认未 verified：theHeartOfMadnessPart1",
-        "evidence": [
-          "content/migration-confirmation.js",
-          "audit/eote-scenario-acceptance.json",
-          "audit/eote-scenarios-browser.json",
-          "tests/eote-scenario-iceAndDeathPart1.test.mjs",
-          "tests/eote-scenario-iceAndDeathPart2.test.mjs",
-          "tests/eote-scenario-iceAndDeathPart3.test.mjs",
-          "tests/eote-scenario-fatalMirage.test.mjs",
-          "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
-          "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-          "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
-          "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
         ]
       }
     ]
@@ -2999,13 +3553,13 @@
     "keywords": true,
     "rulebook": true,
     "storyGuides": true,
-    "primitivesDisclosed": false,
+    "primitivesDisclosed": true,
     "nodeAcceptance": true,
     "regression": true,
     "p7ScenarioBrowser": true,
     "p8ReleaseBrowser": true,
     "releaseAcceptance": false,
-    "confirmations": false,
+    "confirmations": true,
     "pass": false
   },
   "remaining": [
@@ -3017,60 +3571,30 @@
       ]
     },
     {
-      "id": "gate:primitivesDisclosed",
-      "reason": "发布门禁未通过：primitivesDisclosed",
-      "evidence": [
-        "tools/audit-eote.mjs"
-      ]
-    },
-    {
       "id": "gate:releaseAcceptance",
       "reason": "发布门禁未通过：releaseAcceptance",
       "evidence": [
         "tools/audit-eote.mjs"
       ]
-    },
-    {
-      "id": "gate:confirmations",
-      "reason": "发布门禁未通过：confirmations",
-      "evidence": [
-        "tools/audit-eote.mjs"
-      ]
-    },
-    {
-      "id": "confirmation:scenarios",
-      "reason": "迁移确认未 verified：theHeartOfMadnessPart1",
-      "evidence": [
-        "content/migration-confirmation.js",
-        "audit/eote-scenario-acceptance.json",
-        "audit/eote-scenarios-browser.json",
-        "tests/eote-scenario-iceAndDeathPart1.test.mjs",
-        "tests/eote-scenario-iceAndDeathPart2.test.mjs",
-        "tests/eote-scenario-iceAndDeathPart3.test.mjs",
-        "tests/eote-scenario-fatalMirage.test.mjs",
-        "tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
-        "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "tests/eote-scenario-theHeartOfMadnessPart1.test.mjs",
-        "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs"
-      ]
     }
   ],
   "evidence": {
     "files": {
-      "audit/eote-all-card-acceptance.json": "817a71829fce9ae473b0e31ef6d43a34e0cb622aa5bc30a13531cb2e0e24002d",
+      "audit/eote-all-card-acceptance.json": "02510e45e6f09004f943b43d3dc41335f744cd0bc7875e274156d2ade69e1006",
       "audit/eote-interactions.json": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202",
       "audit/eote-investigators.json": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6",
       "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
       "audit/eote-player-acceptance.json": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac",
       "audit/eote-player-queue.json": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b",
       "audit/eote-primitive-plan.json": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9",
+      "audit/eote-primitive-requests.json": "5d32f25e2e3c076e0da3db5d0135354c88d5fdd4fcf0e046b75f6239cfe21c3d",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "caa257625b2b7c75a20b30bc17a778089cffcb8c53c8093217255e86127209f6",
+      "audit/eote-release-acceptance.json": "ec1cb6294548df96b77c3bb3ecace055267f5ded9ffe20974f8153478b066b8d",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
       "audit/eote-rules.json": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047",
       "audit/eote-scenario-acceptance.json": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad",
       "audit/eote-scenarios-browser.json": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567",
-      "audit/eote-scope.json": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
+      "audit/eote-scope.json": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
       "content/campaigns/edgeOfTheEarth/story-text.js": "8df0f285fb61268b885033f501f5613afd08dbdec80a52d22ceb84f56114538d",
       "web/scenario-guides/cityOfTheElderThings.json": "f8e7f343c01006d7d577d3cd7066008dbbebd830609c495cf763ca8b4e786de0",
       "web/scenario-guides/fatalMirage.json": "3b3f9d5939cbd2ee1cffc882d0c0e0ee1f27d4372402cb75aca72b4c32c12816",
@@ -3086,7 +3610,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "dc8c8d7ce739fa7990268fcd4b85a344295432f132ac328197c6a692afe8e339"
+      "sha256": "f3ac7ede6293a0ac8c30ad3a3c1ccb5f69017d5286d49ed02e03ba9e9d892abe"
     },
     {
       "path": "content/registry.js",
@@ -3114,7 +3638,7 @@
     },
     {
       "path": "audit/eote-scope.json",
-      "sha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9"
+      "sha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370"
     },
     {
       "path": "audit/eote-scenario-acceptance.json",
@@ -3122,7 +3646,7 @@
     },
     {
       "path": "audit/eote-all-card-acceptance.json",
-      "sha256": "817a71829fce9ae473b0e31ef6d43a34e0cb622aa5bc30a13531cb2e0e24002d"
+      "sha256": "02510e45e6f09004f943b43d3dc41335f744cd0bc7875e274156d2ade69e1006"
     },
     {
       "path": "audit/eote-investigators.json",
@@ -3166,7 +3690,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "caa257625b2b7c75a20b30bc17a778089cffcb8c53c8093217255e86127209f6"
+      "sha256": "ec1cb6294548df96b77c3bb3ecace055267f5ded9ffe20974f8153478b066b8d"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",
@@ -3182,19 +3706,23 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "ec503cc56167d5015c93ff298b83bc2c3341a524c445bec82c6cc1986fa1924d"
+      "sha256": "1f0d2d15776cba1023c4efb00c537c3d61f02ce318706dfa6c98262d17ce8279"
     },
     {
       "path": "tools/audit-eote.mjs",
-      "sha256": "d884aaf8d240e4319e552e74a0f7e02e7bc9ccd54c4121b6fec0035aea20b52b"
+      "sha256": "82202a6d327d04f02432e7302b59a39cc89fcdb890999c9767702c525b7c65a1"
     },
     {
       "path": "tools/audit-eote-release.mjs",
-      "sha256": "b22e8b5499e01e3ec6be8dac524bd508fb776aab2116edd19371fc0955f23b64"
+      "sha256": "e236ba454c43136bb3eb387889080277a3a9edb0cc42a11c2e49637bdc03cc96"
     },
     {
       "path": "tests/eote-migration-ledger.test.mjs",
-      "sha256": "ac5ca0501eb3aaa24552a594883930223e07c8a0e4470f5c9387054989b50fd6"
+      "sha256": "9e9eeef47ea06058b610987aff54bff309f547f30cd2155422955cf601bf528a"
+    },
+    {
+      "path": "audit/eote-primitive-requests.json",
+      "sha256": "5d32f25e2e3c076e0da3db5d0135354c88d5fdd4fcf0e046b75f6239cfe21c3d"
     }
   ],
   "testFiles": [

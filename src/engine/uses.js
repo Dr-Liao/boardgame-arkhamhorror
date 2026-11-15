@@ -18,3 +18,8 @@ export function afterUsesSpent(state, inv, asset, amount, events, deps) {
   deps.reactionWindow(state, 'spellChargesSpent', { when: 'spellChargesSpent', seat: inv.seat,
     asset, amount, location: inv.location, windowInstance: `uses:${state.usesWindowSerial}` }, events, { allowNested: true })
 }
+
+export function afterSuppliesSubstituted(state, inv, target, provider, amount, events, deps) {
+  deps.reactionWindow(state, 'sharedSuppliesSpent', { when: 'sharedSuppliesSpent', seat: inv.seat,
+    asset: provider, target, amount, location: inv.location }, events, { allowNested: true })
+}

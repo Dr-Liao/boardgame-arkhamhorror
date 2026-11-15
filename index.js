@@ -22,7 +22,6 @@ import { contentRegistry } from './content/registered.js'
 import { META } from './src/cards/cards-data.js'
 import { stateCompatibilityError } from './src/engine/rules-state.js'
 import { migrateState } from './src/engine/save-migration.js'
-import { setAutoReactionHosted } from './src/engine/resolution.js'
 import { campaignListForUi } from './content/registry.js'
 import { laneBalance } from './src/campaign/campaign-modes.js'
 // 双线开闸是逐战役的：P5 只验证机制（演示/夹具可置 dualLineGate: 'open'），
@@ -491,8 +490,12 @@ export default {
   staticTables,
 
   // —— 规则 ——
-  createState(settings, players) {
-    return createGameState({ ...settings, campaignHub: settings.legacyAutoStart !== true }, players)
+  createState(settings, players, context) {
+    return createGameState({
+      ...settings,
+      campaignHub: settings.legacyAutoStart !== true,
+      autoReactionHosted: context?.autoReactionHosted,
+    }, players)
   },
   validateMove: hostedValidateMove,
   applyMove: hostedApplyMove,
@@ -503,10 +506,6 @@ export default {
   // commitMove 事务（validateMove/applyMove/revision/actionLog/事件/快照与普通行动一致）。
   isDebugMove(move) { return move?.action === 'debug' },
   debugCommand(session, seat, command) { return buildDebugCommand(session, seat, command) },
-
-  // 大厅加载 Mod 时调用一次：从此自动奖励窗口对真人可见，由大厅代答。
-  // 纯引擎消费者（单测 / replay-fixtures / 审计工具）不调用，保持旧的直接领取。
-  enableAutoReactionHosted() { setAutoReactionHosted(true) },
 
   // 三态自动结算（大厅可选钩子）：发布前把该座位的待决窗口代答成 trigger / skip。
   // states 只含该座位「动过的卡」；没有覆盖时按 autoByDefault 取内置默认：

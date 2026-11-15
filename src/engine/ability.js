@@ -1,4 +1,6 @@
 import { validateKeyCost } from './key-cost.js'
+import { normalizePatrolTarget } from './enemy-keyword-movement.js'
+import { validateDamageSourceRule } from './effect-provenance.js'
 // 诡镇奇谈：卡牌版 · 声明式能力注册表（Ability Registry）
 //
 // P0-A 的核心。此前「一张卡能做什么」只有两个去处：
@@ -93,7 +95,7 @@ const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'd
   'returnClue', 'damage', 'doomOnSource', 'drawEncounter', 'groupClues'])
 const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost',
   'limit', 'fromHand', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
-  'maximumInvestigatorDamage',
+  'maximumInvestigatorDamage', 'requiresEncounterDeck',
   // Phase 5（5c-37）：支援能力上的计数器上限（「时间借取」最多 3 声滴答）；读点在 canAffordAbility。
   'maxClicks',
   'resolve', 'effect', 'skill', 'weakness', 'entersPlay', 'leavesPlay', 'additionalTokenCost',
@@ -556,6 +558,10 @@ export function normalizeDescriptor(raw, { code, index }) {
     silent: raw.silent === true,
     duringOwnSkillTest: raw.duringOwnSkillTest === true,
     requiresNoClues: raw.requiresNoClues === true,
+    ...(raw.requiresEncounterDeck != null ? { requiresEncounterDeck: (() => {
+      if (typeof raw.requiresEncounterDeck !== 'boolean') throw new TypeError('无效遭遇牌库要求')
+      return raw.requiresEncounterDeck
+    })() } : {}),
     maximumInvestigatorDamage: raw.maximumInvestigatorDamage ?? null,
     // Phase 5（5c-37）：支援能力的计数器上限（「时间借取」最多 3 声滴答）。
     maxClicks: raw.maxClicks ?? null,
@@ -692,6 +698,25 @@ export function registerCardAbilities(entries) {
     }
     if (entry.locationRule?.objective != null && typeof entry.locationRule.objective !== 'function') throw new TypeError('Invalid printed location objective')
     if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
+    if (entry.enemyRule?.patrolTarget != null) normalizePatrolTarget(entry.enemyRule.patrolTarget)
+    if (entry.enemyRule?.elusive != null && typeof entry.enemyRule.elusive !== 'boolean') throw new TypeError('无效逃逸声明')
+    if (entry.enemyRule?.allowedDamageSources != null) validateDamageSourceRule(entry.enemyRule.allowedDamageSources)
+    if (entry.enemyRule?.discardToScenarioDeck != null && (typeof entry.enemyRule.discardToScenarioDeck !== 'string'
+      || !/^[a-z][a-zA-Z0-9]{0,63}$/.test(entry.enemyRule.discardToScenarioDeck)
+      || ['constructor', 'prototype'].includes(entry.enemyRule.discardToScenarioDeck))) throw new TypeError('无效敌人弃牌去向')
+    if (entry.enemyRule?.ignoreDefenses != null && (!Array.isArray(entry.enemyRule.ignoreDefenses)
+      || entry.enemyRule.ignoreDefenses.some(type => !['barrier', 'decoy', 'trap'].includes(type)))) throw new TypeError('无效工事豁免')
+    if (entry.assetRule?.parleyEventsFromDiscard != null && typeof entry.assetRule.parleyEventsFromDiscard !== 'boolean') throw new TypeError('无效弃牌堆谈判通道')
+    if (entry.assetRule?.shareSuppliesAs != null && (!Array.isArray(entry.assetRule.shareSuppliesAs)
+      || !entry.assetRule.shareSuppliesAs.length || new Set(entry.assetRule.shareSuppliesAs).size !== entry.assetRule.shareSuppliesAs.length
+      || entry.assetRule.shareSuppliesAs.some(type => !['supply', 'ammo'].includes(type)))) throw new TypeError('无效补给代付声明')
+    for (const rule of [entry.assetRule?.controlledTraitLimit, entry.investigator?.firstAssetOfRound]) {
+      if (rule == null) continue
+      assertKnownKeys(rule, new Set(['trait', 'amount']), '支援特质声明')
+      if (typeof rule.trait !== 'string' || !rule.trait.trim() || !Number.isSafeInteger(rule.amount) || rule.amount < 1) {
+        throw new TypeError('无效支援特质声明')
+      }
+    }
     // 沉睡：读点是 effect-provenance 的 enemyEffectAllowed（伤害/交战/攻击/躲避一律先问它）。
     if(entry.enemyRule?.slumbering!=null && typeof entry.enemyRule.slumbering!=='boolean')throw new TypeError('Invalid slumbering rule')
     // 连续条件的冷漠：读点是 enemy-aloof 的 enemyIsAloof（07086「有调查员没有手牌时失去冷漠」）。

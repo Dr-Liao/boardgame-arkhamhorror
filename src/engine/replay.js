@@ -109,6 +109,7 @@ export function captureReplayLog(state) {
       rulesMode: setup.rulesMode ?? state.rulesMode ?? 'simplified',
       seed: state.seed ?? null,
       campaignHub: Boolean(state.hubFlow),
+      ...(typeof state.autoReactionHosted === 'boolean' ? { autoReactionHosted: state.autoReactionHosted } : {}),
       aiStoryAwareness: state.aiStoryAwareness === true,
       // 游戏高级设置：卡牌范围会影响 AI/自定义牌组与可选调查员，必须随建局参数重放；
       // 回档开关只影响关卡检查点分支，同样记进日志，重放后的状态才和存档一致。

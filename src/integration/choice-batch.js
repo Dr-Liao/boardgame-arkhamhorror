@@ -5,6 +5,7 @@
 // pendingChoice/legalMoves/investigators。这里按座位找到所属 lane，在 **lane 的克隆**
 // 上逐步 applyMove，成功后才写回容器（原子），并把事件座位换回房间座位。
 import { applyMove, legalMoves } from '../engine/engine.js'
+import { finishParallelLaneMove } from './parallel-runtime.js'
 
 const LANES = ['A', 'B']
 
@@ -16,16 +17,6 @@ function parallelContext(session, seat) {
   const roomSeats = laneState.laneRuntime?.roomSeats || []
   const laneSeat = roomSeats.indexOf(seat)
   return laneSeat >= 0 ? { container, lane, laneState, laneSeat, roomSeats } : null
-}
-
-function mapLaneEvents(events, roomSeats, lane) {
-  return (events || []).map(event => {
-    const copy = { ...event }
-    if (Number.isInteger(copy.seat)) copy.seat = roomSeats[copy.seat] ?? copy.seat
-    if (Number.isInteger(copy.privateSeat)) copy.privateSeat = roomSeats[copy.privateSeat] ?? copy.privateSeat
-    copy.lane = lane
-    return copy
-  })
 }
 
 function commitParallelBatch(session, seat, batch, { lane, laneState, laneSeat, roomSeats }, moveError) {
@@ -67,16 +58,20 @@ function commitParallelBatch(session, seat, batch, { lane, laneState, laneSeat, 
     if (!finish) throw moveError('当前无法确认选择')
     collected.push(...(applyMove(draft, laneSeat, finish) || []))
   }
-  // 写回容器：只替换本线运行时，容器版本 +1；事件换回房间座位并补 seq。
-  const before = {
-    ...session.state,
-    parallel: { ...session.state.parallel, lanes: { ...session.state.parallel.lanes, [lane]: laneState } },
-  }
   const container = session.state
-  container.parallel.lanes[lane] = draft
-  container.revision = (before.revision ?? 0) + 1
-  const events = mapLaneEvents(collected, roomSeats, lane)
+  const before = { ...container }
+  const next = {
+    ...container,
+    parallel: {
+      ...container.parallel,
+      lanes: { ...container.parallel.lanes, [lane]: draft },
+      awaiting: { ...container.parallel.awaiting },
+      sealed: { ...container.parallel.sealed },
+    },
+  }
+  const events = finishParallelLaneMove(next, lane, collected, roomSeats)
     .map((event, index) => ({ ...event, seq: session.events.length + index }))
+  Object.assign(container, next)
   session.events = session.events.concat(events)
   return {
     before, after: container, events, seat,

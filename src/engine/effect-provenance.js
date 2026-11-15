@@ -95,6 +95,22 @@ export function effectSourceIsPlayer(state) {
   return currentEffectSource(state)?.kind === 'playerCard'
 }
 
+export function validateDamageSourceRule(rule) {
+  if (!rule || typeof rule !== 'object' || Array.isArray(rule) || Object.keys(rule).some(key => !['traits', 'encounter'].includes(key))
+    || rule.encounter != null && typeof rule.encounter !== 'boolean'
+    || rule.traits != null && (!Array.isArray(rule.traits) || rule.traits.some(trait => typeof trait !== 'string' || !trait))
+    || !rule.encounter && !rule.traits?.length) throw new TypeError('无效伤害来源限制')
+}
+
+export function damageSourceMatches(state, rule, source, definitionForSource) {
+  if (!rule) return true
+  const active = currentEffectSource(state)
+  const definition = definitionForSource(state, source ?? active?.code ?? null)
+  const kind = definition ? effectSourceKindOfType(definition.type) : active?.kind
+  return (rule.encounter === true && kind === 'encounterCard') || Boolean(definition?.traits?.some(trait =>
+    rule.traits?.some(allowed => allowed.toLowerCase() === trait.toLowerCase())))
+}
+
 // ---------------------------------------------------------------- 章节钩子
 
 const behaviorProxies = new WeakMap()

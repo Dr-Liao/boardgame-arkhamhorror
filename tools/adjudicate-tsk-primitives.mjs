@@ -19,6 +19,7 @@ const MOD = fileURLToPath(new URL('../', import.meta.url))
 const RUN = fileURLToPath(new URL('../../../artifacts/migration/tsk/', import.meta.url))
 const REQUEST_DIR = join(RUN, 'primitive-requests')
 const LEDGER = join(RUN, 'primitive-adjudication.json')
+const RELEASE_LEDGER = fileURLToPath(new URL('../audit/tsk-primitive-adjudication.json', import.meta.url))
 const REVIEW_DATE = '2026-11-12'
 const DECISION = 'accepted-approximation-for-P8'
 const NEXT_PHASE = 'P9'
@@ -137,6 +138,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const ledger = buildAdjudication()
   if (process.argv.includes('--write')) {
     const final = applyAdjudication(ledger)
+    if (final.summary.requests > 0) writeFileSync(RELEASE_LEDGER, json(final))
     console.log(`tsk primitive adjudication: 已写入（请求 ${final.summary.requests} 份，全部 deferred；非请求文件 ${final.summary.nonRequestFiles}）`)
   } else if (process.argv.includes('--check')) {
     if (!existsSync(LEDGER)) throw new Error('缺少 artifacts/migration/tsk/primitive-adjudication.json：先 --write')

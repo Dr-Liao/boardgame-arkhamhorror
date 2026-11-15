@@ -1,15 +1,26 @@
 import { mechanicState, integer, investigatorAt } from './mechanic-state.js'
 import { randomValue } from './rules-state.js'
+import { registeredEntry } from './ability.js'
 function pile(state, id) {
   if (typeof id !== 'string' || !/^[a-z][A-Za-z0-9]{0,63}$/.test(id) || ['constructor', 'prototype'].includes(id)) throw new TypeError('Invalid scenario deck id')
   const decks = mechanicState(state)?.scenarioDecks
   if (!decks || !Object.hasOwn(decks, id)) throw new RangeError('Scenario deck is not initialized')
   return decks[id]
 }
+export const scenarioDeckPiles = pile
 function shuffled(state, cards) {
   const list = [...cards]
   for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(randomValue(state) * (i + 1)); [list[i], list[j]] = [list[j], list[i]] }
   return list
+}
+
+export function routeEnemyDiscardToScenarioDeck(state, enemy) {
+  const code = enemy.originalCode || enemy.code
+  const name = enemy.discardToScenarioDeck || registeredEntry(code)?.enemyRule?.discardToScenarioDeck
+  const deck = name && mechanicState(state)?.scenarioDecks?.[name]
+  if (!deck) return false
+  deck.discard.push(code)
+  return true
 }
 export function createScenarioDeckApi(state, deps = {}) {
   return {
@@ -22,6 +33,36 @@ export function createScenarioDeckApi(state, deps = {}) {
       return cards.length
     },
     size: id => pile(state, id).deck.length,
+    discard(id, code) {
+      if (typeof code !== 'string' || !code) throw new TypeError('Invalid discard card')
+      pile(state, id).discard.push(code)
+      return true
+    },
+    draw(id, seat, { recycle = false } = {}) {
+      investigatorAt(state, seat)
+      if (typeof recycle !== 'boolean' || typeof deps.drawCard !== 'function') throw new TypeError('Invalid separate encounter draw')
+      const target = pile(state, id)
+      if (!target.deck.length && recycle && target.discard.length) {
+        target.deck = shuffled(state, target.discard)
+        target.discard.length = 0
+      }
+      const code = target.deck.pop()
+      if (!code) return null
+      deps.drawCard(seat, code, { scenarioDeckId: id })
+      return code
+    },
+    drawBottomMatching(id, seat, matches) {
+      investigatorAt(state, seat)
+      if (typeof matches !== 'function' || typeof deps.drawCard !== 'function') throw new TypeError('定向抽牌需要匹配与抽牌管线')
+      const target = pile(state, id)
+      const index = target.deck.findIndex(matches)
+      if (index < 0) return null
+      const [code] = target.deck.splice(index, 1)
+      // The deck bottom stays at index zero. Inspected cards go back on top.
+      target.deck.push(...target.deck.splice(0, index).reverse())
+      deps.drawCard(seat, code, { scenarioDeckId: id })
+      return code
+    },
     cards: id => [...pile(state, id).deck],
     take(id, count = 1) { integer(count); const deck = pile(state, id).deck; return deck.splice(Math.max(0, deck.length - count), count).reverse() },
     put(id, cards, { shuffle = false, top = true } = {}) {

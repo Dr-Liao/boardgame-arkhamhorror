@@ -1,17 +1,16 @@
 // 八循环《绯红密钥》（TSK）P7 战役分片计划结构性验收。
 //
 // 验证 tools/plan-tsk-campaign.mjs 的分片事实：10 章 + 16 共享组无交集覆盖 311 张战役卡、
-// 10 张 scenario 参考卡除外、章专属组与共享组归属正确、worker 输入产物存在且可复算。
+// 10 张 scenario 参考卡除外、章专属组与共享组归属正确、worker 输入可从签入计划复算。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { buildCampaignPlan } from '../tools/plan-tsk-campaign.mjs'
+import { buildCampaignPlan, chapterWorkerInputs } from '../tools/plan-tsk-campaign.mjs'
 import { CARD_PARTITIONS, CHAPTER_ENCOUNTER_GROUPS, ENCOUNTER_GROUPS, chapters } from '../content/campaigns/theScarletKeys/shared.js'
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url))
-const RUN = fileURLToPath(new URL('../../../artifacts/migration/tsk/', import.meta.url))
 const PLAN_FILE = `${ROOT}audit/tsk-campaign-plan.json`
 const plan = buildCampaignPlan()
 
@@ -48,12 +47,15 @@ test('P7 TSK 战役分片：章专属组/共享组卡片归属与卡表 encounte
   }
 })
 
-test('P7 TSK 战役分片：计划产物已落盘且 worker 输入逐章存在', () => {
+test('P7 TSK 战役分片：从签入计划复算各章 worker 输入', () => {
   assert.ok(existsSync(PLAN_FILE), '缺少 audit/tsk-campaign-plan.json（先 node tools/plan-tsk-campaign.mjs --write）')
   const disk = JSON.parse(readFileSync(PLAN_FILE, 'utf8'))
   assert.equal(disk.summary.campaignCards, plan.summary.campaignCards)
   assert.equal(disk.nodes.length, plan.nodes.length)
-  for (const node of plan.nodes.filter(item => item.kind === 'chapter')) {
-    assert.ok(existsSync(`${RUN}workers/campaign-${node.id}.input.json`), `缺少 worker 输入 ${node.id}`)
+  const inputs = chapterWorkerInputs(plan)
+  assert.deepEqual(inputs, chapterWorkerInputs(disk))
+  assert.equal(inputs.length, chapters.length)
+  for (const input of inputs) {
+    assert.deepEqual(Object.keys(input.entryPaths).sort(), [...input.cards].sort(), input.chapterId)
   }
 })

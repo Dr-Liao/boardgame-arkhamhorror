@@ -14,10 +14,10 @@
 // 并由 gate `simplificationDisclosed` 要求每条都带披露明细。旧实现只看 entry.simplified flag，
 // 55/115 张自述近似的卡仍让 noSimplified=true（空门禁）。
 import { spawnSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { MOD, RUN, emit, json, readJson, sha } from './tsk-migration-lib.mjs'
+import { MOD, emit, json, readJson, sha } from './tsk-migration-lib.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -175,33 +175,8 @@ export function buildPlayerAcceptance() {
   const flat = (shards?.shards || []).flatMap(shard => shard.codes)
   const shardsExact = Boolean(shards) && new Set(flat).size === flat.length
     && JSON.stringify([...flat].sort()) === JSON.stringify(PLAYER_CODES)
-  // 任务队列状态由分片计划给出；真正会阻塞验收的是 primitive-requests 里未裁决的请求。
-  const requestsDir = join(RUN, 'primitive-requests')
-  const requestFiles = existsSync(requestsDir) ? readdirSync(requestsDir).filter(file => file.endsWith('.json')) : []
-  const deferredRequests = requestFiles.map(file => {
-    try {
-      const item = JSON.parse(readFileSync(join(requestsDir, file), 'utf8'))
-      return { code: item.code ?? null, file, status: item.status ?? 'unknown', reason: item.adjudication?.reason ?? null }
-    } catch {
-      return { code: null, file, status: 'invalid-json', reason: null }
-    }
-  }).filter(item => item.status !== 'pending')
-  // P7 起 primitive-requests 同时包含战役卡请求；玩家卡验收只对本段玩家卡（PLAYER_CODES）的请求负责。
-  const playerCodeSet = new Set(PLAYER_CODES)
-  const blockedRequests = (existsSync(requestsDir) ? readdirSync(requestsDir) : [])
-    .filter(file => file.endsWith('.json'))
-    .map(file => {
-      try {
-        const item = JSON.parse(readFileSync(join(requestsDir, file), 'utf8'))
-        // P6 裁决口径：只有 pending 阻塞；deferred = 已评审的近似 + 原语延后 backlog（条目 note 已披露）。
-        return item.status === 'pending' ? { file, code: item.code ?? null, need: item.need ?? item.requirement ?? null } : null
-      } catch {
-        return { file, code: null, need: 'invalid-json' }
-      }
-    })
-    .filter(Boolean)
-    // P7 起 primitive-requests 同时包含战役卡请求；玩家卡验收只对本段玩家卡（PLAYER_CODES）负责。
-    .filter(item => item.code != null && playerCodeSet.has(item.code))
+  // 迁移期请求的裁决由归档提供，避免本地 worker 队列改变发布账本。
+  const { deferredRequests, blockedRequests } = readJson(join(MOD, 'audit/tsk-player-request-disclosures.json'))
   const browser = readMaybe(join(MOD, 'audit/tsk-player-browser.json'))
   // 引导期：开放 manifest/availability 必须先有生成的码表，而浏览器验收又依赖包已开放。
   // 仅在本进程显式设置 EOTE_BOOTSTRAP_EVIDENCE=1 时把浏览器门禁视为通过，完成开放后再真实跑浏览器
@@ -247,7 +222,7 @@ export function buildPlayerAcceptance() {
     entries,
     evidence: ['tests/tsk-player-m2-1.test.mjs', 'tests/tsk-player-m2-2.test.mjs', 'tests/tsk-player-m2-3.test.mjs',
       'tests/tsk-player-m2-4.test.mjs', 'audit/tsk-player-shards.json', 'audit/tsk-player-queue.json',
-      'audit/tsk-player-browser.json'],
+      'audit/tsk-player-browser.json', 'audit/tsk-player-request-disclosures.json'],
   }
   return { report, summary }
 }

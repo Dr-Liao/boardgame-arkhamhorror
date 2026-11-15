@@ -17,8 +17,32 @@ function bags(state) {
 }
 
 function assertBagId(id) {
-  if (!id || typeof id !== 'string') throw new Error('tokenBag 需要字符串 id')
+  if (typeof id !== 'string' || !/^[A-Za-z][A-Za-z0-9_-]*$/.test(id) || ['constructor', 'prototype'].includes(id)) throw new Error('无效 tokenBag id')
   return id
+}
+
+export function validateTokenBags(state) {
+  if (state.tokenBags == null) return
+  if (typeof state.tokenBags !== 'object' || Array.isArray(state.tokenBags)) throw new TypeError('无效独立袋存档')
+  for (const [id, bag] of Object.entries(state.tokenBags)) {
+    assertBagId(id)
+    if (!bag || Object.keys(bag).some(key => !['tokens', 'revealed'].includes(key))
+      || ![bag.tokens, bag.revealed].every(zone => Array.isArray(zone) && zone.every(token => typeof token === 'string' && token))) {
+      throw new TypeError('无效独立袋标记')
+    }
+  }
+}
+
+// A revealed physical token may move to a different independent bag or the main chaos bag.
+export function transferRevealedToken(state, from, token, to = null) {
+  assertBagId(from)
+  if (to != null) assertBagId(to)
+  const source = state.tokenBags?.[from]?.revealed
+  const target = to == null ? state.chaosBag : state.tokenBags?.[to]?.tokens
+  const index = source?.indexOf(token) ?? -1
+  if (index < 0 || !Array.isArray(target)) return false
+  target.push(source.splice(index, 1)[0])
+  return true
 }
 
 /** 建袋（重复建会覆盖；返回 token 副本数）。 */

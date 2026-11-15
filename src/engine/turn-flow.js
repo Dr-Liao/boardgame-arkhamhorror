@@ -1,7 +1,8 @@
 import { wouldAddToVictory } from './victory-destination.js'
+import { routeEnemyDiscardToScenarioDeck } from './scenario-decks.js'
 import { discardPlayerCards } from './player-zones.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
-import { roundPlayRules } from './action-history.js'
+import { firstAssetDiscount, roundPlayRules } from './action-history.js'
 import { availableResources } from './resource-bank.js'
 import { playTimingSource } from './play-timing.js'
 import { endAirTurn } from './flood.js'
@@ -253,7 +254,7 @@ export function createTurnFlow(deps) {
         ?? state.investigators[weaknessOwnerSeat(state, enemy.code)]
       if (owner) owner.discard.push(enemy.code)
       else state.encounterDiscard.push(enemy.code)
-    } else state.encounterDiscard.push(enemy.code)
+    } else if (!routeEnemyDiscardToScenarioDeck(state, enemy)) state.encounterDiscard.push(enemy.code)
     if (enemy.victory) {
       state.victory += enemy.victory
       info(state, events, `💥 「${enemy.name}」被击败了！胜利点 +${enemy.victory}（累计 ${state.victory}）。`)
@@ -484,7 +485,8 @@ export function createTurnFlow(deps) {
       + (registeredEntry(def.code)?.playCostModifier?.({ state, inv, card: def }) || 0)
     // 2026-10-25 第七轮修复 05002：揭示牌的 -2 折扣只通过 fromHunch 路径的 inv.playDiscount 生效，
     // 不再按卡号在 playCost 里减（避免手中同名另一张也吃折扣）。
-    return Math.max(0, (def.cost || 0) - discount - firstDiscount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
+    return Math.max(0, (def.cost || 0) - discount - firstDiscount - firstAssetDiscount(state, inv, def, registeredEntry)
+      - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
   }
 
   function itemDiscountAtLocation(state, inv, def) {

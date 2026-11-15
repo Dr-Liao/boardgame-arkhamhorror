@@ -4,7 +4,7 @@
 //   · 12 个共享组的逐组真实行为断言（敌人强制 / 诡计显现 / 威胁区 / 地点附属 / 空洞 / 隐匿 / 绯红密钥 /
 //     同志会 / 空间异常 / 腐化）；
 //   · 单卡条目 → 卡表身份 → 遭遇组归属的一致性；
-//   · 近似逐条披露：凡登记 primitive-requests/<code>.json 的条目必须在 note 里写 approximation；
+//   · 近似逐条披露：签入的全卡账本与条目 note 一致；
 //   · JSON 存档往返：空洞 / 隐匿容器与条目结算在序列化后仍然一致。
 //
 // 条目用动态 import 逐文件加载（不依赖遭遇索引重建，索引由主进程统一重建）：先造一局基础状态触发引擎
@@ -277,13 +277,14 @@ test('P7 shared B：12 组 / 31 张与卡表归属、文件名、scope 一致，
       || (entry.treacheryRule?.attachmentAbilities || []).some(ability => typeof ability.resolve === 'function')
     assert.ok(hasLogic, `${item.code} 是无行为空壳`)
   }
-  // 登记了原语请求的卡必须在 note 里披露近似。
-  const requestDir = path.join(MOD, '../../artifacts/migration/tsk/primitive-requests')
-  const requested = new Set(CODES.filter(code => fs.existsSync(path.join(requestDir, `${code}.json`))))
-  assert.ok(requested.size > 0)
-  for (const code of requested) {
-    const note = String(entryOf(code)?.note || '')
-    assert.match(note, /approximation/, `${code} 有原语请求但 note 未披露 approximation`)
+  const ledger = JSON.parse(fs.readFileSync(path.join(MOD, 'audit/tsk-all-card-acceptance.json'), 'utf8'))
+  const rows = ledger.cards.filter(row => CODES.includes(row.code))
+  assert.equal(rows.length, CODES.length)
+  const approximate = CODES.filter(code => /^(approximation|近似)\s*[:：]/.test(entryOf(code)?.note ?? ''))
+  assert.ok(approximate.length > 0)
+  for (const code of approximate) {
+    const row = rows.find(item => item.code === code)
+    assert.ok(row?.disclosures.includes(entryOf(code).note), `${code} 的近似未列入全卡账本`)
   }
 })
 

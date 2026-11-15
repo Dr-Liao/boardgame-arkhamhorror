@@ -1,18 +1,10 @@
 import { isDeepStrictEqual } from 'node:util'
 import { transactionEvents, presentationCount } from './presentation-events.js'
 
-// 回滚开关：BOARDGAME_AUTOREACTION=0 时恢复「引擎对真人直接领取自动奖励」的旧行为。
-// 正常路径由大厅在发布前代答（autoOptionId 让窗口对真人可见）。
-const AUTO_REACTION_LEGACY = typeof process !== 'undefined' && process.env?.BOARDGAME_AUTOREACTION === '0'
-// 「有人负责代答」模式：只有大厅进程会打开它。纯引擎消费者（单测、replay-fixtures、审计工具）
-// 不打开，保持「自动奖励直接领取」的旧行为，避免把大厅策略带进规则指纹。
-let autoReactionHosted = false
-export function setAutoReactionHosted(value = true) { autoReactionHosted = !!value }
-
 // 续算时这些字段取自当前状态而非事务快照：存档迁移只会刷新顶层状态，
 // 若从 base 恢复版本号，旧存档回答待决选择后会退回旧版本而无法继续行动。
 const STATIC_FIELDS = ['cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
-  'schemaVersion', 'rulesVersion', 'resourceVersion', 'turnFlowModel']
+  'schemaVersion', 'rulesVersion', 'resourceVersion', 'turnFlowModel', 'autoReactionHosted']
 const clone = value => JSON.parse(JSON.stringify(value))
 // 事务恢复凭据（continuation.move）只保留语义字段：label/explanation 是展示文案，
 // 没有规则作用，却会随日志进 state、进存档、进状态指纹——改一句卡面文案不该算行为变化。
@@ -94,13 +86,13 @@ export function requestChoice(state, { kind, source, seat, seats = null, prompt,
   // 纯引擎消费者和回滚开关都维持旧行为（直接领取）。
   const auto = autoOptionId != null && options.some(option => option.id === autoOptionId)
   const human = (state.humanSeats || [0]).includes(seat)
-  if (auto && (!human || !autoReactionHosted || AUTO_REACTION_LEGACY)) {
+  const hosted = state.autoReactionHosted === true
+  if (auto && (!human || !hosted)) {
     context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: autoOptionId }))
     return autoOptionId
   }
   const responders = seats?.length > 1 ? { seats: [...seats] } : {}
   // 这些提示只在「大厅托管模式」下进 state：纯引擎消费者/迁移对比保持旧窗口形状与指纹。
-  const hosted = autoReactionHosted && !AUTO_REACTION_LEGACY
   throw new ChoicePause(clone({ id, kind, source, seat, ...responders, prompt, options, canSkip,
     ...(hosted ? {
       ...(auto ? { autoOptionId } : {}),

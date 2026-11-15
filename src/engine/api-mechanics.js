@@ -46,6 +46,10 @@ import * as tskInvestigator from './tsk-investigator.js'
 import { tskStateSummary } from './tsk-primitives.js'
 // 八循环 P4：TSK 交互事务（规则侧选择事务；只在 interactions.tsk 命名空间提供）。
 import { createTskInteractions } from './tsk-interactions.js'
+import { canResolveCodex, resolveCodex, scenarioDate, scenarioPeriod, setScenarioDate } from './scenario-calendar.js'
+import { placeLocationDefense } from './location-defenses.js'
+import { advanceRailVehicle, configureRailGrid, convertRailMarkers, endRailGrid, steerRailVehicle } from './rail-grid.js'
+import { changeRelationship, changeResidentNote, crossOutResident, residentStatus } from './resident-record.js'
 
 // Composition only. Writes remain in the reusable domain primitives.
 export function createMechanicsApi(state, deps = {}) {
@@ -62,7 +66,33 @@ export function createMechanicsApi(state, deps = {}) {
     // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
     interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps), tsk: createTskInteractions(state, deps) },
     scenarioDecks: deck,
+    calendar: {
+      current: () => scenarioDate(state),
+      set: (day, period) => setScenarioDate(state, day, period),
+      periodAt: locationId => scenarioPeriod(state, locationId),
+    },
+    codex: {
+      available: id => canResolveCodex(state, id),
+      resolve: (id, seat, resolve) => resolveCodex(state, id, seat, resolve),
+    },
+    residents: {
+      status: spec => residentStatus(state.campaign, spec),
+      change: (spec, delta, options) => changeRelationship(state.campaign, spec, delta, options),
+      note: (spec, note, remove) => changeResidentNote(state.campaign, spec, note, remove),
+      crossOut: spec => crossOutResident(state.campaign, spec),
+    },
+    rail: {
+      configure: (vehicle, facing, ports) => configureRailGrid(state, vehicle, facing, ports, options => grid.configureGrid(state, options)),
+      end: options => endRailGrid(state, { configure: policy => grid.configureGrid(state, policy), connect: () => grid.connectGrid(state) }, options),
+      convertMarkers: (from, to, options) => convertRailMarkers(state, from, to, options),
+      steer: facing => steerRailVehicle(state, facing),
+      advance: chooseFacing => advanceRailVehicle(state, {
+        move: (id, destination) => vehicles.moveVehicle(state, id, destination, deps), connect: () => grid.connectGrid(state),
+      }, chooseFacing || (dirs => deps.choice?.({ kind: 'effect', source: 'railFacing', seat: state.campaign.leadSeat,
+        prompt: '选择载具行进方向。', options: dirs.map(id => ({ id, label: id })) }))),
+    },
     enemyZones:deps.enemyZones||createEnemyZoneApi(state,{mechanicState}),
+    defenses: { place: (type, locationId) => placeLocationDefense(state, type, locationId) },
     barriers: {
       count: (a, b) => barriers.barrierCount(state, a, b),
       edges: id => barriers.barrierEdges(state, id),
@@ -110,6 +140,10 @@ export function createMechanicsApi(state, deps = {}) {
       release: (source, token, count, options) => changed(pool.releasePoolTokens(state, source, token, count, options)),
       revealSealed: (source, token) => pool.revealSealedToken(state, source, token),
       inspect: count => pool.inspectChaosTokens(state, count), treat: spec => setTokenTreatment(state, spec),
+      rank: (faces, options) => pool.rankedBagTokens(state, faces, options),
+      payMixed: amounts => changed(pool.payMixedPoolTokens(state, amounts)),
+      replaceNumeric: (count, delta) => pool.replaceRandomNumericTokens(state, count, delta),
+      replaceCampaignNumeric: (count, delta) => pool.replaceCampaignNumericTokens(state, count, delta),
       scheduleReplacement: (from, to) => pool.schedulePoolReplacement(state, from, to),
     },
     water: {
@@ -144,6 +178,8 @@ export function createMechanicsApi(state, deps = {}) {
     },
     map: {
       configure: options => grid.configureGrid(state, options),
+      emptyAdjacent: locationId => grid.adjacentGridSpaces(state, locationId),
+      relocate: (cells, options) => grid.relocateGridCells(state, cells, options),
       position: id => grid.gridPosition(state, id),
       locations: query => grid.gridLocations(state, query),
       place: (id, x, y, options) => grid.placeGridLocation(state, id, x, y, deps, options),

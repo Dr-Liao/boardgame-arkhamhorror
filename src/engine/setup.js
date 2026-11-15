@@ -23,6 +23,8 @@ import {
 } from './investigator-form.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
+import { deckAfterSurvey, restoreSurveyInvestigator, surveyForDestination, surveyForInvestigator } from './survey-preparation.js'
+import { expirePurchaseDiscounts } from '../campaign/purchase-discount.js'
 import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
 import { runTskInvestigatorSetup } from './tsk-investigator-support.js'
 import { contentRegistry } from '../../content/registered.js'
@@ -260,6 +262,8 @@ function clearScenarioSceneLeftovers(state) {
 }
 
 function prepareInvestigator(state, inv, events, startLocation, options = {}) {
+  const survey = options.survey
+  const surveySeat = surveyForInvestigator(state, inv, survey)
   const def = ALL_INVESTIGATORS[inv.code]
   // 先清上一关的临时记账，再按本关重设规范字段：这样像 tomeActionUsed 这种「开局显式
   // 重置为 false」的字段不会在清理阶段被删掉（否则状态形状会随加载路径抖动）。
@@ -268,6 +272,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   delete inv.actionHistory
   delete inv.defeatedHealthHistory
   delete inv.openingHandBonus
+  if (inv.surveyOpening) delete inv.surveyOpening
   // 第 2 步 P2.6：无牌组故事调查员——不登记战役身份、不建牌库、不受创伤。
   const story = isStoryInvestigator(state, inv)
   let record = story ? null : state.campaign.investigators[inv.seat]
@@ -279,7 +284,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
       deck = built.deck
     } else {
       if (record.code !== inv.code || record.status !== 'active') throw new Error('调查员战役身份不可进入剧本')
-      deck = shuffle(record.deck, () => randomValue(state))
+      deck = shuffle(survey ? deckAfterSurvey(state, inv, record.deck, survey) : record.deck, () => randomValue(state))
     }
   }
   // 旧存档修复：v0.4.0 及更早的《天机之城》换身还原只照抄了「先把四属性覆盖成伊斯人身体
@@ -348,6 +353,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
     info(state, events, `📜 ${inv.name} 是故事调查员：没有牌组，起始手牌为 0。`)
     return
   }
+  if (surveySeat) restoreSurveyInvestigator(inv, surveySeat, state.round)
   const startsWith = investigatorRule(inv.code)?.startsWith
   for (const code of startsWith == null ? [] : Array.isArray(startsWith) ? startsWith : [startsWith]) {
     if (removeCardByCode(inv.deck, code)) inv.assets.push(newPlayerAssetInstance(state, inv, code))
@@ -382,6 +388,10 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
 }
 
 function completeStartingHand(state, inv, events) {
+  if (inv.surveyOpening) {
+    consumeStartingAdjustments(state, inv, events)
+    return
+  }
   const trauma = state.campaign.trauma[inv.seat] || {physical:0,mental:0}
   drawOpeningHand(state, inv)
   // 第 5 步 P6：「每场游戏开始时，你的起始手牌中额外有一张 X」（黛安娜·史丹利的黑暗洞察）。
@@ -526,6 +536,7 @@ function createGameState(settings, players) {
   const state = {
     schemaVersion: STATE_SCHEMA_VERSION,
     rulesVersion: RULES_VERSION,
+    ...(typeof settings.autoReactionHosted === 'boolean' ? { autoReactionHosted: settings.autoReactionHosted } : {}),
     // 2026-11-13：回合收尾流程模型。2 = 行动点用尽后不再自动结束回合、不弹收尾玩家窗口，
     // 快速卡/免费能力是 legalMoves 的直接行动，玩家必须主动 endTurn（实现读点见 dispatch.js 尾部）。
     // 1 = 旧流程（行动点用尽自动推进 + 收尾窗口）。旧存档由 save-migration.js 的
@@ -671,6 +682,7 @@ function startScenario(state, index, events) {
   const CAMPAIGN = campaignFor(state)
   const scenarioId = CAMPAIGN.scenarioOrder[index]
   const sc = structuredClone(SCENARIOS[scenarioId])
+  const survey = surveyForDestination(state, sc.id)
   resolveAgendaDoomThresholds(sc.agendas, state.numInvestigators)
   state.scenario = sc
   // 剧本级混乱标记含义：definition 数据优先；内容层 behavior 声明的 tokenMeanings（05050 等）
@@ -783,8 +795,13 @@ function startScenario(state, index, events) {
   // 调查员：恢复/重建（含创伤）。
   const deferOpeningHands = scenarioBehavior(state).setupBeforeOpeningHands === true
   for (const inv of state.investigators) {
-    prepareInvestigator(state, inv, events, startLoc, { deferOpeningHand:deferOpeningHands })
+    prepareInvestigator(state, inv, events, startLoc, { deferOpeningHand:deferOpeningHands, survey })
   }
+  if (survey) {
+    delete state.campaign.surveyPreparation
+    state.clues = state.investigators.reduce((sum, inv) => sum + inv.clues, 0)
+  }
+  expirePurchaseDiscounts(state.campaign)
   // 战役要求延续的换身（幕间四：困在伊斯人身体里的调查员）：在牌库/属性按原卡重建之后再套用，
   // 这样牌组仍按战役记录构建，只有卡面身份与技能/生命理智换成身体卡。
   applyCampaignInvestigatorForms(state, events)
@@ -872,12 +889,12 @@ function setupScenarioEnemies(state, events) {
 function setupScenarioDecks(state, events) {
   const sc = state.scenario
   const rng = () => randomValue(state)
-  let deck = sc.encounterDeck.slice()
-
-  deck = scenarioBehavior(state).modifyDeck?.(state, deck, events,
-    { randomValue, removeCardByCode, info }) || deck
-
-  state.encounterDeck = shuffle(deck, rng)
+  if (!sc.mechanics?.noEncounterDeck) {
+    let deck = sc.encounterDeck.slice()
+    deck = scenarioBehavior(state).modifyDeck?.(state, deck, events,
+      { randomValue, removeCardByCode, info }) || deck
+    state.encounterDeck = shuffle(deck, rng)
+  }
 
   // 午夜假面：独立异教徒牌堆。
   if (sc.cultistDeck) {

@@ -321,7 +321,7 @@ export function playGame({ settings, players, policy, steps = 60, onStep = null,
 function playP6(recipe) {
   const settings = { campaignHub: true, playerInvestigator: recipe.investigator ?? '01001', difficulty: recipe.difficulty ?? 'easy' }
   const players = [{ seat: 0, role: 'human' }]
-  const state = createGameState({ ...settings, seed: recipe.seed }, players)
+  const state = createGameState({ ...settings, ...recipe.settings, seed: recipe.seed }, players)
   const hashes = [stateHash(state)]
   const policy = s => notzPolicy(s, recipe.branch ?? 'r1', recipe.mode ?? 'victory')
   const limit = recipe.limit ?? 1400

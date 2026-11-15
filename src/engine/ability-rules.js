@@ -15,7 +15,7 @@ import { availableUseCost, payUseCost } from './use-transfer.js'
 import { currentRevelation } from './resolution-scope.js'
 import { poolTokenRoom } from './chaos-token-pool.js'
 import { canDiscardControlledAsset } from './investigator-mechanics.js'
-import { afterUsesSpent } from './uses.js'
+import { afterSuppliesSubstituted, afterUsesSpent } from './uses.js'
 import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { entityAbilityInRange } from './parley.js'
 import { NON_PLAYER_SCOPES } from './ability.js'
@@ -111,7 +111,8 @@ export function createAbilityRules(deps) {
     if (!payTokenCost(state, inv, descriptor?.additionalTokenCost)) return false
     if (!payKeyCost(state, inv, source, descriptor?.additionalKeyCost, spec => selectMechanic(state, inv.seat, spec))) return false
     if (cost.exhaust) source.exhausted = true
-    if (cost.uses) payUseCost(state, inv.seat, source, cost.uses, registeredEntry, spec => deps.requestChoice(state, spec))
+    if (cost.uses && !payUseCost(state, inv.seat, source, cost.uses, registeredEntry, spec => deps.requestChoice(state, spec),
+      (provider, count) => afterSuppliesSubstituted(state, inv, source, provider, count, events, deps))) return false
     if (cost.resources) resourceBank.spendFromPool(inv, cost.resources, state)
     if (cost.clues) {
       inv.clues -= cost.clues
@@ -149,11 +150,12 @@ export function createAbilityRules(deps) {
     return true
   }
 
-  function descriptorCost(descriptor) {
-    return descriptor.kind === 'free' ? { ...descriptor.cost, action: false } : descriptor.cost
+  function descriptorCost(descriptor, ignoreActionCost = false) {
+    return descriptor.kind === 'free' || ignoreActionCost ? { ...descriptor.cost, action: false } : descriptor.cost
   }
 
-  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null, ignoreCosts = false } = {}) {
+  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null, ignoreCosts = false, ignoreActionCost = false } = {}) {
+    if (state.scenario?.mechanics?.noEncounterDeck && (descriptor.requiresEncounterDeck || descriptor.cost?.drawEncounter)) return false
     if (['action', 'free'].includes(descriptor.kind) && descriptor.actionKind && source
       && NON_PLAYER_SCOPES.includes(registeredEntry(source.originalCode || source.code)?.scope)
       && !entityAbilityInRange(state, inv, source, descriptor)) return false
@@ -201,7 +203,7 @@ export function createAbilityRules(deps) {
       // 隐私弱点（03084d「你不能打出事件」）：fromHand 描述子与普通出牌同一读点。
       if (playTypeBlocked(state, inv, def.type)) return false
       if (!descriptor.noPlayCost && availableResources(inv) < playCost(state, inv, def) - channelDiscount) return false
-    } else if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor), descriptor })) return false
+    } else if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor, ignoreActionCost), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {
       state, inv, source, windowId, context,
       // 条件里常用的读点：内容层不直接 import 引擎，也不需要 api 的完整面。

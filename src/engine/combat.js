@@ -2,12 +2,12 @@ import { discardPlayerCards } from './player-zones.js'
 import { sourceCardDef } from './card-lookup.js'
 import { availableResources } from './resource-bank.js'
 import { actionTestSkill } from './skill-substitution.js'
-import { enemyHasLocationKeyword } from './enemy-entry.js'
 import { afterUsesSpent } from './uses.js'
 import { hasWindowListener } from './window-listeners.js'
 import { eventWindowContext } from './event-window.js'
 import { directDamageSource } from '../integration/direct-damage.js'
-import { currentEffectSource } from './effect-provenance.js'
+import { currentEffectSource, damageSourceMatches } from './effect-provenance.js'
+import { enemyHasAttackKeyword, resolveElusiveAfterAttack } from './enemy-keyword-movement.js'
 // 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
@@ -337,9 +337,12 @@ function doFight(state, seat, opts, events, noSpend) {
           info(state, events, `✨ 丽塔·钱德勒的激励：对怪物敌人的攻击 +1 伤害。`)
         }
       }
-      if (!enemyTextBlanked(state, enemy)
+      const allowedDamageSources = enemyRuleFlags(enemy.originalCode || enemy.code).allowedDamageSources
+      const blockedDamage = allowedDamageSources && !enemyTextBlanked(state, enemy)
+        && !damageSourceMatches(state, allowedDamageSources, opts.assetId || opts.sourceCode || null, sourceCardDef)
+      if (blockedDamage || (!enemyTextBlanked(state, enemy)
         && (entityRuleActive(state, enemy, 'cannot:beDamaged')
-          || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, opts.assetId || null, seat) === false)) {
+          || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, opts.assetId || null, seat) === false))) {
         dmg = 0
         info(state, events, `⛔ 「${enemy.name}」免疫这次攻击造成的伤害。`)
       }
@@ -433,6 +436,7 @@ function doFight(state, seat, opts, events, noSpend) {
         dmg = Math.max(0, dmg - attackDamageReduction)
         info(state, events, `🛡️ 「${enemy.name}」本次受到攻击的伤害从 ${before} 减为 ${dmg}。`)
       }
+      if (blockedDamage) dmg = 0
       if (opts.stormOfSpirits) {
         for (const other of state.enemies.filter(item => item.location === enemy.location)) {
           damageEnemy(state, other, other.id === enemy.id ? Math.max(2, dmg) : 2, seat, events, opts.assetId || null)
@@ -545,7 +549,8 @@ function doFight(state, seat, opts, events, noSpend) {
       // 反击：横置时通常不能反击，但 04062 瓦卢西亚的预示者等「横置时也能反击」的
       // 敌人（retaliateWhileExhausted）必须放行（失落时代 P2 钩子）。
       // Phase 2（C1）：ignore:retaliate 让攻击者的反击失效（卡面声明，引擎只问读点）。
-      if (!opts.ignoreRetaliate && !ruleIgnored(state, inv, 'retaliate') && (enemy.retaliate || opts.grantRetaliate || r.grantedEnemyKeywords?.includes('retaliate') || enemyHasLocationKeyword(state, enemy, 'retaliate'))
+      if (!opts.ignoreRetaliate && !ruleIgnored(state, inv, 'retaliate')
+        && enemyHasAttackKeyword(state, enemy, 'retaliate', enemy.retaliate || opts.grantRetaliate || r.grantedEnemyKeywords?.includes('retaliate'), registeredEntry)
         && (!enemy.exhausted || enemy.retaliateWhileExhausted || opts.grantRetaliate)
         && !enemyTextBlanked(state, enemy)) {
         enemyAttack(state, enemy, inv, events, `⚡ 「${enemy.name}」反击 ${inv.name}：${enemy.damage} 点伤害、${enemy.horror} 点恐惧。`, { kind: 'retaliate' })
@@ -555,6 +560,7 @@ function doFight(state, seat, opts, events, noSpend) {
       const asset = inv.assets.find(item => item.id === opts.assetId)
       if (asset) { leaveAsset(state, inv, asset); if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code) }
     }
+    resolveElusiveAfterAttack(state, enemy, registeredEntry, () => scenarioRuntime(state, events), item => enemyTextBlanked(state, item))
   } })
 }
 
@@ -734,7 +740,8 @@ function doEvade(state, seat, opts, events, noSpend) {
       reactionWindow(state, 'evadeFail', { when: 'evadeFail', seat, location: inv.location, enemy,
         failedBy: Math.max(0, evadeBase - r.value), prompt: `躲避「${enemy.name}」失败` }, events)
       // Phase 2（C1）：ignore:alert 让躲避失败时的警戒反击失效。
-      if ((enemy.alert || r.grantedEnemyKeywords?.includes('alert') || enemyHasLocationKeyword(state, enemy, 'alert')) && !ruleIgnored(state, inv, 'alert') && !enemy.exhausted && !enemyTextBlanked(state, enemy)) {
+      if (enemyHasAttackKeyword(state, enemy, 'alert', enemy.alert || r.grantedEnemyKeywords?.includes('alert'), registeredEntry)
+        && !ruleIgnored(state, inv, 'alert') && !enemy.exhausted && !enemyTextBlanked(state, enemy)) {
         enemyAttack(state, enemy, inv, events, `⚡ 「${enemy.name}」警戒反击 ${inv.name}。`, { kind: 'alert' })
       }
       // 「你尝试躲避它时检定失败后：其攻击你」（03241b 死亡鬼灵）。

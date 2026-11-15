@@ -810,7 +810,7 @@
     },
     {
       "path": "tools/plan-tsk-campaign.mjs",
-      "sha256": "ed5ce2a25a11b354c2ce49706271e65a98ab34359c5d93e7e8944165226f8f7b"
+      "sha256": "18208c42e7ea52a4f40ba0948dca43f692db76940aef73fc6a84350f15847a9c"
     },
     {
       "path": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/index.js",

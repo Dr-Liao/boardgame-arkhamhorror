@@ -1,0 +1,1125 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theFeastOfHemlockVale",
+  "input": "audit/fhv-mechanism-scan.json",
+  "status": "done",
+  "reuse": [
+    {
+      "id": "timing.windows",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10002",
+        "10003",
+        "10004",
+        "10005",
+        "10005b",
+        "10008"
+      ],
+      "sources": [
+        "src/engine/windows.js",
+        "src/engine/ability.js",
+        "src/engine/ability-exec.js",
+        "src/engine/play-condition.js"
+      ],
+      "evidence": [
+        "src/engine/windows.js",
+        "src/engine/ability.js",
+        "src/engine/ability-exec.js",
+        "src/engine/play-condition.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "test.outcomes",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10003",
+        "10004",
+        "10005b",
+        "10006",
+        "10007"
+      ],
+      "sources": [
+        "src/engine/tests.js",
+        "src/engine/effects.js"
+      ],
+      "evidence": [
+        "src/engine/tests.js",
+        "src/engine/effects.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "choice.targets",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10004",
+        "10006",
+        "10007",
+        "10008",
+        "10009"
+      ],
+      "sources": [
+        "src/engine/targets.js",
+        "src/engine/matcher.js",
+        "src/engine/resolution.js"
+      ],
+      "evidence": [
+        "src/engine/targets.js",
+        "src/engine/matcher.js",
+        "src/engine/resolution.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "cards.zones",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10002",
+        "10003",
+        "10004",
+        "10005",
+        "10005b"
+      ],
+      "sources": [
+        "src/engine/deck-ops.js",
+        "src/engine/player-zones.js",
+        "src/engine/card-ops.js"
+      ],
+      "evidence": [
+        "src/engine/deck-ops.js",
+        "src/engine/player-zones.js",
+        "src/engine/card-ops.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "cost.playAndSlots",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10002",
+        "10016b",
+        "10022",
+        "10023",
+        "10026"
+      ],
+      "sources": [
+        "src/engine/cost.js",
+        "src/engine/assets.js",
+        "src/engine/modifiers.js"
+      ],
+      "evidence": [
+        "src/engine/cost.js",
+        "src/engine/assets.js",
+        "src/engine/modifiers.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "assets.uses",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10002",
+        "10006",
+        "10013",
+        "10014",
+        "10019",
+        "10020"
+      ],
+      "sources": [
+        "src/engine/assets.js",
+        "src/engine/api-misc.js"
+      ],
+      "evidence": [
+        "src/engine/assets.js",
+        "src/engine/api-misc.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "combat.harm",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10006",
+        "10007",
+        "10008",
+        "10009",
+        "10010",
+        "10014"
+      ],
+      "sources": [
+        "src/engine/combat.js",
+        "src/engine/enemies.js",
+        "src/engine/asset-defeat.js"
+      ],
+      "evidence": [
+        "src/engine/combat.js",
+        "src/engine/enemies.js",
+        "src/engine/asset-defeat.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "locations.tokens",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008"
+      ],
+      "sources": [
+        "src/engine/api-clue.js",
+        "src/engine/location-doom.js",
+        "src/engine/location-state.js"
+      ],
+      "evidence": [
+        "src/engine/api-clue.js",
+        "src/engine/location-doom.js",
+        "src/engine/location-state.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "locations.move",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10004",
+        "10006",
+        "10007",
+        "10008",
+        "10009",
+        "10010"
+      ],
+      "sources": [
+        "src/engine/locations.js",
+        "src/engine/location-connections.js",
+        "src/engine/location-effect-scope.js"
+      ],
+      "evidence": [
+        "src/engine/locations.js",
+        "src/engine/location-connections.js",
+        "src/engine/location-effect-scope.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "enemies.framework",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10006",
+        "10007",
+        "10009",
+        "10010",
+        "10011",
+        "10014"
+      ],
+      "sources": [
+        "src/engine/enemies.js",
+        "src/engine/encounter.js",
+        "src/engine/turn.js"
+      ],
+      "evidence": [
+        "src/engine/enemies.js",
+        "src/engine/encounter.js",
+        "src/engine/turn.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "chaos.framework",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10004",
+        "10009",
+        "10012",
+        "10013",
+        "10015"
+      ],
+      "sources": [
+        "src/engine/chaos-bag.js",
+        "src/engine/chaos-token-effects.js",
+        "src/engine/tests.js"
+      ],
+      "evidence": [
+        "src/engine/chaos-bag.js",
+        "src/engine/chaos-token-effects.js",
+        "src/engine/tests.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "enemies.alert",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10022",
+        "10646",
+        "10565",
+        "10625",
+        "10664a",
+        "10664b"
+      ],
+      "sources": [
+        "src/engine/combat.js",
+        "src/engine/physical-faces.js"
+      ],
+      "evidence": [
+        "src/engine/combat.js",
+        "src/engine/physical-faces.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.stagesAndBranches",
+      "fromP1": "reuse",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10117",
+        "10503",
+        "10505",
+        "10506",
+        "10524b",
+        "10525"
+      ],
+      "sources": [
+        "src/engine/act-agenda.js",
+        "src/engine/scenario-runtime.js",
+        "src/engine/resolution.js"
+      ],
+      "evidence": [
+        "src/engine/act-agenda.js",
+        "src/engine/scenario-runtime.js",
+        "src/engine/resolution.js"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.darkness",
+      "fromP1": "extend",
+      "disposition": "reuse",
+      "status": "done",
+      "cards": [
+        "10605",
+        "10618",
+        "10625",
+        "10606",
+        "10609",
+        "10615",
+        "10616",
+        "10617"
+      ],
+      "sources": [
+        "src/engine/scenario-runtime.js",
+        "src/engine/mechanic-state.js"
+      ],
+      "evidence": [
+        "src/engine/marker-count.js#markerCountOf",
+        "src/engine/marker-count.js#addMarker",
+        "src/engine/scenario-runtime-extras.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#独立遭遇牌库只洗自己的弃牌堆，空牌库不调用主遭遇管线"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    }
+  ],
+  "new": [
+    {
+      "id": "cards.playChannels",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10002",
+        "10020",
+        "10027",
+        "10030",
+        "10033",
+        "10080"
+      ],
+      "sources": [
+        "src/engine/play-attempt.js",
+        "src/engine/ability-exec.js",
+        "src/engine/player-zones.js"
+      ],
+      "evidence": [
+        "src/engine/api-card.js#resolveAssetAction",
+        "src/engine/reveal.js#runExecuteDescriptor",
+        "src/engine/play-channels.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#代执行行动分别免行动费与全部费用，来源必须属于操作者"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "assets.sharedUses",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10020",
+        "10033"
+      ],
+      "sources": [
+        "src/engine/cost.js",
+        "src/engine/api-misc.js"
+      ],
+      "evidence": [
+        "src/engine/use-transfer.js#payUseCost",
+        "src/engine/ability-rules.js",
+        "src/engine/uses.js#afterSuppliesSubstituted"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#支付补给／弹药只能用自己控制的合法来源，非法选择不部分扣费"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "assets.maskLifecycle",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10023",
+        "10043",
+        "10067",
+        "10084",
+        "10111",
+        "10133"
+      ],
+      "sources": [
+        "src/engine/assets.js",
+        "src/engine/ability.js",
+        "src/engine/windows.js"
+      ],
+      "evidence": [
+        "src/engine/assets.js#exceedsControlledTraitLimit",
+        "src/engine/locations.js#placeLocation",
+        "src/engine/act-agenda.js#placeDoomOnCard"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#面具同特质上限，并区分地点入场与第一次放置毁灭"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "assets.attachmentControl",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10002",
+        "10005",
+        "10006",
+        "10007",
+        "10008",
+        "10010"
+      ],
+      "sources": [
+        "src/engine/ability.js",
+        "src/engine/actions-extra.js",
+        "src/engine/modifiers.js"
+      ],
+      "evidence": [
+        "src/engine/hosted-assets.js#attachControlledAsset",
+        "src/engine/hosted-assets.js#claimHostedAsset",
+        "src/engine/enemies.js#leaveEnemyPlay"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#宿主上的支援保留身份与原所有者，同地点调查员可取回并使用"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "cards.bondedFaces",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007"
+      ],
+      "sources": [
+        "src/engine/bonded.js",
+        "src/engine/api-card.js",
+        "src/engine/physical-faces.js"
+      ],
+      "evidence": [
+        "src/engine/bonded.js#shuffleCopyIntoDeck",
+        "src/engine/physical-faces.js#applyPhysicalFace",
+        "src/engine/enemy-location.js#turnLocationIntoEnemy",
+        "src/engine/investigator-form.js#applyInvestigatorForm"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#绑定池只取选定副本，池内用完后按实体从弃牌取同一张",
+        "tests/fhv-primitives.test.mjs#双类型地点存档后仍能调查、躲避和攻击，击败时只进一次胜利区并坍塌",
+        "tests/fhv-primitives.test.mjs#濒败替换形态清除既有伤恐，读档后按声明阻止治疗"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "combat.sourceFilter",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10724",
+        "10682",
+        "10684"
+      ],
+      "sources": [
+        "src/engine/effect-provenance.js",
+        "src/engine/combat.js",
+        "src/engine/enemies.js"
+      ],
+      "evidence": [
+        "src/engine/effect-provenance.js#damageSourceMatches",
+        "src/engine/enemies.js#applyHarm",
+        "src/engine/harm-threat.js#checkDefeated"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#谈判额度不能用于普通行动，来源限制拒绝未知的直接伤害",
+        "tests/fhv-primitives.test.mjs#序曲阻止普通伤恐和直接击败，禁用依赖遭遇牌库的能力"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "chaos.blessCurse",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10012",
+        "10013",
+        "10104",
+        "10105",
+        "10014",
+        "10019",
+        "10022",
+        "10024"
+      ],
+      "sources": [
+        "src/engine/chaos-token-pool.js",
+        "src/engine/chaos-bag.js",
+        "src/engine/token-cost.js",
+        "src/engine/investigator-mechanics.js"
+      ],
+      "evidence": [
+        "src/engine/chaos-token-pool.js#rankedBagTokens",
+        "src/engine/api-test.js#revealRankedTokenInstead",
+        "src/engine/tests.js#beforeChaosTokenReveal"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#组合祝福诅咒费用不可部分支付，疲劳仅替换不同的数字刻面",
+        "tests/fhv-primitives.test.mjs#真实检定在揭示前取出袋内多数标记并继续连抽"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "enemies.patrol",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10564",
+        "10601",
+        "10646",
+        "10701b",
+        "10552",
+        "10592",
+        "10644a",
+        "10644b"
+      ],
+      "sources": [
+        "src/engine/tsk-coterie.js",
+        "src/engine/turn.js",
+        "content/campaigns/theScarletKeys/scenarios/onThinIce/behavior.js"
+      ],
+      "evidence": [
+        "src/engine/enemy-keyword-movement.js#resolvePatrol",
+        "src/engine/turn.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#巡逻与逃逸由真实敌人阶段和攻击结算触发"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "enemies.elusive",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10011",
+        "10014",
+        "10018",
+        "10022",
+        "10601",
+        "10583a",
+        "10584a"
+      ],
+      "sources": [
+        "src/engine/enemies.js",
+        "src/engine/combat.js",
+        "src/engine/location-connections.js"
+      ],
+      "evidence": [
+        "src/engine/enemy-keyword-movement.js#setEnemyKeywords",
+        "src/engine/enemy-keyword-movement.js#resolveElusiveAfterAttack",
+        "src/engine/combat.js",
+        "src/engine/enemies.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#巡逻与逃逸由真实敌人阶段和攻击结算触发",
+        "tests/fhv-primitives.test.mjs#逃逸关键词可暂时授予或取消，取消的攻击结算后无连接也会横置"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "actions.parley",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10009",
+        "10010",
+        "10011",
+        "10128",
+        "10026",
+        "10035",
+        "10057"
+      ],
+      "sources": [
+        "src/engine/parley.js",
+        "src/engine/dispatch.js",
+        "src/engine/cost.js"
+      ],
+      "evidence": [
+        "src/engine/table-decisions.js#restrictedKindOfMove",
+        "src/engine/play-channels.js#parleyDiscardProvider",
+        "src/engine/actions.js#doPlay"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#打出弃牌区谈判事件花费宿主一次使用次数，嵌套检定保留谈判行动性质",
+        "tests/fhv-primitives.test.mjs#谈判能力中的攻击只消费谈判额度且不触发其他敌人的借机攻击"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.codex",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10558",
+        "10559",
+        "10560",
+        "10565",
+        "10573",
+        "10607b"
+      ],
+      "sources": [
+        "src/engine/resolution.js",
+        "src/engine/windows.js",
+        "src/engine/scenario-runtime.js"
+      ],
+      "evidence": [
+        "src/engine/scenario-calendar.js#normalizeCodex",
+        "src/engine/scenario-calendar.js#resolveCodex"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#法典按已付费触发者结算首个合格分支，按幕重开并通过存档校验"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.time",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10675",
+        "10677",
+        "10679",
+        "10524",
+        "10544",
+        "10565",
+        "10570",
+        "10571",
+        "10575"
+      ],
+      "sources": [
+        "src/campaign/campaign-flow.js",
+        "src/engine/setup.js",
+        "src/engine/windows.js"
+      ],
+      "evidence": [
+        "src/engine/scenario-calendar.js#setScenarioDate",
+        "src/engine/matcher.js#duringPeriod"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#日期记录跨场可读，局部昼夜由地点特质决定"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.persist",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10682",
+        "10684",
+        "10687"
+      ],
+      "sources": [
+        "src/campaign/campaign.js",
+        "src/engine/setup.js",
+        "src/engine/save-migration.js"
+      ],
+      "evidence": [
+        "src/engine/survey-preparation.js#prepareSurvey",
+        "src/engine/campaign-flow.js#finishScenario",
+        "src/engine/setup.js#startScenario",
+        "src/engine/table-decisions.js#runMulligans"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#跨章节整备保存身份、实物支援、线索和手牌，开局消费整备并跳过换牌",
+        "tests/fhv-primitives.test.mjs#序曲阻止普通伤恐和直接击败，禁用依赖遭遇牌库的能力"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.residents",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10693",
+        "10702",
+        "10713",
+        "10714",
+        "10715",
+        "10044",
+        "10628",
+        "10655",
+        "10656",
+        "10683",
+        "10686"
+      ],
+      "sources": [
+        "src/campaign/campaign-effects.js",
+        "src/campaign/story.js"
+      ],
+      "evidence": [
+        "src/engine/resident-record.js#changeRelationship",
+        "src/engine/resident-record.js#crossOutResident",
+        "src/campaign/record-sets.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#居民记录按范围增减，划除后笔记不可见且不可修改"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "locations.grid",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10501",
+        "10502",
+        "10704",
+        "10063",
+        "10135",
+        "10136",
+        "10137",
+        "10138"
+      ],
+      "sources": [
+        "src/engine/grid-map.js",
+        "src/engine/location-connections.js",
+        "src/engine/location-swap.js"
+      ],
+      "evidence": [
+        "src/engine/grid-map.js#adjacentGridSpaces",
+        "src/engine/grid-map.js#relocateGridCells"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#网格交换先校验全部坐标，地点实体及在场内容随地点标识保留"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "locations.enemyLocation",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10523",
+        "10524",
+        "10524b",
+        "10525",
+        "10526",
+        "10527"
+      ],
+      "sources": [
+        "src/engine/physical-faces.js",
+        "src/engine/locations.js",
+        "src/engine/enemies.js"
+      ],
+      "evidence": [
+        "src/engine/enemy-location.js#turnLocationIntoEnemy",
+        "src/engine/enemy-location.js#removeEnemyLocation",
+        "src/engine/locations.js#removeLocation",
+        "src/engine/enemies.js#defeatEnemy"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#双类型地点存档后仍能调查、躲避和攻击，击败时只进一次胜利区并坍塌"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "chaos.predationBag",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10523",
+        "10524",
+        "10524b",
+        "10526",
+        "10527",
+        "10528"
+      ],
+      "sources": [
+        "src/engine/chaos-bag.js",
+        "src/engine/chaos-token-pool.js"
+      ],
+      "evidence": [
+        "src/engine/token-bag.js#transferRevealedToken",
+        "src/engine/enemy-location.js#changeLocationSeals"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#独立猎杀袋揭示后可归还、转移，标记不会触发玩家检定",
+        "tests/fhv-primitives.test.mjs#双类型地点存档后仍能调查、躲避和攻击，击败时只进一次胜利区并坍塌"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "investigators.toolDiscount",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10002",
+        "10003"
+      ],
+      "sources": [
+        "src/engine/cost.js",
+        "src/engine/modifiers.js",
+        "src/engine/assets.js"
+      ],
+      "evidence": [
+        "src/engine/action-history.js#firstAssetDiscount",
+        "src/engine/api-card.js#swapControlledAssetFromHand"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#首张支援折扣按打出记录与卡种计算，不消费同特质事件",
+        "tests/fhv-primitives.test.mjs#工具互换按印刷费用与可用槽位检查，原支援退回手牌且新支援原位入场"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "assets.clueTransfer",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008"
+      ],
+      "sources": [
+        "src/engine/api-clue.js",
+        "src/engine/physical-faces.js",
+        "src/engine/assets.js"
+      ],
+      "evidence": [
+        "src/engine/api-clue.js#transferControlledClues",
+        "src/engine/asset-clues.js#returnAssetClues",
+        "src/engine/assets.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#支援线索转移校验归属、特质和容量，真实离场归还地点"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "investigators.harmAndForm",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10015",
+        "10016a",
+        "10016b",
+        "10017",
+        "10018",
+        "10530"
+      ],
+      "sources": [
+        "src/engine/combat.js",
+        "src/engine/asset-defeat.js",
+        "src/engine/save-migration.js"
+      ],
+      "evidence": [
+        "src/engine/harm-assignment.js#redirectAllyHarm",
+        "src/engine/harm-threat.js#assignHarm",
+        "src/engine/investigator-form.js#replaceLethalHarmWithForm"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#濒败替换形态清除既有伤恐，读档后按声明阻止治疗",
+        "tests/fhv-primitives.test.mjs#同地点调查员可承接直接给予盟友的伤恐并在读档后完成选择"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.specialZones",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10572",
+        "10575",
+        "10576",
+        "10605",
+        "10606",
+        "10607a"
+      ],
+      "sources": [
+        "src/engine/mechanic-state.js",
+        "src/engine/scenario-runtime.js",
+        "src/engine/encounter.js"
+      ],
+      "evidence": [
+        "src/engine/scenario-decks.js#routeEnemyDiscardToScenarioDeck",
+        "src/engine/enemy-zones.js#createEnemyZoneApi",
+        "src/engine/encounter.js#drawEncounter"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#独立遭遇牌库只洗自己的弃牌堆，空牌库不调用主遭遇管线",
+        "tests/fhv-primitives.test.mjs#追击区往返保留敌人实体与附属，离场回到来源牌库的独立弃牌区"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.defenses",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10626",
+        "10627",
+        "10629",
+        "10630",
+        "10631",
+        "10633"
+      ],
+      "sources": [
+        "src/engine/location-connections.js",
+        "src/engine/enemies.js"
+      ],
+      "evidence": [
+        "src/engine/location-defenses.js#applyLocationDefenses",
+        "src/engine/movement.js#relocateEnemy"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#工事在移动管线拦截关键词移动，诱饵阻止当轮重整",
+        "tests/fhv-primitives.test.mjs#同时有诱饵与陷阱时可先结算陷阱，敌人离场后保留未用诱饵"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.sinking",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10588",
+        "10589",
+        "10590",
+        "10595a",
+        "10596a",
+        "10597a"
+      ],
+      "sources": [
+        "src/engine/location-state.js",
+        "src/engine/physical-faces.js",
+        "src/engine/location-attachments.js"
+      ],
+      "evidence": [
+        "src/engine/location-face.js#sinkLocation",
+        "src/engine/scenario-runtime.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#渗坑达到阈值翻面，保留线索与遭遇附属并弃掉玩家附属"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.rail",
+      "fromP1": "new",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10501",
+        "10502",
+        "10505",
+        "10506",
+        "10507",
+        "10509"
+      ],
+      "sources": [
+        "src/engine/grid-map.js",
+        "src/engine/locations.js"
+      ],
+      "evidence": [
+        "src/engine/rail-grid.js#advanceRailVehicle",
+        "src/engine/rail-grid.js#convertRailMarkers"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#轨道只连接相对的出口，载具经权威入口移动并在断轨时记录脱轨",
+        "tests/fhv-primitives.test.mjs#轨道多出口选择跨存档保留，计数按比例兑换并可切回普通连通"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "scenario.fate",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10651",
+        "10652",
+        "10653",
+        "10654",
+        "10662b",
+        "10666"
+      ],
+      "sources": [
+        "src/engine/physical-faces.js",
+        "src/engine/scenario-runtime.js"
+      ],
+      "evidence": [
+        "src/engine/scenario-runtime.js#placeLocationVariant",
+        "src/engine/scenario-decks.js#drawBottomMatching",
+        "src/engine/investigator-form.js#applyInvestigatorForm"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#混合场外牌库从底部抽取遭遇牌，跳过的牌保留且调查员形态可恢复"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.deckProgression",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10001",
+        "10004",
+        "10009",
+        "10012",
+        "10015",
+        "10109",
+        "10005",
+        "10005b"
+      ],
+      "sources": [
+        "src/deck/availability.js",
+        "src/campaign/campaign.js"
+      ],
+      "evidence": [
+        "src/campaign/purchase-discount.js#temporaryPurchaseDiscount",
+        "src/campaign/campaign.js#purchaseCard",
+        "web/deck-rules.js#matchesCardRule"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#临时购牌折扣用于不同名新购，确认才消耗并在下次开局失效"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    },
+    {
+      "id": "campaign.fatigue",
+      "fromP1": "extend",
+      "disposition": "new",
+      "status": "done",
+      "cards": [
+        "10677",
+        "10679"
+      ],
+      "sources": [
+        "src/campaign/campaign-effects.js",
+        "src/engine/chaos-bag.js"
+      ],
+      "evidence": [
+        "src/engine/chaos-token-pool.js#replaceCampaignNumericTokens",
+        "src/engine/api-mechanics.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs#组合祝福诅咒费用不可部分支付，疲劳仅替换不同的数字刻面"
+      ],
+      "docs": "docs/campaign/theFeastOfHemlockVale/primitives.md"
+    }
+  ],
+  "pending": [],
+  "escape": [],
+  "verification": {
+    "targeted": "tests/fhv-primitives.test.mjs",
+    "targetedReport": "artifacts/migration/fhv/reports/p2-followup-primitives.log",
+    "replay": "artifacts/migration/fhv/reports/p2-followup-replay.log",
+    "fast": "artifacts/migration/fhv/reports/p2-followup-fast-compare.json"
+  }
+}

@@ -107,7 +107,7 @@ const CJK_ALLOW = {
   // 卡面文本匹配用的双语正则（治愈…恐惧 / 治癒…恐懼）。
   'deck-rules.js': [/治愈/, /治癒/],
   // 曲目 mood 是内容数据（docs/localization.md §8.7：歌曲名与 mood 不属界面文案）。
-  'music-player.js': [/\bmood:\s*['"]/],
+  'music-player.js': [/\bmood["']?\s*:\s*['"]/],
 }
 
 test('已本地化的 UI 文件不再残留用户可见中文', () => {

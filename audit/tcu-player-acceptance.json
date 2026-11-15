@@ -22,7 +22,7 @@
     "basicWeaknesses": 2,
     "verified": 87,
     "unverified": 0,
-    "testsPassed": 184
+    "testsPassed": 185
   },
   "testFiles": [
     {
@@ -31,7 +31,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "37b6da333f976ea79819aa530b9282abf6efe299b8e3241158cf971ea205429c"
+      "sha256": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
@@ -49,11 +49,11 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "a134ef547388cd7f2880769d3e3e70572f0feb11f921b8acc4751ee360fc711d"
+      "sha256": "3929fd00249c222ded17233647e3ff3435575172d56a141d84877b86a3c44276"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "36c735c581a73f7696c309b2539d2a8877dc02d080875f6e6bbfdd194541a6d2"
+      "sha256": "ba1a4f6314c5cb659df43e33e0d26956441a3509c7080ced3700b65a411324fd"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "b4f518a2a69a000c78592690c424e2a66632e6788b68eac238781fd518295305"
+      "sha256": "3bb8861c00ad9e1723a53b709f7c28b7924b9f67b49dacfd646dacf750ebf0d6"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -69,7 +69,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-      "sha256": "37b6da333f976ea79819aa530b9282abf6efe299b8e3241158cf971ea205429c"
+      "sha256": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
@@ -823,12 +823,12 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1209,
+          "line": 1233,
           "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1237,
+          "line": 1261,
           "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密"
         }
       ]
@@ -950,6 +950,11 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
           "line": 1096,
           "test": "TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "line": 1124,
+          "test": "TCU 05158 第六感 符号窗口跳过询问后不再重复询问（同地点两名调查员也只问一次）"
         }
       ]
     },
@@ -964,7 +969,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1128,
+          "line": 1152,
           "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
         }
       ]
@@ -980,12 +985,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1158,
+          "line": 1182,
           "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-          "line": 1179,
+          "line": 1203,
           "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
         }
       ]

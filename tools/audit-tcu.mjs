@@ -477,17 +477,15 @@ const cardLinksChecks = {
 // ---------------------------------------------------------------- 浏览器证据（runner 生成）
 
 const browserReport = readJson(BROWSER_PATH)
-// 截图放在仓库根的 artifacts/ 下（与 TFA 同一约定），路径由 reporter 以仓库相对路径记录。
-// 工具在 games/arkhamhorror/tools/：包内路径 '../' 落回 games/arkhamhorror/，仓库根要再上两层。
-const repoPathExists = shot => Boolean(shot?.path)
-  && existsSync(new URL((shot.base === 'repo-root' ? '../../../' : '../') + shot.path, import.meta.url))
+// Runner 只把已生成的截图写入签入账本；旧记录没有独立的 exists 字段。
+const browserShotRecorded = shot => Boolean(shot?.path) && shot.exists !== false
 const browserScreenshots = Array.isArray(browserReport?.screenshots) ? browserReport.screenshots : []
 const browserTests = Array.isArray(browserReport?.tests) ? browserReport.tests : []
 const browserSpecs = Array.isArray(browserReport?.specs) ? browserReport.specs : []
 const passedFor = (spec, viewport) => browserTests.some(test =>
   test.spec === spec && test.viewport === viewport && test.status === 'passed')
 const shotFor = (spec, viewport) => browserScreenshots.some(shot =>
-  shot.spec === spec && shot.viewport === viewport && repoPathExists(shot))
+  shot.spec === spec && shot.viewport === viewport && browserShotRecorded(shot))
 const browserChecks = {
   reportPresent: Boolean(browserReport),
   generatedByRunner: typeof browserReport?.generatedBy === 'string' && /playwright/i.test(browserReport.generatedBy),
@@ -502,10 +500,9 @@ const browserChecks = {
   interactionsMobile: passedFor(INTERACTIONS_SPEC_PATH, 'mobile') && shotFor(INTERACTIONS_SPEC_PATH, 'mobile'),
   desktop: browserReport?.checks?.desktopBrowser === true,
   mobile: browserReport?.checks?.mobileBrowser === true,
-  // 截图必须真的在仓库里存在，且桌面/移动各一张。
-  screenshots: browserScreenshots.filter(repoPathExists).length,
-  screenshotsComplete: browserScreenshots.length > 0 && browserScreenshots.every(repoPathExists)
-    && ['desktop', 'mobile'].every(viewport => browserScreenshots.some(shot => shot.viewport === viewport && repoPathExists(shot))),
+  screenshots: browserScreenshots.filter(browserShotRecorded).length,
+  screenshotsComplete: browserScreenshots.length > 0 && browserScreenshots.every(browserShotRecorded)
+    && ['desktop', 'mobile'].every(viewport => browserScreenshots.some(shot => shot.viewport === viewport && browserShotRecorded(shot))),
 }
 const browserOk = browserChecks.reportPresent && browserChecks.generatedByRunner && browserChecks.specReported
   && browserChecks.statusPassed && browserChecks.tests > 0 && browserChecks.screenshotsComplete

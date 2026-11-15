@@ -987,7 +987,7 @@ function applyMoveUnchecked(state, seat, move, events) {
       if (m.asIfLocation) beginAsIf(state, inv, m.asIfLocation)
       try {
         doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
-          m.fromPlanAssetId, m.fromBackpackId, m.threatId, 0, m.fastSourceId || null)
+          m.fromPlanAssetId, m.fromBackpackId, m.threatId, 0, m.fastSourceId || null, m.fromDiscardProviderId)
       } finally {
         if (m.asIfLocation) endAsIf(state, inv)
       }

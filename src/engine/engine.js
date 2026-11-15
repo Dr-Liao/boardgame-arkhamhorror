@@ -418,6 +418,8 @@ import { enemyIsAloof } from './enemy-aloof.js'
 // 引擎侧只装配依赖并把只读查询转出给 observation / 测试使用。
 import { createCapture, isCaptured } from './capture.js'
 import { putInHand } from './hand-entry.js'
+import { discardHostedAssets } from './hosted-assets.js'
+import { routeEnemyDiscardToScenarioDeck } from './scenario-decks.js'
 import { keysAt as keysAtTarget, transferKey } from './scenario-keys.js'
 export { isCaptured, capturedSeats, capturedLocation, capturedAtLocation, capturedCount, capturedActionError } from './capture.js'
 
@@ -676,10 +678,12 @@ function discardEnemyCard(state, enemy) {
   if (enemy.hostId) { returnSwarmCard(state, enemy); return }
   for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
   disengageEnemy(state, enemy)
+  discardHostedAssets(state, enemy, (owner, code) => owner.discard.push(code))
   removeOne(state.enemies, enemy)
   const owner = state.investigators[enemy.bearerSeat]
   if (isWeaknessCode(enemy.code) && owner) owner.discard.push(enemy.code)
-  else state.encounterDiscard.push(enemy.code)
+  else if (!routeEnemyDiscardToScenarioDeck(state, enemy)) state.encounterDiscard.push(enemy.code)
+  if (enemy.enemyLocation) removeLocation(state, enemy.id, [])
   scenarioBehavior(state).enemyDiscarded?.(state, enemy, scenarioRuntime(state, []))
 }
 
@@ -697,6 +701,7 @@ function interrogateCultist(state, enemy, events) {
 }
 
 function engagesAutomatically(state, enemy, options={}) {
+  if (enemy.enemyLocation) return false
   // 沉睡（enemyRule.slumbering）的敌人印着「不能与调查员交战」：连自动交战也不发生，
   // 不论当前效果来源；换到清醒面后这条立刻失效（读当前印刷面）。
   if (!enemyEffectAllowed(state, enemy, 'autoEngage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
@@ -1304,6 +1309,8 @@ const apiDeps = { ...commonDeps,
   // 第 2 步 P2.8：绑定（ctx.api.bonded 的三个读点）。
   bondedGroupOf: (...args) => bondedGroupOf(...args),
   retrieveBonded: (...args) => retrieveBonded(...args),
+  shuffleBondedCopyIntoDeck: (state, inv, main, code) => bondedApi().shuffleCopyIntoDeck(state, inv, main, code,
+    cards => shuffle(cards, () => randomValue(state))),
   returnBonded: (...args) => returnBonded(...args), }
 
 const apiEnemyDeps = { ...commonDeps,
@@ -2450,6 +2457,8 @@ let locationsImpl = null
 function locationsApi() {
   locationsImpl ||= createLocations({
   ...commonDeps,
+  discardEnemyCard,
+  eliminateInvestigator,
   ALL_TREACHERIES,
   relocateDestinationCode,
   assetPassiveData,

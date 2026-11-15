@@ -12,6 +12,8 @@ import { vehicleOf } from './vehicles.js'
 import { checkAirAfterMove } from './flood.js'
 import { investigatorConnections } from './location-connections.js'
 import { swarmGroup } from './swarm.js'
+import { applyLocationDefenses, blockKeywordMove } from './location-defenses.js'
+import { withEffectSource } from './effect-provenance.js'
 
 export function createMovement(deps) {
   const {
@@ -347,7 +349,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
 
 function relocateEnemy(state, enemy, destination, events, options = {}) {
   if (enemy?.hostId) enemy = state.enemies.find(item => item.id === enemy.hostId) || enemy
-  if (!enemy || enemy.bindMonster || !destination) return
+  if (!enemy || enemy.enemyLocation || enemy.bindMonster || !destination) return
   if (state.phase === 'enemy' && !options.routeSelected && (!options.cause || options.cause==='hunter') && !registeredEntry(enemy.originalCode || enemy.code)?.movesThroughVoid) {
     const lures = (state.playerLocationAttachments || []).filter(a => registeredEntry(a.code)?.locationLure)
     if (lures.length) {
@@ -375,12 +377,24 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
     return
   }
   if (!enemy.elite && state.locations.find(loc => loc.id === destination)?.barricade) return
+  const defenseRule = state.scenario?.mechanics?.defenses ? registeredEntry(enemy.originalCode || enemy.code)?.enemyRule : null
+  const ignoredDefenses = defenseRule?.ignoreDefenses || []
+  if (blockKeywordMove(state, enemy, destination, options.cause, ignoredDefenses)) return { moved: false, blockedBy: 'barrier' }
   const previous = enemy.location
   enemy.location = destination
   for (const member of swarmGroup(state, enemy)) member.location = destination
   if (enemy.engagedSeat != null && state.investigators[enemy.engagedSeat]?.location !== destination) disengageEnemy(state, enemy)
   const result={moved:true,from:previous,to:destination,enemyId:enemy.id,cause:options.cause||'effect'}
   if(state.scenario?.eventWindowInstances&&options.cause==='hunter')enemy.lastHunterMove={round:state.round,phase:state.phase,phaseInstance:options.phaseInstance??state.phaseInstance??0,from:previous,to:destination}
+  if (state.scenario?.mechanics?.defenses) {
+    const api = scenarioRuntime(state, events)
+    applyLocationDefenses(state, enemy, ignoredDefenses, { disengage: api.disengage, exhaust: api.exhaustEnemy,
+      choose: types => requestChoice(state, { kind: 'effect', source: enemy.id, seat: state.campaign.leadSeat,
+        prompt: '选择先结算的工事。', options: types.map(id => ({ id, label: id === 'decoy' ? '诱饵' : '陷阱' })) }),
+      damage: (item, amount) => withEffectSource(state, { kind: 'scenarioRule' },
+        () => api.damageEnemy(item.id, amount, state.campaign?.leadSeat ?? 0)) })
+    if (!state.enemies.includes(enemy)) return result
+  }
   processPlayerEnemyEntry(state, enemy, events)
   scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events))
   if(!options.skipAutoEngage)autoEngageAt(state, destination, events,{ignoreAloofFor:options.ignoreAloof?enemy.id:null})

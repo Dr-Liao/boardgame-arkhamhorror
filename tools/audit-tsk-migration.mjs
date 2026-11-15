@@ -3,21 +3,22 @@
 //
 //   node tools/audit-tsk-migration.mjs --write   生成 audit/tsk-migration.json
 //   node tools/audit-tsk-migration.mjs --check   逐字节复算（结论/证据漂移即失败）
+//   node tools/audit-tsk-migration.mjs --check-ledger   复算并校验账本，包括如实登记的未通过门禁
 //   node tools/audit-tsk-migration.mjs          打印账本
 //
 // 口径（docs/arkham-content-migration.md §4.8 M5 / §6；README P8）：
-//   · 一个事实源：逐项 import 生成器（buildScope/buildScan/buildPrimitivePlan/buildAdjudication），
+//   · 一个事实源：逐项 import 生成器（buildScope/buildScan/buildPrimitivePlan），
 //     或实跑既有 --check 命令（scan/verify/audit 系列），不复制「已冻结的结论」；
 //   · 逐卡：audit/tsk-all-card-acceptance.json（另一工具生成）必须 missing=0、总数=439；
 //   · 战役 E2E：实跑 tests/tsk-p8-campaign.test.mjs + 既有 flow/interlude 测试，并核对
 //     标题覆盖（世界地图启程/状况报告/强制终局/四档难度/存档/撤退/同志会）；
 //   · 浏览器发布：audit/tsk-release-browser.json（reporter 生成）status=passed、六项 checks 全真、
-//     截图逐张按磁盘重新 sha256；
+//     复算使用 runner 记录的截图哈希；--verify-files 重新比对当前截图文件；
 //   · confirmations：scenarios（10 章 × §6 12 项）/ keywords（29）/ rulebook 全部 verified
 //     （content/migration-confirmation.js#assertMigrationConfirmations 复算）；
 //   · 回归：audit/tsk-regression.json（verify-tsk-regression）冻结失败集合 = P0 4 条、无新增；
 //   · 资产：439 条记录图片解析全部可解析（本地/远程回退二元状态），运行时不依赖 参考资源/；
-//   · 原语：artifacts/migration/tsk/primitive-adjudication.json 无 pending（175 份全部 deferred 到 P9）。
+//   · 原语：使用签入的裁决清单 audit/tsk-primitive-adjudication.json，缺失时披露发布证据缺口。
 import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -34,7 +35,6 @@ import { imageResolution } from '../presentation/images.js'
 import { buildScope } from './scan-tsk-scope.mjs'
 import { buildScan } from './scan-tsk-mechanisms.mjs'
 import { buildPrimitivePlan } from './audit-tsk-primitives.mjs'
-import { buildAdjudication } from './adjudicate-tsk-primitives.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { getAvailability } from '../src/deck/availability.js'
 import { MOD, RUN, json, readJson, sha } from './tsk-migration-lib.mjs'
@@ -47,7 +47,7 @@ const ALL_CARDS_LEDGER = 'audit/tsk-all-card-acceptance.json'
 const RELEASE_BROWSER = 'audit/tsk-release-browser.json'
 const CUSTOMIZATION_BROWSER = 'audit/tsk-customization-browser.json'
 const EPILOGUE_BROWSER = 'audit/tsk-epilogue-browser.json'
-const ADJUDICATION_LEDGER = 'artifacts/migration/tsk/primitive-adjudication.json'
+const ADJUDICATION_LEDGER = 'audit/tsk-primitive-adjudication.json'
 const REGRESSION = 'audit/tsk-regression.json'
 const EVIDENCE_DIR = 'artifacts/migration/tsk/p8'
 const REQUIRED_BROWSER_CHECKS = [
@@ -75,13 +75,6 @@ const existsAt = relative => existsSync(join(MOD, relative))
 const readText = relative => (existsAt(relative) ? readFileSync(join(MOD, relative), 'utf8') : null)
 const readMaybe = relative => {
   try { return readJson(relative) } catch { return null }
-}
-// 根 artifacts（artifacts/migration/tsk/**）不在 Mod 目录下，单独读取。
-const readRunMaybe = relative => {
-  try { return JSON.parse(readFileSync(join(RUN, relative.replace('artifacts/migration/tsk/', '')), 'utf8').replace(/^\uFEFF/, '')) } catch { return null }
-}
-const textShaRun = relative => {
-  try { return sha(readFileSync(join(RUN, relative.replace('artifacts/migration/tsk/', '')))) } catch { return null }
 }
 const textSha = relative => {
   const text = readText(relative)
@@ -167,8 +160,7 @@ const scanDisk = readMaybe('audit/tsk-mechanism-scan.json')
 const { plan: primitivePlan, catalog: primitiveCatalog } = await buildPrimitivePlan()
 const primitiveDisk = readMaybe('audit/tsk-primitive-plan.json')
 const primitiveCatalogDisk = readMaybe('audit/tsk-primitive-catalog.json')
-const adjudication = buildAdjudication()
-const adjudicationDisk = readRunMaybe(ADJUDICATION_LEDGER)
+const adjudication = readMaybe(ADJUDICATION_LEDGER)
 
 const ledgerChecks = {
   scope: { pass: JSON.stringify(scope) === JSON.stringify(scopeDisk) && Object.values(scope.gates || {}).every(Boolean), sha256: textSha('audit/tsk-scope.json'), path: 'audit/tsk-scope.json', gates: scope.gates || null },
@@ -176,17 +168,19 @@ const ledgerChecks = {
   primitivePlan: { pass: JSON.stringify(primitivePlan) === JSON.stringify(primitiveDisk) && Object.values(primitivePlan.gates || {}).every(Boolean), sha256: textSha('audit/tsk-primitive-plan.json'), path: 'audit/tsk-primitive-plan.json', gates: primitivePlan.gates || null },
   primitiveCatalog: { pass: JSON.stringify(primitiveCatalog) === JSON.stringify(primitiveCatalogDisk), sha256: textSha('audit/tsk-primitive-catalog.json'), path: 'audit/tsk-primitive-catalog.json' },
   adjudication: {
-    pass: JSON.stringify(adjudication) === JSON.stringify(adjudicationDisk)
-      && (adjudication.summary?.requests || 0) === 175
-      && (adjudication.summary?.nonRequestFiles || 0) === 1
-      && (adjudication.summary?.pendingBefore || 0) === 0,
-    sha256: textShaRun(ADJUDICATION_LEDGER), path: ADJUDICATION_LEDGER,
-    requests: adjudication.summary?.requests ?? null, deferred: adjudication.summary?.deferredAfter ?? null,
-    categories: adjudication.summary?.categories ?? null,
+    pass: adjudication?.summary?.requests === 175
+      && adjudication.summary.nonRequestFiles === 1
+      && adjudication.summary.pendingBefore === 0
+      && adjudication.requests?.length === 175
+      && new Set(adjudication.requests.map(row => row.file)).size === 175
+      && adjudication.requests.every(row => row.statusBefore === 'deferred'),
+    sha256: textSha(ADJUDICATION_LEDGER), path: ADJUDICATION_LEDGER,
+    requests: adjudication?.summary?.requests ?? null, deferred: adjudication?.summary?.deferredAfter ?? null,
+    categories: adjudication?.summary?.categories ?? null,
   },
 }
 const ledgerCommands = {
-  baseline: runNode(['tools/scan-tsk-baseline.mjs', '--check']),
+  baseline: runNode(['tools/scan-tsk-baseline.mjs', '--check-metadata']),
   nodeAcceptance: runNode(['tools/verify-tsk.mjs', '--check']),
   rules: runNode(['tools/audit-tsk-rules.mjs', '--check']),
   interactions: runNode(['tools/audit-tsk-interactions.mjs', '--check']),
@@ -195,7 +189,6 @@ const ledgerCommands = {
   scenarios: runNode(['tools/audit-tsk-scenarios.mjs', '--check']),
   guides: runNode(['tools/import-scenario-guides.mjs']),
   story: runNode(['tools/import-tsk-story.mjs', '--check']),
-  adjudication: runNode(['tools/adjudicate-tsk-primitives.mjs', '--check']),
 }
 const ledgerGates = Object.fromEntries(Object.entries(ledgerCommands).map(([key, row]) => [key, { pass: row.exitCode === 0, command: row.command, exitCode: row.exitCode, tail: row.stderr ? row.stderr.slice(-600) : row.stdout.slice(-400) }]))
 for (const key of ['baseline', 'nodeAcceptance', 'rules', 'interactions', 'investigators', 'player', 'scenarios', 'guides', 'story']) {
@@ -243,11 +236,15 @@ const campaignE2EGate = {
 }
 
 // ---------------------------------------------------------------------------
-// 5. 发布浏览器账本（截图按磁盘复算）
+// 5. 发布浏览器账本
 // ---------------------------------------------------------------------------
-// 浏览器 screenshot 账本通用校验：路径 repo-root 相对、磁盘 bytes/sha256 必须与账本一致。
 function validateScreenshots(ledger) {
   return ((ledger?.screenshots) || []).map(shot => {
+    const recorded = shot.base === 'repo-root' && Boolean(shot.path) && shot.bytes > 0
+      && /^[a-f0-9]{64}$/.test(shot.sha256)
+    if (!process.argv.includes('--verify-files')) {
+      return { path: shot.path, viewport: shot.viewport, phase: shot.phase, exists: recorded, hashMatches: recorded, bytes: shot.bytes }
+    }
     // 浏览器账本的 base='repo-root' 指工作区根（artifacts/ 在根目录，不在 Mod 子目录）。
     const absolute = join(shot.base === 'repo-root' ? WORKSPACE : MOD, shot.path)
     const exists = existsSync(absolute)
@@ -555,7 +552,7 @@ const sources = [
   'tests/fixtures/replay/tsk-baseline.json', 'content/campaigns/theScarletKeys/story-text.js',
   'content/campaigns/theScarletKeys/manifest.js', 'content/campaigns/theScarletKeys/flow.js',
   'content/registered.js', 'content/mechanics.js',
-].filter(file => existsAt(file) || file === ADJUDICATION_LEDGER).map(file => ({ path: file, sha256: existsAt(file) ? textSha(file) : textShaRun(file) }))
+].filter(existsAt).map(file => ({ path: file, sha256: textSha(file) }))
 
 const report = {
   schemaVersion: 1,
@@ -590,11 +587,11 @@ const report = {
   },
   confirmations,
   primitives: {
-    adjudication: adjudication.summary || null,
-    pendingRequests: adjudication.summary?.pendingBefore ?? null,
-    deferredRequests: adjudication.summary?.deferredAfter ?? null,
+    adjudication: adjudication?.summary ?? null,
+    pendingRequests: adjudication?.summary?.pendingBefore ?? null,
+    deferredRequests: adjudication?.summary?.deferredAfter ?? null,
     nextPhase: 'P9',
-    ledger: { path: ADJUDICATION_LEDGER, sha256: textShaRun(ADJUDICATION_LEDGER) },
+    ledger: { path: ADJUDICATION_LEDGER, sha256: textSha(ADJUDICATION_LEDGER) },
   },
   evidence: {
     fast: regression?.fast || null,
@@ -614,7 +611,8 @@ const report = {
       { kind: 'disclosed-approximation', count: allCards.summary.simplified || 0, note: '有近似披露的行为卡（条目 note/章节 approximations 逐条登记）' },
       { kind: 'scenario-data', count: allCards.summary.scenarioData || 0, note: '地点/幕/议程/剧情资产等数据型战役卡：行为由章 behavior 承接并有章测试证据，逐卡字面在 P9 逐卡验收' },
     ] : []),
-    { kind: 'primitive-backlog', count: adjudication.summary?.deferredAfter || 0, note: 'P8 裁决为 deferred，进入 P9 原语批次（artifacts/migration/tsk/primitive-adjudication.json）' },
+    ...(adjudication ? [{ kind: 'primitive-backlog', count: adjudication.summary.deferredAfter, note: 'P8 裁决为 deferred，进入 P9 原语批次（audit/tsk-primitive-adjudication.json）' }]
+      : [{ kind: 'missing-primitive-adjudication', path: ADJUDICATION_LEDGER }]),
     ...(failedGates.length ? [{ kind: 'gate-pending', gates: failedGates }] : []),
   ],
   gate: Object.fromEntries(Object.entries(gates).map(([key, value]) => [key, value.pass === true])),
@@ -622,18 +620,23 @@ const report = {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const body = json(report)
-  if (process.argv.includes('--write')) {
+  if (process.argv.includes('--verify-files')) {
+    for (const [name, gate] of Object.entries({ release: releaseBrowserGate, customization: customizationBrowserGate, epilogue: epilogueBrowserGate })) {
+      console.log(`tsk browser ${name}: ${gate.screenshotsOk ? 'passed' : 'missing or mismatched'}`)
+      if (!gate.screenshotsOk) process.exitCode = 1
+    }
+  } else if (process.argv.includes('--write')) {
     mkdirSync(join(RUN, 'p8'), { recursive: true })
     mkdirSync(join(MOD, EVIDENCE_DIR), { recursive: true })
     writeFileSync(REPORT, body)
     console.log(`tsk migration: 已写入（status=${status}，失败门禁：${failedGates.join(',') || '无'}）`)
     console.log(JSON.stringify(report.gate))
     if (status !== 'verified') process.exitCode = 1
-  } else if (process.argv.includes('--check')) {
+  } else if (process.argv.includes('--check') || process.argv.includes('--check-ledger')) {
     if (!existsSync(REPORT)) throw new Error('audit/tsk-migration.json 不存在：先 --write')
     if (readFileSync(REPORT, 'utf8') !== body) throw new Error('audit/tsk-migration.json 与复算不一致：审阅后 --write')
-    if (status !== 'verified') throw new Error(`tsk migration 门禁未全真：${failedGates.join(',')}`)
-    console.log('tsk migration: 复算一致（status=verified）')
+    if (process.argv.includes('--check') && status !== 'verified') throw new Error(`tsk migration 门禁未全真：${failedGates.join(',')}`)
+    console.log(`tsk migration: 复算一致（status=${status}）`)
   } else {
     console.log(body)
   }

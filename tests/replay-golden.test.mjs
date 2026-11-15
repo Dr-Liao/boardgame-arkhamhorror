@@ -14,7 +14,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { RULES_VERSION, STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
 import { replayLog, STATE_HASH_VERSION, stateHash, verifyReplay } from '../src/engine/replay.js'
-import { REPLAY_RECIPES } from '../tools/replay-games.mjs'
+import { playRecipe, REPLAY_RECIPES } from '../tools/replay-games.mjs'
 import { FIXTURES, TOTAL_STEPS } from './replay-golden-fixtures.mjs'
 
 test('基线文件与当前指纹口径、规则版本、recipe 清单一致', () => {
@@ -59,4 +59,12 @@ test('基线的动作与关卡覆盖不能退化', () => {
   const uiStates = new Set(FIXTURES.fixtures.map(fixture => fixture.final.uiState))
   // 敦威治关卡现在能真正推进到幕间（interlude），覆盖范围只增不减。
   assert.deepEqual([...uiStates].sort(), ['campaignResult', 'inScenario', 'interlude', 'scenarioResult'])
+})
+
+test('大厅托管反应的日志可在纯引擎进程重放', () => {
+  const recipe = REPLAY_RECIPES.find(item => item.id === 'notz-gathering-hub-victory-r1')
+  const { state, log } = playRecipe({ ...recipe, limit: 25, settings: { autoReactionHosted: true } })
+  assert.equal(log.settings.autoReactionHosted, true)
+  assert.ok(log.moves.some(({ move }) => move.action === 'choose' && move.optionId === 'trigger'))
+  assert.equal(stateHash(replayLog(JSON.parse(JSON.stringify(log)))), stateHash(state))
 })

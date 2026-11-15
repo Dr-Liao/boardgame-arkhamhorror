@@ -136,6 +136,7 @@ export function createHarmThreat(deps) {
           return (other.location === inv.location || connected) && (passive === true || passive === kind)
         })
         .map(asset => ({ asset, owner: other })))
+    const investigators = direct ? [] : investigatorsWhoCanAbsorbHarm(state, inv.location, inv)
     let locked = null
     // 2026-11-13 P1-6：09007「非直接伤害至少 1 点必须分配给受伤的旁观者」——
     // 旧实现只把 composureDamage 支援列入 mandatory 并去掉「由调查员承受」选项，玩家仍可
@@ -178,15 +179,19 @@ export function createHarmThreat(deps) {
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
         const availableSoaks = (forcedFirst.length ? [] : soaks).filter(({ asset }) => assetCapacityValue(asset, capacity)
           > (asset[kind] || 0) + (assignments.get(asset) || 0))
-        const candidates = assets.length || availableSoaks.length
+        const availableInvestigators = forcedFirst.length ? [] : investigators.filter(other =>
+          (kind === 'damage' ? getMaxHealth(other) : getMaxSanity(other)) > (other[kind] || 0) + (assignments.get(other) || 0))
+        const candidates = assets.length || availableSoaks.length || availableInvestigators.length
         ? requestChoice(state, { kind: 'assign-' + kind, source: 'harm', seat: inv.seat,
           prompt: `分配 1 点${kind === 'damage' ? '伤害' : '恐惧'}（剩余 ${amount - i}）。`,
           options: [...(preferAssets || mandatory?.length ? [] : [{ id: 'self', label: '由调查员承受' }]),
             ...assets.map(asset => ({ id: asset.id, label: cardName(asset.code) })),
-              ...availableSoaks.map(({ asset, owner }) => ({ id: asset.id, label: `${cardName(asset.code)}（${owner.name}）` }))] })
+              ...availableSoaks.map(({ asset, owner }) => ({ id: asset.id, label: `${cardName(asset.code)}（${owner.name}）` })),
+              ...availableInvestigators.map(other => ({ id: `seat:${other.seat}`, label: other.name }))] })
         : 'self'
       const recipient = candidates === 'self' ? inv
           : assets.find(item => item.id === candidates) || availableSoaks.find(item => item.asset.id === candidates)?.asset
+            || availableInvestigators.find(other => `seat:${other.seat}` === candidates)
       assignments.set(recipient, (assignments.get(recipient) || 0) + 1)
       if (forcedFirst.length) composureDamageSatisfied = true
       if (strategy === 'fillOne') locked = recipient
@@ -204,6 +209,7 @@ export function createHarmThreat(deps) {
   }
 
   function applyThreatForced(state, inv, t, fx, events, depth = 0) {
+    if (state.scenario?.mechanics?.protectInvestigators) return
     if (fx.damage && !inv.defeated && !inv.resigned) {
       inv.damage += fx.damage
       info(state, events, `💥 「${cardName(t.code)}」强制：${inv.name} 受到 ${fx.damage} 点直接伤害。`)
@@ -236,6 +242,7 @@ export function createHarmThreat(deps) {
   }
 
   function defeatAll(state, events) {
+    if (state.scenario?.mechanics?.protectInvestigators) return
     for (const inv of state.investigators) {
       if (!inv.defeated && !inv.resigned) inv.defeated = true
     }
@@ -304,7 +311,7 @@ export function createHarmThreat(deps) {
 
   function checkDefeated(state, seat, events) {
     const inv = state.investigators[seat]
-    if (!inv || inv.defeated || inv.resigned) return
+    if (!inv || inv.defeated || inv.resigned || state.scenario?.mechanics?.protectInvestigators) return
     const lethalHidden = activeHiddenRules(state, inv).find(item =>
       Number.isFinite(item.rule.killAtHorrorOverSanityMultiplier)
         && inv.horror > getMaxSanity(inv) * item.rule.killAtHorrorOverSanityMultiplier)
@@ -335,6 +342,7 @@ export function createHarmThreat(deps) {
         try {
           reactionWindow(state, 'wouldDefeat', {
             when: 'wouldDefeat', seat: inv.seat, location: inv.location,
+            cause: damageLethal && horrorLethal ? 'both' : damageLethal ? 'damage' : 'horror',
             prompt: `${inv.name} 将要被击败`,
           }, events, { allowNested: true })
         } finally {
@@ -638,7 +646,7 @@ export function createHarmThreat(deps) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
     const isInvestigator = target.seat != null && target.name != null
-    if (isInvestigator && !playerEffectCanAffect(state, target.seat)) return 0
+    if (isInvestigator && (target.formHealingProhibited || !playerEffectCanAffect(state, target.seat))) return 0
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
     const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
@@ -753,7 +761,7 @@ export function createHarmThreat(deps) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
     const isInvestigator = target.seat != null && target.name != null
-    if (isInvestigator && !playerEffectCanAffect(state, target.seat)) return 0
+    if (isInvestigator && (target.formHealingProhibited || !playerEffectCanAffect(state, target.seat))) return 0
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
     const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
@@ -815,3 +823,4 @@ export function createHarmThreat(deps) {
 
   return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
 }
+import { investigatorsWhoCanAbsorbHarm } from './harm-assignment.js'

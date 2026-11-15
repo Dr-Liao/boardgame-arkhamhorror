@@ -1,0 +1,1048 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theFeastOfHemlockVale",
+  "generatedBy": "tools/plan-fhv-primitives.mjs",
+  "readOnly": true,
+  "engine": {
+    "effects": [
+      "gainResource",
+      "loseResource",
+      "draw",
+      "heal",
+      "takeDamage",
+      "takeHorror",
+      "gainAction",
+      "discoverClue",
+      "addDoom",
+      "dealDamage",
+      "investigate",
+      "fight",
+      "evade",
+      "moveInvestigator",
+      "chooseOne",
+      "discardHandTo",
+      "reloadAmmo",
+      "defeatNonEliteEnemy",
+      "removeDiscard",
+      "onTheLam",
+      "addStatPhase",
+      "rechargeAsset",
+      "cancelEnemyAttack",
+      "cancelTreachery",
+      "substituteSkill",
+      "sequence",
+      "targetedEffect",
+      "searchTop",
+      "investigateForResources",
+      "moveTo",
+      "dealDamageAll",
+      "dealDamageExhausted",
+      "blankEnemy",
+      "ignoreChaos",
+      "returnAssetToHand",
+      "shuffleIntoEncounter",
+      "searchDiscard",
+      "autoEvadeNonElite",
+      "attachBarricade",
+      "drawEncounter",
+      "addTestValue",
+      "disengageAll",
+      "flipTokenSign",
+      "scry",
+      "gainClues",
+      "targetedTest",
+      "readyAsset",
+      "healDamageAtLocation",
+      "researchSolution",
+      "carcosaInvestigator",
+      "carcosaPlayer",
+      "addCurrentTest",
+      "mill",
+      "tfaInvestigator",
+      "tfaPlayer",
+      "cancelSymbolToken"
+    ],
+    "abilityKinds": [
+      "action",
+      "free",
+      "reaction",
+      "forced",
+      "constant",
+      "elderSign",
+      "setup",
+      "played",
+      "commit",
+      "weakness",
+      "entersPlay",
+      "leavesPlay"
+    ],
+    "windows": [
+      "actionResolvedAtLocation",
+      "activateFirearmFight",
+      "afterAlarmRaised",
+      "agendaWouldAdvance",
+      "assetActionResolved",
+      "assetCluesPlaced",
+      "assetDamageAssigned",
+      "assetDefeated",
+      "assetEnteredPlay",
+      "assetExhausted",
+      "assetHarmPlaced",
+      "assetLeavesPlay",
+      "attackFail",
+      "beforeChaosTokenReveal",
+      "beforePlayAttempt",
+      "beforePlayCost",
+      "blessTokensWouldReturnToPool",
+      "cardCancelled",
+      "cardDrawn",
+      "cardWouldBeDrawn",
+      "cardsDrawn",
+      "chaosRevealStepEnded",
+      "chaosTokenResolved",
+      "chaosTokenRevealed",
+      "clueDiscovered",
+      "committedCard",
+      "consecutiveActions",
+      "damageAssignedToSelf",
+      "damageHealed",
+      "damagePlaced",
+      "defeatAtLocation",
+      "defeatEnemy",
+      "discoverClue",
+      "doomPlaced",
+      "doomWouldBePlaced",
+      "encounterCardWouldDraw",
+      "encounterDrawn",
+      "enemy.afterAttacks",
+      "enemy.afterHunters",
+      "enemyAttack",
+      "enemyAttackDamage",
+      "enemyAttacked",
+      "enemyDamaged",
+      "enemyDefeated",
+      "enemyEngaged",
+      "enemyEnteredLocation",
+      "enemyMoved",
+      "enemyPhaseBegins",
+      "enemyPhaseEnds",
+      "enemyReadied",
+      "enemyRoundEnd",
+      "enemySpawn",
+      "enemyWouldBeDefeated",
+      "enemyWouldBeEvaded",
+      "evadeFail",
+      "evadeSuccess",
+      "eventPlayed",
+      "floodChanged",
+      "handCardDiscarded",
+      "harmAssigned",
+      "harmDealt",
+      "haunted",
+      "horrorHealed",
+      "horrorPlaced",
+      "investigateFail",
+      "investigateSuccess",
+      "investigation.afterAction",
+      "investigationPhaseEnds",
+      "investigationPhaseStarts",
+      "locationPlaced",
+      "locationRevealed",
+      "move",
+      "moveBeforeEngage",
+      "mythos.afterEncounter",
+      "mythosEncounterStep",
+      "mythosEnd",
+      "negativeTokenRevealed",
+      "opportunityAttack",
+      "phaseBegins",
+      "promiseBroken",
+      "revelationTest",
+      "revelationTestAlly",
+      "roundEnds",
+      "roundStarts",
+      "scenarioStarts",
+      "searchWouldResolve",
+      "sharedSuppliesSpent",
+      "skillTestFail",
+      "skillTestFailed",
+      "skillTestSuccess",
+      "skullRevealed",
+      "spellChargesSpent",
+      "spellPlayed",
+      "symbolRevealed",
+      "test.afterCommit",
+      "test.beforeCommit",
+      "testBegins",
+      "testEnds",
+      "testInitiated",
+      "testWouldFail",
+      "threatEntered",
+      "tokenEffectWouldResolve",
+      "tokenReveal",
+      "tokenWouldResolve",
+      "treachery",
+      "treacheryTestSuccess",
+      "treacheryWouldDiscard",
+      "tskCrossSeatAction",
+      "tskExposed",
+      "tskKeyShifted",
+      "turnBegins",
+      "turnEnded",
+      "upkeep.end",
+      "upkeepEnd",
+      "weaponFightInitiated",
+      "wouldDefeat",
+      "wouldDefeatByHorror",
+      "wouldDiscardFromHand",
+      "wouldLoseActions",
+      "wouldLoseResources",
+      "wouldSucceedTest"
+    ],
+    "matcher": [
+      "aliveInvestigators",
+      "all",
+      "always",
+      "any",
+      "atLocation",
+      "atTrait",
+      "attackKind",
+      "canGainResources",
+      "clueAtLocation",
+      "contextEnemy",
+      "contextOf",
+      "controlledCards",
+      "drewCardType",
+      "drewNonWeakness",
+      "duringPeriod",
+      "enemiesAt",
+      "enemiesEngagedWith",
+      "exhaustedEnemies",
+      "failedByAtMost",
+      "hasTrait",
+      "investigatorClues",
+      "investigatorOf",
+      "investigatorsAt",
+      "locationTrait",
+      "locationsHere",
+      "never",
+      "noEnemiesHere",
+      "none",
+      "not",
+      "otherInvestigatorsAt",
+      "otherSeat",
+      "ownFirstAction",
+      "ownSeat",
+      "ownTurn",
+      "remainingSanityAtLeast",
+      "resignAvailable",
+      "seatOf",
+      "successByAtLeast",
+      "tokenRevealed",
+      "traitList"
+    ],
+    "targets": [
+      "enemy",
+      "investigator",
+      "location",
+      "asset",
+      "cardInHand"
+    ],
+    "playChannels": [
+      "attached",
+      "hunch",
+      "threat",
+      "beneath",
+      "backpack",
+      "discard",
+      "plan",
+      "deckTop",
+      "otherHand"
+    ],
+    "windowPlayChannels": [
+      "plan",
+      "attached",
+      "beneath",
+      "hunch",
+      "discard",
+      "backpack",
+      "threat",
+      "deckTop",
+      "otherHand"
+    ],
+    "mechanicsApi": {
+      "barriers": [
+        "canPlace",
+        "change",
+        "count",
+        "edges",
+        "moveConnected",
+        "removeConnected",
+        "set"
+      ],
+      "calendar": [
+        "current",
+        "periodAt",
+        "set"
+      ],
+      "camp": [
+        "inheritRevealed",
+        "location",
+        "recordRevealed",
+        "revealed",
+        "set"
+      ],
+      "chaosTokens": [
+        "add",
+        "candidates",
+        "count",
+        "inspect",
+        "pay",
+        "payMixed",
+        "rank",
+        "release",
+        "replace",
+        "replaceCampaignNumeric",
+        "replaceNumeric",
+        "revealSealed",
+        "room",
+        "scheduleReplacement",
+        "seal",
+        "treat"
+      ],
+      "city": [
+        "cityscapes",
+        "initialize",
+        "keyOnLocation",
+        "moveKey",
+        "placeKey",
+        "swapKeys",
+        "takeKey",
+        "visibleOnColumn",
+        "visibleOnRow"
+      ],
+      "climb": [
+        "ascend",
+        "cluesLostOnMove",
+        "descend",
+        "destinationError",
+        "dropExpeditionAssets",
+        "fallDamage",
+        "state"
+      ],
+      "codex": [
+        "available",
+        "resolve"
+      ],
+      "commitOrigins": [
+        "beneath",
+        "commit",
+        "store",
+        "take",
+        "withdraw"
+      ],
+      "crossSeat": [
+        "clear",
+        "data",
+        "grant"
+      ],
+      "deckTop": [
+        "card",
+        "clear",
+        "discountUsed",
+        "markPlayed",
+        "play",
+        "reveal",
+        "weaknessDraw"
+      ],
+      "defenses": [
+        "place"
+      ],
+      "disciplines": [
+        "bonds",
+        "burden",
+        "face",
+        "faceCode",
+        "flip",
+        "initialize",
+        "select"
+      ],
+      "enemyZones": [
+        "contains",
+        "enter",
+        "get",
+        "isInactive",
+        "list",
+        "restore",
+        "storeDeparted"
+      ],
+      "eoteCampaign": [
+        "memorials",
+        "partners",
+        "seals",
+        "supplies"
+      ],
+      "facilities": [
+        "activate",
+        "collapsedTowers",
+        "damageTower",
+        "destroy",
+        "initialize",
+        "placeTowerSeal",
+        "removeTowerSeal",
+        "state",
+        "tower",
+        "towerHealth",
+        "towerSeals"
+      ],
+      "frost": [
+        "add",
+        "autoFail",
+        "count",
+        "extraReveal",
+        "limit",
+        "pay",
+        "room"
+      ],
+      "hiddenDecks": [
+        "draw",
+        "returnToBottom",
+        "shuffleTopIntoInvestigatorDeck",
+        "size"
+      ],
+      "interactions": [
+        "chooseKey",
+        "commit",
+        "crossSeat",
+        "deckTop",
+        "discipline",
+        "eote",
+        "frost",
+        "keys",
+        "partners",
+        "release",
+        "returnCommitment",
+        "seal",
+        "seals",
+        "supply",
+        "tekeli",
+        "tsk",
+        "vehicle"
+      ],
+      "keys": [
+        "at",
+        "claim",
+        "give",
+        "heldAtLocation",
+        "heldByGroup",
+        "initialize",
+        "linkAsset",
+        "onExit",
+        "placeRandom",
+        "spend",
+        "transfer"
+      ],
+      "levels": [
+        "neighbors",
+        "of",
+        "ordered",
+        "set"
+      ],
+      "map": [
+        "configure",
+        "connect",
+        "distance",
+        "emptyAdjacent",
+        "expand",
+        "extendRoad",
+        "initializeRoad",
+        "locations",
+        "neighbors",
+        "paths",
+        "place",
+        "position",
+        "relocate"
+      ],
+      "rail": [
+        "advance",
+        "configure",
+        "convertMarkers",
+        "end",
+        "steer"
+      ],
+      "recordSets": [
+        "add",
+        "claimReward",
+        "remove",
+        "values"
+      ],
+      "residents": [
+        "change",
+        "crossOut",
+        "note",
+        "status"
+      ],
+      "roundDistance": [
+        "distance",
+        "noteStartLocation",
+        "reward",
+        "startLocation"
+      ],
+      "scenarioDecks": [
+        "addEncounterTop",
+        "cards",
+        "discard",
+        "discardTop",
+        "draw",
+        "drawBottomMatching",
+        "initialize",
+        "peek",
+        "put",
+        "removeTop",
+        "returnTop",
+        "revealChooseDraw",
+        "size",
+        "take",
+        "top",
+        "total"
+      ],
+      "shelter": [
+        "camp",
+        "of"
+      ],
+      "tekeli": [
+        "draw",
+        "initialize",
+        "return",
+        "shuffleIn",
+        "size"
+      ],
+      "tsk": [
+        "concealed",
+        "coterie",
+        "customizable",
+        "hollow",
+        "investigator",
+        "keys",
+        "map",
+        "patrol",
+        "state"
+      ],
+      "useTokens": [
+        "move",
+        "spend"
+      ],
+      "vehicles": [
+        "accessError",
+        "enter",
+        "leave",
+        "lockUntil",
+        "move",
+        "of",
+        "passengers",
+        "record",
+        "register",
+        "remove",
+        "running",
+        "setDriver"
+      ],
+      "water": [
+        "beginAirTurn",
+        "canChange",
+        "change",
+        "effectiveLevel",
+        "endAirTurn",
+        "level",
+        "lock",
+        "set",
+        "setRevealPolicy"
+      ]
+    },
+    "scenarioRuntimeExtras": {
+      "bondedLocation": [
+        "partnerOf",
+        "place",
+        "remove"
+      ],
+      "counters": [
+        "add",
+        "atLeast",
+        "get",
+        "highestOf",
+        "max",
+        "reset",
+        "set",
+        "setMax"
+      ],
+      "locationDoom": [
+        "add",
+        "get",
+        "highest",
+        "remove",
+        "total",
+        "validate"
+      ],
+      "markers": [
+        "add",
+        "get",
+        "reference",
+        "reset",
+        "set",
+        "summary"
+      ],
+      "swarm": [
+        "blockedReason",
+        "canDefeat",
+        "cardsOf",
+        "clear",
+        "countOf",
+        "hostOf",
+        "place",
+        "remove"
+      ],
+      "swarming": [
+        "count",
+        "countForText",
+        "spec"
+      ],
+      "tokenBag": [
+        "add",
+        "clearInfested",
+        "create",
+        "infestedCount",
+        "info",
+        "isInfested",
+        "markInfested",
+        "reset",
+        "return",
+        "reveal",
+        "transfer"
+      ],
+      "veiled": [
+        "canFlip",
+        "flip",
+        "flipBlockedReason",
+        "isVeiled",
+        "shuffleBack",
+        "validate"
+      ],
+      "verticalChain": [
+        "link",
+        "move",
+        "neighbors",
+        "order"
+      ]
+    },
+    "otherApiFactories": [
+      "src/engine/api-card.js",
+      "src/engine/api-clue.js",
+      "src/engine/api-enemy.js",
+      "src/engine/api-misc.js",
+      "src/engine/api-test.js"
+    ]
+  },
+  "primitives": [
+    {
+      "id": "timing.windows",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/windows.js",
+        "src/engine/ability.js",
+        "src/engine/ability-exec.js",
+        "src/engine/play-condition.js"
+      ]
+    },
+    {
+      "id": "test.outcomes",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/tests.js",
+        "src/engine/effects.js"
+      ]
+    },
+    {
+      "id": "choice.targets",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/targets.js",
+        "src/engine/matcher.js",
+        "src/engine/resolution.js"
+      ]
+    },
+    {
+      "id": "cards.zones",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/deck-ops.js",
+        "src/engine/player-zones.js",
+        "src/engine/card-ops.js"
+      ]
+    },
+    {
+      "id": "cards.playChannels",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/api-card.js#resolveAssetAction",
+        "src/engine/reveal.js#runExecuteDescriptor",
+        "src/engine/play-channels.js"
+      ]
+    },
+    {
+      "id": "cost.playAndSlots",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/cost.js",
+        "src/engine/assets.js",
+        "src/engine/modifiers.js"
+      ]
+    },
+    {
+      "id": "assets.uses",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/assets.js",
+        "src/engine/api-misc.js"
+      ]
+    },
+    {
+      "id": "assets.sharedUses",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/use-transfer.js#payUseCost",
+        "src/engine/ability-rules.js",
+        "src/engine/uses.js#afterSuppliesSubstituted"
+      ]
+    },
+    {
+      "id": "assets.maskLifecycle",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/assets.js#exceedsControlledTraitLimit",
+        "src/engine/locations.js#placeLocation",
+        "src/engine/act-agenda.js#placeDoomOnCard"
+      ]
+    },
+    {
+      "id": "assets.attachmentControl",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/hosted-assets.js#attachControlledAsset",
+        "src/engine/hosted-assets.js#claimHostedAsset",
+        "src/engine/enemies.js#leaveEnemyPlay"
+      ]
+    },
+    {
+      "id": "cards.bondedFaces",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/bonded.js#shuffleCopyIntoDeck",
+        "src/engine/physical-faces.js#applyPhysicalFace",
+        "src/engine/enemy-location.js#turnLocationIntoEnemy",
+        "src/engine/investigator-form.js#applyInvestigatorForm"
+      ]
+    },
+    {
+      "id": "combat.harm",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/combat.js",
+        "src/engine/enemies.js",
+        "src/engine/asset-defeat.js"
+      ]
+    },
+    {
+      "id": "combat.sourceFilter",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/effect-provenance.js#damageSourceMatches",
+        "src/engine/enemies.js#applyHarm",
+        "src/engine/harm-threat.js#checkDefeated"
+      ]
+    },
+    {
+      "id": "locations.tokens",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/api-clue.js",
+        "src/engine/location-doom.js",
+        "src/engine/location-state.js"
+      ]
+    },
+    {
+      "id": "locations.move",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/locations.js",
+        "src/engine/location-connections.js",
+        "src/engine/location-effect-scope.js"
+      ]
+    },
+    {
+      "id": "enemies.framework",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/enemies.js",
+        "src/engine/encounter.js",
+        "src/engine/turn.js"
+      ]
+    },
+    {
+      "id": "chaos.framework",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/chaos-bag.js",
+        "src/engine/chaos-token-effects.js",
+        "src/engine/tests.js"
+      ]
+    },
+    {
+      "id": "chaos.blessCurse",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/chaos-token-pool.js#rankedBagTokens",
+        "src/engine/api-test.js#revealRankedTokenInstead",
+        "src/engine/tests.js#beforeChaosTokenReveal"
+      ]
+    },
+    {
+      "id": "enemies.alert",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/combat.js",
+        "src/engine/physical-faces.js"
+      ]
+    },
+    {
+      "id": "enemies.patrol",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/enemy-keyword-movement.js#resolvePatrol",
+        "src/engine/turn.js"
+      ]
+    },
+    {
+      "id": "enemies.elusive",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/enemy-keyword-movement.js#setEnemyKeywords",
+        "src/engine/enemy-keyword-movement.js#resolveElusiveAfterAttack",
+        "src/engine/combat.js",
+        "src/engine/enemies.js"
+      ]
+    },
+    {
+      "id": "actions.parley",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/table-decisions.js#restrictedKindOfMove",
+        "src/engine/play-channels.js#parleyDiscardProvider",
+        "src/engine/actions.js#doPlay"
+      ]
+    },
+    {
+      "id": "campaign.codex",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/scenario-calendar.js#normalizeCodex",
+        "src/engine/scenario-calendar.js#resolveCodex"
+      ]
+    },
+    {
+      "id": "campaign.time",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/scenario-calendar.js#setScenarioDate",
+        "src/engine/matcher.js#duringPeriod"
+      ]
+    },
+    {
+      "id": "campaign.persist",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/survey-preparation.js#prepareSurvey",
+        "src/engine/campaign-flow.js#finishScenario",
+        "src/engine/setup.js#startScenario",
+        "src/engine/table-decisions.js#runMulligans"
+      ]
+    },
+    {
+      "id": "campaign.residents",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/resident-record.js#changeRelationship",
+        "src/engine/resident-record.js#crossOutResident",
+        "src/campaign/record-sets.js"
+      ]
+    },
+    {
+      "id": "locations.grid",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/grid-map.js#adjacentGridSpaces",
+        "src/engine/grid-map.js#relocateGridCells"
+      ]
+    },
+    {
+      "id": "locations.enemyLocation",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/enemy-location.js#turnLocationIntoEnemy",
+        "src/engine/enemy-location.js#removeEnemyLocation",
+        "src/engine/locations.js#removeLocation",
+        "src/engine/enemies.js#defeatEnemy"
+      ]
+    },
+    {
+      "id": "chaos.predationBag",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/token-bag.js#transferRevealedToken",
+        "src/engine/enemy-location.js#changeLocationSeals"
+      ]
+    },
+    {
+      "id": "investigators.toolDiscount",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/action-history.js#firstAssetDiscount",
+        "src/engine/api-card.js#swapControlledAssetFromHand"
+      ]
+    },
+    {
+      "id": "assets.clueTransfer",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/api-clue.js#transferControlledClues",
+        "src/engine/asset-clues.js#returnAssetClues",
+        "src/engine/assets.js"
+      ]
+    },
+    {
+      "id": "investigators.harmAndForm",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/harm-assignment.js#redirectAllyHarm",
+        "src/engine/harm-threat.js#assignHarm",
+        "src/engine/investigator-form.js#replaceLethalHarmWithForm"
+      ]
+    },
+    {
+      "id": "scenario.specialZones",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/scenario-decks.js#routeEnemyDiscardToScenarioDeck",
+        "src/engine/enemy-zones.js#createEnemyZoneApi",
+        "src/engine/encounter.js#drawEncounter"
+      ]
+    },
+    {
+      "id": "scenario.stagesAndBranches",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/act-agenda.js",
+        "src/engine/scenario-runtime.js",
+        "src/engine/resolution.js"
+      ]
+    },
+    {
+      "id": "scenario.darkness",
+      "disposition": "reuse",
+      "status": "done",
+      "evidence": [
+        "src/engine/marker-count.js#markerCountOf",
+        "src/engine/marker-count.js#addMarker",
+        "src/engine/scenario-runtime-extras.js"
+      ]
+    },
+    {
+      "id": "scenario.defenses",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/location-defenses.js#applyLocationDefenses",
+        "src/engine/movement.js#relocateEnemy"
+      ]
+    },
+    {
+      "id": "scenario.sinking",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/location-face.js#sinkLocation",
+        "src/engine/scenario-runtime.js"
+      ]
+    },
+    {
+      "id": "scenario.rail",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/rail-grid.js#advanceRailVehicle",
+        "src/engine/rail-grid.js#convertRailMarkers"
+      ]
+    },
+    {
+      "id": "scenario.fate",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/scenario-runtime.js#placeLocationVariant",
+        "src/engine/scenario-decks.js#drawBottomMatching",
+        "src/engine/investigator-form.js#applyInvestigatorForm"
+      ]
+    },
+    {
+      "id": "campaign.deckProgression",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/campaign/purchase-discount.js#temporaryPurchaseDiscount",
+        "src/campaign/campaign.js#purchaseCard",
+        "web/deck-rules.js#matchesCardRule"
+      ]
+    },
+    {
+      "id": "campaign.fatigue",
+      "disposition": "new",
+      "status": "done",
+      "evidence": [
+        "src/engine/chaos-token-pool.js#replaceCampaignNumericTokens",
+        "src/engine/api-mechanics.js"
+      ]
+    }
+  ]
+}

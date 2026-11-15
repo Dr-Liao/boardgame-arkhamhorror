@@ -16,6 +16,7 @@ import { grantSpellCredit } from './spell-actions.js'
 import { preparePlayAttempt, payBondedPlayCost } from './play-attempt.js'
 import { withOptionalLocationIgnore, ignoreLocationTrigger } from './location-effect-scope.js'
 import { recordPlayedCard } from './action-history.js'
+import { parleyDiscardProvider } from './play-channels.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { payTokenCost, tokenCostAvailable } from './token-cost.js'
 import { playTimingSource } from './play-timing.js'
@@ -85,9 +86,11 @@ export function createActions(deps) {
     withEffectCode,
   } = deps
 
-function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null, playDiscount = 0, fastSourceId = null) {
+function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null, playDiscount = 0, fastSourceId = null, fromDiscardProviderId = null) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
+  const discardProvider = fromDiscardProviderId && parleyDiscardProvider(inv, cardId, fromDiscardProviderId, { cardDef, registeredEntry })
+  if (fromDiscardProviderId && (!fromDiscard || !discardProvider)) return
   const copiedDef = copyCode && registeredEntry(cardId)?.copiesBeneathEvents ? cardDef(copyCode) : null
   const playedDef = copiedDef || def
   // 地球边缘 P5（08016 鲍勃）：跨座位代打。play-channels 的 otherHand 通道把队友手牌里的
@@ -133,7 +136,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     plan.exhausted = true
   } else if (fromDiscard) {
     // 温蒂的护身符要求弃牌堆顶；「临时武器」等标记 playableFromDiscard 的卡可在弃牌堆任意位置。
-    if (playAccess(cardId).fromDiscard) {
+    if (discardProvider || playAccess(cardId).fromDiscard) {
       if (!inv.discard.includes(cardId)) return
       inv.discard.splice(inv.discard.lastIndexOf(cardId), 1)
     } else {
@@ -285,6 +288,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       resourceBank.spendFromPool(payer, cost, state)
     }
     if (!payTokenCost(state, inv, registeredEntry(cardId)?.additionalTokenCost)) throw new Error('额外混乱标记费用已失效')
+    if (discardProvider) discardProvider.uses -= 1
     recordPlayedCard(state, inv, playedDef, registeredEntry)
     notePromiseEvent(state, inv.seat, 'play', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
     if (def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) {
@@ -502,7 +506,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code: cardId, originalCode: cardId,
         victory: cardDef(cardId)?.victory || 0 })
       info(state, events, `💎 「${cardName(cardId)}」被加入胜利展示区。`)
-    } else if (disposal.exileAfterPlay) exilePlayerCard(state, inv, cardId, events)
+    } else if (discardProvider) (state.removedFromGame ||= []).push(cardId)
+    else if (disposal.exileAfterPlay) exilePlayerCard(state, inv, cardId, events)
     else if (entryFlags.returnToHandAfterPlay) putInHand(state, inv, cardId)
     else if (disposal.becomesAsset) { /* 「危险预感」等：卡牌本身留在场上，由效果创建实例。 */ }
     else if (disposal.shuffleBackAfterPlay && (fromDiscard || disposal.fromHandShuffle)) {

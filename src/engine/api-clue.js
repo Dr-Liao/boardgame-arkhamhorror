@@ -1,4 +1,5 @@
 import { discardPlayerCards } from './player-zones.js'
+import { transferControlledClues } from './asset-clues.js'
 // 能力 API · 线索 / 毁灭 / 收尾（Phase 6 · 6d-9，abilityApi 第三批）。
 //
 // 这一组方法负责「调查结果的落账」：线索归还与搬运、毁灭放置与移除、威胁区操作、
@@ -31,6 +32,18 @@ export function createClueApi(state, events, deps) {
   } = deps
 
   return {
+    transferControlledClues(seat, from, to, count, options) {
+      const moved = transferControlledClues(state, seat, from, to, count, options)
+      if (moved) {
+        syncClues(state)
+        const inv = state.investigators[seat]
+        const asset = inv.assets.find(item => item.id === to)
+        if (asset) deps.reactionWindow?.(state, 'assetCluesPlaced', {
+          when: 'assetCluesPlaced', seat, asset, amount: moved, location: inv.location,
+        }, events, { allowNested: true })
+      }
+      return moved
+    },
     returnClueToLocation: (seat, amount = 1) => {
       const owner = state.investigators[seat]
       const location = state.locations.find(item => item.id === owner?.location)

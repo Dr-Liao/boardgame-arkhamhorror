@@ -1,4 +1,5 @@
 import { replacePlayerZoneCards } from './player-zones.js'
+import { returnAssetClues } from './asset-clues.js'
 import { payTokenCost } from './token-cost.js'
 import { keysOnExit } from './scenario-keys.js'
 import { removeVehicle } from './vehicles.js'
@@ -199,7 +200,16 @@ export function createAssets(deps) {
     return { capacity, occupancy: Math.min(occupancy, capacity), eligible }
   }
 
+  function exceedsControlledTraitLimit(inv, card) {
+    const rule = registeredEntry(card.code)?.assetRule?.controlledTraitLimit
+    if (!rule) return false
+    const trait = rule.trait.toLowerCase()
+    return inv.assets.filter(asset => (cardDef(asset.code)?.traits || asset.traits || [])
+      .some(value => value.toLowerCase() === trait)).length >= rule.amount
+  }
+
   function canEquip(inv, card) {
+    if (exceedsControlledTraitLimit(inv, card)) return false
     const need = {}
     for (const s of normalizedSlots(card)) {
       if (s === 'handx2') need.hand = (need.hand || 0) + 2
@@ -256,6 +266,7 @@ export function createAssets(deps) {
   // 只返回「弃到刚好够槽位」的最小方案：腾槽时必须停手，不能顺手多弃无关资产；
   // 同一层（张数相同）的全部组合都保留，玩家仍可自己决定先弃哪一张。
   function assetReplacementPlans(inv, card) {
+    if (exceedsControlledTraitLimit(inv, card)) return []
     if (canEquip(inv, card)) return [[]]
     const assets = replacementCandidates(inv, card)
     for (let size = 1; size <= assets.length; size++) {
@@ -351,6 +362,7 @@ export function createAssets(deps) {
     const healthBefore = getMaxHealth(inv)
     const sanityBefore = getMaxSanity(inv)
     removeOne(inv.assets, asset)
+    returnAssetClues(state, inv, asset)
     if (asset.attachedToAsset) {
       const host = inv.assets.find(item => item.id === asset.attachedToAsset)
       if (host) host.attachments = (host.attachments || []).filter(item => item.id !== asset.id)

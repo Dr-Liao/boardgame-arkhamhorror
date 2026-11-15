@@ -82,12 +82,14 @@ function originalSnapshot(state, inv, def) {
 }
 
 // 把 inv 换成 code 这张调查员卡。可重复调用：已有快照时只刷新卡面读数，不覆盖原身份。
-export function applyInvestigatorForm(state, inv, { code, form = 'yithian' } = {}) {
+export function applyInvestigatorForm(state, inv, { code, form = 'yithian', healingProhibited = false } = {}) {
   if (!inv || !code) throw new Error('换身需要调查员实例与目标调查员卡号')
   const def = cardDefinition(code)
   if (!def) throw new Error(`换身目标不是调查员卡：${code}`)
   inv.formOriginal ||= originalSnapshot(state, inv, def)
   inv.form = form
+  if (healingProhibited) inv.formHealingProhibited = true
+  else if (inv.formHealingProhibited) delete inv.formHealingProhibited
   inv.cardCode = def.code
   inv.code = def.code
   inv.name = def.nameZh || def.name
@@ -111,6 +113,7 @@ export function applyInvestigatorForm(state, inv, { code, form = 'yithian' } = {
 // 还原换身前的卡面身份；没有快照时只清掉残留的换身字段（不猜测原身份）。
 export function restoreInvestigatorForm(inv) {
   if (!inv) return false
+  if (inv.formHealingProhibited) delete inv.formHealingProhibited
   if (!inv.formOriginal) {
     delete inv.form
     delete inv.cardCode
@@ -126,6 +129,16 @@ export function restoreInvestigatorForm(inv) {
   delete inv.cardCode
   delete inv.formOriginal
   return true
+}
+
+export function replaceLethalHarmWithForm(state, inv, context, spec) {
+  if (!inv || inv.defeated || inv.resigned || context?.when !== 'wouldDefeat' || context.seat !== inv.seat
+    || !['damage', 'horror', 'both'].includes(context.cause) || context.replacedDefeat) return false
+  applyInvestigatorForm(state, inv, spec)
+  inv.damage = 0
+  inv.horror = 0
+  context.replacedDefeat = true
+  return inv
 }
 
 // 还原队伍里所有换身状态，返回还原人数（用于日志/迁移变更说明）。

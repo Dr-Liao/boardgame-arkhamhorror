@@ -261,15 +261,15 @@
     "inputs": [
       {
         "file": "audit/tsk-scope.json",
-        "sha256": "c8fb0ebe529fafa7bd6c989c453eb719faaa2831181b39b9c3d661d11e22e884"
+        "sha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68"
       },
       {
         "file": "audit/tsk-scenario-acceptance.json",
-        "sha256": "15c32df2c68a8e9c277ba906951d4d1015e7e8b49fe0ee5a75ad19fc6c1b522b"
+        "sha256": "6dba177649d11c20576812a33f9bb3847b2c236b35c0c583a4c664fdae3d7a5e"
       },
       {
         "file": "audit/tsk-player-acceptance.json",
-        "sha256": "3300a39be161777786de96be0ed84b1ac224af35bad724ad8c4d07c195c7767c"
+        "sha256": "c8b9b7fce37146f8e7f95182cc3d2883ab3db7117f31c08bb7b1e175aeba4b6a"
       },
       {
         "file": "audit/tsk-investigators.json",
@@ -381,7 +381,7 @@
       },
       {
         "file": "tests/tsk-shared-encounters-a.test.mjs",
-        "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc",
+        "sha256": "1bf9dd6130f34079999b5903ffaaeb9133d3bc362227e46e67c6b991f03047a6",
         "passed": 40,
         "failed": 0,
         "spawnExit": 0,
@@ -389,7 +389,7 @@
       },
       {
         "file": "tests/tsk-shared-encounters-b.test.mjs",
-        "sha256": "5d8041139c0133480f7966fd5d638c4c95ffdade580400361dc99b80f70d55a7",
+        "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d",
         "passed": 14,
         "failed": 0,
         "spawnExit": 0,

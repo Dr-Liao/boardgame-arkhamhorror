@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "50e72a667c1b573f766405e201832ba6df08481196e4c1d348bb76bf7c37f930",
+  "resourceVersion": "8bf241a1af63b8b1ea3940cf01df14bacb55de3c1a8f2d3f15d6660e7ed333be",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -118,7 +118,7 @@ export const META = {
       "status": "valid"
     }
   ],
-  "strictAccepted": 1444,
+  "strictAccepted": 1883,
   "total": 5930,
   "types": {
     "act": 374,
@@ -308961,7 +308961,7 @@ export const ALL_CARDS = {
   },
   "09001": {
     "agility": 2,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Carson Sinclair has served three generations of the Webb family in Arkham. Always proper, Carson watched with disapproval as his most recent employer, Hercule Webb, began bringing bizarre artifacts and profane tomes into the house, aided in these endeavors by Webb's business manager, Dupuis. When Mr. Webb was swallowed by a dimensional rift, no one believed Carson's description of the harrowing event. Carson has devoted himself to proving Dupuis's guilt, and to restoring the children as the rightful heirs to the Webb fortune.",
     "backFlavorZh": "卡森·辛克莱已经在阿卡姆服务了韦伯家族的三代人。卡森的举止向来合宜，但最新一任家主的所为叫他无法认同一一赫丘勒·韦伯在商业伙伴杜普斯的帮助下，将奇怪的神器和渎神的典籍带到家中。韦伯先生最终被维度之间的裂隙吞没了，但卡森讲述的恐怖事件却没人相信。卡森决心要证明杜普斯有罪，让韦伯家的孩子继承应得的家产。",
     "backNameZh": "",
@@ -309074,7 +309074,7 @@ export const ALL_CARDS = {
     "willpower": 2
   },
   "09002": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309137,7 +309137,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09002"
   },
   "09003": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309198,7 +309198,7 @@ export const ALL_CARDS = {
   },
   "09004": {
     "agility": 1,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "After the third or fourth mutilated body showed up during his time at St. Mary’s Hospital in Arkham, Vincent Lee began to suspect that these were not mere wild animal attacks. When a young man died screaming in his sleep from a burst heart, Vincent knew for a fact that dark times were ahead. Taking a leave of absence from his position at the hospital, he has set out to ease the suffering of those afflicted by the spreading chaos, hoping that the trail of bodies will lead him to the answers he craves.",
     "backFlavorZh": "文森特·李在阿卡姆的圣玛丽医院已经见到三四具严重损毁的尸体，他不禁怀疑这并非单纯的野生动物袭击。后来有一位青年在睡梦中尖叫着死于心脏爆裂。文森特知道，黑暗时光已至。混乱愈演愈烈。他在医院停了职，去找那些饱受折磨的人，为他们减缓痛苦，并希望尸体上的痕迹能引导他找到自己渴望的真相。",
     "backNameZh": "",
@@ -309337,7 +309337,7 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "09005": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309409,7 +309409,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09005"
   },
   "09006": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309470,7 +309470,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09006"
   },
   "09007": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309535,7 +309535,7 @@ export const ALL_CARDS = {
   },
   "09008": {
     "agility": 5,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "When the Taíno artifacts went missing from the Miskatonic Museum, Kymani was hired to assess the museum's liability. Of course, Kymani already knew who the thief was - it has been their own heist, all along. But Kymani had no interest in selling the relics. As far as Kymani was concerned, they weren't the one who really stole them. No; Kymani had sent the historical artifacts back home, where they truly belonged. The museum and the insurance company see only a villain to catch, but Kymani is faster, smarter, and better.",
     "backFlavorZh": "正巧基玛尼在受雇评定米斯卡塔尼克博物馆的安全指数的时候，馆内的泰诺族神器失踪了。基玛尼当然知道是谁干的——向来都是家贼难防。但基玛尼可不是为了卖掉这些遗物。其实基玛尼并不觉得自己真的偷了这些东西。不是的，基玛尼只是把这些神器带回家里，送到真正该在的地方。在博物馆和保险公司的眼中，基玛尼是要捉拿归案的反派。但基玛尼向来更快、更机灵、干得更好。",
     "backNameZh": "",
@@ -309641,7 +309641,7 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "09009": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309711,7 +309711,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09009"
   },
   "09010": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309782,7 +309782,7 @@ export const ALL_CARDS = {
   },
   "09011": {
     "agility": 3,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A refugee from French-occupied Algeria, Amina arrived in Arkham with nothing more than she could carry. Six years later, Amina's sharp mind and technical skill placed her at the switchboard for the Miskatonic Valley Telephone Company. Soon after, she began to catch snippets of something strange while at work - distorted words in an unrecognizable language, out-of-place noises, calls that connected to nowhere at all and dropped almost immediately. As the phantom calls grew in frequency, Amina sought answers. She found the right extension, connected to the line, and listened in. Despite not understanding a word of the alien language on the other side, she could tell the eldritch words held real power.",
     "backFlavorZh": "阿米娜是从法属阿尔及利亚逃出来的难民，她到阿卡姆的时候身无长物。六年后，阿米娜凭借自己的灵敏头脑和专业技术，在米斯卡塔尼克谷电话公司找到了接线员的活。不久，她在工作中捕捉到了一些奇怪的片段——一种未知语言的扭曲话语，不合常理的噪音，阵阵呼唤不知通往何处，又在一瞬间断线。怪声越来越频繁，阿米娜决定要寻求答案。她连上正确的分线，开始倾听。尽管她并不明白另一端的异星语言到底在说什么，但依然能感受到其中蕴含着真正的力量。",
     "backNameZh": "",
@@ -309894,7 +309894,7 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "09012": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -309954,7 +309954,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09012"
   },
   "09013": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310014,7 +310014,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09013"
   },
   "09014": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310076,7 +310076,7 @@ export const ALL_CARDS = {
   },
   "09015": {
     "agility": 3,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Even while growing up in Arkham, Darrell always knew that there was something not quite right about the strange little town. After graduating from high school, he went to work for the <i>Arkham Advertiser</i> as a photographer, and in the years since, he's scoured every inch of the city. But on one fateful night, he saw something truly indescribable - a horror that shook his world to the core. His editor says he was just seeing things, but he knows the truth. With his trusty camera in tow, he will not rest until he has captured photographic evidence of the horrors that dwell in the shadows of his hometown and beyond. Just one good shot is all he needs.",
     "backFlavorZh": "即便达雷尔在阿卡姆长大，他还是知道这座诡镇有什么不对劲。自打高中毕业，达雷尔就在阿卡姆报社工作。这么多年的摄影师当下来，他已经翻遍了城里的每一寸地方。在宿命般的一夜，他看到的东西确实无可名状——这份恐惧让他的世界天翻地覆。编辑说他只是看到了幻象，但达雷尔知道真相。达雷尔带着自己信任的相机，一定要拍下实据，证明恐怖寄居于自己家乡和彼端的阴影之中，在此之前他绝不停歇。他只要按对一次快门。",
     "backNameZh": "",
@@ -310184,7 +310184,7 @@ export const ALL_CARDS = {
     "willpower": 2
   },
   "09016": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310251,7 +310251,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09016"
   },
   "09017": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310313,7 +310313,7 @@ export const ALL_CARDS = {
   },
   "09018": {
     "agility": 1,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Charlie Kane promised the people of Arkham a safer future. He made a lot of promises - lower taxes, better schools, less crime. It was part of the job, after all. And although he sometimes had to do things he wasn't proud of, Charlie always did work for the greater good. So when he started hearing the reports, he put the people first. Of course, he couldn't tell anyone. Widespread panic would not serve the public good. Besides, who'd believe him? Still, Charlie has always had connections in town. So he made a few calls, put a task force together, and went to work.",
     "backFlavorZh": "查理·凯恩向阿卡姆的人民允诺一个更为安全的未来。他作出了不少承诺——减低税收、兴办学校、打击犯罪。总之，这是工作。虽然有些时候做的事情他并不骄傲，但查理总是为了崇高利益。他听到报告时，总把人民放在第一位。当然，他不会告诉别人。撒播恐慌对公众利益没有好处。再说，有谁会信呢？查理在镇里总有人脉。他只要打几个电话，组织起一支队伍，然后就去干活。",
     "backNameZh": "",
@@ -310451,7 +310451,7 @@ export const ALL_CARDS = {
     "willpower": 1
   },
   "09019": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310525,7 +310525,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09019"
   },
   "09020": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310586,7 +310586,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09020"
   },
   "09021": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310683,7 +310683,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09022": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310787,7 +310787,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09023": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310874,7 +310874,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09024": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310938,7 +310938,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09025": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -310994,7 +310994,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09026": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311055,7 +311055,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09027": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311111,7 +311111,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09028": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311168,7 +311168,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09029": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311226,7 +311226,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09030": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311283,7 +311283,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09031": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311335,7 +311335,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09032": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311394,7 +311394,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09033": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311459,7 +311459,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09034": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311523,7 +311523,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09035": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311581,7 +311581,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09036": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311638,7 +311638,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09037": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311705,7 +311705,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09038": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311770,7 +311770,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09039": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311827,7 +311827,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09040": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -311925,7 +311925,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09041": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312022,7 +312022,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09042": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312140,7 +312140,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09043": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312203,7 +312203,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09044": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312265,7 +312265,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09045": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312328,7 +312328,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09046": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312386,7 +312386,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09047": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312443,7 +312443,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09048": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312501,7 +312501,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09049": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312555,7 +312555,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09050": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312621,7 +312621,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09051": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312680,7 +312680,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09052": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312738,7 +312738,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09053": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312794,7 +312794,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09054": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312859,7 +312859,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09055": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312922,7 +312922,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09056": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -312981,7 +312981,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09057": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313042,7 +313042,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09058": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313106,7 +313106,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "09059": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313194,7 +313194,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09060": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313293,7 +313293,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09061": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313389,7 +313389,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09062": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313448,7 +313448,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09063": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313505,7 +313505,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09064": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313572,7 +313572,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09065": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313631,7 +313631,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09066": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313690,7 +313690,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09067": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313750,7 +313750,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09068": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313808,7 +313808,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09069": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313864,7 +313864,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09070": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313918,7 +313918,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09071": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -313982,7 +313982,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09072": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314047,7 +314047,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09073": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314106,7 +314106,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09074": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314163,7 +314163,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09075": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314228,7 +314228,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09076": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314291,7 +314291,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09077": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314345,7 +314345,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09078": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314402,7 +314402,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09079": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314503,7 +314503,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09080": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314601,7 +314601,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09081": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314697,7 +314697,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09082": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314762,7 +314762,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09083": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314823,7 +314823,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09084": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314884,7 +314884,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09085": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -314945,7 +314945,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09086": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315002,7 +315002,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09087": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315057,7 +315057,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09088": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315113,7 +315113,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09089": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315175,7 +315175,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09090": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315231,7 +315231,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09091": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315290,7 +315290,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09092": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315355,7 +315355,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09093": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315415,7 +315415,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09094": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315467,7 +315467,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09095": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315524,7 +315524,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09096": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315589,7 +315589,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09097": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315650,7 +315650,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09098": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315711,7 +315711,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09099": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315804,7 +315804,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09100": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315898,7 +315898,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09101": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -315989,7 +315989,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09102": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316052,7 +316052,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09103": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316114,7 +316114,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09104": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316170,7 +316170,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09105": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316228,7 +316228,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09106": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316283,7 +316283,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09107": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316337,7 +316337,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09108": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316395,7 +316395,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09109": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316449,7 +316449,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09110": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316504,7 +316504,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09111": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316558,7 +316558,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09112": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316611,7 +316611,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09113": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316674,7 +316674,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09114": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316740,7 +316740,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09115": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316794,7 +316794,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09116": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316850,7 +316850,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09117": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316911,7 +316911,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09118": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -316965,7 +316965,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09119": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317063,7 +317063,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09120": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317124,7 +317124,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09121": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317182,7 +317182,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09122": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317244,7 +317244,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09123": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317296,7 +317296,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09124": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317363,7 +317363,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09124"
   },
   "09125": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317424,7 +317424,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09125"
   },
   "09126": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317485,7 +317485,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09126"
   },
   "09127": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317552,7 +317552,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09127"
   },
   "09128": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -317613,7 +317613,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09128"
   },
   "09501": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "谜雨",
     "backText": "Hard / Expert\n[skull]: -2 (-4 instead if you have 2 or more clues).\n[tablet]: -2. If there is a concealed mini-card at your location, reveal another chaos token.\n[elder_thing]: -4. If you fail, you must either spend 1 clue or place 1 doom on an enemy in the shadows.",
@@ -317662,7 +317662,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09501"
   },
   "09502": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Eventually, you notice the tail. The figure stalks you through the rainy streets, pretending to have some other pressing task at hand. For once, you believe your paranoia may have paid off. But there is only one way to know for sure. So you test your theory - walking faster, moving aimlessly through the streets, and doubling back to see what they do. Every time, there they are. Watching you. It's a tail, all right. You flip the script and begin to give chase, instead. If they work for the man with the red gloves, you are going to find out.",
     "backFlavorZh": "结果你发现有人跟踪。你注意到身后的雨街中有身影尾随，对方还装作手头另有急切的事情。你一度以为是自己的妄想症发作。要想确认，只有一个法子。你检验自己的判断——加快脚步，在街巷里漫无目的地穿行，再三检查对方在干什么。结果对方无时不在，一直盯着你。果然是被盯上了。你改变计划，果断出击。如果这是戴红手套男子的手下，那你一定要查个明白。",
     "backName": "Just Out of Reach",
@@ -317717,7 +317717,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09502"
   },
   "09503": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Through the rainy streets and dense fog you give chase, but no matter what you do, the man you seek constantly eludes your grasp. All you catch is the barest hint of the color red as he slips out of view once more. Then, fast as a flash of lightning and gone just as swiftly, a formless shape ducks out of view. A chunk of a nearby telephone booth goes along with it. After a moment of trepidation, you inch forward and examine what remains of the booth. All that remains is an ectoplasmic substance, appearing like the negative of an undeveloped photo. It takes you a while to pick up the trail once more. When you do, you find that your quarry has fled to the east, where the Tower Bridge looms over the skyline.",
     "backFlavorZh": "你穿越雨街和浓雾一路追逐，但怎么也抓不到那个男子。他屡屡逃脱，你只能瞧见一缕黯淡的红色。接着，视线里闪过一个不辨实状的身影，来去之疾，有如闪电。附近一座巨大的电话亭也随之而去。你大为惶恐，小心翼翼地接近电话亭还残余的部分。所剩的只是一团形体模糊的虚影，就像尚未冲洗的底片。你缓了一会儿才重新上路。你发现自己的猎物已经往东边逃去，那里的天际线上耸立着伦敦塔桥的高大身影。",
     "backName": "He Got Away!",
@@ -317772,7 +317772,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09503"
   },
   "09504": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As the night grows deeper and the rain becomes a torrent, you flinch at every moving shadow, every sound, every shape. You wonder if perhaps this investigation is getting the best of you.\nOr maybe there are more of them than you thought, watching you. Lying in wait for the perfect opportunity to strike.",
     "backFlavorZh": "夜色愈发浓重，大雨变成了风暴。每一处阴影，每一声响动，每一个身形都吓得你不轻。你不禁怀疑此番调查是否明智。\n或许还有更多潜藏的身影在注视着你，等待发起进攻的绝佳时机。",
     "backName": "Mysterious Shapes",
@@ -317827,7 +317827,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09504"
   },
   "09505": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Plot Succeeds",
     "backNameZh": "阴谋得逞",
@@ -317881,7 +317881,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09505"
   },
   "09506": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You spot the figure on the other side of the street just as a bright red bus approaches. You are certain whoever was there was staring directly at you. The bus cuts a swath through the foggy street, and when it has passed, the figure is gone.\nPerhaps it is just your paranoia at work, but it cannot be a coincidence. It must have either been your contact, or one of their foes. Perhaps even the reason they are missing. Steeling yourself for any possibility, you set off in chase.",
     "backFlavorZh": "一辆亮红色的巴士开过，就在此时，你发现了街对面的身影。你确信对方正望着你。巴士在雾街中划过一道红色的长线。开过的时候，那个身影不见了。\n兴许是你的妄想症在作祟，但这也太巧合了。这肯定是你的联络人，要不就是你的敌人，甚至可能是他们消失的原因。你做足准备，追了上去。",
     "backName": "Movement in the Dark",
@@ -317936,7 +317936,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09506"
   },
   "09507": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "After much toil and pursuit, you finally catch up to the figure you've been chasing. A feeling of vindication washes over you as you spot the red gloves the man wears. It was no phantom you chased; this is the one you have sought all along. You corner him in a narrow alleyway, sheets of rain and fog masking your approach. Several more figures flank the man - a meeting, perhaps? To your surprise, he casts an expressionless glance in your direction. Then, fast as a flash of lightning and gone just as swiftly, a formless shape ducks out of view. A chunk of a nearby building goes along with it. When you turn to question your quarry about what happened, they have all fled east. You inch forward and examine the partially-excised wall, covered in an ectoplasmic substance, like the negative of an undeveloped photo.",
     "backFlavorZh": "你费尽千辛万苦，终于追上去了。你认出对方戴的红手套，顿知自己绝非臆想。你追逐的不是幻影，就是你一直要找的人。连绵的大雨和浓雾掩护你前进，你已经将他逼入狭窄的小巷。他周围还有几个身影——兴许是一次碰头？他朝你的方向投来面无表情的一瞥，惊着你了。接着，视线里闪过一个不辨实状的身影，来去之疾，有如闪电。附近的建筑也随之而去。你正要质问猎物发生了什么，他们却都往东逃去了。你小心翼翼地接近残余的半堵墙，却发现上面笼罩着一团形体模糊的虚影，就像尚未冲洗的底片。",
     "backName": "The Chase is On!",
@@ -317990,7 +317990,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09507"
   },
   "09508": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Quietly and cautiously, you follow the figure from a distance. With measured haste, he darts to and fro inside the ominous tower. Searching for something.\nFinally, while you watch from the shadows, the man with the red gloves finds what he is looking for: a loose brick along one of the candlelit hall's many columns. He casually rotates the stone back into place with the kind of nonchalance as if he were dealing with a piece of misplaced laundry. To your surprise, a section of the nearby wall rotates in turn, revealing a secret passageway. He ascends into darkness, and you follow in secret.",
     "backFlavorZh": "你小心翼翼，悄然无声，远远地跟在那个身影后面。他迅速迈进了那座阴森的塔楼，是要寻找什么。\n你从阴影中窥探，发现戴红手套的男子终于在烛光点燃的大厅里找到了自己想要的东西：在众多立柱中，有一块松动的砖头。他漫不经心地将砖头转回应有的位置，仿佛手上不过是一件放错位置的脏衣。惊人的是，附近的墙壁居然也转开了一个口子，露出一条秘密通道。他遁入黑暗，而你也秘密跟上。",
     "backName": "He's Here!",
@@ -318045,7 +318045,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09508"
   },
   "09509": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Plot is Foiled",
     "backNameZh": "阴谋落空",
@@ -318098,7 +318098,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09509"
   },
   "09510": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Cold rain pelts the dreary streets in a rhythmic pitter-patter. Despite the hour, the square is bustling with automobiles, carriages, and pedestrians. Somewhere in this crowded city is the man you seek... or are you already too late?",
     "backFlavorZh": "冷雨噼里啪啦地落在沉闷的街上，颇有些节奏。尽管为时已晚，广场上汽车、马车和行人还是熙熙攘攘。你要找的人就藏在拥挤的城市某处……但你还来得及吗？",
     "backNameZh": "伦敦雨街",
@@ -318155,7 +318155,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09510"
   },
   "09511": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A fixture of the London skyline, the clock tower at the north end of the Palace of Westminster looms over the city, its face like the eye of a watchful guardian.",
     "backFlavorZh": "威斯敏斯特宫北段的钟楼俯瞰全城，是伦敦天际线上一道不容错过的风景，仿佛一位警惕的守望者瞪大的眼睛。",
     "backNameZh": "大本钟",
@@ -318213,7 +318213,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09512": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Gothic abbey near the palace is both a place of religious significance and a traditional burial site for English royals. Lights flicker in the windows as the gentle rain turns to an ominous downpour. You would not be the first to seek guidance on such hallowed ground, but you wonder what else may be at work within its aged walls.",
     "backFlavorZh": "宫殿旁哥特式的修道院既有着十足的宗教意义，也是英国王室传统的长眠之所。绵绵细雨惹人不安地飘泼起来。修道院的窗里闪着灯光。在这样的圣所寻求指引理所当然，但你也想知道古老的墙壁后是否还藏了其他东西。",
     "backNameZh": "威斯敏斯特修道院",
@@ -318270,7 +318270,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09512"
   },
   "09513": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The night's unusually somber mood is enough to drown out even the beauty of the royal park. The Round Pond threatens to flood as the downpour continues. This place has been a popular meeting ground for many years - perhaps the man with the red gloves and his cohorts are here?",
     "backFlavorZh": "这一夜非常致郁，连御园的美丽也于事无补。\n大雨如注，再这样下去圆池都要泛滥成灾。\n人们常常来此会面——兴许戴红手套的男子和他的同伙就在这儿？",
     "backNameZh": "肯辛顿花园",
@@ -318328,7 +318328,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09514": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Spanning the River Thames, the newly built Tower Bridge has quickly become a cultural icon, connecting Central London with the East End, which has seen much growth in recent years. To the north, just over the bridge, a dark cloud encircles the Tower of London.",
     "backFlavorZh": "横跨泰晤士河的塔桥虽然年轻，但也迅速成为一处文化地标，连接了伦敦中心和近年发展迅速的东区。越过塔桥，北边的乌云环绕着伦敦塔。",
     "backNameZh": "塔桥",
@@ -318386,7 +318386,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09514"
   },
   "09515": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Although the original entrance to the water gate has long since been bricked up, you commandeer a small vessel and make your way along the river anyway. Perhaps there is still a secret route one might take from here to infiltrate the Tower of London.",
     "backFlavorZh": "尽管原本的水门早就用砖封上了，但你还是霸占了一艘小船沿河而行。也许这里还有潜入伦敦塔的秘密路线。",
     "backNameZh": "叛徒之门",
@@ -318444,7 +318444,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09515"
   },
   "09516": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A conspiracy of ravens circle ominously over the castle walls. Far too many to be a coincidence.",
     "backFlavorZh": "一团乌鸦在城墙上环绕，颇为不祥。\n数量之众，绝非巧合。",
     "backNameZh": "伦敦塔",
@@ -318501,7 +318501,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09516"
   },
   "09517": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "What could the man with the red gloves possibly want in this place?",
     "backFlavorZh": "戴红手套的男子到底在这儿想获得什么？",
     "backNameZh": "塔楼牢房",
@@ -318559,7 +318559,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09518": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -318624,7 +318624,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09519a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -318682,7 +318682,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09519a"
   },
   "09519b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -318736,7 +318736,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09519b"
   },
   "09520": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -2 for every 1 [per_investigator] civilians slain.\n[cultist]: -6. Choose a non-[[Elite]] enemy at your location. That enemy readies and attacks you.\n[tablet]: -2. Take 1 damage. A civilian at your location is slain.\n[elder_thing]: -4. If you fail, discard 1 card from your hand at random.",
@@ -318785,7 +318785,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09520"
   },
   "09521": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As night falls, your sense of being followed only grows. Turning around, you see a trio of tall, lanky figures moving slowly. The shadows obscure their features, but a glint of light reflects on wet, red jaws and hollow eyes. When you quicken your pace, they quicken theirs. As the group bears down on you, you duck into a nearby alleyway and sprint away from them. After several minutes of running, you hear a rasping, gutteral howl followed by a sound like ripping cloth behind you.",
     "backFlavorZh": "夜幕愈深，你也愈发感到有什么东西在跟着自己。你转过身，看到三个高瘦的身影缓缓向前。他们的面容被阴影掩藏，看不真切，但鲜红潮湿的下颚和空洞的眼睛还是反射出了一点微光。你加快脚步，他们也提速跟上。就在他们要扑上来的时候，你迅速闪进附近的街巷，逃开了。你跑了几分钟，听到背后传来一阵堵在咽喉里的噪音，颇为刺耳，接着是衣服撕裂的声音。",
     "backName": "The Risen Dead",
@@ -318840,7 +318840,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09521"
   },
   "09522": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A crimson sunrise casts the ruined city in an awful glow: cars overturned, stalls razed, cobblestones covered in blood smears. What few civilians remain cower behind boarded up windows, fearfully praying for their lives. Whatever terrible thing Amaranth aimed to do here, she has succeeded. The city's ruin is a grim testament to her awful power.\nHeart heavy with the weight of such great loss, you make a path through the devastation. A pack of the hungering dead catch wind of your scent and pursue you relentlessly to the city limits, picking at you with sharp, hungry claws. You barely escape with your life.",
     "backFlavorZh": "猩红的阳光洒在城市的废墟上，映照出一片可怕的光景：车辆倾倒，商店遭劫，卵石路上洒满了粘稠的血液。只剩寥寥无几的平民还躲在封死的窗后，惊恐万分地祈求活命。无论苋在此处的意图为何，她都得逞了。城中毁灭的惨状无情地证明了她有着多么强大的力量。\n你心情沉重地穿越眼前的破败，如此惨重的损失压得你抬不起头。一群饥饿的死者闻到了你的味道，无休无止地追你直到城市的尽头。他们饥渴尖利的利爪伤你不浅，你仅以身免。",
     "backName": "The Hungering Dead",
@@ -318895,7 +318895,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09522"
   },
   "09523": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Showing the photograph of Amaranth to several locals, they direct you to the verdant Bahia Palace Gardens. Approaching carefully, you find the woman with the red flower standing at the edge of a ritual circle, candles lit at each point, with gleaming offerings gathered around a corpse laid on an altar in the center. On either side of the corpse, two dead warriors are laid on the ground, bedecked in ancient finery.\n\"Soon, my love,\" Amaranth strokes the cheek of the corpse as the blossom in her hair unfurls. Tenebrous vines radiate out from the circle and creep across the garden. The grass and greenery shrivel under their touch, and eerie green light shimmers up the black vines, drinking the life around it. \"It appears we have guests,\" Amaranth smirks.",
     "backFlavorZh": "你把苋的照片给几个当地人看了，他们指引你到郁郁葱葱的巴希尔宫花园去。你悄悄接近，发现戴着红花的女子正站在仪式法阵的边缘，法阵的角上都点着蜡烛，烛光照映着祭品，祭品中央的祭坛上有一具尸体。而在尸体的另一侧，是两个穿着古代华服的亡灵战士。\n“马上，亲爱的。”苋敲过尸体的脸颊，她头发上系着的花朵展开了，黑暗的藤蔓向法阵外伸出，穿过了花园。草木触之尽枯。黑藤上闪过可怕的绿光，吸取了周围的生命。“看来我们有客人了。”苋狞笑道。",
     "backName": "Night Has Come",
@@ -318950,7 +318950,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09523"
   },
   "09524": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Land is Dark",
     "backNameZh": "黑暗之地",
@@ -319003,7 +319003,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09524"
   },
   "09525": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Amaranth's tortured cry resounds through the streets as she collapses. A heady wind picks up, whipping the dust in the street into a frantic dervish as the hot sun beats down overhead. Black ichor pools around Amaranth's body as the nexus of vines begins to wither and dessicate around you. The hordes of risen dead stop in their tracks, as if waiting for your move. You can see the remaining civilians of Marrakesh flee the city beyond them.\nStanding over the beautiful, terrible woman, you feel a pang of pity. As you turn her over, you notice the voluptuous flower behind her ear has wilted in the heat. She lets out a primal scream as you pull the blossom from her ear: the stem is several inches longer than you expected, and sticky with blood.",
     "backFlavorZh": "苋倒下了，街巷里回荡着她受难的尖叫。疾风将街上的沙尘吹起，在头顶的烈日下飘扬，仿佛是苦行僧的祭舞。黑色的液体洒满苋的四周，连结的藤蔓在你身旁枯萎干瘪。苏生的死者停了下来，仿佛在等你先动。你看到马拉喀什残存的平民逃出了城市。\n你站在这个美丽又可怕的女子面前，心中不禁涌起一阵悲悯。你将她翻过身来，发现她耳边丰盈的花朵在暑气中已然枯萎。你从她耳边将花摘下，她发出一声压抑已久的悲鸣：花朵的茎杆比你想的还要长上几寸，上面黏糊糊地沾满了血液。",
     "backName": "Stand By Me",
@@ -319057,7 +319057,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09525"
   },
   "09526": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Your initial impression of Marrakesh seems pleasant, from the gentle, dry heat to the striking Moorish architecture and colorful tilework. However, you also sense an unspoken fear among those around you.",
     "backFlavorZh": "你对马拉喀什的初见印象还算不错。暖风干爽和煦，摩尔式的建筑和彩色瓷砖也很迷人。不过，你还是体会到周围传来一阵难以言喻的恐惧。",
     "backNameZh": "马拉喀什火车站",
@@ -319114,7 +319114,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09526"
   },
   "09527": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The center of commerce in Marrakesh, this huge open-air market is the go-to place for acquiring food and supplies. The air is thick with the music of buskers and the smell of spices and roasted meats.",
     "backFlavorZh": "这个庞大的露天广场是马拉喀什的商业中心。无论是想大快朵颐，还是获取补给，都可以到这儿来。空气中传来了杂耍艺人的乐声，还有香料和烤肉的气味。",
     "backNameZh": "德吉玛广场",
@@ -319171,7 +319171,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09527"
   },
   "09528": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The royal necropolis of the Saadian dynasty, this is the final resting place for much of Morocco's 16th-century royalty. Some of its beautiful tilework was destroyed with the recent theft.",
     "backFlavorZh": "萨阿德王朝的陵墓是摩洛哥16世纪众王的长眠之所。一些精美的瓷砖已在最近的盗窃案中遭劫。",
     "backNameZh": "萨阿德王陵",
@@ -319228,7 +319228,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09528"
   },
   "09529": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You have heard reports of strange disappearances near the tanneries, where leather is processed in large vats of pungent chemicals and dyes.",
     "backFlavorZh": "你听闻神秘的失踪案就发生在鞣革场附近。那里用大罐盛装刺激的化学药剂和染料处理皮革。",
     "backNameZh": "鞣革厂",
@@ -319285,7 +319285,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09529"
   },
   "09530": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The sprawling and opulent palace draws many admirers. The jewel of the palace is its courtyard garden: an oasis of lush vegetation amidst a harsh desert.",
     "backFlavorZh": "植被繁盛的宫殿吸引了许多慕名而来的旅客。在环境严酷的沙漠中，御花园这样一片茂密的绿洲自然就成了王宫的明珠。",
     "backNameZh": "巴希尔宫花园",
@@ -319344,7 +319344,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09530"
   },
   "09531": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The once-bustling station is now quiet and lonely. The attendants in charge have delayed the train until tomorrow; news of what is happening in Marrakesh seems to have spread quickly.",
     "backFlavorZh": "一度熙熙攘攘的火车站现在寂静荒凉。负责的工作人员将所有的班车都推迟到了明日。马拉喀什发生的事情看来已经传远。",
     "backNameZh": "马拉喀什火车站",
@@ -319402,7 +319402,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09531"
   },
   "09532": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Wind whistles through the empty square, accompanied by the sound of slow footsteps and low groans of the risen.",
     "backFlavorZh": "微风吹过空荡荡的广场，与之同来的还有苏生的死者缓慢的脚步声和低沉的吼叫。",
     "backNameZh": "德吉玛广场",
@@ -319461,7 +319461,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09532"
   },
   "09533": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "This once-holy place is now desecrated and overrun with figures that reek of death and fresh blood.",
     "backFlavorZh": "曾经的圣所已遭亵渎，布满了鲜血和散发着死亡气味的身影。",
     "backNameZh": "萨阿德王陵",
@@ -319520,7 +319520,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09533"
   },
   "09534": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "For some reason, the risen dead have been especially active near the old tanneries. Why congregate here?",
     "backFlavorZh": "不知怎的，旧鞣革场周围苏生的死者格外活跃。为什么会聚集在这儿？",
     "backNameZh": "鞣革厂",
@@ -319579,7 +319579,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09534"
   },
   "09535": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The once-vibrant gardens are choked with black, thorned vines. The remaining trees are frail and flake under your touch, and the fountains run dry.",
     "backFlavorZh": "一度生机盎然的花园现在已被黑色的荆藤占据。剩余的树木十分脆弱，你一碰就碎裂了。喷泉也已干涸。",
     "backNameZh": "巴希尔宫花园",
@@ -319640,7 +319640,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09535"
   },
   "09536": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -319692,7 +319692,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09536"
   },
   "09536b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -319740,7 +319740,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09536b"
   },
   "09537": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -319808,7 +319808,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09537b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -319872,7 +319872,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09538": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -319939,7 +319939,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09539": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320000,7 +320000,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09539"
   },
   "09540": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320061,7 +320061,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09540"
   },
   "09541": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320124,7 +320124,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09542": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320178,7 +320178,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09542"
   },
   "09543": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320232,7 +320232,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09543"
   },
   "09544a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320290,7 +320290,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09544a"
   },
   "09544b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -320344,7 +320344,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09544b"
   },
   "09545": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is 1 more than the number of targets on this card.\n[cultist]: -7. If you fail by 2 or more, shuffle each concealed mini-card at your location and at each connecting location facedown, then place them at random in the positions they were in.\n[tablet]: -2. Cancel the effects and icons of each card committed to this skill test.\n[elder_thing]: -3. If you fail, you must either place 1 doom on the current agenda, or the nearest [[Coterie]] enemy attacks you (even if it is in the shadows).",
@@ -320393,7 +320393,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09545"
   },
   "09546": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Hot on the thief's heels, you bust through the door leading to her current target, only to find her already leaving with a piece of the statuette. She gives you a mischievous smirk before escaping through a nearby window.",
     "backFlavorZh": "你紧追不舍，跟着窃贼冲进了大门，里面就是她的下一个目标，却发现她已经拿着一块碎片溜了。她从附近一扇窗逃了，临了还给你留下一个调皮的坏笑。",
     "backName": "Bamboozled!",
@@ -320448,7 +320448,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09546"
   },
   "09547": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Exposed!",
     "backNameZh": "揭露！",
@@ -320501,7 +320501,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09547"
   },
   "09548": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Getaway",
     "backNameZh": "逃跑路线",
@@ -320554,7 +320554,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09548"
   },
   "09549": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You step out onto the broad avenue, eyes darting to every alleyway and rooftop. This street connects with the Plaza de Mayo and many of the buildings which Officer Bolívar marked as potential targets for La Chica Roja's campaign of thievery. It's as good a place as any to start your search.",
     "backFlavorZh": "你走过宽广的大道，眼神扫过每一条街巷，每一座屋顶。玻利瓦尔警长给你标出了好几个地方，都可能是红衣女郎的目标。五月大道就是连接它们和五月广场的中轴，是开始搜寻的好地方。",
     "backNameZh": "五月大道",
@@ -320613,7 +320613,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09549"
   },
   "09550": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Serving as the office of the President of Argentina, the Rose House is also home to several antiques and curios inherited from past leaders. One might be a piece of the Key your quarry seeks.",
     "backFlavorZh": "玫瑰宫是阿根廷的总统府，里面寄存着过去数任留下的奇珍异宝。也许这里就有一片钥匙吸引了你的猎物。",
     "backNameZh": "玫瑰宫",
@@ -320671,7 +320671,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09550"
   },
   "09551": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Overlooking the Plaza de Mayo looms the impressive façade of the Metropolitan Cathedral. In addition to the usual trappings of the church, Bolívar has informed you that it houses many magnificent pieces of art, as well as a mausoleum. It seems a likely target for La Chica Roja.",
     "backFlavorZh": "主教座堂的宏伟立面俯瞰整个五月广场。玻利瓦尔告诉你，这里仿佛一座宏伟的陵墓，除了有教会的华美陈设，更保存了许多艺术珍品，可能是红衣女郎的目标。",
     "backNameZh": "主教座堂",
@@ -320729,7 +320729,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09551"
   },
   "09552": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Robbing the dead has long been a crime reserved for only the foulest of thieves, so naturally, Officer Bolívar believes Recoleta Cemetery is on the list of potential targets. Who knows what valuables may be locked with the dead in the cemetery's countless marble vaults and mausoleums?",
     "backFlavorZh": "只有最奸恶的窃贼才会对死者下手，玻利瓦尔警长自然觉得雷科莱塔公墓也会沦为目标。谁知道数不胜数的大理石坟茔中埋藏了多少宝藏？",
     "backNameZh": "雷科莱塔公墓",
@@ -320787,7 +320787,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09552"
   },
   "09553": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "This privately-owned mansion contains many pieces of art that fit the profile of your mark's past robberies. Judging from the ornate architecture, its owners must be important high society types. You're unlikely to be allowed to patrol the area, so you'll have to resort to La Chica Roja's own methods if you plan on watching for her here.",
     "backFlavorZh": "这座私人宅邸藏有许多艺术品，和过去遭窃的地方如出一辙。看这华美的建筑，屋主肯定是上层人士。想必你没法进去探看。要在这儿守株待兔的话，你就得学着红衣女郎的手段了。",
     "backNameZh": "伊拉祖里兹宫",
@@ -320844,7 +320844,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09553"
   },
   "09554": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Officer Bolívar has marked this public administrative building as a potential target for La Chica Roja. Steeped in history, the Cabildo de Buenos Aires likely houses artifacts from the city's colonial era. Perhaps one is a piece of the Key she is assembling?",
     "backFlavorZh": "这座市政建筑也被玻利瓦尔警长标作是红衣女郎的目标。回顾历史，布宜诺斯艾利斯市议会可能珍藏了许多殖民地时期的文物。她要组装的钥匙，也许就有一片收在这里？",
     "backNameZh": "市议会",
@@ -320902,7 +320902,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09554"
   },
   "09555": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "While you know La Chica Roja isn't after money, Officer Bolívar insists that the largest bank in the city is a prime target.",
     "backFlavorZh": "你知道红衣女郎不是为了钱，但玻利瓦尔警长还是坚持市里最大的银行可能成为其首要目标。",
     "backNameZh": "省立银行",
@@ -320959,7 +320959,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09555"
   },
   "09556": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Many prolific figures of opera, including the famed Arturo Toscanini, have laid their mark on this gorgeous opera house - easily one of the best in the world. Bolívar can provide you with tickets to the current showing of <i>Aida</i>, but you're probably going to stand out like a sore thumb.",
     "backFlavorZh": "众多歌剧界的名角——包括大名鼎鼎的阿尔图罗·托斯卡尼尼，都在这座华美的歌剧院留下了自己的印记。要说这里是世界一流，那也不差。玻利瓦尔能给你搞到最近《阿依达》的票，但你肯定会显得格格不入。",
     "backNameZh": "哥伦布剧院",
@@ -321016,7 +321016,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09556"
   },
   "09557": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321084,7 +321084,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09557b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321141,7 +321141,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09557b"
   },
   "09558": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321202,7 +321202,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09558"
   },
   "09559": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321255,7 +321255,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09559"
   },
   "09560": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321308,7 +321308,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09560"
   },
   "09561": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321362,7 +321362,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09561"
   },
   "09562": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "It has taken much investigative work and even more toil, but you and your new ally have finally managed to confront the Coterie elder known only as The Sanguine Watcher. The spell protecting his body has faltered, and he is at your mercy. Heartless, empty eyes gaze back at you from behind his ruby spectacles. \"I knew we never should have let you into our fold,\" he scolds the girl in red. \"You are young and insolent. A jester who dons the clothes of a queen. A mockery of our great circle.\"\n\"You are the one who gives us a bad name,\" she barks back. \"We are supposed to protect humanity, not torment it. If it were up to me, you would be driven out.\"\n\"We shall see.\" He pulls his ruby glasses down, revealing dark, empty sockets where his eyes should be. Scarlet light bounces off the ominous rims resting on the tip of his nose. \"Watch your step, girl. Not even your tricks can save you from me.\" Then, with a thrashing of dark, nightmarish wings, he is snatched from above and carried into the night.",
     "backFlavorZh": "你和新的盟友费尽心思调查，其中艰难更是不计其数，终于击溃了名为血色监视者的结社长老。保护他身体的法术已经瓦解，他已是你的板上鱼肉。他空洞的眼神从深红色的眼镜后面望向了你。“我就知道不该让你入伙。”他斥骂红衣女子，“你乳臭未干，粗野无礼。不过是个扮作女王的小丑。在我们的宏大圈子里就是个笑柄。”\n“你才给我们带来了恶名。”她吼了回去，“我们应该保护人类，而你却在折磨他们。要是我能说了算，就该把你赶出去。”\n“等着瞧吧。”他摘下自己的红眼镜，本该是眸子的地方却只有漆黑空洞的眼窝。鼻尖上可怖的镜片闪出了猩红的光芒。“小心着点儿，小丫头。你这点把戏救不了你。”夜魇漆黑的双翅突然扑扇而过，将他一把抓入了夜空。",
     "backName": "The Truth in Red",
@@ -321416,7 +321416,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09562"
   },
   "09563": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321481,7 +321481,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "09564": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321538,7 +321538,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09564"
   },
   "09565a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321596,7 +321596,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09565a"
   },
   "09565b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321650,7 +321650,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09565b"
   },
   "09566": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the total number of clues on [[Cultist]] enemies in play, to a maximum of 4. (If it is act 3, X is 4.)\n[cultist]: -7. You may place 1 doom on the nearest [[Cultist]] enemy to change this token's modifier to -3.\n[tablet]: -4. If you fail, place 1 of your clues on your location.\n[elder_thing]: -2. Place 1 doom on the nearest [[Cultist]] enemy.",
@@ -321699,7 +321699,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09566"
   },
   "09567": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The daylight dims, and you strain your eyes to examine why. A strange, black shape has begun to crawl its way over the outline of the sun. An eclipse? Whatever the cult is up to, you better stop it soon...",
     "backFlavorZh": "日光黯淡，你眯起眼睛想看看是为什么。诡异的黑影缓缓吞没了太阳的轮廓。是日食？无论教派意欲为何，你最好还是快点阻止他们……",
     "backName": "In a Shadow of Voidlight",
@@ -321754,7 +321754,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09567"
   },
   "09568": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Manuscript Discovered",
     "backNameZh": "发现手稿",
@@ -321808,7 +321808,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09568"
   },
   "09569": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Talisman Discovered",
     "backNameZh": "发现护身符",
@@ -321862,7 +321862,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09569"
   },
   "09570": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "In the dark light of an alien moon, your enemies work tirelessly to escape with the talisman in their possession.",
     "backFlavorZh": "在一片诡异的黑色月光下，你的敌人不知疲倦地想带着护身符逃走。",
     "backName": "Rush for the Key",
@@ -321916,7 +321916,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09570"
   },
   "09571": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -321967,7 +321967,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09571"
   },
   "09571b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -322014,7 +322014,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09571b"
   },
   "09572": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Galata Bridge spans over the Golden Horn, separating the piers from the rest of the city.",
     "backFlavorZh": "加拉塔大桥横跨金角湾，将码头和城区隔开。",
     "backNameZh": "加拉塔码头",
@@ -322073,7 +322073,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09573": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The ancient Galata Tower looms over this well-traveled district, where tourists and residents intermingle. You pass several embassies, warehouses, and commercial buildings for businesses both local and foreign. One of the district's older buildings may have once hid the talisman. Perhaps even the famed Galata Tower itself?",
     "backFlavorZh": "石塔耸立的加拉塔游人如织，和居民交融在一起。你经过使馆、仓库和贩卖国内外货物的商栈。这一片古老的建筑里可能就存放过护身符。也许就是著名的石塔？",
     "backNameZh": "加拉塔",
@@ -322130,7 +322130,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09573"
   },
   "09574": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Originally brought to the city from Egypt by the Romans, the Obelisk looms ominously over Sultanahmet Square. Its inscription commemorates the triumphs of conquerors past.",
     "backFlavorZh": "这座方尖碑原本是埃及人所造，被罗马人运到此城，阴森地耸立在苏丹艾哈迈德广场上。上面的铭文记录了征服胜利的历史。",
     "backNameZh": "狄奥多西方尖碑",
@@ -322188,7 +322188,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09575": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Housing faculties of theology, arts, mathematics, and science, as well as other recent additions, the newly reconstituted university is as prestigious as its campus is beautiful. If there's anywhere in the city you'll be able to find information regarding relics from its past, it's here.",
     "backFlavorZh": "新近重组的大学闻名遐迩，校园也是美丽宜人。这里除了神学、艺术、数学和科学，还有许多新近设立的院系。要是城里还有什么地方能让你找到过去遗物的信息，那就是这儿了。",
     "backNameZh": "伊斯坦布尔大学",
@@ -322246,7 +322246,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09576": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Originally built as a cathedral, the Hagia Sophia Grand Mosque is one of the most iconic buildings in the entire world and the epitome of Byzantine architecture. Having survived the city's numerous transformations throughout the ages, this holy place may contain a wealth of information pertinent to your investigation, if you know where to look.",
     "backFlavorZh": "圣索菲亚清真寺建立之初原本是一座基督大教堂。它是全世界最为著名的地标之一，也是拜占庭建筑的集大成者。沧海桑田，城市几度易手，圣地屹立不倒，可能藏着大量与你调查有关的讯息，但你得知道从哪入手。",
     "backNameZh": "圣索菲亚",
@@ -322303,7 +322303,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09576"
   },
   "09577": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322364,7 +322364,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09577"
   },
   "09578": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322424,7 +322424,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09578"
   },
   "09579": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322486,7 +322486,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09580": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322546,7 +322546,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09580"
   },
   "09581": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322606,7 +322606,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09581"
   },
   "09582": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322667,7 +322667,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09583": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
     "backNameZh": "大巴扎",
@@ -322729,7 +322729,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09584": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -322788,7 +322788,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09584"
   },
   "09585": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -322850,7 +322850,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09586a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -322911,7 +322911,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09586a"
   },
   "09586b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -322972,7 +322972,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09586b"
   },
   "09586c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323033,7 +323033,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09586c"
   },
   "09587": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323086,7 +323086,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09587"
   },
   "09588": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323139,7 +323139,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09588"
   },
   "09589": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323192,7 +323192,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09589"
   },
   "09590a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323250,7 +323250,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09590a"
   },
   "09590b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323304,7 +323304,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09590b"
   },
   "09591": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the number of enemies in the shadows (max 5).\n[cultist]: -6. If you fail, put a decoy into play at your location, flip it over, and shuffle each concealed mini-card at your location facedown.\n[tablet]: -3. Set each non-weakness card committed to this test aside, out of play, as a hollow.\n[elder_thing]: -1. If there is a concealed mini-card at your location, either take 2 damage or treat this token's modifier as -5.",
@@ -323353,7 +323353,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09591"
   },
   "09592": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A flash of lightning draws your attention to the sky. Or, is it even lightning at all? Clouds and distorted space roll through the gloom of night. A shimmer. A blur. A blemish. And then one of the roiling clouds simply vanishes. Perhaps it was just your imagination. But something feels... strange. Is it possible the creatures you spotted in London could devour even the sky itself?",
     "backFlavorZh": "一道闪电吸引你抬头看向空中。或者说，那是闪电吗？云朵和扭曲的空间在幽暗的夜色中翻滚。是闪光，是模糊，是污点。旋转的云朵有一片就这么消失了。也许这只是你的想象。但事情有点……奇怪？有没有可能你在伦敦发现的生物甚至可以吞噬这片天空？",
     "backName": "Vanishing Sky",
@@ -323408,7 +323408,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09592"
   },
   "09593": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As if possessed by a strange compulsion, your eyes continuously drift to the clouds obscuring the starless night sky. Every now and again, one cloud haunts your sight. The same cloud, every time. Its shape burns into your retina. Are you going mad? Your eyes trace around its outline. It cannot be the same. You saw the flash that caused that cloud to vanish. Didn't you?",
     "backFlavorZh": "你的眼睛仿佛被一阵奇怪的冲动支配，止不住地看向遮蔽了无星黑夜的云层。有一朵云不时在你的视线中萦绕不去。每次都是同一朵，它的形状都刻在了你的视网膜里。你疯了吗？你的目光追踪着云朵的轮廓。不可能是同一朵。你见过有道光让它消失了，不是吗？",
     "backName": "Mimicry",
@@ -323463,7 +323463,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09593"
   },
   "09594": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You stop in your tracks, taking stock of your surroundings. The joyous noise of Havana has returned. A stillness has settled over the city. No more eyes in the shadows. No more familiar clouds. Stars twinkle above, mocking your suspicion with their charming beauty. Desi and his crew are nowhere to be found. And, worse...\nThere are sudden gaps in your memory.",
     "backFlavorZh": "你停下脚步，环顾四周。哈瓦那欢乐的喧嚣又回来了。整座城市突然静止了。再没有阴影中的眼睛。再没有看着熟悉的云。天上闪亮的星星还是那么迷人，仿佛是在嘲笑你的疑神疑鬼。德西和他的手下也都不见了。而更糟的是……\n你的记忆中突然有了空白。",
     "backName": "Erasure",
@@ -323518,7 +323518,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09594"
   },
   "09595": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "\"There's something off about all of this...\" Desi remarks as you patrol the rainy streets of Havana. \"I swear, I keep seeing something following us, but when I look-\" Fate must have a sense of cosmic irony, as the moment Desi turns around, a formless shape not unlike a distortion in reality opens its gaping maw and swallows him whole. You shout his name in terror... but to your surprise, the distortion reshapes itself in his image. The imposter gives you a sinister grin before vanishing into the shadows, taking the real Desi with him.",
     "backFlavorZh": "“这些事有点不对劲……”你们正在哈瓦那的雨街上巡逻，德西突然说道。“我发誓，一直有东西跟着我们，但每次我回头看的时候……”命运可真爱开玩笑，德西刚一回头，现实扭曲般的无形身影就张开巨口，将他整个吞没。你吓破了胆，大叫他的名字……但意外的是，扭曲重塑成了他的样子。赝品留给你一个邪恶的狞笑，就消失在阴影之中，带走了真的德西。",
     "backName": "Pursued into the Streets",
@@ -323573,7 +323573,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09595"
   },
   "09596": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "It's clear now what has been happening to Desi's crew. They are being snatched by the very same entities you and Flint had been investigating and replaced by deadly imposters. But their true objective seems to be eliminating the evidence of their mimicry. Are they trying to infiltrate the Coterie from within? Are these creatures truly intelligent enough for such a scheme?\nWhatever the case may be, you've tracked down the imposter. Desi is in danger of being erased from existence, or worse. You're not sure you can trust him, but you have to do something to help.",
     "backFlavorZh": "你终于清楚德西的手下发生了什么。他们被你和福林一路调查的实体掠走，代以一模一样的赝品。但他们的真实目的似乎是要抹除原品存在的证据。他们是要从内部彻底取代结社吗？这些生物真的这么聪明，能筹划这样的密谋？\n无论真实情况为何，你都得追踪这些赝品到底。德西的存在可能都要被抹除，甚至更糟。你并不确定自己是否能相信他，但你还是得施以援手。",
     "backName": "Truths Untold",
@@ -323628,7 +323628,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09596"
   },
   "09597": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "With a bit of stealth, a bit of speed, and a lot of luck, you manage to make your way out the club's back entrance and into the streets of Havana. The gunfire continues for a few seconds, then ceases once your attackers realize you're no longer inside. Over the pounding of your heart in your chest, you listen closely for voices and hear Desi's, broken and uneven, on the other side of the building. \"Find them - and when you do - end them,\" he orders. The sound of his voice grates against your mind. \"They must not be allowed - to escape.\" Footsteps pound on the pavement as they split up in search of you.",
     "backFlavorZh": "你凭着一点隐秘、一点速度和一点运气，成功从店后门逃向了哈瓦那的街道。枪声又响了几秒，随即停了。他们已经发现你不在里面。你按捺住胸膛里跳跃不止的心脏，仔细聆听，听到建筑另一侧传来了德西不甚流利的声音：“找到他们——一旦找到——就干掉。”他下令了，这声音让你烦躁。“不能让他们——溜了。”他们分头找你，人行道上又响起了脚步声。",
     "backName": "Pursued into the Streets",
@@ -323683,7 +323683,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09597"
   },
   "09598": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "From your encounters with Desi's crew, you believe you've made a startling discovery. Their mannerisms don't appear to be their own, and their hostility is feral, alien. But it is the very slight distortion that occasionally follows in their wake that leads to your realization. The people who attacked you weren't Desi and his crew at all. They were taken by the entities you and Flint had been investigating and replaced by deadly imposters. But perhaps the real Desi is still out there, somewhere. If so, he's definitely in danger!",
     "backFlavorZh": "你觉得自己在遭遇德西手下的过程中有了惊人的发现。他们的习性十分古怪，他们的敌意也十分野性、异样。他们身上不时出现的细微扭曲让你意识过来。这群攻击你的人根本不是德西和他的手下。他们已经被你和福林一路调查的实体掠走，代以一模一样的赝品。但也许真正的德西还在某处？要真是这样，那他危在旦夕！",
     "backName": "Truths Untold",
@@ -323737,7 +323737,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09598"
   },
   "09599": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Your intervention gives the Desi you suspect is real just enough time to gain the advantage. While you had been pulling your punches, Desi has no such qualms. He shoves his firearm in his imposter's stomach and pulls the trigger. The other Desi collapses, lifeless, to the floor. Blood pools from his bullet wound and soaks his body crimson. Desi spits on the corpse of the mimic. <i>\"Púdrete en el infierno,\"</i> he mutters under his breath. Then he clasps your shoulder and gives you a grin. \"Thanks. I really owe you one.\" From what you can tell, his mannerisms seem perfectly natural. You breathe a sigh of relief.",
     "backFlavorZh": "你介入战局，帮了你认为是真身的德西一把，给了他足够的时间占据上风。你留了一手，但德西就没有这样的顾虑了。他把枪抵在复制品的肚子上，扣动了扳机。另一个德西倒下，死了。枪伤涌出血泊，将他染得鲜红。德西啐了一口自己仿态的尸体。“他妈的下地狱去吧。”他咬出一句咒骂。他随即拍了拍你的肩膀笑了。“谢了，我欠你一笔。”在你看来，他的举止非常自然。你松了口气。",
     "backName": "No Man Like Me",
@@ -323791,7 +323791,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09599"
   },
   "09600a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323851,7 +323851,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09600a"
   },
   "09600b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -323907,7 +323907,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09600b"
   },
   "09601": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The broad roadway along Havana's northern seawall is a perfect place for both public gatherings and clandestine meetings. Could the Coterie have agents posted there?",
     "backFlavorZh": "这条宽阔的大道沿着哈瓦那北部的防波堤，非常适合公众集会，也是私下碰头的好地方。结社在这儿安排了特工吗？",
     "backNameZh": "马赛奥大道",
@@ -323966,7 +323966,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09602": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "When it comes to high society in Havana, nothing is more iconic than this outdoor venue. But if this is one of Desi's haunts, there has to be something else at work here.",
     "backFlavorZh": "要说到哈瓦那的上流社会，那就不能不提这片室外的桃源。但要是德西的手下在此游荡，那肯定又有些别的花样。",
     "backNameZh": "热带花园",
@@ -324024,7 +324024,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09603": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Nobody else seems to notice the presence swirling above the Teatro Nacional, but you've seen it before, in London. And where such creatures roost, the Coterie is sure to be present, as well. Perhaps you should get tickets and see for yourself.",
     "backFlavorZh": "似乎没人注意到国家剧院上面旋转的存在，但你之前见过，就在伦敦。只要这东西出现，结社肯定也在附近。兴许你应该买张票自己进去看看。",
     "backNameZh": "哈瓦那大剧院",
@@ -324082,7 +324082,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09604": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "If Desi is a member of the Club, chances are, it's no coincidence. Wherever he and his crew show up, those <i>things</i> are sure to follow. Or is it the other way around?\nOnly one way to find out for sure.",
     "backFlavorZh": "德西很有可能是这个俱乐部的一员。不论他和手下出现在哪里，这些东西都紧随其后。抑或是反过来的？只有一个办法可以确认。",
     "backNameZh": "海景游艇俱乐部",
@@ -324140,7 +324140,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09604"
   },
   "09605": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Recently renovated, the famed Plaza Hotel offers all of the modern amenities, and has hosted a variety of famous guests. But recent gossip of living shadows and otherworldly figures prowling its halls at night have you thinking there's more at play here after dark.",
     "backFlavorZh": "大名鼎鼎的广场酒店最近刚刚翻新，各类现代设施一应俱全。众多名流在此下榻。不过近来又有传言，说有活动的阴影和异界的身影在走廊里徘徊，让你不得不怀疑黑暗之后还有暗流涌动。",
     "backNameZh": "广场酒店",
@@ -324198,7 +324198,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09606a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324262,7 +324262,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09607a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324329,7 +324329,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09607b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324385,7 +324385,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09607b"
   },
   "09608": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324441,7 +324441,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09608"
   },
   "09609": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is 1 more than the number of [[Hazard]] treacheries in play.\n[cultist]: -5. Choose a non-weakness card in your hand and set it aside, out of play, as a hollow.\n[tablet]: -3. If Void Chimera is at your location, you automatically fail, instead.\n[elder_thing]: -4. Look at the top card of your deck. If it is not a weakness, set it aside, out of play, as a hollow.",
@@ -324490,7 +324490,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09609"
   },
   "09610": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The frigid landscape fills you with a kind of numbness. At first, you dismiss the feeling as purely physical, a side effect of the cold. It is only when you stop and consider the feeling itself that it dawns on you: the numbness is a result of some strange influence. You are forgetting small moments. Memories of the surrounding area. It is as though your mind itself is being hunted and fed upon.",
     "backFlavorZh": "严寒冻得你麻木。一开始你只以为这是身体在寒冷之下的反应，打算不予理会。等到停下来的时候，你才发现这股感觉是某种奇怪的力量强加于你的。你开始忘掉一些琐碎的时刻，忘掉周围的区域。就好像有什么东西追猎、吃掉了你的思维。",
     "backName": "Frozen Thoughts",
@@ -324545,7 +324545,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09610"
   },
   "09611": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "During your exploration, you stop and look up at the majestic vista of a nearby mountain range. One of the mountains appears strangely damaged, as though a great fist has punched a hole in the mountainside. Although it is covered in a layer of snow, there is something ominous about the deep, empty pit gouged into the side of the rock. You wonder what horrible thing burst out of the heart of the mountain.\nAs you stare at the impossible destruction around you, a faint buzzing in the back of your mind sets you on edge. You have a creeping feeling that you have forgotten something, or someone...",
     "backFlavorZh": "你在探索中驻足查看附近山脉的壮丽奇景。其中一峰看起来有奇怪的缺口，仿佛有一只巨拳在山侧打出一个洞来。尽管盖了一层雪，岩石边挖出的深洞看上去还是让人觉得不祥。你不禁想问，从山脉的心脏中到底会涌出什么可怕的东西。\n就在你凝视周围不可思议的毁灭景象的时候，脑海深处突然传来一阵模糊的嗡嗡声，让你紧张起来。你害怕自己是不是已经忘了什么，忘了谁……",
     "backName": "The Heartless Mountain",
@@ -324600,7 +324600,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09611"
   },
   "09612": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Suddenly, a horde of blurred figures coalesces around you. An obscene numbness overtakes your senses as sight blurs and sense splinters. The numbness gives way to bliss as you slip under whatever awful influence has been changing this place. You struggle to hold onto reality, but your awareness drifts to unconsciousness, and you are dragged into a deep, forgetful slumber.",
     "backFlavorZh": "你身边突然有一群虚影汇合。突如其来的麻木占据了你的感官。你视线模糊，知觉分裂。你臣服于改变此地的可怕力量，麻木也变得心悦。尽管你还想再抓住现实一把，但意识已经涣散，你陷入了深沉、健忘的长眠。",
     "backName": "This Never Happened",
@@ -324655,7 +324655,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09612"
   },
   "09613": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Negotiations",
     "backNameZh": "协商",
@@ -324709,7 +324709,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09613"
   },
   "09614": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "After making what preparations you can, you wait around a campfire. Your very presence in this territory makes you a prime lure for whatever awful predator stalks these woods. Soon enough, you hear a twig snap and see a multitude of glowing eyes watching you from the trees.",
     "backFlavorZh": "你做好准备，在营火旁等待。你在这里，就是树林间游荡的捕食者的首要目标。很快，你就听到枝桠扭断的声音，看到树林间众多荧荧闪光的眼睛正望着你。",
     "backName": "The True Face of Terror",
@@ -324763,7 +324763,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09614"
   },
   "09615a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324817,7 +324817,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09615a"
   },
   "09615b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -324872,7 +324872,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09616": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As you land a final blow, the shifting, violent thing collapses into itself with a noisome cacophony and a sudden suction of air. As its form crumbles, the strange otherworld around you also begins to disintegrate, and you find yourself drawn back to reality in a rush of static and ozone.",
     "backFlavorZh": "你打出最后一击，变换无穷的残暴怪物就此倒下，伴有恶臭和刺耳的噪音，吸走了附近的空气。它的身形崩坏，你周围奇异的异界景象也瓦解了。你发现自己混在一团静电和臭氧中给甩回了现实。",
     "backName": "The Killing Blow",
@@ -324926,7 +324926,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09616"
   },
   "09617": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Anchorage bustles with excitement brought on by the gold rush. Almost every street you walk down has a new façade under construction. The sheer number of rugged pioneer folk walking the streets makes you feel out of place in your everyday clothes.",
     "backFlavorZh": "淘金潮让安克雷奇变得热火朝天。差不多你经过的每条街都在大兴土木。街上走着无数的拓荒者，个个破衣烂衫。而你穿着日常衣服，显得格格不入。",
     "backNameZh": "",
@@ -324979,7 +324979,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09617"
   },
   "09618": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Fairbanks is the perfect place to replenish your supplies and research routes to the gold mine.",
     "backFlavorZh": "要想补充补给，研究去金矿的线路，那费尔班克斯是绝佳的地点。",
     "backNameZh": "",
@@ -325033,7 +325033,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09618"
   },
   "09619": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bleak splendours of these remote and lonely forests rather overwhelmed him with the sense of his own littleness.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "这些森林遥远孤寂，荒芜又壮观，让他体会到了自己的渺小，这份感觉将他吞没。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Alaskan Wilderness",
@@ -325092,7 +325092,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09619"
   },
   "09620": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bleak splendours of these remote and lonely forests rather overwhelmed him with the sense of his own littleness.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "这些森林遥远孤寂，荒芜又壮观，让他体会到了自己的渺小，这份感觉将他吞没。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Alaskan Wilderness",
@@ -325150,7 +325150,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09620"
   },
   "09621": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bleak splendours of these remote and lonely forests rather overwhelmed him with the sense of his own littleness.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "这些森林遥远孤寂，荒芜又壮观，让他体会到了自己的渺小，这份感觉将他吞没。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Alaskan Wilderness",
@@ -325210,7 +325210,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09622": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "In the draughts of night that poured their silent tide from the depths of the forest, with messages from distant ridges and from lakes just beginning to freeze, there lay already the faint, bleak odors of coming winter.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "夜风带来了森林深处汹涌的沉默，还有消息来自遥远的山脊和刚刚结冰的湖面。这些都是严冬将至之时淡薄的阴冷气息。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Outer Wilderness",
@@ -325269,7 +325269,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09622"
   },
   "09623": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "In the draughts of night that poured their silent tide from the depths of the forest, with messages from distant ridges and from lakes just beginning to freeze, there lay already the faint, bleak odors of coming winter.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "夜风带来了森林深处汹涌的沉默，还有消息来自遥远的山脊和刚刚结冰的湖面。这些都是严冬将至之时淡薄的阴冷气息。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Outer Wilderness",
@@ -325329,7 +325329,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09624": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "In the draughts of night that poured their silent tide from the depths of the forest, with messages from distant ridges and from lakes just beginning to freeze, there lay already the faint, bleak odors of coming winter.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "夜风带来了森林深处汹涌的沉默，还有消息来自遥远的山脊和刚刚结冰的湖面。这些都是严冬将至之时淡薄的阴冷气息。阿尔杰农·布莱克伍德，《温迪戈》",
     "backName": "Outer Wilderness",
@@ -325383,7 +325383,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09624"
   },
   "09625a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325450,7 +325450,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09625b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325508,7 +325508,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09625b"
   },
   "09626": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325572,7 +325572,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09627": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325637,7 +325637,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09628": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325702,7 +325702,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09629": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325766,7 +325766,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09630": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325830,7 +325830,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09631": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325888,7 +325888,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09631"
   },
   "09632": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325941,7 +325941,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09632"
   },
   "09633": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -325995,7 +325995,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09633"
   },
   "09634a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -326053,7 +326053,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09634a"
   },
   "09634b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -326107,7 +326107,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09634b"
   },
   "09635": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -2 (-4 instead if you are at a location with a Key Locus).\n[cultist]: -5. If you fail, either take 1 damage and 1 horror, or place 1 doom on the nearest Key Locus or [[Locus Site]] location.\n[tablet]: -2. If this is an attack against an enemy with patrol, after this attack, it attacks you, disengages, and resolves its patrol keyword.\n[elder_thing]: -3. For each point you fail by, lose 1 resource.",
@@ -326156,7 +326156,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09635"
   },
   "09636": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Final Stand",
     "backNameZh": "最后防线",
@@ -326210,7 +326210,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09636"
   },
   "09637": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The storm rages on. Doors batter and foundations shake. You have tried your damnedest, but the Claret Knight - and thus the last of the Key Locuses preventing you from acquiring your prize - still stands. With the supernatural storm growing more and more potent, and the rest of the Coterie mobilizing for all-out war with one another, you don't think you'll get another chance like this. Perhaps it would be better to retreat and lay low.",
     "backFlavorZh": "风暴咆哮。门砸坏了，地基摇晃。你把自己所有的力气都他妈的用尽了，但暗红骑士——还有剩下的钥匙节点——还在阻止你夺取猎物。反常的风暴愈演愈烈，结社的人正倾巢而出，不留余力。你觉得自己不可能再有这样的机会了。现在是否应该撤退休整？",
     "backName": "Power Retained",
@@ -326265,7 +326265,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09637"
   },
   "09638": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The storm rages on. Doors batter and foundations shake. You have tried your damnedest, but the Beast in a Cowl of Crimson is too dangerous and too agile to pin down. So long as its lair remains undisturbed - and thus the last of the Key Locuses still standing - you cannot reclaim the creature's Key. With the supernatural storm growing more and more potent and the Beast's devotees growing bolder and stronger by the hour, you don't think you'll get another chance like this. Perhaps it would be better to retreat and lay low.",
     "backFlavorZh": "风暴咆哮。门砸坏了，地基摇晃。你把自己所有的力气都他妈的用尽了，但还是拦不住危险又敏捷的深红斗篷的恶兽。只要它的巢穴不受侵扰——剩下的钥匙节点依然有效——你就无法夺回它手中的钥匙。反常的风暴愈演愈烈，每过一刻，恶兽的信徒胆子都越来越大，力量也越来越强。你觉得自己不可能再有这样的机会了。现在是否应该撤退休整？",
     "backName": "Overrun",
@@ -326320,7 +326320,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09638"
   },
   "09639": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "...But when the storm passes, you still stand, and the Light of Pharos is safe. Your host orders several of his agents to track down the Beast's whereabouts, and you are surprised to find that it has fled the city. \"We're safe,\" one of them says, letting out a held breath. \"We're finally safe.\"",
     "backFlavorZh": "……等到风暴过去，你依然屹立，而法罗斯之光安全了。你的东道主命令手下几个特工去找寻恶兽的所在。意外的是，它已经逃出城去了。“我们安全了。”有个特工松了一直悬着的一口气，“我们终于安全了。”",
     "backName": "Knight's Stronghold",
@@ -326374,7 +326374,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09639"
   },
   "09640": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Fallen Stronghold",
     "backNameZh": "陷落的要塞",
@@ -326427,7 +326427,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09640"
   },
   "09641": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Den of Evil",
     "backNameZh": "邪恶之巢",
@@ -326480,7 +326480,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09641"
   },
   "09642": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The stock exchange building in Alexandria is more than just a place of business, it seems - it is also the Claret Knight's chosen hiding place for the Key you are searching for.",
     "backFlavorZh": "看来亚历山大的证券交易所可不仅仅是做生意的地方——它其实就是暗红骑士为钥匙选择的安放之所，那把你要找到的钥匙。",
     "backNameZh": "证券交易所",
@@ -326538,7 +326538,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09642"
   },
   "09643": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "It seems the Coterie has set up shop in Alexandria's stock exchange building. What better place to hide than in plain sight?",
     "backFlavorZh": "看来结社已在亚历山大的证券交易安营扎寨。众目睽睽之下，还有哪能比这里更适合避人耳目？",
     "backNameZh": "证券交易所",
@@ -326597,7 +326597,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09644": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Bourse is the site of Alexandria's stock exchange, cementing the city as a major economic center for Egypt. It is a bustling place during the day, with many carriages and automobiles parked nearby at all hours, and dozens of people entering and exiting.",
     "backFlavorZh": "亚历山大的证券交易所巩固了此城埃及经济中心的地位。白天这里熙熙攘攘，无数马车汽车停在附近，众人进进出出。",
     "backNameZh": "证券交易所",
@@ -326655,7 +326655,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09644"
   },
   "09645": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Established along the coast, the Windsor Palace is one of the finest hotels in the city, serving its elite. If there is anywhere Coterie envoys might be hiding, this is it. According to your intel, it's also the hiding place of one of the Claret Knight's supposed \"loci.\"",
     "backFlavorZh": "建在海边的温莎宫是城里顶尖的酒店，服务精英阶层。要是哪里还能供结社的特使藏身，那就是这儿了。根据你的情报，这里也是暗红骑士藏匿所谓“节点”的地方。",
     "backNameZh": "温莎宫酒店",
@@ -326714,7 +326714,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09645"
   },
   "09646": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Founded just two decades ago, the college is home to many important and well-to-do students. Your intel indicates that one of the Claret Knight's loci might have moved recently - it wouldn't be a surprise to you if this was the chosen site.",
     "backFlavorZh": "这所学院成立已有两秩，培育了许多达官显贵。你的情报显示，暗红骑士近来移动过一个节点——要是他选了这里，那真是毫不意外。",
     "backNameZh": "维多利亚学院",
@@ -326773,7 +326773,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09646"
   },
   "09647": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "One of the most important historical strongholds along the Mediterranean, the Citadel was built on the site of the ancient and famed Lighthouse of Alexandria.",
     "backFlavorZh": "这座城堡名列地中海岸最重要的历史要塞之林。这块地方原本屹立着亚历山大名声卓著的古代灯塔。",
     "backNameZh": "奎贝堡",
@@ -326830,7 +326830,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09647"
   },
   "09648": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Waves crash against the road that runs along Alexandria's coast, spilling water into the streets. A hub of activity, many streets intersect with the Corniche along its lengthy route - perhaps the perfect hiding place for a Key Locus?",
     "backFlavorZh": "海浪冲击着亚历山大沿海的道路，海水都溅到了街上。滨海大道奇长无比，与许多街道都有交汇，是活动的中心——兴许这里是钥匙节点绝佳的藏匿地点？",
     "backNameZh": "滨海大道",
@@ -326889,7 +326889,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09648"
   },
   "09649": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "This busy, crowded marketplace is known for its twisting streets, bustling shops, and grisly past. You can't help but dart your eyes between the many alleys and hiding places along these narrow streets as you search for the Key Locus tucked away here.",
     "backFlavorZh": "这座拥挤繁忙的市集可谓鼎鼎大名，因为它有着弯曲的街巷、繁忙的店铺和可怕的过往。你寻找这里藏匿的钥匙节点，眼睛不住地瞥过狭窄街道间数不清的小巷和藏匿地。",
     "backNameZh": "妇女市集",
@@ -326948,7 +326948,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09649"
   },
   "09650": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The necropolis is home to several prominent dead, but is also the lair of something far more terrifying.",
     "backFlavorZh": "大墓地中是许多著名古人的长眠之地，也有更为可怕的存在以此为巢。",
     "backNameZh": "亚历山大地下陵墓",
@@ -327007,7 +327007,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09651": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "亚历山大地下陵墓",
     "backText": "The way into the catacombs is blocked. You cannot enter the Catacombs of Kom el Shoqafa. The Beast in a Cowl of Crimson cannot leave Catacombs of Kom el Shoqafa.\nForced - If there is 6 or more doom on the current agenda: Reveal Catacombs of Kom el Shoqafa.",
@@ -327066,7 +327066,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09652": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Kom el Shoqafa - meaning Mound of Shards - is the site of many tombs, statues and other ancient relics, a conflux of Egyptian, Roman, and Greek influences. It is now partially underwater and closed to the public. Who knows what other secrets lie buried within?",
     "backFlavorZh": "此地本名碎片冢，汇集了埃及、罗马和希腊时代的众多坟墓、雕塑和古代遗物。现在已经半沉入水下，对公众关闭。谁知道里面还埋藏着什么样的秘密？",
     "backNameZh": "亚历山大地下陵墓",
@@ -327124,7 +327124,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09652"
   },
   "09653a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327183,7 +327183,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09653b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327238,7 +327238,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09654a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327306,7 +327306,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09654b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327364,7 +327364,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09654b"
   },
   "09655a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327431,7 +327431,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09655b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327495,7 +327495,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09656": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327556,7 +327556,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09656"
   },
   "09657": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327616,7 +327616,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09657"
   },
   "09658": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327669,7 +327669,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09658"
   },
   "09659a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327727,7 +327727,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09659a"
   },
   "09659b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -327781,7 +327781,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09659b"
   },
   "09660": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the number of charges on The Shade Reaper.\n[cultist]: -5. Place 1 charge on The Shade Reaper.\n[tablet]: -3. If you are at a location with a [[Geist]] enemy, you automatically fail.\n[elder_thing]: -6. You may place 1 charge on The Shade Reaper to treat this token's modifier as -3 instead.",
@@ -327830,7 +327830,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09660"
   },
   "09661": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Amidst the throng of a busy street, you see the woman with the red parasol flit past a food stall down a narrow back alley. Following her, you step into an alley filled with a hazy, silvery light. A strange feeling comes over you, and your head swims with alien whispers.",
     "backFlavorZh": "你在拥挤的街道中瞧见打着红伞的女子掠过卖食物的小摊，走进狭窄的后巷。你跟了进去，踏入小巷，里面一阵朦胧的银光。你被一阵奇怪的感觉包围，脑子里回荡起异界的低语。",
     "backName": "Strange Whispers",
@@ -327885,7 +327885,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09661"
   },
   "09662": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Hungry for Pain",
     "backNameZh": "渴求痛苦",
@@ -327939,7 +327939,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09662"
   },
   "09663": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Tzu San Niang corners you in a narrow alley, her face heavily shadowed in the harsh evening light. \"Don't be afraid,\" her voice worms its way into your mind. \"I do not wish you harm. Quite the opposite, I think we should be friends.\" She grins and snaps her parasol shut, pointing it directly at you. \"Well, 'friend' is a little too kind. You're my new <i>pet</i>.\" The tip dances with crackling, silvery light, and a torrent of energy tears through the air toward you. As waves of pain wash over you, you fall to your knees, wracked with agony. Tzu San Niang laughs as you lose consciousness.",
     "backFlavorZh": "朱三娘将你逼至狭窄的巷角，浓重的夜光给她的脸蒙上了厚厚的阴影。“别怕。”她的声音钻进了你的脑海，“我不想伤害你。恰恰相反，我觉得咱们应该能做朋友。”她狞笑着收起伞，用它直直指着你。\n“唔，‘朋友’好像太客气了点。你会是我的新宠物。”伞尖跃动着噼啪的银光，一道能量的漩涡穿透空气奔你而来。痛苦席卷了你，你跪在地上，不堪折磨。朱三娘哈哈大笑，你失去了意识。",
     "backName": "\"Don't Be Afraid\"",
@@ -327994,7 +327994,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09663"
   },
   "09664": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "After what feels like hours of searching, you catch the trail of the Lady with the Red Parasol. You follow her down a narrow side-street to the worn façade of an old shop, which she steps inside. Uncertain of the risk she might pose, you wait for her to emerge rather than follow her into a potential trap. However, after some time passes, you grow impatient and step into the shop.",
     "backFlavorZh": "你花了几个小时搜寻，终于找到红伞夫人的踪迹。你跟她走进一条狭窄的侧巷，来到一家老店门前，店面看上去饱经风吹雨打。她进去了。你不确定她准备了什么等你，没有踏进可能的陷阱，而是在外面等她出现。但是过了一会儿，你焦躁起来，于是进店去了。",
     "backName": "The Bomoh's Shop",
@@ -328049,7 +328049,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09664"
   },
   "09665": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Reap the Whirlwind",
     "backNameZh": "收割孽债",
@@ -328102,7 +328102,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09665"
   },
   "09666": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As Tzu San Niang fires another eldritch beam of crackling light at you, you charge forward, ignoring the pain, and wrest the parasol from her grip. She fights back with all the fury of a cornered animal. Countless souls, all bound in torment to the Key, cry out at once. The woman lets out an ear-piercing scream as the red parasol is wrenched away from her. You step back, brandishing her own weapon.\n\"A hollow victory,\" she says haughtily. \"I know you don't have the nerve to use my shade against me.\" She turns to walk away.",
     "backFlavorZh": "朱三娘正准备再给你一招骇人的光线，你直接冲上前去，不顾疼痛，从她手里拧下了伞。她挣扎退后，怒如困兽。无数受钥匙磨难的亡魂一起发出尖叫。三娘失去了伞，也发出刺耳的哀嚎。你挥舞着她的武器退后。\n“毫无意义的胜利。”她笑得很是狂妄，“你没有胆子用我的阴影来对付我。”她转身就走了。",
     "backName": "Don't Fear the Reaper",
@@ -328156,7 +328156,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09666"
   },
   "09667": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "This busy railway stop brings in travelers from all over the world, near and far. The recently completed platform now connects Kuala Lumpur to Singapore and Siam.",
     "backFlavorZh": "世界各地不分遐迩的旅客齐聚这座繁忙的车站。最新完工的月台将吉隆坡、新加坡和暹罗都联系在了一起。",
     "backNameZh": "吉隆坡火车站",
@@ -328214,7 +328214,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09667"
   },
   "09668": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The western wing of the station is veiled in a heavy fog. Glimmering shapes flit to and fro in the haze.",
     "backFlavorZh": "火车站西翼弥漫着浓雾。朦胧中闪亮的身影来回穿梭。",
     "backNameZh": "吉隆坡火车站",
@@ -328275,7 +328275,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09669": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Selangor Club attracts all the city's wealthiest clientele, but especially caters to the British imperialists that run much of the export business.",
     "backFlavorZh": "雪兰莪俱乐部吸引了全城所有的豪富，但做出口贸易的英帝国主义者尤其喜欢这里。",
     "backNameZh": "雪兰莪俱乐部",
@@ -328332,7 +328332,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09669"
   },
   "09670": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The large padang, or square, is a well-manicured lawn used for all sorts of sporting events, from cricket to rugby. Spectators watch the games from either side of the square or from inside the clubhouse.",
     "backFlavorZh": "这片宽大的草坪堪称广场，养护完好，用于举办各种体育活动，从板球到橄榄球，不一而足。广场两侧和俱乐部屋子里都有观众观看比赛。",
     "backNameZh": "雪兰莪俱乐部草坪",
@@ -328391,7 +328391,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09671": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The bomoh's shop is primarily an apothecary, with shelf after shelf filled with dried bundles of herbs and flowers, some ground up in little jars or in alcohol tinctures. Other supplies for the bomoh's practice rest on a bookshelf behind the counter: lime, resin, and a dagger in a wooden sheath.",
     "backFlavorZh": "降头师的商店看上去就像家药铺，层层架子上堆满了一捆捆脱水的草药和花朵，另有一些磨碎了放在小罐里，泡在药酒里。还有一些降头师的材料放在柜台后面的书架上：石灰、松香，还有带木鞘的匕首。",
     "backNameZh": "美拉提的商店",
@@ -328449,7 +328449,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09671"
   },
   "09672": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The elaborate shadow puppet shows that take place on stage make this theater a popular attraction. The distinctive puppets are made to cast stylized silhouettes on a backlit screen. The effect gives the impression that the screen is a veil between reality and some shadowy other world.",
     "backFlavorZh": "这座剧场会上演精巧的皮影偶戏，吸引了不少游客。特征鲜明的傀偶在幕布上投下虚影。这种效果给人留下一种印象，仿佛幕布就是现实和阴影彼端之间的帷幕。",
     "backNameZh": "哇扬皮影偶戏剧场",
@@ -328509,7 +328509,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09673": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Large pits yawn like open mouths in the earth: some are filled with rainwater, some flicker like shuttering eyes in the low light. The supports that hold up the rickety scaffolding that spans the pits are temporary, at best.",
     "backFlavorZh": "地上的大坑就像张开的巨口：有的盛满了雨水，有的在暗光中像眨眼一样闪烁着。支撑着坑洞的脚手架摇摇晃晃，看来最多也不过是草草搭就的临时货。",
     "backNameZh": "锡矿",
@@ -328569,7 +328569,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09674a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328635,7 +328635,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09674b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328684,7 +328684,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09674c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328750,7 +328750,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09674d": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328799,7 +328799,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09675a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328865,7 +328865,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09675b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328914,7 +328914,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09675c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -328980,7 +328980,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09675d": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329029,7 +329029,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09676a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329095,7 +329095,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09676b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329144,7 +329144,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09676c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329210,7 +329210,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09676d": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329259,7 +329259,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09677": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329313,7 +329313,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09677"
   },
   "09678": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329366,7 +329366,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09678"
   },
   "09679a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329432,7 +329432,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09679a"
   },
   "09679b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329495,7 +329495,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09680a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329553,7 +329553,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09680a"
   },
   "09680b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -329607,7 +329607,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09680b"
   },
   "09681": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is the number of locations in play.\n[cultist]: -6. If you fail, the nearest [[Outsider]] enemy readies, moves once toward you, and attacks you if it is at your location.\n[tablet]: -X. X is 1 plus the number of set-aside hollows you own.\n[elder_thing]: -3. Choose a non-weakness card in your hand and set it aside, as a hollow.",
@@ -329656,7 +329656,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09681"
   },
   "09682": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Whirlwinds of cosmic dust swirl throughout the alien sky, threads of radiant starlight and tempests of gravity-defying rubble shifting, churning, rearranging. Every inch of this place is a deliberate act of insanity, a premeditated manipulation of your mind, designed to make you lose your sense of self.",
     "backFlavorZh": "异星的天空中刮过洪荒星尘的漩涡。星光辐射条条成线，石砾风暴违背了重力的法则。这一切都在变换、搅动、重组。这里每寸地方都是刻意的疯狂，预谋要操纵你的思想，让你失去自己的感知。",
     "backName": "Alien Sky",
@@ -329711,7 +329711,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09682"
   },
   "09683": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The weight of an infinite, dimensionless universe forces you to your knees. You imagine Taylor's \"layer cake,\" layer upon layer upon layer, worlds upon worlds upon wolrds, and yours is the thinnest of all. You are hurtling through barriers humanity was never meant to cross, and if you remain here any longer, you won't even <i>remember</i> where you came from.",
     "backFlavorZh": "无维无尽的宇宙之重，压得你跪下。你想到泰勒的“多层蛋糕”，一层上面还有一层，世界上面还有世界，而你的却是最薄一层。你穿行于人类绝不该跨越的边界。要是你再待一会儿，甚至都不会记得自己从何而来。",
     "backName": "Alien Earth",
@@ -329766,7 +329766,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09683"
   },
   "09684": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "<span class='tsk-glyphs'>You are</span> nothing; <span class='tsk-glyphs'>timeless,</span> forgotten, <span class='tsk-glyphs'>a figment, a shard of a fractured</span> memory; <span class='tsk-glyphs'>but here, so much more;</span> a promise, <span class='tsk-glyphs'>a signatory, a blood-inked curse in a covenant of tear</span>drops ever <span class='tsk-glyphs'>swimming</span> ever <span class='tsk-glyphs'>falling</span> ever <span class='tsk-glyphs'> drowning in thoughts in memory in</span> time; <span class='tsk-glyphs'>and it, it is the final err, it is the final terror that shall reign; and your thoughts, your memories, they are its and it is you; coin-sides, both and all and nothing at once,</span> all <span class='tsk-glyphs'>at</span> once, <span class='tsk-glyphs'>all at once.</span>",
     "backFlavorZh": "---- 虚无；---- 被遗忘，----- 记忆，---- 承诺，------ 跌落 --- 从来 ---- 永远 ------ 时间；-------- 全部 -- 都，----",
     "backName": "Coin-Sides",
@@ -329821,7 +329821,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09684"
   },
   "09685": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "As the dark, beating heart of the City of Remnants is a mess of a structure, all black onyx stone and jagged, twisting glass. Hanging throughout the horrid lair is a jumbled nest of chains, fencewire, and alien cables. One of the entities floats in the center of the chamber: a ball of twisted, distorted space with two tendrils of shimmering plasmic light. The tendrils reach down to a humanoid figure in tattered cloth, touching its unconscious mind and pumping something <i>out</i> of it. You step closer and realize with horror that you recognize the covered figure upon the altar - or, at least, you recognize its stark red gloves.",
     "backFlavorZh": "在残骸之城跃动的黑暗中枢，是纠结在一起的巨大构造物，全由黑色的缟玛瑙和犬牙参差、扭曲歪斜的玻璃组成。恐怖的巢穴正中悬着一张由异界的锁链、丝线和绳索纠缠在一起的巨网。漂浮在空间正中的是扭曲空间形成的巨大球体，伸出的两根触手散发着原生质的光芒。触手伸向一个衣衫褴褛、失去意识的人形生物，抽走了什么。你靠近一步，惊恐地意识到自己认识祭坛上这个被重重包裹的身影——或者说，你至少认出了红色的手套。",
     "backName": "Illusions within Illusions",
@@ -329875,7 +329875,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09685"
   },
   "09686": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You finally manage to pry the body of the Red-Gloved Man away from the creature's flashing tendrils and drag him off of the altar. He drifts in and out of consciousness as you carry him out of the entity's lair, speaking only nonsense words in an unearthly language. The moment his eyelids open before the alien skies of the Outside, he shudders awake in agony, letting out gasping, pained breaths and clutching the very spot on his forehead where the creature had latched onto him.\nYou give him a moment to recover before asking him how he got here and what it was doing to him. To his credit, the man does not take long to return to his usual stoic demeanor, adjusting the cuffs of his suit and lowering the brim of his hat to obscure the sweat dripping down his forehead. \"Not here,\" he says. As if on cue, the structure of glass and onyx shudders into ruin and the entity emerges, its tendrils unfolding into a massive, eldritch shape of luminous distortion. \"I don't suppose you know a way out of here?\" the man asks.",
     "backFlavorZh": "你终于将戴红手套的男子从怪物发光的触手中扯下，将他拖离祭坛。你将他拖离这怪物的老巢，他一路上都身软无力，失去意识，只会用一种异界的语言吐出几个没有意义的词。他终于睁眼看了域外的诡异天空，痛苦地颤抖着醒来，气喘吁吁，惨不忍睹，捂住自己头上被怪物抓住的位置。\n你让他恢复了一会儿，才问起他是怎么来的，又到底发生了什么。他没花多久就恢复了自己原本镇定的样子，也是令人佩服。他理理西装的袖口，压低帽沿，遮住自己前额滴下的汗水。“这儿不行。”他说。恰巧就在这时候，玻璃和玛瑙的构造体在废墟中颤抖跃出，触手围拢扭曲在一起，形成一团巨大诡异的发光物质。“我想你应该知道怎么出去吧？”男人问道。",
     "backName": "Out of the Frying Pan",
@@ -329929,7 +329929,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09686"
   },
   "09687": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You stand at the edge of the platform upon which you arrived in this realm, wondering how to return to your own. There is no sign whatsoever of the ship that fell into the pit below. Perhaps it made its way back. Or perhaps it is still falling. You have no way to know for sure, but very few alternatives. Holding your breath, you look away from the bottomless pit, and take a leap of faith...",
     "backFlavorZh": "你站在刚到这片领域时抵达的平面边缘，还是不知道该怎么返回自己的世界。掉进下方坑洞的船只去了哪里，毫无迹象。也许它已经回头。又或者还在继续下落。你并不确定，但也没什么选择。你屏息不看无底的深渊，纵身信仰之跃……",
     "backName": "The Real World",
@@ -329983,7 +329983,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09687"
   },
   "09688": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Before you lies an otherworldly landscape unlike anything you have ever seen - the twisting, jumbled structures, the alien flora and strange effigies, all of it against a backdrop of familiar architecture and gadgetry both modern and ancient. The ship that led you here teeters on the brink of this eldritch platform for a moment, and then, with a deafening ruckus, plunges into the endless oblivion below.",
     "backFlavorZh": "你眼前的异界景象前所未见——扭曲纠缠的构造、外星植物和奇异的仿体，这一切都是在古今熟见的建筑和器物基础上模仿而来的。载你来此的船只在这个骇人平面的边缘摇晃片刻，就在震耳欲聋的混乱中摔下了无尽的虚空。",
     "backNameZh": "域外来客之廷",
@@ -330040,7 +330040,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09688"
   },
   "09689": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -330098,7 +330098,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09690": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -330160,7 +330160,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09690"
   },
   "09691": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -330221,7 +330221,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09692": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -330280,7 +330280,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09692"
   },
   "09693": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -330339,7 +330339,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09693"
   },
   "09694": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "Hard / Expert\n[skull]: -X. X is 1 more than the current act number.\n[cultist]: -7. You may flip a [[Stable]] key you control to its [[Unstable]] side to treat this token's modifier as -4, instead.\n[tablet]: -2. If there is a ready [[Outsider]] enemy at your location, you automatically fail, instead.\n[elder_thing]: -4. Cancel the effects and icons of each card committed to this test and set each of them aside, out of play, as hollows.",
@@ -330388,7 +330388,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09694"
   },
   "09695": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "Swift as Scarlet",
     "backNameZh": "迅如猩红",
@@ -330442,7 +330442,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09695"
   },
   "09696": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "A peal of thunder resounds across dimensions. In the deep recesses of your mind, the building pressure of infinite forgotten worlds crushes your every sense. Your keys, surging with paradimensional energy, rattle and hum in your hands. Without them, you could scarcely withstand the strain of this realm.",
     "backFlavorZh": "维度之间雷声隆隆。无数被遗忘的世界重压累积，在你脑海深处冲击着你的每一寸感官。你手中的钥匙吱嘎嗡响，涌现着超维能量。要是没有它们，你在这片领域的重压下可没法存活。",
     "backName": "Transdimensional Shock",
@@ -330497,7 +330497,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09696"
   },
   "09697": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "<span class='tsk-glyphs'>This is the forgotten</span> end<span class='tsk-glyphs'>-that-is-not-an-</span>end<span class='tsk-glyphs'>; not an</span> erasure <span class='tsk-glyphs'>but a turning of the moons; the great twist of irony in the</span> cosmic <span class='tsk-glyphs'>joke that is</span> existence; consciousness <span class='tsk-glyphs'>and</span> memory <span class='tsk-glyphs'>and being together at once and at last; and when the great work of the beyond is complete, your thoughts and dreams will be just a</span> drop <span class='tsk-glyphs'>of water in an</span> endless <span class='tsk-glyphs'>ocean of</span> sentience<span class='tsk-glyphs'>; mine but yours and ours together; and this place will be our home, from now until</span> eternity<span class='tsk-glyphs'>, and you shall never again hope nor despair, for we will be one and the</span> same<span class='tsk-glyphs'>.</span>",
     "backFlavorZh": "一段加密的信息……",
     "backName": "Red Sky Falling",
@@ -330552,7 +330552,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09697"
   },
   "09698": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Finally, you spot the man with the red gloves just before he ducks into a shimmering, extradimensional portal. There is no time to lose - it's now or never! You follow swiftly as the portal closes...",
     "backFlavorZh": "你终于找到了戴红手套的男子，他迅速溜进了一个闪闪发光的次元门。没有时间可以浪费了——机不可失，时不再来！你赶在次元门关闭时快速跟了上去……",
     "backName": "Another World (v. I)",
@@ -330607,7 +330607,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09698"
   },
   "09699": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "You step through the portal, uncertain if you will ever return...",
     "backFlavorZh": "你踏入次元门，不确定自己是否还能回来……",
     "backName": "Another World (v. II)",
@@ -330661,7 +330661,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09699"
   },
   "09700": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Finally, you spot the man with the red gloves just before he ducks into a shimmering, extradimensional portal. There is no time to lose - it's now or never! You follow swiftly as the portal closes...",
     "backFlavorZh": "你终于找到了戴红手套的男子，他迅速溜进了一个闪闪发光的次元门。没有时间可以浪费了——机不可失，时不再来！你赶在次元门关闭时快速跟了上去……",
     "backName": "Another World (v. III)",
@@ -330716,7 +330716,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09700"
   },
   "09701": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Seven forgotten locks grant entry to the tower, each one a piece of history from a realm long since erased from time. You forget they exist the moment the gates open. On the other side, steps course their way up the spire's baffling length. Winding, perplexing, and seemingly infinite, the ascent to the apex of the tower that binds this world together is paradoxical, a Gordian knot twisted far too many times. Even if you make it to the top, you doubt you will ever find a way back.",
     "backFlavorZh": "塔的入口处有七把遗忘之锁，每一把都是一段属于久遭遗忘国度的历史。门打开的时刻，你已经忘了它们存在过。另一端旋转阶梯的长度叫人望而生怯。它是个扭曲了无数次的难解之结，盘旋向上，通往塔顶，似乎无尽，令人茫然，将整个世界包裹起来，不可思议。即便你能上到顶端，你都怀疑自己能不能找到路回来。",
     "backName": "Into the Tower",
@@ -330770,7 +330770,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09701"
   },
   "09702": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "With herculean effort, you practically crawl from the final step to the tower's pinnacle. Twisting clouds of crimson and violet clash in a multidimensional sky, infinite gateways to infinite worlds, all of them oblivious, all of them blind, all of them theirs for the taking. You look out upon the world of the Outsiders with both awe and pity, upon the countless worlds' worth of ruin they have collected, discarded, forsaken, lost to all time. It is a garbage heap of cosmic proportions. At the very center lies your foe who has orchestrated humanity's erasure. Its body only scarcely resembles that of the Red-Gloved Man now. With no human face to wear, its gaze is empty, its expression unknowable.",
     "backFlavorZh": "你费尽千辛万苦，终于从最后一阶切实爬上了高塔顶端。多维的天空中猩红的云层扭曲出紫色的裂口，是通往无穷世界的无穷门扉。个个痴愚、个个盲目，个个任凭宰割。你带着敬畏和怜悯仰望着域外来客的世界，看着它们敛集的无数世界的遗迹，都已被遗弃、遗忘，失落于永恒。这里就是宇宙万物的垃圾堆。你的敌人，主宰人类消失的罪魁祸首，就在正中央。它的身形已经一点都不像那个戴红手套的男子了。它已经没有人类的面庞，眼神空洞，表情未知。",
     "backName": "Windows and Doors",
@@ -330824,7 +330824,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09702"
   },
   "09703": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The entity collapses upon itself, its wordless screech washing over the world and worlds beyond, reverberating through your skull, tearing you apart molecule by molecule. You remain tethered to reality only by the energy of your keys, which endure even as all else implodes around you. There is a sensation of tugging at the back of your skull, a feeling of being yanked by a fishhook out of ravaged waters.\nThen, darkness.",
     "backFlavorZh": "实体倒下了，它无言的尖叫在世界和彼端回荡，在你的脑中回响，要将你撕成一个个原子。你还能留存至今，完全是因为钥匙的能量。你身边的一切早已爆裂。你脑后突然一阵拖拽的感觉，就好像你在这片凌乱的水域中上了钩。\n然后，一片黑暗。",
     "backName": "Of Goldfish and Whales",
@@ -330878,7 +330878,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09703"
   },
   "09704": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The halls of the Red Coterie's secret hideout celebrate its long history of meddling with humanity, its walls adorned with ancient relics from past civilizations, scarlet-red tapestries, and numerous portraits of important-looking people, all clad in red.",
     "backFlavorZh": "红色结社秘密窝点的长廊大大方方地陈列了他们干涉人类的历史，墙上装饰着过去文明的古代遗物、猩红的织毯，还有不计其数的肖像，上面画的人看上去都举足轻重，个个穿着红衣。",
     "backNameZh": "猩红走廊",
@@ -330936,7 +330936,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09704"
   },
   "09705": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The halls of the Red Coterie's secret hideout celebrate its long history of meddling with humanity, its walls adorned with ancient relics from past civilizations, scarlet-red tapestries, and numerous portraits of important-looking people, all clad in red.",
     "backFlavorZh": "红色结社秘密窝点的长廊大大方方地陈列了他们干涉人类的历史，墙上装饰着过去文明的古代遗物、猩红的织毯，还有不计其数的肖像，上面画的人看上去都举足轻重，个个穿着红衣。",
     "backNameZh": "猩红走廊",
@@ -330993,7 +330993,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09705"
   },
   "09706": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331052,7 +331052,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09706"
   },
   "09707": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331111,7 +331111,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09707"
   },
   "09708": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331170,7 +331170,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09708"
   },
   "09709": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331229,7 +331229,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09709"
   },
   "09710": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331287,7 +331287,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09710"
   },
   "09711": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "The Red Coterie's inner sanctum is steeped in ancient tradition and ceremony, welcoming and sinister all at once.",
     "backFlavorZh": "红色结社的内部圣堂浸淫了古代的传统和仪式，既引人入胜，又邪恶无比。",
     "backName": "Coterie Sanctuary",
@@ -331346,7 +331346,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09711"
   },
   "09712": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "In the nexus of this jumbled otherworld rises the tower: a sinister structure of assorted materials climbing out of the tangled city, looming countless stories over you like a skyscraper of forgotten architecture. An otherworldly mist snakes around the tower's length, flanked on all sides by barren, jagged peaks.",
     "backFlavorZh": "在这个纠结世界的核心升起了一座巨塔：扭曲的材料在错综之城上盘旋成一幢不祥的高楼，你面前仿佛竖立起一座失落的摩天大楼，有无数层。一旁围绕着参差的不毛诸峰，中间异界的迷雾盘绕向上。",
     "backNameZh": "万千纠结之塔",
@@ -331404,7 +331404,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09712"
   },
   "09713": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "通往悖逆重力之阶的大门已经封印、失落。作为进入悖逆重力之阶的额外费用，万千纠结之塔的调查员必须共同花费4[per_investigator]个线索。",
     "backNameZh": "悖逆重力之阶",
     "backText": "The gate to Gravity-Defying Climb is sealed and forgotten. As an additional cost to enter Gravity-Defying Climb, investigators at The Knotted Tower must spend 4 [per_investigator] clues.",
@@ -331462,7 +331462,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09713"
   },
   "09714": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "睥睨众生之巅",
     "backText": "The Red-Gloved Man cannot be defeated.\nThe way to The Towering Vertex is impossibly perplexing. In order for an investigator to enter The Towering Vertex, concealed mini-cards around Gravity-Defying Climb must be exposed in the following sequence: First, City of Remnants (L); second, City of Remnants (M); third, City of Remnants (R).",
@@ -331521,7 +331521,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09714"
   },
   "09715": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331584,7 +331584,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09715"
   },
   "09716a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331645,7 +331645,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09716a"
   },
   "09716b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331706,7 +331706,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09716b"
   },
   "09716c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331767,7 +331767,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09716c"
   },
   "09717": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331821,7 +331821,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09717"
   },
   "09718": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331875,7 +331875,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09718"
   },
   "09719": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331929,7 +331929,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09719"
   },
   "09720": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -331989,7 +331989,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09720"
   },
   "09721": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332042,7 +332042,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09721"
   },
   "09722": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332095,7 +332095,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09722"
   },
   "09723": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332148,7 +332148,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09723"
   },
   "09724": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332201,7 +332201,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09724"
   },
   "09725": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332254,7 +332254,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09725"
   },
   "09726a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332315,7 +332315,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09726a"
   },
   "09726b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332376,7 +332376,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09726b"
   },
   "09727a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332437,7 +332437,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09727a"
   },
   "09727b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332498,7 +332498,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09727b"
   },
   "09728": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332551,7 +332551,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09728"
   },
   "09729": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332604,7 +332604,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09729"
   },
   "09730": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332658,7 +332658,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09730"
   },
   "09731": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332719,7 +332719,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09731"
   },
   "09732": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332780,7 +332780,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09733": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332834,7 +332834,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09733"
   },
   "09734": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332895,7 +332895,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09734"
   },
   "09735": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -332948,7 +332948,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09735"
   },
   "09736": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333001,7 +333001,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09736"
   },
   "09737": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333061,7 +333061,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09737"
   },
   "09738": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333114,7 +333114,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09738"
   },
   "09739": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333175,7 +333175,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09740": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333228,7 +333228,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09740"
   },
   "09741": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333281,7 +333281,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09741"
   },
   "09742": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333334,7 +333334,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09742"
   },
   "09743": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333387,7 +333387,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09743"
   },
   "09744": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333441,7 +333441,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09744"
   },
   "09745": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333496,7 +333496,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09745"
   },
   "09746": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -333551,7 +333551,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09746"
   },
   "09747a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333608,7 +333608,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747a"
   },
   "09747b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333665,7 +333665,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747b"
   },
   "09747c": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333722,7 +333722,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747c"
   },
   "09748a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333779,7 +333779,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09748a"
   },
   "09748b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333836,7 +333836,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09748b"
   },
   "09749a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333894,7 +333894,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09749b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -333952,7 +333952,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09750": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
     "backNameZh": "残骸之城",
@@ -334010,7 +334010,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09751": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334063,7 +334063,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09751"
   },
   "09752": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334128,7 +334128,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09753": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334192,7 +334192,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09754": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334257,7 +334257,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09755": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334321,7 +334321,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09756": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334386,7 +334386,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09757": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334450,7 +334450,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09758": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334515,7 +334515,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09759": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334580,7 +334580,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09760": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334645,7 +334645,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09761": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334710,7 +334710,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09762": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334779,7 +334779,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09762"
   },
   "09763": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334850,7 +334850,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09763"
   },
   "09764": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334917,7 +334917,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09764"
   },
   "09765": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -334971,7 +334971,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09765"
   },
   "09766": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335029,7 +335029,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09766"
   },
   "09767": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335086,7 +335086,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09767"
   },
   "09768a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335144,7 +335144,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09768a"
   },
   "09768b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335198,7 +335198,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09768b"
   },
   "09769a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335256,7 +335256,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09769a"
   },
   "09769b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335310,7 +335310,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09769b"
   },
   "09770a": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -335368,7 +335368,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09770a"
   },
   "09770b": {
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",

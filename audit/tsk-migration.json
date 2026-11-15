@@ -12,11 +12,11 @@
     "docs/campaign/theScarletKeys/README.md#P8",
     "docs/campaign/theScarletKeys/README.md#6-每章完成模板"
   ],
-  "status": "verified",
-  "playable": true,
+  "status": "pending",
+  "playable": false,
   "launchEnabled": true,
   "earlyAccess": false,
-  "equivalenceCertified": true,
+  "equivalenceCertified": false,
   "gates": {
     "registration": {
       "pass": true,
@@ -132,11 +132,11 @@
       }
     },
     "ledgers": {
-      "pass": true,
+      "pass": false,
       "checks": {
         "scope": {
           "pass": true,
-          "sha256": "c8fb0ebe529fafa7bd6c989c453eb719faaa2831181b39b9c3d661d11e22e884",
+          "sha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68",
           "path": "audit/tsk-scope.json",
           "gates": {
             "records": true,
@@ -168,7 +168,7 @@
         },
         "scan": {
           "pass": true,
-          "sha256": "e0ef587311ca8cd0ce3a312a1f6b3611bd6fd58e423b2953365d06f372c691ae",
+          "sha256": "6be5a36551f0e00f8cdbe4011ff40dfc71b983a367d41ba993a87f45b3c4a797",
           "path": "audit/tsk-mechanism-scan.json",
           "gates": {
             "scopePassed": true,
@@ -191,7 +191,7 @@
         },
         "primitivePlan": {
           "pass": true,
-          "sha256": "2f3f80f68ec45de8ac55aac358d522573b52a0ab1831d259361a57d4532dd13e",
+          "sha256": "ff3672f289312c0f7259887ceec2c3ebceadab69ab5a714a7e774941b0f74c83",
           "path": "audit/tsk-primitive-plan.json",
           "gates": {
             "catalogEntriesCovered": true,
@@ -218,28 +218,20 @@
           "path": "audit/tsk-primitive-catalog.json"
         },
         "adjudication": {
-          "pass": true,
-          "sha256": "8c34664a6686bb04b0b6d55cd3896783f83cd3a885bd0f7595c8aeb7387a02b2",
-          "path": "artifacts/migration/tsk/primitive-adjudication.json",
-          "requests": 175,
-          "deferred": 175,
-          "categories": {
-            "other": 59,
-            "ui-window": 59,
-            "record-container": 26,
-            "timing-hook": 15,
-            "targeting": 8,
-            "private-info": 5,
-            "keyword-rule": 3
-          }
+          "pass": false,
+          "sha256": null,
+          "path": "audit/tsk-primitive-adjudication.json",
+          "requests": null,
+          "deferred": null,
+          "categories": null
         }
       },
       "commands": {
         "baseline": {
           "pass": true,
-          "command": "node tools/scan-tsk-baseline.mjs --check",
+          "command": "node tools/scan-tsk-baseline.mjs --check-metadata",
           "exitCode": 0,
-          "tail": "tsk baseline: check ok（gitHead fb7d536；replay 13 局 / 870 步 sha256=19e63fcba8a5…；rulesVersion n6.0 / schemaVersion 7；合规与 12 项指标一致；fast 日志 sha256 一致；replay --compare exit 0）\n"
+          "tail": "tsk baseline: check ok（gitHead fb7d536；replay 13 局 / 870 步 sha256=19e63fcba8a5…；rulesVersion n6.0 / schemaVersion 7；合规与 12 项指标一致；回放由发布门禁校验）\n"
         },
         "nodeAcceptance": {
           "pass": true,
@@ -288,12 +280,6 @@
           "command": "node tools/import-tsk-story.mjs --check",
           "exitCode": 0,
           "tail": "tsk story: 复算一致\n"
-        },
-        "adjudication": {
-          "pass": true,
-          "command": "node tools/adjudicate-tsk-primitives.mjs --check",
-          "exitCode": 0,
-          "tail": "tsk primitive adjudication: 复算一致（无 pending 请求）\n"
         }
       },
       "evidence": {
@@ -329,7 +315,7 @@
     "allCards": {
       "pass": true,
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "df822e38792d8ac14a5d24320c72657638bb2a59de917ee684d551d682551d53",
+      "sha256": "5c4adf75a51f3ccf8f3dad3a8873af4dc34b4076f9b36b18d81bd0b2aa26cdde",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -572,13 +558,13 @@
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"02a5878002f512dd6b13d51fce5f3855e2ab9da27f7cf6cbb631463564fe2314\",\n \"drift\": []\n}\n"
+          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"648c2e6c3e795d7f8573628a27c3e183684e4e48d291d4ef0146bc83f1a8a293\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：63 个文件、251 条本地链接全部可解析\n"
+          "tail": "文档链接体检：63 个文件、263 条本地链接全部可解析\n"
         }
       }
     },
@@ -2516,49 +2502,13 @@
     }
   },
   "primitives": {
-    "adjudication": {
-      "files": 176,
-      "requests": 175,
-      "nonRequestFiles": 1,
-      "pendingBefore": 0,
-      "deferredAfter": 175,
-      "alreadyDeferred": 175,
-      "pendingFiles": [],
-      "categories": {
-        "other": 59,
-        "ui-window": 59,
-        "record-container": 26,
-        "timing-hook": 15,
-        "targeting": 8,
-        "private-info": 5,
-        "keyword-rule": 3
-      },
-      "workers": {
-        "w-m2-1": 14,
-        "w-m2-2": 11,
-        "w-m2-3": 14,
-        "unknown": 17,
-        "w-p7-riddlesAndRain": 4,
-        "w-p7-deadHeat": 9,
-        "w-p7-sanguineShadows": 4,
-        "w-p7-dealingsInTheDark": 9,
-        "w-m3-dancingMad": 3,
-        "w-m3-onThinIce": 11,
-        "w-dogsOfWar": 8,
-        "w-m3-withoutATrace": 5,
-        "w-p7-congressOfTheKeys": 2,
-        "w-p7-shared-a": 35,
-        "w-p7-shared-b": 22,
-        "w-p7-campaign-flow": 3,
-        "w-p7-shadesOfSuffering": 4
-      }
-    },
-    "pendingRequests": 0,
-    "deferredRequests": 175,
+    "adjudication": null,
+    "pendingRequests": null,
+    "deferredRequests": null,
     "nextPhase": "P9",
     "ledger": {
-      "path": "artifacts/migration/tsk/primitive-adjudication.json",
-      "sha256": "8c34664a6686bb04b0b6d55cd3896783f83cd3a885bd0f7595c8aeb7387a02b2"
+      "path": "audit/tsk-primitive-adjudication.json",
+      "sha256": null
     }
   },
   "evidence": {
@@ -2674,7 +2624,7 @@
     },
     "allCards": {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "df822e38792d8ac14a5d24320c72657638bb2a59de917ee684d551d682551d53",
+      "sha256": "5c4adf75a51f3ccf8f3dad3a8873af4dc34b4076f9b36b18d81bd0b2aa26cdde",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -2764,12 +2714,8 @@
   },
   "sources": [
     {
-      "path": "artifacts/migration/tsk/primitive-adjudication.json",
-      "sha256": "8c34664a6686bb04b0b6d55cd3896783f83cd3a885bd0f7595c8aeb7387a02b2"
-    },
-    {
       "path": "audit/tsk-scope.json",
-      "sha256": "c8fb0ebe529fafa7bd6c989c453eb719faaa2831181b39b9c3d661d11e22e884"
+      "sha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68"
     },
     {
       "path": "audit/tsk-baseline.json",
@@ -2777,11 +2723,11 @@
     },
     {
       "path": "audit/tsk-mechanism-scan.json",
-      "sha256": "e0ef587311ca8cd0ce3a312a1f6b3611bd6fd58e423b2953365d06f372c691ae"
+      "sha256": "6be5a36551f0e00f8cdbe4011ff40dfc71b983a367d41ba993a87f45b3c4a797"
     },
     {
       "path": "audit/tsk-primitive-plan.json",
-      "sha256": "2f3f80f68ec45de8ac55aac358d522573b52a0ab1831d259361a57d4532dd13e"
+      "sha256": "ff3672f289312c0f7259887ceec2c3ebceadab69ab5a714a7e774941b0f74c83"
     },
     {
       "path": "audit/tsk-primitive-catalog.json",
@@ -2793,11 +2739,11 @@
     },
     {
       "path": "audit/tsk-rules.json",
-      "sha256": "053d3bca4c4de6d309f6499858619358223fd89d7630591114897a3eee1b5289"
+      "sha256": "74301e07a91064efaa0fa7df29b7f1c6c8dad792c0931224eac1abeb505d84bf"
     },
     {
       "path": "audit/tsk-interactions.json",
-      "sha256": "dd08b7b4977260e771711e62fcf26f3af9dc2947fb7fa0a4688329536b4c1ace"
+      "sha256": "a0d32c10b3af6a25c6b18d68a29b0236072cbb17d635286bb51bd83497390230"
     },
     {
       "path": "audit/tsk-investigators.json",
@@ -2805,11 +2751,11 @@
     },
     {
       "path": "audit/tsk-player-acceptance.json",
-      "sha256": "3300a39be161777786de96be0ed84b1ac224af35bad724ad8c4d07c195c7767c"
+      "sha256": "c8b9b7fce37146f8e7f95182cc3d2883ab3db7117f31c08bb7b1e175aeba4b6a"
     },
     {
       "path": "audit/tsk-scenario-acceptance.json",
-      "sha256": "15c32df2c68a8e9c277ba906951d4d1015e7e8b49fe0ee5a75ad19fc6c1b522b"
+      "sha256": "6dba177649d11c20576812a33f9bb3847b2c236b35c0c583a4c664fdae3d7a5e"
     },
     {
       "path": "audit/tsk-campaign-plan.json",
@@ -2841,7 +2787,7 @@
     },
     {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "df822e38792d8ac14a5d24320c72657638bb2a59de917ee684d551d682551d53"
+      "sha256": "5c4adf75a51f3ccf8f3dad3a8873af4dc34b4076f9b36b18d81bd0b2aa26cdde"
     },
     {
       "path": "audit/tsk-release-browser.json",
@@ -2896,14 +2842,19 @@
       "note": "地点/幕/议程/剧情资产等数据型战役卡：行为由章 behavior 承接并有章测试证据，逐卡字面在 P9 逐卡验收"
     },
     {
-      "kind": "primitive-backlog",
-      "count": 175,
-      "note": "P8 裁决为 deferred，进入 P9 原语批次（artifacts/migration/tsk/primitive-adjudication.json）"
+      "kind": "missing-primitive-adjudication",
+      "path": "audit/tsk-primitive-adjudication.json"
+    },
+    {
+      "kind": "gate-pending",
+      "gates": [
+        "ledgers"
+      ]
     }
   ],
   "gate": {
     "registration": true,
-    "ledgers": true,
+    "ledgers": false,
     "allCards": true,
     "campaignE2E": true,
     "releaseBrowser": true,

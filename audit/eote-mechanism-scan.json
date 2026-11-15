@@ -492,13 +492,14 @@
       "scenario"
     ],
     "windows": {
-      "count": 117,
+      "count": 120,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
         "afterAlarmRaised",
         "agendaWouldAdvance",
         "assetActionResolved",
+        "assetCluesPlaced",
         "assetDamageAssigned",
         "assetDefeated",
         "assetEnteredPlay",
@@ -562,6 +563,7 @@
         "investigation.afterAction",
         "investigationPhaseEnds",
         "investigationPhaseStarts",
+        "locationPlaced",
         "locationRevealed",
         "move",
         "moveBeforeEngage",
@@ -578,6 +580,7 @@
         "roundStarts",
         "scenarioStarts",
         "searchWouldResolve",
+        "sharedSuppliesSpent",
         "skillTestFail",
         "skillTestFailed",
         "skillTestSuccess",
@@ -615,7 +618,7 @@
       "readPoint": "src/engine/windows.js#windows"
     },
     "matchers": {
-      "count": 39,
+      "count": 40,
       "list": [
         "aliveInvestigators",
         "all",
@@ -631,6 +634,7 @@
         "controlledCards",
         "drewCardType",
         "drewNonWeakness",
+        "duringPeriod",
         "enemiesAt",
         "enemiesEngagedWith",
         "exhaustedEnemies",

@@ -6,7 +6,21 @@
 
 本目录是独立仓库 [boardgame-arkhamhorror](https://github.com/Dr-Liao/boardgame-arkhamhorror) 的 checkout，不是大厅仓库的 git submodule；父仓库会忽略其内容。源码开发和本仓库测试需将 checkout 放在大厅的 `games/arkhamhorror` 下；正式发行包可由游戏中心安装到大厅用户数据目录的 `mods/arkhamhorror/<版本>/`，无需放进 `games/`。
 
-当前可从大厅启动《夜之狂热》《敦威治遗产》《卡尔克萨之路》《失落的时代》《万象无终》《食梦者》《地球边缘》和《绯红密钥》。《万象无终》已完成原战役九章、377 条卡面记录及双语完整指南的验收，移除提前体验标记，详见 `audit/tcu-migration.json`。《食梦者》按 `playable + earlyAccess` 开放；并行共享幕间、尾声及真实双人联机验收的边界见 `audit/tde-migration.json`。《地球边缘》已于 P8 完成整体验收与发布（`earlyAccess:false`）：403 条记录逐卡账本无 missing/blocked、真实大厅发布/进度/联机浏览器验收与全量回归通过，已披露近似与维护项见 `audit/eote-release-acceptance.json`。《绯红密钥》已于 P8 完成整体验收与发布（`playable`、`earlyAccess:false`）：439 条记录逐卡账本无 missing/blocked、十章与世界地图启程/逐章推进/通古斯卡终章真实浏览器验收、全量回归与冻结失败集合一致，已披露近似与原语 P9 backlog 见 `audit/tsk-migration.json`。`playable` 表示在本 Mod 明确声明的实现边界内可完成流程，不代表与桌游原版规则等价；提前开放但仍有已登记近似项的内容会同时标记 `earlyAccess`，差异以 `audit/` 账本为准。
+## 战役验收
+
+[生产注册表](content/registered.js) 决定大厅可启动的战役。各战役的发布状态、规则差异、测试证据和余项记录在对应账本。
+
+- [夜之狂热](audit/p6-behavior-ledger.md)
+- [敦威治遗产](audit/dunwich-migration.json)
+- [卡尔克萨之路](audit/carcosa-migration.json)
+- [失落的时代](audit/tfa-migration.json)
+- [万象无终](audit/tcu-migration.json)
+- [食梦者](audit/tde-migration.json)
+- [印斯茅斯暗潮](audit/tic-migration.json)
+- [地球边缘](audit/eote-migration.json)
+- [绯红密钥](audit/tsk-migration.json)
+
+浏览器 runner 在验收时检查截图文件并生成报告。Node 复算使用签入的报告和原语请求清单。地球边缘可通过 `node tools/audit-eote-release.mjs --verify-files` 复核当前磁盘的发布截图。
 
 ## 安装
 

@@ -68,12 +68,12 @@ export function deckRules(investigator, codes = [], cards = {}) {
   return rules
 }
 const lower = value => String(value).toLowerCase().replace(/\.$/, '')
-// 第 5 步 M1 调查员批次（P6）：构筑标签的三种印刷写法。
-//   uc = 带「使用（充能）」、hh = 能治愈恐惧、st = [[法术]]；
+// 构筑标签：使用（充能）、治疗恐惧、法术，以及印刷的谈判行动。
 // 卡表用 tag + text（正则）描述「带有『治愈……恐惧』字样的卡牌」这类构筑选项。
-const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st'])
+const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st', 'pa'])
 const HEALS_HORROR = /heals? .*horror|治愈[^。\n]*恐惧|治癒[^。\n]*恐懼/i
 const SPELL_TEXT = /\[\[spell\]\]/i
+const PRINTED_PARLEY = /(?:^|\r?\n)\s*(?:\[[a-z]+\]\s*)*(?:<b>)?parley(?:<\/b>)?[.:]/i
 const PRINTED_USES = /Uses\s*\([^)]*?\b([A-Za-z]+)\s*\)/gi
 
 // 卡面派生信息缓存：构筑校验只读卡牌的 text/traits/uses，按卡牌对象身份缓存。
@@ -95,6 +95,7 @@ function cardInfo(card) {
     factions: card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean),
     healsHorror: texts.some(text => HEALS_HORROR.test(text)),
     isSpell: traits.includes('spell') || texts.some(text => SPELL_TEXT.test(text)),
+    parley: texts.some(text => PRINTED_PARLEY.test(text)),
   }
   cardInfoCache.set(card, info)
   return info
@@ -121,9 +122,10 @@ const ruleInfoCache = new WeakMap()
 function ruleInfo(rule) {
   const cached = ruleInfoCache.get(rule)
   if (cached) return cached
-  const info = { known: Object.keys(rule).every(key => KNOWN_RULE_KEYS.has(key)), patterns: null }
+  const info = { known: Object.keys(rule).every(key => KNOWN_RULE_KEYS.has(key)), patterns: null, parleyHeading: false }
   if (rule.text?.length) {
     const sources = Array.isArray(rule.text) ? rule.text : [rule.text]
+    info.parleyHeading = sources.includes('<b>Parley\\.<\\/b>')
     info.patterns = sources
       .map(source => { try { return new RegExp(source, 'i') } catch { return null } })
       .filter(Boolean)
@@ -161,7 +163,8 @@ export function matchesCardRule(card, rule, investigator) {
   if (rule.not && typeof rule.not === 'object' && matchesCardRule(card, rule.not, investigator)) return false
   const cardValues = cardInfo(card)
   if (info.patterns) {
-    if (!info.patterns.some(pattern => cardValues.texts.some(text => pattern.test(text)))) return false
+    const printedParley = info.parleyHeading && cardValues.parley && rule.tag?.map(lower).includes('pa')
+    if (!printedParley && !info.patterns.some(pattern => cardValues.texts.some(text => pattern.test(text)))) return false
   }
   const allowed = rule.factions || rule.faction || rule.faction_select
   if (allowed?.length && !allowed.some(faction => cardValues.factions.includes(faction))) return false
@@ -178,6 +181,7 @@ export function matchesCardRule(card, rule, investigator) {
     if (tags.includes('uc') && !cardValues.printedUses.some(use => ['charge', 'charges'].includes(use))) return false
     if (tags.includes('hh') && !cardValues.healsHorror) return false
     if (tags.includes('st') && !cardValues.isSpell) return false
+    if (tags.includes('pa') && !cardValues.parley) return false
   }
   if (rule.investigatorTraits?.length
     && !rule.investigatorTraits.some(trait => investigatorTraits(investigator).includes(lower(trait)))) return false

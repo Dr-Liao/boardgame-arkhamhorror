@@ -3,6 +3,7 @@ import { tokenCostAvailable } from './token-cost.js'
 import { afterUsesSpent } from './uses.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { extraDeckPiles } from './alt-decks.js'
+import { scenarioDeckPiles } from './scenario-decks.js'
 import { markForcedRevelation } from './resolution-scope.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-20）。
@@ -97,6 +98,7 @@ export function createEncounter(deps) {
   } = deps
 
 function drawEncounter(state, inv, events, options = {}) {
+  if (state.scenario?.mechanics?.noEncounterDeck && !options.scenarioDeckId) return
   if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
     row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('encounterCardWouldDraw'))))) {
     const context = { when: 'encounterCardWouldDraw', seat: inv.seat, location: inv.location }
@@ -109,17 +111,18 @@ function drawEncounter(state, inv, events, options = {}) {
   const deckId = options.deck
     || scenarioBehavior(state).encounterDeckFor?.(state, inv)
     || 'encounter'
-  const piles = deckId === 'encounter' ? null : extraDeckPiles(state, deckId)
+  const piles = options.scenarioDeckId ? scenarioDeckPiles(state, options.scenarioDeckId)
+    : deckId === 'encounter' ? null : extraDeckPiles(state, deckId)
   const deck = () => (piles ? piles.deck : state.encounterDeck)
   const discard = () => (piles ? piles.discard : state.encounterDiscard)
   const setDeck = list => { if (piles) piles.deck = list; else state.encounterDeck = list }
-  if (deck().length === 0) {
+  if (options.code == null && deck().length === 0) {
     if (discard().length === 0) return
     setDeck(shuffle([...discard()], () => randomValue(state)))
     if (piles) piles.discard = []
     else state.encounterDiscard = []
   }
-  const code = deck().pop()
+  const code = options.code ?? deck().pop()
   const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code]
   // 2026-10-25 本循环修复 05183：drawExtra/抽牌管线支持给「本次抽到的卡」附加选项：
   //   · options.peril：强制本次遭遇视为险境（peril），影响投入/队友协助等窗口；
@@ -244,7 +247,8 @@ function drawEncounter(state, inv, events, options = {}) {
     } else {
       engage = resolvingInv.seat
     }
-    const spawnOptions = registeredEntry(code)?.enemyRule?.revelationSpawnOptions?.(state, resolvingInv, loc, scenarioRuntime(state, events)) || {}
+    const spawnOptions = { ...registeredEntry(code)?.enemyRule?.revelationSpawnOptions?.(state, resolvingInv, loc, scenarioRuntime(state, events)),
+      ...(options.scenarioDeckId ? { discardToScenarioDeck: options.scenarioDeckId } : {}) }
     const enemy = spawnEnemy(state, code, loc, engage, false, false, resolvingInv.seat, spawnOptions)
     if (enemy) info(state, events, `👹 ${resolvingInv.name} 遭遇了「${enemy.name}」！它出现在「${locName(state, enemy.location)}」${enemy.engagedSeat != null ? '并与之交战' : ''}。`)
     if (enemy && revelationSpawn?.cluesPerInvestigator) enemy.clues = (enemy.clues || 0) + revelationSpawn.cluesPerInvestigator * state.numInvestigators

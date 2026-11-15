@@ -225,7 +225,7 @@ test('对局响应只嵌入本局所需卡牌定义，图鉴不扩大运行许�
   const illegal = await get('/api/start', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ modId: 'arkhamhorror', settings: { opponents: [], teammates: 0, playerInvestigator: '09001' } }),
+    body: JSON.stringify({ modId: 'arkhamhorror', settings: { opponents: [], teammates: 0, playerInvestigator: '10001' } }),
   })
   assert.equal(illegal.body.ok, false)
 })

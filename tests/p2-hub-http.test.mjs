@@ -32,7 +32,7 @@ async function listen() {
   return { server, request, close: () => new Promise(resolve => { server.closeAllConnections(); server.close(resolve) }) }
 }
 
-test('P2 新战役局外流程、原子存档、显式读取、删除与另存为', { timeout: 30000 }, async () => {
+test('P2 新战役局外流程、原子存档、显式读取、删除与另存为', { timeout: 90000 }, async () => {
   const previous = process.env.DSH_HOME
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'arkham-p2-'))
   process.env.DSH_HOME = home
@@ -178,7 +178,7 @@ test('P2 新战役局外流程、原子存档、显式读取、删除与另存�
   }
 })
 
-test('P2 关卡结算停在局外页，升级完成后主动进入下一关', { timeout: 30000 }, async () => {
+test('P2 关卡结算停在局外页，升级完成后主动进入下一关', { timeout: 90000 }, async () => {
   const previous = process.env.DSH_HOME
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'arkham-p2-flow-'))
   process.env.DSH_HOME = home

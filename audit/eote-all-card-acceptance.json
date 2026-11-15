@@ -3455,14 +3455,14 @@
         "file": "src/cards/entries/08098.js",
         "implemented": true,
         "implementedFlag": null,
-        "sha256": "3851bd3cf983525f7f695c1784005a0dfab49083917fc69201fae36f1b684fdc"
+        "sha256": "e67eaf9ca604f7fa0bf0f555b5502a128f876c8690d504d6cbc31da1bef481a6"
       },
       "evidence": [
         {
           "kind": "strong",
           "ledgerMatched": false,
           "resolvedFile": "tests/eote-player-m2-3.test.mjs",
-          "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动",
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供",
           "titleMatched": true,
           "traceable": true
         }
@@ -3523,14 +3523,14 @@
         "file": "src/cards/entries/08100.js",
         "implemented": true,
         "implementedFlag": null,
-        "sha256": "abfcedcded07a791889f42ac1fc7168abe5c27bf73cbddc9edaad88a4dbc591a"
+        "sha256": "21ed1e7792c8b3fb8326d6259287fe17f779246e05d4c29e3487202bfa84654c"
       },
       "evidence": [
         {
           "kind": "strong",
           "ledgerMatched": false,
           "resolvedFile": "tests/eote-player-m2-3.test.mjs",
-          "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动",
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供",
           "titleMatched": true,
           "traceable": true
         }
@@ -4754,9 +4754,11 @@
       "name": "冰冻海岸",
       "nameEn": "Frozen Shores",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08503"
+      ],
+      "reason": "pending-primitive: p7-shared-08503 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -4837,9 +4839,11 @@
       "name": "辽阔雪地",
       "nameEn": "Broad Snowdrifts",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08506"
+      ],
+      "reason": "pending-primitive: p7-shared-08506（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -4887,9 +4891,11 @@
       "name": "岩石峭壁",
       "nameEn": "Rocky Crags",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08508"
+      ],
+      "reason": "pending-primitive: p7-shared-08508 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -5094,9 +5100,11 @@
       "name": "疾行谬物",
       "nameEn": "Skittering Nonsense",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08515"
+      ],
+      "reason": "pending-primitive: p7-shared-08515（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -5160,9 +5168,11 @@
       "name": "零能见度",
       "nameEn": "Zero Visibility",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08517"
+      ],
+      "reason": "pending-primitive: p7-shared-08517（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -5907,9 +5917,11 @@
       "name": "邪灵现身",
       "nameEn": "Manifestations of Evil",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08544"
+      ],
+      "reason": "pending-primitive: p7-08544（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -5973,9 +5985,11 @@
       "name": "陷入围攻！",
       "nameEn": "Under Attack!",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08546"
+      ],
+      "reason": "pending-primitive: p7-08546（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -6495,9 +6509,11 @@
       "name": "树篱迷宫",
       "nameEn": "Hedge Maze",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -6553,9 +6569,11 @@
       "name": "荒废车站",
       "nameEn": "Deserted Station",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -6603,9 +6621,11 @@
       "name": "沿海水域",
       "nameEn": "Coastal Waters",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -6753,9 +6773,11 @@
       "name": "耸立岩石",
       "nameEn": "Standing Stones",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -6803,9 +6825,11 @@
       "name": "飞机场",
       "nameEn": "Airfield",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -6853,9 +6877,11 @@
       "name": "阿拉斯加荒野",
       "nameEn": "Alaskan Wilds",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7061,9 +7087,11 @@
       "name": "肯斯勒博士的办公室",
       "nameEn": "Dr. Kensler's Office",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7111,9 +7139,11 @@
       "name": "摩艾石像",
       "nameEn": "Mo'ai Statues",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08560"
+      ],
+      "reason": "pending-primitive: p7-08560 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7834,9 +7864,11 @@
       "name": "威廉·戴尔教授",
       "nameEn": "Professor William Dyer",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -7859,9 +7891,11 @@
       "name": "丹佛斯",
       "nameEn": "Danforth",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7884,9 +7918,11 @@
       "name": "伊里亚·阿什瓦克",
       "nameEn": "Eliyah Ashevak",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7909,9 +7945,11 @@
       "name": "玛拉·辛哈医生",
       "nameEn": "Dr. Mala Sinha",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7934,9 +7972,11 @@
       "name": "艾弗里·克莱普尔",
       "nameEn": "Avery Claypool",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -7967,9 +8007,11 @@
       "name": "詹姆斯·“曲奇”·弗雷德里克斯",
       "nameEn": "James \"Cookie\" Fredericks",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -7992,9 +8034,11 @@
       "name": "艾米·肯斯勒博士",
       "nameEn": "Dr. Amy Kensler",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -8017,9 +8061,11 @@
       "name": "罗尔德·埃尔斯沃思",
       "nameEn": "Roald Ellsworth",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -8042,9 +8088,11 @@
       "name": "高田弘子",
       "nameEn": "Takada Hiroko",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-08587"
+      ],
+      "reason": "pending-primitive: p7-08587 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -9602,9 +9650,11 @@
       "name": "伊夸之门",
       "nameEn": "The Gate of Y'quaa",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08649"
+      ],
+      "reason": "pending-primitive: p7-shared-08649 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -9877,7 +9927,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08660.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "058dc863fc28fd9fcdb83c1478799befb41d430059778525f015d161c0b61edc"
+        "sha256": "340125c9c7f0eac517938efb9801facb4f36899e5815bdc91e95b39c687f3b77"
       },
       "evidence": [
         {
@@ -9910,7 +9960,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08661.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "5ab48565cf5c924e120b8524801116c1cb60475f62468347b54270959a6120c4"
+        "sha256": "2358f412b9877953874c5c901f65af386e659425f62c37e50688f8b19e4fccef"
       },
       "evidence": [
         {
@@ -9943,7 +9993,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08662.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "9f872d8b40688e65c2949a2af7fea3b1b623467f2839446544fe947cf8385959"
+        "sha256": "8293a4cf2915c58d8ad272ef3874c3f62f1ab26a0cf317fe4e2ad2d11e27c740"
       },
       "evidence": [
         {
@@ -9976,7 +10026,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08663.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "d28a359442225a3f9b47691a20c5e6b017afc8eb991c8d514df8e3fb033fed77"
+        "sha256": "04c4e912cde14161b149003681cf77124d1f8446b4dcb94fe6e5c85959d18f7c"
       },
       "evidence": [
         {
@@ -10009,7 +10059,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "0b5803d15759583efc25aaf27eaf8184ca12d50b51aa51368f37083c7f9cd7f5"
+        "sha256": "68e0a7a442d9dfb2f6324057c96e974d395a421be28d22a77ac7410f37405833"
       },
       "evidence": [
         {
@@ -10042,7 +10092,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "775b2f378d667a51c97f41317eaa33ac3dda20e1a4b5ea6f957a9886b048db2f"
+        "sha256": "b6317f8368fc950433bd46a4fd7a839b906348b78e869b9bf6d8587dc2eda0a2"
       },
       "evidence": [
         {
@@ -10075,7 +10125,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "79ec8946bef13d890f4de14fe3e6e3b23a54fbe8efbf1df27ee5668e99ddbd13"
+        "sha256": "fdf1d2d8c3d7aeb3c50271795f0390358843d0b6056bd9954d3b0b55249913a3"
       },
       "evidence": [
         {
@@ -10108,7 +10158,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "c55fc57dc8a44f3a6f79bc6ddb9502199274296a502d439e1b037d6b6f199ef2"
+        "sha256": "22cd3f42c05ee03f9b01fd1a9a9366d0bda7f597ac3a1fae17850c1f944b9390"
       },
       "evidence": [
         {
@@ -10141,7 +10191,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "8df385f199be660e8d9e5d88abfc6370b9f366b1ebe2f9c1fe84bb214af0aeae"
+        "sha256": "60e00c2aa96b424864e84c5c888f1d8c88a26a1695ac893d9f78c8d2687aba09"
       },
       "evidence": [
         {
@@ -10174,7 +10224,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08669.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "39c768d173e64ccdc27e66584c6639f11c25e2894ebdfd778cae377f0580c066"
+        "sha256": "381e0b43a5aa2feba723afc17899a62fbf3b229eb150809078397cb8c96235c7"
       },
       "evidence": [
         {
@@ -10207,7 +10257,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08670.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "f9345362f8d64445631567e5216335dccc8a807cea5ff85554bd21f460ec7659"
+        "sha256": "f0f3f5f5e08c405509dfb33c877aa308796487a85cf31489508e6c0f31a7cdd8"
       },
       "evidence": [
         {
@@ -10240,7 +10290,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08671.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "f143812db584ccf5ce48cb231d6673d01526c7b9221ed054ee83b9403a308bab"
+        "sha256": "b17db65b117299bbae7e5687ff86d7d007704392e49176dbfed1e6668211a07e"
       },
       "evidence": [
         {
@@ -10273,7 +10323,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08672.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "c4858fd3dbb448e242f9701066d3102e85c36af74ec549d0fae051e4c014071f"
+        "sha256": "fd3d8cec565c6ece2fa244a9c3f6c327bbba2596d3294ee7c28b6c9e61cae6a8"
       },
       "evidence": [
         {
@@ -10307,7 +10357,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08673.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "3271e1afc0c5a1b8b15d6bf07d079728222042b9d293ce1858bafa6210323623"
+        "sha256": "da0d25f652b1f45a8b6b8485825417995c49452636e17435996e688446966779"
       },
       "evidence": [
         {
@@ -10323,9 +10373,11 @@
       "name": "摧毁高塔",
       "nameEn": "Collapse the Pylons",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08673"
+      ],
+      "reason": "pending-primitive: p7-08673（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10340,7 +10392,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "38691ba9c9f41e03eb57ec91fc8d7561615e68e01cf7ee147ab79347a9e222dc"
+        "sha256": "9edda6fbf3fa8d9933c11c714a5e4c0f419515717db638f3901d3ad5939e9c29"
       },
       "evidence": [
         {
@@ -10373,7 +10425,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "f3c8939320a0ad8649a21144077cce1a9f1cb82c187bc8b25aedac0b08e230c7"
+        "sha256": "bb422d35248da2910e68a9f6641ff42886d56944dba6c519848743aeafb2e70d"
       },
       "evidence": [
         {
@@ -10406,7 +10458,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "8eea1ece40581190903bcd24898c8bb9753995e0e86b53bc41a32ce991c7e0f2"
+        "sha256": "10eb123b69d469945dc76afc0dc156c3237051fb527cc4255b87b79aaaf5cf55"
       },
       "evidence": [
         {
@@ -10439,7 +10491,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "d4fa5d21f2b68bd3e28bc2532a03d97d857e8acbb2fad832244191ddd8319ce9"
+        "sha256": "73a17792d0001360a444f0ecd259092119adb68d686ce759d0c838b62c632658"
       },
       "evidence": [
         {
@@ -10472,7 +10524,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "58ddbc656d8b1645ad0fcd4aaca897fd593d420c5ee392a7f82abdb34f3177c6"
+        "sha256": "bb8ac9ffdb2db864d4a9c129d3a8bdf209f33c844b33f9abb194a3b8a3c48afe"
       },
       "evidence": [
         {
@@ -10505,7 +10557,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08679.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "fdfd8d8f8e387ab413b6d5361136b3731e88db29b1b1b40c85ad16f3d1ddf0db"
+        "sha256": "9b4b6058fcb8eddd1e8d120405c9ae51a58a30e323e5b1480a3339a4c970024a"
       },
       "evidence": [
         {
@@ -10521,9 +10573,11 @@
       "name": "无名疯狂",
       "nameEn": "The Nameless Madness",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08679"
+      ],
+      "reason": "pending-primitive: p7-08679（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10538,7 +10592,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08680.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "c4039eb50c6f9b280d217104543a88ba69067e6e10f13bbda6d7fd6b21ad6d9c"
+        "sha256": "48688145d72f792cd7f060a23e83629b0252b8ce790766787b86e73a5147cb55"
       },
       "evidence": [
         {
@@ -10571,7 +10625,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08681.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "f2e7f0fe728486156f997b312d415bde55c34b5ffd25d5e3a924e2fab7548ce4"
+        "sha256": "9c8cefc86d4268b53b0fe810fb7e888a2c59a31e9bff53df77a42eb45ec1a415"
       },
       "evidence": [
         {
@@ -10587,9 +10641,11 @@
       "name": "最终幻景",
       "nameEn": "The Final Mirage",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08681"
+      ],
+      "reason": "pending-primitive: p7-08681（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10604,7 +10660,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08682.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "6c5a2df53dffdcfe8c220fd79d8cb5be9d7f081d0c62c6a7ce0ff411d77658eb"
+        "sha256": "ba21e45d841034eebe9877fe53f73dede5466c999fb5dd541998534ce4343691"
       },
       "evidence": [
         {
@@ -10620,9 +10676,11 @@
       "name": "巨大坡道",
       "nameEn": "Titanic Ramp",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08682"
+      ],
+      "reason": "pending-primitive: p7-08682（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10637,7 +10695,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08683.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "a747889317ea74d5648895f50aed65f3da0b7dacb5d7aabc1b7c4ebfa4b27425"
+        "sha256": "72261f7d112d6b551afbcfc66732b51c157149a90bcd828bb0eaf67b6416594f"
       },
       "evidence": [
         {
@@ -10653,9 +10711,11 @@
       "name": "巨大坡道",
       "nameEn": "Titanic Ramp",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08682"
+      ],
+      "reason": "pending-primitive: p7-08682（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10670,7 +10730,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08684.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "f91de5c91f4e1136ff8886d9f9c00d04573de1b29dec11364f284487df147e48"
+        "sha256": "1d2a6fedde3913147045a4a880cb90c4c2957fa0a0eaede6661ba37ede79ff10"
       },
       "evidence": [
         {
@@ -10686,9 +10746,11 @@
       "name": "巨大坡道",
       "nameEn": "Titanic Ramp",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08682"
+      ],
+      "reason": "pending-primitive: p7-08682（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10703,7 +10765,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08685.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "4cbd16e5f60b0f592a709580d7939a7721afc833815447967721e374f996d5bc"
+        "sha256": "4ed341c37b602d277be00929b4e33b2db89693330831081c60fe0f937115c4ae"
       },
       "evidence": [
         {
@@ -10719,9 +10781,11 @@
       "name": "巨大坡道",
       "nameEn": "Titanic Ramp",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-08682"
+      ],
+      "reason": "pending-primitive: p7-08682（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10736,7 +10800,7 @@
         "file": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08686.js",
         "implemented": true,
         "implementedFlag": "explicit-true",
-        "sha256": "25bc977c503b5f111ee67ed29626cd6fcac4ae1619db4c2304f8db021deebd00"
+        "sha256": "74ef904d133151a0ba1ecee6942068e997862a82d81f700b85c5b8c1198e9407"
       },
       "evidence": [
         {
@@ -10917,9 +10981,11 @@
       "name": "同源迷雾",
       "nameEn": "Kindred Mist",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08691"
+      ],
+      "reason": "pending-primitive: p7-shared-08691（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10950,9 +11016,11 @@
       "name": "南极寒风",
       "nameEn": "Antarctic Wind",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08692"
+      ],
+      "reason": "pending-primitive: p7-shared-08692（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -10983,9 +11051,11 @@
       "name": "雪盲危机",
       "nameEn": "Whiteout",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08693"
+      ],
+      "reason": "pending-primitive: p7-shared-08693（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11016,9 +11086,11 @@
       "name": "极地旋涡",
       "nameEn": "Polar Vortex",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08694"
+      ],
+      "reason": "pending-primitive: p7-shared-08694（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11115,9 +11187,11 @@
       "name": "古老者崛起",
       "nameEn": "Rise of the Elder Things",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08697"
+      ],
+      "reason": "pending-primitive: p7-shared-08697（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11181,9 +11255,11 @@
       "name": "穿越冰雪",
       "nameEn": "Through the Ice",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08699"
+      ],
+      "reason": "pending-primitive: p7-shared-08699（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11264,9 +11340,11 @@
       "name": "身陷疯狂",
       "nameEn": "Abandoned to Madness",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08702"
+      ],
+      "reason": "pending-primitive: p7-shared-08702 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -11297,9 +11375,11 @@
       "name": "渎神幻象",
       "nameEn": "Blasphemous Visions",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08703"
+      ],
+      "reason": "pending-primitive: p7-shared-08703（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11330,9 +11410,11 @@
       "name": "窥看不可说之事",
       "nameEn": "Glimpse the Unspeakable",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08704"
+      ],
+      "reason": "pending-primitive: p7-shared-08704（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11396,9 +11478,11 @@
       "name": "瘴气折磨",
       "nameEn": "Miasmatic Torment",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08706"
+      ],
+      "reason": "pending-primitive: p7-shared-08706（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11429,9 +11513,11 @@
       "name": "朦胧瘴气",
       "nameEn": "Nebulous Miasma",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08707"
+      ],
+      "reason": "pending-primitive: p7-shared-08707（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11462,9 +11548,11 @@
       "name": "巨型白化企鹅",
       "nameEn": "Giant Albino Penguin",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08708"
+      ],
+      "reason": "pending-primitive: p7-shared-08708（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11528,9 +11616,11 @@
       "name": "失落的修格斯",
       "nameEn": "Forgotten Shoggoth",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08710"
+      ],
+      "reason": "pending-primitive: p7-shared-08710（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11594,9 +11684,11 @@
       "name": "极地幻景",
       "nameEn": "Polar Mirage",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": null,
-      "status": "verified",
+      "pendingRequests": [
+        "p7-shared-08712"
+      ],
+      "reason": "pending-primitive: p7-shared-08712（近似已披露，不阻塞 gate）",
+      "status": "simplified",
       "subtype": null,
       "titleMatched": false,
       "traceable": true,
@@ -11685,9 +11777,11 @@
       "name": "丹佛斯",
       "nameEn": "Danforth",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08715"
+      ],
+      "reason": "pending-primitive: p7-shared-08715 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -11794,9 +11888,11 @@
       "name": "詹姆斯·“曲奇”·弗雷德里克斯",
       "nameEn": "James \"Cookie\" Fredericks",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08719"
+      ],
+      "reason": "pending-primitive: p7-shared-08719 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -11852,9 +11948,11 @@
       "name": "罗尔德·埃尔斯沃思",
       "nameEn": "Roald Ellsworth",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08721"
+      ],
+      "reason": "pending-primitive: p7-shared-08721 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -12018,9 +12116,11 @@
       "name": "忒咳哩-哩",
       "nameEn": "Tekeli-li",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08727"
+      ],
+      "reason": "pending-primitive: p7-shared-08727 且无测试证据",
+      "status": "blocked",
       "subtype": "weakness",
       "titleMatched": false,
       "traceable": false,
@@ -12118,9 +12218,11 @@
       "name": "爱伦·坡作品集",
       "nameEn": "Collected Works of Poe",
       "partition": "eoteCampaign",
-      "pendingRequests": [],
-      "reason": "no-test-evidence: 实跑测试标题/文件/账本均未覆盖该卡",
-      "status": "missing",
+      "pendingRequests": [
+        "p7-shared-08731"
+      ],
+      "reason": "pending-primitive: p7-shared-08731 且无测试证据",
+      "status": "blocked",
       "subtype": null,
       "titleMatched": false,
       "traceable": false,
@@ -13183,111 +13285,111 @@
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08660.js",
-        "sha256": "058dc863fc28fd9fcdb83c1478799befb41d430059778525f015d161c0b61edc"
+        "sha256": "340125c9c7f0eac517938efb9801facb4f36899e5815bdc91e95b39c687f3b77"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08661.js",
-        "sha256": "5ab48565cf5c924e120b8524801116c1cb60475f62468347b54270959a6120c4"
+        "sha256": "2358f412b9877953874c5c901f65af386e659425f62c37e50688f8b19e4fccef"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08662.js",
-        "sha256": "9f872d8b40688e65c2949a2af7fea3b1b623467f2839446544fe947cf8385959"
+        "sha256": "8293a4cf2915c58d8ad272ef3874c3f62f1ab26a0cf317fe4e2ad2d11e27c740"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08663.js",
-        "sha256": "d28a359442225a3f9b47691a20c5e6b017afc8eb991c8d514df8e3fb033fed77"
+        "sha256": "04c4e912cde14161b149003681cf77124d1f8446b4dcb94fe6e5c85959d18f7c"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08664.js",
-        "sha256": "0b5803d15759583efc25aaf27eaf8184ca12d50b51aa51368f37083c7f9cd7f5"
+        "sha256": "68e0a7a442d9dfb2f6324057c96e974d395a421be28d22a77ac7410f37405833"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08665.js",
-        "sha256": "775b2f378d667a51c97f41317eaa33ac3dda20e1a4b5ea6f957a9886b048db2f"
+        "sha256": "b6317f8368fc950433bd46a4fd7a839b906348b78e869b9bf6d8587dc2eda0a2"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08666.js",
-        "sha256": "79ec8946bef13d890f4de14fe3e6e3b23a54fbe8efbf1df27ee5668e99ddbd13"
+        "sha256": "fdf1d2d8c3d7aeb3c50271795f0390358843d0b6056bd9954d3b0b55249913a3"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08667.js",
-        "sha256": "c55fc57dc8a44f3a6f79bc6ddb9502199274296a502d439e1b037d6b6f199ef2"
+        "sha256": "22cd3f42c05ee03f9b01fd1a9a9366d0bda7f597ac3a1fae17850c1f944b9390"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08668.js",
-        "sha256": "8df385f199be660e8d9e5d88abfc6370b9f366b1ebe2f9c1fe84bb214af0aeae"
+        "sha256": "60e00c2aa96b424864e84c5c888f1d8c88a26a1695ac893d9f78c8d2687aba09"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08669.js",
-        "sha256": "39c768d173e64ccdc27e66584c6639f11c25e2894ebdfd778cae377f0580c066"
+        "sha256": "381e0b43a5aa2feba723afc17899a62fbf3b229eb150809078397cb8c96235c7"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart1/08670.js",
-        "sha256": "f9345362f8d64445631567e5216335dccc8a807cea5ff85554bd21f460ec7659"
+        "sha256": "f0f3f5f5e08c405509dfb33c877aa308796487a85cf31489508e6c0f31a7cdd8"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08671.js",
-        "sha256": "f143812db584ccf5ce48cb231d6673d01526c7b9221ed054ee83b9403a308bab"
+        "sha256": "b17db65b117299bbae7e5687ff86d7d007704392e49176dbfed1e6668211a07e"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08672.js",
-        "sha256": "c4858fd3dbb448e242f9701066d3102e85c36af74ec549d0fae051e4c014071f"
+        "sha256": "fd3d8cec565c6ece2fa244a9c3f6c327bbba2596d3294ee7c28b6c9e61cae6a8"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08673.js",
-        "sha256": "3271e1afc0c5a1b8b15d6bf07d079728222042b9d293ce1858bafa6210323623"
+        "sha256": "da0d25f652b1f45a8b6b8485825417995c49452636e17435996e688446966779"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08674.js",
-        "sha256": "38691ba9c9f41e03eb57ec91fc8d7561615e68e01cf7ee147ab79347a9e222dc"
+        "sha256": "9edda6fbf3fa8d9933c11c714a5e4c0f419515717db638f3901d3ad5939e9c29"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08675.js",
-        "sha256": "f3c8939320a0ad8649a21144077cce1a9f1cb82c187bc8b25aedac0b08e230c7"
+        "sha256": "bb422d35248da2910e68a9f6641ff42886d56944dba6c519848743aeafb2e70d"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08676.js",
-        "sha256": "8eea1ece40581190903bcd24898c8bb9753995e0e86b53bc41a32ce991c7e0f2"
+        "sha256": "10eb123b69d469945dc76afc0dc156c3237051fb527cc4255b87b79aaaf5cf55"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08677.js",
-        "sha256": "d4fa5d21f2b68bd3e28bc2532a03d97d857e8acbb2fad832244191ddd8319ce9"
+        "sha256": "73a17792d0001360a444f0ecd259092119adb68d686ce759d0c838b62c632658"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08678.js",
-        "sha256": "58ddbc656d8b1645ad0fcd4aaca897fd593d420c5ee392a7f82abdb34f3177c6"
+        "sha256": "bb8ac9ffdb2db864d4a9c129d3a8bdf209f33c844b33f9abb194a3b8a3c48afe"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08679.js",
-        "sha256": "fdfd8d8f8e387ab413b6d5361136b3731e88db29b1b1b40c85ad16f3d1ddf0db"
+        "sha256": "9b4b6058fcb8eddd1e8d120405c9ae51a58a30e323e5b1480a3339a4c970024a"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08680.js",
-        "sha256": "c4039eb50c6f9b280d217104543a88ba69067e6e10f13bbda6d7fd6b21ad6d9c"
+        "sha256": "48688145d72f792cd7f060a23e83629b0252b8ce790766787b86e73a5147cb55"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08681.js",
-        "sha256": "f2e7f0fe728486156f997b312d415bde55c34b5ffd25d5e3a924e2fab7548ce4"
+        "sha256": "9c8cefc86d4268b53b0fe810fb7e888a2c59a31e9bff53df77a42eb45ec1a415"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08682.js",
-        "sha256": "6c5a2df53dffdcfe8c220fd79d8cb5be9d7f081d0c62c6a7ce0ff411d77658eb"
+        "sha256": "ba21e45d841034eebe9877fe53f73dede5466c999fb5dd541998534ce4343691"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08683.js",
-        "sha256": "a747889317ea74d5648895f50aed65f3da0b7dacb5d7aabc1b7c4ebfa4b27425"
+        "sha256": "72261f7d112d6b551afbcfc66732b51c157149a90bcd828bb0eaf67b6416594f"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08684.js",
-        "sha256": "f91de5c91f4e1136ff8886d9f9c00d04573de1b29dec11364f284487df147e48"
+        "sha256": "1d2a6fedde3913147045a4a880cb90c4c2957fa0a0eaede6661ba37ede79ff10"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08685.js",
-        "sha256": "4cbd16e5f60b0f592a709580d7939a7721afc833815447967721e374f996d5bc"
+        "sha256": "4ed341c37b602d277be00929b4e33b2db89693330831081c60fe0f937115c4ae"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/theHeartOfMadnessPart2/08686.js",
-        "sha256": "25bc977c503b5f111ee67ed29626cd6fcac4ae1619db4c2304f8db021deebd00"
+        "sha256": "74ef904d133151a0ba1ecee6942068e997862a82d81f700b85c5b8c1198e9407"
       },
       {
         "path": "src/cards/encounter-entries/edgeOfTheEarth/toTheForbiddenPeaks/08597.js",
@@ -13791,7 +13893,7 @@
       },
       {
         "path": "src/cards/entries/08098.js",
-        "sha256": "3851bd3cf983525f7f695c1784005a0dfab49083917fc69201fae36f1b684fdc"
+        "sha256": "e67eaf9ca604f7fa0bf0f555b5502a128f876c8690d504d6cbc31da1bef481a6"
       },
       {
         "path": "src/cards/entries/08099.js",
@@ -13799,7 +13901,7 @@
       },
       {
         "path": "src/cards/entries/08100.js",
-        "sha256": "abfcedcded07a791889f42ac1fc7168abe5c27bf73cbddc9edaad88a4dbc591a"
+        "sha256": "21ed1e7792c8b3fb8326d6259287fe17f779246e05d4c29e3487202bfa84654c"
       },
       {
         "path": "src/cards/entries/08101.js",
@@ -13952,9 +14054,11 @@
         "sha256": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b"
       }
     ],
-    "primitiveRequests": [],
+    "primitiveRequests": [
+      "audit/eote-primitive-requests.json"
+    ],
     "scope": "audit/eote-scope.json",
-    "scopeSha256": "8e9fd7b9127a19f3de13a534157b4f857a0609f1ceb7804106c468fed8472de9",
+    "scopeSha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
     "testFiles": [
       {
         "path": "tests/eote-investigator-bob.test.mjs",
@@ -13982,11 +14086,11 @@
       },
       {
         "path": "tests/eote-player-m2-2.test.mjs",
-        "sha256": "3f4c27890f99062a075bdaf139e1a4873e8d6e0d846233840941249b162b2c3a"
+        "sha256": "b37c5087965d20a019a0b5f39ded4403440ec86e62d155b26d06f129f35b19f3"
       },
       {
         "path": "tests/eote-player-m2-3.test.mjs",
-        "sha256": "ddd3c2d6472a8d03cad3a3537bb4c653bf5106d05329dac33103edfe19e504ec"
+        "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
       },
       {
         "path": "tests/eote-player-m2-4.test.mjs",
@@ -14033,7 +14137,7 @@
   "status": "pending",
   "summary": {
     "behaviorCards": 401,
-    "blocked": 0,
+    "blocked": 23,
     "evidence": {
       "file": 120,
       "ledger": 0,
@@ -14046,16 +14150,16 @@
       "withoutTraceableEvidence": 141
     },
     "gateComplete": false,
-    "missing": 141,
+    "missing": 118,
     "no-behavior": 2,
     "partitions": {
       "eoteCampaign": {
-        "blocked": 0,
-        "missing": 141,
+        "blocked": 23,
+        "missing": 118,
         "no-behavior": 2,
-        "simplified": 0,
+        "simplified": 28,
         "total": 266,
-        "verified": 123
+        "verified": 95
       },
       "eoteInvestigators": {
         "blocked": 0,
@@ -14074,11 +14178,45 @@
         "verified": 115
       }
     },
-    "pendingBehaviorRequests": [],
+    "pendingBehaviorRequests": [
+      "p7-08544",
+      "p7-08546",
+      "p7-08560",
+      "p7-08587",
+      "p7-08673",
+      "p7-08679",
+      "p7-08681",
+      "p7-08682",
+      "p7-shared-08503",
+      "p7-shared-08506",
+      "p7-shared-08508",
+      "p7-shared-08515",
+      "p7-shared-08517",
+      "p7-shared-08649",
+      "p7-shared-08691",
+      "p7-shared-08692",
+      "p7-shared-08693",
+      "p7-shared-08694",
+      "p7-shared-08697",
+      "p7-shared-08699",
+      "p7-shared-08702",
+      "p7-shared-08703",
+      "p7-shared-08704",
+      "p7-shared-08706",
+      "p7-shared-08707",
+      "p7-shared-08708",
+      "p7-shared-08710",
+      "p7-shared-08712",
+      "p7-shared-08715",
+      "p7-shared-08719",
+      "p7-shared-08721",
+      "p7-shared-08727",
+      "p7-shared-08731"
+    ],
     "referenceCards": 2,
-    "simplified": 0,
+    "simplified": 28,
     "total": 403,
-    "verified": 260
+    "verified": 232
   },
   "testRun": {
     "exitCode": 0,
@@ -14678,7 +14816,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 741,
+        "line": 743,
         "test": "P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一次基础行动"
       },
       {
@@ -14688,7 +14826,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 765,
+        "line": 767,
         "test": "P6 08064 先见：指定卡牌与抽到的卡相同 → 取消/弃掉；遭遇牌可取消显现"
       },
       {
@@ -14718,7 +14856,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 793,
+        "line": 795,
         "test": "P6 08070 真法魔典：揭示手牌法术支援并结算其能力"
       },
       {
@@ -14728,7 +14866,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 804,
+        "line": 806,
         "test": "P6 08072 沙夫纳的目录：花费秘密获得资源（近似秘密当资源）；秘密耗尽弃掉"
       },
       {
@@ -14738,7 +14876,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 819,
+        "line": 821,
         "test": "P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2"
       },
       {
@@ -14748,7 +14886,7 @@
       },
       {
         "file": "tests/eote-player-m2-2.test.mjs",
-        "line": 852,
+        "line": 854,
         "test": "P6 08076 阅后即焚：放逐一张 0-5 级手牌、发现 2 线索；等级≥2 时移除 1 毁灭"
       },
       {
@@ -14763,7 +14901,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 481,
+        "line": 500,
         "test": "P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌"
       },
       {
@@ -14778,7 +14916,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 489,
+        "line": 508,
         "test": "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整"
       },
       {
@@ -14798,7 +14936,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 577,
+        "line": 596,
         "test": "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害"
       },
       {
@@ -14808,7 +14946,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 503,
+        "line": 522,
         "test": "P6 08087 狙击：添加「符号标记视为 0」的延迟效果"
       },
       {
@@ -14818,7 +14956,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 513,
+        "line": 532,
         "test": "P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动"
       },
       {
@@ -14828,7 +14966,7 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 525,
+        "line": 544,
         "test": "P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印"
       },
       {
@@ -14858,8 +14996,13 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 588,
+        "line": 607,
         "test": "P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面"
+      },
+      {
+        "file": "tests/eote-player-m2-3.test.mjs",
+        "line": 324,
+        "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
@@ -14868,42 +15011,42 @@
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 324,
+        "line": 343,
         "test": "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 336,
+        "line": 355,
         "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 353,
+        "line": 372,
         "test": "P6 08102 保护魂灵：真实 assetLeavesPlay 窗口（盟友离场后返回拥有者手牌或抽 3 张）"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 564,
+        "line": 583,
         "test": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 406,
+        "line": 425,
         "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 426,
+        "line": 445,
         "test": "P6 08107 破冰锥（3 级）：真实窗口弃掉自身换取成功后 +1 伤害"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 601,
+        "line": 620,
         "test": "P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索"
       },
       {
         "file": "tests/eote-player-m2-3.test.mjs",
-        "line": 470,
+        "line": 489,
         "test": "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置"
       },
       {
@@ -15537,6 +15680,6 @@
       "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
       "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
     ],
-    "totalPasses": 286
+    "totalPasses": 287
   }
 }

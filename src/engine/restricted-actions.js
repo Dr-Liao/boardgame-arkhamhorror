@@ -32,6 +32,7 @@ export const RESTRICTED_ACTION_FIELDS = Object.freeze({
   fightEvade: 'fightEvadeOnlyActions',
   // 八循环 P5：09001 卡森「额外行动只能用于本能力」的受限额度。
   crossSeatAction: 'crossSeatActionOnlyActions',
+  parley: 'parleyOnlyActions',
 })
 
 export const RESTRICTED_ACTION_KINDS = Object.freeze(Object.keys(RESTRICTED_ACTION_FIELDS))

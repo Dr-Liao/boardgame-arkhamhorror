@@ -22,7 +22,7 @@
 // - **输出确定性**：不写时间戳、耗时、git head、本机路径；同一干净检出复跑应逐字节一致。
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { contentRegistry } from '../content/registered.js'
@@ -65,7 +65,7 @@ const SCOPE_PATH = 'artifacts/migration/tde/scope.json'
 const MECHANISM_SCAN_PATH = 'artifacts/migration/tde/mechanism-scan.json'
 const PRIMITIVE_PLAN_PATH = 'artifacts/migration/tde/primitive-plan.json'
 const PRIMITIVE_CATALOG_PATH = 'artifacts/migration/tde/primitive-catalog.json'
-const PRIMITIVE_REQUEST_DIR = 'artifacts/migration/tde/primitive-requests'
+const PRIMITIVE_REQUESTS_PATH = 'audit/tde-primitive-requests.json'
 const BROWSER_PATH = 'audit/tde-browser-acceptance.json'
 const BROWSER_CONFIG_PATH = 'tests/playwright/playwright.tde.config.mjs'
 const RULES_LEDGER_PATH = 'audit/tde-rules.json'
@@ -394,14 +394,10 @@ const browserSpecSet = new Set(browserSpecs)
 const browserSpecsComplete = expectedBrowserSpecs.length > 0 && browserSpecs.length === expectedBrowserSpecs.length
   && expectedBrowserSpecs.every(spec => browserSpecSet.has(spec))
 const browserPassedFor = viewport => browserTests.some(test => test.viewport === viewport && test.status === 'passed')
-// 截图路径的 base 由 reporter 决定：'repo-root' 相对仓库根，缺省相对游戏根；必须真实落盘才算证据。
-const browserShotExists = shot => {
-  if (!shot || !shot.path) return false
-  const base = shot.base === 'repo-root' ? '../../../' : '../'
-  return existsSync(new URL(base + shot.path, import.meta.url))
-}
+// Runner 生成账本时校验截图落盘。复算只读取签入的验收记录。
+const browserShotRecorded = shot => Boolean(shot?.path) && shot.exists === true
 const browserShotFor = viewport => browserScreenshots.some(shot => shot.viewport === viewport
-  && shot.exists !== false && browserShotExists(shot))
+  && browserShotRecorded(shot))
 const browserReleaseCheck = key => browserReport?.checks?.release?.[key] === true || browserReport?.release?.[key] === true
 const browserMediaCheck = key => browserReport?.checks?.media?.[key] === true || browserReport?.media?.[key] === true
 const browserChecks = {
@@ -412,7 +408,7 @@ const browserChecks = {
   expectedSpecs: expectedBrowserSpecs,
   specsComplete: browserSpecsComplete,
   tests: browserTests.length,
-  screenshots: browserScreenshots.filter(shot => shot.exists !== false && browserShotExists(shot)).length,
+  screenshots: browserScreenshots.filter(browserShotRecorded).length,
   scenarios: browserScenarios.length,
   scenariosCovered: browserScenarios.filter(item => item && item.desktop === true && item.mobile === true).length,
   desktop: browserReport?.checks?.desktopBrowser === true && browserPassedFor('desktop') && browserShotFor('desktop'),
@@ -692,14 +688,8 @@ const primitiveNewItems = (primitiveCatalog?.primitives?.new || []).filter(Boole
 const unfinishedPrimitives = primitiveNewItems.filter(item => item.status !== 'done').map(item => item.id || '(未命名)')
 const deferredPrimitives = (primitivePlan?.deferredPrimitives || []).filter(Boolean)
 const escapePrimitives = (primitivePlan?.escape || []).filter(Boolean)
-const requestFileNames = existsSync(urlOf(PRIMITIVE_REQUEST_DIR))
-  ? readdirSync(urlOf(PRIMITIVE_REQUEST_DIR)).filter(name => name.endsWith('.json')).sort()
-  : []
-// 请求文件按 worker 前缀分组：P7（w-m2-*）与 P8（w-p8-*）；status 以文件内的最终回写为准。
-const primitiveRequestItems = requestFileNames
-  .map(file => ({ file, request: readJson(`${PRIMITIVE_REQUEST_DIR}/${file}`) }))
-  .filter(item => Boolean(item.request))
-const primitiveRequests = primitiveRequestItems.map(item => item.request)
+// 发布复算读取归档裁决；worker 临时请求目录可以独立更新。
+const primitiveRequestItems = readJson(PRIMITIVE_REQUESTS_PATH) ?? []
 const p7RequestItems = primitiveRequestItems.filter(item => item.file.startsWith('w-m2'))
 const p8RequestItems = primitiveRequestItems.filter(item => !item.file.startsWith('w-m2'))
 const rejectedRequests = primitiveRequestItems.filter(item => item.request.status === 'rejected')
@@ -1251,7 +1241,7 @@ const audit = {
       PARALLEL_LEDGER_PATH,
       'src/cards/tde-campaign-acceptance.js', 'src/cards/tde-player-acceptance.js',
       'content/campaigns/theDreamEaters/story-text.js',
-      ...requestFileNames.map(file => `${PRIMITIVE_REQUEST_DIR}/${file}`),
+      PRIMITIVE_REQUESTS_PATH,
     ].map(path => [path, fileHash(path)])),
     browser: {
       path: BROWSER_PATH,

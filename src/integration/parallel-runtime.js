@@ -198,6 +198,20 @@ function remapEventSeats(event, roomSeats) {
   return copy
 }
 
+export function finishParallelLaneMove(state, lane, events, roomSeats) {
+  const revision = (state.revision ?? 0) + 1
+  if (!Number.isSafeInteger(revision)) throw new Error('对局版本号超过安全范围')
+  state.revision = revision
+  const laneState = state.parallel.lanes[lane]
+  if (laneState.uiState === 'scenarioResult' || laneState.uiState === 'campaignResult') markLaneFinished(state, lane)
+  syncParallelStatus(state)
+  return events.map(event => {
+    const copy = remapEventSeats(event, roomSeats)
+    copy.lane = copy.lane || lane
+    return copy
+  })
+}
+
 /** 大厅命令：按座位路由到本线运行时。 */
 export function parallelApplyMove(state, seat, move) {
   if (!isParallelState(state)) throw new Error('不是并行双运行时状态')
@@ -206,17 +220,10 @@ export function parallelApplyMove(state, seat, move) {
     const laneState = state.parallel.lanes[lane]
     if (!laneState) throw new Error('未知的双线运行时')
     const { lane: _omitLane, ...cleanMove } = withoutRevision(move)
-    const idx = laneState.laneRuntime?.roomSeats?.indexOf(seat) ?? -1
-    const events = applyMove(laneState, idx >= 0 ? idx : 0, cleanMove) || []
-    state.revision = (state.revision ?? 0) + 1
-    if (laneState.uiState === 'scenarioResult' || laneState.uiState === 'campaignResult') markLaneFinished(state, lane)
-    syncParallelStatus(state)
     const roomSeats = laneState.laneRuntime?.roomSeats || []
-    return events.map(event => {
-      const copy = remapEventSeats(event, roomSeats)
-      copy.lane = copy.lane || lane
-      return copy
-    })
+    const idx = roomSeats.indexOf(seat)
+    const events = applyMove(laneState, idx >= 0 ? idx : 0, cleanMove) || []
+    return finishParallelLaneMove(state, lane, events, roomSeats)
   }
   if (sharedState(state)) {
     const coordinator = sharedState(state)
@@ -256,21 +263,9 @@ export function parallelApplyMove(state, seat, move) {
     && move.laneRevision !== laneState.revision) {
     throw new Error(`STALE_REVISION：${lane} 线期望 ${laneState.revision}，收到 ${move.laneRevision}`)
   }
-  const events = applyMove(laneState, laneSeat, withoutRevision(move)) || []
-  // 全局提交序列：任一条线成功提交都推进顶层 revision（门禁 8）；各线 revision 由引擎自行递增。
-  state.revision = (state.revision ?? 0) + 1
-  // 本线关卡结算 → 记等待；两边到同一章对才封盘（先不自动推进，幕间交给各线玩家）。
-  if (laneState.uiState === 'scenarioResult' || laneState.uiState === 'campaignResult') markLaneFinished(state, lane)
-  syncParallelStatus(state)
-  // 事件离开引擎前把线内座位换回房间座位（含演出快照），并标记 lane。
   const roomSeats = laneState.laneRuntime?.roomSeats || []
-  return events.map(event => {
-    const copy = remapEventSeats(event, roomSeats)
-    // 门禁 5：无 seat 的公共事件（info/presentation/checkpoint）也要带本线标记，
-    // 否则 viewEvents 无法按观察者所属线过滤。
-    copy.lane = copy.lane || lane
-    return copy
-  })
+  const events = applyMove(laneState, laneSeat, withoutRevision(move)) || []
+  return finishParallelLaneMove(state, lane, events, roomSeats)
 }
 
 /** 容器状态与两条线保持一致：全部结束才结束；否则 playing。 */

@@ -31,7 +31,20 @@ export function roundPlayRules(state, registeredEntry) {
 }
 
 export function recordPlayedCard(state, inv, card, registeredEntry) {
-  if (!roundPlayRules(state, registeredEntry).length) return
+  const trackAsset = registeredEntry(inv.code)?.investigator?.firstAssetOfRound && card.type === 'asset'
+  if (!trackAsset && !roundPlayRules(state, registeredEntry).length) return
   if (inv.playedCardsHistory?.round !== state.round) inv.playedCardsHistory = { round: state.round, traits: [] }
   inv.playedCardsHistory.traits.push(...(card.traits || []).map(trait => trait.toLowerCase()))
+  if (trackAsset) {
+    const traits = inv.playedCardsHistory.assetTraits ||= []
+    traits.push(...(card.traits || []).map(trait => trait.toLowerCase()))
+  }
+}
+
+export function firstAssetDiscount(state, inv, definition, registeredEntry) {
+  const rule = registeredEntry(inv.code)?.investigator?.firstAssetOfRound
+  if (!rule || definition.type !== 'asset') return 0
+  const trait = rule.trait.toLowerCase()
+  if (!definition.traits?.some(value => value.toLowerCase() === trait)) return 0
+  return inv.playedCardsHistory?.round === state.round && inv.playedCardsHistory.assetTraits?.includes(trait) ? 0 : rule.amount
 }

@@ -2,6 +2,15 @@ import { afterUsesSpent } from './uses.js'
 import { consumeDeckTop, deckTopCard, deckTopDiscountUsed, restoreDeckTop } from './eote-deck-top.js'
 import { syncPassiveDeckTop, takeDeckTopForCommit } from './eote-investigator-support.js'
 import { eoteScenarioState } from './eote-state.js'
+import { assetTextBlankedExceptForced } from './card-text.js'
+
+export function parleyDiscardProvider(inv, code, sourceId, { cardDef, registeredEntry }) {
+  const def = cardDef(code)
+  if (!sourceId || def?.type !== 'event' || !(inv.discard || []).includes(code)
+    || !(/\bparley\b/i.test(def.text || '') || registeredEntry(code)?.abilities?.some(row => row.actionKind === 'parley'))) return null
+  return inv.assets.find(asset => asset.id === sourceId && (asset.uses || 0) > 0 && !assetTextBlankedExceptForced(asset)
+    && registeredEntry(asset.code)?.assetRule?.parleyEventsFromDiscard === true) || null
+}
 // 「如同手牌」通道（play / commit as if in hand）统一原语。
 //
 // 症状：同一类卡面效果（「如同它是你的手牌」「如同其在你的手牌中」）在项目里有 8 种存储形状：
@@ -175,6 +184,13 @@ export function createPlayChannels(deps) {
         out.push(entry({ channel: 'discard', code, sourceName: '弃牌堆',
           move: { action: 'play', cardId: code, fromDiscard: true },
           labelSuffix: '（弃牌堆）' }))
+      }
+      const providers = inv.assets.filter(asset => registeredEntry(asset.code)?.assetRule?.parleyEventsFromDiscard === true)
+      for (const provider of providers) for (const code of unique(inv.discard || [])) {
+        if (!isCardAvailable(code) || !parleyDiscardProvider(inv, code, provider.id, { cardDef, registeredEntry })) continue
+        out.push(entry({ channel: 'discard', code, sourceId: provider.id, sourceName: cardName(provider.code),
+          move: { action: 'play', cardId: code, fromDiscard: true, fromDiscardProviderId: provider.id },
+          labelSuffix: `（${cardName(provider.code)}：弃牌堆）` }))
       }
       const top = hasPlayedEventsToDeckTop(inv) && (inv.discard || []).length ? topDiscardEvent(state, inv) : null
       if (top) {
@@ -408,6 +424,7 @@ export function createPlayChannels(deps) {
     if ((a.fromBeneath ?? false) !== (b.fromBeneath ?? false)) return false
     if ((a.fromHunch ?? false) !== (b.fromHunch ?? false)) return false
     if ((a.fromDiscard ?? false) !== (b.fromDiscard ?? false)) return false
+    if ((a.fromDiscardProviderId ?? null) !== (b.fromDiscardProviderId ?? null)) return false
     if ((a.fromDeckTop ?? false) !== (b.fromDeckTop ?? false)) return false
     if ((a.fromOtherHand ?? false) !== (b.fromOtherHand ?? false)) return false
     if ((a.ownerSeat ?? null) !== (b.ownerSeat ?? null)) return false
@@ -460,6 +477,10 @@ export function createPlayChannels(deps) {
         break
       }
       case 'discard': {
+        if (candidate.move.fromDiscardProviderId) {
+          if (!parleyDiscardProvider(inv, code, candidate.move.fromDiscardProviderId, { cardDef, registeredEntry })) return '弃牌堆谈判通道不可用'
+          break
+        }
         if (!playAccess(code).fromDiscard) {
           if (!hasPlayedEventsToDeckTop(inv)) return '你没有温蒂的护身符'
           if (topDiscardEvent(state, inv) !== code) return '不是弃牌堆中最上方的事件'
@@ -639,11 +660,17 @@ export function createPlayChannels(deps) {
         return { ...base, handIndex: inv.hand.length - 1 }
       }
       case 'discard': {
+        const sourceId = candidate.move.fromDiscardProviderId
+        const provider = sourceId && parleyDiscardProvider(inv, candidate.code, sourceId, { cardDef, registeredEntry })
+        if (sourceId && !provider) return { ok: false }
         const at = (inv.discard || []).lastIndexOf(candidate.code)
         if (at < 0) return { ok: false }
         inv.discard.splice(at, 1)
         inv.hand.push(candidate.code)
-        return { ...base, handIndex: inv.hand.length - 1 }
+        return { ...base, handIndex: inv.hand.length - 1, ...(provider ? { finish: () => {
+          provider.uses -= 1
+          afterUsesSpent(state, inv, provider, 1, events, deps)
+        } } : {}) }
       }
       case 'threat': {
         const at = (inv.threat || []).findIndex(card => card.id === candidate.sourceId && card.code === candidate.code)

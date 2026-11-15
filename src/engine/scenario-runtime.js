@@ -5,6 +5,8 @@ import { nearestEnemies,isEnemyUnengaged } from './enemy-query.js'
 import { putInHand } from './hand-entry.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { createMechanicsApi } from './api-mechanics.js'
+import { defensePreventsReady } from './location-defenses.js'
+import { sinkLocation } from './location-face.js'
 import { locationLookCandidates } from './location-look.js'
 // 剧本运行时（scenarioRuntime）从 engine.js 拆出的模块（Phase 6 · 6d-13）。
 //
@@ -39,6 +41,11 @@ import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
+import { changeLocationSeals, restoreEnemyLocation, turnLocationIntoEnemy } from './enemy-location.js'
+import { setEnemyKeywords } from './enemy-keyword-movement.js'
+import { applyInvestigatorForm, replaceLethalHarmWithForm, restoreInvestigatorForm } from './investigator-form.js'
+import { grantPurchaseDiscount } from '../campaign/purchase-discount.js'
+import { redirectAllyHarm } from './harm-assignment.js'
 import { dispatchVehicleEvent, roadHazardOnce } from './road-hazards.js'
 import { mechanicState } from './mechanic-state.js'
 import { capturedAtLocation, capturedLocation, capturedSeats, isCaptured } from './capture.js'
@@ -239,6 +246,10 @@ function scenarioRuntime(state, events, testSource = null) {
       options: [{ id: 'done', cardCode: loc.originalCode || loc.code, label: loc.name }] })
     return true
   }
+  const allyHarm = (owner, asset, amount, kind) => redirectAllyHarm(state, owner, asset, amount, kind, {
+    cardDef, maxHealth: getMaxHealth, maxSanity: getMaxSanity, choose: options => requestChoice(state, options),
+    place: (inv, count, type) => applyHarm(state, inv, type === 'damage' ? count : 0, type === 'horror' ? count : 0, events, true),
+  })
   const api = wrapInvestigatorEffects(state, {
     // 2026-11-13 P1-13：`api.tsk` 别名——条目面（ctx.api 摊平 mechanics）与场景运行时看到同一份
     // 机制视图；09751 等按 `api.tsk.concealed` 读，此前只有 `api.mechanics.tsk` 导致崩溃。
@@ -310,7 +321,11 @@ function scenarioRuntime(state, events, testSource = null) {
     mechanics: createMechanicsApi(state, {
       enemyZones:enemyZoneApi(state,events),
       choice: spec => requestChoice(state, spec), cardName,
-      drawCard: (seat, code) => { state.encounterDeck.push(code); drawEncounter(state, state.investigators[seat], events) },
+      drawCard: (seat, code, options) => {
+        if (options?.scenarioDeckId) return drawEncounter(state, state.investigators[seat], events, { code, ...options })
+        state.encounterDeck.push(code)
+        return drawEncounter(state, state.investigators[seat], events)
+      },
       cardsSeen: (deck, seat, cards) => scenarioBehavior(state).scenarioCardsSeen?.(state, deck, seat, cards, scenarioRuntime(state, events)),
       floodChanged: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }),
       // 2026-11-13 P1-1：与 abilityApi 同一个派发口径（内容层经 api.mechanics.tsk 揭露/变换时开窗）。
@@ -490,7 +505,7 @@ function scenarioRuntime(state, events, testSource = null) {
     // 地点帷幕的临时修正（如「直到皮博迪先生重整，该地点 -1 帷幕」）；撤销时反向调用。
     setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
     autoEngageAll: () => autoEngageAll(state, events),
-    place: id => placeLocation(state, id, events),
+    place: (id, seat) => placeLocation(state, id, events, seat),
     placePrintedLocation: (code, options = {}) => {
       const matches = Object.values(state.scenario.locations || {}).filter(loc => (loc.originalCode || loc.code) === code)
       if (matches.length !== 1) throw new Error(`Printed location placement requires one physical identity: ${code}`)
@@ -499,8 +514,21 @@ function scenarioRuntime(state, events, testSource = null) {
       if (options.reveal !== false) revealLocation(state, id, events, options.seat ?? null)
       return id
     },
+    placeLocationVariant: (value, choices, options = {}) => {
+      if (typeof value !== 'string' || !choices || typeof choices !== 'object' || Array.isArray(choices)
+        || Object.values(choices).some(code => typeof code !== 'string' || !code)) throw new TypeError('无效地点变体')
+      return Object.hasOwn(choices, value) ? api.placePrintedLocation(choices[value], options) : false
+    },
     reveal: (id, seat = null) => revealLocation(state, id, events, seat),
     remove: id => removeLocation(state, id, events),
+    turnLocationIntoEnemy: (id, face, options) => turnLocationIntoEnemy(state, id, face, options),
+    replaceLethalHarmWithForm: (seat, context, spec) => replaceLethalHarmWithForm(state, state.investigators[seat], context, spec),
+    applyInvestigatorForm: (seat, spec) => applyInvestigatorForm(state, state.investigators[seat], spec),
+    restoreInvestigatorForm: seat => restoreInvestigatorForm(state.investigators[seat]),
+    grantPurchaseDiscount: (seat, spec) => grantPurchaseDiscount(state.campaign, seat, spec),
+    setEnemyKeywords: (enemy, keywords, spec) => setEnemyKeywords(state, enemy, keywords, spec),
+    restoreEnemyLocation: (id, options) => restoreEnemyLocation(state, id, options),
+    changeLocationSeals: (id, delta) => changeLocationSeals(state, id, delta),
     // 2026-10-28 P2-6：地点交换 / 移出游戏（05125 探访巫宅）。旧地点上的线索/毁灭/地点附属/
     // 玩家地点附属/敌人/调查员迁移语义由原语统一处理，卡条目不再写 state.locations。
     swapLocation: (fromId, toId, options = {}) => swapLocationInPlay(state, events, fromId, toId, options, {
@@ -680,6 +708,8 @@ function scenarioRuntime(state, events, testSource = null) {
     damageAsset: (seat, assetId, n) => {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
       if (!asset) return
+      n = allyHarm(inv, asset, n, 'damage')
+      if (!n) return
       asset.damage = (asset.damage || 0) + n
       if (asset.damage >= (cardDef(asset.code)?.health || Infinity)) {
         leaveAsset(state, inv, asset, events)
@@ -691,6 +721,8 @@ function scenarioRuntime(state, events, testSource = null) {
     horrorAsset: (seat, assetId, n) => {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
       if (!asset) return
+      n = allyHarm(inv, asset, n, 'horror')
+      if (!n) return
       asset.horror = (asset.horror || 0) + n
       if (asset.horror >= (cardDef(asset.code)?.sanity || Infinity)) {
         leaveAsset(state, inv, asset, events)
@@ -823,7 +855,7 @@ function scenarioRuntime(state, events, testSource = null) {
     addTrauma: (seat, kind, amount = 1) => addTrauma(state, seat, kind, amount, events),
     defeatInvestigator: (seat, options = {}) => {
       const inv = state.investigators[seat]
-      if (!inv || inv.defeated || inv.resigned) return false
+      if (!inv || inv.defeated || inv.resigned || state.scenario?.mechanics?.protectInvestigators) return false
       inv.defeated = true
       inv.defeatCause = options.cause || 'killed'
       eliminateInvestigator(state, inv, events)
@@ -1200,7 +1232,8 @@ function scenarioRuntime(state, events, testSource = null) {
     readyEnemy: enemy => {
       if (!enemy) return false
       if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return false
-      const group=swarmGroup(state,enemy), exhausted=group.filter(member=>member.exhausted)
+      const group=swarmGroup(state,enemy).filter(member => !defensePreventsReady(state, member)), exhausted=group.filter(member=>member.exhausted)
+      if (!group.length) return false
       for (const member of group) member.exhausted=false
       for (const member of exhausted) {
         registeredEntry(member.originalCode || member.code)?.enemyScript?.onReadied?.(state, member, scenarioRuntime(state, events))
@@ -1349,7 +1382,7 @@ function scenarioRuntime(state, events, testSource = null) {
     driveInsane: seat => {
       const inv = state.investigators[seat]
       const record = state.campaign.investigators?.[seat]
-      if (!inv || !record) return false
+      if (!inv || !record || state.scenario?.mechanics?.protectInvestigators) return false
       const trauma = state.campaign.trauma[seat]
       const sanity = Number(state.cards?.[inv.code]?.sanity || inv.sanity || 1)
       addTrauma(state, seat, 'mental', Math.max(0, sanity - trauma.mental), events)
@@ -1659,6 +1692,9 @@ function scenarioRuntime(state, events, testSource = null) {
       }, { public: true })
     },
     flipLocation: (id, seat) => flipScenarioLocation(state, id, seat, events),
+    sinkLocation: (id, face, threshold) => sinkLocation(state, id, face, {
+      threshold, discardPlayer: (seat, code) => discardPlayerCards(state, state.investigators[seat], code),
+    }),
     // 第 2 步 P2.12：异端者多面与放逐（面的代码/属性来自关卡数据与卡面定义）。
     flipAsset: (asset,nextCode) => applyPhysicalFace(state,asset,nextCode,{definitionFor:code=>cardDef(code)}),
     flipEnemy: (enemy, nextCode) => enemyPlayerEffectBlocked(state, enemy, slumberDeps) ? null
@@ -1876,7 +1912,7 @@ function scenarioRuntime(state, events, testSource = null) {
     // 击败/退场：`cause === 'killed'` 时把战役记录同步标记为 killed（「被击败后结算」的
     // 卡——如 04289 坠崖——只声明结果，账本字段由引擎统一写，卡条目不再直写 campaign 记录）。
     defeat: (inv, cause = null) => {
-      if (!inv) return
+      if (!inv || state.scenario?.mechanics?.protectInvestigators) return
       inv.defeated = true
       inv.defeatCause = cause
       eliminateInvestigator(state, inv, events)
@@ -2238,6 +2274,7 @@ function scenarioRuntime(state, events, testSource = null) {
       removeOne(state.enemies, enemy)
       state.removedFromGame ||= []
       state.removedFromGame.push(enemy.originalCode || enemy.code)
+      if (enemy.enemyLocation) removeLocation(state, enemy.id, events)
       return true
     },
     checkEnemyDefeat: (enemy, source = null, seat = null) => {
@@ -2258,7 +2295,7 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     devourLocation: id => {
       for (const inv of aliveInvestigators(state).filter(i => i.location === id)) {
-        inv.defeated = true; inv.defeatCause = null; eliminateInvestigator(state, inv, events)
+        api.defeat(inv)
       }
       for (const enemy of state.enemies.filter(e => e.location === id)) discardEnemyCard(state, enemy)
       const lost = (state.storyAssets || []).filter(a => a.location === id)

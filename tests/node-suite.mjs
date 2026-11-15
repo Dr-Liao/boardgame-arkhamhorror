@@ -8,6 +8,7 @@ import './eote-migration.test.mjs'
 import './tsk-migration.test.mjs'
 // P2（八循环通用原语）：七组原语的分层注册；suite-manifest 守卫要求与 tests/suites.mjs 一致。
 import './tsk-primitives-state.test.mjs'
+import './fhv-primitives.test.mjs'
 import './tsk-primitives-concealed.test.mjs'
 import './tsk-primitives-keys-hollow.test.mjs'
 import './tsk-primitives-map.test.mjs'

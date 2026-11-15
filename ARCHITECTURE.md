@@ -14,12 +14,7 @@
   `earlyAccess: true` 是 `playable` 的显式例外：允许尚有未完成确认或已登记近似项的内容提前开放；
   未完成确认保持 `pending`，近似项进入 remaining，且不得宣称规则等价。门禁以
   `content/migration-confirmation.js` 为准。
-- 《夜之狂热》状态为 `playable`，三关组成可启动战役。
-- 《敦威治遗产》状态为 `playable`，八章组成可从大厅启动的完整战役；规则仍采用本 Mod 的简化实现边界。
-- 《卡尔克萨之路》为 `playable`，沿用敦威治的卡包、章节、资源与验收目录契约；逐卡字面核对仍在迁移账本中跟踪。
-- 《失落的时代》为 `playable`，已移除提前体验标记：十章逐章规则与桌面/移动浏览器验收、序幕补给品、真实大厅经首章结算到第二章和双真人联机均已通过；证据见 `audit/tfa-migration.json`、`audit/tfa-scenario-acceptance.json` 与 `audit/tfa-browser-acceptance.json`。
-- 《万象无终》M0–M5 已交付（发布口径 `playable` + `earlyAccess`）：战役、9 章与 `tcuCampaign` 包可从大厅启动，`assertLaunchable` 通过；六位正式调查员可选人/可构筑，87 张玩家卡逐卡验收（85 张可构筑，83 张可入牌组进构筑界面与 TCU 战役起始牌组池；05314/05317 绑定副本与 2 张基础弱点只作依赖）。逐卡自动账本 `audit/tcu-all-card-acceptance.json` 377/377 verified；逐卡行为审计 `audit/tcu-card-behavior-audit.json` 在 2026-10-25 完成第七轮全量重跑（继续修复后重审 + 交叉复核 + Lead 裁决）：377 条记录 **363 match（登记已验收）/ 14 approximation / 0 gap**，因此 `equivalenceCertified: false`、14 条非 match 逐卡在总账 remaining 中，未宣称规则等价（已验收清单与逐轮基线见 `audit/tcu-card-behavior-audit.json`）。发布级证据（大厅→序章→章节实机路径、媒体资源、展示素材与 27 首 BGM）见 `audit/tcu-browser-acceptance.json`；逐章证据见 `audit/tcu-scenario-acceptance.json`，整轮账本见 `audit/tcu-migration.json`。
-- 《食梦者》八章与四种模式已注册，可从大厅启动；发布口径为 `playable` + `earlyAccess`，不宣称印刷规则等价。并行共享幕间 II/III 与尾声协调、真实联机双真人房间尚未验收，完整边界与证据见 `audit/tde-migration.json`、`audit/tde-parallel-acceptance.json` 和 `audit/tde-browser-acceptance.json`。
+- 可启动战役及章节由 [生产注册表](content/registered.js) 提供。发布确认和剩余差异见 [战役迁移账本](README.md#战役验收)。
 - 目录收录不等于规则已实现；可选人、可构筑和可启动状态必须经过服务端许可与内容注册表校验。
 
 ## 2. 目录结构
@@ -67,7 +62,7 @@ games/arkhamhorror/
 - `autoPassChoice`：自动跳过的房主侧代答钩子。客户端在 move 的 `body.client.autoPass` 里带上本机
   「反应关」的卡号集合，并用联机 `prefs` 命令在开关变化/进局/重连时全量同步；大厅按座位缓存后，
   在命令的发布之前调用它，把返回的普通 `choose/skip` 交给 `commitMove` 提交（与玩家手点同一条路径，
-  回放/撤销/审计不变）。P1 起缓存覆盖任意在线座位，所以别人命令触发的窗口、多座位连续窗口也能在
+  回放/撤销/审计不变）。大厅通过建局上下文传入 `autoReactionHosted`，规则引擎把它写入对局状态与重放日志。旧日志沿用直接结算，旧存档首次由大厅恢复时固定当前策略。P1 起缓存覆盖任意在线座位，所以别人命令触发的窗口、多座位连续窗口也能在
   同一条命令里代答；离线座位不代答。判定函数 `reactionSkipPlan` 放在 `web/reaction-preferences.js`，
   浏览器与 Node 共用同一份映射逻辑（Node 反向 import `web/` 是架构守卫允许的方向）。
 

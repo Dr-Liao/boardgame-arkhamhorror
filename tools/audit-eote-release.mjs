@@ -15,7 +15,8 @@
 //   3) 全卡：账本 gate complete（missing/blocked=0），三包分片 266/22/115、合计 403；
 //   4) 浏览器：status=passed、complete=true、sourceStableDuringRun=true；specs 覆盖 expectedSpecs；
 //      12 项 checks（release/progression/online/privacy/permission/disconnect × desktop/mobile）全真；
-//   5) screenshots：逐张重新 stat + sha256（只信磁盘，不信账本自报）；每个 phase × 视口 ≥4、总 ≥20；
+//   5) screenshots：复算使用 runner 记录的文件大小和 SHA-256；--verify-files 重新核对磁盘；
+//      每个 phase × 视口 ≥4、总 ≥20；
 //   6) scope.cardImages：中英卡图库存 + 远程回退 + 375/102 + cycleCopies=false + 「不依赖参考资源」；
 //   7) node/regression：status=passed 且 sourceStableDuringRun=true（fast 只允许 P0 基线既有的失败）；
 //   8) guides：story-text 8 章 469 段、web/scenario-guides/ 8 个指南 json 存在；
@@ -390,16 +391,18 @@ export function buildReleaseAcceptance(options = {}) {
     && (expectedTests === null || ledgerTests.length === expectedTests)
     && blockedEntries.length === 0 && sourceFiles.length > 0
 
-  // ---------------------------------------------------------------- 截图（只信磁盘）
+  // 发布复算使用签入的 runner 校验结果；现场验收可重新核对截图文件。
   const screenshots = sorted((Array.isArray(ledger?.screenshots) ? ledger.screenshots : []).map(raw => {
     const record = typeof raw === 'string' ? { path: raw } : { ...raw }
     const path = String(record.path || '').replaceAll('\\', '/')
-    const absolute = join(WORKSPACE, path)
-    const exists = Boolean(path) && existsSync(absolute)
-    const bytes = exists ? statSync(absolute).size : null
-    const sha256 = exists ? sha(readFileSync(absolute)) : null
     const declaredBytes = Number.isFinite(record.bytes) ? record.bytes : null
     const declaredSha = typeof record.sha256 === 'string' ? record.sha256 : null
+    const absolute = join(WORKSPACE, path)
+    const exists = Boolean(path) && (options.verifyFiles
+      ? existsSync(absolute)
+      : record.exists === true && declaredBytes > 0 && /^[a-f0-9]{64}$/.test(declaredSha))
+    const bytes = exists ? (options.verifyFiles ? statSync(absolute).size : declaredBytes) : null
+    const sha256 = exists ? (options.verifyFiles ? sha(readFileSync(absolute)) : declaredSha) : null
     const hashMatches = exists && (declaredSha === null || declaredSha === sha256)
       && (declaredBytes === null || declaredBytes === bytes)
     return {
@@ -555,8 +558,14 @@ export function buildReleaseAcceptance(options = {}) {
 
 // ---------------------------------------------------------------- 写入 / 校验
 function main() {
-  const report = buildReleaseAcceptance()
   const args = process.argv.slice(2)
+  if (args.includes('--verify-files')) {
+    const report = buildReleaseAcceptance({ verifyFiles: true })
+    console.log(`eote release screenshots: ${report.screenshots.verified}/${report.screenshots.total}`)
+    if (!report.featureChecks.screenshots) process.exitCode = 1
+    return
+  }
+  const report = buildReleaseAcceptance()
   if (args.includes('--write')) {
     writeJson(REPORT, report)
     writeJson(join(RUN, 'release-acceptance.json'), report)

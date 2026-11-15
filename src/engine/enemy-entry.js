@@ -1,6 +1,7 @@
 import { registeredEntry } from './ability.js'
 
 export function enemyCanEnterLocation(state, enemy, destination) {
+  if (enemy?.enemyLocation && destination !== enemy.id) return false
   const rule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
   const location = state.locations.find(item => item.id === destination)
   // 梦境之门（06015a/b）：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门」。

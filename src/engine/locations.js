@@ -9,6 +9,10 @@ import { applyRevealFloodPolicy, floodLevel, setFloodLevel } from './flood.js'
 import { syncDynamicLocationSymbols } from './location-symbols.js'
 import { forgetRoadLocation } from './map-graph.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
+import { hasWindowListener } from './window-listeners.js'
+import { removeEnemyLocation } from './enemy-location.js'
+import { discardHostedAssets } from './hosted-assets.js'
+import { discardPlayerCards } from './player-zones.js'
 
 // 地点卡自己的「揭示时」规则由条目声明（静态注册表，不进 state）。
 function locationRuleOf(loc) {
@@ -91,6 +95,8 @@ export function syncClues(state) {
 
 export function createLocations(deps) {
   const {
+    discardEnemyCard,
+    eliminateInvestigator,
     entityModifierTotal,
     ALL_CARDS,
     ALL_TREACHERIES,
@@ -168,6 +174,9 @@ function placeLocation(state, id, events, seat = null) {
   if (loc.revealed) awardLocationVictory(state, loc, events)
   // 杰克·威廉斯：新地点入场后可以横置并抽牌（仅限放置该地点的调查员）。
   if (seat != null) {
+    if (hasWindowListener(state, 'locationPlaced')) {
+      reactionWindow(state, 'locationPlaced', { when: 'locationPlaced', seat, location: id }, events, { allowNested: true })
+    }
     const placer = state.investigators[seat]
     if (placer?.assets.some(asset => assetPassiveData(asset.code)?.noOpportunityFirstAction)) {
       triggerReaction(state, seat, 'locationRevealed', events, { when: 'locationRevealed', seat, location: id })
@@ -291,8 +300,20 @@ function revealLocation(state, id, events, seat = null) {
 function removeLocation(state, id, events, options = {}) {
   const i = state.locations.findIndex((l) => l.id === id)
   if (i >= 0) {
+    if (state.locations[i].enemyLocationFace && !options.collapseHandled) {
+      const enemy = state.enemies.find(item => item.id === id && item.enemyLocation)
+      if (enemy) return discardEnemyCard(state, enemy)
+      return removeEnemyLocation(state, id, {
+        choose: ids => requestChoice(state, { kind: 'location', source: id, seat: state.campaign.leadSeat,
+          prompt: '选择坍塌后放置所有在场对象的地点。',
+          options: ids.map(value => ({ id: value, label: locName(state, value) })) }),
+        remove: value => removeLocation(state, value, events, { ...options, collapseHandled: true }),
+        discardEnemy: item => discardEnemyCard(state, item),
+        noDestination: inv => { inv.defeated = true; inv.defeatCause = null; eliminateInvestigator(state, inv, events) },
+      })
+    }
     // Phase 5（5a-32）：移出地点时的默认去向在卡号规则数据里。
-    const destination = state.locations.find(loc => (loc.originalCode || loc.code) === relocateDestinationCode() && loc.id !== id)
+    const destination = !options.collapseHandled && state.locations.find(loc => (loc.originalCode || loc.code) === relocateDestinationCode() && loc.id !== id)
     const departing = destination ? aliveInvestigators(state).filter(inv => inv.location === id) : []
     if (destination) {
       const companions = state.enemies.filter(enemy => enemy.location === id && departing.some(inv => inv.seat === enemy.engagedSeat))
@@ -305,6 +326,7 @@ function removeLocation(state, id, events, options = {}) {
       autoEngageAt(state, destination.id, events)
     }
     const [loc] = state.locations.splice(i, 1)
+    discardHostedAssets(state, loc, (owner, code) => discardPlayerCards(state, owner, code))
     // 网格坐标随地点一起清掉（读点：grid-map 的 placeGridLocation 用 grid 判占用；
     // 存档校验也会 locationAt 每个 grid 键，残留会直接判「无效地点」）。
     if (state.scenarioFlags?.mechanics?.grid) delete state.scenarioFlags.mechanics.grid[loc.id]
@@ -482,6 +504,7 @@ function setLocationShroudMod(location, amount) {
 }
 
 function awardLocationVictory(state, loc, events) {
+  if (loc?.enemyLocationFace) return
   // 2026-10-25：幽灵面地点（05081/05082/05084）的胜利点按「剧本结束时已揭示且无线索」
   // 结算（campaign-flow 的幕末口径），翻面瞬间不计分——否则 05082 的闹鬼之后把线索放回
   // 地点时已计分无法撤销。普通地点的胜利点仍在翻面/揭示且无线索时立即进胜利区。

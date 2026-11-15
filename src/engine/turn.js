@@ -1,5 +1,6 @@
 import { resetTskTurnTracking } from './tsk-investigator-support.js'
 import { hunterRouteCandidates } from './enemy-routes.js'
+import { resolvePatrol } from './enemy-keyword-movement.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
 import { putInHand } from './hand-entry.js'
@@ -207,6 +208,7 @@ function resolveEnemyPhaseOf(state, enemy, events = []) {
       if (target && !dreamGateEntryError(null, state.locations.find(location => location.id === target))) relocateEnemy(state, enemy, target, events, {cause:'hunter',phaseInstance:state.phaseInstance,routeSelected:true})
     }
   }
+  patrolMove(state, enemy, events)
   autoEngageAll(state, events)
   let attacked = false
   for (const member of swarmGroup(state, enemy)) if (!member.exhausted && member.skipAttackRound !== state.round) {
@@ -253,6 +255,7 @@ function enemyPhase(state) {
     }
   }
   // 2026-10-25：新增「猎手移动后」剧本钩子（05067 等「在敌人经猎手关键词移动后」的强制时点）。
+  for (const enemy of state.enemies.slice()) patrolMove(state, enemy, events)
   scenarioBehavior(state).enemyPhaseAfterHunters?.(state, scenarioRuntime(state, events))
   autoEngageAll(state, events)
   playerWindow(state, 'enemy.afterHunters', events)
@@ -314,6 +317,13 @@ function enemyPhase(state) {
   return events
 }
 
+function patrolMove(state, enemy, events) {
+  const target = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.patrolTarget
+  if (!target) return false
+  return resolvePatrol(state, enemy, target, { blanked: item => enemyTextBlanked(state, item),
+    choice: spec => requestChoice(state, spec), move: (item, to, options) => relocateEnemy(state, item, to, events, options) })
+}
+
 function hunterRoute(state,enemy,targetIds,prompt) {
   if(targetIds.includes(enemy.location)) return null
   const targets=[...new Set(targetIds)]
@@ -321,7 +331,7 @@ function hunterRoute(state,enemy,targetIds,prompt) {
   const target=targets.length===1?targets[0]:chooseAmong(state,{kind:'location',source:enemy.id,seat:leadDecisionSeat(state),
     prompt:'选择猎手的目标地点。',options:targets.map(id=>({id,label:locName(state,id)}))})
   const {destinations}=hunterRouteCandidates(state,enemy,[target],{
-    ignoreBarriers:!enemyTextBlanked(state,enemy)&&registeredEntry(enemy.originalCode||enemy.code)?.enemyRule?.ignoreHunterBarriers===true,
+    ignoreBarriers:state.scenario?.mechanics?.defenses === true || (!enemyTextBlanked(state,enemy)&&registeredEntry(enemy.originalCode||enemy.code)?.enemyRule?.ignoreHunterBarriers===true),
     connections:id=>{const loc=state.locations.find(l=>l.id===id);const extra=[...(loc?.connections||[]),...(scenarioBehavior(state).enemyConnections?.(state,enemy,loc)||[])];
       // 07332 水生异怪：「移动时，完全淹没的地点视作相互连接」——路障路径（hunterRoute）同样要加这条边。
       if(registeredEntry(enemy.originalCode||enemy.code)?.enemyRule?.hunterTreatsFloodedConnected===true&&floodLevel(state,id)>=2){

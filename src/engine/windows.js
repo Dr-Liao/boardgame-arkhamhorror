@@ -90,6 +90,8 @@ define('assetHarmPlaced', '伤害或恐惧放置到支援后', 'reaction')
 define('weaponFightInitiated', '使用武器发起攻击时', 'reaction')
 define('blessTokensWouldReturnToPool', '检定的祝福将要归还标记池时', 'interrupt')
 define('testEnds', '技能检定结束时', 'reaction')
+define('sharedSuppliesSpent', '从另一支援支付补给后', 'reaction')
+define('assetCluesPlaced', '支援上放置线索后', 'reaction')
 define('assetDamageAssigned', '伤害分配至支援时', 'reaction')
 define('cardWouldBeDrawn', '将要抽到卡牌时', 'interrupt')
 define('doomWouldBePlaced', '将要放置毁灭时', 'interrupt')
@@ -104,6 +106,7 @@ for (const [id, label] of [
   ['damagePlaced', '伤害被放置后'],
   ['enemyAttackDamage', '敌人攻击造成伤害时'],
   ['locationRevealed', '地点揭示后'],
+  ['locationPlaced', '地点入场后'],
   ['move', '移动后'],
   ['revelationTest', '显现检定后'],
   ['revelationTestAlly', '队友显现检定后'],

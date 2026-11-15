@@ -1,4 +1,13 @@
 import { validateEnemyZones,enemyForKeyHolder } from './enemy-zones.js'
+import { normalizeCodex, normalizeScenarioCalendar, validateCalendarSave } from './scenario-calendar.js'
+import { validateTokenBags } from './token-bag.js'
+import { validateLocationDefenses } from './location-defenses.js'
+import { validateAssetClueSave } from './asset-clues.js'
+import { validateRailGrid } from './rail-grid.js'
+import { validateEnemyLocations } from './enemy-location.js'
+import { validateEnemyKeywords } from './enemy-keyword-movement.js'
+import { validateHostedAssets } from './hosted-assets.js'
+import { normalizeSurveyPreparation, validateSurveyPreparation } from './survey-preparation.js'
 // Optional JSON extension inside the existing scenarioFlags store. Reads never initialize it.
 export function mechanicState(state, create = false) {
   if (!create) return state.scenarioFlags?.mechanics || null
@@ -25,13 +34,16 @@ export function assertFields(value, allowed) {
 }
 export function normalizeScenarioMechanics(spec) {
   if (spec == null) return null
-  assertFields(spec, ['water', 'keys', 'vehicles'])
+  assertFields(spec, ['water', 'keys', 'vehicles', 'calendar', 'codex', 'defenses', 'survey', 'noEncounterDeck', 'protectInvestigators'])
+  normalizeScenarioCalendar(spec.calendar)
+  normalizeCodex(spec.codex)
+  normalizeSurveyPreparation(spec.survey)
   if (spec.water != null) {
     assertFields(spec.water, ['air', 'damage'])
     if (spec.water.air != null && typeof spec.water.air !== 'boolean') throw new TypeError('water.air 必须为布尔值')
     if (spec.water.damage != null) integer(spec.water.damage)
   }
-  for (const field of ['keys', 'vehicles']) if (spec[field] != null && typeof spec[field] !== 'boolean') throw new TypeError(`${field} 必须为布尔值`)
+  for (const field of ['keys', 'vehicles', 'defenses', 'noEncounterDeck', 'protectInvestigators']) if (spec[field] != null && typeof spec[field] !== 'boolean') throw new TypeError(`${field} 必须为布尔值`)
   return structuredClone(spec)
 }
 // TIC 捕获/押送：`mechanicState.captured` 的存档校验（唯一权威状态在 capture.js 写入）。
@@ -57,10 +69,19 @@ function validateCaptured(state, captured) {
 }
 
 export function validateMechanicState(state) {
+  validateTokenBags(state)
+  validateAssetClueSave(state)
+  validateEnemyLocations(state)
+  validateEnemyKeywords(state)
+  validateHostedAssets(state)
+  validateSurveyPreparation(state)
   const data = mechanicState(state)
   if (!data) return // Old saves stay byte-for-byte unchanged.
   // 'eote' 是 P2 新增的七循环可选扩展（容器形状/版本见 eote-state.js）；旧存档没有该键时保持原状。
-  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards','captured','eote','tsk'])
+  assertFields(data, ['version', 'flood', 'floodPolicy', 'air', 'airTurns', 'keys', 'vehicles', 'vehicleAccess', 'recordRewards', 'beneath', 'road', 'promises', 'tokenSchedules', 'barriers', 'scenarioDecks', 'grid', 'gridAdjacency','enemyZones','roadHazards','captured','eote','tsk', 'scenarioDate', 'resolvedCodex', 'defenses', 'rail'])
+  validateCalendarSave(state, data)
+  validateLocationDefenses(state, data.defenses)
+  validateRailGrid(state, data.rail)
   validateEnemyZones(state,data.enemyZones)
   validateCaptured(state, data.captured)
   if (data.version !== 1) throw new TypeError('不支持的可选机制存档版本')

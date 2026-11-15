@@ -199,14 +199,14 @@ test('媒体许可登记保留，运行时图片仅在 Mod 图库；PNG 验收�
   const snapshots = resolve(ROOT, 'games/arkhamhorror/tests/p7-release.browser.mjs-snapshots')
   const results = resolve(ROOT, 'games/arkhamhorror/test-results')
   const stagedTranslations = resolve(ROOT, 'games/arkhamhorror/artifacts/card-translation/zh/cards') + sep
-  const translationPreviews = resolve(ROOT, 'games/arkhamhorror/artifacts/card-translation/previews') + sep
+  const localArtifacts = resolve(ROOT, 'games/arkhamhorror/artifacts') + sep
   // README 的牌桌插图属于文档，不参与运行时资源；单独登记在 docs/images 下。
   const docsMedia = resolve(ROOT, 'games/arkhamhorror/docs/images') + sep
   for (const file of walk(resolve(ROOT, 'games/arkhamhorror'))) {
-    const testPng = file.endsWith('.png') && [snapshots, results].some(dir => file.startsWith(dir + sep))
+    const testPng = file.endsWith('.png') && ([snapshots, results].some(dir => file.startsWith(dir + sep)) || file.startsWith(localArtifacts))
     const music = file.startsWith(resolve(audio, 'music') + sep) && file.endsWith('.mp3')
     const symbolFont = SYMBOL_FONTS.some(name => file === resolve(fonts, name))
-    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont || file.startsWith(docsMedia) || (file.startsWith(stagedTranslations) && file.endsWith('.avif')) || (file.startsWith(translationPreviews) && file.endsWith('.png')), file)
+    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont || file.startsWith(docsMedia) || (file.startsWith(stagedTranslations) && file.endsWith('.avif')), file)
   }
 })
 

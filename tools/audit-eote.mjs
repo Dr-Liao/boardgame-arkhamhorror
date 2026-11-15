@@ -51,7 +51,7 @@ const PATHS = Object.freeze({
   regression: 'audit/eote-regression.json',
   playerQueue: 'audit/eote-player-queue.json',
   primitivePlan: 'audit/eote-primitive-plan.json',
-  primitiveRequests: 'artifacts/migration/eote/primitive-requests',
+  primitiveRequests: 'audit/eote-primitive-requests.json',
   p7Browser: 'audit/eote-scenarios-browser.json',
   releaseBrowser: 'audit/eote-release-browser.json',
   releaseAcceptance: 'audit/eote-release-acceptance.json',
@@ -101,11 +101,6 @@ const fileExists = path => Boolean(resolvePath(path))
 const num = value => (Number.isFinite(value) ? value : 0)
 const bool = value => value === true
 const sorted = list => [...list].sort((left, right) => String(left).localeCompare(String(right)))
-const listDir = path => {
-  const absolute = resolvePath(path)
-  if (!absolute) return []
-  return sorted(readdirSync(absolute).filter(name => !name.startsWith('.')))
-}
 const fileShaEntry = path => ({ path, sha256: fileHash(path) })
 
 function walk(dir) {
@@ -210,22 +205,15 @@ function normalizedAllCards(ledger) {
 }
 
 function requestStats() {
-  const files = listDir(PATHS.primitiveRequests).filter(name => name.endsWith('.json'))
-  const items = files.map(file => {
-    const request = readJson(`${PATHS.primitiveRequests}/${file}`) || {}
-    return {
-      file,
-      path: `${PATHS.primitiveRequests}/${file}`,
-      id: request.id ?? file.replace(/\.json$/, ''),
-      status: request.status ?? 'pending',
-      primitive: request.primitive ?? null,
-      need: request.need ?? null,
-      reason: request.approximation ?? request.reason ?? request.notes ?? null,
-    }
-  })
+  const items = readJson(PATHS.primitiveRequests).map(request => ({
+    ...request,
+    path: PATHS.primitiveRequests,
+    primitive: request.primitive ?? null,
+    need: request.need ?? null,
+  }))
   const byStatus = {}
   for (const item of items) byStatus[item.status] = (byStatus[item.status] || 0) + 1
-  return { files, items, byStatus, pending: items.filter(item => item.status === 'pending') }
+  return { items, byStatus, pending: items.filter(item => item.status === 'pending') }
 }
 
 // ---------------------------------------------------------------- 关键词 / 规则书确认
@@ -714,7 +702,7 @@ export function buildMigrationLedger() {
     'content/packs/eoteCampaign/manifest.js', 'content/packs/eoteInvestigators/manifest.js',
     'content/packs/eotePlayer/manifest.js', 'src/cards/cards-data.js', 'tools/audit-eote.mjs',
     'tools/audit-eote-release.mjs', 'tests/eote-migration-ledger.test.mjs',
-    ...requests.files.map(file => `${PATHS.primitiveRequests}/${file}`),
+    PATHS.primitiveRequests,
   ].map(path => ({ path, sha256: fileHash(path) }))
 
   const ledger = {
@@ -950,7 +938,7 @@ export function buildMigrationLedger() {
         PATHS.scope, PATHS.scenario, PATHS.allCards, PATHS.investigators, PATHS.player, PATHS.rules,
         PATHS.interactions, PATHS.node, PATHS.regression, PATHS.playerQueue, PATHS.primitivePlan,
         PATHS.p7Browser, PATHS.releaseBrowser, PATHS.releaseAcceptance, PATHS.storyText,
-        ...requests.files.map(file => `${PATHS.primitiveRequests}/${file}`),
+        PATHS.primitiveRequests,
         ...GUIDES,
       ].map(path => [path, fileHash(path)]))),
       missingInputs: sorted([...new Set([...missingInputs, ...registry.missingInputs])]),

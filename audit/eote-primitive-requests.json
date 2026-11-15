@@ -1,0 +1,715 @@
+[
+  {
+    "file": "m2-1-08020.json",
+    "id": "m2-1-08020",
+    "status": "rejected",
+    "need": "「本次攻击自动成功」的攻击入口",
+    "cards": [
+      "08020"
+    ],
+    "reason": "继续用 +1 伤害/战斗值修正近似；真实「自动成功」建议在 P7 由 combat.js 的 test options 扩展（本轮 scope 外）。"
+  },
+  {
+    "file": "m2-1-08021.json",
+    "id": "m2-1-08021",
+    "status": "rejected",
+    "need": "「持续到本阶段结束：敌人攻击同地点其他调查员时改为攻击你，然后与你交战；取消每次这种攻击造成的 1 点恐惧」的攻击拦截/改向持续效果",
+    "cards": [
+      "08021"
+    ],
+    "reason": "用 enemyAttack 窗口一次性取消/改向（03106 式即时替身）近似；「持续到阶段结束」请延后。"
+  },
+  {
+    "file": "m2-1-08024.json",
+    "id": "m2-1-08024",
+    "status": "rejected",
+    "need": "技能卡「在手中或投入检定中时获得等于某属性值的图标」——commit 描述符的 iconBonus 上下文需要能读取有效属性值",
+    "cards": [
+      "08024",
+      "08037"
+    ],
+    "reason": "继续用印刷值近似；或由主进程把 getStat 加入 iconBonus ctx 后一行接通。"
+  },
+  {
+    "file": "m2-1-08028.json",
+    "id": "m2-1-08028",
+    "status": "rejected",
+    "need": "事件卡结算后「附属到敌人（宿主）」并保留其 reaction；宿主被击败时枚举其上附属事件",
+    "cards": [
+      "08028"
+    ],
+    "reason": "用 api.attachSelfTo(code,enemyId)（把事件作为附属记录在敌人身上）近似存活/展示；reaction 仍在卡自身窗口结算，不依赖宿主枚举。"
+  },
+  {
+    "file": "m2-1-08031.json",
+    "id": "m2-1-08031",
+    "status": "rejected",
+    "need": "玩家支援卡的「补给阶段抽牌替换」读点（资产驱动的 upkeepDraw 替换）",
+    "cards": [
+      "08031"
+    ],
+    "reason": "用调查员级/场景钩子近似，或主进程在 phases.js 增加 assetEffect(inv,asset)?.upkeepDraw 读点。"
+  },
+  {
+    "file": "m2-1-08033.json",
+    "id": "m2-1-08033",
+    "status": "rejected",
+    "need": "「灵脉」(ley line) 通用标记：可放置在 4 个地点/敌人/调查员/支援上并在它们之间移动，且带「移除标记」代价",
+    "cards": [
+      "08033",
+      "08041",
+      "08042",
+      "08043",
+      "08044"
+    ],
+    "reason": "用 `api.cardCounters`（若宿主为卡实例）+ 地点 flags 拆分近似；跨异质宿主的统一投影留待后续。"
+  },
+  {
+    "file": "m2-1-08034.json",
+    "id": "m2-1-08034",
+    "status": "rejected",
+    "need": "「牌在弃牌堆时，可以投入到你本回合执行的每个符合条件的技能检定中」的弃牌堆投入通道",
+    "cards": [
+      "08034"
+    ],
+    "reason": "用一次性 commitOrigins（from:discard）近似第一检定；后续检定不可复用。"
+  },
+  {
+    "file": "m2-1-08046.json",
+    "id": "m2-1-08046",
+    "status": "rejected",
+    "need": "牌库构筑层「每张非弱点、非署名卡最多 1 张（以卡名区分）」的全局限制",
+    "cards": [
+      "08046"
+    ],
+    "reason": "内容层声明 deckConstruction.limitPerName 近似；校验留待主进程。"
+  },
+  {
+    "file": "m2-1-08047.json",
+    "id": "m2-1-08047",
+    "status": "rejected",
+    "need": "「移动最多 3 次；该移动期间敌人不会与你交战」的移动窗口/不交战移动原语",
+    "cards": [
+      "08047"
+    ],
+    "reason": "移动到无敌人地点近似；或每次移动前用 api 取消敌人交战（非等价）。"
+  },
+  {
+    "file": "m2-2-08049.json",
+    "id": "m2-2-08049",
+    "status": "rejected",
+    "need": "跨座位快速事件候选（\"你\"→\"任意调查员\"的费用升级）",
+    "cards": [
+      "08049"
+    ],
+    "reason": "维持现有「遭遇牌库→你的牌库」升级；「任意调查员」升级先不做或仅做费用+2提示。"
+  },
+  {
+    "file": "m2-2-08051.json",
+    "id": "m2-2-08051",
+    "status": "implemented",
+    "need": "把任意调查员的手牌移入他人手牌并按「如同自己手牌」打出",
+    "cards": [
+      "08051"
+    ],
+    "reason": "不当交易要求：揭示自己手中一张 Item 支援，同地点另一位调查员可以打出它（如同自己手牌）。引擎没有跨座位手牌转移/代打原语：giveAsset 只针对场上资产，playCard 只从打牌者手牌取牌。"
+  },
+  {
+    "file": "m2-2-08052.json",
+    "id": "m2-2-08052",
+    "status": "rejected",
+    "need": "commit iconBonus ctx 提供修正后技能值读点（getStat / api 或 state-aware stats）",
+    "cards": [
+      "08052",
+      "08065",
+      "08078"
+    ],
+    "reason": "继续用 cards-data 印刷值近似；主进程可一行补 ctx.getStat 后接通。"
+  },
+  {
+    "file": "m2-2-08053.json",
+    "id": "m2-2-08053",
+    "status": "implemented",
+    "need": "「下一次技能检定 +N」读取点",
+    "cards": [
+      "08053",
+      "08058"
+    ],
+    "reason": "红色闹钟（2 经验）1 充能分支：你下一次技能检定得到 +3 技能值。addPendingTestBonus 只在当前有 skillTest 时生效，没有跨检定的「下一次」存储/消费读点。"
+  },
+  {
+    "file": "m2-2-08055.json",
+    "id": "m2-2-08055",
+    "status": "rejected",
+    "need": "「场外放一边的牌可以如同手牌打出」通道",
+    "cards": [
+      "08055"
+    ],
+    "reason": "维持当前「揭示后进弃牌堆」近似；或主进程补 play-channels setAside 通道后升级。"
+  },
+  {
+    "file": "m2-2-08056.json",
+    "id": "m2-2-08056",
+    "status": "implemented",
+    "need": "沉稳（composure）扩展到非直接伤害",
+    "cards": [
+      "08056",
+      "08069"
+    ],
+    "reason": "刚毅果敢升级版把沉稳从「非直接恐惧」扩展到「非直接伤害/恐惧」。引擎 harm-threat.js 的 mandatory 只在 kind===\"horror\" 时收 composure 资产；伤害没有同口径读点（redirectOneDamageToSelf 只转移 1 点、且是旧 assetRule 机制）。"
+  },
+  {
+    "file": "m2-2-08057.json",
+    "id": "m2-2-08057",
+    "status": "rejected",
+    "need": "getMaxHealth / getMaxSanity 读取 modifiers 修正（资源阈值条件）",
+    "cards": [
+      "08057"
+    ],
+    "reason": "条目 maxHealth/maxSanity 修正当前无读点；请继续用 threatEffect healthModifier/sanityModifier 或用一次性 applyDamage/heal 近似。"
+  },
+  {
+    "file": "m2-2-08058.json",
+    "id": "m2-2-08058",
+    "status": "partial",
+    "need": "同 08053：下一次技能检定 +4；以及「免费移动最多 N 次」读点",
+    "cards": [
+      "08058"
+    ],
+    "reason": "红色闹钟（5 经验）与 08053 共用「下一次技能检定 +N」需求（+4）；2 充能分支「你可以移动最多 3 次」是行动期间的免费移动行动，现有 restricted-actions 只支持 fight/evade/engage，move 没有免费行动额度。"
+  },
+  {
+    "file": "m2-2-08059.json",
+    "id": "m2-2-08059",
+    "status": "rejected",
+    "need": "建库/升级经验修正的战役层原语",
+    "cards": [
+      "08059"
+    ],
+    "reason": "维持「setup 写身份参数」近似；真实计价在 P7 由 campaign.js#applyPermanentPurchaseEffects 泛化后接通。"
+  },
+  {
+    "file": "m2-2-08062.json",
+    "id": "m2-2-08062",
+    "status": "implemented",
+    "need": "执行一次基础行动，且本次行动内技能检定可用 willpower 替代原技能",
+    "cards": [
+      "08062"
+    ],
+    "reason": "闭环要求花费 1 充能并横置后执行一次基础行动，该行动期间每次检定可改用 willpower。现有 api.beginImmediateAction 选择并执行一次行动，但没有「基础行动」过滤与「行动期间技能替代」绑定；技能替代只有 legacy effect substituteSkill（写入 inv.skillSubstitute）没有 ctx.api 入口/时长绑定。"
+  },
+  {
+    "file": "m2-2-08064.json",
+    "id": "m2-2-08064",
+    "status": "rejected",
+    "need": "指定一张卡牌，抽取的卡若是指定卡则取消/减 2 费打出",
+    "cards": [
+      "08064"
+    ],
+    "reason": "用 played+fast 在 encounterDrawn/cardWouldBeDrawn 窗口做「取消并弃掉」，-2 费立刻打出改由 api.playCardFromHandFree(discount) 近似。"
+  },
+  {
+    "file": "m2-2-08066.json",
+    "id": "m2-2-08066",
+    "status": "implemented",
+    "need": "lookAt 任意排列上限从 4 张放宽到 6 张",
+    "cards": [
+      "08066"
+    ],
+    "reason": "平行命运要看牌库顶 6 张并以任意顺序放回，lookAt 的 arrange 排列枚举当前写死 pile.length<=4（避免 720 排列爆炸），6 张时不会询问顺序；本卡实现先用 arrange+top，顺序能力待接线。"
+  },
+  {
+    "file": "m2-2-08067.json",
+    "id": "m2-2-08067",
+    "status": "rejected",
+    "need": "从支援附属区投入技能检定，成功后返回手牌（每次检定一次）",
+    "cards": [
+      "08067"
+    ],
+    "reason": "用现有 attachedCommitAsIfInHand 投入（成功后按常规进弃牌堆）近似；回手部分暂缺。"
+  },
+  {
+    "file": "m2-2-08070.json",
+    "id": "m2-2-08070",
+    "status": "rejected",
+    "need": "揭示手牌中的法术支援并以其为来源结算能力（代理来源）",
+    "cards": [
+      "08070"
+    ],
+    "reason": "改为「揭示手中法术支援并直接结算其效果描述子」的一次性 resolve（费用/充能记在魔典上由描述子自行处理）；或维持现有近似。"
+  },
+  {
+    "file": "m2-2-08072.json",
+    "id": "m2-2-08072",
+    "status": "rejected",
+    "need": "把支援上的 secrets 当资源支付同地点 Item 支援的打出费用",
+    "cards": [
+      "08072"
+    ],
+    "reason": "维持当前「花 1 秘密得 1 资源」近似（已实现且测试通过）。"
+  },
+  {
+    "file": "m2-2-08074.json",
+    "id": "m2-2-08074",
+    "status": "partial",
+    "need": "附属事件（event attachTo）初始 uses 与「所附属支援发起的检定」读点",
+    "cards": [
+      "08074"
+    ],
+    "reason": "应急装备是附属到 [[道具]] 支援上的事件，使用(3 耐久)，在「被附属支援的技能检定期间」花 1 耐久 +2。引擎 attachCardTo 创建 attachment 时不初始化 entry.uses；且 action 类技能检定的 state.skillTest.source.assetId 只在 damageIfCommittedSkill/trackAssetSource 时写入，无法可靠判断「这次检定用的是宿主支援」。"
+  },
+  {
+    "file": "m2-2-08076.json",
+    "id": "m2-2-08076",
+    "status": "implemented",
+    "need": "放逐手牌中的一张 0-5 级卡牌",
+    "cards": [
+      "08076"
+    ],
+    "reason": "阅后即焚：放逐你手中一张等级 0-5 的卡牌。引擎 exilePlayerCard 只用于打出的牌自身（actions/tests 内部），没有 ctx.api 入口把任意手牌放逐并写 state.exiled/exiledBySeat 账本。"
+  },
+  {
+    "file": "m2-3-08079.json",
+    "id": "m2-3-08079",
+    "status": "rejected",
+    "need": "攻击结算后的伤害/恐惧分配限制读点",
+    "cards": [
+      "08079"
+    ],
+    "reason": "用 enemyAttacked 窗口的 context.attack.damage/horror 抽牌（按实际承受点数）近似；禁止分配盟友的部分改由 api.damageAllies? 不可用 → 保留文字近似并记录差异。"
+  },
+  {
+    "file": "m2-3-08081.json",
+    "id": "m2-3-08081",
+    "status": "implemented",
+    "need": "沉稳（composure）支援的强制伤害分配（伤害侧）",
+    "cards": [
+      "08081"
+    ],
+    "reason": "08081 是 3 级沉稳卡，印刷「非直接伤害/恐惧在分配到调查员卡之前必须先分配给有胆有识」。引擎 harm-threat.js#assignHarm 目前只对 kind==='horror' 读取 entry.composure 的 mandatory；伤害仍可分配给调查员或其它支援。恐惧侧已由既有 composure 读点生效，伤害侧缺失。"
+  },
+  {
+    "file": "m2-3-08086.json",
+    "id": "m2-3-08086",
+    "status": "implemented",
+    "need": "「你发动一次攻击时」本次攻击 +1 伤害的反应读点",
+    "cards": [
+      "08086"
+    ],
+    "reason": "迈克尔·李的第二个反应是「你发动一次攻击时，横置本卡并花费 1 证据：你在本次攻击中造成 +1 伤害」。攻击发起窗口只在 weaponFightInitiated（远程/枪械支援）暴露 damageBonus；普通攻击/近战攻击没有可写「本次攻击伤害加值」的通用读点，api.addExtraOnSuccess 只支持检定成功后的独立效果（不是本次攻击伤害）。属性修正与调查成功放证据已实现。"
+  },
+  {
+    "file": "m2-3-08087.json",
+    "id": "m2-3-08087",
+    "status": "rejected",
+    "need": "「你本回合下一个攻击行动期间」的标记处理与不引发借机攻击的延迟效果",
+    "cards": [
+      "08087"
+    ],
+    "reason": "改为「本次攻击检定期间」的 api.replaceTokenEffect + 事件自身 noOpportunityAttack 近似（若必须在行动前打出则先声明文字近似）。"
+  },
+  {
+    "file": "m2-3-08091.json",
+    "id": "m2-3-08091",
+    "status": "implemented",
+    "need": "指定混沌标记为「咒印」并在符号标记揭示时改为从混乱袋中查找揭示该标记",
+    "cards": [
+      "08091"
+    ],
+    "reason": "恩科西·马巴蒂入场时指定一个非 elder_sign 符号标记为咒印（引擎有 api.sealRandomChaosToken / api.nameChaosToken，但没有把「某个调查员的咒印」记录在卡上并作为后续替换来源的读点）；反应要把刚揭示的 cultist/tablet/elderthing 替换为「从混乱袋中查找你的咒印并揭示它（其他标记放回混乱袋）」，即把已揭示标记从本次检定结果中移除并重新抽指定标记——现有 moveRevealed/replaceChaosToken 不能按「标记名」从袋中查找并插入揭示序列。"
+  },
+  {
+    "file": "m2-3-08097.json",
+    "id": "m2-3-08097",
+    "status": "implemented",
+    "need": "查看相连未揭示地点的「揭示面」",
+    "cards": [
+      "08097"
+    ],
+    "reason": "袖珍望远镜的 [free] 横置能力要查看一个相连、未揭示地点的揭示面（不改变其揭示状态）。引擎 look.js 的 lookAt 只支持牌库区（deck/discard/encounterDeck/explorationDeck/investigatorDeck），没有按地点 id 读取其 revealData/背面内容的读点；调查能力已实现（api.investigate locationId）。"
+  },
+  {
+    "file": "m2-3-08104.json",
+    "id": "m2-3-08104",
+    "status": "rejected",
+    "need": "调查成功时「不发现所在地点 1 个线索，改为……」的线索替换读点",
+    "cards": [
+      "08104",
+      "08106"
+    ],
+    "reason": "用 api.investigate({noClueDiscovery:true}) 后手动 api.discoverClue 近似（本卡已在卡内近似）；真实替换留待主进程。"
+  },
+  {
+    "file": "m2-3-08106.json",
+    "id": "m2-3-08106",
+    "status": "rejected",
+    "need": "同 08104：调查成功的线索发现替换读点（4 级版）",
+    "cards": [
+      "08104",
+      "08106"
+    ],
+    "reason": "同 08104（弃牌堆道具用 api.playerTools.recoverDiscard 近似）。"
+  },
+  {
+    "file": "m2-3-08107.json",
+    "id": "m2-3-08107",
+    "status": "implemented",
+    "need": "技能检定「成功后弃掉本卡，换取本次攻击 +1 伤害 / 额外 1 线索」的读点",
+    "cards": [
+      "08107"
+    ],
+    "reason": "破冰锥（3 级）在检定期间横置加 +1 技能值（已实现）；若成功，可以选择弃掉破冰锥，使本次攻击 +1 伤害（攻击时）或发现所在地点额外 1 线索（调查时）。当前引擎没有「检定成功后弃掉支援并把效果并入本次攻击伤害/线索」的读点：api.addExtraOnSuccess 只能执行独立 effect，无法写本次攻击伤害；弃置自身也需要在成功结算阶段执行。"
+  },
+  {
+    "file": "p7-08503.json",
+    "id": "p7-shared-08503",
+    "status": "pending",
+    "primitive": "locationRule.shroudWhenAttached",
+    "cards": [
+      "08503"
+    ],
+    "reason": "地点「有遭遇卡牌附属时 +2 隐藏」没有通用读点（地点隐藏值不由 entityModifierTotal 读附属卡）。"
+  },
+  {
+    "file": "p7-08506.json",
+    "id": "p7-shared-08506",
+    "status": "pending",
+    "primitive": "locationRule.entryGroupCluesSurcharge",
+    "cards": [
+      "08506"
+    ],
+    "reason": "《亡命冰原》13 个地点的背面「进入本地点额外共同线索费用」没有移动附加费读点（08503–08514 背面同族条款）。"
+  },
+  {
+    "file": "p7-08508.json",
+    "id": "p7-shared-08508",
+    "status": "pending",
+    "primitive": "window.locationAttachmentEntered",
+    "cards": [
+      "08508"
+    ],
+    "reason": "「诡计附属到本地点时该诡计获得涌动」没有地点附属事件窗口。"
+  },
+  {
+    "file": "p7-08515.json",
+    "id": "p7-shared-08515",
+    "status": "pending",
+    "primitive": "window.enemyDefeatedAttack",
+    "cards": [
+      "08515"
+    ],
+    "reason": "敌人被击败瞬间实体已离场，无法再走真实攻击管线；当前实现按印刷攻击值直接结算伤害/恐惧（近似）。"
+  },
+  {
+    "file": "p7-08517.json",
+    "id": "p7-shared-08517",
+    "status": "pending",
+    "primitive": "treacheryRule.moveSurchargeFromTreacheryLocation",
+    "cards": [
+      "08517"
+    ],
+    "reason": "「离开有诡计附属的地点额外 1 行动」需要移动附加费读点（威胁区卡片的持续限制）。"
+  },
+  {
+    "file": "p7-08544.json",
+    "id": "p7-08544",
+    "status": "pending",
+    "need": "议程「将要推进时」的 scenarioBehavior 钩子（engine 议程推进读点）",
+    "cards": [
+      "08544"
+    ],
+    "reason": "08544 邪灵现身是强制规则：密谋将要推进时若渗出梦魇底下有正面朝下卡牌，不推进、移除 2 毁灭并把 1 张底下卡生成在其地点。章节 behavior.agendaWouldAdvance 已实现规则，但 engine 的议程推进流程没有调用 scenarioBehavior 的 advance 拦截钩子（TDE 的 agendaRule.onReveal 只在揭示时开窗，无法阻止推进）。"
+  },
+  {
+    "file": "p7-08546.json",
+    "id": "p7-08546",
+    "status": "pending",
+    "need": "幕目标/撤退行动的 scenarioBehavior 钩子（engine 幕推进与 scenarioAction 读点）",
+    "cards": [
+      "08546"
+    ],
+    "reason": "08546 陷入围攻！的目标是「场上没有幻灵敌人」或「所有未被击败的调查员都撤退」，并提供营地共同花 4 线索的撤退行动。章节 behavior.actObjectiveMet/performScenarioAction 已实现规则，但 engine 的幕推进判定没有 scenarioBehavior 钩子可读；营地撤退行动需要 engine 的 scenarioAction 枚举入口分派到 locationRule.actions。"
+  },
+  {
+    "file": "p7-08560.json",
+    "id": "p7-08560",
+    "status": "pending",
+    "need": "fatalMirage 地点「强制/额外费用」规则的通用 locationRule 读点",
+    "cards": [
+      "08560",
+      "08561",
+      "08562",
+      "08565",
+      "08566",
+      "08567",
+      "08571",
+      "08572"
+    ],
+    "reason": "08560–08574 等幻景地点多为强制规则：调查后直到回合结束隐藏值 +1 且不能离开（08560）、调查时揭示 frost 后受伤害/恐惧并在成功时额外发现线索（08562/08565）、进入需额外费用（08566/08567）、伙伴在本地时地点隐藏 -2、诡计附属时 +3 隐藏（08561）等。当前条目用 flags 声明（location flags: forcedAfterInvestigate / forcedOnFrostReveal / extraInvestigateCost / investigatorShroudBonus / shroudBonusIfTreacheryAttached），engine 尚无可执行读点；章节 behavior 只能做数据校验。"
+  },
+  {
+    "file": "p7-08587.json",
+    "id": "p7-08587",
+    "status": "pending",
+    "need": "伙伴（storyAsset 遭遇卡）的 free/reaction 能力在叙事期的可用入口",
+    "cards": [
+      "08587",
+      "08588",
+      "08589",
+      "08590",
+      "08591",
+      "08592",
+      "08593",
+      "08594",
+      "08595"
+    ],
+    "reason": "08587–08595 是「伙伴」支援：多数为 [free]/[reaction]（花 1 秘密/补给并横置治愈、取消 frost、战斗/调查基础值 6 等）。它们以 storyAsset 条目承载（资产-type 在 EotE card-data 归 storyAssets），但 engine 对 NON_PLAYER_SCOPES 条目的 action/free 要求显式 actionKind，且玩家叙事期不会把 storyAsset 当受控支援枚举能力；fatalMirage 章节 behavior.choosePartner 只把伙伴登记到战役记录/场上，能力本身无法被玩家激活。"
+  },
+  {
+    "file": "p7-08649.json",
+    "id": "p7-shared-08649",
+    "status": "pending",
+    "primitive": "locationRule.backFaceEntryBan",
+    "cards": [
+      "08649"
+    ],
+    "reason": "地点背面「不能进入 / 不能拥有附属」需要地点规则读点（locationRule 暂无 backFace 限制族）。"
+  },
+  {
+    "file": "p7-08673.json",
+    "id": "p7-08673",
+    "status": "pending",
+    "primitive": "mistPylonAsEnemy",
+    "need": "「每座已揭示的迷雾高塔可被当作敌人攻击：fight=帷幕、health=线索值；生命为 0 即坍塌（留在场上）」。当前用 scenarioAction + 战斗检定 + P2-D damageTower 原语近似，战斗管线不生成敌人实体，因此敌人阶段/交战/攻击反应卡无法作用于高塔。",
+    "cards": [
+      "08673"
+    ],
+    "reason": "章节 behavior.actions 生成「攻击迷雾高塔」scenarioAction；api.test 成功 1 伤害（A 封印 +1）；damageTower 记录伤害与坍塌。"
+  },
+  {
+    "file": "p7-08679.json",
+    "id": "p7-08679",
+    "status": "pending",
+    "primitive": "setAsideEnemyCopiesCounter",
+    "need": "「无名的疯狂」共 15 份：放一边数量、在场数量、以及「成功攻击/规避后按成功差值重整最近一份已重整副本」需要引擎提供「放一边的同名敌人副本计数」与「按成功差值消耗计数」的通用原语。",
+    "cards": [
+      "08679"
+    ],
+    "reason": "章节用 state.enemies 实例近似；setAside 清单位于 manifest.zones.setAside（15 份）。"
+  },
+  {
+    "file": "p7-08681.json",
+    "id": "p7-08681",
+    "status": "pending",
+    "primitive": "doomPlacementReplacement",
+    "need": "「当 1+ 毁灭将被放置时，如果还有放一边的无名的疯狂：改为生成 1 份」。需要引擎在放毁灭前调用 behavior 的替换钩子（类似 crisis 的 doomPlacementReplacement），当前只能放毁灭后提示。",
+    "cards": [
+      "08681"
+    ],
+    "reason": "议程 5 条目 flags.finalMirageDoomReplacement + behavior 提示；实际仍放毁灭。"
+  },
+  {
+    "file": "p7-08682.json",
+    "id": "p7-08682",
+    "status": "pending",
+    "primitive": "locationLeaveTest",
+    "need": "泰坦坡道「离开的额外费用：检定 [agility] (X)，失败取消移动；连接地点任意调查员可花 1 线索自动成功」。engine 已有 scenarioBehavior.locationLeaveTest 读点，但需要确认返回契约（skill/difficulty/spendClueAutoSucceed）与「失败取消移动」的接线；当前条目声明数据、behavior 返回契约形状，未在真实移动管线验证。",
+    "cards": [
+      "08682",
+      "08683",
+      "08684",
+      "08685"
+    ],
+    "reason": "条目 locationRule.leaveTestDifficulty/spendClueAutoSucceed + behavior.locationLeaveTest 声明；移动取消依赖引擎窗口。"
+  },
+  {
+    "file": "p7-08691.json",
+    "id": "p7-shared-08691",
+    "status": "pending",
+    "primitive": "treacheryRule.tekeliShuffleReplacement",
+    "cards": [
+      "08691"
+    ],
+    "reason": "忒咳哩-哩洗入替代需要 tekelili 洗入管线的「地点附属替换」读点（P2 eote-tekeli.tekeliShuffleIn 目前只有直接洗入）；轮末弃掉附属卡也需要地点附属强制窗口。"
+  },
+  {
+    "file": "p7-08692.json",
+    "id": "p7-shared-08692",
+    "status": "pending",
+    "primitive": "treacheryRule.locationAttachmentRestrictions",
+    "cards": [
+      "08692"
+    ],
+    "reason": "地点附属对调查员「不能打牌/抽牌」的持续限制没有通用读点；轮末弃掉附属卡也没有地点附属强制窗口（当前只有 attachmentAbilities 行动与 blocksMovementWhileReady）。"
+  },
+  {
+    "file": "p7-08693.json",
+    "id": "p7-shared-08693",
+    "status": "pending",
+    "primitive": "treacheryRule.attachmentSkillPenalty",
+    "cards": [
+      "08693"
+    ],
+    "reason": "地点附属给所在地点调查员的技能修正没有通用读点（modifiers 只在实体自身/持有者链上）。"
+  },
+  {
+    "file": "p7-08694.json",
+    "id": "p7-shared-08694",
+    "status": "pending",
+    "primitive": "treacheryRule.attachmentTurnEndDirectDamage",
+    "cards": [
+      "08694"
+    ],
+    "reason": "地点附属的「回合结束直接伤害（含调查员与所有有生命值卡牌）」需要地点附属强制窗口与直接伤害入口。"
+  },
+  {
+    "file": "p7-08697.json",
+    "id": "p7-shared-08697",
+    "status": "pending",
+    "primitive": "api.buffEnemyUntilEndOfRound",
+    "cards": [
+      "08697"
+    ],
+    "reason": "临时提升敌人攻击/躲避直到本轮结束没有通用写点（enemyStatMods 只读议程 passive；entityModifierTotal 只汇总条目/地点静态修正）。"
+  },
+  {
+    "file": "p7-08699.json",
+    "id": "p7-shared-08699",
+    "status": "pending",
+    "primitive": "treacheryRule.attachmentMoveTest",
+    "cards": [
+      "08699"
+    ],
+    "reason": "地点附属的「进入/离开附属地点额外检定」需要移动前附加费读点与移动取消语义（hidden-rules.js 目前只读 blocksMovementWhileReady）。"
+  },
+  {
+    "file": "p7-08702.json",
+    "id": "p7-shared-08702",
+    "status": "pending",
+    "primitive": "enemyAttachmentDifficultyBonus",
+    "cards": [
+      "08702"
+    ],
+    "reason": "敌人附属卡的「攻击/躲避/谈判难度 +1」没有通用读点（07259 的 attackBonus 只服务攻击伤害/恐惧，且由章节 behavior 分派）。"
+  },
+  {
+    "file": "p7-08703.json",
+    "id": "p7-shared-08703",
+    "status": "pending",
+    "primitive": "treacheryRule.tekeliliDoubleResolution",
+    "cards": [
+      "08703"
+    ],
+    "reason": "「忒咳哩-哩弱点效果额外结算一次」需要弱点结算管线读点（deck-ops.js#resolveWeakness 的倍数）。"
+  },
+  {
+    "file": "p7-08704.json",
+    "id": "p7-shared-08704",
+    "status": "pending",
+    "primitive": "api.resolveWeaknessByCode",
+    "cards": [
+      "08704"
+    ],
+    "reason": "08704（以及 08710 修格斯「抽忒咳哩-哩」）需要「按卡号立即结算一张弱点」的读点；P2 eote-tekeli 只提供取牌/去向。"
+  },
+  {
+    "file": "p7-08706.json",
+    "id": "p7-shared-08706",
+    "status": "pending",
+    "primitive": "treacheryRule.supportAttachmentForced",
+    "cards": [
+      "08706"
+    ],
+    "reason": "支援附属的「不能重整/回合结束受伤/行动摆脱」没有通用读点；另外 runtime api 缺少对支援执行「横置」的写入口（api.exhaust 只在能力面）。"
+  },
+  {
+    "file": "p7-08707.json",
+    "id": "p7-shared-08707",
+    "status": "pending",
+    "primitive": "treacheryRule.attachmentTurnEndDirectHorror",
+    "cards": [
+      "08707"
+    ],
+    "reason": "地点附属的「回合结束直接恐惧（含调查员与所有有神智卡牌）」需要地点附属强制窗口与直接恐惧入口。"
+  },
+  {
+    "file": "p7-08708.json",
+    "id": "p7-shared-08708",
+    "status": "pending",
+    "primitive": "enemyRule.locationMoveSurcharge",
+    "cards": [
+      "08708"
+    ],
+    "reason": "敌人对地点移动的附加行动费没有通用读点（enemyRule 现有字段覆盖猎手/交战限制，但没有移动附加费）。"
+  },
+  {
+    "file": "p7-08710.json",
+    "id": "p7-shared-08710",
+    "status": "pending",
+    "primitive": "api.resolveWeaknessByCode",
+    "cards": [
+      "08710"
+    ],
+    "reason": "同 08704：抽出的忒咳哩-哩需要立即按弱点结算的读点。"
+  },
+  {
+    "file": "p7-08712.json",
+    "id": "p7-shared-08712",
+    "status": "pending",
+    "primitive": "treacheryRule.attachmentClueDiscoveryForced",
+    "cards": [
+      "08712"
+    ],
+    "reason": "地点附属的「发现/控制附属地点线索后弃手牌并弃卡」需要地点附属强制窗口。"
+  },
+  {
+    "file": "p7-08715.json",
+    "id": "p7-shared-08715",
+    "status": "pending",
+    "primitive": "window.weaknessResolved",
+    "cards": [
+      "08715"
+    ],
+    "reason": "「结算忒咳哩-哩弱点后」没有通用窗口（windows.js 只有 treachery/tokenReveal/cardsDrawn 等；弱点结算后不开放任何窗口）。"
+  },
+  {
+    "file": "p7-08719.json",
+    "id": "p7-shared-08719",
+    "status": "pending",
+    "primitive": "enemyRule.cannotAttackThisRound",
+    "cards": [
+      "08719"
+    ],
+    "reason": "「敌人本轮不能攻击」没有通用写入口（enemyCannotAttack 由章节 behavior 提供；条目侧无法声明临时禁用）。"
+  },
+  {
+    "file": "p7-08721.json",
+    "id": "p7-shared-08721",
+    "status": "pending",
+    "primitive": "treacheryRule.blankTextUntilEndOfTurn",
+    "cards": [
+      "08721"
+    ],
+    "reason": "「临时把地点附属诡计的印刷文本框视为空白」没有通用读点（实体文本空白只覆盖玩家卡/敌人/地点自身）。"
+  },
+  {
+    "file": "p7-08727.json",
+    "id": "p7-shared-08727",
+    "status": "pending",
+    "primitive": "api.loseActionNextTurn",
+    "cards": [
+      "08727"
+    ],
+    "reason": "「下一个回合期间失去 1 个行动」没有通用读点（api.loseActions 只扣当前行动）。"
+  },
+  {
+    "file": "p7-08731.json",
+    "id": "p7-shared-08731",
+    "status": "pending",
+    "primitive": "searchTopToScenarioDeckBottom",
+    "cards": [
+      "08731"
+    ],
+    "reason": "「查找牌库顶并只把忒咳哩-哩放回剧本牌库底」没有通用读点（api.searchTop 只能把牌移到手/弃牌/牌库，不能跨到剧本牌库底）。"
+  }
+]

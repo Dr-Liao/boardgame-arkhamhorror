@@ -5806,6 +5806,7 @@
     "tests/tsk-player-m2-4.test.mjs",
     "audit/tsk-player-shards.json",
     "audit/tsk-player-queue.json",
-    "audit/tsk-player-browser.json"
+    "audit/tsk-player-browser.json",
+    "audit/tsk-player-request-disclosures.json"
   ]
 }

@@ -205,7 +205,11 @@ export function buildImport(root = ROOT) {
   const selected = Object.fromEntries(Object.entries(SOURCE_PATHS).map(([id, relative]) => [id, sources.find(source => source.path === relative)?.rows]))
   if (Object.values(selected).some(rows => !rows)) throw new Error('主来源缺失')
   const merged = mergeCatalog(selected)
-  const identities = Object.entries(SCENARIO_CARD_IDENTITIES).flatMap(([scenarioId, categories]) => Object.entries(categories).flatMap(([category, entries]) => Object.entries(entries).map(([ruleId, identity]) => ({ scenarioId, category, ruleId, ...identity }))))
+  // N1 only embeds base-game scenario identities. Expansion aliases are
+  // registered by content and can use a different runtime role from the printed card.
+  const identities = Object.keys(SCENARIOS).flatMap(scenarioId =>
+    Object.entries(SCENARIO_CARD_IDENTITIES[scenarioId]).flatMap(([category, entries]) =>
+      Object.entries(entries).map(([ruleId, identity]) => ({ scenarioId, category, ruleId, ...identity }))))
   for (const [scenarioId, scenario] of Object.entries(SCENARIOS)) {
     for (const [ruleId, variants] of Object.entries(scenario.locationVariants || {})) {
       for (const variant of variants) if (!identities.some(i=>i.scenarioId===scenarioId&&i.originalCode===variant.originalCode)) {

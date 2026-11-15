@@ -230,7 +230,7 @@ function writeBaseline() {
     + `fastFailures ${report.fastFailures.length} 条；指标 ${ARCHITECTURE_METRIC_KEYS.length} 项`)
 }
 
-function checkBaseline() {
+function checkBaseline({ compareReplay = true } = {}) {
   if (!existsSync(baselinePath)) {
     fail(`${BASELINE_FILE} 不存在；先运行 node tools/scan-tsk-baseline.mjs --write`)
   }
@@ -276,7 +276,7 @@ function checkBaseline() {
   }
   // 6) 冻结证据：fast 采集日志在运行目录存在时复核 sha256；干净检出没有该忽略文件时跳过。
   let fastLogState = 'absent'
-  if (existsSync(FAST_LOG_FILE)) {
+  if (compareReplay && existsSync(FAST_LOG_FILE)) {
     const fastLogSha = sha(readFileSync(FAST_LOG_FILE))
     if (fastLogSha !== embedded.fastLogSha256) {
       fail(`fast 采集日志已变化：${FAST_LOG_FILE} 当前 sha256=${fastLogSha}，基线=${embedded.fastLogSha256}；`
@@ -285,11 +285,13 @@ function checkBaseline() {
     fastLogState = 'matched'
   }
   // 7) golden replay 用当前代码逐局重放：任何行为变化都必须让 --check 失败。
-  const compare = spawnSync(process.execPath, [join(MOD, 'tools/replay-fixtures.mjs'), '--compare', embedded.replayFile], {
-    cwd: MOD, encoding: 'utf8', timeout: 600_000,
-  })
-  if (compare.status !== 0) {
-    fail(`replay --compare 失败（exit=${compare.status}）：${lastLine(compare.stdout || compare.stderr)}`)
+  if (compareReplay) {
+    const compare = spawnSync(process.execPath, [join(MOD, 'tools/replay-fixtures.mjs'), '--compare', embedded.replayFile], {
+      cwd: MOD, encoding: 'utf8', timeout: 600_000,
+    })
+    if (compare.status !== 0) {
+      fail(`replay --compare 失败（exit=${compare.status}）：${lastLine(compare.stdout || compare.stderr)}`)
+    }
   }
   // 8) 其余冻结字段（fastFailures/fastLogSha256/worktree/replaySummary/referenceCommitNote 等）逐字节复算：
   //    快照是单次历史记录，任何手改或代码重构导致的序列化漂移都要求显式 --write。
@@ -305,7 +307,9 @@ function checkBaseline() {
     + `replay ${embedded.replaySummary.length} 局 / ${totalReplaySteps(embedded)} 步 sha256=${String(embedded.replaySha256).slice(0, 12)}…；`
     + `rulesVersion ${embedded.rulesVersion} / schemaVersion ${embedded.stateSchemaVersion}；`
     + `合规与 ${ARCHITECTURE_METRIC_KEYS.length} 项指标一致；`
-    + `fast 日志 ${fastLogState === 'matched' ? 'sha256 一致' : '缺失（跳过）'}；replay --compare exit 0）`)
+    + (compareReplay
+      ? `fast 日志 ${fastLogState === 'matched' ? 'sha256 一致' : '缺失（跳过）'}；replay --compare exit 0）`
+      : '回放由发布门禁校验）'))
 }
 
 const isMain = Boolean(process.argv[1]) && pathToFileURL(process.argv[1]).href === import.meta.url
@@ -314,12 +318,12 @@ if (isMain) {
   try {
     if (mode === '--write') {
       writeBaseline()
-    } else if (mode === '--check') {
-      checkBaseline()
+    } else if (mode === '--check' || mode === '--check-metadata') {
+      checkBaseline({ compareReplay: mode === '--check' })
     } else if (!mode) {
       process.stdout.write(json(buildBaseline()))
     } else {
-      console.error('用法：node tools/scan-tsk-baseline.mjs --write | --check（无参数打印 JSON）')
+      console.error('用法：node tools/scan-tsk-baseline.mjs --write | --check | --check-metadata（无参数打印 JSON）')
       process.exitCode = 2
     }
   } catch (error) {

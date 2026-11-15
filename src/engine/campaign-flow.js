@@ -8,6 +8,8 @@
 
 import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
 import { restoreInvestigatorForms } from './investigator-form.js'
+import { prepareSurvey } from './survey-preparation.js'
+import { investigatorRule } from '../cards/card-rules.js'
 
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
@@ -26,6 +28,7 @@ export function createCampaignFlow(deps) {
     campaignFor,
     campaignGraph,
     campaignManifestFor,
+    cardDef,
     endCampaign,
     enterCampaignNode,
     getThreatEffect,
@@ -125,7 +128,7 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
       campaign.scenarioIndex = manifest.scenarioIds.indexOf(next.scenarioId)
       state.hubSelectedScenarioId = next.scenarioId
     }
-    campaign.upgradesAllowed = node.type === 'interlude' && node.upgrades !== false
+    campaign.upgradesAllowed = node.type === 'interlude' && node.upgrades !== false && !campaign.surveyPreparation
     if (campaign.upgradesAllowed) openDraftUpgrades(state)
     state.hubReady = false; state.hubSeatDone = {}; state.currentSeat = 0
     if (launch && !state.hubFlow) runInterlude(state, campaign.scenarioIndex, events)
@@ -195,7 +198,7 @@ function finishScenario(state, resolutionKey, events) {
     .filter(card => String(card.id || '').startsWith('location:'))
     .map(card => String(card.id).slice('location:'.length)))
   state.victory = (state.victoryDisplay || []).reduce((sum, card) => sum + (card.victory || 0), 0)
-    + state.locations.filter(loc => !awardedLocationIds.has(loc.id) && loc.revealed && loc.clues === 0)
+    + state.locations.filter(loc => !loc.enemyLocationFace && !awardedLocationIds.has(loc.id) && loc.revealed && loc.clues === 0)
       .reduce((sum, loc) => sum + (loc.victory || 0), 0)
   info(state, events, `剧本结局：${resolutionKey}。`)
   // 04038 黑暗契约：游戏结束/退场时仍在手牌，则移出牌库并换成「失败的代价」。
@@ -220,6 +223,9 @@ function finishScenario(state, resolutionKey, events) {
   applyDefeatTrauma(state, events)
   const resolutionResult = applyResolutionEffects(state, resolutionKey, events)
   if (resolutionResult?.story) story = resolutionResult.story
+  if (sc.mechanics?.survey) prepareSurvey(state, {
+    choose: spec => requestChoice(state, spec), cardDef, entryOf: registeredEntry, investigatorRule,
+  })
   persistPoisonedWeaknesses(state, events)
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {

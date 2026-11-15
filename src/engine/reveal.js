@@ -222,10 +222,11 @@ function executeDescriptor(state, params) {
   }
 }
 
-function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false }) {
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, ignoreActionCost = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false }) {
   if (state.locations.includes(source) && ['forced', 'reaction'].includes(descriptor.kind)
     && ignoreLocationTrigger(state, source.id, requestChoice, descriptor.label)) return false
-  const cost = descriptorCost(descriptor)
+  const cost = descriptorCost(descriptor, ignoreActionCost)
+  if (state.scenario?.mechanics?.noEncounterDeck && (descriptor.requiresEncounterDeck || cost?.drawEncounter)) return false
   // 手牌事件：先按打出规则付费并离开手牌，再结算效果。
   // noPlayCost 的描述子（如 05023 宝剑王牌「放置入场」）自己负责移动这张牌。
   // Phase 5（5c-8）：反应窗口打出的快速事件由 playReactionCard 先付费/离手，
@@ -361,12 +362,13 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     if (previousAssetId === undefined) delete state._resolvingAssetId
     else state._resolvingAssetId = previousAssetId
   }
-  if (handCode) disposePlayedEvent(inv, handCode)
+  if (handCode && fromChannel?.move?.fromDiscardProviderId) (state.removedFromGame ||= []).push(handCode)
+  else if (handCode) disposePlayedEvent(inv, handCode)
   // deferredBeneath 的冲刷统一在最外层 executeDescriptor 的 finally 中执行（见上方 flushDeferredBeneath）。
   // Phase 5（D2）：discardWhenEmpty 也可以写在注册表条目上（与 uses/usesType 同层）。
   const entry = registeredEntry(descriptor.code)
   const discardWhenEmpty = entry?.discardWhenEmpty
-  if (discardWhenEmpty && source && source.uses != null && source.uses <= 0) {
+  if (discardWhenEmpty && source && source.uses != null && source.uses <= 0 && (!ignoreCosts || inv.assets.includes(source))) {
     leaveAsset(state, inv, source)
     if (!source.removedFromGame && !source.returnedToHand) inv.discard.push(source.code)
     info(state, events, `「${cardName(source.code)}」充能耗尽，弃掉。`)

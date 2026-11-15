@@ -116,6 +116,20 @@ export function createBonded(deps) {
     return [...toHand, ...pool]
   }
 
+  function shuffleCopyIntoDeck(state, inv, mainCode, code, shuffleDeck) {
+    const group = groupOf(mainCode)
+    if (!inv || !group?.copies.some(item => item.code === code) || typeof shuffleDeck !== 'function') return false
+    const set = setFor(state, inv, mainCode)
+    const source = set.cards.includes(code) ? set.cards : inv.discard
+    const index = source.indexOf(code)
+    if (index < 0) return false
+    const deck = shuffleDeck([...inv.deck, code])
+    source.splice(index, 1)
+    set.retrieved = true
+    inv.deck = deck
+    return true
+  }
+
   // 主卡离场：把副本从持有者的手牌/牌库/弃牌堆/场上/威胁区收回场外集合。
   function returnToSet(state, inv, mainCode, options = {}) {
     if (!inv) return []
@@ -193,7 +207,7 @@ export function createBonded(deps) {
     return total
   }
 
-  return { groupOf, retrieve, returnToSet, returnAll, projection, setFor }
+  return { groupOf, retrieve, shuffleCopyIntoDeck, returnToSet, returnAll, projection, setFor }
 }
 
 // 公开读数：场外集合内容（副本身份与数量是桌面公开信息）。纯函数：观察投影直接引用。

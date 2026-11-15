@@ -1,5 +1,6 @@
 import { beginChaosTest, drawChaosToken, endChaosTest, sealChaosToken } from './chaos-bag.js'
 import { integer, mechanicState } from './mechanic-state.js'
+import { randomValue } from './rules-state.js'
 
 // 有限物理标记池上限：祝福／诅咒各 10 枚（TIC），寒霜 8 枚（EotE）。
 // 三种标记共用同一套「袋内＋已揭示＋封印区」计数：上限是实物总数，不是袋内数量。
@@ -110,4 +111,52 @@ export function resolvePoolSchedules(state) {
   const due = data.tokenSchedules.filter(record => record.round <= state.round)
   data.tokenSchedules = data.tokenSchedules.filter(record => record.round > state.round)
   return due.map(record => replacePoolTokens(state, record.from, record.to, state.chaosBag.filter(face => face === record.from).length))
+}
+
+// Comparison uses only tokens currently in the bag, unlike the physical pool cap.
+export function rankedBagTokens(state, faces, { order = 'fewest', requireAvailable = false } = {}) {
+  if (!Array.isArray(faces) || !faces.length || new Set(faces).size !== faces.length || !['fewest', 'most'].includes(order)) {
+    throw new TypeError('无效标记比较')
+  }
+  const counts = faces.map(face => ({ face, count: payablePoolTokens(state, face).length }))
+    .filter(row => !requireAvailable || row.count > 0)
+  const target = (order === 'fewest' ? Math.min : Math.max)(...counts.map(row => row.count))
+  return counts.filter(row => row.count === target).map(row => row.face)
+}
+
+export function payMixedPoolTokens(state, amounts) {
+  if (!amounts || typeof amounts !== 'object' || Array.isArray(amounts)) throw new TypeError('无效组合标记费用')
+  const entries = Object.entries(amounts)
+  for (const [face, count] of entries) { tokenName(face); integer(count) }
+  if (!entries.every(([face, count]) => payablePoolTokens(state, face).length >= count)) return false
+  for (const [face, count] of entries) if (count) payPoolTokens(state, face, count)
+  return true
+}
+
+export function replaceRandomNumericTokens(state, count, delta) {
+  integer(count)
+  if (!Number.isSafeInteger(delta) || !delta) throw new TypeError('无效数字标记修正')
+  const indexes = state.chaosBag.flatMap((face, index) => /^[+-]?\d+$/.test(face) && Number.isSafeInteger(Number(face) + delta) ? [index] : [])
+  if (indexes.length < count) return false
+  const replaced = []
+  for (let draw = 0; draw < count; draw++) {
+    const [index] = indexes.splice(Math.floor(randomValue(state) * indexes.length), 1)
+    const from = state.chaosBag[index]
+    const value = Number(from) + delta
+    const to = value > 0 ? `+${value}` : String(value)
+    state.chaosBag[index] = to
+    replaced.push({ from, to })
+  }
+  return replaced
+}
+
+export function replaceCampaignNumericTokens(state, count, delta) {
+  if (!state.campaign) throw new TypeError('需要战役混乱袋')
+  const working = { chaosBag: [...(state.campaign.chaosBag || state.chaosBag)], rngState: state.rngState }
+  const replaced = replaceRandomNumericTokens(working, count, delta)
+  if (!replaced || !replaced.length) return replaced
+  state.rngState = working.rngState
+  state.campaign.chaosBag = working.chaosBag
+  state.chaosBag = [...working.chaosBag]
+  return replaced
 }

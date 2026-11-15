@@ -1,5 +1,6 @@
 import { registeredEntry } from './ability.js'
 import { entityRuleActive } from './modifiers.js'
+import { enemyKeywordOverride } from './enemy-keyword-movement.js'
 
 // 冷漠（aloof）的有效读点。
 //
@@ -15,7 +16,7 @@ import { entityRuleActive } from './modifiers.js'
 //     07124–07127 写在议程上，由 entityRuleActive 读 scene 行）。
 // 文本被涂白的敌人按既有口径整段失效（印刷条件与印刷冷漠一起消失）。
 export function enemyIsAloof(state, enemy, { isBlanked = () => false, entryOf = registeredEntry } = {}) {
-  if (!enemy?.aloof) return false
+  if (!(enemyKeywordOverride(state, enemy, 'aloof') ?? enemy?.aloof)) return false
   if (isBlanked(state, enemy)) return false
   if (entityRuleActive(state, enemy, 'loses:aloof')) return false
   const rule = entryOf(enemy.originalCode || enemy.code)?.enemyRule

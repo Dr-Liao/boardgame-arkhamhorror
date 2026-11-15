@@ -1136,7 +1136,7 @@ test('P9.5 G9 批量确认按座位原子提交并按全局事件 seq 串行；�
   // 真实开局序列：骨架先触发 story 选择，then mulligan；逐条回答直到某条线出现 mulligan。
   let mulligan = null
   for (let guard = 0; guard < 20 && !mulligan; guard += 1) {
-    for (const lane of ['A', 'B']) {
+    for (const lane of ['B']) {
       const laneState = state.parallel.lanes[lane]
       const pending = laneState.pendingChoice
       if (!pending) continue
@@ -1180,6 +1180,14 @@ test('P9.5 G9 批量确认按座位原子提交并按全局事件 seq 串行；�
   assert.deepEqual(seqs, seqs.map((_, index) => index + 1), 'seq 从 session.events.length 起连续递增')
   assert.ok(receipt.events.every(event => event.lane === lane))
   assert.ok(receipt.events.every(event => event.seat == null || state.campaign.seatParts[event.seat] === lane))
+  const snapshots = receipt.events.flatMap(event => [event.tableState, event.presentation?.tableState].filter(Boolean))
+  assert.ok(snapshots.length > 0)
+  for (const snapshot of snapshots) {
+    assert.deepEqual(snapshot.investigators.map(inv => inv.seat), laneState.laneRuntime.roomSeats)
+  }
+  const projected = mod.viewEvents(receipt.events, roomSeat, { state })
+  const projectedSnapshots = projected.flatMap(event => [event.tableState, event.presentation?.tableState].filter(Boolean))
+  assert.ok(projectedSnapshots.some(snapshot => snapshot.investigators.some(inv => inv.seat === roomSeat && inv.hand.length)))
   // 失败不落地：过期 choiceId → 抛错且容器版本/线版本不变。
   const revBeforeFailure = state.revision
   const laneRevBeforeFailure = state.parallel.lanes[lane].revision

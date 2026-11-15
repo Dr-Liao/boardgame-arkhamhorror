@@ -5,6 +5,7 @@ import { registeredEntry } from './ability.js'
 import { bondedPoolMain, bondedCardList } from './bonded.js'
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { validateMechanicState } from './mechanic-state.js'
+import { validatePurchaseDiscounts } from '../campaign/purchase-discount.js'
 import { validateInvestigatorMechanics } from './investigator-mechanics.js'
 import { validateEoteState } from './eote-primitives.js'
 import { validateEotePlayerPrimitives } from './effect-state.js'
@@ -568,11 +569,12 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   for (const change of local) changes.push(label === '存档' ? change : `${label}：${change}`)
 }
 
-export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
+export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS, autoReactionHosted } = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
   // Optional extension v1 is inside the existing scenarioFlags schema; absent old saves stay untouched.
   validateDraftState(state)
   validateMechanicState(state)
+  validatePurchaseDiscounts(state.campaign)
   validateInvestigatorMechanics(state)
   // 七循环 P2：EotE 可选扩展（scenarioFlags.mechanics.eote / campaign.eote / 既有 mechanicState 的
   // 数值钥匙与隐藏剧本牌库）。旧存档没有这些键时各校验直接跳过，字节不变。
@@ -583,14 +585,23 @@ export function migrateState(state, { force = false, migrations = STATE_MIGRATIO
   // 场景扩展）。旧存档没有这些键时各校验直接跳过，字节不变。
   validateTskState(state)
   for (const saved of [state.continuation?.base, ...parallelLaneEntries(state).map(([, lane]) => lane)].filter(Boolean)) {
-    validateDraftState(saved); validateMechanicState(saved); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved); validateTskState(saved)
+    validateDraftState(saved); validateMechanicState(saved); validatePurchaseDiscounts(saved.campaign); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved); validateTskState(saved)
   }
   const lanes = parallelLaneEntries(state)
   const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))
-  if (!runtimeNeedsWork(state, force) && !laneNeedsWork) return { state, changes: [] }
+  const reactionPolicy = state.autoReactionHosted ?? autoReactionHosted
+  const reactionRuntimes = saved => [saved, ...parallelLaneEntries(saved).map(([, lane]) => lane),
+    saved.parallel?.interlude?.state, saved.parallel?.ending].filter(Boolean)
+  const needsReactionPolicy = typeof reactionPolicy === 'boolean'
+    && reactionRuntimes(state).some(runtime => runtime.autoReactionHosted === undefined)
+  if (!runtimeNeedsWork(state, force) && !laneNeedsWork && !needsReactionPolicy) return { state, changes: [] }
   const next = structuredClone(state)
   const changes = []
   const nextLanes = parallelLaneEntries(next)
+  if (needsReactionPolicy) {
+    for (const runtime of reactionRuntimes(next)) runtime.autoReactionHosted ??= reactionPolicy
+    changes.push('保存本局的反应托管策略')
+  }
   // 并行容器没有自己的关卡循环；冒烟只跑两条线，避免把外壳当成一局可下的牌。
   migrateRuntime(next, { force, migrations, changes, label: '存档', playable: nextLanes.length === 0 })
   for (const [part, lane] of parallelLaneEntries(next)) {

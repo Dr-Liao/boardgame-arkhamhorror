@@ -36,10 +36,7 @@ const LEDGER_VERSION = 1
 const REFERENCE_CARDS = Object.freeze(['08596', '08621'])
 const ENTRY_ROOT = path.join(MOD, 'src/cards/entries')
 const ENCOUNTER_ROOT = path.join(MOD, 'src/cards/encounter-entries/edgeOfTheEarth')
-const REQUEST_DIRS = [
-  path.join(MOD, 'artifacts/migration/eote/primitive-requests'),
-  path.join(MOD, '..', '..', 'artifacts/migration/eote/primitive-requests'),
-]
+const REQUESTS = 'audit/eote-primitive-requests.json'
 
 const sha256 = value => createHash('sha256').update(value).digest('hex')
 const readJson = absolute => JSON.parse(fs.readFileSync(absolute, 'utf8'))
@@ -108,28 +105,13 @@ function loadInputs() {
     if (!entryFiles.has(code)) entryFiles.set(code, absolute)
   }
   // 待实现行为类原语请求（player queue 的 rejected/done 不阻塞；p7-*.json pending 才算）。
-  // REQUEST_DIRS 同时读 Mod 内副本与大厅根目录运行镜像：同名请求只记一次（优先首个存在的目录）。
   const pending = new Map()
-  const requestFiles = new Set()
-  for (const dir of REQUEST_DIRS) {
-    if (!exists(dir)) continue
-    for (const name of sorted(fs.readdirSync(dir).filter(item => item.endsWith('.json')))) {
-      let request
-      try { request = readJson(path.join(dir, name)) } catch { continue }
-      if (request?.kind === 'shared-factory') continue
-      if (request?.status !== 'pending') continue
-      const codes = Array.isArray(request.cards) && request.cards.length
-        ? request.cards
-        : Array.isArray(request.cardCodes) && request.cardCodes.length
-          ? request.cardCodes
-          : (request.code ? [request.code] : [])
-      if (!codes.length) continue
-      const id = request.id || name.replace(/\.json$/, '')
-      requestFiles.add(`artifacts/migration/eote/primitive-requests/${name}`)
-      for (const code of codes) {
-        if (!pending.has(code)) pending.set(code, [])
-        if (!pending.get(code).includes(id)) pending.get(code).push(id)
-      }
+  const requestFiles = new Set([REQUESTS])
+  for (const request of readJson(path.join(MOD, REQUESTS))) {
+    if (request.kind === 'shared-factory' || request.status !== 'pending') continue
+    for (const code of request.cards) {
+      if (!pending.has(code)) pending.set(code, [])
+      if (!pending.get(code).includes(request.id)) pending.get(code).push(request.id)
     }
   }
   for (const item of ledgers.playerQueue?.items || []) {

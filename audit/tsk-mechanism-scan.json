@@ -7,7 +7,7 @@
   "generatedBy": "tools/scan-tsk-mechanisms.mjs",
   "docs": "docs/campaign/theScarletKeys/README.md",
   "status": "catalog-only",
-  "scopeSha256": "c8fb0ebe529fafa7bd6c989c453eb719faaa2831181b39b9c3d661d11e22e884",
+  "scopeSha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68",
   "guideLayers": [
     "heading",
     "tokens",
@@ -131,10 +131,11 @@
       {
         "module": "src/engine/api-card.js",
         "exportName": "createCardApi",
-        "topLevelCount": 47,
+        "topLevelCount": 51,
         "verbs": [
           "addClicks",
           "addExtraChaosChoicesToTest",
+          "attachControlledAsset",
           "attachOrSwapControlledAsset",
           "attachResolvingEncounter",
           "attachToHostByCode",
@@ -143,6 +144,7 @@
           "bumpInstanceTrauma",
           "canEquip",
           "cardAbilityOptions",
+          "claimHostedAsset",
           "className",
           "discardAllThreats",
           "discardPiles",
@@ -164,6 +166,7 @@
           "releaseSealedToken",
           "repeatResolvedAbility",
           "replayPlayedCode",
+          "resolveAssetAction",
           "resolveCardAbility",
           "returnEnemyToBonded",
           "revealChaosTokens",
@@ -177,6 +180,7 @@
           "setStatOverride",
           "softEndTurn",
           "spawnEnemyAt",
+          "swapControlledAssetFromHand",
           "switchRole",
           "takeFromDeck",
           "tarotSlotInfo"
@@ -185,7 +189,7 @@
       {
         "module": "src/engine/api-clue.js",
         "exportName": "createClueApi",
-        "topLevelCount": 24,
+        "topLevelCount": 25,
         "verbs": [
           "addAssetHorror",
           "attachShroud",
@@ -210,7 +214,8 @@
           "returnClueToLocation",
           "setAssetUses",
           "tempCampaignShroudMod",
-          "tempShroudMod"
+          "tempShroudMod",
+          "transferControlledClues"
         ]
       },
       {
@@ -245,16 +250,19 @@
       {
         "module": "src/engine/api-mechanics.js",
         "exportName": "createMechanicsApi",
-        "topLevelCount": 28,
+        "topLevelCount": 33,
         "verbs": [
           "barriers",
+          "calendar",
           "camp",
           "chaosTokens",
           "city",
           "climb",
+          "codex",
           "commitOrigins",
           "crossSeat",
           "deckTop",
+          "defenses",
           "disciplines",
           "enemyZones",
           "eoteCampaign",
@@ -266,7 +274,9 @@
           "levels",
           "map",
           "promise",
+          "rail",
           "recordSets",
+          "residents",
           "roundDistance",
           "scenarioDecks",
           "shelter",
@@ -542,7 +552,7 @@
       {
         "module": "src/engine/api-test.js",
         "exportName": "createTestApi",
-        "topLevelCount": 26,
+        "topLevelCount": 27,
         "verbs": [
           "addCommittedCardIcons",
           "addPendingTestBonus",
@@ -566,6 +576,7 @@
           "replaceTokenEffect",
           "retryTest",
           "revealAndCommitSkill",
+          "revealRankedTokenInstead",
           "searchDeck",
           "setTestAutoSuccess",
           "testResult",
@@ -599,13 +610,14 @@
       "scenario"
     ],
     "windows": {
-      "count": 118,
+      "count": 121,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
         "afterAlarmRaised",
         "agendaWouldAdvance",
         "assetActionResolved",
+        "assetCluesPlaced",
         "assetDamageAssigned",
         "assetDefeated",
         "assetEnteredPlay",
@@ -669,6 +681,7 @@
         "investigation.afterAction",
         "investigationPhaseEnds",
         "investigationPhaseStarts",
+        "locationPlaced",
         "locationRevealed",
         "move",
         "moveBeforeEngage",
@@ -685,6 +698,7 @@
         "roundStarts",
         "scenarioStarts",
         "searchWouldResolve",
+        "sharedSuppliesSpent",
         "skillTestFail",
         "skillTestFailed",
         "skillTestSuccess",
@@ -723,7 +737,7 @@
       "readPoint": "src/engine/windows.js#windows"
     },
     "matchers": {
-      "count": 39,
+      "count": 40,
       "list": [
         "aliveInvestigators",
         "all",
@@ -739,6 +753,7 @@
         "controlledCards",
         "drewCardType",
         "drewNonWeakness",
+        "duringPeriod",
         "enemiesAt",
         "enemiesEngagedWith",
         "exhaustedEnemies",

@@ -466,6 +466,7 @@ export function createActAgenda(deps) {
 
   function placeDoomOnCard(state, card, amount, events, options = {}) {
     if (!card || !(amount > 0)) return 0
+    if (card.enemyLocation) card = state.locations.find(location => location.id === card.id) || card
     // 2026-10-25 本循环修复 doom-placement-prevention（05085/05095/05096/05097）：
     // 写入前询问剧本「这张卡能否被放置毁灭」；返回 false 时既不写也不触发 doomPlaced。
     if (scenarioBehavior(state).canPlaceDoomOn?.(state, card) === false) {
@@ -482,6 +483,7 @@ export function createActAgenda(deps) {
       }
       return 0
     }
+    const hadDoom = (card.doom || 0) > 0
     card.doom = (card.doom || 0) + amount
     // 第 5 步 P6：卡牌上出现毁灭标记可能新增「法术专用额外行动」（玛丽·朗博）。
     // 只在轮到该调查员时结算；没有该规则的调查员在这里是纯读点（investigatorRule 返回空）。
@@ -496,7 +498,7 @@ export function createActAgenda(deps) {
       { target: card, amount, agenda: false }, scenarioRuntime(state, events))
     // 2026-10-25 第六轮修复 05237：刚放置的毁灭可被反应取消（内容调用 api.cancelDoomPlacement）。
     reactionWindow(state, 'doomPlaced', {
-      when: 'doomPlaced', seat: state.currentSeat, card, amount,
+      when: 'doomPlaced', seat: state.currentSeat, card, amount, hadDoom,
       prompt: `「${card.name || cardName(card.code)}」放置了 ${amount} 点毁灭`,
     }, events)
     return amount
@@ -511,6 +513,7 @@ export function createActAgenda(deps) {
       state, amount, scenarioRuntime(state, events), { source: 'effect' }) === true) {
       return
     }
+    const hadDoom = state.doom > 0
     state.doom += amount
     info(state, events, `🌑 密谋上增加 ${amount} 点毁灭（当前 ${state.doom}）。`)
     if (amount > 0) {
@@ -523,7 +526,7 @@ export function createActAgenda(deps) {
             || (Array.isArray(ability.trigger) && ability.trigger.includes('doomPlaced')))))
       if (hasDoomPlaced) {
         reactionWindow(state, 'doomPlaced', {
-          when: 'doomPlaced', seat: state.currentSeat, card: null, agenda: true, amount,
+          when: 'doomPlaced', seat: state.currentSeat, card: null, agenda: true, amount, hadDoom,
           prompt: `密谋上放置了 ${amount} 点毁灭`,
         }, events)
       }

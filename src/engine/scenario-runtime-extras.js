@@ -19,7 +19,7 @@ import {
 } from './veiled.js'
 import {
   addTokenToBag, createTokenBag, infestedCount, isInfestedLocation, markInfested, clearInfested,
-  resetTokenBag, returnTokenToBag, revealTokenFromBag, tokenBagInfo,
+  resetTokenBag, returnTokenToBag, revealTokenFromBag, tokenBagInfo, transferRevealedToken,
 } from './token-bag.js'
 import { chainNeighbors, linkVerticalChain, moveAlongChain, orderVerticalChain } from './vertical-chain.js'
 import { bondedPartnerOf, placeBondedLocation, removeBondedLocation } from './bonded-location.js'
@@ -96,6 +96,7 @@ export function scenarioRuntimeExtras(state, onCounterChanged = null) {
       reveal: (id, options) => revealTokenFromBag(state, id, options),
       add: (id, token) => addTokenToBag(state, id, token),
       return: (id, token) => returnTokenToBag(state, id, token),
+      transfer: (id, token, to) => transferRevealedToken(state, id, token, to),
       reset: (id, tokens = null) => resetTokenBag(state, id, tokens),
       infestedCount: () => infestedCount(state),
       isInfested: locationId => isInfestedLocation(state, locationId),

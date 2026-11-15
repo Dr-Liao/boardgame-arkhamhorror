@@ -128,7 +128,7 @@
     },
     {
       "path": "tests/tsk-interactions.test.mjs",
-      "sha256": "b253cfd55bde193e60635cbc48365dbc693e3f7ba7845c4cd42b712594ef53da"
+      "sha256": "9c7624b622b04af337d49ed8f579219745e3feb808e1f15fe69af3f68aa75a83"
     },
     {
       "path": "web/mechanic-ui.js",

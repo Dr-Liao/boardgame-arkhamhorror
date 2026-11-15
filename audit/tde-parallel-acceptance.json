@@ -285,7 +285,7 @@
   "files": {
     "games/arkhamhorror/tests/tde-p95-flow.test.mjs": "d143db1b97d4ed218390fc833f280855157f066490940e5fe30d193c434563b8",
     "games/arkhamhorror/tests/tde-p95-interludes.test.mjs": "0c42bfa1502963ea68d08604aca811c9710ed158793f9c8919520f99c8f48cc8",
-    "games/arkhamhorror/tests/tde-p95-matrix.test.mjs": "64534d09859c9fd8cc29e285f46ace4b1b4533ecab958f931022be8a2cee3ae3",
+    "games/arkhamhorror/tests/tde-p95-matrix.test.mjs": "ee31b225ccdbd0b8e1e7f4c602de9640f9913c07a3a53048d60d28e998125a40",
     "games/arkhamhorror/tests/tde-p95-parallel-full.test.mjs": "1f97642f1a5630fba66da0031c47741e67c9ccca21ac03ef0738860190272ee5"
   },
   "remaining": []

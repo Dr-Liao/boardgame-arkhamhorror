@@ -62,9 +62,10 @@ function restoreOrder(state, order) {
   state.chaosBag = [...sorted, ...remaining]
 }
 
-export function drawChaosToken(state) {
-  let index = -1
-  if (Array.isArray(state.debugNextTokens) && state.debugNextTokens.length) {
+export function drawChaosToken(state, selectedFace = null) {
+  let index = selectedFace == null ? -1 : state.chaosBag.indexOf(selectedFace)
+  if (selectedFace != null && index < 0) return null
+  if (selectedFace == null && Array.isArray(state.debugNextTokens) && state.debugNextTokens.length) {
     const forced = state.debugNextTokens.shift()
     if (!state.debugNextTokens.length) delete state.debugNextTokens
     index = state.chaosBag.indexOf(forced)

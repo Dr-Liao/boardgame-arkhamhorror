@@ -146,6 +146,16 @@ export function buildCampaignPlan() {
   }
 }
 
+export function chapterWorkerInputs(plan) {
+  return plan.nodes.filter(node => node.kind === 'chapter').map(node => ({
+    kind: node.kind, chapterId: node.id, name: node.name, nameEn: node.nameEn,
+    referenceCode: node.referenceCode, encounterCode: node.encounterCode,
+    scenarioDir: node.scenarioDir, testFile: node.testFile, guideFile: node.guideFile,
+    cards: node.cards, entryPaths: Object.fromEntries(node.entries.map(entry => [entry.code, entry.path])),
+    storySummary: node.story,
+  }))
+}
+
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const plan = buildCampaignPlan()
   const body = JSON.stringify(plan, null, 2) + '\n'
@@ -153,14 +163,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     writeFileSync(PLAN_PATH, body)
     mkdirSync(join(RUN, 'workers'), { recursive: true })
     writeFileSync(join(RUN, 'campaign-plan.json'), body)
-    for (const node of plan.nodes.filter(item => item.kind === 'chapter')) {
-      writeFileSync(join(RUN, 'workers', `campaign-${node.id}.input.json`), JSON.stringify({
-        kind: node.kind, chapterId: node.id, name: node.name, nameEn: node.nameEn,
-        referenceCode: node.referenceCode, encounterCode: node.encounterCode,
-        scenarioDir: node.scenarioDir, testFile: node.testFile, guideFile: node.guideFile,
-        cards: node.cards, entryPaths: Object.fromEntries(node.entries.map(entry => [entry.code, entry.path])),
-        storySummary: node.story,
-      }, null, 2) + '\n')
+    for (const input of chapterWorkerInputs(plan)) {
+      writeFileSync(join(RUN, 'workers', `campaign-${input.chapterId}.input.json`), JSON.stringify(input, null, 2) + '\n')
     }
     console.log(`tsk campaign plan: 已写入（status=${plan.status}，卡 ${plan.summary.assignedCards}/${plan.summary.campaignCards}，缺条目 ${plan.summary.entriesMissing}）`)
     console.log(JSON.stringify(plan.gates))

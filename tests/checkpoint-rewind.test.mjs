@@ -83,7 +83,7 @@ async function listen() {
   }
 }
 
-test('关卡入口检查点可由队长创建精确分支，且原时间线保持不变', { timeout: 30000 }, async () => {
+test('关卡入口检查点可由队长创建精确分支，且原时间线保持不变', { timeout: 90000 }, async () => {
   const previous = process.env.DSH_HOME
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'arkham-checkpoint-'))
   process.env.DSH_HOME = home

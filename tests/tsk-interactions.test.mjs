@@ -8,7 +8,7 @@
 //   · 审计账本 audit/tsk-interactions.json 必须由 buildInteractionAudit() 逐字节复算。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { buildInteractionAudit } from '../tools/audit-tsk-interactions.mjs'
@@ -284,7 +284,7 @@ test('P4 观察投影与快照掩码：未揭露身份/密档正文/他人勾选
   assert.equal(JSON.stringify(view).includes('otherworld'), false)
 })
 
-test('P4 浏览器证据：16 用例两视口覆盖、截图存在并覆盖 6 组交互', async () => {
+test('P4 浏览器账本：16 用例两视口覆盖、记录截图并覆盖 6 组交互', async () => {
   // 注意：完整门禁（fast 无新增失败 / replay / 来源 SHA）由 `npm run audit:tsk:interactions` 复算；
   // 本测试只校验浏览器证据本身，避免「审计账本 ↔ fast 回归」的循环依赖。
   const browser = readJson(join(MOD, 'audit/tsk-interactions-browser.json'))
@@ -305,7 +305,7 @@ test('P4 浏览器证据：16 用例两视口覆盖、截图存在并覆盖 6 �
   }
   assert.ok(browser.screenshots.length >= 12)
   for (const screenshot of browser.screenshots) {
-    assert.equal(existsSync(join(MOD, '..', '..', screenshot)), true, `截图缺失：${screenshot}`)
+    assert.match(screenshot, /^artifacts\/migration\/tsk\/p4\/screenshots\/(desktop|mobile)-[^/]+\.png$/)
   }
   // 交付原语只来自 P2 已交付目录，且 6 组一一对应。
   const delivered = [

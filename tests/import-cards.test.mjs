@@ -98,7 +98,7 @@ test('N1 输出稳定且逐项关闭差集，不覆盖 N0 冻结报告', () => {
 
 test('服务端拒绝目录中未开放调查员和伪造牌组', () => {
   const players = [{ seat: 0, name: 'Player' }]
-  for (const code of ['09001', '10001', 'unknown', '__proto__']) assert.throws(() => createGameState({ playerInvestigator: code }, players), /调查员/)
+  for (const code of ['10001', 'unknown', '__proto__']) assert.throws(() => createGameState({ playerInvestigator: code }, players), /调查员/)
   assert.throws(() => createGameState({ playerInvestigator: '01001', playerDeck: ['09001'] }, players), /卡组/)
   assert.throws(() => createGameState({ playerInvestigator: '01001', playerDeck: 'invalid' }, players), /卡组/)
 })
@@ -138,8 +138,7 @@ test('Core、敦威治、卡尔克萨与失落调查员和 1–4 人开局正常
       // 池子变长会让既有 13 局 golden replay 与种子用例的 AI 选人漂移。
       assert.equal(Object.keys(state.investigatorDefs).length, SELECTABLE_INVESTIGATOR_CODES.length)
       assert.equal(PLAYABLE_INVESTIGATOR_CODES.length, 27, 'AI 自动选人池保持 27')
-      // 27 = 核心 5 + 敦威治 5 + 卡尔克萨 6 + 失落 5 + 万象无终 6；P10 起 + 食梦者 5 = 32（真人可选池；AI 自动池仍 27）。
-      assert.equal(Object.keys(state.investigatorDefs).length, 32)
+      assert.deepEqual(Object.keys(state.investigatorDefs).sort(), [...SELECTABLE_INVESTIGATOR_CODES].sort())
       assert.equal(state.cards['09001'], undefined)
       assert.ok(!JSON.stringify(state).includes('canonicalSource'))
       for (const inv of state.investigators) {
